@@ -1,0 +1,44 @@
+{
+	"quotationType": [
+		{"key":"1", "value":"普通"},
+		{"key":"2", "value":"大宅"}
+	], "quotationClassification": [
+		{"key":"1", "value":"普通部分"},
+		{"key":"2", "value":"其它部分"},
+		{"key":"3", "value":"一次性包死"},
+		{"key":"4", "value":"综合项目"},
+		{"key":"5", "value":"管理费"}
+	], "quotationBigCategory": [
+		{"key":"1", "value":"基础部分"},
+		{"key":"2", "value":"木作及油饰"},
+		{"key":"3", "value":"隐蔽工程"},
+		{"key":"4", "value":"其他部分"},
+		{"key":"5", "value":"综合部分"},
+		{"key":"6", "value":"管理费"}
+	], "quotationSmallCategory": [
+		{"key":"1", "value":"厨房"},
+		{"key":"2", "value":"灯具及开关插座安装"},
+		{"key":"3", "value":"地面工程"},
+		{"key":"4", "value":"电路改造(包死)"},
+		{"key":"5", "value":"二手房改造"},
+		{"key":"6", "value":"阁楼"},
+		{"key":"7", "value":"柜体"},
+		{"key":"8", "value":"门窗"},
+		{"key":"9", "value":"暖气改造"},
+		{"key":"10", "value":"欧式"},
+		{"key":"11", "value":"棚顶工程"},
+		{"key":"12", "value":"墙面工程"},
+		{"key":"13", "value":"水电预收单价"},
+		{"key":"14", "value":"水路改造(包死)"},
+		{"key":"15", "value":"外花园露台"},
+		{"key":"16", "value":"卫生间"},
+		{"key":"17", "value":"造型墙"},
+		{"key":"18", "value":"南北外阳台内封"},
+		{"key":"19", "value":"赠送大礼包"},
+		{"key":"20", "value":"综合项目"},
+		{"key":"21", "value":"其他"},
+		{"key":"22", "value":"管理费"}
+	]
+    "errorCode": 0,
+    "errorMsg": null
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>  
+<head>  
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
+	
+	<style type="text/css">
+		body, html, #allmap {width: 100%;height: 100%; overflow: hidden; margin:0; font-family:"微软雅黑";}
+	</style>
+	
+	<script type = "text/javascript" src = "http://api.map.baidu.com/api?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx"></script> 
+	
+</head>
+<body style="margin:0">  
+	<div id="allmap"></div>
+	
+	<script type="text/javascript">
+		window.jQuery || document.write("<script src='../../assets/js/jquery-2.0.3.min.js'><"+"/script>");
+		if("ontouchend" in document) document.write("<script src='../../assets/js/jquery.mobile.custom.min.js'><"+"/script>");
+	</script>
+	
+	<script src="../../assets/js/bootstrap.min.js"></script>
+	<script src="../../assets/js/bootbox.min.js"></script>
+	
+	<script src="../../assets/js/date-time/moment.min.js"></script>
+	<script src="../../assets/js/date-time/daterangepicker.min.js"></script>
+	<script src="../../assets/js/jqGrid/i18n/grid.locale-cn.js"></script>
+	<script src="../../assets/js/jqGrid/jquery.jqGrid.src.js"></script>
+	<script src="../../assets/js/jquery.gritter.min.js"></script>
+	
+	
+	<script src="../../assets/js/ace-elements.min.js"></script>
+	<script src="../../assets/js/ace.min.js"></script>
+
+	<script src="../../js/com/utils.js"></script>
+	<script src="../../js/com/core.js"></script>
+	
+	<script> 
+        //创建地图函数
+		var mp = new BMap.Map("allmap"); // 在百度地图容器中创建一个地图 
+		var point = new BMap.Point(123.38497,41.810947);//定义一个中心点
+		mp.centerAndZoom(point, 13); // 设定地图中心和坐标并将地图显示在地图容器中
+		mp.setMapStyle({style:'light'});
+		mp.enableKeyboard();
+		mp.enableScrollWheelZoom(true);
+		
+		var driving = new BMap.DrivingRoute(mp);
+		
+		var polylines = [];
+		var points = [];
+		
+		driving.setSearchCompleteCallback(function(){
+			try{
+				var pts = driving.getResults().getPlan(0).getRoute(0).getPath();
+			
+				var polyline = new BMap.Polyline(pts);
+				
+				mp.addOverlay(polyline);
+			}catch(e){
+				console.log(e.message);
+			}
+		});
+        
+		com.post("../../queryTrackPointByUserIdATime.do", {"trackPoint.userId": "FL-02030", "trackPoint.date": "2015-09-05"}, function(res){
+			console.log(res);
+			
+			var trackPoints = res.trackPoints;
+			
+			var _;
+			var points = [];
+			
+			for(var i=1;i<trackPoints.length;i++){
+			
+				if(i == trackPoints.length - 1){
+					continue;
+				}
+			
+				var p = trackPoints[i];
+				var np = trackPoints[i + 1];
+				var pp = trackPoints[i - 1];
+				
+				if(p.x == pp.x && p.y == pp.y){
+					//continue;
+				}
+				
+				if(p.x == 0 || p.y == 0 || np.x == 0 || np.y == 0){
+					continue;
+				}
+				
+				var p1 = new BMap.Point(p.y, p.x);
+				var p2 = new BMap.Point(np.y, np.x);
+				
+				points.push(p1);
+				driving.search(p1, p2);
+				
+			}
+			
+		}, null, false);
+        
+</script>  
+</body>  
+</html>  
+    

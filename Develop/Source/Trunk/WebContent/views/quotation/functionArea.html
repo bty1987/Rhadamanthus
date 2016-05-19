@@ -1,0 +1,134 @@
+
+<div class="page-content">
+
+	<div class="row">
+		<div class="col-xs-12" id="functionAreaList">
+			<div id="searchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+		
+		<div class="col-xs-12 hide" id="functionAreaQuotationItemList">
+			<div class="tabbable" >
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#add" id="showFunctionAreaName">功能区报价项</a>
+					</li>
+				</ul>
+		
+				<div class="tab-content ">
+					<div id="add" class="tab-pane in active">
+						<input type="text" class="hide" id="selectFunctionAreaId">
+						<input type="text" class="hide" id="selectVersionId">
+						<table id="listFunctionAreaItemGrid"></table>
+						<div id="listFunctionAreaItemGridPager"></div>
+					</div>
+				</div>
+			</div>
+			<div class="text-right col-md-12">
+				<div class="hr"></div>
+				<button class="btn btn-info" type="button" id="btnBack">
+					<i class="icon-mail-forward bigger-110"></i>
+					返回
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="functionAreaModal" tabindex="-1" role="dialog"	aria-labelledby="functionAreaDialog" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="functionAreaDialog">功能区</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaId">编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="autoId" class="col-xs-10 col-sm-5 hide" />
+								<input type="text" id="functionAreaId" class="col-xs-10 col-sm-5 v_required v_functionAreaId" data-toggle="popover" data-trigger='manual' maxlength='5'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="versionId">报价版本</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="versionId" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="functionAreaName" class="col-xs-10 col-sm-5 v_required v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength='20'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+							<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaType">类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="functionAreaType" data-toggle="popover" data-trigger='manual'>
+								<option value="普通" selected="true">普通 </option>
+								<option value="一次性包死">一次性包死</option>
+								<option value="综合项目">综合项目</option>
+								<option value="管理费">管理费</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder">排序</label>
+							<div class="col-sm-9">
+								<input type="text" id="functionAreaOrder" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' maxlength='5'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="selectItemModal" tabindex="-1" role="dialog"	aria-labelledby="selectItemDialog" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog" style="width:900px;">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="selectItemDialog">选择报价项目</h4>
+				</div>
+				<div class="modal-body">
+					
+					<div class="row">
+						<div class="col-md-12" id="itemSearchDiv"></div>
+						<div class="col-md-12">
+							<table id="itemListGrid"></table>
+							<div id="itemGridPager"></div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveSelectItemBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelSelectItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/quotation/functionArea.js?version=' + versionCode);
+</script>

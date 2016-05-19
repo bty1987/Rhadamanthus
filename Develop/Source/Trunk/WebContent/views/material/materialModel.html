@@ -1,0 +1,129 @@
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="materialModelModal" tabindex="-1" role="dialog" aria-labelledby="materialModelDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="materialModelDialog">主材型号</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+		      			<div class="form-group" hidden="true">
+							<label class="col-sm-3 control-label no-padding-right" for="mmId">ID</label>
+							<div class="col-sm-9">
+								<input type="text" id="mmId" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialModelNo">编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="materialModelNo" class="col-xs-10 col-sm-5 v_required v_materialBrandName" maxlength="64" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+		      		
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialModelName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="materialModelName" class="col-xs-10 col-sm-5 v_required v_materialBrandName" maxlength="64" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialTypeId">品类</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="materialTypeId" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialBrandId">品牌</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="materialBrandId" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="measurementUnitId">单位</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="measurementUnitId" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialPurchasePrice">进价</label>
+							<div class="col-sm-9">
+								<input type="text" id="materialPurchasePrice" class="col-xs-10 col-sm-5 v_required v_price" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="materialUnitPrice">标价</label>
+							<div class="col-sm-9">
+								<input type="text" id="materialUnitPrice" class="col-xs-10 col-sm-5 v_required v_price" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="discount">折扣</label>
+							<div class="col-sm-9">
+								<input type="text" id="discount" class="col-xs-10 col-sm-5 v_required v_discount" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="calcType">计算类型</label>
+							<div class="col-sm-9">
+								<input type="hidden" id="calcType" />
+								<input id="calcTypeSwitch" checked="" type="checkbox" class="ace ace-switch ace-switch-5" />
+								<span class="lbl"></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div id="baseDiv" class="form-group" style="display: block;">
+							<label class="col-sm-3 control-label no-padding-right" for="base">底价</label>
+							<div class="col-sm-9">
+								<input type="text" id="base" class="col-xs-10 col-sm-5 v_required v_price" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div id="pointDiv" class="form-group" style="display: none;">
+							<label class="col-sm-3 control-label no-padding-right" for="point">点位</label>
+							<div class="col-sm-9">
+								<input type="text" id="point" class="col-xs-10 col-sm-5 v_required v_point" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/material/materialModel.js?version=' + versionCode);
+</script>

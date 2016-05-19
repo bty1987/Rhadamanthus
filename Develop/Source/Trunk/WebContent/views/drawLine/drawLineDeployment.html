@@ -1,0 +1,238 @@
+
+<div id="DrawLineDeploymentPageContent" class="page-content">
+	<div id="searchDiv"></div>
+
+	<div class="row" id="drawLineGroupList">
+		<div class="col-md-12">
+			<table id="listGridGroup"></table>
+			<div id="gridPagerGroup"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="drawLineModal" tabindex="-1" role="dialog" aria-labelledby="drawLineDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineDialog">放线确认信息</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								for="actualDate">放线日期</label>
+							<div class="col-sm-9">
+								<input type="text" class="hide" id="autoId" />
+								<input type="text" class="hide" id="groupIndex" /> 
+								<input class="date-picker col-xs-10 col-sm-5 v_required" id="actualDate" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual' />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
+							<div class="col-sm-9">
+								<div class="bootstrap-timepicker">
+									<input id="startTime" type="text" class="v_required" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
+							<div class="col-sm-9">
+								<div class="bootstrap-timepicker">
+									<input id="endTime" type="text" class="v_required" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="drawLineGroup">放线小组</label>
+							<div class="col-sm-9">
+								<select class='col-xs-10 col-sm-5' id='drawLineGroup' data-toggle="popover" data-trigger='manual'>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="drawLineApplyModal" tabindex="-1" role="dialog"	aria-labelledby="drawLineApplyDialog" aria-hidden="true">
+		<div class="modal-dialog" style="width:800px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineApplyDialog">部署信息</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div id="calendar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="drawLineDeploymentModal" tabindex="-1" role="dialog" aria-labelledby="drawLineDeploymentDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineDeploymentDialog">人员部署</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<div class="col-sm-12" align="center">
+								<span id="orderInfos"></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="supervisorQuality">监理员</label>
+							<div class="col-sm-9">
+								<select id="supervisorQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="chanQuality">铲大白质检</label>
+							<div class="col-sm-9">
+								<select id="chanQuality" class="chosen-select col-sm-5 v_required " data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="putlineQuality">放线质检</label>
+							<div class="col-sm-9">
+								<select id="putlineQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="waterwayCircuitPowerQuality">水电力质检</label>
+							<div class="col-sm-9">
+								<select id="waterwayCircuitPowerQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="bricklayQuality">瓦工质检</label>
+							<div class="col-sm-9">
+								<select id="bricklayQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual' style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="carpentQuality">木工质检</label>
+							<div class="col-sm-9">
+								<select id="carpentQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual' style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="oilQuality">油工质检</label>
+							<div class="col-sm-9">
+								<select id="oilQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual' style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cleaningQuality">保洁质检</label>
+							<div class="col-sm-9">
+								<select id="cleaningQuality" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual' style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="deployedBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="drawLineStatusModal" tabindex="-1" role="dialog" aria-labelledby="drawLineStatusDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineStatusDialog">状态确认</h4>
+				</div>
+
+				<div class="modal-body">
+
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="status">状态</label>
+							<div class="col-sm-9">
+								<select id="status" class="col-xs-10 col-sm-5"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="content">备注</label>
+							<div class="col-sm-9">
+								<textarea id="content" class="col-xs-10 col-sm-5"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/drawLine/drawLineDeployment.js?version=' + versionCode);
+</script>

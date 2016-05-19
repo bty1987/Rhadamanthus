@@ -1,0 +1,114 @@
+<style>
+.uploadify-button-text{line-height: 0 !important;}
+.lineheight0{line-height:15px !important;}
+</style>
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listgrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog" style="width: 800px;">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">公告信息</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="theme">主题</label>
+							<div class="col-sm-9">
+								<input type="text" id="theme" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="typeSel">公告类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-7" id="typeSel">
+									<option value="通知">通知</option>
+									<option value="活动">活动</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="prioritySel">优先级</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-7" id="prioritySel">
+									<option value="普通">普通</option>
+									<option value="重要">重要</option>
+									<option value="紧急">紧急</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
+							<div class="col-sm-9">
+								<div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="startTime" data-toggle="popover" data-trigger='manual'>
+									<input class="form-control date-picker" id="startTime" type="text" data-date-format="yyyy-mm-dd">
+									<span class="input-group-addon">
+										<i class="icon-calendar bigger-110"></i>
+									</span>
+								</div>
+								<span class='star'></span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
+							<div class="col-sm-9">
+								<div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="endTime" data-toggle="popover" data-trigger='manual'>
+									<input class="form-control date-picker" id="endTime" type="text" data-date-format="yyyy-mm-dd">
+									<span class="input-group-addon">
+										<i class="icon-calendar bigger-110"></i>
+									</span>
+								</div>
+								<span class='star'></span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="isPublic">公开</label>
+							<div class="col-sm-9">
+								<input type="checkbox" id="isPublic" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="attachment">上传附件</label>
+							<div class="col-sm-3 col-xs-4">
+								<!-- <input type="file" name='uploadify' id="attachment" />  -->
+								<div id="attachment"></div>
+								<input type="text" class="hidden" id="filePath"/>
+							</div>
+						</div>
+						
+						<div class="form-group"  style="padding: 0 10px;">
+								<div class="wysiwyg-editor" id="contents" data-toggle="popover" data-trigger='manual'></div>
+						</div>
+						
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'assets/js/jquery.hotkeys.min.js?version=' + versionCode);
+	$.getScript(hostServer + 'assets/js/bootstrap-wysiwyg.min.js?version=' + versionCode);
+	$.getScript(hostServer + 'js/information/noticeMng.js?version=' + versionCode);
+</script>

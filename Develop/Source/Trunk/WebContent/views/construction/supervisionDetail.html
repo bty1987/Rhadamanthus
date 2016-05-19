@@ -1,0 +1,871 @@
+<div class="row">
+	<div class="col-xs-12">
+
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="widget-box">
+					<div class="widget-body">
+						<div class="widget-main">
+							<div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+								<ul class="wizard-steps">
+									<li data-target="#step1" class="active">
+										<span class="step">1</span>
+										<span class="title">铲大白</span>
+									</li>
+
+									<li data-target="#step2">
+										<span class="step" >2</span>
+										<span class="title">放线</span>
+									</li>
+
+									<li data-target="#step3">
+										<span class="step">3</span>
+										<span class="title">力水电</span>
+									</li>
+
+									<li data-target="#step4">
+										<span class="step">4</span>
+										<span class="title">瓦工</span>
+									</li>
+									
+									<li data-target="#step5">
+										<span class="step">5</span>
+										<span class="title">地面找平</span>
+									</li>
+										
+									<li data-target="#step6">
+										<span class="step">6</span>
+										<span class="title">木工</span>
+									</li>
+									
+									<li data-target="#step7">
+										<span class="step">7</span>
+										<span class="title">油工</span>
+									</li>
+									
+									<li data-target="#step8">
+										<span class="step">8</span>
+										<span class="title">水电安装</span>
+									</li>
+									
+									<li data-target="#step9">
+										<span class="step">9</span>
+										<span class="title">保洁</span>
+									</li>
+								</ul>
+							</div>
+
+							<hr />
+							<div class="step-content row-fluid position-relative" id="step-container">
+								<div class="step-pane active" id="step1">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="chanNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#chanInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#chanDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="chanInfo">
+													<div class="row">
+														<div class="col-sm-6">
+															<form class="form-horizontal" role="form">
+																<div class="form-group text-center">
+																	<h3 class="header smaller lighter blue col-sm-10">
+																		<i class="icon-edit"></i>
+																		铲大白信息
+																	</h3>
+																</div>
+																<div class="form-group">
+																	<label class="col-sm-2 control-label no-padding-right" for="chanStartTime">开工时间</label>
+																	<div class="col-sm-4">
+																		<input id="chanStartTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
+																	</div>
+																	<div class="col-sm-4">
+																		<button id="chanStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																	</div>
+																</div>
+																<div class="space-4"></div>
+																<div class="form-group">
+																	<label class="col-sm-2 control-label no-padding-right" for="chanEndTime">完工时间</label>
+																	<div class="col-sm-4">
+																		<input id="chanEndTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
+																	</div>
+																	<div class="col-sm-4">
+																		<button id="chanEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																	</div>
+																</div>
+																<div class="space-4"></div>
+																<div class="form-group">
+																	<label class="col-sm-2 control-label no-padding-right" for="status">铲大白状态</label>
+																	<div id="status" class="col-sm-6">	</div>
+																</div>
+																<div class="space-4"></div>
+															</form>
+														</div>
+														<div class="col-sm-6 text-center">
+															<div class="text-center">
+																<h3 class="header smaller lighter green">
+																		<i class="icon-group"></i>
+																		工人信息
+																</h3>
+																<div id="chanWorkerInfo">
+																	<div class="profile-picture col-sm-6 col-sm-offset-3">
+																		<img id="chanWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px">
+																		<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+																			<a href="#" class="blue pull-left" id="chanWorkSalary">
+																				<i class="icon-money bigger-130"></i>
+																			</a>
+																			<span id="chanWorkerNameSpan" class="pull-right"></span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="tab-pane in active" id="chanDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="chanGallery"></ul>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="chanUpload" type="file" />  -->
+																<div id="chanUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="step-pane" id="step2">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="putlineNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#putlineInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#putlineDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="putlineInfo">
+													<div class="row">
+														<div class="col-sm-6">
+															<form class="form-horizontal" role="form">
+																<div class="form-group text-center">
+																	<h3 class="header smaller lighter blue col-sm-10">
+																		<i class="icon-edit"></i>
+																		放线信息
+																	</h3>
+																</div>
+																<div class="form-group">
+																	<label class="col-sm-2 control-label no-padding-right" for="putlineTime">放线时间</label>
+																	<div class="col-sm-4">
+																		<input id="putlineTime" type="text" class="col-sm-12" >
+																	</div>
+																</div>
+																<div class="space-4"></div>
+														
+																<div class="form-group">
+																	<label class="col-sm-2 control-label no-padding-right" for="putlineStatus">放线状态</label>
+																	<div id="putlineStatus" class="col-sm-4">	</div>
+																</div>
+																<div class="space-4"></div>
+																
+															</form>
+														</div>
+														<div class="col-sm-6 text-center">
+															<div class="text-center">
+																<h3 class="header smaller lighter green">
+																		<i class="icon-group"></i>
+																		工人信息
+																</h3>
+																<div id="fangWorkerInfo">
+																	<div class="profile-picture col-sm-6 col-sm-offset-3">
+																		<img id="fangWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
+																		<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+																			<a href="#" class="blue pull-left" id="fangWorkSalary">
+																				<i class="icon-money bigger-130"></i>
+																			</a>
+																			<span id="fangWorkerNameSpan" class="pull-right"></span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="tab-pane in active" id="putlineDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="putlineGallery"></ul>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="putlineUpload" type="file" /> -->
+																<div id="putlineUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="step-pane" id="step3">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="waterwayCircuitPowerNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#waterwayCircuitPowerInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#waterwayCircuitPowerDrawing" >施工图片</a>
+												</li>
+											</ul>
+									
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="waterwayCircuitPowerInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																水力电信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="waterwayCircuitPowerStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="waterwayCircuitPowerStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="waterwayCircuitPowerEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="waterwayCircuitPowerEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div id="waterwayCircuitPowerWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="waterwayCircuitPowerDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="waterwayCircuitPowerGallery"></ul>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="waterwayCircuitPowerUpload" type="file" /> -->
+																<div id="waterwayCircuitPowerUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="step-pane" id="step4">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="bricklayNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#bricklayInfo" >信息</a>
+												</li>
+												<li class="">
+													<a data-toggle="tab" href="#bricklayDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="bricklayInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																瓦工信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="bricklayStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="bricklayStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="bricklayStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="bricklayEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="bricklayEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="bricklayEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div id="bricklayWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="bricklayDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="bricklayGallery"></ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="bricklayUpload" type="file" /> -->
+																<div id="bricklayUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="step-pane" id="step5">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="groundLevelingNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#groundLevelingInfo" >信息</a>
+												</li>
+												<li class="">
+													<a data-toggle="tab" href="#groundLevelingDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="groundLevelingInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																木工信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="groundLevelingStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="groundLevelingStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="groundLevelingStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="groundLevelingEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="groundLevelingEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="groundLevelingEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div id="groundLevelingWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="groundLevelingDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="groundLevelingGallery"></ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="groundLevelingUpload" type="file" /> -->
+																<div id="groundLevelingUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="step-pane" id="step6">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="carpentNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#carpentInfo" >信息</a>
+												</li>
+												<li class="">
+													<a data-toggle="tab" href="#carpentDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="carpentInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																木工信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="carpentStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="carpentStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="carpentStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="carpentEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="carpentEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="carpentEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div id="carpentWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="carpentDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="carpentGallery"></ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="carpentUpload" type="file" /> -->
+																<div id="carpentUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="step-pane" id="step7">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="oilNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#oilInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#oilDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="oilInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																油工信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="oilStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="oilStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="oilStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="oilEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="oilEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="oilEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div id="oilWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="oilDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="oilGallery"></ul>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="oilUpload" type="file" /> -->
+																<div id="oilUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="step-pane" id="step8">
+									<div class="row">
+									
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="waterwayCircuitCheckNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#waterwayCircuitCheckInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#waterwayCircuitCheckDrawing" >施工图片</a>
+												</li>
+											</ul>
+									
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="waterwayCircuitCheckInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																水力电信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="waterwayCircuitCheckStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="waterwayCircuitCheckStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="waterwayCircuitCheckEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="waterwayCircuitCheckEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div id="waterwayCircuitCheckWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="waterwayCircuitCheckDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="waterwayCircuitCheckGallery"></ul>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="waterwayCircuitCheckUpload" type="file" /> -->
+																<div id="waterwayCircuitCheckUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="step-pane" id="step9">
+									<div class="row">
+										<div class="tabbable">
+											<ul class="nav nav-tabs" id="cleaningNavTab">
+												<li class="active">
+													<a data-toggle="tab" href="#cleaningInfo" >信息</a>
+												</li>
+									
+												<li class="">
+													<a data-toggle="tab" href="#cleaningDrawing" >施工图片</a>
+												</li>
+											</ul>
+											
+											<div class="tab-content ">
+												<div class="tab-pane in active" id="cleaningInfo">
+													<form class="form-horizontal" role="form">
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																保洁信息
+															</h3>
+														</div>
+														<div class="form-group">
+															<div class="col-sm-12">
+																<label class="col-sm-1 control-label no-padding-right" for="cleaningStartTime">开工时间</label>
+																<div class="col-sm-2">
+																	<input id="cleaningStartTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="cleaningStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																</div>
+																<label class="col-sm-1 control-label no-padding-right" for="cleaningEndTime">完工时间</label>
+																<div class="col-sm-2">
+																	<input id="cleaningEndTime" type="text" class="col-sm-12" readonly="readonly">
+																</div>
+																<div class="col-sm-2">
+																	<button id="cleaningEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																</div>
+															</div>
+														</div>
+														<div class="space-4"></div>
+														
+														<div class="form-group">
+															<h3 class="header smaller lighter blue">
+																<i class="icon-edit"></i>
+																工人信息
+															</h3>
+														</div>
+														
+														<div class="form-group">
+															<div id="cleaningWorkerInfos">
+															</div>
+														</div>
+														<div class="space-4"></div>
+													</form>
+												</div>
+												
+												<div class="tab-pane in active" id="cleaningDrawing">
+													<div class="row">
+														<div class="col-xs-12">
+															<div class="row-fluid">
+																<ul class="ace-thumbnails" id="cleaningGallery"></ul>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="cleaningUpload" type="file" /> -->
+																<div id="cleaningUpload"></div>
+																<input type="text" class="hidden" id="picture" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<hr />
+							<div class="row-fluid wizard-actions">
+								<button id="btnBack" class="btn btn-info" type="button">
+									<i class="icon-mail-forward bigger-110"></i> 返回
+								</button>
+								<button class="btn btn-prev">
+									<i class="icon-arrow-left"></i> 上一步
+								</button>
+								<button class="btn btn-success btn-next">
+									下一步 <i class="icon-arrow-right icon-on-right"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="workerSalaryModal" tabindex="-1" role="dialog"	aria-labelledby="workerSalaryDialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="customerDialog">工人工资</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="workerName">姓名</label>
+						<div class="col-sm-9">
+							<input type="text" id="workerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="workerSalary">工资</label>
+						<div class="col-sm-9">
+							<input type="text" id="workerSalary" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/construction/supervisionDetail.js?version=' + versionCode);
+</script>

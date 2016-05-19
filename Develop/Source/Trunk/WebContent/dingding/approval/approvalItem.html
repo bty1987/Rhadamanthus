@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cmn-Hans">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="format-detection" content="telephone=no" />
+    <title>审批详情</title>
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.css">
+    <link rel="stylesheet" href="../assets/css/weui.css"/>
+    <link rel="stylesheet" href="../assets/css/example.css"/>
+    <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<style>
+    .weui_cells p{
+        margin: 0;
+    }
+</style>
+<body>
+
+
+<div class="bd content">
+    <div class="weui_cells_title">审批详情</div>
+    <div class="weui_cells">
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>审批类型</p>
+            </div>
+            <div class="weui_cell_ft" id="approvalType"></div>
+        </div>
+
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>审批人</p>
+            </div>
+            <div class="weui_cell_ft" id="senderName"></div>
+        </div>
+
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>申请时间</p>
+            </div>
+            <div href="javascript:;" class="weui_cell_ft" id="createTime"></div>
+        </div>
+
+        <div class="weui_media_box weui_media_text">
+            <h4 class="weui_media_title">内容</h4>
+            <p class="weui_cells_tips no-padding" id="contents"></p>
+        </div>
+
+        <div class="weui_media_box weui_media_text">
+            <h4 class="weui_media_title">备注</h4>
+            <p class="weui_cells_tips no-padding" id="comment"></p>
+        </div>
+
+    </div>
+    <div class="content-block">
+        <div class="row">
+            <div class="col-50"><a class="button button-big button-fill button-danger" href="javascript:;" id="refuseBtn">拒绝</a></div>
+            <div class="col-50"><a class="button button-big button-fill button-success" href="javascript:;" id="approveBtn">同意</a></div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.js' charset='utf-8'></script>
+<script src="../assets/js/deferred.js"></script>
+<script src="../assets/js/callbacks.js"></script>
+
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.js' charset='utf-8'></script>
+
+<script type="text/javascript">
+	if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
+		document.write('<script type="text/javascript" src="http://g.alicdn.com/ilw/ding/0.5.1/scripts/dingtalk.js"><\/script>'); 
+	}else{
+		document.write('<script type="text/javascript" src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.4.2/index.js"><\/script>')
+	}
+</script>
+
+<script src="../utils/config.js"></script>
+<script src="../utils/dingding.js"></script>
+<script src="../utils/utils.js"></script>
+
+<script src="approvalDetail.js"></script>
+</html>
+
+

@@ -1,0 +1,118 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"> <!--分页-->
+
+                <a style="margin-top: 7px;" class="btn btn-minier  btn-primary pull-left" name="addCustomer"><i class="icon-plus bigger-110"></i>添加</a>
+
+                <div class="pager-info" style="display: inline-block;">
+		                    第<span class="bigger-120 blue" name="nowPage">1</span>页，
+		                    共<span class="bigger-120 blue" name="totalPage">12</span>页，
+		                    每页显示<span class="bigger-120 blue" name="rows">10</span>条，
+		                    共找到<span class="bigger-120 blue" name="totalRecords">116</span>条
+                </div>
+
+                <ul class="pager pull-right">
+                    <li class="previous" name="prev">
+                        <a href="javascript:void (0);" >← 上一页</a>
+                    </li>
+                    <li class="next" name="next">
+                        <a href="javascript:void (0);" >下一页 →</a>
+                    </li>
+                </ul>
+            </div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="customerModal" tabindex="-1" role="dialog"	aria-labelledby="customerDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="customerDialog">客户</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+							<div class="col-sm-9">
+								<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+							<div class="col-sm-9">
+								<input type="checkbox" id="gender" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="phone">联系方式</label>
+							<div class="col-sm-9">
+								<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+							<div class="col-sm-9">
+								<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+							<div class="col-sm-9">
+								<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+							<div class="col-sm-9">
+								<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+							<div class="col-sm-9">
+								<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/data/customer.js?version=' + versionCode);
+</script>

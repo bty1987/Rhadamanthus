@@ -1,0 +1,261 @@
+<div class="page-content" id='createOrder'>
+	<div id="fl-statement">
+		<div class="page-header"></div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" role="form">
+				<div class="widget-box">
+					<div class="widget-header">
+						<div class="widget-toolbar no-border pull-left" style="display: none;">
+							<input id="decorationOrderFlag" value='1' checked="checked" type='checkbox' class='ace' /> 
+							<span class='lbl'>装修订单</span> 
+							<input id='materialOrderFlag' value='2' type='checkbox' class='ace' />
+							<span class='lbl'>主材订单</span>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="customerId" class="col-md-3 control-label no-padding-right">客户姓名</label>
+											<div class="col-md-9">
+												<select class="chosen-select col-md-4 v_required" id="customerId" data-placeholder="请输入客户" data-toggle="popover" data-trigger='manual' style="display: none;">
+													<option value="">&nbsp;</option>
+												</select> <i class='icon-asterisk'></i>
+												<button type="button" id="createCustomer" class="btn btn-xs btn-info">创建客户</button>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="villageId" class="col-sm-3 control-label no-padding-right">楼盘名</label>
+											<div class="col-md-9">
+												<select class="chosen-select col-md-4 v_required" id="villageId" data-placeholder="请输入楼盘名" data-toggle="popover" data-trigger='manual' style="display: none;">
+													<option value="">&nbsp;</option>
+												</select>
+												<i class='icon-asterisk'></i>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="houseNumber" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_required v_houseNumber" id="houseNumber" data-toggle="popover" data-trigger='manual' maxlength="30">
+													<i class='icon-asterisk'></i>
+												<div class="col-md-12">
+													<span id="buildingRuleContent" class="red"></span>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="designerId" class="col-sm-3 control-label no-padding-right">设计师</label>
+											<div class="col-md-9">
+												<select class="chosen-select col-md-4 v_required" id="designerId" data-placeholder="请输入设计师" data-toggle="popover" data-trigger='manual' style="display: none;">
+													<option value="">&nbsp;</option>
+												</select> <i id="designerId_asterisk" class='material icon-asterisk'></i>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="salesmanId" class="col-sm-3 control-label no-padding-right">业务员</label>
+											<div class="col-md-9">
+												<select class="chosen-select col-md-4 v_required" id="salesmanId" data-placeholder="请输入业务员" data-toggle="popover" data-trigger='manual' style="display: none;">
+													<option value="">&nbsp;</option>
+												</select> <i id="salesmanId_asterisk"  class='material icon-asterisk'></i>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label for="salesmanId" class="col-sm-3 control-label no-padding-right">业务员类型</label>
+											<div class="col-md-9">
+												<select class='col-xs-10 col-sm-5' id='salesmanType' data-toggle="popover" data-trigger='manual' ></select>
+												<i class='icon-asterisk'></i>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="notSalesmanName" class="col-sm-3 control-label no-padding-right">非业务人员名称</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_name" data-toggle="popover" data-trigger='manual' maxlength="8" id="notSalesmanName">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="notSalesmanRate" class="col-sm-3 control-label no-padding-right">非业务提点</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="11" value="0" id="notSalesmanRate">
+												<i class='icon-asterisk'></i>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="notSalesmanPhone" class="col-sm-3 control-label no-padding-right">非业务人员手机</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_phone" data-toggle="popover" data-trigger='manual' maxlength="11" id="notSalesmanPhone">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="notSalesmanContent" class="col-sm-3 control-label no-padding-right">非业务备注</label>
+											<div class="col-sm-9">
+												<textarea class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50" id="notSalesmanContent"></textarea>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="houseType" class="col-sm-3 control-label no-padding-right">房屋类别</label>
+											<div class="col-sm-9">
+												<select class='col-xs-10 col-sm-5 v_required' id='houseType' data-toggle="popover" data-trigger='manual' ></select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="apartmentType" class="col-sm-3 control-label no-padding-right">房屋户型</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual' id="apartmentType">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="houseClass"
+												class="col-sm-3 control-label no-padding-right">房屋类型</label>
+											<div class="col-sm-9">
+												<select class='col-xs-10 col-sm-5' id='houseClass' data-toggle="popover" data-trigger='manual' ></select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="status" class="col-sm-3 control-label no-padding-right">订单状态</label>
+											<div class="col-sm-9">
+												<select class='col-xs-10 col-sm-5' id='status' data-toggle="popover" data-trigger='manual' ></select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="houseArea" class="col-sm-3 control-label no-padding-right ">房屋面积</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' id="houseArea">
+												<i class='icon-asterisk'></i>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="backOrderName" class="col-sm-3 control-label no-padding-right">返单人员名称</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_name" data-toggle="popover" data-trigger='manual' maxlength="8" id="backOrderName">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="backOrderPhone" class="col-sm-3 control-label no-padding-right">返单人员电话</label>
+											<div class="col-sm-9">
+												<input type="text" class="col-xs-10 col-sm-5 v_phone" data-toggle="popover" data-trigger='manual' maxlength="11" id="backOrderPhone">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="backOrderContent" class="col-sm-3 control-label no-padding-right">返单人员备注</label>
+											<div class="col-sm-9">
+												<textarea class="col-xs-10 col-sm-5" rows="3" data-toggle="popover" data-trigger='manual' maxlength="128" id="backOrderContent"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="widget-toolbox padding-8 clearfix span7 text-center">
+							<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+							<button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+						</div>
+					</div>
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1" role="dialog"	aria-labelledby="customerDialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="customerDialog">客户</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+						<div class="col-sm-9">
+							<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="gender" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="phone">联系方式</label>
+						<div class="col-sm-9">
+							<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/>
+							<span class='star'></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+						<div class="col-sm-9">
+							<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+						<div class="col-sm-9">
+							<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+						<div class="col-sm-9">
+							<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+						<div class="col-sm-9">
+							<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+						<div class="col-sm-9">
+							<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+				<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/decoration/createOrder.js?version=' + versionCode);
+</script>

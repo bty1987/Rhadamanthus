@@ -1,0 +1,246 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="chanNavTab">
+				<li class="active">
+					<a data-toggle="tab" href="#info" >信息</a>
+				</li>
+				<li class="">
+					<a data-toggle="tab" href="#drawing" >施工图片</a>
+				</li>
+			</ul>
+			
+			<div class="tab-content">
+				<div class="tab-pane in active" id="info">
+					<div id="chan" class="row" style="display: none;">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<div class="form-group text-center">
+									<h3 class="header smaller lighter blue col-sm-10">
+										<i class="icon-edit"></i>
+										工程信息
+									</h3>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="chanStartTime">开工时间</label>
+									<div class="col-sm-4">
+										<input id="chanStartTime" class="date-picker col-sm-12" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="chanEndTime">完工时间</label>
+									<div class="col-sm-4">
+										<input id="chanEndTime" class="date-picker col-sm-12" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="status">铲大白状态</label>
+									<div class="col-sm-4" id="chanStatus"></div>
+								</div>
+								<div class="form-group" id="chanOperate">
+									<div class="col-sm-offset-2">
+										<button id="chanSuccess" class="btn btn-xs btn-success">成功</button>
+										<button id="chanFail" class="btn btn-xs btn-danger">失败</button>
+										<button id="chanDelay" class="btn btn-xs btn-warning">延迟</button>
+										<button id="chanPass" class="btn btn-xs btn-info">通过</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="col-sm-6">
+							<div id="chanWorkerEnter" style="display: none;">
+								<form class="form-horizontal" role="form">
+									<div class="form-group text-center">
+										<h3 class="header smaller lighter green">
+											<i class="icon-group"></i>
+											工人信息录入
+										</h3>
+									</div>
+									<div class="form-group ">
+										<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
+										<select id="chanWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+											<option value="">&nbsp;</option>
+										</select> 
+									</div>
+									<div class="form-group ">
+										<div class="col-sm-offset-2">
+											<button id="chanWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div id="chanWorkerInfo" class="text-center" style="display: none;">
+								<h3 class="header smaller lighter green">
+									<i class="icon-group"></i>
+									工人信息
+								</h3>
+								<div class="profile-picture col-sm-6 col-sm-offset-3">
+									<img id="chanWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
+									<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+										<span id="chanWorkerNameSpan" class="pull-right"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div id="putline" class="row" style="display: none;">
+						<div class="col-sm-6">
+							<form class="form-horizontal" role="form">
+								<div class="form-group text-center">
+									<h3 class="header smaller lighter blue col-sm-10">
+										<i class="icon-edit"></i>
+										工程信息
+									</h3>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="putlineTime">放线时间</label>
+									<div class="col-sm-4">
+										<input id="putlineTime" class="date-picker col-sm-12" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="fangStatus">铲大白状态</label>
+									<div class="col-sm-4" id="fangStatus"></div>
+								</div>
+								<div class="form-group ">
+									<div class="col-sm-offset-2">
+										<button id="putlineSuccess" class="btn btn-xs btn-success">放线成功</button>
+										<button id="putlineFail" class="btn btn-xs btn-danger">放线失败</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="col-sm-6">
+							<div id="fangWorkerEnter" style="display: none;">
+								<form class="form-horizontal" role="form">
+									<div class="form-group text-center">
+										<h3 class="header smaller lighter green">
+											<i class="icon-group"></i>
+											工人信息录入
+										</h3>
+									</div>
+									<div class="form-group ">
+										<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
+										<select id="fangWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+											<option value="">&nbsp;</option>
+										</select> 
+									</div>
+									<div class="form-group ">
+										<div class="col-sm-offset-2">
+											<button id="fangWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div id="fangWorkerInfo" class="text-center" style="display: none;">
+								<h3 class="header smaller lighter green">
+										<i class="icon-group"></i>
+										工人信息
+								</h3>
+								<div class="profile-picture col-sm-6 col-sm-offset-3">
+									<img id="fangWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
+									<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+										<span id="fangWorkerNameSpan" class="pull-right"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div id="common" class="row" style="display: none;">
+						<div class="col-sm-12">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<h3 class="header smaller lighter blue" style="padding-left: 15px">
+										<i class="icon-edit"></i>
+										基本信息
+									</h3>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-sm-12">
+										<label class="col-sm-1 control-label no-padding-right" for="startTime">开工时间</label>
+										<div class="col-sm-2">
+											<input id="startTime" type="text" class="col-sm-12 date-picker" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'>
+										</div>
+										<label class="col-sm-1 control-label no-padding-right" for="endTime">完工时间</label>
+										<div class="col-sm-2">
+											<input id="endTime" type="text" class="col-sm-12 date-picker" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'>
+										</div>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<h3 class="header smaller lighter blue" style="padding-left: 15px">
+										<i class="icon-edit"></i>
+										工人信息
+									</h3>
+								</div>
+								
+								<div class="form-group">
+									<div id="workerEnter">
+										<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+										<select id="workerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+											<option value="">&nbsp;</option>
+										</select> 
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-1">
+										<button id="workerSubmit" class="btn btn-xs col-sm-2 ">确认</button>
+									</div>
+								</div>
+								<div class="space-4"></div>
+								
+								<div class="form-group">
+									<div id="workerInfos">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="pull-left inline">
+								<div class="btn btn-success" id="btnSubmit" type="button">提交</div>
+							</div>
+							<div class="pull-right inline">
+								<div class="btn btn-default" id="btnBackInfo" type="button">返回</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="tab-pane in active" id="drawing">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="row-fluid">
+								<ul class="ace-thumbnails" id="qualityGallery"></ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="hr hr32 hr-dotted"></div>
+						<div class="col-xs-12">
+							<div class="pull-left inline">
+								<!-- <input id="qualityUpload" type="file" /> -->
+								<div id="qualityUpload"></div>
+								<input type="text" class="hidden" id="picture" />
+							</div>
+							<div class="pull-right inline">
+								<div class="btn btn-default" id="btnBackDrawing" type="button">返回</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/construction/qualityTestingDetail.js?version=' + versionCode);
+</script>

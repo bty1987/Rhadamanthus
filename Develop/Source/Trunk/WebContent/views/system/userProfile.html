@@ -1,0 +1,141 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="">
+				<div id="user-profile-3" class="user-profile row">
+					<div class="col-sm-offset-1 col-sm-10">
+						<div class="space"></div>
+						<form class="form-horizontal">
+							<div class="tabbable">
+								<ul class="nav nav-tabs padding-16">
+									<li class="active">
+										<a data-toggle="tab" href="#edit-basic">
+											<i class="green icon-edit bigger-125"></i>
+											个人信息
+										</a>
+									</li>
+
+								</ul>
+
+								<div class="tab-content profile-edit-tab-content">
+									<div id="edit-basic" class="tab-pane in active">
+										<h4 class="header blue bolder smaller">基本信息</h4>
+								
+										<div class="row">
+											<div class="col-md-6">
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="age">年龄</label>
+
+													<span class="col-md-5 block no-padding-right">
+														<input class="form-control v_required v_number" id="age" placeholder="年龄" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="2">
+													</span>
+												</div>
+						
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="telephone">电话</label>
+
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_required v_phones" id="telephone" placeholder="手机号" value="" type="text" data-toggle="popover" data-trigger='manual'>
+													</div>
+												</div>
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="qq">QQ</label>
+
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_number" id="qq" placeholder="QQ号码" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="15">
+													</div>
+												</div>
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="wechat">微信</label>
+
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_name_en" id="wechat" placeholder="微信号码" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="15">
+													</div>
+												</div>
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="email">邮箱</label>
+
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_email" id="email" placeholder="邮箱" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="60">
+													</div>
+												</div>
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3  control-label no-padding-right " for="emergencyMan">紧急联系人</label>
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_name" id="emergencyMan" placeholder="紧急联系人" readonly="readonly" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="60">
+													</div>
+												</div>
+												
+												<div class="block clearfix form-group">
+													<label class="col-md-3  control-label no-padding-right " for="emergencyPhone">联系电话</label>
+
+													<div class="col-md-5 block no-padding-right">
+														<input class="form-control v_number" id="emergencyPhone" placeholder="紧急联系人电话" readonly="readonly" value="" type="text" data-toggle="popover" data-trigger='manual' maxlength="11">
+													</div>
+												</div>
+											</div>
+											
+											<div class="col-md-6">
+												<div class="block clearfix form-group">
+													<label class="col-md-3 control-label no-padding-right " for="picture">个人图片</label>
+													<div class="col-md-5 block no-padding-right">
+														<div class="col-md-12 row-fluid">
+																<ul class="ace-thumbnails">
+																	<li>
+																		<a id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+																			<img id="showImg" src="#" alt="150x150" width='150' height='150' >
+																		</a>
+							
+																		<div class="tools tools-top">
+<!-- 																			<a href="#"><i class="icon-link"></i></a> -->
+																			<a id="removePicture" href="#"><i class="icon-remove red"></i></a>
+																		</div>
+																	</li>
+																</ul>
+														</div>
+														<div class="col-md-12">
+															<!-- <input id="pictureUpload" type="file" class=""/>  -->
+															<div id="pictureUpload"></div>
+															<input type="text" class="hidden" id="picture"/>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="clearfix form-actions">
+									<div class="col-md-offset-3 col-md-9">
+										<button class="btn btn-info" type="button" id="save">
+											<i class="icon-ok bigger-110"></i>
+											保存
+										</button>
+	
+										&nbsp; &nbsp;
+										<button class="btn" type="button" id="reset">
+											<i class="icon-undo bigger-110"></i>
+											重置
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/system/userProfile.js?version=' + versionCode);
+</script>

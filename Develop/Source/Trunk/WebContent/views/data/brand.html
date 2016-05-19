@@ -1,0 +1,65 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="brandModal" tabindex="-1" role="dialog" aria-labelledby="brandDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="brandDialog">主材品牌</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+		      			<div class="form-group" hidden="true">
+							<label class="col-sm-3 control-label no-padding-right" for="bId">ID</label>
+							<div class="col-sm-9">
+								<input type="text" id="bId" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+		      		
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="brandId">编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="brandId" class="col-xs-10 col-sm-5 v_required v_brandId" maxlength="10" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="brandName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="brandName" class="col-xs-10 col-sm-5 v_required v_name" maxlength="30" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="categoryId">品类</label>
+							<div class="col-sm-3">
+								<select class="form-control" id="categoryId"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/data/brand.js?version=' + versionCode);
+</script>

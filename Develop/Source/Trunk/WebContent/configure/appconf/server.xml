@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="18006" shutdown="SHUTDOWN">
+	<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+	<Listener className="org.apache.catalina.core.JasperListener" />
+	<Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+	<Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+	<GlobalNamingResources>
+		<Resource name="UserDatabase" auth="Container"
+		             type="org.apache.catalina.UserDatabase"
+		             description="User database that can be updated and saved"
+		             factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+		             pathname="conf/tomcat-users.xml" />
+	</GlobalNamingResources>
+
+	<Service name="Catalina">
+		<Executor name="tomcatThreadPool" namePrefix="catalina-exec-" maxThreads="1000" maxIdleTime="60000" minSpareThreads="20"/>
+		
+		<Connector executor="tomcatThreadPool" port="18081" maxHttpHeaderSize="8192" maxThreads="1000" processorCache="1000" acceptCount="1000"
+				   minSpareThreads="100" acceptorThreadCount="8" URIEncoding="UTF-8" enableLookups="false" redirectPort="8443" connectionTimeout="120000" keepAliveTimeout="120000"
+				   maxKeepAliveRequests="65535" disableUploadTimeout="true" compression="on" compressionMinSize="4096" noCompressionUserAgents="gozilla, traviata"
+				   compressableMimeType="text/html,text/xml,text/javascript,text/css,text/plain,application/json,application/x-javascript"/>
+		<Connector port="18010" protocol="AJP/1.3" redirectPort="8443" />
+		
+		<Engine name="Catalina" defaultHost="localhost" jvmRoute="tomcat1">
+			<Realm className="org.apache.catalina.realm.LockOutRealm">
+				<Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+			</Realm>
+		
+			<Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true"></Host>
+		</Engine>
+	</Service>
+</Server>

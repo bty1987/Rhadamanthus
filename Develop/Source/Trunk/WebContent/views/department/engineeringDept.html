@@ -1,0 +1,94 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listgrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="engineeringDeptModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">工程部门</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="engineeringDeptId">部门编号</label>
+							<div class="col-sm-9">
+								<input type="text" maxlength="10" id="engineeringDeptId" class="col-xs-10 col-sm-6 v_engineeringDept v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="engineeringDeptName">部门名称</label>
+							<div class="col-sm-9">
+								<input type="text" maxlength="64" id="engineeringDeptName" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="typeSel">部门类型</label>
+							<div class="col-sm-9">
+								<select id="typeSel" class="type col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="regionSel">所属大区</label>
+							<div class="col-sm-9">
+								<select id="regionSel" class="region col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="citySel">所属城市</label>
+							<div class="col-sm-9">
+								<select id="citySel" class="city col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cityProperSel">所属城区</label>
+							<div class="col-sm-9">
+								<select id="cityProperSel" class="city col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="des">描述</label>
+							<div class="col-sm-9">
+								<textarea id="des" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/department/engineeringDept.js?version=' + versionCode);
+</script>

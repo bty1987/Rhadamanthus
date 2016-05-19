@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cmn-Hans">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="format-detection" content="telephone=no" />
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../assets/css/weui.css"/>
+    <link rel="stylesheet" href="../assets/css/example.css"/>
+    <link rel="stylesheet" href="../css/main.css"/>
+</head>
+
+<body>
+
+<div class="weui_grids">
+
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_chan"></i>
+        </div>
+        <p class="weui_grid_label">
+            铲大白
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_putline"></i>
+        </div>
+        <p class="weui_grid_label">
+            放线
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_waterwaycircuitpower"></i>
+        </div>
+        <p class="weui_grid_label">
+            水力电
+        </p>
+    </a>
+
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_bricklay"></i>
+        </div>
+        <p class="weui_grid_label">
+            瓦工
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_groundleveling"></i>
+        </div>
+        <p class="weui_grid_label">
+            地面找平
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_carpent"></i>
+        </div>
+        <p class="weui_grid_label">
+            木工
+        </p>
+    </a>
+
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_oil"></i>
+        </div>
+        <p class="weui_grid_label">
+            油工
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_waterwaycircuitcheck"></i>
+        </div>
+        <p class="weui_grid_label">
+            水电安装
+        </p>
+    </a>
+    <a href="javascript:;" class="weui_grid">
+        <div class="weui_grid_icon">
+            <i class="icon icon_cleaning"></i>
+        </div>
+        <p class="weui_grid_label">
+            保洁
+        </p>
+    </a>
+</div>
+
+
+</body>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.js' charset='utf-8'></script>
+<script src="../assets/js/deferred.js"></script>
+<script src="../assets/js/callbacks.js"></script>
+
+<script src="../utils/config.js"></script>
+<script src="../utils/dingding.js"></script>
+<script src="../utils/utils.js"></script>
+
+<script src="orderDetail.js"></script>
+
+<script>
+    $(function(){
+
+        var search = window.location.search;
+        $('.weui_grids a').click(function(){
+
+            window.location.href = "project.html"+search+"&index=" +  $(this).index();
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,117 @@
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="tabbable">
+				<ul id="inbox-tabs" class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger tab-space-1">
+					<li class="active">
+						<a data-toggle="tab" href="#inbox" data-target="inbox">
+							<i class="blue icon-inbox bigger-130"></i>
+							<span class="bigger-110 sysMessage">系统消息</span>
+						</a>
+					</li>
+				</ul>
+
+				<div class="tab-content no-border no-padding">
+					<div class="tab-pane in active">
+						<div class="message-container">
+							<div id="messageList">
+								<table id="listgrid"></table>
+								<div id="gridPager"></div>
+							</div>
+
+							<div class="messageDetail" id="messageDetail" style="display: none; margin-top: 20px;">
+								<div class="message-header clearfix">
+									<div class="pull-left">
+										<i class="icon-user bigger-110 orange middle"></i>
+										<span class="sender" style='color:#6a9cba'></span>&nbsp;
+										<i class="icon-time bigger-110 orange middle"></i>
+										<span class="createTime"></span>
+									</div>
+									<div class="action-buttons pull-right">
+										<span class='uselessMsg' style='color:red;display:none;'>该审批消息已作废.</span>
+										<button id="passBtn" class='btn btn-xs btn-success approve-btn' style="display: none;">审批通过</button>
+										<button id="refuseBtn" class='btn btn-xs btn-danger approve-btn' style="display: none;">审批拒绝</button>
+										<button id="returnBtn" class='btn btn-xs btn-info'>返回</button>
+									</div>
+								</div>
+								<div class="hr hr-double"></div>
+								<div class="contents"></div>
+								<div class="hr hr-double"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog"	 aria-labelledby="messageDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="messageDialog">消息</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="receiver">收信人</label>
+							<div class="col-sm-9">
+								<select id="receiver" class="chosen-select col-sm-6 v_required" data-placeholder="" data-toggle="popover" data-trigger='manual'	>
+									<option value="">&nbsp;</option>
+								</select> 
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="contents">内容</label>
+							<div class="col-sm-9">
+								<textarea id="contents" maxlength="50" class="col-xs-10 col-sm-6 v_required" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="discountModal" tabindex="-1" role="dialog"	aria-labelledby="customerDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="discountDialog">该折扣低于7.5折, 是否计入业绩?</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group col-sm-5">
+							<label class="col-sm-6 control-label no-padding-right" for="isPerformance">计入业绩</label>
+							<div class="col-sm-6">
+								<input type="checkbox" id="isPerformance" />
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="performanceSaveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="performanceCancelBtn" class="btn btn-default"
+						data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/information/messageMng.js?version=' + versionCode);
+</script>

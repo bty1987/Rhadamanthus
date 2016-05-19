@@ -1,0 +1,120 @@
+/**
+ * @File Name		: Counting.java
+ * @Package   	: com.fanglin.vo
+ * @Version		: 1.0
+ * @Date			: 2015-1-26
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
+
+package com.fanglin.common.po;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="counting", catalog = "communion")
+public class CountingPO implements Serializable{
+
+	private static final long serialVersionUID = 149702824362133350L;
+	
+	public static int TYPE_CUSTOMER_INT = 1;
+	
+	public static int TYPE_DECORATION_ORDER_INT = 2;
+	
+	public static int TYPE_BUDGET_AUDIT_ITEM_INT = 3;
+	
+	public static int TYPE_ADDORREDUCE_INT = 4;
+	
+	public static int TYPE_CUSTOM_QUOTATION_ITEM_INT = 5;
+	
+	public static int TYPE_USER_INT = 6;
+	
+	public static int TYPE_VILLAGE_INT = 7;
+	
+	public static int TYPE_QUOTATION_VERSION_INT = 8;
+	
+	public static int TYPE_QUOTATION_FUNCTION_AREA_INT = 9;
+	
+	public static int TYPE_MATERIAL_TYPE_INT = 10;
+	
+	public static int TYPE_MATERIAL_BRAND_INT = 11;
+	
+	public static int TYPE_DESIGNER_REGION_INT = 12;
+	
+	public static int TYPE_DESIGNER_DEPARTMENT_INT = 13;
+	
+	public static int TYPE_SALESMAN_REGION_INT = 14;
+	
+	public static int TYPE_SALESMAN_DEPARTMENT_INT = 15;
+	
+	public static int TYPE_MATERIAL_DEPARTMENT_INT = 16;
+	
+	public static int TYPE_ENGINEERING_DEPARTMENT_INT = 17;
+	
+	public static int TYPE_FUNCTION_DEPARTMENT_INT = 18;
+	
+	public static int TYPE_REGION_INT = 19;
+	
+	public static int TYPE_CITY_INT = 20;
+	
+	public static int TYPE_CITY_PROPER_INT = 21;
+	
+	public static int TYPE_ROLE_INT = 22;
+	
+	public static int TYPE_CATEGORY_INT = 23;
+	
+	public static int TYPE_BRAND_INT = 24;
+	
+	public static int TYPE_FINANCE_CC_INT = 25;
+	
+	public static int TYPE_FINANCE_CR_INT = 26;
+	
+	public static String COLUMN_DATE_STR = "date";
+	
+	public static String COLUMN_TYPE_STR = "type";
+	
+	public static String COUNTING_DATE_SILNLE_STR = "single";
+
+	private String date;
+	
+	private int type;
+	
+	private int count;
+
+	@Id
+	@Column(name = "date")
+	public String getDate(){
+		return date;
+	}
+
+	public void setDate(String date){
+		this.date = date;
+	}
+
+	@Id
+	@Column(name = "type")
+	public Integer getType(){
+		return type;
+	}
+
+	public void setType(Integer type){
+		this.type = type;
+	}
+
+	@Column(name = "count")
+	public Integer getCount(){
+		return count;
+	}
+
+	public void setCount(Integer count){
+		this.count = count;
+	}
+	
+}

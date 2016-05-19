@@ -1,0 +1,105 @@
+<div id="qualityTestingPageContent" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id='fl-alert'></div>
+			<div id="qualityTestingSearchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="qualityTestingModal" tabindex="-1" role="dialog"	aria-labelledby="qualityTestingDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="qualityTestingDialog">质检控制</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="worker">工人</label>
+							<div class="col-sm-9">
+								<input id="worker" class="col-xs-10 col-sm-5 v_required" type="text" placeholder="自动填充">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="worker"></label>
+							<div class="col-sm-9">
+								<span class="btn btn-xs col-sm-5" data-content="<img alt='150x150' src='./assets/avatars/profile-pic.jpg'>" title="" data-rel="popover">工人照片</span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="beginTime">开工时间</label>
+							<div class="col-sm-9">
+								<input class="date-picker col-xs-10 col-sm-5" id="beginTime" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="beginTime">完工时间</label>
+							<div class="col-sm-9">
+								<input class="date-picker col-xs-10 col-sm-5" id="beginTime" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<button class="btn btn-xs btn-primary col-sm-12">上传图片</button>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<div class="row-fluid">
+								<ul class="ace-thumbnails">
+									<li>
+										<a data-rel="colorbox" href="assets/images/gallery/image-2.jpg" class="cboxElement">
+											<img src="assets/images/gallery/thumb-2.jpg" alt="150x150">
+										</a>
+		
+										<div class="tools tools-top">
+											<a href="#">
+												<i class="icon-link"></i>
+											</a>
+		
+											<a href="#">
+												<i class="icon-paper-clip"></i>
+											</a>
+		
+											<a href="#">
+												<i class="icon-pencil"></i>
+											</a>
+		
+											<a href="#">
+												<i class="icon-remove red"></i>
+											</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/utils/constructionUtils.js?version=' + versionCode);
+	$.getScript(hostServer + 'js/construction/qualityTesting.js?version=' + versionCode);
+</script>
