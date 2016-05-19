@@ -1,0 +1,97 @@
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul id="inbox-tabs" class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger tab-space-1">
+							<li class="active">
+								<a data-toggle="tab" href="#inbox" data-target="inbox">
+									<i class="blue icon-inbox bigger-130"></i>
+									<span class="bigger-110">系统消息</span>
+								</a>
+							</li>
+						</ul>
+
+						<div class="tab-content no-border no-padding">
+							<div class="tab-pane in active">
+								<div class="message-container">
+									<div id="listMessage">
+										<div id="searchDiv"></div>
+										<table id="listgrid"></table>
+										<div id="gridPager"></div>
+									</div>
+									<div class="hide message-content" id="id-message-content">
+										<div class="message-header clearfix">
+											<div class="pull-left">
+												<span class="blue bigger-125"> Clik to open this message </span>
+						
+												<div class="space-4"></div>
+												&nbsp;
+												<img class="middle" alt="John's Avatar" src="assets/avatars/avatar.png" width="32" />
+												&nbsp;
+												<a href="#" class="sender">John Doe</a>
+												&nbsp;
+												<i class="icon-time bigger-110 orange middle"></i>
+												<span class="time">Today, 7:15 pm</span>
+											</div>
+						
+											<div class="action-buttons pull-right">
+												
+												<button  id="gobackMessageList" >
+													<i class="icon-mail-forward blue icon-only bigger-130"></i>
+													返回
+												</button>
+						
+												<button id="deleteMessage">
+													<i class="icon-trash red icon-only bigger-130"></i>
+													删除
+												</button>
+											</div>
+										</div>
+						
+										<div class="hr hr-double"></div>
+						
+										<div class="message-body">
+											<p>
+												Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+											</p>
+						
+											<p>
+												Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+											</p>
+						
+											<p>
+												Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+											</p>
+						
+											<p>
+												Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+											</p>
+						
+											<p>
+												Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+											</p>
+						
+											<p>
+												Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+											</p>
+										</div>
+						
+										<div class="hr hr-double"></div>
+						
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/message/message.js?version=' + versionCode);
+</script>

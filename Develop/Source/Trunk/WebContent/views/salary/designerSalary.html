@@ -1,0 +1,48 @@
+<div class="page-content">
+	<div class="row">
+		<div  class="col-xs-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#designerSalary" >设计师工资</a>
+					</li>
+
+					<li class="">
+						<a data-toggle="tab" href="#designerSalaryPayoff" id="payoffDesignerTab">已发工资</a>
+					</li>
+					<li class="">
+						<a data-toggle="tab" href="#designerSalaryUnPayoff" id="unpayoffDesignerTab">未发工资</a>
+					</li>
+				</ul>
+
+				<div class="tab-content ">
+					<div id="designerSalary" class="tab-pane in active">
+						<div id="designerSalaryList"  class="row">
+							<div id="searchDiv"></div>
+							<table id="listGrid"></table>
+							<div id="gridPager"></div>
+						</div>
+					</div>
+					<div id="designerSalaryPayoff" class="tab-pane in active">
+						<div id="designerSalaryPayoffList" class="row">
+							<div id="searchPayoffDiv"></div>
+							<table id="listPayoffGrid"></table>
+							<div id="gridPayoffPager"></div>
+						</div>
+					</div>
+					<div id="designerSalaryUnPayoff" class="tab-pane in active">
+						<div id="designerSalaryUnPayoffList" class="row">
+							<div id="searchUnPayoffDiv"></div>
+							<table id="listUnPayoffGrid"></table>
+							<div id="gridUnPayoffPager"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/salary/designerSalary.js?version=' + versionCode);
+</script>

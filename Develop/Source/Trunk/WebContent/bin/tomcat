@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Startup script for the tomcat
+#
+# chkconfig: 345 80 15
+# description: Tomcat is a Servlet+JSP Engine.
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+prog="java"
+
+checkjava(){
+    if [ -z "$JAVA_HOME" ]; then
+        export JAVA_HOME=/usr/local/Java/jdk1.7.0_60
+    fi
+}
+
+start(){
+    checkjava
+    if [ -z $(/sbin/pidof java | sed s/[[:space:]]//g) ]; then
+        echo "Starting tomcat"
+        /usr/local/Tomcat/tomcat-1/bin/startup.sh
+        sleep 1
+        /usr/local/Tomcat/tomcat-2/bin/startup.sh
+        touch /var/lock/subsys/tomcat
+    else
+        echo "tomcat allready running"
+    fi
+}
+
+stop(){
+    checkjava
+    if [ ! -z $(/sbin/pidof java | sed s/[[:space:]]//g) ]; then
+        echo "Shutting down tomcat"
+        #/usr/local/Tomcat/tomcat-1/bin/shutdown.sh
+        #sleep 1
+        #/usr/local/Tomcat/tomcat-2/bin/shutdown.sh
+        #until [ -z $(/sbin/pidof java | sed s/[[:space:]]//g) ]; do :; done
+        killall java
+        rm -f /var/lock/subsys/tomcat
+    else
+        echo "tomcat not running"
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 2
+        start
+        ;;
+    status)
+        #/usr/local/Tomcat/tomcat/bin/catalina.sh version
+        status $prog
+        RETVAL=$?
+        ps aux | grep $prog
+        ;;
+    *)
+       echo "Usage: $0 {start|stop|restart|status}"
+esac

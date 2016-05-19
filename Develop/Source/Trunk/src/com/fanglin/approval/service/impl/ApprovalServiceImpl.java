@@ -1,0 +1,205 @@
+/**
+ * @File Name		: ApprovalServiceImpl.java
+ * @Package   	: com.fanglin.approval.service.impl
+ * @Version		: 1.0
+ * @Date			: 2015-10-25
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
+
+package com.fanglin.approval.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalActivityService;
+import com.fanglin.approval.service.ApprovalCustomerService;
+import com.fanglin.approval.service.ApprovalDecorationRefundService;
+import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
+import com.fanglin.approval.service.ApprovalMaterialOutsideRefundService;
+import com.fanglin.approval.service.ApprovalMaterialRefundService;
+import com.fanglin.approval.service.ApprovalOrderBelongService;
+import com.fanglin.approval.service.ApprovalQuotationDiscountService;
+import com.fanglin.approval.service.ApprovalService;
+import com.fanglin.approval.service.ApprovalVillageService;
+import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.FilterVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
+
+@Service("approvalService")
+@Transactional(readOnly=true)
+public class ApprovalServiceImpl implements ApprovalService {
+
+	@Autowired
+	private ApprovalDao approvalDao;
+	
+	@Autowired
+	private ApprovalActivityService approvalActivityService;
+	
+	@Autowired
+	private ApprovalCustomerService approvalCustomerService;
+	
+	@Autowired
+	private ApprovalDecorationRefundService approvalDecorationRefundService;
+	
+	@Autowired
+	private ApprovalMaterialFullPaymentService approvalMaterialFullPaymentService;
+	
+	@Autowired
+	private ApprovalMaterialOutsideRefundService approvalMaterialOutsideRefundService;
+	
+	@Autowired
+	private ApprovalMaterialRefundService approvalMaterialRefundService;
+	
+	@Autowired
+	private ApprovalOrderBelongService approvalOrderBelongService;
+	
+	@Autowired
+	private ApprovalQuotationDiscountService approvalQuotationDiscountService;
+	
+	@Autowired
+	private ApprovalVillageService approvalVillageService;
+	
+	@Override
+	public void pageApprovalByReceiveId(Paging paging, List<FilterVO> filters, String userId) {
+		
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalByReceiveId(paging, filters, userId);
+		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
+		
+		for(ApprovalPO approvalPO: approvalPOs){
+			ApprovalVO approvalVO = new ApprovalVO();
+			BeanUtil.copyProperties(approvalPO, approvalVO);
+			
+			approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
+			approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());
+			approvalVO.setSenderId(approvalPO.getSender().getUserId());
+			approvalVO.setSenderName(approvalPO.getSender().getCurrentName());
+			
+			approvalVOs.add(approvalVO);
+		}
+		
+		paging.setData(approvalVOs);
+	}
+
+	@Override
+	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException {
+		
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		
+		if(approvalPO == null){
+			throw new FLException(240009, "审批信息不存在");
+		}
+		
+		BeanUtil.copyProperties(approvalPO, approvalVO);
+		
+		approvalVO.setSenderId(approvalPO.getSender().getUserId());
+		approvalVO.setSenderName(approvalPO.getSender().getUserName());
+		
+		return approvalVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int approve(ApprovalVO approvalVO) throws FLException {
+		
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		
+		if(approvalPO == null){
+			throw new FLException(240009, "审批信息不存在");
+		}
+		
+		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
+			throw new FLException(240001, "不能重复审批");
+		}
+		
+		short type = approvalPO.getType();
+		
+		switch (type) {
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
+				approvalCustomerService.approvalForCustomer(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
+				approvalVillageService.approvalForVillage(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+				approvalOrderBelongService.approvalForOrderBelong(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
+				approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+				approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_OUTSIDE_REFUND_INT:
+				approvalMaterialOutsideRefundService.approvalForMaterialOutsideRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
+				approvalActivityService.approvalForDecorationActivity(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
+				break;
+		}
+		
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
+		
+		approvalDao.update(approvalPO);
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int refuse(ApprovalVO approvalVO) throws FLException {
+		
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		
+		if(approvalPO == null){
+			throw new FLException(240009, "审批信息不存在");
+		}
+		
+		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
+			throw new FLException(240001, "不能重复审批");
+		}
+		
+		short type = approvalPO.getType();
+		
+		switch (type) {
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
+				break;
+			default:
+				break;
+		}
+		
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
+		
+		approvalDao.update(approvalPO);
+		
+		return 0;
+	}
+
+}

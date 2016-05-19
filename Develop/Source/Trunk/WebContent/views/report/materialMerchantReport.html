@@ -1,0 +1,37 @@
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv">
+				<div class="fl_search clearfix">
+					<span class="col-xs-4">
+						时间:
+						<input type="text" class="" name="date-range-picker" id="dateRangeSearch" style="width: 90%">
+					</span>
+					<span class="col-xs-2">
+						类型:
+						<select class="" id="reportType"></select>
+					</span>
+					<button id="fl_btn_searchDiv" class="btn btn-sm btn-info btn-search">查询</button>
+				</div>
+			</div>
+			
+			<div id="materialTypeReport"></div>
+			<div id="materialBrandReport"></div>
+			
+			<div class="col-xs-6">
+				<div>
+					<table id="materialTypeTable" class="table table-striped table-bordered table-hover"></table>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div>
+					<table id="materialBrandTable" class="table table-striped table-bordered table-hover"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/report/materialMerchantReport.js?version=' + versionCode);
+</script>

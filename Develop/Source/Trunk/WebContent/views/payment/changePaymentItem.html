@@ -1,0 +1,58 @@
+<div id="changePaymentItemContent" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#changePaymentItemList" >转换款项</a>
+					</li>
+				</ul>
+				<div class="tab-content ">
+					<div id="changePaymentItemList" class="tab-pane in active">
+						<div id="searchDiv"></div>
+						<table id="listGrid"></table>
+						<div id="gridPager"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="changePaymentItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+		      			<div class="modal-header">
+		        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        			<h4 class="modal-title" id="myModalLabel">添加转换款项</h4>
+		      			</div>
+		      			<div class="modal-body">
+							<form class="form-horizontal" role="form">
+		      					<input type="text" id="decorationPaymentId" class="hide" />
+							
+					      		<div class="form-group" id="crashDiv">
+									<label for="refundSum" class="col-md-3 control-label" >剩余金额</label>
+									<span class="col-md-9 block no-padding-right  ">
+										<input type="text" id="paymentBlance" class="col-md-46 v_float v_required"  readonly data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</span>
+									<label for="changeMoney" class="col-md-3 control-label" >转换金额</label>
+									<span class="col-md-9 block no-padding-right  ">
+										<input type="text" id="changeMoney" class="col-md-46 v_float v_required"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</span>
+								</div>
+								
+								<div class="space-4 "></div>
+							</form>
+		      			</div>
+		      			
+						<div class="modal-footer ">
+							<button type="button" id="saveChangePaymentBtn" class="btn btn-primary">确认</button>
+				        	<button type="button" id="canceChangePaymentBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				      	</div>
+		    		</div>
+		  		</div>
+		  	</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/payment/changePaymentItem.js?version=' + versionCode);
+</script>

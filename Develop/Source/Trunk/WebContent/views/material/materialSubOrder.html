@@ -1,0 +1,149 @@
+<div id="materialSubOrderPageContent">
+
+	<div id="fl-statement"></div>
+	<div class="row">
+		<div class="col-xs-12">
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="materialSubOrderMoneyModal" tabindex="-1" role="dialog" aria-labelledby="materialSubOrderMoneyDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="materialSubOrderMoneyDialog">款项</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="depositPayment">总价</label>
+							<div class="col-sm-9">
+								<input type="text" id="total" class="col-xs-10 col-sm-4" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="depositPayment">定金</label>
+							<div class="col-sm-9">
+								<input type="text" id="depositPayment" class="col-xs-10 col-sm-4 " />
+								<button id="depositPaymentBtn" key="deposit" class="btn btn-minier btn-yellow" data-loading-text="提交中...">交款</button>
+								<button id="depositCancelBtn" key="deposit" class="btn btn-minier btn-yellow" data-loading-text="提交中...">撤消</button>
+								<button id="depositRefundBtn" key="deposit" class="btn btn-minier btn-yellow" data-loading-text="提交中...">退款</button>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="realDepositPayment">实收定金</label>
+							<div class="col-sm-9">
+								<input type="text" id="realDepositPayment" readonly="readonly" class="col-xs-10 col-sm-4 " />
+								<span id="depositPaymentInfo" class="label label-danger arrowed"></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="fullPayment" data-loading-text="提交中...">补款</label>
+							<div class="col-sm-9">
+								<input type="text" id="fullPayment" readonly="readonly" class="col-xs-10 col-sm-4 " />
+								<button id="fullPaymentBtn" key="full" class="btn btn-minier btn-yellow" data-loading-text="提交中...">交款</button>
+								<button id="fullRefundBtn" key="fullRefund" class="btn btn-minier btn-danger" data-loading-text="提交中...">退款</button>
+								<button id="fullCancelBtn" key="full" class="btn btn-minier btn-yellow" data-loading-text="提交中...">撤消</button>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="realFullPayment">实收补款</label>
+							<div class="col-sm-9">
+								<input type="text" id="realFullPayment" readonly="readonly" class="col-xs-10 col-sm-4 " />
+								<span id="fullPaymentInfo" class="label label-danger arrowed"></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="maling">券信息</label>
+							<div class="col-sm-9">
+								<input type="text" id="coupon" readonly="readonly" class="col-xs-10 col-sm-4 " />
+								<button id="couponBtn" key="coupon" class="btn btn-minier btn-yellow">券修改</button>
+								<button id="couponRefundBtn" key="coupon" class="btn btn-minier btn-danger">退券</button>
+								<div id="couponInfo" style="display: none;">
+									<select id="couponType" class="col-sm-3" data-toggle="popover" data-trigger='manual'></select>
+									<input id="couponValue" type="text" class="col-sm-2" value="0" data-toggle="popover" data-trigger='manual'/>
+									<button id="couponCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中...">提交</button>
+									<button id="couponCancelBtn" key="coupon" class="btn btn-minier btn-danger">取消</button>
+								</div>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="maling">抹零</label>
+							<div class="col-sm-9">
+								<input type="text" id="maling" readonly="readonly" class="col-xs-10 col-sm-4 " />
+								<button id="malingBtn" key="coupon" class="btn btn-minier btn-yellow">抹零修改</button>
+								<div id="malingInfo" style="display: none;">
+									<input id="malingValue" type="text" class="col-sm-2" value="0" data-toggle="popover" data-trigger='manual'/>
+									<button id="malingCommitBtn" key="coupon" class="btn btn-minier btn-yellow" data-loading-text="提交中...">提交</button>
+									<button id="malingCancelBtn" key="coupon" class="btn btn-minier btn-danger">取消</button>
+								</div>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+					</form>
+				</div>
+				<div class="modal-footer">
+					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="approvalMaterialFullPaymentModal" tabindex="-1" role="dialog" aria-labelledby="approvalMaterialFullPaymentModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+     		<div class="modal-header">
+       			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+       			<h4 class="modal-title">主材补款提交审批</h4>
+     		</div>
+     		<div class="modal-body">
+	      		<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<div class="col-sm-12" align="center">
+							<span>当前订单中存在折扣价和售价不等的型号,补款的提交需要进行审批动作</span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
+						<div class="col-sm-9">
+							<select id="approveManSel" class="chosen-select col-xs-10 col-sm-6 v_required" data-placeholder="请输入审批人" data-toggle="popover" data-trigger='manual' style="display: none;">
+								<option value="">&nbsp;</option>
+							</select> 
+							<span class='star'></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+     		</div>
+			<div class="modal-footer">
+				<button type="button" id="approveSaveBtn" class="btn btn-primary">修改申请</button>
+	        	<button type="button" id="vApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+	      	</div>
+   		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/material/materialSubOrder.js?version=' + versionCode);
+</script>

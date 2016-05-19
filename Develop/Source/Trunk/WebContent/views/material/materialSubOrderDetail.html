@@ -1,0 +1,66 @@
+<div id="materialSubOrderDetailPageContent">
+	<div id="fl-statement"></div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<table id="listGrid"></table>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="rejectMaterialSubOrderModal" tabindex="-1" role="dialog" aria-labelledby="rejectMaterialSubOrderDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="updateMaterialSubOrderModal">退货信息</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refundTotal">退货总额</label>
+							<div class="col-sm-9">
+								<input id="refundTotal" type="text" class=" col-sm-6" readonly="readonly"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refund">实际退款额</label>
+							<div class="col-sm-9">
+								<input id="refund" type="text" value="0" class=" col-sm-6 v_required v_price" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refundDes" >备注信息</label>
+							<div class="col-sm-9">
+								<textarea id="refundDes" maxlength="256" class="col-sm-6 v_required" rows="3"></textarea>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refund">审批人</label>
+							<div class="col-sm-9">
+								<select id="approver" class="chosen-select col-md-6 v_required" data-toggle="popover" data-trigger='manual' style="display: none;">
+									<option value="">&nbsp;</option>
+								</select> <i class='icon-asterisk'></i>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="saveRefundBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/material/materialSubOrderDetail.js?version=' + versionCode);
+</script>

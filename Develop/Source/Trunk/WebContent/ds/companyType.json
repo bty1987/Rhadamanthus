@@ -1,0 +1,12 @@
+{
+    "company": [
+        {"key":"1","value":"方林装饰"},
+    	{"key":"0","value":"总公司"},
+		{"key":"2","value":"1918装饰"},
+		{"key":"3","value":"宜家装饰"},
+		{"key":"4","value":"工装公司"},
+		{"key":"5","value":"正林伟业"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}

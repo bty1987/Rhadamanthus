@@ -1,0 +1,72 @@
+<div class="page-content">
+	<div class="page-header">
+		<h1>
+			<span id="activityName"></span>
+			<label class="pull-right inline">
+				<button class="btn btn-danger" id="backBtn">返回</button>
+			</label>
+			<label class="pull-right inline">
+				<button class="btn btn-success" id="addBtn">添加</button>
+			</label>
+		</h1>
+	</div>
+	
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 pricing-span-body">
+			<div id="activityItems"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="activityItemModal" tabindex="-1" role="dialog" aria-labelledby="activityItemModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">活动物品</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="activityItemName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="activityItemName" maxlength="10" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+							<div class="col-sm-9">
+								<select class="col-sm-7 col-xs-10 v_required" id="type" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group" id="moneyInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="money">金额</label>
+							<div class="col-sm-9">
+								<input type="text"  id="money" class="col-sm-7 col-xs-10 v_number v_required"/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+	
+</div>
+
+
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/information/activityItem.js?version=' + versionCode);
+</script>

@@ -1,0 +1,475 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="paymentTab">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#paymentList">预付款</a>
+					</li>
+					<li>
+						<a id="history" data-toggle="tab" href="#paymentHistoryList">历史收款</a>
+					</li>
+				</ul>
+				<div class="tab-content ">
+					<div id="paymentList" class="tab-pane in active">
+						<div id="searchDiv"></div>
+						<table id="listgrid"></table>
+						<div id="gridPager"></div>
+					</div>
+					<div id="paymentHistoryList" class="tab-pane in active">
+						<div id="searchHistoryDiv"></div>
+						<table id="listgridHistory"></table>
+						<div id="gridPagerHistory"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">收款信息</h4>
+      			</div>
+      			<div class="modal-body">
+      				<form class="form-horizontal" role="form">
+      					<div style='color:red;text-align:center;display:none;' class='payWayError'>请选择付款方式</div>
+	      				<div class="block clearfix pay_way">
+							<label class="col-md-3 control-label" >付款方式</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="cashCheckbox">
+								<span class="lbl"> 现金</span>
+							</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="bankCheckbox">
+								<span class="lbl"> 刷卡</span>
+							</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="checkvCheckbox">
+								<span class="lbl"> 转账</span>
+							</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="installmentCheckbox">
+								<span class="lbl"> 分期</span>
+							</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="accountsCheckbox">
+								<span class="lbl"> 对公账户</span>
+							</label>
+						</div>
+						<div class="space-4 "></div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" id="paymentTypeDiv">
+							<label class="col-sm-3 control-label no-padding-right" for="paymentTypeSel">预付款类型</label>
+							<div class="col-sm-9">
+								<select id="paymentTypeSel" class="col-xs-10 col-sm-5">
+									<option value='主材预付款'>主材预付款</option>
+									<option value='合同预付款'>合同预付款</option>
+									<option value='工程预付款'>工程预付款</option>
+									<option value='正林预付款'>正林预付款</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" >
+							<label class="col-md-3 control-label no-padding-right" for="des" >说明</label>
+							<div class="col-md-9">
+								<textarea id="des" class="col-md-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
+							</div>
+						</div>
+						
+	      				<div id="cashDiv" referCheckbox="cashCheckbox">
+	      					<h4 class="header blue bolder smaller">现金</h4>
+	      					<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
+								<div class="col-sm-9">
+									<select id="cashInfo" class="col-xs-10 col-sm-5"></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							
+				      		<div class="form-group">
+								<label for="cash" class="col-md-3 control-label">现金金额</label>
+								<span class="col-md-9 block no-padding-right">
+									<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual'/>
+									<span style='height:34px; line-height:34px;'>&nbsp;元</span>
+								</span>
+							</div>
+							<div class="space-4"></div>
+						</div>
+						
+						<div id="bankDiv" referCheckbox="bankCheckbox" style='display: none'>
+							<h4 class="header blue bolder smaller">
+								银行卡
+								<button id="bankAdd" class="btn btn-minier btn-success pull-right inline" num="0">添加</button>
+							</h4>
+							<div id="bankDivGroup"></div>
+						</div>
+							
+						<div id="checkvDiv" referCheckbox="checkvCheckbox" style='display: none'>
+							<h4 class="header blue bolder smaller">转账</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="checkvBankName">银行</label>
+								<div class="col-sm-9">
+									<select id="checkvBankName" class="col-xs-10 col-sm-5 bankSel"></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="checkPay">转账金额</label>
+								<div class="col-sm-9">
+									<input type="text" id="checkv" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual'>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+						
+						<div id="installmentDiv" referCheckbox="installmentCheckbox" style='display: none'>
+							<h4 class="header blue bolder smaller">分期</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="installmentBankName">银行</label>
+								<div class="col-sm-9">
+									<select id="installmentBankName" class="col-xs-10 col-sm-5 bankSel"></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="installment" >分期金额</label>
+								<div class="col-sm-9">
+									<input type="text" id="installment" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual'>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+						
+						<div id="accountsDiv" referCheckbox="accountsCheckbox" style='display: none'>
+							<h4 class="header blue bolder smaller">对公账户</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="accountsBankName">银行</label>
+								<div class="col-sm-9">
+									<select id="accountsBankName" class="col-xs-10 col-sm-5 bankSel"></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="accounts" >对公金额</label>
+								<div class="col-sm-9">
+									<input type="text" id="accounts" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual'>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+					</form>
+      			</div>
+      			
+				<div class="modal-footer ">
+					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+					<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+  	
+  	<div class="modal fade" id="cashOutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">提现信息</h4>
+      			</div>
+      			<div class="modal-body">
+      				<form class="form-horizontal" role="form">
+	      				<div class="block clearfix">
+							<label class="col-md-3 control-label" >提现方式</label>
+							<label class="inline">
+								<input name="refundType" type="radio" class="ace" id="refundCash" value="0">
+								<span class="lbl"> 现金</span>
+							</label>	
+							<label class="inline">
+								<input name="refundType" type="radio" class="ace" id="refundBankCard" value="1">
+								<span class="lbl"> 刷卡</span>
+							</label>	
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refundPaymentTypeSel">预付款类型</label>
+							<div class="col-sm-9">
+								<select id="refundPaymentTypeSel" class="col-xs-10 col-sm-5">
+									<option value='主材预付款'>主材预付款</option>
+									<option value='合同预付款'>合同预付款</option>
+									<option value='工程预付款'>工程预付款</option>
+									<option value='正林预付款'>正林预付款</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+						
+			      		<div class="form-group" id="refundSumDiv">
+							<label for="refundSum" class="col-md-3 control-label">余额</label>
+							<span class="col-md-9 block no-padding-right  ">
+								<input type="text" id="refundSum" class="col-md-5" disabled/>
+							</span>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" id="refundSumDiv">
+							<label for="refundSum" class="col-md-3 control-label">提现金额</label>
+							<span class="col-md-9 block no-padding-right  ">
+								<input type="text" id="refund" class="col-md-5"/>
+							</span>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" id="refundBankCardDiv" style="display: none;">
+							<label class="col-md-3 control-label no-padding-right" for="refundBankName">银行</label>
+							<div class="col-md-9">
+								<select id="refundBankName" class="col-md-5 bankSel"></select>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" >
+							<label class="col-md-3 control-label no-padding-right" for="des" >说明</label>
+							<div class="col-md-9">
+								<textarea id="outDes" class="col-md-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
+							</div>
+						</div>
+					</form>
+      			</div>
+      			
+				<div class="modal-footer ">
+					<span id="outPaymentInfo" class="alert-danger pull-left inline"></span>
+					<button type="button" id="cashOut_collectBtn" class="btn btn-primary">提现</button>
+		        	<button type="button" id="cashOut_cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+  	
+  	<div class="modal fade" id="convertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">预付款转换</h4>
+      			</div>
+      			<div class="modal-body">
+      				<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="convertLeftSel">预转换</label>
+							<div class="col-sm-9">
+								<select id="convertLeftSel" class="col-xs-10 col-sm-5 convertTypeSel">
+									<option value='主材预付款'>主材预付款</option>
+									<option value='合同预付款'>合同预付款</option>
+									<option value='工程预付款'>工程预付款</option>
+									<option value='正林预付款'>正林预付款</option>
+								</select>
+								<span class="label label-lg label-yellow arrowed" style="margin-top:3px;"></span>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="convertRightSel">被转换</label>
+							<div class="col-sm-9">
+								<select id="convertRightSel" class="col-xs-10 col-sm-5 convertTypeSel">
+									<option value='主材预付款'>主材预付款</option>
+									<option value='合同预付款'>合同预付款</option>
+									<option value='工程预付款'>工程预付款</option>
+									<option value='正林预付款'>正林预付款</option>
+								</select>
+								<span class="label label-lg label-yellow arrowed" style="margin-top:3px;"></span>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+						
+			      		<div class="form-group">
+							<label for="convertCash" class="col-md-3 control-label">转换金额</label>
+							<span class="col-md-9 block no-padding-right">
+								<input type="text" id="convertCash" class="col-md-6 v_required v_float" data-toggle="popover" data-trigger='manual' style='width:166px;'/>
+								<span style='height:34px; line-height:34px;'>&nbsp;元</span>
+							</span>
+						</div>
+						<div class="space-4 "></div>
+						
+						<div style='color:red;text-align:center;' id='convertMsg'></div>
+					</form>
+      			</div>
+      			
+				<div class="modal-footer ">
+					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+					<button type="button" id="convertBtn" class="btn btn-primary">转换</button>
+		        	<button type="button" id="convertCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+  	
+  	<div class="modal fade" id="historyEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">预付款信息</h4>
+      			</div>
+      			<div class="modal-body">
+      				<form class="form-horizontal" role="form">
+      					<div style='color:red;text-align:center;display:none;' class='wrongRecharge'>修改后总金额与原有预付款金额不等.</div>
+	      				<div class="block clearfix">
+							<label class="col-md-3 control-label" >付款方式</label>
+							<label class="inline">
+								<input disabled type="checkbox" class="ace historyEditItem" checked="checked" id="cashCheckbox_h"/>
+								<span class="lbl"> 现金</span>
+							</label>
+							<label class="inline">
+								<input disabled type="checkbox" class="ace historyEditItem" id="bankCheckbox_h"/>
+								<span class="lbl"> 刷卡</span>
+							</label>
+							<label class="inline">
+								<input disabled type="checkbox" class="ace historyEditItem" id="checkvCheckbox_h"/>
+								<span class="lbl"> 转账</span>
+							</label>
+							<label class="inline">
+								<input disabled type="checkbox" class="ace historyEditItem" id="installmentCheckbox_h"/>
+								<span class="lbl"> 分期</span>
+							</label>
+							<label class="inline">
+								<input disabled type="checkbox" class="ace historyEditItem" id="accountsCheckbox_h"/>
+								<span class="lbl"> 对公账户</span>
+							</label>
+						</div>
+						<div class="space-4 "></div>
+						<div class="space-4 "></div>
+						
+						<div class="form-group" >
+							<label class="col-md-3 control-label no-padding-right" for="des_h" >说明</label>
+							<div class="col-md-9">
+								<textarea disabled id="des_h" class="col-md-6 historyEditItem" rows="3"></textarea>
+							</div>
+						</div>
+						
+	      				<div id="cashDiv_h" referCheckbox="cashCheckbox_h">
+	      					<h4 class="header blue bolder smaller">现金</h4>
+				      		<div class="form-group">
+								<label for="cash_h" class="col-md-3 control-label">现金金额</label>
+								<span class="col-md-9 block no-padding-right">
+									<input disabled type="text" id="cash_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<span class='star'></span>
+								</span>
+							</div>
+						</div>
+						
+						<div id="bankDiv_h" referCheckbox="bankCheckbox_h" style='display: none'>
+							<h4 class="header blue bolder smaller">银行卡</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="swipeBankName_h">开户行</label>
+								<div class="col-sm-9">
+									<select disabled id="swipeBankName_h" class="col-xs-10 col-sm-5 bankSel v_required historyEditItem" data-toggle="popover" data-trigger='manual'></select>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="swipe_h" >刷卡金额</label>
+								<div class="col-sm-9">
+									<input disabled type="text" id="swipe_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+							<div class="form-group" >
+								<label class="col-md-3 control-label no-padding-right" for="swipeDes_h" >刷卡备注</label>
+								<div class="col-md-9">
+									<textarea disabled id="swipeDes_h" class="col-md-6 v_required v_swipeDes historyEditItem" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
+									<span class='star'></span>
+								</div>
+								<div style='color:red;margin:0 10px;'>说明：请分别输入金额及刷卡时间并以#分割,例如:1000&20141112 111111#5000&20141112 111111</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+							
+						<div id="checkvDiv_h" referCheckbox="checkvCheckbox_h" style='display: none'>
+							<h4 class="header blue bolder smaller">转账</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="checkBankName_h">银行</label>
+								<div class="col-sm-9">
+									<select disabled id="checkBankName_h" class="col-xs-10 col-sm-5 bankSel v_required historyEditItem" data-toggle="popover" data-trigger='manual'></select>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="checkPay_h">转账金额</label>
+								<div class="col-sm-9">
+									<input disabled type="text" id="checkPay_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+						
+						<div id="installmentDiv_h" referCheckbox="installmentCheckbox_h" style='display: none'>
+							<h4 class="header blue bolder smaller">分期</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="installmentBankName_h">银行</label>
+								<div class="col-sm-9">
+									<select disabled id="installmentBankName_h" class="col-xs-10 col-sm-5 bankSel v_required historyEditItem" data-toggle="popover" data-trigger='manual'></select>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="installment_h">分期金额</label>
+								<div class="col-sm-9">
+									<input disabled type="text" id="installment_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+						
+						<div id="accountsDiv_h" referCheckbox="accountsCheckbox_h" style='display: none'>
+							<h4 class="header blue bolder smaller">对公账户</h4>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="accountsBankName_h">银行</label>
+								<div class="col-sm-9">
+									<select disabled id="accountsBankName_h" class="col-xs-10 col-sm-5 bankSel v_required historyEditItem" data-toggle="popover" data-trigger='manual'></select>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="accounts_h">对公金额</label>
+								<div class="col-sm-9">
+									<input disabled type="text" id="accounts_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<span class='star'></span>
+								</div>
+							</div>
+							<div class="space-4 "></div>
+						</div>
+					</form>
+      			</div>
+      			
+				<div class="modal-footer ">
+					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+					<button type="button" id="historySaveBtn" class="btn btn-primary">确认</button>
+		        	<button type="button" id="historyCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/payment/payment.js?version=' + versionCode);
+</script>

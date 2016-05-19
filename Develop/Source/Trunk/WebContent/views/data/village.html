@@ -1,0 +1,117 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listgrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="villageModal" tabindex="-1" role="dialog" aria-labelledby="villageDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="villageDialog">楼盘</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="villageId">楼盘编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="villageId" maxlength="10" class="col-xs-10 col-sm-6 v_required v_villageId" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="villageName">楼盘名称</label>
+							<div class="col-sm-9">
+<!-- 								<input class="col-xs-10 col-sm-6 v_required v_villageName input-mask-villageName" type="text" id="villageName" data-toggle="popover" data-trigger='manual'/> -->
+								<input class="col-xs-10 col-sm-6 v_required v_name" maxlength="20" type="text" id="villageName" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="buildingNameRule">楼号规则</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="nameRuleSel" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cityProper">所在城市</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="citySel" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cityProper">所在城区</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="cityProperSel" data-toggle="popover" data-trigger='manual'></select>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="developer">开发商</label>
+							<div class="col-sm-9">
+								<input type="text" id="developer" maxlength="20" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="salesPhone">售楼电话</label>
+							<div class="col-sm-9">
+								<input type="text" id="salesPhone" maxlength="15" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="deliveryTime">交付时间</label>
+							<div class="col-sm-9">
+								<div class="input-group col-xs-10 col-sm-6 no-padding">
+									<input class="form-control date-picker" id="deliveryTime" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual' />
+									<span class="input-group-addon">
+										<i class="icon-calendar bigger-110"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="villageContent">说明</label>
+							<div class="col-sm-9">
+								<textarea id="villageContent" maxlength="512" class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/data/village.js?version=' + versionCode);
+</script>

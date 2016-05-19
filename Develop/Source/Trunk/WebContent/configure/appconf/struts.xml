@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.convention.action.includeJars" value=".*?/fanglin-*.*?jar(!/)?" /> <!-- 设置Convention插件需要搜索的jar包 -->
+
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.action.extension" value="do" />
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<constant name="struts.custom.i18n.resources" value="messageResource" />
+
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
+	<constant name="struts.multipart.maxSize" value="102400000000000" />
+	<!-- 设置上传文件的临时文件夹,默认使用javax.servlet.context.tempdir -->
+	<constant name="struts.multipart.saveDir " value="/upload/tmp" />
+
+	<package name="import" extends="json-default,struts-default">
+		<!-- 这里可以设置一些全局的返回值映射关系等 -->
+
+		<interceptors>
+			<interceptor name="accessInterceptor" class="com.fanglin.core.interceptor.AccessInterceptor" />
+			<interceptor-stack name="accessItctStack">
+				<interceptor-ref name="accessInterceptor" >
+					<param name="exception.logEnabled">false</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">false</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="accessItctStack" />
+		<global-results>
+			<result name="error">operateError.do</result>
+			<result name="login">login.do</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception">
+			</exception-mapping>
+		</global-exception-mappings>
+
+	</package>
+
+
+	<package name="base" extends="json-default,struts-default">
+		<!-- 这里可以设置一些全局的返回值映射关系等 -->
+
+		<interceptors>
+			<interceptor name="accessInterceptor" class="com.fanglin.core.interceptor.AccessInterceptor" />
+			<interceptor-stack name="accessItctStack">
+				<interceptor-ref name="accessInterceptor" >
+					<param name="exception.logEnabled">false</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">false</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="accessItctStack" />
+		<global-results>
+			<result name="error">operateError.do</result>
+			<result name="login">login.do</result>
+		</global-results>
+	</package>
+
+
+	<package name="login" extends="json-default,struts-default">
+		<interceptors>
+			<interceptor-stack name="accessItctStack">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">ERROR</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="accessItctStack" />
+		<global-results>
+			<result name="error">operateError.do</result>
+			<result name="login">login.do</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception">
+			</exception-mapping>
+		</global-exception-mappings>
+	</package>
+</struts>

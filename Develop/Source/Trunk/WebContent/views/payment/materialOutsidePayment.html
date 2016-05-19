@@ -1,0 +1,196 @@
+<div id="materialOutsidePaymentContent" class="page-content">
+	<div id="fl-statement"></div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#materialOutsidePaymentList" >主材收款</a>
+					</li>
+
+					<li class="">
+						<a data-toggle="tab" href="#history" id="historyReduceSalaryTab">历史收款</a>
+					</li>
+				</ul>
+				<div class="tab-content ">
+					<div id="materialOutsidePaymentList" class="tab-pane in active">
+						<div id="searchDiv"></div>
+						<table id="listGrid"></table>
+						<div id="gridPager"></div>
+			
+					</div>
+					<div id="history" class="tab-pane in active">
+
+						<div id="searchMaterialOutsidePaymentHistoryDiv"></div>
+						<table id="listMaterialOutsidePaymentHistoryGrid"></table>
+						<div id="gridMaterialOutsidePaymentHistoryPager"></div>
+
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="baseItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+		      			<div class="modal-header">
+		        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        			<h4 class="modal-title" id="myModalLabel">付款信息</h4>
+		      			</div>
+		      			<div class="modal-body">
+		      				<form class="form-horizontal" role="form">
+		      				<div class="block clearfix">
+								<label class="col-md-3 control-label" >付款方式</label>
+								<label class="inline">
+									<input type="checkbox" class="ace" checked="checked" id="cashCheckbox" key="cash" select="1">
+									<span class="lbl"> 现金</span>
+								</label>
+								<label class="inline">
+									<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="1">
+									<span class="lbl"> 刷卡</span>
+								</label>
+								<label class="inline">
+									<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
+									<span class="lbl"> 转账</span>
+								</label>
+								<label class="inline">
+									<input type="checkbox" class="ace" id="installmentCheckbox" key="installment" select="1">
+									<span class="lbl"> 分期</span>
+								</label>
+								<label class="inline">
+									<input type="checkbox" class="ace" id="accountsCheckbox" key="accounts" select="1">
+									<span class="lbl"> 对公账户</span>
+								</label>
+							</div>
+								<div id="infoDiv">
+									<h4 class="header blue bolder smaller">基本信息</h4>
+									<div class="form-group" >
+										<label class="col-sm-3 control-label no-padding-right" for="referMoney" >应收金额</label>
+										<div class="col-md-9">
+											<input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' />
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									<div class="form-group" >
+										<label class="col-sm-3 control-label no-padding-right" for="des" >说明</label>
+										<div class="col-md-9">
+											<textarea id="des" class="col-md-6 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+							
+			      				<div id="cashDiv" class="hide">
+			      					<h4 class="header blue bolder smaller">现金</h4>
+			      					<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
+										<div class="col-sm-9">
+											<select id="cashInfo" class="col-xs-10 col-sm-5"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+						      		<div class="form-group">
+										<label for="cash" class="col-sm-3 control-label no-padding-right" >现金金额</label>
+										<span class="col-md-9 block no-padding-right  ">
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' />
+										</span>
+									</div>
+									<div class="space-4"></div>
+								</div>
+								
+								<div id="bankDiv" class="hide">
+									<h4 class="header blue bolder smaller">银行卡</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="bankName">开户行</label>
+										<div class="col-sm-9">
+											<select id="bankName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="bank" >刷卡金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="bank" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									
+								</div>
+									
+								<div id="checkvDiv" class="hide">
+									<h4 class="header blue bolder smaller">转账</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="checkvBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="checkvBankName" class="col-xs-10 col-sm-5"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="checkv" >转账金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="checkv" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									
+								</div>
+								
+								<div id="installmentDiv" class="hide">
+									<h4 class="header blue bolder smaller">分期</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="installmentBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="installmentBankName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+											</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="installment" >分期金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="installment" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									
+								</div>
+								
+								<div id="accountsDiv" class="hide">
+									<h4 class="header blue bolder smaller">对公账户</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="accountsBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="accountsBankName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+											</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="accounts" >对公金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="accounts" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+							</form>
+		      			</div>
+		      			
+						<div class="modal-footer">
+							<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+							<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				      	</div>
+		    		</div>
+		  		</div>
+		  	</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/payment/materialOutsidePayment.js?version=' + versionCode);
+</script>

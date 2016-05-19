@@ -1,0 +1,119 @@
+<div id="materialOrderPreBalancePageContent" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="materialOrderPreBalanceCalModal" tabindex="-1" role="dialog" aria-labelledby="materialOrderPreBalanceCalModalDialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="materialOrderPreBalanceCalModalDialog">订单点数</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="oldBase">原底价</label>
+						<div class="col-sm-9">
+							<input type="text" id="oldBase" class="col-xs-10 col-sm-4 v_required" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="oldPoint">原点数</label>
+						<div class="col-sm-9">
+							<input type="text" id="oldPoint" class="col-xs-10 col-sm-4 v_required" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="caclType">修改点数</label>
+						<div class="col-sm-9">
+							<select id="caclType" class="col-xs-10 col-sm-4 v_required" data-toggle="popover" data-trigger='manual'></select>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="value">修改值</label>
+						<div class="col-sm-9">
+							<input type="text" id="value" class="col-xs-10 col-sm-4 v_required" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default"
+					data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="materialOrderMalingModal" tabindex="-1" role="dialog" aria-labelledby="materialOrderMalingDialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="materialOrderMalingDialog">订单点数</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="malingTotal">抹零总数</label>
+						<div class="col-sm-9">
+							<input type="text" id="malingTotal" class="col-xs-10 col-sm-4 v_required" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="oldMaling">原抹零</label>
+						<div class="col-sm-9">
+							<input type="text" id="oldMaling" class="col-xs-10 col-sm-4 v_required" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="oldVenderMaling">原厂商抹零</label>
+						<div class="col-sm-9">
+							<input type="text" id="oldVenderMaling" class="col-xs-10 col-sm-4 v_required" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="venderMaling">修改厂商抹零</label>
+						<div class="col-sm-9">
+							<input type="text" id="venderMaling" class="col-xs-10 col-sm-4 v_required" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="saveMalingBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelMalingBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/material/materialOrderPreBalance.js?version=' + versionCode);
+</script>

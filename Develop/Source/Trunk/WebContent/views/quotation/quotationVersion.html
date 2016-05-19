@@ -1,0 +1,113 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listGrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="qtModal" tabindex="-1" role="dialog"	aria-labelledby="quotationVersionDialog" aria-hidden="true"  data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="quotationVersionDialog">报价版本</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="versionId">编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="versionId" class="col-xs-10 col-sm-5 v_required v_versionId" data-toggle="popover" data-trigger='manual' maxlength="6"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right " for="versionName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="versionName" class="col-xs-10 col-sm-5 v_name v_required" data-toggle="popover" data-trigger='manual' maxlength="30"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right " for="versionDes">信息</label>
+							<div class="col-sm-9">
+								<textarea id="versionDes" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="defaultFlag">默认</label>
+							<div class="col-sm-9">
+								<input type="checkbox" id="defaultFlag" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="copyVersionModal" tabindex="-1" role="dialog"	aria-labelledby="copyVersionDialog" aria-hidden="true"  data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="copyVersionDialog">报价版本</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="copyVersionId">编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="copySourceVersionId" class="hide">
+								<input type="text" id="copyVersionId" class="col-xs-10 col-sm-5 v_required v_versionId" data-toggle="popover" data-trigger='manual' maxlength="6"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right " for="copyVersionName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="copyVersionName" class="col-xs-10 col-sm-5 v_name v_required" data-toggle="popover" data-trigger='manual' maxlength="30"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right " for="copyVersionDes">信息</label>
+							<div class="col-sm-9">
+								<textarea id="copyVersionDes" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveCopyVersionBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelCopyVersionBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/quotation/quotationVersion.js?version=' + versionCode);
+</script>

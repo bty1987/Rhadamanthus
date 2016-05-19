@@ -1,0 +1,23 @@
+
+#!/bin/bash
+
+echo 'baity'
+
+DATE=`date +%Y%m%d`
+database=platform
+
+mkdir -p /usr/local/Destroy/
+sh /home/fanglin/bin/mysqlbackup.sh
+
+mv /home/fanglin/backup/db/$database$DATE.tar.gz /usr/local/Destroy/destroy.tar.gz
+
+#rm -rf /home/fanglin/backup/db/
+#rm -rf /home/fanglin/ROOT/
+
+service tomcat stop
+service mysql stop
+service nginx stop
+
+chkconfig --del tomcat
+chkconfig --del mysql
+chkconfig --del nginx

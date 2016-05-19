@@ -1,0 +1,58 @@
+
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="searchDiv"></div>
+			<table id="listgrid"></table>
+			<div id="gridPager"></div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="businessRegionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">业务大区</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="businessRegionId">业务大区编号</label>
+							<div class="col-sm-9">
+								<input type="text" maxlength="10" id="businessRegionId" class="col-xs-10 col-sm-6 v_businessRegion v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="businessRegionName">业务大区名称</label>
+							<div class="col-sm-9">
+								<input type="text" maxlength="32" id="businessRegionName" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="businessRegionDes">描述</label>
+							<div class="col-sm-9">
+								<textarea id="businessRegionDes" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+      			</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/department/businessRegion.js?version=' + versionCode);
+</script>
