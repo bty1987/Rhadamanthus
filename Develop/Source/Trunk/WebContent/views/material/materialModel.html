@@ -1,41 +1,6 @@
 <div class="page-content">
 	<div class="row">
 		<div class="col-xs-12">
-			<!--TODO-->
-
-			<style>
-				.item-list.fl-table-list h3.oid{
-					margin-top: 0;
-				}
-
-				.item-list.fl-table-list small{
-					font-size: .9em;
-				}
-
-				ul.fl-inline-list li{
-					display: inline-block;
-					float: left;
-					padding-right: 20px;
-					font-size: 14px;
-				}
-
-				.fl-page-wrap{
-					max-width: 500px;
-					margin: 30px auto 50px;
-				}
-
-				.fl-page-wrap .pager{
-					margin-top: 0;
-					margin-bottom: 0;
-				}
-				.fl-page-wrap .pager-info{
-					line-height: 32px;
-				}
-
-				.status-lbl:before {
-					content: "\a0启\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0禁" !important;
-				}
-			</style>
 
 			<!-- 查询条件-->
 			<div id="condList" class="fl_search clearfix"></div>
@@ -62,8 +27,6 @@
 					</li>
 				</ul>
 			</div>
-			<!--END OF TODO-->
-
 		</div>
 	</div>
 	
@@ -185,8 +148,5 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/utils/condition.js?version=' + versionCode);
-	$.getScript(hostServer + 'js/utils/searcher.js?version=' + versionCode);
-	$.getScript(hostServer + 'js/material/materialModel1.js?version=' + versionCode);
-
+	$.getScript(hostServer + 'js/material/materialModel.js?version=' + versionCode);
 </script>
