@@ -96,6 +96,11 @@ ul.fl-inline-list li{
     margin-top: 0;
     margin-bottom: 0;
 }
+
 .fl-page-wrap .pager-info{
     line-height: 32px;
+}
+
+.status-lbl:before {
+	content: "\a0启\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0禁" !important;
 }

@@ -16,12 +16,10 @@ $(function(){
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
-
                 });
 
                 $ul.appendTo($tableWrap);
             }
-
         };
 
         var creatLine = function(v){
@@ -32,7 +30,6 @@ $(function(){
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -50,7 +47,6 @@ $(function(){
                 ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "grey"]
             ];
 
-
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -63,7 +59,6 @@ $(function(){
             $divBtnWrap.append($btnEdit).append($btnDelete).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
-
 
             $btnEdit.click(function(){
                 materialModel.$nowLine = $liLine;
@@ -94,8 +89,6 @@ $(function(){
             return $liLine;
         };
 
-
-
         return {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
@@ -111,9 +104,6 @@ $(function(){
     var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId'];
 
     Searcher.init( _condArr, "condList", api.material.pageMaterialModel, displayFunc, "resultList", "materialModelPostData");
-
-
-
 
     var materialModel = {
         $nowLine : null,
@@ -187,7 +177,6 @@ $(function(){
             }
         }
     };
-
 
     $.extend(com.validator, materialModel.validator);
 
@@ -300,17 +289,4 @@ $(function(){
     }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
