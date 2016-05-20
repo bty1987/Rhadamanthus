@@ -4,13 +4,16 @@
 
 var Condition = function(){
 
+
     var _condRules = {
+
+
         //例子 autofill
         designer : {
             label : "设计师",//中文名
             type : "autofill",//类型
             submitConfig : {//向后台提交的配置
-                name : "",//接口中的参数名
+                name : "designer",//接口中的参数名
                 op : "cn",//查询方式
                 validate: null//校验规则
             },
@@ -27,7 +30,7 @@ var Condition = function(){
             label:"订单编号",
             type:"text",
             submitConfig : {
-                name : "",
+                name : "orderId",
                 op : "eq",
                 validate:{
                     "reg" : /^[0-9]*$/,
@@ -40,7 +43,7 @@ var Condition = function(){
             label:"设计中心",
             type:"select",
             submitConfig : {
-                name : "",
+                name : "designerRegionId",
                 op : "eq",
                 validate:null
             },
@@ -57,11 +60,51 @@ var Condition = function(){
             label:"量尺时间",
             type:"dateRangePicker",
             submitConfig : {
-                name : "account.assistant.orderId",
+                name : "createTimeDateRange",
                 op : "cn",
                 validate:null
             }
         },
+
+
+        //数据-主材-型号 页面的各种查询条件
+        materialModelNo : { //
+            label:"编号",
+            type:"text",
+            submitConfig : {
+                name : "materialModelNo",
+                op : "cn",
+                validate : null
+            }
+        },
+
+        materialModelName : { //
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "materialModelName",
+                op : "cn",
+                validate : null
+            }
+        },
+
+        materialTypeId : {
+            label:"品类",
+            type:"select",
+            submitConfig : {
+                name : "materialTypeId",
+                op : "cn",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.data.queryCategory,
+                postData:{},
+                listPath: "categorys",
+                keyPath:"cid",
+                valuePath:"categoryName"
+            }
+        },
+
 
         //人事-员工 页面的各种查询条件
 
@@ -69,7 +112,7 @@ var Condition = function(){
             label:"员工号",
             type:"text",
             submitConfig : {
-                name : "",
+                name : "userId",
                 op : "eq",
                 validate:null
             }
@@ -78,7 +121,7 @@ var Condition = function(){
             label : "姓名",
             type : "autofill",
             submitConfig : {
-                name : "",
+                name : "userName",
                 op : "cn",
                 validate: null
             },
@@ -94,7 +137,7 @@ var Condition = function(){
             label:"身份证号",
             type:"text",
             submitConfig : {
-                name : "",
+                name : "identity",
                 op : "eq",
                 validate:null
             }
@@ -104,7 +147,7 @@ var Condition = function(){
             label:"角色",
             type:"select",
             submitConfig : {
-                name : "",
+                name : "roleId",
                 op : "eq",
                 validate:null
             },
@@ -120,7 +163,7 @@ var Condition = function(){
             label:"部门类型",
             type:"select",
             submitConfig : {
-                name : "",
+                name : "deptType",
                 op : "eq",
                 validate:null
             },
@@ -136,7 +179,7 @@ var Condition = function(){
             label:"设计中心",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "deptId",
                 op : "eq",
                 validate:null
             },
@@ -152,7 +195,7 @@ var Condition = function(){
             label:"设计中心",
             type:"select",
             submitConfig : {
-                name : "",
+                name : "status",
                 op : "eq",
                 validate:null
             },
@@ -164,29 +207,31 @@ var Condition = function(){
                 valuePath:null
             }
         },
+
+
         //装修订单-设计 页面的各种查询条件
         village : {
             label:"楼盘",
             type:"autofill",
             submitConfig : {
-                name : "",
-                op : "cn",
+                name : "village",//TODO
+                op : "cn",//TODO
                 validate:null
             },
             dataSource : {
                 url : api.data.queryVillageForNameByPinyin,
-                postData:{},
-                listPath: "autoFillKeyValue",
-                keyPath:"key",
-                valuePath:"value"
+                postData:{},//TODO
+                listPath: "autoFillKeyValue",//TODO
+                keyPath:"key",//TODO
+                valuePath:"value"//TODO
             }
         },
         houseNumber : {
             label:"楼号",
             type:"text",
             submitConfig : {
-                name : "",
-                op : "cn",
+                name : "houseNumber",//TODO
+                op : "cn",//TODO
                 validate:null
             }
         },
@@ -194,7 +239,7 @@ var Condition = function(){
             label:"面积",
             type:"text",
             submitConfig : {
-                name : "",
+                name : "houseArea",//TODO
                 op : "eq",
                 validate:null
             }
@@ -203,7 +248,7 @@ var Condition = function(){
             label:"客户电话",
             type:"text",
             submitConfig : {
-                name : "",
+                name : "customerPhone",//TODO
                 op : "cn",
                 validate:{
                     "reg" : /^[0-9]*$/,
@@ -215,7 +260,7 @@ var Condition = function(){
             label:"业务员",
             type : "autofill",
             submitConfig : {//向后台提交的配置
-                name : "account.assistant.salesman.uid",//接口中的参数名
+                name : "salesman",//接口中的参数名
                 op : "cn",//查询方式
                 validate:null
             },
@@ -232,7 +277,7 @@ var Condition = function(){
             label:"设计部",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "designerDepartmentId",
                 op : "eq",
                 validate:null
             },
@@ -248,7 +293,7 @@ var Condition = function(){
             label:"业务中心",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "salesmanRegionId",
                 op : "eq",
                 validate:null
             },
@@ -264,7 +309,7 @@ var Condition = function(){
             label:"业务部",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "salesmanDepartmentId",
                 op : "eq",
                 validate:null
             },
@@ -280,7 +325,7 @@ var Condition = function(){
             label:"签单时间",
             type:"dateRangePicker",
             submitConfig : {
-                name : "account.assistant.orderId",
+                name : "signTimeDateRange",
                 op : "cn",
                 validate:null
             }
@@ -289,7 +334,7 @@ var Condition = function(){
             label:"房屋类型",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "houseClass",
                 op : "eq",
                 validate:null
             },
@@ -305,7 +350,7 @@ var Condition = function(){
             label:"状态",
             type:"select",
             submitConfig : {
-                name : "account.assistant.salesman.uid",
+                name : "status",
                 op : "eq",
                 validate:null
             },
@@ -317,38 +362,7 @@ var Condition = function(){
                 valuePath:"value"
             }
         },
-        customerName : {
-            label : "姓名",
-            type : "autofill",
-            submitConfig : {
-                name : "",
-                op : "cn",
-                validate: null
-            },
-            dataSource : {
-                url : api.data.queryCustomerForName,
-                postData:{},
-                listPath: "autoFileCustomer",
-                keyPath:"key",
-                valuePath:"value"
-            }
-        },
-        relationshipType : {
-            label:"关系客户",
-            type:"select",
-            submitConfig : {
-                name : "",
-                op : "eq",
-                validate:null
-            },
-            dataSource : {//从后台取数据的各种配置
-                url : api.ds.customerInfo,
-                postData:{},
-                listPath: "relationshipType",
-                keyPath:"key",
-                valuePath:"value"
-            }
-        }
+
     };
     return {
         getRuleByCondName:function(condName){
