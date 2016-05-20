@@ -3,42 +3,30 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '5891c62c274cc9c95255c0fdcc543a1e986c972b'
-    oldFile: !uuid '790991fc29f6f6fc6601a5a58594bd2755d7195d'
+    newFile: !uuid '980823ecf92072c359d4a184e7435da57c5c2a34'
+    oldFile: !uuid '5891c62c274cc9c95255c0fdcc543a1e986c972b'
   /Develop/Source:
-    newFile: !uuid 'ccab97e50a16eb00c8a67236baefd8899d0369a5'
-    oldFile: !uuid 'c68275681a3e18d33ffeb140f87616c734909743'
+    newFile: !uuid '33dcd8405df28e95f694c5b880df964e5936ac83'
+    oldFile: !uuid 'ccab97e50a16eb00c8a67236baefd8899d0369a5'
   /Develop/Source/Trunk:
-    newFile: !uuid 'e19510b9fc8d6c2f42e0d8b1d7fc72215d6b1ce9'
-    oldFile: !uuid '7f1122d5e996931c05c2f105e782cd6d40852e67'
+    newFile: !uuid '004da685d5fec3f16826d9a0a39b8b56528c0675'
+    oldFile: !uuid 'e19510b9fc8d6c2f42e0d8b1d7fc72215d6b1ce9'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '20de470f6521945bcdb65bcf620b1eb59e84f08d'
-    oldFile: !uuid '86985360e86d6f3f760e5001e367c98f580e663c'
-  /Develop/Source/Trunk/WebContent/css:
-    newFile: !uuid '4b89bf3cba11db7af92816ee21fedc1f6443e552'
-    oldFile: !uuid '863bc1f71c1c17375c3d0ca00c46648234649f28'
-  /Develop/Source/Trunk/WebContent/css/main.css:
-    newFile: !uuid '9570b2365db84d100eac2d68c5f66b92a8c51e8d'
-    oldFile: !uuid '862716c2ac40323da9f0510e3fcdc67bb677f161'
+    newFile: !uuid '896e0222d597881336fcda7205197c77e318d383'
+    oldFile: !uuid '20de470f6521945bcdb65bcf620b1eb59e84f08d'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '31013d0fbc0a19db7ec873d19be32ccbf482427f'
-    oldFile: !uuid 'bac9e2cb0dfe986d37f5b2628b647fc1a628db8c'
-  /Develop/Source/Trunk/WebContent/js/material:
-    newFile: !uuid '5b94bf2906e17e42898ab4fec25c0e029d93dc54'
-    oldFile: !uuid '0fb4c825317d9aeeb1d7e5ac7bb3abe43276d6c9'
-  /Develop/Source/Trunk/WebContent/js/material/materialModel.js:
-    newFile: !uuid '17864e440d67f329eb6735fbad3c99343db1c4e6'
-    oldFile: !uuid 'c02f8725eaef64b41644137066e6a9e2c49b1adf'
-  /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '3f58c041bb081c005d9e9df53f6f0d838580cbb8'
-    oldFile: !uuid 'd8a2969ad02977ee214c5da0b9635d71714cf910'
-  /Develop/Source/Trunk/WebContent/views/material:
-    newFile: !uuid 'dbefe5e162c2c96afd592367b9dbd3165d5eb240'
-    oldFile: !uuid '68f6d143dfa473c5c87d3aaf0991f68d8caa3fc9'
-  /Develop/Source/Trunk/WebContent/views/material/materialModel.html:
-    newFile: !uuid '282c5bb7028ba0674ec876820d4b8d2e86ab4ae6'
-    oldFile: !uuid '91e8ab75ece8c2acb872a681493fd1ca0f077b55'
-gitCommitId: !uuid '73d2c00a1f79b89cc198bb9e29d79e3634473ae5'
+    newFile: !uuid '6c00c7bf4734e0b8d7fad8aecd94567211714b2e'
+    oldFile: !uuid '31013d0fbc0a19db7ec873d19be32ccbf482427f'
+  /Develop/Source/Trunk/WebContent/js/com:
+    newFile: !uuid 'e91b012766c5d0dd7a4b501dec4c826e9ea43f68'
+    oldFile: !uuid '3e13f72279241b56ddbc33a9fb5ae2ba948a1113'
+  /Develop/Source/Trunk/WebContent/js/com/api.js:
+    newFile: !uuid 'e7fd9d72b2cd1876378c175dd019da3bcf521871'
+    oldFile: !uuid '219a833868149239745b819d4a4b2111419bf45e'
+  /Develop/Source/Trunk/WebContent/js/com/utils.js:
+    newFile: !uuid 'e10ddd2d7ab58c993a61e3782c47dc2d39c8876f'
+    oldFile: !uuid 'bbb59a9bc19b0451bb959ee0b0b9d21c90f1ef7b'
+gitCommitId: !uuid '6b829651d5c0064648a17d20f19e816097cb8ae4'
 renames: {
   }
-revisionId: 7
+revisionId: 8
