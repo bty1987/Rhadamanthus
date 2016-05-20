@@ -44,16 +44,4 @@ public class UserService {
 		return JSON.parseObject(json.toJSONString(), User.class);
 	}
 	
-	public static void main(String[] args) {
-		
-		String str = "{\"deviceId\":\"2c246e7546ee4a3f041c2b872b453f79\",\"errcode\":0,\"errmsg\":\"ok\",\"is_sys\":true,\"sys_level\":2,\"userid\":\"FL-00479\"}";
-		
-		JSONObject result = JSON.parseObject(str);
-		
-		User user = JSON.parseObject(result.toJSONString(), User.class);
-		
-		System.out.println(user.toString());
-		
-	}
-
 }
