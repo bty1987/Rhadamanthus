@@ -3,30 +3,33 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '980823ecf92072c359d4a184e7435da57c5c2a34'
-    oldFile: !uuid '5891c62c274cc9c95255c0fdcc543a1e986c972b'
+    newFile: !uuid '52303693aff387601cb81315c44d75d1024e6f7a'
+    oldFile: !uuid '980823ecf92072c359d4a184e7435da57c5c2a34'
   /Develop/Source:
-    newFile: !uuid '33dcd8405df28e95f694c5b880df964e5936ac83'
-    oldFile: !uuid 'ccab97e50a16eb00c8a67236baefd8899d0369a5'
+    newFile: !uuid 'c2be1f4e7e7398cdbc3f441f0b7bee81957af704'
+    oldFile: !uuid '33dcd8405df28e95f694c5b880df964e5936ac83'
   /Develop/Source/Trunk:
-    newFile: !uuid '004da685d5fec3f16826d9a0a39b8b56528c0675'
-    oldFile: !uuid 'e19510b9fc8d6c2f42e0d8b1d7fc72215d6b1ce9'
-  /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '896e0222d597881336fcda7205197c77e318d383'
-    oldFile: !uuid '20de470f6521945bcdb65bcf620b1eb59e84f08d'
-  /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '6c00c7bf4734e0b8d7fad8aecd94567211714b2e'
-    oldFile: !uuid '31013d0fbc0a19db7ec873d19be32ccbf482427f'
-  /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid 'e91b012766c5d0dd7a4b501dec4c826e9ea43f68'
-    oldFile: !uuid '3e13f72279241b56ddbc33a9fb5ae2ba948a1113'
-  /Develop/Source/Trunk/WebContent/js/com/api.js:
-    newFile: !uuid 'e7fd9d72b2cd1876378c175dd019da3bcf521871'
-    oldFile: !uuid '219a833868149239745b819d4a4b2111419bf45e'
-  /Develop/Source/Trunk/WebContent/js/com/utils.js:
-    newFile: !uuid 'e10ddd2d7ab58c993a61e3782c47dc2d39c8876f'
-    oldFile: !uuid 'bbb59a9bc19b0451bb959ee0b0b9d21c90f1ef7b'
-gitCommitId: !uuid '6b829651d5c0064648a17d20f19e816097cb8ae4'
+    newFile: !uuid '5ea8270d306af3f9a336d5192efc1478705432e2'
+    oldFile: !uuid '004da685d5fec3f16826d9a0a39b8b56528c0675'
+  /Develop/Source/Trunk/src:
+    newFile: !uuid '5a2dee35a04f70f9d03b5e93429e599dbc19f259'
+    oldFile: !uuid '2170fcaeff2b60ac36590e8e0231b09872624beb'
+  /Develop/Source/Trunk/src/com:
+    newFile: !uuid '3a14405dcc10775565cb27549e0fb18f7d06db83'
+    oldFile: !uuid 'fc32cf58386afe8f6b45b8161eaeadd8bf2259d5'
+  /Develop/Source/Trunk/src/com/fanglin:
+    newFile: !uuid '8af1882f36e0e3110ecb3de56c151d184d58b1d6'
+    oldFile: !uuid '2d40fbb202931977b5f8e92bf6089aafb2f4e6ce'
+  /Develop/Source/Trunk/src/com/fanglin/dingding:
+    newFile: !uuid '348b92076048ca26ebbd057320ecafd75e00c07b'
+    oldFile: !uuid '75dfc76f8353fa956d1b6fe26516b9cd51afc563'
+  /Develop/Source/Trunk/src/com/fanglin/dingding/service:
+    newFile: !uuid '195de6464298036508200227f94476f26ba1f711'
+    oldFile: !uuid '7a99bae9dfda3a6d785aa42db62dc6002026cacc'
+  /Develop/Source/Trunk/src/com/fanglin/dingding/service/UserService.java:
+    newFile: !uuid '23826b9fcd30be6ed8611a1798e3f00f7cd079dd'
+    oldFile: !uuid '8bdd4d24a6f31bc14b61a806cef12abae8739808'
+gitCommitId: !uuid '81b6c01c6390b4ee622a3528dc46d18683aa5d35'
 renames: {
   }
-revisionId: 8
+revisionId: 9
