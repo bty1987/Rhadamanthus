@@ -18,6 +18,9 @@ var Searcher = (function(){
         var $condWrap = $('#'+ searchId);
         var $searchBtn = $('<button></button>').addClass('btn btn-xs btn-info btn-search').html('查询');
 
+
+
+
         condCodeArrs && condCodeArrs.length &&(
             $.each(condCodeArrs,function(i,val){
                 var condRule = Condition.getRuleByCondName(val);
@@ -31,6 +34,7 @@ var Searcher = (function(){
                 $searchBtn.click(function(){
                     $('#pagenation').hide();
 
+                    //TODO URL
                     paging.nowPage["paging.page"] = 0;
                     paging.nowPostParams = null;
                     var _params = paging.getParams(searchId);
@@ -53,8 +57,10 @@ var Searcher = (function(){
      * */
     var createCondItem = function(condCode, condRule){
 
+
         var $item = $('<span></span>').addClass('inline');
         var $label = $('<label></label>');
+
 
         var $showItem,$valueItem;
 
@@ -81,6 +87,7 @@ var Searcher = (function(){
                 "data-rqs" : _rname,
                 "data-op" : _rop
             }).appendTo($item);
+            //TODO
             // $line.addClass("text");
         }
 
@@ -89,8 +96,10 @@ var Searcher = (function(){
                 "type" : "text",
                 "placeholder" : "请输入" + _rlabel,
                 "name" : condCode,
-                "data-op" : _rop
+                "data-op" : _rop,
+                "data-rqs" : _rname
             }).appendTo($item);
+
 
             $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
                 $(this).next().focus();
@@ -104,7 +113,8 @@ var Searcher = (function(){
                 "placeholder" : "请输入" + _rlabel,
                 "name" : condCode,
                 "autocomplete" : "off",
-                "data-op" : _rop
+                "data-op" : _rop,
+                "data-rqs" : _rname
             }).appendTo($item);
 
             $showItem.typeahead({
@@ -121,6 +131,7 @@ var Searcher = (function(){
                     this.process(this.options.list);
                 }
             });
+
         }
 
         if(_rtype == "select"){
@@ -128,7 +139,8 @@ var Searcher = (function(){
             $showItem = $('<select></select>').attr({
                 "name" : condCode,
                 "data-rqs" : _rname,
-                "data-op" : _rop
+                "data-op" : _rop,
+                "data-rqs" : _rname
             }).append('<option value="">全部</option>').appendTo($item);
 
 
@@ -145,6 +157,7 @@ var Searcher = (function(){
                     })
                 );
             }, null, false);
+            //TODO
             //$line.addClass("select");
         }
 
@@ -157,7 +170,7 @@ var Searcher = (function(){
     var paging = {
         condCodeArrs : null,
         nowPage : {
-            "paging.page" : 0,
+            "paging.page" : 1,
             "paging.rows" : 10,
             "paging.totalRecords" : 0,
             "paging.totalPage" : 0
@@ -176,6 +189,7 @@ var Searcher = (function(){
             _condArr && _condArr.length &&(
                 $.each(_condArr,function(i,val){
                     var $input = $('[name=' + val + ']', '#'+ searchId);
+                    var _postName = $input.attr("data-rqs");
                     var _rule = Condition.getRuleByCondName( val);
                     var _reg = _rule.submitConfig.validate;
                     var _inputValue = $input.val();
@@ -197,7 +211,7 @@ var Searcher = (function(){
                             }else{
                                 $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
                                 _params['filters[' + _count + '].data'] = _inputValue;
-                                _params['filters[' + _count + '].field'] = val;
+                                _params['filters[' + _count + '].field'] = _postName;
                                 _params['filters[' + _count + '].op'] = _op;
                                 _count +=1;
                             }
