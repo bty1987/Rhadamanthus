@@ -3,33 +3,201 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '52303693aff387601cb81315c44d75d1024e6f7a'
-    oldFile: !uuid '980823ecf92072c359d4a184e7435da57c5c2a34'
+    newFile: !uuid '24f533ddf73a6a871fe24b5f67ca37cf18d41716'
+    oldFile: !uuid '52303693aff387601cb81315c44d75d1024e6f7a'
   /Develop/Source:
-    newFile: !uuid 'c2be1f4e7e7398cdbc3f441f0b7bee81957af704'
-    oldFile: !uuid '33dcd8405df28e95f694c5b880df964e5936ac83'
+    newFile: !uuid '02d70bb271dcb1d44b8c6d5de1e8fbd2a3d156da'
+    oldFile: !uuid 'c2be1f4e7e7398cdbc3f441f0b7bee81957af704'
   /Develop/Source/Trunk:
-    newFile: !uuid '5ea8270d306af3f9a336d5192efc1478705432e2'
-    oldFile: !uuid '004da685d5fec3f16826d9a0a39b8b56528c0675'
+    newFile: !uuid 'c980fd17f0fe789f2046759db645102605a0dad9'
+    oldFile: !uuid '5ea8270d306af3f9a336d5192efc1478705432e2'
+  /Develop/Source/Trunk/.classpath:
+    newFile: !uuid 'bb5ce44247e2eaae6f056aa05f208418ed199c53'
+    oldFile: !uuid 'ce4f8b90bee3c604576d285b91397c95881fa89c'
+  /Develop/Source/Trunk/WebContent:
+    newFile: !uuid '7679e24045b927a7664dbd907e29adb5bdca5dff'
+    oldFile: !uuid '896e0222d597881336fcda7205197c77e318d383'
+  /Develop/Source/Trunk/WebContent/WEB-INF:
+    newFile: !uuid '9a45e4e5017b5494a3cc619b3fcb058940c3c1ed'
+    oldFile: !uuid '5252ad795f2813ccc601955dbb895f38f877446f'
+  /Develop/Source/Trunk/WebContent/WEB-INF/lib:
+    newFile: !uuid '6ce18666820bc5cb289eb85419d188392a538418'
+    oldFile: !uuid 'd2cdb9a10fc77e7f66c2ee52f5ab4ea24766491b'
+  /Develop/Source/Trunk/WebContent/WEB-INF/lib/core-3.1.0.jar:
+    newFile: !uuid '63c228a9b7c0c2b9ce0d2a862c853a02a20db778'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/WEB-INF/lib/javase-1.7.jar:
+    newFile: !uuid 'a7d0a1738b29116f09163189d94d507b879ea161'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/css:
+    newFile: !uuid '5db2e00896c4d78c26d7b39ae1f5032973089850'
+    oldFile: !uuid '4b89bf3cba11db7af92816ee21fedc1f6443e552'
+  /Develop/Source/Trunk/WebContent/css/main.css:
+    newFile: !uuid 'a4bb8600c4fd2bd8bae165da19a782aa02bf73f0'
+    oldFile: !uuid '9570b2365db84d100eac2d68c5f66b92a8c51e8d'
+  /Develop/Source/Trunk/WebContent/db:
+    newFile: !uuid '18b52c44eb957e8f21f89a87b8a2820a16612d51'
+    oldFile: !uuid 'c56478e23d17e702f9014bceb6aee8a3e935b87e'
+  /Develop/Source/Trunk/WebContent/db/platform.sql:
+    newFile: !uuid '38e78ee59a2a371babcf00484ba66da4c14e1ab1'
+    oldFile: !uuid '25ff18d602327d1901165cbefe75d75b20b2c2ac'
+  /Develop/Source/Trunk/WebContent/db/update.sql:
+    newFile: !uuid '73d2f740af669fdcb9314447861573c2ac40e6b2'
+    oldFile: !uuid '01efb0985fd19ffc479fa6cc3ff0eaa70b32a6c5'
+  /Develop/Source/Trunk/WebContent/dingding:
+    newFile: !uuid '2b8f1f4765f347a0c00f95e61f558d2c2880b786'
+    oldFile: !uuid 'aae422845c51d673d656e559cbae70a0d5e13acb'
+  /Develop/Source/Trunk/WebContent/dingding/approval:
+    newFile: !uuid '368716e14b80106475269142dd304675ef04df93'
+    oldFile: !uuid '4c4aadae2b29f7dc97f55ab73acab9b7385d5eac'
+  /Develop/Source/Trunk/WebContent/dingding/approval/approval.js:
+    newFile: !uuid 'dfa8ee24a3343be128a4410b22e142f6c1712030'
+    oldFile: !uuid '65435811c07ff670cc4e7b95355c7b31f96fbcd1'
+  /Develop/Source/Trunk/WebContent/dingding/login:
+    newFile: !uuid '18019e1b22cb1003a5954f1d4769ccb1042e840c'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/dingding/login/login.html:
+    newFile: !uuid '82fc286e615d831f70a87db71139d63f0446f89f'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/dingding/login/login.js:
+    newFile: !uuid '4533cef7588e8b2d53505b898f7f4c23558f620e'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/dlogin.html:
+    newFile: !uuid 'e6086afec0adc69d3e89d069200dcd5d4d571a24'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid 'f7b4cf71ac2a3e7be6472f391f10c9b84d2c19e5'
+    oldFile: !uuid '6c00c7bf4734e0b8d7fad8aecd94567211714b2e'
+  /Develop/Source/Trunk/WebContent/js/com:
+    newFile: !uuid '1e5fc04262a55d51432afebdc93722cb4b5089ea'
+    oldFile: !uuid 'e91b012766c5d0dd7a4b501dec4c826e9ea43f68'
+  /Develop/Source/Trunk/WebContent/js/com/api.js:
+    newFile: !uuid 'd61a1998d1338060a217b394c0b1c59924ce5c64'
+    oldFile: !uuid 'e7fd9d72b2cd1876378c175dd019da3bcf521871'
+  /Develop/Source/Trunk/WebContent/js/com/condition.js:
+    newFile: !uuid 'b5dd687ddf59ebd366911a6f945e4f6fe78fb9a0'
+    oldFile: !uuid '269497630c136ce09a301c826a28ff0cd29c772b'
+  /Develop/Source/Trunk/WebContent/js/com/searcher.js:
+    newFile: !uuid 'd5de870626bcdbff1dc78471b9994623bcbac09e'
+    oldFile: !uuid '19b84ee417ddc4024feb3462b0c3c18fbef2cc9e'
+  /Develop/Source/Trunk/WebContent/js/data:
+    newFile: !uuid '1863a2197b7c58f39a595a01728e84bca7c6f98e'
+    oldFile: !uuid '14a98ddf8801f27779bc612da01364371c9dffb6'
+  /Develop/Source/Trunk/WebContent/js/data/village.js:
+    newFile: !uuid 'b846d6425949418094657b82c415b28386422a5f'
+    oldFile: !uuid 'bc222c2d6152185c514d8eba16e4bc8400fb0ead'
+  /Develop/Source/Trunk/WebContent/js/dlogin.js:
+    newFile: !uuid '7ee8042f33498494494c39fded4f95840ba8c0f2'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/js/login.js:
+    newFile: !uuid 'b15a4f49bc073083682e8bc007650b3837c26f6a'
+    oldFile: !uuid '88cebb90b9c58e9c4b8043f3a1690d27d0bae3a9'
+  /Develop/Source/Trunk/WebContent/main.html:
+    newFile: !uuid '10ec12d15e16a2217756b33b154907b552b492ee'
+    oldFile: !uuid '35cef14c04026db05fc52fe0c55e8e5b06c09d6d'
+  /Develop/Source/Trunk/WebContent/views:
+    newFile: !uuid '42065054618dcafbe6442b26053b4af01e4dabfe'
+    oldFile: !uuid '3f58c041bb081c005d9e9df53f6f0d838580cbb8'
+  /Develop/Source/Trunk/WebContent/views/data:
+    newFile: !uuid '50b0b78b14b5ae66818591f076f5a234949a3caf'
+    oldFile: !uuid '5a5522562c6a3424f9c7aef0b2821b03116a4f62'
+  /Develop/Source/Trunk/WebContent/views/data/village.html:
+    newFile: !uuid 'ddbd63d9f6c97e3bce24d5199b3733386ee27bd1'
+    oldFile: !uuid 'e0f2fe1a7b37f312ea3e1aa84ea4cd5af35265ae'
   /Develop/Source/Trunk/src:
-    newFile: !uuid '5a2dee35a04f70f9d03b5e93429e599dbc19f259'
-    oldFile: !uuid '2170fcaeff2b60ac36590e8e0231b09872624beb'
+    newFile: !uuid 'c3156c26248e4c273a42310221e48c2310f4413d'
+    oldFile: !uuid '5a2dee35a04f70f9d03b5e93429e599dbc19f259'
   /Develop/Source/Trunk/src/com:
-    newFile: !uuid '3a14405dcc10775565cb27549e0fb18f7d06db83'
-    oldFile: !uuid 'fc32cf58386afe8f6b45b8161eaeadd8bf2259d5'
+    newFile: !uuid '0860acf3ba028eaea29c31f478ae09a72ed3718e'
+    oldFile: !uuid '3a14405dcc10775565cb27549e0fb18f7d06db83'
   /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid '8af1882f36e0e3110ecb3de56c151d184d58b1d6'
-    oldFile: !uuid '2d40fbb202931977b5f8e92bf6089aafb2f4e6ce'
+    newFile: !uuid '65a1f2c90440e33c5b9675e425d3eb588229ab6a'
+    oldFile: !uuid '8af1882f36e0e3110ecb3de56c151d184d58b1d6'
+  /Develop/Source/Trunk/src/com/fanglin/common:
+    newFile: !uuid '4ab9762d383370163493d3eb07e3f45db1c10f7e'
+    oldFile: !uuid 'fc989a4686374a2d82f1babc8025409b093ad3da'
+  /Develop/Source/Trunk/src/com/fanglin/common/action:
+    newFile: !uuid 'd4da87b961509c3ef8834b3adb07900d190007d9'
+    oldFile: !uuid '68134fd7b77e3aa88c2f39215623b17c1ad4249e'
+  /Develop/Source/Trunk/src/com/fanglin/common/action/LoginAction.java:
+    newFile: !uuid 'cb1ffe2d3c33b86a15890f0e5e773e040765c67a'
+    oldFile: !uuid 'e7a51b92b1d392c0663da7321a070c926b66605e'
+  /Develop/Source/Trunk/src/com/fanglin/common/action/LoginInfoAction.java:
+    newFile: !uuid 'c4eda8570d474f332e91759a2bb21fc35792de6f'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/action/UploadAction.java:
+    newFile: null
+    oldFile: !uuid 'd19fdbc9eb91802cf4b7ea873b0a51cee6a09d43'
+  /Develop/Source/Trunk/src/com/fanglin/common/dao:
+    newFile: !uuid '1eac2cb098fced136e2c52ea440605761e63f89b'
+    oldFile: !uuid '9f94f835ac1080467941b0074f6f58c5981d2153'
+  /Develop/Source/Trunk/src/com/fanglin/common/dao/LoginInfoDao.java:
+    newFile: !uuid '06293c3158b98d7693ecfc549eeaf522bad0f3ba'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/dao/impl:
+    newFile: !uuid 'fce8f048463077f3fd8e10483d3072304c0b2dea'
+    oldFile: !uuid '8bd926b3e82f19279ae46481fbaf23d38078b8ae'
+  /Develop/Source/Trunk/src/com/fanglin/common/dao/impl/LoginInfoDaoImpl.java:
+    newFile: !uuid 'f6cdfd072c6b478bf4e4801b85a3cbd8a590d760'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/po:
+    newFile: !uuid '61fb87d90504e67fa62e5e4b52e38ea00a4d31df'
+    oldFile: !uuid '13b5f0937163e258e0253fb3eb207d03f034043b'
+  /Develop/Source/Trunk/src/com/fanglin/common/po/LoginInfoPO.java:
+    newFile: !uuid '7f12ffb02db3ed5e737ef3f66cb7e55eacf85955'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/service:
+    newFile: !uuid 'd086f1325524bdcfae53be9c98074b3ee2a4e18a'
+    oldFile: !uuid '568e0473b3ee6a757ba2dc4e404ac655e4bd9ebe'
+  /Develop/Source/Trunk/src/com/fanglin/common/service/LoginInfoService.java:
+    newFile: !uuid '497d317c50c2a9d11320dfc539f8ca29d0f471c2'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/service/impl:
+    newFile: !uuid '9c27d4c147619d5bb1e80e79135cc6f4783bfab6'
+    oldFile: !uuid '2547e767af2e809fa9f596b635d818478b05d35b'
+  /Develop/Source/Trunk/src/com/fanglin/common/service/impl/LoginInfoServiceImpl.java:
+    newFile: !uuid 'cc437991f20f2853f55cf188ef02b6cffdd02b2e'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/common/vo:
+    newFile: !uuid '24abcabb3ca9b5abd3d4859f735e074554faeb23'
+    oldFile: !uuid 'bc00a41798b1ab17f83411ea17efc285aea5feaf'
+  /Develop/Source/Trunk/src/com/fanglin/common/vo/LoginInfoVO.java:
+    newFile: !uuid '19d5915b817db859129caeec97c313abc72a12c0'
+    oldFile: null
+  /Develop/Source/Trunk/src/com/fanglin/core:
+    newFile: !uuid '9406d41cffd58a4e5fadebd060810b452b9de4ab'
+    oldFile: !uuid '5463dace2aacdbc81758586a9f992d5d056f10cf'
+  /Develop/Source/Trunk/src/com/fanglin/core/interceptor:
+    newFile: !uuid '88091a307d7b1fe8203759d1319aeaea67f9f557'
+    oldFile: !uuid '44f56c9f133d720baeb87ed4f3e4b508878a3b30'
+  /Develop/Source/Trunk/src/com/fanglin/core/interceptor/AccessInterceptor.java:
+    newFile: !uuid '71998058a71fc9cc4e9f142a6990b3d682106371'
+    oldFile: !uuid '809c7c7215e3774e242f6dc131985bd2e08c708a'
   /Develop/Source/Trunk/src/com/fanglin/dingding:
-    newFile: !uuid '348b92076048ca26ebbd057320ecafd75e00c07b'
-    oldFile: !uuid '75dfc76f8353fa956d1b6fe26516b9cd51afc563'
-  /Develop/Source/Trunk/src/com/fanglin/dingding/service:
-    newFile: !uuid '195de6464298036508200227f94476f26ba1f711'
-    oldFile: !uuid '7a99bae9dfda3a6d785aa42db62dc6002026cacc'
-  /Develop/Source/Trunk/src/com/fanglin/dingding/service/UserService.java:
-    newFile: !uuid '23826b9fcd30be6ed8611a1798e3f00f7cd079dd'
-    oldFile: !uuid '8bdd4d24a6f31bc14b61a806cef12abae8739808'
-gitCommitId: !uuid '81b6c01c6390b4ee622a3528dc46d18683aa5d35'
+    newFile: !uuid '00f5e23ccbd71708212e61e21f38638a2b32f987'
+    oldFile: !uuid '348b92076048ca26ebbd057320ecafd75e00c07b'
+  /Develop/Source/Trunk/src/com/fanglin/dingding/utils:
+    newFile: !uuid '06b6273eecdf173fe4937cd04365a4cf23a3100f'
+    oldFile: !uuid 'a3ba56994eee11780dd2f96aadd13ba9d9de6b8d'
+  /Develop/Source/Trunk/src/com/fanglin/dingding/utils/HttpHelper.java:
+    newFile: !uuid '9c9112ce1a0fcbac909fe6f34ab95a656183a7cd'
+    oldFile: !uuid 'e974974a59ab8c3d83493d1a74d192a93d7629d5'
+  /Develop/Source/Trunk/src/com/fanglin/log:
+    newFile: !uuid '4dfcdef2ded56b9e20ab0521ab9eb64083749222'
+    oldFile: !uuid '19633807ae5eb48bd77ffa56db9e1935a2f8a0b8'
+  /Develop/Source/Trunk/src/com/fanglin/log/vo:
+    newFile: !uuid '668dc792f2666e0925087df1b04629d3373003ba'
+    oldFile: !uuid '9f9b982606b643b7a107c1e6c92363c839be6fe8'
+  /Develop/Source/Trunk/src/com/fanglin/log/vo/LoginLogVO.java:
+    newFile: !uuid 'ad23b9e9bc2d91f24b6d43e6c7946e4ec11e9a6a'
+    oldFile: !uuid 'd61c5f51f9ec229634bdb359cee5b151b3f76e21'
+  /Develop/Source/Trunk/src/com/fanglin/utils:
+    newFile: !uuid '17d99dade53582e99c079ce1e2cbd69f85de4296'
+    oldFile: !uuid 'ee69b39b8976a167eb346c152285fa844448d6de'
+  /Develop/Source/Trunk/src/com/fanglin/utils/QRCodeUtil.java:
+    newFile: !uuid '55540cb4087e91831e10d8f4f1e751ab299f685c'
+    oldFile: null
+gitCommitId: !uuid '2e0ee61bca6c64e50e3283912ccab9179efb2161'
 renames: {
   }
-revisionId: 9
+revisionId: 10
