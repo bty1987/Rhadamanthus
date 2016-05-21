@@ -47,7 +47,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
 		List<String> passLogNames = Arrays.asList(new String[]{"index", "doLogin", "login", "logout", "verifyCode"});
-		List<String> passActionNames = Arrays.asList(new String[]{"index", "doLogin", "loginM", "getConfig", "requestAuthCode", "noperateAuthority", "timeout", "operateError"});
+		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
 		
 		String userId = "";
 		String result = Action.LOGIN;
@@ -73,6 +73,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 		
 		AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
 		Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
+		
+		System.out.println(actionName);
 		
 		try {
 			if(passActionNames.contains(actionName) || authenticationUtil.isMobile()){

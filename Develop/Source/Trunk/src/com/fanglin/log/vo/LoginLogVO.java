@@ -28,6 +28,17 @@ public class LoginLogVO implements Serializable {
 	@SerializedName("登录结果")
 	private int successFlag;
 
+	public LoginLogVO() {
+		super();
+	}
+
+	public LoginLogVO(String loginId, String sourceIp, Timestamp loginTime) {
+		super();
+		this.loginId = loginId;
+		this.loginTime = loginTime;
+		this.sourceIp = sourceIp;
+	}
+
 	public Long getLlId() {
 		return llId;
 	}

@@ -1,8 +1,8 @@
 jQuery(function($) {
 	var loginurl = "login.do";
-	if(window.location.href.indexOf("login.do") == -1){
-		window.parent.location.href= loginurl ;
-	}
+//	if(window.location.href.indexOf("login.do") == -1){
+//		window.parent.location.href= loginurl ;
+//	}
 	
 	$("#Verify").click(function(){
 		$(this).attr("src","verifyCode.do?timestamp="+ new Date().getTime());
@@ -34,7 +34,7 @@ function login() {
 		dataType: "json",
 		url: "doLogin.do",
 		data: {
-			userId: $("#userId").val(),
+			userId: $("#userId").val(), 
 			password: $("#password").val(),
 			verifyCode: $("#nowCode").val()
 		},

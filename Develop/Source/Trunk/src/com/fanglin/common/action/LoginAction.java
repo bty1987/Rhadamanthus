@@ -72,10 +72,7 @@ public class LoginAction extends BaseListAction {
 				throw new FLException(110001, "验证码错误");
 			}else{
 				
-				LoginLogVO loginLogVO = new LoginLogVO();
-				loginLogVO.setLoginId(loginId);
-				loginLogVO.setSourceIp(ip);
-				loginLogVO.setLoginTime(DateUtil.getDateToTimestamp(new Date()));
+				LoginLogVO loginLogVO = new LoginLogVO(loginId, ip, DateUtil.getDateToTimestamp(new Date()));
 				
 				int times = loginLogService.isCanLogin(loginLogVO);
 				if(times == -1){
@@ -85,7 +82,7 @@ public class LoginAction extends BaseListAction {
 				UserVO user = userService.validateUser(loginId, password);
 				if(user == null){
 					
-					String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times-1)));
+					String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times - 1)));
 					
 					loginLogVO.setSuccessFlag(0);
 					loginLogService.addLoginLog(loginLogVO);
@@ -114,42 +111,6 @@ public class LoginAction extends BaseListAction {
 					
 					loginLogVO.setSuccessFlag(1);
 					loginLogService.addLoginLog(loginLogVO);
-				}
-			}
-		} catch (FLException e) {
-			setErrorCode(e.getCode());
-			setErrorMsg(e.getErrorMessage());
-		} catch (Exception e) {
-			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
-		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "loginM", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String loginM(){
-		
-		String loginId = request.getParameter("userId");
-		String password = request.getParameter("password");
-		
-		try {
-			UserVO user = userService.validateUser(loginId, password);
-			
-			if(user == null){
-				throw new FLException(110002, "用户名或者密码错误");
-			}else{
-				
-			    if(user.getIsLogin().equals("否")){
-			        throw new FLException(110004, "该用户不能登陆系统");
-			    }
-			    
-			    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true);
-			    
-				try {
-					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
-				} catch (Exception e) {
-					throw new FLException(110000, "系统处理问题");
 				}
 			}
 		} catch (FLException e) {
@@ -221,7 +182,7 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "logout", results = { @Result(name = "success", type = "dispatcher", location = "/login.html") })
+	@Action(value = "logout", results = { @Result(name = "success", type = "dispatcher", location = "/") })
 	public String logout(){
 
 		try {

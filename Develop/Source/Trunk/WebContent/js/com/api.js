@@ -207,6 +207,8 @@ var api = {
 		
 	}, common: {
 		
+		QRCode: {url: "QRCode.do"},
+		
 		createTree: {url: "createTree.do"},
 		
 		logout: {url: "logout.do"},

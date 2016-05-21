@@ -102,10 +102,8 @@ var Approval = (function(){
 			$a.append($wrap).appendTo($li);
 
 			return $li;
-
 		}
 	};
-
 
 	return {
 		init: function(authentication, user){
@@ -127,8 +125,6 @@ var Approval = (function(){
 						$('.infinite-scroll-preloader').remove()
 				) ;
 			})
-
-
 		},
 		getList : function(){
 			var page = parseInt(paging.page.page) == parseInt(paging.page.totalPage) ? null : parseInt(paging.page.page) + 1;
@@ -160,13 +156,9 @@ $(function(){
 
 		$(page).on('infinite', function() {
 			Approval.getList();
-
 		});
 	});
 
 	$.init();
 });
-
-
-
 
