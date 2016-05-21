@@ -22,6 +22,18 @@ CREATE TABLE decorationorderstatusright (
   PRIMARY KEY (dosrId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
 
+DROP TABLE IF EXISTS logininfo;
+CREATE TABLE logininfo (
+  liId int(11) NOT NULL AUTO_INCREMENT,
+  loginFlag varchar(32) NOT NULL,
+  code int(11) NOT NULL DEFAULT -1 COMMENT '-1 无确认, 0 成功 , 其他错误码',
+  message varchar(64) NOT NULL DEFAULT '',
+  authentication varchar(512) NOT NULL DEFAULT '',
+  optime bigint(20) NOT NULL,
+  PRIMARY KEY (liId),
+  KEY indexone (loginFlag)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='二维码登陆信息';
+
 alter table decorationorder change orderSupervisorId supervisorId varchar(15) DEFAULT NULL COMMENT '监理编号';
 
 alter table decorationorder change orderInspectionId inspectionId varchar(15) DEFAULT NULL COMMENT '巡检编号';

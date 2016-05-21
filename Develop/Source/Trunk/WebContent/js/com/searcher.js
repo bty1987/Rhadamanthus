@@ -18,9 +18,6 @@ var Searcher = (function(){
         var $condWrap = $('#'+ searchId);
         var $searchBtn = $('<button></button>').addClass('btn btn-xs btn-info btn-search').html('查询');
 
-
-
-
         condCodeArrs && condCodeArrs.length &&(
             $.each(condCodeArrs,function(i,val){
                 var condRule = Condition.getRuleByCondName(val);
@@ -240,7 +237,7 @@ var Searcher = (function(){
         },
         getDataByPage : function(url, _params, callBackFunc, tableId, historyName){
 
-            //todo _rpostParam
+
             com.post(url, _params, $.proxy(function(result){
                 this.nowPage["paging.page"] = result.paging.page;
                 this.nowPage["paging.rows"] = result.paging.rows;
@@ -326,7 +323,7 @@ var Searcher = (function(){
                 key.indexOf("field") != -1 && (
                     _pname = val,
                         _pvalue = _params[key.substring(0,key.length-5) + "data"],
-                        $('[name="'+ _pname +'"]',"#" + searchId).val(_pvalue)
+                        $('[data-rqs="'+ _pname +'"]',"#" + searchId).val(_pvalue)
                 );
             });
             jQuery.isEmptyObject( _params ) && ( _params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"] );

@@ -289,7 +289,7 @@ public class HttpHelper {
 				outputStream.close();
 				inputStream.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(String.format("%s - %s - %s", "HH", "E", e.getMessage()));
 			}
 		}
     }

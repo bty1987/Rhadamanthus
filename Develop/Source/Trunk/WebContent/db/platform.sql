@@ -1061,6 +1061,18 @@ CREATE TABLE inspectionrecord (
   KEY indexone (orderId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='巡检记录表';
 
+DROP TABLE IF EXISTS logininfo;
+CREATE TABLE logininfo (
+  liId int(11) NOT NULL AUTO_INCREMENT,
+  loginFlag varchar(32) NOT NULL,
+  code int(11) NOT NULL DEFAULT -1 COMMENT '-1 无确认, 0 成功 , 其他错误码',
+  message varchar(64) NOT NULL DEFAULT '',
+  authentication varchar(512) NOT NULL DEFAULT '',
+  optime bigint NOT NULL,
+  PRIMARY KEY (liId),
+  KEY indexone (loginFlag)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='二维码登陆信息';
+
 DROP TABLE IF EXISTS loginlog;
 CREATE TABLE loginlog (
   id varchar(32) NOT NULL,

@@ -65,9 +65,41 @@ var Condition = function(){
                 validate:null
             }
         },
-
-
-        //数据-主材-型号 页面的各种查询条件
+        //--------数据-楼盘
+        villageName :  {
+            label : "楼盘名称",
+            type : "autofill",
+            submitConfig : {
+                name : "villageName",
+                op : "cn",
+                validate: null
+            },
+            dataSource : {
+                url : api.data.queryVillageForNameByPinyin,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        cityId :  {
+            label:"所属城市",
+            type:"select",
+            submitConfig : {
+                name : "cityId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.system.queryCity,
+                postData:{},
+                listPath: "cityList",
+                keyPath: "cityId",
+                valuePath: "cityName"
+            }
+        },
+        cityProperId : null,
+        //---------数据-主材-型号 页面的各种查询条件
         materialModelNo : { //
             label:"编号",
             type:"text",
@@ -106,7 +138,7 @@ var Condition = function(){
         },
 
 
-        //人事-员工 页面的各种查询条件
+        //--------人事-员工 页面的各种查询条件
 
         userId : { //
             label:"员工号",
