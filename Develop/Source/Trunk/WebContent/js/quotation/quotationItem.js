@@ -67,7 +67,7 @@ $(function(){
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.autoId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.villageId, 1,function(){$statusSwitch.prop("checked")}));
+                $statusSwitch.prop("checked") ? (updateStatus(v.autoId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.autoId, 1,function(){$statusSwitch.prop("checked")}));
             });
 
             return $liLine;
@@ -77,7 +77,6 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -155,7 +154,6 @@ $(function(){
 
     $.extend(com.validator, quotationItem.validator);
 
-
     com.post(api.quotation.queryQuotationType, {},function(a) {
         quotationItem.data.quotationTypeData = a.quotationTypes;
         $("#quotationType").bindData(quotationItem.data.quotationTypeData, "id", "name");
@@ -197,6 +195,7 @@ $(function(){
 
     //编辑按钮
     function edit(b) {
+
         quotationItem.editFlg = !0;
         quotationItem.quotationItemItems.autoId.val(b.autoId);
         quotationItem.quotationItemItems.itemId.val(b.itemId);
@@ -244,9 +243,13 @@ $(function(){
 
     //启用禁用功能
     function updateStatus(id, status, failcallBack) {
+
+
+
+
         com.post(api.quotation.updateQuotationItemForStatus, {
             "quotationItem.autoId": id,
-            "village.status": status
+            "quotationItem.status": status
         }, function () {
 
         }, function () {
