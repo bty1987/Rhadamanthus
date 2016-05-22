@@ -3,36 +3,27 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'e54e6427c0d0fae51803477f29d1af83a09885e0'
-    oldFile: !uuid '1e3600418ec37285f5bcd4407387b0a961683dc0'
+    newFile: !uuid '5f8d79404fa9b08f3a05163d382ce11af04aa2a7'
+    oldFile: !uuid 'e54e6427c0d0fae51803477f29d1af83a09885e0'
   /Develop/Source:
-    newFile: !uuid '4aafdaec1758307b17dc66f95c815223d0b062e1'
-    oldFile: !uuid '7a15f70a51fbb328ea3172d72ae047903d32cc73'
+    newFile: !uuid '97d7412dee499f678049c2874c833f73861bb895'
+    oldFile: !uuid '4aafdaec1758307b17dc66f95c815223d0b062e1'
   /Develop/Source/Trunk:
-    newFile: !uuid 'abdb9fa7163e0dbec17d1974e856f28f96842b49'
-    oldFile: !uuid '26a04f36d752b9b2fbd088e9c553169e3c498570'
+    newFile: !uuid 'd6243db6a0ab4b32f684230998508172d69c9f58'
+    oldFile: !uuid 'abdb9fa7163e0dbec17d1974e856f28f96842b49'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '69299da33379456199ec7062a34cdaa86080f8f9'
-    oldFile: !uuid 'a2880b37f94959035fb6aaa81d3b58b03c855a8f'
+    newFile: !uuid 'aaba04e2938d650ed17912302e265fb784d8a34d'
+    oldFile: !uuid '69299da33379456199ec7062a34cdaa86080f8f9'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '13e063fd2da75598f96caa7924600a1cf27a9d6e'
-    oldFile: !uuid 'd6ee42605be26d345260a3ceef9eee4bc7210de5'
-  /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid '9092228a07ac1c7609baf5a96c603355eefea0a2'
-    oldFile: !uuid '1e5fc04262a55d51432afebdc93722cb4b5089ea'
-  /Develop/Source/Trunk/WebContent/js/com/config.js:
-    newFile: !uuid '53adc9dd7da5c7e897e1beee346169416c5352cd'
-    oldFile: !uuid '56b25aceb68732cdf92ce6fe9ac63231b7574796'
-  /Develop/Source/Trunk/WebContent/version.html:
-    newFile: !uuid 'a34e30bd7e565494fb761672ab40e4de74b11e0e'
-    oldFile: !uuid '7b36c571352333ed383b82e6d7eb66426db99cb5'
-  /Develop/Source/Trunk/conf:
-    newFile: !uuid 'c7ec82305ff31d7b087ce9f9bbc875d8d07e8195'
-    oldFile: !uuid 'cf86d6933aba68c003d0fa5a4694a55e08f2e608'
-  /Develop/Source/Trunk/conf/sysconfig.properties:
-    newFile: !uuid '09136aa8d0a74fc0d56bdc96a5ae46042a2ca422'
-    oldFile: !uuid '91915e4a9d3b62d34762d14c5f56b81b4da6c780'
-gitCommitId: !uuid '1bbda489b57c3c682dbfc575ea88d8fe6228e699'
+    newFile: !uuid '25e30c642211f1c331d2ae114715cdc28782cd8f'
+    oldFile: !uuid '13e063fd2da75598f96caa7924600a1cf27a9d6e'
+  /Develop/Source/Trunk/WebContent/js/quotation:
+    newFile: !uuid '98897e9777d5fd2a2980b7f2f33c9fe5ae9d0052'
+    oldFile: !uuid '92b086eca1cfc38e1be58bbea8e20ae886a68509'
+  /Develop/Source/Trunk/WebContent/js/quotation/quotationItem.js:
+    newFile: !uuid '557c3edb461e0f8a787e2477ff1559e240d6e5d0'
+    oldFile: !uuid '7a865bb69cdf49dce884bcd6c151e00965cd2bd6'
+gitCommitId: !uuid '315ed8270bfa189f7e948ba93cd544308d5ab883'
 renames: {
   }
-revisionId: 12
+revisionId: 13
