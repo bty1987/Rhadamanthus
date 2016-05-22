@@ -75,6 +75,14 @@ public class QuotationItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="updateQuotationItemForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateQuotationItemForStatus() throws FLException{
+		
+		quotationItemService.updateQuotationItemForStatus(quotationItem);
+		
+		return SUCCESS;
+	}
+	
 	public QuotationItemVO getQuotationItem() {
 		return quotationItem;
 	}

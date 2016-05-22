@@ -1,356 +1,265 @@
-var quotationItem = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancelBtn: null,
-	importBtn:null,
-	importCancelBtn:null,
-	modal: null,
-	quotationItemItems: {},
-	data: {
-		quotationTypeData:{},
-		quotationClassificationData: {},
-		quotationBigCategoryData: {},
-		quotationSmallCategoryData: {},
-		measurementUnitData: {},
-		workTypeData: {},
-		versionData: {}
-	},
-	
-	editFlag: false,
-	repeatFlg:false,
-	
-	validator: {
-		region: {
-			type: "v_itemId", 
-			regex: /^QI_\d{5}$/g,
-			errorMsg: "请以QI_作为前缀 , 之后以五个位数字组成(如QI_00001)."
-		}
-	}
-};
+$(function(){
 
-jQuery(function($) {
-	
-	quotationItem.listGrid = $("#listGrid");
-	quotationItem.gridPager = "#gridPager";
-	quotationItem.saveBtn = $("#saveBtn").on("click", saveData);
-	quotationItem.cancelBtn = $("#cancelBtn");
-	quotationItem.modal = $("#quotationItemModal");
-	quotationItem.importModal = $("#quotationItemImportModal");
-	quotationItem.importBtn = $("#importBtn").on("click", importItems);
-	quotationItem.importCancelBtn = $("#importCancelBtn");
-	quotationItem.quotationItemItems.itemId = $("#itemId").on("blur",function(){
-		$this = $(this);
-		
-		if($this.val() == ""){
-			return;
-		}
-		
-		var options = {
-			"quotationItem.itemId": $this.val(),
-			"quotationItem.versionId": $("#version").val(),
-		}
-		
-		com.post(api.quotation.queryQuotationItemByItemIdAVersionId, options, function(res){
-			if(res.quotationItem && res.quotationItem.itemId){
-				com.showTips($this, "该版本的项目编号已存在", true);
-				quotationItem.repeatFlg = true;
-			}else{
-				com.clearValidator("#itemId", true);
-				quotationItem.repeatFlg = false;
-			}
-		});
-	});
-	
-	quotationItem.quotationItemItems.autoId = $("#autoId");
-	quotationItem.quotationItemItems.quotationType = $("#quotationType");
-	quotationItem.quotationItemItems.quotationClassification = $("#quotationClassification");
-	quotationItem.quotationItemItems.quotationBigCategory = $("#quotationBigCategory");
-	quotationItem.quotationItemItems.quotationSmallCategory = $("#quotationSmallCategory");
-	quotationItem.quotationItemItems.itemName = $("#itemName");
-	quotationItem.quotationItemItems.measurementUnit = $("#measurementUnit");
-	quotationItem.quotationItemItems.workType = $("#workType");
-	quotationItem.quotationItemItems.quotationItemDes = $("#quotationItemDes");
-	quotationItem.quotationItemItems.unitPrice = $("#unitPrice");
-	quotationItem.quotationItemItems.version = $("#version").on("change",function(){
-		$this = $(this);
-		
-		if(quotationItem.quotationItemItems.itemId.val() == ""){
-			return;
-		}
-		
-		var options = {
-			"quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),
-			"quotationItem.versionId": $("#version").val(),
-		}
-		
-		com.post(api.quotation.queryQuotationItemByItemIdAVersionId, options, function(res){
-			if(res.quotationItem && res.quotationItem.itemId){
-				com.showTips(quotationItem.quotationItemItems.itemId, "该版本的项目编号已存在", true);
-				quotationItem.repeatFlg = true;
-			}else{
-				com.clearValidator("#itemId", true);
-				quotationItem.repeatFlg = false;
-			}
-		});
-	});
-	
-	quotationItem.quotationItemItems.importVersion = $("#importVersion");
-	
-	quotationItem.modal.on('shown.bs.modal', function(e){
-		com.clearValidator();
-		com.clearValidator("#itemId", true);
-		
-		if(quotationItem.editFlg == false){
-			quotationItem.quotationItemItems.quotationType.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.quotationClassification.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.quotationBigCategory.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.quotationSmallCategory.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.workType.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.measurementUnit.get(0).selectedIndex = 0;
-			quotationItem.quotationItemItems.version.get(0).selectedIndex = 0;
-		}
-	});
-	
-	quotationItem.importModal.on('shown.bs.modal', function(e){
-		$("#importVersion").get(0).selectedIndex = 0;
-	});
-	
-	quotationItem.importModal.on('hide.bs.modal', function(e){
-		com.clearValidator();
-		com.clearValidator("#itemId", true);
-	});
-	
-	$.extend(com.validator, quotationItem.validator);
-	
-	var searchOpts = {
-		url: api.quotation.pageQuotationItem,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: quotationItem.listGrid,
-		items: [
-	        {label:"名称",id:"itemNameSearch",name:"itemName", type:'text'},
-	        {label:"类型", id:"quotationTypeSearch", name:"quotationTypeId", type:"select",op:"eq"},
-	        {label:"分类", id:"quotationClassificationSearch", name:"quotationClassificationId", type:"select",op:"eq"},
-	        {label:"大类", id:"quotationBigCategorySearch", name:"quotationBigCategoryId", type:"select",op:"eq"},
-	        {label:"小类", id:"quotationSmallCategorySearch", name:"quotationSmallCategoryId", type:"select",op:"eq"},
-	        {label:"版本", id:"versionSearch", name:"versionId", type:"select",op:"eq"}
-	    ]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	bindQuotationItemPageSelect();
+    /**
+     * 回调函数必须提供 init(tableId, result.list)方法
+     * tableId ，用来显示的div的id
+     * result.list 列表的json数组
+     * */
+    var displayFunc  = (function(){
 
-	quotationItem.listGrid.jqGrid({		
-		url: api.quotation.pageQuotationItem.url,
-		colNames:['autoId','编号', '名称', '类型', '分类', '大类', '小类', '单位', '工种','类型', '分类', '大类', '小类', '单位', '版本', '工种', '说明', '单价', '版本'],
-		colModel:[
-		    {name:'autoId',hidden:true},
-			{name:'itemId', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'itemName', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'quotationType', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'quotationClassification', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'quotationBigCategory', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'quotationSmallCategory', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'measurementUnit', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'workType', search: true, searchoptions: {sopt: ["cn"]}},
-			{name:'quotationTypeId',hidden:true},
-			{name:'quotationClassificationId',hidden:true},
-			{name:'quotationBigCategoryId',hidden:true},
-			{name:'quotationSmallCategoryId',hidden:true},
-			{name:'measurementUnitId',hidden:true},
-			{name:'workTypeId',hidden:true},
-			{name:'versionId', hidden:true},
-			{name:'quotationItemDes'},
-			{name:'unitPrice'},
-			{name:'version', search: true, searchoptions: {sopt: ["cn"]}},
-		], 
-		rowNum:50,
-		rowList:[50,100,200],
-		pager : quotationItem.gridPager,
-		caption: "报价项信息列表"
-		
-	});
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-	quotationItem.listGrid.navGrid(quotationItem.gridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(quotationItem.gridPager,{
-		caption: "",
-		buttonicon: "icon-pencil blue",
-		title: "编辑",
-		onClickButton: function(){
-			quotationItem.editFlg = true;
-			var num = quotationItem.listGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.showSelectInfo(quotationItem.listGrid.attr("id"));
-				return;
-			}
-			
-			var row = quotationItem.listGrid.jqGrid("getRowData", num);
-			quotationItem.quotationItemItems.autoId.val(row.autoId);
-			quotationItem.quotationItemItems.itemId.val(row.itemId);
-			quotationItem.quotationItemItems.itemName.val(row.itemName);
-			quotationItem.quotationItemItems.quotationType.val(row.quotationTypeId); 
-			quotationItem.quotationItemItems.quotationClassification.val(row.quotationClassificationId); 
-			quotationItem.quotationItemItems.quotationBigCategory.val(row.quotationBigCategoryId); 
-			quotationItem.quotationItemItems.quotationSmallCategory.val(row.quotationSmallCategoryId); 
-			quotationItem.quotationItemItems.workType.val(row.workTypeId); 
-			quotationItem.quotationItemItems.measurementUnit.val(row.measurementUnitId); 
-			
-			quotationItem.quotationItemItems.quotationItemDes.val(row.quotationItemDes);
-			quotationItem.quotationItemItems.unitPrice.val(row.unitPrice);
-			quotationItem.quotationItemItems.version.val(row.versionId); 
-			quotationItem.quotationItemItems.itemId.prop("disabled", true);
-			quotationItem.quotationItemItems.version.prop("disabled", true);
-			quotationItem.modal.modal("show");
-		},
-		position: "first"
-	}).navButtonAdd(quotationItem.gridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "添加",
-		onClickButton: function(){
-			quotationItem.editFlg = false;
-			com.cleanItems(quotationItem.quotationItemItems);
-			quotationItem.quotationItemItems.itemId.prop("disabled", false);
-			quotationItem.quotationItemItems.version.prop("disabled", false);
-			quotationItem.modal.modal("show");
-		},
-		position: "first"
-	});
+            if(listData && listData.length){
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.itemName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+
+            var $btnStatus = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $span = $('<span></span>').addClass('lbl');
+
+            var propertyArr = [
+                ["编号:", v.itemId, "grey"],
+                ["类型:", v.quotationType, "grey"],
+                ["分类:", v.quotationClassification, "grey"],
+                ["大类:", v.quotationBigCategory, "grey"],
+
+                ["小类:", v.quotationSmallCategory, "grey"],
+                ["单位:", v.measurementUnit, "grey"],
+                ["工种:", v.workType, "grey"],
+                ["说明:", v.quotationItemDes, "grey"],
+                ["单价:", v.unitPrice, "grey"],
+                ["版本:", v.version, "grey"],
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $btnStatus.append($statusSwitch).append($span);
+
+            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnEdit.click(function(){
+                edit(v);
+            });
+
+            !v.status && $statusSwitch.prop("checked", true);
+            $statusSwitch.switchBtn("status-lbl").on("click",function() {
+                $statusSwitch.prop("checked") ? (updateStatus(v.autoId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.villageId, 1,function(){$statusSwitch.prop("checked")}));
+            });
+
+            return $liLine;
+        };
+
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+
+    var _condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'versionId'];
+
+    Searcher.init( _condArr, "condList", api.quotation.pageQuotationItem, displayFunc, "resultList", "villagePostData");
+
+    var quotationItem = {
+        saveBtn: $("#saveBtn").on("click", saveData),
+        cancelBtn: $("#cancelBtn"),
+        modal: $("#quotationItemModal").on("shown.bs.modal",function(a) {
+            com.clearValidator();
+            com.clearValidator("#itemId", !0);
+            0 == quotationItem.editFlg && (quotationItem.quotationItemItems.quotationType.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationClassification.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationBigCategory.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationSmallCategory.get(0).selectedIndex = 0, quotationItem.quotationItemItems.workType.get(0).selectedIndex = 0, quotationItem.quotationItemItems.measurementUnit.get(0).selectedIndex = 0, quotationItem.quotationItemItems.version.get(0).selectedIndex = 0)
+        }),
+        quotationItemItems: {
+            itemId: $("#itemId").on("blur", function () {
+                $this = $(this);
+                if ("" != $this.val()) {
+                    var b = {
+                        "quotationItem.itemId": $this.val(),
+                        "quotationItem.versionId": $("#version").val()
+                    };
+                    com.post(api.quotation.queryQuotationItemByItemIdAVersionId, b,function (a) {
+                            a.quotationItem && a.quotationItem.itemId ? (com.showTips($this, "\u8be5\u7248\u672c\u7684\u9879\u76ee\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationItem.repeatFlg = !0) : (com.clearValidator("#itemId", !0), quotationItem.repeatFlg = !1)
+                    })
+                }
+            }),
+            autoId: $("#autoId"),
+            quotationType: $("#quotationType"),
+            quotationClassification: $("#quotationClassification"),
+            quotationBigCategory: $("#quotationBigCategory"),
+            quotationSmallCategory: $("#quotationSmallCategory"),
+            itemName: $("#itemName"),
+            measurementUnit: $("#measurementUnit"),
+            workType: $("#workType"),
+            quotationItemDes: $("#quotationItemDes"),
+            unitPrice: $("#unitPrice"),
+            version: $("#version").on("change",function () {
+                $this = $(this);
+                if ("" != quotationItem.quotationItemItems.itemId.val()) {
+                    var b = {
+                        "quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),
+                        "quotationItem.versionId": $("#version").val()
+                    };
+                    com.post(api.quotation.queryQuotationItemByItemIdAVersionId, b, function (a) {
+                        a.quotationItem && a.quotationItem.itemId ? (com.showTips(quotationItem.quotationItemItems.itemId, "\u8be5\u7248\u672c\u7684\u9879\u76ee\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationItem.repeatFlg = !0) : (com.clearValidator("#itemId", !0), quotationItem.repeatFlg = !1)
+                    })
+                }
+            }),
+        },
+        data: {
+            quotationTypeData: {},
+            quotationClassificationData: {},
+            quotationBigCategoryData: {},
+            quotationSmallCategoryData: {},
+            measurementUnitData: {},
+            workTypeData: {},
+            versionData: {}
+        },
+        editFlag: !1,
+        repeatFlg: !1,
+        validator: {
+            region: {
+                type: "v_itemId",
+                regex: /^QI_\d{5}$/g,
+                errorMsg: "\u8bf7\u4ee5QI_\u4f5c\u4e3a\u524d\u7f00 , \u4e4b\u540e\u4ee5\u4e94\u4e2a\u4f4d\u6570\u5b57\u7ec4\u6210(\u5982QI_00001)."
+            }
+        }
+    };
+
+    $.extend(com.validator, quotationItem.validator);
+
+
+    com.post(api.quotation.queryQuotationType, {},function(a) {
+        quotationItem.data.quotationTypeData = a.quotationTypes;
+        $("#quotationType").bindData(quotationItem.data.quotationTypeData, "id", "name");
+    });
+    com.post(api.quotation.queryQuotationClassification, {}, function(a) {
+        quotationItem.data.quotationClassificationData = a.quotationClassifications;
+        $("#quotationClassification").bindData(quotationItem.data.quotationClassificationData, "id", "name");
+    });
+    com.post(api.quotation.queryQuotationBigCategory, {}, function(a) {
+        quotationItem.data.quotationBigCategoryData = a.quotationBigCategorys;
+        $("#quotationBigCategory").bindData(quotationItem.data.quotationBigCategoryData, "id", "name");
+    });
+    com.post(api.quotation.queryQuotationSmallCategory, {}, function(a) {
+        quotationItem.data.quotationSmallCategoryData = a.quotationSmallCategorys;
+        $("#quotationSmallCategory").bindData(quotationItem.data.quotationSmallCategoryData, "id", "name")
+    });
+    com.post(api.common.queryMeasurementUnit, {}, function(a) {
+        quotationItem.data.measurementUnitData = a.measurementUnits;
+        $("#measurementUnit").bindData(quotationItem.data.measurementUnitData, "id", "name")
+    });
+    com.post(api.common.queryWorkType, {}, function(a) {
+        quotationItem.data.workTypeData = a.workTypes;
+        $("#workType").bindData(quotationItem.data.workTypeData, "id", "name")
+    });
+    com.post(api.quotation.queryQuotationVersion, {}, function(a) {
+        quotationItem.data.VersionData = a.quotationVersions;
+        quotationItem.quotationItemItems.version.bindData(quotationItem.data.VersionData, "versionId", "versionName");
+        $("#importVersion").bindData(quotationItem.data.VersionData, "versionId", "versionName");
+    });
+
+    //添加按钮
+    $('a[name="add"]', '#pagenation').click(function () {
+        quotationItem.editFlg = !1;
+        com.cleanItems(quotationItem.quotationItemItems);
+        quotationItem.quotationItemItems.itemId.prop("disabled", !1);
+        quotationItem.quotationItemItems.version.prop("disabled", !1);
+        quotationItem.modal.modal("show")
+    });
+
+    //编辑按钮
+    function edit(b) {
+        quotationItem.editFlg = !0;
+        quotationItem.quotationItemItems.autoId.val(b.autoId);
+        quotationItem.quotationItemItems.itemId.val(b.itemId);
+        quotationItem.quotationItemItems.itemName.val(b.itemName);
+        quotationItem.quotationItemItems.quotationType.val(b.quotationTypeId);
+        quotationItem.quotationItemItems.quotationClassification.val(b.quotationClassificationId);
+        quotationItem.quotationItemItems.quotationBigCategory.val(b.quotationBigCategoryId);
+        quotationItem.quotationItemItems.quotationSmallCategory.val(b.quotationSmallCategoryId);
+        quotationItem.quotationItemItems.workType.val(b.workTypeId);
+        quotationItem.quotationItemItems.measurementUnit.val(b.measurementUnitId);
+        quotationItem.quotationItemItems.quotationItemDes.val(b.quotationItemDes);
+        quotationItem.quotationItemItems.unitPrice.val(b.unitPrice);
+        quotationItem.quotationItemItems.version.val(b.versionId);
+        quotationItem.quotationItemItems.itemId.prop("disabled", !0);
+        quotationItem.quotationItemItems.version.prop("disabled", !0);
+        quotationItem.modal.modal("show");
+    }
+
+    //保存
+    function saveData() {
+        if (!com.validate() && !quotationItem.repeatFlg) {
+            var a, c = {
+                "quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),
+                "quotationItem.itemName": quotationItem.quotationItemItems.itemName.val(),
+                "quotationItem.quotationTypeId": quotationItem.quotationItemItems.quotationType.val(),
+                "quotationItem.quotationType": "",
+                "quotationItem.quotationClassificationId": quotationItem.quotationItemItems.quotationClassification.val(),
+                "quotationItem.quotationClassification": "",
+                "quotationItem.quotationBigCategoryId": quotationItem.quotationItemItems.quotationBigCategory.val(),
+                "quotationItem.quotationBigCategory": "",
+                "quotationItem.quotationSmallCategoryId": quotationItem.quotationItemItems.quotationSmallCategory.val(),
+                "quotationItem.quotationSmallCategory": "",
+                "quotationItem.measurementUnitId": quotationItem.quotationItemItems.measurementUnit.val(),
+                "quotationItem.measurementUnit": "",
+                "quotationItem.workTypeId": quotationItem.quotationItemItems.workType.val(),
+                "quotationItem.workType": "",
+                "quotationItem.quotationItemDes": quotationItem.quotationItemItems.quotationItemDes.val(),
+                "quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val()
+            };
+            quotationItem.editFlg ? (a = api.quotation.updateQuotationItem, c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", c["quotationItem.autoId"] = quotationItem.quotationItemItems.autoId.val()) : (c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", a = api.quotation.addQuotationItem);
+            com.post(a, c, successCallback, failCallback);
+            quotationItem.modal.modal("hide")
+        }
+    }
+
+    //启用禁用功能
+    function updateStatus(id, status, failcallBack) {
+        com.post(api.quotation.updateQuotationItemForStatus, {
+            "quotationItem.autoId": id,
+            "village.status": status
+        }, function () {
+
+        }, function () {
+            failcallBack && failcallBack();
+        });
+    }
+
+    function successCallback() {
+        com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+        $('#condList button').click();
+    };
+
+    function failCallback() {}
+
 });
 
-function bindQuotationItemPageSelect(){
-	com.post(api.quotation.queryQuotationType, {}, function(res){
-		quotationItem.data.quotationTypeData = res.quotationTypes;
-		$("#quotationType").bindData(quotationItem.data.quotationTypeData, "id", "name");
-		$("#quotationTypeSearch").bindData(quotationItem.data.quotationTypeData, "id", "name", true);
-	}, function(msg){
-		return {};
-	});
-		
-	com.post(api.quotation.queryQuotationClassification, {}, function(res){
-		quotationItem.data.quotationClassificationData = res.quotationClassifications;
-		$("#quotationClassification").bindData(quotationItem.data.quotationClassificationData, "id", "name");
-		$("#quotationClassificationSearch").bindData(quotationItem.data.quotationClassificationData, "id", "name", true);
-	}, function(msg){
-		return {};
-	});
-		
-	com.post(api.quotation.queryQuotationBigCategory, {}, function(res){
-		quotationItem.data.quotationBigCategoryData = res.quotationBigCategorys;
-		$("#quotationBigCategory").bindData(quotationItem.data.quotationBigCategoryData, "id", "name");
-		$("#quotationBigCategorySearch").bindData(quotationItem.data.quotationBigCategoryData, "id", "name", true);
-	}, function(msg){
-		return {};
-	});
-	
-	com.post(api.quotation.queryQuotationSmallCategory, {}, 
-		function(res){
-			quotationItem.data.quotationSmallCategoryData = res.quotationSmallCategorys;
-			$("#quotationSmallCategorySearch").bindData(quotationItem.data.quotationSmallCategoryData, "id", "name", true);
-			$("#quotationSmallCategory").bindData(quotationItem.data.quotationSmallCategoryData, "id", "name");
-		}, 
-		function(msg){
-			return {};
-	});
-	
-	com.post(api.common.queryMeasurementUnit, {}, function(res){
-		quotationItem.data.measurementUnitData = res.measurementUnits;
-		$("#measurementUnit").bindData(quotationItem.data.measurementUnitData, "id", "name");
-	}, 	function(msg){
-		return {};
-	});
-	
-	com.post(api.common.queryWorkType, {}, function(res){
-		quotationItem.data.workTypeData = res.workTypes;
-		$("#workType").bindData(quotationItem.data.workTypeData, "id", "name");
-	}, function(msg){
-		return {};
-	});
-	
-	com.post(api.quotation.queryQuotationVersion, {}, function(res){
-		quotationItem.data.VersionData = res.quotationVersions;
-		quotationItem.quotationItemItems.version.bindData(quotationItem.data.VersionData, "versionId", "versionName");
-		
-		$("#importVersion").bindData(quotationItem.data.VersionData, "versionId", "versionName");
-		$("#versionSearch").bindData(quotationItem.data.VersionData, "versionId", "versionName",true);
-	}, function(msg){
-		return {};
-	});
-}
-
-function saveData(){
-	if(com.validate() || quotationItem.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		"quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),
-		"quotationItem.itemName": quotationItem.quotationItemItems.itemName.val(),
-		"quotationItem.quotationTypeId": quotationItem.quotationItemItems.quotationType.val(),
-		"quotationItem.quotationType": "",
-		"quotationItem.quotationClassificationId": quotationItem.quotationItemItems.quotationClassification.val(),
-		"quotationItem.quotationClassification": "",
-		"quotationItem.quotationBigCategoryId": quotationItem.quotationItemItems.quotationBigCategory.val(),
-		"quotationItem.quotationBigCategory": "",
-		"quotationItem.quotationSmallCategoryId": quotationItem.quotationItemItems.quotationSmallCategory.val(),
-		"quotationItem.quotationSmallCategory": "",
-		"quotationItem.measurementUnitId": quotationItem.quotationItemItems.measurementUnit.val(),
-		"quotationItem.measurementUnit": "",
-		"quotationItem.workTypeId": quotationItem.quotationItemItems.workType.val(),
-		"quotationItem.workType": "",
-		"quotationItem.quotationItemDes": quotationItem.quotationItemItems.quotationItemDes.val(),
-		"quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val()
-
-	};
-	
-	if(quotationItem.editFlg) {
-		url = api.quotation.updateQuotationItem;
-		options["quotationItem.versionId"]= quotationItem.quotationItemItems.version.val();
-		options["quotationItem.version"]= "";
-		options["quotationItem.autoId"] = quotationItem.quotationItemItems.autoId.val();
-	}else{
-		options["quotationItem.versionId"]= quotationItem.quotationItemItems.version.val();
-		options["quotationItem.version"]= "";
-		url = api.quotation.addQuotationItem;
-	}
-	com.post(url, options, successCallback, failCallback);
-	quotationItem.modal.modal("hide");
-}
-
-function successCallback(){
-	quotationItem.listGrid.jqGrid().trigger("reloadGrid");
-	com.showAlert(com.info, "操作成功");
-}
-
-function failCallback(){
-	
-}
-
-function cleanItems(){
-	
-}
-
-function importItems(){
-	
-}
-
-function initSelect(id, data, key, value){
-	if(!key){
-		key = "id";
-	}
-	
-	if(!value){
-		value = "name";
-	}
-	
-	var select = $("#" + id);
-	select.empty();
-	
-	for(var i=0;i<data.length;i++){
-	    var option = $("<option>").text(data[i][value]).val(data[i][key]);
-	    select.append(option);
-	}
-}

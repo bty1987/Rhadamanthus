@@ -103,10 +103,6 @@ public class DecorationOrderVO implements Serializable {
 	
 	private Integer otherStatus;
 	
-	private Integer desigerChangeApproval;
-	
-	private Integer salesmanChangeApproval;
-
 	private Integer orderType;
 	
 	private String versionId;
@@ -120,10 +116,6 @@ public class DecorationOrderVO implements Serializable {
 	private String createUserId;
 	
 	private Float orderTotalPrice;
-	
-	private Integer calQuotationsFlag;
-	
-	private Integer approveStatus;
 	
 	private Float notSalesmanRate;
 
@@ -367,22 +359,6 @@ public class DecorationOrderVO implements Serializable {
 		this.paymentStatus = paymentStatus;
 	}
 
-	public Integer getDesigerChangeApproval(){
-		return desigerChangeApproval;
-	}
-
-	public void setDesigerChangeApproval(Integer desigerChangeApproval){
-		this.desigerChangeApproval = desigerChangeApproval;
-	}
-
-	public Integer getSalesmanChangeApproval(){
-		return salesmanChangeApproval;
-	}
-
-	public void setSalesmanChangeApproval(Integer salesmanChangeApproval){
-		this.salesmanChangeApproval = salesmanChangeApproval;
-	}
-
 	public void setNotSalesmanName(String notSalesmanName){
 		this.notSalesmanName = notSalesmanName;
 	}
@@ -488,14 +464,6 @@ public class DecorationOrderVO implements Serializable {
 		return orderTotalPrice;
 	}
 
-	public void setCalQuotationsFlag(Integer calQuotationsFlag){
-		this.calQuotationsFlag = calQuotationsFlag;
-	}
-
-	public Integer getCalQuotationsFlag(){
-		return calQuotationsFlag;
-	}
-
 	public void setFreeArea(Float freeArea){
 		this.freeArea = freeArea;
 	}
@@ -503,14 +471,6 @@ public class DecorationOrderVO implements Serializable {
 	public Float getFreeArea(){
 		return freeArea;
 	}
-
-    public Integer getApproveStatus(){
-        return approveStatus;
-    }
-    
-    public void setApproveStatus(Integer approveStatus){
-        this.approveStatus = approveStatus;
-    }
 
 	public void setNotSalesmanRate(Float notSalesmanRate){
 		this.notSalesmanRate = notSalesmanRate;

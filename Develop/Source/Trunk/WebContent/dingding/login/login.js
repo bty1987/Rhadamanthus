@@ -1,7 +1,9 @@
 $(function(){
+	
+	Ding.handle(23525686, window.location.href, function(cfg, user){
 
-    $('#login').click(function(){
-        Ding.handle(23525686, window.location.href, function(cfg, user){
+		$('#login').click(function(){
+        
             var params = utils.getUrlParams();
             $.ajax({
                 type: 'GET',

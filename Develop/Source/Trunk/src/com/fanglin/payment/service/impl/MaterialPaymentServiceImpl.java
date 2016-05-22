@@ -33,7 +33,6 @@ import com.fanglin.data.vo.CustomerVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
@@ -80,8 +79,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Autowired
 	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 	
 	@Autowired
 	private UserDao userDao;
@@ -1502,9 +1501,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
 					materialReceiptPO.setStatus((short) MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
 					
-					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
+//					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
 					
-					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
+//					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
 				}
 				
 				materialReceiptDao.update(materialReceiptPO);

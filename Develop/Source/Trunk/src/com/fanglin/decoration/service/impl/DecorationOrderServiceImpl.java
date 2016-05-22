@@ -511,13 +511,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	public void pageDecorationOrderForDesigner(Paging paging, List<FilterVO> filters, String userId){
 		
+		if(filters.size() == 0) return;
+		
 		UserPO userPO = userDao.get(userId);
 		
 		if(userPO == null) return;
 		
 		String duty = userPO.getDuty();
-		
-		if(filters.size() == 0 && duty.contains("设计师")) return;
 		
 		List<Integer> designDepartmentIds = null;
 		List<String> statuses = null;
@@ -787,7 +787,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderExportVO.setContractTime(decorationOrderPO.getContractTime());
 			decorationOrderExportVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			decorationOrderExportVO.setContractPrice(decorationOrderPO.getOrderTotalPrice());
-			decorationOrderExportVO.setActivity(decorationOrderPO.getOrderAward());
 			decorationOrderExportVO.setUnpayPayment(decorationOrderPO.getOrderTotalPrice());
 			decorationOrderExportVO.setSalesmanType(decorationOrderPO.getSalesmanType());
 			
@@ -1350,7 +1349,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setDesignerPO(new UserPO(decorationOrderVO.getDesignerId()));
 		decorationOrderPO.setSalesmanPO(new UserPO(decorationOrderVO.getSalesmanId()));
 		
-		decorationOrderPO.setCalQuotationsFlag(0);
 		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		UserPO operater = new UserPO(decorationOrderVO.getCreateUserId());
@@ -1466,7 +1464,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setDesignerPO(new UserPO(decorationOrderVO.getDesignerId()));
 		decorationOrderPO.setSalesmanPO(new UserPO(decorationOrderVO.getSalesmanId()));
 		
-		decorationOrderPO.setCalQuotationsFlag(0);
 		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		UserPO operater = new UserPO(decorationOrderVO.getCreateUserId());
