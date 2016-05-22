@@ -74,8 +74,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 		AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
 		Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
 		
-		System.out.println(actionName);
-		
 		try {
 			if(passActionNames.contains(actionName) || authenticationUtil.isMobile()){
 				result = invocation.invoke();

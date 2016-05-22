@@ -27,7 +27,6 @@ import com.fanglin.data.service.impl.CustomerServiceImpl;
 import com.fanglin.data.vo.CustomerVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -56,8 +55,8 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private AdvanceReceiptDao advanceReceiptDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 
 	@Autowired
 	private CustomerDao customerDao;
@@ -352,9 +351,9 @@ public class PaymentServiceImpl implements PaymentService {
 			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT){
 				advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_CONFIRM_INT);
 				
-				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(paymentPO.getOrderId());
+//				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(paymentPO.getOrderId());
 				
-				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, new UserPO(currentUserId));
+//				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, new UserPO(currentUserId));
 			}
 			
 			advanceReceiptDao.update(advanceReceiptPO);

@@ -144,3 +144,14 @@ alter table cleaningdrawing modify column drawingAddUrl varchar(256);
 alter table materialModel add column status tinyint(4) NOT NULL DEFAULT 0;
 
 alter table quotationitem add column status tinyint(4) NOT NULL DEFAULT 0;
+
+ALTER TABLE `platform`.`decorationorder` 
+DROP COLUMN `orderAwardTime`,
+DROP COLUMN `orderAwardStatus`,
+DROP COLUMN `orderAward`,
+DROP COLUMN `orderActivityGiftsTime`,
+DROP COLUMN `orderActivityGiftsStatus`,
+DROP COLUMN `orderActivityGifts`,
+DROP COLUMN `orderActivityId`,
+DROP COLUMN `calQuotationsFlag`,
+DROP COLUMN `approveStatus`;

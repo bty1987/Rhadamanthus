@@ -133,8 +133,6 @@ public class DecorationOrderPO implements Serializable {
 	
 	private Timestamp depositTime;
 	
-	private String orderAward;
-	
 	private Timestamp createTime;
 	
 	private String status;
@@ -153,12 +151,6 @@ public class DecorationOrderPO implements Serializable {
 	
 	private Float orderTotalPrice;
 
-	private Integer calQuotationsFlag;
-	
-	private String orderActivityGifts;
-	
-	private Integer approveStatus;
-	
 	private Float notSalesmanRate = 0f;
 	
 	private String salesmanType = "守园";
@@ -423,14 +415,6 @@ public class DecorationOrderPO implements Serializable {
 		return contractTime;
 	}
 
-	public void setOrderAward(String orderAward){
-		this.orderAward = orderAward;
-	}
-
-	public String getOrderAward(){
-		return orderAward;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "createUser", referencedColumnName="userId")
 	public UserPO getCreateUserPO(){
@@ -458,22 +442,6 @@ public class DecorationOrderPO implements Serializable {
 	public Float getOrderTotalPrice(){
 		return orderTotalPrice;
 	}
-
-	public void setCalQuotationsFlag(Integer calQuotationsFlag){
-		this.calQuotationsFlag = calQuotationsFlag;
-	}
-
-	public Integer getCalQuotationsFlag(){
-		return calQuotationsFlag;
-	}
-	
-	public void setOrderActivityGifts(String orderActivityGifts){
-		this.orderActivityGifts = orderActivityGifts;
-	}
-	
-	public String getOrderActivityGifts(){
-		return orderActivityGifts;
-	}
 	
 	public void setFreeArea(Float freeArea){
 		this.freeArea = freeArea;
@@ -483,14 +451,6 @@ public class DecorationOrderPO implements Serializable {
 		return freeArea;
 	}
 	
-    public Integer getApproveStatus(){
-        return approveStatus;
-    }
-    
-    public void setApproveStatus(Integer approveStatus){
-        this.approveStatus = approveStatus;
-    }
-    
 	public void setNotSalesmanRate(Float notSalesmanRate){
 		this.notSalesmanRate = notSalesmanRate;
 	}

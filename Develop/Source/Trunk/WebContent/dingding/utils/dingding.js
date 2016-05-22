@@ -55,6 +55,10 @@ var Ding = (function(){
 			
 			dd.ready(function() {
 				
+				dd.biz.navigation.setRight({
+					show: false,
+				})
+				
 				dd.runtime.permission.requestAuthCode({
 			        corpId: _config.corpId,
 			        onSuccess: function (info) {

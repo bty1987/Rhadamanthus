@@ -143,9 +143,8 @@ public class LoginAction extends BaseListAction {
 				if(user == null){
 					throw new FLException(110004, "该用户不能登陆系统");
 				}else{
-					
-				    if(user.getIsLogin().equals("否")){
-				        throw new FLException(110004, "该用户不能登陆系统");
+				    if((user.getIsLogin() & UserPO.ISLOGIN_FIP_INT) != UserPO.ISLOGIN_FIP_INT){
+			            throw new FLException(110004, "该用户不能登陆系统");
 				    }
 				}
 			}

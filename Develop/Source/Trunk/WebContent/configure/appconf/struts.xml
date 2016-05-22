@@ -43,9 +43,7 @@
 			<exception-mapping result="error" exception="java.lang.Exception">
 			</exception-mapping>
 		</global-exception-mappings>
-
 	</package>
-
 
 	<package name="base" extends="json-default,struts-default">
 		<!-- 这里可以设置一些全局的返回值映射关系等 -->
@@ -68,7 +66,6 @@
 		</global-results>
 	</package>
 
-
 	<package name="login" extends="json-default,struts-default">
 		<interceptors>
 			<interceptor-stack name="accessItctStack">
@@ -88,4 +85,24 @@
 			</exception-mapping>
 		</global-exception-mappings>
 	</package>
+	
+	<package name="dingding" extends="json-default,struts-default">
+		<interceptors>
+			<interceptor-stack name="accessItctStack">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">ERROR</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="accessItctStack" />
+		<global-results>
+			<result name="error">operateError.do</result>
+			<result name="login">login.do</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception">	</exception-mapping>
+		</global-exception-mappings>
+	</package>
+
 </struts>

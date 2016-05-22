@@ -37,7 +37,6 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.dingding.po.AppMessageDelivery;
 import com.fanglin.dingding.po.TextMessage;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
@@ -74,8 +73,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 	
 //	@Autowired
 //	private DecorationActivityItemDao decorationActivityItemDao;
@@ -1050,7 +1049,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
 					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
 					
-					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));
+//					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));
 				}
 				
 				decorationReceiptDao.save(decorationReceiptPO);
