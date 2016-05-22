@@ -580,7 +580,7 @@
         	});
         }
 
-    };
+    };
     $.fn.nestable = function(params)
     {
         var lists  = this,
@@ -603,5 +603,5 @@
         return retval || lists;
     };	
 
-})(window.jQuery || window.Zepto, window, document);
+})(window.jQuery || window.Zepto, window, document);
 	
