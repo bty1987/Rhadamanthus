@@ -244,9 +244,6 @@ $(function(){
     //启用禁用功能
     function updateStatus(id, status, failcallBack) {
 
-
-
-
         com.post(api.quotation.updateQuotationItemForStatus, {
             "quotationItem.autoId": id,
             "quotationItem.status": status

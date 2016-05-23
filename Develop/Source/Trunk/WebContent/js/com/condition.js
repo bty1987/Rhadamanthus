@@ -4,7 +4,6 @@
 
 var Condition = function(){
 
-
     var _condRules = {
 
         //例子 autofill
@@ -64,6 +63,96 @@ var Condition = function(){
                 validate:null
             }
         },
+        //--------数据-报价-报价项
+        itemName : { //
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "itemName",
+                op : "cn",
+                validate:null
+            }
+        },
+        quotationTypeId : {
+            label:"类型",
+            type:"select",
+            submitConfig : {
+                name : "quotationTypeId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.quotation.queryQuotationType,
+                postData:{},
+                listPath: "quotationTypes",
+                keyPath:"id",
+                valuePath:"name"
+            }
+        },
+        quotationClassificationId : {
+            label:"分类",
+            type:"select",
+            submitConfig : {
+                name : "quotationClassificationId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.quotation.queryQuotationClassification ,
+                postData:{},
+                listPath: "quotationClassifications",
+                keyPath:"id",
+                valuePath:"name"
+            }
+        },
+        quotationBigCategoryId : {
+            label:"大类",
+            type:"select",
+            submitConfig : {
+                name : "quotationBigCategoryId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.quotation.queryQuotationBigCategory,
+                postData:{},
+                listPath: "quotationBigCategorys",
+                keyPath:"id",
+                valuePath:"name"
+            }
+        },
+        quotationSmallCategoryId : {
+            label:"小类",
+            type:"select",
+            submitConfig : {
+                name : "quotationSmallCategoryId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.quotation.queryQuotationSmallCategory,
+                postData:{ },
+                listPath: "quotationSmallCategorys",
+                keyPath:"id",
+                valuePath:"name"
+            }
+        },
+        versionId : {
+            label:"版本",
+            type:"select",
+            submitConfig : {
+                name : "versionId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.quotation.queryQuotationVersion,
+                postData:{},
+                listPath: "quotationVersions",
+                keyPath:"versionId",
+                valuePath:"versionName"
+            }
+        },
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -118,6 +207,7 @@ var Condition = function(){
                 validate : null
             }
         },
+
         materialTypeId : {
             label:"品类",
             type:"select",
@@ -296,6 +386,7 @@ var Condition = function(){
                 valuePath:"value"//用来在页面显示的字段的json路径
             }
         },
+
         designerDepartmentId : {
             label:"设计部",
             type:"select",
