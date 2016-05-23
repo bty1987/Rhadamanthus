@@ -1,6 +1,6 @@
 $(function(){
 	
-	Ding.handle(23525686, window.location.href, function(cfg, user){
+	Ding.handle(config.loginAgentId, window.location.href, function(cfg, user){
 
 		$('#login').click(function(){
         

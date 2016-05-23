@@ -145,7 +145,7 @@ $(function(){
 
 	$.config = {router: false};
 
-	Ding.handle(5390445, window.location.href, function(config, user){
+	Ding.handle(config.approvalAgentID, window.location.href, function(config, user){
 		Approval.init(config.authenticationEncode, user);
 		window.localStorage["authentication"] = config.authenticationEncode;
 		window.localStorage["userid"] = user.userid;

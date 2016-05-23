@@ -1142,7 +1142,7 @@ $(function(){
 
     //hostAddr = "http://" + window.location.host;
     Project.renderTime();
-    Ding.handle(23777027, window.location.href, function(config, user){
+    Ding.handle(config.supervisionAgentID, window.location.href, function(config, user){
         Project.init(config.authenticationEncode);
     },["biz.util.uploadImage"]);
 

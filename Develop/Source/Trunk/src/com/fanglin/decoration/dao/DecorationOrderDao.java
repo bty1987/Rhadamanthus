@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationOrderDao extends Dao<DecorationOrderPO> {
 	
-	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<FilterVO> filters);
+	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<FilterVO> filters, List<Integer> designDepartmentIds, List<String> statuses);
 	
 	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<FilterVO> filters);
 	

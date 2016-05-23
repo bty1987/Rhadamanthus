@@ -70,9 +70,7 @@ var Supervision = (function(){
                             buttonName: "确认",
                         });
                     }
-
                 });
-
             });
         },
         //表单提交
@@ -149,7 +147,6 @@ $(function(){
         $('#search').focus();
     });
 
-    /*--------------------*/
     var supervision = {
 
         hostAddr: null,
@@ -167,19 +164,15 @@ $(function(){
         "paging.rows": 10,
     };
 
-
     var _config = {};
 
     supervision.hostAddr = "http://" + window.location.host;
 
     supervision.params = utils.getUrlParams();
 
-    Ding.handle("23777027", window.location.href, function(config, user){
+    Ding.handle(config.supervisionAgentID, window.location.href, function(config, user){
         Supervision.init(config.authenticationEncode);
 
         supervision.authentication = config.authenticationEncode;
     });
-
-
-
 });
