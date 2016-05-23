@@ -36,8 +36,18 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<FilterVO> filters){
+	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<FilterVO> filters, List<Integer> designDepartmentIds, List<String> statuses){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+		
+		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
+			query.alias("designerPO", "designer");
+			query.alias("designer.dept", "designerDept");
+			query.add(Restrictions.in("designerDept.dId", designDepartmentIds));
+		}
+		
+		if(statuses != null && statuses.size() > 0){
+			query.add(Restrictions.in("status", statuses));
+		}
 		
 		queryFilterExcute(query, filters);
 		

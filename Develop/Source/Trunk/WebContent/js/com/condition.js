@@ -7,7 +7,6 @@ var Condition = function(){
 
     var _condRules = {
 
-
         //例子 autofill
         designer : {
             label : "设计师",//中文名
@@ -119,7 +118,6 @@ var Condition = function(){
                 validate : null
             }
         },
-
         materialTypeId : {
             label:"品类",
             type:"select",
@@ -136,10 +134,7 @@ var Condition = function(){
                 valuePath:"categoryName"
             }
         },
-
-
         //--------人事-员工 页面的各种查询条件
-
         userId : { //
             label:"员工号",
             type:"text",
@@ -174,7 +169,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         roleId : {
             label:"角色",
             type:"select",
@@ -239,31 +233,29 @@ var Condition = function(){
                 valuePath:null
             }
         },
-
-
         //装修订单-设计 页面的各种查询条件
         village : {
             label:"楼盘",
             type:"autofill",
             submitConfig : {
-                name : "village",//TODO
-                op : "cn",//TODO
+                name : "village",
+                op : "cn",
                 validate:null
             },
             dataSource : {
                 url : api.data.queryVillageForNameByPinyin,
-                postData:{},//TODO
-                listPath: "autoFillKeyValue",//TODO
-                keyPath:"key",//TODO
-                valuePath:"value"//TODO
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
             }
         },
         houseNumber : {
             label:"楼号",
             type:"text",
             submitConfig : {
-                name : "houseNumber",//TODO
-                op : "cn",//TODO
+                name : "houseNumber",
+                op : "cn",
                 validate:null
             }
         },
@@ -271,7 +263,7 @@ var Condition = function(){
             label:"面积",
             type:"text",
             submitConfig : {
-                name : "houseArea",//TODO
+                name : "houseArea",
                 op : "eq",
                 validate:null
             }
@@ -280,7 +272,7 @@ var Condition = function(){
             label:"客户电话",
             type:"text",
             submitConfig : {
-                name : "customerPhone",//TODO
+                name : "customerPhone",
                 op : "cn",
                 validate:{
                     "reg" : /^[0-9]*$/,
@@ -304,7 +296,6 @@ var Condition = function(){
                 valuePath:"value"//用来在页面显示的字段的json路径
             }
         },
-
         designerDepartmentId : {
             label:"设计部",
             type:"select",

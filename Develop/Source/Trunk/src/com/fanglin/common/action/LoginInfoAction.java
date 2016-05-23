@@ -45,8 +45,6 @@ public class LoginInfoAction extends BaseListAction {
 		
 		String contents = String.format("%s/dingding/login/login.html?loginFlag=%s", SystemConfig.getString("hostServer"), loginInfo.getLoginFlag());
 		
-		System.out.println(contents);
-		
 		QRCode = QRCodeUtil.encode(contents, 300, 300);
 		
 		return SUCCESS;

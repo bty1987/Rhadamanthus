@@ -121,7 +121,7 @@ public class DecorationOrderDrawLineServiceImpl implements DecorationOrderDrawLi
 		
 		if(filters.size() == 0) return ;
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null);
 		List<DecorationOrderVO> decorationOrderVOs = decorationOrderPOToVO(decorationOrderPOs);
 		
 		paging.setData(decorationOrderVOs);

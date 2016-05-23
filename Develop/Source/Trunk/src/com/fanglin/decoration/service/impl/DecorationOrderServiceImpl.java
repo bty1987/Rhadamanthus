@@ -233,7 +233,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
 		}
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -471,7 +471,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		filters.add(new FilterVO("status", statuses, "ni"));
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -511,13 +511,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	public void pageDecorationOrderForDesigner(Paging paging, List<FilterVO> filters, String userId){
 		
-		if(filters.size() == 0) return;
-		
 		UserPO userPO = userDao.get(userId);
 		
 		if(userPO == null) return;
 		
 		String duty = userPO.getDuty();
+		
+		if(filters.size() == 0 && duty.contains("设计师")) return;
 		
 		List<Integer> designDepartmentIds = null;
 		List<String> statuses = null;
