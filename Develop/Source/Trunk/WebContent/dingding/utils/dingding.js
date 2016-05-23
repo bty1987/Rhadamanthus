@@ -21,7 +21,9 @@ var Ding = (function(){
 	return {
 		handle: function(appId, checkURI, backfunc, apiList){
 			
-			if(!isPC()){
+			var isPCFlag = isPC();
+			
+			if(!isPCFlag){
 				dd = DingTalkPC;
 			}
 			
@@ -55,9 +57,11 @@ var Ding = (function(){
 			
 			dd.ready(function() {
 				
-				dd.biz.navigation.setRight({
-					show: false,
-				})
+				if(isPCFlag){
+					dd.biz.navigation.setRight({
+						show: false,
+					});
+				}
 				
 				dd.runtime.permission.requestAuthCode({
 			        corpId: _config.corpId,
