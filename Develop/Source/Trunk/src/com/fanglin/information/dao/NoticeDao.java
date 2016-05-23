@@ -3,7 +3,7 @@
  * Description:
  * Copyright: Copyright (c) 2013 All rights reserved.
  * Company: JH Corporation, China, Ltd.
- * @author Howard
+ * @author bty1987
  */
 
 package com.fanglin.information.dao;

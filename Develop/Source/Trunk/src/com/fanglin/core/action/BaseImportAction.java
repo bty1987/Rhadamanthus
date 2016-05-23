@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
- * @Author		: mzy
+ * @Author		: bty1987
  * @Email		: 
  * Describing	: 基类Action 当返回的是非列表的Action是继承BaseAction类，返回列表时继承BaseListAction类
  */

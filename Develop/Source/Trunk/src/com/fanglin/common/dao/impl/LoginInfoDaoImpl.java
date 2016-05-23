@@ -30,4 +30,13 @@ public class LoginInfoDaoImpl extends DaoImpl<LoginInfoPO> implements LoginInfoD
 		return (LoginInfoPO) session().createCriteria(LoginInfoPO.class).add(Restrictions.eq(LoginInfoPO.COLUMN_LOGINFLAG_STR, loginFlag)).uniqueResult();
 	}
 
+	@Override
+	public int deleteLoginInfoByOptime(long optime) {
+		
+		String sql = "delete from platform.logininfo where optime < :optime and code = -1";
+		session().createSQLQuery(sql).setLong("optime", optime).executeUpdate();
+		
+		return 0;
+	}
+
 }
