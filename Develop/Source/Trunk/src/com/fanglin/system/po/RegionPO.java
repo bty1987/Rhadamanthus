@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-7-28
  * @Copyright	: Copyright Decoration 2014
- * @Author		: Howard
+ * @Author		: bty1987
  * @Describing	: 
  */
 package com.fanglin.system.po;

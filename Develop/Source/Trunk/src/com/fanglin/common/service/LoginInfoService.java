@@ -23,4 +23,6 @@ public interface LoginInfoService {
 	
 	public int login(LoginInfoVO loginInfoVO);
 	
+	public int deleteLoginInfoByOptime(LoginInfoVO loginInfoVO);
+	
 }

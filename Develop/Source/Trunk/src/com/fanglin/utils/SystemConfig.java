@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
- * @Author		: mzy
+ * @Author		: bty1987
  * @Email		: 
  * Describing	: 获得配置文件内容的工具类
  */ 

@@ -127,5 +127,14 @@ public class LoginInfoServiceImpl implements LoginInfoService {
 		
 		return 0;
 	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int deleteLoginInfoByOptime(LoginInfoVO loginInfoVO) {
+		
+		loginInfoDao.deleteLoginInfoByOptime(new Date().getTime());
+		
+		return 0;
+	}
 	
 }

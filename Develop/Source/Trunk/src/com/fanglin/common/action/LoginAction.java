@@ -1,10 +1,10 @@
-/*
+/**
  * @File Name	: LoginAction.java
  * @Package		：com.fanglin.action 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
- * @Author		: mzy
+ * @Author		: bty1987
  * @Email		: 
  * Describing	: 登陆相关action
  */

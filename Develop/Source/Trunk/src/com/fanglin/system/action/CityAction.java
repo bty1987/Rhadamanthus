@@ -3,7 +3,7 @@
  * Description:
  * Copyright: Copyright (c) 2014 All rights reserved.
  * Company: JH Corporation, China, Ltd.
- * @author Howard
+ * @author bty1987
  *
  */
 

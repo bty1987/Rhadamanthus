@@ -17,5 +17,7 @@ import com.fanglin.core.dao.Dao;
 public interface LoginInfoDao extends Dao<LoginInfoPO> {
 	
 	public LoginInfoPO queryLoginInfoByLoginFlag(String loginFlag);
+	
+	public int deleteLoginInfoByOptime(long optime);
 
 }

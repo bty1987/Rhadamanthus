@@ -4,8 +4,8 @@
  * @Version		: 1.0
  * @Date			: 2014-9-27
  * @Copyright	: Copyright Creators 2014
- * @Author		: mzy
- * @Email			: 739061411@qqcom
+ * @Author		: bty1987
+ * @Email			: bty1987@163.com
  * @Describing	: 
  */
 
