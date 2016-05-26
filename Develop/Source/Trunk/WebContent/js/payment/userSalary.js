@@ -138,7 +138,9 @@ function initUploadify(){
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
         'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{}, // 附带值
+        'formData':{
+        	'uploadType':4,
+        }, // 附带值
         //'swf': "./js/uploadify/uploadify.swf",
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         //'queueID':'uploadfileQueue', // 文件选择后的容器ID

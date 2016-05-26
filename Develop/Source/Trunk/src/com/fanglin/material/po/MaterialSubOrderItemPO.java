@@ -13,47 +13,47 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2310778692937056830L;
 	
-	public static String COLUMN_MSOIID_STR = "msoiId";
+	public static final String COLUMN_MSOIID_STR = "msoiId";
 	
-	public static String COLUMN_MSOID_STR = "msoId";
+	public static final String COLUMN_MSOID_STR = "msoId";
 	
-	public static String COLUMN_MATERIALMODELNO_STR = "materialModelNo";
+	public static final String COLUMN_MATERIALMODELNO_STR = "materialModelNo";
 	
-	public static String COLUMN_MATERIALMODELNAME_STR = "materialModelName";
+	public static final String COLUMN_MATERIALMODELNAME_STR = "materialModelName";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static String COLUMN_PAYMENTSTATUS_STR = "paymentStatus";
+	public static final String COLUMN_PAYMENTSTATUS_STR = "paymentStatus";
 	
-	public static String COLUMN_REFUNDSTATUS_STR = "refundStatus";
+	public static final String COLUMN_REFUNDSTATUS_STR = "refundStatus";
 	
-	public static String COLUMN_BALANCESTATUS_STR = "balanceStatus";
+	public static final String COLUMN_BALANCESTATUS_STR = "balanceStatus";
 	
-	public static String COLUMN_MPID_STR = "mpId";
+	public static final String COLUMN_MPID_STR = "mpId";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_DELETE_INT = 4;
+	public static final int STATUS_TYPE_DELETE_INT = 4;
 	
-	public static int PAYMENTSTATUS_TYPE_INIT_INT = 0;
+	public static final int PAYMENTSTATUS_TYPE_INIT_INT = 0;
 	
-	public static int PAYMENTSTATUS_TYPE_PAYMENT_INT = 1;
+	public static final int PAYMENTSTATUS_TYPE_PAYMENT_INT = 1;
 	
-	public static int PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
+	public static final int PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
 	
-	public static int REFUNDSTATUS_TYPE_INIT_INT = 0;
+	public static final int REFUNDSTATUS_TYPE_INIT_INT = 0;
 	
-	public static int REFUNDSTATUS_TYPE_REJECT_INT = 1;
+	public static final int REFUNDSTATUS_TYPE_REJECT_INT = 1;
 	
-	public static int BALANCESTATUS_TYPE_INIT_INT = 0;
+	public static final int BALANCESTATUS_TYPE_INIT_INT = 0;
 	
-	public static int BALANCESTATUS_TYPE_PREBALANCE_INT = 1;
+	public static final int BALANCESTATUS_TYPE_PREBALANCE_INT = 1;
 	
-	public static int BALANCESTATIS_TYPE_POSTBALANCE_INT = 3;
+	public static final int BALANCESTATIS_TYPE_POSTBALANCE_INT = 3;
 	
-	public static int CALCTYPE_TYPE_BASE_INT = 0;
+	public static final int CALCTYPE_TYPE_BASE_INT = 0;
 	
-	public static int CALCTYPE_TYPE_POINT_INT = 1;
+	public static final int CALCTYPE_TYPE_POINT_INT = 1;
 
 	private long msoiId;
 	

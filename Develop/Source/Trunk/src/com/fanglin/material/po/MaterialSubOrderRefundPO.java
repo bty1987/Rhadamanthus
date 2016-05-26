@@ -13,23 +13,23 @@ public class MaterialSubOrderRefundPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8113424076445112728L;
 	
-	public static int STATUS_TYPE_REFUND_INT = 0;
+	public static final int STATUS_TYPE_REFUND_INT = 0;
 	
-	public static int STATUS_TYPE_CANCEL_INT = 1;
+	public static final int STATUS_TYPE_CANCEL_INT = 1;
 	
-	public static int STATUS_TYPE_PAYMENTCOLLECT_INT = 2;
+	public static final int STATUS_TYPE_PAYMENTCOLLECT_INT = 2;
 	
-	public static int STATUS_TYPE_PAYMENTCONFIRM_INT = 3;
+	public static final int STATUS_TYPE_PAYMENTCONFIRM_INT = 3;
 	
-	public static String COLUMN_MSOID_STR = "msoId";
+	public static final String COLUMN_MSOID_STR = "msoId";
 	
-	public static String COLUMN_MSOIID_STR = "msoiId";
+	public static final String COLUMN_MSOIID_STR = "msoiId";
 	
-	public static String COLUMN_MPID_STR = "mpId";
+	public static final String COLUMN_MPID_STR = "mpId";
 	
-	public static String COLUMN_IDENT_STR = "ident";
+	public static final String COLUMN_IDENT_STR = "ident";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
 	private long msorId;
 	

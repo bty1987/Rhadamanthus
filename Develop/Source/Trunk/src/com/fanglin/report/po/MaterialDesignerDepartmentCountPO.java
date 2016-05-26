@@ -14,15 +14,15 @@ public class MaterialDesignerDepartmentCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2120186081140651110L;
 	
-	public static String COLUMN_DESIGNERDEPTID_STR = "designerDeptId";
+	public static final String COLUMN_DESIGNERDEPTID_STR = "designerDeptId";
 	
-	public static String COLUMN_DESIGNERDEPTNAME_STR = "designerDeptName";
+	public static final String COLUMN_DESIGNERDEPTNAME_STR = "designerDeptName";
 	
-	public static String COLUMN_DESINGERREGIONID_STR = "designerRegionId";
+	public static final String COLUMN_DESINGERREGIONID_STR = "designerRegionId";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_TOTAL_STR = "total";
+	public static final String COLUMN_TOTAL_STR = "total";
 
 	private int mddcId;
 	

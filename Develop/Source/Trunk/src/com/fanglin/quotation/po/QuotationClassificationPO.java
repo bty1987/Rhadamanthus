@@ -24,25 +24,25 @@ public class QuotationClassificationPO implements Serializable{
 	
 	private static final long serialVersionUID = 1333190756206588599L;
 	
-	public static int TYPE_BASIC_PART_INT = 1;
+	public static final int TYPE_BASIC_PART_INT = 1;
 	
-	public static int TYPE_OTHER_PART_INT = 2;
+	public static final int TYPE_OTHER_PART_INT = 2;
 	
-	public static int TYPE_DISPOSABLE_INT = 3;
+	public static final int TYPE_DISPOSABLE_INT = 3;
 	
-	public static int TYPE_INTEGRATED_PROJECT_INT = 4;
+	public static final int TYPE_INTEGRATED_PROJECT_INT = 4;
 	
-	public static int TYPE_MANAGEMENT_EXPENSE_INT = 5;
+	public static final int TYPE_MANAGEMENT_EXPENSE_INT = 5;
 	
-	public static String TYPE_BASIC_PART_STR = "基础部分";
+	public static final String TYPE_BASIC_PART_STR = "基础部分";
 	
-	public static String TYPE_OTHER_PART_STR = "其他部分";
+	public static final String TYPE_OTHER_PART_STR = "其他部分";
 	
-	public static String TYPE_DISPOSABLE_STR = "一次性包死";
+	public static final String TYPE_DISPOSABLE_STR = "一次性包死";
 	
-	public static String TYPE_INTEGRATED_PROJECT_STR = "综合项目";
+	public static final String TYPE_INTEGRATED_PROJECT_STR = "综合项目";
 	
-	public static String TYPE_MANAGEMENT_EXPENSE_STR = "管理费";
+	public static final String TYPE_MANAGEMENT_EXPENSE_STR = "管理费";
 
 	private int id;
 	

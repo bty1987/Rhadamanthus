@@ -34,7 +34,7 @@ public class BudgetAuditItemPO implements Serializable {
 	
 	public static final String STATUS_CHARGEBACK_STR = "扣款";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private Long auditId;
 	

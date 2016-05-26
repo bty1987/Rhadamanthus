@@ -15,11 +15,11 @@ public class GroundLevelingConstructionScheduleWorkerPO implements java.io.Seria
 
 	private static final long serialVersionUID = 973812717221715019L;
 	
-	public static String COLUMN_GLCSID_STR = "glcsId";
+	public static final String COLUMN_GLCSID_STR = "glcsId";
 	
-	public static String COLUMN_WORKERID_STR = "workerId";
+	public static final String COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int glcswId;
 	

@@ -90,6 +90,7 @@ public class BricklayConstructionScheduleServiceImpl implements BricklayConstruc
 			
 			UserPO userPO = userDao.get(bricklayConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				bricklayConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				bricklayConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				bricklayConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				bricklayConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

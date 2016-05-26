@@ -14,21 +14,21 @@ public class DesignerDeductSalaryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7390064577294465248L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_PAYOFF_INT = 1;
+	public static final int STATUS_TYPE_PAYOFF_INT = 1;
 	
-	public static int TYPE_TYPE_ADDREDUCE_INT = 1;
+	public static final int TYPE_TYPE_ADDREDUCE_INT = 1;
 	
-	public static String COLUMN_DSID_STR = "dsId";
+	public static final String COLUMN_DSID_STR = "dsId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static String COLUMN_USERID_STR = "userId";
+	public static final String COLUMN_USERID_STR = "userId";
 	
-	public static String COLUMN_TYPE_STR = "type";
+	public static final String COLUMN_TYPE_STR = "type";
 
 	private int ddsId;
 	

@@ -29,7 +29,7 @@ public class SystemDefineItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455511126014L;
 	
-	public static int TYPE_SYSTEMDEFINEITEM_INT = 3;	
+	public static final int TYPE_SYSTEMDEFINEITEM_INT = 3;	
 	
 	private long autoId;
 	

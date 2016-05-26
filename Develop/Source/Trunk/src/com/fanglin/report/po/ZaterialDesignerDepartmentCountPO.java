@@ -14,15 +14,15 @@ public class ZaterialDesignerDepartmentCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5008038230815616923L;
 	
-	public static String COLUMN_DESIGNERDEPTID_STR = "designerDeptId";
+	public static final String COLUMN_DESIGNERDEPTID_STR = "designerDeptId";
 	
-	public static String COLUMN_DESIGNERDEPTNAME_STR = "designerDeptName";
+	public static final String COLUMN_DESIGNERDEPTNAME_STR = "designerDeptName";
 	
-	public static String COLUMN_DESIGNERREGIONID_STR = "designerRegionId";
+	public static final String COLUMN_DESIGNERREGIONID_STR = "designerRegionId";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_TOTAL_STR = "total";
+	public static final String COLUMN_TOTAL_STR = "total";
 
 	private int zddcId;
 	

@@ -41,6 +41,19 @@ public class SubjectPO implements java.io.Serializable {
 	
 	private short status;
 	
+	public SubjectPO() {
+		super();
+	}
+
+	public SubjectPO(String oneCode, String twoCode, String thrCode, String name, short direction) {
+		super();
+		this.oneCode = oneCode;
+		this.twoCode = twoCode;
+		this.thrCode = thrCode;
+		this.name = name;
+		this.direction = direction;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "sId")

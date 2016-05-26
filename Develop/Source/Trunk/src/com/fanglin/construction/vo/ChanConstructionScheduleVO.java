@@ -33,6 +33,8 @@ public class ChanConstructionScheduleVO implements Serializable {
 	
 	private String workerDuty;
 	
+	private String workerPhone;
+	
 	private String workerPhoto;
 	
 	private String startTime;
@@ -207,6 +209,14 @@ public class ChanConstructionScheduleVO implements Serializable {
 
 	public void setWorkerName(String workerName) {
 		this.workerName = workerName;
+	}
+
+	public String getWorkerPhone() {
+		return workerPhone;
+	}
+
+	public void setWorkerPhone(String workerPhone) {
+		this.workerPhone = workerPhone;
 	}
 
 	public String getWorkerPhoto() {

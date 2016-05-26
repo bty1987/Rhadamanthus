@@ -23,6 +23,8 @@ public class WaterwayCircuitPowerConstructionScheduleWorkerVO implements java.io
 	
 	private String workerRatyDes;
 	
+	private String workerPhone;
+	
 	private String workerPhoto;
 	
 	private String workerOldId;
@@ -99,6 +101,14 @@ public class WaterwayCircuitPowerConstructionScheduleWorkerVO implements java.io
 
 	public void setWorkerName(String workerName){
 		this.workerName = workerName;
+	}
+
+	public String getWorkerPhone() {
+		return workerPhone;
+	}
+
+	public void setWorkerPhone(String workerPhone) {
+		this.workerPhone = workerPhone;
 	}
 
 	public String getWorkerPhoto(){

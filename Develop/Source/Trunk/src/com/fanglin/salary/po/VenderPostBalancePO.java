@@ -14,17 +14,17 @@ public class VenderPostBalancePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 371186650620403178L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_YTPE_PAYOFF_INT = 1;
+	public static final int STATUS_YTPE_PAYOFF_INT = 1;
 	
-	public static String COLUMN_VBID_STR = "vbId";
+	public static final String COLUMN_VBID_STR = "vbId";
 	
-	public static String COLUMN_MSOID_STR = "msoId";
+	public static final String COLUMN_MSOID_STR = "msoId";
 	
-	public static String COLUMN_MATERIALBRANDID_STR = "materialBrandId";
+	public static final String COLUMN_MATERIALBRANDID_STR = "materialBrandId";
 
 	private int vpbId;
 	

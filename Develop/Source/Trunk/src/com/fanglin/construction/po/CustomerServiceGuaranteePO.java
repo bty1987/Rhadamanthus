@@ -24,7 +24,7 @@ public class CustomerServiceGuaranteePO implements Serializable{
 
 	private static final long serialVersionUID = -6147848721739253445L;
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int csgId;
 	

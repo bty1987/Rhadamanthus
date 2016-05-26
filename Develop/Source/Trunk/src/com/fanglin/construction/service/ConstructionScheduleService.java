@@ -23,8 +23,6 @@ public interface ConstructionScheduleService {
 	
 	public void pageDecorationOrderForConstructionSchedule(Paging paging, List<FilterVO> filters);
 	
-	public void pageDecorationOrderForConstructionScheduleM(Paging paging, List<FilterVO> filters, String userId) throws FLException ;
-	
 	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<FilterVO> filters, String userId);
 	
 	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<FilterVO> filters, String userId, UserPO userPO);

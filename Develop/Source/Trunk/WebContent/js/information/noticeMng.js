@@ -258,7 +258,7 @@ function bindUploadfiy(){
         'formData':{
             'username':'用户名',
             'rnd':'加密密文',
-            'uploadType':2
+            'uploadType':3
         },
         'buttonText': '上传附件',
         'buttonClass': 'btn btn-sm btn-primary lineheight0',

@@ -15,11 +15,11 @@ public class OilConstructionScheduleWorkerPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3842243798381411106L;
 	
-	public static String COLUMN_OCSID_STR = "ocsId";
+	public static final String COLUMN_OCSID_STR = "ocsId";
 	
-	public static String COLUMN_WORKERID_STR = "workerId";
+	public static final String COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int ocswId;
 	

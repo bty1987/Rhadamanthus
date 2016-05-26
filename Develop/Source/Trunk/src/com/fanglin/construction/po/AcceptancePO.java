@@ -24,13 +24,13 @@ public class AcceptancePO implements Serializable{
 
 	private static final long serialVersionUID = -4319485351492418003L;
 	
-	public static int ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT = 512;
+	public static final int ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT = 512;
 	
-	public static String ACCEPTANCE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "验收";
+	public static final String ACCEPTANCE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "验收";
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int actId;
 	

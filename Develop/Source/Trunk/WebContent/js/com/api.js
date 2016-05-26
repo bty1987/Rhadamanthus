@@ -220,6 +220,11 @@ var api = {
 		
 		queryWorkType: {url: "queryWorkType.do"},
 		
+		pageReceiptType: {url: "pageReceiptType.do"},
+		queryReceiptType: {url: "queryReceiptType.do"},
+		queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
+		addReceiptType: {url: "addReceiptType.do"},
+		
 		changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
 		changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
 		changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},

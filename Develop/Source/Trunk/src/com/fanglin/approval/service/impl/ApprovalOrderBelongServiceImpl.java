@@ -143,7 +143,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			}
 		}
 		
-		if(rateCount != 1){
+		if(rateCount != 1f){
 			throw new FLException(140016, "订单归属人员比例和不为1");
 		}
 		

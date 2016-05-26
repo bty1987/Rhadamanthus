@@ -147,26 +147,6 @@ jQuery(function($) {
 		});
 	}
 	
-	com.post(api.ds.bankType, {}, function(res){
-		
-		materialPayment.cashInfo = res.cashInfo;
-		materialPayment.bankInfo = res.bankInfo;
-		materialPayment.checkBankInfo = res.checkBankInfo;
-		materialPayment.accountsInfo = res.accountsInfo;
-		
-		materialPayment.bank = res.bank;
-		
-		$("#cashInfo").bindData(res.cash, 'key', 'value');
-		$("#refundCashInfo").bindData(res.cash, 'key', 'value');
-		
-		$("#installmentBankName").bindData(res.bank, 'key', 'value');
-		$("#refundBankName").bindData(res.bank, 'key', 'value');
-		
-		$("#checkvBankName").bindData(res.checkBank, 'key', 'value');
-		
-		$("#accountsBankName").bindData(res.accounts, 'key', 'value');
-	});
-	
 	com.post(api.ds.materialInfo, {}, function(res){
 		$("#advanceType").bindData(res.advanceType, 'key', 'value');
 		
@@ -180,19 +160,54 @@ jQuery(function($) {
 	$("#couponType").chosen({width: "216px", multi_type: "input"});
 	$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
 	
-	com.post(api.ds.couponType, {}, function(res){
-		materialPayment.couponType = res.couponTypes;
+	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		$("#couponType").bindData(materialPayment.couponType, 'key', 'value');
+		materialPayment.cash = [];
+		materialPayment.bank = [];
+		materialPayment.checkBank = [];
+		materialPayment.accounts = [];
+		materialPayment.couponType = [];
+		
+		materialPayment.cashInfo = {};
+		materialPayment.bankInfo = {};
+		materialPayment.checkBankInfo = {};
+		materialPayment.accountsInfo = {};
+		materialPayment.couponTypeData = {};
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				materialPayment.cash.push(v);
+				materialPayment.cashInfo[v.key] = v.name;
+			}else if(v.type == 2){
+				materialPayment.bank.push(v);
+				materialPayment.bankInfo[v.key] = v.name;
+			}else if(v.type == 3){
+				materialPayment.checkBank.push(v);
+				materialPayment.checkBankInfo[v.key] = v.name;
+			}else if(v.type == 4){
+				materialPayment.accounts.push(v);
+				materialPayment.accountsInfo[v.key] = v.name;
+			}else if(v.type == 5){
+				materialPayment.couponType.push(v);
+				materialPayment.couponTypeData[v.key] = [v.key, v.name];
+			}
+		});
+		
+		$("#cashInfo").bindData(materialPayment.cash, 'key', 'name');
+		$("#refundCashInfo").bindData(materialPayment.cash, 'key', 'name');
+		
+		$("#installmentBankName").bindData(materialPayment.bank, 'key', 'name');
+		$("#refundBankName").bindData(materialPayment.bank, 'key', 'name');
+		
+		$("#checkvBankName").bindData(materialPayment.checkBank, 'key', 'name');
+		
+		$("#accountsBankName").bindData(materialPayment.accounts, 'key', 'name');
+		
+		$("#couponType").bindData(materialPayment.couponType, 'key', 'name');
 		$("#couponType").trigger("chosen:updated");
 		
-		$("#refundCouponType").bindData(materialPayment.couponType, 'key', 'value');
+		$("#refundCouponType").bindData(materialPayment.couponType, 'key', 'name');
 		$("#refundCouponType").trigger("chosen:updated");
-		
-		for(var i=0;i<materialPayment.couponType.length;i++){
-			var e = materialPayment.couponType[i];
-			materialPayment.couponTypeData[e["value"]] = [e["key"], e["value"]];
-		}
 	});
 	
 	$("#bankAdd").click(function(){
@@ -776,15 +791,10 @@ function dialogPayment(rowId, mpId, paymentType, customerId, orderId){
 //			materialPayment.items.couponType.trigger("chosen:updated");
 //		});
 		
-		com.post(api.ds.couponType, {}, function(res){
-			
-			var couponInfos = res.couponType;
-			
-			materialPayment.items.couponType.chosen("destroy");
-			materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-			materialPayment.items.couponType.bindData(couponInfos, 'key', 'value');
-			materialPayment.items.couponType.trigger("chosen:updated");
-		});
+		materialPayment.items.couponType.chosen("destroy");
+		materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
+		materialPayment.items.couponType.bindData(materialPayment.couponType, 'key', 'name');
+		materialPayment.items.couponType.trigger("chosen:updated");
 		
 		materialPayment.baseModal.modal("show");
 	}else if(paymentType == 4 || paymentType == 5 || paymentType == 6 || paymentType == 7){ // 退款
@@ -1263,7 +1273,7 @@ function addBankDiv(index){
 	
 	var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
 	var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-	var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(materialPayment.bank, 'key', 'value').appendTo(bankNameDiv);
+	var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(materialPayment.bank, 'key', 'name').appendTo(bankNameDiv);
 	var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
 	var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
 		$("#bankDiv_"+$(this).attr("index")).remove();

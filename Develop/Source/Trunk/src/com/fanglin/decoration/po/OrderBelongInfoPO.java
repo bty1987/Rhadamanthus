@@ -32,21 +32,21 @@ public class OrderBelongInfoPO implements Serializable {
 
 	private static final long serialVersionUID = 11111344461146L;
 	
-	public static String BELONGTYPE_DESIGN_STR = "设计";
+	public static final String BELONGTYPE_DESIGN_STR = "设计";
 	
-	public static String BELONGTYPE_SALESMAN_STR = "业务";
+	public static final String BELONGTYPE_SALESMAN_STR = "业务";
 	
-	public static String STATUS_APPLY_STR = "申请审批";
+	public static final String STATUS_APPLY_STR = "申请审批";
 	
-	public static String STATUS_PASS_STR = "审批通过";
+	public static final String STATUS_PASS_STR = "审批通过";
 	
-	public static String STATUS_UNPASS_STR = "审批未通过";
+	public static final String STATUS_UNPASS_STR = "审批未通过";
 	
-	public static String STATUS_REPLACE_STR = "替换";
+	public static final String STATUS_REPLACE_STR = "替换";
 	
-	public static String DEFAULTFLAG_TRUE_STR = "是";
+	public static final String DEFAULTFLAG_TRUE_STR = "是";
 	
-	public static String DEFAULTFLAG_FALSE_STR = "否";
+	public static final String DEFAULTFLAG_FALSE_STR = "否";
 
 	private long autoId;
 	

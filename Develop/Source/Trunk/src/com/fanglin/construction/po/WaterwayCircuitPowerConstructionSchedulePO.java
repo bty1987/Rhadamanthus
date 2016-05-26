@@ -27,15 +27,15 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 
 	private static final long serialVersionUID = 6085853844947063108L;
 	
-	public static int WATERWAYCIRCUITPOWER_ALLOCATION_WORKER_FLAG_INT = 4;
+	public static final int WATERWAYCIRCUITPOWER_ALLOCATION_WORKER_FLAG_INT = 4;
 	
-	public static String WATERWAYCIRCUITPOWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水电力";
+	public static final String WATERWAYCIRCUITPOWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水电力";
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int wcpcsId;
 	

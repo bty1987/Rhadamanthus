@@ -96,6 +96,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 				putlineConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
 				putlineConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
 				putlineConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
+				putlineConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
 				putlineConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
 			}
 		}

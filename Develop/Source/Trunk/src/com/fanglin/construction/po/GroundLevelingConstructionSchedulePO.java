@@ -14,17 +14,17 @@ public class GroundLevelingConstructionSchedulePO implements java.io.Serializabl
 
 	private static final long serialVersionUID = 8626112203327291623L;
 	
-	public static int GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 7;
+	public static final int GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 7;
 	
-	public static int GROUNDLEVELING_ALLOCATION_WORKER_FLAG_INT = 16;
+	public static final int GROUNDLEVELING_ALLOCATION_WORKER_FLAG_INT = 16;
 	
-	public static String GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "地面找平";
+	public static final String GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "地面找平";
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int glcsId;
 	

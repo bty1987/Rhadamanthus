@@ -14,9 +14,9 @@ public class MaterialDepartmentCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8210082803092475827L;
 	
-	public static String COLUMN_MATERIALDEPTID_STR = "materialDeptId";
+	public static final String COLUMN_MATERIALDEPTID_STR = "materialDeptId";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	private int mdcId;
 	

@@ -51,7 +51,7 @@ import com.fanglin.utils.SystemConfig;
 @Transactional(readOnly=true)
 public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemService {
 	
-	public static int MATERIAL_LIMIT_INT = 10;
+	public static final int MATERIAL_LIMIT_INT = 10;
 	
 	@Autowired
 	private MaterialSubOrderDao materialSubOrderDao;

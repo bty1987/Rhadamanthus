@@ -14,11 +14,11 @@ public class MaterialBrandCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -266955101410786047L;
 	
-	public static String COLUMN_MATERIALBRAND_STR = "materialBrand";
+	public static final String COLUMN_MATERIALBRAND_STR = "materialBrand";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_TOTAL_STR = "total";
+	public static final String COLUMN_TOTAL_STR = "total";
 
 	private int mbcId;
 	

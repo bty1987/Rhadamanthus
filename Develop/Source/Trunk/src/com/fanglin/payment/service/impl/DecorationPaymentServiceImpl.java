@@ -37,6 +37,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.dingding.po.AppMessageDelivery;
 import com.fanglin.dingding.po.TextMessage;
+import com.fanglin.finance.service.FinanceService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
@@ -73,8 +74,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
 	
-//	@Autowired
-//	private FinanceService financeService;
+	@Autowired
+	private FinanceService financeService;
 	
 //	@Autowired
 //	private DecorationActivityItemDao decorationActivityItemDao;
@@ -620,7 +621,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		Float coupon = decorationPaymentVO.getCoupon();
 		
-		if(coupon != null && coupon.floatValue() != 0){
+		if(coupon != null && coupon.floatValue() != 0f){
 			
 //			float _coupon = 0f;
 //			StringBuffer couponInfo = new StringBuffer("#");
@@ -681,32 +682,32 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		Float accounts = decorationPaymentVO.getAccounts();
 		Float installment = decorationPaymentVO.getInstallment();
 		
-		if(cash != null && cash.floatValue() != 0){
+		if(cash != null && cash.floatValue() != 0f){
 			decorationReceiptPO.setCash(cash);
 			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
 			realMoney = Arith.add(cash, realMoney);
 		}
-		if(bank != null && bank.floatValue() != 0){
+		if(bank != null && bank.floatValue() != 0f){
 			decorationReceiptPO.setBank(bank);
 			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
 			realMoney = Arith.add(bank, realMoney);
 		}
-		if(checkv != null && checkv.floatValue() != 0){
+		if(checkv != null && checkv.floatValue() != 0f){
 			decorationReceiptPO.setCheckv(checkv);
 			decorationReceiptPO.setCheckvBankName(decorationPaymentVO.getCheckvBankName());
 			realMoney = Arith.add(checkv, realMoney);
 		}
-		if(accounts != null && accounts.floatValue() != 0){
+		if(accounts != null && accounts.floatValue() != 0f){
 			decorationReceiptPO.setAccounts(accounts);
 			decorationReceiptPO.setAccountsBankName(decorationPaymentVO.getAccountsBankName());
 			realMoney = Arith.add(accounts, realMoney);
 		}
-		if(installment != null && installment.floatValue() != 0){
+		if(installment != null && installment.floatValue() != 0f){
 			decorationReceiptPO.setInstallment(installment);
 			decorationReceiptPO.setInstallmentBankName(decorationPaymentVO.getInstallmentBankName());
 			realMoney = Arith.add(installment, realMoney);
 		}
-		if(advance != null && advance.floatValue() != 0){
+		if(advance != null && advance.floatValue() != 0f){
 			decorationReceiptPO.setAdvance(advance);
 			decorationReceiptPO.setAdvanceType(decorationPaymentVO.getAdvanceType());
 			realMoney = Arith.add(advance, realMoney);
@@ -765,42 +766,42 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		Float installment = decorationPaymentVO.getInstallment();
 		Float coupon = decorationPaymentVO.getCoupon();
 		
-		if(cash != null && cash.floatValue() != 0){
+		if(cash != null && cash.floatValue() != 0f){
 			decorationReceiptPO.setCash(cash);
 			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
 		}else{
 			decorationReceiptPO.setCash(0f);
 			decorationReceiptPO.setCashInfo("");
 		}
-		if(bank != null && bank.floatValue() != 0){
+		if(bank != null && bank.floatValue() != 0f){
 			decorationReceiptPO.setBank(bank);
 			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
 		}else{
 			decorationReceiptPO.setBank(0f);
 			decorationReceiptPO.setBankInfo("");
 		}
-		if(checkv != null && checkv.floatValue() != 0){
+		if(checkv != null && checkv.floatValue() != 0f){
 			decorationReceiptPO.setCheckv(checkv);
 			decorationReceiptPO.setCheckvBankName(decorationPaymentVO.getCheckvBankName());
 		}else{
 			decorationReceiptPO.setCheckv(0f);
 			decorationReceiptPO.setCheckvBankName("");
 		}
-		if(accounts != null && accounts.floatValue() != 0){
+		if(accounts != null && accounts.floatValue() != 0f){
 			decorationReceiptPO.setAccounts(accounts);
 			decorationReceiptPO.setAccountsBankName(decorationPaymentVO.getAccountsBankName());
 		}else{
 			decorationReceiptPO.setAccounts(0f);
 			decorationReceiptPO.setAccountsBankName("");
 		}
-		if(installment != null && installment.floatValue() != 0){
+		if(installment != null && installment.floatValue() != 0f){
 			decorationReceiptPO.setInstallment(installment);
 			decorationReceiptPO.setInstallmentBankName(decorationPaymentVO.getInstallmentBankName());
 		}else{
 			decorationReceiptPO.setInstallment(0f);
 			decorationReceiptPO.setInstallmentBankName("");
 		}
-		if(coupon != null && coupon.floatValue() != 0){
+		if(coupon != null && coupon.floatValue() != 0f){
 			decorationReceiptPO.setCoupon(coupon);
 			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
 		}else{
@@ -914,21 +915,21 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		Float bank = decorationPaymentVO.getBank();
 		Float coupon = decorationPaymentVO.getCoupon();
 		
-		if(cash != null && cash.floatValue() != 0){
+		if(cash != null && cash.floatValue() != 0f){
 			decorationReceiptPO.setCash(cash);
 			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
 			
 			real = Arith.add(real, cash);
 		}
 		
-		if(bank != null && bank.floatValue() != 0){
+		if(bank != null && bank.floatValue() != 0f){
 			decorationReceiptPO.setBank(bank);
 			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
 			
 			real = Arith.add(real, bank);
 		}
 		
-		if(coupon != null && coupon.floatValue() != 0){
+		if(coupon != null && coupon.floatValue() != 0f){
 			decorationReceiptPO.setCoupon(coupon);
 			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
 			
@@ -1049,7 +1050,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
 					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
 					
-//					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));
+					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));
 				}
 				
 				decorationReceiptDao.save(decorationReceiptPO);

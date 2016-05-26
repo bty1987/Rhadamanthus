@@ -22,6 +22,8 @@ public class CleaningConstructionScheduleWorkerVO implements java.io.Serializabl
 	
 	private String workerRatyDes;
 	
+	private String workerPhone;
+	
 	private String workerPhoto;
 	
 	private String workerOldId;
@@ -98,6 +100,14 @@ public class CleaningConstructionScheduleWorkerVO implements java.io.Serializabl
 
 	public void setWorkerName(String workerName){
 		this.workerName = workerName;
+	}
+
+	public String getWorkerPhone() {
+		return workerPhone;
+	}
+
+	public void setWorkerPhone(String workerPhone) {
+		this.workerPhone = workerPhone;
 	}
 
 	public String getWorkerPhoto(){

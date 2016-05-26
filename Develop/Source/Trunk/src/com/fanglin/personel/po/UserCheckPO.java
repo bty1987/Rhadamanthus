@@ -18,9 +18,9 @@ public class UserCheckPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3081228509086918182L;
 	
-	public static String COLUMN_USERID_STR = "user.userId";
+	public static final String COLUMN_USERID_STR = "user.userId";
 	
-	public static String COLUMN_CHECKTIME_STR = "checkTime";
+	public static final String COLUMN_CHECKTIME_STR = "checkTime";
 
 	private long ucId;
 	

@@ -12,6 +12,7 @@
 package com.fanglin.common.service;
 
 import com.fanglin.common.vo.LoginInfoVO;
+import com.fanglin.core.interceptor.FLException;
 
 public interface LoginInfoService {
 	
@@ -19,7 +20,7 @@ public interface LoginInfoService {
 	
 	public LoginInfoVO addLoginInfo();
 	
-	public int updateLoginInfoForAuthentication(LoginInfoVO loginInfoVO);
+	public int updateLoginInfoForAuthentication(LoginInfoVO loginInfoVO) throws FLException;
 	
 	public int login(LoginInfoVO loginInfoVO);
 	

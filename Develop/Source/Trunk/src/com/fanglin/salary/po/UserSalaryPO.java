@@ -31,27 +31,27 @@ public class UserSalaryPO implements Serializable {
 
 	private static final long serialVersionUID = -7226711123554310769L;
 
-	public static String TYPE_PRICE_DEDUCTION_STR = "报价扣款";
+	public static final String TYPE_PRICE_DEDUCTION_STR = "报价扣款";
 	
-	public static String TYPE_ATTENDANCE_DEDUCTION_STR = "考勤扣款";
+	public static final String TYPE_ATTENDANCE_DEDUCTION_STR = "考勤扣款";
 	
-	public static String TYPE_INSURANCE_DEDUCTION_STR = "保险扣款";
+	public static final String TYPE_INSURANCE_DEDUCTION_STR = "保险扣款";
 	
-	public static String TYPE_OTHER_DEDUCTION_STR = "其他扣款";
+	public static final String TYPE_OTHER_DEDUCTION_STR = "其他扣款";
 	
-	public static String TYPE_MONTHLY_BONUS_STR = "月度奖金";
+	public static final String TYPE_MONTHLY_BONUS_STR = "月度奖金";
 	
-	public static String TYPE_QUARTERLY_BONUS_STR = "季度奖金";
+	public static final String TYPE_QUARTERLY_BONUS_STR = "季度奖金";
 	
-	public static String TYPE_DECEMBER_BONUS_STR = "年终奖金";
+	public static final String TYPE_DECEMBER_BONUS_STR = "年终奖金";
 	
-	public static String TYPE_OTHER_BONUS_STR = "其他奖金";
+	public static final String TYPE_OTHER_BONUS_STR = "其他奖金";
 	
-	public static String TYPE_REPLENISHMENT_STR = "补款";
+	public static final String TYPE_REPLENISHMENT_STR = "补款";
 	
-	public static int STATUS_INIT_INT = 0;
+	public static final int STATUS_INIT_INT = 0;
 	
-	public static int STATUS_BALANCE_INT = 1;
+	public static final int STATUS_BALANCE_INT = 1;
 
 	private Long autoId;
 	

@@ -14,17 +14,17 @@ public class DesignerSalaryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 296513431597297003L;
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_PAYOFF_INT = 1;
+	public static final int STATUS_TYPE_PAYOFF_INT = 1;
 	
-	public static int STATUS_TYPE_UNPAYOFF_INT = 2;
+	public static final int STATUS_TYPE_UNPAYOFF_INT = 2;
 	
-	public static String COLUMN_DSID_STR = "dsId";
+	public static final String COLUMN_DSID_STR = "dsId";
 	
-	public static String COLUMN_USERID_STR = "userId";
+	public static final String COLUMN_USERID_STR = "userId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
 	private int dsId;
 	

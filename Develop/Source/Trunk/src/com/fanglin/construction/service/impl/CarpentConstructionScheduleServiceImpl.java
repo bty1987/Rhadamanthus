@@ -89,6 +89,7 @@ public class CarpentConstructionScheduleServiceImpl implements CarpentConstructi
 			
 			UserPO userPO = userDao.get(carpentConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				carpentConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				carpentConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				carpentConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				carpentConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

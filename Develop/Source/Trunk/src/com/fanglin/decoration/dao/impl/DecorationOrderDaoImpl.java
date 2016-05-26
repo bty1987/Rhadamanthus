@@ -322,6 +322,8 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					query.add(query.getCriterion("houseClass", data, op));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion("status", data, op));
+				}else if("statuses".equals(field)){
+					query.add(query.getCriterion("status", filter.getRange(), op));
 				}else if("otherStatus".equals(field)){
 					query.add(query.getCriterion("otherStatus", data, "and"));
 				}else if("designerId".equals(field)){

@@ -118,26 +118,44 @@ jQuery(function($) {
 		payment.listgridHistory.trigger("reloadGrid", payment.postParams);
 	});
 	
-	com.post(api.ds.bankType, {}, function(res){
+	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		payment.cashInfo = res.cashInfo;
-		payment.bank = res.bank;
-		payment.bankInfo = res.bankInfo;
-		payment.checkBankInfo = res.checkBankInfo;
-		payment.accountsInfo = res.accountsInfo;
+		payment.cash = [];
+		payment.bank = [];
+		payment.checkBank = [];
+		payment.accounts = [];
 		
-		payment.checkBank = res.checkBank;
+		payment.cashInfo = {};
+		payment.bankInfo = {};
+		payment.checkBankInfo = {};
+		payment.accountsInfo = {};
 		
-		$("#cashInfo").bindData(res.cash, 'key', 'value');
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				payment.cash.push(v);
+				payment.cashInfo[v.key] = v.name;
+			}else if(v.type == 2){
+				payment.bank.push(v);
+				payment.bankInfo[v.key] = v.name;
+			}else if(v.type == 3){
+				payment.checkBank.push(v);
+				payment.checkBankInfo[v.key] = v.name;
+			}else if(v.type == 4){
+				payment.accounts.push(v);
+				payment.accountsInfo[v.key] = v.name;
+			}
+		});
 		
-		$("#installmentBankName").bindData(res.bank, 'key', 'value');
-		$("#refundBankName").bindData(res.bank, 'key', 'value');
+		$("#cashInfo").bindData(payment.cash, 'key', 'name');
 		
-		$("#checkvBankName").bindData(res.checkBank, 'key', 'value');
+		$("#installmentBankName").bindData(payment.bank, 'key', 'name');
+		$("#refundBankName").bindData(payment.bank, 'key', 'name');
 		
-		$(".bankSel").bindData(res.bank, 'key', 'value');
+		$("#checkvBankName").bindData(payment.checkBank, 'key', 'name');
 		
-		$("#accountsBankName").bindData(res.accounts, 'key', 'value');
+		$(".bankSel").bindData(payment.bank, 'key', 'name');
+		
+		$("#accountsBankName").bindData(payment.accounts, 'key', 'name');
 	});
 	
 	$("#bankAdd").click(function(){
@@ -417,8 +435,6 @@ function showPaymentModal(rowId, orderId){
 	$("#bankAdd").attr("num", 0);
 	
 	com.cleanItems(payment.items);
-	
-	payment.items.checkvBankName.bindData(payment.checkBank, 'key', 'value');
 	
 	payment.modal.modal("show");
 	

@@ -27,17 +27,17 @@ public class CarpentConstructionSchedulePO implements Serializable{
 
 	private static final long serialVersionUID = 6661138224403774890L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int CARPENT_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 8;
+	public static final int CARPENT_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 8;
 	
-	public static int CARPENT_ALLOCATION_WORKER_FLAG_INT = 32;
+	public static final int CARPENT_ALLOCATION_WORKER_FLAG_INT = 32;
 	
-	public static String CARPENT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "木工";
+	public static final String CARPENT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "木工";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int ccsId;
 	

@@ -33,7 +33,7 @@ var Ding = (function(){
 			
 			$.ajax({
 				type: 'POST',
-				url: config.serverHost + "requestDDConfig.do",
+				url: config.serverHost + "requestDDConfig.do?timestamp=" + new Date().getTime(),
 				data: {"url": checkURI},
 				dataType : "json",
 				async: false,
@@ -69,7 +69,7 @@ var Ding = (function(){
 			        	
 			            $.ajax({
 			            	type: 'POST',
-			                url: config.serverHost + '/queryDDUserInfo.do',
+			                url: config.serverHost + '/queryDDUserInfo.do?timestamp=' + new Date().getTime(),
 			                data: {"code": info.code},
 			                async: false,
 			                success: function (data, status, xhr) {
@@ -81,7 +81,7 @@ var Ding = (function(){
 			                			
 			                			$.ajax({
 			                		    	type: 'POST',
-			                		        url: config.serverHost + '/requestAuthCode.do',
+			                		        url: config.serverHost + '/requestAuthCode.do?timestamp=' + new Date().getTime(),
 			                		        data: {"userId": _user.userid},
 			                		        async: false,
 			                		        success: function (data, status, xhr) {

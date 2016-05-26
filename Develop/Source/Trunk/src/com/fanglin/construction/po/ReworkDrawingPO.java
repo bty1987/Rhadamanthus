@@ -27,7 +27,7 @@ public class ReworkDrawingPO implements Serializable{
 
 	private static final long serialVersionUID = 6799307327658765089L;
 	
-	public static String COLUMN_RWID_STR = "rwId";
+	public static final String COLUMN_RWID_STR = "rwId";
 	
 	private int rwdId;
 	

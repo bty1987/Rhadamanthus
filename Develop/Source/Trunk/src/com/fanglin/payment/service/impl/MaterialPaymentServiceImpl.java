@@ -33,6 +33,7 @@ import com.fanglin.data.vo.CustomerVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
+import com.fanglin.finance.service.FinanceService;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
@@ -79,8 +80,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Autowired
 	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
 	
-//	@Autowired
-//	private FinanceService financeService;
+	@Autowired
+	private FinanceService financeService;
 	
 	@Autowired
 	private UserDao userDao;
@@ -505,11 +506,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			if(materialSubOrderPO != null){
 				BeanUtil.copyProperties(materialSubOrderPO, materialPaymentVO);
+				
+				materialPaymentVO.setMsoCoupon(materialSubOrderPO.getCoupon());
+				materialPaymentVO.setMsoCouponInfo(materialSubOrderPO.getCouponInfo());
 			}
 			
 			materialPaymentVO.setPaymentTypeName(types.get(materialPaymentVO.getPaymentType()));
-			materialPaymentVO.setMsoCoupon(materialSubOrderPO.getCoupon());
-			materialPaymentVO.setMsoCouponInfo(materialSubOrderPO.getCouponInfo());
 			
 			materialPaymentVOs.add(materialPaymentVO);
 		}
@@ -1256,19 +1258,19 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		int paymentType = materialPaymentPO.getPaymentType() ;
 		
-		if(cash != 0){
+		if(cash != 0f){
 			materialReceiptPO.setCash(materialPaymentVO.getCash());
 			materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
 			
 			real = Arith.add(real, cash);
 		}
-		if(bank != 0){
+		if(bank != 0f){
 			materialReceiptPO.setBank(bank);
 			materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
 			
 			real = Arith.add(real, bank);
 		}
-		if(coupon != 0){
+		if(coupon != 0f){
 			materialReceiptPO.setCoupon(coupon);
 			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
 			
@@ -1501,9 +1503,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
 					materialReceiptPO.setStatus((short) MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
 					
-//					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
+					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
 					
-//					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
+					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
 				}
 				
 				materialReceiptDao.update(materialReceiptPO);

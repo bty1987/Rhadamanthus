@@ -28,9 +28,9 @@ public class QuotationFunctionAreaPO implements Serializable {
 
 	private static final long serialVersionUID = 1344464611L;
 	
-	public static String TYPE_COMMON_STR = "普通";
+	public static final String TYPE_COMMON_STR = "普通";
 	
-	public static String TYPE_MANAGEMENT_STR = "管理费";
+	public static final String TYPE_MANAGEMENT_STR = "管理费";
 	
 	private long autoId;
 	

@@ -17,6 +17,10 @@ public class LoginInfoVO implements java.io.Serializable {
 	private Long optime;
 	
 	private String userId;
+	
+	private Double x;
+	
+	private Double y;
 
 	public Long getLiId() {
 		return this.liId;
@@ -72,6 +76,22 @@ public class LoginInfoVO implements java.io.Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 }

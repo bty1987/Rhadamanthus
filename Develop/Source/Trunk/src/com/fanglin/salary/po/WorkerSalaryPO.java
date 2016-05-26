@@ -15,21 +15,21 @@ public class WorkerSalaryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 822467532841192640L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_PAYOFF = 1;
+	public static final int STATUS_TYPE_PAYOFF = 1;
 	
-	public static int STATUS_TYPE_UNPAYOFF = 2;
+	public static final int STATUS_TYPE_UNPAYOFF = 2;
 	
-	public static String COLUMN_WSID_STR = "wsId";
+	public static final String COLUMN_WSID_STR = "wsId";
 	
-	public static String COLUMN_USERID_STR = "userId";
+	public static final String COLUMN_USERID_STR = "userId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static String COLUMN_WORKTYPEID_STR = "workTypeId";
+	public static final String COLUMN_WORKTYPEID_STR = "workTypeId";
 
 	private int wsId;
 	

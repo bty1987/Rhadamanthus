@@ -469,7 +469,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		List<String> statuses = Arrays.asList(DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR, DecorationOrderPO.STATUS_COMPLETED_STR);
 		
-		filters.add(new FilterVO("status", statuses, "ni"));
+		filters.add(new FilterVO("statuses", statuses, "ni"));
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
@@ -517,7 +517,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		String duty = userPO.getDuty();
 		
-		if(filters.size() == 0 && duty.contains("设计师")) return;
+		if(filters.size() == 0 && !duty.contains("设计师")) return;
 		
 		List<Integer> designDepartmentIds = null;
 		List<String> statuses = null;

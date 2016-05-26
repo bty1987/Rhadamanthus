@@ -15,15 +15,15 @@ public class BricklayConstructionScheduleWorkerPO implements java.io.Serializabl
 
 	private static final long serialVersionUID = -7514302020195756379L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_BCSID_STR = "bcsId";
+	public static final String COLUMN_BCSID_STR = "bcsId";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_WORKERID_STR = "workerId";
+	public static final String COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int bcswId;
 	

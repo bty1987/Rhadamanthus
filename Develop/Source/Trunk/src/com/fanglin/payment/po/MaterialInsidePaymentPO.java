@@ -14,19 +14,19 @@ public class MaterialInsidePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8590198663194344857L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_MIID_STR = "miId";
+	public static final String COLUMN_MIID_STR = "miId";
 	
-	public static String COLUMN_PAYMENTSTATUS_STR = "paymentStatus";
+	public static final String COLUMN_PAYMENTSTATUS_STR = "paymentStatus";
 	
-	public static String COLUMN_PAYMENTTYPE_STR = "paymentType";
+	public static final String COLUMN_PAYMENTTYPE_STR = "paymentType";
 	
-	public static int PAYMENTSTATUS_TYPE_INIT_INT = 0;
+	public static final int PAYMENTSTATUS_TYPE_INIT_INT = 0;
 	
-	public static int PAYMENTSTATUS_TYPE_COLLECT_INT = 1;
+	public static final int PAYMENTSTATUS_TYPE_COLLECT_INT = 1;
 	
-	public static int PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
+	public static final int PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
 
 	private long mipId;
 	

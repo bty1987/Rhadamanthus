@@ -12,7 +12,7 @@ params.authentication = window.authentication;
 
 $(function(){
 	com.post(api.common.createTree, {}, loadTreeCallback);
-
+	
 	$("#versionCode").text(config.versionCode);
 	
 	$(".userProfile").attr("href", api.index.userProfile.url + "?timestamp="+ new Date().getTime());

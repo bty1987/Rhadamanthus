@@ -14,15 +14,15 @@ public class DesignerOutsideSalaryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3678880641510340882L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_DSID_STR = "dsId";
+	public static final String COLUMN_DSID_STR = "dsId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static int STATUS_INIT_INT = 0;
+	public static final int STATUS_INIT_INT = 0;
 	
-	public static int STATUS_PAYOFF_INT = 1;
+	public static final int STATUS_PAYOFF_INT = 1;
 
 	private int dosId;
 	

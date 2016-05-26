@@ -27,17 +27,17 @@ public class CleaningConstructionSchedulePO implements Serializable {
 
 	private static final long serialVersionUID = -8701965467459440790L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int CLEANING_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 10;
+	public static final int CLEANING_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 10;
 	
-	public static int CLEANING_ALLOCATION_WORKER_FLAG_INT = 256;
+	public static final int CLEANING_ALLOCATION_WORKER_FLAG_INT = 256;
 	
-	public static String CLEANING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "保洁";
+	public static final String CLEANING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "保洁";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
     private int ccsId;
     

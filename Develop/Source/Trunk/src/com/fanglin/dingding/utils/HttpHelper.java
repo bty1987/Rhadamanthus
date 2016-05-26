@@ -48,7 +48,7 @@ public class HttpHelper {
 	
 	private static final String RESPONSE_PRINT_EXCEPTION_STR = "request url=%s, exception, msg=%s";
 	
-	public static Logger logger = LoggerFactory.getLogger(HttpHelper.class);
+	public static final Logger logger = LoggerFactory.getLogger(HttpHelper.class);
 
 	public static JSONObject httpGet(String url){
         HttpGet httpGet = new HttpGet(url);

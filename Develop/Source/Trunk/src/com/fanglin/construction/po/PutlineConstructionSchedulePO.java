@@ -33,25 +33,25 @@ public class PutlineConstructionSchedulePO implements Serializable {
 
 	private static final long serialVersionUID = 7964248933414074995L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 2;
+	public static final int PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 2;
 	
-	public static int PUBLINE_ALLOCATION_WORKER_FLAG_INT = 2;
+	public static final int PUBLINE_ALLOCATION_WORKER_FLAG_INT = 2;
 	
-	public static String PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "放线";
+	public static final String PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "放线";
 	
-	public static int PUTLINESTATUS_TYPE_INIT_INT = 0;
+	public static final int PUTLINESTATUS_TYPE_INIT_INT = 0;
 	
-	public static int PUTLINESTATUS_TYPE_SUCCESS_INT = 1;
+	public static final int PUTLINESTATUS_TYPE_SUCCESS_INT = 1;
 	
-	public static int PUTLINESTATUS_TYPE_FAIL_INT = 2;
+	public static final int PUTLINESTATUS_TYPE_FAIL_INT = 2;
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_PUTLINESTATUS_STR = "putlineStatus";
+	public static final String COLUMN_PUTLINESTATUS_STR = "putlineStatus";
 	
 	private int plcsId;
 	
