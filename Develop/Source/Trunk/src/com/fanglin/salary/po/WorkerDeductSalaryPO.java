@@ -1,5 +1,4 @@
 package com.fanglin.salary.po;
-// default package
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -15,25 +14,25 @@ public class WorkerDeductSalaryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7005634387087934683L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_PASS_INT = 1;
+	public static final int STATUS_TYPE_PASS_INT = 1;
 	
-	public static int STATUS_TYPE_CONFIRM_INT = 2;
+	public static final int STATUS_TYPE_CONFIRM_INT = 2;
 	
-	public static int STATUS_TYPE_PAYOFF_INT = 3;
+	public static final int STATUS_TYPE_PAYOFF_INT = 3;
 	
-	public static int STATUS_TYPE_DELETE_INT = 4;
+	public static final int STATUS_TYPE_DELETE_INT = 4;
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static String COLUMN_WSID_STR = "wsId";
+	public static final String COLUMN_WSID_STR = "wsId";
 	
-	public static String COLUMN_WORKTYPEID_STR = "workTypeId";
+	public static final String COLUMN_WORKTYPEID_STR = "workTypeId";
 
 	private int wdsId;
 	

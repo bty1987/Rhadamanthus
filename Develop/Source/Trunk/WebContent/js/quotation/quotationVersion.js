@@ -1,259 +1,196 @@
-var quotationVersion = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	quotationVersionItems: {},
-	
-	validator: {
-		roleId: {
-			type: "v_versionId", 
-			regex: /^QV_\d{3}$/, 
-			errorMsg: "请输入QV_数字,如QV_001."
-		}
-	},
-	repeatFlg:false,
-	editFlag: false
-};
+$(function(){
 
-jQuery(function($) {
-	
-	quotationVersion.listGrid = $("#listGrid");
-	quotationVersion.gridPager = "#gridPager";
-	quotationVersion.saveBtn = $("#saveBtn").on("click", saveData);
-	quotationVersion.cancelBtn = $("#cancelBtn");
-	quotationVersion.modal = $("#qtModal").on('show.bs.modal',function(e){
-		com.clearValidator();
-		com.clearValidator("#versionId", true);
-	});
-	
-	quotationVersion.saveCopyVersionBtn = $("#saveCopyVersionBtn").on("click", saveCopyVersionData);
-	quotationVersion.cancelCopyVersionBtn = $("#cancelCopyVersionBtn");
-	quotationVersion.modalCopyVersion = $("#copyVersionModal").on('show.bs.modal',function(e){
-		com.clearValidator();
-		com.clearValidator("#copyVersionId", true);
-	});
-	
-	quotationVersion.quotationVersionItems.copyVersionId= $("#copyVersionId").on("blur",function(){
-		$this = $(this);
-		
-		var options = {
-			"quotationVersion.versionId": $this.val(),
-		}
-		
-		com.post(api.quotation.queryQuotationVersionByVersionId, options, function(res){
-			
-			if(res.quotationVersion && res.quotationVersion.qvId){
-				com.showTips($this, "该版本编号已存在", true);
-				quotationVersion.repeatFlg = true;
-			}else{
-				com.clearValidator("#copyVersionId", true);
-				quotationVersion.repeatFlg = false;
-			}
-		});
-	});
-	
-	quotationVersion.quotationVersionItems.copyVersionName = $("#copyVersionName");
-	quotationVersion.quotationVersionItems.copyVersionDes = $("#copyVersionDes");
-	
-	quotationVersion.quotationVersionItems.versionId= $("#versionId").on("blur",function(){
-		$this = $(this);
-		
-		var options = {
-			"quotationVersion.versionId": $this.val(),
-		}
-		
-		com.post(api.quotation.queryQuotationVersionByVersionId, options, function(res){
-			
-			if(res.quotationVersion && res.quotationVersion.qvId){
-				com.showTips($this, "该版本编号已存在", true);
-				quotationVersion.repeatFlg = true;
-			}else{
-				com.clearValidator("#versionId", true);
-				quotationVersion.repeatFlg = false;
-			}
-		});
-	});
-	
-	quotationVersion.quotationVersionItems.versionName = $("#versionName");
-	quotationVersion.quotationVersionItems.versionDes = $("#versionDes");
-	
-	$.extend(com.validator, quotationVersion.validator);
-	
-	var searchOpts = {
-		url: api.quotation.pageQuotationVersion,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: quotationVersion.listGrid,
-		items: [
-		    {label:"版本名称",id:"versionNameSearch",name:"versionName", type:'text'}
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	quotationVersion.quotationVersionItems.defaultFlag = $("#defaultFlag");
-	
- 	quotationVersion.quotationVersionItems.defaultFlag.switchBtn();
-	
-	quotationVersion.quotationVersionItems.defaultFlag.click(function(e){
-		quotationVersion.quotationVersionItems.defaultFlag.value = quotationVersion.quotationVersionItems.defaultFlag.value == 0 ? 1 : 0;
-	});
+    /**
+     * 回调函数必须提供 init(tableId, result.list)方法
+     * tableId ，用来显示的div的id
+     * result.list 列表的json数组
+     * */
+    var displayFunc  = (function(){
 
-	quotationVersion.listGrid.jqGrid({		
-		url: api.quotation.pageQuotationVersion.url,
-		colNames:['编号', '名称', '信息', '默认版本','操作'],
-		colModel:[
-			{name:'versionId', editable:true, edittype:"text"},
-			{name:'versionName', editable:true, edittype:"text", editoptions:{size:"20",maxlength:"30"}},
-			{name:'versionDes', editable:true, sortable:false, edittype:"textarea"},
-			{name:'defaultFlag', editable:true, formatter:defaultFlagFormat ,unformat:defaultFlagUnFormat},
-			{name:'action', formatter:initAction}
-		], 
-		pager : quotationVersion.gridPager,
-		caption: "报价版本信息列表"
-	});
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-	quotationVersion.listGrid.navGrid(quotationVersion.gridPager,
-		{edit: false, add: false, del: false, search: false, refresh: false, view: false}, {}, {}, {}
-	).navButtonAdd(quotationVersion.gridPager,{
-		caption: "",
-		buttonicon: "icon-pencil blue",
-		title: "编辑",
-		onClickButton: function(){
-			quotationVersion.editFlg = true;
-			var num = quotationVersion.listGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.showSelectInfo(quotationVersion.listGrid.attr("id"));
-				return;
-			}
-			
-			var row = quotationVersion.listGrid.jqGrid("getRowData", num);
-			quotationVersion.quotationVersionItems.versionId.val(row.versionId);
-			quotationVersion.quotationVersionItems.versionName.val(row.versionName);
-			quotationVersion.quotationVersionItems.versionDes.val(row.versionDes);
-			
-			quotationVersion.quotationVersionItems.versionId.prop("disabled", true).css("display", "block");
-			
-			if(quotationVersion.quotationVersionItems.defaultFlag.value == undefined){
-				if(row.defaultFlag == 1){
-					quotationVersion.quotationVersionItems.defaultFlag.click();
-				}
-				quotationVersion.quotationVersionItems.defaultFlag.value = row.defaultFlag;
-			}else{
-				if(quotationVersion.quotationVersionItems.defaultFlag.value != row.defaultFlag){
-					quotationVersion.quotationVersionItems.defaultFlag.click();
-				}
-				quotationVersion.quotationVersionItems.defaultFlag.value = row.defaultFlag;
-			}
-			
-			quotationVersion.modal.modal("show");
-		},
-		position: "first"
-	}).navButtonAdd(quotationVersion.gridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "添加",
-		onClickButton: function(){
-			
-			quotationVersion.quotationVersionItems.versionId.css("display", "none");
-			
-			quotationVersion.editFlg = false;
-			com.cleanItems(quotationVersion.quotationVersionItems);
-			quotationVersion.quotationVersionItems.versionId.prop("disabled",false);
-			quotationVersion.modal.modal("show");
-		},
-		position: "first"
-	});
+            if(listData && listData.length){
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.versionName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnCopy = $('<a></a>').addClass('btn btn-minier btn-success').html('复制报价');
+
+            var propertyArr = [
+                ["编号:", v.versionId, "grey"],
+                ["信息:", v.versionDes ? v.versionDes : '--', "grey"],
+                ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '--', "red"],
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnEdit).append($btnCopy).appendTo($h3);
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnEdit.click(function(){
+                editLine(v);
+            });
+
+            $btnCopy.click(function(){
+                copyVersion(v.versionId);
+            });
+
+            return $liLine;
+        };
+
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+
+    var _condArr = ['versionName'];
+
+    Searcher.init( _condArr, "condList", api.quotation.pageQuotationVersion, displayFunc, "resultList", "quotationVersionPostData");
+
+    var quotationVersion = {
+        saveBtn: $("#saveBtn").on("click", saveData),
+        cancellBtn: $("#cancelBtn"),
+        modal: $("#qtModal").on("show.bs.modal", function(a) {
+            com.clearValidator();
+            com.clearValidator("#versionId", !0)
+        }),
+        saveCopyVersionBtn : $("#saveCopyVersionBtn").on("click", saveCopyVersionData),
+        cancelCopyVersionBtn : $("#cancelCopyVersionBtn"),
+        modalCopyVersion : $("#copyVersionModal").on("show.bs.modal", function(a) {
+            com.clearValidator();
+            com.clearValidator("#copyVersionId", !0)
+        }),
+        quotationVersionItems: {
+            copyVersionId: $("#copyVersionId").on("blur", function () {
+                $this = $(this);
+                var b = {
+                    "quotationVersion.versionId": $this.val()
+                };
+                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyVersionId", !0), quotationVersion.repeatFlg = !1)
+                })
+            }),
+            copyVersionName: $("#copyVersionName"),
+            copyVersionDes: $("#copyVersionDes"),
+            versionId: $("#versionId").on("blur", function () {
+                $this = $(this);
+                var b = {
+                    "quotationVersion.versionId": $this.val()
+                };
+                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), quotationVersion.repeatFlg = !1)
+                })
+            }),
+            versionName: $("#versionName"),
+            versionDes: $("#versionDes"),
+            defaultFlag : $("#defaultFlag").switchBtn().on("click", function(a) {
+                quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0
+            })
+        },
+        validator: {
+            roleId: {
+                type: "v_versionId",
+                regex: /^QV_\d{3}$/,
+                errorMsg: "\u8bf7\u8f93\u5165QV_\u6570\u5b57,\u5982QV_001."
+            }
+        },
+        repeatFlg: !1,
+        editFlag: !1
+    };
+
+    $.extend(com.validator, quotationVersion.validator);
+
+    $('a[name="add"]','#pagenation').click(function(){
+        quotationVersion.quotationVersionItems.versionId.css("display", "none");
+        quotationVersion.editFlag = !1;
+        com.cleanItems(quotationVersion.quotationVersionItems);
+        quotationVersion.quotationVersionItems.versionId.prop("disabled", !1);
+        quotationVersion.modal.modal("show")
+    });
+
+    function editLine(b){
+
+        quotationVersion.editFlag = !0;
+        quotationVersion.quotationVersionItems.versionId.val(b.versionId);
+        quotationVersion.quotationVersionItems.versionName.val(b.versionName);
+        quotationVersion.quotationVersionItems.versionDes.val(b.versionDes);
+        quotationVersion.quotationVersionItems.versionId.prop("disabled", !0).css("display", "block");
+        void 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 == b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click() : quotationVersion.quotationVersionItems.defaultFlag.value != b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click();
+        quotationVersion.quotationVersionItems.defaultFlag.value = b.defaultFlag;
+        quotationVersion.modal.modal("show");
+    }
+
+    function copyVersion(a){
+        $("#copySourceVersionId").val(a);
+        quotationVersion.modalCopyVersion.modal("show")
+    }
+
+    function saveData() {
+        com.clearValidator();
+        com.clearValidator("#versionId", !0);
+        if (!com.validate("qtModal") && !quotationVersion.repeatFlg) {
+            var a = {
+                "quotationVersion.versionId": quotationVersion.quotationVersionItems.versionId.val(),
+                "quotationVersion.versionName": quotationVersion.quotationVersionItems.versionName.val(),
+                "quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
+                "quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
+            };
+            com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, a, successCallback, failCallback);
+            quotationVersion.modal.modal("hide")
+        }
+    }
+
+    function saveCopyVersionData() {
+        com.clearValidator();
+        com.clearValidator("#copyVersionId", !0);
+        if (!com.validate("copyVersionModal") && !quotationVersion.repeatFlg) {
+            var a = quotationVersion.quotationVersionItems,
+                a = {
+                    versionId: $("#copySourceVersionId").val(),
+                    "quotationVersion.versionId": a.copyVersionId.val(),
+                    "quotationVersion.versionName": a.copyVersionName.val(),
+                    "quotationVersion.defaultFlag": 0,
+                    "quotationVersion.versionDes": a.copyVersionDes.val()
+                };
+            com.post(api.quotation.copyQuotationVersion, a, successCallback, failCallback);
+            quotationVersion.modalCopyVersion.modal("hide")
+        }
+    }
+
+    function successCallback() {
+        com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+        $('#condList button.btn-search').click();
+
+    }
+    function failCallback() {}
+
 });
 
-function defaultFlagFormat( cellvalue, options, rowObject ){  
-	if(cellvalue == 1){
-		return '是 <input type="text" value="1" class="hidden" />  ';
-	}
-	
-    return '否<input type="text" value="0" class="hidden" />';  
-} 
-
-function defaultFlagUnFormat( cellvalue, options, cell){  
-	return $('input', cell).val();
-}  
-
-function initAction(cellvalue, options, rowObject){
-	var result = '';
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button class="btn btn-minier btn-primary" onclick="copyQuotationVersion(\''+rowObject.versionId+'\');">复制报价</button>';
-	result += '</div>';
-	
-	return result;
-}
-
-function copyQuotationVersion(versionId){
-	$("#copySourceVersionId").val(versionId);
-	quotationVersion.modalCopyVersion.modal("show");
-}
-
-function saveData(){
-	com.clearValidator();
-	com.clearValidator("#versionId", true);
-	
-	if(com.validate("qtModal")|| quotationVersion.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		"quotationVersion.versionId": quotationVersion.quotationVersionItems.versionId.val(),
-		"quotationVersion.versionName": quotationVersion.quotationVersionItems.versionName.val(),
-		"quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
-		"quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
-	};
-	
-	if(quotationVersion.editFlg){
-		url = api.quotation.updateQuotationVersion;
-	}else{
-		url = api.quotation.addQuotationVersion;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	
-	quotationVersion.modal.modal("hide");
-}
-
-function saveCopyVersionData(){
-	com.clearValidator();
-	com.clearValidator("#copyVersionId", true);
-	
-	if(com.validate("copyVersionModal")|| quotationVersion.repeatFlg){
-		return;
-	}
-	
-	var quotationVersionItems = quotationVersion.quotationVersionItems;
-	
-	var options = {
-		"versionId": $("#copySourceVersionId").val(),
-		"quotationVersion.versionId": quotationVersionItems.copyVersionId.val(),
-		"quotationVersion.versionName": quotationVersionItems.copyVersionName.val(),
-		"quotationVersion.defaultFlag": 0,
-		"quotationVersion.versionDes": quotationVersionItems.copyVersionDes.val()
-	};
-	
-	com.post(api.quotation.copyQuotationVersion, options, successCallback, failCallback);
-	
-	quotationVersion.modalCopyVersion.modal("hide");
-}
-
-function successCallback(){
-	quotationVersion.listGrid.trigger("reloadGrid");
-	com.showAlert(com.info, "操作成功");
-	
-}
-
-function failCallback(){
-	
-}
-
-function cleanItems(){
-	
-}

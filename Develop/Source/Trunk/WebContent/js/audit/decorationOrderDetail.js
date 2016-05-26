@@ -429,7 +429,7 @@ function initUploadify(){
         'successTimeout':150,
         //附带值
         'formData':{
-            'uploadType':1
+            'uploadType':2
         },
         //flash
         //'swf': "./js/uploadify/uploadify.swf",

@@ -94,6 +94,7 @@ public class OilConstructionScheduleServiceImpl implements OilConstructionSchedu
 			
 			UserPO userPO = userDao.get(oilConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				oilConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				oilConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				oilConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				oilConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

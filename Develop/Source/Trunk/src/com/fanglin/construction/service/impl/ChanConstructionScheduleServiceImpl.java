@@ -82,6 +82,7 @@ public class ChanConstructionScheduleServiceImpl implements ChanConstructionSche
 				chanConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
 				chanConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
 				chanConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
+				chanConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
 				chanConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
 			}
 		}

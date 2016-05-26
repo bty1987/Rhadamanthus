@@ -37,51 +37,51 @@ public class DecorationOrderPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433500262L;
 	
-	public static String STATUS_CONSULT_STR = "咨询";
+	public static final String STATUS_CONSULT_STR = "咨询";
 	
-	public static String STATUS_AMOUNT_STR = "量房";
+	public static final String STATUS_AMOUNT_STR = "量房";
 	
-	public static String STATUS_QUOTATION_STR = "已报价";
+	public static final String STATUS_QUOTATION_STR = "已报价";
 	
-	public static String STATUS_DEPOSIT_STR = "定金";
+	public static final String STATUS_DEPOSIT_STR = "定金";
 	
-	public static String STATUS_RESIGNED_STR = "重签合同";
+	public static final String STATUS_RESIGNED_STR = "重签合同";
 	
-	public static String STATUS_SIGNED_STR = "已签约";
+	public static final String STATUS_SIGNED_STR = "已签约";
 	
-	public static String STATUS_WASTE_STR = "废单";
+	public static final String STATUS_WASTE_STR = "废单";
 	
-	public static String STATUS_COMPLETED_STR = "已完工";
+	public static final String STATUS_COMPLETED_STR = "已完工";
 	
-	public static String STATUS_TERMINATION_STR = "合同终止";
+	public static final String STATUS_TERMINATION_STR = "合同终止";
 	
-	public static String PROJECTSTATUS_WAITING_STR = "等待施工";
+	public static final String PROJECTSTATUS_WAITING_STR = "等待施工";
 	
-	public static String PROJECTSTATUS_FANG_APPLY_STR = "放线申请";
+	public static final String PROJECTSTATUS_FANG_APPLY_STR = "放线申请";
 	
-	public static String PROJECTSTATUS_FANG_SUCCESS_STR = "放线成功";
+	public static final String PROJECTSTATUS_FANG_SUCCESS_STR = "放线成功";
 	
-	public static String PROJECTSTATUS_FANG_FAIL_STR = "放线失败";
+	public static final String PROJECTSTATUS_FANG_FAIL_STR = "放线失败";
 	
-	public static int ORDERTYPE_DECORATION_INT = 1;
+	public static final int ORDERTYPE_DECORATION_INT = 1;
 	
-	public static int ORDERTYPE_MATERIAL_INT = 2;
+	public static final int ORDERTYPE_MATERIAL_INT = 2;
 	
-	public static String HOUSETYPE_COMPLETE_STR = "现房";
+	public static final String HOUSETYPE_COMPLETE_STR = "现房";
 	
-	public static String HOUSETYPE_OFFPLAN_STR = "期房";
+	public static final String HOUSETYPE_OFFPLAN_STR = "期房";
 	
-	public static String ACTIVITYSTATUS_RECEIVED_STR = "已领取";
+	public static final String ACTIVITYSTATUS_RECEIVED_STR = "已领取";
 	
-	public static String ACTIVITYSTATUS_UNRECEIVED_STR = "未领取";
+	public static final String ACTIVITYSTATUS_UNRECEIVED_STR = "未领取";
 	
-	public static int APPROVAL_MODIFICATION_INT = 0;
+	public static final int APPROVAL_MODIFICATION_INT = 0;
 	
-	public static int APPROVAL_APPLY_INT = 1;
+	public static final int APPROVAL_APPLY_INT = 1;
 	
-	public static int APPROVAL_PASS_INT = 2;
+	public static final int APPROVAL_PASS_INT = 2;
 	
-	public static int APPROVAL_UNPASS_INT = 3;
+	public static final int APPROVAL_UNPASS_INT = 3;
 	
 	private Long autoId;
 	

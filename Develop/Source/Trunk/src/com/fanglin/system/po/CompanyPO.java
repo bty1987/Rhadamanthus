@@ -13,12 +13,12 @@ package com.fanglin.system.po;
 
 public class CompanyPO {
 	
-	public static int TYPE_HEADQUARTER_INT = 0;
+	public static final int TYPE_HEADQUARTER_INT = 0;
 	
-	public static int TYPE_FANGLIN_INT = 1;
+	public static final int TYPE_FANGLIN_INT = 1;
 	
-	public static int TYPE_BIGHOUSE_INT = 2;
+	public static final int TYPE_BIGHOUSE_INT = 2;
 	
-	public static int TYPE_YIJIA_INT = 3;
+	public static final int TYPE_YIJIA_INT = 3;
 
 }

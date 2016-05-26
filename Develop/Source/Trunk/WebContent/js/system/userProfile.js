@@ -83,7 +83,7 @@ jQuery(function($) {
 	        'auto':true, // 是否自动上传
 	        'successTimeout': 99999, //超时时间
 	        'formData': { //附带值
-	            'uploadType':2,
+	            'uploadType':0,
 	            'strutsUploadsFileName': '',
 	            'username':'用户名',
 	            'rnd':'加密密文'

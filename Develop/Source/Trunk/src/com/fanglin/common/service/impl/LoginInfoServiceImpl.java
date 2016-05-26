@@ -21,6 +21,7 @@ import com.fanglin.common.dao.LoginInfoDao;
 import com.fanglin.common.po.LoginInfoPO;
 import com.fanglin.common.service.LoginInfoService;
 import com.fanglin.common.vo.LoginInfoVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.log.vo.LoginLogVO;
 import com.fanglin.personel.dao.UserDao;
@@ -69,7 +70,39 @@ public class LoginInfoServiceImpl implements LoginInfoService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateLoginInfoForAuthentication(LoginInfoVO loginInfoVO) {
+	public int updateLoginInfoForAuthentication(LoginInfoVO loginInfoVO) throws FLException {
+		
+		UserPO userPO = userDao.get(loginInfoVO.getUserId());
+		
+		if(userPO == null){
+			throw new FLException(110004, "该用户不能登陆系统");
+		}
+		
+		if(userPO.getExtranet() == 0){
+			boolean checkFlag = false;
+			
+			double x = loginInfoVO.getX();
+			double y = loginInfoVO.getY();
+			
+			String checkPoint = SystemConfig.getString("checkPoint");
+			double checkRang = SystemConfig.getDouble("checkRang");
+			
+			String[] checkInfos = checkPoint.split(",");
+			
+			for(String checkInfo: checkInfos){
+				double _x = Double.parseDouble(checkInfo.split(":")[0]);
+				double _y = Double.parseDouble(checkInfo.split(":")[1]);
+				
+				if(Math.abs(x - _x) < checkRang && Math.abs(y - _y) < checkRang){
+					checkFlag = true;
+					break;
+				}
+			}
+			
+			if(!checkFlag){
+				throw new FLException(110007, "网络问题");
+			}
+		}
 		
 		LoginInfoPO loginInfoPO = loginInfoDao.queryLoginInfoByLoginFlag(loginInfoVO.getLoginFlag());
 		

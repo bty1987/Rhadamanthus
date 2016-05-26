@@ -32,51 +32,51 @@ public class ConstructionSchedulePO implements Serializable{
 
 	private static final long serialVersionUID = -3113263670279309498L;
 	
-	public static String COLUMN_ORDERID_STR = "decorationOrderPO.orderId";
+	public static final String COLUMN_ORDERID_STR = "decorationOrderPO.orderId";
 	
-	public static String COLUMN_SCHEDULE_STR = "schedule";
+	public static final String COLUMN_SCHEDULE_STR = "schedule";
 	
-	public static String COLUMN_SUPERVISORQUALITYID_STR = "supervisorQualityId";
+	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisorQualityId";
 	
-	public static String COLUMN_CHANQUALITYID_STR = "chanQualityId";
+	public static final String COLUMN_CHANQUALITYID_STR = "chanQualityId";
 	
-	public static String COLUMN_PUTLINEQUALITYID_STR = "putlineQualityId";
+	public static final String COLUMN_PUTLINEQUALITYID_STR = "putlineQualityId";
 	
-	public static String COLUMN_WATERWAYCIRCUITQUALITYID_STR = "waterwayCircuitPowerQualityId";
+	public static final String COLUMN_WATERWAYCIRCUITQUALITYID_STR = "waterwayCircuitPowerQualityId";
 	
-	public static String COLUMN_POWERQUALITYID_STR = "powerQualityId";
+	public static final String COLUMN_POWERQUALITYID_STR = "powerQualityId";
 	
-	public static String COLUMN_BRICKLAYQUALITYID_STR = "bricklayQualityId";
+	public static final String COLUMN_BRICKLAYQUALITYID_STR = "bricklayQualityId";
 	
-	public static String COLUMN_CARPENTQUALITYID_STR = "carpentQualityId";
+	public static final String COLUMN_CARPENTQUALITYID_STR = "carpentQualityId";
 	
-	public static String COLUMN_OILQUALITYID_STR = "oilQualityId";
+	public static final String COLUMN_OILQUALITYID_STR = "oilQualityId";
 	
-	public static String COLUMN_CLEANINGQUALITYID_STR = "cleaningQualityId";
+	public static final String COLUMN_CLEANINGQUALITYID_STR = "cleaningQualityId";
 	
-	public static String COLUMN_CHANSTATUS_STR = "chanStatus";
+	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
 	
-	public static String COLUMN_ALLOCATIONWORKERFLAG_STR = "allocationWorkerFlag";
+	public static final String COLUMN_ALLOCATIONWORKERFLAG_STR = "allocationWorkerFlag";
 	
-	public static String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
+	public static final String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
 	
-	public static int SCHEDULE_TYPE_CHAN_INT = 1;
+	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
 	
-	public static int SCHEDULE_TYPE_PUTLINE_INT = 2;
+	public static final int SCHEDULE_TYPE_PUTLINE_INT = 2;
 	
-	public static int SCHEDULE_TYPE_WATERWAYCIRCUIT_INT = 3;
+	public static final int SCHEDULE_TYPE_WATERWAYCIRCUIT_INT = 3;
 	
-	public static int SCHEDULE_TYPE_BRICKLAY_INT = 4;
+	public static final int SCHEDULE_TYPE_BRICKLAY_INT = 4;
 	
-	public static int SCHEDULE_TYPE_GROUNDLEVELING_INT = 5;
+	public static final int SCHEDULE_TYPE_GROUNDLEVELING_INT = 5;
 	
-	public static int SCHEDULE_TYPE_CARPENT_INT = 6;
+	public static final int SCHEDULE_TYPE_CARPENT_INT = 6;
 	
-	public static int SCHEDULE_TYPE_OIL_INT = 7;
+	public static final int SCHEDULE_TYPE_OIL_INT = 7;
 	
-	public static int SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT = 8;
+	public static final int SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT = 8;
 	
-	public static int SCHEDULE_TYPE_CLEANING_INT = 9;
+	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
 	
 	private int csId;
 	

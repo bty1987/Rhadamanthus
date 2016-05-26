@@ -25,9 +25,9 @@ public class InspectionRecordPO implements Serializable{
 
 	private static final long serialVersionUID = 736199537491227456L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int irId;
 	

@@ -15,23 +15,23 @@ public class WaterwayCircuitCheckConstructionScheduleWorkerPO implements java.io
 
 	private static final long serialVersionUID = -3996000892351248728L;
 	
-	public static int WATERWAY_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 3;
+	public static final int WATERWAY_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 3;
 	
-	public static String WATERWAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水暖工";
+	public static final String WATERWAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水暖工";
 	
-	public static int POWER_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 4;
+	public static final int POWER_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 4;
 	
-	public static String POWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "力工";
+	public static final String POWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "力工";
 	
-	public static int CIRCUIT_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 5;
+	public static final int CIRCUIT_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 5;
 	
-	public static String CIRCUIT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "电工";
+	public static final String CIRCUIT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "电工";
 	
-	public static String COLUMN_WCCCSID_STR = "wcccsId";
+	public static final String COLUMN_WCCCSID_STR = "wcccsId";
 	
-	public static String 	COLUMN_WORKERID_STR = "workerId";
+	public static final String 	COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int wcccswId;
 	

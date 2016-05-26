@@ -15,15 +15,15 @@ public class CarpentConstructionScheduleWorkerPO implements java.io.Serializable
 
 	private static final long serialVersionUID = -4122303748594285951L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_CCSID_STR = "ccsId";
+	public static final String COLUMN_CCSID_STR = "ccsId";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_WORKERID_STR = "workerId";
+	public static final String COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int ccswId;
 	

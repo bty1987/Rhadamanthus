@@ -1160,7 +1160,7 @@ function initUploadify() {
 		'auto' : true, // 是否自动上传
 		'successTimeout' : 150, // 超时时间
 		'formData' : { // 附带值
-			'uploadType' : 1
+			'uploadType' : 2
 		},
 		//'swf': "./js/uploadify/uploadify.swf", // flash
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件

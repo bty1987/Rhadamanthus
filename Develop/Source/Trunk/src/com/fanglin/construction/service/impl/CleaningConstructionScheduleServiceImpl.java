@@ -90,6 +90,7 @@ public class CleaningConstructionScheduleServiceImpl implements CleaningConstruc
 			
 			UserPO userPO = userDao.get(cleaningConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				cleaningConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				cleaningConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				cleaningConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				cleaningConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

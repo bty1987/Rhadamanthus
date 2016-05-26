@@ -29,13 +29,13 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private static final long serialVersionUID = 13444646L;
 	
-	public static int TYPE_QUOTATIONITEM_INT = 0; // 系统报价项
+	public static final int TYPE_QUOTATIONITEM_INT = 0; // 系统报价项
 	
-	public static String TYPE_ORIGINAL_STR = "原始报价";
+	public static final String TYPE_ORIGINAL_STR = "原始报价";
 	
-	public static String TYPE_ADD_STR = "增项";
+	public static final String TYPE_ADD_STR = "增项";
 	
-	public static String TYPE_REDUCE_STR = "减项";
+	public static final String TYPE_REDUCE_STR = "减项";
 	
 	private long qfaiId;
 

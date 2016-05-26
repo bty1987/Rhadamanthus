@@ -22,6 +22,8 @@ public class GroundLevelingConstructionScheduleWorkerVO implements java.io.Seria
 	
 	private String workerRatyDes;
 	
+	private String workerPhone;
+	
 	private String workerPhoto;
 	
 	private String workerOldId;
@@ -98,6 +100,14 @@ public class GroundLevelingConstructionScheduleWorkerVO implements java.io.Seria
 
 	public void setWorkerRatyDes(String workerRatyDes){
 		this.workerRatyDes = workerRatyDes;
+	}
+
+	public String getWorkerPhone() {
+		return workerPhone;
+	}
+
+	public void setWorkerPhone(String workerPhone) {
+		this.workerPhone = workerPhone;
 	}
 
 	public String getWorkerPhoto(){

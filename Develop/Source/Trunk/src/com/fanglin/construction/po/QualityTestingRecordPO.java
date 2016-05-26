@@ -16,11 +16,11 @@ public class QualityTestingRecordPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2466855414573660718L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_OPERATERID_STR = "operaterId";
+	public static final String COLUMN_OPERATERID_STR = "operaterId";
 
 	private int qtrId;
 	

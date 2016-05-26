@@ -199,5 +199,4 @@ function saveData(){
 
 function successCallback(){
 	com.showAlert(com.info, "操作成功");
-	customer.listgrid.trigger("reloadGrid");
 }

@@ -31,9 +31,9 @@ public class CustomQuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455543326014L;
 	
-	public static int TYPE_CUSTOMQUOTATIONITEM_INT = 2;
+	public static final int TYPE_CUSTOMQUOTATIONITEM_INT = 2;
 	
-	public static String TYPE_ORIGINAL_STR = "原始报价";
+	public static final String TYPE_ORIGINAL_STR = "原始报价";
 	
 	private long autoId;
 	

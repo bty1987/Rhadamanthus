@@ -14,9 +14,9 @@ public class MaterialInsidePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3376405548558094341L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_MATERIALGUIDEID_STR = "materialGuideId";
+	public static final String COLUMN_MATERIALGUIDEID_STR = "materialGuideId";
 
 	private long miId;
 	

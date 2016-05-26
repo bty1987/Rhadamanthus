@@ -27,17 +27,17 @@ public class BricklayConstructionSchedulePO implements Serializable{
 
 	private static final long serialVersionUID = -4715729970075470712L;
 	
-	public static int BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 6;
+	public static final int BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 6;
 	
-	public static int BRICKLAY_ALLOCATION_WORKER_FLAG_INT = 8;
+	public static final int BRICKLAY_ALLOCATION_WORKER_FLAG_INT = 8;
 	
-	public static String BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "瓦工";
+	public static final String BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "瓦工";
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int bcsId;
 	

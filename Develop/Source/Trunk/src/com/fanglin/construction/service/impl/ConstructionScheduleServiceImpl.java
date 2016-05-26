@@ -137,25 +137,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	}
 	
 	@Override
-	public void pageDecorationOrderForConstructionScheduleM(Paging paging, List<FilterVO> filters, String userId) throws FLException {
-		
-		UserPO userPO = userDao.get(userId);
-		
-		if(userPO != null){
-			String duty = userPO.getDuty();
-			
-			if(duty.contains("质检")){
-				pageDecorationOrderForQualityByUserId(paging, filters, null, userPO);
-			}else if(duty.contains("监理")){
-				pageDecorationOrderForSupervisionByUserId(paging, filters, null, userPO);
-			}else{
-				throw new FLException(120019, "当前用户职位错误");
-			}
-		}
-		
-	}
-
-	@Override
 	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<FilterVO> filters, String userId){
 		
 		UserPO user = userDao.get(userId);
@@ -634,9 +615,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				decorationOrderTotalPrice = decorationOrderPO.getOrderTotalPrice();
 			}
 			
-			if(decorationOrderTotalPrice == 0){
+			if(decorationOrderTotalPrice == 0f){
 				throw new FLException(120011, "订单总价为零");
-			}else if(decorationOrderTotalPrice > 0){
+			}else if(decorationOrderTotalPrice > 0f){
 				if(total < 0 && Math.abs(total) >= Arith.mul(decorationOrderTotalPrice, 0.05f)){
 					DecorationPaymentPO _decorationPaymentPO = new DecorationPaymentPO();
 					_decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
@@ -846,8 +827,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 		decorationOrderVO.setCustomer(customerVO);
 		
-		if(decorationOrderPO.getSupervisorPO() != null){
-			decorationOrderVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
+		UserPO supervisor = decorationOrderPO.getSupervisorPO();
+		
+		if(supervisor != null){
+			decorationOrderVO.setSupervisor(supervisor.getCurrentName());
+			decorationOrderVO.setSupervisorPhone(supervisor.getPhone());
 		}
 		
 		UserPO designer = decorationOrderPO.getDesignerPO();

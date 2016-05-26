@@ -14,17 +14,17 @@ public class MaterialDesignerRankPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 211642270167532636L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_DISABLED_INT = 1;
+	public static final int STATUS_TYPE_DISABLED_INT = 1;
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static String COLUMN_DESIGNERID_STR = "designerId";
+	public static final String COLUMN_DESIGNERID_STR = "designerId";
 	
-	public static String COLUMN_RANK_STR = "rank";
+	public static final String COLUMN_RANK_STR = "rank";
 
 	private int mdrId;
 	

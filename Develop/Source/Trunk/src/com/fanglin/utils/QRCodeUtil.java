@@ -31,7 +31,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 public class QRCodeUtil {
 	
-	public static Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
+	public static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
 	
 	public static String encode(String contents, int width, int height) {
 		

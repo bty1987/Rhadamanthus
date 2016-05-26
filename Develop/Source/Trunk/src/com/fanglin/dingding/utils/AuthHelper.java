@@ -14,7 +14,7 @@ import com.fanglin.utils.SystemConfig;
 
 public class AuthHelper {
 	
-	public static Logger logger = LoggerFactory.getLogger(AuthHelper.class);
+	public static final Logger logger = LoggerFactory.getLogger(AuthHelper.class);
 
 	public static String getAccessToken() {
 		

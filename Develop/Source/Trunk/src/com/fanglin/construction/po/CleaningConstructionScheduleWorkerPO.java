@@ -15,11 +15,11 @@ public class CleaningConstructionScheduleWorkerPO implements java.io.Serializabl
 
 	private static final long serialVersionUID = 9135284721573368000L;
 	
-	public static String COLUMN_CCSID_STR = "ccsId";
+	public static final String COLUMN_CCSID_STR = "ccsId";
 	
-	public static String COLUMN_WORKERID_STR = "workerId";
+	public static final String COLUMN_WORKERID_STR = "workerId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private int ccswId;
 	

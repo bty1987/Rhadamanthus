@@ -24,13 +24,13 @@ public class ReworkPO implements Serializable{
 
 	private static final long serialVersionUID = 574508244898090148L;
 	
-	public static String COLUMN_RWID_STR = "rwId";
+	public static final String COLUMN_RWID_STR = "rwId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_REWORKDES = "reworkDes";
+	public static final String COLUMN_REWORKDES = "reworkDes";
 	
 	private int rwId;
 	

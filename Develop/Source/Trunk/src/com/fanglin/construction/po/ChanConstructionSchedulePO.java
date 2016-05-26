@@ -28,37 +28,37 @@ public class ChanConstructionSchedulePO implements Serializable {
 
 	private static final long serialVersionUID = -8749991367232507035L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int CHAN_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 1;
+	public static final int CHAN_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 1;
 	
-	public static int CHAN_ALLOCATION_WORKER_FLAG_INT = 1;
+	public static final int CHAN_ALLOCATION_WORKER_FLAG_INT = 1;
 	
-	public static String CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "铲大白";
+	public static final String CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "铲大白";
 	
-	public static int STARTTIMEFLAG_TYPE_INIT_INT = 0;
+	public static final int STARTTIMEFLAG_TYPE_INIT_INT = 0;
 	
-	public static int STARTTIMEFLAG_TYPE_COMMIT_INT = 1;
+	public static final int STARTTIMEFLAG_TYPE_COMMIT_INT = 1;
 	
-	public static int ENDTIMEFLAG_TYPE_INIT_INT = 0;
+	public static final int ENDTIMEFLAG_TYPE_INIT_INT = 0;
 	
-	public static int ENDTIMEFLAG_TYPE_COMMIT_INT = 1;
+	public static final int ENDTIMEFLAG_TYPE_COMMIT_INT = 1;
 	
-	public static int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;
 	
-	public static int STATUS_TYPE_SUCCESS_INT = 1;
+	public static final int STATUS_TYPE_SUCCESS_INT = 1;
 	
-	public static int STATUS_TYPE_FAIL_INT = 2;
+	public static final int STATUS_TYPE_FAIL_INT = 2;
 	
-	public static int STATUS_TYPE_DELAY_INT = 3;
+	public static final int STATUS_TYPE_DELAY_INT = 3;
 	
-	public static int STATUS_TYPE_PASS_INT = 4;
+	public static final int STATUS_TYPE_PASS_INT = 4;
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
 	private int ccsId;
 	

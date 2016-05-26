@@ -31,7 +31,7 @@ var Searcher = (function(){
                 $searchBtn.click(function(){
                     $('#pagenation').hide();
 
-                    //TODO URL
+                     URL
                     paging.nowPage["paging.page"] = 0;
                     paging.nowPostParams = null;
                     var _params = paging.getParams(searchId);
@@ -84,7 +84,6 @@ var Searcher = (function(){
                 "data-rqs" : _rname,
                 "data-op" : _rop
             }).appendTo($item);
-            //TODO
             // $line.addClass("text");
         }
 
@@ -101,7 +100,6 @@ var Searcher = (function(){
             $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
                 $(this).next().focus();
             });
-
         }
 
         if(_rtype=="autofill"){
@@ -128,7 +126,6 @@ var Searcher = (function(){
                     this.process(this.options.list);
                 }
             });
-
         }
 
         if(_rtype == "select"){
@@ -154,14 +151,12 @@ var Searcher = (function(){
                     })
                 );
             }, null, false);
-            //TODO
+            
             //$line.addClass("select");
         }
 
         return $item;
-
     };
-
 
     /**分页*/
     var paging = {
@@ -219,24 +214,18 @@ var Searcher = (function(){
                             _params['filters[' + _count + '].op'] = _op;
                             _count +=1;
                         }
-
                     }
-
                 })
-
             );
-
 
             if(_params){
                 _params["paging.page"] = this.nowPage["paging.page"];
                 _params["paging.rows"] = this.nowPage["paging.rows"];
             }
 
-
             return _params;
         },
         getDataByPage : function(url, _params, callBackFunc, tableId, historyName){
-
 
             com.post(url, _params, $.proxy(function(result){
                 this.nowPage["paging.page"] = result.paging.page;
@@ -281,7 +270,6 @@ var Searcher = (function(){
                         _params["paging.page"] -= 1,
                             _pagenation.getDataByPage(url, _params, displayFunc, tableId, historyName)
                     )
-
                 );
             });
             $('li[name="next"]','#pagenation').click(function(){
@@ -294,7 +282,6 @@ var Searcher = (function(){
                         _params["paging.page"] += 1,
                             _pagenation.getDataByPage(url, _params, displayFunc, tableId, historyName)
                     )
-
                 );
             });
         }
@@ -330,13 +317,5 @@ var Searcher = (function(){
 
             paging.getDataByPage(url, _params, displayFunc, tableId, historyName);
         }
-
     }
 })();
-
-
-
-
-
-
-

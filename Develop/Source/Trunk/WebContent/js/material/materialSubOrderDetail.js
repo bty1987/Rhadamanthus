@@ -355,7 +355,7 @@ function materialSubOrderItemListGridInit(){
 		datatype: "jsonstring",
 	    rowNum : "-1",
 	    height: "1000",
-		colNames:['编号', 'id', 'msoiId', 'msoId', '名称', '品类', '品牌', '单位', '折扣价', '售价', '数量', '总价', '状态', '级别', '叶子', '描述', '操作'],
+		colNames:['编号', 'id', 'msoiId', 'msoId', '名称', '品类', '品牌', '单位', '折扣价', '售价', '数量', '总价', '状态', '级别', '叶子', '结算值', '描述', '操作'],
 		colModel:[
 		    {name:'materialModelNo', editable:true, hidden:true},
 		    {name:'id', hidden:true},
@@ -372,6 +372,7 @@ function materialSubOrderItemListGridInit(){
 			{name:'status', hidden: true},
 			{name:'level', hidden:true},
 			{name:'isLeaf', hidden:true},
+			{name:'prePoint'},
 			{name:'des', width:100, align:"center", formatter: desInit},
 			{name:'action', width: 180, sortable: false, editable: false, formatter: actionInit}
 		],

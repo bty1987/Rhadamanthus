@@ -15,16 +15,13 @@ import java.io.Serializable;
 
 public class WorkerSalaryExcelVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3388957923653804743L;
 	
-	public static String SUBJECT_NAME_TYPE_WORKER_SALARY_STR = "工人工资";
+	public static final String SUBJECT_NAME_TYPE_WORKER_SALARY_STR = "工人工资";
 	
-	public static String CURRENCY_CODE_RMB_STR = "RMB";
+	public static final String CURRENCY_CODE_RMB_STR = "RMB";
 	
-	public static String CURRENCY_NAME_RMB_STR = "人民币";
+	public static final String CURRENCY_NAME_RMB_STR = "人民币";
 	
 	private String voucherData;
 	

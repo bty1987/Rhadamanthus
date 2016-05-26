@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.common.service.LoginInfoService;
 import com.fanglin.common.vo.LoginInfoVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.QRCodeUtil;
 import com.fanglin.utils.SystemConfig;
 
@@ -59,7 +60,7 @@ public class LoginInfoAction extends BaseListAction {
 	}
 	
 	@Action(value = "updateLoginInfoForAuthentication", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String updateLoginInfoForAuthentication(){
+	public String updateLoginInfoForAuthentication() throws FLException{
 		
 		loginInfoService.updateLoginInfoForAuthentication(loginInfo);
 		

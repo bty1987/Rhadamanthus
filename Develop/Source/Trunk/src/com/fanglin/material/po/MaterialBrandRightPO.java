@@ -13,7 +13,7 @@ public class MaterialBrandRightPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6767441655705988667L;
 	
-	public static String COLUMN_USERID_STR = "userId";
+	public static final String COLUMN_USERID_STR = "userId";
 
 	private int mbrId;
 	

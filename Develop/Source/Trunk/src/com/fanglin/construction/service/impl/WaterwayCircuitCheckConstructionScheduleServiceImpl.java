@@ -92,6 +92,7 @@ public class WaterwayCircuitCheckConstructionScheduleServiceImpl implements Wate
 			
 			UserPO userPO = userDao.get(waterwayCircuitCheckConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				waterwayCircuitCheckConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				waterwayCircuitCheckConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				waterwayCircuitCheckConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				waterwayCircuitCheckConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

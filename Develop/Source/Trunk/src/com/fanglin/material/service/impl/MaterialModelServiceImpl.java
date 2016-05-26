@@ -39,7 +39,7 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly=true)
 public class MaterialModelServiceImpl implements MaterialModelService{
 	
-	public static int MATERIAL_LIMIT_INT = 10;
+	public static final int MATERIAL_LIMIT_INT = 10;
 
 	@Autowired
 	private MaterialModelDao materialModelDao;

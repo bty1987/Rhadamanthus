@@ -14,11 +14,11 @@ public class MaterialTypeCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3684199420164210915L;
 	
-	public static String COLUMN_MATERIALTYPE_STR = "materialType";
+	public static final String COLUMN_MATERIALTYPE_STR = "materialType";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_TOTAL_STR = "total";
+	public static final String COLUMN_TOTAL_STR = "total";
 
 	private int mtcId;
 	

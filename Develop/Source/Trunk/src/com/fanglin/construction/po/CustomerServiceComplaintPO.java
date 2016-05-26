@@ -24,13 +24,13 @@ public class CustomerServiceComplaintPO implements Serializable{
 
 	private static final long serialVersionUID = 1570889773414503470L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int COMPLAINT_STATUS_TYPE_INIT_INT = 0;
+	public static final int COMPLAINT_STATUS_TYPE_INIT_INT = 0;
 	
-	public static int COMPLAINT_STATUS_TYPE_HANDLE_INT = 1;
+	public static final int COMPLAINT_STATUS_TYPE_HANDLE_INT = 1;
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int cscId;
 	

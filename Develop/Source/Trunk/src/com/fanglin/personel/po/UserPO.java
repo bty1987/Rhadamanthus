@@ -31,13 +31,13 @@ public class UserPO implements Serializable {
 
 	private static final long serialVersionUID = -7041891388073738568L;
 	
-	public static String SUPER_USERID_STR = "1";
+	public static final String SUPER_USERID_STR = "1";
 	
-	public static short ISLOGIN_NOT_INT = 0;
+	public static final short ISLOGIN_NOT_INT = 0;
 	
-	public static short ISLOGIN_FIP_INT = 1;
+	public static final short ISLOGIN_FIP_INT = 1;
 	
-	public static short ISLOGIN_FS_INT = 2;
+	public static final short ISLOGIN_FS_INT = 2;
 	
 	private int uId;
 

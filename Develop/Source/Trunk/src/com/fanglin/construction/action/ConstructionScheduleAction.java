@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.ConstructionScheduleService;
-import com.fanglin.construction.service.ConstructionScheduleWorkerService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
@@ -38,9 +37,6 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Autowired
 	private ConstructionScheduleService constructionScheduleService;
 	
-	@Autowired
-	private ConstructionScheduleWorkerService constructionScheduleWorkerService;
-	
 	private ConstructionScheduleVO constructionSchedule;
 	
 	public Map<String, List<ConstructionScheduleWorkerVO>> constructionScheduleWorkers;
@@ -49,14 +45,6 @@ public class ConstructionScheduleAction extends BaseListAction{
 	public String pageDecorationOrderForConstructionSchedule(){
 		
 		constructionScheduleService.pageDecorationOrderForConstructionSchedule(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForConstructionScheduleM", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForConstructionScheduleM() throws FLException{
-		
-		constructionScheduleService.pageDecorationOrderForConstructionScheduleM(getPaging(), getFilters(), getUserId());
 		
 		return SUCCESS;
 	}
@@ -101,26 +89,10 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryConstructionScheduleByOrderIdM", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleByOrderIdM() throws FLException{
-		
-		constructionSchedule = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule, getUserId());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryConstructionScheduleForWorkerNameByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionScheduleForWorkerNameByOrderId(){
 		
 		constructionSchedule = constructionScheduleService.queryConstructionScheduleForWorkerNameByOrderId(constructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryConstructionScheduleForWorkerByOrderIdM", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleForWorkerByOrderIdM(){
-		
-		constructionScheduleWorkers = constructionScheduleWorkerService.queryConstructionScheduleWorkerByOrderId(constructionSchedule);
 		
 		return SUCCESS;
 	}

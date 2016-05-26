@@ -89,6 +89,7 @@ public class GroundLevelingConstructionScheduleServiceImpl implements GroundLeve
 			
 			UserPO userPO = userDao.get(groundLevelingConstructionScheduleWorkerPO.getWorkerId());
 			if(userPO != null){
+				groundLevelingConstructionScheduleWorkerVO.setWorkerPhone(userPO.getPhone());
 				groundLevelingConstructionScheduleWorkerVO.setWorkerPhoto(userPO.getUserPhoto());
 				groundLevelingConstructionScheduleWorkerVO.setWorkerOldId(userPO.getOldUserId());
 				groundLevelingConstructionScheduleWorkerVO.setWorkerDuty(userPO.getDuty());

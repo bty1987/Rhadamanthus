@@ -25,7 +25,7 @@ public class InspectionDeductionPO implements Serializable{
 
 	private static final long serialVersionUID = 933595476588801026L;
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int idId;
 	

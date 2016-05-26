@@ -27,17 +27,17 @@ public class OilConstructionSchedulePO implements Serializable {
 
 	private static final long serialVersionUID = 6588259840829130012L;
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static int OIL_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 9;
+	public static final int OIL_CONSTRUCTION_SCHEDULE_TYPE_ID_INT = 9;
 	
-	public static int OIL_ALLOCATION_WORKER_FLAG_INT = 64;
+	public static final int OIL_ALLOCATION_WORKER_FLAG_INT = 64;
 	
-	public static String OIL_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "油工";
+	public static final String OIL_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "油工";
 	
-	public static String COLUMN_CSID_STR = "csId";
+	public static final String COLUMN_CSID_STR = "csId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	private int ocsId;
 	

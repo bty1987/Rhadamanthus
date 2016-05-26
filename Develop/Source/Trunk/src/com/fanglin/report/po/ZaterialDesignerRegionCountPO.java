@@ -14,13 +14,13 @@ public class ZaterialDesignerRegionCountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4736436226536277259L;
 	
-	public static String COLUMN_DESIGNERREGIONID_STR = "designerRegionId";
+	public static final String COLUMN_DESIGNERREGIONID_STR = "designerRegionId";
 	
-	public static String COLUMN_DESIGNERREGIONNAME_STR = "designerRegionName";
+	public static final String COLUMN_DESIGNERREGIONNAME_STR = "designerRegionName";
 	
-	public static String COLUMN_CREATETIME_STR = "createTime";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static String COLUMN_TOTAL_STR = "total";
+	public static final String COLUMN_TOTAL_STR = "total";
 
 	private Integer zdrcId;
 	

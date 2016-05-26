@@ -53,7 +53,7 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly=true)
 public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	
-	public static String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;

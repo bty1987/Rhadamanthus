@@ -25,33 +25,33 @@ public class AddReducePO implements Serializable{
 
 	private static final long serialVersionUID = -46470961633886019L;
 
-	public static String COLUMN_ARID_STR = "arId";
+	public static final String COLUMN_ARID_STR = "arId";
 	
-	public static String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static String COLUMN_ADDREDUCETYPE_STR = "addReduceType";
+	public static final String COLUMN_ADDREDUCETYPE_STR = "addReduceType";
 	
-	public static String COLUMN_ADDREDUCESTATUS_STR = "addReduceTotal";
+	public static final String COLUMN_ADDREDUCESTATUS_STR = "addReduceTotal";
 	
-	public static String COLUMN_ADDREDUCETOTAL_STR = "addReduceStatus";
+	public static final String COLUMN_ADDREDUCETOTAL_STR = "addReduceStatus";
 	
-	public static String COLUMN_ADDREDUCEDES_STR = "addReduceDes";
+	public static final String COLUMN_ADDREDUCEDES_STR = "addReduceDes";
 	
-	public static String COLUMN_ORDERPAYMENTID_STR="orderPaymentId";
+	public static final String COLUMN_ORDERPAYMENTID_STR="orderPaymentId";
 	
-	public static int ADDREDUCETYPE_ADD_INT = 0;
+	public static final int ADDREDUCETYPE_ADD_INT = 0;
 	
-	public static int ADDREDUCETYPE_REDUCE_INT = 1;
+	public static final int ADDREDUCETYPE_REDUCE_INT = 1;
 	
-	public static int ADDREDUCETYPE_LEAKAGE_INT = 2;
+	public static final int ADDREDUCETYPE_LEAKAGE_INT = 2;
 	
-	public static int ADDREDUCESTATUS_UNSUBMIT_INT = 0;
+	public static final int ADDREDUCESTATUS_UNSUBMIT_INT = 0;
 	
-	public static int ADDREDUCESTATUS_SUBMIT_INT = 1;
+	public static final int ADDREDUCESTATUS_SUBMIT_INT = 1;
 	
-	public static int ADDREDUCESTATUS_PAYED_INT = 2;
+	public static final int ADDREDUCESTATUS_PAYED_INT = 2;
 	
-	public static int ADDREDUCESTATUS_CONFIRMED_INT = 3;
+	public static final int ADDREDUCESTATUS_CONFIRMED_INT = 3;
 	
 	private int arId;
 	

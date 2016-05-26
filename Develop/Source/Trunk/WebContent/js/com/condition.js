@@ -4,6 +4,7 @@
 
 var Condition = function(){
 
+
     var _condRules = {
 
         //例子 autofill
@@ -63,7 +64,20 @@ var Condition = function(){
                 validate:null
             }
         },
+
+        //-------数据-报价-报价版本
+        versionName : { //
+            label:"版本名称",
+            type:"text",
+            submitConfig : {
+                name : "versionName",
+                op : "cn",
+                validate:null
+            }
+        },
+
         //--------数据-报价-报价项
+
         itemName : { //
             label:"名称",
             type:"text",
@@ -73,6 +87,7 @@ var Condition = function(){
                 validate:null
             }
         },
+
         quotationTypeId : {
             label:"类型",
             type:"select",
@@ -89,6 +104,7 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
+
         quotationClassificationId : {
             label:"分类",
             type:"select",
@@ -105,6 +121,7 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
+
         quotationBigCategoryId : {
             label:"大类",
             type:"select",
@@ -121,6 +138,7 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
+
         quotationSmallCategoryId : {
             label:"小类",
             type:"select",
@@ -137,6 +155,7 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
+
         versionId : {
             label:"版本",
             type:"select",
@@ -153,6 +172,10 @@ var Condition = function(){
                 valuePath:"versionName"
             }
         },
+
+
+
+
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -224,7 +247,10 @@ var Condition = function(){
                 valuePath:"categoryName"
             }
         },
+
+
         //--------人事-员工 页面的各种查询条件
+
         userId : { //
             label:"员工号",
             type:"text",
@@ -259,6 +285,7 @@ var Condition = function(){
                 validate:null
             }
         },
+
         roleId : {
             label:"角色",
             type:"select",
@@ -323,6 +350,8 @@ var Condition = function(){
                 valuePath:null
             }
         },
+
+
         //装修订单-设计 页面的各种查询条件
         village : {
             label:"楼盘",

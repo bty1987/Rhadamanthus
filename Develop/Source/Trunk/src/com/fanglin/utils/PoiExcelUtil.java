@@ -49,24 +49,6 @@ public class PoiExcelUtil {
 
 	private ExcelWorkSheet<?> sheet;
 
-	// private static String changeIntToString(Integer in){
-	// return in.toString();
-	// }
-	//
-	// private static String changeDateToString(Date in){
-	// return DateUtil.getDateToDateString(in, "yyyy-MM-dd");
-	// }
-	//
-	// private static String changeFloatToString(Float in){
-	// DecimalFormat df = new DecimalFormat("0.00");
-	// return df.format(in);
-	// }
-	//
-	// private static String changeDoubleToString(Double in){
-	// DecimalFormat df = new DecimalFormat("0.00");
-	// return df.format(in);
-	// }
-
 	public static void exportExcel(ExcelWorkSheet<?> sheetObj, OutputStream out){
 		
 		HSSFWorkbook workbook = new HSSFWorkbook(); // 声明一个工作薄
@@ -131,12 +113,11 @@ public class PoiExcelUtil {
 			Object obj = sheetObj.getData().get(i);
 			int colIndex = 0;
 			for(int j = 0; j < sheetObj.getPropertyNames().size(); ++j){
-				String valueString = null;
 				
 				HSSFCell cell = row.createCell(colIndex);
 				cell.setCellStyle(style2);
 				
-				valueString = sheetObj.getIndexPropertyValue(obj, j);
+				String valueString = sheetObj.getIndexPropertyValue(obj, j);
 				HSSFRichTextString richString = new HSSFRichTextString(valueString);
 				cell.setCellValue(richString);
 				
@@ -194,7 +175,7 @@ public class PoiExcelUtil {
 		
 		Sheet sheet = wb.getSheetAt(0); // 读取第一章表格内容
 
-		String value = "";
+		String value = null;
 		Row row = null;
 		Cell cell = null;
 		int counter = 0;
