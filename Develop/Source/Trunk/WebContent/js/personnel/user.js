@@ -1,4 +1,3 @@
-
 $(function(){
 
     /**
@@ -13,9 +12,10 @@ $(function(){
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
+
                 $.each(listData,function(i, v){
                     var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -29,23 +29,22 @@ $(function(){
                         ["职位:", v.duty, "grey"],
                         ["角色:", v.role.roleName, "grey"],
                         ["联系方式:", v.phone, "grey"]
-                     ];
+                    ];
 
                     $.each(propertyArr, function (index,value) {
-                     var $liProperty = $('<li></li>');
-                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                     $liProperty.appendTo($ulProperty);
-                     });
-
+                        var $liProperty = $('<li></li>');
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulProperty);
+                    });
 
                     $btnEdit.click(function(){
                         viewUser(v.userId+"");
                     });
 
-                    $divBtnWrap.append($btnEdit).appendTo($h3);
+                    $divBtnWrap.append($btnEdit).appendTo($divBtnBlock);
 
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
+                    $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -73,9 +72,11 @@ $(function(){
         }
     })();
 
-    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'status', 'identity'];
+    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity'];
 
-    Searcher.init( _condArr, "condList", api.personel.pageUser, displayFunc, "resultList", "userPostData");
+    var userSeacher = new Searcher();
+    userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "userPostData");
 
 });
-

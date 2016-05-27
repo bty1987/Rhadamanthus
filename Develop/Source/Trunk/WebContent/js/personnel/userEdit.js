@@ -1,4 +1,3 @@
-
 var user = {
     politicalType: [],
     householdType: [],
@@ -43,7 +42,9 @@ jQuery(function(a) {
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
+        //$("#fl-container").load(api.personel.userIndex);
         $("#fl-container").load("/views/personnel/user.html");
+
     });
     user.items.userId = a("#userId").on("blur",function() {
         $this = a(this);
@@ -226,9 +227,9 @@ jQuery(function(a) {
                 com.clearValidator("#userId", !0),
                 com.clearValidator()
             )
+
         });
-    }else{
-        user.items.userId.css("display", "none");
+
     }
 
     a(".date-picker").datepicker({autoclose: !0}).on("show",function() {
@@ -307,11 +308,15 @@ function saveData() {
             b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
         user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
         com.post(a, b, successCallback, failCallback);
+
     }
 }
 
 function successCallback() {
     com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+    //$.jgrid.refreshGrid(user.listgrid, user.postParam);
+    //user.contractList = [];
+    //user.experienceList = []
     $("#fl-container").load("/views/personnel/user.html");
 }
 

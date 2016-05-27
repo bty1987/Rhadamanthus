@@ -77,6 +77,7 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
+
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -86,7 +87,10 @@ $(function(){
 
     var _condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'versionId'];
 
-    Searcher.init( _condArr, "condList", api.quotation.pageQuotationItem, displayFunc, "resultList", "villagePostData");
+    var quotationItemSeacher = new Searcher();
+    quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItem,  function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "quotationItemPostData");
 
     var quotationItem = {
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -153,6 +157,7 @@ $(function(){
     };
 
     $.extend(com.validator, quotationItem.validator);
+
 
     com.post(api.quotation.queryQuotationType, {},function(a) {
         quotationItem.data.quotationTypeData = a.quotationTypes;
@@ -244,7 +249,7 @@ $(function(){
     //启用禁用功能
     function updateStatus(id, status, failcallBack) {
 
-        com.post(api.quotation.updateQuotationItemForStatus, {
+        com.post({"url": "updateQuotationItem.do"}, {
             "quotationItem.autoId": id,
             "quotationItem.status": status
         }, function () {
@@ -262,4 +267,3 @@ $(function(){
     function failCallback() {}
 
 });
-

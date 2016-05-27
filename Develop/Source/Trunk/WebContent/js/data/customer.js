@@ -163,8 +163,10 @@ jQuery(function($) {
     })();
 	
 	var _condArr = ['customerName', 'customerPhone', 'relationshipType'];
-
-    Searcher.init( _condArr, "condList", api.data.pageCustomer, displayFunc, "resultList", "customerPostData");
+	var customerSeacher = new Searcher();
+	customerSeacher.init( _condArr, "condList", api.data.pageCustomer, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "customerPostData");
 });
 
 function saveData(){

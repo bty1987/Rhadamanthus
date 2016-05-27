@@ -31,6 +31,7 @@ $(function(){
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
+
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl');
@@ -82,9 +83,9 @@ $(function(){
             });
 
             /*$statusSwitch.switchBtn("status-lbl").on("click",function(e) {
-                e.preventDefault();
-                $statusSwitch.prop("checked") ? (updateStatus(v.mmId, 0, function(){$statusSwitch.removeAttr('checked')})) : (updateStatus(v.mmId, 1, function(){$statusSwitch.prop("checked", true)}));
-            });*/
+             e.preventDefault();
+             $statusSwitch.prop("checked") ? (updateStatus(v.mmId, 0, function(){$statusSwitch.removeAttr('checked')})) : (updateStatus(v.mmId, 1, function(){$statusSwitch.prop("checked", true)}));
+             });*/
 
             return $liLine;
         };
@@ -103,16 +104,20 @@ $(function(){
 
     var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId'];
 
-    Searcher.init( _condArr, "condList", api.material.pageMaterialModel, displayFunc, "resultList", "materialModelPostData");
+    var materialModelSeacher = new Searcher();
+
+    materialModelSeacher.init( _condArr, "condList", api.material.pageMaterialModel, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "materialModelPostData");
 
     var materialModel = {
         $nowLine : null,
         saveBtn: $("#saveBtn").on("click", saveData),
         cancelBtn: $("#cancelBtn"),
         modal: $("#materialModelModal").on("show.bs.modal", function(a) {
-                com.clearValidator();
-                com.clearValidator("#materialModelName", !0);
-                com.clearValidator("#materialModelNo", !0)
+            com.clearValidator();
+            com.clearValidator("#materialModelName", !0);
+            com.clearValidator("#materialModelNo", !0)
         }),
         materialModelItems: {
             mmId : $("#mmId"),
@@ -289,4 +294,3 @@ $(function(){
     }
 
 });
-
