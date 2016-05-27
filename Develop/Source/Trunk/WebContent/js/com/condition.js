@@ -7,6 +7,7 @@ var Condition = function(){
 
     var _condRules = {
 
+
         //例子 autofill
         designer : {
             label : "设计师",//中文名
@@ -319,7 +320,7 @@ var Condition = function(){
             }
         },
         deptId : {
-            label:"设计中心",
+            label:"部门",
             type:"select",
             submitConfig : {
                 name : "deptId",
@@ -334,8 +335,8 @@ var Condition = function(){
                 valuePath: "deptName"
             }
         },
-        status : {
-            label:"设计中心",
+        userstatus : {
+            label:"状态",
             type:"select",
             submitConfig : {
                 name : "status",

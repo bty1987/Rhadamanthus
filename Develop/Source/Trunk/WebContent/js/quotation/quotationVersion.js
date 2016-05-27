@@ -16,7 +16,6 @@ $(function(){
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
-
                 });
 
                 $ul.appendTo($tableWrap);
@@ -37,6 +36,7 @@ $(function(){
                 ["信息:", v.versionDes ? v.versionDes : '--', "grey"],
                 ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '--', "red"],
             ];
+
 
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
@@ -64,6 +64,7 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
+
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -73,7 +74,10 @@ $(function(){
 
     var _condArr = ['versionName'];
 
-    Searcher.init( _condArr, "condList", api.quotation.pageQuotationVersion, displayFunc, "resultList", "quotationVersionPostData");
+    var quotationVersionSeacher = new Searcher();
+    quotationVersionSeacher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "quotationVersionPostData");
 
     var quotationVersion = {
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -193,4 +197,3 @@ $(function(){
     function failCallback() {}
 
 });
-

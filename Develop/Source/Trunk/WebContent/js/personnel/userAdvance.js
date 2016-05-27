@@ -1,4 +1,7 @@
 var userAdvance = {
+	listgrid: null,
+	gridPager: null,
+	
 	postData: {},
 	postParam: {},
 	
@@ -7,16 +10,15 @@ var userAdvance = {
 
 jQuery(function($) {
 	
+	userAdvance.listgrid = $("#listgrid");
+	userAdvance.gridPager = "#gridPager";
+	
 	com.post(api.ds.departmentInfo, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.deptType = res.deptType;
 	}, null, false);
 	
 	com.post(api.ds.companyType, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.company = res.company;
-	}, null, false);
-	
-	com.post(api.ds.decorationInfo, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.decorationOrderStatus = res.decorationOrderStatus;
 	}, null, false);
 	
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
@@ -70,7 +72,6 @@ jQuery(function($) {
 
                     $btnRight.click(function(){
                     	dialogUserAdvanceIndex(v.userId);
-
                     });
 
 					$btnDesigne.click(function(){
@@ -111,7 +112,7 @@ jQuery(function($) {
 					list = data.deptList;
 				}, null, false);
 				com.post({"url" : "queryDecorationOrderDesignDepartmentRightByUserId.do"}, { "user.userId" : userId}, function(data){
-					userList = data.dids;
+					userList = data.dIds;
 				}, null, false);
 
 				list && list.length && $.each(list, function(i, v){
@@ -132,7 +133,7 @@ jQuery(function($) {
 				$dialog.modal("show");
 
 				this.postConf.path = {"url" : "updateDecorationOrderDesignDepartmentRight.do"};
-				this.postConf.name = "dids";
+				this.postConf.name = "dIds";
 				this.postConf["user.userId"] = userId;
 			},
 			//业务权限配置
@@ -141,13 +142,11 @@ jQuery(function($) {
 				var list, userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
-				
 				com.post(api.department.queryDepartment, { "dept.type" : "业务部"}, function(data){
 					list = data.deptList;
 				}, null, false);
-				
 				com.post({"url" :"queryDecorationOrderSalesmanDepartmentRightByUserId.do"}, { "user.userId" : userId}, function(data){
-					userList = data.dids;
+					userList = data.dIds;
 				}, null, false);
 
 				list && list.length && $.each(list, function(i, v){
@@ -168,7 +167,7 @@ jQuery(function($) {
 				$dialog.modal("show");
 
 				this.postConf.path = {"url" : "updateDecorationOrderSalesmanDepartmentRight.do"};
-				this.postConf.name = "dids";
+				this.postConf.name = "dIds";
 				this.postConf["user.userId"] = userId;
 			},
 			//订单权限配置
@@ -177,9 +176,9 @@ jQuery(function($) {
 				var list, userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
-				
-				list = userAdvance.decorationOrderStatus;
-				
+				com.post(api.ds.decorationInfo, { "dept.type" : "业务部"}, function(data){
+					list = data.status;
+				}, null, false);
 				com.post({"url" :"queryDecorationOrderStatusRightByUserId.do"}, { "user.userId" : userId}, function(data){
 					userList = data.statuses;
 				}, null, false);
@@ -212,14 +211,14 @@ jQuery(function($) {
 				$('button[name="subbtn"]').click(function(){
 					var list = $('input[name="advance"]:checked', $dialog);
 					var params = {"user.userId" : postConf["user.userId"]};
-					
-					$.each(list, function(i, v){
-						params[postConf.name + "[" + i + "]"] = $(this).val();
-					});
-					
-					com.post(postConf.path, params, function(data){
-						$dialog.modal("hide");
-					});
+					list.length && (
+						$.each(list, function(i, v){
+							params[postConf.name + "[" + i + "]"] = $(this).val();
+						}),
+						com.post(postConf.path, params, function(data){
+							$dialog.modal("hide");
+						})
+					);
 				});
 			}
 		};
@@ -235,7 +234,11 @@ jQuery(function($) {
 	
 	var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId'];
 
-    Searcher.init( _condArr, "condList", api.personel.pageUser, displayFunc, "resultList", "userAdvancePostData");
+	var userAdvanceSeacher = new Searcher();
+	userAdvanceSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "userAdvancePostData");
+
 });
 
 function dialogUserAdvanceIndex(userId, userName){

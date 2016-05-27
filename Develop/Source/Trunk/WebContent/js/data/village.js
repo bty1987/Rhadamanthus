@@ -16,7 +16,6 @@ $(function(){
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
-
                 });
 
                 $ul.appendTo($tableWrap);
@@ -60,6 +59,7 @@ $(function(){
 
             $liLine.append($h3).append($ulProperty);
 
+
             $btnEdit.click(function(){
                 editVillage(v);
             });
@@ -86,14 +86,17 @@ $(function(){
 
     var _condArr = ['villageName', 'cityId'];
 
-    Searcher.init( _condArr, "condList", api.data.pageVillage, displayFunc, "resultList", "villagePostData");
+    var villageSeacher = new Searcher();
+    villageSeacher.init( _condArr, "condList", api.data.pageVillage, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "villagePostData");
 
     var village = {
         saveBtn: $("#saveBtn").on("click", saveData),
         cancellBtn: $("#cancelBtn"),
         modal: $("#villageModal").on("show.bs.modal",function(a) {
-                com.clearValidator();
-                com.clearValidator("#villageId", !0)
+            com.clearValidator();
+            com.clearValidator("#villageId", !0)
         }),
         items: {
 
@@ -210,10 +213,9 @@ $(function(){
             }) : b.bindData([], "", "", d)
     }
 
-
     //启用禁用功能
     function updateStatus(id, status, failcallBack){
-        com.post(api.data.updateVillageForStatus, {"village.villageId" : id, "village.status" : status}, function(){
+        com.post({"url" : "updateVillageForStatus.do"}, {"village.villageId" : id, "village.status" : status}, function(){
 
         },function(){
             failcallBack && failcallBack();
@@ -221,3 +223,4 @@ $(function(){
     }
 
 });
+
