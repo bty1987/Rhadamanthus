@@ -22,9 +22,9 @@ public interface BackVisitService {
 	
 	public void pageBackVisitByOrderId(Paging paging,List<FilterVO> filters, BackVisitVO backVisitVO);
 	
-	public void remindBackVisitForDesigner() throws FLException;
+	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO);
 	
-	public void addBackVisit(BackVisitVO orderDesignPicture) throws FLException;
+	public void addBackVisit(BackVisitVO backVisitVO, String userId) throws FLException;
 
 	public void deleteBackVisitById(BackVisitVO orderDesignPicture);
 

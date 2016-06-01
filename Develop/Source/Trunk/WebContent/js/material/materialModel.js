@@ -94,7 +94,6 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -286,7 +285,7 @@ $(function(){
 
     //启用禁用功能
     function updateStatus(mmid, status, failcallBack){
-        com.post({"url" : "updateMaterialModelForStatus.do"}, {"materialModel.mmId" : mmid, "materialModel.status" : status}, function(){
+        com.post(api.material.updateMaterialModelForStatus, {"materialModel.mmId" : mmid, "materialModel.status" : status}, function(){
 
         },function(){
             failcallBack && failcallBack();

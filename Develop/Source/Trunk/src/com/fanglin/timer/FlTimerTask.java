@@ -7,9 +7,6 @@ import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fanglin.decoration.service.BackVisitService;
 
 /**
  * 这是一个打铃的程序，必须隔一段时间打一次
@@ -18,9 +15,6 @@ import com.fanglin.decoration.service.BackVisitService;
 public class FlTimerTask extends TimerTask {
 	
 	protected Logger log = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
-	private BackVisitService backVisitService;
 	
 	public FlTimerTask(){
 	}
@@ -52,7 +46,7 @@ public class FlTimerTask extends TimerTask {
 			
 			try{
 				log.info("检查客户回访启动 --"+(new Date()).toString());
-				backVisitService.remindBackVisitForDesigner();
+//				backVisitService.remindBackVisitForDesigner();
 			}catch (Exception e){
 				log.info("检查客户回访失败 --"+(new Date()).toString());
 			}

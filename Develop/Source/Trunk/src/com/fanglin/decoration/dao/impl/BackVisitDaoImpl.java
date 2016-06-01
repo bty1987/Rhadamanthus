@@ -14,6 +14,7 @@ package com.fanglin.decoration.dao.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -35,32 +36,25 @@ public class BackVisitDaoImpl extends DaoImpl<BackVisitPO> implements BackVisitD
 		PagingQuery<BackVisitPO> query = pagingQuery(paging, BackVisitPO.class);
 		
 		if(!"".equals(orderId)){
-			query.add(query.getCriterion("decorationOrderPO.orderId", orderId, "eq"));
-		}else{
-			query.add(query.getCriterion("decorationOrderPO.orderId", "", "ne"));
+			query.add(query.getCriterion("decorationOrder.orderId", orderId, "eq"));
 		}
 
-		if(filters != null){
-
-			for(FilterVO filter : filters){
-				if("grade".equals(filter.getField())){
-					query.add(query.getCriterion("grade", Integer.parseInt(filter.getData()), filter.getOp()));
-				}else{
-					query.add(query.getCriterion("grade", -1, "ne"));
-				}
-			}
-		}
-		query.desc("createTime");
+		query.desc(BackVisitPO.COLUMN_CREATETIME_STR);
 
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<BackVisitPO> queryBackVisitByOrderId(String orderId) {
+		return session().createCriteria(BackVisitPO.class).createAlias("decorationOrder", "decorationOrder").add(Restrictions.eq(BackVisitPO.COLUMN_ORDERID_STR, orderId)).addOrder(Order.desc(BackVisitPO.COLUMN_CREATETIME_STR)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<BackVisitPO> queryBackVisitByOrderIdAStartAEndTime(String orderId,Timestamp start, Timestamp end){
-		return createCriteria(BackVisitPO.class)
-				.add(Restrictions.eq("decorationOrderPO.orderId", orderId))
-				.add(Restrictions.eq("grade", -1))
+		return createCriteria(BackVisitPO.class).createAlias("decorationOrder", "decorationOrder")
+				.add(Restrictions.eq("decorationOrder.orderId", orderId))
 				.add(Restrictions.gt("createTime", start))
 				.add(Restrictions.lt("createTime", end))
 				.list();

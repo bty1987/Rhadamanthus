@@ -60,9 +60,14 @@ public class LoginInfoAction extends BaseListAction {
 	}
 	
 	@Action(value = "updateLoginInfoForAuthentication", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String updateLoginInfoForAuthentication() throws FLException{
+	public String updateLoginInfoForAuthentication(){
 		
-		loginInfoService.updateLoginInfoForAuthentication(loginInfo);
+		try {
+			loginInfoService.updateLoginInfoForAuthentication(loginInfo);
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}
 		
 		return SUCCESS;
 	}

@@ -22,6 +22,8 @@ import com.fanglin.utils.Paging;
 public interface BackVisitDao extends Dao<BackVisitPO> {
 	
 	public List<BackVisitPO> pageBackVisitByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	
+	public List<BackVisitPO> queryBackVisitByOrderId(String orderId);
 
 	public List<BackVisitPO> queryBackVisitByOrderIdAStartAEndTime(String orderId, Timestamp start, Timestamp end);
 	

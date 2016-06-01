@@ -27,47 +27,59 @@ import com.fanglin.personel.po.UserPO;
 public class BackVisitPO implements Serializable {
 
 	private static final long serialVersionUID = 1000000000011112L;
+	
+	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 
-	private long autoId;
+	private long bvId;
 
-	private DecorationOrderPO decorationOrderPO;
+	private DecorationOrderPO decorationOrder;
 
-	private UserPO designerPO;
+	private UserPO sender;
+	
+	private String receiverIds;
 	
 	private Timestamp createTime;
 	
-	private int grade;
-	
-	private String backVisitContent;
+	private String content;
 
 	@Id
 	@GeneratedValue
-	public long getAutoId(){
-		return autoId;
+	public long getBvId() {
+		return bvId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setBvId(long bvId) {
+		this.bvId = bvId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrderPO(){
-		return decorationOrderPO;
+	public DecorationOrderPO getDecorationOrder(){
+		return decorationOrder;
 	}
 
-	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO){
-		this.decorationOrderPO = decorationOrderPO;
+	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
+		this.decorationOrder = decorationOrder;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "designerId", referencedColumnName = "userId")
-	public UserPO getDesignerPO(){
-		return designerPO;
+	@JoinColumn(nullable = true, name = "senderId", referencedColumnName = "userId")
+	public UserPO getSender() {
+		return sender;
 	}
 
-	public void setDesignerPO(UserPO designerPO){
-		this.designerPO = designerPO;
+	public void setSender(UserPO sender) {
+		this.sender = sender;
+	}
+
+	public String getReceiverIds() {
+		return receiverIds;
+	}
+
+	public void setReceiverIds(String receiverIds) {
+		this.receiverIds = receiverIds;
 	}
 
 	public Timestamp getCreateTime(){
@@ -78,19 +90,11 @@ public class BackVisitPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public int getGrade(){
-		return grade;
+	public String getContent() {
+		return content;
 	}
 
-	public void setGrade(int grade){
-		this.grade = grade;
-	}
-
-	public String getBackVisitContent(){
-		return backVisitContent;
-	}
-
-	public void setBackVisitContent(String backVisitContent){
-		this.backVisitContent = backVisitContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

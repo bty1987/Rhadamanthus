@@ -11,8 +11,8 @@
 
 package com.fanglin.decoration.service.impl;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,16 +28,11 @@ import com.fanglin.decoration.po.BackVisitPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.BackVisitService;
 import com.fanglin.decoration.vo.BackVisitVO;
-import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.service.UserService;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("backVisitService")
 @Transactional(readOnly=true)
@@ -50,10 +45,7 @@ public class BackVisitServiceImpl implements BackVisitService {
 	private DecorationOrderDao  decorationOrderDao;
 	
 	@Autowired
-	private MessageService messageService;
-	
-	@Autowired
-	private UserService userService;
+	private UserDao userDao;
 	
 	@Override
 	public void pageBackVisitByOrderId(Paging paging, List<FilterVO> filters, BackVisitVO backVisitVO){
@@ -63,11 +55,15 @@ public class BackVisitServiceImpl implements BackVisitService {
 		
 		for(BackVisitPO backVisitPO: backVisitPOs){
 			BackVisitVO _backVisitVO = new BackVisitVO();
-			BeanUtil.copyProperties(backVisitPO, _backVisitVO);
 			
-			_backVisitVO.setDesigner(backVisitPO.getDesignerPO().getCurrentName());
-			_backVisitVO.setDesignerId(backVisitPO.getDesignerPO().getUserId());
-			_backVisitVO.setOrderId(backVisitPO.getDecorationOrderPO().getOrderId());
+			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decorationOrder", "sender"));
+			
+			UserPO sender = backVisitPO.getSender();
+			
+			_backVisitVO.setOrderId(backVisitPO.getDecorationOrder().getOrderId());
+			_backVisitVO.setSender(sender.getCurrentName());
+			_backVisitVO.setSenderId(sender.getUserId());
+			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
 			
 			backVisitVOs.add(_backVisitVO);
 		}
@@ -76,91 +72,77 @@ public class BackVisitServiceImpl implements BackVisitService {
 	}
 	
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void remindBackVisitForDesigner() throws FLException{
+	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO) {
 		
-		Date now  = new Date();
-		int backVisitDate = SystemConfig.getInt("backVisitDate", 5) * 24 * 60 * 60 * 1000;
-		int backVisitStage = SystemConfig.getInt("backVisitStage", 3);
-		Long startTime = now.getTime() - backVisitStage * backVisitDate ;
+		List<BackVisitPO> backVisitPOs = backVisitDao.queryBackVisitByOrderId(backVisitVO.getOrderId());
+		List<BackVisitVO> backVisitVOs = new ArrayList<BackVisitVO>();
 		
-		List<FilterVO> filters = new ArrayList<FilterVO>();
-		filters.add(new FilterVO("createTime", startTime.toString(), "gt"));
-		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.queryDecorationOrderForBackVisit(filters);
-		
-		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+		for(BackVisitPO backVisitPO: backVisitPOs){
+			BackVisitVO _backVisitVO = new BackVisitVO();
 			
-			StringBuffer contents = null;
+			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decorationOrder", "sender"));
 			
-			long createTime = decorationOrderPO.getCreateTime().getTime();
-			long keepTime = now.getTime() - createTime;
+			UserPO sender = backVisitPO.getSender();
 			
-			long stage = keepTime / backVisitDate;
+			_backVisitVO.setOrderId(backVisitPO.getDecorationOrder().getOrderId());
+			_backVisitVO.setSender(sender.getCurrentName());
+			_backVisitVO.setSenderId(sender.getUserId());
+			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
 			
-			Timestamp start = new Timestamp(createTime + stage * backVisitStage);
-			Timestamp end =  new Timestamp(createTime + (stage+1) * backVisitStage);
-			
-			List<BackVisitPO> backVisitPOs = backVisitDao.queryBackVisitByOrderIdAStartAEndTime(decorationOrderPO.getOrderId(), start, end);
-			
-			if(backVisitPOs == null || backVisitPOs.size() == 0){
-				//发送消息提醒设计师及对应设计部长
-				
-				contents = new StringBuffer();
-				contents.append("订单:");
-				contents.append(decorationOrderPO.getOrderId());
-				contents.append("回访提醒!");
-				
-				MessageVO message = new MessageVO();
-				message.setSender(new UserVO(UserPO.SUPER_USERID_STR)); // root
-				message.setReceiver(new UserVO(decorationOrderPO.getDesignerPO().getUserId()));
-				message.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				message.setType(MessagePO.MESSAGE_TYPE_BACKVISIT_STR);
-				message.setContents(contents.toString());
-				messageService.sendMessage(message);
-				
-				contents = new StringBuffer();
-				contents.append("订单:");
-				contents.append(decorationOrderPO.getOrderId());
-				contents.append("设计师:");
-				contents.append(decorationOrderPO.getDesignerPO().getUserId());
-				contents.append("回访提醒!");
-				
-				List<UserVO> users = userService.queryUserByDetpIdADuty(decorationOrderPO.getDesignerPO().getDept().getDeptId(), "设计部经理");
-				message.setContents(contents.toString());
-				if(users.size() > 0){
-					message.setReceiver(new UserVO(users.get(0).getUserId()));
-					messageService.sendMessage(message);
-				}
-			}
+			backVisitVOs.add(_backVisitVO);
 		}
+		
+		return backVisitVOs;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addBackVisit(BackVisitVO backVisitVO) throws FLException{
+	public void addBackVisit(BackVisitVO backVisitVO, String userId) throws FLException{
+		
+		String orderId = backVisitVO.getOrderId();
+		
 		BackVisitPO backVisitPO = new BackVisitPO();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(backVisitVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
-
-		BeanUtil.copyProperties(backVisitVO, backVisitPO);
-		backVisitPO.setDecorationOrderPO(decorationOrderPO);
 		
-		UserPO userPO = new UserPO();
-		userPO.setUserId(backVisitVO.getDesignerId());
-		backVisitPO.setDesignerPO(userPO);
+		UserPO userPO = userDao.get(userId);
 		
-		backVisitDao.saveOrUpdate(backVisitPO);
+		if(userPO == null){
+			throw new FLException(220005, "员工不存在");
+		}
+		
+		BeanUtil.copyProperties(backVisitVO, backVisitPO, Arrays.asList("decorationOrder", "sender"));
+		
+		backVisitPO.setDecorationOrder(decorationOrderPO);
+		backVisitPO.setSender(userPO);
+		backVisitPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		
+		StringBuffer receiverIds = new StringBuffer();
+		
+		if(backVisitVO.getReceivers() != null && backVisitVO.getReceivers().size() > 0){
+			
+			List<String> receivers = backVisitVO.getReceivers();
+			
+			for(String receiverId: receivers){
+				com.fanglin.dingding.service.MessageService.sendMessageForBackVisit(receiverId, String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent());
+				
+				receiverIds.append(receiverId);
+			}
+		}
+		
+		backVisitPO.setReceiverIds(receiverIds.toString());
+		
+		backVisitDao.save(backVisitPO);
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteBackVisitById(BackVisitVO orderDesignPicture){	
-		backVisitDao.deleteById(orderDesignPicture.getAutoId());
+		backVisitDao.deleteById(orderDesignPicture.getBvId());
 	}
 
 }

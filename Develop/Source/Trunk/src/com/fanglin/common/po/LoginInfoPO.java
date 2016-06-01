@@ -26,6 +26,10 @@ public class LoginInfoPO implements java.io.Serializable {
 	private String authentication;
 	
 	private long optime;
+	
+	private double x;
+	
+	private double y;
 
 	public LoginInfoPO() {
 		super();
@@ -94,6 +98,22 @@ public class LoginInfoPO implements java.io.Serializable {
 
 	public void setOptime(long optime) {
 		this.optime = optime;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
 	}
 
 }

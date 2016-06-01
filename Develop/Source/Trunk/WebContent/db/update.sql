@@ -12,3 +12,9 @@ CREATE TABLE receipttype (
   status tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (rtId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE backvisit CHANGE COLUMN autoId bvId BIGINT(20) NOT NULL AUTO_INCREMENT ;
+ALTER TABLE backvisit CHANGE COLUMN designerId senderId varchar(15) NOT NULL;
+ALTER TABLE backvisit CHANGE COLUMN backVisitContent content varchar(128) NOT NULL;
+ALTER TABLE backvisit DROP COLUMN grade;
+ALTER TABLE backvisit ADD COLUMN receiverIds varchar(128);

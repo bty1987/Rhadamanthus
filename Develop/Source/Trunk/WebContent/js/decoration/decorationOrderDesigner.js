@@ -16,6 +16,7 @@ var contract = {
 };
 
 var decorationOrderPostData = {};
+
 $(function(){
 
 	order.cancelBtn = $("#cancelBtn");
@@ -175,7 +176,7 @@ $(function(){
 						viewDecorationOrderInDecreaseIndex(v.orderId+"");
 					});
 
-					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).append($btnPrice).appendTo($divBtnBlock);
+					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).append($btnPrice).appendTo($h3);
 
 					if(v.status == "已报价" || v.status == "定金" || v.status == "已签约" || v.status == "已完工" || v.status == "重签合同"){
 						$divBtnWrap.append($btnContract);
@@ -203,7 +204,8 @@ $(function(){
 		//回访
 		var viewDecorationOrderBackVisitIndex = function (decorationOrderId){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-			$("#decorationOrderPageContent").load(api.index.decorationOrderBackVisitIndex.url);
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
+			$("#decorationOrderPageContent").load(api.index.backVisitIndex.url);
 		}
 		//放线
 		var modalDrawLineModal = function (decorationOrderId){

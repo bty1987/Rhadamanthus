@@ -155,7 +155,8 @@ jQuery(function($) {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-                $('a[name="addCustomer"]','#pagenation').click(function(){
+            }, initAddCustomer: function(){
+            	$('a[name="addCustomer"]','#pagenation').click(function(){
                 	addCustomer();
                 });
             }
@@ -163,10 +164,14 @@ jQuery(function($) {
     })();
 	
 	var _condArr = ['customerName', 'customerPhone', 'relationshipType'];
+	
 	var customerSeacher = new Searcher();
+	
 	customerSeacher.init( _condArr, "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "customerPostData");
+	
+	displayFunc.initAddCustomer();
 });
 
 function saveData(){

@@ -35,8 +35,6 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.dingding.po.AppMessageDelivery;
-import com.fanglin.dingding.po.TextMessage;
 import com.fanglin.finance.service.FinanceService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -431,21 +429,10 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 					args.append("orderRefundApprove-paymentAutoId-");
 					args.append(decorationPaymentPO.getAutoId());
 					
-					StringBuffer contents = new StringBuffer();
-					contents.append(decorationPaymentVO.getCreateDes());
-					contents.append(",订单编号:");
-					contents.append(decorationPaymentVO.getOrderId());
-					contents.append(",退款类型:");
-					contents.append(decorationPaymentVO.getPaymentType());
-					contents.append(",款项编号:");
-					contents.append(decorationPaymentPO.getAutoId());
-					contents.append(",退款金额:");
-					contents.append(decorationPaymentPO.getReferMoney());
-					
 					messageVO.setSender(new UserVO(decorationPaymentVO.getCreateUserId()));
 					messageVO.setType("审批消息");
 					messageVO.setArgs(args.toString());
-					messageVO.setContents(contents.toString());
+					messageVO.setContents(String.format("%s,订单编号:%s,退款类型:%s,款项编号:%s,退款金额:", decorationPaymentVO.getCreateDes(), decorationOrderPO.getOrderId(), decorationPaymentVO.getPaymentType(), decorationPaymentPO.getAutoId(), decorationPaymentPO.getReferMoney()));
 					messageService.sendMessage(messageVO);
 				}else{
 					String refundType = decorationPaymentVO.getPaymentType().substring(0, decorationPaymentVO.getPaymentType().indexOf("退款"));
@@ -734,10 +721,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 		
 		if(decorationOrderPO.getSupervisorPO() != null){
-			TextMessage textMessage = new TextMessage(String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()));
-			AppMessageDelivery appMessageDelivery = new AppMessageDelivery(decorationOrderPO.getSupervisorPO().getUserId(), "", SystemConfig.getString("messageAgentId"));
-			appMessageDelivery.withMessage(textMessage);
-			com.fanglin.dingding.service.MessageService.send(appMessageDelivery);
+			com.fanglin.dingding.service.MessageService.sendMessageForPayment(decorationOrderPO.getSupervisorPO().getUserId(), "", String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()));
 		}
 		
 		return 0;

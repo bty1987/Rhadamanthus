@@ -97,6 +97,7 @@ var api = {
 		decorationOrderBelongInfoViewIndex: {url: "/views/decoration/decorationOrderBelongInfoView.html"},
 
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
+		backVisitIndex: {url: "/views/decoration/backVisit.html"},
 		createOrderIndex: {url: "/views/decoration/createOrder.html"},
 		printAddOrReduceInfoIndex: {url: "/views/decoration/printAddOrReduceInfo.html"},
 		
@@ -538,8 +539,8 @@ var api = {
 		pageAddOrReduceItemByPaymentId: {url: "pageAddOrReduceItemByPaymentId.do"},
 		
 		pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
+		queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do"},
 		addBackVisit: {url: "addBackVisit.do"},
-		deleteBackVisitById: {url: "deleteBackVisitById.do"},
 		
 		pageCustomerItemByQuotationId: {url: "pageCustomerItemByQuotationId.do"},
 		
@@ -920,8 +921,8 @@ var api = {
 		
 	}, right: {
 		queryDecorationOrderDesignDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do"},
-		queryDecorationOrderSalesmanDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do"},
-		queryDecorationOrderStatusRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do"},
+		queryDecorationOrderSalesmanDepartmentRightByUserId: {url: "queryDecorationOrderSalesmanDepartmentRightByUserId.do"},
+		queryDecorationOrderStatusRightByUserId: {url: "queryDecorationOrderStatusRightByUserId.do"},
 		
 		updateDecorationOrderDesignDepartmentRight: {url: "updateDecorationOrderDesignDepartmentRight.do"},
 		updateDecorationOrderSalesmanDepartmentRight: {url: "updateDecorationOrderSalesmanDepartmentRight.do"},
