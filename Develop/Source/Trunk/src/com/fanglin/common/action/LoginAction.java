@@ -94,7 +94,7 @@ public class LoginAction extends BaseListAction {
 			            throw new FLException(110004, "该用户不能登陆系统");
 				    }
 				    
-				    if(user.getExtranet() == 0 && !ip.startsWith("192.168")){
+				    if(user.getExtranet() == 0 && !(ip.startsWith("192.168") || ip.startsWith("127") || SystemConfig.getString("hostServer").contains(ip))){
 				    	throw new FLException(110007, "网络问题");
 				    }
 				    

@@ -23,7 +23,6 @@ var materialInsidePayment = {
 	batchFlag: true,
 	
 	queryUrl: null
-	
 };
 
 jQuery(function($) {
@@ -58,7 +57,7 @@ jQuery(function($) {
 		listgrid: materialInsidePayment.listMaterialInsidePaymentHistoryGrid,
 		items: [
 			{label:"楼盘地址",id:"searchVillage",name:"village",type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-			{label:"设计师",id:"searchHistoryDesigner",name:"designer",type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty., postData:{"duty":"设计师"}},
+			{label:"设计师",id:"searchHistoryDesigner",name:"designer",type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
 		]
 	};
 	$("#searchMaterialInsidePaymentHistoryDiv").flSearch(searchHistoryOpts);

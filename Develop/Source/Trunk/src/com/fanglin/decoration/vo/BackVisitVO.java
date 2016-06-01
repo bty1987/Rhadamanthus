@@ -12,89 +12,95 @@ package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
-
-import com.google.gson.annotations.SerializedName;
 
 public class BackVisitVO implements Serializable {
 
 	private static final long serialVersionUID = 191991919191L;
 
-	private Long autoId;
+	private Long bvId;
 
-	@SerializedName("订单编号")
 	private String orderId;
 
-	@SerializedName("创建人")
-	private String designer;
+	private String sender;
 	
-	@SerializedName("创建人编号")
-	private String designerId;
+	private String senderId;
 	
-	@SerializedName("创建时间")
+	private String senderPhoto;
+	
 	private Timestamp createTime;
 	
-	@SerializedName("等级")
-	private Integer grade;
+	private String content;
 	
-	@SerializedName("备注")
-	private String backVisitContent;
-	
-	public Long getAutoId(){
-		return autoId;
+	private List<String> receivers;
+
+	public Long getBvId() {
+		return bvId;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setBvId(Long bvId) {
+		this.bvId = bvId;
 	}
 
-	public String getOrderId(){
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
-	public String getDesigner(){
-		return designer;
+	public String getSender() {
+		return sender;
 	}
 
-	public void setDesigner(String designer){
-		this.designer = designer;
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
-	public String getDesignerId(){
-		return designerId;
+	public String getSenderId() {
+		return senderId;
 	}
 
-	public void setDesignerId(String designerId){
-		this.designerId = designerId;
+	public void setSenderId(String senderId) {
+		this.senderId = senderId;
+	}
+	
+	public String getSenderPhoto() {
+		return senderPhoto;
 	}
 
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getCreateTime(){
+	public void setSenderPhoto(String senderPhoto) {
+		this.senderPhoto = senderPhoto;
+	}
+
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public Integer getGrade(){
-		return grade;
+	public String getContent() {
+		return content;
 	}
 
-	public void setGrade(Integer grade){
-		this.grade = grade;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public String getBackVisitContent(){
-		return backVisitContent;
+	public List<String> getReceivers() {
+		return receivers;
 	}
 
-	public void setBackVisitContent(String backVisitContent){
-		this.backVisitContent = backVisitContent;
+	public void setReceivers(List<String> receivers) {
+		this.receivers = receivers;
 	}
+	
+	
+	
 }

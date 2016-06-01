@@ -1,7 +1,4 @@
 var userAdvance = {
-	listgrid: null,
-	gridPager: null,
-	
 	postData: {},
 	postParam: {},
 	
@@ -10,8 +7,15 @@ var userAdvance = {
 
 jQuery(function($) {
 	
-	userAdvance.listgrid = $("#listgrid");
-	userAdvance.gridPager = "#gridPager";
+	userAdvance.userAdvanceModal = $("#userAdvanceModal");
+	
+	userAdvance.userAdvanceItems.isLogin = $("#isLogin").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.extranet = $("#extranet").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.roleSel = $("#roleSel");
+	userAdvance.userAdvanceItems.company = $("#company");
+	
+	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
+	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 	
 	com.post(api.ds.departmentInfo, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.deptType = res.deptType;
@@ -25,16 +29,6 @@ jQuery(function($) {
 		userAdvance.roleList = res.roleList;
 	}, null, false);
 	
-	userAdvance.userAdvanceModal = $("#userAdvanceModal");
-	
-	userAdvance.userAdvanceItems.isLogin = $("#isLogin").switchBtn("isOrNot");
-	userAdvance.userAdvanceItems.extranet = $("#extranet").switchBtn("isOrNot");
-	userAdvance.userAdvanceItems.roleSel = $("#roleSel");
-	userAdvance.userAdvanceItems.company = $("#company");
-	
-	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
-	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
-	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -47,7 +41,6 @@ jQuery(function($) {
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
 
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-primary').html('权配');
 
@@ -111,8 +104,8 @@ jQuery(function($) {
 				com.post(api.department.queryDepartment, { "dept.type" : "设计部"}, function(data){
 					list = data.deptList;
 				}, null, false);
-				com.post({"url" : "queryDecorationOrderDesignDepartmentRightByUserId.do"}, { "user.userId" : userId}, function(data){
-					userList = data.dIds;
+				com.post(api.right.queryDecorationOrderDesignDepartmentRightByUserId, { "user.userId" : userId}, function(data){
+					userList = data.dids;
 				}, null, false);
 
 				list && list.length && $.each(list, function(i, v){
@@ -132,8 +125,8 @@ jQuery(function($) {
 
 				$dialog.modal("show");
 
-				this.postConf.path = {"url" : "updateDecorationOrderDesignDepartmentRight.do"};
-				this.postConf.name = "dIds";
+				this.postConf.path = api.right.updateDecorationOrderDesignDepartmentRight;
+				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
 			//业务权限配置
@@ -145,8 +138,8 @@ jQuery(function($) {
 				com.post(api.department.queryDepartment, { "dept.type" : "业务部"}, function(data){
 					list = data.deptList;
 				}, null, false);
-				com.post({"url" :"queryDecorationOrderSalesmanDepartmentRightByUserId.do"}, { "user.userId" : userId}, function(data){
-					userList = data.dIds;
+				com.post(api.right.queryDecorationOrderSalesmanDepartmentRightByUserId, { "user.userId" : userId}, function(data){
+					userList = data.dids;
 				}, null, false);
 
 				list && list.length && $.each(list, function(i, v){
@@ -166,8 +159,8 @@ jQuery(function($) {
 
 				$dialog.modal("show");
 
-				this.postConf.path = {"url" : "updateDecorationOrderSalesmanDepartmentRight.do"};
-				this.postConf.name = "dIds";
+				this.postConf.path = api.right.updateDecorationOrderSalesmanDepartmentRight;
+				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
 			//订单权限配置
@@ -177,9 +170,9 @@ jQuery(function($) {
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.ds.decorationInfo, { "dept.type" : "业务部"}, function(data){
-					list = data.status;
+					list = data.decorationOrderStatus;
 				}, null, false);
-				com.post({"url" :"queryDecorationOrderStatusRightByUserId.do"}, { "user.userId" : userId}, function(data){
+				com.post(api.right.queryDecorationOrderStatusRightByUserId, { "user.userId" : userId}, function(data){
 					userList = data.statuses;
 				}, null, false);
 
@@ -200,7 +193,7 @@ jQuery(function($) {
 
 				$dialog.modal("show");
 
-				this.postConf.path = {"url" : "updateDecorationOrderStatusRight.do"};
+				this.postConf.path = api.right.updateDecorationOrderStatusRight;
 				this.postConf.name = "statuses";
 				this.postConf["user.userId"] = userId;
 
@@ -208,9 +201,11 @@ jQuery(function($) {
 			setAdvance : function(){
 				var $dialog = this.$dialog;
 				var postConf = this.postConf;
+				
 				$('button[name="subbtn"]').click(function(){
 					var list = $('input[name="advance"]:checked', $dialog);
 					var params = {"user.userId" : postConf["user.userId"]};
+					
 					list.length && (
 						$.each(list, function(i, v){
 							params[postConf.name + "[" + i + "]"] = $(this).val();
@@ -227,7 +222,8 @@ jQuery(function($) {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-				binding.setAdvance()
+            }, setAdvance: function(){
+            	binding.setAdvance();
             }
         }
     })();
@@ -235,10 +231,12 @@ jQuery(function($) {
 	var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId'];
 
 	var userAdvanceSeacher = new Searcher();
+	
 	userAdvanceSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "userAdvancePostData");
-
+	
+	displayFunc.setAdvance();
 });
 
 function dialogUserAdvanceIndex(userId, userName){

@@ -345,7 +345,7 @@ function dialogMaterialSubOrderMoney(rowId){
 	materialSubOrderPostData["materialSubOrder.fullStatus"] = fullStatus;
 	materialSubOrderPostData["materialSubOrder.otherStatus"] = otherStatus;
 	
-	materialSubOrder.materialSubOrderItems.depositPaymentBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.depositPaymentBtn.unbind("click").on("click", function(){
 		
 		$("#paymentInfo").html("");
 		
@@ -410,7 +410,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.depositCancelBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.depositCancelBtn.unbind("click").on("click", function(){
 		
 		$("#paymentInfo").html("");
 		
@@ -455,7 +455,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.depositRefundBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.depositRefundBtn.unbind("click").on("click", function(){
 		
 		$("#paymentInfo").html("");
 		
@@ -501,7 +501,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.fullPaymentBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.fullPaymentBtn.unbind("click").on("click", function(){
 		
 		$("#paymentInfo").html("");
 		
@@ -569,7 +569,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.fullRefundBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.fullRefundBtn.unbind("click").on("click", function(){
 		$("#paymentInfo").html("");
 		
 		var args = {};
@@ -627,7 +627,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.fullCancelBtn.on("click", function(){
+	materialSubOrder.materialSubOrderItems.fullCancelBtn.unbind("click").on("click", function(){
 		
 		$("#paymentInfo").html("");
 		
@@ -691,7 +691,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.couponBtn.click(function(){
+	materialSubOrder.materialSubOrderItems.couponBtn.unbind("click").click(function(){
 		
 		materialSubOrderPostData["couponCommitType"] = 1;
 		
@@ -717,7 +717,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.couponCommitBtn.click(function(){
+	materialSubOrder.materialSubOrderItems.couponCommitBtn.unbind("click").click(function(){
 		
 		var url = "";
 		var couponValue = materialSubOrder.materialSubOrderItems.couponValue.val();
@@ -778,7 +778,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.couponCancelBtn.click(function(){
+	materialSubOrder.materialSubOrderItems.couponCancelBtn.unbind("click").click(function(){
 		
 		if(materialSubOrderPostData["materialSubOrder.fullStatus"] == 0){
 			materialSubOrder.materialSubOrderItems.couponBtn.css("display", "inline");
@@ -795,7 +795,7 @@ function dialogMaterialSubOrderMoney(rowId){
 		return false;
 	});
 	
-	materialSubOrder.materialSubOrderItems.malingBtn.click(function(){
+	materialSubOrder.materialSubOrderItems.malingBtn.unbind("click").click(function(){
 		
 		materialSubOrder.materialSubOrderItems.malingBtn.css("display", "none");
 		materialSubOrder.materialSubOrderItems.malingInfo.css("display", "inline");

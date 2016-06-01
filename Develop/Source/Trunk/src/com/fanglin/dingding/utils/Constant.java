@@ -24,5 +24,9 @@ public interface Constant {
 	public static final String SECRET_STR = "secret";
 	
 	public static final String APPROVAL_AGENTID_STR = "approvalAgentId";
+	
+	public static final String MESSAGE_AGENTID_STR = "messageAgentId";
+	
+	public static final String SALESMAN_AGENTID_STR = "salesmanAgentId";
 
 }

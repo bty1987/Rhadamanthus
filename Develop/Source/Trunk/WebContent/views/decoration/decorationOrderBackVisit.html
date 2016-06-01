@@ -1,49 +1,37 @@
-<div id="fl-statement"></div>
 
-<div class="row">
-	<div class="col-xs-12">
-		<div id="backVisitSearchDiv"></div>
-		<table id="listGrid"></table>
-		<div id="gridPager"></div>
-	</div>
-	
-	<div class="modal fade" id="backVisitModal" tabindex="-1" role="dialog"	aria-labelledby="backVisitDialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="backVisitDialog">订单</h4>
+<!--装修订单-装修订单-设计-->
+<div class="page-content" id="decorationOrderPageContent">
+
+	<div class="row">
+		<div class="col-xs-12">
+
+			<!-- 查询条件-->
+			<div id="condList" class="fl_search clearfix"></div>
+			<!--查询结果-->
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<!--分页-->
+			<div id="pagenation" class="fl-page-wrap clearfix">
+
+				<div class="pager-info pull-left">
+					第<span class="bigger-120 blue" name="nowPage">1</span>页，
+					共<span class="bigger-120 blue" name="totalPage">12</span>页，
+					每页显示<span class="bigger-120 blue" name="rows">10</span>条，
+					共找到<span class="bigger-120 blue" name="totalRecords">116</span>条
 				</div>
-				
-				<div class="modal-body">
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label for="grade" class="col-sm-3 control-label no-padding-right">等级</label>
-							<div class="col-sm-9">
-								<select id="grade" class="col-xs-10 col-sm-5 v_required"></select>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="backVisitContent" class="col-sm-3 control-label no-padding-right">内容</label>
-							<div class="col-sm-9">
-								<textarea id="backVisitContent" class="col-xs-10 col-sm-5 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
-							</div>
-						</div>
-					</form>
-				</div>
-				
-				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				</div>
+
+				<ul class="pager pull-right">
+					<li class="previous" name="prev">
+						<a href="javascript:void (0);" >← 上一页</a>
+					</li>
+					<li class="next" name="next">
+						<a href="javascript:void (0);" >下一页 →</a>
+					</li>
+				</ul>
 			</div>
+
 		</div>
 	</div>
+
 </div>
-	
-<script type="text/javascript">
-	$.getScript(hostServer + 'js/decoration/decorationOrderBackVisit.js?version=' + versionCode);
-</script>
+
+<script src="js/decoration/decorationOrderBackVisit.js"></script>

@@ -1,7 +1,4 @@
-
-/*扫码登录页面js*/
 jQuery(function(a){
-    //二维码
     var count = 0;
 
     var initQRCode  = function(){
@@ -19,7 +16,7 @@ jQuery(function(a){
         count == 30 ? $('.login_qrcode_refresh').html("您的二维码已失效，<br>请点击下方刷新按钮").removeClass('hide') : $.post("queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag" : flag}).done(function(data){
             count ++ ;
             var statusCode = data.loginInfo.code;
-            -1 == statusCode ? setTimeout(function(){checkLogin(flag)} , 4000)   : 0 == statusCode ? (setCookie("authentication" , data.loginInfo.authentication , 1) ,window.location.href = "main.html") : $('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide');
+            -1 == statusCode ? setTimeout(function(){checkLogin(flag)} , 4000)   : 0 == statusCode ? (setCookie("authentication" , data.loginInfo.authentication , 1) ,window.location.href = "index.do?timestamp=" + new Date().getTime()) : $('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide');
         });
     };
 
@@ -46,7 +43,6 @@ jQuery(function(a){
         $('#dloginContainer').removeClass('hide');
     });
 
-    //用户名密码
     var loginurl = "login.do";
 
     $("#Verify").click(function(){

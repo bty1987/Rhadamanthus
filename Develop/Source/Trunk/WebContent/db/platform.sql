@@ -317,13 +317,13 @@ CREATE TABLE approvalvillage (
 
 DROP TABLE IF EXISTS backvisit;
 CREATE TABLE backvisit (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  bvId bigint(20) NOT NULL AUTO_INCREMENT,
   orderId varchar(15) NOT NULL,
-  designerId varchar(15) NOT NULL,
+  senderId varchar(15) NOT NULL,
   createTime timestamp NULL DEFAULT NULL,
-  grade tinyint(4) NOT NULL DEFAULT '0' COMMENT '0普通  1 重要 2 紧急',
-  backVisitContent varchar(128) NOT NULL,
-  PRIMARY KEY (autoId),
+  content varchar(128) NOT NULL,
+  receiverIds varchar(128),
+  PRIMARY KEY (bvId),
   KEY indexone (orderId,grade,createTime)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师回访记录表';
 
@@ -1060,6 +1060,8 @@ CREATE TABLE logininfo (
   message varchar(64) NOT NULL DEFAULT '',
   authentication varchar(512) NOT NULL DEFAULT '',
   optime bigint NOT NULL,
+  x double NOT NULL DEFAULT 0,
+  y double NOT NULL DEFAULT 0,
   PRIMARY KEY (liId),
   KEY indexone (loginFlag)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='二维码登陆信息';

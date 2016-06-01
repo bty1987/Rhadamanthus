@@ -17,12 +17,10 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.service.BackVisitService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -33,9 +31,6 @@ public class ScheduleAction extends BaseListAction{
 	
 	private Logger log = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private BackVisitService backVisitService;
-	
 	@Action(value = "dayReportSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String dayReportSchedule() throws FLException{
 		
@@ -45,7 +40,7 @@ public class ScheduleAction extends BaseListAction{
 //		Date date = new Date();
 //		Date beforeDay = new Date(date.getTime() - 24*60*60*1000);
 		
-		backVisitService.remindBackVisitForDesigner();
+//		backVisitService.remindBackVisitForDesigner();
 		
 		return SUCCESS;
 	}

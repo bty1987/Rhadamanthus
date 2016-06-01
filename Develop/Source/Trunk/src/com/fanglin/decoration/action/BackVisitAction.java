@@ -11,7 +11,6 @@
 
 package com.fanglin.decoration.action;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -25,7 +24,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.BackVisitService;
 import com.fanglin.decoration.vo.BackVisitVO;
-import com.fanglin.utils.DateUtil;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -49,13 +47,18 @@ public class BackVisitAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryBackVisitByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBackVisitByOrderId(){
+		
+		backVisits = backVisitService.queryBackVisitByOrderId(backVisit);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addBackVisit", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBackVisit() throws FLException{
 
-		backVisit.setDesignerId(getUserId());
-		backVisit.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		backVisitService.addBackVisit(backVisit);
+		backVisitService.addBackVisit(backVisit, getUserId());
 
 		return SUCCESS;
 	}

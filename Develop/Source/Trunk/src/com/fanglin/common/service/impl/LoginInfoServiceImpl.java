@@ -78,11 +78,18 @@ public class LoginInfoServiceImpl implements LoginInfoService {
 			throw new FLException(110004, "该用户不能登陆系统");
 		}
 		
+		System.out.println(loginInfoVO.getX());
+		System.out.println(loginInfoVO.getY());
+		
+		Double x = loginInfoVO.getX();
+		Double y = loginInfoVO.getY();
+		
+		if(x == null || y == null){
+			throw new FLException(110007, "网络问题");
+		}
+		
 		if(userPO.getExtranet() == 0){
 			boolean checkFlag = false;
-			
-			double x = loginInfoVO.getX();
-			double y = loginInfoVO.getY();
 			
 			String checkPoint = SystemConfig.getString("checkPoint");
 			double checkRang = SystemConfig.getDouble("checkRang");
@@ -109,6 +116,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
 		if(loginInfoPO != null){
 			loginInfoPO.setAuthentication(loginInfoVO.getAuthentication());
 			loginInfoPO.setCode(0);
+			loginInfoPO.setX(x);
+			loginInfoPO.setY(y);
 			
 			loginInfoDao.update(loginInfoPO);
 		}

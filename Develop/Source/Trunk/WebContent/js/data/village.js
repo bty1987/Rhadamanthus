@@ -76,7 +76,6 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -215,7 +214,7 @@ $(function(){
 
     //启用禁用功能
     function updateStatus(id, status, failcallBack){
-        com.post({"url" : "updateVillageForStatus.do"}, {"village.villageId" : id, "village.status" : status}, function(){
+        com.post(api.data.updateVillageForStatus, {"village.villageId" : id, "village.status" : status}, function(){
 
         },function(){
             failcallBack && failcallBack();

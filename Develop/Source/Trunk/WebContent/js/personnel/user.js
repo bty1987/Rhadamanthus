@@ -17,7 +17,6 @@ $(function(){
                     var $liLine = $('<li></li>').addClass('item-blue clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
@@ -42,9 +41,9 @@ $(function(){
                         viewUser(v.userId+"");
                     });
 
-                    $divBtnWrap.append($btnEdit).appendTo($divBtnBlock);
+                    $divBtnWrap.append($btnEdit).appendTo($h3);
 
-                    $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
+                    $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -65,7 +64,8 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-                $('a[name="addUser"]','#pagenation').click(function(){
+            }, initAddUser: function(){
+            	$('a[name="addUser"]','#pagenation').click(function(){
                     addUser();
                 });
             }
@@ -75,8 +75,10 @@ $(function(){
     var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity'];
 
     var userSeacher = new Searcher();
+    
     userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "userPostData");
 
+    displayFunc.initAddUser();
 });

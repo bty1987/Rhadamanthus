@@ -1,149 +1,85 @@
-var backVisit = {
-	decorationOrderId : null,
-	initBackVisitList : initBackVisitList,
-	listGrid : null,
-	gridPager : null,
-	saveBtn : null,
-	cancellBtn : null,
-	modal : null,
-	backVisitItems : {},
-	postParam : {},
-};
 
-jQuery(function($) {
-	
-	backVisit.decorationOrderId = decorationOrderPostData.decorationOrderId;
+var decorationOrderPostData = {};
 
-	backVisit.listGrid = $("#listGrid");
-	backVisit.gridPager = "#gridPager";
-	backVisit.saveBtn = $("#saveBtn").on("click", saveData);
-	backVisit.cancelBtn = $("#cancelBtn");
-	backVisit.modal = $("#backVisitModal");
-	
-	backVisit.backVisitItems.backVisitContent = $("#backVisitContent");
-	backVisit.backVisitItems.grade = $("#grade");
-	
-	initBackVisitList();
+$(function(){
+
+	var displayFunc  = (function(){
+
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<b></b>').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			var $btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
+			var propertyArr = [
+				["楼盘地址:", v.village.cityProper.cityProperName + v.village.villageName + " " + v.houseNumber, "grey"],
+				["客户名:", v.customer.customerName, "grey"],
+				["余额:", v.freeArea, "grey"],
+				["设计部:", v.designDepartment, "grey"],
+				["设计师:", v.designer, "grey"],
+				["业务部:", v.businessDepartment, "grey"],
+				["业务员:", v.salesman, "grey"],
+				["面积:", v.houseArea, "grey"],
+				["合同报价:", v.orderTotalPrice, "grey"],
+				["量房时间:", v.createTime, "grey"],
+				["状态:", v.status, "red"]
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+			$btnRevie.click(function(){
+				viewDecorationOrderBackVisitIndex(v.orderId+"");
+			});
+
+			$divBtnWrap.append($btnRevie).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			}
+		}
+	})();
+
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','houseClass','status'];
+
+	var decorationOrderTimelineSeacher = new Searcher();
+
+	decorationOrderTimelineSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForDesigner, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "decorationOrderTimelinePostData");
+
+	function viewDecorationOrderBackVisitIndex(decorationOrderId){
+		decorationOrderPostData["decorationOrderId"] = decorationOrderId;
+		params.historyOrderPage = api.index.decorationOrderBackVisitIndex.url;
+		$("#fl-container").load(api.index.backVisitIndex.url);
+	}
 });
 
-function initBackVisitList() {
-	var backVisitSearchOpts = {
-		url: api.decoration.pageBackVisitByOrderId.url,
-		postParmas : {"backVisit.orderId": ""},
-		listgrid : backVisit.listGrid,
-		items : [ {
-			label : "等级",
-			id : "searchGrade",
-			name : "grade",
-			type : "select",
-			op : "eq"
-		} ]
-	};
 
-	$("#backVisitSearchDiv").flSearch(backVisitSearchOpts);
-	
-	//$("#backVisitSearchDiv > .fl_search").append('&nbsp;<button id="obsoleteOrderBtn" class="btn btn-sm btn-primary no-border">废单</button>');
-	
-//	$("#obsoleteOrderBtn").on("click",function(){
-//		bootbox.confirm("确认要废单吗?",function(result){
-//			if(result){
-//				com.post(api.decoration.obsoleteDecorationOrder, {"decorationOrder.orderId":backVisit.decorationOrderId}, function(res){
-//					if(res.errorCode==0){
-//						com.showAlert(com.info, "操作成功");
-//					}else{
-//						com.showAlert(com.info, res.errorMsg);
-//					}
-//				});
-//			}
-//			
-//		});
-//	});
-	
-	com.post(api.ds.backVisitGrade, {}, function(res) {
-		order.grade = res.grade;
-		$("#searchGrade").bindData(order.grade, 'key', 'value', true);
-		$("#grade").bindData(order.grade, 'key', 'value');
-	});
 
-	backVisit.listGrid.jqGrid({
-		url: api.decoration.pageBackVisitByOrderId.url,
-		postData : {"backVisit.orderId": backVisit.decorationOrderId},
-		colNames : [ '编号', '操作人', '内容', '等级', '创建时间' ],
-		colModel : [
-		    {name: "autoId", hidden : true}, 
-		    {name: 'designer'},
-		    {name: 'backVisitContent'},
-		    {name: 'grade',formatter: gradeInit},
-		    {name: 'createTime'},
-		],
-		pager : backVisit.gridPager,
-		caption : "回访信息列表"
-	});
-
-	backVisit.listGrid.navGrid(backVisit.gridPager, {
-		edit : false,
-		add : false,
-		del : false,
-		search : false,
-		searchicon : 'icon-search orange',
-		refresh : false,
-		view : false
-	}, {}, {}, {}, $.jgrid.searchFunc($(this))).navButtonAdd(
-			backVisit.gridPager, {
-				caption : "",
-				buttonicon : "icon-plus-sign purple",
-				title : "添加",
-				onClickButton : function() {
-					com.clearValidator();
-					com.cleanItems(backVisit.backVisitItems);
-					
-					backVisit.backVisitItems.backVisitContent.get(0).selectedIndex = 0;
-					backVisit.modal.modal("show");
-				},
-				position : "first"
-			}).navButtonAdd(backVisit.gridPager, {
-		caption : "",
-		buttonicon : "icon-mail-forward",
-		title : "返回",
-		onClickButton : function() {
-			$(".tooltip").remove();
-			$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
-		},
-		position : "first"
-	});
-}
-function gradeInit(cellvalue, options, rowdata){
-	if(cellvalue == 0){
-		return '普通';
-	}else if(cellvalue == 1){
-		return '重要';
-	}else if(cellvalue == 2){
-		return '紧急';
-	}
-}
-function saveData(){
-	
-	if(com.validate()){
-		return;
-	}
-	
-	var options = {
-		"backVisit.orderId":backVisit.decorationOrderId,
-		"backVisit.backVisitContent":backVisit.backVisitItems.backVisitContent.val(),
-		"backVisit.grade":backVisit.backVisitItems.grade.val()
-	};
-	
-	com.post(api.decoration.addBackVisit, options, successCallback);
-}
-
-function successCallback(res) {
-	if(res.errorCode == 0){
-		com.showAlert(com.info, "操作成功");
-		backVisit.listGrid.trigger("reloadGrid");
-		backVisit.modal.modal("hide");
-	}
-}
-
-function failCallback() {
-
-}
