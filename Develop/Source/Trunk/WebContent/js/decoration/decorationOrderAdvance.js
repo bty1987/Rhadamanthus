@@ -180,6 +180,149 @@ $(function(){
 	                "customer.phone": $("#phone").val(),
 	                "decorationContract.quotationDetail.customer.customerName": $("#customerName").val(),
 	                "decorationContract.quotationDetail.customer.phone": $("#phone").val(),
+<<<<<<< HEAD
+	                "decorationContract.orderId": decorationOrderPostData["decorationOrder.orderId"]
+	            };
+	            com.post(api.data.checkCustomerForPhone, {
+	                "customer.phone": $("#phone").val()
+	            },
+	            function(c) {
+	                c = c.customerIds;
+	                0 != c.length && a.each(c,
+	                function(a, c) {
+	                    c != b && (d = !0)
+	                })
+	            },
+	            null, !1);
+	            if (d) return com.showAlert(com.error, "\u5ba2\u6237\u7535\u8bdd\u5df2\u7ecf\u5b58\u5728"), !1;
+	            com.post(api.data.updateCustomer, c,
+	            	function(a) {
+	                	0 == a.errorCode ? com.post(api.decoration.signDecorationContract, c,
+	                	function(a) {
+	                		com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+	                		order.listGrid.trigger("reloadGrid")
+	                	}, null, !1) : com.showAlert(com.error, a.errorMsg)
+	            },
+	            null, !1);
+	            
+	            order.customerInfoModal.modal("hide")
+	        }
+	    });
+	    
+	    $(".date-picker").datepicker({
+	        format: "yyyy-mm-dd",
+	        autoclose: !0,
+	        todayBtn: !0,
+	        todayHighlight: !0
+	    }).next().on(ace.click_event,
+	    	function() {
+	        	a(this).prev().focus()
+	    });
+	    
+	    $(".date-picker").datepicker({
+	        format: "yyyy-mm-dd",
+	        autoclose: !0,
+	        todayBtn: !0,
+	        todayHighlight: !0
+	    }).next().on(ace.click_event,
+	    	function() {
+	        	a(this).prev().focus()
+	    });
+	    
+		function saveData() {
+			var a = {
+			"customer.customerName": order.orderItems.customerName.val(),
+			"customer.gender": order.orderItems.gender.value,
+			"customer.phone": order.orderItems.phone.val(),
+			"customer.qq": order.orderItems.qq.val(),
+			"customer.wechat": order.orderItems.wechat.val(),
+			"customer.email": order.orderItems.email.val(),
+			"customer.address": order.orderItems.address.val(),
+			"customer.relationshipType": order.orderItems.relationshipType.val()
+			};
+			com.post(order.editFlg ? order.editUrl: order.addUrl, a, successCallback, failCallback);
+			order.modal.modal("hide")
+		}
+   
+	    //废单
+	    function obsoleteOrder(a) { 
+	        decorationOrderPostData["decorationOrder.orderId"] = a;
+	        bootbox.confirm("\u786e\u8ba4\u8981\u5e9f\u5355\u5417?",
+	        function(b) {
+	            b && com.post(api.decoration.obsoleteDecorationOrder, {
+	                "decorationOrder.orderId": a
+	            },
+	            function(a) {
+	                com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+	                successCallback()
+	            })
+	        })
+	    }
+    
+	     //查看
+	    function viewDecorationOrderDetail(a) { 
+	    	decorationOrderPostData.decorationOrderId = a
+	        $("#fl-container").load(api.index.decorationOrderDetailSalesmanIndex.url, {},function() {
+            // decorationOrderPostData.decorationOrderId = a
+	        })
+	    } 
+	    
+	     //签订合同
+	    function signOrder(a, b) {  
+	       decorationOrderPostData["decorationOrder.orderId"] = a;
+	       decorationOrderPostData["customer.customerId"] = b;
+	       order.customerInfoModal.modal("show")
+	    }
+	    
+	     //合同终止
+	    function terminalOrder(decorationOrderId, rowId){ 
+	    	
+	    	decorationOrderPostData["decorationOrder.orderId"] = decorationOrderId;
+	    	decorationOrderPostData["decorationOrder.rowId"] = rowId;
+	    	
+	    	com.post(api.payment.queryDecorationPaymentForBaseByOrderId, {"decorationPayment.orderId":decorationOrderId}, function(res){
+
+	    		var refundValue = 0;
+	    		var decorationPaymentInfo = "";
+	    		var decorationPayments = res.decorationPayments;
+	    		
+	    		for(var i=0;i<decorationPayments.length;i++){
+	    			
+	    			var decorationPayment = decorationPayments[i];
+	    			var paymentType = decorationPayment.paymentType;
+	    			var paymentStatus = decorationPayment.paymentStatus;
+	    			var referMoney = decorationPayment.referMoney;
+	    			
+	    			if(paymentStatus == "已付款" || paymentStatus == "已确认"){
+	    				decorationPaymentInfo += paymentType + ":" + referMoney + "<br/>";
+	    				refundValue = utils.accAdd(refundValue, referMoney);
+	    			}
+	    		}
+	    		
+	    		if(decorationPaymentInfo == ""){
+	    			decorationPaymentInfo == "无付款信息";
+	    		}
+	    		
+	    		$("#decorationPaymentInfo").html(decorationPaymentInfo);
+	    		$("#refundValue").val(refundValue);
+	    		$("#paymentValue").val(refundValue);
+	    		order.paymentValue = refundValue;
+	    		
+	    		com.clearValidator();
+	    		
+	    		order.refundContractModal.modal("show");	
+	    	});
+	    }
+	    
+	      //重签合同
+	     function resignOrder(decorationOrderId, rowId){ 
+	    	decorationOrderPostData["decorationOrder.orderId"] = decorationOrderId;
+	    	decorationOrderPostData["decorationOrder.rowId"] = rowId;
+	    	
+	    	bootbox.confirm("确认要重签合同吗?", function(result){
+	    		if(result){
+	    			com.post(api.decoration.resignDecorationContract, {"decorationContract.orderId": decorationOrderId}, function(res){
+=======
 	                "decorationContract.quotationDetail.orderId": decorationOrderPostData["decorationOrder.orderId"]
 	            };
 	            com.post(api.data.checkCustomerForPhone, {
@@ -321,6 +464,7 @@ $(function(){
 	    	bootbox.confirm("确认要重签合同吗?", function(result){
 	    		if(result){
 	    			com.post(api.decoration.resignDecorationContract, {"decorationContract.quotationDetail.orderId": decorationOrderId}, function(res){
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 	    				com.showAlert(com.info, "操作成功");
 	    				successCallback();
 	    			});

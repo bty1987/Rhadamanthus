@@ -148,7 +148,7 @@ jQuery(function($) {
 		option["quotationDetail.manageRate"] = _quotationDetail.manageRate;
 		option["quotationDetail.trafficPrice"] = _quotationDetail.trafficPrice;
 		
- 		com.post(api.quotation.addQuotationFunctionAreaByIds, option, function(res){
+ 		com.post(api.quotation.addQuotationFuctionAreaByFunctionAreaIds, option, function(res){
  			if(res.errorCode == 0){
  				
  				_functionAreas = res.quotationFunctionAreas;
@@ -214,7 +214,7 @@ jQuery(function($) {
  		args["quotationDetail.manageRate"] = _quotationDetail.manageRate;
  		args["quotationDetail.trafficPrice"] = _quotationDetail.trafficPrice;
 		
-		com.post(api.quotation.updateQuotationDetail, args, function(res){
+		com.post(api.quotation.updateQuotationForAdvance, args, function(res){
 			com.showAlert(com.info, "操作成功");
 		}, function(res){
 			console.log(res)
@@ -287,7 +287,7 @@ jQuery(function($) {
  		args["quotationDetail.manageRate"] = _quotationDetail.manageRate;
  		args["quotationDetail.trafficPrice"] = _quotationDetail.trafficPrice;
 		
-		com.post(api.quotation.updateQuotationDetail, args, function(res){
+		com.post(api.quotation.updateQuotationForAdvance, args, function(res){
 		}, function(res){
 			console.log(res)
 		});
@@ -2233,7 +2233,7 @@ function saveQuotationDetail(cleanFlag, btnId){
 	
 	var btn = $("#" + btnId).button('loading');
 	
-	com.post(api.quotation.saveQuotaionDetail, option, function(res){
+	com.post(api.quotation.updateQuotationForAdvance, option, function(res){
 		
 		if(res.errorCode != 0){
 			bootbox.alert(res.errorMsg);

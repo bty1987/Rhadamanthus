@@ -1831,7 +1831,7 @@ CREATE TABLE qualitytestingrecord (
 
 DROP TABLE IF EXISTS quotation;
 CREATE TABLE quotation (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  qId bigint(20) NOT NULL AUTO_INCREMENT,
   orderId varchar(15) NOT NULL,
   quotationName varchar(64) NOT NULL,
   decorationStyle varchar(10) DEFAULT NULL,
@@ -1847,7 +1847,7 @@ CREATE TABLE quotation (
   managePrice decimal(10,3) DEFAULT '0.000',
   manageRate decimal(10,3) DEFAULT '0.000',
   trafficPrice decimal(10,3) DEFAULT '0.000',
-  PRIMARY KEY (autoId),
+  PRIMARY KEY (qId),
   KEY indexone (orderId,createTime,status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价表';
 
@@ -1864,20 +1864,36 @@ CREATE TABLE quotationfuncationareaitem (
   KEY indexthr (uuid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
 
+DROP TABLE IF EXISTS quotationfunctionareaitem;
+CREATE TABLE quotationfunctionareaitem (
+  qfaiId int(11) NOT NULL AUTO_INCREMENT,
+  itemName varchar(128) NOT NULL,
+  measurementUnit varchar(10) NOT NULL,
+  unitPrice decimal(10,3) NOT NULL,
+  num decimal(10,3) NOT NULL,
+  type tinyint(4) NOT NULL,
+  quotationFunctionAreaId bigint(20) NOT NULL,
+  quotationItemId bigint(20),
+  content varchar(256),
+  PRIMARY KEY (qfaiId),
+  KEY indexone (functionAreaId),
+  KEY indextwo (quotationItemId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+
 DROP TABLE IF EXISTS quotationfunctionarea;
 CREATE TABLE quotationfunctionarea (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  qfaId bigint(20) NOT NULL AUTO_INCREMENT,
   quotationId bigint(20) NOT NULL,
   functionAreaName varchar(10) NOT NULL,
   functionAreaOrder int(11) DEFAULT NULL,
   functionAreaType varchar(10) NOT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  PRIMARY KEY (autoId),
+  PRIMARY KEY (qfaId),
   KEY indexone (quotationId,functionAreaOrder)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价功能区';
 
 DROP TABLE IF EXISTS quotationitem;
 CREATE TABLE quotationitem (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  qiId bigint(20) NOT NULL AUTO_INCREMENT,
   itemId varchar(10) NOT NULL,
   versionId varchar(11) NOT NULL,
   quotationTypeId int(11) NOT NULL,
@@ -1890,7 +1906,8 @@ CREATE TABLE quotationitem (
   quotationItemDes varchar(512) NOT NULL,
   unitPrice decimal(10,3) NOT NULL,
   status tinyint(4) NOT NULL DEFAULT 0,
-  PRIMARY KEY (autoId),
+  discount tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (qiId),
   KEY indexone (itemId,versionId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价项目表';
 

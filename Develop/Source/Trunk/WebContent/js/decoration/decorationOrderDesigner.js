@@ -82,7 +82,7 @@ $(function(){
 		bootbox.confirm("确认要保存合同信息吗？",function(result){
 			if(result){
 				var options ={
-					"decorationContract.quotationDetail.orderId":contract.decorationOrderId,
+					"decorationContract.orderId":contract.decorationOrderId,
 					"decorationContract.workingDuration":$("#workingDuration").val(),
 					"decorationContract.startTime":$("#startTime").val(),
 					"decorationContract.endTime":$("#endTime").val(),
