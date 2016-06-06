@@ -3,21 +3,78 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '34e89a0e6db17641f9d6c97b5b08d8a563052c9a'
-    oldFile: !uuid 'f9057ca5e4232e0ad78aaab2a122800a928e9efe'
+    newFile: !uuid 'bca5822633c4368b80a756154cf49f47c01b38a7'
+    oldFile: !uuid '34e89a0e6db17641f9d6c97b5b08d8a563052c9a'
   /Develop/Source:
-    newFile: !uuid '168b4dca85f72ea420be2c3752b519a2c978c9f4'
-    oldFile: !uuid 'b45396070b2f51311d43fe7dc85bd7259b2d7601'
+    newFile: !uuid '468d9ba474a36955c2d14d0570817c927421cda9'
+    oldFile: !uuid '168b4dca85f72ea420be2c3752b519a2c978c9f4'
   /Develop/Source/Trunk:
-    newFile: !uuid '743c0d1279166d3208bacfb0e09d1327775bce42'
-    oldFile: !uuid '2efbbb8f25cbec00882401ab157776d60db39630'
-  /Develop/Source/Trunk/conf:
-    newFile: !uuid '48bd348e26a527b3b9b680ce7217f3518b6c7da7'
-    oldFile: !uuid '76caea9f2324b7e2091b50aeec3218ed7cc63592'
-  /Develop/Source/Trunk/conf/sysconfig.properties:
-    newFile: !uuid '556c04b99540d0fcd87cf3355b5b97cea0ba1dd3'
-    oldFile: !uuid '421819b7d0b99da4dd914ee599ae8c34662ac498'
-gitCommitId: !uuid 'cd9780e7f7562116682160731e48fd9559304360'
+    newFile: !uuid '958d1bfe20749dce4fd2189a715337989ec6158c'
+    oldFile: !uuid '743c0d1279166d3208bacfb0e09d1327775bce42'
+  /Develop/Source/Trunk/WebContent:
+    newFile: !uuid '730438a2cadc45f670153209995e853273b82c1e'
+    oldFile: !uuid '8ff78970708427a323f29b7de3b9a148f8840da6'
+  /Develop/Source/Trunk/WebContent/db:
+    newFile: !uuid 'b161b559ea92220a446c6b844157eade980230ee'
+    oldFile: !uuid 'ef8b9959b3b8b337a513f7f2f33a815f45192466'
+  /Develop/Source/Trunk/WebContent/db/platform.sql:
+    newFile: !uuid 'c4e7ac82e4b36bbc8a88652218e511ab58edd41a'
+    oldFile: !uuid 'd614bce86801f61225a4d0bfcc89bd63ab86f6c9'
+  /Develop/Source/Trunk/WebContent/db/update.sql:
+    newFile: !uuid '5512a5da86c487b57cfdd49a0e581fb52ee7162f'
+    oldFile: !uuid 'd71b4eda1a47ef27bcb4608abf73e8b80bc9377a'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid '36c3fe6531f5860edbd9b09931310e209d04f169'
+    oldFile: !uuid 'cb0c08acbe9ca284be42622aab8c0f5997d8d331'
+  /Develop/Source/Trunk/WebContent/js/com:
+    newFile: !uuid 'ceb53c60f15a9de1be109813dc8db5727102b458'
+    oldFile: !uuid '5218da5936d2d3bc1f73a1a248e3af964ce8eeb7'
+  /Develop/Source/Trunk/WebContent/js/com/api.js:
+    newFile: !uuid 'd76c19b0aa49317396f06a818adc54f8c60ffa80'
+    oldFile: !uuid '6bbe1871c89f422ccf3b0fb2fd77e1f43d56ae15'
+  /Develop/Source/Trunk/WebContent/js/com/condition.js:
+    newFile: !uuid 'a77105cfc6c24f0b36f6eb3d5a0c23d9bc7c1ce8'
+    oldFile: !uuid '02dba76d4c6930bb9de59dd2d4cbad99d655fb4f'
+  /Develop/Source/Trunk/WebContent/js/decoration:
+    newFile: !uuid '5f18caf2139f8ba9a1e38d03872eaa2080acb620'
+    oldFile: !uuid '1555ccfd6635c6844580f9ab0f8affc169110d4b'
+  /Develop/Source/Trunk/WebContent/js/decoration/backVisit.js:
+    newFile: !uuid '7040b73ab7f9cf938647ec5c365564f874a2934b'
+    oldFile: !uuid '12257a7a015df0935a8d09f9502392750f86e244'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderAdvance.js:
+    newFile: !uuid 'd1520025f9948d82b1126e56b351a3b2ef6b8480'
+    oldFile: !uuid 'fdc15761665510070e926bcc2978ccdbff7fef10'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderBackVisit.js:
+    newFile: !uuid 'c75d489b79c11a691ebadb00083df6642879df34'
+    oldFile: !uuid '006648af79bb0d2046c35b5d667d7d97ecb74ba3'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderCommon.js:
+    newFile: !uuid '5cc8ede5d00f937507affe834658d9b65281111a'
+    oldFile: !uuid '856faf27bad631ff244d11e145a802f235d7f131'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderDesigner.js:
+    newFile: !uuid 'f0c26a29ec7a8b8b99e0c8dc4f696e92e174170d'
+    oldFile: !uuid 'fa8eb65d39ede3f72d6d8dce80a5cdbb52a37968'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderSalesman.js:
+    newFile: !uuid '97bb063c71d30dc71e65b6f5f0fba92eec87adb2'
+    oldFile: !uuid '028d4ed2775c951224f1039c82d77a309b14aa2e'
+  /Develop/Source/Trunk/WebContent/js/quotation:
+    newFile: !uuid '5ceb47548b9bd044dd92fff636cdd9913d4bb54d'
+    oldFile: !uuid '450697a382f4228067b2af1be4e17368dcbfa11b'
+  /Develop/Source/Trunk/WebContent/js/quotation/quotationDetail.js:
+    newFile: !uuid 'c1f85e80e58e3602e93d44d95b7716bcd791f8fa'
+    oldFile: !uuid 'a488cd87ffc2a783e7c83e02347e717a24ce89f5'
+  /Develop/Source/Trunk/WebContent/main.html:
+    newFile: !uuid '878cccf366163cd32f24ef6878906d5b58f37b71'
+    oldFile: !uuid '0b44843fbbc15931556fd329b1f7958d046ad76b'
+  /Develop/Source/Trunk/WebContent/views:
+    newFile: !uuid 'f5771b66f911dd3a05af0920cf8c76489027ed85'
+    oldFile: !uuid '6c3816fbc9cb90f1c87a453f5fae420d8606d4fc'
+  /Develop/Source/Trunk/WebContent/views/decoration:
+    newFile: !uuid 'da4e2f249284b5e57bf4b0f4a29cf2859472ecf1'
+    oldFile: !uuid '9eaa36b67951f63fa611f8a6aab3ee9559ef9c68'
+  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderCommon.html:
+    newFile: !uuid 'b86546809e6886be7e80af788ee8aceb87438755'
+    oldFile: !uuid 'e70f9c7d2c8a6c9371d844c4df00cddaaea3db06'
+gitCommitId: !uuid '9f71474e1e7f04e6cc83c6394b614b16bb3e0a0a'
 renames: {
   }
-revisionId: 22
+revisionId: 23
