@@ -83,15 +83,12 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	}
 
 	@Override
-	public int deleteQuotationFunctionAreaItemByUuids(List<String> uuids){
+	public int deleteQuotationFunctionAreaItemByQfaiIds(List<Long> qfaiIds) {
 		
-		if(uuids.size() == 0){
-			return -1;
-		}
-		
-		String hql = "delete QuotationFunctionAreaItemPO q where q.uuid in :uuids";
-		int deletedEntities = session().createQuery(hql).setParameterList("uuids", uuids).executeUpdate();
+		String hql = "delete QuotationFunctionAreaItemPO q where q.qfaiId in :qfaiIds";
+		int deletedEntities = session().createQuery(hql).setParameterList("qfaiIds", qfaiIds).executeUpdate();
 		
 		return deletedEntities;
 	}
+	
 }

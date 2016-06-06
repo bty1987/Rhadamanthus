@@ -11,7 +11,6 @@
 
 package com.fanglin.quotation.action;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -25,7 +24,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationVO;
-import com.fanglin.utils.DateUtil;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -42,8 +40,6 @@ public class QuotationAction extends BaseListAction {
 	private List<QuotationVO> quotations;
 
 	private int canChange;
-	
-	private long replicaOrderId;
 	
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationByOrderId(){
@@ -64,15 +60,15 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "queryQuotationById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationById(){
 		
-		quotation=quotationService.queryQuotationById(quotation.getAutoId());
+		quotation=quotationService.queryQuotationById(quotation.getQid());
 
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryQuotationForStatusByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationForStatusByOrderId(){
+	public String queryQuotationForStatusByOrderId() throws FLException{
 		
-		canChange = quotationService.queryQuotationForStatusByOrderId(quotation, null);
+		canChange = quotationService.checkQuotationForStatusByOrderId(quotation, null, false);
 	    
 		return SUCCESS;
 	}
@@ -80,10 +76,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "addQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotation() throws FLException{
 
-		quotation.setDesignerId(getUserId());
-		quotation.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		quotationService.addQuotation(quotation);
+		quotationService.addQuotation(quotation, getUserId());
 		
 		return SUCCESS;
 	}
@@ -93,6 +86,14 @@ public class QuotationAction extends BaseListAction {
 		
 		quotationService.updateQuotation(quotation);
 	    
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateQuotationForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationForAdvance() throws FLException{
+		
+		quotationService.updateQuotationForAdvance(quotation);
+		
 		return SUCCESS;
 	}
 	
@@ -107,7 +108,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "replicaQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String replicaQuotation() throws FLException{
 		
-		quotationService.replicaQuotation(replicaOrderId, quotation);
+		quotationService.replicaQuotation(quotation);
 		
 		return SUCCESS;
 	}
@@ -115,9 +116,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "copyQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyQuotation() throws FLException{ 
 		
-		quotation.setDesignerId(getUserId());
-		quotation.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		quotationService.copyQuotation(quotation.getAutoId(), quotation);
+		quotationService.copyQuotation(quotation, getUserId());
 	    
 		return SUCCESS;
 	}
@@ -152,14 +151,6 @@ public class QuotationAction extends BaseListAction {
 
 	public int getCanChange(){
 		return canChange;
-	}
-
-	public long getReplicaOrderId() {
-		return replicaOrderId;
-	}
-
-	public void setReplicaOrderId(long replicaOrderId) {
-		this.replicaOrderId = replicaOrderId;
 	}
 
 }

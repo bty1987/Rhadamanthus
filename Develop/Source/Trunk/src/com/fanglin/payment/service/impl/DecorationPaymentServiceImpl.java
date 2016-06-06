@@ -26,10 +26,10 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.construction.dao.AddReduceDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.VillagePO;
-import com.fanglin.data.service.CustomerService;
-import com.fanglin.data.vo.CustomerVO;
+import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.common.po.VillagePO;
+import com.fanglin.data.common.service.CustomerService;
+import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
@@ -1031,7 +1031,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 				decorationReceiptPO.setConfirmUserPO(new UserPO(confirmUserId));
 				
-				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
+				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
 					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
 					
 					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));

@@ -17,9 +17,6 @@ import java.util.Map;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.quotation.vo.QuotationDetailVO;
-import com.google.gson.annotations.SerializedName;
-
 public class DecorationContractVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
@@ -28,28 +25,18 @@ public class DecorationContractVO implements Serializable {
 	
 	private String orderId;
 
-	@SerializedName("报价明细")
-	private QuotationDetailVO quotationDetail;
-	
-	@SerializedName("附加条款")
 	private String additionalInfo;
 	
-	@SerializedName("合同模板")
 	private String templateHtml;
 	
-	@SerializedName("签订时间")
 	private Timestamp signTime;
 	
-	@SerializedName("工期")
 	private Integer workingDuration;
 	
-	@SerializedName("开始时间")
 	private Timestamp startTime;
 	
-	@SerializedName("竣工时间")
 	private Timestamp endTime;
 	
-	@SerializedName("合同编号")
 	private String contractCode;
 	
 	private Float orderTotalPrice;
@@ -62,14 +49,6 @@ public class DecorationContractVO implements Serializable {
 
 	public void setAutoId(Long autoId){
 		this.autoId = autoId;
-	}
-
-	public QuotationDetailVO getQuotationDetail(){
-		return quotationDetail;
-	}
-
-	public void setQuotationDetail(QuotationDetailVO quotationDetail){
-		this.quotationDetail = quotationDetail;
 	}
 
 	public String getAdditionalInfo(){

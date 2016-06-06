@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
+import com.fanglin.data.common.po.CustomerPO;
 
 @Entity
 @Table(name = "advancepayment", catalog = "platform")

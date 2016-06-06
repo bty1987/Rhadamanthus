@@ -16,6 +16,9 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.construction.dao.AddReduceDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
+import com.fanglin.data.quotation.po.QuotationClassificationPO;
+import com.fanglin.data.quotation.po.SystemDefineItemPO;
 import com.fanglin.decoration.dao.AddOrReduceDetailDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddOrReduceDetailPO;
@@ -29,12 +32,9 @@ import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
-import com.fanglin.quotation.po.QuotationBigCategoryPO;
-import com.fanglin.quotation.po.QuotationClassificationPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.quotation.po.SystemDefineItemPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -83,7 +83,7 @@ public class AddOrReduceDetailServiceImpl implements AddOrReduceDetailService {
 			
 			addOrReduceItemVO.setWorkType(addOrReduceDetailPO.getWorkTypePO().getName());
 			addOrReduceItemVO.setWorkTypeId(addOrReduceDetailPO.getWorkTypePO().getId());
-			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getAutoId());
+			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getQfaId());
 			addOrReduceItemVO.setQuotationFunctionAreaName(addOrReduceDetailPO.getQuotationFunctionAreaPO().getFunctionAreaName());
 			addOrReduceItemVO.setQuotationClassification(addOrReduceDetailPO.getQuotationClassificationPO().getName());
 			addOrReduceItemVO.setQuotationClassificationId(addOrReduceDetailPO.getQuotationClassificationPO().getId());
@@ -130,7 +130,7 @@ public class AddOrReduceDetailServiceImpl implements AddOrReduceDetailService {
 		addOrReduceDetailVO.setOrderPaymentId(addReducePO.getOrderPaymentId());
 		addOrReduceDetailVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 		addOrReduceDetailVO.setQuotationDiscount(quotationPO.getDiscount());
-		addOrReduceDetailVO.setQuotationId(quotationPO.getAutoId());
+		addOrReduceDetailVO.setQuotationId(quotationPO.getQid());
 		
 		addOrReduceDetailVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 		addOrReduceDetailVO.setVersionName(decorationOrderPO.getVersionPO().getVersionName());
@@ -150,7 +150,7 @@ public class AddOrReduceDetailServiceImpl implements AddOrReduceDetailService {
 			
 			addOrReduceItemVO.setWorkType(addOrReduceDetailPO.getWorkTypePO().getName());
 			addOrReduceItemVO.setWorkTypeId(addOrReduceDetailPO.getWorkTypePO().getId());
-			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getAutoId());
+			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getQfaId());
 			addOrReduceItemVO.setQuotationFunctionAreaName(addOrReduceDetailPO.getQuotationFunctionAreaPO().getFunctionAreaName());
 			addOrReduceItemVO.setQuotationClassification(addOrReduceDetailPO.getQuotationClassificationPO().getName());
 			addOrReduceItemVO.setQuotationClassificationId(addOrReduceDetailPO.getQuotationClassificationPO().getId());

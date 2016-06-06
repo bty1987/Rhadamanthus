@@ -79,125 +79,182 @@ public class MediaScheduleServiceImpl implements MediaScheduleService {
 	@Transactional(rollbackFor=Exception.class)
 	public int switchMediaForDing() {
 		
-		String strFormat = "%s%s?imageName=%s&uploadType=%d";
+		int count = 1;
+		
+		String strFormat = "%sdownloadDDImage.do?imageName=%s&uploadType=%d";
 		
 		String mediaHost = SystemConfig.getString("localMediaServer");
-		String api = "downloadDDImage.do";
 		
 		List<ChanDrawingPO> chanDrawingPOs = chanDrawingDao.queryChanDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(ChanDrawingPO chanDrawingPO: chanDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, chanDrawingPO.getDrawingUrl(), 6));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, chanDrawingPO.getDrawingUrl(), 6));
 			
 			if(json != null && json.getString("generateName") != null){
 				chanDrawingPO.setDrawingUrl(json.getString("generateName"));
 				chanDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				chanDrawingDao.update(chanDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					chanDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<PutlineDrawingPO> putlineDrawingPOs = putlineDrawingDao.queryPutlineDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(PutlineDrawingPO putlineDrawingPO: putlineDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, putlineDrawingPO.getDrawingUrl(), 7));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, putlineDrawingPO.getDrawingUrl(), 7));
 			
 			if(json != null && json.getString("generateName") != null){
 				putlineDrawingPO.setDrawingUrl(json.getString("generateName"));
 				putlineDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				putlineDrawingDao.update(putlineDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					putlineDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<WaterwayCircuitPowerDrawingPO> waterwayCircuitPowerDrawingPOs = waterwayCircuitPowerDrawingDao.queryWaterwayCircuitPowerDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(WaterwayCircuitPowerDrawingPO waterwayCircuitPowerDrawingPO: waterwayCircuitPowerDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, waterwayCircuitPowerDrawingPO.getDrawingUrl(), 8));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, waterwayCircuitPowerDrawingPO.getDrawingUrl(), 8));
 			
 			if(json != null && json.getString("generateName") != null){
+				
 				waterwayCircuitPowerDrawingPO.setDrawingUrl(json.getString("generateName"));
 				waterwayCircuitPowerDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				waterwayCircuitPowerDrawingDao.update(waterwayCircuitPowerDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					waterwayCircuitPowerDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<BricklayDrawingPO> bricklayDrawingPOs = bricklayDrawingDao.queryBricklayDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(BricklayDrawingPO bricklayDrawingPO: bricklayDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, bricklayDrawingPO.getDrawingUrl(), 9));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, bricklayDrawingPO.getDrawingUrl(), 9));
 			
 			if(json != null && json.getString("generateName") != null){
+				
 				bricklayDrawingPO.setDrawingUrl(json.getString("generateName"));
 				bricklayDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				bricklayDrawingDao.update(bricklayDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					bricklayDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<GroundLevelingDrawingPO> groundLevelingDrawingPOs = groundLevelingDrawingDao.queryGroundLevelingDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(GroundLevelingDrawingPO groundLevelingDrawingPO: groundLevelingDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, groundLevelingDrawingPO.getDrawingUrl(), 10));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, groundLevelingDrawingPO.getDrawingUrl(), 10));
 			
 			if(json != null && json.getString("generateName") != null){
 				groundLevelingDrawingPO.setDrawingUrl(json.getString("generateName"));
 				groundLevelingDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				groundLevelingDrawingDao.update(groundLevelingDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					groundLevelingDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<CarpentDrawingPO> carpentDrawingPOs = carpentDrawingDao.queryCarpentDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(CarpentDrawingPO carpentDrawingPO: carpentDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, carpentDrawingPO.getDrawingUrl(), 11));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, carpentDrawingPO.getDrawingUrl(), 11));
 			
 			if(json != null && json.getString("generateName") != null){
 				carpentDrawingPO.setDrawingUrl(json.getString("generateName"));
 				carpentDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				carpentDrawingDao.update(carpentDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					carpentDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<OilDrawingPO> oilDrawingPOs = oilDrawingDao.queryOilDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(OilDrawingPO oilDrawingPO: oilDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, oilDrawingPO.getDrawingUrl(), 12));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, oilDrawingPO.getDrawingUrl(), 12));
 			
 			if(json != null && json.getString("generateName") != null){
 				oilDrawingPO.setDrawingUrl(json.getString("generateName"));
 				oilDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				oilDrawingDao.update(oilDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					oilDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<WaterwayCircuitCheckDrawingPO> waterwayCircuitCheckDrawingPOs = waterwayCircuitCheckDrawingDao.queryWaterwayCircuitCheckDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(WaterwayCircuitCheckDrawingPO waterwayCircuitCheckDrawingPO: waterwayCircuitCheckDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, waterwayCircuitCheckDrawingPO.getDrawingUrl(), 13));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, waterwayCircuitCheckDrawingPO.getDrawingUrl(), 13));
 			
 			if(json != null && json.getString("generateName") != null){
 				waterwayCircuitCheckDrawingPO.setDrawingUrl(json.getString("generateName"));
 				waterwayCircuitCheckDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				waterwayCircuitCheckDrawingDao.update(waterwayCircuitCheckDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					waterwayCircuitCheckDrawingDao.flush();
+				}
 			}
 		}
 		
 		List<CleaningDrawingPO> cleaningDrawingPOs = cleaningDrawingDao.queryCleaningDrawingByType(DRAWING_TYPE_DING_INT);
 		
 		for(CleaningDrawingPO cleaningDrawingPO: cleaningDrawingPOs){
-			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, api, cleaningDrawingPO.getDrawingUrl(), 14));
+			JSONObject json = HttpHelper.httpGet(String.format(strFormat, mediaHost, cleaningDrawingPO.getDrawingUrl(), 14));
 			
 			if(json != null && json.getString("generateName") != null){
 				cleaningDrawingPO.setDrawingUrl(json.getString("generateName"));
 				cleaningDrawingPO.setType(DRAWING_TYPE_LOCAL_INT);
 				
 				cleaningDrawingDao.update(cleaningDrawingPO);
+				
+				count++;
+				
+				if(count % 50 == 0){
+					cleaningDrawingDao.flush();
+				}
 			}
 		}
 		

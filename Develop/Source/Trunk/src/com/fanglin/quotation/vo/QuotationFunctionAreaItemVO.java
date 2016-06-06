@@ -8,44 +8,22 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 	
 	private Long qfaiId;
 
-	private String uuid;
-	
-	private Long itemIdAutoId;
-	
-	private String itemId;
-	
-	private String quotationBigCategory;
-	
-	private Integer quotationBigCategoryId;
-	
 	private String itemName;
-	
-	private String measurementUnit;
-	
-	private Integer measurementUnitId;
-	
-	private String workType;
-	
-	private Integer workTypeId;
-	
-	protected String quotationItemDes;
 	
 	private Float unitPrice;
 	
 	private Float num;
 	
-	private Integer quotationClassificationId;
+	private Short type;
 	
-	private String quotationClassification;
+	private String measurementUnit;
 	
-	private Integer customFlag; // 自定义标识
+	private Long quotationFunctionAreaId;
 	
-	private String itemType; // 原始报价, 增项, 减项, 扣款, 特批
+	private Long quotationItemId;
+	
+	private String content;
 
-	private Long functionAreaId;
-	
-	private String functionAreaName;
-	
 	public Long getQfaiId() {
 		return qfaiId;
 	}
@@ -54,156 +32,68 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.qfaiId = qfaiId;
 	}
 
-	public String getItemId(){
-		return itemId;
-	}
-
-	public void setItemId(String itemId){
-		this.itemId = itemId;
-	}
-
-	public String getItemName(){
+	public String getItemName() {
 		return itemName;
 	}
 
-	public void setItemName(String itemName){
+	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
 
-	public String getQuotationItemDes(){
-		return quotationItemDes;
-	}
-
-	public void setQuotationItemDes(String quotationItemDes){
-		this.quotationItemDes = quotationItemDes;
-	}
-
-	public Integer getCustomFlag(){
-		return customFlag;
-	}
-
-	public void setCustomFlag(Integer customFlag){
-		this.customFlag = customFlag;
-	}
-
-	public void setUnitPrice(Float unitPrice){
-		this.unitPrice = unitPrice;
-	}
-
-	public Float getUnitPrice(){
+	public Float getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setNum(Float num){
-		this.num = num;
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
-	public Float getNum(){
+	public Float getNum() {
 		return num;
 	}
 
-	public void setItemIdAutoId(Long itemIdAutoId){
-		this.itemIdAutoId = itemIdAutoId;
+	public void setNum(Float num) {
+		this.num = num;
 	}
 
-	public Long getItemIdAutoId(){
-		return itemIdAutoId;
+	public Short getType() {
+		return type;
 	}
 
-	public void setUuid(String uuid){
-		this.uuid = uuid;
+	public void setType(Short type) {
+		this.type = type;
 	}
 
-	public String getUuid(){
-		return uuid;
-	}
-
-	public void setQuotationBigCategory(String quotationBigCategory){
-		this.quotationBigCategory = quotationBigCategory;
-	}
-
-	public String getQuotationBigCategory(){
-		return quotationBigCategory;
-	}
-
-	public void setMeasurementUnit(String measurementUnit){
-		this.measurementUnit = measurementUnit;
-	}
-
-	public String getMeasurementUnit(){
+	public String getMeasurementUnit() {
 		return measurementUnit;
 	}
 
-	public void setWorkType(String workType){
-		this.workType = workType;
+	public void setMeasurementUnit(String measurementUnit) {
+		this.measurementUnit = measurementUnit;
 	}
 
-	public String getWorkType(){
-		return workType;
+	public Long getQuotationFunctionAreaId() {
+		return quotationFunctionAreaId;
 	}
 
-	public void setWorkTypeId(Integer workTypeId){
-		this.workTypeId = workTypeId;
+	public void setQuotationFunctionAreaId(Long quotationFunctionAreaId) {
+		this.quotationFunctionAreaId = quotationFunctionAreaId;
 	}
 
-	public Integer getWorkTypeId(){
-		return workTypeId;
+	public Long getQuotationItemId() {
+		return quotationItemId;
 	}
 
-	public void setMeasurementUnitId(Integer measurementUnitId){
-		this.measurementUnitId = measurementUnitId;
+	public void setQuotationItemId(Long quotationItemId) {
+		this.quotationItemId = quotationItemId;
 	}
 
-	public Integer getMeasurementUnitId(){
-		return measurementUnitId;
+	public String getContent() {
+		return content;
 	}
 
-	public void setQuotationBigCategoryId(Integer quotationBigCategoryId){
-		this.quotationBigCategoryId = quotationBigCategoryId;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public Integer getQuotationBigCategoryId(){
-		return quotationBigCategoryId;
-	}
-
-	public void setQuotationClassificationId(Integer quotationClassificationId){
-		this.quotationClassificationId = quotationClassificationId;
-	}
-
-	public Integer getQuotationClassificationId(){
-		return quotationClassificationId;
-	}
-
-	public void setQuotationClassification(String quotationClassification){
-		this.quotationClassification = quotationClassification;
-	}
-
-	public String getQuotationClassification(){
-		return quotationClassification;
-	}
-
-	public void setItemType(String itemType){
-		this.itemType = itemType;
-	}
-
-	public String getItemType(){
-		return itemType;
-	}
-
-	public void setFunctionAreaId(Long functionAreaId){
-		this.functionAreaId = functionAreaId;
-	}
-
-	public Long getFunctionAreaId(){
-		return functionAreaId;
-	}
-
-	public void setFunctionAreaName(String functionAreaName){
-		this.functionAreaName = functionAreaName;
-	}
-
-	public String getFunctionAreaName(){
-		return functionAreaName;
-	}
-	
 }

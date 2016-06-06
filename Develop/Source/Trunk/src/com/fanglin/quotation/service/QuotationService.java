@@ -23,11 +23,11 @@ public interface QuotationService {
 
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO);
 	
-	public int queryQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO);
-	
 	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
 	
-	public int addQuotation(QuotationVO quotationVO) throws FLException;
+	public int checkQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO, boolean priceFlag) throws FLException;
+	
+	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	
 	public int updateQuotation(QuotationVO quotationVO) throws FLException;
 	
@@ -35,9 +35,11 @@ public interface QuotationService {
 	
 	public int updateQuotationForStatus(QuotationVO quotationVO) throws FLException;
 	
-	public int replicaQuotation(long replicaAutoId, QuotationVO quotationVO) throws FLException;
+	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
 	
-	public int copyQuotation(long copyAutoId, QuotationVO quotationVO) throws FLException;
+	public int replicaQuotation(QuotationVO quotationVO) throws FLException;
+	
+	public int copyQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	
 	public int deleteQuotationById(QuotationVO quotationVO) throws FLException;
 	

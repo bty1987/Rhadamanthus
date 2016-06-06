@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.dao.VillageDao;
+import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.system.po.CityProperPO;

@@ -23,12 +23,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.quotation.po.QuotationItemPO;
+
 @Entity
-@Table(name = "quotationfuncationareaitem", catalog = "platform")
+@Table(name = "quotationfunctionareaitem", catalog = "platform")
 public class QuotationFunctionAreaItemPO implements Serializable {
 	
-	private static final long serialVersionUID = 13444646L;
-	
+	private static final long serialVersionUID = 3077313706873385773L;
+
 	public static final int TYPE_QUOTATIONITEM_INT = 0; // 系统报价项
 	
 	public static final String TYPE_ORIGINAL_STR = "原始报价";
@@ -39,14 +41,23 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private long qfaiId;
 
-	private String uuid;
+	private String itemName;
+	
+	private String measurementUnit;
+	
+	private float unitPrice;
+	
+	private float num;
+	
+	private short type;
 	
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
 	private QuotationItemPO quotationItem;
 	
-	private float num;
+	private String content;
 	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "qfaiId") 
 	public long getQfaiId() {
@@ -56,43 +67,79 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setQfaiId(long qfaiId) {
 		this.qfaiId = qfaiId;
 	}
+	
+	@Column(name = "itemName")
+	public String getItemName() {
+		return itemName;
+	}
 
-	@Id
-	@Column(name="uuid")
-	public String getUuid(){
-		return uuid;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	@Column(name = "measurementUnit")
+	public String getMeasurementUnit() {
+		return measurementUnit;
+	}
+
+	public void setMeasurementUnit(String measurementUnit) {
+		this.measurementUnit = measurementUnit;
+	}
+
+	@Column(name = "unitPrice")
+	public float getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(float unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	@Column(name = "num")
+	public float getNum(){
+		return num;
 	}
 	
-	public void setUuid(String uuid){
-		this.uuid = uuid;
+	public void setNum(float num){
+		this.num = num;
 	}
 
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
+	public QuotationFunctionAreaPO getQuotationFunctionArea(){
+		return quotationFunctionArea;
+	}
+	
 	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea){
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName = "autoId")
-	public QuotationFunctionAreaPO getQuotationFunctionArea(){
-		return quotationFunctionArea;
+	@JoinColumn(nullable = false, name = "quotationItemId", referencedColumnName = "qiId")
+	public QuotationItemPO getQuotationItem(){
+		return quotationItem;
 	}
-
+	
 	public void setQuotationItem(QuotationItemPO quotationItem){
 		this.quotationItem = quotationItem;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quoteItemId", referencedColumnName = "autoId")
-	public QuotationItemPO getQuotationItem(){
-		return quotationItem;
+	@Column(name = "content")
+	public String getContent() {
+		return content;
 	}
 
-	public void setNum(float num){
-		this.num = num;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public float getNum(){
-		return num;
-	}
-	
 }

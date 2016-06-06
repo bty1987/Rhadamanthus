@@ -28,5 +28,5 @@ public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaI
 	
 	public int deleteQuotationFunctionAreaItemByFunctionAreaIds(List<Long> functionAreaIds);
 	
-	public int deleteQuotationFunctionAreaItemByUuids(List<String> uuids);
+	public int deleteQuotationFunctionAreaItemByQfaiIds(List<Long> qfaiIds);
 }

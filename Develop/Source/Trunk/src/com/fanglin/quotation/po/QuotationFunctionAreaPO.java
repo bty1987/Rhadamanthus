@@ -32,7 +32,7 @@ public class QuotationFunctionAreaPO implements Serializable {
 	
 	public static final String TYPE_MANAGEMENT_STR = "管理费";
 	
-	private long autoId;
+	private long qfaId;
 	
 	private QuotationPO quotation;
 	
@@ -42,21 +42,23 @@ public class QuotationFunctionAreaPO implements Serializable {
 	
 	private String functionAreaType;
 
-	public QuotationFunctionAreaPO(){	}
+	public QuotationFunctionAreaPO(){
+		super();
+	}
 	
-	public QuotationFunctionAreaPO(long autoId){
-		this.autoId = autoId;
+	public QuotationFunctionAreaPO(long qfaId){
+		this.qfaId = qfaId;
 	}
 	
 	@Id
 	@GeneratedValue
-	@Column(name="autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name="qfaId")
+	public long getQfaId(){
+		return qfaId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setQfaId(long qfaId){
+		this.qfaId = qfaId;
 	}
 
 	public String getFunctionAreaName(){
@@ -72,7 +74,7 @@ public class QuotationFunctionAreaPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quotationId",referencedColumnName = "autoId")
+	@JoinColumn(nullable = false, name = "quotationId",referencedColumnName = "qId")
 	public QuotationPO getQuotation(){
 		return quotation;
 	}
