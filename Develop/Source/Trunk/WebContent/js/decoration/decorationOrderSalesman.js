@@ -49,7 +49,10 @@ $(function(){
                 ["状态:", v.status, "grey"],
             ];
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -86,11 +89,19 @@ $(function(){
  
    var decorationOrderSalesmanSeacher = new Searcher();
    
+<<<<<<< HEAD
+   decorationOrderSalesmanSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForSalesman, function(data){
+=======
    decorationOrderSalesmanSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
         displayFunc.init('resultList', data);
     }, "pagenation", "DecorationOrderSalesmanPostData");
 
+<<<<<<< HEAD
+   	//定义全局变量  json
+=======
  //定义全局变量  json
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 	var order = {
 	    listGrid: null,
 	    gridPager: null,
@@ -141,6 +152,31 @@ $(function(){
                 "customer.phone": $("#phone").val(),
                 "decorationContract.quotationDetail.customer.customerName": $("#customerName").val(),
                 "decorationContract.quotationDetail.customer.phone": $("#phone").val(),
+<<<<<<< HEAD
+                "decorationContract.orderId": decorationOrderPostData["decorationOrder.orderId"]
+            };
+            com.post(api.data.checkCustomerForPhone, {
+                "customer.phone": $("#phone").val()
+            },
+            function(c) {
+                c = c.customerIds;
+                0 != c.length && a.each(c,
+                function(a, c) {
+                    c != b && (d = !0)
+                })
+            },
+            null, !1);
+            if (d) return com.showAlert(com.error, "\u5ba2\u6237\u7535\u8bdd\u5df2\u7ecf\u5b58\u5728"), !1;
+            com.post(api.data.updateCustomer, c,
+	            function(a) {
+	                0 == a.errorCode ? com.post(api.decoration.signDecorationContract, c,
+	                function(a) {
+	                    com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+	                    order.listGrid.trigger("reloadGrid")
+	                },
+	                null, !1) : com.showAlert(com.error, a.errorMsg)
+	            },
+=======
                 "decorationContract.quotationDetail.orderId": decorationOrderPostData["decorationOrder.orderId"]
             };
             com.post(api.data.checkCustomerForPhone, {
@@ -165,6 +201,7 @@ $(function(){
                 },
                 null, !1) : com.showAlert(com.error, a.errorMsg)
             },
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
             null, !1);
             order.customerInfoModal.modal("hide")
         }
@@ -207,7 +244,11 @@ $(function(){
    
     function viewDecorationOrderBackVisitIndex(decorationOrderId) { 
     	decorationOrderPostData["decorationOrderId"] = decorationOrderId;
+<<<<<<< HEAD
+		params.historyOrderPage = api.index.decorationOrderSalesmanIndex.url;
+=======
 		params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 		$("#decorationOrderPageContent").load(api.index.backVisitIndex.url);
     }
   

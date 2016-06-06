@@ -459,7 +459,7 @@ var Condition = function(){
             },
             dataSource : {
                 url : api.department.queryDepartment,
-                postData:{ "dept.type" : "业务部" },
+                postData:{ "dept.type" : "all" },
                 listPath: "deptList",
                 keyPath:"deptId",
                 valuePath:"deptName"

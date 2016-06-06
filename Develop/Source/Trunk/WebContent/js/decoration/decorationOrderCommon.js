@@ -1,32 +1,127 @@
-var order = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	orderItems: {},
-	
-	orderStatus: [],
-	businessDepartments:[],
-	postParam:{},
-	
-	editFlag: false
-};
-
-var contract = {
-	decorationOrderId:null,
-};
-
 var decorationOrderPostData = {};
+$(function(){
 
-jQuery(function($) {
-	order.listGrid = $("#listGrid");
-	order.gridPager = "#gridPager";
+    /**
+     * 回调函数必须提供 init(tableId, result.list)方法
+     * tableId ，用来显示的div的id
+     * result.list 列表的json数组
+     * */
+    var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+ 
+        var creatLine = function(v){   
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.orderId));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnLook = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+            var $btnAgreement = $('<a></a>').addClass('btn btn-minier').html('合同');
+
+            var propertyArr = [
+                ["订单编号:", v.orderId, "grey"],
+                ["楼盘地址:", v.village.villageName, "grey"],
+                ["客户名:", v.customer.customerName, "grey"],
+                ["余额:", v.customer.balance, "grey"],
+                ["设计部:", v.designDepartment, "grey"],
+                ["设计师:", v.designer, "grey"],
+                ["业务部:", v.businessDepartment, "grey"],
+                ["业务员:", v.salesman, "grey"],
+                ["面积:", v.houseArea, "grey"],
+                ["合同报价:", v.orderTotalPrice, "grey"],
+                ["折扣:", v.discount, "grey"],
+                ["量房时间:", v.createTime, "grey"],
+                ["签单时间:", v.contractTime, "grey"],
+                ["状态:", v.status, "grey"],
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+			$divBtnWrap.append($btnLook);
+			  
+			$divBtnWrap.append($btnAgreement);
+            
+            if(v.status == "已签约" || v.status == "已完工"){//判断的条件是ListData中的status,所以取v.status
+                	
+            	$divBtnWrap.append($btnAgreement);
+            }
+
+	    	$divBtnWrap.appendTo($h3);
+	    	
+            $liLine.append($h3).append($ulProperty);
+         
+            //查看按钮点击事件
+            $btnLook.click(function(){
+            	viewDecorationOrderDetail(v.orderId);
+            });
+            
+            //合同按钮点击事件
+            $btnAgreement.click(function(){
+            	modalAgreementModal(v.orderId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        };
+    })();
+
+    var _condArr = ['orderId','village','houseNumber','houseArea','customerPhone','designer','salesman','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId', 'createTimeDateRange','signTimeDateRange','houseClass','status'];
+
+    var decorationOrderCommonSeacher = new Searcher();
+    decorationOrderCommonSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "DecorationOrderCommonPostData");
+
+ //定义全局变量  
+	var order = {
+	    listGrid: null,
+	    gridPager: null,
+	    saveBtn: null,
+	    cancellBtn: null,
+	    orderItems: {},
+	    orderStatus: [],
+	    businessDepartments: [],
+	    postParam: {},
+	    editFlag: !1
+	},
+	
+	contract = {
+		decorationOrderId: null
+	};
+	
+	//给全局变量赋值（主要操作是制定页面标签）
 	
 	order.agreementModal = $("#agreementModal");
 	
 	decorationUtils.createDecorationOrderCondition(order.listGrid, api.decoration.pageDecorationOrderForCommon.url, "orderSearchDiv", {}, "");
-	
-	initDecorationOrderList();
 	
 	//-----------------------------------合同----------------------------
 	$("#additionalInfoBtn").on('click',function(res){
@@ -56,157 +151,84 @@ jQuery(function($) {
 	$('.date-picker').datepicker({format:'yyyy-mm-dd' , autoclose:true,todayBtn:true,todayHighlight:true}).next().on(ace.click_event, function(){
 		$(this).prev().focus();
 	});
-});
-
-//-----------------------------------------------------合同-----------------------------------------
-function initializeContent(){
-	$('#additionalInfo').ace_wysiwyg({
-		toolbar:['font', null, 'fontSize', null, {name:'bold', className:'btn-info'}, {name:'italic', className:'btn-info'}, {name:'strikethrough', className:'btn-info'},
-			{name:'underline', className:'btn-info'}, null,{name:'insertunorderedlist', className:'btn-success'},{name:'insertorderedlist', className:'btn-success'},
-			{name:'outdent', className:'btn-purple'},{name:'indent', className:'btn-purple'},null,{name:'justifyleft', className:'btn-primary'},
-			{name:'justifycenter', className:'btn-primary'},{name:'justifyright', className:'btn-primary'},{name:'justifyfull', className:'btn-inverse'},null,
-			null,null,null,null,null,'foreColor',null,{name:'undo', className:'btn-grey'},
-			{name:'redo', className:'btn-grey'}],
-		'wysiwyg': {fileUploadError: showErrorAlert}
-	}).prev().addClass('wysiwyg-style2');
 	
-	if (typeof jQuery.ui !== 'undefined' && /applewebkit/.test(navigator.userAgent.toLowerCase())) {
-		var lastResizableImg = null;
+	function initializeContent(){
+		$('#additionalInfo').ace_wysiwyg({
+			toolbar:['font', null, 'fontSize', null, {name:'bold', className:'btn-info'}, {name:'italic', className:'btn-info'}, {name:'strikethrough', className:'btn-info'},
+				{name:'underline', className:'btn-info'}, null,{name:'insertunorderedlist', className:'btn-success'},{name:'insertorderedlist', className:'btn-success'},
+				{name:'outdent', className:'btn-purple'},{name:'indent', className:'btn-purple'},null,{name:'justifyleft', className:'btn-primary'},
+				{name:'justifycenter', className:'btn-primary'},{name:'justifyright', className:'btn-primary'},{name:'justifyfull', className:'btn-inverse'},null,
+				null,null,null,null,null,'foreColor',null,{name:'undo', className:'btn-grey'},
+				{name:'redo', className:'btn-grey'}],
+			'wysiwyg': {fileUploadError: showErrorAlert}
+		}).prev().addClass('wysiwyg-style2');
 		
-		function destroyResizable() {
-			if(lastResizableImg == null){
-				return;
-			}
+		if (typeof jQuery.ui !== 'undefined' && /applewebkit/.test(navigator.userAgent.toLowerCase())) {
+			var lastResizableImg = null;
 			
-			lastResizableImg.resizable( "destroy" );
-			lastResizableImg.removeData('resizable');
-			lastResizableImg = null;
-		}
-		var enableImageResize = function() {
-			$('.wysiwyg-editor').on('mousedown', function(e) {
-				var target = $(e.target);
-				if(e.target instanceof HTMLImageElement) {
-					if(!target.data('resizable')) {
-						target.resizable({
-							aspectRatio: e.target.width / e.target.height
-						});
-						target.data('resizable', true);
-						
-						if( lastResizableImg != null ) {//disable previous resizable image
-							lastResizableImg.resizable( "destroy" );
-							lastResizableImg.removeData('resizable');
+			function destroyResizable() {
+				if(lastResizableImg == null){
+					return;
+				}
+				
+				lastResizableImg.resizable( "destroy" );
+				lastResizableImg.removeData('resizable');
+				lastResizableImg = null;
+			}
+			var enableImageResize = function() {
+				$('.wysiwyg-editor').on('mousedown', function(e) {
+					var target = $(e.target);
+					if(e.target instanceof HTMLImageElement) {
+						if(!target.data('resizable')) {
+							target.resizable({
+								aspectRatio: e.target.width / e.target.height
+							});
+							target.data('resizable', true);
+							
+							if( lastResizableImg != null ) {
+								lastResizableImg.resizable( "destroy" );
+								lastResizableImg.removeData('resizable');
+							}
+							lastResizableImg = target;
 						}
-						lastResizableImg = target;
 					}
-				}
-			}).on('click', function(e) {
-				if( lastResizableImg != null && !(e.target instanceof HTMLImageElement) ) {
+				}).on('click', function(e) {
+					if( lastResizableImg != null && !(e.target instanceof HTMLImageElement) ) {
+						destroyResizable();
+					}
+				}).on('keydown', function() {
 					destroyResizable();
-				}
-			}).on('keydown', function() {
-				destroyResizable();
-			});
-	    };
-		enableImageResize();
-	}
-}
-
-function showErrorAlert (reason, detail) {
-	var msg='';
-	if(reason === 'unsupported-file-type') {
-		msg = "Unsupported format " + detail; 
-	}else{
-		console.log("error uploading file", reason, detail);
-	}
-	$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
-}
-
-//---------------------------------------------------------------------------init begin ---------------------------------------------------------
-
-function initDecorationOrderList(){
-	order.listGrid.jqGrid({		
-		url: api.decoration.pageDecorationOrderForCommon.url,
-		postData: {"filters[0].field":"orderId","filters[0].op":"eq","filters[0].data":"null"},
-		colNames:['订单编号', '楼盘地址', '客户名', '余额','设计部', '设计师', '业务部', '业务员', '面积', '合同报价', '折扣', '量房时间', '签单时间', '状态', '操作', 'houseNumber', 'cityP'],
-		colModel:[
-		    {name:'orderId', width: 70},
-			{name:'villageName', jsonmap:'village.villageName', formatter: villageInit, width: 180},
-			{name:'customerName', jsonmap:'customer.customerName', width: 50},
-			{name:'balance', jsonmap:'customer.balance', width: 35},
-			{name:'designDepartment', width: 70},
-			{name:'designer', width: 50},
-			{name:'businessDepartment', width: 70},
-			{name:'salesman', width: 50},
-			{name:'houseArea', width: 50},
-			{name:'orderTotalPrice', width: 50},
-			{name:'discount', width: 35},
-			{name:'createTime', width: 70},
-			{name:'contractTime', width: 70},
-			{name:'status', width: 50},
-			{name:'action', jsonmap:'status', width: 100, sortable: false, editable: false, formatter: actionInit},
-			{name:"houseNumber", hidden:true},
-			{name:"cityProperName", jsonmap:"village.cityProper.cityProperName", hidden:true}
-		], 
-		pager : order.gridPager,
-		caption: "装修订单信息列表"
-	});
-
-	order.listGrid.navGrid(order.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}, $.jgrid.searchFunc($(this))
-	);
-}
-
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button type="button" id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewDecorationOrderDetail(\'' + rowdata.orderId + '\');">查看</button>';
-	
-	if(cellvalue == "已签约"||cellvalue == "已完工"){
-		result += '<button type="button" class="btn btn-minier" onclick="modalAgreementModal(\'' + rowdata.orderId + '\');">合同</button>';
-	}
-	result += '</div>';
-	
-	return result;
-}
-
-
-function villageInit(cellvalue, options, rowdata){
-	
-	var html = rowdata.village.cityProper.cityProperName+rowdata.village.villageName + ' '+rowdata.houseNumber;
-	return html;
-}
-
-function viewDecorationOrderDetail(decorationOrderId){
-	
-	decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-	
-	$("#fl-container").load(api.index.decorationOrderDetailCommonIndex.url);
-}
-
-function modalAgreementModal(decorationOrderId){
-	contract.decorationOrderId = decorationOrderId;
-	
-	com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
-		if(res.decorationContract==null || res.decorationContract.autoId == null){
-			$("#printContractBtn").attr("disabled",true);
-		}else{
-			$("#printContractBtn").attr("disabled",false);
+				});
+		    };
+			enableImageResize();
 		}
-		order.agreementModal.modal("show");
-	});
-	
-	$("#printContractBtn").attr('href', api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId);
-}
+	}
 
-function successCallback(){
-	order.listGrid.trigger("reloadGrid");
-}
+	//查看
+    function viewDecorationOrderDetail(decorationOrderId) { 
+    	decorationOrderPostData.decorationOrderId = decorationOrderId;
+        $("#fl-container").load(api.index.decorationOrderDetailCommonIndex.url);
+    } 
+	    
+    //合同
+    function modalAgreementModal(decorationOrderId){
+    	contract.decorationOrderId = decorationOrderId;
+    	
+    	com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
+    		if(res.decorationContract == null || res.decorationContract.autoId == null){
+    			$("#printContractBtn").attr("disabled",true);
+    		}else{
+    			$("#printContractBtn").attr("disabled",false);
+    		}
+    		order.agreementModal.modal("show");
+    	});
+    	
+    	$("#printContractBtn").attr('href', api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId);
+    }
+	     
+    function successCallback() {
+	    decorationOrderSalesmanSeacher.doSearch();
+    }
+});
+    
 
-function failCallback(){
-	
-}
-
-function cleanItems(){
-	
-}

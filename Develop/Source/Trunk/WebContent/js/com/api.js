@@ -541,8 +541,11 @@ var api = {
 		pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
 		queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do"},
 		addBackVisit: {url: "addBackVisit.do"},
+<<<<<<< HEAD
+=======
 		
 		pageCustomerItemByQuotationId: {url: "pageCustomerItemByQuotationId.do"},
+>>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 		
 		queryDecorationActivityByOrderId: {url: "queryDecorationActivityByOrderId.do"},
 		queryDecorationActivityItem: {url: "queryDecorationActivityItem.do"},
@@ -858,29 +861,23 @@ var api = {
 		queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do"},
 		queryQuotationById: {url: "queryQuotationById.do"},
 		queryQuotationForStatusByOrderId: {url: "queryQuotationForStatusByOrderId.do"},
+		checkQuotationForStatusByOrderId: {url: "checkQuotationForStatusByOrderId.do"},
 		addQuotation: {url: "addQuotation.do"},
 		updateQuotation: {url: "updateQuotation.do"},
+		updateQuotationForAdvance: {url: "updateQuotationForAdvance.do"},
 		deleteQuotationById: {url: "deleteQuotationById.do"},
 		replicaQuotation: {url: "replicaQuotation.do"},
 		copyQuotation: {url: "copyQuotation.do"},
 		changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
 		
-		queryQuotationFunctionAreaByIds: {url: "queryQuotationFunctionAreaByIds.do"},
 		queryQuotationFunctionAreaForCommonById: {url: "queryQuotationFunctionAreaForCommonById.do"},
-		queryQuotationDetailById: {url: "queryQuotationDetailById.do"},
-		queryQuotationDetailForAllInfoById: {url: "queryQuotationDetailForAllInfoById.do"},
-		queryQuotationDetailForDefaultByOrderId: {url: "queryQuotationDetailForDefaultByOrderId.do"},
-		addQuotationFunctionArea: {url: "addQuotationFunctionArea.do"},
-		addQuotationFunctionAreaByIds: {url: "addQuotationFunctionAreaByIds.do"},
-		addCustomQuotationItem: {url: "addCustomQuotationItem.do"},
-		saveQuotaionDetail: {url: "saveQuotaionDetail.do"},
-		updateQuotationDetail: {url: "updateQuotationDetail.do"},
+		addQuotationFuctionAreaByFunctionAreaIds: {url: "addQuotationFuctionAreaByFunctionAreaIds.do"},
 		updateQuotationFunctionArea: {url: "updateQuotationFunctionArea.do"},
-		updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
-		updateCustomQuotationItem: {url: "updateCustomQuotationItem.do"},
 		deleteQuotationFunctionArea: {url: "deleteQuotationFunctionArea.do"},
-		deleteQuotationFunctionAreaItemByUuids: {url: "deleteQuotationFunctionAreaItemByUuids.do"},
-		deleteCustomQuotationItemByIds: {url: "deleteCustomQuotationItemByIds.do"},
+		
+		queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
+		updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
+		deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
 		
 	}, report: {
 		
