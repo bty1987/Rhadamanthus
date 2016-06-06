@@ -28,6 +28,7 @@ import com.fanglin.common.po.WorkTypePO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.information.po.MessagePO;
@@ -35,7 +36,6 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationDao;
-import com.fanglin.quotation.po.QuotationBigCategoryPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.salary.po.UserSalaryPO;
@@ -78,7 +78,7 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 			BudgetAuditItemVO budgetAuditItemVO = new BudgetAuditItemVO();
 			BeanUtil.copyProperties(budgetAuditItemPO, budgetAuditItemVO);
 
-			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getAutoId());
+			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getQfaId());
 			budgetAuditItemVO.setFunctionAreaName(budgetAuditItemPO.getFunctionArea().getFunctionAreaName());
 
 			budgetAuditItemVO.setCategoryId(budgetAuditItemPO.getCategory().getId());
@@ -107,7 +107,7 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 
 		budgetAuditVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 		budgetAuditVO.setQuotationDiscount(quotationPO.getDiscount());
-		budgetAuditVO.setQuotationId(quotationPO.getAutoId());
+		budgetAuditVO.setQuotationId(quotationPO.getQid());
 
 		budgetAuditVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 		budgetAuditVO.setVersionName(decorationOrderPO.getVersionPO().getVersionName());
@@ -120,7 +120,7 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 			BudgetAuditItemVO budgetAuditItemVO = new BudgetAuditItemVO();
 			BeanUtil.copyProperties(budgetAuditItemPO, budgetAuditItemVO);
 
-			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getAutoId());
+			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getQfaId());
 			budgetAuditItemVO.setFunctionAreaName(budgetAuditItemPO.getFunctionArea().getFunctionAreaName());
 
 			budgetAuditItemVO.setCategoryId(budgetAuditItemPO.getCategory().getId());

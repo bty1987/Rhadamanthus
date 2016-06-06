@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.vo.CustomerVO;
+import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class PaymentVO implements Serializable {

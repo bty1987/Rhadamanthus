@@ -21,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.dao.CustomerDao;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.service.impl.CustomerServiceImpl;
-import com.fanglin.data.vo.CustomerVO;
+import com.fanglin.data.common.dao.CustomerDao;
+import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.common.service.impl.CustomerServiceImpl;
+import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.finance.service.FinanceService;
@@ -42,6 +42,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("paymentService")
 @Transactional(readOnly = true)
@@ -349,7 +350,7 @@ public class PaymentServiceImpl implements PaymentService {
 			advanceReceiptPO.setConfirmUser(new UserPO(currentUserId));
 			paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
 			
-			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT){
+			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
 				advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_CONFIRM_INT);
 				
 				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(paymentPO.getOrderId());

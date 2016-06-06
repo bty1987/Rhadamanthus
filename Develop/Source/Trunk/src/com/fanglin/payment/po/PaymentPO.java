@@ -18,7 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
+import com.fanglin.data.common.po.CustomerPO;
 
 @Entity
 @Table(name = "payment", catalog = "platform")

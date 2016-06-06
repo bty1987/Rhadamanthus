@@ -40,8 +40,6 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.quotation.service.QuotationDetailService;
-import com.fanglin.quotation.vo.QuotationDetailVO;
 import com.fanglin.report.service.DecorationRankService;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -68,9 +66,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private QuotationDao quotationDao;
 	
 	@Autowired
-	private QuotationDetailService quotationDetailService;
-	
-	@Autowired
 	private OrderBelongInfoDao belongInfoDao;
 	
 	@Autowired
@@ -88,9 +83,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		if(decorationContractPO != null){
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO);
-			
-			QuotationDetailVO quotationDetailVO = quotationDetailService.queryQuotationDetailForDefaultByOrderId(orderId);
-			decorationContractVO.setQuotationDetail(quotationDetailVO);
 		}
 		
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForBaseByOrderId(orderId);
@@ -128,11 +120,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveDecorationContract(DecorationContractVO contract) throws FLException{
+	public int saveDecorationContract(DecorationContractVO decorationContractVO) throws FLException{
 		
 		List<String> noUpdateStatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
 		
-		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(contract.getQuotationDetail().getOrderId());
+		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(decorationContractVO.getOrderId());
 		
 		if(decorationContractPO != null){
 			if(noUpdateStatus.contains(decorationContractPO.getDecorationOrderPO().getStatus())){
@@ -143,19 +135,19 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationContractPO = new DecorationContractPO();
 		}
 	
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(contract.getQuotationDetail().getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationContractVO.getOrderId());
 		
 		StringBuffer contractCode= new StringBuffer(SystemConfig.getString("contractStartWith", "FLJ-"));
 		contractCode.append(decorationOrderPO.getOrderId());
 		contractCode.append("-");
 		contractCode.append(decorationOrderPO.getDesignerPO().getDept().getContractPrefix());
 		
-		decorationContractPO.setAdditionalInfo(contract.getAdditionalInfo());
-		decorationContractPO.setEndTime(contract.getEndTime());
-		decorationContractPO.setStartTime(contract.getStartTime());
+		decorationContractPO.setAdditionalInfo(decorationContractVO.getAdditionalInfo());
+		decorationContractPO.setEndTime(decorationContractVO.getEndTime());
+		decorationContractPO.setStartTime(decorationContractVO.getStartTime());
 		decorationContractPO.setDecorationOrderPO(decorationOrderPO);
 		decorationContractPO.setContractCode(contractCode.toString());
-		decorationContractPO.setWorkingDuration(contract.getWorkingDuration());
+		decorationContractPO.setWorkingDuration(decorationContractVO.getWorkingDuration());
 		decorationContractPO.setTemplateHtml(SystemConfig.getString("contractPath", "decorationContract1.html"));
 		decorationContractPO.setSignTime(DateUtil.getDateToTimestamp(new Date()));
 	
@@ -172,7 +164,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<Object> noPaymentStatus = Arrays.asList(new Object[]{null, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR});
 		
 		boolean resignFlag = false;
-		String orderId = decorationContractVO.getQuotationDetail().getOrderId();
+		String orderId = decorationContractVO.getOrderId();
 		
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
@@ -214,7 +206,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 		
 		//更新归属信息的部门和大区
-		List<OrderBelongInfoPO> orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getQuotationDetail().getOrderId(), OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		List<OrderBelongInfoPO> orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
 		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
@@ -222,7 +214,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			belongInfoDao.saveOrUpdate(orderBelongInfoPO);
 		}
 		
-		orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getQuotationDetail().getOrderId(), OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
 		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
@@ -295,7 +287,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Transactional(rollbackFor=Exception.class)
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException {
 		
-		String orderId = decorationContractVO.getQuotationDetail().getOrderId();
+		String orderId = decorationContractVO.getOrderId();
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
 		

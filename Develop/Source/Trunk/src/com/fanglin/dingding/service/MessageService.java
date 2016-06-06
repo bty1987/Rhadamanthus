@@ -86,6 +86,7 @@ public class MessageService {
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", SystemConfig.getString(Constant.SALESMAN_AGENTID_STR));
 		
 		OAMessage oaMessage = new OAMessage();
+		oaMessage.message_url = String.format("%s/dingding/salesman/backvisit.html?orderid=%s", SystemConfig.getString(Constant.MP_HOST_STR), orderId);
 		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s", SystemConfig.getString(Constant.MP_HOST_STR), orderId);
 		OAMessage.Head head = new OAMessage.Head();
 		head.bgcolor = "FFDFD130";

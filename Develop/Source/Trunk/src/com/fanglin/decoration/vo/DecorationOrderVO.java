@@ -17,8 +17,8 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
-import com.fanglin.data.vo.CustomerVO;
-import com.fanglin.data.vo.VillageVO;
+import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.data.common.vo.VillageVO;
 
 public class DecorationOrderVO implements Serializable {
 

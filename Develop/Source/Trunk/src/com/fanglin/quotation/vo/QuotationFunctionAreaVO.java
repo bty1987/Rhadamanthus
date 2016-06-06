@@ -9,7 +9,7 @@ public class QuotationFunctionAreaVO implements Serializable {
 	
 	private int id; // 配合页面存储信息
 
-	private Long autoId;
+	private Long qfaId;
 	
 	private String functionAreaName;
 	
@@ -19,7 +19,7 @@ public class QuotationFunctionAreaVO implements Serializable {
 	
 	private String functionAreaType;
 	
-	List<QuotationFunctionAreaItemVO> items;
+	private List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems;
 
 	public int getId() {
 		return id;
@@ -29,20 +29,12 @@ public class QuotationFunctionAreaVO implements Serializable {
 		this.id = id;
 	}
 
-	public List<QuotationFunctionAreaItemVO> getItems(){
-		return items;
+	public Long getQfaId(){
+		return qfaId;
 	}
 
-	public void setItems(List<QuotationFunctionAreaItemVO> items){
-		this.items = items;
-	}
-
-	public Long getAutoId(){
-		return autoId;
-	}
-
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setQfaId(Long qfaId){
+		this.qfaId = qfaId;
 	}
 
 	public String getFunctionAreaName(){
@@ -75,6 +67,15 @@ public class QuotationFunctionAreaVO implements Serializable {
 
 	public Float getSum(){
 		return sum;
+	}
+	
+	public List<QuotationFunctionAreaItemVO> getQuotationFunctionAreaItems() {
+		return quotationFunctionAreaItems;
+	}
+
+	public void setQuotationFunctionAreaItems(
+			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
+		this.quotationFunctionAreaItems = quotationFunctionAreaItems;
 	}
 
 }

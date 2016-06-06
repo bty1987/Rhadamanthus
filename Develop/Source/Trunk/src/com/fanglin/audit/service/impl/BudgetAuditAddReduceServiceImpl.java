@@ -46,7 +46,7 @@ public class BudgetAuditAddReduceServiceImpl implements BudgetAuditAddReduceServ
 			addOrReduceItemVO.setWorkType(addOrReduceDetailPO.getWorkTypePO().getName());
 			addOrReduceItemVO.setWorkTypeId(addOrReduceDetailPO.getWorkTypePO().getId());
 
-			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getAutoId());
+			addOrReduceItemVO.setQuotationFunctionAreaId(addOrReduceDetailPO.getQuotationFunctionAreaPO().getQfaId());
 			addOrReduceItemVO.setQuotationFunctionAreaName(addOrReduceDetailPO.getQuotationFunctionAreaPO().getFunctionAreaName());
 
 			addOrReduceItemVOs.add(addOrReduceItemVO);

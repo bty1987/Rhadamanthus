@@ -31,10 +31,7 @@ public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaP
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId){
-		return createCriteria(QuotationFunctionAreaPO.class)
-				.add(Restrictions.eq("quotation.autoId", quotationId))
-				.addOrder(Order.asc("functionAreaOrder"))
-				.list();
+		return createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qId", quotationId)).addOrder(Order.asc("functionAreaOrder")).list();
 	}
 
 	@Override

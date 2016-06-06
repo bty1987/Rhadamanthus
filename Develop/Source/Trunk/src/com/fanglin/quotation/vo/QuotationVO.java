@@ -20,21 +20,11 @@ public class QuotationVO implements Serializable {
 
 	private static final long serialVersionUID = -62258203481876631L;
 
-	private Long autoId;
+	private Long qId;
 	
 	private String orderId;
 	
-	private String OrderStatus;
-	
-	private Integer orderActivityId;
-	
-	private String orderActivity;
-	
-	private Float orderActivityDiscount;
-	
 	private Float orderTotalPrice;
-	
-	private Timestamp contractTime;
 	
 	private String versionId;
 
@@ -42,13 +32,11 @@ public class QuotationVO implements Serializable {
 	
 	private String decorationStyle;
 	
+	private String createrId;
+	
+	private String createrName;
+	
 	private Timestamp createTime;
-	
-	protected String quotationContent;
-	
-	private String designerId;
-	
-	private String designer;
 	
 	private Float discount;
 	
@@ -58,14 +46,22 @@ public class QuotationVO implements Serializable {
 	
 	private Integer saveStatus;
 	
-	private Integer calFlag;
-
-	public Long getAutoId(){
-		return autoId;
+	private String quotationContent;
+	
+	private Float latexCut;
+	
+	private Float managePrice;
+	
+	private Float manageRate;
+	
+	private Float trafficPrice;
+	
+	public Long getQid(){
+		return qId;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setQid(Long qId){
+		this.qId = qId;
 	}
 
 	public String getOrderId(){
@@ -74,22 +70,6 @@ public class QuotationVO implements Serializable {
 
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
-	}
-
-	public String getOrderStatus(){
-		return OrderStatus;
-	}
-
-	public void setOrderStatus(String orderStatus){
-		OrderStatus = orderStatus;
-	}
-
-	public Integer getOrderActivityId(){
-		return orderActivityId;
-	}
-
-	public void setOrderActivityId(Integer orderActivityId){
-		this.orderActivityId = orderActivityId;
 	}
 
 	public String getQuotationName(){
@@ -108,6 +88,22 @@ public class QuotationVO implements Serializable {
 		this.decorationStyle = decorationStyle;
 	}
 
+	public String getCreaterId() {
+		return createrId;
+	}
+
+	public void setCreaterId(String createrId) {
+		this.createrId = createrId;
+	}
+
+	public String getCreaterName() {
+		return createrName;
+	}
+
+	public void setCreaterName(String createrName) {
+		this.createrName = createrName;
+	}
+
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime(){
 		return createTime;
@@ -117,14 +113,6 @@ public class QuotationVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getQuotationContent(){
-		return quotationContent;
-	}
-
-	public void setQuotationContent(String quotationContent){
-		this.quotationContent = quotationContent;
-	}
-	
 	public Float getDiscount(){
 		return discount;
 	}
@@ -149,52 +137,12 @@ public class QuotationVO implements Serializable {
 		return totalPrice;
 	}
 
-	public void setDesignerId(String designerId){
-		this.designerId = designerId;
-	}
-
-	public String getDesignerId(){
-		return designerId;
-	}
-
-	public void setDesigner(String designer){
-		this.designer = designer;
-	}
-
-	public String getDesigner(){
-		return designer;
-	}
-
-	public void setSaveStatus(Integer saveStatus){
-		this.saveStatus = saveStatus;
-	}
-
-	public Integer getSaveStatus(){
-		return saveStatus;
-	}
-
-	public void setOrderActivity(String orderActivity){
-		this.orderActivity = orderActivity;
-	}
-
-	public String getOrderActivity(){
-		return orderActivity;
-	}
-
 	public void setVersionId(String versionId){
 		this.versionId = versionId;
 	}
 
 	public String getVersionId(){
 		return versionId;
-	}
-
-	public Float getOrderActivityDiscount(){
-		return orderActivityDiscount;
-	}
-
-	public void setOrderActivityDiscount(Float orderActivityDiscount){
-		this.orderActivityDiscount = orderActivityDiscount;
 	}
 
 	public Float getOrderTotalPrice(){
@@ -205,21 +153,52 @@ public class QuotationVO implements Serializable {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getContractTime(){
-		return contractTime;
+	public Integer getSaveStatus() {
+		return saveStatus;
 	}
 
-	public void setContractTime(Timestamp contractTime){
-		this.contractTime = contractTime;
+	public void setSaveStatus(Integer saveStatus) {
+		this.saveStatus = saveStatus;
 	}
 
-	public void setCalFlag(Integer calFlag){
-		this.calFlag = calFlag;
+	public String getQuotationContent() {
+		return quotationContent;
 	}
 
-	public Integer getCalFlag(){
-		return calFlag;
+	public void setQuotationContent(String quotationContent) {
+		this.quotationContent = quotationContent;
+	}
+
+	public Float getLatexCut() {
+		return latexCut;
+	}
+
+	public void setLatexCut(Float latexCut) {
+		this.latexCut = latexCut;
+	}
+
+	public Float getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(Float managePrice) {
+		this.managePrice = managePrice;
+	}
+
+	public Float getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Float manageRate) {
+		this.manageRate = manageRate;
+	}
+
+	public Float getTrafficPrice() {
+		return trafficPrice;
+	}
+
+	public void setTrafficPrice(Float trafficPrice) {
+		this.trafficPrice = trafficPrice;
 	}
 
 }

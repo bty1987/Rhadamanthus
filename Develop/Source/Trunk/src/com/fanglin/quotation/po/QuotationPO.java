@@ -32,7 +32,7 @@ public class QuotationPO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
 
-	private long autoId;
+	private long qId;
 	
 	private DecorationOrderPO decorationOrder;
 	
@@ -64,8 +64,8 @@ public class QuotationPO implements Serializable {
 	
 	private float trafficPrice;
 	
-	public QuotationPO(long autoId){
-		this.autoId = autoId;
+	public QuotationPO(long qId){
+		this.qId = qId;
 	}
 	
 	public QuotationPO(){
@@ -73,13 +73,13 @@ public class QuotationPO implements Serializable {
 	}
 	@Id
 	@GeneratedValue
-	@Column(name = "autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name = "qId")
+	public long getQid(){
+		return qId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setQid(long qId){
+		this.qId = qId;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)

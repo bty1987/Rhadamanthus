@@ -22,8 +22,8 @@ import javax.persistence.Table;
 
 import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.common.po.WorkTypePO;
-import com.fanglin.quotation.po.QuotationBigCategoryPO;
-import com.fanglin.quotation.po.QuotationClassificationPO;
+import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
+import com.fanglin.data.quotation.po.QuotationClassificationPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Entity

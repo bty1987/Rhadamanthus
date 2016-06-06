@@ -26,10 +26,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.VillagePO;
+import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.common.po.VillagePO;
+import com.fanglin.data.quotation.po.QuotationVersionPO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.quotation.po.QuotationVersionPO;
 
 @Entity
 @Table(name = "decorationOrder", catalog = "platform")

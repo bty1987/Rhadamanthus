@@ -33,11 +33,13 @@ import com.fanglin.common.vo.BuildingNameRuleVO;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.VillagePO;
-import com.fanglin.data.service.impl.CustomerServiceImpl;
-import com.fanglin.data.vo.CustomerVO;
-import com.fanglin.data.vo.VillageVO;
+import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.common.po.VillagePO;
+import com.fanglin.data.common.service.impl.CustomerServiceImpl;
+import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.data.common.vo.VillageVO;
+import com.fanglin.data.quotation.dao.QuotationVersionDao;
+import com.fanglin.data.quotation.po.QuotationVersionPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
 import com.fanglin.decoration.dao.OrderBelongInfoDao;
@@ -61,10 +63,8 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
-import com.fanglin.quotation.dao.QuotationVersionDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.quotation.po.QuotationVersionPO;
 import com.fanglin.report.service.DecorationRankService;
 import com.fanglin.right.dao.DecorationOrderDesignDepartmentRightDao;
 import com.fanglin.right.dao.DecorationOrderSalesmanDepartmentRightDao;
@@ -943,7 +943,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			UserPO userPO = userDao.get(userId);
 			
-			if(!userPO.getDept().getDeptName().contains("客服")){
+			if(userPO != null && !userPO.getDept().getDeptName().contains("客服")){
 				decorationOrderVO.getCustomer().setConfidentialInfo();
 			}
 		}
@@ -1126,10 +1126,10 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			List<QuotationPO> quotationPOs = quotationDao.queryQuotationByOrderId(orderId);
 			for(QuotationPO quotationPO: quotationPOs){
-				List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getAutoId());
+				List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid());
 				
 				for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreaPOs){
-					quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getAutoId());
+					quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 					
 					quotationFunctionAreaDao.delete(quotationFunctionAreaPO);
 				}
