@@ -70,11 +70,7 @@ $(function(){
 
 	var decorationOrderTimelineSeacher = new Searcher();
 
-<<<<<<< HEAD
 	decorationOrderTimelineSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForGeneral, function(data){
-=======
-	decorationOrderTimelineSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForDesigner, function(data){
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationOrderTimelinePostData");
 

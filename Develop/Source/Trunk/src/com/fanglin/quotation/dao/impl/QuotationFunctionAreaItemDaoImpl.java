@@ -33,9 +33,8 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	@SuppressWarnings("unchecked")
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId){
 		return createCriteria(QuotationFunctionAreaItemPO.class)
-				.createAlias("quotationItem", "quotationItem")
-				.add(Restrictions.eq("quotationFunctionArea.autoId", functionAreaId))
-				.addOrder(Order.asc("quotationItem.itemId"))
+				.add(Restrictions.eq("quotationFunctionArea.qfaId", functionAreaId))
+				.addOrder(Order.asc("qfaiId"))
 				.list();
 	}
 
@@ -47,7 +46,7 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 			return new ArrayList<QuotationFunctionAreaItemPO>();
 		}else{
 			return session().createCriteria(QuotationFunctionAreaItemPO.class)
-					.add(Restrictions.in("quotationFunctionArea.autoId", functionAreaIds))
+					.add(Restrictions.in("quotationFunctionArea.qfaId", functionAreaIds))
 					.list();
 		}
 	}
@@ -63,8 +62,8 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 
 	@Override
 	public int deleteQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId){
-		String hql = "delete QuotationFunctionAreaItemPO q where q.quotationFunctionArea.autoId = :quotationFunctionAreaAutoId";
-		int deletedEntities = session().createQuery(hql).setLong("quotationFunctionAreaAutoId", functionAreaId).executeUpdate();
+		String hql = "delete QuotationFunctionAreaItemPO q where q.quotationFunctionArea.qfaId = :quotationFunctionAreaId";
+		int deletedEntities = session().createQuery(hql).setLong("quotationFunctionAreaId", functionAreaId).executeUpdate();
 		
 		return deletedEntities;
 	}
@@ -76,7 +75,7 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 			return -1;
 		}
 		
-		String hql = "delete QuotationFunctionAreaItemPO q where q.quotationFunctionArea.autoId in :functionAreaIds";
+		String hql = "delete QuotationFunctionAreaItemPO q where q.quotationFunctionArea.qfaId in :functionAreaIds";
 		int deletedEntities = session().createQuery(hql).setParameterList("functionAreaIds", functionAreaIds).executeUpdate();
 		
 		return deletedEntities;

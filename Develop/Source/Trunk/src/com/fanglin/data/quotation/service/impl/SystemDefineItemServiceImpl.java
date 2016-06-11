@@ -25,9 +25,9 @@ import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.common.po.WorkTypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.QuotationBigCategoryPO;
+import com.fanglin.data.po.SystemDefineItemPO;
 import com.fanglin.data.quotation.dao.SystemDefineItemDao;
-import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
-import com.fanglin.data.quotation.po.SystemDefineItemPO;
 import com.fanglin.data.quotation.service.SystemDefineItemService;
 import com.fanglin.data.quotation.vo.SystemDefineItemVO;
 import com.fanglin.utils.BeanUtil;
@@ -101,34 +101,45 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException{
+	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException {
 		
 		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId());
 		
-		if((systemDefineItemPO != null && systemDefineItemVO.getAutoId() == null) || (systemDefineItemPO != null && systemDefineItemVO.getAutoId() != systemDefineItemPO.getAutoId())){
+		if(systemDefineItemPO != null){
 			throw new FLException(200009, "系统自定义报价项编号存在");
 		}
 		
+		systemDefineItemPO = new SystemDefineItemPO();
+		BeanUtil.copyProperties(systemDefineItemVO, systemDefineItemPO, Arrays.asList("quotationBigCategory", "measurementUnit", "workType"));
+		
+		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
+		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
+		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
+		
+		systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException {
+		
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(systemDefineItemVO.getSdiId());
+		
 		if(systemDefineItemPO == null){
-			systemDefineItemPO = new SystemDefineItemPO();
-			BeanUtil.copyProperties(systemDefineItemVO, systemDefineItemPO, Arrays.asList("quotationBigCategory", "measurementUnit", "workType"));
-			
-			systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
-			systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
-			systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
-			
-			systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
-		}else{
-			systemDefineItemPO.setItemName(systemDefineItemVO.getItemName());
-			systemDefineItemPO.setUnitPrice(systemDefineItemVO.getUnitPrice());
-			systemDefineItemPO.setQuotationItemDes(systemDefineItemVO.getQuotationItemDes());
-			
-			systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
-			systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
-			systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
-			
-			systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
+			throw new FLException(200021, "系统自定义报价项不存在");
 		}
+		
+		systemDefineItemPO.setItemName(systemDefineItemVO.getItemName());
+		systemDefineItemPO.setUnitPrice(systemDefineItemVO.getUnitPrice());
+		systemDefineItemPO.setQuotationItemDes(systemDefineItemVO.getQuotationItemDes());
+		
+		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
+		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
+		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
+		
+		systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
 		
 		return 0;
 	}

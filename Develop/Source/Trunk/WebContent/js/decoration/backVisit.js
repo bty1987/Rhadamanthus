@@ -109,11 +109,7 @@ $(function(){
             var _people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');
             _people.length && $.each(_people, function(i,v){
             	if($.trim(v) != ""){
-<<<<<<< HEAD
-            		a['backVisit.receivers[' + i + ']'] = v.trim();
-=======
             		a['backVisit.receivers[' + i + ']'] = v;
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
             	}
             });
 

@@ -38,7 +38,7 @@ public class QuotationAction extends BaseListAction {
 	private QuotationVO quotation;
 	
 	private List<QuotationVO> quotations;
-
+	
 	private int canChange;
 	
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })

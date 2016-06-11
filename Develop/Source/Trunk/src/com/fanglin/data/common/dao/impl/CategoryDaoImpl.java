@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.dao.CategoryDao;
-import com.fanglin.data.common.po.CategoryPO;
+import com.fanglin.data.po.CategoryPO;
 import com.fanglin.utils.Paging;
 
 @Repository("categoryDao")

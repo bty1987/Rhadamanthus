@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.data.material.dao.MaterialBrandRightDao;
-import com.fanglin.data.material.po.MaterialBrandRightPO;
 import com.fanglin.data.material.service.MaterialBrandRightService;
 import com.fanglin.data.material.vo.MaterialBrandRightVO;
+import com.fanglin.data.po.MaterialBrandRightPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("materialBrandRightService")

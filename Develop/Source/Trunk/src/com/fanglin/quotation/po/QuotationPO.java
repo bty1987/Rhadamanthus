@@ -32,7 +32,7 @@ public class QuotationPO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
 
-	private long qId;
+	private long qid;
 	
 	private DecorationOrderPO decorationOrder;
 	
@@ -41,8 +41,6 @@ public class QuotationPO implements Serializable {
 	private String decorationStyle;
 	
 	private Timestamp createTime;
-	
-	private String quotationContent;
 	
 	private UserPO createUser;
 	
@@ -64,8 +62,10 @@ public class QuotationPO implements Serializable {
 	
 	private float trafficPrice;
 	
-	public QuotationPO(long qId){
-		this.qId = qId;
+	private String content;
+	
+	public QuotationPO(long qid){
+		this.qid = qid;
 	}
 	
 	public QuotationPO(){
@@ -75,11 +75,11 @@ public class QuotationPO implements Serializable {
 	@GeneratedValue
 	@Column(name = "qId")
 	public long getQid(){
-		return qId;
+		return qid;
 	}
 
-	public void setQid(long qId){
-		this.qId = qId;
+	public void setQid(long qid){
+		this.qid = qid;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -126,12 +126,12 @@ public class QuotationPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getQuotationContent(){
-		return quotationContent;
+	public String getContent(){
+		return content;
 	}
 
-	public void setQuotationContent(String quotationContent){
-		this.quotationContent = quotationContent;
+	public void setContent(String content){
+		this.content = content;
 	}
 
 	public float getDiscount(){

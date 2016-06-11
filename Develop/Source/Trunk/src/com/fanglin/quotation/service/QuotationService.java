@@ -19,7 +19,7 @@ import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationService {
 	
-	public QuotationVO queryQuotationById(long autoId);
+	public QuotationVO queryQuotationById(long qId);
 
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO);
 	

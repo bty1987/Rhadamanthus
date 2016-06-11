@@ -68,7 +68,7 @@ public class FunctionAreaAction extends BaseListAction {
 	@Action(value="addFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addFunctionArea() throws FLException{
 
-		functionAreaService.saveOrUpdateFunctionArea(functionArea);
+		functionAreaService.addFunctionArea(functionArea);
 	    
 		return SUCCESS;
 	}
@@ -76,7 +76,7 @@ public class FunctionAreaAction extends BaseListAction {
 	@Action(value="updateFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateFunctionArea() throws FLException{
 
-		functionAreaService.saveOrUpdateFunctionArea(functionArea);
+		functionAreaService.updateFunctionArea(functionArea);
 	    
 		return SUCCESS;
 	}

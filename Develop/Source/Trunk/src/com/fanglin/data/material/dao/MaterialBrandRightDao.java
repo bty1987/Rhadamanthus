@@ -12,7 +12,7 @@
 package com.fanglin.data.material.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.data.material.po.MaterialBrandRightPO;
+import com.fanglin.data.po.MaterialBrandRightPO;
 
 public interface MaterialBrandRightDao extends Dao<MaterialBrandRightPO> {
 	

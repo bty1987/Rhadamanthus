@@ -12,16 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.common.po.WorkTypePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.FunctionAreaItemPO;
+import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.QuotationBigCategoryPO;
+import com.fanglin.data.po.QuotationClassificationPO;
+import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationSmallCategoryPO;
+import com.fanglin.data.po.QuotationTypePO;
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
-import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
-import com.fanglin.data.quotation.po.QuotationClassificationPO;
-import com.fanglin.data.quotation.po.QuotationItemPO;
-import com.fanglin.data.quotation.po.QuotationSmallCategoryPO;
-import com.fanglin.data.quotation.po.QuotationTypePO;
-import com.fanglin.data.quotation.po.QuotationVersionPO;
 import com.fanglin.data.quotation.service.FunctionAreaItemService;
 import com.fanglin.data.quotation.vo.FunctionAreaItemVO;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
@@ -43,7 +43,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 	@Override
 	public List<FunctionAreaItemVO> queryFunctionAreaItemByFunctionAreaId(FunctionAreaItemVO functionAreaItemVO){
 		
-		long functionAreaId = functionAreaItemVO.getFunctionArea().getAutoId();
+		long functionAreaId = functionAreaItemVO.getFunctionArea().getFaId();
 		
 		List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
 		List<FunctionAreaItemVO> functionAreaItemVOs = new ArrayList<FunctionAreaItemVO>();
@@ -62,13 +62,13 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			QuotationVersionPO quotationVersionPO = quotationItemPO.getQuotationVersion();
 			
 			FunctionAreaVO functionAreaVO = new FunctionAreaVO();
-			functionAreaVO.setAutoId(FunctionAreaPO.getAutoId());
+			functionAreaVO.setFaId(FunctionAreaPO.getFaId());
 			functionAreaVO.setFunctionAreaId(FunctionAreaPO.getFunctionAreaId());
 			functionAreaVO.setFunctionAreaName(FunctionAreaPO.getFunctionAreaName());
 			functionAreaVO.setVersion(FunctionAreaPO.getQuotationVersion().getVersionName());
 			
 			FunctionAreaItemVO _functionAreaItemVO = new FunctionAreaItemVO();
-			_functionAreaItemVO.setAutoId(functionAreaItemPO.getAutoId());
+			_functionAreaItemVO.setFaiId(functionAreaItemPO.getFaiId());
 			_functionAreaItemVO.setFunctionArea(functionAreaVO);
 			
 			QuotationItemVO quotationItemVO = new QuotationItemVO();
@@ -113,13 +113,13 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 		FunctionAreaPO functionAreaPO = null;
 		
 		if(functionAreaItems.size() > 0){
-			functionAreaPO = functionAreaDao.get(functionAreaItems.get(0).getFunctionArea().getAutoId());
+			functionAreaPO = functionAreaDao.get(functionAreaItems.get(0).getFunctionArea().getFaId());
 		}
 		
 		if(functionAreaPO == null){
 			StringBuffer errorInfo = new StringBuffer();
 			errorInfo.append("功能区");
-			errorInfo.append(functionAreaItems.get(0).getFunctionArea().getAutoId());
+			errorInfo.append(functionAreaItems.get(0).getFunctionArea().getFaId());
 			errorInfo.append("不存在");
 
 			throw new FLException(200010, errorInfo.toString());
@@ -139,7 +139,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 				continue;
 			}
 			
-			long functionAreaId = functionAreaItemVO.getFunctionArea().getAutoId();
+			long functionAreaId = functionAreaItemVO.getFunctionArea().getFaId();
 			long itemId =  functionAreaItemVO.getQuotationItem().getQiId();
 			
 			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItemByIdAFunctionAreaId(functionAreaId, itemId);
@@ -147,7 +147,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			if(functionAreaItemPO == null){
 				functionAreaItemPO = new FunctionAreaItemPO();
 				FunctionAreaPO _functionAreaPO = new FunctionAreaPO();
-				_functionAreaPO.setAutoId(functionAreaItemVO.getFunctionArea().getAutoId());
+				_functionAreaPO.setFaId(functionAreaItemVO.getFunctionArea().getFaId());
 				functionAreaItemPO.setFunctionArea(_functionAreaPO);
 				
 				QuotationItemPO quotationItemPO = new QuotationItemPO();

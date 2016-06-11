@@ -54,7 +54,7 @@ $(function(){
 
            //编辑按钮的点击事件
             $btnDelete.click(function(){
-            	removeSystemDefine(v.autoId);
+            	removeSystemDefine(v.sdiId);
             });
             
             $btnEdit.click(function(){
@@ -95,8 +95,6 @@ $(function(){
 		addSystemDefineItemUrl:api.quotation.addSystemDefineItem,
 		
 		updateSystemDefineItemUrl:api.quotation.updateSystemDefineItem,
-		
-		deleteSystemDefineItemsByAutoIdsUrl:api.quotation.deleteSystemDefineItemByIds,
 		
 		queryQuotationTypeUrl:api.common.queryWorkType,
 		
@@ -140,7 +138,7 @@ $(function(){
 	systemDefineItem.cancelBtn = $("#cancelBtn");
 	systemDefineItem.modal = $("#addItemModal");
 
-	systemDefineItem.systemDefineItemItems.autoId = $("#autoId");
+	systemDefineItem.systemDefineItemItems.sdiId = $("#sdiId");
 	systemDefineItem.systemDefineItemItems.quotationBigCategory = $("#quotationBigCategory");
 	systemDefineItem.systemDefineItemItems.itemName = $("#itemName");
 	systemDefineItem.systemDefineItemItems.measurementUnit = $("#measurementUnit");
@@ -232,7 +230,7 @@ function initDataMap(){
     	
     	systemDefineItem.editFlg=true;
     	systemDefineItem.repeatFlg=false;
-		systemDefineItem.systemDefineItemItems.autoId.val(row.autoId);
+		systemDefineItem.systemDefineItemItems.sdiId.val(row.sdiId);
 		systemDefineItem.systemDefineItemItems.itemId.val(row.itemId);
 		systemDefineItem.systemDefineItemItems.itemName.val(row.itemName);
 		systemDefineItem.systemDefineItemItems.quotationBigCategory.val(row.quotationBigCategoryId); 
@@ -266,7 +264,7 @@ function initDataMap(){
     	
     	if(systemDefineItem.editFlg) {
     		url = systemDefineItem.updateSystemDefineItemUrl;
-    		options["systemDefineItem.autoId"] = systemDefineItem.systemDefineItemItems.autoId.val();
+    		options["systemDefineItem.sdiId"] = systemDefineItem.systemDefineItemItems.sdiId.val();
     	}else{
     		url = systemDefineItem.addSystemDefineItemUrl;
     	}

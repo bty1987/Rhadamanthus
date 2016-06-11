@@ -55,7 +55,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@Override
 	public int countQuotationByOrderId(String orderId) {
 		
-		String sql = "select count(autoId) from platform.quotation where orderId = :orderId";
+		String sql = "select count(*) from platform.quotation where orderId = :orderId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 		
 		return count.intValue();

@@ -17,11 +17,9 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.decoration.service.AddOrReduceItemService;
 import com.fanglin.decoration.vo.AddReduceVO;
 
 @ParentPackage("base")
@@ -33,9 +31,6 @@ public class AddOrReduceItemAction extends BaseListAction {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 	
-	@Autowired
-	private AddOrReduceItemService addOrReduceItemService;
-	
 	private AddReduceVO addReduce;
 	
 	private Long orderPaymentId;
@@ -43,8 +38,6 @@ public class AddOrReduceItemAction extends BaseListAction {
 	@Action(value = "pageAddOrReduceItemByPaymentId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddOrReduceItemByPaymentId(){
 
-		addOrReduceItemService.pageAddOrReduceItemByPaymentId(getPaging(), getFilters(), addReduce);
-	    
 		return SUCCESS;
 	}
 	

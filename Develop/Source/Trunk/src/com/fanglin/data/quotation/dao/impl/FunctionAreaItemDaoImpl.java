@@ -7,8 +7,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
 
 @Repository("functionAreaItemDao")
 public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> implements FunctionAreaItemDao{
@@ -22,7 +22,7 @@ public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> impleme
 	public List<FunctionAreaItemPO> queryFunctionAreaItemByFunctionAreaId(long functionAreaId){
 		return (List<FunctionAreaItemPO>)session().createCriteria(FunctionAreaItemPO.class)
 				.createAlias("quotationItem", "quotationItem")
-				.add(Restrictions.eq("functionArea.autoId", functionAreaId))
+				.add(Restrictions.eq("functionArea.faId", functionAreaId))
 				.addOrder(Order.asc("quotationItem.itemId"))
 				.list();
 	}
@@ -30,8 +30,8 @@ public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> impleme
 	@Override
 	public FunctionAreaItemPO queryFunctionAreaItemByIdAFunctionAreaId(long functionAreaId, long itemId){
 		return (FunctionAreaItemPO)session().createCriteria(FunctionAreaItemPO.class)
-				.add(Restrictions.eq("quotationItem.autoId", itemId))
-				.add(Restrictions.eq("functionArea.autoId", functionAreaId))
+				.add(Restrictions.eq("quotationItem.qiId", itemId))
+				.add(Restrictions.eq("functionArea.faId", functionAreaId))
 				.uniqueResult();
 	}
 	

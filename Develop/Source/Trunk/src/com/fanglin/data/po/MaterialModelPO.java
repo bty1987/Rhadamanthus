@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.material.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 
@@ -20,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.common.po.MeasurementUnitPO;
-import com.fanglin.data.common.po.BrandPO;
 
 @Entity
 @Table(name="materialmodel", catalog = "platform")

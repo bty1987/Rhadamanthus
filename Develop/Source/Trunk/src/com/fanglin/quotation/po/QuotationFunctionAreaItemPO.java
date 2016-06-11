@@ -23,7 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.quotation.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationItemPO;
 
 @Entity
 @Table(name = "quotationfunctionareaitem", catalog = "platform")
@@ -114,7 +114,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
+	@JoinColumn(name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
 	public QuotationFunctionAreaPO getQuotationFunctionArea(){
 		return quotationFunctionArea;
 	}
@@ -124,7 +124,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quotationItemId", referencedColumnName = "qiId")
+	@JoinColumn(name = "quotationItemId", referencedColumnName = "qiId")
 	public QuotationItemPO getQuotationItem(){
 		return quotationItem;
 	}

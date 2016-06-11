@@ -16,78 +16,56 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.google.gson.annotations.SerializedName;
-
-
 public class AddReduceVO implements Serializable{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7416960652933057166L;
+	private static final long serialVersionUID = -882438841944489334L;
+
+	private Integer arId;
 	
-	@SerializedName("增减项编号")
-	private int arId;
+	private String orderId;
 	
-	@SerializedName("订单编号")
-	private String OrderId;
+	private Integer type;
 	
-	@SerializedName("类别")
-	private int addReduceType;
+	private Float total;
 	
-	@SerializedName("总额")
-	private Float addReduceTotal;
+	private Integer status;
 	
-	@SerializedName("状态")
-	private int addReduceStatus;
-	
-	@SerializedName("增减项编号")
 	private Timestamp createTime;
 	
-	@SerializedName("增减项描述")
-	private String addReduceDes;
+	private String content;
 	
-	@SerializedName("收款编号")
-	private Long orderPaymentId;
+	private Long dpId;
 
-	public int getArId(){
+	public Integer getArId(){
 		return arId;
 	}
 
-	public void setArId(int arId){
+	public void setArId(Integer arId){
 		this.arId = arId;
 	}
 	
-	public String getOrderId(){
-		return OrderId;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setOrderId(String orderId){
-		OrderId = orderId;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public int getAddReduceType(){
-		return addReduceType;
+	public Integer getType() {
+		return type;
 	}
 
-	public void setAddReduceType(int addReduceType){
-		this.addReduceType = addReduceType;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
-	public Float getAddReduceTotal(){
-		return addReduceTotal;
+	public Float getTotal() {
+		return total;
 	}
 
-	public void setAddReduceTotal(Float addReduceTotal){
-		this.addReduceTotal = addReduceTotal;
-	}
-
-	public int getAddReduceStatus(){
-		return addReduceStatus;
-	}
-
-	public void setAddReduceStatus(int addReduceStatus){
-		this.addReduceStatus = addReduceStatus;
+	public void setTotal(Float total) {
+		this.total = total;
 	}
 	
 	@JSON(format="yyyy-MM-dd")
@@ -99,20 +77,28 @@ public class AddReduceVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	public String getAddReduceDes(){
-		return addReduceDes;
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setAddReduceDes(String addReduceDes){
-		this.addReduceDes = addReduceDes;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
-	public void setOrderPaymentId(Long orderPaymentId){
-		this.orderPaymentId = orderPaymentId;
+	public String getContent() {
+		return content;
 	}
 
-	public Long getOrderPaymentId(){
-		return orderPaymentId;
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Long getDecorationPaymentId() {
+		return dpId;
+	}
+
+	public void setDpId(Long dpId) {
+		this.dpId = dpId;
 	}
 
 }

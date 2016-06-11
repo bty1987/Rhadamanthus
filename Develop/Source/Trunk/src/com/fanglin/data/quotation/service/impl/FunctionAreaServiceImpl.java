@@ -25,11 +25,11 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.FunctionAreaItemPO;
+import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
-import com.fanglin.data.quotation.po.QuotationVersionPO;
 import com.fanglin.data.quotation.service.FunctionAreaService;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.utils.BeanUtil;
@@ -119,36 +119,52 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException{
+	public int addFunctionArea(FunctionAreaVO functionAreaVO) throws FLException {
 		
 		FunctionAreaPO functionAreaPO = functionAreaDao.queryFunctionAreaByIdAVersionId(functionAreaVO.getFunctionAreaId(), functionAreaVO.getVersionId());
 		
-		if(functionAreaPO == null){
-			functionAreaPO = new FunctionAreaPO();
-			
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_FUNCTION_AREA_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-			
-			StringBuffer functionAreaId = new StringBuffer();
-			functionAreaId.append(SystemConfig.getString("companyIdent", ""));
-			functionAreaId.append(SystemConfig.getString("quotationFunctionAreaIdent", "D_"));
-			functionAreaId.append(FormatUtil.fillZero(count, "000"));
-			
-			functionAreaPO.setFunctionAreaId(functionAreaId.toString());
-			
-			BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[]{"functionAreaId"}));
+		if(functionAreaPO != null){
+			throw new FLException(200020, "功能区对应版本和编号已存在");
+		}
+		
+		functionAreaPO = new FunctionAreaPO();
+		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_FUNCTION_AREA_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		
+		StringBuffer functionAreaId = new StringBuffer();
+		functionAreaId.append(SystemConfig.getString("companyIdent", ""));
+		functionAreaId.append(SystemConfig.getString("quotationFunctionAreaIdent", "D_"));
+		functionAreaId.append(FormatUtil.fillZero(count, "000"));
+		
+		functionAreaPO.setFunctionAreaId(functionAreaId.toString());
+		
+		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[]{"functionAreaId"}));
 
-			functionAreaPO.setQuotationVersion(new QuotationVersionPO(functionAreaVO.getVersionId()));
-			
-			functionAreaDao.saveOrUpdate(functionAreaPO);
-		}else{
-			if(!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())){ // 功能区的类型改变时 清楚所包含的报价项
-				functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getAutoId());
-			}
-			
-			BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[]{"functionAreaId", "versionId"}));
-			
-			functionAreaDao.saveOrUpdate(functionAreaPO);
-		}		
+		functionAreaPO.setQuotationVersion(new QuotationVersionPO(functionAreaVO.getVersionId()));
+		
+		functionAreaDao.saveOrUpdate(functionAreaPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException {
+		
+		FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaVO.getFaId());
+		
+		if(functionAreaPO == null){
+			throw new FLException(200012, "功能区不存在");
+		}
+		
+		if(!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())){ // 功能区的类型改变时 清楚所包含的报价项
+			functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaId());
+		}
+		
+		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[]{"functionAreaId", "versionId"}));
+		
+		functionAreaDao.saveOrUpdate(functionAreaPO);
+		
 		return 0;
 	}
 

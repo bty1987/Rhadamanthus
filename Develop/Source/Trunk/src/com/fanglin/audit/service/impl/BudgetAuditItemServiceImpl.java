@@ -28,7 +28,7 @@ import com.fanglin.common.po.WorkTypePO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
+import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.information.po.MessagePO;
@@ -77,12 +77,15 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 		for(BudgetAuditItemPO budgetAuditItemPO: budgetAuditItemPOs){
 			BudgetAuditItemVO budgetAuditItemVO = new BudgetAuditItemVO();
 			BeanUtil.copyProperties(budgetAuditItemPO, budgetAuditItemVO);
+			
+			QuotationFunctionAreaPO quotationFunctionAreaPO = budgetAuditItemPO.getQuotationFunctionArea();
+			QuotationBigCategoryPO quotationBigCategoryPO = budgetAuditItemPO.getQuotationBigCategory();
 
-			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getQfaId());
-			budgetAuditItemVO.setFunctionAreaName(budgetAuditItemPO.getFunctionArea().getFunctionAreaName());
+			budgetAuditItemVO.setFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+			budgetAuditItemVO.setFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
 
-			budgetAuditItemVO.setCategoryId(budgetAuditItemPO.getCategory().getId());
-			budgetAuditItemVO.setCategoryName(budgetAuditItemPO.getCategory().getName());
+			budgetAuditItemVO.setCategoryId(quotationBigCategoryPO.getId());
+			budgetAuditItemVO.setCategoryName(quotationBigCategoryPO.getName());
 
 			budgetAuditItemVO.setMeasurementUnitId(budgetAuditItemPO.getMeasurementUnit().getId());
 			budgetAuditItemVO.setMeasurementUnitName(budgetAuditItemPO.getMeasurementUnit().getName());
@@ -119,12 +122,15 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 		for(BudgetAuditItemPO budgetAuditItemPO: budgetAuditItemPOs){
 			BudgetAuditItemVO budgetAuditItemVO = new BudgetAuditItemVO();
 			BeanUtil.copyProperties(budgetAuditItemPO, budgetAuditItemVO);
+			
+			QuotationFunctionAreaPO quotationFunctionAreaPO = budgetAuditItemPO.getQuotationFunctionArea();
+			QuotationBigCategoryPO quotationBigCategoryPO = budgetAuditItemPO.getQuotationBigCategory();
 
-			budgetAuditItemVO.setFunctionAreaId(budgetAuditItemPO.getFunctionArea().getQfaId());
-			budgetAuditItemVO.setFunctionAreaName(budgetAuditItemPO.getFunctionArea().getFunctionAreaName());
+			budgetAuditItemVO.setFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+			budgetAuditItemVO.setFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
 
-			budgetAuditItemVO.setCategoryId(budgetAuditItemPO.getCategory().getId());
-			budgetAuditItemVO.setCategoryName(budgetAuditItemPO.getCategory().getName());
+			budgetAuditItemVO.setCategoryId(quotationBigCategoryPO.getId());
+			budgetAuditItemVO.setCategoryName(quotationBigCategoryPO.getName());
 
 			budgetAuditItemVO.setMeasurementUnitId(budgetAuditItemPO.getMeasurementUnit().getId());
 			budgetAuditItemVO.setMeasurementUnitName(budgetAuditItemPO.getMeasurementUnit().getName());
@@ -166,8 +172,8 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 				budgetAuditItemPO.setStatus(budgetAuditItemVO.getStatus());
 				budgetAuditItemPO.setDes(budgetAuditItemVO.getDes());
 				budgetAuditItemPO.setComment(budgetAuditItemVO.getComment());
-				budgetAuditItemPO.setFunctionArea(new QuotationFunctionAreaPO(budgetAuditItemVO.getFunctionAreaId()));
-				budgetAuditItemPO.setCategory(new QuotationBigCategoryPO(budgetAuditItemVO.getCategoryId()));
+				budgetAuditItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(budgetAuditItemVO.getFunctionAreaId()));
+				budgetAuditItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(budgetAuditItemVO.getCategoryId()));
 				budgetAuditItemPO.setMeasurementUnit(new MeasurementUnitPO(budgetAuditItemVO.getMeasurementUnitId()));
 				budgetAuditItemPO.setWorkType(new WorkTypePO(budgetAuditItemVO.getWorkTypeId()));
 				
@@ -194,8 +200,8 @@ public class BudgetAuditItemServiceImpl implements BudgetAuditItemService {
 				budgetAuditItemPO.setStatus(budgetAuditItemVO.getStatus());
 				budgetAuditItemPO.setDes(budgetAuditItemVO.getDes());
 				budgetAuditItemPO.setComment(budgetAuditItemVO.getComment());
-				budgetAuditItemPO.setFunctionArea(new QuotationFunctionAreaPO(budgetAuditItemVO.getFunctionAreaId()));
-				budgetAuditItemPO.setCategory(new QuotationBigCategoryPO(budgetAuditItemVO.getCategoryId()));
+				budgetAuditItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(budgetAuditItemVO.getFunctionAreaId()));
+				budgetAuditItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(budgetAuditItemVO.getCategoryId()));
 				budgetAuditItemPO.setMeasurementUnit(new MeasurementUnitPO(budgetAuditItemVO.getMeasurementUnitId()));
 				budgetAuditItemPO.setWorkType(new WorkTypePO(budgetAuditItemVO.getWorkTypeId()));
 				

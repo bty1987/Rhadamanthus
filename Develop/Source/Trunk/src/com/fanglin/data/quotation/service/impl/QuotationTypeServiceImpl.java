@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.data.po.QuotationTypePO;
 import com.fanglin.data.quotation.dao.QuotationTypeDao;
-import com.fanglin.data.quotation.po.QuotationTypePO;
 import com.fanglin.data.quotation.service.QuotationTypeService;
 import com.fanglin.data.quotation.vo.QuotationTypeVO;
 import com.fanglin.utils.BeanUtil;

@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.po.CustomerPO;
 import com.fanglin.utils.Paging;
 
 public interface CustomerDao extends Dao<CustomerPO> {

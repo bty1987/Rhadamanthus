@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.common.po.VillagePO;
+import com.fanglin.data.po.VillagePO;
 import com.fanglin.utils.Paging;
 
 public interface VillageDao extends Dao<VillagePO> {

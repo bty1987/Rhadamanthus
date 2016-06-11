@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 

@@ -564,7 +564,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(orderId);
 		for(AddReducePO addReducePO: addReducePOs){
-			if(addReducePO.getAddReduceStatus() != AddReducePO.ADDREDUCESTATUS_PAYED_INT){
+			if(addReducePO.getStatus() != AddReducePO.STATUS_PAYED_INT){
 				throw new FLException(120007, "当前订单相关的增项没有完成财务处理");
 			}
 		}
@@ -595,17 +595,17 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			
 			List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(orderId);
 			for(AddReducePO addReducePO: addReducePOs){
-				if(addReducePO.getAddReduceType() == AddReducePO.ADDREDUCETYPE_LEAKAGE_INT){
+				if(addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
 					continue;
 				}
 				
-				if(addReducePO.getAddReduceStatus() != AddReducePO.ADDREDUCESTATUS_PAYED_INT){
+				if(addReducePO.getStatus() != AddReducePO.STATUS_PAYED_INT){
 					throw new FLException(120010, "当前订单存在增减项没有完成财务处理");
 				}else{
-					if(addReducePO.getAddReduceType() == AddReducePO.ADDREDUCETYPE_ADD_INT){
-						total += addReducePO.getAddReduceTotal();
-					}else if(addReducePO.getAddReduceType() == AddReducePO.ADDREDUCETYPE_REDUCE_INT){
-						total -= addReducePO.getAddReduceTotal();
+					if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT){
+						total += addReducePO.getTotal();
+					}else if(addReducePO.getType() == AddReducePO.TYPE_REDUCE_INT){
+						total -= addReducePO.getTotal();
 					}
 				}
 			}

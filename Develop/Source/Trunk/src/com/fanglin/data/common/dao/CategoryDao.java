@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.common.po.CategoryPO;
+import com.fanglin.data.po.CategoryPO;
 import com.fanglin.utils.Paging;
 
 public interface CategoryDao extends Dao<CategoryPO> {

@@ -24,7 +24,9 @@ public interface SystemDefineItemService {
 	
 	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO) throws FLException;
 	
-	public int saveOrUpdateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	
+	public int updateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
 	
 	public void deleteSystemDefineItem(SystemDefineItemVO systemDefineItemVO);
 

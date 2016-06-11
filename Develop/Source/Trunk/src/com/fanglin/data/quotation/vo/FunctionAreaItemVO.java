@@ -13,26 +13,22 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class FunctionAreaItemVO implements Serializable {
 
 	private static final long serialVersionUID = 134446416L;
 
-	private Long autoId;
+	private Long faiId;
 	
-	@SerializedName("功能区信息")
 	private FunctionAreaVO functionArea;
 	
-	@SerializedName("报价项信息")
 	private QuotationItemVO quotationItem;
 	
-	public Long getAutoId(){
-		return autoId;
+	public Long getFaiId(){
+		return faiId;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setFaiId(Long faiId){
+		this.faiId = faiId;
 	}
 
 	public FunctionAreaVO getFunctionArea() {

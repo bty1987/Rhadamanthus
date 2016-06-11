@@ -13,50 +13,38 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class SystemDefineItemVO implements Serializable{
 	
 	private static final long serialVersionUID = -629582034818766395L;
 
-	private Long autoId;
+	private Long sdiId;
 	
-	@SerializedName("项目编号")
 	private String itemId;
 	
-	@SerializedName("大类编号")
 	private int quotationBigCategoryId;
 	
-	@SerializedName("大类")
 	private String quotationBigCategory;
 	
-	@SerializedName("项目名")
 	private String itemName;
 	
-	@SerializedName("计量单位编号")
 	private int measurementUnitId;
 
-	@SerializedName("计量单位")
 	private String measurementUnit;
 
-	@SerializedName("工种编号")
 	private int itemWorkTypeId;
 
-	@SerializedName("工种")
 	private String itemWorkType;
 
-	@SerializedName("工艺说明")
 	protected String quotationItemDes;
 
-	@SerializedName("单价")
 	private float unitPrice;
 	
-	public Long getAutoId(){
-		return autoId;
+	public Long getSdiId(){
+		return sdiId;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setSdiId(Long sdiId){
+		this.sdiId = sdiId;
 	}
 
 	public String getItemId(){

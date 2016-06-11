@@ -14,8 +14,8 @@ package com.fanglin.data.quotation.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationBigCategoryDao;
-import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
 
 @Repository("quotationbigcategory")
 public class QuotationBigCategoryDaoImpl extends DaoImpl<QuotationBigCategoryPO> implements QuotationBigCategoryDao {

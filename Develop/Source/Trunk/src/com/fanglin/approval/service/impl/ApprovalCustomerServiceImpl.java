@@ -27,7 +27,7 @@ import com.fanglin.approval.vo.ApprovalCustomerVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.po.CustomerPO;
+import com.fanglin.data.po.CustomerPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.data.material.dao.MaterialBrandRightDao;
-import com.fanglin.data.material.po.MaterialBrandRightPO;
+import com.fanglin.data.po.MaterialBrandRightPO;
 
 @Repository("materialBrandRightDao")
 public class MaterialBrandRightDaoImpl extends DaoImpl<MaterialBrandRightPO> implements MaterialBrandRightDao {

@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
+import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.utils.Paging;
 
 public interface FunctionAreaDao extends Dao<FunctionAreaPO> {

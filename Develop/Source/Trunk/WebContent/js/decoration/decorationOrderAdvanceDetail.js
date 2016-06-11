@@ -280,7 +280,7 @@ jQuery(function($) {
 	});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderSalesmanIndex.url);
+		$("#fl-container").load(api.index.decorationOrderAdvanceIndex.url);
 	});
 	
 	initBaseInfo();
@@ -990,7 +990,7 @@ function initQuotationDetail(){
 	
 	$("#quotationItemListGrid").navGrid("#quotationItemGridPager", {edit: false, add: false, del: false, search: false});
 
-	$('[data-rel="tooltip"]').tooltip({container:'#decorationOrderDetailSalesmanPageContent'});
+	$('[data-rel="tooltip"]').tooltip({container:'#decorationOrderAdvanceDetailPageContent'});
 	$('.ui-widget-content.footrow.footrow-ltr').addClass("red");
 }
 

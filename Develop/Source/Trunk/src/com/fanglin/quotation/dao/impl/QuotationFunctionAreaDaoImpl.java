@@ -31,7 +31,7 @@ public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaP
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId){
-		return createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qId", quotationId)).addOrder(Order.asc("functionAreaOrder")).list();
+		return createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).addOrder(Order.asc("functionAreaOrder")).list();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaP
 			return -1;
 		}
 		
-		String hql = "delete QuotationFunctionAreaPO q where q.autoId in :ids";
+		String hql = "delete QuotationFunctionAreaPO q where q.qid in :ids";
 		int deletedEntities = session().createQuery(hql).setParameterList("ids", ids).executeUpdate();
 		
 		return deletedEntities;

@@ -11,7 +11,6 @@
 
 package com.fanglin.decoration.action;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -22,10 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.decoration.service.AddOrReduceDetailService;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.AddReduceService;
 import com.fanglin.decoration.vo.AddReduceVO;
-import com.fanglin.utils.DateUtil;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -37,19 +35,12 @@ public class AddReduceAction extends BaseListAction{
 	@Autowired
 	private AddReduceService addReduceService;
 	
-	@Autowired
-	private AddOrReduceDetailService addOrReduceDetailService;
-	
 	private AddReduceVO addReduce;
 	
 	private List<Integer> arIds;
 	
-	private String deleteFlag;
-	
 	@Action(value = "pageAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduceByOrderId(){
-		
-		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
 		
 		return SUCCESS;
 	}
@@ -57,22 +48,19 @@ public class AddReduceAction extends BaseListAction{
 	@Action(value = "pageAddReduceDetailByArId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduceDetailByArId(){
 		
-		addOrReduceDetailService.pageAddOrReduceDetailByArId(getPaging(), getFilters(), addReduce);
-		
 		return SUCCESS;
 	}
 	
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAddReduce(){
 		
-		addReduce.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		addReduceService.saveOrUpdateAddReduce(addReduce);
+		addReduceService.AddAddReduce(addReduce);
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "updateAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduce(){
+	public String updateAddReduce() throws FLException{
 		
 		addReduceService.updateAddReduce(addReduce);
 		
@@ -80,13 +68,21 @@ public class AddReduceAction extends BaseListAction{
 	}
 	
 	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteAddReduce(){
+	public String deleteAddReduce() throws FLException{
 		
-		deleteFlag = addReduceService.deleteAddReduce(arIds);
+		addReduceService.deleteAddReduceByArId(addReduce);
 		
 		return SUCCESS;
 	}
-
+	
+	@Action(value = "submitAddOrReduceDetail", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitAddOrReduceDetail() throws FLException{
+		
+		addReduceService.submitAddReduce(addReduce, getUserId());
+		
+		return SUCCESS;
+	}
+	
 	public AddReduceVO getAddReduce(){
 		return addReduce;
 	}
@@ -103,12 +99,4 @@ public class AddReduceAction extends BaseListAction{
 		this.arIds = arIds;
 	}
 
-	public String getDeleteFlag(){
-		return deleteFlag;
-	}
-
-	public void setDeleteFlag(String deleteFlag){
-		this.deleteFlag = deleteFlag;
-	}
-	
 }

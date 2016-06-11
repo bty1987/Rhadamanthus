@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.quotation.po.SystemDefineItemPO;
+import com.fanglin.data.po.SystemDefineItemPO;
 import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemDao extends Dao<SystemDefineItemPO> {
