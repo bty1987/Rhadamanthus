@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.common.po.BrandPO;
+import com.fanglin.data.po.BrandPO;
 import com.fanglin.utils.Paging;
 
 public interface BrandDao extends Dao<BrandPO> {

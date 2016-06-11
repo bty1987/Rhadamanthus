@@ -107,16 +107,33 @@ CREATE TABLE addorreducedetail (
   KEY indexone (arId,itemId,itemType,customerItemId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='增减项明细表';
 
+DROP TABLE IF EXISTS addreduceitem;
+CREATE TABLE addreduceitem (
+  ariId bigint(20) NOT NULL AUTO_INCREMENT,
+  arId int(11) NOT NULL COMMENT '增减项编号',
+  itemName varchar(128) NOT NULL,
+  type tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
+  measurementUnit varchar(10) NOT NULL,
+  workType int(15) NOT NULL,
+  unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
+  num decimal(10,3) NOT NULL DEFAULT '0.000',
+  quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
+  quotationItemId bigint(20),
+  content varchar(512) DEFAULT NULL,
+  PRIMARY KEY (ariId),
+  KEY indexone (arId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='增减项目';
+
 DROP TABLE IF EXISTS addreduce;
 CREATE TABLE addreduce (
   arId int(11) NOT NULL AUTO_INCREMENT,
   orderId varchar(15) NOT NULL,
-  addReduceType tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
-  addReduceTotal decimal(10,3) NOT NULL,
-  addReduceStatus tinyint(4) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ',
+  type tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
+  total decimal(10,3) NOT NULL,
+  status tinyint(4) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ',
   createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  addReduceDes varchar(256) NOT NULL,
-  orderPaymentId bigint(20) DEFAULT NULL COMMENT '对应收款编号',
+  content varchar(256) NOT NULL,
+  dpId bigint(20) DEFAULT NULL COMMENT '对应收款编号',
   PRIMARY KEY (arId),
   KEY indexone (orderId,addReduceType,addReduceStatus)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='增减项表';
@@ -954,23 +971,23 @@ CREATE TABLE designersalary (
 
 DROP TABLE IF EXISTS functionarea;
 CREATE TABLE functionarea (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  faId bigint(20) NOT NULL AUTO_INCREMENT,
   functionAreaId varchar(10) NOT NULL,
   functionAreaName varchar(20) NOT NULL,
   versionId varchar(11) NOT NULL,
   functionAreaOrder int(11) NOT NULL,
   functionAreaType varchar(10) NOT NULL DEFAULT '普通' COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  PRIMARY KEY (autoId),
+  PRIMARY KEY (faId),
   KEY indexone (functionAreaId,versionId,functionAreaType,functionAreaOrder),
   KEY indextwo (versionId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能区表';
 
 DROP TABLE IF EXISTS functionareaquoteitem;
 CREATE TABLE functionareaquoteitem (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  faiId bigint(20) NOT NULL AUTO_INCREMENT,
   functionAreaId bigint(20) NOT NULL,
   quoteItemId bigint(20) NOT NULL,
-  PRIMARY KEY (autoId),
+  PRIMARY KEY (faiId),
   KEY indexone (functionAreaId,quoteItemId),
   KEY indextwo (quoteItemId,functionAreaId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
@@ -1838,7 +1855,7 @@ CREATE TABLE quotation (
   createTime timestamp NULL DEFAULT NULL,
   createUserId varchar(15) NOT NULL,
   discount decimal(10,3) NOT NULL DEFAULT '10.000',
-  quotationContent varchar(45) DEFAULT NULL,
+  content varchar(45) DEFAULT NULL,
   totalPrice decimal(10,3) DEFAULT NULL,
   status tinyint(4) NOT NULL DEFAULT '0' COMMENT '1、默认',
   saveStatus tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
@@ -1872,11 +1889,12 @@ CREATE TABLE quotationfunctionareaitem (
   unitPrice decimal(10,3) NOT NULL,
   num decimal(10,3) NOT NULL,
   type tinyint(4) NOT NULL,
+  discount tinyint(4) NOT NULL DEFAULT 1,
   quotationFunctionAreaId bigint(20) NOT NULL,
   quotationItemId bigint(20),
   content varchar(256),
   PRIMARY KEY (qfaiId),
-  KEY indexone (functionAreaId),
+  KEY indexone (quotationFunctionAreaId),
   KEY indextwo (quotationItemId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
 

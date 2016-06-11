@@ -26,10 +26,10 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.construction.dao.AddReduceDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.data.common.po.CustomerPO;
-import com.fanglin.data.common.po.VillagePO;
 import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.data.po.CustomerPO;
+import com.fanglin.data.po.VillagePO;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
@@ -713,7 +713,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		if(DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(decorationPaymentPO.getPaymentType())){
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByOrderPaymentId(decorationPaymentPO.getAutoId());
-			addReducePO.setAddReduceStatus(2);
+			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 			
 			addReduceDao.update(addReducePO);
 		}
@@ -939,7 +939,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		if(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())){
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByOrderPaymentId(decorationPaymentPO.getAutoId());
-			addReducePO.setAddReduceStatus(AddReducePO.ADDREDUCESTATUS_PAYED_INT);
+			addReducePO.setStatus(AddReducePO.STATUS_SUBMIT_INT);
 			
 			addReduceDao.update(addReducePO);
 		}

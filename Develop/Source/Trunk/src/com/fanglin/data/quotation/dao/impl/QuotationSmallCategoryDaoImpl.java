@@ -14,8 +14,8 @@ package com.fanglin.data.quotation.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.data.po.QuotationSmallCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationSmallCategoryDao;
-import com.fanglin.data.quotation.po.QuotationSmallCategoryPO;
 
 @Repository("quotationsmallcategory")
 public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategoryPO> implements QuotationSmallCategoryDao {

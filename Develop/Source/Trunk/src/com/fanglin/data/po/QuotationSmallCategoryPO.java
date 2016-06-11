@@ -1,15 +1,15 @@
 /**
- * @File Name		: QuotationTypePO.java
+ * @File Name		: QuotationSmallCategoryPO.java
  * @Package   	: com.fanglin.entity
  * @Version		: 1.0
- * @Date			: 2014-7-27
+ * @Date			: 2014-7-29
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 
@@ -19,23 +19,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="quotationtype", catalog = "communion")
-public class QuotationTypePO implements Serializable{
-	
-	private static final long serialVersionUID = 6306610802053889704L;
+@Table(name="quotationsmallcategory", catalog = "communion")
+public class QuotationSmallCategoryPO implements Serializable{
 
+	private static final long serialVersionUID = 3068253191725820789L;
+	
 	private int id;
 	
 	private String name;
 	
-	public QuotationTypePO(){
+	public QuotationSmallCategoryPO(){
 		
 	}
 	
-	public QuotationTypePO(int id){
+	public QuotationSmallCategoryPO(int id){
 		this.id = id;
 	}
-	
+
 	@Id
 	@Column(name="id")
 	public int getId(){
@@ -54,5 +54,5 @@ public class QuotationTypePO implements Serializable{
 	public void setName(String name){
 		this.name = name;
 	}
-	
+
 }

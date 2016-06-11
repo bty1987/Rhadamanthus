@@ -12,7 +12,7 @@
 package com.fanglin.data.quotation.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.data.quotation.po.QuotationSmallCategoryPO;
+import com.fanglin.data.po.QuotationSmallCategoryPO;
 
 public interface QuotationSmallCategoryDao extends Dao<QuotationSmallCategoryPO>{
 

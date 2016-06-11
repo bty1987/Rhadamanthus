@@ -56,11 +56,11 @@ $(function(){
 
             $btnAssign.click(function(){
 
-                assignQuotationItemIndex(v.autoId, v.versionId, v.functionAreaType);
+                assignQuotationItemIndex(v.faId, v.versionId, v.functionAreaType);
             });
 
             $btnDel.click(function(){
-                removeFunctionArea(v.autoId);
+                removeFunctionArea(v.faId);
             });
 
             return $liLine;
@@ -93,7 +93,7 @@ $(function(){
                 0 == functionArea.editFlg && (functionArea.functionAreaItems.functionAreaType.get(0).selectedIndex = 0)
             }),
             functionAreaItems: {
-                autoId: $("#autoId"),
+                faId: $("#faId"),
                 functionAreaId: $("#functionAreaId").on("blur", function () {
                     $this = $(this);
                     "" != $this.val() && com.post(api.quotation.queryFunctionAreaByIdAVersionId, {
@@ -186,7 +186,7 @@ $(function(){
     function editFunctionArea(a) {
         functionArea.editFlg = !0;
         bindVersion(a.versionId);
-        functionArea.functionAreaItems.autoId.val(a.autoId);
+        functionArea.functionAreaItems.faId.val(a.faId);
         functionArea.functionAreaItems.functionAreaId.val(a.functionAreaId);
         functionArea.functionAreaItems.functionAreaName.val(a.functionAreaName);
         functionArea.functionAreaItems.functionAreaOrder.val(a.functionAreaOrder);
@@ -208,7 +208,7 @@ $(function(){
             };
             functionArea.editFlg ? (
                 a = api.quotation.updateFunctionArea,
-                b["functionArea.autoId"] = functionArea.functionAreaItems.autoId.val(),
+                b["functionArea.faId"] = functionArea.functionAreaItems.faId.val(),
                 functionArea.oldFunctionAreaType != functionArea.functionAreaItems.functionAreaType.val() ? bootbox.confirm("功能区的类型修改，会清空以前包含的报价项，确认修改吗？",function(c) {
                     c && (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))
                 }) : (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))) : (a = api.quotation.addFunctionArea, com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))
@@ -235,7 +235,7 @@ $(function(){
         quotationItem.postParam["quotationItem.versionId"] = b;
         functionAreaItem.postParam.functionAreaId = a;
         functionAreaItem.postParam.functionAreaType = c;
-        functionAreaItem.postParam["functionAreaItem.functionArea.autoId"] = a;
+        functionAreaItem.postParam["functionAreaItem.functionArea.faId"] = a;
         functionAreaItem.postParam["functionAreaItem.functionArea.functionAreaType"] = c;
         initFunctionAreaItemList();
 
@@ -257,7 +257,7 @@ $(function(){
     //显示报价项信息列表
     function initFunctionAreaItemList() {
 
-        //"autoId 报价项编号 分类 大类 小类 名称 单位 工种 单价" itemList
+        //"faId 报价项编号 分类 大类 小类 名称 单位 工种 单价" itemList
         com.post( api.quotation.queryFunctionAreaItemByFunctionAreaId, functionAreaItem.postParam, function(data){
 
             var $tableWrap = $('#itemList');
@@ -275,7 +275,7 @@ $(function(){
                         "type" : "checkbox",
                         "name" : "areaItems",
                         "class" : "ace ace-checkbox-2",
-                    }).val(v.autoId);
+                    }).val(v.qiId);
                     var $span = $('<span></span>').addClass('lbl');
 
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -361,12 +361,11 @@ $(function(){
                     "class" : "ace ace-checkbox-2",
                     "data-quotationClassification" : v.quotationClassification,
                     "data-itemName" : v.itemName
-                }).val(v.autoId);
+                }).val(v.qiId);
                 var $span = $('<span></span>').addClass('lbl');
 
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                //autoId "        "
                 var propertyArr = [
                     ["类型:", v.quotationType, "grey"],
                     ["分类:", v.quotationClassification, "grey"],
@@ -408,7 +407,6 @@ $(function(){
         var quotationSeacher = new Searcher();
 
         quotationSeacher.init( condArr, "quoCondList", api.quotation.pageQuotationItemByVersionId, function(data){
-            console.log(data);
             quoDisplayFunc.init('quoResultList', data);
         }, "quoPagenation", "quotationFuncAreaPostData", extraParams);
 
@@ -425,7 +423,7 @@ $(function(){
             var quotationClassification,itemName;
             quotationClassification = $(this).attr('data-quotationClassification');
             itemName = $(this).attr('data-itemName');
-            quotationClassification == functionAreaType || "普通" == functionAreaType && ("基础部分" == quotationClassification || "其他部分" == quotationClassification) ? (_params["functionAreaItems[" + i + "].functionArea.autoId"] = $("#selectFunctionAreaId").val(), _params["functionAreaItems[" + i + "].quotationItem.autoId"] = $(this).val(), _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification) : bootbox.alert("不能将(" + itemName + ")添加到该功能区中")
+            quotationClassification == functionAreaType || "普通" == functionAreaType && ("基础部分" == quotationClassification || "其他部分" == quotationClassification) ? (_params["functionAreaItems[" + i + "].functionArea.faId"] = $("#selectFunctionAreaId").val(), _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(), _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification) : bootbox.alert("不能将(" + itemName + ")添加到该功能区中")
 
         }), !jQuery.isEmptyObject(_params) && com.post(api.quotation.addFunctionAreaItem, _params, successFunctionAreaItemCallback));
     }

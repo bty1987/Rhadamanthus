@@ -21,11 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.FunctionAreaItemPO;
+import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
-import com.fanglin.data.quotation.po.QuotationItemPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
@@ -65,8 +65,8 @@ public class QuotationServiceImpl implements QuotationService {
 	private FunctionAreaItemDao functionAreaItemDao;
 	
 	@Override
-	public QuotationVO queryQuotationById(long autoId){
-		QuotationPO quotationPO = quotationDao.get(autoId);
+	public QuotationVO queryQuotationById(long qId){
+		QuotationPO quotationPO = quotationDao.get(qId);
 		QuotationVO quotationVO = new QuotationVO();
 		
 		if(quotationPO != null){
@@ -238,7 +238,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationPO.setDecorationStyle(quotationVO.getDecorationStyle());
 		quotationPO.setQuotationName(quotationVO.getQuotationName());
-		quotationPO.setQuotationContent(quotationVO.getQuotationContent());
+		quotationPO.setContent(quotationVO.getContent());
 		
 		quotationDao.update(quotationPO);
 		
@@ -307,19 +307,20 @@ public class QuotationServiceImpl implements QuotationService {
 	@Transactional(rollbackFor=Exception.class)
 	public int replicaQuotation(QuotationVO quotationVO) throws FLException{
 		
+		long replicaQId = quotationVO.getQid();
+		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR});
 		
 		QuotationPO quotationPO = new QuotationPO();
-
-		long replicaQId = quotationVO.getQid();
+		
 		String orderId = quotationVO.getOrderId();
+		
+		checkQuotationForStatusByOrderId(quotationVO, null, false);
 		
 		if(quotationDao.countQuotationByOrderId(orderId) >= SystemConfig.getInt("limitQuotationNumber", 3)){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
-
-		checkQuotationForStatusByOrderId(quotationVO, null, false);
-    
+		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
 		
 		if(decorationOrderPO.getQuotationTimeLimit() >= SystemConfig.getInt("quotationTimeLimit")){
@@ -329,7 +330,7 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderDao.update(decorationOrderPO);
 		}
 		
-		BeanUtil.copyProperties(quotationVO, quotationPO, "qId");
+		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
 		
 		quotationPO.setDecorationOrder(decorationOrderPO);
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -341,7 +342,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setDiscount(10);
 		quotationPO.setTotalPrice(0);
 		quotationPO.setCreateUser(copyQuotationPO.getCreateUser());
-		quotationPO.setQuotationContent("");
+		quotationPO.setContent("");
 		
 		if(orderId.equals(copyQuotationPO.getDecorationOrder().getOrderId())){
 			throw new FLException(200019, "拷贝报价不能在订单内完成");
@@ -375,7 +376,7 @@ public class QuotationServiceImpl implements QuotationService {
 	@Transactional(rollbackFor=Exception.class)
 	public int copyQuotation(QuotationVO quotationVO, String userId) throws FLException{
 		
-		long copyAutoId = quotationVO.getQid();
+		long copyQId = quotationVO.getQid();
 		String orderId = quotationVO.getOrderId();
 		
 		QuotationPO quotationPO = new QuotationPO();
@@ -395,13 +396,13 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderDao.update(decorationOrderPO);
 		}
 		
-		BeanUtil.copyProperties(quotationVO, quotationPO, "qId");
+		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
 		
 		quotationPO.setDecorationOrder(decorationOrderPO);
 		quotationPO.setCreateUser(new UserPO(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		QuotationPO copyPO = quotationDao.get(copyAutoId);
+		QuotationPO copyPO = quotationDao.get(copyQId);
 		quotationPO.setSaveStatus(1);
 		quotationPO.setDiscount(copyPO.getDiscount());
 		quotationPO.setTotalPrice(copyPO.getTotalPrice());
@@ -415,7 +416,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		quotationDao.save(quotationPO);
 		
-		copyQuotation(copyAutoId, quotationPO.getQid());
+		copyQuotation(copyQId, quotationPO.getQid());
 		
 		return 0;
 	}
@@ -481,7 +482,7 @@ public class QuotationServiceImpl implements QuotationService {
 			
 			quotationFunctionAreaDao.save(quotationFunctionAreaPO);
 			
-			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaPO.getAutoId());
+			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaId());
 			for(FunctionAreaItemPO functionAreaItemPO: functionAreaItemPOs){
 				
 				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = new QuotationFunctionAreaItemPO();

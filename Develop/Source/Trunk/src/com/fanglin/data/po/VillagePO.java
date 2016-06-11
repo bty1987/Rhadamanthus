@@ -1,4 +1,4 @@
-package com.fanglin.data.common.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 

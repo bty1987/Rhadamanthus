@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.dao.BrandDao;
-import com.fanglin.data.common.po.BrandPO;
+import com.fanglin.data.po.BrandPO;
 import com.fanglin.utils.Paging;
 
 @Repository("brandDao")

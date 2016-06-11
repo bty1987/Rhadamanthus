@@ -58,7 +58,7 @@ public class SystemDefineItemAction extends BaseListAction {
 	@Action(value="addSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addSystemDefineItem() throws FLException{
 
-		systemDefineItemService.saveOrUpdateSystemDefineItem(systemDefineItem);
+		systemDefineItemService.addSystemDefineItem(systemDefineItem);
 		
 		return SUCCESS;
 	}
@@ -66,7 +66,7 @@ public class SystemDefineItemAction extends BaseListAction {
 	@Action(value="updateSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateSystemDefineItem() throws FLException{
 
-		systemDefineItemService.saveOrUpdateSystemDefineItem(systemDefineItem);
+		systemDefineItemService.updateSystemDefineItem(systemDefineItem);
 		
 		return SUCCESS;
 	}

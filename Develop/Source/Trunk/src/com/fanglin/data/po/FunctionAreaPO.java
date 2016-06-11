@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 
@@ -28,7 +28,7 @@ public class FunctionAreaPO implements Serializable {
 
 	private static final long serialVersionUID = 13444646L;
 	
-	private long autoId;
+	private long faId;
 	
 	private String functionAreaId;
 	
@@ -41,13 +41,13 @@ public class FunctionAreaPO implements Serializable {
 	private String functionAreaType;
 
 	@Id
-	@Column(name="autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name="faId")
+	public long getFaId(){
+		return faId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setFaId(long faId){
+		this.faId = faId;
 	}
 
 	public String getFunctionAreaId(){

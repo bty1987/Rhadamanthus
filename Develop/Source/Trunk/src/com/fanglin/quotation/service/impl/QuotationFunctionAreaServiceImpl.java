@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.FunctionAreaItemPO;
+import com.fanglin.data.po.FunctionAreaPO;
+import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
-import com.fanglin.data.quotation.po.QuotationItemPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -69,6 +69,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+			
+			System.out.println(quotationFunctionAreaItemPOs.size());
 			
 			for(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO: quotationFunctionAreaItemPOs){
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();

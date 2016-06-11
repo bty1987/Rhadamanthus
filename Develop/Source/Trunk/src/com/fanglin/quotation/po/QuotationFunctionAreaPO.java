@@ -26,8 +26,8 @@ import javax.persistence.Table;
 @Table(name = "quotationfunctionarea", catalog = "platform")
 public class QuotationFunctionAreaPO implements Serializable {
 
-	private static final long serialVersionUID = 1344464611L;
-	
+	private static final long serialVersionUID = 7743703726911437039L;
+
 	public static final String TYPE_COMMON_STR = "普通";
 	
 	public static final String TYPE_MANAGEMENT_STR = "管理费";

@@ -49,10 +49,6 @@ $(function(){
                 ["状态:", v.status, "grey"],
             ];
 
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -89,19 +85,11 @@ $(function(){
  
    var decorationOrderSalesmanSeacher = new Searcher();
    
-<<<<<<< HEAD
    decorationOrderSalesmanSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForSalesman, function(data){
-=======
-   decorationOrderSalesmanSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
         displayFunc.init('resultList', data);
     }, "pagenation", "DecorationOrderSalesmanPostData");
 
-<<<<<<< HEAD
    	//定义全局变量  json
-=======
- //定义全局变量  json
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 	var order = {
 	    listGrid: null,
 	    gridPager: null,
@@ -118,137 +106,15 @@ $(function(){
 		decorationOrderId: null
 	};
 	
-    order.saveBtn = $("#saveBtn").on("click", saveData);
-    order.cancelBtn = $("#cancelBtn");
     order.decorationOrderModal = $("#decorationOrderModal");
     order.agreementModal = $("#agreementModal");
     order.refundContractModal = $("#refundContractModal");
     order.customerInfoModal = $("#customerInfoModal");
     decorationUtils.createDecorationOrderCondition(order.listGrid, api.decoration.pageDecorationOrderForSalesman.url, "orderSearchDiv", {}, "");
 	    
-    $("#refundContractBtn").on("click",
-    function() {
-        if (!com.validate("refundContractModal")) {
-            var b = {
-                "decorationOrder.orderId": decorationOrderPostData["decorationOrder.orderId"],
-                refundValue: $("#refundValue").val(),
-                paymentValue: order.paymentValue
-            };
-            com.post(api.decoration.terminalDecorationOrder, b,
-            function(d) {
-                com.showAlert(com.info, "\u7533\u8bf7\u6210\u529f");
-                $("#" + decorationOrderPostData["decorationOrder.rowId"] + "_terminalBtn").css("display", "none")
-            });
-            order.refundContractModal.modal("hide")
-        }
-    });
-    $("#customerInfoBtn").on("click", function() {
-        if (!com.validate()) {
-            var b = decorationOrderPostData["customer.customerId"],
-            d = !1,
-            c = {
-                "customer.id": b,
-                "customer.customerName": $("#customerName").val(),
-                "customer.phone": $("#phone").val(),
-                "decorationContract.quotationDetail.customer.customerName": $("#customerName").val(),
-                "decorationContract.quotationDetail.customer.phone": $("#phone").val(),
-<<<<<<< HEAD
-                "decorationContract.orderId": decorationOrderPostData["decorationOrder.orderId"]
-            };
-            com.post(api.data.checkCustomerForPhone, {
-                "customer.phone": $("#phone").val()
-            },
-            function(c) {
-                c = c.customerIds;
-                0 != c.length && a.each(c,
-                function(a, c) {
-                    c != b && (d = !0)
-                })
-            },
-            null, !1);
-            if (d) return com.showAlert(com.error, "\u5ba2\u6237\u7535\u8bdd\u5df2\u7ecf\u5b58\u5728"), !1;
-            com.post(api.data.updateCustomer, c,
-	            function(a) {
-	                0 == a.errorCode ? com.post(api.decoration.signDecorationContract, c,
-	                function(a) {
-	                    com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
-	                    order.listGrid.trigger("reloadGrid")
-	                },
-	                null, !1) : com.showAlert(com.error, a.errorMsg)
-	            },
-=======
-                "decorationContract.quotationDetail.orderId": decorationOrderPostData["decorationOrder.orderId"]
-            };
-            com.post(api.data.checkCustomerForPhone, {
-                "customer.phone": $("#phone").val()
-            },
-            function(c) {
-                c = c.customerIds;
-                0 != c.length && a.each(c,
-                function(a, c) {
-                    c != b && (d = !0)
-                })
-            },
-            null, !1);
-            if (d) return com.showAlert(com.error, "\u5ba2\u6237\u7535\u8bdd\u5df2\u7ecf\u5b58\u5728"),
-            !1;
-            com.post(api.data.updateCustomer, c,
-            function(a) {
-                0 == a.errorCode ? com.post(api.decoration.signDecorationContract, c,
-                function(a) {
-                    com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
-                    order.listGrid.trigger("reloadGrid")
-                },
-                null, !1) : com.showAlert(com.error, a.errorMsg)
-            },
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
-            null, !1);
-            order.customerInfoModal.modal("hide")
-        }
-    });
-    
-    $(".date-picker").datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: !0,
-        todayBtn: !0,
-        todayHighlight: !0
-    }).next().on(ace.click_event,
-	    function() {
-	        a(this).prev().focus()
-	    });
-    
-    $(".date-picker").datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: !0,
-        todayBtn: !0,
-        todayHighlight: !0
-    }).next().on(ace.click_event,
-	    function() {
-	        a(this).prev().focus()
-    })
-
-   function saveData() {
-	    var a = {
-	        "customer.customerName": order.orderItems.customerName.val(),
-	        "customer.gender": order.orderItems.gender.value,
-	        "customer.phone": order.orderItems.phone.val(),
-	        "customer.qq": order.orderItems.qq.val(),
-	        "customer.wechat": order.orderItems.wechat.val(),
-	        "customer.email": order.orderItems.email.val(),
-	        "customer.address": order.orderItems.address.val(),
-	        "customer.relationshipType": order.orderItems.relationshipType.val()
-	    };
-	    com.post(order.editFlg ? order.editUrl: order.addUrl, a, successCallback, failCallback);
-	    order.modal.modal("hide")
-	 }
-   
     function viewDecorationOrderBackVisitIndex(decorationOrderId) { 
     	decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-<<<<<<< HEAD
 		params.historyOrderPage = api.index.decorationOrderSalesmanIndex.url;
-=======
-		params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 		$("#decorationOrderPageContent").load(api.index.backVisitIndex.url);
     }
   

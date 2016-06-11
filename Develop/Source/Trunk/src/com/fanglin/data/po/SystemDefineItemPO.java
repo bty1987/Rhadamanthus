@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 
@@ -31,7 +31,7 @@ public class SystemDefineItemPO implements Serializable {
 	
 	public static final int TYPE_SYSTEMDEFINEITEM_INT = 3;	
 	
-	private long autoId;
+	private long sdiId;
 	
 	private String itemId;
 	
@@ -51,19 +51,19 @@ public class SystemDefineItemPO implements Serializable {
 		
 	}
 	
-	public SystemDefineItemPO(long autoId){
-		this.autoId = autoId;
+	public SystemDefineItemPO(long sdiId){
+		this.sdiId = sdiId;
 	}
 	
 	@Id
 	@GeneratedValue
-	@Column(name="autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name="sdiId")
+	public long getSdiId(){
+		return sdiId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setSdiId(long sdiId){
+		this.sdiId = sdiId;
 	}
 
 	@Column(name="itemId")

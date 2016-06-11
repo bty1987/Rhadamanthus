@@ -3,7 +3,7 @@ package com.fanglin.data.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.data.quotation.po.FunctionAreaItemPO;
+import com.fanglin.data.po.FunctionAreaItemPO;
 
 public interface FunctionAreaItemDao extends Dao<FunctionAreaItemPO> {
 

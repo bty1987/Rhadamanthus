@@ -26,8 +26,10 @@ public interface FunctionAreaService {
 	
 	public List<FunctionAreaVO> queryFunctionAreaByVersionId(FunctionAreaVO functionAreaVO) throws FLException;
 	
-	public int saveOrUpdateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException;
-
+	public int addFunctionArea(FunctionAreaVO functionAreaVO) throws FLException;
+	
+	public int updateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException;
+	
 	public void deleteFunctionAreaByIds(List<Long> ids);
 	
 	public void deleteFunctionArea(FunctionAreaVO functionAreaVO);

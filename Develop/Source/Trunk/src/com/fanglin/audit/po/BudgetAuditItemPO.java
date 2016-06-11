@@ -19,7 +19,7 @@ import javax.persistence.Table;
 
 import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.common.po.WorkTypePO;
-import com.fanglin.data.quotation.po.QuotationBigCategoryPO;
+import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Entity
@@ -58,9 +58,9 @@ public class BudgetAuditItemPO implements Serializable {
 	
 	private String comment; // 操作说明
 
-	private QuotationFunctionAreaPO functionArea;
+	private QuotationFunctionAreaPO quotationFunctionArea;
 	
-	private QuotationBigCategoryPO category;
+	private QuotationBigCategoryPO quotationBigCategory;
 	
 	private MeasurementUnitPO measurementUnit;
 	
@@ -171,27 +171,28 @@ public class BudgetAuditItemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName = "autoId")
-	public QuotationFunctionAreaPO getFunctionArea(){
-		return functionArea;
+	@javax.persistence.JoinColumn(name = "functionAreaId", referencedColumnName = "qfaId")
+	public QuotationFunctionAreaPO getQuotationFunctionArea() {
+		return quotationFunctionArea;
 	}
 
-	public void setFunctionArea(QuotationFunctionAreaPO functionArea){
-		this.functionArea = functionArea;
-	}
-
-	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "categoryId", referencedColumnName = "id")
-	public QuotationBigCategoryPO getCategory(){
-		return category;
-	}
-
-	public void setCategory(QuotationBigCategoryPO category){
-		this.category = category;
+	public void setQuotationFunctionArea(
+			QuotationFunctionAreaPO quotationFunctionArea) {
+		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "measurementUnitId", referencedColumnName = "id")
+	@javax.persistence.JoinColumn(name = "categoryId", referencedColumnName = "id")
+	public QuotationBigCategoryPO getQuotationBigCategory() {
+		return quotationBigCategory;
+	}
+
+	public void setQuotationBigCategory(QuotationBigCategoryPO quotationBigCategory) {
+		this.quotationBigCategory = quotationBigCategory;
+	}
+
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "measurementUnitId", referencedColumnName = "id")
 	public MeasurementUnitPO getMeasurementUnit(){
 		return measurementUnit;
 	}

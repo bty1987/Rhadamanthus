@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
-import com.fanglin.data.quotation.po.FunctionAreaPO;
 import com.fanglin.utils.Paging;
 
 @Repository("functionAreaDao")

@@ -26,7 +26,7 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.approval.vo.ApprovalVillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.VillageDao;
-import com.fanglin.data.common.po.VillagePO;
+import com.fanglin.data.po.VillagePO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.information.po.MessagePO;

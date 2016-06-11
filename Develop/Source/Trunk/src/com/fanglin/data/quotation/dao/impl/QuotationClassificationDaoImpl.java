@@ -14,8 +14,8 @@ package com.fanglin.data.quotation.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.data.po.QuotationClassificationPO;
 import com.fanglin.data.quotation.dao.QuotationClassificationDao;
-import com.fanglin.data.quotation.po.QuotationClassificationPO;
 
 @Repository("quotationclassification")
 public class QuotationClassificationDaoImpl extends DaoImpl<QuotationClassificationPO> implements QuotationClassificationDao {

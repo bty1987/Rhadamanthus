@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.SystemDefineItemPO;
 import com.fanglin.data.quotation.dao.SystemDefineItemDao;
-import com.fanglin.data.quotation.po.SystemDefineItemPO;
 import com.fanglin.utils.Paging;
 
 @Repository("systemDefineItemDao")

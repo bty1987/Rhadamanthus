@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.po;
+package com.fanglin.data.po;
 
 import java.io.Serializable;
 
@@ -25,12 +25,12 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "functionAreaQuoteItem", catalog = "platform")
+@Table(name = "functionareaquoteitem", catalog = "platform")
 public class FunctionAreaItemPO implements Serializable {
 
 	private static final long serialVersionUID = 13444646L;
 
-	private long autoId;
+	private long faiId;
 	
 	private FunctionAreaPO functionArea;
 	
@@ -38,13 +38,13 @@ public class FunctionAreaItemPO implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	@Column(name="autoId", nullable = false)
-	public long getAutoId(){
-		return autoId;
+	@Column(name="faiId", nullable = false)
+	public long getFaiId(){
+		return faiId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setFaiId(long faiId){
+		this.faiId = faiId;
 	}
 
 	public void setQuotationItem(QuotationItemPO quotationItem){
@@ -52,7 +52,7 @@ public class FunctionAreaItemPO implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quoteItemId", referencedColumnName="autoId")
+	@JoinColumn(nullable = false, name = "quoteItemId", referencedColumnName="qiId")
 	public QuotationItemPO getQuotationItem(){
 		return quotationItem;
 	}
@@ -62,7 +62,7 @@ public class FunctionAreaItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName="autoId")
+	@JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName="faId")
 	public FunctionAreaPO getFunctionArea(){
 		return functionArea;
 	}

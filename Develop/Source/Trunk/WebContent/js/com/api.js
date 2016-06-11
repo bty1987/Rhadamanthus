@@ -84,10 +84,12 @@ var api = {
 		decorationOrderDetailDesignerIndex: {url: "/views/decoration/decorationOrderDetailDesigner.html"},
 		
 		decorationOrderSalesmanIndex: {url: "/views/decoration/decorationOrderSalesman.html"},
-		decorationOrderDetailSalesmanIndex: {url: "/views/decoration/decorationOrderDetailSalesman.html"},
 		
 		decorationOrderCommonIndex: {url: "/views/decoration/decorationOrderCommon.html"},
 		decorationOrderDetailCommonIndex: {url: "/views/decoration/decorationOrderDetailCommon.html"},
+		
+		decorationOrderAdvanceIndex: {url: "/views/decoration/decorationOrderAdvance.html"},
+		decorationOrderAdvanceDetailIndex: {url: "/views/decoration/decorationOrderAdvanceDetail.html"},
 		
 		decorationActivityIndex: {url: "/views/decoration/decorationActivity.html"},
 		decorationActivityItemIndex: {url: "/views/decoration/decorationActivityItem.html"},
@@ -541,11 +543,6 @@ var api = {
 		pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
 		queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do"},
 		addBackVisit: {url: "addBackVisit.do"},
-<<<<<<< HEAD
-=======
-		
-		pageCustomerItemByQuotationId: {url: "pageCustomerItemByQuotationId.do"},
->>>>>>> branch 'master' of https://git.oschina.net/bty1987/Rhadamanthus.git
 		
 		queryDecorationActivityByOrderId: {url: "queryDecorationActivityByOrderId.do"},
 		queryDecorationActivityItem: {url: "queryDecorationActivityItem.do"},
@@ -871,6 +868,7 @@ var api = {
 		changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
 		
 		queryQuotationFunctionAreaForCommonById: {url: "queryQuotationFunctionAreaForCommonById.do"},
+		queryQuotationFunctionAreaByQuotationId: {url: "queryQuotationFunctionAreaByQuotationId.do"},
 		addQuotationFuctionAreaByFunctionAreaIds: {url: "addQuotationFuctionAreaByFunctionAreaIds.do"},
 		updateQuotationFunctionArea: {url: "updateQuotationFunctionArea.do"},
 		deleteQuotationFunctionArea: {url: "deleteQuotationFunctionArea.do"},

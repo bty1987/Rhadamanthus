@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
-import com.fanglin.data.quotation.po.QuotationItemPO;
 import com.fanglin.utils.Paging;
 
 @Repository("quotationItemDao")

@@ -13,26 +13,19 @@ package com.fanglin.decoration.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.AddReduceVO;
-import com.fanglin.utils.Paging;
 
 public interface AddReduceService {
 	
-	public void pageAddReduce(Paging paging, List<FilterVO> filters);
-	
-	public void pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, AddReduceVO addReduceVO);
-	
 	public List<AddReduceVO> queryAddReduceByOrderId(String orderId);
 	
-	public int saveOrUpdateAddReduce(AddReduceVO addReduceVO);
+	public int AddAddReduce(AddReduceVO addReduceVO);
 	
-	public void updateAddReduce(AddReduceVO addReduceVO);
+	public int updateAddReduce(AddReduceVO addReduceVO) throws FLException;
 	
-	public void deleteAddReduceById(int addReduceId);
+	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException;
 	
-	public void deleteAddReduce(AddReduceVO addReduceVO);
-	
-	public String deleteAddReduce(List<Integer> arIds);
+	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException;
 	
 }

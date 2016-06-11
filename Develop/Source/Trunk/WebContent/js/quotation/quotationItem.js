@@ -67,7 +67,7 @@ $(function(){
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.autoId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.autoId, 1,function(){$statusSwitch.prop("checked")}));
+                $statusSwitch.prop("checked") ? (updateStatus(v.qiId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.qiId, 1,function(){$statusSwitch.prop("checked")}));
             });
 
             return $liLine;
@@ -112,7 +112,7 @@ $(function(){
                     })
                 }
             }),
-            autoId: $("#autoId"),
+            qiId: $("#qiId"),
             quotationType: $("#quotationType"),
             quotationClassification: $("#quotationClassification"),
             quotationBigCategory: $("#quotationBigCategory"),
@@ -157,7 +157,6 @@ $(function(){
 
     $.extend(com.validator, quotationItem.validator);
 
-
     com.post(api.quotation.queryQuotationType, {},function(a) {
         quotationItem.data.quotationTypeData = a.quotationTypes;
         $("#quotationType").bindData(quotationItem.data.quotationTypeData, "id", "name");
@@ -191,9 +190,11 @@ $(function(){
     //添加按钮
     $('a[name="add"]', '#pagenation').click(function () {
         quotationItem.editFlg = !1;
+        
         com.cleanItems(quotationItem.quotationItemItems);
         quotationItem.quotationItemItems.itemId.prop("disabled", !1);
         quotationItem.quotationItemItems.version.prop("disabled", !1);
+        
         quotationItem.modal.modal("show")
     });
 
@@ -201,7 +202,7 @@ $(function(){
     function edit(b) {
 
         quotationItem.editFlg = !0;
-        quotationItem.quotationItemItems.autoId.val(b.autoId);
+        quotationItem.quotationItemItems.qiId.val(b.qiId);
         quotationItem.quotationItemItems.itemId.val(b.itemId);
         quotationItem.quotationItemItems.itemName.val(b.itemName);
         quotationItem.quotationItemItems.quotationType.val(b.quotationTypeId);
@@ -239,7 +240,7 @@ $(function(){
                 "quotationItem.quotationItemDes": quotationItem.quotationItemItems.quotationItemDes.val(),
                 "quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val()
             };
-            quotationItem.editFlg ? (a = api.quotation.updateQuotationItem, c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", c["quotationItem.autoId"] = quotationItem.quotationItemItems.autoId.val()) : (c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", a = api.quotation.addQuotationItem);
+            quotationItem.editFlg ? (a = api.quotation.updateQuotationItem, c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", c["quotationItem.qiId"] = quotationItem.quotationItemItems.qiId.val()) : (c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", a = api.quotation.addQuotationItem);
             com.post(a, c, successCallback, failCallback);
             quotationItem.modal.modal("hide")
         }
@@ -248,8 +249,8 @@ $(function(){
     //启用禁用功能
     function updateStatus(id, status, failcallBack) {
 
-        com.post(api.quotation.updateQuotationItem, {
-            "quotationItem.autoId": id,
+        com.post(api.quotation.updateQuotationItemForStatus, {
+            "quotationItem.qiId": id,
             "quotationItem.status": status
         }, function () {
 

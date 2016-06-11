@@ -89,8 +89,6 @@ $(function(){
 					"decorationContract.additionalInfo":$("#additionalInfo").html()
 				};
 
-				console.log('hetong--', options);
-
 				com.post(api.decoration.saveDecorationContract, options, function(res){
 					if(res.errorCode == 0){
 						com.showAlert(com.info, "保存成功");

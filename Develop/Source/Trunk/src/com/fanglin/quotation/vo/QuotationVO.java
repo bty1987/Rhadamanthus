@@ -20,7 +20,7 @@ public class QuotationVO implements Serializable {
 
 	private static final long serialVersionUID = -62258203481876631L;
 
-	private Long qId;
+	private Long qid;
 	
 	private String orderId;
 	
@@ -46,7 +46,7 @@ public class QuotationVO implements Serializable {
 	
 	private Integer saveStatus;
 	
-	private String quotationContent;
+	private String content;
 	
 	private Float latexCut;
 	
@@ -56,12 +56,21 @@ public class QuotationVO implements Serializable {
 	
 	private Float trafficPrice;
 	
-	public Long getQid(){
-		return qId;
+	public QuotationVO() {
+		super();
 	}
 
-	public void setQid(Long qId){
-		this.qId = qId;
+	public QuotationVO(Long qid) {
+		super();
+		this.qid = qid;
+	}
+
+	public Long getQid(){
+		return qid;
+	}
+
+	public void setQid(Long qid){
+		this.qid = qid;
 	}
 
 	public String getOrderId(){
@@ -161,12 +170,12 @@ public class QuotationVO implements Serializable {
 		this.saveStatus = saveStatus;
 	}
 
-	public String getQuotationContent() {
-		return quotationContent;
+	public String getContent() {
+		return content;
 	}
 
-	public void setQuotationContent(String quotationContent) {
-		this.quotationContent = quotationContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public Float getLatexCut() {

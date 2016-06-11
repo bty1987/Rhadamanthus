@@ -29,45 +29,45 @@ public class AddReducePO implements Serializable{
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static final String COLUMN_ADDREDUCETYPE_STR = "addReduceType";
+	public static final String COLUMN_TYPE_STR = "type";
 	
-	public static final String COLUMN_ADDREDUCESTATUS_STR = "addReduceTotal";
+	public static final String COLUMN_TOTAL_STR = "total";
 	
-	public static final String COLUMN_ADDREDUCETOTAL_STR = "addReduceStatus";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final String COLUMN_ADDREDUCEDES_STR = "addReduceDes";
+	public static final String COLUMN_CONTENT_STR = "content";
 	
-	public static final String COLUMN_ORDERPAYMENTID_STR="orderPaymentId";
+	public static final String COLUMN_DECORATIONPAYMENTID_STR="decorationPaymentId";
 	
-	public static final int ADDREDUCETYPE_ADD_INT = 0;
+	public static final int TYPE_ADD_INT = 0;
 	
-	public static final int ADDREDUCETYPE_REDUCE_INT = 1;
+	public static final int TYPE_REDUCE_INT = 1;
 	
-	public static final int ADDREDUCETYPE_LEAKAGE_INT = 2;
+	public static final int TYPE_LEAKAGE_INT = 2;
 	
-	public static final int ADDREDUCESTATUS_UNSUBMIT_INT = 0;
+	public static final int STATUS_UNSUBMIT_INT = 0;
 	
-	public static final int ADDREDUCESTATUS_SUBMIT_INT = 1;
+	public static final int STATUS_SUBMIT_INT = 1;
 	
-	public static final int ADDREDUCESTATUS_PAYED_INT = 2;
+	public static final int STATUS_PAYED_INT = 2;
 	
-	public static final int ADDREDUCESTATUS_CONFIRMED_INT = 3;
+	public static final int STATUS_CONFIRMED_INT = 3;
 	
 	private int arId;
 	
 	private String orderId;
 	
-	private int addReduceType;
+	private int type;
 	
-	private Float addReduceTotal=(float) 0;
+	private float total;
 	
-	private int addReduceStatus;
+	private int status;
 	
 	private Timestamp createTime;
 	
-	private String addReduceDes;
+	private String content;
 	
-	private Long orderPaymentId;
+	private Long dpId;
 
 	@Id
 	@Column(name="arId")
@@ -88,56 +88,58 @@ public class AddReducePO implements Serializable{
 		this.orderId = orderId;
 	}
 
-	@Column(name="addReduceType")
-	public int getAddReduceType(){
-		return addReduceType;
+	@Column(name="type")
+	public int getType() {
+		return type;
 	}
 
-	public void setAddReduceType(int addReduceType){
-		this.addReduceType = addReduceType;
+	public void setType(int type) {
+		this.type = type;
 	}
 
-	@Column(name="addReduceTotal")
-	public Float getAddReduceTotal(){
-		return addReduceTotal;
+	@Column(name="total")
+	public float getTotal() {
+		return total;
 	}
 
-	public void setAddReduceTotal(Float addReduceTotal){
-		this.addReduceTotal = addReduceTotal;
+	public void setTotal(float total) {
+		this.total = total;
 	}
 
-	@Column(name="addReduceStatus")
-	public int getAddReduceStatus(){
-		return addReduceStatus;
+	@Column(name="status")
+	public int getStatus() {
+		return status;
 	}
 
-	public void setAddReduceStatus(int addReduceStatus){
-		this.addReduceStatus = addReduceStatus;
+	public void setStatus(int status) {
+		this.status = status;
 	}
-	
-	public Timestamp getCreateTime(){
+
+	@Column(name="createTime")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	@Column(name="addReduceDes")
-	public String getAddReduceDes(){
-		return addReduceDes;
+	@Column(name="content")
+	public String getContent() {
+		return content;
 	}
 
-	public void setAddReduceDes(String addReduceDes){
-		this.addReduceDes = addReduceDes;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public void setOrderPaymentId(Long orderPaymentId){
-		this.orderPaymentId = orderPaymentId;
+	@Column(name="dpId")
+	public Long getDpId() {
+		return dpId;
 	}
 
-	public Long getOrderPaymentId(){
-		return orderPaymentId;
+	public void setDpId(Long dpId) {
+		this.dpId = dpId;
 	}
-	
+
 }
