@@ -81,7 +81,7 @@ var api = {
 		decorationOrderAddOrReduceDetailIndex: {url: "/views/decoration/decorationOrderAddOrReduceDetail.html"},
 		
 		decorationOrderDesignerIndex: {url: "/views/decoration/decorationOrderDesigner.html"},
-		decorationOrderDetailDesignerIndex: {url: "/views/decoration/decorationOrderDetailDesigner.html"},
+		decorationOrderDesignerDetailIndex: {url: "/views/decoration/decorationOrderDesignerDetail.html"},
 		
 		decorationOrderSalesmanIndex: {url: "/views/decoration/decorationOrderSalesman.html"},
 		

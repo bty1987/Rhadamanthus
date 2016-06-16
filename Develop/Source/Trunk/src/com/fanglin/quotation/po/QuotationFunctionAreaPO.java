@@ -50,6 +50,13 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 	
+	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, String functionAreaType) {
+		this.quotation = quotation;
+		this.functionAreaName = functionAreaName;
+		this.functionAreaOrder = functionAreaOrder;
+		this.functionAreaType = functionAreaType;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name="qfaId")

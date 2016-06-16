@@ -15,10 +15,6 @@
 								<div class="col-md-12 hr hr-14"></div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-6  no-padding-right">活动:</label>
-										<label id="sumLabActivityName" class=" col-md-4  no-padding-left"></label>
-									</div>
-									<div class="form-group">
 										<label class=" col-md-6  no-padding-right">总价:</label>
 										<label id="sumLabSumMoney" class=" col-md-4  no-padding-left">0.00</label>
 									</div>
@@ -41,28 +37,33 @@
 				<div class="col-md-12">
 					<div class="col-md-12">
 						<div class="ui-pg-div">
-							<button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow">
+							<button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3" style="margin-left: 2px;">
 								<i class="icon-pencil"></i>功能区
 							</button>
-							<button id="discountBtn" class="btn btn-minier btn-success">
+							<button id="discountBtn" class="btn btn-minier btn-success col-md-3" style="margin-left: 2px;">
 								<i class="icon-pencil"></i>折扣
 							</button>
-							<button id="viewStatisticalBtn" class="btn btn-minier btn-pink">
+							<button id="viewStatisticalBtn" class="btn btn-minier btn-pink col-md-3" style="margin-left: 2px;">
 								<i class="icon-bar-chart"></i>统计
 							</button>
-							
 						</div>
 					</div>
 					<div class="col-md-12 space-8"></div>
-					<div class="col-md-12 ">
+					<div class="col-md-12">
 						<div class="ui-pg-div">
-							<button id="saveQuotationDetailOKBtn" class="btn btn-minier btn-primary" data-loading-text="提交中...">
+							<button id="saveQuotationDetailOKBtn" class="btn btn-minier btn-primary" data-loading-text="提交中..." style="display: none;">
 								<i class="icon-ok"></i>删除未用项
 							</button>
-							<button id="saveQuotationDetailBtn" class="btn btn-minier btn-primary" data-loading-text="提交中...">
+							<button id="saveQuotationDetailBtn" class="btn btn-minier btn-primary" data-loading-text="提交中..." style="display: none;">
 								<i class="icon-save"></i>保存
 							</button>
-							<button id="detailBckBtn" class="btn btn-minier btn-info">
+							<button id="saveQuotationBtn" class="btn btn-minier btn-inverse col-md-3">
+								<i class="icon-save"></i>保存
+							</button>
+							<a id="printFinanceBtn" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;" target="_blank">
+								<i class="icon-print"></i>打印
+							</a>
+							<button id="detailBckBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px;">
 								<i class="icon-mail-forward"></i>返回
 							</button>
 						</div>
@@ -79,6 +80,14 @@
 				</div>
 				<div class="hr hr-24"></div>
 				<div class="col-md-12">
+					<div class="ui-pg-div pull-right inline">
+						<button id="openFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中...">
+							<i class="icon-folder-close"></i>展开功能区
+						</button>
+						<button id="closeFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中...">
+							<i class="icon-folder-open "></i>收起功能区
+						</button>
+					</div>
 				</div>
 				<div class="col-md-12" id="functionAreaDetailList"></div>
 			</div>
@@ -168,8 +177,33 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" id="addFunctionAreaItemsBtn" class="btn btn-primary">保存</button>
-							<button type="button" id="addCustomFunctionAreaItemsBtn" class="btn btn-primary icon-add">自定义</button>
+							<button type="button" id="addCustomFunctionAreaItemsBtn" class="btn btn-primary icon-add" style="display: none;">自定义</button>
 							<button type="button" id="cancelAddFunctionAreaItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="historyQuotationItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="historyQuotationItemDialog" aria-hidden="true">
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content col-md-12">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="historyQuotationItemDialog">报价项</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-xs-12" id="historyQuotationItemDiv">
+									<table id="historyQuotationItemListGrid"></table>
+									<div id="historyQuotationItemGridPager"></div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" id="addHistoryItemsBtn" class="btn btn-primary">保存</button>
+							<button type="button" id="cancelHistoryItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</div>
 				</div>
@@ -186,7 +220,6 @@
 						</div>
 						<div class="modal-body">
 							<form class="form-horizontal" role="form">
-								
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="itemName">名称</label>
 									<div class="col-sm-9">
@@ -212,9 +245,9 @@
 								<div class="space-4"></div>
 								
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="itemWorkType">工种</label>
+									<label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
 									<div class="col-sm-3">
-										<select class="form-control v_required" id="itemWorkType" data-toggle="popover" data-trigger='manual'></select>
+										<select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -313,4 +346,6 @@
 	</div>
 </div>
 
-<script src="./js/quotation/quotationDetail.js"></script>
+<script type="text/javascript">
+	$.getScript(hostServer + 'js/quotation/quotationDetail.js?version=' + versionCode);
+</script>

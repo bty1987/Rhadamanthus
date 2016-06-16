@@ -126,6 +126,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		short type = approvalPO.getType();
 		
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
+		
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
 				approvalCustomerService.approvalForCustomer(approvalPO);
@@ -155,9 +158,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
 		}
-		
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
 		
 		approvalDao.update(approvalPO);
 		

@@ -66,7 +66,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level) throws FLException {
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		
 		String approvalDuty = "";
 		String orderId = approvalQuotationDiscountVO.getOrderId();
@@ -146,27 +146,40 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(approvalQuotationDiscountPO.getOrderId());
+		
+		if(decorationOrderPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		List<String> status = Arrays.asList(DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR);
+		
 		Float limitDiscount = SystemConfig.getFloat("defaultSecondApprovalDiscount", 8f);
 		
-		if(approvalQuotationDiscountPO.getLevel() == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT && approvalQuotationDiscountPO.getNewDiscount() < limitDiscount){
-			ApprovalVO approvalVO = new ApprovalVO();
-			approvalVO.setComment(approvalPO.getComment());
-			
-			ApprovalQuotationDiscountVO approvalQuotationDiscountVO = new ApprovalQuotationDiscountVO();
-			approvalQuotationDiscountVO.setOrderId(approvalQuotationDiscountPO.getOrderId());
-			approvalQuotationDiscountVO.setQuotationId(approvalQuotationDiscountPO.getQuotationId());
-			approvalQuotationDiscountVO.setNewDiscount(approvalQuotationDiscountPO.getNewDiscount());
-			
-			submitApprovalForQuotationDiscount(approvalVO, approvalQuotationDiscountVO, approvalPO.getSender().getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT);
+		if(!status.contains(decorationOrderPO.getStatus())){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
+			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationOrderPO.getStatus()));
 		}else{
-			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
-			
-			if(quotationPO == null){
-				throw new FLException(200003, "报价不存在");
+			if(approvalQuotationDiscountPO.getLevel() == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT && approvalQuotationDiscountPO.getNewDiscount() < limitDiscount){
+				ApprovalVO approvalVO = new ApprovalVO();
+				approvalVO.setComment(approvalPO.getComment());
+				
+				ApprovalQuotationDiscountVO approvalQuotationDiscountVO = new ApprovalQuotationDiscountVO();
+				approvalQuotationDiscountVO.setOrderId(approvalQuotationDiscountPO.getOrderId());
+				approvalQuotationDiscountVO.setQuotationId(approvalQuotationDiscountPO.getQuotationId());
+				approvalQuotationDiscountVO.setNewDiscount(approvalQuotationDiscountPO.getNewDiscount());
+				
+				submitApprovalForQuotationDiscount(approvalVO, approvalQuotationDiscountVO, approvalPO.getSender().getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT);
+			}else{
+				QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
+				
+				if(quotationPO == null){
+					throw new FLException(200003, "报价不存在");
+				}
+				
+				quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
+				quotationDao.update(quotationPO);
 			}
-			
-			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
-			quotationDao.update(quotationPO);
 		}
 		
 		return 0;

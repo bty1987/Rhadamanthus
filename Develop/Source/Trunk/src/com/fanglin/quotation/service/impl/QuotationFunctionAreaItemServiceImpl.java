@@ -52,6 +52,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			
 			BeanUtil.copyProperties(quotationFunctionAreaItemPO, _quotationFunctionAreaItemVO);
 			
+			if(quotationFunctionAreaItemPO.getQuotationItem() != null){
+				quotationFunctionAreaItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getQuotationItemDes());
+			}
+			
 			quotationFunctionAreaItemVOs.add(_quotationFunctionAreaItemVO);
 		}
 		
@@ -60,7 +64,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateQuotationFunctionAreaItem(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, QuotationVO quotationVO) throws FLException {
+	public QuotationFunctionAreaItemVO updateQuotationFunctionAreaItem(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, QuotationVO quotationVO) throws FLException {
 		
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
 		
@@ -88,8 +92,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			
 			if(quotationFunctionAreaItemVO.getType() == 0){
 				quotationFunctionAreaItemPO.setQuotationItem(new QuotationItemPO(quotationFunctionAreaItemVO.getQuotationItemId()));
+				quotationFunctionAreaItemPO.setContent(null);
 			}else{
 				quotationFunctionAreaItemPO.setContent(quotationFunctionAreaItemVO.getContent());
+				quotationFunctionAreaItemPO.setQuotationItem(null);
 			}
 		}
 		
@@ -99,7 +105,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		
 		quotationFunctionAreaItemVO.setQfaiId(quotationFunctionAreaItemPO.getQfaiId());
 		
-		return 0;
+		return quotationFunctionAreaItemVO;
 	}
 
 	@Override

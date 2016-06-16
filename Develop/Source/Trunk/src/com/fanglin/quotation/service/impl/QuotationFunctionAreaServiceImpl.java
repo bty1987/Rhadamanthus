@@ -59,6 +59,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaByQuotationId(QuotationVO quotationVO) throws FLException {
 		
+		QuotationFunctionAreaVO autogeneration = null;
+		
 		List<QuotationFunctionAreaVO> quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
 		
@@ -70,8 +72,6 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 			
-			System.out.println(quotationFunctionAreaItemPOs.size());
-			
 			for(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO: quotationFunctionAreaItemPOs){
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 				
@@ -79,12 +79,28 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 				
+				if(quotationFunctionAreaItemPO.getQuotationItem() != null){
+					
+					QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
+					
+					quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
+					quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				}
+				
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
 			}
 			
 			quotationFunctionAreaVO.setQuotationFunctionAreaItems(quotationFunctionAreaItemVOs);
 			
-			quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+			if("0".equals(quotationFunctionAreaVO.getFunctionAreaType())){
+				autogeneration = quotationFunctionAreaVO;
+			}else{
+				quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+			}
+		}
+		
+		if(autogeneration != null){
+			quotationFunctionAreaVOs.add(autogeneration);
 		}
 		
 		return quotationFunctionAreaVOs;
@@ -92,6 +108,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaForCommonByQuotationId(QuotationVO quotationVO) throws FLException {
+		
+		QuotationFunctionAreaVO autogeneration = null;
 		
 		List<QuotationFunctionAreaVO> quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
@@ -102,6 +120,16 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			BeanUtil.copyProperties(quotationFunctionAreaPO, quotationFunctionAreaVO);
 			
 			quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+			
+			if("0".equals(quotationFunctionAreaVO.getFunctionAreaType())){
+				autogeneration = quotationFunctionAreaVO;
+			}else{
+				quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+			}
+		}
+		
+		if(autogeneration != null){
+			quotationFunctionAreaVOs.add(autogeneration);
 		}
 		
 		return quotationFunctionAreaVOs;
@@ -145,9 +173,13 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				
 				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
 				
+				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
 				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getItemName());
 				quotationFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
+				quotationFunctionAreaItemVO.setWorkType(quotationItemPO.getWorkType().getName());
+				quotationFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
 				quotationFunctionAreaItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
+				quotationFunctionAreaItemVO.setType(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT);
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 				quotationFunctionAreaItemVO.setNum(0f);
 				
@@ -211,6 +243,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		
 		quotationFunctionAreaDao.deleteQuotationFunctionAreaByIds(qfaIds);
 		quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(qfaId);
+		
+		quotationDao.update(quotationPO);
 		
 		return 0;
 	}

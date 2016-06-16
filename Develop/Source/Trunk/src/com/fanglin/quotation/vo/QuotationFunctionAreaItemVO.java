@@ -18,6 +18,10 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 	
 	private String measurementUnit;
 	
+	private String workType;
+	
+	private Short discount;
+	
 	private Long quotationFunctionAreaId;
 	
 	private Long quotationItemId;
@@ -70,6 +74,22 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 
 	public void setMeasurementUnit(String measurementUnit) {
 		this.measurementUnit = measurementUnit;
+	}
+
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
+	public Short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Short discount) {
+		this.discount = discount;
 	}
 
 	public Long getQuotationFunctionAreaId() {
