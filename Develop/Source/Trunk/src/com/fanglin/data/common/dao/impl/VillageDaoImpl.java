@@ -70,6 +70,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 
 	@Override
 	public int countVillageByCityProperId(String cityProperId){
+		
 		String sql = "select count(villageId) from communion.village where cityProperId = :cityProperId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("cityProperId", cityProperId).uniqueResult();
 		

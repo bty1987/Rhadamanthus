@@ -220,7 +220,15 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderDao.saveOrUpdate(decorationOrderPO);
 		}
 		
-		createQuotationDetailByVersionIdAndQuotationId(quotationPO.getQid(), decorationOrderPO.getVersionPO().getVersionId());
+		QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, String.valueOf(0));
+		
+		quotationFunctionAreaDao.save(autogeneration);
+		
+		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "", 0.015f, 1f, (short) 2, autogeneration, "");
+		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "", 0.135f, 1f, (short) 3, autogeneration, "");
+		
+		quotationFunctionAreaItemDao.save(trafficPrice);
+		quotationFunctionAreaItemDao.save(managePrice);
 		
 		return 0;
 	}
@@ -468,6 +476,7 @@ public class QuotationServiceImpl implements QuotationService {
 		return 0;
 	}
 	
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor=Exception.class)
 	private int createQuotationDetailByVersionIdAndQuotationId(long quotationId, String versionId){
 

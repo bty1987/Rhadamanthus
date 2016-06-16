@@ -36,6 +36,7 @@ CREATE TABLE quotationfunctionareaitem (
   qfaiId int(11) NOT NULL AUTO_INCREMENT,
   itemName varchar(128) NOT NULL,
   measurementUnit varchar(10) NOT NULL,
+  workType varchar(15) NOT NULL,
   unitPrice decimal(10,3) NOT NULL,
   num decimal(10,3) NOT NULL,
   discount tinyint(4) NOT NULL DEFAULT 1,
@@ -65,4 +66,5 @@ CREATE TABLE addreduceitem (
   KEY indexone (arId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='增减项目';
 
-update quotationitem set quotationTypeId = 1;
+update quotationitem set quotationTypeId = 1; # 添加系统类型
+update functionarea set functionAreaType = 1; # 功能区全部为普通

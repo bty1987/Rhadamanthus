@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
-import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -66,7 +65,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private QuotationDao quotationDao;
 	
 	@Autowired
-	private OrderBelongInfoDao belongInfoDao;
+	private OrderBelongInfoDao orderBelongInfoDao;
 	
 	@Autowired
 	private DecorationRankService decorationRankService;
@@ -166,17 +165,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		boolean resignFlag = false;
 		String orderId = decorationContractVO.getOrderId();
 		
-		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
-		}
-		
-		if(decorationContractPO == null){
-			decorationContractPO = new DecorationContractPO();
-			decorationContractPO.setDecorationOrderPO(decorationOrderPO);
 		}
 		
 		if(noUpdateStatus.contains(decorationOrderPO.getStatus())){
@@ -187,11 +179,18 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140006, "订单没有进行款项交付,不能签订合同");
 		}
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
-		
-		if(approvalPO != null){
-			throw new FLException(140007, "订单归属信息没有通过审批");
+		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
+			throw new FLException(140037, "订单存在未处理审批项");
 		}
+		
+		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
+		
+		if(decorationContractPO == null){
+			decorationContractPO = new DecorationContractPO();
+			decorationContractPO.setDecorationOrderPO(decorationOrderPO);
+		}
+		
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		
 		if(quotationPO == null){
 			throw new FLException(140008, "订单没有报价信息");
@@ -206,20 +205,20 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 		
 		//更新归属信息的部门和大区
-		List<OrderBelongInfoPO> orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
 		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
-			belongInfoDao.saveOrUpdate(orderBelongInfoPO);
+			orderBelongInfoDao.saveOrUpdate(orderBelongInfoPO);
 		}
 		
-		orderBelongInfoPOs = belongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
 		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
-			belongInfoDao.saveOrUpdate(orderBelongInfoPO);
+			orderBelongInfoDao.saveOrUpdate(orderBelongInfoPO);
 		}
 		
 		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_SIGNED_STR);
@@ -297,6 +296,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		if(!DecorationOrderPO.STATUS_SIGNED_STR.equals(decorationOrderPO.getStatus())){
 			throw new FLException(140027, "订单状态不能重签合同");
+		}
+		
+		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
+			throw new FLException(140037, "订单存在未处理审批项");
 		}
 		
 		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_RESIGNED_STR);

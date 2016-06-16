@@ -24,4 +24,6 @@ public interface ApprovalDao extends Dao<ApprovalPO> {
 	
 	public ApprovalPO queryApprovalForInitByTypeAIdent(short type, String ident);
 	
+	public int countApprovalForInitByIdent(String ident);
+	
 }

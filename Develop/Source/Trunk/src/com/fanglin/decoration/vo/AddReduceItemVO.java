@@ -1,7 +1,5 @@
 package com.fanglin.decoration.vo;
 
-import com.fanglin.data.po.QuotationItemPO;
-
 public class AddReduceItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8622530142993960730L;
@@ -18,9 +16,9 @@ public class AddReduceItemVO implements java.io.Serializable {
 	
 	private Integer workType;
 	
-	private Double unitPrice;
+	private Float unitPrice;
 	
-	private Double num;
+	private Float num;
 	
 	private Long quotationFunctionAreaId;
 	
@@ -78,19 +76,19 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.workType = workType;
 	}
 
-	public Double getUnitPrice() {
+	public Float getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Double unitPrice) {
+	public void setUnitPrice(Float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Double getNum() {
+	public Float getNum() {
 		return num;
 	}
 
-	public void setNum(Double num) {
+	public void setNum(Float num) {
 		this.num = num;
 	}
 

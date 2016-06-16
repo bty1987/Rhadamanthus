@@ -108,5 +108,14 @@ public class QuotationFunctionAreaAction extends BaseListAction{
 	public void setFunctionAreaIds(List<Long> functionAreaIds) {
 		this.functionAreaIds = functionAreaIds;
 	}
+
+	public QuotationFunctionAreaVO getQuotationFunctionArea() {
+		return quotationFunctionArea;
+	}
+
+	public void setQuotationFunctionArea(
+			QuotationFunctionAreaVO quotationFunctionArea) {
+		this.quotationFunctionArea = quotationFunctionArea;
+	}
 	
 }

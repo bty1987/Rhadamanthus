@@ -19,21 +19,21 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	public static final String COLUMN_ARID_STR = "arId";
 
-	private Long ariId;
+	private long ariId;
 	
-	private Integer arId;
+	private int arId;
 	
 	private String itemName;
 	
-	private Short type;
+	private short type;
 	
 	private String measurementUnit;
 	
-	private Integer workType;
+	private int workType;
 	
-	private Double unitPrice;
+	private float unitPrice;
 	
-	private Double num;
+	private float num;
 	
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
@@ -53,11 +53,11 @@ public class AddReduceItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "arId")
-	public Integer getArId() {
+	public int getArId() {
 		return this.arId;
 	}
 
-	public void setArId(Integer arId) {
+	public void setArId(int arId) {
 		this.arId = arId;
 	}
 
@@ -71,11 +71,11 @@ public class AddReduceItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "type")
-	public Short getType() {
+	public short getType() {
 		return this.type;
 	}
 
-	public void setType(Short type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
@@ -89,29 +89,29 @@ public class AddReduceItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "workType", nullable = false)
-	public Integer getWorkType() {
+	public int getWorkType() {
 		return this.workType;
 	}
 
-	public void setWorkType(Integer workType) {
+	public void setWorkType(int workType) {
 		this.workType = workType;
 	}
 
 	@Column(name = "unitPrice")
-	public Double getUnitPrice() {
+	public float getUnitPrice() {
 		return this.unitPrice;
 	}
 
-	public void setUnitPrice(Double unitPrice) {
+	public void setUnitPrice(float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	@Column(name = "num")
-	public Double getNum() {
+	public float getNum() {
 		return this.num;
 	}
 
-	public void setNum(Double num) {
+	public void setNum(float num) {
 		this.num = num;
 	}
 

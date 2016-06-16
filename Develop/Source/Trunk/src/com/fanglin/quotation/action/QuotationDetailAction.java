@@ -51,26 +51,8 @@ public class QuotationDetailAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotationFunctionArea() throws FLException{
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updateQuotationFunctionAreaItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotationFunctionAreaItem() throws FLException{
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "updateCustomQuotationItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateCustomQuotationItem() throws FLException{
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotationFunctionArea() throws FLException{
 		
 		return SUCCESS;
 	}

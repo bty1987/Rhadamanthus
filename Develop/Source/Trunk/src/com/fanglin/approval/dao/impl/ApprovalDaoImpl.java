@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -67,6 +68,15 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
 				.add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, ApprovalPO.APPROVAL_STATUS_INIT_INT))
 				.uniqueResult();
+	}
+
+	@Override
+	public int countApprovalForInitByIdent(String ident) {
+		
+		String sql = "select count(*) from approval where ident = :ident";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
+		
+		return count.intValue();
 	}
 	
 }

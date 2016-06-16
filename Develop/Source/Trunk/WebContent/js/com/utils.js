@@ -62,7 +62,7 @@ var utils = {
         r1 = Number(arg1.toString().replace(".",""));  
         r2 = Number(arg2.toString().replace(".",""));  
         
-        return (r1 / r2) * pow(10, t2 - t1);  
+        return (r1 / r2) * Math.pow(10, t2 - t1);  
 	}, changeTwoDecimal: function(floatvar){
 		var f_x = parseFloat(floatvar);
 		if (isNaN(f_x)){

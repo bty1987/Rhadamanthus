@@ -30,20 +30,18 @@ import com.fanglin.data.po.QuotationItemPO;
 public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private static final long serialVersionUID = 3077313706873385773L;
+	
+	public static final short TYPE_QUOTATION_COMMON_INT = 0;
+	
+	public static final short TYPE_QUOTATION_CUSTOMER_INT = 1;
 
-	public static final int TYPE_QUOTATIONITEM_INT = 0; // 系统报价项
-	
-	public static final String TYPE_ORIGINAL_STR = "原始报价";
-	
-	public static final String TYPE_ADD_STR = "增项";
-	
-	public static final String TYPE_REDUCE_STR = "减项";
-	
 	private long qfaiId;
 
 	private String itemName;
 	
 	private String measurementUnit;
+	
+	private String workType;
 	
 	private float unitPrice;
 	
@@ -51,12 +49,29 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private short type;
 	
+	private short discount;
+	
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
 	private QuotationItemPO quotationItem;
 	
 	private String content;
 	
+	public QuotationFunctionAreaItemPO() {
+		super();
+	}
+
+	public QuotationFunctionAreaItemPO(String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, QuotationFunctionAreaPO quotationFunctionArea, String content) {
+		this.itemName = itemName;
+		this.measurementUnit = measurementUnit;
+		this.workType = workType;
+		this.unitPrice = unitPrice;
+		this.num = num;
+		this.type = type;
+		this.quotationFunctionArea = quotationFunctionArea;
+		this.content = content;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "qfaiId") 
@@ -86,6 +101,15 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
+	@Column(name = "workType")
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
 	@Column(name = "unitPrice")
 	public float getUnitPrice() {
 		return unitPrice;
@@ -111,6 +135,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	public short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(short discount) {
+		this.discount = discount;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
