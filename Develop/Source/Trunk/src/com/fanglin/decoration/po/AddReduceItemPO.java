@@ -17,6 +17,14 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5762586048215579423L;
 	
+	public static final short TYPE_COMMON_QUOTATION_INT = 0;
+	
+	public static final short TYPE_SYSTEM_QUOTATION_INT = 1;
+	
+	public static final short TYPE_CUSTOM_QUOTATION_INT = 2;
+	
+	public static final short TYPE_QUOTATION_ITEM_INT = 3;
+	
 	public static final String COLUMN_ARID_STR = "arId";
 
 	private long ariId;

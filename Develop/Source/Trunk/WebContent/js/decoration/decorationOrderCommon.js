@@ -58,8 +58,6 @@ $(function(){
 
 			$divBtnWrap.append($btnLook);
 			  
-			$divBtnWrap.append($btnAgreement);
-            
             if(v.status == "已签约" || v.status == "已完工"){//判断的条件是ListData中的status,所以取v.status
                 	
             	$divBtnWrap.append($btnAgreement);
@@ -207,7 +205,7 @@ $(function(){
 	//查看
     function viewDecorationOrderDetail(decorationOrderId) { 
     	decorationOrderPostData.decorationOrderId = decorationOrderId;
-        $("#fl-container").load(api.index.decorationOrderDetailCommonIndex.url);
+        $("#fl-container").load(api.index.decorationOrderCommonDetailIndex.url);
     } 
 	    
     //合同
@@ -224,6 +222,16 @@ $(function(){
     	});
     	
     	$("#printContractBtn").attr('href', api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId);
+    }
+    
+    function showErrorAlert (reason, detail) {
+    	var msg='';
+    	if(reason === 'unsupported-file-type') {
+    		msg = "Unsupported format " + detail; 
+    	}else{
+    		console.log("error uploading file", reason, detail);
+    	}
+    	$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
     }
 	     
     function successCallback() {

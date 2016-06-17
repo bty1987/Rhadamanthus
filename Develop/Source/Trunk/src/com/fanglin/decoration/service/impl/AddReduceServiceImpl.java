@@ -47,15 +47,18 @@ public class AddReduceServiceImpl implements AddReduceService{
 	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Override
-	public List<AddReduceVO> queryAddReduceByOrderId(String orderId){
+	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO){
 		
-		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForNLeakageByOrderId(orderId);
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForNLeakageByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
 		
 		for(AddReducePO addReducePO: addReducePOs){
-			AddReduceVO addReduceVO = new AddReduceVO();
-			BeanUtil.copyProperties(addReducePO, addReduceVO);
-			addReduceVOs.add(addReduceVO);
+			
+			AddReduceVO _addReduceVO = new AddReduceVO();
+			
+			BeanUtil.copyProperties(addReducePO, _addReduceVO);
+			
+			addReduceVOs.add(_addReduceVO);
 		}
 		
 		return addReduceVOs;
@@ -70,6 +73,8 @@ public class AddReduceServiceImpl implements AddReduceService{
 		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId"));
 		
 		addReducePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		addReducePO.setStatus(AddReducePO.STATUS_UNSUBMIT_INT);
+		addReducePO.setTotal(0f);
 		
 		addReduceDao.save(addReducePO);
 		

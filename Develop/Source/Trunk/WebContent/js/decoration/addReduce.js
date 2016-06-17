@@ -1,6 +1,5 @@
-var addOrReduce = {
+var addReduce = {
 	decorationOrderId:null,
-	initAddOrReduceList:initAddOrReduceList,
 	
 	typeDict : {"0":"增项", "1":"减项", "2":"漏项"},
 	typeList : [{"key":"0","value":"增项"}, {"key":"1","value":"减项"},{"key":"2","value":"漏项"}],
@@ -11,7 +10,7 @@ var addOrReduce = {
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
-	addOrReduceItems: {},
+	addReduceItems: {},
 	
 	editFlag: false,
 	repeatFlg: false
@@ -20,36 +19,36 @@ var addOrReduce = {
 jQuery(function($) {
 	//$('#fl-statement').statement("装修订单", "增减项信息列表");
 	
-	addOrReduce.decorationOrderId = decorationOrderPostData.decorationOrderId;
+	addReduce.decorationOrderId = decorationOrderPostData.decorationOrderId;
 	
-	addOrReduce.listGrid = $("#listGrid");
-	addOrReduce.gridPager = "#gridPager";
+	addReduce.listGrid = $("#listGrid");
+	addReduce.gridPager = "#gridPager";
 	
-	addOrReduce.addOrReduceItems.addReduceDes = $("#addReduceDes");
-	addOrReduce.addOrReduceItems.addReduceType = $("#addReduceType");
+	addReduce.addReduceItems.addReduceDes = $("#addReduceDes");
+	addReduce.addReduceItems.addReduceType = $("#addReduceType");
 	
-	addOrReduce.saveBtn = $("#saveBtn").on("click", saveData);
-	addOrReduce.cancelBtn = $("#cancelBtn");
-	addOrReduce.modal = $("#addOrReduceModal");
+	addReduce.saveBtn = $("#saveBtn").on("click", saveData);
+	addReduce.cancelBtn = $("#cancelBtn");
+	addReduce.modal = $("#addReduceModal");
 	
-	initAddOrReduceList();
+	initaddReduceList();
 });
 
-function initAddOrReduceList(){
+function initaddReduceList(){
 	var searchOpts = {
 		url: api.addReduce.pageAddReduceByOrderId,
-		postParmas: {"paging.rows":10, "paging.page":1,"addReduce.orderId":addOrReduce.decorationOrderId},
-		listgrid: addOrReduce.listGrid,
+		postParmas: {"paging.rows":10, "paging.page":1,"addReduce.orderId":addReduce.decorationOrderId},
+		listgrid: addReduce.listGrid,
 		items: [
 	        {label:"类型",id:"searchAddReduceType",name:"addReduceType",type:"select",op:"eq"}
 		]
 	};
-	$("#addOrReduceSearchDiv").flSearch(searchOpts);
-	$("#searchAddReduceType").bindData(addOrReduce.typeList, 'key', 'value', true);
+	$("#addReduceSearchDiv").flSearch(searchOpts);
+	$("#searchAddReduceType").bindData(addReduce.typeList, 'key', 'value', true);
 	
-	addOrReduce.listGrid.jqGrid({
+	addReduce.listGrid.jqGrid({
 		url: api.addReduce.pageAddReduceByOrderId.url,
-		postData: {"addReduce.orderId":addOrReduce.decorationOrderId},
+		postData: {"addReduce.orderId":addReduce.decorationOrderId},
 		colNames:['id', '说明', '总价', '类别', '状态', '添加时间', '操作','orderPaymentId'],
 		colModel:[
 		    {name:'arId', hidden:true},
@@ -63,50 +62,50 @@ function initAddOrReduceList(){
 		], 
 		rowNum:200,
 		rowList:[200,500,1000],
-		pager : addOrReduce.gridPager,
+		pager : addReduce.gridPager,
 		caption: "增减项信息列表"
 	});
 	
-	addOrReduce.listGrid.navGrid(addOrReduce.gridPager, {edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {},
+	addReduce.listGrid.navGrid(addReduce.gridPager, {edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {},
 		$.jgrid.deleteFunc(removeRow),
 		$.jgrid.searchFunc($(this))
-	).navButtonAdd(addOrReduce.gridPager, { 
+	).navButtonAdd(addReduce.gridPager, { 
 		caption:"",
 		buttonicon: 'icon-print blue',
 		onClickButton: function(){
-			var nums = addOrReduce.listGrid.jqGrid("getGridParam","selarrrow");
+			var nums = addReduce.listGrid.jqGrid("getGridParam","selarrrow");
 			if(nums == null){
-				$.jgrid.showSelectInfo(addOrReduce.listGrid.attr("id"));
+				$.jgrid.showSelectInfo(addReduce.listGrid.attr("id"));
 				return;
 			}
-			var row = addOrReduce.listGrid.jqGrid('getRowData', nums[0]);
-			var addOrReduceIds = "a=1";
+			var row = addReduce.listGrid.jqGrid('getRowData', nums[0]);
+			var addReduceIds = "a=1";
 			
 			for(var i = 0; i< nums.length; i++){
-				row = addOrReduce.listGrid.jqGrid('getRowData', nums[i]);
+				row = addReduce.listGrid.jqGrid('getRowData', nums[i]);
 				
-				addOrReduceIds+="&addOrReduceIds["+i+"]="+row.arId;
+				addReduceIds+="&addReduceIds["+i+"]="+row.arId;
 			}
 				
-			var url = api.index.printAddOrReduceInfoIndex.url + "?" + addOrReduceIds;
+			var url = api.index.addReduceOutputIndex.url + "?" + addReduceIds;
 			window.open(url);
 		},
 		position: 'first'
-	}).navButtonAdd(addOrReduce.gridPager, {
+	}).navButtonAdd(addReduce.gridPager, {
 		caption: "",
 		buttonicon: "icon-plus-sign purple",
 		title: "创建",
 		onClickButton: function(){
 			
-			addOrReduce.editFlag = false;
-			com.cleanItems(addOrReduce.addOrReduceItems);
+			addReduce.editFlag = false;
+			com.cleanItems(addReduce.addReduceItems);
 			
-			addOrReduce.addOrReduceItems.addReduceType.attr('disabled', false);
+			addReduce.addReduceItems.addReduceType.attr('disabled', false);
 			
-			addOrReduce.modal.modal("show");
+			addReduce.modal.modal("show");
 		},
 		position: "first"
-	}).navButtonAdd(addOrReduce.gridPager, {
+	}).navButtonAdd(addReduce.gridPager, {
 		caption: "",
 		buttonicon: "icon-mail-forward",
 		title: "返回",
@@ -120,14 +119,14 @@ function initAddOrReduceList(){
 
 function statusFormat(cellvalue, options, rowdata){
 	
-	var result = addOrReduce.statusDict[cellvalue];
+	var result = addReduce.statusDict[cellvalue];
 	
 	return result;
 }
 
 function typeFormat(cellvalue, options, rowdata){
 	
-	var result = addOrReduce.typeDict[cellvalue];
+	var result = addReduce.typeDict[cellvalue];
 	
 	return result;
 }
@@ -137,17 +136,17 @@ function actionInit(cellvalue, options, rowdata){
 	var result = '';
 	
 	result += '<div class="ui-pg-div btn-group">';
-	result += '<button class="btn btn-minier btn-yellow" onclick="viewDetailAddOrReduce('+rowdata.arId+');">查看</button>';
+	result += '<button class="btn btn-minier btn-yellow" onclick="viewDetailAddReduce('+rowdata.arId+');">查看</button>';
 	result += '</div>';
 	
 	return result;
 }
 
-function viewDetailAddOrReduce(addOrReduceId){
+function viewDetailAddReduce(addReduceId){
 	
-	params["addOrReduceId"] = addOrReduceId;
+	params["addReduceId"] = addReduceId;
 	
-	$("#fl-container").load(api.index.decorationOrderAddOrReduceDetailIndex.url, {});
+	$("#fl-container").load(api.index.AddReduceDetailIndex.url, {});
 }
 
 function removeRow(params, rowNums){
@@ -155,7 +154,7 @@ function removeRow(params, rowNums){
 	var nums = rowNums.split(",");
 	
 	for(var i=0;i<nums.length;i++){
-		var row = addOrReduce.listGrid.jqGrid('getRowData', nums[i]);
+		var row = addReduce.listGrid.jqGrid('getRowData', nums[i]);
 		options["arIds["+i+"]"] = row.arId;
 	}
 	
@@ -166,7 +165,7 @@ function removeRow(params, rowNums){
 			com.showAlert(com.info, "操作成功!");
 		}
 		
-		$.jgrid.refreshGrid(addOrReduce.listGrid, {"addReduce.orderId":addOrReduce.decorationOrderId});
+		$.jgrid.refreshGrid(addReduce.listGrid, {"addReduce.orderId":addReduce.decorationOrderId});
 	});
 	
 	$("#eData").trigger("click");
@@ -174,25 +173,25 @@ function removeRow(params, rowNums){
 
 function saveData(){
 	
-	if(com.validate() || addOrReduce.repeatFlg)
+	if(com.validate() || addReduce.repeatFlg)
 		return;
 	
 	var url;
 	var options = {
-		"addReduce.addReduceDes": addOrReduce.addOrReduceItems.addReduceDes.val(),
-		"addReduce.addReduceType": addOrReduce.addOrReduceItems.addReduceType.val(),
-		"addReduce.orderId": addOrReduce.decorationOrderId
+		"addReduce.content": addReduce.addReduceItems.addReduceDes.val(),
+		"addReduce.type": addReduce.addReduceItems.addReduceType.val(),
+		"addReduce.orderId": addReduce.decorationOrderId
 	};
 	
 	url = api.addReduce.addAddReduce;
-	options["addReduce.addReduceStatus"] = 0;
-	options["addReduce.addReduceTotal"] = 0;
+	options["addReduce.status"] = 0;
+	options["addReduce.total"] = 0;
 	
 	com.post(url, options, function(res){
 		com.showAlert(com.info, "操作成功");
 		
-		addOrReduce.listGrid.trigger("reloadGrid");
+		addReduce.listGrid.trigger("reloadGrid");
 	});
 	
-	addOrReduce.modal.modal("hide");
+	addReduce.modal.modal("hide");
 }

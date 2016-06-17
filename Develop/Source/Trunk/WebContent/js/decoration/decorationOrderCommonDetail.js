@@ -12,7 +12,7 @@ var decorationOrderDetail = {
 	mediaServer:null,
 	
 	quotations:null,
-	quotationDetail:null,
+	quotationDetail:{},
 	
 	reloadFlag:0,
 	decorationOrderQuotationItemData:[]
@@ -78,7 +78,7 @@ function initWizard(){
 //		}
 		
 		if((info.step == 3 && info.direction ==="previous")||(info.step == 1 && info.direction ==="next")){
-			loadQuotationDetail(decorationOrderDetail["quotation.autoId"]);
+			decorationUtils.loadQuotationDetail();
 		}
 	
 		if((info.step == 4 && info.direction ==="previous")||(info.step == 2 && info.direction ==="next")){
@@ -108,7 +108,7 @@ function initWizard(){
 	}).on('stepclick', function(e,info){
 		
 		if(info.step == 2){
-			loadQuotationDetail(decorationOrderDetail["quotation.autoId"]);
+			decorationUtils.loadQuotationDetail();
 		}else if(info.step == 3){
 			initDecorationPicture();
 			initCADPicture();
@@ -324,279 +324,6 @@ function deleteOrderCAD(autoId,decorationOrderId){
 
 function downloadFile(picturePath,uploadFileName){
 	window.open(decorationOrderDetail.mediaServer + api.common.downloadFile.url + "?downloadFilePath="+picturePath+"&fileName="+uploadFileName);
-}
-
-function calQuotationDetailSum(){
-	var temQuotationDetail = decorationOrderDetail.quotationDetail;
-	var functionAreas = temQuotationDetail.functionAreas;
-	
-	var totalPrice = 0;//总价
-	var discountPrice = 0;//打折
-	var noDiscountTotalPrice = 0;//不打折
-	var carManagePrice = 0;//车运费
-	var managePrice = 0;//管理费
-	
-	var carManageFunctionAreaIndex = -1;
-	var manageFunctionAreaIndex = -1;
-	var carManageItemIndex = -1;
-	var manageItemIndex = -1;
-	
-	decorationOrderDetail.quotationDetail.manageRate =  0;
-	decorationOrderDetail.quotationDetail.carManageRate = 0;
-	
-	var i = 0;
-	for(i=0;i<functionAreas.length;++i){
-		functionAreas[i].sum = 0;
-		if(functionAreas[i].functionAreaType == '普通'){//参与打折
-			var sum = 0;
-			
-			for(var j=0;j<functionAreas[i].items.length;j++){
-				functionAreas[i].items[j].discountUnitPrice = Math.round((parseFloat(functionAreas[i].items[j].unitPrice)*decorationOrderDetail.quotationDetail.discount/10)*100)/100;
-				functionAreas[i].items[j].sum = Math.round((parseFloat(functionAreas[i].items[j].unitPrice)*decorationOrderDetail.quotationDetail.discount*parseFloat(functionAreas[i].items[j].num)/10)*100)/100;
-				sum+=functionAreas[i].items[j].sum;
-				
-			}
-			functionAreas[i].sum = sum;
-			discountPrice += sum;
-			totalPrice+=sum;
-			
-		}else {
-			var sum = 0;
-			for(var j=0;j<functionAreas[i].items.length;j++){
-				
-				if(/*functionAreas[i].items[j].customFlag == 1 
-						||*/((functionAreas[i].items[j].itemName.search('车运费')==-1) && (functionAreas[i].items[j].itemName.search('管理费')==-1))){//不打折
-					
-					functionAreas[i].items[j].sum = Math.round((parseFloat(functionAreas[i].items[j].unitPrice)*parseFloat(functionAreas[i].items[j].num))*100)/100;
-					sum+=functionAreas[i].items[j].sum;
-				}else if((functionAreas[i].items[j].itemName.search('车运费')!=-1)){
-					decorationOrderDetail.quotationDetail.carManageRate = functionAreas[i].items[j].unitPrice;
-					carManageFunctionAreaIndex = i;
-					carManageItemIndex = j;
-				}else if((functionAreas[i].items[j].itemName.search('管理费')!=-1)){
-					functionAreas[i].items[j].unitPrice = parseFloat(functionAreas[i].items[j].unitPrice)+parseFloat(decorationOrderDetail.quotationDetail.notSalesmanRate);
-					decorationOrderDetail.quotationDetail.manageRate = functionAreas[i].items[j].unitPrice;
-					manageFunctionAreaIndex = i;
-					manageItemIndex = j;
-				}
-				functionAreas[i].items[j].discountUnitPrice =  Math.round(parseFloat(functionAreas[i].items[j].unitPrice)*100)/100;
-			}
-			functionAreas[i].sum = sum;
-			noDiscountTotalPrice += sum;
-			totalPrice+=sum;
-		}
-		
-	}
-	
-	var commonPrice = discountPrice + noDiscountTotalPrice;
-	carManagePrice = Math.round(((commonPrice)*parseFloat(decorationOrderDetail.quotationDetail.carManageRate))*100)/100;
-	if( parseFloat(decorationOrderDetail.quotationDetail.limitCarManagePrice) > carManagePrice){
-		carManagePrice =  Math.round(parseFloat(decorationOrderDetail.quotationDetail.limitCarManagePrice)*100)/100;
-	}
-	
-	if(carManageFunctionAreaIndex!=-1){
-		commonPrice += carManagePrice;
-		functionAreas[carManageFunctionAreaIndex].sum +=carManagePrice;
-		functionAreas[carManageFunctionAreaIndex].items[carManageItemIndex].sum =carManagePrice;
-		totalPrice+=carManagePrice;
-	}
-	
-	managePrice = Math.round(((commonPrice)*parseFloat(decorationOrderDetail.quotationDetail.manageRate))*100)/100;
-
-	if(manageFunctionAreaIndex!=-1){
-		functionAreas[manageFunctionAreaIndex].sum +=managePrice;
-		functionAreas[manageFunctionAreaIndex].items[manageItemIndex].sum =managePrice;
-		totalPrice+=managePrice;
-	}
-	
-	var otherItems = temQuotationDetail.otherItems;
-	
-	for(var i=0;i<otherItems.length;++i){
-
-		var tem  = 0;
-		//0 增项 1 减项 2 漏项 
-		//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
-		if(otherItems.itemType == '增项' || otherItems.itemType == '扣款' || otherItems.itemType == '特批'){//增项漏项不打折
-			
-			tem = Math.round((parseFloat(otherItems[i].unitPrice)*parseFloat(otherItems[i].num))*100)/100;
-			otherItems[i].discountUnitPrice = Math.round((parseFloat(otherItems[i].unitPrice)*decorationOrderDetail.quotationDetail.discount)*100)/100;
-			otherItems[i].sum = tem;
-			
-			noDiscountTotalPrice +=tem;
-			
-			totalPrice+=tem;
-			
-		}else {//减项
-			if((otherItems[i].itemType == '减项' && (otherItems[i].quotationClassificationId == '3' || otherItems[i].quotationClassificationId == '4' || otherItems[i].quotationClassificationId == '5'))){//减项的一次性包死 综合项目 管理费 不打折
-				tem = Math.round((parseFloat(otherItems[i].unitPrice)*parseFloat(otherItems[i].num))*100)/100;
-				otherItems[i].discountUnitPrice = Math.round((parseFloat(otherItems[i].unitPrice))*100)/100;
-				otherItems[i].sum =tem;
-				
-				noDiscountTotalPrice +=tem;
-				totalPrice+=tem;
-			}else{
-				tem = Math.round(parseFloat(otherItems[i].unitPrice)*decorationOrderDetail.quotationDetail.discount*parseFloat(otherItems[i].num)/10*100)/100;
-				otherItems[i].discountUnitPrice = Math.round((parseFloat(otherItems[i].unitPrice)*decorationOrderDetail.quotationDetail.discount/10)*100)/100;
-				otherItems[i].sum = tem;
-				
-				discountPrice +=tem;
-				totalPrice+=tem;
-			}
-		}
-		
-		for(var j=0;j<functionAreas.length;++j){
-			if(functionAreas[j].functionAreaId == otherItems[i].functionAreaId){
-				functionAreas[j].sum +=tem;
-				break;
-			}
-		}
-	}
-	
-	temQuotationDetail.totalPrice = Math.round(totalPrice*100)/100;//总价
-	temQuotationDetail.discountPrice =  Math.round(discountPrice*100)/100;//打折
-	temQuotationDetail.noDiscountTotalPrice =  Math.round(noDiscountTotalPrice*100)/100;//不打折
-	temQuotationDetail.carManagePrice =  Math.round(carManagePrice*100)/100;//车运费
-	temQuotationDetail.managePrice =  Math.round(managePrice*100)/100;//管理费
-	
-	temQuotationDetail.userdata = {};
-	temQuotationDetail.userdata.num="总价:";
-	temQuotationDetail.userdata.sum = Math.round(temQuotationDetail.totalPrice*100)/100;
-	
-	console.log("cal total:",temQuotationDetail);
-}
-
-function initQuotationDetailItem(){
-	decorationOrderDetail.decorationOrderQuotationItemData = [];
-	
-	var temQuotationDetail = decorationOrderDetail.quotationDetail;
-	var functionAreas = temQuotationDetail.functionAreas;
-	
-	var i = 0;
-	for(i=0;i<functionAreas.length;++i){
-		for(var j=0;j<functionAreas[i].items.length;j++){
-			var item = functionAreas[i].items[j];
-			var tem = {};
-			tem.itemName = item.itemName;
-			tem.itemId = item.itemId;
-			tem.functionAreaName = functionAreas[i].functionAreaName;
-			tem.measurementUnit = item.measurementUnit;
-			tem.unitPrice = item.unitPrice;
-			tem.discountUnitPrice = item.discountUnitPrice;
-			tem.num = item.num;
-			tem.sum = item.sum;
-			tem.quotationItemDes = item.quotationItemDes;
-			tem.itemType = item.itemType;
-			
-			decorationOrderDetail.decorationOrderQuotationItemData.push(tem);
-		}
-	}
-	
-	var otherItems = temQuotationDetail.otherItems;
-	
-	for(var i=0;i<otherItems.length;++i){
-		var item = otherItems[i];
-		var tem = {};
-		tem.itemName = item.itemName;
-		tem.itemId = item.itemId;
-		tem.functionAreaName = item.functionAreaName;
-		tem.measurementUnit = item.measurementUnit;
-		tem.unitPrice = item.unitPrice;
-		tem.discountUnitPrice = item.discountUnitPrice;
-		tem.num = item.num;
-		tem.sum = item.sum;
-		tem.quotationItemDes = item.quotationItemDes;
-		tem.itemType = item.itemType;
-		
-		decorationOrderDetail.decorationOrderQuotationItemData.push(tem);
-	}
-}
-
-function loadQuotationDetail(quotationAutoId){
-	
-	if(quotationAutoId){
-		$("#printProjectBtn").attr('href', decorationOrderDetail.printQuotationIndexUrl + "?quotationDetail.autoId=" + quotationAutoId + "&type=1");
-		$("#printFinanceBtn").attr('href', decorationOrderDetail.printQuotationIndexUrl + "?quotationDetail.autoId=" + quotationAutoId + "&type=2");
-		$("#printCustomerBtn").attr('href', decorationOrderDetail.printQuotationIndexUrl + "?quotationDetail.autoId=" + quotationAutoId + "&type=3");
-		
-		com.post(api.quotation.queryQuotationDetailForAllInfoById, {"quotationDetail.autoId": quotationAutoId} ,function(res){
-			if(res.errorCode == 0){
-				decorationOrderDetail.quotationDetail = res.quotationDetail;
-				
-				calQuotationDetailSum(); //计算总值
-				initQuotationDetailItem(); // 初始化 数据initQuotationDetailItem
-				decorationUtils.initQuotationDetailItemGroupByJob(decorationOrderDetail.quotationDetail);
-				
-				$("#showWay").on("change", function() {
-					initQuotationDetail();
-				});
-				
-				initQuotationDetail();
-			}else{
-				bootbox.alert("操作失败");
-			}
-		});
-	}else{
-		$("#btnPrintDefaultQuotationInfo").attr("disabled", "disabled");
-	}
-}
-
-function initQuotationDetail(){
-	
-	var _data = decorationOrderDetail.decorationOrderQuotationItemData;
-	var _groupField = [ 'functionAreaName' ];
-	if ($("#showWay").val() == 0) {
-		_data = decorationOrderDetail.decorationOrderQuotationItemData;
-		_groupField = [ 'functionAreaName' ];
-	} else {
-		_data = decorationOrderDetail.decorationOrderQuotationItemGroupByJob;
-		_groupField = [ 'workType' ];
-	}
-
-	$grid = $('<table id="quotationItemListGrid"></table><div id="quotationItemGridPager"></div>');  
-	$('#quotationItemListDiv').empty().html($grid);  
-	$("#quotationItemListGrid").jqGrid({
-		data: _data, 
-		datatype: "local",
-		viewrecords : false,
-		multiselect : false,
-        multiboxonly: false,
-		colNames:['编号', '名称', '功能区', '项目类型', '工种', '单位', '单价', '折后单价', '数量', '总价', '工艺说明'],
-		colModel:[
-			{name:"itemId"},
-			{name:"itemName", width:400, summaryType:'count', summaryTpl:'<b class="blue">共{0}项</b>'},
-			{name:'functionAreaName'},
-			{name:"itemType"},
-			{name:'workType'},
-			{name:"measurementUnit"},
-			{name:"unitPrice"},
-			{name:"discountUnitPrice"},
-			{name:"num"},
-			{name:"sum", formatter:"number", summaryType:'sum'},
-			{name:"quotationItemDes",formatter:quotationItemDesFormatter,unformat:quotationItemDesUnformat}
-		], 
-		pager: "#quotationItemGridPager" ,
-		rowNum:200,
-		rowList:[50,100,200],
-		grouping: true,
-	   	groupingView: {
-	   		groupField: _groupField,
-	   		groupColumnShow: [true],
-	   		groupText: ['<b>{0}</b>'],
-	   		groupCollapse : false,
-			groupOrder: ['asc'],
-			groupSummary: [true],
-			showSummaryOnHide: true,
-			groupDataSorted: true
-	   	},
-	   	userData:decorationOrderDetail.quotationDetail.userdata,
-	    footerrow: true,
-	    userDataOnFooter: true
-	});
-		
-	$("#quotationItemListGrid").navGrid("#quotationItemGridPager", {edit: false, add: false, del: false, search: false});
-
-	$('[data-rel="tooltip"]').tooltip({container:'#decorationOrderDetailCommonPageContent'});
-	$('.ui-widget-content.footrow.footrow-ltr').addClass("red");
 }
 
 function quotationItemDesFormatter(cellvalue, options, rowObject){

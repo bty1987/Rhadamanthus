@@ -51,6 +51,14 @@ public class AddReduceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceByOrderId(){
+		
+		addReduceService.queryAddReduceByOrderId(addReduce);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAddReduce(){
 		

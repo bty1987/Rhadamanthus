@@ -77,8 +77,9 @@ var api = {
 		customerIndex: {url: "/views/data/customer.html"},
 		villageIndex: {url: "/views/data/village.html"},
 		
-		decorationOrderAddOrReduceIndex: {url: "/views/decoration/decorationOrderAddOrReduce.html"},
-		decorationOrderAddOrReduceDetailIndex: {url: "/views/decoration/decorationOrderAddOrReduceDetail.html"},
+		addReduceIndex: {url: "/views/decoration/addReduce.html"},
+		addReduceDetailIndex: {url: "/views/decoration/addReduceDetail.html"},
+		addReduceOutputIndex: {url: "/views/decoration/addReduceOutput.html"},
 		
 		decorationOrderDesignerIndex: {url: "/views/decoration/decorationOrderDesigner.html"},
 		decorationOrderDesignerDetailIndex: {url: "/views/decoration/decorationOrderDesignerDetail.html"},
@@ -86,7 +87,7 @@ var api = {
 		decorationOrderSalesmanIndex: {url: "/views/decoration/decorationOrderSalesman.html"},
 		
 		decorationOrderCommonIndex: {url: "/views/decoration/decorationOrderCommon.html"},
-		decorationOrderDetailCommonIndex: {url: "/views/decoration/decorationOrderDetailCommon.html"},
+		decorationOrderCommonDetailIndex: {url: "/views/decoration/decorationOrderCommonDetail.html"},
 		
 		decorationOrderAdvanceIndex: {url: "/views/decoration/decorationOrderAdvance.html"},
 		decorationOrderAdvanceDetailIndex: {url: "/views/decoration/decorationOrderAdvanceDetail.html"},
@@ -101,7 +102,6 @@ var api = {
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
 		backVisitIndex: {url: "/views/decoration/backVisit.html"},
 		createOrderIndex: {url: "/views/decoration/createOrder.html"},
-		printAddOrReduceInfoIndex: {url: "/views/decoration/printAddOrReduceInfo.html"},
 		
 		designRegionIndex: {url: "/views/department/designRegion.html"},
 		businessRegionIndex: {url: "/views/department/businessRegion.html"},
@@ -167,13 +167,13 @@ var api = {
 		userSalaryIndex: {url: "/views/payment/userSalary.html"},
 		
 		functionAreaIndex: {url: "/views/quotation/functionArea.html"},
-		quotationIndex: {url: "/views/quotation/quotationIndex.html"},
-		quotationDetailIndex: {url: "/views/quotation/quotationDetail.html"},
-		printQuotaionIndex: {url: "/views/quotation/quotationList.html"},
-		quotationListIndex: {url: "/views/quotation/quotationList.html"},
 		quotationItemIndex: {url: "/views/quotation/quotationItem.html"},
 		quotationVersionIndex: {url: "/views/quotation/quotationVersion.html"},
 		systemDefineItemIndex: {url: "/views/quotation/systemDefineItem.html"},
+		
+		quotationIndex: {url: "/views/quotation/quotationIndex.html"},
+		quotationDetailIndex: {url: "/views/quotation/quotationDetail.html"},
+		quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"},
 		
 		reportBizDeptIndex: {url: "/views/report/reportBizDept.html"},
 		reportDesignDeptIndex: {url: "/views/report/reportDesignDept.html"},

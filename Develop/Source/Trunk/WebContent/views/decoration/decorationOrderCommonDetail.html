@@ -1,0 +1,486 @@
+<div id="decorationOrderDetailCommonPageContent" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="widget-box">
+						<div class="widget-body">
+							<div class="widget-main">
+								<div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+									<ul class="wizard-steps">
+										<li data-target="#step1" class="complete active">
+											<span class="step">1</span>
+											<span class="title">基本信息</span>
+										</li>
+	
+										<li data-target="#step2" class="complete">
+											<span class="step">2</span>
+											<span class="title">报价信息</span>
+										</li>
+	
+										<li data-target="#step3" class="complete">
+											<span class="step">3</span>
+											<span class="title">图纸信息</span>
+										</li>
+	
+										<li data-target="#step4" class="complete">
+											<span class="step">4</span>
+											<span class="title">主材信息</span>
+										</li>
+										
+										<li data-target="#step5" class="complete">
+											<span class="step">5</span>
+											<span class="title">活动信息</span></li>
+										
+										<li data-target="#step6" class="complete">
+											<span class="step">6</span>
+											<span class="title">款项信息</span>
+										</li>
+										
+										<li data-target="#step7" class="complete">
+											<span class="step">7</span>
+											<span class="title">归属信息</span>
+										</li>
+											
+										<li data-target="#step8" class="complete">
+											<span class="step">8</span>
+											<span class="title">工程信息</span>
+										</li>
+									</ul>
+								</div>
+								<hr />
+								<div class="step-content row-fluid position-relative" id="step-container">
+									<div class="step-pane active" id="step1">
+										<div class="row">
+											<form class="form-horizontal" role="form">
+												<div class="col-xs-12 col-sm-5">
+													<div class="control-group">
+														<div class="form-group">
+															<label for="orderId" class="col-sm-3 control-label no-padding-right">订单号</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="orderId" readonly value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="form-field-1" class="col-sm-3 control-label no-padding-right">客户名</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="customer" readonly value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="customerInfosBtn" class="col-sm-3 control-label no-padding-right"></label>
+															<div class="col-sm-9">
+																<button type="button" id="customerInfosBtn" class="btn btn-xs btn-danger col-xs-10 col-sm-5">客户信息</button>
+																<span class="customerApprovingLabel label label-info arrowed" style='display:none;'>修改审批中...</span>
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="houseAddr" class="col-sm-3 control-label no-padding-right">楼盘地址</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="houseAddr" value="">
+																<span class="villageApprovingLabel label label-info arrowed" style='display:none;'>修改审批中...</span>
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="designDepartment" class="col-sm-3 control-label no-padding-right">设计部</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="designDepartment" value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="designer" class="col-sm-3 control-label no-padding-right">设计师</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="designer" value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="businessDepartment" class="col-sm-3 control-label no-padding-right">业务部门</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="businessDepartment" value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="salesman" class="col-sm-3 control-label no-padding-right">业务员</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="salesman" value="">
+															</div>
+														</div>
+													</div>
+												</div>
+											
+												<div class="col-xs-12 col-sm-5">
+													<div class="control-group">
+														<div class="form-group">
+															<label for="houseType" class="col-sm-3 control-label no-padding-right">房屋类别</label>
+															<div class="col-sm-9">
+																	<select class='col-xs-10 col-sm-5' id='houseType' data-toggle="popover" data-trigger='manual' >
+																		<option value='现房' selected="selected">现房</option>
+																		<option value='期房'>期房</option>
+																	</select>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="houseClass"
+																class="col-sm-3 control-label no-padding-right">房屋类型</label>
+															<div class="col-sm-9">
+																<select class='col-xs-10 col-sm-5' id='houseClass' data-toggle="popover" data-trigger='manual' >
+																	<option value=''></option>
+																	<option value='清水'>清水</option>
+																	<option value='二手'>二手</option>
+																	<option value='别墅'>别墅</option>
+																	<option value='阁楼'>阁楼</option>
+																	<option value='地下'>地下</option>
+																</select>
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="houseArea" class="col-sm-3 control-label no-padding-right">建筑面积</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5 v_float v_required" id="houseArea" value="0">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="freeArea" class="col-sm-3 control-label no-padding-right">赠送面积</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5 v_float v_required" id="freeArea" value="0">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="status" class="col-sm-3 control-label no-padding-right">订单状态</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="status" value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="createTime" class="col-sm-3 control-label no-padding-right">量房时间</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="createTime" value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="salesmanType" class="col-sm-3 control-label no-padding-right">业务人员类型</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" readonly id="salesmanType" value="">
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<hr>
+										<div class="row">
+											<form class="form-horizontal" role="form">
+												<div class="col-xs-12 col-sm-5">
+													<div class="form-group">
+														<label for="notSalesmanName" class="col-sm-3 control-label no-padding-right">非业务人员名称</label>
+														<div class="col-sm-9">
+															<input type="text" id="notSalesmanName" class="col-xs-10 col-sm-5 v_name" data-toggle="popover" data-trigger='manual' maxlength="8" readonly="readonly">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label for="notSalesmanRate" class="col-sm-3 control-label no-padding-right">非业务提点</label>
+														<div class="col-sm-9">
+															<input type="text" id="notSalesmanRate" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="11" value="0"  readonly="readonly">
+															<i class='icon-asterisk'></i>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="notSalesmanPhone" class="col-sm-3 control-label no-padding-right">非业务人员手机</label>
+														<div class="col-sm-9">
+															<input type="text" id="notSalesmanPhone" class="col-xs-10 col-sm-5 v_phone" data-toggle="popover" data-trigger='manual' maxlength="11" readonly="readonly">
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="notSalesmanContent" class="col-sm-3 control-label no-padding-right">非业务备注</label>
+														<div class="col-sm-9">
+															<textarea id="notSalesmanContent" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50" readonly="readonly"></textarea>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-xs-12 col-sm-5">
+													<div class="form-group">
+														<label for="backOrderName" class="col-sm-3 control-label no-padding-right">返单人员名称</label>
+														<div class="col-sm-9">
+															<input type="text" id="backOrderName" class="col-xs-10 col-sm-5 v_name" data-toggle="popover" data-trigger='manual' maxlength="8" readonly="readonly">
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="backOrderPhone" class="col-sm-3 control-label no-padding-right">返单人员电话</label>
+														<div class="col-sm-9">
+															<input type="text" id="backOrderPhone" class="col-xs-10 col-sm-5 v_phone" data-toggle="popover" data-trigger='manual' maxlength="11" readonly="readonly">
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="backOrderContent" class="col-sm-3 control-label no-padding-right">返单人员备注</label>
+														<div class="col-sm-9">
+															<textarea id="backOrderContent" class="col-xs-10 col-sm-5" rows="3" data-toggle="popover" data-trigger='manual' maxlength="128" readonly="readonly"></textarea>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+	
+									<div class="step-pane active" id="step2">
+										<div class="row">
+											<div class="col-md-8 ">
+												<div class="form-group">
+													<label class="col-md-2 control-label no-padding-right " for="showWay">显示方式：</label>
+													<div class="col-md-6">
+														<select class="col-md-6" id="showWay">
+															<option value="0">功能区分组</option>
+															<option value="1">工种分组</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-4 text-right">
+												<div class="form-group">
+													<div class="col-md-12">
+													<button class="btn btn-info " id='btnPrintDefaultQuotationInfo'>
+														<i class="icon-print bigger-120"></i>
+														打印报价
+													</button>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-12" id="quotationItemListDiv">
+												<table id="quotationItemListGrid"></table>
+												<div id="quotationItemGridPager"></div>
+											</div>
+										</div>
+									</div>
+	
+									<div class="step-pane active" id="step3">
+										<div class="row">
+											<div class="col-md-12 hr"></div>
+											<div class="col-xs-12">
+												<div class="row-fluid">
+													<ul class="ace-thumbnails" id="designPictures"></ul>
+												</div>
+											</div>
+											<div class="col-md-12 hr"></div>
+											<div class="col-xs-12">
+												<div class="row-fluid">
+													<label class="col-md-1 control-label no-padding-right ">下载CAD工程图:</label>
+													<div class="col-sm-7 infobox-container" id="CADProjectPicture">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+	
+									<div class="step-pane active" id="step4">
+										<div id="materialPaymentDiv">
+											<table id="materialPaymentListGrid"></table>
+											<div id="materialPaymentGridPager"></div>
+										</div>
+									</div>
+									
+									<div class="step-pane active" id="step5">
+										<div class="row">
+											<div class='col-md-12' id="activitys"></div>
+											<div class="col-md-12 hr"></div>
+											<div class='col-md-12' id="activityItems"></div>
+										</div>
+									</div>
+									
+									<div class="step-pane active" id="step6">
+										<div class="row">
+											
+											<div class="col-xs-6 col-md-6  widget-container-span ui-sortable"> 
+												<div class="widget-box " id='basePaymentWidget'>                                                              
+													<div class="widget-header">                                                       
+														<h5 >
+															<strong>基本款项信息</strong>                           
+														</h5>                                                                         
+											                                                                                       
+														<div class="widget-toolbar">
+															<a href="#" data-action="collapse">
+																<i class="1 bigger-125 icon-chevron-up"></i>
+															</a>
+														</div>
+													</div>
+													<div class="widget-body">
+														<div class="widget-body-inner" id='basePaymentDiv' style="display: block;">
+															<table id="basePaymentTable"></table>
+															<div id="basePaymentPager"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6 col-md-6  widget-container-span ui-sortable">
+												<div class="widget-box" id="otherPaymentWidget">
+													<div class="widget-header">
+														<h5 >
+															<strong>其他项信息</strong>
+														</h5>
+														<div class="widget-toolbar">
+															<a href="#" data-action="collapse">
+																<i class="1 bigger-125 icon-chevron-up"></i>
+															</a>
+														</div>
+													</div>
+													<div class="widget-body">
+														<div class="widget-body-inner" style="display: block;">
+															<table id="otherPaymentTable"></table>
+															<div id="otherPaymentGridPager"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="step-pane active" id="step7">
+										<div class="row">
+											<div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+												<div class="widget-box">
+													<div class="widget-header">
+														<h5>
+															<strong>归属设计信息</strong>
+														</h5>
+													</div>
+													<div class="widget-body">
+														<div class="widget-body-inner" style="display: block;">
+															<table id="belongDesignInfo"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+												<div class="widget-box">
+													<div class="widget-header">
+														<h5 >
+															<strong>归属业务信息</strong>
+														</h5>
+													</div>
+						
+													<div class="widget-body">
+														<div class="widget-body-inner" style="display: block;">
+															<table id="belongSalesmanInfo"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>									
+									
+									<div class="step-pane active" id="step8">
+										<div class="row">
+											<form class="form-horizontal" role="form">
+												<div class="col-xs-12 col-sm-5">
+													<div class="control-group">
+														<div class="form-group">
+															<label for="schedule" class="col-sm-3 control-label no-padding-right">施工进度</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="schedule" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="supervisorQualityId" class="col-sm-3 control-label no-padding-right">监理</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="supervisorQualityId" readonly value="">
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="putlineQualityId" class="col-sm-3 control-label no-padding-right">放线质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="putlineQualityId" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="bricklayQualityId" class="col-sm-3 control-label no-padding-right">瓦工质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="bricklayQualityId" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="oilQualityId" class="col-sm-3 control-label no-padding-right">油工质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="oilQualityId" readonly value="">
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-xs-12 col-sm-5">
+													<div class="control-group">
+														<div class="form-group">
+															<label for="chanQualityId" class="col-sm-3 control-label no-padding-right">铲大白质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="chanQualityId" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="waterwayCircuitPowerQualityId" class="col-sm-3 control-label no-padding-right">水电力质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="waterwayCircuitPowerQualityId" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="carpentQualityId" class="col-sm-3 control-label no-padding-right">木工质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="carpentQualityId" readonly value="">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="cleaningQualityId" class="col-sm-3 control-label no-padding-right">保洁质检</label>
+															<div class="col-sm-9">
+																<input type="text" class="col-xs-10 col-sm-5" id="cleaningQualityId" readonly value="">
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+	
+								<hr />
+								<div class="row-fluid wizard-actions">
+									<button id="btnBack" class="btn btn-info" type="button">
+										<i class="icon-mail-forward "></i>返回
+									</button>
+									<button class="btn btn-prev">
+										<i class="icon-arrow-left"></i> 上一步
+									</button>
+	
+									<button class="btn btn-success btn-next" data-last="完成">
+										下一步 <i class="icon-arrow-right icon-on-right"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	//$.getScript(hostServer + 'js/utils/decorationUtils.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/utils/materialUtils.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/decoration/decorationOrderCommonDetail.js?version=' + versionCode);
+</script>
+
+<script src="js/utils/decorationUtils.js"></script>
+<script src="js/utils/materialUtils.js"></script>
+<script src="js/decoration/decorationOrderCommonDetail.js"></script>
