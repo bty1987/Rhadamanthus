@@ -79,6 +79,11 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setCreaterId(createUser.getUserId());
 			quotationVO.setCreaterName(createUser.getCurrentName());
 			quotationVO.setOrderId(decorationOrderPO.getOrderId());
+			quotationVO.setOrderAddr(String.format("%s %s", decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber()));
+			quotationVO.setCustomerName(decorationOrderPO.getCustomerPO().getCustomerName());
+			quotationVO.setDesignerName(decorationOrderPO.getDesignerPO().getCurrentName());
+			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
 			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
@@ -103,6 +108,11 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setCreaterId(createUser.getUserId());
 			quotationVO.setCreaterName(createUser.getCurrentName());
 			quotationVO.setOrderId(decorationOrderPO.getOrderId());
+			quotationVO.setOrderAddr(String.format("%s %s", decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber()));
+			quotationVO.setCustomerName(decorationOrderPO.getCustomerPO().getCustomerName());
+			quotationVO.setDesignerName(decorationOrderPO.getDesignerPO().getCurrentName());
+			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
 			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
@@ -224,8 +234,8 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationFunctionAreaDao.save(autogeneration);
 		
-		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "", 0.015f, 1f, (short) 2, autogeneration, "");
-		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "", 0.135f, 1f, (short) 3, autogeneration, "");
+		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", 0.015f, 1f, (short) 2, autogeneration, "");
+		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", 0.135f, 1f, (short) 3, autogeneration, "");
 		
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);

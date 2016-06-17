@@ -111,69 +111,215 @@ var decorationUtils = {
 				$("#salesmanDepartmentId").bindData(salesmanDepartment, 'deptId', 'deptName', true);
 			}
 		}, null, false);
-	},	initQuotationDetailItemGroupByJob: function(quotationDetail){
+	},	initQuotationDetailItemGroupByJob: function(quotationFunctionAreas, addReduceItems){
 
-		decorationOrderDetail.decorationOrderQuotationItemGroupByJob = [];
-		
-		var functionAreas = quotationDetail.functionAreas;
+		decorationOrderDetail.decorationOrderQuotationItemGroupByJob = {};
 		
 		var quotationAreaItemsMap = {};
+		
+		var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
-		for(var i=0;i<functionAreas.length;++i) {
-			for(var j=0;j<functionAreas[i].items.length;j++) {
-				var item = functionAreas[i].items[j];
-				var tem = {};
-				
-				if(quotationAreaItemsMap[item.itemId] == undefined){
-					tem.itemId = item.itemId;
-					tem.itemName = item.itemName;
-					tem.functionAreaName = functionAreas[i].functionAreaName;
-					tem.workType = item.workType;
-					tem.measurementUnit = item.measurementUnit;
-					tem.unitPrice = item.unitPrice;
-					tem.discountUnitPrice = item.discountUnitPrice;
-					tem.num = parseFloat(item.num);
-					tem.sum = parseFloat(item.sum);
-					tem.quotationItemDes = item.quotationItemDes;
-					tem.itemType = item.itemType;
-					
-					quotationAreaItemsMap[item.itemId] = tem;
-				}else{
-					quotationAreaItemsMap[item.itemId]["num"] = quotationAreaItemsMap[item.itemId]["num"] + parseFloat(item.num);
-					quotationAreaItemsMap[item.itemId]["sum"] = quotationAreaItemsMap[item.itemId]["sum"] + parseFloat(item.sum);
-				}
-			}
-		}
-
-		var otherItems = quotationDetail.otherItems;
-
-		for(var i=0;i<otherItems.length;++i){
-			var item = otherItems[i];
-			var tem = {};
+		for(var i=0;i<quotationFunctionAreaLength;++i) {
 			
-			if(quotationAreaItemsMap[item.itemId] == undefined){
-				tem.itemId = item.itemId;
-				tem.itemName = item.itemName;
-				tem.workType = item.workType;
-				tem.measurementUnit = item.measurementUnit;
-				tem.unitPrice = item.unitPrice;
-				tem.discountUnitPrice = item.discountUnitPrice;
-				tem.num = parseFloat(item.num);
-				tem.sum = parseFloat(item.sum);
-				tem.quotationItemDes = item.quotationItemDes;
-				tem.itemType = item.itemType;
+			var quotationFunctionArea = quotationFunctionAreas[i];
+			var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
+			var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
+			
+			for(var j=0;j<quotationFunctionAreaItemLength;j++) {
 				
-				quotationAreaItemsMap[item.itemId] = tem;
-			}else{
-				quotationAreaItemsMap[item.itemId]["num"] = quotationAreaItemsMap[item.itemId]["num"] + parseFloat(item.num);
-				quotationAreaItemsMap[item.itemId]["sum"] = quotationAreaItemsMap[item.itemId]["sum"] + parseFloat(item.sum);
+				var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
+
+				if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType]){
+					decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType] = [];
+				}
+				
+				decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType].push(quotationFunctionAreaItem);
 			}
 		}
 		
-		for(var itemId in quotationAreaItemsMap){
-			decorationOrderDetail.decorationOrderQuotationItemGroupByJob.push(quotationAreaItemsMap[itemId]);
+		var addReduceItemLength = addRecudeItems.length;
+		
+		for(var i=0;i<addReduceItemLength;i++){
+			
+			var addReduceItem = addReduceItems[i];
+			
+			if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType]){
+				decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType] = [];
+			}
+			
+			decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType].push(addReduceItem);
 		}
-	},	materialPaymentListGridInit: function(){
+
+		console.log(decorationOrderDetail.decorationOrderQuotationItemGroupByJob);
+	},	loadQuotationDetail: function(){
+		
+		var quotation = null;
+		
+		var options = {
+			"quotation.orderId": decorationOrderDetail.decorationOrderId,
+		}
+		
+		decorationOrderDetail.quotationDetail = {};
+		
+		com.post(api.quotation.queryQuotationForDefaultByOrderId, options, function(res){
+			decorationOrderDetail.quotation = res.quotation;
+		}, null, false);
+		
+		var quotationId = decorationOrderDetail.quotation.qid;
+		
+		if(quotationId){
+			$("#printProjectBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1");
+			$("#printFinanceBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=2");
+			$("#printCustomerBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=3");
+			
+			com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function(res){
+				decorationOrderDetail.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
+			}, null, false);
+			
+			decorationUtils.initQuotationDetailItem(decorationOrderDetail.quotation, decorationOrderDetail.quotationDetail.quotationFunctionAreas, []);
+			
+			decorationUtils.initQuotationDetail();
+			
+			$("#showWay").on("change", function() {
+				decorationUtils.initQuotationDetail();
+			});
+		}else{
+			$("#btnPrintDefaultQuotationInfo").attr("disabled", "disabled");
+		}
+	}, initQuotationDetailItem: function(quotation, quotationFunctionAreas, addReduceItems) {
+		
+		var discount = quotation.discount;
+		
+		var quotationFunctionAreaItemCs = {};
+		var quotationFunctionAreaItemWs = {};
+		
+		var quotationFunctionAreaLength = quotationFunctionAreas.length;
+
+		for(var i=0;i<quotationFunctionAreaLength;++i) {
+			
+			var quotationFunctionAreaTotal = 0;
+			
+			var quotationFunctionArea = quotationFunctionAreas[i];
+			var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
+			var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
+			
+			quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName] = [];
+			
+			for(var j=0;j<quotationFunctionAreaItemLength;j++) {
+				
+				var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
+
+				if(!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]){
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = [];
+				}
+				
+				var _dcp = quotationFunctionAreaItem.type < 2 ?  utils.changeTwoDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
+				var _dcpt = utils.changeTwoDecimal(utils.accMul(quotationFunctionAreaItem.num,  _dcp));
+				
+				quotationFunctionAreaTotal = utils.accAdd(quotationFunctionAreaTotal, _dcpt)
+				
+				quotationFunctionAreaItem.dcp = _dcp;
+				quotationFunctionAreaItem.dcpt = _dcpt;
+				
+				if(quotationFunctionAreaItem.type == 2){
+					quotationFunctionAreaItem.num = quotation.trafficPrice;
+					quotationFunctionAreaItem.dcpt = quotation.trafficPrice;
+				}else if(quotationFunctionAreaItem.type == 3){
+					quotationFunctionAreaItem.num = quotation.managePrice;
+					quotationFunctionAreaItem.dcpt = quotation.managePrice;
+				}
+				
+				quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
+				quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType].push(quotationFunctionAreaItem);
+			}
+		}
+		
+		var addReduceItemLength = addReduceItems.length;
+
+		for (var i=0;i<addReduceItemLength;++i) {
+			
+			var addReduceItem = addReduceItems[i];
+			
+			var _dcp = utils.changeTwoDecimal(utils.accMul(addReduceItem.unitPrice, (addReduceItem.discount == 1 ? utils.accDiv(discount, 10) : 1)));
+			var _dcpt = utils.changeTwoDecimal(utils.accMul(addReduceItem.num,  _dcp));
+			
+			if(quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaName]){
+				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaName].push(addReduceItem);
+			}
+			
+			if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType]){
+				quotationFunctionAreaItemWs[addReduceItem.workType] = [];
+			}
+			
+			quotationFunctionAreaItemWs[addReduceItem.workType].push(addReduceItem);
+		}
+		
+		decorationOrderDetail.quotationFunctionAreaItemCs = quotationFunctionAreaItemCs;
+		decorationOrderDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
+	}, initQuotationDetail: function(){
+		
+		var quotationItemListDiv = $("#quotationItemListDiv");
+		
+		quotationItemListDiv.html("");
+		
+		if ($("#showWay").val() == 0) {
+			_data = decorationOrderDetail.quotationFunctionAreaItemCs;
+		} else {
+			_data = decorationOrderDetail.quotationFunctionAreaItemWs;
+		}
+		
+		_data && $.each(_data, function(i, v){
+			
+			var $dcpts = 0.0;
+			var $domain, $dhead, $dname, $btns, $dbody, $dbodyInner, $list;
+			
+			$domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"});
+			$dhead = $('<div></div>').addClass('widget-header');
+			$dname = $('<h4></h4>').append($('<strong></strong>').html(i));
+			
+			$dbody = $('<div></div>').addClass('widget-body');
+			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
+			$list = $('<ul></ul>').addClass('fl-quo-list');
+			
+			$dhead.append($dname);
+			$dbodyInner.append($list).appendTo($dbody);
+			$domain.append($dhead).append($dbody);
+			
+			$.each(v, function(linenum, qv){
+				
+				$dcpts = utils.accAdd($dcpts, qv.dcpt)
+				
+				var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
+				
+				var _lineSet = [
+					["line", linenum + 1],
+					["num", qv.num],
+					["name", qv.itemName],
+					["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "---", ["data-type", qv.type]],
+					["unit", qv.measurementUnit],
+					["worktype", qv.workType],
+					["price unitprice", qv.unitPrice],
+					["price discountprice", qv.dcp, ["data-discount", qv.discount]],
+					["price totalprice-discount",  qv.type < 2 ? qv.dcpt : qv.unitPrice],
+				];
+
+				$.each(_lineSet, function(i, v){
+					var $cell = $('<div></div>').addClass('cell ' + v[0]);
+					var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+					
+					$cell.append($cellWrap).appendTo($item);
+				});
+				
+				$item.appendTo($list);
+			});
+			
+			var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + $dcpts);
+			var $total = $('<div></div>').addClass("pull-right inline").append($totalInner);
+			var $item = $('<li></li>').append($total).appendTo($list);
+			
+			$domain.appendTo(quotationItemListDiv);
+		});
+	}, materialPaymentListGridInit: function(){
 
 		$grid = $('<table id="materialPaymentListGrid"></table><div id="materialPaymentGridPager"></div>');
 		$('#materialPaymentDiv').empty().html($grid);

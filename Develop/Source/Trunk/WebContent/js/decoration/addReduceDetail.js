@@ -1,11 +1,11 @@
-var addOrReduceDetail = {
+var addReduceDetail = {
 	
-	addOrReduceId:null,
+	addReduceId:null,
 	decorationOrderId:null,
 	
-	addOrReduceDetail:null,
-	loadAddOrReduceDetail:loadAddOrReduceDetail,
-	initAddOrReduceDetail:initAddOrReduceDetail,
+	addReduceDetail:null,
+	loadAddReduceDetail:loadAddReduceDetail,
+	initAddReduceDetail:initAddReduceDetail,
 	
 	addType:0,
 
@@ -43,69 +43,69 @@ var addOrReduceDetail = {
 jQuery(function($) {
 	$('#fl-statement').statement("增减项", "增减项详细");
 	
-	addOrReduceDetail.addOrReduceId = params.addOrReduceId;
+	addReduceDetail.addReduceId = params.addReduceId;
 
-	addOrReduceDetail.customItemsModal = $("#customItemsModal");
+	addReduceDetail.customItemsModal = $("#customItemsModal");
 	
-	addOrReduceDetail.quotationItemModal = $("#quotationItemModal");
-	addOrReduceDetail.quotationItemSearchDiv = $("#quotationItemSearchDiv");
-	addOrReduceDetail.quotationItemListGrid = $("#quotationItemListGrid");
-	addOrReduceDetail.quotationItemGridPager = $("#quotationItemGridPager");
+	addReduceDetail.quotationItemModal = $("#quotationItemModal");
+	addReduceDetail.quotationItemSearchDiv = $("#quotationItemSearchDiv");
+	addReduceDetail.quotationItemListGrid = $("#quotationItemListGrid");
+	addReduceDetail.quotationItemGridPager = $("#quotationItemGridPager");
 	
-	addOrReduceDetail.customItemModal = $("#customItemModal");
-	addOrReduceDetail.customItemSearchDiv = $("#customItemSearchDiv");
-	addOrReduceDetail.customItemListGrid = $("#customItemListGrid");
-	addOrReduceDetail.customItemGridPager = $("#customItemGridPager");
+	addReduceDetail.customItemModal = $("#customItemModal");
+	addReduceDetail.customItemSearchDiv = $("#customItemSearchDiv");
+	addReduceDetail.customItemListGrid = $("#customItemListGrid");
+	addReduceDetail.customItemGridPager = $("#customItemGridPager");
 	
-	addOrReduceDetail.systemDefineItemModal = $("#systemDefineItemModal");
-	addOrReduceDetail.systemDefineItemSearchDiv = $("#systemDefineItemSearchDiv");
-	addOrReduceDetail.systemDefineItemListGrid = $("#systemDefineItemListGrid");
-	addOrReduceDetail.systemDefineItemGridPager = $("#systemDefineItemGridPager");
+	addReduceDetail.systemDefineItemModal = $("#systemDefineItemModal");
+	addReduceDetail.systemDefineItemSearchDiv = $("#systemDefineItemSearchDiv");
+	addReduceDetail.systemDefineItemListGrid = $("#systemDefineItemListGrid");
+	addReduceDetail.systemDefineItemGridPager = $("#systemDefineItemGridPager");
 	
-	addOrReduceDetail.addItemModal = $("#addItemModal");
+	addReduceDetail.addItemModal = $("#addItemModal");
 	
 	initDataMap();
 		
 //----------------------------------------------返回----------------------------
 	$('#detailBckBtn').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderAddOrReduceIndex.url, {}, function(){
-			addOrReduce.decorationOrderId = addOrReduceDetail.addOrReduceDetail.orderId;
+		$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+			addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
 			
-			addOrReduce.initAddOrReduceList();
+			addReduce.initAddReduceList();
 		});
 	});
 //----------------------------------------保存----------------
-	$('#saveAddOrReduceDetailBtn').on(ace.click_event, function(){
+	$('#saveAddReduceDetailBtn').on(ace.click_event, function(){
 
-		if(addOrReduceDetail.lastEditId!=-1){
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+		if(addReduceDetail.lastEditId!=-1){
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su = $("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su = $("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 			}else{
 				return;
 			}
 		}
 
-		saveAddOrReduceDetail(0);
+		saveAddReduceDetail(0);
 	});
 	
-	$('#submitAddOrReduceDetailOKBtn').on(ace.click_event, function(){
+	$('#submitAddReduceDetailOKBtn').on(ace.click_event, function(){
 
-		if(addOrReduceDetail.lastEditId!=-1){
+		if(addReduceDetail.lastEditId!=-1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su = $("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su = $("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 				
 			}else{
 				return;
@@ -116,7 +116,7 @@ jQuery(function($) {
 			if(res == false){
 				return;
 			}else{
-				saveAddOrReduceDetail(1);
+				saveAddReduceDetail(1);
 			}
 		});
 	});
@@ -125,16 +125,16 @@ jQuery(function($) {
 	$("#addNewItemBtn").on(ace.click_event, function(event){
 		com.clearValidator();
 		
-		if(addOrReduceDetail.lastEditId!=-1){
+		if(addReduceDetail.lastEditId!=-1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su = $("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su = $("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 				
 			}else{
 				return;
@@ -149,22 +149,22 @@ jQuery(function($) {
 		$("#measurementUnit").get(0).selectedIndex = 0;
 		$("#workType").get(0).selectedIndex = 0;
 		
-		addOrReduceDetail.addItemModal.modal("show");
+		addReduceDetail.addItemModal.modal("show");
 		event.stopPropagation();
 	});
 	
 	$("#addSystemDefineItemBtn").on(ace.click_event, function(event){
 		
-		if(addOrReduceDetail.lastEditId!=-1){
+		if(addReduceDetail.lastEditId!=-1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su=$("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su=$("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 				
 			}else{
 				return;
@@ -175,24 +175,24 @@ jQuery(function($) {
 		$("#quotationWorkTypeSearch1").val("");
 		$("#quotationBigCategorySearch1").val("");
 		
-		$.jgrid.refreshGrid(addOrReduceDetail.customItemListGrid, addOrReduceDetail.customItemPostParam);
+		$.jgrid.refreshGrid(addReduceDetail.customItemListGrid, addReduceDetail.customItemPostParam);
 		
-		addOrReduceDetail.systemDefineItemModal.modal("show");
+		addReduceDetail.systemDefineItemModal.modal("show");
 
 		return false;
 	});
 
 	$("#addQuotaionItemBtn").on(ace.click_event, function(event){
-		if(addOrReduceDetail.lastEditId!=-1){
+		if(addReduceDetail.lastEditId!=-1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su=$("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su=$("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 				
 			}else{
 				return;
@@ -203,26 +203,26 @@ jQuery(function($) {
 		$("#quotationWorkTypeSearch").val("");
 		$("#quotationBigCategorySearch").val("");
 		
-		addOrReduceDetail.quotationItemPostParam.versionId = addOrReduceDetail.addOrReduceDetail.versionId;
+		addReduceDetail.quotationItemPostParam.versionId = addReduceDetail.addReduceDetail.versionId;
 		
-		addOrReduceDetail.quotationItemPostParam["quotationItem.versionId"] = addOrReduceDetail.addOrReduceDetail.versionId;
+		addReduceDetail.quotationItemPostParam["quotationItem.versionId"] = addReduceDetail.addReduceDetail.versionId;
 		
-		$.jgrid.refreshGrid(addOrReduceDetail.quotationItemListGrid, addOrReduceDetail.quotationItemPostParam);
+		$.jgrid.refreshGrid(addReduceDetail.quotationItemListGrid, addReduceDetail.quotationItemPostParam);
 		
-		addOrReduceDetail.quotationItemModal.modal("show");
+		addReduceDetail.quotationItemModal.modal("show");
 	});
 	
 	$("#addCunstomItemsBtn").on(ace.click_event, function(event){
-		if(addOrReduceDetail.lastEditId != -1){
+		if(addReduceDetail.lastEditId != -1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su=$("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su=$("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 				
 			}else{
 				return;
@@ -233,10 +233,10 @@ jQuery(function($) {
 		$("#quotationWorkTypeSearch2").val("");
 		$("#quotationBigCategorySearch2").val("");
 		
-		addOrReduceDetail.customItemPostParam["customQuotationItem.quotationId"] = addOrReduceDetail.addOrReduceDetail.quotationId;
-		$.jgrid.refreshGrid(addOrReduceDetail.customItemListGrid, addOrReduceDetail.customItemPostParam);
+		addReduceDetail.customItemPostParam["customQuotationItem.quotationId"] = addReduceDetail.addReduceDetail.quotationId;
+		$.jgrid.refreshGrid(addReduceDetail.customItemListGrid, addReduceDetail.customItemPostParam);
 		
-		addOrReduceDetail.customItemModal.modal("show");
+		addReduceDetail.customItemModal.modal("show");
 	});
 
 	$("#addItemsBtn").on(ace.click_event, function(event){
@@ -265,14 +265,14 @@ jQuery(function($) {
 			return;
 		
 		var functionAreaType = "";
-		for(var lp =0;lp < addOrReduceDetail.quotationFunctionAreas.length; ++lp){
-			if(addOrReduceDetail.quotationFunctionAreas[lp].autoId == $("#quotationFunctionAreaId").val()){
-				functionAreaType = addOrReduceDetail.quotationFunctionAreas[lp].functionAreaType;
+		for(var lp =0;lp < addReduceDetail.quotationFunctionAreas.length; ++lp){
+			if(addReduceDetail.quotationFunctionAreas[lp].autoId == $("#quotationFunctionAreaId").val()){
+				functionAreaType = addReduceDetail.quotationFunctionAreas[lp].functionAreaType;
 				break;
 			}
 		}
-		var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-		var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+		var temAddReduceDetail = addReduceDetail.addReduceDetail;
+		var addReduceItems = temAddReduceDetail.addReduceItems;
 		var addRow = {};
 		
 		addRow.num = $("#num").val();
@@ -301,32 +301,32 @@ jQuery(function($) {
 		//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
 		addRow.itemType = 2;
 
-		if(addOrReduceDetail.lastEditId!=-1){
-			$("#addOrReduceItemList").jqGrid('restoreRow',addOrReduceDetail.lastEditId);
-			addOrReduceDetail.lastEditId=-1;
+		if(addReduceDetail.lastEditId!=-1){
+			$("#addReduceItemList").jqGrid('restoreRow',addReduceDetail.lastEditId);
+			addReduceDetail.lastEditId=-1;
 		}
 		
-		console.log($("#addOrReduceItemList"));
+		console.log($("#addReduceItemList"));
 		var addFlag = true;
-		for(var loop=0;loop<addOrReduceItems.length;++loop){
-			if(addOrReduceItems[loop].itemType == addRow.itemType 
-					&& addOrReduceItems[loop].itemName == addRow.itemName 
-					&& addOrReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
+		for(var loop=0;loop<addReduceItems.length;++loop){
+			if(addReduceItems[loop].itemType == addRow.itemType 
+					&& addReduceItems[loop].itemName == addRow.itemName 
+					&& addReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
 				addFlag = false;
 				break;
 			}
 		}
 		
 		if(addFlag){ // 已存在
-			var ids = $("#addOrReduceItemList").jqGrid('getDataIDs');
+			var ids = $("#addReduceItemList").jqGrid('getDataIDs');
 			var maxid = Math.max.apply(null, ids);
 			if(maxid == -Infinity){
 				maxid = 0;
 			}
-			$("#addOrReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
-			changeItem("addOrReduceItemList");
-			initAddOrReduceDetail();
-			addOrReduceDetail.addItemModal.modal("hide");
+			$("#addReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
+			changeItem("addReduceItemList");
+			initAddReduceDetail();
+			addReduceDetail.addItemModal.modal("hide");
 			maxid++;
 		}else{
 			bootbox.alert('该报价('+addRow.itemName+')已存在');
@@ -335,21 +335,21 @@ jQuery(function($) {
 		return false;
 	});
 	
-	loadAddOrReduceDetail();
+	loadAddReduceDetail();
 });
 
 //---------------------------------------------字典初始化--------------------------------
 function initDataMap(){
 	com.post(api.quotation.queryQuotationType, {}, function(res){
 		if(res.errorCode == 0){
-			addOrReduceDetail.quotationTypes = res.quotationTypes;
-			addOrReduceDetail.quotationTypesStr = "";
+			addReduceDetail.quotationTypes = res.quotationTypes;
+			addReduceDetail.quotationTypesStr = "";
 			
 			for(var tem=0;tem<res.quotationTypes.length;++tem){
-				addOrReduceDetail.quotationTypesStr += (res.quotationTypes[tem].id + ":" + res.quotationTypes[tem].name + ";");
+				addReduceDetail.quotationTypesStr += (res.quotationTypes[tem].id + ":" + res.quotationTypes[tem].name + ";");
 			}
 			
-			addOrReduceDetail.quotationTypesStr = addOrReduceDetail.quotationTypesStr.substr(0,addOrReduceDetail.quotationTypesStr.length - 1);
+			addReduceDetail.quotationTypesStr = addReduceDetail.quotationTypesStr.substr(0,addReduceDetail.quotationTypesStr.length - 1);
 		}else{
 			bootbox.alert("系统异常");
 		}
@@ -357,14 +357,14 @@ function initDataMap(){
 	
 	com.post(api.common.queryMeasurementUnit,{},function(res){
 		if(res.errorCode == 0){
-			addOrReduceDetail.measurementUnits = res.measurementUnits;
-			addOrReduceDetail.measurementUnitsStr= "";
+			addReduceDetail.measurementUnits = res.measurementUnits;
+			addReduceDetail.measurementUnitsStr= "";
 			
 			for(var tem=0;tem<res.measurementUnits.length;++tem){
-				addOrReduceDetail.measurementUnitsStr += (res.measurementUnits[tem].id + ":" + res.measurementUnits[tem].name + ";");
+				addReduceDetail.measurementUnitsStr += (res.measurementUnits[tem].id + ":" + res.measurementUnits[tem].name + ";");
 			}
-			addOrReduceDetail.measurementUnitsStr = addOrReduceDetail.measurementUnitsStr.substr(0, addOrReduceDetail.measurementUnitsStr.length - 1);
-			$("#measurementUnit").bindData(addOrReduceDetail.measurementUnits, "id", "name");
+			addReduceDetail.measurementUnitsStr = addReduceDetail.measurementUnitsStr.substr(0, addReduceDetail.measurementUnitsStr.length - 1);
+			$("#measurementUnit").bindData(addReduceDetail.measurementUnits, "id", "name");
 		}else{
 			bootbox.alert("系统异常");
 		}
@@ -372,15 +372,15 @@ function initDataMap(){
 	
 	com.post(api.quotation.queryQuotationBigCategory, {},function(res){
 		if(res.errorCode==0){
-			addOrReduceDetail.quotationBigCategorys = res.quotationBigCategorys;
-			addOrReduceDetail.quotationBigCategorysStr="";
+			addReduceDetail.quotationBigCategorys = res.quotationBigCategorys;
+			addReduceDetail.quotationBigCategorysStr="";
 			var tem = 0;
 			for(tem=0;tem<res.quotationBigCategorys.length;++tem){
-				addOrReduceDetail.quotationBigCategorysStr+=(res.quotationBigCategorys[tem].id+":"+res.quotationBigCategorys[tem].name+";");
+				addReduceDetail.quotationBigCategorysStr+=(res.quotationBigCategorys[tem].id+":"+res.quotationBigCategorys[tem].name+";");
 			}
-			addOrReduceDetail.quotationBigCategorysStr = addOrReduceDetail.quotationBigCategorysStr.substr(0,addOrReduceDetail.quotationBigCategorysStr.length-1);
+			addReduceDetail.quotationBigCategorysStr = addReduceDetail.quotationBigCategorysStr.substr(0,addReduceDetail.quotationBigCategorysStr.length-1);
 			
-			$("#quotationBigCategory").bindData(addOrReduceDetail.quotationBigCategorys, "id", "name");
+			$("#quotationBigCategory").bindData(addReduceDetail.quotationBigCategorys, "id", "name");
 		}else{
 			bootbox.alert("系统异常");
 		}
@@ -388,15 +388,15 @@ function initDataMap(){
 	
 	com.post(api.common.queryWorkType, {}, function(res){
 		if(res.errorCode == 0){
-			addOrReduceDetail.workTypes = res.workTypes;
-			addOrReduceDetail.workTypesStr = "";
+			addReduceDetail.workTypes = res.workTypes;
+			addReduceDetail.workTypesStr = "";
 			var tem = 0;
 			for(tem=0;tem<res.workTypes.length;++tem){
-				addOrReduceDetail.workTypesStr += (res.workTypes[tem].id+":"+res.workTypes[tem].name+";");
+				addReduceDetail.workTypesStr += (res.workTypes[tem].id+":"+res.workTypes[tem].name+";");
 			}
-			addOrReduceDetail.workTypesStr = addOrReduceDetail.workTypesStr.substr(0,addOrReduceDetail.workTypesStr.length-1);
+			addReduceDetail.workTypesStr = addReduceDetail.workTypesStr.substr(0,addReduceDetail.workTypesStr.length-1);
 			
-			$("#workType").bindData(addOrReduceDetail.workTypes, "id", "name");
+			$("#workType").bindData(addReduceDetail.workTypes, "id", "name");
 		}else{
 			bootbox.alert("系统异常");
 		}
@@ -405,13 +405,13 @@ function initDataMap(){
 	com.post(api.quotation.queryQuotationClassification, {}, function(res){
 		if(res.errorCode==0){
 			
-			addOrReduceDetail.quotationClassifications = res.quotationClassifications;
-			addOrReduceDetail.quotationClassificationsStr="";
+			addReduceDetail.quotationClassifications = res.quotationClassifications;
+			addReduceDetail.quotationClassificationsStr="";
 			var tem = 0;
 			for(tem=0;tem<res.quotationClassifications.length;++tem){
-				addOrReduceDetail.quotationClassificationsStr+=(res.quotationClassifications[tem].id+":"+res.quotationClassifications[tem].name+";");
+				addReduceDetail.quotationClassificationsStr+=(res.quotationClassifications[tem].id+":"+res.quotationClassifications[tem].name+";");
 			}
-			addOrReduceDetail.quotationClassificationsStr =addOrReduceDetail.quotationClassificationsStr.substr(0,addOrReduceDetail.quotationClassificationsStr.length-1);
+			addReduceDetail.quotationClassificationsStr =addReduceDetail.quotationClassificationsStr.substr(0,addReduceDetail.quotationClassificationsStr.length-1);
 		}else{
 			bootbox.alert("系统异常");
 		}
@@ -419,30 +419,30 @@ function initDataMap(){
 }
 
 //--------------------------------------------------------服务器端加载数据-------------------------------------------------------
-function loadAddOrReduceDetail(){
-	com.post(api.decoration.queryAddOrReduceDetailById, {"addOrReduceDetail.arId":addOrReduceDetail.addOrReduceId}, function(res){
-		addOrReduceDetail.addOrReduceDetail = res.addOrReduceDetail;
+function loadAddReduceDetail(){
+	com.post(api.decoration.queryAddReduceDetailById, {"addReduceDetail.arId":addReduceDetail.addReduceId}, function(res){
+		addReduceDetail.addReduceDetail = res.addReduceDetail;
 		
-		console.log("load addOrReduceDetail:",addOrReduceDetail.addOrReduceDetail);
+		console.log("load addReduceDetail:",addReduceDetail.addReduceDetail);
 
-		addOrReduceDetail.customItemPostParam.quotationId = addOrReduceDetail.addOrReduceDetail.quotationId;
-		addOrReduceDetail.quotationItemPostParam.versionId = addOrReduceDetail.addOrReduceDetail.versionId;
-		addOrReduceDetail.customItemPostParam["customQuotationItem.quotationId"] = addOrReduceDetail.addOrReduceDetail.quotationId;
+		addReduceDetail.customItemPostParam.quotationId = addReduceDetail.addReduceDetail.quotationId;
+		addReduceDetail.quotationItemPostParam.versionId = addReduceDetail.addReduceDetail.versionId;
+		addReduceDetail.customItemPostParam["customQuotationItem.quotationId"] = addReduceDetail.addReduceDetail.quotationId;
 		
-		com.post(api.quotation.queryQuotationFunctionAreaForCommonById, {"quotationDetail.autoId":addOrReduceDetail.addOrReduceDetail.quotationId}, function(res){
+		com.post(api.quotation.queryQuotationFunctionAreaForCommonById, {"quotationDetail.autoId":addReduceDetail.addReduceDetail.quotationId}, function(res){
 	
-				addOrReduceDetail.quotationFunctionAreas = res.quotationFunctionAreas;
-				addOrReduceDetail.quotationFunctionAreasStr="";
+				addReduceDetail.quotationFunctionAreas = res.quotationFunctionAreas;
+				addReduceDetail.quotationFunctionAreasStr="";
 				
 				for(var i=0;i<res.quotationFunctionAreas.length;++i){
-					addOrReduceDetail.quotationFunctionAreasStr+=(res.quotationFunctionAreas[i].autoId+":"+res.quotationFunctionAreas[i].functionAreaName+";");
+					addReduceDetail.quotationFunctionAreasStr+=(res.quotationFunctionAreas[i].autoId+":"+res.quotationFunctionAreas[i].functionAreaName+";");
 				}
 				
-				addOrReduceDetail.quotationFunctionAreasStr = addOrReduceDetail.quotationFunctionAreasStr.substr(0,addOrReduceDetail.quotationFunctionAreasStr.length - 1);
-				$("#addQuotationFunctionAreaId").bindData(addOrReduceDetail.quotationFunctionAreas, "autoId", "functionAreaName");
-				$("#quotationFunctionAreaId").bindData(addOrReduceDetail.quotationFunctionAreas, "autoId", "functionAreaName");
+				addReduceDetail.quotationFunctionAreasStr = addReduceDetail.quotationFunctionAreasStr.substr(0,addReduceDetail.quotationFunctionAreasStr.length - 1);
+				$("#addQuotationFunctionAreaId").bindData(addReduceDetail.quotationFunctionAreas, "autoId", "functionAreaName");
+				$("#quotationFunctionAreaId").bindData(addReduceDetail.quotationFunctionAreas, "autoId", "functionAreaName");
 				
-				initAddOrReduceDetail();
+				initAddReduceDetail();
 	
 		});
 		
@@ -456,8 +456,8 @@ function initQuotationItemList(){
 	
 	var quotationItemSearchOpts = {
 		url: api.quotation.pageQuotationItemByVersionId,
-		postParmas: {"paging.rows":10, "paging.page":1, "quotationItem.versionId":addOrReduceDetail.addOrReduceDetail.versionId},
-		listgrid: addOrReduceDetail.quotationItemListGrid,
+		postParmas: {"paging.rows":10, "paging.page":1, "quotationItem.versionId":addReduceDetail.addReduceDetail.versionId},
+		listgrid: addReduceDetail.quotationItemListGrid,
 		items: [
 	        {label:"名称",id:"itemNameSearch",name:"itemName", type:'text'},
 	        {label:"分类", id:"quotationClassificationSearch", name:"quotationClassificationId", type:"select",op:"eq"},
@@ -467,15 +467,15 @@ function initQuotationItemList(){
 		]
 	};
 	
-	addOrReduceDetail.quotationItemSearchDiv.flSearch(quotationItemSearchOpts);
-	$("#quotationBigCategorySearch").bindData(addOrReduceDetail.quotationBigCategorys, "id", "name", true);
-	$("#quotationWorkTypeSearch").bindData(addOrReduceDetail.workTypes, "id", "name", true);
-	$("#quotationClassificationSearch").bindData(addOrReduceDetail.quotationClassifications, "id", "name", true);
-	$("#quotationSmallCategorySearch").bindData(addOrReduceDetail.quotationSmallCategorys, "id", "name", true);
+	addReduceDetail.quotationItemSearchDiv.flSearch(quotationItemSearchOpts);
+	$("#quotationBigCategorySearch").bindData(addReduceDetail.quotationBigCategorys, "id", "name", true);
+	$("#quotationWorkTypeSearch").bindData(addReduceDetail.workTypes, "id", "name", true);
+	$("#quotationClassificationSearch").bindData(addReduceDetail.quotationClassifications, "id", "name", true);
+	$("#quotationSmallCategorySearch").bindData(addReduceDetail.quotationSmallCategorys, "id", "name", true);
 	
-	addOrReduceDetail.quotationItemListGrid.jqGrid({		
+	addReduceDetail.quotationItemListGrid.jqGrid({		
 		url: api.quotation.pageQuotationItemByVersionId.url,
-		postData:addOrReduceDetail.quotationItemPostParam,
+		postData:addReduceDetail.quotationItemPostParam,
 		colNames:['autoId','编号', '名称', '类型', '分类', '大类', '小类', '单位', '工种', '说明', '单价', '版本','workTypeId','measurementUnitId','quotationClassificationId','quotationBigCategoryId','quotationSmallCategoryId','quotationTypeId'],
 		colModel:[
 		    {name:'autoId',hidden: true},  
@@ -502,11 +502,11 @@ function initQuotationItemList(){
 		rowNum:15,
 		rowList:[15,30,50],
 		height: '450',
-		pager : addOrReduceDetail.quotationItemGridPager,
+		pager : addReduceDetail.quotationItemGridPager,
 		caption: ""
 	});
 
-	addOrReduceDetail.quotationItemListGrid.navGrid(addOrReduceDetail.quotationItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
+	addReduceDetail.quotationItemListGrid.navGrid(addReduceDetail.quotationItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
 		$.jgrid.searchFunc($(this))
 	);
 }
@@ -516,7 +516,7 @@ function initSystemDefineItemList(){
 	var systemDefineItemSearchOpts = {
 		url: api.quotation.pageSystemDefineItem,
 		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: addOrReduceDetail.systemDefineItemListGrid,
+		listgrid: addReduceDetail.systemDefineItemListGrid,
 		items: [
 	        {label:"名称",id:"itemNameSearch1",name:"itemName", type:'text'},
 	        {label:"大类", id:"quotationBigCategorySearch1", name:"quotationBigCategoryId", type:"select",op:"eq"},
@@ -524,11 +524,11 @@ function initSystemDefineItemList(){
 		]
 	};
 	
-	addOrReduceDetail.systemDefineItemSearchDiv.flSearch(systemDefineItemSearchOpts);
-	$("#quotationBigCategorySearch1").bindData(addOrReduceDetail.quotationBigCategorys, "id", "name", true);
-	$("#quotationWorkTypeSearch1").bindData(addOrReduceDetail.workTypes, "id", "name", true);
+	addReduceDetail.systemDefineItemSearchDiv.flSearch(systemDefineItemSearchOpts);
+	$("#quotationBigCategorySearch1").bindData(addReduceDetail.quotationBigCategorys, "id", "name", true);
+	$("#quotationWorkTypeSearch1").bindData(addReduceDetail.workTypes, "id", "name", true);
 	
-	addOrReduceDetail.systemDefineItemListGrid.jqGrid({		
+	addReduceDetail.systemDefineItemListGrid.jqGrid({		
 		url: api.quotation.pageSystemDefineItem.url,
 		postData: {},
 		colNames:['autoId','编号', '名称',  '大类', '单位', '工种', '说明', '单价', 'workTypeId','measurementUnitId','quotationBigCategoryId'],
@@ -550,23 +550,23 @@ function initSystemDefineItemList(){
 		rowNum:15,
 		rowList:[15,30,50],
 		height: '450',
-		pager : addOrReduceDetail.systemDefineItemGridPager,
+		pager : addReduceDetail.systemDefineItemGridPager,
 		caption: ""
 	});
 
-	addOrReduceDetail.systemDefineItemListGrid.navGrid(addOrReduceDetail.systemDefineItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
+	addReduceDetail.systemDefineItemListGrid.navGrid(addReduceDetail.systemDefineItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
 		$.jgrid.searchFunc($(this))
 	);
 }
 
 function initCustomItemList(){
 	
-	console.log(addOrReduceDetail.customItemPostParam);
+	console.log(addReduceDetail.customItemPostParam);
 	
 	var customItemSearchOpts = {
 		url: api.decoration.pageCustomerItemByQuotationId,
-		postParmas: {"paging.rows":10, "paging.page":1,"customQuotationItem.quotationId":addOrReduceDetail.addOrReduceDetail.quotationId},
-		listgrid: addOrReduceDetail.quotationItemListGrid,
+		postParmas: {"paging.rows":10, "paging.page":1,"customQuotationItem.quotationId":addReduceDetail.addReduceDetail.quotationId},
+		listgrid: addReduceDetail.quotationItemListGrid,
 		items: [
 	        {label:"名称",id:"itemNameSearch2",name:"itemName", type:'text'},
 	        {label:"分类", id:"quotationClassificationSearch2", name:"quotationClassificationId", type:"select",op:"eq"},
@@ -575,14 +575,14 @@ function initCustomItemList(){
 		]
 	};
 	
-	addOrReduceDetail.customItemSearchDiv.flSearch(customItemSearchOpts);
-	$("#quotationBigCategorySearch2").bindData(addOrReduceDetail.quotationBigCategorys, "id", "name", true);
-	$("#quotationWorkTypeSearch2").bindData(addOrReduceDetail.workTypes, "id", "name", true);
-	$("#quotationClassificationSearch2").bindData(addOrReduceDetail.quotationClassifications, "id", "name", true);
+	addReduceDetail.customItemSearchDiv.flSearch(customItemSearchOpts);
+	$("#quotationBigCategorySearch2").bindData(addReduceDetail.quotationBigCategorys, "id", "name", true);
+	$("#quotationWorkTypeSearch2").bindData(addReduceDetail.workTypes, "id", "name", true);
+	$("#quotationClassificationSearch2").bindData(addReduceDetail.quotationClassifications, "id", "name", true);
 	
-	addOrReduceDetail.customItemListGrid.jqGrid({		
+	addReduceDetail.customItemListGrid.jqGrid({		
 		url: api.decoration.pageCustomerItemByQuotationId.url,
-		postData: addOrReduceDetail.customItemPostParam,
+		postData: addReduceDetail.customItemPostParam,
 		colNames:['autoId','编号', '名称', '分类',  '大类', '单位', '工种', '说明', '单价', 'workTypeId','quotationClassificationId','measurementUnitId','quotationBigCategoryId'],
 		colModel:[
 		    {name:'autoId',hidden: true},  
@@ -604,47 +604,47 @@ function initCustomItemList(){
 		rowNum:15,
 		rowList:[15,30,50],
 		height: '450',
-		pager : addOrReduceDetail.customItemGridPager,
+		pager : addReduceDetail.customItemGridPager,
 		caption: ""
 	});
 
-	addOrReduceDetail.customItemListGrid.navGrid(addOrReduceDetail.customItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
+	addReduceDetail.customItemListGrid.navGrid(addReduceDetail.customItemGridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {},
 		$.jgrid.searchFunc($(this))
 	);
 }
 
 //------------------------------------------------------------------界面初始化---------------------------------------------
 
-function calAddOrReduceSum(){
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+function calAddReduceSum(){
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	
 	var totalPrice = 0;//总价
 	var discountPrice = 0;//打折
 	var noDiscountTotalPrice = 0;//不打折
 	
 	var i = 0;
-	for(i=0;i<addOrReduceItems.length;++i){
+	for(i=0;i<addReduceItems.length;++i){
 
 		// 0 增项 1 减项 2 漏项 
 		// 0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
-		if(temAddOrReduceDetail.addReduceType == '0' || temAddOrReduceDetail.addReduceType == '2'){ // 增项漏项不打折
+		if(temAddReduceDetail.addReduceType == '0' || temAddReduceDetail.addReduceType == '2'){ // 增项漏项不打折
 			
-			var tem = Math.round((parseFloat(addOrReduceItems[i].unitPrice)*parseFloat(addOrReduceItems[i].num))*100)/100;
+			var tem = Math.round((parseFloat(addReduceItems[i].unitPrice)*parseFloat(addReduceItems[i].num))*100)/100;
 			noDiscountTotalPrice += tem;
 			
 			totalPrice += tem;
 			
 		}else {//减项
 			// 0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
-			var itemType = addOrReduceItems[i].itemType;
-			var quotationClassificationId = addOrReduceItems[i].quotationClassificationId;
+			var itemType = addReduceItems[i].itemType;
+			var quotationClassificationId = addReduceItems[i].quotationClassificationId;
 			if(itemType == '3' || (itemType == '0' && (quotationClassificationId == '3' || quotationClassificationId == '4' || quotationClassificationId == '5'))){ // 系统定义报价项目不打折--减项的一次性包死 综合项目 管理费 不打折
-				var tem = Math.round((parseFloat(addOrReduceItems[i].unitPrice) * parseFloat(addOrReduceItems[i].num)) * 100) / 100;
+				var tem = Math.round((parseFloat(addReduceItems[i].unitPrice) * parseFloat(addReduceItems[i].num)) * 100) / 100;
 				noDiscountTotalPrice += tem;
 				totalPrice += tem;
 			}else{
-				var tem = Math.round(parseFloat(addOrReduceItems[i].unitPrice) * addOrReduceDetail.addOrReduceDetail.quotationDiscount * parseFloat(addOrReduceItems[i].num) / 10 * 100) / 100;
+				var tem = Math.round(parseFloat(addReduceItems[i].unitPrice) * addReduceDetail.addReduceDetail.quotationDiscount * parseFloat(addReduceItems[i].num) / 10 * 100) / 100;
 				
 				discountPrice +=tem;
 				totalPrice += tem;
@@ -652,22 +652,22 @@ function calAddOrReduceSum(){
 		}
 	}
 	
-	temAddOrReduceDetail.totalPrice = Math.round(totalPrice * 100) / 100;//总价
-	temAddOrReduceDetail.discountPrice =  Math.round(discountPrice * 100) / 100;//打折
-	temAddOrReduceDetail.noDiscountTotalPrice =  Math.round(noDiscountTotalPrice * 100) / 100;//不打折
+	temAddReduceDetail.totalPrice = Math.round(totalPrice * 100) / 100;//总价
+	temAddReduceDetail.discountPrice =  Math.round(discountPrice * 100) / 100;//打折
+	temAddReduceDetail.noDiscountTotalPrice =  Math.round(noDiscountTotalPrice * 100) / 100;//不打折
 }
 
-function initAddOrReduceDetail(){
+function initAddReduceDetail(){
 	
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	
-	calAddOrReduceSum();
+	calAddReduceSum();
 	
-	$("#addOrReduceItemDiv").html("");
-	$("#addOrReduceItemDiv").html('<table id="addOrReduceItemList"></table> '); 
+	$("#addReduceItemDiv").html("");
+	$("#addReduceItemDiv").html('<table id="addReduceItemList"></table> '); 
 	
-	$("#addOrReduceItemList").jqGrid({		
+	$("#addReduceItemList").jqGrid({		
 		datatype: "local",
 		viewrecords : false,
 		multiselect : false,
@@ -677,9 +677,9 @@ function initAddOrReduceDetail(){
 		  {name:"num",width:40,editable:true,edittype: "text",editoptions:{maxlength:5},editrules:{ required:true ,custom:true,custom_func:checkGridNum}},
 		 
 		  {name:"itemName",editable:true,edittype: "text",editoptions:{maxlength:32},editrules:{ required:true ,custom:true,custom_func:checkGridItemName}},
-		  {name:"quotationFunctionAreaId",width:60,formatter:"select",editable:false,edittype: "select",editoptions:{value:addOrReduceDetail.quotationFunctionAreasStr}},
-		  {name:"quotationBigCategoryId",width:50,formatter:"select",editable:true,edittype: "select",editoptions:{value:addOrReduceDetail.quotationBigCategorysStr}},
-		  {name:"measurementUnitId",width:50,formatter:"select",editable:true,edittype: "select",editoptions:{value:addOrReduceDetail.measurementUnitsStr}},
+		  {name:"quotationFunctionAreaId",width:60,formatter:"select",editable:false,edittype: "select",editoptions:{value:addReduceDetail.quotationFunctionAreasStr}},
+		  {name:"quotationBigCategoryId",width:50,formatter:"select",editable:true,edittype: "select",editoptions:{value:addReduceDetail.quotationBigCategorysStr}},
+		  {name:"measurementUnitId",width:50,formatter:"select",editable:true,edittype: "select",editoptions:{value:addReduceDetail.measurementUnitsStr}},
 		  {name:"unitPrice",width:50,editable:true,edittype: "text",editoptions:{maxlength:5},editrules:{ required:true ,custom:true,custom_func:checkGridNum}},
 		  {name:"discountUnitPrice",width:50,formatter:discountUnitPriceFormatter},
 		  {name:"sumMoney",width:50,formatter:sumMoneyFormatter},
@@ -694,20 +694,20 @@ function initAddOrReduceDetail(){
 		  
 		], 
 		onSelectRow: function(id){
-			if(id && (id !== addOrReduceDetail.lastEditId)){
+			if(id && (id !== addReduceDetail.lastEditId)){
 				
 				var rowData = $(this).jqGrid("getRowData", id); 
 				
 				$('[data-rel="tooltip"]').tooltip('hide');
-				if(addOrReduceDetail.lastEditId!=-1){
+				if(addReduceDetail.lastEditId!=-1){
 					
-					var gridEditRes = $(this).jqGrid('saveRow',addOrReduceDetail.lastEditId);
+					var gridEditRes = $(this).jqGrid('saveRow',addReduceDetail.lastEditId);
 					if(gridEditRes){
 						
-						var newRowData = $(this).jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-						var su=$(this).jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
-						addOrReduceDetail.lastEditId=-1;
-						changeItem("addOrReduceItemList");
+						var newRowData = $(this).jqGrid("getRowData", addReduceDetail.lastEditId); 
+						var su=$(this).jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
+						addReduceDetail.lastEditId=-1;
+						changeItem("addReduceItemList");
 						
 					}else{
 						return;
@@ -734,54 +734,54 @@ function initAddOrReduceDetail(){
 						var newRowData = $(this).jqGrid("getRowData", rowid); 
 						var su = $(this).jqGrid('setRowData',rowid,newRowData);
 						console.log(newRowData);
-						addOrReduceDetail.lastEditId = -1;
+						addReduceDetail.lastEditId = -1;
 					
-						changeItem("addOrReduceItemList");
+						changeItem("addReduceItemList");
 						
-						initAddOrReduceDetail();
-						$('[data-rel="tooltip"]').tooltip({container:'#addOrReduceItemDiv'});
+						initAddReduceDetail();
+						$('[data-rel="tooltip"]').tooltip({container:'#addReduceItemDiv'});
 					}, afterrestorefunc:function(rowid){
-						addOrReduceDetail.lastEditId = -1;
+						addReduceDetail.lastEditId = -1;
 					}
 				});
 				
-				addOrReduceDetail.lastEditId=id;
+				addReduceDetail.lastEditId=id;
 			}
 		}
 	});
 	
-	for(var j=0;j<addOrReduceItems.length;j++){
-		$("#addOrReduceItemList").jqGrid("addRowData",j,addOrReduceItems[j]);
+	for(var j=0;j<addReduceItems.length;j++){
+		$("#addReduceItemList").jqGrid("addRowData",j,addReduceItems[j]);
 	}
 	
 	//初始化报价概要信息
-	$("#sumLabActivityName").html(addOrReduceDetail.addOrReduceDetail.orderActivity);
+	$("#sumLabActivityName").html(addReduceDetail.addReduceDetail.orderActivity);
 	
-	var discountMoney  = parseFloat(addOrReduceDetail.addOrReduceDetail.discountPrice)/parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount)*(10-parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount));
+	var discountMoney  = parseFloat(addReduceDetail.addReduceDetail.discountPrice)/parseFloat(addReduceDetail.addReduceDetail.quotationDiscount)*(10-parseFloat(addReduceDetail.addReduceDetail.quotationDiscount));
 	console.log(discountMoney);
 	
-	$("#sumLabSumMoney").html(Math.round((addOrReduceDetail.addOrReduceDetail.totalPrice + discountMoney)*100)/100);
-	$("#sumLabDiscount").html(Math.round(addOrReduceDetail.addOrReduceDetail.quotationDiscount*100)/100);
-	$("#sumLabDiscountMoney").html(Math.round(addOrReduceDetail.addOrReduceDetail.totalPrice*100)/100);
+	$("#sumLabSumMoney").html(Math.round((addReduceDetail.addReduceDetail.totalPrice + discountMoney)*100)/100);
+	$("#sumLabDiscount").html(Math.round(addReduceDetail.addReduceDetail.quotationDiscount*100)/100);
+	$("#sumLabDiscountMoney").html(Math.round(addReduceDetail.addReduceDetail.totalPrice*100)/100);
 	
-	if(addOrReduceDetail.addOrReduceDetail.addReduceType == '0'){
+	if(addReduceDetail.addReduceDetail.addReduceType == '0'){
 		$("#sumLabType").html("增项");
-	}else if(addOrReduceDetail.addOrReduceDetail.addReduceType == '1'){
+	}else if(addReduceDetail.addReduceDetail.addReduceType == '1'){
 		$("#sumLabType").html("减项");
 	}else {
 		$("#sumLabType").html("漏项");
 	}
-	$("#addReduceDes").html(addOrReduceDetail.addOrReduceDetail.addReduceDes);
+	$("#addReduceDes").html(addReduceDetail.addReduceDetail.addReduceDes);
 	
 	$('[data-rel="tooltip"]').tooltip('destroy');
-	$('[data-rel="tooltip"]').tooltip({container:'#addOrReduceItemDiv'});
+	$('[data-rel="tooltip"]').tooltip({container:'#addReduceItemDiv'});
 
-	if(addOrReduceDetail.addOrReduceDetail!='2'&&(addOrReduceDetail.addOrReduceDetail.addReduceStatus == '0' || addOrReduceDetail.addOrReduceDetail.addReduceStatus == '1')){
-		$("#submitAddOrReduceDetailOKBtn").attr("disabled",false);
-		$("#saveAddOrReduceDetailBtn").attr("disabled",false);
+	if(addReduceDetail.addReduceDetail!='2'&&(addReduceDetail.addReduceDetail.addReduceStatus == '0' || addReduceDetail.addReduceDetail.addReduceStatus == '1')){
+		$("#submitAddReduceDetailOKBtn").attr("disabled",false);
+		$("#saveAddReduceDetailBtn").attr("disabled",false);
 	}else{
-		$("#submitAddOrReduceDetailOKBtn").attr("disabled",true);
-		$("#saveAddOrReduceDetailBtn").attr("disabled",true);
+		$("#submitAddReduceDetailOKBtn").attr("disabled",true);
+		$("#saveAddReduceDetailBtn").attr("disabled",true);
 	}
 }
 
@@ -799,7 +799,7 @@ function discountUnitPriceFormatter(cellvalue, options, rowObject){
 	//增项漏项不打折--系统定义报价项目不打折--减项的一次性包死 综合项目 管理费 不打折
 	//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
 	//alert(rowObject);
-	if(addOrReduceDetail.addOrReduceDetail.addReduceType=='1' ){ // 减项
+	if(addReduceDetail.addReduceDetail.addReduceType=='1' ){ // 减项
 		
 		var itemType = rowObject.itemType;
 		var quotationClassificationId = rowObject.quotationClassificationId;
@@ -807,7 +807,7 @@ function discountUnitPriceFormatter(cellvalue, options, rowObject){
 		if(itemType == '3' || (itemType == '0' && (quotationClassificationId == '3' || quotationClassificationId == '4' || quotationClassificationId == '5'))){ // 系统定义报价项目不打折--减项的一次性包死 综合项目 管理费 不打折
 			return Math.round(parseFloat(rowObject.unitPrice) * 100) / 100; // 不打折
 		}else{
-			return Math.round(parseFloat(rowObject.unitPrice) * parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount) / 10 * 100) / 100;
+			return Math.round(parseFloat(rowObject.unitPrice) * parseFloat(addReduceDetail.addReduceDetail.quotationDiscount) / 10 * 100) / 100;
 		}
 	}else{
 		return Math.round(parseFloat(rowObject.unitPrice) * 100) / 100; // 不打折
@@ -819,8 +819,8 @@ function sumMoneyFormatter(cellvalue, options, rowObject){
 	//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
 	//增项漏项不打折--系统定义报价项目不打折--减项的一次性包死 综合项目 管理费 不打折
 	//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
-	console.log(addOrReduceDetail.addOrReduceDetail.addReduceType,rowObject);
-	if(addOrReduceDetail.addOrReduceDetail.addReduceType=='1' ){ // 减项
+	console.log(addReduceDetail.addReduceDetail.addReduceType,rowObject);
+	if(addReduceDetail.addReduceDetail.addReduceType=='1' ){ // 减项
 		
 		var itemType = rowObject.itemType;
 		var quotationClassificationId = rowObject.quotationClassificationId;
@@ -828,7 +828,7 @@ function sumMoneyFormatter(cellvalue, options, rowObject){
 		if(itemType == '3' || (itemType == '0' && (quotationClassificationId == '3' || quotationClassificationId == '4' || quotationClassificationId == '5'))){ // 系统定义报价项目不打折--减项的一次性包死 综合项目 管理费 不打折
 			return Math.round(parseFloat(rowObject.unitPrice)*parseFloat(rowObject.num) * 100) / 100;//不打折
 		}else{
-			return  Math.round(parseFloat(rowObject.unitPrice)*parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount)*parseFloat(rowObject.num) / 10 * 100) / 100;
+			return  Math.round(parseFloat(rowObject.unitPrice)*parseFloat(addReduceDetail.addReduceDetail.quotationDiscount)*parseFloat(rowObject.num) / 10 * 100) / 100;
 		}
 	}else{
 		return Math.round(parseFloat(rowObject.unitPrice)*parseFloat(rowObject.num)*100)/100;//不打折
@@ -878,17 +878,17 @@ function checkGridQuotationItemDes(value, colname){
 
 function removeItem(rowId){
 	
-	var row = $("#addOrReduceItemList").jqGrid('getRowData',rowId);
-	if(addOrReduceDetail.lastEditId != -1 && addOrReduceDetail.lastEditId != rowId){
-		var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+	var row = $("#addReduceItemList").jqGrid('getRowData',rowId);
+	if(addReduceDetail.lastEditId != -1 && addReduceDetail.lastEditId != rowId){
+		var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 		
 		if(gridEditRes){
-			var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-			var su = $("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
+			var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+			var su = $("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
 			
-			addOrReduceDetail.lastEditId=-1;
-			changeItem("addOrReduceItemList");
-			initAddOrReduceDetail();
+			addReduceDetail.lastEditId=-1;
+			changeItem("addReduceItemList");
+			initAddReduceDetail();
 		}else{
 			return;
 		}
@@ -897,23 +897,23 @@ function removeItem(rowId){
 	bootbox.confirm("确定要删除吗?",function(result){
 		if(result){
 			console.log('--------------removeItem-');
-			addOrReduceDetail.lastEditId = -1;
-			$("#addOrReduceItemList").jqGrid('delRowData',rowId);
-			changeItem("addOrReduceItemList");
-			initAddOrReduceDetail();
+			addReduceDetail.lastEditId = -1;
+			$("#addReduceItemList").jqGrid('delRowData',rowId);
+			changeItem("addReduceItemList");
+			initAddReduceDetail();
 		}
 	});
 }
 
 function changeItem(tableId){
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	console.log('--------------changeItem-');
-	console.log(addOrReduceItems);
+	console.log(addReduceItems);
 	
 	var ids = $("#"+tableId).jqGrid('getDataIDs');
-	addOrReduceItems.splice(0);
-	console.log(addOrReduceItems);
+	addReduceItems.splice(0);
+	console.log(addReduceItems);
 	  
 	console.log('------ids-------',ids);
 	for(var index=0;index< ids.length;++index){
@@ -933,21 +933,21 @@ function changeItem(tableId){
         item.quotationClassificationId = rowData.quotationClassificationId;
         item.quotationClassificationId = rowData.quotationClassificationId;
         
-        addOrReduceItems.push(item);
+        addReduceItems.push(item);
         console.log(rowData);
 	}
-	console.log(addOrReduceItems);
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	console.log(addReduceItems);
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	
-	calAddOrReduceSum();
+	calAddReduceSum();
 	
-	var discountMoney  = parseFloat(addOrReduceDetail.addOrReduceDetail.discountPrice)/parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount)*(10-parseFloat(addOrReduceDetail.addOrReduceDetail.quotationDiscount));
+	var discountMoney  = parseFloat(addReduceDetail.addReduceDetail.discountPrice)/parseFloat(addReduceDetail.addReduceDetail.quotationDiscount)*(10-parseFloat(addReduceDetail.addReduceDetail.quotationDiscount));
 	console.log(discountMoney);
 	
-	$("#sumLabSumMoney").html(Math.round((addOrReduceDetail.addOrReduceDetail.totalPrice + discountMoney)*100)/100);
-	$("#sumLabDiscount").html(Math.round(addOrReduceDetail.addOrReduceDetail.quotationDiscount*100)/100);
-	$("#sumLabDiscountMoney").html(Math.round(addOrReduceDetail.addOrReduceDetail.totalPrice*100)/100);
+	$("#sumLabSumMoney").html(Math.round((addReduceDetail.addReduceDetail.totalPrice + discountMoney)*100)/100);
+	$("#sumLabDiscount").html(Math.round(addReduceDetail.addReduceDetail.quotationDiscount*100)/100);
+	$("#sumLabDiscountMoney").html(Math.round(addReduceDetail.addReduceDetail.totalPrice*100)/100);
 }
 
 function confirmItemAdd(){
@@ -955,11 +955,11 @@ function confirmItemAdd(){
 		return;
 	}
 	
-	if(addOrReduceDetail.addType==1){
+	if(addReduceDetail.addType==1){
 		addQuotationItem();
-	}else if(addOrReduceDetail.addType == 2){
+	}else if(addReduceDetail.addType == 2){
 		addCustomItem();
-	}else if(addOrReduceDetail.addType == 3){
+	}else if(addReduceDetail.addType == 3){
 		addSystemDefineItem();
 	}
 	
@@ -967,57 +967,57 @@ function confirmItemAdd(){
 }
 
 function addQuotationItemFunctionArea(){
-	var nums = addOrReduceDetail.quotationItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.quotationItemListGrid.jqGrid("getGridParam","selarrrow");
 	
 	if(nums.length != 0){
 		$("#functionAreaModal").modal("show");
 		$("#quotationFunctionAreaId").get(0).selectedIndex = 0;
-		addOrReduceDetail.addType = 1;
+		addReduceDetail.addType = 1;
 	}
 }
 
 function addQuotationItem(){
 	
-	var nums = addOrReduceDetail.quotationItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.quotationItemListGrid.jqGrid("getGridParam","selarrrow");
 	
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	var options = {};
 	
 	var functionAreaType = "";
-	for(var lp =0;lp < addOrReduceDetail.quotationFunctionAreas.length; ++lp){
-		if(addOrReduceDetail.quotationFunctionAreas[lp].autoId == $("#quotationFunctionAreaId").val()){
-			functionAreaType = addOrReduceDetail.quotationFunctionAreas[lp].functionAreaType;
+	for(var lp =0;lp < addReduceDetail.quotationFunctionAreas.length; ++lp){
+		if(addReduceDetail.quotationFunctionAreas[lp].autoId == $("#quotationFunctionAreaId").val()){
+			functionAreaType = addReduceDetail.quotationFunctionAreas[lp].functionAreaType;
 			break;
 		}
 	}
 	
 	if(nums.length!=0){
 	
-		if(addOrReduceDetail.lastEditId!=-1){
+		if(addReduceDetail.lastEditId!=-1){
 			
-			var gridEditRes = $("#addOrReduceItemList").jqGrid('saveRow',addOrReduceDetail.lastEditId);
+			var gridEditRes = $("#addReduceItemList").jqGrid('saveRow',addReduceDetail.lastEditId);
 			if(gridEditRes){
 				
-				var newRowData = $("#addOrReduceItemList").jqGrid("getRowData", addOrReduceDetail.lastEditId); 
-				var su = $("#addOrReduceItemList").jqGrid('setRowData',addOrReduceDetail.lastEditId,newRowData);
+				var newRowData = $("#addReduceItemList").jqGrid("getRowData", addReduceDetail.lastEditId); 
+				var su = $("#addReduceItemList").jqGrid('setRowData',addReduceDetail.lastEditId,newRowData);
 				
-				addOrReduceDetail.lastEditId=-1;
-				changeItem("addOrReduceItemList");
-				initAddOrReduceDetail();
+				addReduceDetail.lastEditId=-1;
+				changeItem("addReduceItemList");
+				initAddReduceDetail();
 			}else{
 				return;
 			}
 		}
 		
-		var ids = $("#addOrReduceItemList").jqGrid('getDataIDs');
+		var ids = $("#addReduceItemList").jqGrid('getDataIDs');
 		var maxid = Math.max.apply(null, ids);
 		if(maxid == -Infinity){
 			maxid = 0;
 		}
 		
 		for(var i = 0; i< nums.length; i++){
-			var row = addOrReduceDetail.quotationItemListGrid.jqGrid('getRowData', nums[i]);
+			var row = addReduceDetail.quotationItemListGrid.jqGrid('getRowData', nums[i]);
 
 			var addRow = {};
 			addRow.num = 0;
@@ -1051,58 +1051,58 @@ function addQuotationItem(){
 			}
 			
 			var addFlag = true;
-			for(var loop=0;loop<addOrReduceItems.length;++loop){
-				if(addOrReduceItems[loop].itemType == addRow.itemType 
-						&& addOrReduceItems[loop].itemId == row.itemId 
-						&& addOrReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
+			for(var loop=0;loop<addReduceItems.length;++loop){
+				if(addReduceItems[loop].itemType == addRow.itemType 
+						&& addReduceItems[loop].itemId == row.itemId 
+						&& addReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
 					addFlag = false;
 					break;
 				}
 			}
 			if(addFlag){//已存在
-				$("#addOrReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
+				$("#addReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
 				maxid++;
 			}else{
 				bootbox.alert('该报价('+addRow.itemName+')已存在');
 			}
 		}
-		changeItem("addOrReduceItemList");
-		initAddOrReduceDetail();
+		changeItem("addReduceItemList");
+		initAddReduceDetail();
 	}
-	addOrReduceDetail.quotationItemModal.modal("hide");
+	addReduceDetail.quotationItemModal.modal("hide");
 }
 
 function addCustomItemFunctionArea(){
-	var nums = addOrReduceDetail.customItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.customItemListGrid.jqGrid("getGridParam","selarrrow");
 	
 	if(nums.length!=0){
 		$("#functionAreaModal").modal("show");
 		$("#quotationFunctionAreaId").get(0).selectedIndex = 0;
-		addOrReduceDetail.addType = 2;
+		addReduceDetail.addType = 2;
 	}
 }
 
 function addCustomItem(){
 
-	var nums = addOrReduceDetail.customItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.customItemListGrid.jqGrid("getGridParam","selarrrow");
 	
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	var options = {};
 	
 	if(nums.length!=0){
-		if(addOrReduceDetail.lastEditId!=-1){
-			$("#addOrReduceItemList").jqGrid('restoreRow',addOrReduceDetail.lastEditId);
-			addOrReduceDetail.lastEditId=-1;
+		if(addReduceDetail.lastEditId!=-1){
+			$("#addReduceItemList").jqGrid('restoreRow',addReduceDetail.lastEditId);
+			addReduceDetail.lastEditId=-1;
 		}
 		
-		var ids =  $("#addOrReduceItemList").jqGrid('getDataIDs');
+		var ids =  $("#addReduceItemList").jqGrid('getDataIDs');
 		var maxid = Math.max.apply(null, ids);
 		if(maxid == -Infinity)
 			maxid = 0;
 		
 		for(var i = 0; i< nums.length; i++){
-			var row = addOrReduceDetail.customItemListGrid.jqGrid('getRowData', nums[i]);
+			var row = addReduceDetail.customItemListGrid.jqGrid('getRowData', nums[i]);
 
 			var addRow = {};
 			addRow.num = 0;
@@ -1121,59 +1121,59 @@ function addCustomItem(){
 			addRow.itemType = '1';
 			
 			var addFlag = true;
-			for(var loop=0;loop<addOrReduceItems.length;++loop){
-				if(addOrReduceItems[loop].itemType == addRow.itemType 
-						&& addOrReduceItems[loop].itemId == row.itemId
-						&& addOrReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
+			for(var loop=0;loop<addReduceItems.length;++loop){
+				if(addReduceItems[loop].itemType == addRow.itemType 
+						&& addReduceItems[loop].itemId == row.itemId
+						&& addReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
 					addFlag = false;
 					break;
 				}
 			}
 			if(addFlag){ // 已存在
-				$("#addOrReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
+				$("#addReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
 				maxid++;
 			}else{
 				bootbox.alert('该报价('+addRow.itemName+')已存在');
 			}
 		}
-		changeItem("addOrReduceItemList");
-		initAddOrReduceDetail();
+		changeItem("addReduceItemList");
+		initAddReduceDetail();
 
 	}
-	addOrReduceDetail.customItemModal.modal("hide");
+	addReduceDetail.customItemModal.modal("hide");
 }
 
 function addSystemDefineItemFunctionArea(){
-	var nums = addOrReduceDetail.systemDefineItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.systemDefineItemListGrid.jqGrid("getGridParam","selarrrow");
 	
 	if(nums.length!=0){
 		$("#functionAreaModal").modal("show");
 		$("#quotationFunctionAreaId").get(0).selectedIndex = 0;
-		addOrReduceDetail.addType = 3;
+		addReduceDetail.addType = 3;
 	}
 }
 
 function addSystemDefineItem(){
 
-	var nums = addOrReduceDetail.systemDefineItemListGrid.jqGrid("getGridParam","selarrrow");
+	var nums = addReduceDetail.systemDefineItemListGrid.jqGrid("getGridParam","selarrrow");
 	
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	var options = {};
 	
 	if(nums.length!=0){
-		if(addOrReduceDetail.lastEditId!=-1){
-			$("#addOrReduceItemList").jqGrid('restoreRow',addOrReduceDetail.lastEditId);
-			addOrReduceDetail.lastEditId=-1;
+		if(addReduceDetail.lastEditId!=-1){
+			$("#addReduceItemList").jqGrid('restoreRow',addReduceDetail.lastEditId);
+			addReduceDetail.lastEditId=-1;
 		}
 		
-		var ids =  $("#addOrReduceItemList").jqGrid('getDataIDs');
+		var ids =  $("#addReduceItemList").jqGrid('getDataIDs');
 		var maxid = Math.max.apply(null, ids);
 		if(maxid == -Infinity)
 			maxid = 0;
 		
 		for(var i = 0; i< nums.length; i++){
-			var row = addOrReduceDetail.systemDefineItemListGrid.jqGrid('getRowData', nums[i]);
+			var row = addReduceDetail.systemDefineItemListGrid.jqGrid('getRowData', nums[i]);
 
 			var addRow = {};
 			addRow.num = 0;
@@ -1192,89 +1192,89 @@ function addSystemDefineItem(){
 			addRow.itemType = '3';
 			
 			var addFlag = true;
-			for(var loop=0;loop<addOrReduceItems.length;++loop){
-				if(addOrReduceItems[loop].itemType == addRow.itemType 
-						&&  addOrReduceItems[loop].itemId == row.itemId 
-						&& addOrReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
+			for(var loop=0;loop<addReduceItems.length;++loop){
+				if(addReduceItems[loop].itemType == addRow.itemType 
+						&&  addReduceItems[loop].itemId == row.itemId 
+						&& addReduceItems[loop].quotationFunctionAreaId == addRow.quotationFunctionAreaId){
 					addFlag = false;
 					break;
 				}
 			}
 			if(addFlag){//已存在
-				$("#addOrReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
+				$("#addReduceItemList").jqGrid('addRowData',maxid+1,addRow,"first");
 				maxid++;
 			}else{
 				bootbox.alert('该报价('+addRow.itemName+')已存在');
 			}
 		}
-		changeItem("addOrReduceItemList");
-		initAddOrReduceDetail();
+		changeItem("addReduceItemList");
+		initAddReduceDetail();
 	}
-	addOrReduceDetail.systemDefineItemModal.modal("hide");
+	addReduceDetail.systemDefineItemModal.modal("hide");
 }
 
 //-------------------------------------------------------------save -------------------------------
 
-function saveAddOrReduceDetail(submitFlag){
+function saveAddReduceDetail(submitFlag){
 	var url = "";
 	var option={};
 	var num = 0;
 	
-	var temAddOrReduceDetail = addOrReduceDetail.addOrReduceDetail;
-	var addOrReduceItems = temAddOrReduceDetail.addOrReduceItems;
+	var temAddReduceDetail = addReduceDetail.addReduceDetail;
+	var addReduceItems = temAddReduceDetail.addReduceItems;
 	
-	for(var i = 0;i<addOrReduceItems.length;++i){
-		if(submitFlag == 1 && temAddOrReduceDetail.addOrReduceItems[i].num==0){
+	for(var i = 0;i<addReduceItems.length;++i){
+		if(submitFlag == 1 && temAddReduceDetail.addReduceItems[i].num==0){
 			continue;
 		}
-		option['addOrReduceDetail.addOrReduceItems['+num+'].itemId'] = temAddOrReduceDetail.addOrReduceItems[i].itemId;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].itemName'] = temAddOrReduceDetail.addOrReduceItems[i].itemName;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].measurementUnitId'] = temAddOrReduceDetail.addOrReduceItems[i].measurementUnitId;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].measurementUnit'] = temAddOrReduceDetail.addOrReduceItems[i].measurementUnit;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].num'] = temAddOrReduceDetail.addOrReduceItems[i].num;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationBigCategory'] = temAddOrReduceDetail.addOrReduceItems[i].quotationBigCategory;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationBigCategoryId'] = temAddOrReduceDetail.addOrReduceItems[i].quotationBigCategoryId;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationItemDes'] = temAddOrReduceDetail.addOrReduceItems[i].quotationItemDes;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].unitPrice'] = temAddOrReduceDetail.addOrReduceItems[i].unitPrice;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].workType'] = temAddOrReduceDetail.addOrReduceItems[i].workType;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].workTypeId'] = temAddOrReduceDetail.addOrReduceItems[i].workTypeId;	
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationFunctionAreaId'] = temAddOrReduceDetail.addOrReduceItems[i].quotationFunctionAreaId;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationClassificationId'] = temAddOrReduceDetail.addOrReduceItems[i].quotationClassificationId;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].quotationClassification'] = temAddOrReduceDetail.addOrReduceItems[i].quotationClassification;
-		option['addOrReduceDetail.addOrReduceItems['+num+'].itemType'] = temAddOrReduceDetail.addOrReduceItems[i].itemType;
+		option['addReduceDetail.addReduceItems['+num+'].itemId'] = temAddReduceDetail.addReduceItems[i].itemId;
+		option['addReduceDetail.addReduceItems['+num+'].itemName'] = temAddReduceDetail.addReduceItems[i].itemName;
+		option['addReduceDetail.addReduceItems['+num+'].measurementUnitId'] = temAddReduceDetail.addReduceItems[i].measurementUnitId;
+		option['addReduceDetail.addReduceItems['+num+'].measurementUnit'] = temAddReduceDetail.addReduceItems[i].measurementUnit;
+		option['addReduceDetail.addReduceItems['+num+'].num'] = temAddReduceDetail.addReduceItems[i].num;
+		option['addReduceDetail.addReduceItems['+num+'].quotationBigCategory'] = temAddReduceDetail.addReduceItems[i].quotationBigCategory;
+		option['addReduceDetail.addReduceItems['+num+'].quotationBigCategoryId'] = temAddReduceDetail.addReduceItems[i].quotationBigCategoryId;
+		option['addReduceDetail.addReduceItems['+num+'].quotationItemDes'] = temAddReduceDetail.addReduceItems[i].quotationItemDes;
+		option['addReduceDetail.addReduceItems['+num+'].unitPrice'] = temAddReduceDetail.addReduceItems[i].unitPrice;
+		option['addReduceDetail.addReduceItems['+num+'].workType'] = temAddReduceDetail.addReduceItems[i].workType;
+		option['addReduceDetail.addReduceItems['+num+'].workTypeId'] = temAddReduceDetail.addReduceItems[i].workTypeId;	
+		option['addReduceDetail.addReduceItems['+num+'].quotationFunctionAreaId'] = temAddReduceDetail.addReduceItems[i].quotationFunctionAreaId;
+		option['addReduceDetail.addReduceItems['+num+'].quotationClassificationId'] = temAddReduceDetail.addReduceItems[i].quotationClassificationId;
+		option['addReduceDetail.addReduceItems['+num+'].quotationClassification'] = temAddReduceDetail.addReduceItems[i].quotationClassification;
+		option['addReduceDetail.addReduceItems['+num+'].itemType'] = temAddReduceDetail.addReduceItems[i].itemType;
 		
 		++num;
 	}
 	
-	option['addOrReduceDetail.arId'] = temAddOrReduceDetail.arId;
-	option['addOrReduceDetail.OrderId'] = temAddOrReduceDetail.OrderId;
-	option['addOrReduceDetail.versionId'] = temAddOrReduceDetail.versionId;
-	option['addOrReduceDetail.versionName'] = temAddOrReduceDetail.versionName;
-	option['addOrReduceDetail.orderTotalPrice'] = temAddOrReduceDetail.orderTotalPrice;
-	option['addOrReduceDetail.quotationDiscount'] = temAddOrReduceDetail.quotationDiscount;
-	option['addOrReduceDetail.addReduceType'] = temAddOrReduceDetail.addReduceType;
-	option['addOrReduceDetail.addReduceTotal'] = Math.round(temAddOrReduceDetail.totalPrice);
+	option['addReduceDetail.arId'] = temAddReduceDetail.arId;
+	option['addReduceDetail.OrderId'] = temAddReduceDetail.OrderId;
+	option['addReduceDetail.versionId'] = temAddReduceDetail.versionId;
+	option['addReduceDetail.versionName'] = temAddReduceDetail.versionName;
+	option['addReduceDetail.orderTotalPrice'] = temAddReduceDetail.orderTotalPrice;
+	option['addReduceDetail.quotationDiscount'] = temAddReduceDetail.quotationDiscount;
+	option['addReduceDetail.addReduceType'] = temAddReduceDetail.addReduceType;
+	option['addReduceDetail.addReduceTotal'] = Math.round(temAddReduceDetail.totalPrice);
 	if(submitFlag){
-		option['addOrReduceDetail.addReduceStatus'] = 1;
+		option['addReduceDetail.addReduceStatus'] = 1;
 		
-		if(addOrReduceDetail.lastEditId != -1){
-			$(this).jqGrid('restoreRow', addOrReduceDetail.lastEditId);
-			addOrReduceDetail.lastEditId=-1;
+		if(addReduceDetail.lastEditId != -1){
+			$(this).jqGrid('restoreRow', addReduceDetail.lastEditId);
+			addReduceDetail.lastEditId=-1;
 		}
 	}else{
-		option['addOrReduceDetail.addReduceStatus'] = 0;
+		option['addReduceDetail.addReduceStatus'] = 0;
 	}
 	
-	option['addOrReduceDetail.orderPaymentId'] = temAddOrReduceDetail.orderPaymentId;
-	option['addOrReduceDetail.addReduceDes'] = temAddOrReduceDetail.addReduceDes;
+	option['addReduceDetail.orderPaymentId'] = temAddReduceDetail.orderPaymentId;
+	option['addReduceDetail.addReduceDes'] = temAddReduceDetail.addReduceDes;
 	
 	if(submitFlag){
-		url = api.decoration.submitAddOrReduceDetail;
+		url = api.decoration.submitAddReduceDetail;
 	}else{
-		url = api.decoration.saveAddOrReduceDetail;
+		url = api.decoration.saveAddReduceDetail;
 	}
 	
-	com.post(api.decoration.checkAddOrReduceForPenalty, option, function(res1){
+	com.post(api.decoration.checkAddReduceForPenalty, option, function(res1){
 		
 		if(res1.breachContractFlag == 1){
 			bootbox.confirm("增减项总和满足违约金条件,继续吗?", function(res2){
@@ -1282,9 +1282,9 @@ function saveAddOrReduceDetail(submitFlag){
 					com.post(url, option, function(res){
 						if(submitFlag){
 							com.showAlert(com.info, "提交成功");
-							$("#fl-container").load(api.index.decorationOrderAddOrReduceIndex.url, {}, function(){
-								addOrReduce.decorationOrderId = addOrReduceDetail.addOrReduceDetail.orderId;
-								addOrReduce.initAddOrReduceList();
+							$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+								addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
+								addReduce.initAddReduceList();
 							});
 						}else{
 							com.showAlert(com.info, "保存成功");
@@ -1296,9 +1296,9 @@ function saveAddOrReduceDetail(submitFlag){
 			com.post(url, option, function(res){
 				if(submitFlag){
 					com.showAlert(com.info, "提交成功");
-					$("#fl-container").load(api.index.decorationOrderAddOrReduceIndex.url, {}, function(){
-						addOrReduce.decorationOrderId = addOrReduceDetail.addOrReduceDetail.orderId;
-						addOrReduce.initAddOrReduceList();
+					$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+						addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
+						addReduce.initAddReduceList();
 					});
 				}else{
 					com.showAlert(com.info, "保存成功");

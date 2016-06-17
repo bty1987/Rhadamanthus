@@ -24,6 +24,16 @@ public class QuotationVO implements Serializable {
 	
 	private String orderId;
 	
+	private String orderAddr;
+	
+	private String customerName;
+	
+	private String designerName;
+	
+	private String designDepartmentName;
+	
+	private Float houseArea;
+	
 	private Float orderTotalPrice;
 	
 	private String versionId;
@@ -79,6 +89,46 @@ public class QuotationVO implements Serializable {
 
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
+	}
+
+	public String getOrderAddr() {
+		return orderAddr;
+	}
+
+	public void setOrderAddr(String orderAddr) {
+		this.orderAddr = orderAddr;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getDesignerName() {
+		return designerName;
+	}
+
+	public String getDesignDepartmentName() {
+		return designDepartmentName;
+	}
+
+	public void setDesignDepartmentName(String designDepartmentName) {
+		this.designDepartmentName = designDepartmentName;
+	}
+
+	public Float getHouseArea() {
+		return houseArea;
+	}
+
+	public void setHouseArea(Float houseArea) {
+		this.houseArea = houseArea;
+	}
+
+	public void setDesignerName(String designerName) {
+		this.designerName = designerName;
 	}
 
 	public String getQuotationName(){

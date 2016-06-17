@@ -18,7 +18,7 @@ import com.fanglin.decoration.vo.AddReduceVO;
 
 public interface AddReduceService {
 	
-	public List<AddReduceVO> queryAddReduceByOrderId(String orderId);
+	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO);
 	
 	public int AddAddReduce(AddReduceVO addReduceVO);
 	

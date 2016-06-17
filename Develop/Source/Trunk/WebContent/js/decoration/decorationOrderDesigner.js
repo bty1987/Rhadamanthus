@@ -227,7 +227,7 @@ $(function(){
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
 
-			$("#fl-container").load(api.index.decorationOrderAddOrReduceIndex.url);
+			$("#fl-container").load(api.index.addReduceIndex.url);
 		}
 
 		return {
