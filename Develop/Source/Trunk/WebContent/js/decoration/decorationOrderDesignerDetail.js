@@ -1,12 +1,9 @@
+
 var decorationOrderDetail = {
 	decorationOrderId : null,
 
-	initBaseInfo: initBaseInfo,
-	initUplodify: initUploadify,
 	customer: {},
 	village: {},
-	quotationItemListGrid: null,
-	quotationItemGridPager: null,
 	materialPaymentListGrid: null,
 	materialPaymentGridPager: null,
 
@@ -64,8 +61,6 @@ jQuery(function($) {
 	
 	decorationOrderDetail.btnSaveBaseDecorationOrderInfo = $("#btnSaveBaseDecorationOrderInfo").on("click", saveBaseDecorationOrderInfo);
 
-	decorationOrderDetail.quotationItemListGrid = $("#quotationItemListGrid");
-	decorationOrderDetail.quotationItemGridPager = "#quotationItemGridPager";
 	decorationOrderDetail.materialPaymentListGrid = $("#materialPaymentListGrid");
 	decorationOrderDetail.materialPaymentGridPager = "#materialPaymentGridPager";
 	
@@ -114,11 +109,7 @@ jQuery(function($) {
 	decorationOrderDetail.activity.activityType = $("#activityType").on("change", function(){
 		var $this = $(this);
 		
-		if($this.val() == 0){
-			decorationOrderDetail.activity.couponInfo.css("display", "block");
-		}else if($this.val() == 1){
-			decorationOrderDetail.activity.couponInfo.css("display", "none");
-		}
+		$this.val() == 0 ? decorationOrderDetail.activity.couponInfo.css("display", "block") : decorationOrderDetail.activity.couponInfo.css("display", "none");
 	});
 	decorationOrderDetail.activity.activityItemName = $("#activityItemName");
 	decorationOrderDetail.activity.couponInfo = $("#couponInfo");
@@ -522,7 +513,6 @@ jQuery(function($) {
 		});
 		
 		decorationOrderDetail.joinDecorationActivityModal.modal("show");
-		
 	});
 	
 	$("#applyActivityItemBtn").on("click", function(){
@@ -698,8 +688,7 @@ jQuery(function($) {
 				if (res.errorCode == 0) {
 					var html1 = '<option value="">&nbsp;</option>';
 					if (res.autoFillKeyValue != null) {
-						var i = 0;
-						for(i=0;i<res.autoFillKeyValue.length;++i){
+						for(var i=0;i<res.autoFillKeyValue.length;++i){
 							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
 						}
 					}
@@ -806,23 +795,82 @@ jQuery(function($) {
 		var pinyinName = $(this).val();
 		if ($(this).val() != "") {
 			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 8}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					
-					if (res.autoFillKeyValue != null) {
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
+				var html1 = '<option value="">&nbsp;</option>';
+				
+				if (res.autoFillKeyValue != null) {
+					for(var i=0;i<res.autoFillKeyValue.length;++i){
+						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
 					}
-
-					$("#approveSpecialActivityItemManSel").html(html1).trigger("chosen:updated");
 				}
+
+				$("#approveSpecialActivityItemManSel").html(html1).trigger("chosen:updated");
 			});
 		}
 	});
 	$("#approveSpecialActivityItemManSel_chosen").css("width", "200px");
 	
-	initBaseInfo();
+	initWizard();
+	
+	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, function(decorationOrder){
+		
+		var statuses = ["咨询", "量房", "已报价", "定金"];
+		
+		if(statuses.indexOf(decorationOrder.status)){
+			$("#houseType").prop("disabled", false);
+		}else{
+			decorationOrder.status == "已签约" ? $("#houseType").prop("disabled", true) : $("#houseType").prop("disabled", false);
+		}
+		
+		$("#orderId").val(decorationOrder.orderId);
+		$("#customer").val(decorationOrder.customer.customerName);
+		$("#houseAddr").val(decorationOrder.village.villageName + decorationOrder.houseNumber);
+		$("#designDepartment").val(decorationOrder.designDepartment);
+		$("#designer").val(decorationOrder.designer);
+		$("#businessDepartment").val(decorationOrder.businessDepartment);
+		$("#salesman").val(decorationOrder.salesman);
+		$("#houseType").val(decorationOrder.houseType).prop("disabled", true);
+		$("#houseClass").val(decorationOrder.houseClass).prop("disabled", true);
+		$("#houseArea").val(decorationOrder.houseArea).prop("disabled", true);
+		$("#freeArea").val(decorationOrder.freeArea).prop("disabled", true);
+		$("#status").val(decorationOrder.status);
+		$("#createTime").val(decorationOrder.createTime);
+		
+		$("#backOrderName").val(decorationOrder.backOrderName);
+		$("#backOrderPhone").val(decorationOrder.backOrderPhone);
+		$("#backOrderContent").val(decorationOrder.backOrderContent);
+		
+		$("#notSalesmanName").val(decorationOrder.notSalesmanName);
+		$("#notSalesmanPhone").val(decorationOrder.notSalesmanPhone);
+		$("#notSalesmanRate").val(decorationOrder.notSalesmanRate);
+		$("#notSalesmanContent").val(decorationOrder.notSalesmanContent);
+		
+		$("#salesmanType").val(decorationOrder.salesmanType);
+
+        decorationOrderDetail.customer.id = decorationOrder.customer.id;
+		decorationOrderDetail.customer.phone = decorationOrder.customer.phone;
+		decorationOrderDetail.customer.qq = decorationOrder.customer.qq;
+		decorationOrderDetail.customer.wechat = decorationOrder.customer.wechat;
+		decorationOrderDetail.customer.email = decorationOrder.customer.email;
+		decorationOrderDetail.customer.relationshipType = decorationOrder.customer.relationshipType;
+		decorationOrderDetail.customer.approveStatus = decorationOrder.customer.approveStatus;
+		decorationOrderDetail.village.villageId = decorationOrder.village.villageId;
+		decorationOrderDetail.village.villageName = decorationOrder.village.villageName;
+		decorationOrderDetail.village.houseNumber = decorationOrder.houseNumber;
+		decorationOrderDetail.village.ruleExample = decorationOrder.village.buildingNameRule.ruleExample;
+		decorationOrderDetail.village.ruleContent = decorationOrder.village.buildingNameRule.ruleContent;
+		decorationOrderDetail.village.rule = decorationOrder.village.buildingNameRule.rule;
+	});
+	
+	decorationUtils.initBasePayment(decorationPayment.postParam, basePaymentActionFormatter, '#decorationOrderDetailDesignerPageContent');
+	decorationUtils.initOtherPayment(decorationPayment.postParam, otherPaymentActionFormatter, '#decorationOrderDetailDesignerPageContent');
+	
+	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", function(data){
+		decorationUtils.addDecorationPicture(data, 1, "designPictures");
+	});
+	
+	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwt", function(data){
+		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
+	});
 });
 
 function basePaymentActionFormatter(cellvalue, options, rowObject) {
@@ -895,13 +943,9 @@ function submintPayment(paymentId,paymentType){
 		bootbox.confirm("确认要提交" + paymentType + "吗？", function(result){
 			if(result){
 				com.post(api.payment.submitDecorationPayment, {"decorationPayment.autoId":paymentId}, function(res){
-					if(res.errorCode == 0){
-						$.jgrid.refreshGrid($("#basePaymentTable"), decorationPayment.postParam);
-						$.jgrid.refreshGrid(decorationPayment.otherPaymentGrid, decorationPayment.postParam);
-						decorationOrderDetail.quotationTotalPriceModal.modal("hide");
-					} else {
-						bootbox.alert("系统出错");
-					}
+					$.jgrid.refreshGrid($("#basePaymentTable"), decorationPayment.postParam);
+					$.jgrid.refreshGrid(decorationPayment.otherPaymentGrid, decorationPayment.postParam);
+					decorationOrderDetail.quotationTotalPriceModal.modal("hide");
 				});
 			}
 			bootboxFlag = false;
@@ -946,7 +990,7 @@ function editRefundPayment(paymentId, oldmoney, paymentType) {
 		$("#referMoney").val(oldmoney);
 		$("#paymentType").val(paymentType);
 		
-		if($("#paymentType").val()==null){
+		if($("#paymentType").val() == null){
 			$("#paymentType").prepend("<option value='"+paymentType+"'>"+paymentType+"</option>");
 			$("#paymentType").val(paymentType);
 		}
@@ -962,55 +1006,37 @@ function editRefundPayment(paymentId, oldmoney, paymentType) {
 	});
 }
 
-// -------------------------------------------------------------------------------初始化-
 function initWizard() {
 	$('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {
 		
-		if (info.step == 2 && info.direction === "previous") {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide");
-		} else {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
-		}
+		var curstep = 0;
 		
-		if ((info.step == 3 && info.direction === "previous") || (info.step == 1 && info.direction === "next")) {
+		info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
+		
+		curstep == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
+		
+		if (curstep == 2) {
 			decorationUtils.loadQuotationDetail();
-		}
-
-		if ((info.step == 4 && info.direction === "previous") || (info.step == 2 && info.direction === "next")) {
-			initDecorationPicture();
-			initCADPicture();
-		}
-		
-		if ((info.step == 5 && info.direction === "previous") || (info.step == 3 && info.direction === "next")) {
+		} else if (curstep == 3) {
+			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+		}else if (curstep == 4){
 			setTimeout(decorationUtils.materialPaymentListGridInit, 50);
-		}
-
-		if ((info.step == 6 && info.direction === "previous") || (info.step == 4 && info.direction === "next")) {
+		}else if (curstep == 5) {
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, activityBtnMethod, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, uiBtnMethod, decorationOrderDetail.decorationOrderId);
-		}
-		
-		if (info.step == 6 && info.direction === "next") {
+		}else if(curstep == 7){
 			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
 		}
-		
 	}).on('finished', function(e) {
 		$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
-		//$("#drawLineModal").modal("show");
-		
 	}).on('stepclick', function(e,info){
 		
-		if(info.step == 1){
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide");
-		}else{
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
-		}
+		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 		
 		if (info.step == 2) {
 			decorationUtils.loadQuotationDetail();
 		} else if (info.step == 3) {
-			initDecorationPicture();
-			initCADPicture();
+			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if (info.step == 4){
 			setTimeout(decorationUtils.materialPaymentListGridInit, 50);
 		}else if (info.step == 5) {
@@ -1020,93 +1046,10 @@ function initWizard() {
 			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
 		}
 	}).on('next', function(e, info) {
-		if (info.step == 1) {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide");
-		} else {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
-		}
+		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 	}).on('previous', function(e, info) {
-		if (info.step == 1) {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide");
-		} else {
-			decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
-		}
+		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 	});
-}
-// --------------------------------------------------------------------基本信息--------------------------------------------------------------
-function initBaseInfo() {
-	com.post(api.decoration.queryDecorationOrderForDesignerByOrderId, {"decorationOrder.orderId" : decorationOrderDetail.decorationOrderId}, function(res) {
-		decorationOrderDetail.mediaServer = window.mediaServer;
-		
-		initUploadify();
-		
-		if(res.decorationOrder.status == "咨询" || res.decorationOrder.status=="量房" || res.decorationOrder.status=="已报价" || res.decorationOrder.status=="定金"){
-			$("#houseType").prop("disabled", false);
-		}else{
-			if (res.decorationOrder.status == "已签约") {
-				$("#houseType").prop("disabled", true);
-			} else {
-				$("#houseType").prop("disabled", false);
-			}
-		}
-		
-		$("#orderId").val(res.decorationOrder.orderId);
-		$("#customer").val(res.decorationOrder.customer.customerName);
-		$("#houseAddr").val(res.decorationOrder.village.villageName + res.decorationOrder.houseNumber);
-		$("#designDepartment").val(res.decorationOrder.designDepartment);
-		$("#designer").val(res.decorationOrder.designer);
-		$("#businessDepartment").val(res.decorationOrder.businessDepartment);
-		$("#salesman").val(res.decorationOrder.salesman);
-		$("#houseType").val(res.decorationOrder.houseType);
-		$("#houseClass").val(res.decorationOrder.houseClass);
-		$("#houseArea").val(res.decorationOrder.houseArea);
-		$("#freeArea").val(res.decorationOrder.freeArea);
-		$("#status").val(res.decorationOrder.status);
-		$("#createTime").val(res.decorationOrder.createTime);
-		
-		$("#backOrderName").val(res.decorationOrder.backOrderName);
-		$("#backOrderPhone").val(res.decorationOrder.backOrderPhone);
-		$("#backOrderContent").val(res.decorationOrder.backOrderContent);
-		
-		$("#notSalesmanName").val(res.decorationOrder.notSalesmanName);
-		$("#notSalesmanPhone").val(res.decorationOrder.notSalesmanPhone);
-		$("#notSalesmanRate").val(res.decorationOrder.notSalesmanRate);
-		$("#notSalesmanContent").val(res.decorationOrder.notSalesmanContent);
-		
-		$("#salesmanType").val(res.decorationOrder.salesmanType);
-
-        $("#houseType").prop("disabled", true);
-        $("#houseClass").prop("disabled", true); 
-        $("#houseArea").prop("disabled", true);
-        $("#freeArea").prop("disabled", true);
-        
-        decorationOrderDetail.customer.id = res.decorationOrder.customer.id;
-		decorationOrderDetail.customer.phone = res.decorationOrder.customer.phone;
-		decorationOrderDetail.customer.qq = res.decorationOrder.customer.qq;
-		decorationOrderDetail.customer.wechat = res.decorationOrder.customer.wechat;
-		decorationOrderDetail.customer.email = res.decorationOrder.customer.email;
-		decorationOrderDetail.customer.relationshipType = res.decorationOrder.customer.relationshipType;
-		decorationOrderDetail.customer.approveStatus = res.decorationOrder.customer.approveStatus;
-		decorationOrderDetail.village.villageId = res.decorationOrder.village.villageId;
-		decorationOrderDetail.village.villageName = res.decorationOrder.village.villageName;
-		decorationOrderDetail.village.houseNumber = res.decorationOrder.houseNumber;
-		decorationOrderDetail.village.ruleExample = res.decorationOrder.village.buildingNameRule.ruleExample;
-		decorationOrderDetail.village.ruleContent = res.decorationOrder.village.buildingNameRule.ruleContent;
-		decorationOrderDetail.village.rule = res.decorationOrder.village.buildingNameRule.rule;
-	});
-	
-	var options = {
-		"quotation.orderId": decorationOrderDetail.decorationOrderId,
-	};
-	
-	// -----------------------初始化款项信息-----------
-	decorationUtils.initBasePayment(decorationPayment.postParam, basePaymentActionFormatter, '#decorationOrderDetailDesignerPageContent');
-	decorationUtils.initOtherPayment(decorationPayment.postParam, otherPaymentActionFormatter, '#decorationOrderDetailDesignerPageContent');
-	
-	if(decorationOrderDetail.firstInit==undefined || decorationOrderDetail.firstInit == true){
-		initWizard();
-		decorationOrderDetail.firstInit = false;
-	}
 }
 
 function saveBaseDecorationOrderInfo() {
@@ -1129,7 +1072,6 @@ function saveBaseDecorationOrderInfo() {
 
 			com.post(api.decoration.changeDecorationOrderForActivity, options, function(res) {
 				com.showAlert(com.info, "操作成功");
-				initBaseInfo();
 				btn.button('reset');
 			}, function(res) {
 				btn.button('reset');
@@ -1140,268 +1082,14 @@ function saveBaseDecorationOrderInfo() {
 	});
 }
 
-// --------------------------------------------------------------图纸信息-----------------------
-function initUploadify() {
-	if (decorationOrderDetail.firstInitUploadify != undefined && !decorationOrderDetail.firstInitUploadify) {
-		return;
-	}
-
-	decorationOrderDetail.firstInitUploadify = false;
-	$("#pictureUpload").Huploadify({
-		'debug' : false, // 开启调试
-		'auto' : true, // 是否自动上传
-		'successTimeout' : 150, // 超时时间
-		'formData' : { // 附带值
-			'uploadType' : 2
-		},
-		//'swf': "./js/uploadify/uploadify.swf", // flash
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        //'queueID': 'uploadfileQueue', // 文件选择后的容器ID
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': decorationOrderDetail.mediaServer + api.common.uploadImg.url, // 上传处理程序
-        //'buttonImage':'upbutton.gif', // 浏览按钮的背景图片路径
-        'width':'100', // 浏览按钮的宽度
-        'height': '32', // 浏览按钮的高度
-        //'expressInstall': 'expressInstall.swf', // expressInstall.swf文件的路径
-        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit':'5MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) {
-        	//每次更新上载的文件的进展
-            //有时候上传进度什么想自己个性化控制，可以利用这个方法
-            //使用方法见官方说明
-        }, 'onSelect': function(file){ //选择上传文件后调用
-            
-        }, 'onSelectError':function(file, errorCode, errorMsg){ // 返回一个错误，选择文件的时候触发
-            switch(errorCode) {
-                case -100:
-                    alert("上传的文件数量已经超出系统限制的"+$('#pictureUpload').uploadify('settings','queueSizeLimit')+"个文件！");
-                    break;
-                case -110:
-                    alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#pictureUpload').uploadify('settings','fileSizeLimit')+"大小！");
-                    break;
-                case -120:
-                    alert("文件 ["+file.name+"] 大小异常！");
-                    break;
-                case -130:
-                    alert("文件 ["+file.name+"] 类型不正确！");
-                    break;
-            }
-        },
-        
-        //'onFallback':function(){ // 检测FLASH失败调用
-        //    alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
-        //},
-        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
-        	var dateObj = eval("("+data+")");
-        	
-        	if(dateObj.errorCode == 0){
-        		 bootbox.prompt("请输入备注：", function(result) {                
-					if(result === null){
-
-					}else{
-						var options = {
-							"orderDesignPicture.picturePath": dateObj.resUrl,
-							"orderDesignPicture.uploadFileName": dateObj.strutsUploadsFileName,
-							"orderDesignPicture.pictureContent": result,
-							"orderDesignPicture.orderId": decorationOrderDetail.decorationOrderId
-						};
-						
-						com.post(api.decoration.addOrderDesignPicture, options, function(res) {
-							if (res.errorCode == 0) {
-								com.showAlert(com.info, "操作成功");
-								initDecorationPicture();
-							} else {
-								com.showAlert( com.info, res.errorMsg);
-							}
-						});
-					}
-				});
-			}else{
-				alert(data);
-			}
-		}
-	});
-
-	$("#CADUpload").Huploadify({
-		'debug': false, // 开启调试
-		'auto': true, // 是否自动上传
-		'successTimeout': 150, // 超时时间
-		'formData': { // 附带值
-			'uploadType':1
-		},
-		//'swf': "./js/uploadify/uploadify.swf", // flash
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        //'queueID': 'uploadfileQueue', // 文件选择后的容器ID
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': decorationOrderDetail.mediaServer + api.common.uploadOther.url, // 上传处理程序
-        //'buttonImage': 'upbutton.gif', // 浏览按钮的背景图片路径
-        'width': '100', // 浏览按钮的宽度
-        'height': '32', // 浏览按钮的高度
-        //'expressInstall': 'expressInstall.swf', // expressInstall.swf文件的路径
-        'fileTypeDesc': '支持的格式:', //在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.dwt', // 允许上传的文件后缀
-        'fileSizeLimit': '5MB', // 上传文件的大小限制
-        'queueSizeLimit': 1, // 上传数量
-        'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) {
-        	//每次更新上载的文件的进展
-            //有时候上传进度什么想自己个性化控制，可以利用这个方法
-            //使用方法见官方说明
-        }, 'onSelect': function(file) { // 选择上传文件后调用
-                  
-        }, 'onSelectError': function(file, errorCode, errorMsg){ // 返回一个错误，选择文件的时候触发
-            switch(errorCode) {
-                case -100:
-                    alert("上传的文件数量已经超出系统限制的"+$('#CADUpload').uploadify('settings','queueSizeLimit')+"个文件！");
-                    break;
-                case -110:
-                    alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#CADUpload').uploadify('settings','fileSizeLimit')+"大小！");
-                    break;
-                case -120:
-                    alert("文件 ["+file.name+"] 大小异常！");
-                    break;
-                case -130:
-                    alert("文件 ["+file.name+"] 类型不正确！");
-                    break;
-            }
-        }, 'onFallback': function(){ // 检测FLASH失败调用
-            alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
-        }, 'onUploadSuccess': function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-        	var dateObj = eval("("+data+")");
-        	if(dateObj.errorCode == 0){
-        		 bootbox.prompt("请输入备注:", function(result) {                
-					if (result === null) {
-
-					} else {
-						var options = {
-							"orderDesignPicture.picturePath" : dateObj.resUrl,
-							"orderDesignPicture.uploadFileName" : dateObj.strutsUploadsFileName,
-							"orderDesignPicture.pictureContent" : result,
-							"orderDesignPicture.orderId" : decorationOrderDetail.decorationOrderId
-						};
-						
-						com.post(api.decoration.addOrderDesignPictureForCAD, options, function(res) {
-							if (res.errorCode == 0) {
-								com.showAlert(com.info, "操作成功");
-								initCADPicture();
-							} else {
-								com.showAlert(com.info, res.errorMsg);
-							}
-						});
-					}
-				});
-			} else {
-				alert(data);
-			}
-		}
-	});
-}
-
-function initDecorationPicture() {
-
-	com.post(api.decoration.queryOrderDesignPictureByOrderId, {"orderDesignPicture.orderId" : decorationOrderDetail.decorationOrderId}, function(res) {
-		var html = "";
-		var i = 0;
-		if(res.orderDesignPictures!=null && res.orderDesignPictures.length>0){
-			for(i=0;i<res.orderDesignPictures.length;++i){
-				html+='<li>';
-				html+='<a data-rel="colorbox" href="'+decorationOrderDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+res.orderDesignPictures[i].picturePath+'" class="cboxElement" target="_blank">';
-				html+='		<img src="'+decorationOrderDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+res.orderDesignPictures[i].picturePath+'&divFlag=1&width=200&height=200" alt="200x200" width="200" height="200">';
-				html+='</a>';
-				
-				html+='<div class="tools tools-top">';
-				//html+='		<a href="#"><i class="icon-link"></i></a>';
-				html+='		<label>'+res.orderDesignPictures[i].uploadFileName+'</label>';
-				html+='		<a href="'+decorationOrderDetail.mediaServer + api.common.downloadFile.url + '?downloadFilePath='+res.orderDesignPictures[i].picturePath+'&fileName='+res.orderDesignPictures[i].uploadFileName+'" target="_blank"><i class="icon-download-alt"></i></a>';
-				html+='		<a href="javascript:void(0);" onclick="deleteOrderImg('+res.orderDesignPictures[i].autoId+','+decorationOrderDetail.decorationOrderId+')"><i class="icon-remove red"></i></a>';
-				html+='</div>';
-				html+='</li>';
-			}
-			$("#designPictures").html(html);
-		} else {
-			$("#designPictures").html("");
-		}
-	});
-}
-
-function initCADPicture() {
-	com.post(api.decoration.queryOrderDesignPictureForCADByOrderId, {"orderDesignPicture.orderId" : decorationOrderDetail.decorationOrderId}, function(res) {
-		var i = 0;
-		if(res.orderDesignPictures!=null&& res.orderDesignPictures.length>0){
-			var html ="";
-			for(i=0;i<res.orderDesignPictures.length;++i){
-				html+='<div class="infobox infobox-blue infobox-small infobox-dark">';
-				html+='	<div class="infobox-icon">';
-				html+=" <a class='icon-download-alt' href='"+decorationOrderDetail.mediaServer + api.common.downloadFile.url + "?downloadFilePath="+res.orderDesignPictures[i].picturePath+"&fileName="+res.orderDesignPictures[i].uploadFileName+"' target='_blank'> <i class=''></i></a>";
-				html+='</div>';
-	
-				html+='	<div class="infobox-data">';
-				html+='		<div class="infobox-content">'+res.orderDesignPictures[i].uploadFileName+'</div>';
-				//html+='		<div class="infobox-content">$32,000</div>';
-				html+='	</div>';
-				html+='<a  href="javascript:void(0);" onclick="deleteOrderCAD('+res.orderDesignPictures[i].autoId+','+decorationOrderDetail.decorationOrderId+')" class="badge"><i class="icon-remove red"></i></a>';
-				html+='</div>';
-			}
-			$("#CADProjectPicture").html(html);
-		} else {
-			$("#CADProjectPicture").html("");
-		}
-	});
-}
-
-function deleteOrderImg(autoId, decorationOrderId) {
-	bootbox.confirm("确认要删除吗？", function(res) {
-		if (res) {
-			var options = {
-				"orderDesignPicture.autoId" : autoId,
-				"decorationOrderId" : decorationOrderId
-			};
-			com.post(api.decoration.deleteOrderDesignPictureByIdAndOrderId, options, function(res) {
-				if (res.errorCode == 0) {
-					com.showAlert(com.info, "操作成功");
-					initDecorationPicture();
-				} else {
-					com.showAlert(com.info, res.errorMsg);
-				}
-			});
-		}
-	});
-}
-
-function deleteOrderCAD(autoId, decorationOrderId) {
-	bootbox.confirm("确认要删除吗？", function(res) {
-		if (res) {
-			var options = {
-				"orderDesignPicture.autoId" : autoId,
-				"decorationOrderId" : decorationOrderId
-			};
-			com.post(api.decoration.deleteOrderDesignPictureByIdAndOrderId, options, function(res) {
-				if (res.errorCode == 0) {
-					com.showAlert(com.info, "操作成功");
-					initCADPicture();
-				} else {
-					com.showAlert(com.info, res.errorMsg);
-				}
-			});
-		}
-	});
-}
-
 function downloadFile(picturePath, uploadFileName) {
 	window.open(decorationOrderDetail.mediaServer + api.common.downloadFile.url + "?downloadFilePath=" + picturePath + "&fileName=" + uploadFileName);
 }
-
-//----------------------------------报价信息----------------------------
 
 function quotationItemDesFormatter(cellvalue, options, rowObject){
 	var html = '<span class="btn btn-minier" data-rel="tooltip" data-placement="right" title="'+rowObject.quotationItemDes+'">工艺</span>';
 	html += "<input type='text' class='hide' value='"+rowObject.quotationItemDes+"' />";
 	return html;
-}
-
-function quotationItemDesUnformat(cellvalue, options, cell) {
-	return $('input', cell).val();
 }
 
 function activityBtnMethod(uiPgDiv, decorationActivity){
@@ -1429,7 +1117,7 @@ function uiBtnMethod(uiPgDiv, activityItem){
 		
 		abateBtn.on("click", function(){
 			abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-		})
+		});
 	}
 }
 
@@ -1438,8 +1126,6 @@ function deleteDecorationActivity(daId){
 	var options = {
 		"decorationActivity.daId": daId,
 	}
-	
-	console.log(options);
 	
 	com.post(api.decoration.deleteDecorationActivity, options, function(res){
 		console.log("dactivity_" + res.decorationActivity.daId);

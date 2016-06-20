@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.construction.dao.AddReduceDao;
 import com.fanglin.construction.dao.BricklayConstructionScheduleDao;
 import com.fanglin.construction.dao.CarpentConstructionScheduleDao;
 import com.fanglin.construction.dao.ChanConstructionScheduleDao;
@@ -50,6 +49,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.common.vo.VillageVO;
+import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;

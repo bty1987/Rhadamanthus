@@ -246,7 +246,7 @@ function actionInit(cellvalue, options, rowdata){
 
 function viewDecorationOrderDetail(decorationOrderId){
 	decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-	$("#fl-container").load(api.index.decorationOrderDetailDesignerIndex.url);
+	$("#fl-container").load(api.index.decorationOrderDesignerDetailIndex.url);
 }
 
 function viewDecorationQuotateIndex(decorationOrderId){

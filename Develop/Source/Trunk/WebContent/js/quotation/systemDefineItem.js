@@ -35,8 +35,8 @@ $(function(){
                 ["编号:", v.itemId, "grey"],
                 ["大类:", v.quotationBigCategory, "grey"],
                 ["单位:", v.measurementUnit, "grey"],
-                ["工种", v.itemWorkType, "grey"],
-                ["单价", v.unitPrice, "grey"],
+                ["工种:", v.itemWorkType, "grey"],
+                ["单价:", v.unitPrice, "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {

@@ -201,8 +201,9 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void deleteQuotationItemById(int id){
-		quotationItemDao.deleteById(id);
+	public void deleteQuotationItemByQiId(int qiId){
+		
+		quotationItemDao.deleteById(qiId);
 	}
 	
 	private void quotationItemPOToVO(QuotationItemPO quotationItemPO, QuotationItemVO quotationItemVO){
