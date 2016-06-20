@@ -245,21 +245,21 @@ var api = {
 		uploadImg: {url: "uploadImg.do"},
 		uploadOther: {url: "uploadOther.do"}
 		
-	}, audit: {
-		
-		pageBudgetAuditItemByOrderId: {url: "pageBudgetAuditItemByOrderId.do"},
-		queryBudgetAuditItemByOrderId: {url: "queryBudgetAuditItemByOrderId.do"},
-		addBudgetAuditItem: {url: "addBudgetAuditItem.do"},
-		submitBudgetAuditItem: {url: "submitBudgetAuditItem.do"},
-		changeBudgetAuditItemForStatus: {url: "changeBudgetAuditItemForStatus.do"},
-		
 	}, addReduce: {
 		
 		pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
-		pageAddReduceDetailByArId: {url: "pageAddReduceDetailByArId.do"},
+		queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do"},
 		addAddReduce: {url: "addAddReduce.do"},
 		updateAddReduce: {url: "updateAddReduce.do"},
+		updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do"},
 		deleteAddReduce: {url: "deleteAddReduce.do"},
+		
+		submitAddReduce: {url: "submitAddReduce.do"},
+		
+		queryAddReduceItemByAddReduceId: {url: "queryAddReduceItemByAddReduceId.do"},
+		queryAddReduceItemByAddReduceIds: {url: "queryAddReduceItemByAddReduceIds.do"},
+		updateAddReduceItem: {url: "updateAddReduceItem.do"},
+		deleteAddReduceItem: {url: "deleteAddReduceItem.do"},
 		
 	}, approval: {
 		
@@ -532,14 +532,6 @@ var api = {
 		
 	}, decoration: {
 		
-		queryAddOrReduceDetailById: {url: "queryAddOrReduceDetailById.do"},
-		queryAddOrReduceDetailByIds: {url: "queryAddOrReduceDetailByIds.do"},
-		saveAddOrReduceDetail: {url: "saveAddOrReduceDetail.do"},
-		submitAddOrReduceDetail: {url: "submitAddOrReduceDetail.do"},
-		checkAddOrReduceForPenalty: {url: "checkAddOrReduceForPenalty.do"},
-		
-		pageAddOrReduceItemByPaymentId: {url: "pageAddOrReduceItemByPaymentId.do"},
-		
 		pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
 		queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do"},
 		addBackVisit: {url: "addBackVisit.do"},
@@ -590,6 +582,9 @@ var api = {
 		addOrderDesignPicture: {url: "addOrderDesignPicture.do"},
 		addOrderDesignPictureForCAD: {url: "addOrderDesignPictureForCAD.do"},
 		deleteOrderDesignPictureByIdAndOrderId: {url: "deleteOrderDesignPictureByIdAndOrderId.do"},
+		
+		queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do"},
+		addDecorationPicture: {url: "addDecorationPicture.do"},
 		
 	}, payment: {
 		

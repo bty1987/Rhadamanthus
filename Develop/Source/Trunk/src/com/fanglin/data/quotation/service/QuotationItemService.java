@@ -36,6 +36,6 @@ public interface QuotationItemService {
 	
 	public void deleteQuotationItem(QuotationItemVO quotationItemVO);
 	
-	public void deleteQuotationItemById(int id);
+	public void deleteQuotationItemByQiId(int qiId);
 
 }

@@ -1,14 +1,14 @@
 package com.fanglin.decoration.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Entity
@@ -45,7 +45,7 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
-	private QuotationItemPO quotationItem;
+	private long quoteItemId;
 	
 	private String content;
 
@@ -134,14 +134,12 @@ public class AddReduceItemPO implements java.io.Serializable {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="quotationItemId", referencedColumnName="qiId")
-	public QuotationItemPO getQuotationItem() {
-		return quotationItem;
+	public long getQuoteItemId() {
+		return quoteItemId;
 	}
 
-	public void setQuotationItem(QuotationItemPO quotationItem) {
-		this.quotationItem = quotationItem;
+	public void setQuoteItemId(long quoteItemId) {
+		this.quoteItemId = quoteItemId;
 	}
 
 	@Column(name = "content", length = 512)

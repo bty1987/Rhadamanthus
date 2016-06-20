@@ -35,6 +35,8 @@ public class AddReduceAction extends BaseListAction{
 	@Autowired
 	private AddReduceService addReduceService;
 	
+	private List<AddReduceVO> addReduces;
+	
 	private AddReduceVO addReduce;
 	
 	private List<Integer> arIds;
@@ -42,11 +44,7 @@ public class AddReduceAction extends BaseListAction{
 	@Action(value = "pageAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduceByOrderId(){
 		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageAddReduceDetailByArId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageAddReduceDetailByArId(){
+		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
 		
 		return SUCCESS;
 	}
@@ -54,7 +52,7 @@ public class AddReduceAction extends BaseListAction{
 	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAddReduceByOrderId(){
 		
-		addReduceService.queryAddReduceByOrderId(addReduce);
+		addReduces = addReduceService.queryAddReduceByOrderId(addReduce);
 		
 		return SUCCESS;
 	}
@@ -62,7 +60,7 @@ public class AddReduceAction extends BaseListAction{
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAddReduce(){
 		
-		addReduceService.AddAddReduce(addReduce);
+		addReduceService.addAddReduce(addReduce);
 		
 		return SUCCESS;
 	}
@@ -75,6 +73,14 @@ public class AddReduceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateAddReduceForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAddReduceForAdvance() throws FLException{
+		
+		addReduceService.updateAddReduceForAdvance(addReduce);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAddReduce() throws FLException{
 		
@@ -83,8 +89,8 @@ public class AddReduceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "submitAddOrReduceDetail", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String submitAddOrReduceDetail() throws FLException{
+	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitAddReduce() throws FLException{
 		
 		addReduceService.submitAddReduce(addReduce, getUserId());
 		
@@ -97,6 +103,14 @@ public class AddReduceAction extends BaseListAction{
 
 	public void setAddReduce(AddReduceVO addReduce){
 		this.addReduce = addReduce;
+	}
+
+	public List<AddReduceVO> getAddReduces() {
+		return addReduces;
+	}
+
+	public void setAddReduces(List<AddReduceVO> addReduces) {
+		this.addReduces = addReduces;
 	}
 
 	public List<Integer> getArIds(){

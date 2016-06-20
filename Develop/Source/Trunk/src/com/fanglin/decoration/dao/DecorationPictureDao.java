@@ -14,12 +14,10 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.decoration.po.OrderDesignPicturePO;
+import com.fanglin.decoration.po.DecorationPicturePO;
 
-public interface OrderDesignPictureDao extends Dao<OrderDesignPicturePO> {
+public interface DecorationPictureDao extends Dao<DecorationPicturePO> {
 	
-	public List<OrderDesignPicturePO> queryOrderDesignPictureByOrderId(String orderId);
-
-	public List<OrderDesignPicturePO> queryOrderDesignPictureForCADByOrderId(String orderId);
+	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId);
 	
 }

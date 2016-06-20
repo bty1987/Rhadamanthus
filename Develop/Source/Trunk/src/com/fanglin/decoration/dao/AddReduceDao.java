@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.construction.dao;
+package com.fanglin.decoration.dao;
 
 import java.util.List;
 

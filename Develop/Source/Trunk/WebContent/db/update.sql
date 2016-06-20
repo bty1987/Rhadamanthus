@@ -25,6 +25,8 @@ ALTER TABLE functionarea CHANGE COLUMN autoId faId BIGINT(20) NOT NULL AUTO_INCR
 
 ALTER TABLE functionAreaQuoteItem CHANGE COLUMN autoId faiId BIGINT(20) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE systemdefineitem CHANGE COLUMN autoId sdiId BIGINT(20) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE addreduce CHANGE COLUMN addReduceType type tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项';
 ALTER TABLE addreduce CHANGE COLUMN addReduceTotal total decimal(10,3) NOT NULL;
 ALTER TABLE addreduce CHANGE COLUMN addReduceStatus status tinyint(4) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ';
@@ -60,7 +62,7 @@ CREATE TABLE addreduceitem (
   unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
   num decimal(10,3) NOT NULL DEFAULT '0.000',
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
-  quotationItemId bigint(20),
+  quoteItemId bigint(20),
   content varchar(512) DEFAULT NULL,
   PRIMARY KEY (ariId),
   KEY indexone (arId)
@@ -68,3 +70,19 @@ CREATE TABLE addreduceitem (
 
 update quotationitem set quotationTypeId = 1; # 添加系统类型
 update functionarea set functionAreaType = 1; # 功能区全部为普通
+
+DROP TABLE IF EXISTS decorationpicture;
+CREATE TABLE decorationpicture (
+  dpId bigint(20) NOT NULL AUTO_INCREMENT,
+  orderId varchar(15) NOT NULL,
+  name varchar(32) NOT NULL,
+  path varchar(256) NOT NULL,
+  uploadTime timestamp NULL DEFAULT NULL,
+  content varchar(45) DEFAULT NULL,
+  userId varchar(15) NOT NULL,
+  type int(11) NOT NULL COMMENT '1 设计效果图 2、工程制图CAD',
+  PRIMARY KEY (dpId),
+  KEY indexone (orderId,uploadTime,type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计图纸';
+
+DROP TABLE IF EXISTS budgetaudit;

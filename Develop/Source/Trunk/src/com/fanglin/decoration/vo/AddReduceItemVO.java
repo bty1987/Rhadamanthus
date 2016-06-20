@@ -24,7 +24,7 @@ public class AddReduceItemVO implements java.io.Serializable {
 	
 	private String quotationFunctionAreaName;
 	
-	private Long quotationItemId;
+	private Long quoteItemId;
 	
 	private String content;
 
@@ -108,12 +108,12 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.quotationFunctionAreaName = quotationFunctionAreaName;
 	}
 
-	public Long getQuotationItemId() {
-		return quotationItemId;
+	public Long getQuoteItemId() {
+		return quoteItemId;
 	}
 
-	public void setQuotationItemId(Long quotationItemId) {
-		this.quotationItemId = quotationItemId;
+	public void setQuoteItemId(Long quoteItemId) {
+		this.quoteItemId = quoteItemId;
 	}
 
 	public String getContent() {

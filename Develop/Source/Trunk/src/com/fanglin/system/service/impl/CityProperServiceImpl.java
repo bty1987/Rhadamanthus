@@ -2,7 +2,7 @@
  * Title: CityProperServiceImpl
  * Description:
  * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: JH Corporation, China, Ltd.
+ * Company: BTY
  * @author bty1987
  *
  */

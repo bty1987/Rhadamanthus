@@ -109,8 +109,6 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaForCommonByQuotationId(QuotationVO quotationVO) throws FLException {
 		
-		QuotationFunctionAreaVO autogeneration = null;
-		
 		List<QuotationFunctionAreaVO> quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
 		
@@ -119,17 +117,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			
 			BeanUtil.copyProperties(quotationFunctionAreaPO, quotationFunctionAreaVO);
 			
-			quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
-			
-			if("0".equals(quotationFunctionAreaVO.getFunctionAreaType())){
-				autogeneration = quotationFunctionAreaVO;
-			}else{
+			if(!"0".equals(quotationFunctionAreaVO.getFunctionAreaType())){
 				quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
 			}
-		}
-		
-		if(autogeneration != null){
-			quotationFunctionAreaVOs.add(autogeneration);
 		}
 		
 		return quotationFunctionAreaVOs;

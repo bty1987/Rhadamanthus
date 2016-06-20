@@ -118,7 +118,7 @@ CREATE TABLE addreduceitem (
   unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
   num decimal(10,3) NOT NULL DEFAULT '0.000',
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
-  quotationItemId bigint(20),
+  quoteItemId bigint(20),
   content varchar(512) DEFAULT NULL,
   PRIMARY KEY (ariId),
   KEY indexone (arId)
@@ -393,27 +393,6 @@ CREATE TABLE bricklaydrawing (
   PRIMARY KEY (bdId),
   KEY indexone (bcsId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='瓦工图纸表';
-
-DROP TABLE IF EXISTS budgetaudit;
-CREATE TABLE budgetaudit (
-  auditId bigint(32) NOT NULL AUTO_INCREMENT,
-  orderId varchar(15) NOT NULL COMMENT '订单ID',
-  functionAreaId bigint(20) NOT NULL COMMENT '功能区',
-  customerItemId varchar(20) DEFAULT NULL COMMENT '自定义的id',
-  itemId varchar(15) DEFAULT NULL,
-  itemName varchar(128) NOT NULL,
-  itemType tinyint(4) NOT NULL,
-  categoryId int(11) NOT NULL COMMENT '大类',
-  measurementUnitId int(11) NOT NULL,
-  workTypeId int(11) DEFAULT NULL COMMENT '工种',
-  unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
-  num decimal(10,3) DEFAULT '0.000',
-  status varchar(10) DEFAULT NULL,
-  des varchar(512) DEFAULT NULL COMMENT '工艺说明',
-  `comment` varchar(512) DEFAULT NULL COMMENT '审批说明',
-  PRIMARY KEY (auditId),
-  KEY indexone (orderId,itemId)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预算审核';
 
 DROP TABLE IF EXISTS carpentconstructionschedule;
 CREATE TABLE carpentconstructionschedule (
@@ -1749,21 +1728,18 @@ CREATE TABLE orderbelonginfo (
   KEY indexone (orderId,belongType,belongUserId,status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
 
-DROP TABLE IF EXISTS orderdesignpicture;
-
-
-CREATE TABLE orderdesignpicture (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS decorationpicture;
+CREATE TABLE decorationpicture (
+  dpId bigint(20) NOT NULL AUTO_INCREMENT,
   orderId varchar(15) NOT NULL,
-  uploadFileName varchar(32) NOT NULL,
-  picturePath varchar(256) NOT NULL,
+  name varchar(32) NOT NULL,
+  path varchar(256) NOT NULL,
   uploadTime timestamp NULL DEFAULT NULL,
-  pictureContent varchar(45) DEFAULT NULL,
+  content varchar(45) DEFAULT NULL,
   userId varchar(15) NOT NULL,
-  pictureType int(11) NOT NULL COMMENT '1 设计效果图 2、工程制图CAD',
-  PRIMARY KEY (autoId),
-  KEY indextwo (orderId,uploadTime,pictureType),
-  KEY indexone (orderId)
+  type int(11) NOT NULL COMMENT '1 设计效果图 2、工程制图CAD',
+  PRIMARY KEY (dpId),
+  KEY indexone (orderId,uploadTime,type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计图纸';
 
 DROP TABLE IF EXISTS payment;

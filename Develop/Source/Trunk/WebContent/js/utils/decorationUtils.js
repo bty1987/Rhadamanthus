@@ -656,8 +656,127 @@ var decorationUtils = {
 				]
 			});
 		});
+	}, loadHuploadify: function(eId, ename, fileType, callback){
+		
+		$("#" + eId).Huploadify({
+			'debug' : false, // 开启调试
+			'auto' : true, // 是否自动上传
+			'successTimeout' : 150, // 超时时间
+			'formData' : { // 附带值
+				'uploadType' : 2
+			},
+			'buttonClass': 'btn btn-success',
+	        'buttonText': ename,
+	        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+	        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+	        'uploader': window.mediaServer + api.common.uploadImg.url, // 上传处理程序
+	        'width':'100', // 浏览按钮的宽度
+	        'height': '32', // 浏览按钮的高度
+	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+	        'fileTypeExts':fileType, // 允许上传的文件后缀
+	        'fileSizeLimit':'5MB', // 上传文件的大小限制
+	        'queueSizeLimit' : 1, // 上传数量
+	        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
+	        	callback(data);
+			}
+		});
+		
+	}, addDecorationPicture: function(data, type, eId){
+		
+		var dateObj = eval("("+data+")");
+    	
+    	if(dateObj.errorCode == 0){
+    		 bootbox.prompt("请输入备注:", function(result) {
+    			 
+    			 if(!result){
+    				 return;
+    			 }
+    			 
+				var options = {
+					"decorationPicture.path": dateObj.resUrl,
+					"decorationPicture.name": dateObj.strutsUploadsFileName,
+					"decorationPicture.content": result,
+					"decorationPicture.orderId": decorationOrderDetail.decorationOrderId,
+					"decorationPicture.type": type
+				};
+				
+				com.post(api.decoration.addDecorationPicture, options, function(res) {
+					if(type == 0){
+						decorationUtils.addCAD($("#" + eId), res.decorationPicture);
+					}else if(type == 1){
+						decorationUtils.addPicture($("#" + eId), res.decorationPicture);
+					}
+				});
+			});
+		}else{
+			com.showAlert(com.error, dateObj.errorMsg);
+		}
+	}, initDecorationPicture: function(pictureId, cadId, orderId) {
+		
+		var $picture = $("#" + pictureId).html("");
+		var $cad = $("#" + cadId).html("");
+		
+		com.post(api.decoration.queryDecorationPictureByOrderId, {"decorationPicture.orderId": orderId}, function(res) {
+			var decorationPictures = res.decorationPictures;
+			var decorationPictureLength = decorationPictures.length;
+			
+			for(var i=0;i<decorationPictureLength;i++){
+				var decorationPicture = decorationPictures[i];
+				
+				if(decorationPicture.type == 0){
+					decorationUtils.addCAD($cad, decorationPicture);
+				}else if(decorationPicture.type == 1){
+					decorationUtils.addPicture($picture, decorationPicture);
+				}
+			}
+		});
+	},addPicture:function(e, i){
+		var $li = $('<li></li>').appendTo(e);
+		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', window.mediaServer + api.common.showImg.url + '?imgBasePath=' + i.path).attr('target', '_blank').appendTo($li);
+		var $img = $('<img></img>').attr('alt', '200x200').attr('width', 200).attr('height', 200).attr('src', window.mediaServer + api.common.showImg.url + '?imgBasePath=' + i.path + '&divFlag=1&width=200&height=200').appendTo($imgA);
+		
+		var $tags = $('<div></div>').addClass('tags').appendTo($li);
+		var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+		var $nameInfo = $('<span></span>').addClass('label label-info arrowed').text(i.name).appendTo($nameHolder);
+		var $timeHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+		var $timeInfo = $('<span></span>').addClass('label label-danger arrowed').text(i.uploadTime).appendTo($timeHolder);
+		
+		var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
+		var $toolLabel = $('<label></label>').appendTo($tools);
+		var $downA = $('<a></a>').addClass("icon-download-alt").attr('href', window.mediaServer + api.common.downloadFile.url + '?downloadFilePath=' + i.path + '&fileName=' + i.name).attr('target', '_blank').appendTo($tools);
+	}, addCAD: function(e, i){
+		
+		var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').appendTo(e);
+		var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
+		var $downIcon = $('<a></a>').addClass('icon-download-alt').attr('href', window.mediaServer + api.common.downloadFile.url + "?downloadFilePath=" + i.path + "&fileName=" + i.name).attr('target', '_blank').appendTo($infoboxIcon);
+		
+		var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
+		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxData);
+		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxData);
+		
+	}, initConstructionScheduleInfo: function(){
+		
+		var options = {};
+		options["constructionSchedule.orderId"] = decorationOrderDetail.decorationOrderId;
+		
+		com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res){
+			for(var qualityName in decorationUtils.qualityIds){
+				$("#"+qualityName+"QualityId").val(res.constructionSchedule[qualityName+"QualityName"]);
+			}
+			
+			$("#schedule").val(decorationUtils.scheduleInfos[parseInt(res.constructionSchedule.schedule)]);
+		});
+	}, initBaseInfo: function(orderId, callback){
+		
+		com.post(api.decoration.queryDecorationOrderForCommonByOrderId, {"decorationOrder.orderId": orderId}, function(res){
+			callback(res.decorationOrder);
+		}, null, false);
+		
 	}, init: function(){
 		com.post(api.ds.bankType, {}, function(res){
+			
+			decorationUtils.qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
+			decorationUtils.scheduleInfos = ["铲大白", "放线", "水力电", "瓦工", "地面找平", "木工", "油工", "水电验收", "保洁"];
 			
 			decorationUtils.cashInfo = res.cashInfo;
 			decorationUtils.bankInfo = res.bankInfo;
