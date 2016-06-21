@@ -21,23 +21,27 @@ public class SystemDefineItemVO implements Serializable{
 	
 	private String itemId;
 	
-	private int quotationBigCategoryId;
+	private Integer quotationBigCategoryId;
 	
 	private String quotationBigCategory;
 	
 	private String itemName;
 	
-	private int measurementUnitId;
+	private Integer measurementUnitId;
 
 	private String measurementUnit;
 
-	private int itemWorkTypeId;
+	private Integer itemWorkTypeId;
 
 	private String itemWorkType;
 
 	protected String quotationItemDes;
 
-	private float unitPrice;
+	private Float unitPrice;
+	
+	private Short status;
+	
+	private Short discount;
 	
 	public Long getSdiId(){
 		return sdiId;
@@ -55,11 +59,11 @@ public class SystemDefineItemVO implements Serializable{
 		this.itemId = itemId;
 	}
 
-	public int getQuotationBigCategoryId(){
+	public Integer getQuotationBigCategoryId(){
 		return quotationBigCategoryId;
 	}
 
-	public void setQuotationBigCategoryId(int quotationBigCategoryId){
+	public void setQuotationBigCategoryId(Integer quotationBigCategoryId){
 		this.quotationBigCategoryId = quotationBigCategoryId;
 	}
 
@@ -79,11 +83,11 @@ public class SystemDefineItemVO implements Serializable{
 		this.itemName = itemName;
 	}
 
-	public int getMeasurementUnitId(){
+	public Integer getMeasurementUnitId(){
 		return measurementUnitId;
 	}
 
-	public void setMeasurementUnitId(int measurementUnitId){
+	public void setMeasurementUnitId(Integer measurementUnitId){
 		this.measurementUnitId = measurementUnitId;
 	}
 
@@ -95,11 +99,11 @@ public class SystemDefineItemVO implements Serializable{
 		this.measurementUnit = measurementUnit;
 	}
 
-	public int getItemWorkTypeId(){
+	public Integer getItemWorkTypeId(){
 		return itemWorkTypeId;
 	}
 
-	public void setItemWorkTypeId(int itemWorkTypeId){
+	public void setItemWorkTypeId(Integer itemWorkTypeId){
 		this.itemWorkTypeId = itemWorkTypeId;
 	}
 
@@ -119,12 +123,28 @@ public class SystemDefineItemVO implements Serializable{
 		this.quotationItemDes = quotationItemDes;
 	}
 
-	public float getUnitPrice(){
+	public Float getUnitPrice(){
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice){
+	public void setUnitPrice(Float unitPrice){
 		this.unitPrice = unitPrice;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Short discount) {
+		this.discount = discount;
 	}
 	
 }

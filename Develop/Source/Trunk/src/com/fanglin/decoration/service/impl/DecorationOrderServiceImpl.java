@@ -457,11 +457,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	public void pageDecorationOrderForBelong(Paging paging, List<FilterVO> filters, String userId){
 		
+		if(filters.size() == 0) return;
+		
 		UserPO userPO = userDao.get(userId);
 		
-		if(userPO == null){
-			return;
-		}
+		if(userPO == null) return;
 		
 		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
 			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));

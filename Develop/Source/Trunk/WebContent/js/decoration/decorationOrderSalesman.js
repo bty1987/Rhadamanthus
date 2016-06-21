@@ -33,7 +33,6 @@ $(function(){
             var $btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
            
             var propertyArr = [
-                ["订单编号:", v.orderId, "grey"],
                 ["楼盘地址:", v.village.villageName, "grey"],
                 ["客户名:", v.customer.customerName, "grey"],
                 ["余额:", v.customer.balance, "grey"],

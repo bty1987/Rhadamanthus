@@ -184,13 +184,7 @@ public class LoginAction extends BaseListAction {
 	@Action(value = "logout", results = { @Result(name = "success", type = "dispatcher", location = "/") })
 	public String logout(){
 
-		try {
-			CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
-			clearCookie();
-		} catch (FLException e) {
-			setErrorCode(e.getCode());
-			setErrorMsg(e.getErrorMessage());
-		}
+		CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
 		
 		return SUCCESS;
 	}

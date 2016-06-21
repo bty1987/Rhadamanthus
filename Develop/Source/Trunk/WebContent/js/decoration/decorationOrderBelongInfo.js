@@ -13,7 +13,7 @@ jQuery(function($) {
 	orderBelongInfo.decorationOrderId = params.orderId;
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderBelongIndex.url);
+		com.switchPage(api.index.decorationOrderBelongIndex.url);
 	});
 	
 	decorationUtils.initOrderBelongInfo(orderBelongInfo.decorationOrderId);

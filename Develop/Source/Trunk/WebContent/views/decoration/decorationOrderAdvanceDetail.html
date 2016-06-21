@@ -18,22 +18,22 @@
 											<span class="title">报价信息</span>
 										</li>
 	
-										<li data-target="#step4" class="complete">
-											<span class="step">4</span>
+										<li data-target="#step3" class="complete">
+											<span class="step">3</span>
 											<span class="title">主材信息</span>
 										</li>
 										
-										<li data-target="#step5" class="complete">
-											<span class="step">5</span>
+										<li data-target="#step4" class="complete">
+											<span class="step">4</span>
 											<span class="title">活动信息</span></li>
 										
-										<li data-target="#step6" class="complete">
-											<span class="step">6</span>
+										<li data-target="#step5" class="complete">
+											<span class="step">5</span>
 											<span class="title">款项信息</span>
 										</li>
 										
-										<li data-target="#step7" class="complete">
-											<span class="step">7</span>
+										<li data-target="#step6" class="complete">
+											<span class="step">6</span>
 											<span class="title">归属信息</span>
 										</li>
 									</ul>
@@ -254,17 +254,13 @@
 												</div>
 											</div>
 											<div class="col-md-12 space-6"> </div>
-											<div class="col-md-12" id="quotationItemListDiv">
-												<table id="quotationItemListGrid"></table>
-												<div id="quotationItemGridPager"></div>
-											</div>
+											<div class="col-md-12" id="quotationItemListDiv"></div>
 										</div>
 									</div>
 	
 									<div class="step-pane active" id="step3">
-										<div id="materialPaymentDiv">
-											<table id="materialPaymentListGrid"></table>
-											<div id="materialPaymentGridPager"></div>
+										<div class="row">
+											<div id="materialPaymentDiv" class="col-md-12"></div>
 										</div>
 									</div>
 									
@@ -279,47 +275,29 @@
 									<div class="step-pane active" id="step5">
 										<div class="row">
 											<div class="col-xs-6 col-md-6  widget-container-span ui-sortable">
-												<div class="widget-box " id='basePaymentWidget'>
+												<div class="widget-box transparent" id='basePaymentWidget'>
 													<div class="widget-header">
 														<h5 >
 															<strong>基本款项信息</strong>
 														</h5>
-
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="1 bigger-125 icon-chevron-up"></i>
-															</a>
-														</div>
 													</div>
 													                                                                                       
 													<div class="widget-body">
-														<div class="widget-body-inner" id='basePaymentDiv' style="display: block;">
-															<table id="basePaymentTable"></table>
-															<div id="basePaymentPager"></div>
-														</div>
+														<div class="widget-body-inner" id='basePaymentDiv'></div>
 													</div>
 												</div>
 											</div>
 										
 											<div class="col-xs-6 col-md-6  widget-container-span ui-sortable">
-												<div class="widget-box" id="otherPaymentWidget">                                                              
+												<div class="widget-box transparent" id="otherPaymentWidget">                                                              
 													<div class="widget-header">
 														<h5 >
 															<strong>其他项信息</strong>
 														</h5>
-
-														<div class="widget-toolbar">
-															<a href="#" data-action="collapse">
-																<i class="1 bigger-125 icon-chevron-up"></i>
-															</a>
-														</div>
 													</div>
 
 													<div class="widget-body">
-														<div class="widget-body-inner" style="display: block;">
-															<table id="otherPaymentTable"></table>
-															<div id="otherPaymentGridPager"></div>
-														</div>
+														<div class="widget-body-inner" id='otherPaymentDiv'></div>
 													</div>
 												</div>
 											</div>

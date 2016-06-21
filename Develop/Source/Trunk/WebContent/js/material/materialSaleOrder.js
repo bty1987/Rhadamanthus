@@ -386,7 +386,7 @@ jQuery(function($) {
 	});
 	
 	$("#backBtn").on("click", function(){
-		$("#fl-container").load(api.index.materialOrderIndex.url);
+		com.switchPage(api.index.materialOrderIndex.url);
 	});
 });
 

@@ -81,7 +81,14 @@ $(function(){
    
     systemDefineItemSeacher.init( _condArr, "condList", api.quotation.pageSystemDefineItem, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "SystemDefineItemPostData");
+    }, "pagenation", "SystemDefineItemPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSystemDefineItem').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
     
     //定义全局变量  json
     var systemDefineItem = {
@@ -275,7 +282,7 @@ function initDataMap(){
     }
     
     //添加
-    $('[name="add"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
+    $('[name="addSystemDefineItem"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
     	systemDefineItem.editFlg = false;
 		systemDefineItem.systemDefineItemItems.itemId.prop("disabled", false);
 		com.cleanItems(systemDefineItem.systemDefineItemItems);

@@ -91,6 +91,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				}
 			}
 			
+			QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
+			
+			addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+			addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
+			
 			addReduceItemVOs.add(addReduceItemVO);
 		}
 		
@@ -134,6 +139,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 						addReduceItemVO.setContent("报价项已被删除");
 					}
 				}
+				
+				QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
+				
+				addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+				addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
 				
 				addReduceItemVOs.add(addReduceItemVO);
 			}

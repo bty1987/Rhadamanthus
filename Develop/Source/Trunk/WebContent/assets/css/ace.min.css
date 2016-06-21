@@ -51,7 +51,7 @@ body.breadcrumbs-fixed {
 	padding:0
 }
 .page-content {
-	background:#fff;
+	/*background:#fff;*/
 	margin:0;
 	padding:8px 20px 24px
 }
@@ -5576,14 +5576,14 @@ input[type=checkbox].ace.ace-switch.ace-switch-7:checked+.lbl::after {
 .accordion-style1.panel-group .panel {
 	border-radius:0;
 	border-color:#cdd8e3;
-	background-color:#FFF;
+	/*background-color:#FFF; */
 	box-shadow:none
 }
 .accordion-style1.panel-group .panel:last-child {
 	border-bottom-width:1px
 }
 .accordion-style1.panel-group .panel .collapse {
-	background-color:#FFF
+	/*background-color:#FFF*/
 }
 .accordion-style1.panel-group .panel+.panel {
 	margin-top:2px
@@ -6088,7 +6088,7 @@ th .lbl:only-child,td .lbl:only-child {
 .widget-body {
 	border:1px solid #CCC;
 	border-top:0;
-	background-color:#FFF
+	/*background-color:#FFF  */
 }
 .widget-main {
 	padding:12px
@@ -7955,7 +7955,6 @@ th .lbl:only-child,td .lbl:only-child {
 }
 .item-list>li {
 	padding:9px;
-	background-color:#FFF;
 	margin-top:-1px;
 	position:relative
 }

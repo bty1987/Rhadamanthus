@@ -89,7 +89,14 @@ $(function(){
     var quotationItemSeacher = new Searcher();
     quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItem,  function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "quotationItemPostData");
+    }, "pagenation", "quotationItemPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationItem').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     var quotationItem = {
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -188,7 +195,7 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="add"]', '#pagenation').click(function () {
+    $('a[name="addQuotationItem"]', '#pagenation').click(function () {
         quotationItem.editFlg = !1;
         
         com.cleanItems(quotationItem.quotationItemItems);

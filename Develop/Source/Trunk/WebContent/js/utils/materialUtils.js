@@ -3,11 +3,12 @@ var materialUtils = {
 	materialPaymentRevTypeData: {"预付款":"1", "定金":"2", "补款":"3", "退款":"4", "补款退款":"5", "券退款":"6"},
 	paymentTypeInit: function(cellvalue, options, rowdata){
 		return '<span class="label label-info">' + materialUtils.materialPaymentTypeData[rowdata.paymentType];
-	}, paymentStatusInit: function(cellvalue, options, rowdata){
+	}, paymentStatusInit: function(paymentStatus){
 		var result = '';
-		if(rowdata.paymentStatus == "1" || rowdata.paymentStatus == 1){
+		
+		if(paymentStatus == 1){
 			result += '待确认';
-		}else if(rowdata.paymentStatus == "0" || rowdata.paymentStatus == 0){
+		}else if(paymentStatus == 0){
 			result += '待收款';
 		}else{
 			result += '已确认';

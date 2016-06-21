@@ -179,7 +179,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.materialOrderIndex.url);
+			com.switchPage(api.index.materialOrderIndex.url);
 		},
 		position: "first",
 	});

@@ -97,7 +97,7 @@ var api = {
 		
 		decorationOrderBelongIndex: {url: "/views/decoration/decorationOrderBelong.html"},
 		decorationOrderBelongDetailIndex: {url: "/views/decoration/decorationOrderBelongDetail.html"},
-		decorationOrderBelongInfoViewIndex: {url: "/views/decoration/decorationOrderBelongInfoView.html"},
+		decorationOrderBelongInfoIndex: {url: "/views/decoration/decorationOrderBelongInfo.html"},
 
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
 		backVisitIndex: {url: "/views/decoration/backVisit.html"},
@@ -211,6 +211,7 @@ var api = {
 	}, common: {
 		
 		QRCode: {url: "QRCode.do"},
+		wmCode: {url: "wmCode.do"},
 		
 		createTree: {url: "createTree.do"},
 		
@@ -572,6 +573,7 @@ var api = {
 		
 		exportDecorationorderByContractTime: {url: "exportDecorationorderByContractTime.do"},
 		
+		queryOrderBelongInfoByOrderId: {url: "queryOrderBelongInfoByOrderId.do"},
 		queryOrderBelongInfoForDesignAChangeByOrderId: {url: "queryOrderBelongInfoForDesignAChangeByOrderId.do"},
 		queryOrderBelongInfoForDesignByOrderId: {url: "queryOrderBelongInfoForDesignByOrderId.do"},
 		queryOrderBelongInfoForBusinessnAChangeByOrderId: {url: "queryOrderBelongInfoForBusinessnAChangeByOrderId.do"},
@@ -603,6 +605,7 @@ var api = {
 		pageDecorationPaymentForConfirm: {url: "pageDecorationPaymentForConfirm.do"},
 		pageDecorationPaymentForHistory: {url: "pageDecorationPaymentForHistory.do"},
 		pageDecorationPaymentForChange: {url: "pageDecorationPaymentForChange.do"},
+		queryDecorationPaymentByOrderId: {url: "queryDecorationPaymentByOrderId.do"},
 		queryDecorationPaymentForBaseByOrderId: {url: "queryDecorationPaymentForBaseByOrderId.do"},
 		queryDecorationPaymentByOrderIdAIds: {url: "queryDecorationPaymentByOrderIdAIds.do"},
 		queryDecorationPaymentForBaseAConfirmByOrderId: {url: "queryDecorationPaymentForBaseAConfirmByOrderId.do"},
@@ -632,6 +635,7 @@ var api = {
 		pageMaterialInsidePaymentForNotInit: {url: "pageMaterialInsidePaymentForNotInit.do"},
 		pageMaterialOutsidePaymentForInit: {url: "pageMaterialOutsidePaymentForInit.do"},
 		pageMaterialOutsidePaymentForNotInit: {url: "pageMaterialOutsidePaymentForNotInit.do"},
+		queryMaterialPaymentByOrderId: {url: "queryMaterialPaymentByOrderId.do"},
 		queryMaterialPaymentForInitByMsoId: {url: "queryMaterialPaymentForInitByMsoId.do"},
 		queryMaterialPaymentByMsoId: {url: "queryMaterialPaymentByMsoId.do"},
 		queryMaterialPaymentForCouponByMsoId: {url: "queryMaterialPaymentForCouponByMsoId.do"},
@@ -847,6 +851,8 @@ var api = {
 		querySystemDefineItemByItemId: {url: "querySystemDefineItemByItemId.do"},
 		addSystemDefineItem: {url: "addSystemDefineItem.do"},
 		updateSystemDefineItem: {url: "updateSystemDefineItem.do"},
+		updateSystemDefineItemForStatus: {url: "updateSystemDefineItemForStatus.do"},
+		updateSystemDefineItemForDiscount: {url: "updateSystemDefineItemForDiscount.do"},
 		deleteSystemDefineItemByIds: {url: "deleteSystemDefineItemByIds.do"},
 		
 		queryQuotationByOrderId: {url: "queryQuotationByOrderId.do"},

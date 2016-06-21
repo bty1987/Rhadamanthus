@@ -16,55 +16,61 @@
 								<div class="col-md-12">
 									<div class="form-group">
 										<label class=" col-md-4 no-padding-right">类型:</label>
-										<label id="sumLabType" class=" col-md-4 no-padding-left">增项:</label>
+										<label id="sumLabType" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">活动:</label>
-										<label id="sumLabActivityName" class=" col-md-4 no-padding-left">中秋活动</label>
-									</div>
-								</div>
+
 								<div class="col-md-12">
 									<div class="form-group">
 										<label class=" col-md-4 no-padding-right">总价:</label>
-										<label id="sumLabSumMoney" class=" col-md-4 no-padding-left">95624.00</label>
+										<label id="sumLabSumMoney" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label class=" col-md-4 no-padding-right">折扣:</label>
-										<label id="sumLabDiscount" class=" col-md-4 no-padding-left">0.9</label>
+										<label id="sumLabDiscount" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label class=" col-md-4 no-padding-right">折扣价:</label>
-										<label id="sumLabDiscountMoney" class=" col-md-6  no-padding-left">86841.00</label>
+										<label id="sumLabDiscountMoney" class=" col-md-6  no-padding-left"></label>
 									</div>
 								</div>
 
 								<div class="col-md-12 hr hr-16"></div>
+
 								<div class="col-md-12 center">
 									<div class="ui-pg-div">
-										<button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-4">
+
+										<!--增项的的2个按钮-->
+										<button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-4 hide">
 											<i class="icon-pencil"></i>报价项
 										</button>
 
-										<button id="addSystemDefineItemBtn" class="btn btn-minier btn-pink col-md-4" style="padding-left: 2px;" >
-											<i class="icon-pencil"></i>系统定义
-										</button>
-										<button id="addNewItemBtn" class="btn btn-minier btn-inverse col-md-4" style="padding-left: 2px;" >
+										<button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-4 hide" style="padding-left: 2px;" >
 											<i class="icon-pencil"></i>新增
 										</button>
+
+										<!--减项的2个按钮-->
+										<button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-4 hide">
+											<i class="icon-pencil"></i>报价项
+										</button>
+
+										<button id="addSystemDefineItemBtn" class="btn btn-minier btn-pink col-md-4 hide" style="padding-left: 2px;" >
+											<i class="icon-pencil"></i>系统定义
+										</button>
+										
+										<button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
+											<i class="icon-ok"></i>提交
+										</button>
+
 									</div>
 								</div>
 								<div class="col-md-12 space-6"></div>
 								<div class="col-md-12 ">
 									<div class="ui-pg-div">
-										<button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
-											<i class="icon-ok"></i>提交
-										</button>
 										<button id="saveAddReduceDetailBtn" class="btn btn-minier btn-primary col-md-4" style="padding-left: 2px;" >
 											<i class="icon-save"></i>保存
 										</button>
@@ -80,36 +86,50 @@
 			</div>
 			
 			<div class="col-xs-12 col-md-9">
-				<div class="well">
-					<h4 class="green smaller lighter">增减项描述</h4>
-					<div id="addReduceDes"></div>
-				</div>
-
-				<div class="hr hr-24"></div>
-				<div class="" id="addReduceItemDiv1">
-					<div class="widget-container-span ui-sortable"> 
-						<div class="widget-box " id='addReduceItemWidget'>
-							<div class="widget-header">
-								<h5 >
-									<strong>报价信息</strong>
-								</h5>
-
-								<div class="widget-toolbar">
-									<a href="#" data-action="collapse">
-										<i class="1 bigger-125 icon-chevron-up"></i>
-									</a>
-								</div>
+				<div class="widget-body-inner"  style="display: block;">
+					<ul class="fl-quo-list">
+						<li class="fl-quo-item" title="" data-totalprice="123">
+							<div class="cell line">
+								<div class="cell-wrap"></div>
 							</div>
-							<div class="widget-body">
-								<div class="widget-body-inner" id='addReduceItemDiv' style="display: block;">
-									<table id="addReduceItemList"></table>
-								</div>
+							<div class="cell num">
+								<div class="cell-wrap">工程预算量</div>
 							</div>
-						</div>
+							<div class="cell name">
+								<div class="cell-wrap">名称</div>
+							</div>
+							<div class="cell type">
+								<div class="cell-wrap">类型</div>
+							</div>
+							<div class="cell worktype">
+								<div class="cell-wrap">工种</div>
+							</div>
+							<div class="cell type">
+								<div class="cell-wrap">功能区</div>
+							</div>
+							<div class="cell unit">
+								<div class="cell-wrap">单位</div>
+							</div>
+							<div class="cell price unitprice">
+								<div class="cell-wrap">单价</div>
+							</div>
+							<div class="cell price discountprice">
+								<div class="cell-wrap">折后</div>
+							</div>
+							<div class="cell price totalprice-discount">
+								<div class="cell-wrap">总价</div>
+							</div>
+							<div class="cell btns">
+								<div class="cell-wrap">操作</div>
+							</div>
+						</li>
+					</ul>
+					<div id="addReduceItemDiv">
+						<div class="fl-quo-input hide"><input type="text" class="v_required v_float"></div>
 					</div>
 				</div>
 			</div>
-			
+			<!--弹层-->
 			<div class="modal fade" id="quotationItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="quotationItemDialog" aria-hidden="true">
 				<div class="modal-dialog" style="width:900px;">
 					<div class="modal-content col-md-12">
@@ -122,15 +142,12 @@
 						<div class="modal-body">
 							<div class="row">
 								<div class="col-xs-12">
-									<div id="quotationItemSearchDiv"></div>
-									<table id="quotationItemListGrid"></table>
-									<div id="quotationItemGridPager"></div>
+									<div name="quolist"></div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" id="addItemsBtn" class="btn btn-primary">保存</button>
-							<button type="button" id="addCunstomItemsBtn" class="btn btn-primary">自定义项</button>
 							<button type="button" id="cancelAddItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</div>
@@ -162,8 +179,38 @@
 					</div>
 				</div>
 			</div>
-			
-			
+
+			<!-- 普通报价项弹层-->
+			<div class="modal fade" id="addNormalItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="systemDefineItemDialog" aria-hidden="true">
+				<div class="modal-dialog" style="width:900px;">
+					<div class="modal-content col-md-12">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="addNormalItemDialog">普通报价项</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-xs-12">
+									<!-- 查询条件-->
+									<div id="condListn" class="fl_search clearfix"></div>
+									<!--查询结果-->
+									<div id="resultListn" class="clearfix tab-pane active"></div>
+									<!--分页-->
+									<div id="pagenationn" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" id="saveaddNormalItemBtn" class="btn btn-primary">保存</button>
+							<button type="button" id="canceladdNormalItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 系统定义报价项弹层-->
 			<div class="modal fade" id="systemDefineItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="systemDefineItemDialog" aria-hidden="true">
 				<div class="modal-dialog" style="width:900px;">
 					<div class="modal-content col-md-12">
@@ -176,9 +223,12 @@
 						<div class="modal-body">
 							<div class="row">
 								<div class="col-xs-12">
-									<div id="systemDefineItemSearchDiv"></div>
-									<table id="systemDefineItemListGrid"></table>
-									<div id="systemDefineItemGridPager"></div>
+									<!-- 查询条件-->
+									<div id="condList" class="fl_search clearfix"></div>
+									<!--查询结果-->
+									<div id="resultList" class="clearfix tab-pane active"></div>
+									<!--分页-->
+									<div id="pagenation" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div>
 								</div>
 							</div>
 						</div>
@@ -245,14 +295,7 @@
 								</div>
 								<div class="space-4"></div>
 								
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="quotationBigCategory">大类</label>
-									<div class="col-sm-3">
-										<select class="form-control v_required" id="quotationBigCategory" data-toggle="popover" data-trigger='manual'></select>
-									</div>
-								</div>
-								<div class="space-4"></div>
-								
+
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
 									<div class="col-sm-3">

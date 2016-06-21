@@ -1,120 +1,108 @@
-var order = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	orderItems: {},
-	
-	orderStatus: [],
-	businessDepartments:[],
-	postParam:{},
-	
-	editFlag: false
-};
+var decorationOrderBelong = {};
 
 jQuery(function($) {
-	order.listGrid = $("#listGrid");
-	order.gridPager = "#gridPager";
 	
-	var orderSearchOpts = {
-		url: api.decoration.pageDecorationOrderForBelong,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: order.listGrid,
-		items: [
-	        {label:"订单编号", id:"searchOrderId", name:"orderId", type:'text'},
-	        {label:"楼盘", id:"searchVillage", name:"village", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-	        {label:"楼号", id:"searchHouseNum", name:"houseNumber", type:"text"},
-	        {label:"客户电话", id:"searchPhone", name:"customerPhone", type:"text"},
-	        {label:"面积", id:"searchHouseArea", name:"houseArea", type:"text", op:"eq"},
-	        {label:"业务员", id:"searchSalesman", name:"salesman", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":""}},
-	        {label:"设计师", id:"searchDesigner", name:"designer", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}}
-	    ]
-	};
-	$("#orderSearchDiv").flSearch(orderSearchOpts);
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){   
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.orderId));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnLook = $('<a></a>').addClass('btn btn-minier btn-success').html('查看');
+            var $btnDesign = $('<a></a>').addClass('btn btn-minier btn-yellow').html('设计');
+            var $btnSalesman = $('<a></a>').addClass('btn btn-minier btn-primary').html('业务');
+
+            var propertyArr = [
+                ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
+                ["客户名:", v.customer.customerName, "grey"],
+                ["设计部:", v.designDepartment, "grey"],
+                ["设计师:", v.designer, "grey"],
+                ["业务部:", v.businessDepartment, "grey"],
+                ["业务员:", v.salesman, "grey"],
+                ["面积:", v.houseArea, "grey"],
+                ["合同报价:", v.orderTotalPrice, "grey"],
+                ["量房时间:", v.createTime, "grey"],
+                ["状态:", v.status, "red"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnLook).append($btnDesign).append($btnSalesman).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnLook.click(function(){
+            	viewDecorationOrderBelongDetail(v.orderId);
+            });
+            
+            $btnDesign.click(function(){
+            	changeDecorationOrderBelongDesigner(v.orderId);
+            });
+            
+            $btnSalesman.click(function(){
+            	changeDecorationOrderBelongBussiness(v.orderId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
 	
-	initDecorationOrderList();
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman'];
+	
+	var searcher = new Searcher();
+
+	searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForBelong, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "decorationOrderBelongPostData");
+	
 });
 
-//---------------------------------------------------------------------------init begin ---------------------------------------------------------
-
-function initDecorationOrderList(){
-	order.listGrid.jqGrid({		
-		url: api.decoration.pageDecorationOrderForBelong.url,
-		postData: {"filters[0].field":"orderId","filters[0].op":"eq","filters[0].data":"null"},
-		colNames:['订单编号', '楼盘地址', '客户名', '设计部', '设计师', '业务部', '业务员', '面积', '合同报价', '量房时间', '订单状态', 'desigerChangeApproval','salesmanChangeApproval','操作','houseNumber','cityP'],
-		colModel:[
-		    {name:'orderId',width: 80},
-			{name:'villageName',jsonmap:'village.villageName',formatter: villageInit,width: 210},
-			{name:'customerName',jsonmap:'customer.customerName',width: 50},
-			{name:'designDepartment',width: 100},
-			{name:'designer',width: 50},
-			{name:'businessDepartment',width: 100},
-			{name:'salesman',width: 50},
-			{name:'houseArea',width: 50},
-			{name:'orderTotalPrice',width: 50},
-			{name:'createTime',width: 80},
-			{name:'status',width: 50},
-			{name:'desigerChangeApproval',hidden:true},
-			{name:"salesmanChangeApproval",hidden:true},
-			{name:'action',jsonmap:'status', width: 180, sortable: false, editable: false, formatter: actionInit, width: 80},
-			{name:"houseNumber",hidden:true},
-			{name:"cityProperName",jsonmap:"village.cityProper.cityProperName",hidden:true}
-		], 
-		pager : order.gridPager,
-		caption: "装修订单信息列表"
-	});
-
-	order.listGrid.navGrid(order.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}, $.jgrid.searchFunc($(this))
-	);
-}
-function villageInit(cellvalue, options, rowdata){
-	
-	var html = rowdata.village.cityProper.cityProperName+rowdata.village.villageName + ' '+rowdata.houseNumber;
-	return html;
-}
-
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button  type="button" class="btn btn-minier btn-success" onclick="viewDecorationOrderBelongDetail('+rowdata.orderId+');">查看归属</button>';
-	result += '<button type="button"  class="btn btn-minier btn-yellow" onclick="changeDecorationOrderBelongDesigner('+rowdata.orderId+');">归属设计</button>';
-	result += '<button  type="button" class="btn btn-minier btn-primary" onclick="changeDecorationOrderBelongBussiness('+rowdata.orderId+');">归属业务</button>';
-	
-	result += '</div>';
-	
-	return result;
-}
-
 function viewDecorationOrderBelongDetail(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongInfoViewIndex.url, {}, function(){
-		params["orderId"] = decorationOrderId;
-	});
+	params.orderId = decorationOrderId;
+	com.switchPage(api.index.decorationOrderBelongInfoIndex.url);
 }
 
 function changeDecorationOrderBelongDesigner(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
-		params["orderId"] = decorationOrderId;
-		params["orderBelongType"] = "设计";
-	});
+	params.orderId = decorationOrderId;
+	params.orderBelongType = "设计";
+	com.switchPage(api.index.decorationOrderBelongDetailIndex.url);
 }
 
 function changeDecorationOrderBelongBussiness(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
-		params["orderId"] = decorationOrderId;
-		params["orderBelongType"] = "业务";
-	});
+	params.orderId = decorationOrderId;
+	params.orderBelongType = "业务";
+	com.switchPage(api.index.decorationOrderBelongDetailIndex.url);
 }
 
-function successCallback(){
-	order.listGrid.trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}
-
-function cleanItems(){
-	
-}

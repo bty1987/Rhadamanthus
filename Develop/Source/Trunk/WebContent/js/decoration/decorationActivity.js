@@ -1,86 +1,115 @@
-var decorationActivity = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	orderItems: {},
-	
-	orderStatus: [],
-	businessDepartments:[],
-	postParam:{},
-	
-	editFlag: false
-};
+var decorationActivity = {};
 
 var decorationActivityPostData = {};
 
 jQuery(function($) {
-	decorationActivity.listGrid = $("#listGrid");
-	decorationActivity.gridPager = "#gridPager";
 	
-	decorationActivity.agreementModal = $("#agreementModal");
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){   
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.orderId));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnLook = $('<a></a>').addClass('btn btn-minier btn-yellow').html('活动物品');
+
+            var propertyArr = [
+                ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
+                ["客户名:", v.customer.customerName, "grey"],
+                ["设计师:", v.designer, "grey"],
+                ["业务员:", v.salesman, "grey"],
+                ["面积:", v.houseArea, "grey"],
+                ["状态:", v.status, "red"],
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnLook).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnLook.click(function(){
+            	viewDecorationActivityItem(v.orderId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
 	
-	decorationUtils.createDecorationOrderCondition(decorationActivity.listGrid, api.decoration.pageDecorationOrderForCommon.url, "orderSearchDiv", {}, "");
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman'];
+
+	com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
+		var condition = res.condition;
+
+		if((condition & 4) == 4){ // 设计中心
+			_condArr.push('designerRegionId');
+
+		}
+		if((condition & 8) == 8){ // 设计部
+			_condArr.push('designerDepartmentId');
+
+		}
+		if((condition & 16) == 16){ // 业务中心
+			_condArr.push('salesmanRegionId');
+
+		}
+		if((condition & 32) == 32){ // 业务部
+			_condArr.push('salesmanDepartmentId');
+
+		}
+		if((condition & 64) == 64){ // 量尺时间
+			_condArr.push('createTimeDateRange');
+
+		}
+		if((condition & 128) == 128){ // 签单时间
+			_condArr.push('signTimeDateRange');
+
+		}
+	}, null, false);
+
+	_condArr.push('houseClass');
+	_condArr.push('status');
 	
-	initDecorationOrderList();
+	var searcher = new Searcher();
+
+	searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "decorationActivityPostData");
+	
 });
 
-function initDecorationOrderList(){
-	decorationActivity.listGrid.jqGrid({		
-		url: api.decoration.pageDecorationOrderForCommon.url,
-		postData: {},
-		colNames:['订单编号', '楼盘地址', '客户名', '设计师', '业务员', '面积', '状态', '操作'], 
-		colModel:[
-		    {name:'orderId', width: 70},
-			{name:'villageName', jsonmap:'village.villageName', formatter: villageInit, width: 150},
-			{name:'customerName', jsonmap:'customer.customerName', width: 50},
-			{name:'designer'},
-			{name:'salesman'},
-			{name:'houseArea', width: 50},
-			{name:'status', width: 50},
-			{name:'action', jsonmap:'status', sortable: false, editable: false, formatter: actionInit},
-		], 
-		pager : decorationActivity.gridPager,
-		caption: "订单信息"
-	});
-
-	decorationActivity.listGrid.navGrid(decorationActivity.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}, $.jgrid.searchFunc($(this))
-	);
-}
-
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button type="button" id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewDecorationActivityItem(\'' + rowdata.orderId + '\');">活动物品</button>';
-	result += '</div>';
-	
-	return result;
-}
-
-function villageInit(cellvalue, options, rowdata){
-	
-	var html = rowdata.village.cityProper.cityProperName+rowdata.village.villageName + ' '+rowdata.houseNumber;
-	
-	return html;
-}
-
 function viewDecorationActivityItem(decorationOrderId){
-	
 	decorationActivityPostData["decorationOrderId"] = decorationOrderId;
-	
-	$("#fl-container").load(api.index.decorationActivityItemIndex.url);
-}
-
-function successCallback(){
-	decorationActivity.listGrid.trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}
-
-function cleanItems(){
-	
+	com.switchPage(api.index.decorationActivityItemIndex.url);
 }

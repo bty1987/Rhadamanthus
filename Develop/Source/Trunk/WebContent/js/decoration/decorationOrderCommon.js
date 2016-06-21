@@ -1,4 +1,5 @@
 var decorationOrderPostData = {};
+
 $(function(){
 
     /**
@@ -33,7 +34,6 @@ $(function(){
             var $btnAgreement = $('<a></a>').addClass('btn btn-minier').html('合同');
 
             var propertyArr = [
-                ["订单编号:", v.orderId, "grey"],
                 ["楼盘地址:", v.village.villageName, "grey"],
                 ["客户名:", v.customer.customerName, "grey"],
                 ["余额:", v.customer.balance, "grey"],
@@ -205,7 +205,7 @@ $(function(){
 	//查看
     function viewDecorationOrderDetail(decorationOrderId) { 
     	decorationOrderPostData.decorationOrderId = decorationOrderId;
-        $("#fl-container").load(api.index.decorationOrderCommonDetailIndex.url);
+        com.switchPage(api.index.decorationOrderCommonDetailIndex.url);
     } 
 	    
     //合同

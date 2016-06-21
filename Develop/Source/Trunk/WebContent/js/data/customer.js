@@ -169,7 +169,14 @@ jQuery(function($) {
 	
 	customerSeacher.init( _condArr, "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "customerPostData");
+	}, "pagenation", "customerPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCustomer').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 	
 	displayFunc.initAddCustomer();
 });

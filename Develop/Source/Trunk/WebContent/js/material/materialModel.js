@@ -107,7 +107,14 @@ $(function(){
 
     materialModelSeacher.init( _condArr, "condList", api.material.pageMaterialModel, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "materialModelPostData");
+    }, "pagenation", "materialModelPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addMaterialModel').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     var materialModel = {
         $nowLine : null,
@@ -195,7 +202,7 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="add"]','#pagenation').click(function(){
+    $('a[name="addMaterialModel"]','#pagenation').click(function(){
         materialModel.editFlg = !1;
         com.cleanItems(materialModel.materialModelItems);
         materialModel.materialModelItems.materialModelNo.removeAttr("disabled");

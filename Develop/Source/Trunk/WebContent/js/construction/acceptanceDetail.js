@@ -81,7 +81,7 @@ jQuery(function($) {
 	$('.date-picker').datepicker({autoclose:true});
 	
 	$("#backBtn").click(function(){
-		$("#fl-container").load(api.index.acceptanceIndex.url);
+		com.switchPage(api.index.acceptanceIndex.url);
 	});
 	
 });

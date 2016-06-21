@@ -64,7 +64,6 @@ $(function(){
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -77,7 +76,14 @@ $(function(){
     var quotationVersionSeacher = new Searcher();
     quotationVersionSeacher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "quotationVersionPostData");
+    }, "pagenation", "quotationVersionPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     var quotationVersion = {
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -132,7 +138,7 @@ $(function(){
 
     $.extend(com.validator, quotationVersion.validator);
 
-    $('a[name="add"]','#pagenation').click(function(){
+    $('a[name="addQuotationVersion"]','#pagenation').click(function(){
         quotationVersion.quotationVersionItems.versionId.css("display", "none");
         quotationVersion.editFlag = !1;
         com.cleanItems(quotationVersion.quotationVersionItems);

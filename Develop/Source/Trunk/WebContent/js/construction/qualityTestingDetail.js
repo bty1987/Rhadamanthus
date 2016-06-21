@@ -679,11 +679,11 @@ jQuery(function($) {
 	});
 	
 	$('#btnBackInfo').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.qualityTestingIndex.url);
+		com.switchPage(api.index.qualityTestingIndex.url);
 	});
 	
 	$('#btnBackDrawing').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.qualityTestingIndex.url);
+		com.switchPage(api.index.qualityTestingIndex.url);
 	});
 	
 	$('[data-rel=popover]').popover({html:true});
@@ -733,50 +733,17 @@ function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, dele
         },
         'buttonClass': 'btn btn-success',
         'buttonText': '上传',
-        //'swf': "./js/uploadify/uploadify.swf", // flash
-
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        //'queueID':'uploadfileQueue', // 文件选择后的容器ID
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
         'uploader':qualityTestingDetail.mediaServer + api.common.uploadImg.url, // 上传处理程序
-        //'buttonImage':'upbutton.gif', // 浏览按钮的背景图片路径
-        //'width':'100', // 浏览按钮的宽度
         'height':'45', // 浏览按钮的高度
-        //'expressInstall':'expressInstall.swf', // expressInstall.swf文件的路径。
         'fileTypeDesc':'支持的格式：', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
         'fileSizeLimit':'5MB', // 上传文件的大小限制
         'queueSizeLimit' : 25, // 上传数量
-        'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) {
-        	//每次更新上载的文件的进展
-            //有时候上传进度什么想自己个性化控制，可以利用这个方法
-            //使用方法见官方说明
-        }, 'onInit': function(uploadify){
-        	
-        }, 'onSelect' : function(file) { // 选择上传文件后调用
-                  
-        }, 'onSelectError':function(file, errorCode, errorMsg){ // 返回一个错误，选择文件的时候触发
-            switch(errorCode) {
-                case -100:
-                    alert("上传的文件数量已经超出系统限制的"+$('#file_upload').uploadify('settings','queueSizeLimit')+"个文件！");
-                    break;
-                case -110:
-                    alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#file_upload').uploadify('settings','fileSizeLimit')+"大小！");
-                    break;
-                case -120:
-                    alert("文件 ["+file.name+"] 大小异常！");
-                    break;
-                case -130:
-                    alert("文件 ["+file.name+"] 类型不正确！");
-                    break;
-            };
-        },
-		'onFallback':function(){ // 检测FLASH失败调用
-			alert("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。");
-		},
-        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
+        'onUploadSuccess':function(file, data, response){ // 上传到服务器, 服务器返回相应信息到data里
         	var dateObj=eval("("+data+")");
-        	if(dateObj.errorCode==0){
+        	if(dateObj.errorCode == 0){
 				var options = {};
 				options[name+"."+id] = fId;
 				options[name+".csId"] = qualityTestingDetail.construstionSchedule.csId;

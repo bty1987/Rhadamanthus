@@ -42,8 +42,8 @@ jQuery(function(a) {
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
-        //$("#fl-container").load(api.personel.userIndex);
-        $("#fl-container").load("/views/personnel/user.html");
+        //com.switchPage(api.personel.userIndex);
+        com.switchPage("/views/personnel/user.html");
 
     });
     user.items.userId = a("#userId").on("blur",function() {
@@ -317,7 +317,7 @@ function successCallback() {
     //$.jgrid.refreshGrid(user.listgrid, user.postParam);
     //user.contractList = [];
     //user.experienceList = []
-    $("#fl-container").load("/views/personnel/user.html");
+    com.switchPage("/views/personnel/user.html");
 }
 
 function failCallback() {

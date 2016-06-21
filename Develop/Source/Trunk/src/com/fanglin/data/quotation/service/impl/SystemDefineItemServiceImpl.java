@@ -116,7 +116,7 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
 		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
 		
-		systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
+		systemDefineItemDao.save(systemDefineItemPO);
 		
 		return 0;
 	}
@@ -139,7 +139,41 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
 		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
 		
-		systemDefineItemDao.saveOrUpdate(systemDefineItemPO);
+		systemDefineItemDao.update(systemDefineItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateSystemDefineItemForStatus(SystemDefineItemVO systemDefineItemVO) throws FLException {
+		
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(systemDefineItemVO.getSdiId());
+		
+		if(systemDefineItemPO == null){
+			throw new FLException(200021, "系统自定义报价项不存在");
+		}
+		
+		systemDefineItemPO.setStatus(systemDefineItemVO.getStatus());
+		
+		systemDefineItemDao.update(systemDefineItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateSystemDefineItemForDiscount(SystemDefineItemVO systemDefineItemVO) throws FLException {
+		
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(systemDefineItemVO.getSdiId());
+		
+		if(systemDefineItemPO == null){
+			throw new FLException(200021, "系统自定义报价项不存在");
+		}
+		
+		systemDefineItemPO.setDiscount(systemDefineItemVO.getDiscount());
+		
+		systemDefineItemDao.update(systemDefineItemPO);
 		
 		return 0;
 	}

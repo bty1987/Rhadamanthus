@@ -1,6 +1,4 @@
 var approve = {
-	listgrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancelBtn: null,
 	modal: null,
@@ -8,12 +6,10 @@ var approve = {
 	
 	editFlg: false,
 	postParam: {},
-	type: ["楼号审批", "客户信息审批",  "退款审批", '预算审批', '归属设计审批', '归属业务审批', '主材退货审批']
 };
 
 jQuery(function($) {
-	approve.listgrid = $("#listgrid");
-	approve.gridPager = "#gridPager";
+	
 	approve.saveBtn = $("#saveBtn").on("click", saveData);
 	approve.cancelBtn = $("#cancelBtn");
 	approve.modal = $("#approveModal");
@@ -48,109 +44,143 @@ jQuery(function($) {
 		}
 	});
 	$("#userSel_chosen").css("width", "200px");
-	approve.items.type = $("#type");
 	
-	var searchOpts = {
-		url: api.system.pageUserApprove,
-		listgrid: approve.listgrid,
-		items: [
-		    {label:"用户姓名", id:"userNameSearch", name:"userName",type:'autoFillPinyinText', url:api.personel.queryUserForNameByPinyinName},
-	        {label:"审批类型", id:"typeSearch", name:"type", type:"select"}
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
+	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
 	
-	$("#typeSearch").bindData(approve.approvalType, "key", "value", true);
-	approve.items.type.bindData(approve.approvalType, "key", "value", false);
-	
-	approve.listgrid.jqGrid({		
-		url: api.system.pageUserApprove.url,
-		postData: approve.postParam,
-		colNames:['审批ID', '用户编号', '用户姓名', '审批类型'],
-		colModel:[
-		    {name:'approveId', hidden: true},
-			{name:'userId', jsonmap: "user.userId"},
-			{name:'userName', jsonmap: "user.userName"},
-			{name:'type', formatter: approvalTypeInit}
-		], 
-		pager : approve.gridPager,
-		caption: "审批人员列表"
-	});
+	var displayFunc  = (function(){
 
-	approve.listgrid.navGrid(approve.gridPager, {edit:false,add:false,del:true,search:false,refresh: false,view: false},{},{}
-	,$.jgrid.deleteFunc(removeRow))
-	.navButtonAdd(approve.gridPager, { //edit
-		caption:"",
-		buttonicon: 'icon-pencil blue',
-		onClickButton: function(){    
-			editFlg = true;
-			var num = approve.listgrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.showSelectInfo(approve.listgrid.attr("id"));
-				return;
-			}
-			
-			var row = approve.listgrid.jqGrid("getRowData", num);
-			approve.items.approveId = row.approveId;
-			approve.items.userSel.html('<option value="'+row.userId+'">'+row.userName+'-'+row.userId+'</option>').trigger("chosen:updated");
-			approve.items.userSel.prop("disabled", true).trigger("chosen:updated");
-			approve.items.type.val(row.type);
-			approve.modal.modal("show");
-		},
-		position: 'first'
-	}).navButtonAdd(approve.gridPager, { //add
-		caption:"",
-		buttonicon: 'icon-plus-sign purple',
-		onClickButton: function(){   
-			editFlg = false;
-			approve.items.userSel.html('<option value="">&nbsp;</option>').trigger("chosen:updated");
-			approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
-			approve.modal.modal("show");   
-		},
-		position: 'first'
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+        	var user = v.user;
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + user.currentName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+
+            var propertyArr = [
+                ["编号:", user.userId, "grey"],
+                ["职位:", user.duty, "grey"],
+                ["类型:", approve.approvalTypeData[v.type], "red"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnEdit.click(function(){
+            	editApprovalUser(v.approveId, user.userId, user.currentName, v.type);
+            });
+            
+            $btnDel.click(function(){
+            	deleteApprovalUser(v.approveId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+	
+	var searcher = new Searcher();
+
+	searcher.init(["userName", "approvalType"], "condList", api.system.pageUserApprove, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "approvalUserPostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addApprovalUser').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
 	});
+	
+	$('a[name="addApprovalUser"]', '#pagenation').click(function(){
+		editFlg = false;
+		
+		approve.items.userSel.html('<option value="">&nbsp;</option>').trigger("chosen:updated");
+		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
+		
+		approve.modal.modal("show");
+    });
+	
+	function editApprovalUser(approveId, userId, userName, type){
+		
+		editFlg = true;
+		
+		approve.items.approveId = approveId;
+		
+		approve.items.userSel.html('<option value="'+userId+'">'+userName+'-'+userId+'</option>').trigger("chosen:updated");
+		approve.items.userSel.prop("disabled", true).trigger("chosen:updated");
+		approve.items.type.val(type);
+		
+		approve.modal.modal("show");
+	}
+
+	function deleteApprovalUser(approveId){
+		
+		var options = {
+			"userApproveIds[0]": approveId
+		}
+		
+		com.post(api.system.deleteUserApprove, options, function(){
+			searcher.doSearch();
+		});
+	}
+
+	function saveData(){
+		
+		var url;
+		var options = {
+			'userApprove.user.userId': approve.items.userSel.val(),
+			'userApprove.type': approve.items.type.val(),
+		};
+		
+		if(editFlg){
+			url = api.system.updateUserApprove;
+			options['userApprove.approveId'] = approve.items.approveId;
+		}else{
+			url = api.system.addUserApprove;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearch();
+		});
+		
+		approve.modal.modal("hide");   
+	}
+	
 });
-
-function removeRow(params, rowNums){
-	var options = {};
-	var nums = rowNums.split(",");
-	
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid('getRowData', nums[i]);
-		options["userApproveIds["+i+"]"] = row.approveId;
-	}
-	
-	com.post(api.system.deleteUserApprove, options, successCallback);
-	
-	$("#eData").trigger("click");
-}
-
-function approvalTypeInit(cellvalue, options, rowdata){
-	return approve.approvalTypeData[cellvalue];
-}
-
-function saveData(){
-	
-	var url;
-	var options = {
-		'userApprove.user.userId': approve.items.userSel.val(),
-		'userApprove.type': approve.items.type.val(),
-	};
-	
-	if(editFlg){
-		url = api.system.updateUserApprove;
-		options['userApprove.approveId'] = approve.items.approveId;
-	}else{
-		url = api.system.addUserApprove;
-	}
-	
-	com.post(url, options, successCallback);
-	
-	approve.modal.modal("hide");   
-}
-
-function successCallback(){
-	$.jgrid.refreshGrid(approve.listgrid, approve.postParam);
-	com.showAlert(com.info, "操作成功");
-}
