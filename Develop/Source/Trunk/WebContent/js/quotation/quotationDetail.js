@@ -37,7 +37,7 @@ var QuotationDetail = (function(){
 					bootbox.confirm("当前页面存在重要数据,是否进行当前操作?", function(result) {
 						if(result){
 
-							$("#fl-container").load(api.index.quotationIndex.url, {}, function(){
+							com.switchPage(api.index.quotationIndex.url, {}, function(){
 
 							});
 						}

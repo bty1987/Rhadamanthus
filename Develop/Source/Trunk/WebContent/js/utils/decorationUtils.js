@@ -111,46 +111,6 @@ var decorationUtils = {
 				$("#salesmanDepartmentId").bindData(salesmanDepartment, 'deptId', 'deptName', true);
 			}
 		}, null, false);
-	},	initQuotationDetailItemGroupByJob: function(quotationFunctionAreas, addReduceItems){
-
-		decorationOrderDetail.decorationOrderQuotationItemGroupByJob = {};
-		
-		var quotationAreaItemsMap = {};
-		
-		var quotationFunctionAreaLength = quotationFunctionAreas.length;
-
-		for(var i=0;i<quotationFunctionAreaLength;++i) {
-			
-			var quotationFunctionArea = quotationFunctionAreas[i];
-			var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-			var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
-			
-			for(var j=0;j<quotationFunctionAreaItemLength;j++) {
-				
-				var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-
-				if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType]){
-					decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType] = [];
-				}
-				
-				decorationOrderDetail.decorationOrderQuotationItemGroupByJob[quotationFunctionAreaItem.workType].push(quotationFunctionAreaItem);
-			}
-		}
-		
-		var addReduceItemLength = addRecudeItems.length;
-		
-		for(var i=0;i<addReduceItemLength;i++){
-			
-			var addReduceItem = addReduceItems[i];
-			
-			if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType]){
-				decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType] = [];
-			}
-			
-			decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType].push(addReduceItem);
-		}
-
-		console.log(decorationOrderDetail.decorationOrderQuotationItemGroupByJob);
 	},	loadQuotationDetail: function(){
 		
 		var quotation = null;
@@ -512,94 +472,96 @@ var decorationUtils = {
 		html += "<input type='text' class='hide' value='"+info.substring(0, info.length-2)+"' />";
 		
 		return html;
-	}, initBasePayment: function(postData, paymentActionFunc, tooltipId){
+	}, initPayment: function(orderId, editFunc, submitFunc, refundFunc){
 		
-		var actionFlag = true;
+		var baseTypes = ["定金", "设计费", "首付款", "首付二期款", "二期款", "尾款"];
 		
-		if(paymentActionFunc != null){
-			actionFlag = false;
+		var $base = $("#basePaymentDiv").html("");
+		var $other = $("#otherPaymentDiv").html("");
+		
+		var $baseul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($base);
+		var $otherul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($other);
+		
+		var decorationPayments = null;
+		
+		com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.orderId": orderId}, function(res){
+			decorationPayments = res.decorationPayments;
+		}, null, false);
+		
+		if(decorationPayments && decorationPayments.length){
+			$.each(decorationPayments, function(i, v){
+				var $liLine = $('<li></li>').addClass('item-orange clearfix');
+				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.paymentType));
+				var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+				var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+				var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+				var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+				
+				var propertyArr = [
+					["应收额:", v.referMoney, "grey"],
+					["实收额:", v.realMoney, "grey"],
+					["收款时间:", v.collectTime, "grey"],
+					["状态:", v.paymentStatus, "red"]
+				];
+				
+				$.each(propertyArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulProperty);
+				});
+				
+				var styleArr = [];
+				
+				v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
+				v.bank != null && v.bank != "0" ? styleArr.push(["银行卡:", v.bank, "grey"]) : true;
+				v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
+				v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
+				v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "grey"]) : true;
+				v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "grey"]) : true;
+				v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
+				
+				$.each(styleArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulStyle);
+				});
+				
+				var $paymentType = v.paymentType;
+				var $paymentStatus = v.paymentStatus;
+				
+				var $btnEdit = editFunc ? $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑').click(function(){
+					editFunc(v.autoId, v.referMoney);
+				}) : $('<a></a>');
+				
+				var $btnSubmit = submitFunc ? $('<a></a>').addClass('btn btn-minier btn-primary').html('提交').click(function(){
+					submitFunc(v.autoId, $paymentType);
+				}) : $('<a></a>');
+				
+				var $btnRefund = refundFunc ? $('<a></a>').addClass('btn btn-minier btn-danger').html('编辑').click(function(){
+					refundFunc(v.autoId, v.referMoney, $paymentType);
+				}) : $('<a></a>');
+				
+				if($paymentType != "定金"){
+					if($paymentStatus == '未提交'){
+						$paymentType == "设计费" ? $divBtnWrap.append($btnEdit).append($btnSubmit) : true;
+						baseTypes.indexOf($paymentType) != -1 ? $divBtnWrap.append($btnSubmit) : true;
+						v.paymentType.search('退款') != -1 || v.paymentType == '违约金' ? $divBtnWrap.append($btnSubmit) : true;
+					}else if($paymentStatus == '未付款'){
+						$paymentType == "设计费" ? $divBtnWrap.append($btnEdit) : true;
+					}else if($paymentStatus == '申请审批' || $paymentStatus == '审批未通过'){
+						baseTypes.indexOf($paymentType) == -1 ? $divBtnWrap.append($btnRefund) : true;
+					}
+				}
+				
+				$divBtnWrap.appendTo($h4);
+				
+				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
+				
+				baseTypes.indexOf($paymentType) != -1 ? $liLine.appendTo($baseul) : $liLine.appendTo($otherul);
+			});
 		}
-		
-		$("#basePaymentTable").jqGrid({
-			url: api.payment.pageDecorationPaymentForBaseByOrderId.url,
-			postData:postData,
-			viewrecords : false,
-			multiselect : false,
-	        multiboxonly: false,
-			colNames:['autoId','款项名称', '应收款项', '实收金额', '款项状态', '信息', '操作', '现金', '刷卡', '刷卡信息', '转账', '转账银行', '分期', '分期银行', '对公', '对公银行', '预付款', '代金券', '券信息'],
-			colModel:[
-			    {name:'autoId',hidden:true},
-				{name:'paymentType'},
-				{name:'referMoney'},
-				{name:'realMoney'},
-				{name:'paymentStatus'},
-				{name:'info', formatter:decorationUtils.paymentInfoInit},
-				{name:'action', hidden:actionFlag, formatter:paymentActionFunc},
-				{name:'cash', hidden:true},
-				{name:'bank', hidden:true},	
-				{name:'bankInfo', hidden:true},	
-				{name:'checkv', hidden:true},
-				{name:'checkvBankName', hidden:true},
-				{name:'installment', hidden:true},
-				{name:'installmentBankName', hidden:true},
-				{name:'accounts', hidden:true},
-				{name:'accountsBankName', hidden:true},
-				{name:'advance', hidden:true},
-				{name:'coupon', hidden:true},
-				{name:'couponInfo', hidden:true},
-			], 
-			pager : "#basePaymentPager",
-			caption: "",
-			gridComplete: function(){
-				$('[data-rel="tooltip"]').tooltip('destroy');
-				$('[data-rel=tooltip]').tooltip({container: tooltipId});
-			}
-		});
-	}, initOtherPayment: function(postData, paymentActionFunc, tooltipId) {
-		
-		var actionFlag = true;
-		
-		if(paymentActionFunc != null){
-			actionFlag = false;
-		}
-
-		decorationPayment.otherPaymentGrid.jqGrid({
-			url: api.payment.pageDecorationPaymentForOtherByOrderId.url,
-			postData: postData,
-			viewrecords : false,
-			multiselect : false,
-	        multiboxonly: false,
-			colNames: [ 'autoId', '款项名称', '应收款项', '实收金额', '款项状态', '信息', '操作', '现金', '刷卡', '刷卡信息', '转账', '转账银行', '分期', '分期银行', '对公', '对公银行', '预付款', '代金券', '券信息'],
-			colModel: [ 
-			    {name: 'autoId',hidden : true}, 
-			    {name: 'paymentType'}, 
-			    {name: 'referMoney'}, 
-			    {name: 'realMoney'}, 
-			    {name: 'paymentStatus'},
-			    {name: 'info', formatter:decorationUtils.paymentInfoInit},
-			    {name: 'action', hidden:actionFlag, formatter: paymentActionFunc}, 
-			    {name: 'cash', hidden:true},
-				{name: 'bank', hidden:true},	
-				{name: 'bankInfo', hidden:true},	
-				{name: 'checkv', hidden:true},
-				{name: 'checkvBankName', hidden:true},
-				{name: 'installment', hidden:true},
-				{name: 'installmentBankName', hidden:true},
-				{name: 'accounts', hidden:true},
-				{name: 'accountsBankName', hidden:true},
-				{name: 'advance', hidden:true},
-				{name: 'coupon', hidden:true},
-				{name: 'couponInfo', hidden:true},
-			],
-			pager : decorationPayment.otherPaymentPager,
-			caption : "",
-			gridComplete: function(){
-				$('[data-rel="tooltip"]').tooltip('destroy');
-				$('[data-rel=tooltip]').tooltip({container:tooltipId});
-			}
-		});
-
-		decorationPayment.otherPaymentGrid.navGrid(decorationPayment.otherPaymentPager, {edit : false, add : false, del : false, search : false, 	searchicon : 'icon-search orange', refresh : false, view : false	}, {}, {}, {}, $.jgrid.searchFunc($(this)));
 	}, initOrderBelongInfo: function(orderId){
 		
 		var belongDesignInfo = $("#belongDesignInfo");

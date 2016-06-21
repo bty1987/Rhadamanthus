@@ -270,7 +270,7 @@ $(function(){
     
 	    function viewDecorationOrderDetail(decorationOrderId){
 	    	decorationOrderPostData.decorationOrderId = decorationOrderId;
-	    	$("#fl-container").load(api.index.decorationOrderAdvanceDetailIndex.url);
+	    	com.switchPage(api.index.decorationOrderAdvanceDetailIndex.url);
 	    }
 	    
 	    function signOrder(orderId, customerId){

@@ -56,7 +56,7 @@ jQuery(function($) {
 	});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderCommonIndex.url);
+		com.switchPage(api.index.decorationOrderCommonIndex.url);
 	});
 	
 	initWizard();
@@ -104,8 +104,7 @@ jQuery(function($) {
 		decorationOrderDetail.customer.approveStatus = decorationOrder.customer.approveStatus;
 	});
 	
-	decorationUtils.initBasePayment(decorationPayment.postParam, null, "#decorationOrderDetailCommonPageContent");
-	decorationUtils.initOtherPayment(decorationPayment.postParam, null, "#decorationOrderDetailCommonPageContent");
+	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
 	
 	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", function(data){
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
@@ -138,7 +137,7 @@ function initWizard(){
 			decorationUtils.initConstructionScheduleInfo();
 		}
 	}).on('finished', function(e) {
-		$("#fl-container").load(api.index.decorationOrderCommonIndex.url);
+		com.switchPage(api.index.decorationOrderCommonIndex.url);
 	}).on('stepclick', function(e,info){
 		
 		if(info.step == 2){

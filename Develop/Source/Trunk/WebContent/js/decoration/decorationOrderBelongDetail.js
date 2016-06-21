@@ -41,7 +41,7 @@ jQuery(function($) {
 	$("#defaultFlag").switchBtn("isOrNot");
 	
 	$('#detailBckBtn').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderBelongIndex.url);
+		com.switchPage(api.index.decorationOrderBelongIndex.url);
 	});
 	
 	$('#saveBelongInfoBtn').on(ace.click_event, function(){
@@ -178,7 +178,7 @@ jQuery(function($) {
 		
 		com.post(api.approval.submitApprovalForOrderBelong, options, function(res){
 			com.showAlert(com.info, "操作成功");
-			$("#fl-container").load(api.index.decorationOrderBelongIndex.url);
+			com.switchPage(api.index.decorationOrderBelongIndex.url);
 		});
 		
 		$("#approveModal").modal("hide");

@@ -102,7 +102,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.qualityTestingIndex.url);
+			com.switchPage(api.index.qualityTestingIndex.url);
 		},
 		position: "first",
 	});

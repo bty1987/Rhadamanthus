@@ -101,7 +101,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.inspectionIndex.url);
+			com.switchPage(api.index.inspectionIndex.url);
 		},
 		position: "first",
 	});

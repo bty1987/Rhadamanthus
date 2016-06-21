@@ -153,7 +153,6 @@ $(function(){
 						$liProperty.appendTo($ulProperty);
 					});
 
-
 					$btnView.click(function(){
 						viewDecorationOrderDetail(v.orderId+"");
 					});
@@ -192,12 +191,12 @@ $(function(){
 		//查看
 		var viewDecorationOrderDetail = function (decorationOrderId){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-			$("#fl-container").load(api.index.decorationOrderDesignerDetailIndex.url);
+			com.switchPage(api.index.decorationOrderDesignerDetailIndex.url);
 		}
 		//报价
 		var viewDecorationQuotateIndex = function (decorationOrderId){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-			$("#fl-container").load(api.index.quotationIndex.url);
+			com.switchPage(api.index.quotationIndex.url);
 		}
 		//回访
 		var viewDecorationOrderBackVisitIndex = function (decorationOrderId){
@@ -227,7 +226,7 @@ $(function(){
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
 
-			$("#fl-container").load(api.index.addReduceIndex.url);
+			com.switchPage(api.index.addReduceIndex.url);
 		}
 
 		return {
