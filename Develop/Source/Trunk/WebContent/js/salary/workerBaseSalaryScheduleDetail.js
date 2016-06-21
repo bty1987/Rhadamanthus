@@ -175,7 +175,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.workerBaseSalaryScheduleIndex.url);
+			com.switchPage(api.index.workerBaseSalaryScheduleIndex.url);
 		},
 		position: "first",
 	});

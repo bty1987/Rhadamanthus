@@ -66,6 +66,24 @@ var Condition = function(){
             }
         },
 
+        //-------增减项查询条件
+        addReduceType : {
+            label:"类型",
+            type:"select",
+            submitConfig : {
+                name : "addReduceType",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : null,
+                postData:null,
+                listPath: [{"key":"0","value":"增项"}, {"key":"1","value":"减项"},{"key":"2","value":"漏项"}],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
         //-------数据-报价-报价版本
         versionName : { //
             label:"版本名称",
@@ -174,9 +192,22 @@ var Condition = function(){
             }
         },
 
-
-
-
+        quotationWorkTypeId : {
+            label:"工种",
+            type:"select",
+            submitConfig : {
+                name : "quotationWorkTypeId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.common.queryWorkType,
+                postData:{},
+                listPath: "workTypes",
+                keyPath:"id",
+                valuePath:"name"
+            }
+        },
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -248,10 +279,7 @@ var Condition = function(){
                 valuePath:"categoryName"
             }
         },
-
-
         //--------人事-员工 页面的各种查询条件
-
         userId : { //
             label:"员工号",
             type:"text",
@@ -271,7 +299,7 @@ var Condition = function(){
             },
             dataSource : {
                 url : api.personel.queryUserForNameByPinyinName,
-                postData:{ "duty" : "设计师" },
+                postData:{},
                 listPath: "autoFillKeyValue",
                 keyPath:"key",
                 valuePath:"value"
@@ -286,7 +314,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         roleId : {
             label:"角色",
             type:"select",
@@ -351,8 +378,6 @@ var Condition = function(){
                 valuePath:null
             }
         },
-
-
         //装修订单-设计 页面的各种查询条件
         village : {
             label:"楼盘",
@@ -505,8 +530,22 @@ var Condition = function(){
                 keyPath:"key",
                 valuePath:"value"
             }
-        },
-
+        }, approvalType: {
+            label:"审批类型",
+            type:"select",
+            submitConfig : {
+                name : "type",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : api.ds.approvalType,
+                postData:{ "timestamp": new Date().getTime() },
+                listPath: "approvalType",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        }
     };
     return {
         getRuleByCondName:function(condName){

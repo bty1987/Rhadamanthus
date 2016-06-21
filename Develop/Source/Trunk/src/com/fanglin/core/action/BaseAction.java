@@ -240,28 +240,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 		return roleId;
 	}
-
-	public void clearCookie() throws FLException{
-		String decorationOrderId;
-		String quotationId;
-		
-		try {
-			decorationOrderId = CookieUtil.getCookie(request, Constant.COOKIE_DECORATIONORDER_ORDERID);
-			
-			if(decorationOrderId != null){
-				CookieUtil.delCookie(request, response, Constant.COOKIE_DECORATIONORDER_ORDERID);
-			}
-			
-			quotationId = CookieUtil.getCookie(request,Constant.COOKIE_QUOTATIONID);
-			
-			if(quotationId != null){
-				CookieUtil.delCookie(request, response, Constant.COOKIE_QUOTATIONID);
-			}
-			
-		} catch (UnsupportedEncodingException e){
-			throw new FLException(110005, "系统处理问题");
-		}
-	}
 	
 	private String getAuthentication() throws FLException{
 		

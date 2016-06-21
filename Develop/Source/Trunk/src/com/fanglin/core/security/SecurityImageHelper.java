@@ -98,4 +98,8 @@ public class SecurityImageHelper {
         
         return inputStream;
     }
+    
+    public static void main(String[] args) {
+		System.out.println(SecurityImageHelper.convertImageToStream(SecurityImageHelper.createImage("1111")));
+	}
 }

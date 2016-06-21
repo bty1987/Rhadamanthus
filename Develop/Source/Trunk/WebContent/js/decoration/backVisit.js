@@ -97,7 +97,7 @@ $(function(){
     };
 
     $('#btnBack').click(function(){
-        $("#fl-container").load(params.historyOrderPage);
+        com.switchPage(params.historyOrderPage);
     });
 
     function saveData() {

@@ -52,12 +52,12 @@ $(function(){
         //查看
         var viewUser = function (userId){
             params.tempUserId = userId;
-            $("#fl-container").load("/views/personnel/userEdit.html");
+            com.switchPage("/views/personnel/userEdit.html");
         };
         //添加
         var addUser = function(){
             params.tempUserId = null;
-            $("#fl-container").load("/views/personnel/userEdit.html");
+            com.switchPage("/views/personnel/userEdit.html");
         };
 
         return {
@@ -78,7 +78,14 @@ $(function(){
     
     userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "userPostData");
+    }, "pagenation", "userPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUser').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     displayFunc.initAddUser();
 });

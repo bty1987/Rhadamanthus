@@ -81,9 +81,15 @@ $(function(){
 
     var functionAreaSeacher = new Searcher();
     functionAreaSeacher.init( _condArr, "condList", api.quotation.pageFunctionArea, function(data){
-
         displayFunc.init('resultList', data);
-    }, "pagenation", "functionAreaPostData");
+    }, "pagenation", "functionAreaPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addFunctionArea').css('margin-top', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     var functionArea = {
             saveBtn: $("#saveBtn").on("click", saveFunctionArea),
@@ -173,7 +179,7 @@ $(function(){
     $.extend(com.validator, functionArea.validator);
     //--------------------------functionArea-----------------------
     //功能区添加按钮
-    $('a[name="add"]', '#pagenation').on('click', function () {
+    $('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
         functionArea.editFlg = !1;
         com.cleanItems(functionArea.functionAreaItems);
         bindVersion();

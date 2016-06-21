@@ -148,7 +148,7 @@ jQuery(function($) {
 	});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
+		com.switchPage(api.index.decorationOrderDesignerIndex.url);
 	});
 	
 	$('#createQuotation').on(ace.click_event, function(){
@@ -323,5 +323,5 @@ function editQuotationDetail(quotationId){
 	params["orderId"] = decorationQuotation.decorationOrderId;
 	params["quotationId"] = quotationId;
 	
-	$("#fl-container").load(api.index.quotationDetailIndex.url);
+	com.switchPage(api.index.quotationDetailIndex.url);
 }

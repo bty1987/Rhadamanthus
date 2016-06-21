@@ -36,7 +36,6 @@ $(function(){
             var $btnResign = $('<a></a>').addClass('btn btn-minier').html('重签合同');
 
             var propertyArr = [
-                ["订单编号:", v.orderId, "grey"],
                 ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
                 ["客户名:", v.customer.customerName, "grey"],
                 ["余额:", v.customer.balance, "grey"],
@@ -49,7 +48,7 @@ $(function(){
                 ["折扣:", v.discount, "grey"],
                 ["量房时间:", v.createTime, "grey"],
                 ["签单时间:", v.contractTime, "grey"],
-                ["状态:", v.status, "grey"],
+                ["状态:", v.status, "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -270,7 +269,7 @@ $(function(){
     
 	    function viewDecorationOrderDetail(decorationOrderId){
 	    	decorationOrderPostData.decorationOrderId = decorationOrderId;
-	    	$("#fl-container").load(api.index.decorationOrderAdvanceDetailIndex.url);
+	    	com.switchPage(api.index.decorationOrderAdvanceDetailIndex.url);
 	    }
 	    
 	    function signOrder(orderId, customerId){

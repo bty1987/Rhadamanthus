@@ -15,6 +15,8 @@ var Searcher = function(){
         $pager : null,
         displayFunc : null,
         extraParams : {},//额外的查询参数
+        noPagingFlag : false,
+        resultListName : null,
     };
 
     /*查询条件各种操作*/
@@ -43,14 +45,22 @@ var Searcher = function(){
                 }),
                     basicConf.$searcher.append($searchBtn),
                     $searchBtn.click(function(){
-                        basicConf.$pager.hide();
+                        if(basicConf.noPagingFlag){
+                            _params = getParams();
+                            if(_params){
+                                queryData(_params);
+                            }
 
-                        paging.nowPage["paging.page"] = 0;
-                        paging.nowPostParams = null;
-                        var _params = paging.getParams();
-                        if(_params){
-                            _params["paging.page"] += 1;
-                            paging.getDataByPage( _params);
+                        }else{
+                            basicConf.$pager.hide();
+
+                            paging.nowPage["paging.page"] = 0;
+                            paging.nowPostParams = null;
+                            var _params = paging.getParams();
+                            if(_params){
+                                _params["paging.page"] += 1;
+                                paging.getDataByPage( _params);
+                            }
                         }
                     })
             );
@@ -65,10 +75,8 @@ var Searcher = function(){
          * */
         createCondItem : function(condCode, condRule){
 
-
             var $item = $('<span></span>').addClass('inline');
             var $label = $('<label></label>');
-
 
             var $showItem,$valueItem;
 
@@ -110,7 +118,6 @@ var Searcher = function(){
                 $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
                     $(this).next().focus();
                 });
-
             }
 
             if(_rtype=="autofill"){
@@ -148,21 +155,29 @@ var Searcher = function(){
                     "data-rqs" : _rname
                 }).append('<option value="">全部</option>').appendTo($item);
 
+                if(_rurl){
+                    com.post(_rurl, _rpostParam, function(result){
+                        var data = result[_rresult];
+                        data && data.length &&(
+                            $.each(data,function(i,v){
+                                if("object" !== typeof v){
+                                    $('<option></option>').attr("value" , v).html(v).appendTo($showItem);
+                                }else{
+                                    $('<option></option>').attr("value" , v[_rkey]).html(v[_rvalue]).appendTo($showItem);
+                                }
 
-                _rurl && com.post(_rurl, _rpostParam, function(result){
-                    var data = result[_rresult];
-                    data && data.length &&(
-                        $.each(data,function(i,v){
-                            if("object" !== typeof v){
-                                $('<option></option>').attr("value" , v).html(v).appendTo($showItem);
-                            }else{
-                                $('<option></option>').attr("value" , v[_rkey]).html(v[_rvalue]).appendTo($showItem);
-                            }
-
-                        })
-                    );
-                }, null, false);
-                //$line.addClass("select");
+                            })
+                        );
+                    }, null, false);
+                }else{
+                    $.each(_rresult, function(i, v){
+                        if("object" !== typeof v){
+                            $('<option></option>').attr("value" , v).html(v).appendTo($showItem);
+                        }else{
+                            $('<option></option>').attr("value" , v[_rkey]).html(v[_rvalue]).appendTo($showItem);
+                        }
+                    });
+                }
             }
 
             return $item;
@@ -266,39 +281,116 @@ var Searcher = function(){
         /*给分页的上一页下一页绑定点击事件*/
         init : function(){
             var _pagenation = this;
+			
+			//增加分页操作元素
+            basicConf.$pager.html('');
+            
+            basicConf.$cusBtns && $.each(basicConf.$cusBtns, function(i, v){
+            	v.appendTo(basicConf.$pager);
+            });
+            
+            var $infodiv = $('<div></div>').addClass('pager-info pull-left').appendTo(basicConf.$pager);
+            var $di = $('<span></span>').text('第').appendTo($infodiv);
+            var $nowPage = $('<span></span>').addClass('bigger-120 blue').attr('name', 'nowPage').appendTo($infodiv);
+            var $di = $('<span></span>').text('页, 共').appendTo($infodiv);
+            var $totalPage = $('<span></span>').addClass('bigger-120 blue').attr('name', 'totalPage').appendTo($infodiv);
+            var $di = $('<span></span>').text('页, 每页显示').appendTo($infodiv);
+            var $rows = $('<span></span>').addClass('bigger-120 blue').attr('name', 'rows').appendTo($infodiv);
+            var $di = $('<span></span>').text('条, 共').appendTo($infodiv);
+            var $totalRecords = $('<span></span>').addClass('bigger-120 blue').attr('name', 'totalRecords').appendTo($infodiv);
+            var $di = $('<span></span>').text('条').appendTo($infodiv);
+            
+            var $ul = $('<ul></ul>').addClass('pager pull-right').appendTo(basicConf.$pager);
+            var $prevli = $('<li></li>').addClass('previous').attr('name', 'prev').appendTo($ul);
+            var $preva = $('<a></a>').attr('href', 'javascript:void(0);').text('← 上一页').appendTo($prevli);
+            var $nextli = $('<li></li>').addClass('next').attr('name', 'next').appendTo($ul);
+            var $nexta = $('<a></a>').attr('href', 'javascript:void(0);').text('下一页 →').appendTo($nextli);
+			
             //页面初始化的时候隐藏分页
             basicConf.$pager.hide();
+			
             //上一页下一页绑定
             $('li[name="prev"]', basicConf.$pager).click(function(){
                 var _params;
                 _pagenation.nowPage["paging.page"] > 1 && (
-
                     _params = _pagenation.getParams(),
-                    _params && (
-                        _params["paging.page"] -= 1,
-                            _pagenation.getDataByPage(_params)
-                    )
+                    _params && (_params["paging.page"] -= 1, _pagenation.getDataByPage(_params))
                 );
             });
             $('li[name="next"]', basicConf.$pager).click(function(){
                 var _params;
 
                 _pagenation.nowPage["paging.page"] < _pagenation.nowPage["paging.totalPage"] && (
-
                     _params = _pagenation.getParams(),
-                    _params && (
-                        _params["paging.page"] += 1,
-                            _pagenation.getDataByPage(_params)
-                    )
+                    _params && (_params["paging.page"] += 1, _pagenation.getDataByPage(_params))
                 );
             });
         }
     };
 
+    var queryData = function(_params){
+        com.post(basicConf.url, _params, $.proxy(function(result){
+            //params全局变量,给全局变量赋当前查询条件的值
+            params[basicConf.historyName] = _params;
+            basicConf.displayFunc(result[basicConf.resultListName]);
+        }, this), null, false);
+    };
+
+    var getParams = function(){
+        var _count = 0;
+        var _params = {};
+        var _condArr = basicConf.condCodeArrs;
+
+        _condArr && _condArr.length &&(
+            $.each(_condArr,function(i,val){
+                var $input = $('[name=' + val + ']', basicConf.$searcher);
+                var _postName = $input.attr("data-rqs");
+                var _rule = Condition.getRuleByCondName( val);
+                var _reg = _rule.submitConfig.validate;
+                var _inputValue = $input.val();
+                var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
+                if(_inputValue){
+
+                    if(_reg){
+                        if(!(_reg.reg).test(_inputValue)){
+                            $input.addClass('tooltip-info').attr({
+                                "data-rel" : "tooltip",
+                                "data-placement" : "top",
+                                "data-original-title" : _reg.msg
+
+                            }).tooltip('show');
+
+                            _params = null;
+                            return false;
+
+                        }else{
+                            $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
+                            _params['filters[' + _count + '].data'] = _inputValue;
+                            _params['filters[' + _count + '].field'] = _postName;
+                            _params['filters[' + _count + '].op'] = _op;
+                            _count +=1;
+                        }
+                    }else{
+                        $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
+                        _params['filters[' + _count + '].data'] = _inputValue;
+                        _params['filters[' + _count + '].field'] = _postName;
+                        _params['filters[' + _count + '].op'] = _op;
+                        _count +=1;
+                    }
+                }
+            })
+        );
+
+        if(_params){
+            _params = $.extend(true,{},_params,basicConf.extraParams);
+        }
+        return _params;
+    };
+
     var searchByPresentParams = function(){
         var _params = params[basicConf.historyName] ? params[basicConf.historyName] : {};
-
-        $.each(_params, function(key, val){
+        //给查询条件赋值
+        !jQuery.isEmptyObject(_params) && $.each(_params, function(key, val){
             var _pname,_pvalue;
             key.indexOf("field") != -1 && (
                 _pname = val,
@@ -306,11 +398,16 @@ var Searcher = function(){
                     $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).val(_pvalue)
             );
         });
-        jQuery.isEmptyObject( _params ) && ( _params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"] );
+        if(!basicConf.noPagingFlag){
+            jQuery.isEmptyObject( _params ) && ( _params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"] );
 
-        _params = $.extend({},_params,basicConf.extraParams);
-        paging.nowPostParams = _params ;
-        paging.getDataByPage(_params);
+            _params = $.extend({},_params,basicConf.extraParams);
+            paging.nowPostParams = _params ;
+            paging.getDataByPage(_params);
+        }else{
+            _params = $.extend({},_params,basicConf.extraParams);
+            queryData(_params);
+        }
     };
 
     return{
@@ -324,8 +421,9 @@ var Searcher = function(){
          *     pagerId:分页控件的标签id
          *     historyName:保存历史查询条件的查询条件名
          *     extraParams: 分页查询的其他查询参数{key:val}形式
+         *     noPagingFlag : 不分页标识，true，标识不分页
          * */
-        init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams){
+        init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns){
             /*各种设置*/
             basicConf.condCodeArrs = condCodeArrs;
             basicConf.$searcher = $('#' + searchId);
@@ -334,9 +432,14 @@ var Searcher = function(){
             basicConf.historyName = historyName;
             basicConf.displayFunc = displayFunc;
             extraParams && typeof extraParams == "object" && (basicConf.extraParams = extraParams);
-
-            paging.init();
-
+            noPagingFlag && (basicConf.noPagingFlag = noPagingFlag);
+            basicConf.resultListName = resultListName;
+            
+			cusBtns && (basicConf.$cusBtns = cusBtns());
+			
+            //绑定上一页下一页事件
+            !noPagingFlag && paging.init();
+            //初始化查询条件
             searchCond.renderConds();
 
             searchByPresentParams();

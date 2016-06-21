@@ -59,7 +59,6 @@ $(function(){
 
             $liLine.append($h3).append($ulProperty);
 
-
             $btnEdit.click(function(){
                 editVillage(v);
             });
@@ -88,7 +87,14 @@ $(function(){
     var villageSeacher = new Searcher();
     villageSeacher.init( _condArr, "condList", api.data.pageVillage, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "villagePostData");
+    }, "pagenation", "villagePostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+    });
 
     var village = {
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -154,7 +160,7 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="add"]','#pagenation').click(function(){
+    $('a[name="addVillage"]','#pagenation').click(function(){
         village.editFlag = !1;
         com.cleanItems(village.items);
         village.items.villageId.css("display", "none");

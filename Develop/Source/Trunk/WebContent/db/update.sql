@@ -26,6 +26,8 @@ ALTER TABLE functionarea CHANGE COLUMN autoId faId BIGINT(20) NOT NULL AUTO_INCR
 ALTER TABLE functionAreaQuoteItem CHANGE COLUMN autoId faiId BIGINT(20) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE systemdefineitem CHANGE COLUMN autoId sdiId BIGINT(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE systemdefineitem ADD COLUMN status tinyint(4) NOT NULL DEFAULT 0;
+ALTER TABLE systemdefineitem ADD COLUMN discount tinyint(4) NOT NULL DEFAULT 0;
 
 ALTER TABLE addreduce CHANGE COLUMN addReduceType type tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项';
 ALTER TABLE addreduce CHANGE COLUMN addReduceTotal total decimal(10,3) NOT NULL;
@@ -58,7 +60,7 @@ CREATE TABLE addreduceitem (
   itemName varchar(128) NOT NULL,
   type tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
   measurementUnit varchar(10) NOT NULL,
-  workType int(15) NOT NULL,
+  workType varchar(15) NOT NULL,
   unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
   num decimal(10,3) NOT NULL DEFAULT '0.000',
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',

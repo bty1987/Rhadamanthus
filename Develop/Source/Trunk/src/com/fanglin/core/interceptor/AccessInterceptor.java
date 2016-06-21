@@ -50,7 +50,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
 		
 		String userId = "";
-		String result = Action.LOGIN;
+		String result = Action.SUCCESS;
 		
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
@@ -65,7 +65,9 @@ public class AccessInterceptor extends AbstractInterceptor {
 		}
 		
 		if(authentication == null){
-			return result;
+			invocation.getStack().setValue("errorCode", "110005");
+			invocation.getStack().setValue("errorMsg", "登陆超时");
+			return BaseAction.BACKVALUE_ERROR_STR;
 		}
 		
 		String encryptKey = SystemConfig.getString("encryptKey");
@@ -86,11 +88,11 @@ public class AccessInterceptor extends AbstractInterceptor {
 					
 					if(authenticationUtil.getUpdateTime() == -1){
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
-						return Action.LOGIN;
+						throw new FLException(110005, "登陆超时");
 					}
 					
 					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
-						result = BaseAction.BACKVALUE_TIMEOUT_STR;
+						throw new FLException(110005, "登陆超时");
 					}else{
 						authenticationUtil.setUpdateTime((new Date()).getTime());
 						String authenticationString = authenticationUtil.getAuthenticationStr();
@@ -104,11 +106,11 @@ public class AccessInterceptor extends AbstractInterceptor {
 						if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
 							result =  invocation.invoke();
 						}else{
-							result = BaseAction.BACKVALUE_NOPERATE_STR;
+							throw new FLException(-2, "无操作权限");
 						}
 					}
 				}else{
-					result = BaseAction.BACKVALUE_LOGIN_STR;
+					throw new FLException(110005, "登陆超时");
 				}
 			}
 			
@@ -142,7 +144,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 //			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
-		if(result == Action.LOGIN){
+		if(result == BaseAction.BACKVALUE_ERROR_STR){
 			CookieUtil.delCookie((HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST), (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION);
 		}
 		

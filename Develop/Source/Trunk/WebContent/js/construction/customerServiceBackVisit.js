@@ -110,7 +110,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.customerServiceIndex.url);
+			com.switchPage(api.index.customerServiceIndex.url);
 		},
 		position: "first",
 	});

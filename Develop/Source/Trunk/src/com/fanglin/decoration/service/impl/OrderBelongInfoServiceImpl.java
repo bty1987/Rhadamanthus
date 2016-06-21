@@ -130,5 +130,49 @@ public class OrderBelongInfoServiceImpl implements OrderBelongInfoService {
 		
 		return orderBelongInfoVOs;
 	}
+
+	@Override
+	public List<OrderBelongInfoVO> queryOrderBelongInfoByOrderId(OrderBelongInfoVO orderBelongInfoVO) {
+		
+		List<OrderBelongInfoVO> orderBelongInfoVOs = new ArrayList<OrderBelongInfoVO>();
+		List<OrderBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
+		
+		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+			OrderBelongInfoVO _orderBelongInfoVO = new OrderBelongInfoVO();
+			
+			if(orderBelongInfoPO.getApprovalUserPO() != null){
+				_orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
+				_orderBelongInfoVO.setApprovalTime(orderBelongInfoPO.getApprovalTime());
+				_orderBelongInfoVO.setApprovalUserId(orderBelongInfoPO.getApprovalUserPO().getUserId());
+			}
+			
+			if(orderBelongInfoPO.getOperateUserPO() != null){
+				_orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
+				_orderBelongInfoVO.setOperateUserId(orderBelongInfoPO.getOperateUserPO().getUserId());
+				_orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
+			}
+			
+			_orderBelongInfoVO.setBelongDept(orderBelongInfoPO.getBelongDeptPO().getDeptName());
+			_orderBelongInfoVO.setBelongDeptId(orderBelongInfoPO.getBelongDeptPO().getDeptId());
+			
+			if(orderBelongInfoPO.getBelongRegionPO() != null){
+				_orderBelongInfoVO.setBelongRegion(orderBelongInfoPO.getBelongRegionPO().getDeptName());
+				_orderBelongInfoVO.setBelongRegionId(orderBelongInfoPO.getBelongRegionPO().getDeptId());
+			}else{
+				_orderBelongInfoVO.setBelongRegion("");
+				_orderBelongInfoVO.setBelongRegionId("");
+			}
+			_orderBelongInfoVO.setBelongUser(orderBelongInfoPO.getBelongUserPO().getCurrentName());
+			_orderBelongInfoVO.setBelongUserId(orderBelongInfoPO.getBelongUserPO().getUserId());
+			_orderBelongInfoVO.setBelongRate(orderBelongInfoPO.getBelongRate());
+			_orderBelongInfoVO.setBelongType(orderBelongInfoPO.getBelongType());
+			_orderBelongInfoVO.setAutoId(orderBelongInfoPO.getAutoId());
+			_orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
+			
+			orderBelongInfoVOs.add(_orderBelongInfoVO);
+		}
+		
+		return orderBelongInfoVOs;
+	}
 	
 }

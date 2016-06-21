@@ -522,7 +522,7 @@ jQuery(function($) {
 	$('[data-rel=popover]').popover({html:true});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.workerAllocationIndex.url);
+		com.switchPage(api.index.workerAllocationIndex.url);
 	});
 });
 

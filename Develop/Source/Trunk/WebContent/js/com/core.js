@@ -441,7 +441,11 @@ com = {
 				time: 5000,
 			});
 		}, 500)
-	}, 	dateramgepickerdefault: {
+	}, switchPage: function(url, data, callback){
+		$("#fl-container").load(url, data, function(response, status, xhr){
+			callback && callback(response, status, xhr);
+		});
+	}, dateramgepickerdefault: {
         format: 'YYYY/MM/DD',
         separator:'-',
         locale: {

@@ -99,7 +99,7 @@ CREATE TABLE addorreducedetail (
   quotationBigCategoryId int(11) NOT NULL,
   measurementUnitId int(11) NOT NULL,
   itemWorkTypeId int(11) NOT NULL,
-  quotationItemDes varchar(512) DEFAULT NULL,
+  Des varchar(512) DEFAULT NULL,
   unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
   num decimal(10,3) NOT NULL DEFAULT '0.000',
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
@@ -114,7 +114,7 @@ CREATE TABLE addreduceitem (
   itemName varchar(128) NOT NULL,
   type tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
   measurementUnit varchar(10) NOT NULL,
-  workType int(15) NOT NULL,
+  workType varchar(15) NOT NULL,
   unitPrice decimal(10,3) NOT NULL DEFAULT '0.000',
   num decimal(10,3) NOT NULL DEFAULT '0.000',
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
@@ -2063,6 +2063,8 @@ CREATE TABLE systemdefineitem (
   itemWorkTypeId int(11) NOT NULL,
   quotationItemDes varchar(512) NOT NULL,
   unitPrice decimal(10,3) NOT NULL,
+  status tinyint(4) NOT NULL DEFAULT 0,
+  discount tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (autoId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
 

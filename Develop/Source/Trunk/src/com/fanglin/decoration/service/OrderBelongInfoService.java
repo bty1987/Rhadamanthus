@@ -22,5 +22,7 @@ public interface OrderBelongInfoService {
 	public List<OrderBelongInfoVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId, String belongType);
 
 	public List<OrderBelongInfoVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId, String belongType);
+	
+	public List<OrderBelongInfoVO> queryOrderBelongInfoByOrderId(OrderBelongInfoVO orderBelongInfoVO);
 
 }

@@ -37,7 +37,7 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
-	private int workType;
+	private String workType;
 	
 	private float unitPrice;
 	
@@ -96,12 +96,12 @@ public class AddReduceItemPO implements java.io.Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
-	@Column(name = "workType", nullable = false)
-	public int getWorkType() {
+	@Column(name = "workType")
+	public String getWorkType() {
 		return this.workType;
 	}
 
-	public void setWorkType(int workType) {
+	public void setWorkType(String workType) {
 		this.workType = workType;
 	}
 

@@ -47,8 +47,12 @@ public class SystemDefineItemPO implements Serializable {
 	
 	private String quotationItemDes;
 	
+	private short status;
+	
+	private short discount;
+	
 	public SystemDefineItemPO(){
-		
+		super();
 	}
 	
 	public SystemDefineItemPO(long sdiId){
@@ -130,6 +134,24 @@ public class SystemDefineItemPO implements Serializable {
 
 	public void setUnitPrice(float unitPrice){
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name="status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name="discount")
+	public short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(short discount) {
+		this.discount = discount;
 	}
 
 }

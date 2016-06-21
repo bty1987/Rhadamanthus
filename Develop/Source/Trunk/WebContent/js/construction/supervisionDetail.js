@@ -596,7 +596,7 @@ jQuery(function($) {
 	$('[data-rel=popover]').popover({html:true});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.supervisionIndex.url);
+		com.switchPage(api.index.supervisionIndex.url);
 	});
 	
 });
@@ -966,7 +966,7 @@ function initUploadBtn(operate, element){
         'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
         'fileSizeLimit': '5MB', // 上传文件的大小限制
         'queueSizeLimit' : 10, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+        'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
         	
         	var dateObj=eval("("+data+")");
         	

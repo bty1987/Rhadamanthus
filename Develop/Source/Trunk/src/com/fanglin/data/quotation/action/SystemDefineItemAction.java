@@ -71,6 +71,22 @@ public class SystemDefineItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="updateSystemDefineItemForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSystemDefineItemForStatus() throws FLException{
+		
+		systemDefineItemService.updateSystemDefineItemForStatus(systemDefineItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateSystemDefineItemForDiscount", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSystemDefineItemForDiscount() throws FLException{
+		
+		systemDefineItemService.updateSystemDefineItemForDiscount(systemDefineItem);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="deleteSystemDefineItemByIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteSystemDefineItemByIds(){
 

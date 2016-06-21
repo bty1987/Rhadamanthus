@@ -28,6 +28,10 @@ public interface SystemDefineItemService {
 	
 	public int updateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
 	
+	public int updateSystemDefineItemForStatus(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	
+	public int updateSystemDefineItemForDiscount(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	
 	public void deleteSystemDefineItem(SystemDefineItemVO systemDefineItemVO);
 
 	public void deleteSystemDefineItemById(int id);

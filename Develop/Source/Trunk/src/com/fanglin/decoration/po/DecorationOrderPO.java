@@ -168,7 +168,6 @@ public class DecorationOrderPO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	@Id
 	@GeneratedValue
 	public Long getAutoId(){
 		return autoId;
@@ -178,6 +177,7 @@ public class DecorationOrderPO implements Serializable {
 		this.autoId = autoId;
 	}
 
+	@Id
 	@Column(name="orderId")
 	public String getOrderId(){
 		return orderId;

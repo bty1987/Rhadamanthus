@@ -14,7 +14,7 @@ public class AddReduceItemVO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
-	private Integer workType;
+	private String workType;
 	
 	private Float unitPrice;
 	
@@ -68,11 +68,11 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public Integer getWorkType() {
+	public String getWorkType() {
 		return workType;
 	}
 
-	public void setWorkType(Integer workType) {
+	public void setWorkType(String workType) {
 		this.workType = workType;
 	}
 

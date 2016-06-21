@@ -73,7 +73,16 @@ public class OrderBelongInfoAction extends BaseListAction {
 	public String queryOrderBelongInfoForBusinessnByOrderId(){
 
 		String belongType = OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR;
-		orderBelongInfos = orderBelongInfoService.queryOrderBelongInfoForCurrentByOrderIdAType(orderBelongInfo.getOrderId(),belongType);
+		
+		orderBelongInfos = orderBelongInfoService.queryOrderBelongInfoForCurrentByOrderIdAType(orderBelongInfo.getOrderId(), belongType);
+	    
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryOrderBelongInfoByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOrderBelongInfoByOrderId(){
+
+		orderBelongInfos = orderBelongInfoService.queryOrderBelongInfoByOrderId(orderBelongInfo);
 	    
 		return SUCCESS;
 	}
