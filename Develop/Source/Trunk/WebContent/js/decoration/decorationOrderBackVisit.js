@@ -77,7 +77,7 @@ $(function(){
 	function viewDecorationOrderBackVisitIndex(decorationOrderId){
 		decorationOrderPostData["decorationOrderId"] = decorationOrderId;
 		params.historyOrderPage = api.index.decorationOrderBackVisitIndex.url;
-		$("#fl-container").load(api.index.backVisitIndex.url);
+		com.switchPage(api.index.backVisitIndex.url);
 	}
 });
 

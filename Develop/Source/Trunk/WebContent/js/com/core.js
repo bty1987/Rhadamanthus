@@ -441,7 +441,15 @@ com = {
 				time: 5000,
 			});
 		}, 500)
-	}, 	dateramgepickerdefault: {
+	}, switchPage: function(url, data, callback){
+		$("#fl-container").load(url, data, function(response, status, xhr){
+			callback && callback(response, status, xhr);
+			var img = new Image();
+			img.src = params.watermark;
+			url = 'url("' + img.src + '")'
+			$(".page-content").css('background-size', '300px').css('background-image', url).css('bottom', '0');
+		});
+	}, dateramgepickerdefault: {
         format: 'YYYY/MM/DD',
         separator:'-',
         locale: {

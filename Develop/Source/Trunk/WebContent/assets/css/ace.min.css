@@ -6088,7 +6088,7 @@ th .lbl:only-child,td .lbl:only-child {
 .widget-body {
 	border:1px solid #CCC;
 	border-top:0;
-	background-color:#FFF
+	/*background-color:#FFF  */
 }
 .widget-main {
 	padding:12px
@@ -7955,7 +7955,6 @@ th .lbl:only-child,td .lbl:only-child {
 }
 .item-list>li {
 	padding:9px;
-	background-color:#FFF;
 	margin-top:-1px;
 	position:relative
 }

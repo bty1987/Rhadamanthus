@@ -679,11 +679,11 @@ jQuery(function($) {
 	});
 	
 	$('#btnBackInfo').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.qualityTestingIndex.url);
+		com.switchPage(api.index.qualityTestingIndex.url);
 	});
 	
 	$('#btnBackDrawing').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.qualityTestingIndex.url);
+		com.switchPage(api.index.qualityTestingIndex.url);
 	});
 	
 	$('[data-rel=popover]').popover({html:true});

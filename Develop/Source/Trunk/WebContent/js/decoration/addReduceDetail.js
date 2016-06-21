@@ -68,9 +68,8 @@ jQuery(function($) {
 		
 //----------------------------------------------返回----------------------------
 	$('#detailBckBtn').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+		com.switchPage(api.index.addReduceIndex.url, {}, function(){
 			addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
-			
 			addReduce.initAddReduceList();
 		});
 	});
@@ -1282,7 +1281,7 @@ function saveAddReduceDetail(submitFlag){
 					com.post(url, option, function(res){
 						if(submitFlag){
 							com.showAlert(com.info, "提交成功");
-							$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+							com.switchPage(api.index.addReduceIndex.url, {}, function(){
 								addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
 								addReduce.initAddReduceList();
 							});
@@ -1296,7 +1295,7 @@ function saveAddReduceDetail(submitFlag){
 			com.post(url, option, function(res){
 				if(submitFlag){
 					com.showAlert(com.info, "提交成功");
-					$("#fl-container").load(api.index.addReduceIndex.url, {}, function(){
+					com.switchPage(api.index.addReduceIndex.url, {}, function(){
 						addReduce.decorationOrderId = addReduceDetail.addReduceDetail.orderId;
 						addReduce.initAddReduceList();
 					});

@@ -88,20 +88,20 @@ function actionInit(cellvalue, options, rowdata){
 }
 
 function viewDecorationOrderBelongDetail(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongInfoViewIndex.url, {}, function(){
+	com.switchPage(api.index.decorationOrderBelongInfoViewIndex.url, {}, function(){
 		params["orderId"] = decorationOrderId;
 	});
 }
 
 function changeDecorationOrderBelongDesigner(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
+	com.switchPage(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
 		params["orderId"] = decorationOrderId;
 		params["orderBelongType"] = "设计";
 	});
 }
 
 function changeDecorationOrderBelongBussiness(decorationOrderId){
-	$("#fl-container").load(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
+	com.switchPage(api.index.decorationOrderBelongDetailIndex.url, {}, function(){
 		params["orderId"] = decorationOrderId;
 		params["orderBelongType"] = "业务";
 	});

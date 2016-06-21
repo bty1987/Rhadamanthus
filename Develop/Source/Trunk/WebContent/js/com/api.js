@@ -211,6 +211,7 @@ var api = {
 	}, common: {
 		
 		QRCode: {url: "QRCode.do"},
+		wmCode: {url: "wmCode.do"},
 		
 		createTree: {url: "createTree.do"},
 		
@@ -603,6 +604,7 @@ var api = {
 		pageDecorationPaymentForConfirm: {url: "pageDecorationPaymentForConfirm.do"},
 		pageDecorationPaymentForHistory: {url: "pageDecorationPaymentForHistory.do"},
 		pageDecorationPaymentForChange: {url: "pageDecorationPaymentForChange.do"},
+		queryDecorationPaymentByOrderId: {url: "queryDecorationPaymentByOrderId.do"},
 		queryDecorationPaymentForBaseByOrderId: {url: "queryDecorationPaymentForBaseByOrderId.do"},
 		queryDecorationPaymentByOrderIdAIds: {url: "queryDecorationPaymentByOrderIdAIds.do"},
 		queryDecorationPaymentForBaseAConfirmByOrderId: {url: "queryDecorationPaymentForBaseAConfirmByOrderId.do"},

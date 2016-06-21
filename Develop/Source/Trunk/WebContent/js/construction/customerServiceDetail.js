@@ -276,7 +276,7 @@ jQuery(function($) {
 	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.customerServiceIndex.url);
+		com.switchPage(api.index.customerServiceIndex.url);
 	});
 
 });

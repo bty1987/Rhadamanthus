@@ -86,7 +86,7 @@ jQuery(function($) {
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.supervisionIndex.url);
+			com.switchPage(api.index.supervisionIndex.url);
 		},
 		position: "first",
 	});

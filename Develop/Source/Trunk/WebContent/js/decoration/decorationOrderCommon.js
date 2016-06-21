@@ -205,7 +205,7 @@ $(function(){
 	//查看
     function viewDecorationOrderDetail(decorationOrderId) { 
     	decorationOrderPostData.decorationOrderId = decorationOrderId;
-        $("#fl-container").load(api.index.decorationOrderCommonDetailIndex.url);
+        com.switchPage(api.index.decorationOrderCommonDetailIndex.url);
     } 
 	    
     //合同

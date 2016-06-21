@@ -267,7 +267,7 @@ jQuery(function($) {
 	});
 	
 	$('#btnBack').on(ace.click_event, function(){
-		$("#fl-container").load(api.index.decorationOrderAdvanceIndex.url);
+		com.switchPage(api.index.decorationOrderAdvanceIndex.url);
 	});
 	
 	initWizard();
@@ -323,8 +323,7 @@ jQuery(function($) {
 		decorationOrderDetail.village.rule = decorationOrder.village.buildingNameRule.rule;
 	});
 	
-	decorationUtils.initBasePayment(decorationPayment.postParam, null, "#decorationOrderDetailSalesmanPageContent");
-	decorationUtils.initOtherPayment(decorationPayment.postParam, null, "#decorationOrderDetailSalesmanPageContent");
+	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
 });
 
 function initWizard(){
@@ -335,6 +334,8 @@ function initWizard(){
 		info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 		
 		curstep == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
+		
+		console.log(curstep);
 		
 		if(curstep == 2){
 			decorationUtils.loadQuotationDetail();
@@ -348,8 +349,10 @@ function initWizard(){
 		}
 		
 	}).on('finished', function(e) {
-		$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
+		com.switchPage(api.index.decorationOrderDesignerIndex.url);
 	}).on('stepclick', function(e,info){
+		
+		console.log(info.step);
 		
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
 		

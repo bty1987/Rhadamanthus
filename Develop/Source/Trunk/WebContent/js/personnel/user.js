@@ -52,12 +52,12 @@ $(function(){
         //查看
         var viewUser = function (userId){
             params.tempUserId = userId;
-            $("#fl-container").load("/views/personnel/userEdit.html");
+            com.switchPage("/views/personnel/userEdit.html");
         };
         //添加
         var addUser = function(){
             params.tempUserId = null;
-            $("#fl-container").load("/views/personnel/userEdit.html");
+            com.switchPage("/views/personnel/userEdit.html");
         };
 
         return {

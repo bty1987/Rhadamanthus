@@ -70,7 +70,7 @@ function viewDecorationActivityItem(decorationOrderId){
 	
 	decorationActivityPostData["decorationOrderId"] = decorationOrderId;
 	
-	$("#fl-container").load(api.index.decorationActivityItemIndex.url);
+	com.switchPage(api.index.decorationActivityItemIndex.url);
 }
 
 function successCallback(){

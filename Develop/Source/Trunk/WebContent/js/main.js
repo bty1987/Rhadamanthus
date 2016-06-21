@@ -12,6 +12,9 @@ params.authentication = window.authentication;
 
 $(function(){
 	com.post(api.common.createTree, {}, loadTreeCallback);
+	com.post(api.common.wmCode, {}, function(res){
+		params.watermark = res.watermark;
+	}, null, false);
 	
 	$("#versionCode").text(config.versionCode);
 	
@@ -34,7 +37,7 @@ $(function(){
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-			$("#fl-container").load(hrefStr);
+			com.switchPage(hrefStr);
 		}
 	});
 	
@@ -45,7 +48,7 @@ $(function(){
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-			$("#fl-container").load(hrefStr);
+			com.switchPage(hrefStr);
 		}
 	});
 	
@@ -56,7 +59,7 @@ $(function(){
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-			$("#fl-container").load(hrefStr);
+			com.switchPage(hrefStr);
 		}
 		$('.breadcrumb .nav1').empty().append('<i class="icon-envelope"></i>&nbsp;消息查看');
 	});
@@ -69,20 +72,20 @@ $(function(){
 			type = "通知";
 		}
 		e.preventDefault();
-		$("#fl-container").load(api.index.moreNoticesIndex.url, {}, function(){			params["notice.type"] = type;	
+		com.switchPage(api.index.moreNoticesIndex.url, {}, function(){			params["notice.type"] = type;	
 		});
 	});
 	
 	$("#versionInfo").on("click", function(e){
 		$('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;版本');
-		$("#fl-container").load(api.index.versionIndex.url, {});
+		com.switchPage(api.index.versionIndex.url, {});
 		$('.breadcrumb .nav2').hide();
 		$('.breadcrumb .nav3').hide();
 	});
 	
 	$("#faqInfo").on("click", function(e){
 		$('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;版本');
-		$("#fl-container").load(api.index.faqIndex.url, {});
+		com.switchPage(api.index.faqIndex.url, {});
 		$('.breadcrumb .nav2').hide();
 		$('.breadcrumb .nav3').hide();
 	});
@@ -160,6 +163,13 @@ function loadTopSelf(opts){
 }
 
 function loadNotices(){
+	
+	console.log(params.watermark);
+	
+	var img = new Image();
+	img.src = params.watermark;
+	url = 'url("' + img.src + '")'
+	$(".page-content").css('background-size', '300px').css('background-image', url).css('bottom', '0');
 	
 	var options = {
 		"paging.rows":5,
@@ -327,7 +337,8 @@ function loadTreeCallback(nodes){
 		var hrefStr = $this.attr("href");
 		
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
-			$("#fl-container").load(hrefStr);
+//			com.switchPage(hrefStr);
+			com.switchPage(hrefStr);
 			$(".daterangepicker").remove();
 		}
 	});
@@ -352,7 +363,7 @@ function navControl($this){
 			$('ul.breadcrumb .nav3').hide();
 			$a.on('click', function(e){
 				e.preventDefault();
-				$("#fl-container").load(e.target.href);
+				com.switchPage(e.target.href);
 			});
 		}
 	}else if($this.data('level') == 3){
@@ -365,7 +376,7 @@ function navControl($this){
 			$('ul.breadcrumb .nav3').show().html($a);
 			$a.on('click', function(e){
 				e.preventDefault();
-				$("#fl-container").load(e.target.href);
+				com.switchPage(e.target.href);
 			});
 		}
 	}

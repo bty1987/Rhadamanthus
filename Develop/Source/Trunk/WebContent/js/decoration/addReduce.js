@@ -111,7 +111,7 @@ function initaddReduceList(){
 		title: "返回",
 		onClickButton: function(){
 			$(".tooltip").remove();
-			$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
+			com.switchPage(api.index.decorationOrderDesignerIndex.url);
 		},
 		position: "first"
 	});
@@ -143,10 +143,8 @@ function actionInit(cellvalue, options, rowdata){
 }
 
 function viewDetailAddReduce(addReduceId){
-	
 	params["addReduceId"] = addReduceId;
-	
-	$("#fl-container").load(api.index.AddReduceDetailIndex.url, {});
+	com.switchPage(api.index.AddReduceDetailIndex.url);
 }
 
 function removeRow(params, rowNums){
