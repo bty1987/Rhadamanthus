@@ -337,6 +337,8 @@ function initWizard(){
 		
 		console.log(curstep);
 		
+		console.log(curstep);
+		
 		if(curstep == 2){
 			decorationUtils.loadQuotationDetail();
 		}else if(curstep == 3){
@@ -351,6 +353,8 @@ function initWizard(){
 	}).on('finished', function(e) {
 		com.switchPage(api.index.decorationOrderDesignerIndex.url);
 	}).on('stepclick', function(e,info){
+		
+		console.log(info.step);
 		
 		console.log(info.step);
 		

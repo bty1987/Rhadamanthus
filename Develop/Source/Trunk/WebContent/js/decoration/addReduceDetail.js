@@ -384,6 +384,7 @@ var AddReduceDetail = (function(){
 				if($this.val() && $('input[data-qiid="' + $this.val() +'"]', '#addReduceItemDiv').length){
 					return;
 				}
+				
 				var _quotval = {
 					"num" : 0,//工程预算量
 					"itemName" : $li.find('h3 small').text(),//名称

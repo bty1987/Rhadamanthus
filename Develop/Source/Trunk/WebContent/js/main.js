@@ -169,6 +169,13 @@ function loadTopSelf(opts){
 
 function loadNotices(){
 	
+	console.log(params.watermark);
+	
+	var img = new Image();
+	img.src = params.watermark;
+	url = 'url("' + img.src + '")'
+	$(".page-content").css('background-size', '300px').css('background-image', url).css('bottom', '0');
+	
 	var options = {
 		"paging.rows":5,
 		"paging.page":1,
