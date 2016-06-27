@@ -93,7 +93,7 @@ public class AddReduceVO implements Serializable{
 		this.content = content;
 	}
 
-	public Long getDecorationPaymentId() {
+	public Long getDpId() {
 		return dpId;
 	}
 

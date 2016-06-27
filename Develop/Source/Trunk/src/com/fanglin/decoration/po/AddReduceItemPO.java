@@ -43,12 +43,14 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	private float num;
 	
+	private short discount;
+	
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
 	private long quoteItemId;
 	
 	private String content;
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ariId")
@@ -134,6 +136,7 @@ public class AddReduceItemPO implements java.io.Serializable {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
+	@Column(name = "quoteItemId")
 	public long getQuoteItemId() {
 		return quoteItemId;
 	}
@@ -142,7 +145,16 @@ public class AddReduceItemPO implements java.io.Serializable {
 		this.quoteItemId = quoteItemId;
 	}
 
-	@Column(name = "content", length = 512)
+	@Column(name = "discount")
+	public short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(short discount) {
+		this.discount = discount;
+	}
+
+	@Column(name = "content")
 	public String getContent() {
 		return this.content;
 	}

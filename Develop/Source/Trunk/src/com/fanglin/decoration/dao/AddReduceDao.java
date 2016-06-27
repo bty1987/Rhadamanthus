@@ -24,7 +24,7 @@ public interface AddReduceDao extends Dao<AddReducePO> {
 	
 	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, String orderId);
 	
-	public AddReducePO queryAddReduceByOrderPaymentId(Long orderPaymentId);
+	public AddReducePO queryAddReduceByDecorationPaymentId(Long orderPaymentId);
 	
 	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId);
 	

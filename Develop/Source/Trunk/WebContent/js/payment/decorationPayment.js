@@ -21,7 +21,7 @@ var decorationPayment = {
 	addOrReduceModal:null,
 	refundModal:null,
 	decorationPaymentItems: {},
-	addOrReduceDetailModal:null,
+	addReduceDetail:null,
 	
 	items: {},
 	
@@ -56,7 +56,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	decorationPayment.addOrReduceDetailModal=$("#addOrReduceDetailModal").on('show.bs.modal', function(e){		
+	decorationPayment.addReduceDetail = $("#addReduceDetail").on('show.bs.modal', function(e){		
 	});
 	
 	decorationPayment.addOrReduceDetailListGrid =$("#addOrReduceDetailListGrid");
@@ -510,7 +510,7 @@ function actionInit(cellvalue, options, rowdata){
 	var paymentButtonMidInfo = '" onclick="dialogPayment(\'' + options.rowId + '\', \'' + rowdata.autoId + '\', \'' + rowdata.paymentType + '\', \'' + rowdata.customerId + '\'\, \'' + rowdata.orderId + '\');">';
 	var paymentButtonPostInfo = '</button>';
 	
-	var addOrReduceInfo = '<button class="btn btn-minier btn-primary" onclick="addOrReduceDetail(\'' + rowdata.autoId + '\',\'' + rowdata.paymentType + '\',\'' + rowdata.orderId + '\');">查看明细</button>';
+	var addOrReduceInfo = '<button class="btn btn-minier btn-primary" onclick="addReduceDetail(\'' + rowdata.autoId + '\',\'' + rowdata.paymentType + '\',\'' + rowdata.orderId + '\');">查看明细</button>';
 	
 	var paymentButtonName = "收款";
 	var paymentButtonColor = "btn-primary";
@@ -757,77 +757,73 @@ function jqgridSelectRow(){
 }
 
 //------------------------------------增减项详细------------------------------
-function addOrReduceDetail(decorationPaymentId, paymentType, orderId){
+function addReduceDetail(decorationPaymentId, paymentType, orderId){
+	
 	decorationPayment.orderPaymentId = decorationPaymentId;
 	decorationPayment.paymentType =paymentType;
 	decorationPayment.orderId = orderId;
-	decorationPayment.addOrReduceDetailModal.modal("show");
+	decorationPayment.addReduceDetail.modal("show");
 	
 	var options = {
 		"quotation.orderId": orderId,
+		"addReduce.dpId": decorationPaymentId,
 	};
 	
-	com.post(api.quotation.queryQuotationForDefaultByOrderId, options, function(res){
-		decorationPayment.discount = res.quotation.discount;
-		initAddOrReduceDetailListGrid();
-	});
-}
-
-function discountUnitPriceFormatter(cellvalue, options, rowObject){
-
-	//0 增项 1 减项 2 漏项 
-	//0 报价项 1、自定义报价项目 2、新增自定义报价项目 3、系统定义报价项目
-	//增项漏项不打折 系统定义报价项目不打折
+	com.post(api.addReduce.queryAddReduceByDecorationPaymentId, options, function(res){
+//		initAddOrReduceDetailListGrid();
 		
-	if(decorationPayment.paymentType=='减项款' && rowObject.itemType != '3'){ // 打折
-		return Math.round(parseFloat(rowObject.unitPrice)*parseFloat(decorationPayment.discount)/10*100)/100;
-	}else{
-		return Math.round(parseFloat(rowObject.unitPrice)*100)/100;//不打折
-	}
+		var quotationItemSeacher = new Searcher();
+		quotationItemSeacher.init([], "condList", api.addReduce.queryAddReduceItemByAddReduceId,  function(data){
+			var $tableWrap = $('#resultList').empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+			
+			console.log(data)
+
+			if(data && data.length){
+				$.each(data, function(i, v){
+					var $liLine = createAddReduceItem(v);
+					$liLine.appendTo($ul);
+				});
+				$ul.appendTo($tableWrap);
+			}
+		}, "pagenation", "decorationPaymentAddReduceDetailPostData", {"addReduce.arId": res.addReduce.arId}, true, "addReduceItems");
+	});
 }
 
-function sumMoneyFormatter(cellvalue, options, rowObject){
-	
-	if(decorationPayment.paymentType=='减项款' && rowObject.itemType != '3'){
-		return  Math.round(parseFloat(rowObject.unitPrice)*parseFloat(decorationPayment.discount)*parseFloat(rowObject.num)/10*100)/100;
-	}else {
-		return Math.round(parseFloat(rowObject.unitPrice)*parseFloat(rowObject.num)*100)/100;//不打折
-	}
-}
+function createAddReduceItem(v){
+	var $liLine = $('<li></li>').addClass('item-blue clearfix');
+	var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
 
-function initAddOrReduceDetailListGrid(){
-	
-	$("#addOrReduceItemDiv").html("");
-	$("#addOrReduceItemDiv").html('<table id="addOrReduceItemList"></table> <div id="addOrReduceItemListGridPager"></div> '); 
-	
-	$("#addOrReduceItemList").jqGrid({	
-		url: api.decoration.pageAddOrReduceItemByPaymentId.url,
-		postData: {'addReduce.orderPaymentId':decorationPayment.orderPaymentId},
-		viewrecords: false,
-		multiselect: false,
-        multiboxonly: false,
-		colNames:[ '名称' , '单位' , '单价','数量', '总价','arId','itemType'],
-		colModel:[
-			{name:"itemName"},
-			{name:"measurementUnit"},
-			{name:"discountUnitPrice",formatter:discountUnitPriceFormatter},
-			{name:"num"},
-			{name:"sumMoney",formatter:sumMoneyFormatter},
-			{name:"arId",hidden:true},
-			{name:"itemType",hidden:true}
-		],
-		autowidth:false,
-		width:'535',
-		pager : "#addOrReduceItemListGridPager",
-		caption: ""
+	var $label = $('<label></label>');
+	var $span = $('<span></span>').addClass('lbl');
+
+	var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+	var propertyArr = [
+		["单位:", v.measurementUnit, "grey"],
+		["单价:", v.unitPrice, "grey"],
+		["工程量:", v.num, "grey"],
+		["类型:", v.type, "grey"],
+	];
+
+	$.each(propertyArr, function (index,value) {
+		var $liProperty = $('<li></li>');
+		$('<strong></strong>').html(value[0]).appendTo($liProperty);
+		$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+		$liProperty.appendTo($ulProperty);
 	});
 
-	$("#addOrReduceItemList").navGrid("#addOrReduceItemListGridPager", {edit:false,add:false,del:false,search:false,searchicon : 'icon-search orange', refresh: false,view: false},{},{},null,null);
-}
+	$label.append($span).appendTo($h3);
+	$h3.append($('<small></small>').addClass('blue').html(' ' + v.itemName));
+	$liLine.append($h3).append($ulProperty);
 
-function payment(){
-	console.log("payment");
-	
+	$input.change(function(){
+		var $this = $(this);
+		quote.recordQuots($this, $(this).is(':checked'));
+	});
+
+	return $liLine;
+}
 	if(com.validate()){
 		return;
 	}

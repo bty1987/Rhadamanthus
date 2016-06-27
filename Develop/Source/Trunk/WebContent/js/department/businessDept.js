@@ -83,7 +83,6 @@ jQuery(function($) {
                ["大区:", v.cityProper.city.region.regionName, "grey"],
                ["城市:", v.cityProper.city.cityName, "grey"],
                ["城区:", v.cityProper.cityProperName, "grey"],
-               ["合同前缀:", v.contractPrefix, "grey"],
                ["创建时间:", v.createTime, "grey"],
                ["描述:", v.des, "grey"],
            ];

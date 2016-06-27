@@ -24,15 +24,22 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.content));
+			var $h3 = $('<h3></h3>').addClass('oid');
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnLook = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
-			var propertyArr = [
 
+			var $label = $('<label></label>');
+			var $input = $('<input>').attr({
+				"type": "checkbox",
+				"name": "arids",
+				"class": "ace ace-checkbox-2",
+			}).val(v.arId);
+			var $span = $('<span></span>').addClass('lbl');
+
+			var propertyArr = [
 				["总价:", v.total, "grey"],
 				["类别:", typeDict[v.type + ''], "grey"],
 				["状态:", statusDict[v.status], "grey"],
@@ -45,8 +52,9 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-
-			$divBtnWrap.append($btnLook).append($btnDel).append($btnPrint).appendTo($h3);
+			$label.append($input).append($span).appendTo($h3);
+			$h3.append($('<small></small>').addClass('blue').html(v.content));
+			$divBtnWrap.append($btnLook).append($btnDel).appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
 			//查看按钮点击事件
 			$btnLook.click(function(){
@@ -58,12 +66,6 @@ jQuery(function($) {
 				bootbox.confirm("确认删除吗？",function(flag) {
 					flag && removeRow(v.arId);
 				})
-
-			});
-
-			$btnPrint.click(function(){
-				var url = api.index.addReduceOutputIndex.url + "?&addReduceIds[0]=" + v.arId;
-				window.open(url);
 			});
 
 			return $liLine;
@@ -98,7 +100,6 @@ jQuery(function($) {
 		},
 
 		editFlag: false,
-		repeatFlg: false
 	};
 
 	//返回按钮
@@ -114,6 +115,20 @@ jQuery(function($) {
 		addReduce.addReduceItems.addReduceType.attr('disabled', false);
 
 		addReduce.modal.modal("show");
+	});
+
+	//打印按钮
+	$('#print').click(function(){
+		var $inputs = $('input[name="arids"]:checked');
+		var url = api.index.addReduceOutputIndex.url + "?";
+		if(!$inputs.length) return;
+		$.each($inputs, function(i, v){
+			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
+		});
+		
+		url += "quotation.orderId=" + params.decorationOrderId;
+		
+		window.open(url);
 	});
 
 	function viewDetailAddReduce(addReduceId){
@@ -136,7 +151,7 @@ jQuery(function($) {
 
 	function saveData(){
 
-		if(com.validate() || addReduce.repeatFlg)
+		if(com.validate())
 			return;
 
 		var url;

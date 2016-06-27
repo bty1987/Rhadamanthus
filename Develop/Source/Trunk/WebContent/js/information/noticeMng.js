@@ -248,13 +248,9 @@ function showErrorAlert (reason, detail) {
 
 function bindUploadfiy(){
 	$("#attachment").Huploadify({
-        //开启调试
-//        'debug' : false,
-        //是否自动上传
+        'debug' : false,
         'auto':true,
-        //超时时间
-        'successTimeout':99999,
-        //附带值
+        'successTimeout':300,
         'formData':{
             'username':'用户名',
             'rnd':'加密密文',
@@ -262,63 +258,17 @@ function bindUploadfiy(){
         },
         'buttonText': '上传附件',
         'buttonClass': 'btn btn-sm btn-primary lineheight0',
-        //flash
-        //'swf': "./js/uploadify/uploadify.swf",
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        //'queueID':'uploadfileQueue', // 文件选择后的容器ID
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
         'uploader': window.mediaServer + api.common.uploadOther.url, // 上传处理程序
-        //'buttonImage':'upbutton.gif', // 浏览按钮的背景图片路径
         'width':'78', // 浏览按钮的宽度
-        //'height':'32', // 浏览按钮的高度
-        //'expressInstall':'expressInstall.swf', // expressInstall.swf文件的路径。
-        //在浏览窗口底部的文件类型下拉菜单中显示的文本
-        //'fileTypeDesc':'支持的格式：',
-        //允许上传的文件后缀
-        //'fileTypeExts':'*.rar;*.7z;*.tar;*.gz;*.dwt;*.doc;*.txt;*.xls;*.docx;*.xlsx;*.jpg;*.jpge;*.gif;*.png',
-        //上传文件的大小限制
-        //'fileSizeLimit':'10MB',
-        //上传数量
-        //'queueSizeLimit' : 25,
-        //'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) { // 每次更新上载的文件的进展
-        //     //有时候上传进度什么想自己个性化控制，可以利用这个方法
-        //     //使用方法见官方说明
-        //},
-        //'onSelect' : function(file) { // 选择上传文件后调用
-        //          
-        //},
-        'onSelectError':function(file, errorCode, errorMsg){ // 返回一个错误，选择文件的时候触发
-        	
-            switch(errorCode) {
-                case -100:
-                    alert("上传的文件数量已经超出系统限制的"+$('#file_upload').uploadify('settings','queueSizeLimit')+"个文件!");
-                    break;
-                case -110:
-                    alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#file_upload').uploadify('settings','fileSizeLimit')+"大小!");
-                    break;
-                case -120:
-                    alert("文件 ["+file.name+"] 大小异常！");
-                    break;
-                case -130:
-                    alert("文件 ["+file.name+"] 类型不正确！");
-                    break;
-            }
-        }, 'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
+        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
         	var dateObj=eval("("+data+")");
         	 if(dateObj.errorCode == 0){
-        		// alert(dateObj.resUrl);
         		 	$("#filePath").val(dateObj.resUrl);
 	            }else{
 	            	alert(data);
 	            }
-        }, 'itemTemplate': '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\
-			<div class="cancel">\
-				<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\
-			</div>\
-			<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\
-			<div class="uploadify-progress">\
-				<div class="uploadify-progress-bar"><!--Progress Bar--></div>\
-			</div>\
-		</div>'
+        }
     });
 }
