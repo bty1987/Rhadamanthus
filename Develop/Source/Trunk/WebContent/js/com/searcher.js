@@ -242,7 +242,7 @@ var Searcher = function(){
                     }
                 })
             );
-
+            
             if(_params){
                 _params["paging.page"] = this.nowPage["paging.page"];
                 _params["paging.rows"] = this.nowPage["paging.rows"];
@@ -368,19 +368,19 @@ var Searcher = function(){
                             _params['filters[' + _count + '].data'] = _inputValue;
                             _params['filters[' + _count + '].field'] = _postName;
                             _params['filters[' + _count + '].op'] = _op;
-                            _count +=1;
+                            _count += 1;
                         }
                     }else{
                         $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
                         _params['filters[' + _count + '].data'] = _inputValue;
                         _params['filters[' + _count + '].field'] = _postName;
                         _params['filters[' + _count + '].op'] = _op;
-                        _count +=1;
+                        _count += 1;
                     }
                 }
             })
         );
-
+        
         if(_params){
             _params = $.extend(true,{},_params,basicConf.extraParams);
         }
@@ -388,19 +388,23 @@ var Searcher = function(){
     };
 
     var searchByPresentParams = function(){
+    	var _count = 0;
         var _params = params[basicConf.historyName] ? params[basicConf.historyName] : {};
+        
         //给查询条件赋值
         !jQuery.isEmptyObject(_params) && $.each(_params, function(key, val){
             var _pname,_pvalue;
             key.indexOf("field") != -1 && (
                 _pname = val,
-                    _pvalue = _params[key.substring(0,key.length-5) + "data"],
-                    $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).val(_pvalue)
+                _pvalue = _params[key.substring(0,key.length-5) + "data"],
+                $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).val(_pvalue),
+                _count++    
             );
         });
+        
         if(!basicConf.noPagingFlag){
-            jQuery.isEmptyObject( _params ) && ( _params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"] );
-
+            jQuery.isEmptyObject(_params) && (_params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"]);
+            
             _params = $.extend({},_params,basicConf.extraParams);
             paging.nowPostParams = _params ;
             paging.getDataByPage(_params);

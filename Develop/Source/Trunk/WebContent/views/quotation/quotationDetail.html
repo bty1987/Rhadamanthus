@@ -279,6 +279,7 @@
 				</div>
 			</div>
 
+			<!--折扣设置弹窗-->
 			<div class="modal fade" id="discountModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="discountDialog" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content col-md-12">
@@ -304,6 +305,38 @@
 						<div class="modal-footer">
 							<button type="button" id="saveDisCountBtn" class="btn btn-primary">保存</button>
 							<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--管理费比例设置弹窗-->
+			<div class="modal fade" id="manageRateModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="discountDialog" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content col-md-12">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="manageRateDialog">折扣</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label class="col-md-3 control-label no-padding-right" for="discount">管理费比例</label>
+									<div class="col-md-9">
+										<select id="manageRate" class="col-xs-10 col-sm-5 v_required">
+											<option value=""></option>
+										</select>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</form>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" id="saveMrBtn" class="btn btn-primary">保存</button>
+							<button type="button" id="cancelMrBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</div>
 				</div>

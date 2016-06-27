@@ -199,7 +199,7 @@ function initQuotationList(){
 				
 				var quotationDiv = $('<div></div>').addClass("col-xs-12 col-md-3").appendTo(quotationList);
 				var quotationWidget = $('<div></div>').addClass("widget-box").appendTo(quotationDiv);
-				var quotationWidgetHeader = $('<div></div>').addClass("widget-header").appendTo(quotationWidget);
+				var quotationWidgetHeader = $('<div></div>').addClass("widget-header header-color-blue").appendTo(quotationWidget);
 				
 				if(res.quotations[i].saveStatus == 0){
 					quotationWidgetHeader.addClass("header-color-red");

@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 
 public interface UserService {
 	
-	public void pageUser(Paging paging, List<FilterVO> filters, String userId) throws FLException;
+	public void pageUser(Paging paging, List<FilterVO> filters, String userId, UserVO userVO) throws FLException;
 	
 	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, String userId) throws FLException;
 	

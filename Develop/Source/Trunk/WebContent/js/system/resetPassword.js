@@ -1,56 +1,91 @@
-var resetpw = {
-	listgrid: null,
-	gridPager: null,
-};
+var resetpw = {};
 
 jQuery(function($) {
 
-	resetpw.listgrid = $("#listgrid");
-	resetpw.gridPager = "#gridPager";
-	var searchOpts = {
-			url: api.personel.pageUserForResetPassword,
-			postParmas: {"paging.rows":10, "paging.page":1},
-			listgrid: resetpw.listgrid,
-			items: [{label:"员工编号", id:"userIdSearch", name:"userId",type:'text'}]
-		};
-		$("#searchDiv").flSearch(searchOpts);
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-info').html('重置密码');
+            
+            var propertyArr = [
+               ["编号:", v.userId, "grey"],
+               ["用户名:", v.loginId, "grey"],
+               ["部门:", v.dept.deptName, "grey"],
+               ["职位:", v.duty, "grey"],
+               ["角色:", v.role.roleName, "grey"],
+               ["电话:", v.phone, "red"]
+           ];
+
+           $.each(propertyArr, function (index,value) {
+               var $liProperty = $('<li></li>');
+               $('<strong></strong>').html(value[0]).appendTo($liProperty);
+               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+               $liProperty.appendTo($ulProperty);
+           });
+
+            $divBtnWrap.append($btnReset).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnReset.click(function(){
+            	resetPassword(v.userId, v.userName);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
 	
-	resetpw.listgrid.jqGrid({		
-		url: api.personel.pageUserForResetPassword.url,
-		postData: {},
-		colNames:['员工工号', '姓名', '用户名', '部门', '职位', '角色', '联系方式', '操作'],
-		colModel:[
-		    {name:'userId'},
-		    {name:'userName'},
-		    {name:'loginId'},
-		    {name:'deptName', jsonmap:'dept.deptName'},
-		    {name:'duty'},
-		    {name:'role', jsonmap:'role.roleName'},
-		    {name:'phone'},
-		    {name:"actions", width:80, align:"center", formatter: resetBtn}], 
-		pager : resetpw.gridPager,
-		caption: "用户信息列表"
+	var searcher = new Searcher();
+	
+	searcher.init(["userId", "userName"], "condList", api.personel.pageUserForResetPassword, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "resetPwdPostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addAction').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
 	});
+	
+	function resetPassword(userId, userName){
+		bootbox.confirm("确定要重置（"+userName+"）的密码吗？",function(result){
+			if(result == true){
+				com.post(api.personel.resetPassword, {'user.userId': userId});
+			}
+		});
+	}
+	
 });
-
-function resetBtn(cellvalue, options, row){
-	var result = '';
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button class="btn btn-minier btn-primary" onclick="resetPassword(\''+row.userId+'\',\''+row.userName+'\');">重置密码</button>';
-	result += '</div>';
-	return result;
-}
-
-function resetPassword(userId, userName){
-	bootbox.confirm("确定要重置（"+userName+"）的密码吗？",function(result){
-		if(result == true){
-			com.post(api.personel.resetPassword, {'user.userId': userId}, successCallback);
-		}
-	});
-}
-
-function successCallback(){
-	com.showAlert(com.info, "操作成功");
-	$.jgrid.refreshGrid(resetpw.listgrid, resetpw.postParam);
-}
 

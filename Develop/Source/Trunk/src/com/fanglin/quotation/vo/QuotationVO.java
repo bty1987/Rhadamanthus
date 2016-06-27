@@ -36,6 +36,8 @@ public class QuotationVO implements Serializable {
 	
 	private Float orderTotalPrice;
 	
+	private Float notSalesmanRate = 0f;
+	
 	private String versionId;
 
 	private String quotationName;
@@ -210,6 +212,14 @@ public class QuotationVO implements Serializable {
 
 	public void setOrderTotalPrice(Float orderTotalPrice){
 		this.orderTotalPrice = orderTotalPrice;
+	}
+
+	public Float getNotSalesmanRate() {
+		return notSalesmanRate;
+	}
+
+	public void setNotSalesmanRate(Float notSalesmanRate) {
+		this.notSalesmanRate = notSalesmanRate;
 	}
 
 	public Integer getSaveStatus() {

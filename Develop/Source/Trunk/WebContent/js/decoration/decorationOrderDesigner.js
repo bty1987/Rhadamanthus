@@ -173,13 +173,18 @@ $(function(){
 						viewDecorationOrderInDecreaseIndex(v.orderId+"");
 					});
 
-					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).append($btnPrice).appendTo($h3);
-
-					if(v.status == "已报价" || v.status == "定金" || v.status == "已签约" || v.status == "已完工" || v.status == "重签合同"){
+					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
+					
+					if(["量房", "咨询", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
+						$divBtnWrap.append($btnPrice);
+					}
+					
+					if(["定金", "已报价", "已签约", "重签合同", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnContract);
-						if(v.status == "已签约" || v.status == "已完工"){
-							$divBtnWrap.append($btnAddMinus);
-						}
+					}
+					
+					if(["已签约", "已完工"].indexOf(v.status) != -1){
+						$divBtnWrap.append($btnAddMinus);
 					}
 
 					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);

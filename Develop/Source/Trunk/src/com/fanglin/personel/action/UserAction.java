@@ -59,7 +59,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
 		
-		userService.pageUser(getPaging(), getFilters(), getUserId());
+		userService.pageUser(getPaging(), getFilters(), getUserId(), user);
 		
 		return SUCCESS;
 	}

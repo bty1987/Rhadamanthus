@@ -183,6 +183,10 @@ ul.fl-inline-list li{
 	content: "\a0启\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0禁" !important;
 }
 
+.discount-lbl:before {
+	content: "\a0折\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否" !important;
+}
+
 .fl-quo-list {
 	list-style: none;
 	margin: 0;

@@ -1,16 +1,13 @@
 var designDept = {
-	listgrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancelBtn: null,
 	modal: null,
 	items:{},
 	
 	editFlg: false,
+	
 	postParam: {
-		'filters[0].field': 'type',
-		'filters[0].data': com.deptType.designDept,
-		'filters[0].op': 'eq'
+		'dept.type': '设计部',
 	},
 	
 	validator: {
@@ -20,55 +17,14 @@ var designDept = {
 			errorMsg: "请以FL_DD_作为前缀 , 之后以两位数字组成(如FL_DD_01)."
 		}
 	},
-	repeatFlg: false,
-	
-	designRegionList: {},
-	designRegionKey: "deptId",
-	designRegionValue: "deptName",
-	
-	regionList: {},
-	regionKey: "regionId",
-	regionValue: "regionName",
-	
-	cityList:{},
-	cityKey: "cityId",
-	cityValue: "cityName",
-	
-	cityProperList:{},
-	cityProperKey: "cityProperId",
-	cityProperValue: "cityProperName"
 };
 
 jQuery(function($) {
 	
-	designDept.listgrid = $("#listgrid");
-	designDept.gridPager = "#gridPager";
 	designDept.saveBtn = $("#saveBtn").on("click", saveData);
 	designDept.cancelBtn = $("#cancelBtn");
 	
-	var searchOpts = {
-		url: api.department.pageDepartment,
-		postParmas: designDept.postParam,
-		listgrid: designDept.listgrid,
-		items: [{label:"设计部门名称",id:"designDeptNameSearch",name:"deptName", type:'text'}]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	
-	designDept.items.designDeptId = $("#designDeptId").on("blur",function(){
-		$this = $(this);
-		if($this.val() == undefined || $this.val().trim() == "")
-			return;
-		com.post(api.department.queryDepartmentById, {"dept.deptId": $this.val()}, function(res){
-			if(res.dept){
-				com.showTips($this, "该设计部门编号已存在", true);
-				designDept.repeatFlg = true;
-			}else{
-				com.clearValidator("#designDeptId", true);
-				designDept.repeatFlg = false;
-			}
-		});
-	});
+	designDept.items.designDeptId = $("#designDeptId");
 	designDept.items.designDeptName = $("#designDeptName");
 	designDept.items.designRegionSel = $("#designRegionSel");
 	designDept.items.cityProperSel = $("#cityProperSel");
@@ -89,155 +45,197 @@ jQuery(function($) {
 	$.extend(com.validator, designDept.validator);
 	
 	com.post(api.system.queryRegion, {}, function(res){
-		designDept.regionList = res.regionList;
-		designDept.items.regionSel.bindData(designDept.regionList, designDept.regionKey, designDept.regionValue, false).trigger("change");
+		designDept.items.regionSel.bindData(res.regionList, "regionId", "regionName", false).trigger("change");
 	});
 	
-	com.post(api.department.queryDepartment, {'dept.type': com.deptType.designRegion}, function(res){
-		designDept.designRegionList = res.deptList;
-		designDept.items.designRegionSel.bindData(designDept.designRegionList, designDept.designRegionKey, designDept.designRegionValue, false);
+	com.post(api.department.queryDepartment, {'dept.type': "设计大区"}, function(res){
+		designDept.items.designRegionSel.bindData(res.deptList, "deptId", "deptName", false);
 	});
 	
-	initializeListgrid();
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.deptName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            
+            var propertyArr = [
+               ["编号:", v.deptId, "grey"],
+               ["所属分区:", v.fatherDept.deptName, "grey"],
+               ["大区:", v.cityProper.city.region.regionName, "grey"],
+               ["城市:", v.cityProper.city.cityName, "grey"],
+               ["城区:", v.cityProper.cityProperName, "grey"],
+               ["合同前缀:", v.contractPrefix, "grey"],
+               ["创建时间:", v.createTime, "grey"],
+               ["描述:", v.des, "grey"],
+           ];
+            
+           $.each(propertyArr, function (index,value) {
+               var $liProperty = $('<li></li>');
+               $('<strong></strong>').html(value[0]).appendTo($liProperty);
+               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+               $liProperty.appendTo($ulProperty);
+           });
+
+            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnEdit.click(function(){
+            	editDept(v.deptId, v.deptName, v.fatherDept.deptId, v.cityProper.city.region.regionId, v.cityProper.city.cityId, v.cityProper.cityProperId, v.contractPrefix, v.des);
+            });
+            
+            $btnDel.click(function(){
+            	deleteDept(v.deptId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+	
+	var searcher = new Searcher();
+	
+	searcher.init(["deptName"], "condList", api.department.pageDepartment, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "designDeptPostData", designDept.postParam, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addDept').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+	});
+	
+	$('a[name="addDept"]', '#pagenation').click(function(){
+		editFlg = false;
+		
+		com.cleanItems(designDept.items);
+		
+		designDept.items.designDeptId.prop("disabled", false).css("display", "none");
+		designDept.items.regionSel.trigger("change");
+		
+		designDept.modal.modal("show");   
+    });
+	
+	function editDept(deptId, deptName, fatherDeptId, regionId, cityId, cityProperId, contractPrefix, des){
+		editFlg = true;
+		
+		designDept.items.designDeptId.val(deptId).prop("disabled", true).css("display", "block");
+		designDept.items.designDeptName.val(deptName);
+		designDept.items.designRegionSel.val(fatherDeptId);
+		designDept.items.regionSel.val(regionId);
+		
+		$.when(
+			com.post(api.system.queryCityByRegionId, {"city.region.regionId": regionId}), 
+			com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": cityId})
+		).done(function(city, cityProper){
+			designDept.items.citySel.bindData(city.cityList, "cityId", "cityName", false);
+			designDept.items.cityProperSel.bindData(cityProper.cityProperList, "cityProperId", "cityProperName", false);
+			designDept.items.citySel.val(cityId);
+			designDept.items.cityProperSel.val(cityProperId);
+		}).fail(function(){
+			console.log("queryCityByRegionId and queryCityPropersByCityId fail....");
+		});
+		
+		designDept.items.contractPrefix.val(contractPrefix);
+		designDept.items.des.val(des);
+		
+		designDept.modal.modal("show");
+	}
+	
+	function deleteDept(deptId){
+		var options = {
+			"deptIds[0]": deptId
+		};
+		
+		com.post(api.department.deleteDepartment, options, function(res){
+			searcher.doSearch();
+		});
+	}
+	
+	function saveData(){
+		if(com.validate()){
+			return;
+		}
+		
+		var url;
+		var options = {
+			'dept.ident': 13,
+			'dept.deptName': designDept.items.designDeptName.val(),
+			'dept.fatherDept.deptId': designDept.items.designRegionSel.val(),
+			'dept.cityProper.cityProperId': designDept.items.cityProperSel.val(),
+			'dept.type': com.deptType.designDept,
+			'dept.contractPrefix': designDept.items.contractPrefix.val(),
+			'dept.des': designDept.items.des.val()
+		};
+		
+		if(editFlg){
+			url = api.department.updateDepartment;
+			options['dept.deptId'] = designDept.items.designDeptId.val();
+		}else{
+			url = api.department.addDepartment;
+			options['dept.deptId'] = "DD_";
+			options['dept.company'] = config.company;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearch();
+		});
+		
+		designDept.modal.modal("hide");   
+	}
+	
+	function bindCityProper(cityId, $cityProperObj, flag, callback){
+		if(cityId != ""){
+			com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": cityId}, function(res){
+				$cityProperObj.bindData(res.cityProperList, "cityProperId", "cityProperName", flag);
+				if(callback) callback();
+			});
+		}else{
+			$cityProperObj.bindData([], "", "", flag);
+		}
+	}
+	
+	function bindCity(regionId, $cityObj, flag, callback){
+		if(regionId!=""){
+			com.post(api.system.queryCityByRegionId, {"city.region.regionId": regionId}, function(res){
+				$cityObj.bindData(res.cityList, "cityId", "cityName", flag).trigger("change", callback);
+			});
+		}else{
+			$cityObj.bindData([], "", "", flag);
+		}
+	}
+	
 });
 
-function bindCityProper(cityId, $cityProperObj, flag, callback){
-	if(cityId != ""){
-		com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": cityId}, function(res){
-			$cityProperObj.bindData(res.cityProperList, designDept.cityProperKey, designDept.cityProperValue, flag);
-			if(callback) callback();
-		});
-	}else{
-		$cityProperObj.bindData([], "", "", flag);
-	}
-}
-function bindCity(regionId, $cityObj, flag, callback){
-	if(regionId!=""){
-		com.post(api.system.queryCityByRegionId, {"city.region.regionId": regionId}, function(res){
-			$cityObj.bindData(res.cityList, designDept.cityKey, designDept.cityValue, flag).trigger("change", callback); //when edit we set cityProperId
-		});
-	}else{
-		$cityObj.bindData([], "", "", flag);
-	}
-}
 
-function initializeListgrid(){
-	designDept.listgrid.jqGrid({		
-		url: api.department.pageDepartment.url,
-		postData: designDept.postParam,
-		colNames:['设计部门编号', '设计部门名称', '所属设计大区', '所属大区', '所属城市', '所属城区', '合同号前缀', '创建时间', '描述'],
-		colModel:[
-			{name:'deptId'},
-			{name:'deptName'},
-			{name:'fatherDeptName', jsonmap:'fatherDept.deptName'},
-			{name:'regionName', jsonmap:'cityProper.city.region.regionName'},
-			{name:'cityName', jsonmap:'cityProper.city.cityName'},
-			{name:'cityProperName', jsonmap:'cityProper.cityProperName'},
-			{name:'contractPrefix'},
-			{name:'createTime'},
-			{name:'des'}
-		], 
-		pager : designDept.gridPager,
-		caption: "设计部门列表"
-	});
-
-	designDept.listgrid.navGrid(designDept.gridPager, {edit:false,add:false,del:true,search:false,refresh: false,view: false},{},{},
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(designDept.gridPager, {
-		caption:"",
-		buttonicon: 'icon-pencil blue',
-		onClickButton: function(){    
-			editFlg = true;
-			
-			var row = $.jgrid.getRowData.call(designDept.listgrid, "deptId");
-			
-			if(row == undefined){
-				return;
-			}
-			
-			designDept.items.designDeptId.val(row.deptId).prop("disabled", true).css("display", "block");
-			designDept.items.designDeptName.val(row.deptName);
-			designDept.items.designRegionSel.val(row.fatherDept.deptId);
-			designDept.items.regionSel.val(row.cityProper.city.region.regionId);
-			
-			$.when(
-				com.post(api.system.queryCityByRegionId, {"city.region.regionId":row.cityProper.city.region.regionId}), 
-				com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": row.cityProper.city.cityId})
-			).done(function(city, cityProper){
-					designDept.items.citySel.bindData(city.cityList, designDept.cityKey, designDept.cityValue, false);
-					designDept.items.cityProperSel.bindData(cityProper.cityProperList, designDept.cityProperKey, designDept.cityProperValue, false);
-					designDept.items.citySel.val(row.cityProper.city.cityId);
-					designDept.items.cityProperSel.val(row.cityProper.cityProperId);
-			}).fail(function(){
-				console.log("queryCityByRegionId and queryCityPropersByCityId fail....");
-			});
-			
-			designDept.items.contractPrefix.val(row.contractPrefix);
-			designDept.items.createTime = row.createTime;
-			designDept.items.des.val(row.des);
-			designDept.modal.modal("show");
-		},
-		position: 'first'
-	}).navButtonAdd(designDept.gridPager, { //add
-		caption:"",
-		buttonicon: 'icon-plus-sign purple',
-		onClickButton: function(){   
-			editFlg = false;
-			com.cleanItems(designDept.items);
-			designDept.items.designDeptId.prop("disabled", false).css("display", "none");
-			designDept.items.regionSel.trigger("change");
-			designDept.modal.modal("show");   
-		},
-		position: 'first'
-	});
-}
-
-function removeRow(params, rowNums){
-	var options = {};
-	var nums = rowNums.split(",");
-	
-	for(var i=0; i<nums.length; i++){
-		var row = $(this).jqGrid('getRowData', nums[i]);
-		options["deptIds["+i+"]"] = row.deptId;
-	}
-	
-	com.post(api.department.deleteDepartment, options, successCallback);
-	
-	$("#eData").trigger("click");
-}
-function saveData(){
-	if(com.validate() || designDept.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		'dept.ident': 13,
-		'dept.deptName': designDept.items.designDeptName.val(),
-		'dept.fatherDept.deptId': designDept.items.designRegionSel.val(),
-		'dept.cityProper.cityProperId': designDept.items.cityProperSel.val(),
-		'dept.type': com.deptType.designDept,
-		'dept.contractPrefix': designDept.items.contractPrefix.val(),
-		'dept.des': designDept.items.des.val()
-	};
-	
-	if(editFlg){
-		url = api.department.updateDepartment;
-		options['dept.deptId'] = designDept.items.designDeptId.val();
-		options['dept.createTime'] = designDept.items.createTime;
-	}else{
-		url = api.department.addDepartment;
-		options['dept.deptId'] = "DD_";
-		options['dept.company'] = config.company;
-	}
-	
-	com.post(url, options, successCallback);
-	
-	designDept.modal.modal("hide");   
-}
-
-function successCallback(){
-	com.showAlert(com.info, "操作成功");
-	$.jgrid.refreshGrid(designDept.listgrid, designDept.postParam);
-}

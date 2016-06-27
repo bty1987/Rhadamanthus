@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 
 public interface DepartmentService {
 	
-	public void pageDepartment(Paging paging, List<FilterVO> filters, String userId) throws FLException;
+	public void pageDepartment(Paging paging, List<FilterVO> filters, String userId, DepartmentVO departmentVO) throws FLException;
 	
 	public List<DepartmentVO> queryDepartment(String type, String userId) throws FLException;
 

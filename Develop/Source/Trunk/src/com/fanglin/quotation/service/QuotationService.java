@@ -12,6 +12,7 @@
 package com.fanglin.quotation.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.po.QuotationPO;
@@ -24,6 +25,8 @@ public interface QuotationService {
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO);
 	
 	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
+	
+	public Map<String, List<String>> queryQuotationForConfig();
 	
 	public int checkQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO, boolean priceFlag) throws FLException;
 	

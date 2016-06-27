@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageUser(Paging paging, List<FilterVO> filters, String userId) throws FLException{
+	public void pageUser(Paging paging, List<FilterVO> filters, String userId, UserVO userVO) throws FLException{
 		
 		UserPO _userPO = userDao.get(userId);
 		
@@ -49,6 +49,10 @@ public class UserServiceImpl implements UserService {
 		
 		if(_userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
 			filters.add(new FilterVO("company", String.valueOf(_userPO.getCompany()), "eq"));
+		}
+		
+		if(userVO != null && userVO.getDuty() != null){
+			filters.add(new FilterVO("duty", userVO.getDuty(), "eq"));
 		}
 
 		List<UserPO> userPOs = userDao.pageUser(paging, filters);
@@ -89,7 +93,7 @@ public class UserServiceImpl implements UserService {
 	@SuppressWarnings("unchecked")
 	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, String userId) throws FLException{
 		
-		pageUser(paging, filters, userId);
+		pageUser(paging, filters, userId, null);
 		
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 		

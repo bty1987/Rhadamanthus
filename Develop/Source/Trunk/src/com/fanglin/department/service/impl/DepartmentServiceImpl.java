@@ -52,7 +52,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageDepartment(Paging paging, List<FilterVO> filters, String userId) throws FLException{
+	public void pageDepartment(Paging paging, List<FilterVO> filters, String userId, DepartmentVO departmentVO) throws FLException{
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -62,6 +62,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
 			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
+		}
+		
+		if(departmentVO != null && departmentVO.getType() != null){
+			filters.add(new FilterVO("type", departmentVO.getType(), "eq"));
 		}
 		
 		List<DepartmentPO> departmentPOs = departmentDao.pageDepartment(paging, filters);

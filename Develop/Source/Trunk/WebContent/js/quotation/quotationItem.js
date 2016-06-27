@@ -30,9 +30,14 @@ $(function(){
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
 
+            //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl');
+            //是否打折
+            var $btnDiscount = $('<div></div>').addClass('pull-right');
+            var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $dspan = $('<span></span>').addClass('lbl');
 
             var propertyArr = [
                 ["编号:", v.itemId, "grey"],
@@ -56,8 +61,9 @@ $(function(){
             });
 
             $btnStatus.append($statusSwitch).append($span);
+            $btnDiscount.append($discountSwitch).append($dspan);
 
-            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -68,6 +74,11 @@ $(function(){
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
                 $statusSwitch.prop("checked") ? (updateStatus(v.qiId, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.qiId, 1,function(){$statusSwitch.prop("checked")}));
+            });
+
+            v.discount && $discountSwitch.prop("checked", true);
+            $discountSwitch.switchBtn("discount-lbl").on("click",function() {
+                $discountSwitch.prop("checked") ? (updateDiscount(v.qiId, 1, function(){$discountSwitch.removeAttr("checked")})) : (updateDiscount(v.qiId, 0,function(){$discountSwitch.prop("checked")}));
             });
 
             return $liLine;
@@ -259,6 +270,20 @@ $(function(){
         com.post(api.quotation.updateQuotationItemForStatus, {
             "quotationItem.qiId": id,
             "quotationItem.status": status
+        }, function () {
+
+        }, function () {
+            failcallBack && failcallBack();
+        });
+    }
+
+
+    //是否打折设置
+    function updateDiscount(id, discount, failcallBack) {
+
+        com.post( api.quotation.updateQuotationItemForDiscount, {
+            "quotationItem.qiId": id,
+            "quotationItem.discount": discount
         }, function () {
 
         }, function () {

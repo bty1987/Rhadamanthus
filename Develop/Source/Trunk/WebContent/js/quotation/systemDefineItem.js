@@ -31,6 +31,15 @@ $(function(){
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-primary').html('删除');
 
+			//启用禁用
+			var $btnStatus = $('<div></div>').addClass('pull-right');
+			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+			var $span = $('<span></span>').addClass('lbl');
+			//是否打折
+			var $btnDiscount = $('<div></div>').addClass('pull-right');
+			var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+			var $dspan = $('<span></span>').addClass('lbl');
+
             var propertyArr = [
                 ["编号:", v.itemId, "grey"],
                 ["大类:", v.quotationBigCategory, "grey"],
@@ -46,9 +55,11 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).appendTo($h3);
-            
-            $divBtnWrap.append($btnDelete).appendTo($h3);
+
+			$btnStatus.append($statusSwitch).append($span);
+			$btnDiscount.append($discountSwitch).append($dspan);
+
+			$divBtnWrap.append($btnEdit).append($btnDelete).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -60,8 +71,19 @@ $(function(){
             $btnEdit.click(function(){
                 edit(v);
             });
-            
-            return $liLine;
+
+			v.status && $statusSwitch.prop("checked", true);
+			$statusSwitch.switchBtn("status-lbl").on("click",function() {
+				$statusSwitch.prop("checked") ? (updateStatus(v.sdiId, 1, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.sdiId, 0,function(){$statusSwitch.prop("checked")}));
+			});
+
+			v.discount && $btnDiscount.prop("checked", true);
+			$discountSwitch.switchBtn("discount-lbl").on("click",function() {
+				$discountSwitch.prop("checked") ? (updateDiscount(v.sdiId, 1, function(){$discountSwitch.removeAttr("checked")})) : (updateDiscount(v.sdiId, 0,function(){$discountSwitch.prop("checked")}));
+			});
+
+
+			return $liLine;
         };
       
         return {
@@ -298,6 +320,33 @@ function initDataMap(){
             flag && com.post(api.quotation.deleteSystemDefineItemByIds, c, successCallback);
         });
     }
+
+	//启用禁用功能
+	function updateStatus(id, status, failcallBack) {
+
+		com.post(api.quotation.updateSystemDefineItemForStatus, {
+			"systemDefineItem.sdiId": id,
+			"systemDefineItem.status": status
+		}, function () {
+
+		}, function () {
+			failcallBack && failcallBack();
+		});
+	}
+
+
+	//是否打折设置
+	function updateDiscount(id, discount, failcallBack) {
+
+		com.post(api.quotation.updateSystemDefineItemForDiscount, {
+			"systemDefineItem.sdiId": id,
+			"systemDefineItem.discount": discount
+		}, function () {
+
+		}, function () {
+			failcallBack && failcallBack();
+		});
+	}
 		
     function successCallback(){
     	//$('button.btn-search','#condList').click();//调用成功后，执行查询操作  
