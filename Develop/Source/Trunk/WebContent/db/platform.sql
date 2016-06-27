@@ -120,6 +120,7 @@ CREATE TABLE addreduceitem (
   quotationFunctionAreaId bigint(20) NOT NULL COMMENT '所属报价功能区编号',
   quoteItemId bigint(20),
   content varchar(512) DEFAULT NULL,
+  discount tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (ariId),
   KEY indexone (arId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='增减项目';

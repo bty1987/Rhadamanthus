@@ -250,6 +250,7 @@ var api = {
 		
 		pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
 		queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do"},
+		queryAddReduceByDecorationPaymentId: {url: "queryAddReduceByDecorationPaymentId.do"},
 		addAddReduce: {url: "addAddReduce.do"},
 		updateAddReduce: {url: "updateAddReduce.do"},
 		updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do"},
@@ -878,6 +879,7 @@ var api = {
 		
 		queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
 		updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
+		updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
 		deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
 		
 	}, report: {

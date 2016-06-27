@@ -87,6 +87,20 @@ public class AddReduceServiceImpl implements AddReduceService{
 	}
 	
 	@Override
+	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException {
+		
+		AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(addReduceVO.getDpId());
+		
+		if(addReducePO == null){
+			throw new FLException(140018, "增减项不存在");
+		}
+		
+		BeanUtil.copyProperties(addReducePO, addReduceVO);
+		
+		return addReduceVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addAddReduce(AddReduceVO addReduceVO) {
 		

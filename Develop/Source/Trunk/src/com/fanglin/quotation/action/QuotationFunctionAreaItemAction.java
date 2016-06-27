@@ -57,8 +57,13 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 		
 		quotationFunctionAreaItem = quotationFunctionAreaItemService.updateQuotationFunctionAreaItem(quotationFunctionAreaItem, quotation);
 		
-		System.out.println(quotationFunctionAreaItem);
-		System.out.println(quotationFunctionAreaItem.getQfaiId());
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateQuotationFunctionAreaItemForSpec", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationFunctionAreaItemForSpec() throws FLException{
+		
+		quotationFunctionAreaItemService.updateQuotationFunctionAreaItemForSpec(quotationFunctionAreaItem);
 		
 		return SUCCESS;
 	}

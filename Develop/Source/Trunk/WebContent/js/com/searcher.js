@@ -298,7 +298,9 @@ var Searcher = function(){
             var $rows = $('<span></span>').addClass('bigger-120 blue').attr('name', 'rows').appendTo($infodiv);
             var $di = $('<span></span>').text('条, 共').appendTo($infodiv);
             var $totalRecords = $('<span></span>').addClass('bigger-120 blue').attr('name', 'totalRecords').appendTo($infodiv);
-            var $di = $('<span></span>').text('条').appendTo($infodiv);
+            var $di = $('<span></span>').text('条, 前往').appendTo($infodiv);
+            var $input = $('<input></input>').addClass('fl-page-input').attr('type', 'text').css('font-size', '10px').attr('id', 'pginput').appendTo($infodiv);
+            var $di = $('<span></span>').text('页').appendTo($infodiv);
             
             var $ul = $('<ul></ul>').addClass('pager pull-right').appendTo(basicConf.$pager);
             var $prevli = $('<li></li>').addClass('previous').attr('name', 'prev').appendTo($ul);
@@ -319,12 +321,24 @@ var Searcher = function(){
             });
             $('li[name="next"]', basicConf.$pager).click(function(){
                 var _params;
-
                 _pagenation.nowPage["paging.page"] < _pagenation.nowPage["paging.totalPage"] && (
                     _params = _pagenation.getParams(),
                     _params && (_params["paging.page"] += 1, _pagenation.getDataByPage(_params))
                 );
             });
+            $('#pginput').bind('keypress',function(event){
+            	
+            	var _p = $(this).val();
+            	
+            	if(event.keyCode == "13" && /\d+/.test(_p)){
+            		var _params;
+                	
+                	(_p <= _pagenation.nowPage["paging.totalPage"] && _p >= 1) && (
+                        _params = _pagenation.getParams(),
+                        _params && (_params["paging.page"] = _p, _pagenation.getDataByPage(_params))
+                    );
+            	}
+            })
         }
     };
 

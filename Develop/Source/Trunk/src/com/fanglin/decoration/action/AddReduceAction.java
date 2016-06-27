@@ -57,6 +57,14 @@ public class AddReduceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryAddReduceByDecorationPaymentId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceByDecorationPaymentId() throws FLException{
+		
+		addReduce = addReduceService.queryAddReduceByDecorationPaymentId(addReduce);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAddReduce(){
 		

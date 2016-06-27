@@ -110,6 +110,27 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int updateQuotationFunctionAreaItemForSpec(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
+		
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(quotationFunctionAreaItemVO.getQfaiId());
+		
+		if(quotationFunctionAreaItemPO == null){
+			throw new FLException(200013, "报价项不存在");
+		}
+		
+		short type = quotationFunctionAreaItemPO.getType();
+		
+		if(type == 2 || type == 3){
+			quotationFunctionAreaItemPO.setUnitPrice(quotationFunctionAreaItemVO.getUnitPrice());
+			
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO) throws FLException {
 		
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());

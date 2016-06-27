@@ -36,11 +36,11 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 		
 		if(filters != null){
 			for(FilterVO filter: filters){
-				if("orderId".equals(filter.getField())){
+				if(AddReducePO.COLUMN_ORDERID_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}else if("addReduceStatus".equals(filter.getField())){
+				}else if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
-				}else if("addReduceType".equals(filter.getField())){
+				}else if(AddReducePO.COLUMN_TYPE_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
@@ -60,9 +60,9 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 		
 		if(filters != null){
 			for(FilterVO filter: filters){
-				if("addReduceStatus".equals(filter.getField())){
+				if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
-				}else if("addReduceType".equals(filter.getField())){
+				}else if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
@@ -75,16 +75,16 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public AddReducePO queryAddReduceByOrderPaymentId(Long orderPaymentId){
-		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq("orderPaymentId", orderPaymentId)).uniqueResult();
+	public AddReducePO queryAddReduceByDecorationPaymentId(Long decorationPaymentId){
+		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, decorationPaymentId)).uniqueResult();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId){
 		return (List<AddReducePO>) createCriteria(AddReducePO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.add(Restrictions.ne("addReduceType", 2))
+				.add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId))
+				.add(Restrictions.ne(AddReducePO.COLUMN_TYPE_STR, 2))
 				.list();
 	}
 	

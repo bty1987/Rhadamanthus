@@ -27,6 +27,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 	private Long quoteItemId;
 	
 	private String content;
+	
+	private Short discount;
 
 	public Long getAriId() {
 		return ariId;
@@ -122,6 +124,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Short discount) {
+		this.discount = discount;
 	}
 
 }

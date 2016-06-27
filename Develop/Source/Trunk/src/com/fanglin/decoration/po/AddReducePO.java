@@ -37,7 +37,7 @@ public class AddReducePO implements Serializable{
 	
 	public static final String COLUMN_CONTENT_STR = "content";
 	
-	public static final String COLUMN_DECORATIONPAYMENTID_STR="decorationPaymentId";
+	public static final String COLUMN_DPID_STR = "dpId";
 	
 	public static final int TYPE_ADD_INT = 0;
 	

@@ -7,7 +7,7 @@ var bRegion = {
 	editFlg: false,
 	postParam: {
 		'dept.type': '业务大区',
-	}
+	},
 	
 	validator: {
 		businessRegion: {
