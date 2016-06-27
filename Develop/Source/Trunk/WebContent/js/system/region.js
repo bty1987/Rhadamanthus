@@ -21,133 +21,139 @@ var region = {
 };
 
 jQuery(function($) {
-	region.listgrid = $("#listgrid");
-	region.gridPager = "#gridPager";
+	
 	region.saveBtn = $("#saveBtn").on("click", saveData);
 	region.cancelBtn = $("#cancelBtn");
 	
 	region.modal = $("#regionModal");
-	region.modal.on('show.bs.modal',function(e){
+	
+	region.regionItems.regionName = $("#regionName");
+	region.regionItems.regionId = $("#regionId");
+	
+	$.extend(com.validator, region.validator);
+	
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.regionId + " " + v.regionName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+
+            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnEdit.click(function(){
+            	editRegion(v.regionId, v.regionName);
+            });
+            
+            $btnDel.click(function(){
+            	deleteRegion(v.regionId);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+	
+	var searcher = new Searcher();
+	
+	searcher.init(["regionName"], "condList", api.system.pageRegion, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "regionPostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addRegion').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
+	});
+		
+	$('a[name="addRegion"]', '#pagenation').click(function(){
+		editFlg = false;
+		
+		com.cleanItems(region.regionItems);
+		region.regionItems.regionId.prop("disabled", false).css("display", "none");
+		
+		region.modal.modal("show");  
+    });
+	
+	function editRegion(regionId, regionName){
+		
+		editFlg = true;
+		
 		com.clearValidator();
 		com.clearValidator("#regionId", true);
-	});
-	
-	region.regionItems.regionId = $("#regionId").on("blur",function(){
-		$this = $(this);
 		
-		if($this.val() == undefined || $this.val().trim() == ""){
+		region.regionItems.regionId.val(regionId).prop("disabled", true).css("display", "block");
+		region.regionItems.regionName.val(regionName);
+		
+		region.modal.modal("show");
+	}
+	
+	function deleteRegion(regionId){
+		
+		var options = {
+			"regionIds[0]": regionId,
+		};
+		
+		com.post(api.system.deleteRegion, options, function(res){
+			searcher.doSearch();
+		});
+	}
+
+	function saveData(){
+		
+		if(com.validate() || region.repeatFlg){
 			return;
 		}
 		
-		com.post(api.system.queryRegionById, {"region.regionId":$this.val()}, function(res){
-			if(res.region){
-				com.showTips($this, "该大区编号已存在", true);
-				region.repeatFlg = true;
-			}else{
-				com.clearValidator("#regionId", true);
-				region.repeatFlg = false;
-			}
+		var url;
+		var options = {
+			'region.regionId': region.regionItems.regionId.val(),
+			'region.regionName': region.regionItems.regionName.val(),
+		};
+		
+		if(editFlg){
+			url = api.system.updateRegion;
+		}else{
+			url = api.system.addRegion;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearch();
 		});
-	});
-	region.regionItems.regionName = $("#regionName");
-	$.extend(com.validator, region.validator);
-	
-	var searchOpts = {
-		url: api.system.pageRegion,
-		listgrid: region.listgrid,
-		items: [{label:"大区名称",id:"regionNameSearch",name:"regionName", type:'text'}]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	region.listgrid.jqGrid({		
-		url: api.system.pageRegion.url,
-		postData: region.postParam,
-		colNames:['大区编号', '大区名称'],
-		colModel:[
-			{name:'regionId', search: false},
-			{name:'regionName',  searchoptions: { sopt: ['cn'] }}
-		], 
-		pager : region.gridPager,
-		caption: "大区列表"
-	});
-
-	region.listgrid.navGrid(region.gridPager, {edit:false,add:false,del:true,search:false,searchicon : 'icon-search orange', refresh: false,view: false}, {}, {},
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(region.gridPager, {
-		caption:"",
-		buttonicon: 'icon-pencil blue',
-		onClickButton: function(){    
-			editFlg = true;
-			var num = region.listgrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.viewModal("#alertmod_listgrid",{gbox:"#gbox_"+region.listgrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				
-				return;
-			}
-			var row = region.listgrid.jqGrid("getRowData", num);
-			
-			region.regionItems.regionId.val(row.regionId);
-			region.regionItems.regionId.prop("disabled", true).css("display", "block");
-			region.regionItems.regionName.val(row.regionName);
-			
-			region.modal.modal("show");
-		},
-		position: 'first'
-	}).navButtonAdd(region.gridPager, {
-		caption:"",
-		buttonicon: 'icon-plus-sign purple',
-		onClickButton: function(){   
-			editFlg = false;
-			
-			com.cleanItems(region.regionItems);
-			
-			region.regionItems.regionId.prop("disabled", false).css("display", "none");
-			
-			region.modal.modal("show");   
-		},
-		position: 'first'
-	});
+		
+		region.modal.modal("hide");   
+	}
 	
 });
-
-function removeRow(params, rowNums){
-	var options = {};
-	var nums = rowNums.split(",");
-	
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid('getRowData', nums[i]);
-		options["regionIds["+i+"]"] = row.regionId;
-	}
-	
-	com.post(api.system.deleteRegion, options, successCallback);
-	
-	$("#eData").trigger("click");
-}
-
-function saveData(){
-	if(com.validate() || region.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		'region.regionId': region.regionItems.regionId.val(),
-		'region.regionName': region.regionItems.regionName.val(),
-	};
-	
-	if(editFlg){
-		url = api.system.updateRegion;
-	}else{
-		url = api.system.addRegion;
-	}
-	
-	com.post(url, options, successCallback);
-	
-	region.modal.modal("hide");   
-}
-
-function successCallback(){
-	$.jgrid.refreshGrid(region.listgrid, region.postParam);
-}

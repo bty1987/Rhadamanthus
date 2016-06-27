@@ -47,7 +47,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
 		List<String> passLogNames = Arrays.asList(new String[]{"index", "doLogin", "login", "logout", "verifyCode"});
-		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
+		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError", "error"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
 		
 		String userId = "";
 		String result = Action.SUCCESS;
@@ -60,71 +60,75 @@ public class AccessInterceptor extends AbstractInterceptor {
 		
 		String actionName = invocation.getProxy().getActionName();
 		
-		if(authentication == null){
-			authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
-		}
-		
-		if(authentication == null){
-			invocation.getStack().setValue("errorCode", "110005");
-			invocation.getStack().setValue("errorMsg", "登陆超时");
-			return BaseAction.BACKVALUE_ERROR_STR;
-		}
-		
-		String encryptKey = SystemConfig.getString("encryptKey");
-		String decryptString = AESHelper.decryptString(authentication, encryptKey);
-		
-		AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
-		Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
-		
 		try {
-			if(passActionNames.contains(actionName) || authenticationUtil.isMobile()){
+			
+			if(passActionNames.contains(actionName)){
 				result = invocation.invoke();
 			}else{
-				if(authenticationUtil.getUserId() != null){
-					
-					if(!actionName.startsWith("page") && !actionName.startsWith("query")){
-						logger.error(String.format("%s - %s - %s - %s", "AI", "I", authenticationUtil.getUserId(), actionName));
-					}
-					
-					if(authenticationUtil.getUpdateTime() == -1){
-						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
-						throw new FLException(110005, "登陆超时");
-					}
-					
-					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
-						throw new FLException(110005, "登陆超时");
-					}else{
-						authenticationUtil.setUpdateTime((new Date()).getTime());
-						String authenticationString = authenticationUtil.getAuthenticationStr();
-						String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
-						
-						CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
-						
-						userId = authenticationUtil.getUserId();
-						
-						// 权限认证
-						if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
-							result =  invocation.invoke();
-						}else{
-							throw new FLException(-2, "无操作权限");
-						}
-					}
-				}else{
+				
+				if(authentication == null){
+					authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+				}
+				
+				if(authentication == null){
 					throw new FLException(110005, "登陆超时");
 				}
-			}
-			
-			Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
-			
-			// 获得值栈
-			ValueStack valueStack = invocation.getStack();
-			Integer errorCode = (Integer) valueStack.findValue("errorCode");
-			if(errorCode != null || !passLogNames.contains(actionName)){
 				
-				ActionLogPO actionLogPO = new ActionLogPO(UUIDUtil.getUuid(), actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
+				String encryptKey = SystemConfig.getString("encryptKey");
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				if(actionLogPO.getRunTime() > 5000){
-					logService.addActionLog(actionLogPO);
+				AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
+				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
+				
+				if(authenticationUtil.isMobile()){
+					result = invocation.invoke();
+				}else{
+					if(authenticationUtil.getUserId() != null){
+						
+						if(!actionName.startsWith("page") && !actionName.startsWith("query")){
+							logger.error(String.format("%s - %s - %s - %s", "AI", "I", authenticationUtil.getUserId(), actionName));
+						}
+						
+						if(authenticationUtil.getUpdateTime() == -1){
+							CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
+							throw new FLException(110005, "登陆超时");
+						}
+						
+						if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
+							throw new FLException(110005, "登陆超时");
+						}else{
+							authenticationUtil.setUpdateTime((new Date()).getTime());
+							String authenticationString = authenticationUtil.getAuthenticationStr();
+							String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
+							
+							CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
+							
+							userId = authenticationUtil.getUserId();
+							
+							// 权限认证
+							if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
+								result =  invocation.invoke();
+							}else{
+								throw new FLException(-2, "无操作权限");
+							}
+						}
+					}else{
+						throw new FLException(110005, "登陆超时");
+					}
+				}
+				
+				Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
+				
+				// 获得值栈
+				ValueStack valueStack = invocation.getStack();
+				Integer errorCode = (Integer) valueStack.findValue("errorCode");
+				if(errorCode != null || !passLogNames.contains(actionName)){
+					
+					ActionLogPO actionLogPO = new ActionLogPO(UUIDUtil.getUuid(), actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
+					
+					if(actionLogPO.getRunTime() > 5000){
+						logService.addActionLog(actionLogPO);
+					}
 				}
 			}
 		}catch (LockAcquisitionException e) {
@@ -144,9 +148,9 @@ public class AccessInterceptor extends AbstractInterceptor {
 //			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
-		if(result == BaseAction.BACKVALUE_ERROR_STR){
-			CookieUtil.delCookie((HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST), (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION);
-		}
+//		if(result == BaseAction.BACKVALUE_ERROR_STR){
+//			CookieUtil.delCookie((HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST), (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION);
+//		}
 		
 		return result;
 	}

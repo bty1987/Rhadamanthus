@@ -14,7 +14,9 @@ package com.fanglin.quotation.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,6 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationVO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
@@ -85,6 +86,7 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
 			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
 			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 		}
@@ -114,6 +116,7 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
 			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
 			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 		}
@@ -134,7 +137,7 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderPO = quotationPO.getDecorationOrder();
 		}
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_SIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -142,20 +145,6 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		if(!status.contains(decorationOrderPO.getStatus())){
 			throw new FLException(200005, "报价不能修改");
-		}
-		
-		if(DecorationOrderPO.STATUS_SIGNED_STR.equals(decorationOrderPO.getStatus())){
-			
-			long adjustmentTime = SystemConfig.getInt("adjustmentDate", 2) * 24 * 60 * 60 * 1000;
-			long endTime  = (new Date()).getTime() - adjustmentTime;
-			
-			if(endTime > decorationOrderPO.getContractTime().getTime()){
-				throw new FLException(200005, "超出报价修改期限,不能修改");
-			}else{
-				if(priceFlag && Math.abs(Arith.sub(quotationPO.getTotalPrice(), decorationOrderPO.getOrderTotalPrice())) > 100){
-					throw new FLException(200004, "报价信息只能微调,总额不能超过100");
-				}
-			}
 		}
 		
 		return result;
@@ -180,6 +169,7 @@ public class QuotationServiceImpl implements QuotationService {
 			_quotationVO.setCreaterName(createUser.getCurrentName());
 			_quotationVO.setOrderId(decorationOrderPO.getOrderId());
 			_quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 			
@@ -189,6 +179,18 @@ public class QuotationServiceImpl implements QuotationService {
 		return quotationVOs;
 	}
 	
+	@Override
+	public Map<String, List<String>> queryQuotationForConfig() {
+		
+		Map<String, List<String>> config = new HashMap<String, List<String>>();
+		
+		config.put("manageRates", Arrays.asList(SystemConfig.getString("manageRate").split(",")));
+		config.put("trafficRates", Arrays.asList(SystemConfig.getString("trafficRate").split(",")));
+		config.put("latexCutScales", Arrays.asList(SystemConfig.getString("latexCutScale").split(",")));
+		
+		return config;
+	}
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException{

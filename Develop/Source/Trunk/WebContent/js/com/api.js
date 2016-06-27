@@ -842,6 +842,7 @@ var api = {
 		addQuotationItem: {url: "addQuotationItem.do"},
 		updateQuotationItem: {url: "updateQuotationItem.do"},
 		updateQuotationItemForStatus: {url: "updateQuotationItemForStatus.do"},
+		updateQuotationItemForDiscount: {url: "updateQuotationItemForDiscount.do"},
 		
 		queryFunctionAreaItemByFunctionAreaId: {url: "queryFunctionAreaItemByFunctionAreaId.do"},
 		addFunctionAreaItem: {url: "addFunctionAreaItem.do"},
@@ -859,6 +860,7 @@ var api = {
 		queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do"},
 		queryQuotationById: {url: "queryQuotationById.do"},
 		queryQuotationForStatusByOrderId: {url: "queryQuotationForStatusByOrderId.do"},
+		queryQuotationForConfig: {url: "queryQuotationForConfig.do"},
 		checkQuotationForStatusByOrderId: {url: "checkQuotationForStatusByOrderId.do"},
 		addQuotation: {url: "addQuotation.do"},
 		updateQuotation: {url: "updateQuotation.do"},

@@ -12,6 +12,7 @@
 package com.fanglin.quotation.action;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -41,6 +42,8 @@ public class QuotationAction extends BaseListAction {
 	
 	private int canChange;
 	
+	private Map<String, List<String>> configs;
+	
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationByOrderId(){
 		
@@ -62,6 +65,14 @@ public class QuotationAction extends BaseListAction {
 		
 		quotation=quotationService.queryQuotationById(quotation.getQid());
 
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryQuotationForConfig", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationForConfig() throws FLException{
+		
+		configs = quotationService.queryQuotationForConfig();
+	    
 		return SUCCESS;
 	}
 	
@@ -151,6 +162,14 @@ public class QuotationAction extends BaseListAction {
 
 	public int getCanChange(){
 		return canChange;
+	}
+
+	public Map<String, List<String>> getConfigs() {
+		return configs;
+	}
+
+	public void setConfigs(Map<String, List<String>> configs) {
+		this.configs = configs;
 	}
 
 }

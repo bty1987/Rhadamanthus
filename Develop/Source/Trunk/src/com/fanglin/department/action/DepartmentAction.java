@@ -43,7 +43,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDepartment() throws FLException{
 		
-		departmentService.pageDepartment(getPaging(), getFilters(), getUserId());
+		departmentService.pageDepartment(getPaging(), getFilters(), getUserId(), dept);
 		
 		return SUCCESS;
 	}

@@ -182,7 +182,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 		
-		quotationItemPO.setStatus(quotationItemVO.getDiscount());
+		quotationItemPO.setDiscount(quotationItemVO.getDiscount());
 		
 		quotationItemDao.update(quotationItemPO);
 		

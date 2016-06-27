@@ -1,121 +1,145 @@
 var materialBrandRight = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancelBtn: null,
 	modal: null,
 	
 	editFlg: false,
-	repeatFlg: false,
 	
-	postParam: {"filters[0].data":"驻店导购", "filters[0].field":"duty", "filters[0].op":"eq"},
+	postParam: {
+		"user.duty": "驻店导购"
+	},
 	
 	userId: "",
 };
 
 jQuery(function($) {
 	
-	materialBrandRight.listGrid = $("#listGrid");
-	materialBrandRight.gridPager = "#gridPager";
 	materialBrandRight.saveBtn = $("#saveBtn").on("click", saveData);
 	materialBrandRight.cancelBtn = $("#cancelBtn");
 	materialBrandRight.modal = $("#materialBrandRightModal");
 	
-	var searchOpts = {
-		url: api.personel.queryUserForNameByDuty,
-		postParmas: {"paging.rows":10, "paging.page":1, "duty":"驻店导购"},
-		listgrid: materialBrandRight.listGrid,
-		items: [
-		    {label:"姓名", id:"userNameSearch", name:"userName", type:'autoFillPinyinText', url:api.personel.queryUserForNameByDuty, postData:{"duty":"驻店导购"}}
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
 	$("#brandright").chosen({width: "216px"});
-	
-	materialBrandRight.listGrid.jqGrid({
-		url: api.personel.pageUser.url,
-		postData: materialBrandRight.postParam,
-		colNames:['员工工号', '姓名', '用户名', '操作'],
-		colModel:[
-		    {name:'userId'},
-		    {name:'userName'},
-		    {name:'loginId'},
-		    {name:'action', formatter: actionInit},
-		], 
-		pager: materialBrandRight.gridPager,
-		caption: "主材用户信息列表"
-	});
-	
-	materialBrandRight.listGrid.navGrid(materialBrandRight.gridPage, {edit:false, add:false, del:false, search:false, searchicon : 'icon-search orange', refresh: false, view: false}, {}, {}, {}, {});
 	
 	com.post(api.data.queryBrand, {}, function(res){
 		materialBrandRight.materialBrands = res.brands;
 	});
 	
-});
+	var displayFunc  = (function(){
 
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	var rowId = options.rowId;
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="' + rowId + '_viewMateriSubOrderAdd" class="btn btn-minier btn-inverse" onclick="dialogMaterialBrandRight(\'' + rowdata.userId + '\');">型号权限</button>';
-	result += '</div>';
-	
-	return result;
-}
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-function dialogMaterialBrandRight(userId){
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-inverse').html('型号权限');
+            
+            var propertyArr = [
+               ["编号:", v.userId, "grey"],
+               ["用户名:", v.loginId, "grey"],
+           ];
+            
+           $.each(propertyArr, function (index,value) {
+               var $liProperty = $('<li></li>');
+               $('<strong></strong>').html(value[0]).appendTo($liProperty);
+               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+               $liProperty.appendTo($ulProperty);
+           });
+
+            $divBtnWrap.append($btnConfig).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnConfig.click(function(){
+            	dialogMaterialBrandRight(v.userId);
+            });
+            
+            return $liLine;
+        };
+        
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
 	
-	materialBrandRight.userId = userId;
+	var searcher = new Searcher();
 	
-	com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
+	searcher.init(["materialerName"], "condList", api.personel.pageUser, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
+	
+	function dialogMaterialBrandRight(userId){
 		
-		$("#brandright").chosen("destroy");
-		$("#brandright").chosen({width: "216px"});
-		$("#brandright").bindData(materialBrandRight.materialBrands, 'brandId', 'brandName');
-		$("#brandright").trigger("chosen:updated");
+		materialBrandRight.userId = userId;
 		
-		var brandId = res.materialBrandRight.brandId;
-		var brandIds = brandId.split("#");
-		
-		for(var i=0;i<brandIds.length;i++){
+		com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
 			
-			var _brandId = brandIds[i];
-			
-			$("option[value='"+_brandId+"']", $("#brandright")).attr("selected", "selected");
+			$("#brandright").chosen("destroy");
+			$("#brandright").chosen({width: "216px"});
+			$("#brandright").bindData(materialBrandRight.materialBrands, 'brandId', 'brandName');
 			$("#brandright").trigger("chosen:updated");
-		}
-	});
-	
-	materialBrandRight.modal.modal("show");
-}
-
-function saveData(){
-	
-	if(com.validate() || materialBrandRight.repeatFlg)
-		return;
-	
-	var options = {};
-	var brandright = "#";
-	
-	var brandIds = $("#brandright").val();
-	
-	if(brandIds == null){
-		brandright = "";
-	}else{
-		for(var i=0;i<brandIds.length;i++){
-			brandright += brandIds[i] + "#";
-		}
+			
+			var brandId = res.materialBrandRight.brandId;
+			var brandIds = brandId.split("#");
+			
+			for(var i=0;i<brandIds.length;i++){
+				
+				var _brandId = brandIds[i];
+				
+				$("option[value='"+_brandId+"']", $("#brandright")).attr("selected", "selected");
+				$("#brandright").trigger("chosen:updated");
+			}
+		});
+		
+		materialBrandRight.modal.modal("show");
 	}
 	
-	options["materialBrandRight.userId"] = materialBrandRight.userId;
-	options["materialBrandRight.brandId"] = brandright;
+	function saveData(){
+		
+		if(com.validate())
+			return;
+		
+		var options = {};
+		var brandright = "#";
+		
+		var brandIds = $("#brandright").val();
+		
+		if(brandIds == null){
+			brandright = "";
+		}else{
+			for(var i=0;i<brandIds.length;i++){
+				brandright += brandIds[i] + "#";
+			}
+		}
+		
+		options["materialBrandRight.userId"] = materialBrandRight.userId;
+		options["materialBrandRight.brandId"] = brandright;
+		
+		com.post(api.material.saveMaterialBrandRight, options);
+		
+		materialBrandRight.modal.modal("hide");   
+	}
 	
-	com.post(api.material.saveMaterialBrandRight, options);
-	
-	materialBrandRight.modal.modal("hide");   
-}
+});

@@ -1,4 +1,4 @@
-#Fri Jun 24 14:46:43 CST 2016
+#Sun Jun 26 09:36:37 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/quotationDetail.html=UTF-8
 encoding//WebContent/backup/quotationDetail.js=UTF-8
@@ -122,6 +122,7 @@ encoding//WebContent/views/system/changePassword.html=UTF-8
 encoding//WebContent/views/system/city.html=UTF-8
 encoding//WebContent/views/system/cityProper.html=UTF-8
 encoding//WebContent/views/system/region.html=UTF-8
+encoding//WebContent/views/system/resetPassword.html=UTF-8
 encoding//WebContent/views/system/role.html=UTF-8
 encoding//WebContent/views/system/subFunctionAction.html=UTF-8
 encoding//WebContent/views/system/userProfile.html=UTF-8

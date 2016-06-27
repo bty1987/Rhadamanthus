@@ -7,7 +7,6 @@ var Condition = function(){
 
     var _condRules = {
 
-
         //例子 autofill
         designer : {
             label : "设计师",//中文名
@@ -65,7 +64,96 @@ var Condition = function(){
                 validate:null
             }
         },
-
+        //-------系统
+        regionName: {
+            label:"大区名称",
+            type:"text",
+            submitConfig : {
+                name : "regionName",
+                op : "cn",
+                validate:null
+            }
+        }, cityName: {
+            label:"城市名称",
+            type:"text",
+            submitConfig : {
+                name : "cityName",
+                op : "cn",
+                validate:null
+            }
+        }, cityProperName: {
+            label:"城区名称",
+            type:"text",
+            submitConfig : {
+                name : "cityProperName",
+                op : "cn",
+                validate:null
+            }
+        }, subFunctionName: {
+            label:"自功能名称",
+            type:"text",
+            submitConfig : {
+                name : "subFunctionName",
+                op : "cn",
+                validate:null
+            }
+        }, roleName: {
+            label:"角色名称",
+            type:"text",
+            submitConfig : {
+                name : "roleName",
+                op : "cn",
+                validate:null
+            }
+        }, region: {
+            label:"所属大区",
+            type:"select",
+            submitConfig : {
+                name : "regionId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : api.system.queryRegion,
+                postData:{},
+                listPath: "regionList",
+                keyPath:"regionId",
+                valuePath:"regionName"
+            }
+        }, city: {
+            label:"所属城市",
+            type:"select",
+            submitConfig : {
+                name : "cityId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : api.system.queryCity,
+                postData:{},
+                listPath: "cityList",
+                keyPath:"cityId",
+                valuePath:"cityName"
+            }
+        },
+        //-------部门 
+        regionName: {
+            label:"大区名称",
+            type:"text",
+            submitConfig : {
+                name : "deptName",
+                op : "cn",
+                validate:null
+            }
+        }, deptName: {
+            label:"部门名称",
+            type:"text",
+            submitConfig : {
+                name : "deptName",
+                op : "cn",
+                validate:null
+            }
+        },
         //-------增减项查询条件
         addReduceType : {
             label:"类型",
@@ -251,9 +339,7 @@ var Condition = function(){
                 op : "cn",
                 validate : null
             }
-        },
-
-        materialModelName : { //
+        }, materialModelName : { //
             label:"名称",
             type:"text",
             submitConfig : {
@@ -261,9 +347,7 @@ var Condition = function(){
                 op : "cn",
                 validate : null
             }
-        },
-
-        materialTypeId : {
+        }, materialTypeId : {
             label:"品类",
             type:"select",
             submitConfig : {
@@ -277,6 +361,20 @@ var Condition = function(){
                 listPath: "categorys",
                 keyPath:"cid",
                 valuePath:"categoryName"
+            }
+        }, materialerName : {
+            label : "姓名",
+            type : "autofill",
+            submitConfig : {
+                name : "userName",
+                op : "cn",
+                validate: null
+            }, dataSource : {
+                url : api.personel.queryUserForNameByPinyinName,
+                postData:{"duty": "驻店导购"},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
             }
         },
         //--------人事-员工 页面的各种查询条件
