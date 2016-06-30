@@ -1,76 +1,72 @@
-var notice = {
-	listgrid: null,
-	gridPager: null,
-	postParam: {}
-};
+$(function(){
+	var displayFunc  = (function(){
 
-jQuery(function($) {
-	
-	notice.listgrid = $("#listgrid");
-	notice.gridPager = "#gridPager";
-	
-	notice.postParam["notice.type"] = params["notice.type"];
-	
-	var searchOpts = {
-		url: api.information.pageNoticeForDeptAValid,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: notice.listgrid,
-		items: [
-	        {label:"主题",id:"theme",name:"theme", type:'text'},
-	        {label: "时间", id: "dateRangeSearch", name:"dateRange", type: "dateRangePicker"}
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	initializeListgrid();
+
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.theme));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+			var propertyArr = [
+				["类型:", v.type, "grey"],
+				["优先级:", v.priority, "grey"],
+				["发布部门:", v.dept.deptName, "grey"],
+				["发布人:", v.user.userName, "grey"],
+				["开始时间:", v.startTime, "grey"],
+				["结束时间:", v.endTime, "grey"],
+				["公开:", v.isPublic, "grey"],
+				["内容:", v.contentsText, "grey"],
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+
+
+			$liLine.append($h3).append($ulProperty);
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var _condArr = ['theme', 'dateRange'];
+	var MoreNoticesSeacher = new Searcher();
+	MoreNoticesSeacher.init( _condArr, "condList", api.information.pageNoticeForDeptAValid, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "moreNoticesSeacherPostData", {"notice.type" : params["notice.type"]});
+
+	$('#btnBack').click(function(){
+		isF5 = true;
+		$(".tooltip").remove();
+		window.location.reload();
+	});
 });
-
-function initializeListgrid(){
-	
-	console.log("initializeListgrid");
-	
-	notice.listgrid.jqGrid({		
-		url: api.information.pageNoticeForDeptAValid.url,
-		postData: notice.postParam,
-		colNames:['ID', '主题', '类型', '优先级', '发布部门', '发布人', '开始时间', '结束时间', '公开', '内容', '附件'],
-		colModel:[
-		    {name:'noticeId', hidden: true},
-			{name:'theme', width:40},
-			{name:'type', width:10},
-			{name:'priority', width:15},
-			{name:'deptName', width:20, jsonmap:'dept.deptName'},
-			{name:'userName', width:20, jsonmap:'user.userName'},
-			{name:'startTime', width:25},
-			{name:'endTime', width:25},
-			{name:'isPublic', width:10},
-			{name:'contentsText'},
-			{name:'attachmemt', width:12, align:"center", formatter: attachmentIcon}
-		], 
-		pager : notice.gridPager,
-		caption: "公告列表"
-	});
-
-	notice.listgrid.navGrid(notice.gridPager, {edit:false,add:false,del:false,search:false,refresh: false,view: false}, {}, {}
-	).navButtonAdd(notice.gridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			isF5 = true;
-			$(".tooltip").remove();
-			window.location.reload();
-		},
-		position: "first"
-	});
-}
-
-function attachmentIcon(cellvalue, options, row){
-	var res = "";
-	
-	if(row.filePath!=undefined && row.filePath != null && row.filePath != ""){
-		res = "<a href="+window.mediaServer+row.filePath+" onclick='window.open(this.href); return false;'><i id="+row.noticeId+" class='icon-download-alt bigger-110 blue'></i>";
-	}
-	
-	return res;
-}
-

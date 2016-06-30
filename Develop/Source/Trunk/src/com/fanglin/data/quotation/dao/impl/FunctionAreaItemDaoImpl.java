@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.data.po.FunctionAreaItemPO;
+import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 
 @Repository("functionAreaItemDao")
@@ -23,6 +24,7 @@ public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> impleme
 		return (List<FunctionAreaItemPO>)session().createCriteria(FunctionAreaItemPO.class)
 				.createAlias("quotationItem", "quotationItem")
 				.add(Restrictions.eq("functionArea.faId", functionAreaId))
+				.add(Restrictions.eq("quotationItem.status", QuotationItemPO.STATUS_ENABLE_INT))
 				.addOrder(Order.asc("quotationItem.itemId"))
 				.list();
 	}

@@ -325,7 +325,7 @@ $(function(){
 	    	
 	    	bootbox.confirm("确认要重签合同吗?", function(result){
 	    		if(result){
-	    			com.post(api.decoration.resignDecorationContract, {"decorationContract.quotationDetail.orderId": decorationOrderId}, function(res){
+	    			com.post(api.decoration.resignDecorationContract, {"decorationContract.orderId": decorationOrderId}, function(res){
 	    				com.showAlert(com.info, "操作成功");
 	    				successCallback();
 	    			});

@@ -73,7 +73,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	@Override
 	public int countApprovalForInitByIdent(String ident) {
 		
-		String sql = "select count(*) from platform.approval where ident = :ident";
+		String sql = "select count(*) from platform.approval where ident = :ident and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
 		
 		return count.intValue();

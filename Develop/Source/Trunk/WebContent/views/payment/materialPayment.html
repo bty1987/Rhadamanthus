@@ -14,14 +14,14 @@
 				</ul>
 				<div class="tab-content ">
 					<div id="materialPaymentList" class="tab-pane in active">
-						<div id="searchDiv"></div>
-						<table id="listGrid"></table>
-						<div id="gridPager"></div>
+						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 					<div id="history" class="tab-pane in active">
-						<div id="searchMaterialPaymentHistoryDiv"></div>
-						<table id="listMaterialPaymentHistoryGrid"></table>
-						<div id="gridMaterialPaymentHistoryPager"></div>
+						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 				</div>
 			</div>
@@ -290,5 +290,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/payment/materialPayment.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/payment/materialPayment.js?version=' + versionCode);
 </script>
+
+<script src="js/payment/materialPayment.js"></script>

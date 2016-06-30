@@ -1067,6 +1067,7 @@ var QuotationDetail = (function(){
 				["单位:", v.measurementUnit, "grey"],
 				["工种:", v.workType, "grey"],
 				["单价:", v.unitPrice, "grey"],
+				["打折:", v.discount == 0 ? '否' : '是', "red"],
 				["版本:", v.version, "grey"],
 			];
 

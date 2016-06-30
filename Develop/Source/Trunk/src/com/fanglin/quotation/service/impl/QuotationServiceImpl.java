@@ -306,6 +306,7 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException {
 		
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());

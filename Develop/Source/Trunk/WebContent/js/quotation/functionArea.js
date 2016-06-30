@@ -281,7 +281,7 @@ $(function(){
                         "type" : "checkbox",
                         "name" : "areaItems",
                         "class" : "ace ace-checkbox-2",
-                    }).val(v.qiId);
+                    }).val(v.faiId);
                     var $span = $('<span></span>').addClass('lbl');
 
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');

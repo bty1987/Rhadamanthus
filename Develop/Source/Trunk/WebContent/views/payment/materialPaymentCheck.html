@@ -5,7 +5,7 @@
 			<div class="tabbable">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active">
-						<a data-toggle="tab" href="#materialPaymentList" id="materialPaymentTab">确认主材收款</a>
+						<a data-toggle="tab" href="#materialPaymentList" id="materialPaymentTab">确认收款</a>
 					</li>
 					
 					<li class="">
@@ -14,15 +14,15 @@
 				</ul>
 				<div class="tab-content">
 					<div id="materialPaymentList" class="tab-pane in active">
-						<div id="searchMaterialPaymentDiv"></div>
-						<table id="listMaterialPaymentGrid"></table>
-						<div id="gridMaterialPaymentPager"></div>
+						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 					
 					<div id="materialPaymentHistoryList" class="tab-pane in active">
-						<div id="searchMaterialPaymentHistoryDiv"></div>
-						<table id="listMaterialPaymentHistoryGrid"></table>
-						<div id="gridMaterialPaymentHistoryPager"></div>
+						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 				</div>
 			</div>
@@ -31,5 +31,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/payment/materialPaymentCheck.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/payment/materialPaymentCheck.js?version=' + versionCode);
 </script>
+
+<script src="js/payment/materialPaymentCheck.js"></script>
