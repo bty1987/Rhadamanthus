@@ -1,4 +1,5 @@
 /**
+
  * Title: UserPO
  * Description:
  * Copyright: Copyright (c) 2013 All rights reserved.
@@ -174,6 +175,7 @@ public class UserPO implements Serializable {
 	}
 
 	@Id
+	@Column(name = "userId")
 	public String getUserId(){
 		return userId;
 	}
@@ -182,6 +184,7 @@ public class UserPO implements Serializable {
 		this.userId = userId;
 	}
 
+	@Column(name = "oldUserId")
     public String getOldUserId(){
         return oldUserId;
     }
@@ -210,6 +213,7 @@ public class UserPO implements Serializable {
 		this.dept = dept;
 	}
 
+	@Column(name = "loginId")
 	public String getLoginId(){
 		return loginId;
 	}
@@ -218,6 +222,7 @@ public class UserPO implements Serializable {
 		this.loginId = loginId;
 	}
 
+	@Column(name = "password")
 	public String getPassword(){
 		return password;
 	}
@@ -226,6 +231,7 @@ public class UserPO implements Serializable {
 		this.password = password;
 	}
 
+	@Column(name = "userName")
 	public String getUserName(){
 		return userName;
 	}
@@ -234,6 +240,7 @@ public class UserPO implements Serializable {
 		this.userName = userName;
 	}
 
+	@Column(name = "userNamePinYin")
 	public String getUserNamePinYin(){
 		return userNamePinYin;
 	}
@@ -242,6 +249,7 @@ public class UserPO implements Serializable {
 		this.userNamePinYin = userNamePinYin;
 	}
 
+	@Column(name = "currentName")
 	public String getCurrentName(){
 		return currentName;
 	}
@@ -250,6 +258,7 @@ public class UserPO implements Serializable {
 		this.currentName = currentName;
 	}
 
+	@Column(name = "status")
 	public String getStatus(){
 		return status;
 	}
@@ -258,6 +267,7 @@ public class UserPO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "statusUpdateTime")
 	public Timestamp getStatusUpdateTime(){
 		return statusUpdateTime;
 	}
@@ -266,6 +276,7 @@ public class UserPO implements Serializable {
 		this.statusUpdateTime = statusUpdateTime;
 	}
 
+	@Column(name = "deptType")
     public String getDeptType(){
         return deptType;
     }
@@ -274,6 +285,7 @@ public class UserPO implements Serializable {
         this.deptType = deptType;
     }
     
+    @Column(name = "duty")
 	public String getDuty(){
 		return duty;
 	}
@@ -282,6 +294,7 @@ public class UserPO implements Serializable {
 		this.duty = duty;
 	}
 
+	@Column(name = "employWay")
 	public String getEmployWay(){
 		return employWay;
 	}
@@ -290,6 +303,7 @@ public class UserPO implements Serializable {
 		this.employWay = employWay;
 	}
 
+	@Column(name = "recommendMan")
 	public String getRecommendMan(){
 		return recommendMan;
 	}
@@ -298,6 +312,7 @@ public class UserPO implements Serializable {
 		this.recommendMan = recommendMan;
 	}
 
+	@Column(name = "jobYears")
 	public Integer getJobYears(){
 		return jobYears;
 	}
@@ -306,6 +321,7 @@ public class UserPO implements Serializable {
 		this.jobYears = jobYears;
 	}
 
+	@Column(name = "employType")
 	public String getEmployType(){
 		return employType;
 	}
@@ -314,6 +330,7 @@ public class UserPO implements Serializable {
 		this.employType = employType;
 	}
 
+	@Column(name = "entryTime")
 	public String getEntryTime(){
 		return entryTime;
 	}
@@ -322,6 +339,7 @@ public class UserPO implements Serializable {
 		this.entryTime = entryTime;
 	}
 
+	@Column(name = "employTime")
 	public String getEmployTime(){
 		return employTime;
 	}
@@ -330,6 +348,7 @@ public class UserPO implements Serializable {
 		this.employTime = employTime;
 	}
 
+	@Column(name = "serviceYears")
 	public Integer getServiceYears(){
 		return serviceYears;
 	}
@@ -338,6 +357,7 @@ public class UserPO implements Serializable {
 		this.serviceYears = serviceYears;
 	}
 
+	@Column(name = "gender")
 	public String getGender(){
 		return gender;
 	}
@@ -346,6 +366,7 @@ public class UserPO implements Serializable {
 		this.gender = gender;
 	}
 
+	@Column(name = "birthday")
 	public String getBirthday(){
 		return birthday;
 	}
@@ -354,6 +375,7 @@ public class UserPO implements Serializable {
 		this.birthday = birthday;
 	}
 
+	@Column(name = "age")
 	public Integer getAge(){
 		return age;
 	}
@@ -362,6 +384,7 @@ public class UserPO implements Serializable {
 		this.age = age;
 	}
 
+	@Column(name = "political")
 	public String getPolitical(){
 		return political;
 	}
@@ -370,6 +393,7 @@ public class UserPO implements Serializable {
 		this.political = political;
 	}
 
+	@Column(name = "identity")
 	public String getIdentity(){
 		return identity;
 	}
@@ -378,6 +402,7 @@ public class UserPO implements Serializable {
 		this.identity = identity;
 	}
 
+	@Column(name = "phone")
 	public String getPhone(){
 		return phone;
 	}
@@ -386,6 +411,7 @@ public class UserPO implements Serializable {
 		this.phone = phone;
 	}
 
+	@Column(name = "emergencyMan")
 	public String getEmergencyMan(){
 		return emergencyMan;
 	}
@@ -394,6 +420,7 @@ public class UserPO implements Serializable {
 		this.emergencyMan = emergencyMan;
 	}
 
+	@Column(name = "emergencyPhone")
 	public String getEmergencyPhone(){
 		return emergencyPhone;
 	}
@@ -402,6 +429,7 @@ public class UserPO implements Serializable {
 		this.emergencyPhone = emergencyPhone;
 	}
 
+	@Column(name = "isPresentGraduate")
 	public String getIsPresentGraduate(){
 		return isPresentGraduate;
 	}
@@ -410,6 +438,7 @@ public class UserPO implements Serializable {
 		this.isPresentGraduate = isPresentGraduate;
 	}
 
+	@Column(name = "graduateTime")
 	public String getGraduateTime(){
 		return graduateTime;
 	}
@@ -418,6 +447,7 @@ public class UserPO implements Serializable {
 		this.graduateTime = graduateTime;
 	}
 
+	@Column(name = "school")
 	public String getSchool(){
 		return school;
 	}
@@ -426,6 +456,7 @@ public class UserPO implements Serializable {
 		this.school = school;
 	}
 
+	@Column(name = "education")
 	public String getEducation(){
 		return education;
 	}
@@ -434,6 +465,7 @@ public class UserPO implements Serializable {
 		this.education = education;
 	}
 
+	@Column(name = "specialty")
 	public String getSpecialty(){
 		return specialty;
 	}
@@ -442,6 +474,7 @@ public class UserPO implements Serializable {
 		this.specialty = specialty;
 	}
 
+	@Column(name = "isMarried")
 	public String getIsMarried(){
 		return isMarried;
 	}
@@ -450,6 +483,7 @@ public class UserPO implements Serializable {
 		this.isMarried = isMarried;
 	}
 
+	@Column(name = "isBirth")
 	public String getIsBirth(){
 		return isBirth;
 	}
@@ -458,6 +492,7 @@ public class UserPO implements Serializable {
 		this.isBirth = isBirth;
 	}
 
+	@Column(name = "isHouseLoan")
 	public String getIsHouseLoan(){
 		return isHouseLoan;
 	}
@@ -466,6 +501,7 @@ public class UserPO implements Serializable {
 		this.isHouseLoan = isHouseLoan;
 	}
 
+	@Column(name = "isCarLoan")
 	public String getIsCarLoan(){
 		return isCarLoan;
 	}
@@ -474,6 +510,7 @@ public class UserPO implements Serializable {
 		this.isCarLoan = isCarLoan;
 	}
 
+	@Column(name = "houseType")
 	public String getHouseType(){
 		return houseType;
 	}
@@ -482,6 +519,7 @@ public class UserPO implements Serializable {
 		this.houseType = houseType;
 	}
 
+	@Column(name = "householdType")
 	public String getHouseholdType(){
 		return householdType;
 	}
@@ -490,6 +528,7 @@ public class UserPO implements Serializable {
 		this.householdType = householdType;
 	}
 
+	@Column(name = "hometownAddress")
 	public String getHometownAddress(){
 		return hometownAddress;
 	}
@@ -498,6 +537,7 @@ public class UserPO implements Serializable {
 		this.hometownAddress = hometownAddress;
 	}
 
+	@Column(name = "address")
 	public String getAddress(){
 		return address;
 	}
@@ -506,6 +546,7 @@ public class UserPO implements Serializable {
 		this.address = address;
 	}
 
+	@Column(name = "isContract")
 	public String getIsContract(){
 		return isContract;
 	}
@@ -514,6 +555,7 @@ public class UserPO implements Serializable {
 		this.isContract = isContract;
 	}
 
+	@Column(name = "isInsurance")
 	public String getIsInsurance(){
 		return isInsurance;
 	}
@@ -522,6 +564,7 @@ public class UserPO implements Serializable {
 		this.isInsurance = isInsurance;
 	}
 
+	@Column(name = "insuranceTime")
 	public String getInsuranceTime(){
 		return insuranceTime;
 	}
@@ -530,6 +573,7 @@ public class UserPO implements Serializable {
 		this.insuranceTime = insuranceTime;
 	}
 
+	@Column(name = "pensionNum")
 	public String getPensionNum(){
 		return pensionNum;
 	}
@@ -538,6 +582,7 @@ public class UserPO implements Serializable {
 		this.pensionNum = pensionNum;
 	}
 
+	@Column(name = "medicalNum")
 	public String getMedicalNum(){
 		return medicalNum;
 	}
@@ -546,6 +591,7 @@ public class UserPO implements Serializable {
 		this.medicalNum = medicalNum;
 	}
 
+	@Column(name = "salary")
 	public Float getSalary(){
 		return salary;
 	}
@@ -554,6 +600,7 @@ public class UserPO implements Serializable {
 		this.salary = salary;
 	}
 
+	@Column(name = "lover")
 	public String getLover(){
 		return lover;
 	}
@@ -562,6 +609,7 @@ public class UserPO implements Serializable {
 		this.lover = lover;
 	}
 
+	@Column(name = "bank")
 	public String getBank(){
 		return bank;
 	}
@@ -570,6 +618,7 @@ public class UserPO implements Serializable {
 		this.bank = bank;
 	}
 
+	@Column(name = "bankCardNum")
 	public String getBankCardNum(){
 		return bankCardNum;
 	}
@@ -578,6 +627,7 @@ public class UserPO implements Serializable {
 		this.bankCardNum = bankCardNum;
 	}
 
+	@Column(name = "qq")
 	public String getQq(){
 		return qq;
 	}
@@ -586,6 +636,7 @@ public class UserPO implements Serializable {
 		this.qq = qq;
 	}
 
+	@Column(name = "wechat")
 	public String getWechat(){
 		return wechat;
 	}
@@ -594,6 +645,7 @@ public class UserPO implements Serializable {
 		this.wechat = wechat;
 	}
 
+	@Column(name = "email")
 	public String getEmail(){
 		return email;
 	}
@@ -602,6 +654,7 @@ public class UserPO implements Serializable {
 		this.email = email;
 	}
 
+	@Column(name = "userPhoto")
 	public String getUserPhoto(){
 		return userPhoto;
 	}
@@ -610,6 +663,7 @@ public class UserPO implements Serializable {
 		this.userPhoto = userPhoto;
 	}
 
+	@Column(name = "isLogin")
     public short getIsLogin(){
         return isLogin;
     }
@@ -626,6 +680,7 @@ public class UserPO implements Serializable {
 		this.company = company;
 	}
 
+	@Column(name = "extranet")
 	public short getExtranet() {
 		return extranet;
 	}

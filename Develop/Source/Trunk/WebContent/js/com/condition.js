@@ -154,6 +154,56 @@ var Condition = function(){
                 validate:null
             }
         },
+        //-------信息-公告查询条件
+        theme : { //
+            label:"主题",
+            type:"text",
+            submitConfig : {
+                name : "theme",
+                op : "cn",
+                validate:null
+            }
+        },
+
+        dateRange : {
+            label:"时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "dateRange",
+                op : "cn",
+                validate:null
+            }
+        },
+
+        //-------信息-活动查询条件
+
+        activityName : { //
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "activityName",
+                op : "cn",
+                validate:null
+            }
+        },
+
+        activityStatus : {
+            label:"类型",
+            type:"select",
+            submitConfig : {
+                name : "status",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : null,
+                postData:null,
+                listPath: [{key : "0", value : "\u6709\u6548"}, {key : "1", value: "\u65e0\u6548"}],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
         //-------增减项查询条件
         addReduceType : {
             label:"类型",
@@ -643,7 +693,25 @@ var Condition = function(){
                 keyPath:"key",
                 valuePath:"value"
             }
-        }
+        },
+        // 收款
+        orderAddr : {
+            label:"楼盘",
+            type:"text",
+            submitConfig : {
+                name : "orderAddr",
+                op : "cn",
+                validate:null
+            }
+        }, collectTimeDateRange : {
+            label:"收款时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "collectTime",
+                op : "between",
+                validate:null
+            }
+        },
     };
     return {
         getRuleByCondName:function(condName){

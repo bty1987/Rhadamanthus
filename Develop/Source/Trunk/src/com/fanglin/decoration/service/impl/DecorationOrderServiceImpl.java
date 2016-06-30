@@ -1346,8 +1346,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setCustomerPO(new CustomerPO(decorationOrderVO.getCustomer().getId()));
 		decorationOrderPO.setVillagePO(new VillagePO(decorationOrderVO.getVillage().getVillageId()));
 		
-		decorationOrderPO.setDesignerPO(new UserPO(decorationOrderVO.getDesignerId()));
-		decorationOrderPO.setSalesmanPO(new UserPO(decorationOrderVO.getSalesmanId()));
+		UserPO designer = userDao.get(decorationOrderVO.getDesignerId());
+		UserPO salesman = userDao.get(decorationOrderVO.getSalesmanId());
+		
+		decorationOrderPO.setDesignerPO(designer);
+		decorationOrderPO.setSalesmanPO(salesman);
 		
 		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
@@ -1359,7 +1362,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setOtherStatus(0);
 		
 		decorationOrderDao.save(decorationOrderPO);
-		decorationOrderDao.refresh(decorationOrderPO);
 		
 		//创建订单归属信息
 		OrderBelongInfoPO belongDesignerInfo = new OrderBelongInfoPO();

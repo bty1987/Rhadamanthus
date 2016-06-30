@@ -4,23 +4,23 @@
 			<div class="tabbable">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active">
-						<a data-toggle="tab" href="#decorationPaymentList" id="decorationPaymentTab">确认装修收款</a>
+						<a data-toggle="tab" href="#decorationPaymentList" id="decorationPaymentTab">确认收款</a>
 					</li>
 					<li class="">
-						<a data-toggle="tab" href="#decorationPaymentHistoryList" id="decorationPaymentHistoryTab">确认装修收款</a>
+						<a data-toggle="tab" href="#decorationPaymentHistoryList" id="decorationPaymentHistoryTab">历史收款</a>
 					</li>
 				</ul>
 				<div class="tab-content">
 					<div id="decorationPaymentList" class="tab-pane in active">
-						<div id="searchDecorationPaymentDiv"></div>
-						<table id="listDecorationPaymentGrid"></table>
-						<div id="gridDecorationPaymentPager"></div>
+						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 				
-					<div id="decorationPaymentHistoryList" class="tab-pane in active">
-						<div id="searchDecorationPaymentHistoryDiv"></div>
-						<table id="listDecorationPaymentHistoryGrid"></table>
-						<div id="gridDecorationPaymentHistoryPager"></div>
+					<div id="decorationPaymentHistoryList" class="tab-pane in">
+						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 				</div>
 			</div>
@@ -29,5 +29,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/payment/decorationPaymentCheck.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/payment/decorationPaymentCheck.js?version=' + versionCode);
 </script>
+
+<script src="js/payment/decorationPaymentCheck.js"></script>

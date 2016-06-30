@@ -288,6 +288,7 @@ var AddReduceDetail = (function(){
 				 */
 
 				var args = {
+					"addReduceItem.discount" : addRow.discount,//是否打折;
 					"addReduceItem.ariId" : "",//增减项报价项Id , 新建无此参数;
 					"addReduceItem.itemName" : addRow.itemName,//项目名;
 					"addReduceItem.type" : addRow.type,//增减项类型 , 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
@@ -384,7 +385,6 @@ var AddReduceDetail = (function(){
 				if($this.val() && $('input[data-qiid="' + $this.val() +'"]', '#addReduceItemDiv').length){
 					return;
 				}
-				
 				var _quotval = {
 					"num" : 0,//工程预算量
 					"itemName" : $li.find('h3 small').text(),//名称
@@ -446,6 +446,7 @@ var AddReduceDetail = (function(){
 				*/
 
 				var args = {
+					"addReduceItem.discount" : that.$nowLine.find('.discountprice').attr("data-discount"),//是否打折
 					"addReduceItem.ariId" : that.$nowLine.find('input[name="ariid"]').val(),//增减项报价项Id , 新建无此参数;
 					"addReduceItem.itemName" : that.$nowLine.find('.name .cell-wrap').text(),//项目名;
 					"addReduceItem.type" : _type,//增减项类型 , 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
@@ -632,7 +633,7 @@ var AddReduceDetail = (function(){
 				["type quotationFunctionArea", qv.quotationFunctionAreaName ? qv.quotationFunctionAreaName : "---", ["data-quotationFunctionAreaId", qv.quotationFunctionAreaId]],//功能区
 				["unit", qv.measurementUnit],//单位
 				["price unitprice", qv.unitPrice],//单价
-				["price discountprice", _dcp, ["data-discount", qv.discount]],//折后单价
+				["price discountprice", _dcp, ["data-discount", addReduceDetail.artype == 0 ? "0" : qv.discount]],//折后单价
 				["price totalprice-discount",  utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp))],//总价
 			];
 

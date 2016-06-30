@@ -1,4 +1,4 @@
-#Sun Jun 26 09:36:37 CST 2016
+#Thu Jun 30 15:55:08 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/quotationDetail.html=UTF-8
 encoding//WebContent/backup/quotationDetail.js=UTF-8
@@ -93,8 +93,10 @@ encoding//WebContent/views/material/materialSubOrderCollection.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderDetail.html=UTF-8
 encoding//WebContent/views/message/message.html=UTF-8
 encoding//WebContent/views/payment/decorationPayment.html=UTF-8
+encoding//WebContent/views/payment/decorationPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/materialOutsidePayment.html=UTF-8
 encoding//WebContent/views/payment/materialPayment.html=UTF-8
+encoding//WebContent/views/payment/materialPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/payment.html=UTF-8
 encoding//WebContent/views/personnel/user.html=UTF-8
 encoding//WebContent/views/personnel/userAdvance.html=UTF-8

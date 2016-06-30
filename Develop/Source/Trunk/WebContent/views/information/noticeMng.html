@@ -6,9 +6,12 @@
 <div class="page-content">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="searchDiv"></div>
-			<table id="listgrid"></table>
-			<div id="gridPager"></div>
+			<!-- 查询条件-->
+			<div id="condList" class="fl_search clearfix"></div>
+			<!--查询结果-->
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<!--分页-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div>
 		</div>
 	</div>
 	
@@ -107,8 +110,12 @@
   	</div>
 </div>
 
-<script type="text/javascript">
-	$.getScript(hostServer + 'assets/js/jquery.hotkeys.min.js?version=' + versionCode);
-	$.getScript(hostServer + 'assets/js/bootstrap-wysiwyg.min.js?version=' + versionCode);
-	$.getScript(hostServer + 'js/information/noticeMng.js?version=' + versionCode);
-</script>
+<!--<script type="text/javascript">-->
+	<!--$.getScript(hostServer + 'assets/js/jquery.hotkeys.min.js?version=' + versionCode);-->
+	<!--$.getScript(hostServer + 'assets/js/bootstrap-wysiwyg.min.js?version=' + versionCode);-->
+	<!--$.getScript(hostServer + 'js/information/noticeMng.js?version=' + versionCode);-->
+<!--</script>-->
+
+<script src="assets/js/jquery.hotkeys.min.js"></script>
+<script src="assets/js/bootstrap-wysiwyg.min.js"></script>
+<script src="js/information/noticeMng.js"></script>

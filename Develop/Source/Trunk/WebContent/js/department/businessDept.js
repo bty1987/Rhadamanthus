@@ -120,8 +120,6 @@ jQuery(function($) {
         }
     })();
 	
-	console.log(businessDept.postParam);
-	
 	var searcher = new Searcher();
 	
 	searcher.init(["deptName"], "condList", api.department.pageDepartment, function(data){

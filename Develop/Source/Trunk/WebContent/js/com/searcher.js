@@ -108,11 +108,12 @@ var Searcher = function(){
 
             if(_rtype == "dateRangePicker"){
                 $showItem = $('<input>').attr({
-                    "type" : "text",
-                    "placeholder" : "请输入" + _rlabel,
-                    "name" : condCode,
-                    "data-op" : _rop,
-                    "data-rqs" : _rname
+                    "type": "text",
+                    "placeholder": "请输入" + _rlabel,
+                    "name": condCode,
+                    "data-op": _rop,
+                    "data-rqs": _rname,
+                    "readonly": true,
                 }).appendTo($item);
 
                 $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
@@ -122,12 +123,12 @@ var Searcher = function(){
 
             if(_rtype=="autofill"){
                 $showItem = $('<input>').attr({
-                    "type" : "text",
-                    "placeholder" : "请输入" + _rlabel,
-                    "name" : condCode,
-                    "autocomplete" : "off",
-                    "data-op" : _rop,
-                    "data-rqs" : _rname
+                    "type": "text",
+                    "placeholder": "请输入" + _rlabel,
+                    "name": condCode,
+                    "autocomplete": "off",
+                    "data-op": _rop,
+                    "data-rqs": _rname,
                 }).appendTo($item);
 
                 $showItem.typeahead({
@@ -312,21 +313,21 @@ var Searcher = function(){
             basicConf.$pager.hide();
 			
             //上一页下一页绑定
-            $('li[name="prev"]', basicConf.$pager).click(function(){
+            $prevli.click(function(){
                 var _params;
                 _pagenation.nowPage["paging.page"] > 1 && (
                     _params = _pagenation.getParams(),
                     _params && (_params["paging.page"] -= 1, _pagenation.getDataByPage(_params))
                 );
             });
-            $('li[name="next"]', basicConf.$pager).click(function(){
+            $nextli.click(function(){
                 var _params;
                 _pagenation.nowPage["paging.page"] < _pagenation.nowPage["paging.totalPage"] && (
                     _params = _pagenation.getParams(),
                     _params && (_params["paging.page"] += 1, _pagenation.getDataByPage(_params))
                 );
             });
-            $('#pginput').bind('keypress',function(event){
+            $input.bind('keypress',function(event){
             	
             	var _p = $(this).val();
             	
