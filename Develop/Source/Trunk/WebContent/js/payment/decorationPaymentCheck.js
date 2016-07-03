@@ -1,22 +1,12 @@
 var decorationPaymentCheck = {
-	listDecorationPaymentGrid: null,
-	gridDecorationPaymentPager: null,
-	
-	listDecorationPaymentHistoryGrid: null,
-	gridDecorationPaymentHistoryPager: null,
-	
 	saveBtn: null,
 	cancellBtn: null,
 	
 	baseModal: null,
-	addOrReduceModal:null,
 	refundModal:null,
 	decorationPaymentCheckItems: {},
 	
 	editFlg:false,
-	bankList:null,
-	orderId:null,
-	historyPostParam:{},
 	
 	editFlag:0
 };
@@ -265,17 +255,14 @@ jQuery(function($) {
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){
 		
-		bootbox.confirm("确定要将符合条件的所有收款项目，置为已确认状态吗?", function(result) {
+		bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 			if(result) {
 				
 				var options = {};
-				
 				var $inputs = $('input[name="dpIds"]:checked');
 				
 				$.each($inputs, function(i, v){
-					var $input = $(v);
-					
-					options["paymentIds["+i+"]"] = $input.attr('dpId');
+					options["paymentIds["+i+"]"] = $(v).attr('dpId');
 				});
 				
 				com.post(api.payment.confirmDecorationPayment, options, function(res){
@@ -284,7 +271,6 @@ jQuery(function($) {
 				});
 			}
 		});
-		
 	});
 	
 });

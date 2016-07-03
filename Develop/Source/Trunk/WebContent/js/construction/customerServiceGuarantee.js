@@ -1,22 +1,23 @@
-var guarantee = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	guaranteeItems: {},
-	
-	levelDict: {"0":"普通", "1":"重要"},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
 
 jQuery(function($) {
+
 	$('#fl-statement').statement("巡检控制", "保修信息列表");
-	
-	guarantee.guaranteeListGrid = $("#guaranteeListGrid");
-	guarantee.guaranteeGridPager = "#guaranteeGridPager";
+
+	var guarantee = {
+		backBtn : $('#btnBack').on("click", function(){
+			com.switchPage(api.index.customerServiceIndex.url);
+		}),
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		guaranteeItems: {},
+
+		levelDict: {"0":"普通", "1":"重要"},
+
+		editFlag: false,
+		repeatFlg: false,
+	};
+
 	guarantee.saveBtn = $("#saveBtn").on("click", saveData);
 	guarantee.cancelBtn = $("#cancelBtn");
 	guarantee.modal = $("#guaranteeModal");
@@ -25,145 +26,172 @@ jQuery(function($) {
 	guarantee.guaranteeItems.customerName = $("#customerName");
 	guarantee.guaranteeItems.guaranteeTime = $("#guaranteeTime");
 	guarantee.guaranteeItems.guaranteeDes = $("#guaranteeDes");
-	
-	guarantee.guaranteeListGrid.jqGrid({
-		url: api.construction.pageCustomerServiceGuarantee.url,
-		postData: customerServicePostData,
-		colNames:['Id', '订单编号', '客户名', '时间', '备注'],
-		colModel:[
-		    {name:'csgId', hidden:true},
-		    {name:'orderId'},
-			{name:'customerName'},
-			{name:'guaranteeTime'},
-			{name:'guaranteeDes'},
-		], 
-		pager : guarantee.guaranteeGridPager,
-		caption: "保修信息列表"
-	});
-	
-	guarantee.guaranteeListGrid.navGrid(guarantee.guaranteeGridPager,
-		{edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, 
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(guarantee.guaranteeGridPager,{
-		caption: "",
-		buttonicon: "icon-pencil blue",
-		title: "编辑",
-		onClickButton: function(){
-			guarantee.editFlag = true;
-			var num = guarantee.guaranteeListGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.viewModal("#alertmod_guaranteeListGrid",{gbox:"#gbox_"+guarantee.guaranteeListGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				return;
+
+
+	var displayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
 			}
-			
-			var row = guarantee.guaranteeListGrid.jqGrid("getRowData", num);
-			
-			guarantee.guaranteeItems.orderId.val(row.orderId);
-			guarantee.guaranteeItems.customerName.val(row.customerName);
-			guarantee.guaranteeItems.guaranteeTime.val(row.guaranteeTime);
-			guarantee.guaranteeItems.guaranteeDes.val(row.guaranteeDes);
-			customerServicePostData["customerServiceGuarantee.csgId"] = row.csgId;
-			
-			guarantee.guaranteeItems.orderId.attr('disabled', true);
-			guarantee.guaranteeItems.customerName.attr('disabled', true);
-			guarantee.guaranteeItems.guaranteeTime.attr("disabled", true);
-			
-			guarantee.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(guarantee.guaranteeGridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "创建",
-		onClickButton: function(){
-			
+		};
+
+		var creatLine = function(v){
+			var that = this;
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
+
+
+			var propertyArr = [
+				["客户名:", v.customerName, "grey"],
+				["时间:", v.guaranteeTime, "grey"],
+				["备注:", v.guaranteeDes, "grey"],
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+
+			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+			$btnEdit.click(function(){
+				guarantee.editFlag = true;
+				var row = v;
+				guarantee.guaranteeItems.orderId.val(row.orderId);
+				guarantee.guaranteeItems.customerName.val(row.customerName);
+				guarantee.guaranteeItems.guaranteeTime.val(row.guaranteeTime);
+				guarantee.guaranteeItems.guaranteeDes.val(row.guaranteeDes);
+				customerServicePostData["customerServiceGuarantee.csgId"] = row.csgId;
+
+				guarantee.guaranteeItems.orderId.attr('disabled', true);
+				guarantee.guaranteeItems.customerName.attr('disabled', true);
+				guarantee.guaranteeItems.guaranteeTime.attr("disabled", true);
+
+				guarantee.modal.modal("show");
+			});
+			$btnDel.click(function(){
+				removeRow(v.csgId);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var CustomerServiceGuaranteeSeacher = new Searcher();
+	CustomerServiceGuaranteeSeacher.init( [], "condList", api.construction.pageCustomerServiceGuarantee, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "customerServiceGuaranteeSeacherPostData", customerServicePostData, false, null,  function(){
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+		$adda.click(function(){
 			guarantee.editFlag = false;
 			com.cleanItems(guarantee.guaranteeItems);
-			
+
 			guarantee.guaranteeItems.orderId.val(customerServicePostData["customerServiceGuarantee.orderId"]);
 			guarantee.guaranteeItems.customerName.val(customerServicePostData["customerServiceGuarantee.customerName"]);
-			
+
 			guarantee.guaranteeItems.orderId.attr("disabled", true);
 			guarantee.guaranteeItems.customerName.attr("disabled", true);
 			guarantee.guaranteeItems.guaranteeTime.attr("disabled", false);
-			
+
 			guarantee.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(guarantee.guaranteeGridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			$(".tooltip").remove();
-			com.switchPage(api.index.customerServiceIndex.url);
-		},
-		position: "first",
+		});
+
+		return [$adda];
+
 	});
-	
+
+
+
 	$('.date-picker').datepicker({autoclose:true});
+
+	function levelFormat(cellvalue, options, rowdata){
+
+		var result = '';
+
+		var level = guarantee.levelDict[cellvalue];
+
+		if(cellvalue == 0){
+			result += "<span class='label label-warning'>" + level + "</span>";
+		}else if(cellvalue == 1){
+			result += "<span class='label label-danger'>" + level + "</span>";
+		}
+
+		return result;
+
+	}
+
+	function saveData(){
+		if(com.validate()|| guarantee.repeatFlg)
+			return;
+
+		var url;
+		var options = {
+			"customerServiceGuarantee.orderId": guarantee.guaranteeItems.orderId.val(),
+			"customerServiceGuarantee.customerName": guarantee.guaranteeItems.customerName.val(),
+			"customerServiceGuarantee.guaranteeTime": guarantee.guaranteeItems.guaranteeTime.val(),
+			"customerServiceGuarantee.guaranteeDes": guarantee.guaranteeItems.guaranteeDes.val(),
+		};
+
+		if(guarantee.editFlag){
+			url = api.construction.updateCustomerServiceGuarantee;
+			options["customerServiceGuarantee.csgId"] = customerServicePostData["customerServiceGuarantee.csgId"];
+		}else{
+			url = api.construction.addCustomerServiceGuarantee;
+		}
+
+		com.post(url, options, successCallback, failCallback);
+		guarantee.modal.modal("hide");
+	}
+
+	function removeRow(id){
+
+		bootbox.confirm("确认删除吗？", function(res){
+			if(res){
+				com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]"  : id}, successCallback, failCallback);
+			}
+		});
+
+	}
+
+	function successCallback(result){
+		CustomerServiceGuaranteeSeacher.doSearch();
+	}
+
+	function failCallback(){
+
+	}
 	
 });
 
-function levelFormat(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	var level = guarantee.levelDict[cellvalue];
-	
-	if(cellvalue == 0){
-		result += "<span class='label label-warning'>" + level + "</span>";
-	}else if(cellvalue == 1){
-		result += "<span class='label label-danger'>" + level + "</span>";
-	}
-	
-	return result;
-	
-}
-
-function saveData(){
-	if(com.validate()|| guarantee.repeatFlg)
-		return;
-	
-	var url;
-	var options = {
-		"customerServiceGuarantee.orderId": guarantee.guaranteeItems.orderId.val(),
-		"customerServiceGuarantee.customerName": guarantee.guaranteeItems.customerName.val(),
-		"customerServiceGuarantee.guaranteeTime": guarantee.guaranteeItems.guaranteeTime.val(),
-		"customerServiceGuarantee.guaranteeDes": guarantee.guaranteeItems.guaranteeDes.val(),
-	};
-	
-	if(guarantee.editFlag){
-		url = api.construction.updateCustomerServiceGuarantee;
-		options["customerServiceGuarantee.csgId"] = customerServicePostData["customerServiceGuarantee.csgId"];
-	}else{
-		url = api.construction.addCustomerServiceGuarantee;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	guarantee.modal.modal("hide");
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid("getRowData", nums[i]);
-		options["csgIds[" + i + "]"] = row.csgId;
-	}
-	
-	com.post(api.construction.deleteCustomerServiceGuarantee, options, successCallback, failCallback);
-	
-	$("#eData").trigger("click");
-}
-
-function successCallback(result){
-	guarantee.guaranteeListGrid.jqGrid().trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}

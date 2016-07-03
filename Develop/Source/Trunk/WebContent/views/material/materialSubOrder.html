@@ -3,8 +3,8 @@
 	<div id="fl-statement"></div>
 	<div class="row">
 		<div class="col-xs-12">
-			<table id="listGrid"></table>
-			<div id="gridPager"></div>
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 		</div>
 	</div>
 	
@@ -145,5 +145,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/material/materialSubOrder.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/material/materialSubOrder.js?version=' + versionCode);
 </script>
+
+<script src="js/material/materialSubOrder.js"></script>

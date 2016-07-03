@@ -13,14 +13,14 @@
 				</ul>
 				<div class="tab-content ">
 					<div id="paymentList" class="tab-pane in active">
-						<div id="searchDiv"></div>
-						<table id="listgrid"></table>
-						<div id="gridPager"></div>
+						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 					<div id="paymentHistoryList" class="tab-pane in active">
-						<div id="searchHistoryDiv"></div>
-						<table id="listgridHistory"></table>
-						<div id="gridPagerHistory"></div>
+						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
 				</div>
 			</div>
@@ -67,9 +67,9 @@
 							<label class="col-sm-3 control-label no-padding-right" for="paymentTypeSel">预付款类型</label>
 							<div class="col-sm-9">
 								<select id="paymentTypeSel" class="col-xs-10 col-sm-5">
-									<option value='主材预付款'>主材预付款</option>
 									<option value='合同预付款'>合同预付款</option>
 									<option value='工程预付款'>工程预付款</option>
+									<option value='主材预付款'>主材预付款</option>
 									<option value='正林预付款'>正林预付款</option>
 								</select>
 							</div>
@@ -205,9 +205,9 @@
 							<label class="col-sm-3 control-label no-padding-right" for="refundPaymentTypeSel">预付款类型</label>
 							<div class="col-sm-9">
 								<select id="refundPaymentTypeSel" class="col-xs-10 col-sm-5">
-									<option value='主材预付款'>主材预付款</option>
 									<option value='合同预付款'>合同预付款</option>
 									<option value='工程预付款'>工程预付款</option>
+									<option value='主材预付款'>主材预付款</option>
 									<option value='正林预付款'>正林预付款</option>
 								</select>
 							</div>
@@ -269,9 +269,9 @@
 							<label class="col-sm-3 control-label no-padding-right" for="convertLeftSel">预转换</label>
 							<div class="col-sm-9">
 								<select id="convertLeftSel" class="col-xs-10 col-sm-5 convertTypeSel">
-									<option value='主材预付款'>主材预付款</option>
 									<option value='合同预付款'>合同预付款</option>
 									<option value='工程预付款'>工程预付款</option>
+									<option value='主材预付款'>主材预付款</option>
 									<option value='正林预付款'>正林预付款</option>
 								</select>
 								<span class="label label-lg label-yellow arrowed" style="margin-top:3px;"></span>
@@ -283,9 +283,9 @@
 							<label class="col-sm-3 control-label no-padding-right" for="convertRightSel">被转换</label>
 							<div class="col-sm-9">
 								<select id="convertRightSel" class="col-xs-10 col-sm-5 convertTypeSel">
-									<option value='主材预付款'>主材预付款</option>
 									<option value='合同预付款'>合同预付款</option>
 									<option value='工程预付款'>工程预付款</option>
+									<option value='主材预付款'>主材预付款</option>
 									<option value='正林预付款'>正林预付款</option>
 								</select>
 								<span class="label label-lg label-yellow arrowed" style="margin-top:3px;"></span>
@@ -393,7 +393,6 @@
 									<textarea disabled id="swipeDes_h" class="col-md-6 v_required v_swipeDes historyEditItem" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
 									<span class='star'></span>
 								</div>
-								<div style='color:red;margin:0 10px;'>说明：请分别输入金额及刷卡时间并以#分割,例如:1000&20141112 111111#5000&20141112 111111</div>
 							</div>
 							<div class="space-4 "></div>
 						</div>
@@ -471,5 +470,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/payment/payment.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/payment/payment.js?version=' + versionCode);
 </script>
+
+<script src="js/payment/payment.js"></script>

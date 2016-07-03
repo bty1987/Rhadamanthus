@@ -87,6 +87,14 @@ public class DecorationOrderDrawLineAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryDecorationOrderDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationOrderDrawLine(){
+		
+		drawLines = decorationOrderDrawLineService.queryDecorationOrderDrawLine(getFilters());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryDecorationOrderDrawLineForCountByDate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderDrawLineForCountByDate(){
 		

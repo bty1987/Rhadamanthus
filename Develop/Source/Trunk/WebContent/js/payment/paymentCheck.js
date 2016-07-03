@@ -1,13 +1,8 @@
 var paymentCheck = {
-	listgrid: null,
-	gridPager: null,
 	postParams: {"paging.rows":10, "paging.page":1},
 };
 
 jQuery(function($) {
-	
-	paymentCheck.listgrid = $("#listgrid");
-	paymentCheck.gridPager = "#gridPager";
 	
 	com.post(api.ds.bankType, {}, function(res){
 		
@@ -30,121 +25,124 @@ jQuery(function($) {
 	};
 	$("#searchDiv").flSearch(searchOpts);
 	
-	initializeListgrid();
-});
+	var displayFunc  = (function(){
 
-function initializeListgrid(){
-	paymentCheck.listgrid.jqGrid({		
-		url: api.payment.pagePaymentForHistory.url,
-		postData: paymentCheck.postParams,
-		colNames:['预付款编号', '客户ID', '客户编号', '客户名称', '收款类型', '预付款类型', '操作金额', '当前余额', '现金', '刷卡金额', '刷卡银行', '转账金额', '转账银行', '分期金额', '分期银行', '对公金额', '对公银行', '收款人', '收款时间', '状态', '描述', "转换款", '信息'],
-		colModel:[
-		    {name:'paymentId', hidden:true},
-		    {name:'customerIdDB', jsonmap:"customer.id", hidden: true},
-		    {name:'customerId', jsonmap:"customer.customerId", formatter: formatCustomerId},
-		    {name:'customerName', jsonmap: "customer.customerName"},
-		    {name:'type'},
-		    {name:'paymentType'},
-		    {name:"recharge"},
-			{name:'balance'},
-			{name:'cash', hidden:true},
-			{name:'bank', hidden:true},
-			{name:'bankInfo', hidden:true},
-			{name:'checkv', hidden:true},
-			{name:'checkvBankName', hidden:true},
-			{name:'installment', hidden:true},
-			{name:'installmentBankName', hidden:true},
-			{name:'accounts', hidden:true},
-			{name:'accountsBankName', hidden:true},
-			{name:'collectUserName',jsonmap:"collectUser.userName"},
-			{name:'collectTime', width: 250},
-			{name:'status'},
-			{name:'des', hidden:true},
-			{name:"recharge", hidden:true},
-			{name:'info', formatter:paymentInfoInit},
-		], 
-		rowNum:10,
-		pager : paymentCheck.gridPager,
-		caption: "预付款确认信息列表",
-		gridComplete: function(){
-			$('[data-rel="tooltip"]').tooltip('destroy');
-			$('[data-rel=tooltip]').tooltip({container:'#paymentCheck'});
-		}
-	});
-	
-	paymentCheck.listgrid.navGrid(paymentCheck.gridPager, {edit: false, add: false, del: false, search: false, refresh: false, view: false}, 
-		{}, {}, {}
-	).navButtonAdd(paymentCheck.gridPager, {
-		title:"确认",
-		caption: "",
-		buttonicon: 'icon-ok blue',
-		onClickButton: function(){    
-			var nums = paymentCheck.listgrid.jqGrid("getGridParam","selarrrow");
-			if(nums == null || nums.length==0){
-				$.jgrid.showSelectInfo(paymentCheck.listgrid.attr("id"));
-				return;
-			}
-			bootbox.confirm("确定要将符合条件的所有收款项目，置为已确认状态吗?", function(result) {
-				if(result) {
-					var options = {'status': '已确认'};
-					for(var i = 0; i< nums.length; i++){
-						var row = paymentCheck.listgrid.jqGrid("getRowData", nums[i]);
-						options["paymentIds["+i+"]"] = row.paymentId;
-					}	
-					com.post(api.payment.confirmPayment, options, successCallback);
-				}
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var propertyArr = [
+               ["客户:", v.customer.customerName, "grey"],
+               ["收款类型:", v.type, "grey"],
+               ["预付款类型:", v.paymentType, "grey"],
+               ["操作金额:", v.recharge, "grey"],
+               ["余额:", v.balance, "grey"],
+               ["收款人:", v.collectUser.userName, "grey"],
+               ["收款时间:", v.collectTime, "grey"],
+               ["状态:", v.status, "red"],
+            ];
+            
+            var $label = $('<label></label>');
+			var $input = $('<input>').attr({
+				"type": "checkbox",
+				"name": "pIds",
+				"class": "ace ace-checkbox-2",
+				"pId": v.paymentId,
+			}).val(v.arId);
+			var $span = $('<span></span>').addClass('lbl');
+            
+            $.each(propertyArr, function (index,value) {
+            var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+            
+            $label.append($input).append($span).appendTo($h3);
+            $h3.append($('<small></small>').addClass('blue').html(v.customer.customerId));
+            
+            var styleArr = [];
+			
+			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["银行卡:", v.bank, "grey"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
+			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
+			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "grey"]) : true;
+			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "grey"]) : true;
+			v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
+			
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
 			});
-		},
-		position: 'first'
+           
+            $liLine.append($h3).append($ulProperty);
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+	
+	var searcher = new Searcher();
+	
+	searcher.init(["orderId", "customerId", "customerPhone", "village", "houseNumber", "designer", "collectTimeDateRange"], "condList", api.payment.pagePaymentForHistory, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "paymentCheckCheckPostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
+    	
+    	return [$adda];
 	});
-};
-
-function formatCustomerId(cellValue, options, row){
-	return utils.padLeft(cellValue, 9);
-}
-
-function paymentInfoInit(cellvalue, options, rowdata){
 	
-	var info = "";
+	$('a[name="confirms"]', '#pagenation').click(function(){
+		
+		bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
+			if(result) {
+				
+				var options = {};
+				var $inputs = $('input[name="pIds"]:checked');
+				
+				$.each($inputs, function(i, v){
+					options["paymentIds["+i+"]"] = $(v).attr('pId');
+				});
+				
+				com.post(api.payment.confirmPayment, options, function(res){
+					searcher.doSearch();
+				});
+			}
+		});
+	});
 	
-	if(rowdata.recharge != null && rowdata.recharge != "0"){
-		info += "转换款: " + rowdata.recharge + ", ";
-	}
-	if(rowdata.cash != null && rowdata.cash != "0"){
-		info += "现金: " + rowdata.cash + " " + paymentCheck.cashInfo[rowdata.cashInfo] + ", ";
-	}
-	if(rowdata.bank != null && rowdata.bank != "0"){
-		
-		info += "刷卡: " + rowdata.bank + " ";
-		
-		var _s = rowdata.bankInfo.split('#');
-		
-		for(var i=1;i<_s.length-1;i++){
-			
-			var _i = _s[i].split('|');
-			
-			info += paymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
-		}
-	}
-	if(rowdata.checkv != null && rowdata.checkv != "0"){
-		info += "转账: " + rowdata.checkv + " " + paymentCheck.checkBankInfo[rowdata.checkvBankName] + ", ";
-	}
-	if(rowdata.installment != null && rowdata.installment != "0"){
-		info += "分期: " + rowdata.installment + " " + paymentCheck.bankInfo[rowdata.installmentBankName] + ", ";
-	}
-	if(rowdata.accounts != null && rowdata.accounts != "0"){
-		info += "对公帐户: " + rowdata.accounts + " " + paymentCheck.accountsInfo[rowdata.accountsBankName] + ", ";
-	}
-	if(rowdata.des != null && rowdata.des != ""){
-		info += "描述: " + rowdata.des + ", ";
-	}
-	
-	var html = '<span class="btn btn-minier" data-rel="tooltip" data-placement="left" title="'+info.substring(0, info.length-2)+'">信息</span>';
-	html += "<input type='text' class='hide' value='"+info.substring(0, info.length-2)+"' />";
-	return html;
-}
-
-function successCallback(){
-	com.showAlert(com.info, "操作成功");
-	paymentCheck.listgrid.trigger("reloadGrid", paymentCheck.postParams);
-}
+});

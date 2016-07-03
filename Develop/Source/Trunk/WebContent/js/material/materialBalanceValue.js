@@ -1,6 +1,4 @@
 var materialModel = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancelBtn: null,
 	modal: null,
@@ -51,20 +49,7 @@ jQuery(function($) {
 	});
 	
 	materialModel.materialModelItems.mmId = $("#mmId");
-	materialModel.materialModelItems.materialModelNo = $("#materialModelNo").on("blur", function(){
-		$this = $(this);
-		if($this.val() == undefined || $this.val().trim() == "")
-			return;
-		com.post(api.material.queryMaterialModelByNo, {"materialModel.materialModelNo":$this.val()}, function(res){
-			if(res.materialModel.mmId != 0){
-				com.showTips($this, "该型号编号已存在", true);
-				materialModel.repeatFlg = true;
-			}else{
-				com.clearValidator("#materialModelNo", true);
-				materialModel.repeatFlg = false;
-			}
-		});
-	});
+	materialModel.materialModelItems.materialModelNo = $("#materialModelNo");
 	
 	materialModel.materialModelItems.materialModelName = $("#materialModelName");
 	materialModel.materialModelItems.materialTypeId = $("#materialTypeId");
@@ -90,35 +75,9 @@ jQuery(function($) {
 	
 	$.extend(com.validator, materialModel.validator);
 	
-	var searchOpts = {
-		url: api.material.pageMaterialModel,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: materialModel.listGrid,
-		items: [
-		    {label:"编号", id:"materialModelNoSearch", name:"materialModelNo", type:"text"},
-	        {label:"名称", id:"materialModelNameSearch", name:"materialModelName", type:"text"},
-	        {label:"品类", id:"materialTypeSearch", name:"materialTypeId", type:"select"},
-	        {label:"品牌", id:"materialBrandSearch", name:"materialBrandId", type:"select"},
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	$("#materialTypeSearch").change(function(){
-		var _materialTypeId = $("#materialTypeSearch").val();
-		
-		if(_materialTypeId == ""){
-			$("#materialBrandSearch").bindData([], "bid", "brandName", true);
-		}else{
-			com.post(api.data.queryBrandByCategoryId, {"brand.cid": _materialTypeId, }, function(res){
-				$("#materialBrandSearch").bindData(res.brands, "bid", "brandName", true);
-			});
-		}
-	});
-	
 	com.post(api.data.queryCategory, {}, function(res){
 		materialModel.data.materialTypeData = res.categorys;
 		$("#materialTypeId").bindData(materialModel.data.materialTypeData, "cid", "categoryName");
-		$("#materialTypeSearch").bindData(materialModel.data.materialTypeData, "cid", "categoryName", true);
 	});
 	
 	com.post(api.common.queryMeasurementUnit, {}, function(res){
@@ -134,176 +93,151 @@ jQuery(function($) {
 		});
 	});
 	
-	materialModel.listGrid.jqGrid({
-		url: api.material.pageMaterialModel.url,
-		postData: materialModel.postParam,
-		colNames:['ID', '编号', '名称', '品类ID', '品类', '品牌ID', '品牌', '单位ID', '单位', '进价', '标价', '折扣', '计算方式', '计算值', '点位', '底价'],
-		colModel:[
-		    {name:'mmId', hidden:true},
-		    {name:'materialModelNo'},
-			{name:'materialModelName', width:360},
-			{name:'materialTypeId', hidden:true},
-			{name:'materialTypeName'},
-			{name:'materialBrandId', hidden:true},
-			{name:'materialBrandName'},
-			{name:'measurementUnitId', hidden:true},
-			{name:'measurementUnitName'},
-			{name:'materialPurchasePrice'},
-			{name:'materialUnitPrice'},
-			{name:'discount'},
-			{name:'calcType', formatter: calcTypeInit},
-			{name:'value', formatter: valueInit},
-			{name:'base', hidden:true},
-			{name:'point', hidden:true},
-		],
-		pager : materialModel.gridPager,
-		caption: "主材品类"
-	});
+	var displayFunc  = (function(){
 
-	materialModel.listGrid.navGrid(materialModel.gridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false,view: false},{},{},
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(materialModel.gridPager, {
-		caption:"",
-		buttonicon: 'icon-pencil blue',
-		title: "编辑",
-		onClickButton: function(){
-			editFlg = true;
-			var num = materialModel.listGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num==null){
-				$.jgrid.viewModal("#alertmod_listGrid",{gbox:"#gbox_"+materialModel.listGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				return;
-			}
-			var row = materialModel.listGrid.jqGrid("getRowData", num);
-			
-			materialModel.materialModelItems.mmId.val(row.mmId);
-			materialModel.materialModelItems.materialModelNo.val(row.materialModelNo).attr("disabled", true);
-			materialModel.materialModelItems.materialModelName.val(row.materialModelName);
-			materialModel.materialModelItems.materialTypeId.val(row.materialTypeId);
-			
-			com.post(api.data.queryBrandByCategoryId, {"brand.cid": row.materialTypeId}, 
-				function(res){
-					materialModel.data.materialBrandData[row.materialTypeId] = res.brands;
-					$("#materialBrandId").bindData(materialModel.data.materialBrandData[row.materialTypeId+""], "bid", "brandName");
-					
-					materialModel.materialModelItems.materialBrandId.val(row.materialBrandId);
-				}, 
-				function(msg){
-					return {};
-			});
-			
-			materialModel.materialModelItems.measurementUnitId.val(row.measurementUnitId);
-			materialModel.materialModelItems.materialUnitPrice.val(row.materialUnitPrice);
-			materialModel.materialModelItems.materialPurchasePrice.val(row.materialPurchasePrice);
-			materialModel.materialModelItems.discount.val(row.discount);
-			materialModel.materialModelItems.base.val(row.base);
-			materialModel.materialModelItems.point.val(row.point);
-			
-			if(row.calcType.indexOf("点位") != -1){
-				materialModel.materialModelItems.calcTypeSwitch.prop('checked', true);
-				materialModel.materialModelItems.pointDiv.css("display", "block");
-				materialModel.materialModelItems.baseDiv.css("display", "none");
-			}else if(row.calcType.indexOf("底价") != -1){
-				materialModel.materialModelItems.calcTypeSwitch.prop('checked', false);
-				materialModel.materialModelItems.pointDiv.css("display", "none");
-				materialModel.materialModelItems.baseDiv.css("display", "block");
-			}
-			
-			materialModel.modal.modal("show");
-		},
-		position: 'first'
-	});
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.materialModelName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+
+            var propertyArr = [
+                ["型号:", v.materialModelNo, "grey"],
+                ["品类:", v.materialTypeName, "grey"],
+                ["品牌:", v.materialBrandName, "grey"],
+                ["单位:", v.measurementUnitName, "grey"],
+                ["进价:", v.materialPurchasePrice, "grey"],
+                ["标价:", v.materialUnitPrice, "grey"],
+                ["折扣:", v.discount, "grey"],
+                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
+                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "grey"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnEdit).appendTo($h3);
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnEdit.click(function(){
+            	editBalanceValue(v);
+            });
+
+            return $liLine;
+        };
+
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+
+    var seacher = new Searcher();
+
+    seacher.init(['materialModelName', 'categoryId', 'brandName'], "condList", api.material.pageMaterialModel, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "materialBalanceValuePostData");
+    
+    function editBalanceValue(v){
+    	
+    	editFlg = true;
+		
+		materialModel.materialModelItems.mmId.val(v.mmId);
+		materialModel.materialModelItems.materialModelNo.val(v.materialModelNo).attr("disabled", true);
+		materialModel.materialModelItems.materialModelName.val(v.materialModelName);
+		materialModel.materialModelItems.materialTypeId.val(v.materialTypeId);
+		
+		com.post(api.data.queryBrandByCategoryId, {"brand.cid": v.materialTypeId}, 
+			function(res){
+				materialModel.data.materialBrandData[v.materialTypeId] = res.brands;
+				$("#materialBrandId").bindData(materialModel.data.materialBrandData[v.materialTypeId+""], "bid", "brandName");
+				
+				materialModel.materialModelItems.materialBrandId.val(v.materialBrandId);
+			}, 
+			function(msg){
+				return {};
+		});
+		
+		materialModel.materialModelItems.measurementUnitId.val(v.measurementUnitId);
+		materialModel.materialModelItems.materialUnitPrice.val(v.materialUnitPrice);
+		materialModel.materialModelItems.materialPurchasePrice.val(v.materialPurchasePrice);
+		materialModel.materialModelItems.discount.val(v.discount);
+		materialModel.materialModelItems.base.val(v.base);
+		materialModel.materialModelItems.point.val(v.point);
+		
+		if(v.calcType == 1){
+			materialModel.materialModelItems.calcTypeSwitch.prop('checked', true);
+			materialModel.materialModelItems.pointDiv.css("display", "block");
+			materialModel.materialModelItems.baseDiv.css("display", "none");
+		}else if(v.calcType == 0){
+			materialModel.materialModelItems.calcTypeSwitch.prop('checked', false);
+			materialModel.materialModelItems.pointDiv.css("display", "none");
+			materialModel.materialModelItems.baseDiv.css("display", "block");
+		}
+		
+		materialModel.modal.modal("show");
+    }
+    
+    function saveData(){
+    	if(com.validate()) return;
+    	
+    	var url;
+    	var options = {
+    		'materialModel.mmId': materialModel.materialModelItems.mmId.val(),
+    		'materialModel.materialModelNo': materialModel.materialModelItems.materialModelNo.val(),
+    		'materialModel.materialModelName': materialModel.materialModelItems.materialModelName.val(),
+    		'materialModel.materialBrandId': materialModel.materialModelItems.materialBrandId.val(),
+    		'materialModel.materialBrandName': materialModel.materialModelItems.materialBrandId.find("option:selected").text(),
+    		'materialModel.materialTypeName': materialModel.materialModelItems.materialTypeId.find("option:selected").text(),
+    		'materialModel.measurementUnitId': materialModel.materialModelItems.measurementUnitId.val(),
+    		'materialModel.measurementUnitName': materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
+    		'materialModel.materialUnitPrice': materialModel.materialModelItems.materialUnitPrice.val(),
+    		'materialModel.materialPurchasePrice': materialModel.materialModelItems.materialPurchasePrice.val(),
+    		'materialModel.discount': materialModel.materialModelItems.discount.val(),
+    		'materialModel.calcType': materialModel.materialModelItems.calcTypeSwitch.prop("checked") ? 1 : 0,
+    		'materialModel.point': materialModel.materialModelItems.point.val() == "" ? 0 : materialModel.materialModelItems.point.val(),
+    		'materialModel.base': materialModel.materialModelItems.base.val() == "" ? 0 : materialModel.materialModelItems.base.val(),
+    	};
+    	
+    	if(editFlg){
+    		url = api.material.updateMaterialModel;
+    	}else{
+    		url = api.material.addMaterialModel;
+    	}
+    	
+    	com.post(url, options, function(res){
+    		seacher.doSearch();
+    	});
+    	
+    	materialModel.modal.modal("hide");
+    }
 	
 });
 
-function saveData(){
-	if(com.validate()  || materialModel.repeatFlg)
-		return;
-	
-	var options = {
-		'materialModel.mmId': materialModel.materialModelItems.mmId.val(),
-		'materialModel.materialModelNo': materialModel.materialModelItems.materialModelNo.val(),
-		'materialModel.materialModelName': materialModel.materialModelItems.materialModelName.val(),
-		'materialModel.materialBrandId': materialModel.materialModelItems.materialBrandId.val(),
-		'materialModel.materialBrandName': materialModel.materialModelItems.materialBrandId.find("option:selected").text(),
-		'materialModel.materialTypeName': materialModel.materialModelItems.materialTypeId.find("option:selected").text(),
-		'materialModel.measurementUnitId': materialModel.materialModelItems.measurementUnitId.val(),
-		'materialModel.measurementUnitName': materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
-		'materialModel.materialUnitPrice': materialModel.materialModelItems.materialUnitPrice.val(),
-		'materialModel.materialPurchasePrice': materialModel.materialModelItems.materialPurchasePrice.val(),
-		'materialModel.discount': materialModel.materialModelItems.discount.val(),
-		'materialModel.calcType': materialModel.materialModelItems.calcTypeSwitch.prop("checked") ? 1 : 0,
-		'materialModel.point': materialModel.materialModelItems.point.val() == "" ? 0 : materialModel.materialModelItems.point.val(),
-		'materialModel.base': materialModel.materialModelItems.base.val() == "" ? 0 : materialModel.materialModelItems.base.val(),
-	};
-	var url;
-	if(editFlg){
-		url = api.material.updateMaterialModel;
-	}else{
-		url = api.material.addMaterialModel;
-	}
-	com.post(url, options, function(res){
-		if(res.errorCode == 1){
-			com.showTips(materialModel.materialModelItems.materialModelName, "当前创建型号已经存在!", true);
-		}else{
-			materialModel.modal.modal("hide");
-			$.jgrid.refreshGrid(materialModel.listGrid, materialModel.postParam);
-		}
-	}, function(res){
-		com.showTips(materialModel.materialModelItems.materialModelName, res, true);
-	});
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i = 0; i< nums.length; i++){
-		var row = $(this).jqGrid('getRowData', nums[i]);
-		options["ids["+i+"]"] = row.mmId;
-	}
-	com.post(api.material.deleteMaterialModelByIds, options, successCallback);
-	$("#eData").trigger("click");
-}
-
-function successCallback(){
-	$.jgrid.refreshGrid(materialModel.listGrid, materialModel.postParam);
-}
-
-function mapData(data, key, value){
-	if(!key) key = "id";
-	if(!value) value = "name";
-	_data = {};
-	
-	for(var i=0;i<data.length;i++){
-		_data[data[i][key]] = data[i][value];
-	}
-	return _data;
-}
-
-function calcTypeInit(cellvalue, options, rowdata){
-	
-	var result = "";
-	
-	if(cellvalue == "1"){
-		 result = '<span class="label label-success arrowed">点位</span>';
-	}else if(cellvalue == "0"){
-		result = '<span class="label label-danger arrowed">底价</span>';
-	}
-	
-	return result;
-}
-
-function valueInit(cellvalue, options, rowdata){
-	
-	var result = "";
-	var calcType = rowdata.calcType;
-	
-	if(calcType == "1"){
-		result = rowdata.point;
-	}else if(calcType == "0"){
-		result = rowdata.base;
-	}
-	
-	return result;
-}

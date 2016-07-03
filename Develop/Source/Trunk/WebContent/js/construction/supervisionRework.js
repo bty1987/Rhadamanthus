@@ -1,14 +1,4 @@
-var rework = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	reworkItems: {},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
+
 
 var reworkData = [
 	{"reworkTime":"2014-09-02", "reworkComment":"针对我是吊顶部分进行后期补充工作."}
@@ -16,141 +6,176 @@ var reworkData = [
 
 jQuery(function($) {
 	$('#fl-statement').statement("监理控制", "返工信息列表");
-	
-	rework.listGrid = $("#listGrid");
-	rework.gridPager = "#gridPager";
-	rework.saveBtn = $("#saveBtn").on("click", saveData);
-	rework.cancelBtn = $("#cancelBtn");
-	rework.modal = $("#reworkModal");
-	
-	rework.reworkItems.createTime = $("#createTime");
-	rework.reworkItems.reworkDes = $("#reworkDes");
-	
-	rework.listGrid.jqGrid({
-		url: api.construction.pageReworkByOrderId.url,
-		postData: supervisionPostData,
-		colNames:['id', '创建人Id', '创建人', '返工时间', '返工说明', '操作'],
-		colModel:[
-		    {name:'rwId', hidden:true},
-		    {name:'createrId', hidden:true},
-		    {name:'createrName'},
-		    {name:'createTime'},
-		    {name:'reworkDes'},
-		    {name:'action', formatter: actionInit},
-		], 
-		pager : rework.gridPager,
-		caption: "返工信息列表"
-	});
-	
-	rework.listGrid.navGrid(rework.gridPager,
-		{edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, 
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(rework.gridPager,{
-		caption: "",
-		buttonicon: "icon-pencil blue",
-		title: "编辑",
-		onClickButton: function(){
-			rework.editFlag = true;
-			var num = rework.listGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.viewModal("#alertmod_listGrid",{gbox:"#gbox_"+rework.listGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				return;
-			}
-			
-			var row = rework.listGrid.jqGrid("getRowData", num);
-			
-			rework.reworkItems.createTime.val(row.createTime);
-			rework.reworkItems.reworkDes.val(row.reworkDes);
-			supervisionPostData["rework.rwId"] = row.rwId;
-			
-			rework.modal.modal("show");
+
+
+	var rework = {
+		saveBtn: $("#saveBtn").on("click", saveData),
+		cancellBtn: $("#cancelBtn"),
+		backBtn: $('#btnBack').on('click', function(){
+			com.switchPage(api.index.supervisionIndex.url);
+		}),
+		modal: $("#reworkModal"),
+		reworkItems: {
+			createTime : $("#createTime"),
+			reworkDes : $("#reworkDes"),
 		},
-		position: "first",
-	}).navButtonAdd(rework.gridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "创建",
-		onClickButton: function(){
-			
+
+		editFlag: false,
+		repeatFlg: false,
+	};
+
+	var displayFunc  = (function(){
+
+
+
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var that = this;
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html());
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("图纸");
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
+
+
+			var propertyArr = [
+				["创建人:", v.createrName, "grey"],
+				["返工时间:", v.createTime, "grey"],
+				["返工说明:", v.reworkDes, "grey"],
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+
+			$divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+
+
+
+			$btnView.click(function(){
+				viewSupervisionReworkDrawingIndex(v.rwId);
+			});
+			$btnEdit.click(function(){
+				rework.editFlag = true;
+				rework.reworkItems.createTime.val(v.createTime);
+				rework.reworkItems.reworkDes.val(v.reworkDes);
+				supervisionPostData["rework.rwId"] = v.rwId;
+				rework.modal.modal("show");
+			});
+			$btnDel.click(function(){
+				removeRow(v.rwId);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var SupervisionReworkSeacher = new Searcher();
+	SupervisionReworkSeacher.init( [], "condList", api.construction.pageReworkByOrderId, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "supervisionReworkSeacherPostData", supervisionPostData, false, null,  function(){
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+		$adda.click(function(){
 			rework.editFlag = false;
 			com.cleanItems(rework.reworkItems);
-			
 			rework.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(rework.gridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			$(".tooltip").remove();
-			com.switchPage(api.index.supervisionIndex.url);
-		},
-		position: "first",
+		});
+
+		return [$adda];
+
 	});
-	
+
+
 	$('.date-picker').datepicker({autoclose:true});
+
+
+	function saveData(){
+
+		if(com.validate()|| rework.repeatFlg)
+			return;
+
+		var url;
+		var options = {
+			"rework.createTime": rework.reworkItems.createTime.val(),
+			"rework.reworkDes": rework.reworkItems.reworkDes.val(),
+			"rework.orderId": supervisionPostData["rework.orderId"]
+		};
+
+		if(rework.editFlag){
+			url = api.construction.updateRework;
+			options["rework.rwId"] = supervisionPostData["rework.rwId"];
+		}else{
+			url = api.construction.addRework;
+		}
+
+		com.post(url, options, successCallback, failCallback);
+		rework.modal.modal("hide");
+
+	}
+
+	function removeRow(id){
+
+		bootbox.confirm("确认申请放线吗？", function(res){
+			if(res){
+				com.post(api.construction.deleteRework, {"rwIds[0]"  : id}, successCallback, failCallback);
+			}
+		});
+
+	}
+
+
+	function viewSupervisionReworkDrawingIndex(rwId){
+		supervisionPostData["reworkDrawing.rwId"] = rwId;
+		$("#supervisionPageContent").load(api.index.supervisionReworkDrawingIndex.url);
+	}
+
+	function successCallback(result){
+		SupervisionReworkSeacher.doSearch();
+	}
+
+	function failCallback(){
+
+	}
+
+
 	
 });
 
-function saveData(){
-	
-	if(com.validate()|| rework.repeatFlg)
-		return;
-	
-	var url;
-	var options = {
-		"rework.createTime": rework.reworkItems.createTime.val(),
-		"rework.reworkDes": rework.reworkItems.reworkDes.val(),
-		"rework.orderId": supervisionPostData["rework.orderId"]
-	};
-	
-	if(rework.editFlag){
-		url = api.construction.updateRework;
-		options["rework.rwId"] = supervisionPostData["rework.rwId"];
-	}else{
-		url = api.construction.addRework;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	rework.modal.modal("hide");
-	
-}
 
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid("getRowData", nums[i]);
-		options["rwIds[" + i + "]"] = row.rwId;
-	}
-	
-	com.post(api.construction.deleteRework, options, successCallback, failCallback);
-	$("#eData").trigger("click");
-}
-
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewSupervisionReworkDrawingIndex(' + rowdata.rwId + ');">图纸</button>';
-	result += '</div>';
-	
-	return result;
-}
-
-function viewSupervisionReworkDrawingIndex(rwId){
-	supervisionPostData["reworkDrawing.rwId"] = rwId;
-	$("#supervisionPageContent").load(api.index.supervisionReworkDrawingIndex.url);
-}
-
-function successCallback(result){
-	rework.listGrid.jqGrid().trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}

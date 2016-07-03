@@ -192,6 +192,71 @@ public class DecorationOrderDrawLineServiceImpl implements DecorationOrderDrawLi
 	}
 	
 	@Override
+	public List<DecorationOrderDrawLineVO> queryDecorationOrderDrawLine(List<FilterVO> filters) {
+		
+		List<DecorationOrderDrawLineVO> decorationOrderDrawLineVOs = new ArrayList<DecorationOrderDrawLineVO>();
+		
+		if(filters.size() == 0) return decorationOrderDrawLineVOs;
+		
+		List<DecorationOrderDrawLinePO> decorationOrderDrawLinePOs = decorationOrderDrawLineDao.queryDecorationOrderDrawLine(filters);
+		
+		for(DecorationOrderDrawLinePO decorationOrderDrawLinePO: decorationOrderDrawLinePOs){
+			DecorationOrderDrawLineVO decorationOrderDrawLineVO = new DecorationOrderDrawLineVO();
+			BeanUtil.copyProperties(decorationOrderDrawLinePO, decorationOrderDrawLineVO);
+
+			if(decorationOrderDrawLinePO.getOrderPO().getOrderTotalPrice() == null){
+				decorationOrderDrawLineVO.setOrderTotalPrice((float) 0);
+			}else{
+				decorationOrderDrawLineVO.setOrderTotalPrice(decorationOrderDrawLinePO.getOrderPO().getOrderTotalPrice());
+			}
+			
+			decorationOrderDrawLineVO.setOrderId(decorationOrderDrawLinePO.getOrderPO().getOrderId());
+			decorationOrderDrawLineVO.setCustomer(decorationOrderDrawLinePO.getOrderPO().getCustomerPO().getCustomerName());
+			decorationOrderDrawLineVO.setDesigner(decorationOrderDrawLinePO.getOrderPO().getDesignerPO().getCurrentName());
+			decorationOrderDrawLineVO.setOrderStatus(decorationOrderDrawLinePO.getOrderPO().getStatus());
+			decorationOrderDrawLineVO.setVersionId(decorationOrderDrawLinePO.getOrderPO().getVersionPO().getVersionId());
+			decorationOrderDrawLineVO.setVersionName(decorationOrderDrawLinePO.getOrderPO().getVersionPO().getVersionName());
+			decorationOrderDrawLineVO.setVillage(decorationOrderDrawLinePO.getOrderPO().getVillagePO().getVillageName());
+			decorationOrderDrawLineVO.setCityProper(decorationOrderDrawLinePO.getOrderPO().getVillagePO().getCityProper().getCityProperName());
+			decorationOrderDrawLineVO.setHouseNumber(decorationOrderDrawLinePO.getOrderPO().getHouseNumber());
+			decorationOrderDrawLineVO.setHouseArea(decorationOrderDrawLinePO.getOrderPO().getHouseArea());
+			decorationOrderDrawLineVO.setContractTime(decorationOrderDrawLinePO.getOrderPO().getContractTime());
+			
+			decorationOrderDrawLineVO.setApplayUser(decorationOrderDrawLinePO.getApplayUserPO().getCurrentName());
+			decorationOrderDrawLineVO.setApplayUserId(decorationOrderDrawLinePO.getApplayUserPO().getUserId());
+			
+			SimpleDateFormat  dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat  dateFormath = new SimpleDateFormat("HH:mm");
+			
+			if(decorationOrderDrawLinePO.getActualStartTime() != null){
+				decorationOrderDrawLineVO.setActualDate(dateFormat.format(decorationOrderDrawLinePO.getActualEndTime()));
+				decorationOrderDrawLineVO.setEndTime((dateFormath.format(decorationOrderDrawLinePO.getActualEndTime())));
+				decorationOrderDrawLineVO.setStartTime(dateFormath.format(decorationOrderDrawLinePO.getActualStartTime()));
+			}
+			
+			if(decorationOrderDrawLinePO.getDrawLineUserPO()!=null){
+				decorationOrderDrawLineVO.setDrawLineUser(decorationOrderDrawLinePO.getDrawLineUserPO().getCurrentName());
+				decorationOrderDrawLineVO.setDrawLineUserId(decorationOrderDrawLinePO.getDrawLineUserPO().getUserId());
+			}
+			
+			QuotationPO qs = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderDrawLinePO.getOrderPO().getOrderId());
+			if(qs == null){
+				decorationOrderDrawLineVO.setDiscount((float) 10);
+			}else{
+				decorationOrderDrawLineVO.setDiscount(qs.getDiscount());
+			}
+			
+			if(decorationOrderDrawLinePO.getOrderPO().getSupervisorPO() != null){
+				decorationOrderDrawLineVO.setOrderSupervisor(decorationOrderDrawLinePO.getOrderPO().getSupervisorPO().getCurrentName());
+			}
+			
+			decorationOrderDrawLineVOs.add(decorationOrderDrawLineVO);
+		}
+		
+		return decorationOrderDrawLineVOs;
+	}
+
+	@Override
 	public HashMap<String, HashMap<String,Integer>> queryDecorationOrderDrawLineForCountByDate(DecorationOrderDrawLineVO decorationOrderDrawLineVO){
 		
 		Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.getFirstDay(DateUtil.parseDate(decorationOrderDrawLineVO.getStartTime(), "yyyy-MM-dd HH:mm:ss")));

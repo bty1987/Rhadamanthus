@@ -1,6 +1,4 @@
 var category = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancelBtn: null,
 	modal: null,
@@ -19,138 +17,126 @@ var category = {
 };
 
 jQuery(function($) {
-	$('#fl-statement').statement("主材品类", "主材品类信息列表");
+//	$('#fl-statement').statement("主材品类", "主材品类信息列表");
 	
-	category.listGrid = $("#listGrid");
-	category.gridPager = "#gridPager";
 	category.saveBtn = $("#saveBtn").on("click", saveData);
 	category.cancelBtn = $("#cancelBtn");
-	category.modal = $("#categoryModal");
-	category.modal.on('show.bs.modal',function(e){
+	
+	category.modal = $("#categoryModal").on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#categoryId", true);
 	});
 	
 	category.categoryItems.cId = $("#cId");
-	category.categoryItems.categoryId = $("#categoryId").on("blur", function(){
-		$this = $(this);
-		if($this.val() == undefined || $this.val().trim() == "")
-			return;
-		com.post(api.data.queryCategoryById, {"category.cId":$this.val()}, function(res){
-			if(res.category.cId != 0){
-				com.showTips($this, "该品类编号已存在", true);
-				category.repeatFlg = true;
-			}else{
-				com.clearValidator("#categoryId", true);
-				category.repeatFlg = false;
-			}
-		});
-	});
+	category.categoryItems.categoryId = $("#categoryId");
 	category.categoryItems.categoryName = $("#categoryName");
 	
 	$.extend(com.validator, category.validator);
 	
-	var searchOpts = {
-		url: api.data.pageCategory,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: category.listGrid,
-		items: [
-	        {label:"编号",id:"categoryIdSearch",name:"categoryId", type:'text'},
-	        {label:"名称", id:"categoryNameSearch", name:"categoryName", type:"text"}
-        ]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
-	category.listGrid.jqGrid({
-		url: api.data.pageCategory.url,
-		postData: category.postParam,
-		colNames:['ID', '编号', '名称'],
-		colModel:[
-		    {name:'cid', "hidden": true},
-			{name:'categoryId', searchoptions: {sopt: ['cn']}},
-			{name:'categoryName',  searchoptions: {sopt: ['cn']}}
-		],
-		pager : category.gridPager,
-		caption: "主材品类"
-	});
+	var displayFunc  = (function(){
 
-	category.listGrid.navGrid(category.gridPager, {edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false,view: false},{},{},
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(category.gridPager, {
-		caption:"",
-		buttonicon: 'icon-pencil blue',
-		title: "编辑",
-		onClickButton: function(){
-			editFlg = true;
-			var num = category.listGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.viewModal("#alertmod_listGrid",{gbox:"#gbox_"+category.listGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				return;
-			}
-			var row = category.listGrid.jqGrid("getRowData", num);
-			
-			category.categoryItems.cId.val(row.cid);
-			category.categoryItems.categoryId.val(row.categoryId).attr("disabled", "true").css("display", "block");
-			category.categoryItems.categoryName.val(row.categoryName);
-			
-			category.modal.modal("show");
-		},
-		position: 'first'
-	}).navButtonAdd(category.gridPager, {
-		caption:"",
-		buttonicon: 'icon-plus-sign purple',
-		title: "添加",
-		onClickButton: function(){
-			editFlg = false;
-			
-			com.cleanItems(category.categoryItems);
-			
-			category.categoryItems.categoryId.css("display", "none");
-			
-			category.modal.modal("show");   
-		},
-		position: 'first'
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.categoryId + " " + v.categoryName));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+            
+            $divBtnWrap.append($btnEdit).appendTo($h3);
+            
+            $liLine.append($h3).append($ulProperty);
+            
+            $btnEdit.click(function(){
+            	editCategory(v);
+            });
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+	
+	var searcher = new Searcher();
+	
+	searcher.init(["categoryName"], "condList", api.data.pageCategory, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "categoryPostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	
+    	return [$adda];
 	});
+	
+	$('a[name="add"]', '#pagenation').click(function(){
+		editFlg = false;
+		
+		com.cleanItems(category.categoryItems);
+		
+		category.categoryItems.categoryId.css("display", "none");
+		
+		category.modal.modal("show");     
+    });
+	
+	function editCategory(v){
+		editFlg = true;
+		
+		category.categoryItems.cId.val(v.cid);
+		category.categoryItems.categoryId.val(v.categoryId).attr("disabled", "true").css("display", "block");
+		category.categoryItems.categoryName.val(v.categoryName);
+		
+		category.modal.modal("show");
+	}
+	
+	function saveData(){
+		if(com.validate() || category.repeatFlg){
+			return;
+		}
+		
+		var url;
+		var options = {
+			'category.cid': category.categoryItems.cId.val(),
+			'category.categoryId': category.categoryItems.categoryId.val(),
+			'category.categoryName': category.categoryItems.categoryName.val(),
+		};
+		
+		if(editFlg){
+			url = api.data.updateCategory;
+		}else{
+			url = api.data.addCategory;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearch();
+		});
+		
+		category.modal.modal("hide");
+	}
 	
 });
-
-function saveData(){
-	if(com.validate() || category.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		'category.cid': category.categoryItems.cId.val(),
-		'category.categoryId': category.categoryItems.categoryId.val(),
-		'category.categoryName': category.categoryItems.categoryName.val(),
-	};
-	
-	if(editFlg){
-		url = api.data.updateCategory;
-	}else{
-		url = api.data.addCategory;
-	}
-	
-	com.post(url, options, successCallback);
-	
-	category.modal.modal("hide");   
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i = 0; i< nums.length; i++){
-		var row = $(this).jqGrid('getRowData', nums[i]);
-		options["ids["+i+"]"] = row.cId;
-	}
-	com.post(api.material.deletecategoryByIds, options, successCallback);
-	$("#eData").trigger("click");
-}
-
-function successCallback(){
-	com.showAlert(com.info, "操作成功");
-	$.jgrid.refreshGrid(category.listGrid, category.postParam);
-}

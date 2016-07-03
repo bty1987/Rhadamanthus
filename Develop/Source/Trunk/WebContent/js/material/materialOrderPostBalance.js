@@ -1,6 +1,4 @@
 var materialOrderPostBalance = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
@@ -16,9 +14,7 @@ var materialOrderPostBalancePostData = {};
 jQuery(function($) {
 	$('#fl-statement').statement("主材子订单", "订单信息列表");
 	
-	materialOrderPostBalance.listGrid = $("#listGrid");
-	materialOrderPostBalance.gridPager = "#gridPager";
-	materialOrderPostBalance.saveBtn = $("#saveBtn").on("click", saveData);
+	materialOrderPostBalance.saveBtn = $("#saveBtn");
 	materialOrderPostBalance.cancelBtn = $("#cancelBtn");
 	
 	materialOrderPostBalance.custProfit = $("#custProfit");
@@ -37,126 +33,96 @@ jQuery(function($) {
 		}
 		
 		com.post(api.material.postBalanceMaterialSubOrder, options, function(res){
-			materialOrderPostBalance.listGrid.setCell(materialOrderPostBalancePostData.rowId, "action", "commit");
+			searcher.doSearch();
 		});
 		
 		materialOrderPostBalance.materialSubOrderPostBalanceModal.modal("hide");
 	});
 	
-	var orderSearchOpts = {
-		url: api.material.pageMaterialSubOrderForPostBalance,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: materialOrderPostBalance.listGrid,
-		items: [
-	        {label:"订单号",id:"orderIdSearch",name:"orderId", type:'text'},
-	        {label:"装修订单号",id:"orderIdSearch",name:"msoNo", type:'text'},
-			{label:"楼盘地址",id:"orderAddrSearch",name:"orderAddr", type:'text'},
-			{label:"业务员",id:"salesmanSearch",name:"salesman", type:'text'},
-		]
-	};
-	$("#searchDiv").flSearch(orderSearchOpts);
-	
-	materialOrderPostBalance.listGrid.jqGrid({		
-		url: api.material.pageMaterialSubOrderForPostBalance.url,
-		colNames:['msoId', '编号', '楼盘名', '客户名', '业务员', '品牌', '点位', '底价', '抹零', '厂商抹零', '券信息', '描述', '操作'],
-		multiboxonly: true,
-		forceFit: false,
-		colModel:[
-		    {name:'msoId', hidden:true},
-		    {name:'msoNo'},
-		    {name:'orderAddr', width:300},
-		    {name:'customerName'},
-		    {name:'salesmanName'},
-		    {name:'materialBrand'},
-		    {name:'point', hidden:true},
-		    {name:'base', hidden:true},
-		    {name:'maling', hidden:true},
-		    {name:'venderMaling', hidden:true},
-		    {name:'couponInfo', hidden:true},
-			{name:'des'},
-			{name:'action', width: 180, sortable: false, editable: false, formatter: actionInit}
-		], 
-		pager : materialOrderPostBalance.gridPager,
-		caption: "结算信息列表"
-	});
-	
-	materialOrderPostBalance.listGrid.navGrid(materialOrderPostBalance.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}
-	);
-//	.navButtonAdd(materialOrderPostBalance.gridPager, {
-//		caption:"",
-//		buttonicon: 'icon-ok blue',
-//		title: "结算",
-//		onClickButton: function(){
-//			
-//			var options = {};
-//			
-//			var num = materialOrderPostBalance.listGrid.jqGrid('getGridParam','selrow');
-//			
-//			if(num == null){
-//				$.jgrid.showSelectInfo(materialOrderPostBalance.listGrid.attr("id"));
-//				return false;
-//			}else{
-//				
-//				var _rowIds = materialOrderPostBalance.listGrid.jqGrid('getGridParam','selarrrow');
-//				
-//				for(var i=0;i<_rowIds.length;i++){
-//					_rowInfo = materialOrderPostBalance.listGrid.jqGrid("getRowData", i+1);
-//					options["msoIds[" + i + "]"] = _rowInfo.msoId;
-//				}
-//			
-//				console.log(options);
-//				
-//				bootbox.confirm("确定需要提交当前子订单的结算处理吗?", function(result) {
-//					if(result){
-//						com.post(api.material.postBalanceMaterialSubOrder, options, function(result){
-//							materialOrderPostBalance.listGrid.trigger("reloadGrid");
-//							com.showAlert(com.info, "确认成功!");
-//						}, function(result){
-//							com.showAlert(com.error, "确认失败!");
-//						});
-//					}
-//				});
-//			}
-//		},
-//	});
-	
-});
+	var displayFunc  = (function(){
 
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	if(cellvalue == "commit"){
-		result = "已结算";
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = $('<li></li>').addClass('item-orange clearfix');
+					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.msoNo));
+					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+					var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
+					var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-success').html('结算');
+					
+					var propertyArr = [
+						["楼盘地址:", v.orderAddr, "grey"],
+						["客户名:", v.customerName, "grey"],
+						["业务员:", v.salesmanName, "grey"],
+						["品类:", v.materialType, "grey"],
+						["品牌:", v.materialBrand, "grey"],
+						["点位:", v.point, "blue"],
+						["底价:", v.base, "blue"],
+						["抹零:", v.maling, "green"],
+						["厂商抹零:", v.venderMaling, "green"],
+						["券信息:", v.couponInfo, "grey"],
+						["描述:", v.des, "grey"],
+					];
+					
+					$.each(propertyArr, function (index,value) {
+						var $liProperty = $('<li></li>');
+						$('<strong></strong>').html(value[0]).appendTo($liProperty);
+						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+						$liProperty.appendTo($ulProperty);
+					});
+					
+					$btnItem.click(function(){
+						viewMaterialOrderBalanceDetailIndex(v);
+					});
+					
+					$btnBalance.click(function(){
+						dialogMaterialOrderBalanceIndex(v.msoId);
+					});
+					
+					$divBtnWrap.append($btnItem).append($btnBalance).appendTo($h3);
+					
+					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		}
 		
-		return result;
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			}
+		}
+	})();
+	
+	var searcher = new Searcher();
+	
+	searcher.init(["orderId", "msoNo", "orderAddr", "msalesman", "fullCollectTimeRange"], "condList", api.material.pageMaterialSubOrderForPostBalance, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "materialOrderPostBalancePostData");
+	
+	function viewMaterialOrderBalanceDetailIndex(v){
+		
+		materialOrderPostBalancePostData["materialOrderPostBalance.msoId"] = v.msoId;
+		materialOrderPostBalancePostData["materialOrderPostBalance.maling"] = v.maling;
+		materialOrderPostBalancePostData["materialOrderPostBalance.venderMaling"] = v.venderMaling;
+		materialOrderPostBalancePostData["materialOrderPostBalance.couponInfo"] = v.couponInfo;
+		
+		$("#materialOrderPostBalancePageContent").load(api.index.materialOrderPostBalanceDetailIndex.url);
 	}
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewMaterialOrderBalanceDetailIndex(\'' + rowdata.msoId + '\', \'' + rowdata.maling + '\', \'' + rowdata.venderMaling + '\', \'' + rowdata.couponInfo + '\');">子项</button>';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-success" onclick="dialogMaterialOrderBalanceIndex(\'' + options.rowId + '\', \'' + rowdata.msoId + '\');">结算</button>';
-	result += '</div>';
-	
-	return result;
-}
 
-function saveData(){
-}
+	function dialogMaterialOrderBalanceIndex(msoId){
+		
+		materialOrderPostBalancePostData.msoId = msoId;
+		
+		materialOrderPostBalance.materialSubOrderPostBalanceModal.modal("show");
+	}
 
-function viewMaterialOrderBalanceDetailIndex(msoId, maling, venderMaling, couponInfo){
-	materialOrderPostBalancePostData["materialOrderPostBalance.msoId"] = msoId;
-	materialOrderPostBalancePostData["materialOrderPostBalance.maling"] = maling;
-	materialOrderPostBalancePostData["materialOrderPostBalance.venderMaling"] = venderMaling;
-	materialOrderPostBalancePostData["materialOrderPostBalance.couponInfo"] = couponInfo;
-	$("#materialOrderPostBalancePageContent").load(api.index.materialOrderPostBalanceDetailIndex.url);
-}
-
-function dialogMaterialOrderBalanceIndex(rowId, msoId){
-	
-	materialOrderPostBalancePostData.rowId = rowId;
-	materialOrderPostBalancePostData.msoId = msoId;
-	
-	materialOrderPostBalance.materialSubOrderPostBalanceModal.modal("show");
-}
-
+});

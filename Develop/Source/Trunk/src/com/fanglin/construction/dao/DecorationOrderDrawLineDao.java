@@ -21,12 +21,14 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationOrderDrawLineDao extends Dao<DecorationOrderDrawLinePO> {
 	
-	List<DecorationOrderDrawLinePO> pageDecorationOrderDrawLine(Paging paging, List<FilterVO> filters);
+	public List<DecorationOrderDrawLinePO> pageDecorationOrderDrawLine(Paging paging, List<FilterVO> filters);
+	
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(List<FilterVO> filters);
 
-	List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(Timestamp startTime, Timestamp endTime);
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(Timestamp startTime, Timestamp endTime);
 	
-	List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByOrderId(String orderId);
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByOrderId(String orderId);
 	
-	List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByGroupATime(String group, Timestamp startTime, Timestamp endTime);
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByGroupATime(String group, Timestamp startTime, Timestamp endTime);
 	
 }

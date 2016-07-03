@@ -1,4 +1,4 @@
-#Thu Jun 30 15:55:08 CST 2016
+#Sat Jul 02 15:39:59 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/quotationDetail.html=UTF-8
 encoding//WebContent/backup/quotationDetail.js=UTF-8
@@ -84,20 +84,22 @@ encoding//WebContent/views/material/materialOrderPostBalance.html=UTF-8
 encoding//WebContent/views/material/materialOrderPostBalanceDetail.html=UTF-8
 encoding//WebContent/views/material/materialOrderPreBalance.html=UTF-8
 encoding//WebContent/views/material/materialOrderPreBalanceDetail.html=UTF-8
-encoding//WebContent/views/material/materialOrderRefund.html=UTF-8
 encoding//WebContent/views/material/materialOutside.html=UTF-8
 encoding//WebContent/views/material/materialSaleOrder.html=UTF-8
 encoding//WebContent/views/material/materialSubOrder.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderAdd.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderCollection.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderDetail.html=UTF-8
+encoding//WebContent/views/material/materialSubOrderRefund.html=UTF-8
 encoding//WebContent/views/message/message.html=UTF-8
 encoding//WebContent/views/payment/decorationPayment.html=UTF-8
 encoding//WebContent/views/payment/decorationPaymentCheck.html=UTF-8
+encoding//WebContent/views/payment/materialInsidePayment.html=UTF-8
 encoding//WebContent/views/payment/materialOutsidePayment.html=UTF-8
 encoding//WebContent/views/payment/materialPayment.html=UTF-8
 encoding//WebContent/views/payment/materialPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/payment.html=UTF-8
+encoding//WebContent/views/payment/paymentCheck.html=UTF-8
 encoding//WebContent/views/personnel/user.html=UTF-8
 encoding//WebContent/views/personnel/userAdvance.html=UTF-8
 encoding//WebContent/views/personnel/userEdit.html=UTF-8

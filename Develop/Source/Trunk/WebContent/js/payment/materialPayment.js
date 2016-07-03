@@ -197,7 +197,6 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier');
-            var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看明细');
             
             var propertyArr = [
                ["订单号:", v.orderId, "grey"],
@@ -244,10 +243,6 @@ jQuery(function($) {
             
             $btnCollect.click(function(){
             	dialogPayment(v);
-            });
-            
-            $btnDetail.click(function(){
-            	addReduceDetail(v.autoId, v.paymentType, v.orderId);
             });
             
             return $liLine;

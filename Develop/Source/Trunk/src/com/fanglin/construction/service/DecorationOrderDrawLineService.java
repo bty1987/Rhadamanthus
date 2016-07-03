@@ -25,6 +25,8 @@ public interface DecorationOrderDrawLineService {
 	
 	public List<DecorationOrderDrawLineVO> pageDecorationOrderDrawLine(Paging paging, List<FilterVO> filters);
 	
+	public List<DecorationOrderDrawLineVO> queryDecorationOrderDrawLine(List<FilterVO> filters);
+	
 	public HashMap<String, HashMap<String, Integer>> queryDecorationOrderDrawLineForCountByDate(DecorationOrderDrawLineVO decorationOrderDrawLineVO);
 
 	public int applayDecorationOrderDrawLine(DecorationOrderDrawLineVO drawLine) throws FLException;

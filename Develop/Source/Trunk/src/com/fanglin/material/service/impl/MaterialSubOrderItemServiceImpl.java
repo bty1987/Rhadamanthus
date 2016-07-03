@@ -483,7 +483,8 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		
 		for(Long msoiId: msoiIds){
 			MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(msoiId);
-			if(materialSubOrderItemPO != null && materialSubOrderItemPO.getBalanceStatus() == MaterialSubOrderItemPO.BALANCESTATIS_TYPE_POSTBALANCE_INT){
+			
+			if(materialSubOrderItemPO != null && materialSubOrderItemPO.getBalanceStatus() == MaterialSubOrderItemPO.BALANCESTATUS_TYPE_PREBALANCE_INT){
 				materialSubOrderItemPO.setPostPoint(materialSubOrderItemVO.getPostPoint());
 				
 				materialSubOrderItemDao.update(materialSubOrderItemPO);
