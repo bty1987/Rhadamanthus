@@ -40,7 +40,6 @@ $(function(){
                 ["品类:", v.materialTypeName, "grey"],
                 ["品牌:", v.materialBrandName, "grey"],
                 ["单位:", v.measurementUnitName, "grey"],
-
                 ["进价:", v.materialPurchasePrice, "grey"],
                 ["标价:", v.materialUnitPrice, "grey"],
                 ["折扣:", v.discount, "grey"],

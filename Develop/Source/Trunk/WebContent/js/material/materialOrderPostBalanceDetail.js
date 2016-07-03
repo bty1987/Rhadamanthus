@@ -1,21 +1,18 @@
 var materialOrderPostBalanceDetail = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
 	materialOrderBalanceDetailItems: {},
 	
-	editFlag: false
+	editFlag: false,
+	
+	packages: {},
 };
 
 var materialOrderPostBalanceDetailPostData = {};
 
 jQuery(function($) {
-	$('#fl-statement').statement("结算", "订单信息列表");
 	
-	materialOrderPostBalanceDetail.listGrid = $("#listGrid");
-	materialOrderPostBalanceDetail.gridPager = "#gridPager";
 	materialOrderPostBalanceDetail.saveBtn = $("#saveBtn").on("click", saveData);
 	materialOrderPostBalanceDetail.cancelBtn = $("#cancelBtn");
 	materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal = $("#materialSubOrderItemBalanceModal").on('show.bs.modal',function(e){
@@ -29,184 +26,163 @@ jQuery(function($) {
 	var options = {};
 	options["materialSubOrder.msoId"] = materialOrderPostBalancePostData["materialOrderPostBalance.msoId"];
 	
-	com.post(api.material.queryMaterialSubOrderItemByMsoId, options, function(result){
-		materialSubOrderItemData = result.materialSubOrderItems;
-		materialSubOrderItemListGridInit();
-		
-		var materialSubOrderInfo = "";
-		materialSubOrderInfo += "抹零:"+materialOrderPostBalancePostData["materialOrderPostBalance.maling"];
-		materialSubOrderInfo += ",厂商抹零:"+materialOrderPostBalancePostData["materialOrderPostBalance.venderMaling"];
-		
-		if(materialOrderPostBalancePostData["materialOrderPostBalance.couponInfo"] != ""){
-			materialSubOrderInfo += ",券信息:"+materialOrderPostBalancePostData["materialOrderPostBalance.couponInfo"];
-		}
-		$("#showMaterialSubOrderInfo").html(materialSubOrderInfo);
-	});
-});
+	var displayFunc  = (function(){
 
-function materialSubOrderItemListGridInit(){
-	materialOrderPostBalanceDetail.listGrid.jqGrid({
-		treeGrid: true,
-		treeGridModel: 'adjacency',
-		ExpandColumn: 'id',
-		datastr: JSON.stringify(materialSubOrderItemData),
-		datatype: "jsonstring",
-	    rowNum : "-1",
-		colNames:['编号', 'id', 'msoiId', 'msoId', '名称', '品类', '品牌', '单位', '折扣价', '售价', '数量', '总价', '状态', '计算方式', '预结算值', '结算值', '描述', '级别', '叶子', '操作'],
-		colModel:[
-		    {name:'materialModelNo'},
-		    {name:'id', hidden:true},
-		    {name:'msoiId', hidden:true},
-		    {name:'msoId', hidden:true},
-		    {name:'materialModelName'},
-			{name:'materialTypeName'},
-			{name:'materialBrandName'},
-			{name:'measurementUnitName'},
-			{name:'salePrice'},
-			{name:'price'},
-			{name:'num'},
-			{name:'total'},
-			{name:'status', hidden:true},
-			{name:'calcType', hidden:true},
-			{name:'prePoint'},
-			{name:'postPoint'},
-			{name:'des'},
-			{name:'level', hidden:true},
-			{name:'isLeaf', hidden:true},
-			{name:'action', width: 180, sortable: false, editable: false, formatter: actionInit}
-		],
-		caption: "订单信息列表 <span id='showMaterialSubOrderInfo'></span>",
-		pager: materialOrderPostBalanceDetail.gridPager,
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-		jsonReader: {
-	        root: "dataRows",
-	        repeatitems : false
-	    },
-	    treeReader : {
-	        level_field: "level",
-	        parent_id_field: "parent",
-	        leaf_field: "isLeaf",
-	        expanded_field: "expanded"
-	    },
-	    ondblClickRow: function(id){
-	    	console.log("ondblClickRow");
-	    },
-	    gridComplete: function(){
-	    	console.log("gridComplete");
-	    	$(".tree-minus").unbind();
-	    },
-	});
-	
-	materialOrderPostBalanceDetail.listGrid.navGrid(materialOrderPostBalanceDetail.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}
-	).navButtonAdd(materialOrderPostBalanceDetail.gridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			$(".tooltip").remove();
-			$("#materialOrderPostBalancePageContent").load(api.index.materialOrderPostBalanceIndex.url);
-		},
-	});
-}
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = $('<li></li>').addClass('item-orange clearfix');
+					var $h3 = $('<h3></h3>').addClass('oid');
+					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-success" onclick="dialogMaterialSubOrderItemBalanceModal(' + options.rowId + ');">';
-	
-	if(rowdata.level == 0 && rowdata.isLeaf == true){
-		if(rowdata.calcType == 0){
-			result += '底价';
-		}else{
-			result += '点位';
-		}
-	}else if(rowdata.level == 0 && rowdata.isLeaf == false){
-		result += '点位';
-	}else if(rowdata.level == 1){
-		return "";
-	}
-	
-	result += '</button>';
-	result += '</div>';
-	
-	return result;
-}
+					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success');
+					
+					var propertyArr = [];
+					
+					if(v.level == 0 && v.isLeaf == true){
+						v.calcType == 0 ? $btnValue.html('底价') : $btnValue.html('点位');
+						$divBtnWrap.append($btnValue);
+						
+						$h3.append($('<small></small>').addClass('blue').html(v.materialModelName));
+						
+						propertyArr = [
+							["型号:", v.materialModelNo, "grey"],
+							["品类:", v.materialTypeName, "grey"],
+							["品牌:", v.materialBrandName, "grey"],
+							["单位:", v.measurementUnitName, "grey"],
+							["折扣价:", v.salePrice, "blue"],
+							["售价:", v.price, "blue"],
+							["数量:", v.num, "green"],
+							["总价:", v.total, "green"],
+							["预结算值:", v.prePoint, "grey"],
+							["结算值:", v.postPoint, "grey"],
+							["说明:", v.des, "grey"],
+						];
+					}else if(v.level == 0 && v.isLeaf == false){
+						$btnValue.html('点位');
+						$divBtnWrap.append($btnValue);
+						
+						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.materialModelName));
+						
+						propertyArr = [
+							["总价:", v.total, "green"],
+							["预结算值:", v.prePoint, "grey"],
+							["结算值:", v.postPoint, "grey"],
+						];
+					}else{
+						materialOrderPostBalanceDetail.packages[v.packageName] ? materialOrderPostBalanceDetail.packages[v.packageName].push(v) : (materialOrderPostBalanceDetail.packages[v.packageName] = [v]);
+						
+						propertyArr = [
+						    ["名称:", v.materialModelName, "grey"],
+							["型号:", v.materialModelNo, "grey"],
+							["品类:", v.materialTypeName, "grey"],
+							["品牌:", v.materialBrandName, "grey"],
+							["单位:", v.measurementUnitName, "grey"],
+							["折扣价:", v.salePrice, "blue"],
+							["售价:", v.price, "blue"],
+							["数量:", v.num, "green"],
+							["说明:", v.des, "grey"],
+						];
+					}
+					
+					$.each(propertyArr, function (index,value) {
+						var $liProperty = $('<li></li>');
+						$('<strong></strong>').html(value[0]).appendTo($liProperty);
+						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+						$liProperty.appendTo($ulProperty);
+					});
+					
+					$btnValue.click(function(){
+						dialogMaterialSubOrderItemBalanceModal(v);
+					});
+					
+					$divBtnWrap.appendTo($h3);
+					
+					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
+				});
 
-function valueInit(cellvalue, options, rowdata){
-	
-	var calcType = rowdata.calcType;
-	
-	if(calcType == 0){
-		return rowdata.point;
-	}else{
-		return rowdata.base;
-	}
-}
-
-function saveData(){
-	
-	var i = 0;
-	var options = {};
-	
-	var rowId = materialOrderPostBalanceDetailPostData["materialOrderPostBalanceDetail.rowId"];
-	var prowId = rowId;
-	
-	var rowInfo = materialOrderPostBalanceDetail.listGrid.jqGrid('getRowData', rowId);
-	
-	if(rowInfo.isLeaf == "true"){
-		options["msoiIds[" + i++ + "]"] = rowInfo.msoiId;
-	}else if(rowInfo.isLeaf == "false"){
-		while(true){
-			rowId = rowId + 1;
-			
-			var item = materialOrderPostBalanceDetail.listGrid.jqGrid('getRowData', rowId);
-			if(item.level == 0 && item.isLeaf || rowId > materialOrderPostBalanceDetail.listGrid.jqGrid('getGridParam','records')){
-				break;
+				$ul.appendTo($tableWrap);
 			}
-			
-			options["msoiIds[" + i++ + "]"] = item.msoiId;
-			
 		}
-	}
-	
-	if(rowInfo.calcType == "0"){
-		var base = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-		var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-		if(!(priceRex.test(base) && parseFloat(base) > 0)){
-			materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
-			com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "底价输入内容格式错误!", true);
-			return false;
+		
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			}
 		}
-	}else if(rowInfo.calcType == "1"){
-		var point = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-		var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-		if(!postDiscountRex.test(point)){
-			materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
-			com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "点位输入内容格式错误!", true);
-			return false;
-		}
-	}
+	})();
 	
-	options["materialSubOrderItem.postPoint"] = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-	options["materialSubOrderItem.mosId"] = materialOrderPostBalancePostData["materialOrderPostBalance.msoId"];
+	var searcher = new Searcher();
 	
-	com.post(api.material.updateMaterialSubOrderItemForPostPT, options, function(result){
-		materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("hide");
-		materialOrderPostBalanceDetail.listGrid.setCell(prowId, "postPoint", materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val());
+	searcher.init([], "condList", api.material.queryMaterialSubOrderItemByMsoId, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", null, options, true, "materialSubOrderItems");
+	
+	$('#back').click(function(){
+		$(".tooltip").remove();
+		$("#materialOrderPostBalancePageContent").load(api.index.materialOrderPostBalanceIndex.url);
 	});
-}
-
-function dialogMaterialSubOrderItemBalanceModal(rowId){
 	
-	var _info = materialOrderPostBalanceDetail.listGrid.jqGrid('getRowData', rowId);
+	function dialogMaterialSubOrderItemBalanceModal(v){
+		
+		materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.calcType.val(v.calcType == 0 ? "底价" : "点位");
+		materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val(v.postPoint);
+		
+		materialOrderPostBalanceDetailPostData.tmpItem = v;
+		
+		materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("show");
+	}
 	
-	materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.calcType.val(_info.calcType == 0 ? "底价" : "点位");
-	materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val(_info.postPoint);
+	function saveData(){
+		
+		var i = 0;
+		var options = {};
+		
+		var rowInfo = materialOrderPostBalanceDetailPostData.tmpItem;
+		
+		if(rowInfo.calcType == "0"){
+			var base = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
+			var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
+			if(!(priceRex.test(base) && parseFloat(base) > 0)){
+				materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
+				com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "底价输入内容格式错误!", true);
+				return false;
+			}
+		}else if(rowInfo.calcType == "1"){
+			var point = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
+			var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
+			if(!postDiscountRex.test(point)){
+				materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
+				com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "点位输入内容格式错误!", true);
+				return false;
+			}
+		}
+		
+		if(rowInfo.isLeaf){
+			options["msoiIds[" + i++ + "]"] = rowInfo.msoiId;
+		}else if(!rowInfo.isLeaf){
+			
+			var _packageItems = materialOrderPostBalanceDetail.packages[rowInfo.packageName];
+			
+			_packageItems && _packageItems.length > 0 && ($.each(_packageItems, function(i, v){
+				options["msoiIds[" + i++ + "]"] = v.msoiId;
+			}));
+		}
+		
+		options["materialSubOrderItem.postPoint"] = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
+		options["materialSubOrderItem.mosId"] = materialOrderPostBalancePostData["materialOrderPostBalance.msoId"];
+		
+		com.post(api.material.updateMaterialSubOrderItemForPostPT, options, function(result){
+			searcher.doSearch();
+		});
+		
+		materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("hide");
+	}
 	
-	materialOrderPostBalanceDetailPostData["materialOrderPostBalanceDetail.rowId"] = rowId;
-	
-	materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("show");
-}
+});

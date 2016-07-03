@@ -1,9 +1,9 @@
 <div class="page-content">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="searchDiv"></div>
-			<table id="listGrid"></table>
-			<div id="gridPager"></div>
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 		</div>
 	</div>
 	
@@ -125,5 +125,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/material/materialBalanceValue.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/material/materialBalanceValue.js?version=' + versionCode);
 </script>
+
+<script src="js/material/materialBalanceValue.js"></script>

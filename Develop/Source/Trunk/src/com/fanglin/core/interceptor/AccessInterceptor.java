@@ -138,14 +138,15 @@ public class AccessInterceptor extends AbstractInterceptor {
 		}catch (FLException e) {
 			invocation.getStack().setValue("errorCode", e.getCode());
 			invocation.getStack().setValue("errorMsg", e.getErrorMessage());
-			result = BaseAction.BACKVALUE_ERROR_STR;
+			result = "index".equals(actionName) ? BaseAction.BACKVALUE_LOGIN_STR : BaseAction.BACKVALUE_ERROR_STR;
 		}catch (Exception e) {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
+			
 			result = BaseAction.BACKVALUE_ERROR_STR;
 			
-			e.printStackTrace();
-//			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
+//			e.printStackTrace();
+			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
 //		if(result == BaseAction.BACKVALUE_ERROR_STR){

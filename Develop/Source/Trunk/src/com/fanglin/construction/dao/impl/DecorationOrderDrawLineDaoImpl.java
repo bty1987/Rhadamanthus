@@ -39,6 +39,64 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 	public List<DecorationOrderDrawLinePO> pageDecorationOrderDrawLine(Paging paging, List<FilterVO> filters){
 		PagingQuery<DecorationOrderDrawLinePO> query = pagingQuery(paging, DecorationOrderDrawLinePO.class);
 		
+		queryFilterExcute(query, filters);
+		
+		query.asc("actualStartTime");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(List<FilterVO> filters) {
+		
+		PagingQuery<DecorationOrderDrawLinePO> query = pagingQuery(new Paging(), DecorationOrderDrawLinePO.class);
+		
+		queryFilterExcute(query, filters);
+		
+		query.notPaging();
+		
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(Timestamp startTime, Timestamp endTime){
+		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
+		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
+				.add(Restrictions.not(Restrictions.in("status", status)))
+				.add(Restrictions.ge("actualStartTime", startTime))
+				.add(Restrictions.le("actualStartTime", endTime))
+				.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByOrderId(String orderId){
+		return createCriteria(DecorationOrderDrawLinePO.class)
+				.add(Restrictions.eq("orderPO.orderId", orderId))
+				.addOrder(Order.desc("autoId"))
+				.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByGroupATime(String group, Timestamp startTime,Timestamp endTime){
+		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
+		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
+				.add(Restrictions.not(Restrictions.in("status", status)))
+				.add(Restrictions.or(
+					Restrictions.or(
+						Restrictions.or(
+								Restrictions.and(Restrictions.gt("actualStartTime", startTime),Restrictions.lt("actualStartTime", endTime)),
+								Restrictions.and(Restrictions.gt("actualEndTime", startTime),Restrictions.lt("actualEndTime", endTime))),
+								Restrictions.and(Restrictions.lt("actualStartTime", startTime),Restrictions.gt("actualEndTime", startTime)
+						)),
+						Restrictions.and(Restrictions.gt("actualStartTime", endTime),Restrictions.lt("actualEndTime", endTime))))
+				.add(Restrictions.eq("drawLineGroup", group))
+				.list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
 		if(filters != null){
 
 			query.alias("orderPO", "orderPO");
@@ -99,47 +157,5 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 				}
 			}
 		}
-		
-		query.asc("actualStartTime");
-		
-		return query.list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(Timestamp startTime, Timestamp endTime){
-		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
-		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
-				.add(Restrictions.not(Restrictions.in("status", status)))
-				.add(Restrictions.ge("actualStartTime", startTime))
-				.add(Restrictions.le("actualStartTime", endTime))
-				.list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByOrderId(String orderId){
-		return createCriteria(DecorationOrderDrawLinePO.class)
-				.add(Restrictions.eq("orderPO.orderId", orderId))
-				.addOrder(Order.desc("autoId"))
-				.list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByGroupATime(String group, Timestamp startTime,Timestamp endTime){
-		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
-		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
-				.add(Restrictions.not(Restrictions.in("status", status)))
-				.add(Restrictions.or(
-					Restrictions.or(
-						Restrictions.or(
-								Restrictions.and(Restrictions.gt("actualStartTime", startTime),Restrictions.lt("actualStartTime", endTime)),
-								Restrictions.and(Restrictions.gt("actualEndTime", startTime),Restrictions.lt("actualEndTime", endTime))),
-								Restrictions.and(Restrictions.lt("actualStartTime", startTime),Restrictions.gt("actualEndTime", startTime)
-						)),
-						Restrictions.and(Restrictions.gt("actualStartTime", endTime),Restrictions.lt("actualEndTime", endTime))))
-				.add(Restrictions.eq("drawLineGroup", group))
-				.list();
 	}
 }

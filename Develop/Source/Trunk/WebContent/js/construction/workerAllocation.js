@@ -1,6 +1,4 @@
 var workerAllocation = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
@@ -12,65 +10,131 @@ var workerAllocation = {
 var workerAllocationPostData = {};
 
 jQuery(function($) {
-	$('#fl-statement').statement("监理控制", "订单信息列表");
-	
-	workerAllocation.listGrid = $("#listGrid");
-	workerAllocation.gridPager = "#gridPager";
-	workerAllocation.saveBtn = $("#saveBtn").on("click", saveData);
-	workerAllocation.cancelBtn = $("#cancelBtn");
-	
-	constructionUtils.createDecorationOrderCondition(workerAllocation.listGrid, api.construction.pageDecorationOrderForSupervisionByUserId.url, "searchDiv", {}, "workerAllocationPostData", 75);
-	
-	workerAllocation.listGrid.jqGrid({		
-		url: api.construction.pageDecorationOrderForSupervisionByUserId.url,
-		postData: params["workerAllocationPostData"],
-		colNames:['编号', '楼盘名', '设计师', '监理', '总价', '折扣', '面积', '进度', '工程状态', '操作'],
-		colModel:[
-		    {name:'orderId'},
-			{name:'villageName', width:400, jsonmap:'village.villageName', formatter: villageInit},
-			{name:'designer', width:60},
-			{name:'supervisor', width:60},
-			{name:'orderTotalPrice', width:100},
-			{name:'discount', width:60},
-			{name:'houseArea', width:60},
-			{name:'schedule', formatter: constructionUtils.scheduleInit},
-			{name:'projectStatus', hidden:true},
-			{name:'action', width: 180, sortable: false, editable: false, formatter: actionInit}
-		],
-		pager : workerAllocation.gridPager,
-		caption: "订单信息列表",
-		gridComplete: function(){
-			var _postData = $(this).getGridParam("postData");
-			var _param = params["workerAllocationPostData"] ? params["workerAllocationPostData"] : {};
-			
-			_param["paging.page"] = _postData["paging.page"];
-			_param["paging.rows"] = _postData["paging.rows"];
-			
-			params["workerAllocationPostData"] = _param;
+
+	var displayFunc  = (function(){
+
+
+
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var that = this;
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
+
+
+			var propertyArr = [
+				["楼盘名:", v.village.villageName, "grey"],
+				["设计师:", v.designer, "grey"],
+				["监理:", v.supervisor, "grey"],
+				["总价:", v.orderTotalPrice, "grey"],
+				["折扣:", v.discount, "grey"],
+				["面积:", v.houseArea, "grey"],
+				["工程状态:", v.schedule, "grey"],
+				["进度:", scheduleInit(v)]
+			];
+
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+
+			$divBtnWrap.append($btnView).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+
+
+
+			$btnView.click(function(){
+				viewworkerAllocationDetail(v.orderId);
+			});
+
+
+
+
+			return $liLine;
+		};
+
+		var scheduleInit = function(v) {
+
+			var scheduleInfos = {
+				"铲大白": [10, "progress-bar-inverse"],
+				"放线": [10, "progress-bar-grey"],
+				"水电力": [20, "progress-bar-danger"],
+				"瓦工": [10, "progress-bar-pink"],
+				"地面找平": [10, "progress-bar-purple"],
+				"木工": [10, "progress-bar-warning"],
+				"油工": [10, "progress-bar-yellow"],
+				"水电验收": [10, "progress-bar-success"],
+				"保洁": [10, "progress-bar-progress"]
+			};
+
+			var $process = $('<div></div>').attr({
+				'data-percent' : v.projectStatus
+			}).css({
+				'margin-bottom' : '0px',
+				'width' : '150px',
+				'display' : 'inline-block',
+				'vertical-align' : 'middle',
+			}).addClass('progress');
+
+
+			$.each(scheduleInfos, function(k, val){
+				if(k == v.projectStatus) return false;
+				var $div = $('<div></div>').css({
+					'width' : val[0] + '%'
+				}).addClass('progress-bar ' + val[1]);
+				$div.appendTo($process);
+			});
+
+			return $process;
 		}
-	});
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var _condArr = ['orderId', 'village', 'designer', 'schedule'];
+	var WorkerAllocationSeacher = new Searcher();
+	WorkerAllocationSeacher.init( _condArr, "condList", api.construction.pageDecorationOrderForSupervisionByUserId, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "workerAllocationSeacherPostData");
+
+
+
 	
 });
 
-function villageInit(cellvalue, options, rowdata){
-	var html = rowdata.village.villageName + ' ' + rowdata.houseNumber;
-	return html;
-}
 
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewworkerAllocationDetail(\'' + rowdata.orderId + '\');">查看</button>';
-	result += '</div>';
-	
-	return result;
-}
-
-function saveData(){
-	
-}
 
 function viewworkerAllocationDetail(orderId){
 	workerAllocationPostData["constructionSchedule.orderId"] = orderId;

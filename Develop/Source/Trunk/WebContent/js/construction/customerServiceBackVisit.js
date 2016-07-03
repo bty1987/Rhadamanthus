@@ -1,24 +1,22 @@
-var backVisit = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	backVisitItems: {},
-	
-	levelDict: {"0":"普通", "1":"重要"},
-	
-	backVisitTypeData: [{"id":"1", "name":"普通"}],
-	
-	editFlag: false,
-	repeatFlg: false,
-};
+
 
 jQuery(function($) {
 	$('#fl-statement').statement("巡检控制", "保修信息列表");
-	
-	backVisit.backVisitListGrid = $("#backVisitListGrid");
-	backVisit.backVisitGridPager = "#backVisitGridPager";
+
+	var backVisit = {
+		backBtn : $('#btnBack').on("click", function(){
+			com.switchPage(api.index.customerServiceIndex.url);
+		}),
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		backVisitItems: {},
+		levelDict: {"0":"普通", "1":"重要"},
+		backVisitTypeData: [{"id":"1", "name":"普通"}],
+		editFlag: false,
+		repeatFlg: false,
+	};
+
 	backVisit.saveBtn = $("#saveBtn").on("click", saveData);
 	backVisit.cancelBtn = $("#cancelBtn");
 	backVisit.modal = $("#backVisitModal");
@@ -31,148 +29,177 @@ jQuery(function($) {
 	backVisit.backVisitItems.backVisitDes = $("#backVisitDes");
 	
 	backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
-	
-	backVisit.backVisitListGrid.jqGrid({
-		url: api.construction.pageCustomerServiceBackVisit.url,
-		postData: customerServicePostData,
-		colNames:['Id', '订单编号', '楼盘地址', '客户名', '时间', '类型', '类型', '备注'],
-		colModel:[
-		    {name:'csbvId', hidden:true},
-		    {name:'orderId'},
-		    {name:'orderAddr'},
-			{name:'customerName'},
-			{name:'backVisitTime'},
-			{name:'backVisitType', hidden:true},
-			{name:'backVisitTypeShow', formatter: typeInit},
-			{name:'backVisitDes'},
-		], 
-		pager : backVisit.backVisitGridPager,
-		caption: "保修信息列表"
-	});
-	
-	backVisit.backVisitListGrid.navGrid(backVisit.backVisitGridPager,
-		{edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, 
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	).navButtonAdd(backVisit.backVisitGridPager,{
-		caption: "",
-		buttonicon: "icon-pencil blue",
-		title: "编辑",
-		onClickButton: function(){
-			backVisit.editFlag = true;
-			var num = backVisit.backVisitListGrid.jqGrid("getGridParam", 'selrow');
-			
-			if(num == null){
-				$.jgrid.viewModal("#alertmod_backVisitListGrid",{gbox:"#gbox_"+backVisit.backVisitListGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-				return;
+
+	var displayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
 			}
-			
-			var row = backVisit.backVisitListGrid.jqGrid("getRowData", num);
-			
-			backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
-			backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
-			backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
-			backVisit.backVisitItems.backVisitTime.val(row.backVisitTime);
-			backVisit.backVisitItems.backVisitType.val(row.backVisitType);
-			backVisit.backVisitItems.backVisitDes.val(row.backVisitDes);
-			customerServicePostData["customerServiceBackVisit.csbvId"] = row.csbvId;
-			
-			backVisit.backVisitItems.orderId.attr('disabled', true);
-			backVisit.backVisitItems.orderAddr.attr("disabled", true);
-			backVisit.backVisitItems.customerName.attr('disabled', true);
-			
-			backVisit.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(backVisit.backVisitGridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "创建",
-		onClickButton: function(){
-			
+		};
+
+		var creatLine = function(v){
+			var that = this;
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
+
+
+			var propertyArr = [
+				["楼盘地址:", v.orderAddr, "grey"],
+				["客户名:", v.customerName, "grey"],
+				["时间:", v.backVisitTime, "grey"],
+				["类型:", typeInit(v), "grey"],
+				["备注:", v.backVisitDes, "grey"],
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+
+			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+			$btnEdit.click(function(){
+				backVisit.editFlag = true;
+				var row = v;
+
+				backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
+				backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
+				backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
+				backVisit.backVisitItems.backVisitTime.val(row.backVisitTime);
+				backVisit.backVisitItems.backVisitType.val(row.backVisitType);
+				backVisit.backVisitItems.backVisitDes.val(row.backVisitDes);
+				customerServicePostData["customerServiceBackVisit.csbvId"] = row.csbvId;
+
+				backVisit.backVisitItems.orderId.attr('disabled', true);
+				backVisit.backVisitItems.orderAddr.attr("disabled", true);
+				backVisit.backVisitItems.customerName.attr('disabled', true);
+
+				backVisit.modal.modal("show");
+			});
+			$btnDel.click(function(){
+				removeRow(v.csbvId);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+
+	var CustomerServiceBackVisitSeacher = new Searcher();
+	CustomerServiceBackVisitSeacher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "customerServiceBackVisitSeacherPostData", customerServicePostData, false, null,  function(){
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+		$adda.click(function(){
 			backVisit.editFlag = false;
 			com.cleanItems(backVisit.backVisitItems);
-			
+
 			backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
 			backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
 			backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
-			
+
 			backVisit.backVisitItems.orderId.attr("disabled", true);
 			backVisit.backVisitItems.orderAddr.attr("disabled", true);
 			backVisit.backVisitItems.customerName.attr("disabled", true);
-			
+
 			backVisit.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(backVisit.backVisitGridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			$(".tooltip").remove();
-			com.switchPage(api.index.customerServiceIndex.url);
-		},
-		position: "first",
+		});
+
+		return [$adda];
+
 	});
+
+
 	
 	$('.date-picker').datepicker({autoclose:true});
+
+	function typeInit(rowdata){
+
+		var result = "";
+
+		for(var i=0;i<backVisit.backVisitTypeData.length;i++){
+			if(rowdata["backVisitType"] == backVisit.backVisitTypeData[i]["id"]){
+				result = backVisit.backVisitTypeData[i]["name"];
+			}
+		}
+
+		return result;
+	}
+
+	function saveData(){
+		if(com.validate()|| backVisit.repeatFlg)
+			return;
+
+		var url;
+		var options = {
+			"customerServiceBackVisit.orderId": backVisit.backVisitItems.orderId.val(),
+			"customerServiceBackVisit.orderAddr": backVisit.backVisitItems.orderAddr.val(),
+			"customerServiceBackVisit.customerName": backVisit.backVisitItems.customerName.val(),
+			"customerServiceBackVisit.backVisitTime": backVisit.backVisitItems.backVisitTime.val(),
+			"customerServiceBackVisit.backVisitType": backVisit.backVisitItems.backVisitType.val(),
+			"customerServiceBackVisit.backVisitDes": backVisit.backVisitItems.backVisitDes.val(),
+		};
+
+		if(backVisit.editFlag){
+			url = api.construction.updateCustomerServiceBackVisit;
+			options["customerServiceBackVisit.csbvId"] = customerServicePostData["customerServiceBackVisit.csbvId"];
+		}else{
+			url = api.construction.addCustomerServiceBackVisit;
+		}
+
+		com.post(url, options, successCallback, failCallback);
+		backVisit.modal.modal("hide");
+	}
+
+	function removeRow(id){
+
+		bootbox.confirm("确认删除吗？", function(res){
+			if(res){
+				com.post(api.construction.deleteCustomerServiceBackVisit, {"csbvIds[0]"  : id}, successCallback, failCallback);
+			}
+		});
+
+	}
+
+	function successCallback(result){
+		CustomerServiceBackVisitSeacher.doSearch();
+	}
+
+	function failCallback(){
+
+	}
 	
 });
 
-function typeInit(cellvalue, options, rowdata){
-	
-	var result = "";
-	
-	for(var i=0;i<backVisit.backVisitTypeData.length;i++){
-		if(rowdata["backVisitType"] == backVisit.backVisitTypeData[i]["id"]){
-			result = backVisit.backVisitTypeData[i]["name"];
-		}
-	}
-	
-	return result;
-}
-
-function saveData(){
-	if(com.validate()|| backVisit.repeatFlg)
-		return;
-	
-	var url;
-	var options = {
-		"customerServiceBackVisit.orderId": backVisit.backVisitItems.orderId.val(),
-		"customerServiceBackVisit.orderAddr": backVisit.backVisitItems.orderAddr.val(),
-		"customerServiceBackVisit.customerName": backVisit.backVisitItems.customerName.val(),
-		"customerServiceBackVisit.backVisitTime": backVisit.backVisitItems.backVisitTime.val(),
-		"customerServiceBackVisit.backVisitType": backVisit.backVisitItems.backVisitType.val(),
-		"customerServiceBackVisit.backVisitDes": backVisit.backVisitItems.backVisitDes.val(),
-	};
-	
-	if(backVisit.editFlag){
-		url = api.construction.updateCustomerServiceBackVisit;
-		options["customerServiceBackVisit.csbvId"] = customerServicePostData["customerServiceBackVisit.csbvId"];
-	}else{
-		url = api.construction.addCustomerServiceBackVisit;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	backVisit.modal.modal("hide");
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid("getRowData", nums[i]);
-		options["csbvIds[" + i + "]"] = row.csbvId;
-	}
-	
-	com.post(api.construction.deleteCustomerServiceBackVisit, options, successCallback, failCallback);
-	$("#eData").trigger("click");
-}
-
-function successCallback(result){
-	backVisit.backVisitListGrid.jqGrid().trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}

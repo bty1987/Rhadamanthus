@@ -1,6 +1,4 @@
 var materialOrderPreBalance = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
@@ -16,8 +14,6 @@ var materialOrderPreBalancePostData = {};
 jQuery(function($) {
 	$('#fl-statement').statement("主材子订单", "订单信息列表");
 	
-	materialOrderPreBalance.listGrid = $("#listGrid");
-	materialOrderPreBalance.gridPager = "#gridPager";
 	materialOrderPreBalance.saveBtn = $("#saveBtn").on("click", saveData);
 	materialOrderPreBalance.saveMalingBtn = $("#saveMalingBtn").on("click", saveMalingData);
 	materialOrderPreBalance.cancelBtn = $("#cancelBtn");
@@ -42,219 +38,226 @@ jQuery(function($) {
 	
 	materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
 	
-	var orderSearchOpts = {
-		url: api.material.pageMaterialSubOrderForPreBalance,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: materialOrderPreBalance.listGrid,
-		items: [
-	        {label:"装修订单号",id:"orderIdSearch",name:"orderId", type:'text'},
-	        {label:"主材订单号",id:"orderIdSearch",name:"msoNo", type:'text'},
-			{label:"楼盘地址",id:"orderAddrSearch",name:"orderAddr", type:'text'},
-			{label:"业务员",id:"salesmanSearch",name:"salesman", type:'text'},
-			{label:"补款时间", id:"fullCollectTimeRangeSearch", name:"fullCollectTimeRange", type:"dateRangePicker"},
-        ]
-	};
-	$("#searchDiv").flSearch(orderSearchOpts);
+	var displayFunc  = (function(){
+
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = $('<li></li>').addClass('item-orange clearfix');
+					var $h3 = $('<h3></h3>').addClass('oid');
+					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+					var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
+					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
+					var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-danger').html('抹零');
+					
+					var propertyArr = [
+						["楼盘地址:", v.orderAddr, "grey"],
+						["客户名:", v.customerName, "grey"],
+						["业务员:", v.salesmanName, "grey"],
+						["点位:", v.point, "blue"],
+						["底价:", v.base, "blue"],
+						["抹零:", v.maling, "green"],
+						["厂商抹零:", v.venderMaling, "green"],
+						["创建时间:", v.createTime, "grey"],
+						["补款时间:", v.fullCollectTime, "grey"],
+					];
+					
+					var $label = $('<label></label>');
+					var $input = $('<input>').attr({
+						"type": "checkbox",
+						"name": "msoIds",
+						"class": "ace ace-checkbox-2",
+						"msoId": v.msoId,
+						"packageFlag": v.packageFlag,
+					}).val(v.arId);
+					var $span = $('<span></span>').addClass('lbl');
+
+					$.each(propertyArr, function (index,value) {
+						var $liProperty = $('<li></li>');
+						$('<strong></strong>').html(value[0]).appendTo($liProperty);
+						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+						$liProperty.appendTo($ulProperty);
+					});
+					
+					$label.append($input).append($span).appendTo($h3);
+					$h3.append($('<small></small>').addClass('blue').html(v.msoNo));
+
+					$btnItem.click(function(){
+						viewMaterialOrderBalanceDetailIndex(v.msoId);
+					});
+					
+					$btnValue.click(function(){
+						dialogMaterialOrderPreBalanceBacl(v);
+					});
+					
+					$btnMaling.click(function(){
+						dialogMaterialOrderMaling(v);
+					});
+
+					$divBtnWrap.append($btnItem).append($btnValue).append($btnMaling).appendTo($h3);
+					
+					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		}
+		
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			}
+		}
+	})();
 	
-	materialOrderPreBalance.listGrid.jqGrid({		
-		url: api.material.pageMaterialSubOrderForPreBalance.url,
-		colNames:['msoId', '编号', '客户名', '楼盘名', '业务员', '点位', '底价', '抹零', '厂商抹零', '创建时间', '补款时间', '描述', '套餐', '操作'],
-		multiboxonly: true,
-		forceFit: false,
-		colModel:[
-		    {name:'msoId', hidden:true},
-		    {name:'msoNo'},
-		    {name:'customerName', width:80},
-		    {name:'orderAddr', width:250},
-		    {name:'salesmanName', width:80},
-		    {name:'point', hidden:true},
-		    {name:'base', hidden:true},
-		    {name:'maling', width:80},
-			{name:'venderMaling', width:80},
-			{name:'createTime', width:200},
-			{name:'fullCollectTime', width:200},
-			{name:'des'},
-			{name:'packageFlag', hidden:true},
-			{name:'action', width: 180, sortable: false, editable: false, formatter: actionInit}
-		], 
-		pager : materialOrderPreBalance.gridPager,
-		caption: "预结算信息列表"
+	var searcher = new Searcher();
+	
+	searcher.init(["orderId", "msoNo", "orderAddr", "msalesman", "fullCollectTimeRange"], "condList", api.material.pageMaterialSubOrderForPreBalance, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "materialOrderPreBalancePostData", null, false, null, function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
+    	
+    	return [$adda];
 	});
 	
-	materialOrderPreBalance.listGrid.navGrid(materialOrderPreBalance.gridPager,
-		{edit: false, add: false, del: false, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, {}
-	).navButtonAdd(materialOrderPreBalance.gridPager, {
-		caption:"",
-		buttonicon: 'icon-ok blue',
-		title: "预结算",
-		onClickButton: function(){
+	$('a[name="prebalances"]', '#pagenation').click(function(){
+		
+		var $inputs = $('input[name="msoIds"]:checked');
+		
+		var options = {};
+		var _packageFlag = 0;
+		
+		$.each($inputs, function(i, v){
+			options["msoIds[" + i + "]"] = $(v).attr("msoId");
 			
-			var options = {};
-			var num = materialOrderPreBalance.listGrid.jqGrid('getGridParam','selrow');
-			
-			if(num == null){
-				$.jgrid.showSelectInfo(materialOrderPreBalance.listGrid.attr("id"));
-				return false;
-			}else{
-				var _rowIds = materialOrderPreBalance.listGrid.jqGrid('getGridParam','selarrrow');
-				
-				var _packageFlag = 0;
-				
-				for(var i=0;i<_rowIds.length;i++){
-					_rowInfo = materialOrderPreBalance.listGrid.jqGrid("getRowData", _rowIds[i]);
-					options["msoIds[" + i + "]"] = _rowInfo.msoId;
-					
-					if(_rowInfo.packageFlag == "1"){
-						_packageFlag = 1;
-					}
-				}
-				
-				var message = "<p>确定需要提交当前子订单的预结算处理吗?</p>";
-				
-				if(_packageFlag == "1"){
-					message += "<p class='text-warning bigger-110 orange'><i class='icon-warning-sign'></i>当前存在套餐,是否已经设置完成计算点位?</p>";
-				}
-			
-				bootbox.confirm(message, function(result) {
-					if(result){
-						com.post(api.material.preBalanceMaterialSubOrder, options, function(result){
-							materialOrderPreBalance.listGrid.trigger("reloadGrid");
-							com.showAlert(com.info, "确认成功!");
-						}, function(result){
-							com.showAlert(com.error, "确认失败!");
-						});
-					}
+			$(v).attr("packageFlag") == 1 && (_packageFlag = 1);
+		});
+		
+		var message = "<p>确定需要提交当前子订单的预结算处理吗?</p>";
+		
+		if(_packageFlag == "1"){
+			message += "<p class='text-warning bigger-110 orange'><i class='icon-warning-sign'></i>当前存在套餐,是否已经设置完成计算点位?</p>";
+		}
+	
+		bootbox.confirm(message, function(result) {
+			if(result){
+				com.post(api.material.preBalanceMaterialSubOrder, options, function(result){
+					searcher.doSearch();
 				});
 			}
-		},
+		});
 	});
-});
+	
+	
+	function viewMaterialOrderBalanceDetailIndex(msoId){
+		materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = msoId;
+		$("#materialOrderPreBalancePageContent").load(api.index.materialOrderPreBalanceDetailIndex.url);
+	}
 
-function actionInit(cellvalue, options, rowdata){
-	
-	var result = '';
-	
-	result += '<div class="ui-pg-div btn-group">';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-yellow" onclick="viewMaterialOrderBalanceDetailIndex(' + rowdata.msoId + ');">子项</button>';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-success" onclick="dialogMaterialOrderPreBalanceBacl(' + options.rowId + ');">结算值</button>';
-	result += '<button id="viewDecorationOrderDetiail" class="btn btn-minier btn-danger" onclick="dialogMaterialOrderMaling(' + options.rowId + ');">抹零</button>';
-	result += '</div>';
-	
-	return result;
-}
+	function dialogMaterialOrderPreBalanceBacl(v){
+		
+		materialOrderPreBalancePostData.msoId = v.msoId;
+		
+		materialOrderPreBalance.materialOrderPreBalanceItems.value.val("");
+		materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
+		materialOrderPreBalance.materialOrderPreBalanceItems.oldPoint.val(v.point);
+		materialOrderPreBalance.materialOrderPreBalanceItems.oldBase.val(v.base);
+		
+		materialOrderPreBalance.modal.modal("show");
+	}
 
-function saveData(){
-	
-	var nums = materialOrderPreBalance.listGrid.jqGrid("getGridParam","selarrrow");
-	
-	var rowId = nums[0];
-	
-	var _info = materialOrderPreBalance.listGrid.jqGrid('getRowData', rowId);
-	
-	var options = {};
-	
-	options["materialSubOrder.msoId"] = _info.msoId;
-	options["caclType"] = materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val();
-	
-	if(materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val() == 0){
+	function dialogMaterialOrderMaling(v){
 		
-		var base = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
-		var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-		if(!(priceRex.test(base) && parseFloat(base) > 0)){
-			materialOrderPreBalance.materialOrderPreBalanceItems.value.focus().select();
-			com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.value, "底价输入内容格式错误!", true);
-			return false;
-		}
+		materialOrderPreBalancePostData.msoId = v.msoId;
 		
-		options["materialSubOrder.base"] = base;
-	}else{
+		var maling = v.maling;
+		var venderMaling = v.venderMaling;
 		
-		var point = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
-		var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-		if(!postDiscountRex.test(point)){
-			materialOrderPreBalance.materialOrderPreBalanceItems.value.focus().select();
-			com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.value, "点位输入内容格式错误!", true);
-			return false;
-		}
+		materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal.val(utils.accAdd(maling, venderMaling));
+		materialOrderPreBalance.materialOrderPreBalanceItems.oldMaling.val(maling);
+		materialOrderPreBalance.materialOrderPreBalanceItems.oldVenderMaling.val(venderMaling);
+		materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.val(0);
 		
-		options["materialSubOrder.point"] = point;
+		materialOrderPreBalance.malingModal.modal("show");
 	}
 	
-	com.post(api.material.updateMaterialSubOrderForPreBalancePT, options, function(result){
-		if(result.caclType == 0){
-			materialOrderPreBalance.listGrid.setCell(rowId, "base", result.materialSubOrder.base);
-		}else if(result.caclType == 1){
-			materialOrderPreBalance.listGrid.setCell(rowId, "point", result.materialSubOrder.point);
+	function saveData(){
+		
+		var options = {};
+		
+		options["materialSubOrder.msoId"] = materialOrderPreBalancePostData.msoId;
+		options["caclType"] = materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val();
+		
+		if(materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val() == 0){
+			
+			var base = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
+			var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
+			if(!(priceRex.test(base) && parseFloat(base) > 0)){
+				materialOrderPreBalance.materialOrderPreBalanceItems.value.focus().select();
+				com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.value, "底价输入内容格式错误!", true);
+				return false;
+			}
+			
+			options["materialSubOrder.base"] = base;
+		}else{
+			
+			var point = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
+			var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
+			if(!postDiscountRex.test(point)){
+				materialOrderPreBalance.materialOrderPreBalanceItems.value.focus().select();
+				com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.value, "点位输入内容格式错误!", true);
+				return false;
+			}
+			
+			options["materialSubOrder.point"] = point;
 		}
+		
+		com.post(api.material.updateMaterialSubOrderForPreBalancePT, options, function(result){
+			searcher.doSearch();
+			
+		});
+		
 		materialOrderPreBalance.modal.modal("hide");
-	});
-}
+	}
 
-function saveMalingData(){
-	var nums = materialOrderPreBalance.listGrid.jqGrid("getGridParam","selarrrow");
-	
-	var rowId = nums[0];
-	
-	var _info = materialOrderPreBalance.listGrid.jqGrid('getRowData', rowId);
-	
-	var malingTotal = materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal.val();
-	var venderMaling = materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.val();
-	
-	var venderMalingRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-	if(!venderMalingRex.test(venderMaling)){
-		materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.focus().select();
-		com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling, "修改厂商抹零数据格式不正确!", true);
-		return false;
-	}
-	
-	if(parseFloat(venderMaling) > parseFloat(malingTotal)){
-		materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.focus().select();
-		com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling, "修改厂商抹零数据不能超过抹零总数!", true);
-		return false;
-	}
-	
-	var options = {};
-	
-	options["materialSubOrder.msoId"] = _info.msoId;
-	options["materialSubOrder.maling"] = utils.accSub(malingTotal, venderMaling);
-	options["materialSubOrder.venderMaling"] = venderMaling;
-	
-	com.post(api.material.updateMaterialSubOrderForMaling, options, function(result){
-		materialOrderPreBalance.listGrid.setCell(rowId, "maling", result.materialSubOrder.maling);
-		materialOrderPreBalance.listGrid.setCell(rowId, "venderMaling", result.materialSubOrder.venderMaling);
+	function saveMalingData(){
+		
+		var malingTotal = materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal.val();
+		var venderMaling = materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.val();
+		
+		var venderMalingRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
+		if(!venderMalingRex.test(venderMaling)){
+			materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.focus().select();
+			com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling, "修改厂商抹零数据格式不正确!", true);
+			return false;
+		}
+		
+		if(parseFloat(venderMaling) > parseFloat(malingTotal)){
+			materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.focus().select();
+			com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling, "修改厂商抹零数据不能超过抹零总数!", true);
+			return false;
+		}
+		
+		var options = {};
+		
+		options["materialSubOrder.msoId"] = materialOrderPreBalancePostData.msoId;
+		options["materialSubOrder.maling"] = utils.accSub(malingTotal, venderMaling);
+		options["materialSubOrder.venderMaling"] = venderMaling;
+		
+		com.post(api.material.updateMaterialSubOrderForMaling, options, function(result){
+			searcher.doSearch();
+		});
 		
 		materialOrderPreBalance.malingModal.modal("hide");
-	});
-}
-
-function viewMaterialOrderBalanceDetailIndex(msoId){
-	materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = msoId;
-	$("#materialOrderPreBalancePageContent").load(api.index.materialOrderPreBalanceDetailIndex.url);
-}
-
-function dialogMaterialOrderPreBalanceBacl(rowId){
-	
-	var _info = materialOrderPreBalance.listGrid.jqGrid('getRowData', rowId);
-	
-	materialOrderPreBalance.materialOrderPreBalanceItems.value.val("");
-	materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldPoint.val(_info.point);
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldBase.val(_info.base);
-	
-	materialOrderPreBalance.modal.modal("show");
-}
-
-function dialogMaterialOrderMaling(rowId){
-	
-	var _info = materialOrderPreBalance.listGrid.jqGrid('getRowData', rowId);
-	
-	var maling = _info.maling;
-	var venderMaling = _info.venderMaling;
-	
-	materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal.val(utils.accAdd(maling, venderMaling));
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldMaling.val(maling);
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldVenderMaling.val(venderMaling);
-	materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling.val(0);
-	
-	materialOrderPreBalance.malingModal.modal("show");
-}
+	}
+});

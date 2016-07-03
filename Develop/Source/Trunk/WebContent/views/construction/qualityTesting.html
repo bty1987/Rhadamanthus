@@ -1,10 +1,11 @@
 <div id="qualityTestingPageContent" class="page-content">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id='fl-alert'></div>
-			<div id="qualityTestingSearchDiv"></div>
-			<table id="listGrid"></table>
-			<div id="gridPager"></div>
+			<div id="condList" class="fl_search clearfix"></div>
+			<!--查询结果-->
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<!--分页-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div>
 		</div>
 	</div>
 	
@@ -100,6 +101,5 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/utils/constructionUtils.js?version=' + versionCode);
 	$.getScript(hostServer + 'js/construction/qualityTesting.js?version=' + versionCode);
 </script>

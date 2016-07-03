@@ -120,6 +120,20 @@ var Searcher = function(){
                     $(this).next().focus();
                 });
             }
+            
+            if(_rtype == "datePicker"){
+            	$showItem = $('<input>').attr({
+                    "type": "text",
+                    "placeholder": "请输入" + _rlabel,
+                    "name": condCode,
+                    "data-op": _rop,
+                    "data-rqs": _rname,
+                    "data-date-format": "dd-mm-yyyy",
+                    "readonly": true,
+                }).appendTo($item);
+            	
+            	$showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});
+            }
 
             if(_rtype=="autofill"){
                 $showItem = $('<input>').attr({

@@ -64,6 +64,106 @@ var Condition = function(){
                 validate:null
             }
         },
+
+        //-------订单-施工进度-工程验收
+        acceptanceFlag : {
+            label:"验收状态",
+            type:"select",
+            submitConfig : {
+                name : "acceptanceFlag",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : null,
+                postData : null,
+                listPath : [
+                    {key: "notAcceptanced", value: "未验收"},
+                    {key: "acceptanced", value: "已验收"}
+                ],
+                keyPath : "key",
+                valuePath : "value"
+            }
+        },
+
+        //-------订单-施工进度-监理控制查询条件
+        schedule : {
+            label:"进度",
+            type:"select",
+            submitConfig : {
+                name : "schedule",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.ds.constructionInfo,
+                postData:{ "timestamp" : (new Date).getTime() },
+                listPath: "constructionSchedule",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        projectStatusFlag : {
+            label:"完工状态",
+            type:"select",
+            submitConfig : {
+                name : "projectStatusFlag",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : null,
+                postData : null,
+                listPath: [
+                    {key: "未完工", value: "未完工"},
+                    {key: "已完工", value: "已完工"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        //-------订单-施工进度-巡检控制查询条件
+
+
+        supervisor : {
+        label : "监理",//中文名
+            type : "autofill",//类型
+            submitConfig : {//向后台提交的配置
+            name : "supervisor",//接口中的参数名
+                op : "cn",//查询方式
+                validate: null//校验规则
+        },
+        dataSource : {//从后台取数据的各种配置
+            url : api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData:{ "duty" : "监理" },//获取数据时的请求参数
+            listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath:"key",//用来向后台提交的字段的json路径
+                valuePath:"value"//用来在页面显示的字段的json路径
+        }
+    },
+
+        //-------订单-施工进度-质检控制查询条件
+
+        allocationWorkerFlag : {
+            label:"分配状态",
+                type:"select",
+                submitConfig : {
+                name : "allocationWorkerFlag",
+                    op : "eq",
+                    validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : null,
+                    postData : null,
+                listPath: [
+                    {key: "notAllocationed",value: "未分配工人"},
+                    {key: "allocationed",value: "已分配工人"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
         //-------系统
         regionName: {
             label:"大区名称",
@@ -73,7 +173,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, cityName: {
+        },
+        cityName: {
             label:"城市名称",
             type:"text",
             submitConfig : {
@@ -81,7 +182,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, cityProperName: {
+        },
+        cityProperName: {
             label:"城区名称",
             type:"text",
             submitConfig : {
@@ -89,7 +191,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, subFunctionName: {
+        },
+        subFunctionName: {
             label:"自功能名称",
             type:"text",
             submitConfig : {
@@ -97,7 +200,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, roleName: {
+        },
+        roleName: {
             label:"角色名称",
             type:"text",
             submitConfig : {
@@ -105,7 +209,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, region: {
+        },
+        region: {
             label:"所属大区",
             type:"select",
             submitConfig : {
@@ -120,7 +225,8 @@ var Condition = function(){
                 keyPath:"regionId",
                 valuePath:"regionName"
             }
-        }, city: {
+        },
+        city: {
             label:"所属城市",
             type:"select",
             submitConfig : {
@@ -136,6 +242,7 @@ var Condition = function(){
                 valuePath:"cityName"
             }
         },
+
         //-------部门 
         regionName: {
             label:"大区名称",
@@ -145,7 +252,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, deptName: {
+        },
+        deptName: {
             label:"部门名称",
             type:"text",
             submitConfig : {
@@ -154,6 +262,7 @@ var Condition = function(){
                 validate:null
             }
         },
+
         //-------信息-公告查询条件
         theme : { //
             label:"主题",
@@ -164,7 +273,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         dateRange : {
             label:"时间",
             type:"dateRangePicker",
@@ -346,6 +454,7 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
+
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -380,6 +489,8 @@ var Condition = function(){
             }
         },
         cityProperId : null,
+
+
         //---------数据-主材-型号 页面的各种查询条件
         materialModelNo : { //
             label:"编号",
@@ -389,7 +500,8 @@ var Condition = function(){
                 op : "cn",
                 validate : null
             }
-        }, materialModelName : { //
+        },
+        materialModelName : { //
             label:"名称",
             type:"text",
             submitConfig : {
@@ -397,7 +509,8 @@ var Condition = function(){
                 op : "cn",
                 validate : null
             }
-        }, materialTypeId : {
+        },
+        materialTypeId : {
             label:"品类",
             type:"select",
             submitConfig : {
@@ -412,7 +525,8 @@ var Condition = function(){
                 keyPath:"cid",
                 valuePath:"categoryName"
             }
-        }, materialerName : {
+        },
+        materialerName : {
             label : "姓名",
             type : "autofill",
             submitConfig : {
@@ -425,6 +539,40 @@ var Condition = function(){
                 listPath: "autoFillKeyValue",
                 keyPath:"key",
                 valuePath:"value"
+            }
+        },
+        categoryId : {
+            label:"品类",
+            type:"select",
+            submitConfig : {
+                name : "categoryId",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.data.queryCategory,
+                postData:{},
+                listPath: "categorys",
+                keyPath:"cid",
+                valuePath:"categoryName"
+            }
+        },
+        categoryName : {
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "categoryName",
+                op : "eq",
+                validate : null
+            }
+        },
+        brandName : {
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "brandName",
+                op : "cn",
+                validate : null
             }
         },
         //--------人事-员工 页面的各种查询条件
@@ -561,6 +709,15 @@ var Condition = function(){
                 validate:null
             }
         },
+        customerId: {
+        	label:"客户编号",
+            type:"text",
+            submitConfig : {
+                name : "customerId",
+                op : "cn",
+                validate:null
+            }
+        },
         customerPhone : {
             label:"客户电话",
             type:"text",
@@ -589,7 +746,6 @@ var Condition = function(){
                 valuePath:"value"//用来在页面显示的字段的json路径
             }
         },
-
         designerDepartmentId : {
             label:"设计部",
             type:"select",
@@ -678,7 +834,8 @@ var Condition = function(){
                 keyPath:"key",
                 valuePath:"value"
             }
-        }, approvalType: {
+        },
+        approvalType: {
             label:"审批类型",
             type:"select",
             submitConfig : {
@@ -703,7 +860,8 @@ var Condition = function(){
                 op : "cn",
                 validate:null
             }
-        }, collectTimeDateRange : {
+        },
+        collectTimeDateRange : {
             label:"收款时间",
             type:"dateRangePicker",
             submitConfig : {
@@ -712,6 +870,110 @@ var Condition = function(){
                 validate:null
             }
         },
+		// 主材
+        msoNo : {
+            label:"主材号",
+            type:"text",
+            submitConfig : {
+                name : "msoNo",
+                op : "eq",
+                validate:null
+            }
+        }, fullCollectTimeRange: {
+            label:"收款时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "fullCollectTime",
+                op : "between",
+                validate:null
+            }
+        }, msalesman: {
+            label:"业务员",
+            type : "autofill",
+            submitConfig : {//向后台提交的配置
+                name : "salesman",//接口中的参数名
+                op : "cn",//查询方式
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData:{},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath:"key",//用来向后台提交的字段的json路径
+                valuePath:"value"//用来在页面显示的字段的json路径
+            }
+        }, materialOutPaymentStatus: {
+            label:"状态",
+            type:"select",
+            submitConfig : {
+                name : "status",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : null,
+                postData : null,
+                listPath: [
+                    {key: "0", value: "待收款"},
+                    {key: "1", value: "已收款"},
+                    {key: "2", value: "退款"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        }, materialType : {
+            label:"品类",
+            type:"select",
+            submitConfig : {
+                name : "materialType",
+                op : "cn",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.data.queryCategory,
+                postData:{},
+                listPath: "categorys",
+                keyPath:"categoryName",
+                valuePath:"categoryName"
+            }
+        }, materialBrand : {
+            label:"品牌",
+            type:"text",
+            submitConfig : {
+                name : "materialBrand",
+                op : "cn",
+                validate:null
+            }
+        },
+        // 放线
+        actualDate : {
+            label:"量尺时间",
+            type:"datePicker",
+            submitConfig : {
+                name : "actualDate",
+                op : "between",
+                validate:null
+            }
+        }, drawLineStatus: {
+            label:"状态",
+            type:"select",
+            submitConfig : {
+                name : "status",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : null,
+                postData : null,
+                listPath: [
+                    {"key":"申请放线","value":"申请放线"},
+                    {"key":"放线失败","value":"放线失败"},
+                    {"key":"放线成功","value":"放线成功"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        }, 
     };
     return {
         getRuleByCondName:function(condName){

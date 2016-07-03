@@ -1,11 +1,9 @@
 
 <div id="DrawLineDeploymentPageContent" class="page-content">
-	<div id="searchDiv"></div>
-
 	<div class="row" id="drawLineGroupList">
 		<div class="col-md-12">
-			<table id="listGridGroup"></table>
-			<div id="gridPagerGroup"></div>
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
 		</div>
 	</div>
 	
@@ -234,5 +232,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/drawLine/drawLineDeployment.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/drawLine/drawLineDeployment.js?version=' + versionCode);
 </script>
+
+<script src="js/drawLine/drawLineDeployment.js"></script>

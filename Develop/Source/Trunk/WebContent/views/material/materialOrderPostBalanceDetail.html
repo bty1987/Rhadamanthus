@@ -3,8 +3,14 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<table id="listGrid"></table>
-			<div id="gridPager"></div>
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			
+			<div>
+				<h3 class="clearfix">
+					<a id="back" class="btn btn-minier btn-info pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-mail-forward bigger-110"></i>返回</a>
+				</h3>
+			</div>
 		</div>
 	</div>
 </div>
@@ -47,5 +53,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript(hostServer + 'js/material/materialOrderPostBalanceDetail.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/material/materialOrderPostBalanceDetail.js?version=' + versionCode);
 </script>
+
+<script src="js/material/materialOrderPostBalanceDetail.js"></script>
