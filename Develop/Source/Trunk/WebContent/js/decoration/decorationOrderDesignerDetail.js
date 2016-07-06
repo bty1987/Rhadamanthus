@@ -13,8 +13,6 @@ var decorationOrderDetail = {
 	quotationDetail: {},
 
 	reloadFlag: 0,
-	decorationOrderQuotationItemData: [],
-	decorationOrderQuotationItemGroupByJob: [],
 
 	btnSaveBaseDecorationOrderInfo: null,
 	

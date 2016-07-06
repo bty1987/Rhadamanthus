@@ -317,7 +317,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		}
 		
 		filters.add(new FilterVO(ConstructionSchedulePO.COLUMN_ALLOCATIONWORKERFLAG_STR, String.valueOf(AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT), acceptanceFlagOp));
-		
 		filters.add(new FilterVO(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, String.valueOf(ConstructionSchedulePO.SCHEDULE_TYPE_CLEANING_INT), "eq"));
 		
 		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.pageConstructionScheduleForAcceptance(paging, filters);

@@ -13,6 +13,7 @@ package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.json.annotations.JSON;
@@ -42,6 +43,8 @@ public class DecorationContractVO implements Serializable {
 	private Float orderTotalPrice;
 	
 	private Map<String, String> payments;
+	
+	private List<Integer> paymentRates;
 
 	public Long getAutoId(){
 		return autoId;
@@ -132,6 +135,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public List<Integer> getPaymentRates() {
+		return paymentRates;
+	}
+
+	public void setPaymentRates(List<Integer> paymentRates) {
+		this.paymentRates = paymentRates;
 	}
 
 }

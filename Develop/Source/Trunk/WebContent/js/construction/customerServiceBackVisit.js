@@ -4,9 +4,6 @@ jQuery(function($) {
 	$('#fl-statement').statement("巡检控制", "保修信息列表");
 
 	var backVisit = {
-		backBtn : $('#btnBack').on("click", function(){
-			com.switchPage(api.index.customerServiceIndex.url);
-		}),
 		saveBtn: null,
 		cancellBtn: null,
 		modal: null,
@@ -29,6 +26,8 @@ jQuery(function($) {
 	backVisit.backVisitItems.backVisitDes = $("#backVisitDes");
 	
 	backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
+	
+	$('.date-picker').datepicker({autoclose:true});
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
@@ -118,33 +117,38 @@ jQuery(function($) {
 	CustomerServiceBackVisitSeacher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceBackVisitSeacherPostData", customerServicePostData, false, null,  function(){
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
+    	var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
-		$adda.click(function(){
-			backVisit.editFlag = false;
-			com.cleanItems(backVisit.backVisitItems);
-
-			backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
-			backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
-			backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
-
-			backVisit.backVisitItems.orderId.attr("disabled", true);
-			backVisit.backVisitItems.orderAddr.attr("disabled", true);
-			backVisit.backVisitItems.customerName.attr("disabled", true);
-
-			backVisit.modal.modal("show");
-		});
-
-		return [$adda];
-
+		return [$addb, $adda];
 	});
-
-
 	
-	$('.date-picker').datepicker({autoclose:true});
+	$('a[name="add"]', '#pagenation').click(function(){
+		backVisit.editFlag = false;
+		
+		com.cleanItems(backVisit.backVisitItems);
 
+		backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
+		backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
+		backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
+
+		backVisit.backVisitItems.orderId.attr("disabled", true);
+		backVisit.backVisitItems.orderAddr.attr("disabled", true);
+		backVisit.backVisitItems.customerName.attr("disabled", true);
+
+		backVisit.modal.modal("show");
+	});
+	
+	$('a[name="back"]', '#pagenation').click(function(){
+		com.switchPage(api.index.customerServiceIndex.url);
+	});
+	
 	function typeInit(rowdata){
 
 		var result = "";

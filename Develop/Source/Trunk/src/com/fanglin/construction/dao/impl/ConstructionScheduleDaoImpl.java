@@ -56,9 +56,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				String op = filter.getOp();
 				String data = filter.getData();
 				
-				if(ConstructionSchedulePO.COLUMN_SCHEDULE_STR.equals(field)){
-					query.add(Restrictions.eq(field, Integer.valueOf(data)));
-				}else if(ConstructionSchedulePO.COLUMN_SUPERVISORQUALITYID_STR.equals(field)){
+				if(ConstructionSchedulePO.COLUMN_SUPERVISORQUALITYID_STR.equals(field)){
 					query.add(Restrictions.eq(field, data));
 				}else if(ConstructionSchedulePO.COLUMN_ALLOCATIONWORKERFLAG_STR.equals(field)){
 					
@@ -271,6 +269,8 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 					query.add(query.getCriterion("supervisor.currentName", data, op));
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.villageName", data, op));
+				}else if(ConstructionSchedulePO.COLUMN_SCHEDULE_STR.equals(field)){
+					query.add(Restrictions.eq(field, Integer.valueOf(data)));
 				}else if("projectStatus".equals(field) && !"other".equals(data)){
 					if("未完工".equals(data)){
 						query.add(query.getCriterion("decorationOrderPO.projectStatus", "已完工", "ne"));

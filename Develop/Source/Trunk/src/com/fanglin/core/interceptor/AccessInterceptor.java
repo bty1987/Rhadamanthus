@@ -80,41 +80,37 @@ public class AccessInterceptor extends AbstractInterceptor {
 				AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
 				
-				if(authenticationUtil.isMobile()){
-					result = invocation.invoke();
-				}else{
-					if(authenticationUtil.getUserId() != null){
-						
-						if(!actionName.startsWith("page") && !actionName.startsWith("query")){
-							logger.error(String.format("%s - %s - %s - %s", "AI", "I", authenticationUtil.getUserId(), actionName));
-						}
-						
-						if(authenticationUtil.getUpdateTime() == -1){
-							CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
-							throw new FLException(110005, "登陆超时");
-						}
-						
-						if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
-							throw new FLException(110005, "登陆超时");
-						}else{
-							authenticationUtil.setUpdateTime((new Date()).getTime());
-							String authenticationString = authenticationUtil.getAuthenticationStr();
-							String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
-							
-							CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
-							
-							userId = authenticationUtil.getUserId();
-							
-							// 权限认证
-							if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
-								result =  invocation.invoke();
-							}else{
-								throw new FLException(-2, "无操作权限");
-							}
-						}
-					}else{
+				if(authenticationUtil.getUserId() != null){
+					
+					if(!actionName.startsWith("page") && !actionName.startsWith("query")){
+						logger.error(String.format("%s - %s - %s - %s", "AI", "I", authenticationUtil.getUserId(), actionName));
+					}
+					
+					if(authenticationUtil.getUpdateTime() == -1){
+						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
 						throw new FLException(110005, "登陆超时");
 					}
+					
+					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
+						throw new FLException(110005, "登陆超时");
+					}else{
+						authenticationUtil.setUpdateTime((new Date()).getTime());
+						String authenticationString = authenticationUtil.getAuthenticationStr();
+						String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
+						
+						CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
+						
+						userId = authenticationUtil.getUserId();
+						
+						// 权限认证
+						if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
+							result =  invocation.invoke();
+						}else{
+							throw new FLException(-2, "无操作权限");
+						}
+					}
+				}else{
+					throw new FLException(110005, "登陆超时");
 				}
 				
 				Timestamp endTime = DateUtil.getDateToTimestamp(new Date());

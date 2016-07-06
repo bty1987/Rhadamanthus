@@ -116,10 +116,8 @@ $(function(){
             com.post(api.decoration.addBackVisit, a, successCallback)
         }
     }
+    
     function successCallback(a) {
-    	
-    	console.log(TimeLine.getList);
-    	
         0 == a.errorCode && (com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f"), TimeLine.getList(), backVisit.modal.modal("hide"))
     }
 

@@ -107,7 +107,7 @@ var Condition = function(){
             label:"完工状态",
             type:"select",
             submitConfig : {
-                name : "projectStatusFlag",
+                name : "projectStatus",
                 op : "eq",
                 validate:null
             },
@@ -123,27 +123,23 @@ var Condition = function(){
             }
         },
         //-------订单-施工进度-巡检控制查询条件
-
-
         supervisor : {
-        label : "监理",//中文名
-            type : "autofill",//类型
-            submitConfig : {//向后台提交的配置
-            name : "supervisor",//接口中的参数名
-                op : "cn",//查询方式
-                validate: null//校验规则
-        },
-        dataSource : {//从后台取数据的各种配置
-            url : api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData:{ "duty" : "监理" },//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-                keyPath:"key",//用来向后台提交的字段的json路径
-                valuePath:"value"//用来在页面显示的字段的json路径
-        }
-    },
-
+	        label : "监理",//中文名
+	            type : "autofill",//类型
+	            submitConfig : {//向后台提交的配置
+	            name : "supervisor",//接口中的参数名
+	                op : "cn",//查询方式
+	                validate: null//校验规则
+	        },
+	        dataSource : {//从后台取数据的各种配置
+	            url : api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+	                postData:{ "duty" : "监理" },//获取数据时的请求参数
+	            listPath: "autoFillKeyValue",//响应list的json路径
+	                keyPath:"key",//用来向后台提交的字段的json路径
+	                valuePath:"value"//用来在页面显示的字段的json路径
+	        }
+	    },
         //-------订单-施工进度-质检控制查询条件
-
         allocationWorkerFlag : {
             label:"分配状态",
                 type:"select",
@@ -728,6 +724,22 @@ var Condition = function(){
                     "reg" : /^[0-9]*$/,
                     "msg" : "请输入数字"
                 }
+            }
+        },
+        relationshipType : {
+            label:"关系客户",
+            type:"select",
+            submitConfig : {
+                name : "relationshipType",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.ds.customerInfo,
+                postData:{},
+                listPath: "relationshipType",
+                keyPath:"key",
+                valuePath:"value"
             }
         },
         salesman : {

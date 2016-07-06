@@ -1,5 +1,4 @@
 
-
 var reworkData = [
 	{"reworkTime":"2014-09-02", "reworkComment":"针对我是吊顶部分进行后期补充工作."}
 ];
@@ -7,13 +6,9 @@ var reworkData = [
 jQuery(function($) {
 	$('#fl-statement').statement("监理控制", "返工信息列表");
 
-
 	var rework = {
 		saveBtn: $("#saveBtn").on("click", saveData),
 		cancellBtn: $("#cancelBtn"),
-		backBtn: $('#btnBack').on('click', function(){
-			com.switchPage(api.index.supervisionIndex.url);
-		}),
 		modal: $("#reworkModal"),
 		reworkItems: {
 			createTime : $("#createTime"),
@@ -23,10 +18,10 @@ jQuery(function($) {
 		editFlag: false,
 		repeatFlg: false,
 	};
+	
+	$('.date-picker').datepicker({autoclose:true});
 
 	var displayFunc  = (function(){
-
-
 
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
@@ -54,7 +49,6 @@ jQuery(function($) {
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
 
-
 			var propertyArr = [
 				["创建人:", v.createrName, "grey"],
 				["返工时间:", v.createTime, "grey"],
@@ -68,13 +62,9 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-
 			$divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
-
-
-
 
 			$btnView.click(function(){
 				viewSupervisionReworkDrawingIndex(v.rwId);
@@ -104,31 +94,37 @@ jQuery(function($) {
 		}
 	})();
 
-	var SupervisionReworkSeacher = new Searcher();
-	SupervisionReworkSeacher.init( [], "condList", api.construction.pageReworkByOrderId, function(list){
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.construction.pageReworkByOrderId, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "supervisionReworkSeacherPostData", supervisionPostData, false, null,  function(){
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+	}, "pagenation", "supervisionReworkPostData", supervisionPostData, false, null,  function(){
+
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
+    	var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
-		$adda.click(function(){
-			rework.editFlag = false;
-			com.cleanItems(rework.reworkItems);
-			rework.modal.modal("show");
-		});
-
-		return [$adda];
-
+		return [$addb, $adda];
 	});
-
-
-	$('.date-picker').datepicker({autoclose:true});
-
+	
+	$('a[name="add"]', '#pagenation').click(function(){
+		rework.editFlag = false;
+		
+		com.cleanItems(rework.reworkItems);
+		
+		rework.modal.modal("show");
+	});
+	
+	$('a[name="back"]', '#pagenation').click(function(){
+		com.switchPage(api.index.supervisionIndex.url);
+	});
 
 	function saveData(){
 
-		if(com.validate()|| rework.repeatFlg)
+		if(com.validate())
 			return;
 
 		var url;
@@ -145,37 +141,26 @@ jQuery(function($) {
 			url = api.construction.addRework;
 		}
 
-		com.post(url, options, successCallback, failCallback);
+		com.post(url, options, function(res){
+			searcher.doSearch();
+		});
+		
 		rework.modal.modal("hide");
-
 	}
 
 	function removeRow(id){
-
 		bootbox.confirm("确认申请放线吗？", function(res){
 			if(res){
-				com.post(api.construction.deleteRework, {"rwIds[0]"  : id}, successCallback, failCallback);
+				com.post(api.construction.deleteRework, {"rwIds[0]": id}, function(res){
+					searcher.doSearch();
+				});
 			}
 		});
-
 	}
-
 
 	function viewSupervisionReworkDrawingIndex(rwId){
 		supervisionPostData["reworkDrawing.rwId"] = rwId;
 		$("#supervisionPageContent").load(api.index.supervisionReworkDrawingIndex.url);
 	}
 
-	function successCallback(result){
-		SupervisionReworkSeacher.doSearch();
-	}
-
-	function failCallback(){
-
-	}
-
-
-	
 });
-
-

@@ -131,9 +131,6 @@ public class BackVisitServiceImpl implements BackVisitService {
 				com.fanglin.dingding.service.MessageService.sendMessageForBackVisit(receiverId.trim(), String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent());
 				
 				receiverIds.append(String.format("%s,", receiverId));
-				com.fanglin.dingding.service.MessageService.sendMessageForBackVisit(receiverId, String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent());
-				
-				receiverIds.append(receiverId);
 			}
 		}
 		

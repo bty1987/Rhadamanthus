@@ -1,20 +1,18 @@
-var record = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	recordItems: {},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
 
 jQuery(function($) {
-	$('#fl-statement').statement("巡检控制", "记录信息列表");
 	
-	record.recordListGrid = $("#recordListGrid");
-	record.recordGridPager = "#recordGridPager";
+	$('#fl-statement').statement("巡检控制", "巡检记录");
+	
+	var record = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		recordItems: {},
+		
+		editFlag: false,
+		repeatFlg: false,
+	};
+	
 	record.saveBtn = $("#saveBtn").on("click", saveData);
 	record.cancelBtn = $("#cancelBtn");
 	record.modal = $("#recordModal").on('show.bs.modal',function(e){
@@ -29,139 +27,166 @@ jQuery(function($) {
 	record.recordItems.endTime = $("#endTime");
 	record.recordItems.recordDes = $("#recordDes");
 	
-	record.recordListGrid.jqGrid({
-		url: api.construction.pageInspectionRecordByOrderId.url,
-		postData: inspectionPostData,
-		colNames:['Id', '订单编号', '楼盘名', '操作人Id', '操作人', '开始时间', '结束时间', '信息'],
-		colModel:[
-		    {name:'irId', hidden:true},
-		    {name:'orderId'},
-			{name:'orderAddr'},
-			{name:'operaterId', hidden:true},
-			{name:'operaterName'},
-			{name:'startTime'},
-			{name:'endTime'},
-			{name:'recordDes'},
-		],
-		pager : record.recordGridPager,
-		caption: "记录信息列表"
-	});
-	
-	record.recordListGrid.navGrid(record.recordGridPager,
-		{edit: false, add: false, del: true, search: false, searchicon: 'icon-search orange', refresh: false, view: false}, {}, {}, 
-		$.jgrid.deleteFunc(removeRow),
-		$.jgrid.searchFunc($(this))
-	)
-//	.navButtonAdd(record.recordGridPager,{
-//		caption: "",
-//		buttonicon: "icon-pencil blue",
-//		title: "编辑",
-//		onClickButton: function(){
-//			record.editFlag = true;
-//			var num = record.recordListGrid.jqGrid("getGridParam", 'selrow');
-//			
-//			if(num == null){
-//				$.jgrid.viewModal("#alertmod_recordListGrid",{gbox:"#gbox_"+record.recordListGrid.attr("id"), jqm:true});$("#jqg_alrt").focus();
-//				return;
-//			}
-//			
-//			var row = record.recordListGrid.jqGrid("getRowData", num);
-//			
-//			record.recordItems.orderId.val(row.orderId);
-//			record.recordItems.orderAddr.val(row.orderAddr);
-//			record.recordItems.recordTime.val(row.recordTime);
-//			record.recordItems.recordDes.val(row.recordDes);
-//			inspectionPostData["inspectionRecord.irId"] = row.irId;
-//			
-//			record.recordItems.orderId.attr('disabled', true);
-//			record.recordItems.orderAddr.attr('disabled', true);
-//			
-//			record.modal.modal("show");
-//		},
-//		position: "first",
-//	})
-	.navButtonAdd(record.recordGridPager, {
-		caption: "",
-		buttonicon: "icon-plus-sign purple",
-		title: "创建",
-		onClickButton: function(){
-			
-			record.editFlag = false;
-			
-			com.cleanItems(record.recordItems);
-			
-			record.recordItems.orderId.val(inspectionPostData["inspectionRecord.orderId"]);
-			record.recordItems.orderAddr.val(inspectionPostData["inspectionRecord.orderAddr"]);
-			
-			record.recordItems.orderId.attr('disabled', true);
-			record.recordItems.orderAddr.attr('disabled', true);
-			
-			record.modal.modal("show");
-		},
-		position: "first",
-	}).navButtonAdd(record.gridPager, {
-		caption: "",
-		buttonicon: "icon-mail-forward",
-		title: "返回",
-		onClickButton: function(){
-			$(".tooltip").remove();
-			com.switchPage(api.index.inspectionIndex.url);
-		},
-		position: "first",
-	});
-	
 	$('.date-picker').datepicker({autoclose:true});
 	record.recordItems.startTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
 	record.recordItems.endTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
 	
+	var displayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = $('#' + tableId).empty();
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var that = this;
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
+
+			var propertyArr = [
+				["楼盘地址:", v.orderAddr, "grey"],
+				["操作人:", v.operaterName, "grey"],
+				["开始时间:", v.startTime, "grey"],
+				["结束时间:", v.endTime, "grey"],
+				["备注:", v.recordDes, "grey"],
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty);
+
+			$btnEdit.click(function(){
+				editRecord(v);
+			});
+			
+			$btnDel.click(function(){
+				delRecord(v.irId);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				$('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.construction.pageInspectionRecordByOrderId, function(list){
+		displayFunc.init('resultList', list);
+	}, "pagenation", "inspectionRecordPostData", inspectionPostData, false, null,  function(){
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
+    	var $addspan = $('<span></span>').text('返回').appendTo($addb);
+
+		return [$addb, $adda];
+	});
+	
+	$('a[name="add"]', '#pagenation').click(function(){
+		record.editFlag = false;
+		
+		com.cleanItems(record.recordItems);
+		
+		record.recordItems.orderId.val(inspectionPostData["inspectionRecord.orderId"]);
+		record.recordItems.orderAddr.val(inspectionPostData["inspectionRecord.orderAddr"]);
+		
+		record.recordItems.orderId.attr('disabled', true);
+		record.recordItems.orderAddr.attr('disabled', true);
+		
+		record.modal.modal("show");
+	});
+	
+	$('a[name="back"]', '#pagenation').click(function(){
+		com.switchPage(api.index.inspectionIndex.url);
+	});
+	
+	function editRecord(v){
+		record.editFlag = true;
+		
+		record.recordItems.orderId.val(v.orderId);
+		record.recordItems.orderAddr.val(v.orderAddr);
+		record.recordItems.startDate.val(v.startTime.split(' ')[0]);
+		record.recordItems.startTime.val(v.startTime.split(' ')[1]);
+		record.recordItems.endDate.val(v.endTime.split(' ')[0]);
+		record.recordItems.endTime.val(v.endTime.split(' ')[1]);
+		record.recordItems.recordDes.val(v.recordDes);
+		inspectionPostData["inspectionRecord.irId"] = v.irId;
+		
+		record.recordItems.orderId.attr('disabled', true);
+		record.recordItems.orderAddr.attr('disabled', true);
+		
+		record.modal.modal("show");
+	}
+	
+	function delRecord(irId){
+		com.post(api.construction.deleteInspectionRecord, {"irIds[0]": irId}, function(res){
+			searcher.doSearch();
+		});
+	}
+	
+	function saveData(){
+		if(com.validate()){
+			return;
+		}
+		
+		var url;
+		var options = {
+			"inspectionRecord.orderId": record.recordItems.orderId.val(),
+			"inspectionRecord.orderAddr": record.recordItems.orderAddr.val(),
+			"inspectionRecord.startTime": record.recordItems.startDate.val() + " " + record.recordItems.startTime.val(),
+			"inspectionRecord.endTime": record.recordItems.endDate.val() + " " + record.recordItems.endTime.val(),
+			"inspectionRecord.recordDes": record.recordItems.recordDes.val(),
+		};
+		
+		if(options["inspectionRecord.startTime"] > options["inspectionRecord.endTime"]){
+			com.showAlert(com.warning, "开始时间需要小于结束时间");
+			return false;
+		}
+		
+		if(record.editFlag){
+			url = api.construction.updateInspectionRecord;
+			options["inspectionRecord.irId"] = inspectionPostData["inspectionRecord.irId"];
+		}else{
+			url = api.construction.addInspectionRecord;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearch();
+		});
+		
+		record.modal.modal("hide");
+	}
+	
 });
-
-function saveData(){
-	if(com.validate() || record.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		"inspectionRecord.orderId": record.recordItems.orderId.val(),
-		"inspectionRecord.orderAddr": record.recordItems.orderAddr.val(),
-		"inspectionRecord.startTime": record.recordItems.startDate.val() + " " + record.recordItems.startTime.val(),
-		"inspectionRecord.endTime": record.recordItems.endDate.val() + " " + record.recordItems.endTime.val(),
-		"inspectionRecord.recordDes": record.recordItems.recordDes.val(),
-	};
-	
-	if(options["inspectionRecord.startTime"] > options["inspectionRecord.endTime"]){
-		com.showAlert(com.warning, "开始时间需要小于结束时间");
-		return false;
-	}
-	
-	if(record.editFlag){
-		url = api.construction.updateInspectionRecord;
-		options["inspectionRecord.irId"] = inspectionPostData["inspectionRecord.irId"];
-	}else{
-		url = api.construction.addInspectionRecord;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	record.modal.modal("hide");
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid("getRowData", nums[i]);
-		options["irIds[" + i + "]"] = row.irId;
-	}
-	
-	com.post(api.construction.deleteInspectionRecord, options, successCallback, failCallback);
-	$("#eData").trigger("click");
-}
-
-function successCallback(result){
-	record.recordListGrid.jqGrid().trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}

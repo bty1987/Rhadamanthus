@@ -3,17 +3,7 @@ var acceptancePostData = {};
 jQuery(function($) {
 	$('#fl-statement').statement("工程验收", "订单信息列表");
 	
-	if(!params["acceptancePostData"]){
-		params["acceptancePostData"] = {
-			"filters[0].data": "notAcceptanced",
-			"filters[0].field": "acceptanceFlag",
-			"filters[0].op": "cn",
-		};
-	}
-	
 	var displayFunc  = (function(){
-
-
 
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
@@ -39,7 +29,6 @@ jQuery(function($) {
 
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 
-
 			var propertyArr = [
 				["楼盘名:", v.village.villageName, "grey"],
 				["设计部门:", v.designDepartment, "grey"],
@@ -47,9 +36,8 @@ jQuery(function($) {
 				["监理:", v.supervisor, "grey"],
 				["面积:", v.houseArea, "grey"],
 				["工程状态:", v.schedule, "grey"],
-				["进度:", scheduleInit(v)]
+				["进度:", v.projectStatus, "red"],
 			];
-
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
@@ -57,7 +45,6 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-
 
 			$divBtnWrap.append($btnView).appendTo($h3);
 
@@ -70,41 +57,6 @@ jQuery(function($) {
 			return $liLine;
 		};
 
-		var scheduleInit = function(v) {
-
-			var scheduleInfos = {
-				"铲大白": [10, "progress-bar-inverse"],
-				"放线": [10, "progress-bar-grey"],
-				"水电力": [20, "progress-bar-danger"],
-				"瓦工": [10, "progress-bar-pink"],
-				"地面找平": [10, "progress-bar-purple"],
-				"木工": [10, "progress-bar-warning"],
-				"油工": [10, "progress-bar-yellow"],
-				"水电验收": [10, "progress-bar-success"],
-				"保洁": [10, "progress-bar-progress"]
-			};
-
-			var $process = $('<div></div>').attr({
-				'data-percent' : v.projectStatus
-			}).css({
-				'margin-bottom' : '0px',
-				'width' : '150px',
-				'display' : 'inline-block',
-				'vertical-align' : 'middle',
-			}).addClass('progress');
-
-
-			$.each(scheduleInfos, function(k, val){
-				if(k == v.projectStatus) return false;
-				var $div = $('<div></div>').css({
-					'width' : val[0] + '%'
-				}).addClass('progress-bar ' + val[1]);
-				$div.appendTo($process);
-			});
-
-			return $process;
-		}
-
 		return {
 			init : function(tableId,listData){
 				$('#' + tableId).html(null);
@@ -116,21 +68,14 @@ jQuery(function($) {
 		}
 	})();
 
-	var _condArr = ['orderId', 'village', 'houseNumber', 'supervisor', 'allocationWorkerFlag'];
-	var AcceptanceSeacher = new Searcher();
-	AcceptanceSeacher.init( _condArr, "condList", api.construction.pageDecorationOrderForAcceptance, function(list){
+	var searcher = new Searcher();
+	searcher.init(['orderId', 'village', 'houseNumber', 'supervisor', 'acceptanceFlag'], "condList", api.construction.pageDecorationOrderForAcceptance, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "acceptanceSeacherSeacherPostData", params["acceptancePostData"]);
+	}, "pagenation", "acceptanceSeacherSeacherPostData");
 
 	function viewAcceptanceDetailIndex(orderId){
 		acceptancePostData["acceptance.orderId"] = orderId;
 		$("#acceptancePageContent").load(api.index.acceptanceDetailIndex.url);
 	}
 
-
 });
-
-
-
-
-

@@ -169,8 +169,6 @@ function loadTopSelf(opts){
 
 function loadNotices(){
 	
-	console.log(params.watermark);
-	
 	var img = new Image();
 	img.src = params.watermark;
 	url = 'url("' + img.src + '")'

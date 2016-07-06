@@ -71,33 +71,33 @@ function generateAddReduceItem(name, addReduceItems, total, html){
 	
 	var html = "";
 	
-	html+=name;
-	html+='<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
-	html+='<tbody><tr bgcolor="#FFFFFF" align="center">';
-	html+='<td width="40%">项目名称</td>';
-	html+='<td width="14%">单位</td>';
-	html+='<td width="13%">数量</td>';
-	html+='<td width="13%">单价</td>';
-	html+='<td width="20%">金额</td>';
-	html+='</tr>';
+	html += name;
+	html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
+	html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
+	html += '<td width="40%">项目名称</td>';
+	html += '<td width="14%">单位</td>';
+	html += '<td width="13%">数量</td>';
+	html += '<td width="13%">单价</td>';
+	html += '<td width="20%">金额</td>';
+	html += '</tr>';
 	
 	var itemLength = addReduceItems.length;
 	
 	for(var i=0;i<itemLength;i++){
 		var item = addReduceItems[i];
 		
-		html+='<tr align="center">';
-		html+='<td>'+item.itemName+'</td>';
-		html+='<td>'+item.measurementUnit+'</td>';
-		html+='<td>'+item.num+'</td>';
-		html+='<td>'+item.unitPrice+'</td>';
-		html+='<td>'+item.total+'</td>';
-		html+='</tr>';
+		html += '<tr align="center">';
+		html += '<td>'+item.itemName+'</td>';
+		html += '<td>'+item.measurementUnit+'</td>';
+		html += '<td>'+item.num+'</td>';
+		html += '<td>'+item.unitPrice+'</td>';
+		html += '<td>'+item.total+'</td>';
+		html += '</tr>';
 	}
 	
-	html+='</tbody></table>';
-	html+='工程增项金额:' + Math.round(total * 100) / 100 + '元';
-	html+='<hr><p>';
+	html += '</tbody></table>';
+	html += name + '金额:' + Math.round(total * 100) / 100 + '元';
+	html += '<hr><p>';
 	
 	return html;
 }

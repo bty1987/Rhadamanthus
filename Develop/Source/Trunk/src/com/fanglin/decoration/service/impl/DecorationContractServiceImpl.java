@@ -92,6 +92,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 		
 		decorationContractVO.setPayments(payments);
+		decorationContractVO.setPaymentRates(Arrays.asList(SystemConfig.getInt("firstRate"), SystemConfig.getInt("firstSecondRate"), SystemConfig.getInt("secondRate"), SystemConfig.getInt("lastRate")));
 		
 		return decorationContractVO;
 	}

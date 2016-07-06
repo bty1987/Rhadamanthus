@@ -113,7 +113,7 @@ var Searcher = function(){
                     "name": condCode,
                     "data-op": _rop,
                     "data-rqs": _rname,
-                    "readonly": true,
+//                    "readonly": true,
                 }).appendTo($item);
 
                 $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
@@ -129,7 +129,7 @@ var Searcher = function(){
                     "data-op": _rop,
                     "data-rqs": _rname,
                     "data-date-format": "dd-mm-yyyy",
-                    "readonly": true,
+//                    "readonly": true,
                 }).appendTo($item);
             	
             	$showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});
@@ -276,9 +276,8 @@ var Searcher = function(){
                 this.showPagenation(result.paging.page, result.paging.rows, result.paging.totalPage, result.paging.totalRecords);
                 //params全局变量,给全局变量赋当前查询条件的值
                 params[basicConf.historyName] = _params;
-
-                basicConf.displayFunc(result.paging.data);
-
+                
+                (result.paging.data && result.paging.data.length > 0) ? basicConf.displayFunc(result.paging.data) : emptyData();
             }, this), null, false);
         },
         showPagenation : function(page, rows, totalPage, totalRecords ){
@@ -290,6 +289,7 @@ var Searcher = function(){
             $('span[name="rows"]', basicConf.$pager).html(rows);
             $('span[name="totalPage"]', basicConf.$pager).html(totalPage);
             $('span[name="totalRecords"]', basicConf.$pager).html(totalRecords);
+            
             $(basicConf.$pager).show();
         },
 
@@ -356,12 +356,20 @@ var Searcher = function(){
             })
         }
     };
+    
+    var emptyData = function(){
+    	var $resultList = $('#resultList').html('');
+    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+    }
 
     var queryData = function(_params){
         com.post(basicConf.url, _params, $.proxy(function(result){
             //params全局变量,给全局变量赋当前查询条件的值
             params[basicConf.historyName] = _params;
-            basicConf.displayFunc(result[basicConf.resultListName]);
+            
+            (result[basicConf.resultListName] && result[basicConf.resultListName].length > 0) ? basicConf.displayFunc(result[basicConf.resultListName]) : emptyData();
         }, this), null, false);
     };
 

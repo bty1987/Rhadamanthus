@@ -1,12 +1,7 @@
 
 jQuery(function($) {
 
-	$('#fl-statement').statement("巡检控制", "保修信息列表");
-
 	var guarantee = {
-		backBtn : $('#btnBack').on("click", function(){
-			com.switchPage(api.index.customerServiceIndex.url);
-		}),
 		saveBtn: null,
 		cancellBtn: null,
 		modal: null,
@@ -110,29 +105,36 @@ jQuery(function($) {
 	CustomerServiceGuaranteeSeacher.init( [], "condList", api.construction.pageCustomerServiceGuarantee, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceGuaranteeSeacherPostData", customerServicePostData, false, null,  function(){
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
+    	var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
-		$adda.click(function(){
-			guarantee.editFlag = false;
-			com.cleanItems(guarantee.guaranteeItems);
-
-			guarantee.guaranteeItems.orderId.val(customerServicePostData["customerServiceGuarantee.orderId"]);
-			guarantee.guaranteeItems.customerName.val(customerServicePostData["customerServiceGuarantee.customerName"]);
-
-			guarantee.guaranteeItems.orderId.attr("disabled", true);
-			guarantee.guaranteeItems.customerName.attr("disabled", true);
-			guarantee.guaranteeItems.guaranteeTime.attr("disabled", false);
-
-			guarantee.modal.modal("show");
-		});
-
-		return [$adda];
-
+		return [$addb, $adda];
 	});
 
+	$('a[name="add"]', '#pagenation').click(function(){
+		guarantee.editFlag = false;
+		
+		com.cleanItems(guarantee.guaranteeItems);
 
+		guarantee.guaranteeItems.orderId.val(customerServicePostData["customerServiceGuarantee.orderId"]);
+		guarantee.guaranteeItems.customerName.val(customerServicePostData["customerServiceGuarantee.customerName"]);
+
+		guarantee.guaranteeItems.orderId.attr("disabled", true);
+		guarantee.guaranteeItems.customerName.attr("disabled", true);
+		guarantee.guaranteeItems.guaranteeTime.attr("disabled", false);
+
+		guarantee.modal.modal("show");
+	});
+	
+	$('a[name="back"]', '#pagenation').click(function(){
+		com.switchPage(api.index.customerServiceIndex.url);
+	});
 
 	$('.date-picker').datepicker({autoclose:true});
 
