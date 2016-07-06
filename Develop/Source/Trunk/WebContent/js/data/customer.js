@@ -1,6 +1,4 @@
 var customer = {
-	listgrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
@@ -125,7 +123,6 @@ jQuery(function($) {
             }
         };
         
-        //查看
         var editCustomer = function (c){
         	customer.editFlg = true;
         	
@@ -142,36 +139,29 @@ jQuery(function($) {
 			customer.modal.modal("show");
         };
         
-        //添加
-        var addCustomer = function(){
-        	
-            customer.editFlg = false;
-			com.cleanItems(customer.items);
-			
-			customer.modal.modal("show");
-        };
-
         return {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
             }, initAddCustomer: function(){
-            	$('a[name="addCustomer"]','#pagenation').click(function(){
-                	addCustomer();
+            	$('a[name="add"]','#pagenation').click(function(){
+            		customer.editFlg = false;
+            		
+        			com.cleanItems(customer.items);
+        			
+        			customer.modal.modal("show");
                 });
             }
         }
     })();
 	
-	var _condArr = ['customerName', 'customerPhone', 'relationshipType'];
+	var searcher = new Searcher();
 	
-	var customerSeacher = new Searcher();
-	
-	customerSeacher.init( _condArr, "condList", api.data.pageCustomer, function(data){
+	searcher.init(['customerPhone', 'relationshipType'], "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "customerPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCustomer').css('margin-top', '7px');
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px');
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
@@ -179,38 +169,37 @@ jQuery(function($) {
     });
 	
 	displayFunc.initAddCustomer();
+	
+	function saveData(){
+		if(com.validate() || customer.repeatFlg){
+			return;
+		}
+		
+		var url;
+		var options = {
+			"customer.customerName": customer.items.customerName.val(),
+			"customer.gender": com.genderType[customer.items.gender.prop("checked")],
+			"customer.phone": customer.items.phone.val(),
+			"customer.qq": customer.items.qq.val(),
+			"customer.wechat": customer.items.wechat.val(),
+			"customer.email": customer.items.email.val(),
+			"customer.relationshipType": customer.items.relationshipType.val(),
+			"customer.address": customer.items.address.val()
+		};
+		
+		if(customer.editFlg){
+			url = api.data.updateCustomer;
+			options['customer.id'] = customer.items.id;
+		}else {
+			url = api.data.addCustomer;
+			options['customer.approveStatus'] = 0;
+		}
+		
+		com.post(url, options, function(res){
+			searcher.doSearcher();
+		});
+		
+		customer.modal.modal("hide");
+	}
 });
 
-function saveData(){
-	if(com.validate() || customer.repeatFlg){
-		return;
-	}
-	
-	var url;
-	var options = {
-		"customer.customerName": customer.items.customerName.val(),
-		"customer.gender": com.genderType[customer.items.gender.prop("checked")],
-		"customer.phone": customer.items.phone.val(),
-		"customer.qq": customer.items.qq.val(),
-		"customer.wechat": customer.items.wechat.val(),
-		"customer.email": customer.items.email.val(),
-		"customer.relationshipType": customer.items.relationshipType.val(),
-		"customer.address": customer.items.address.val()
-	};
-	
-	if(customer.editFlg){
-		url = api.data.updateCustomer;
-		options['customer.id'] = customer.items.id;
-	}else {
-		url = api.data.addCustomer;
-		options['customer.approveStatus'] = 0;
-	}
-	
-	com.post(url, options, successCallback);
-	
-	customer.modal.modal("hide");
-}
-
-function successCallback(){
-	com.showAlert(com.info, "操作成功");
-}

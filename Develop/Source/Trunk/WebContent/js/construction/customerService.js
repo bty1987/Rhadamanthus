@@ -1,7 +1,6 @@
 var customerServicePostData = {};
 
 jQuery(function($) {
-	$('#fl-statement').statement("客服控制", "订单信息列表");
 
 	var displayFunc  = (function(){
 
@@ -32,7 +31,6 @@ jQuery(function($) {
 			var $btnRepair = $('<a></a>').addClass('btn btn-minier').html("保修");
 			var $btnRevisit = $('<a></a>').addClass('btn btn-minier btn-danger').html("回访");
 
-
 			var propertyArr = [
 				["楼盘名:", v.village.villageName, "grey"],
 				["客户电话:", v.customer.phone, "grey"],
@@ -43,9 +41,8 @@ jQuery(function($) {
 				["折扣:", v.discount, "grey"],
 				["面积:", v.houseArea, "grey"],
 				["工程状态:", v.schedule, "grey"],
-				["进度:", scheduleInit(v)]
+				["进度:", v.projectStatus, "red"],
 			];
-
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
@@ -53,7 +50,6 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-
 
 			$divBtnWrap.append($btnView).append($btnComplain).append($btnRepair).append($btnRevisit).appendTo($h3);
 
@@ -75,41 +71,6 @@ jQuery(function($) {
 			return $liLine;
 		};
 
-		var scheduleInit = function(v) {
-
-			var scheduleInfos = {
-				"铲大白": [10, "progress-bar-inverse"],
-				"放线": [10, "progress-bar-grey"],
-				"水电力": [20, "progress-bar-danger"],
-				"瓦工": [10, "progress-bar-pink"],
-				"地面找平": [10, "progress-bar-purple"],
-				"木工": [10, "progress-bar-warning"],
-				"油工": [10, "progress-bar-yellow"],
-				"水电验收": [10, "progress-bar-success"],
-				"保洁": [10, "progress-bar-progress"]
-			};
-
-			var $process = $('<div></div>').attr({
-				'data-percent' : v.projectStatus
-			}).css({
-				'margin-bottom' : '0px',
-				'width' : '150px',
-				'display' : 'inline-block',
-				'vertical-align' : 'middle',
-			}).addClass('progress');
-
-
-			$.each(scheduleInfos, function(k, val){
-				if(k == v.projectStatus) return false;
-				var $div = $('<div></div>').css({
-					'width' : val[0] + '%'
-				}).addClass('progress-bar ' + val[1]);
-				$div.appendTo($process);
-			});
-
-			return $process;
-		}
-
 		return {
 			init : function(tableId,listData){
 				$('#' + tableId).html(null);
@@ -121,12 +82,10 @@ jQuery(function($) {
 		}
 	})();
 
-	var _condArr = ['orderId', 'village', 'houseNumber', 'designer', 'schedule'];
-	var CustomerServiceSeacher = new Searcher();
-	CustomerServiceSeacher.init( _condArr, "condList", api.construction.pageDecorationOrderForConstructionSchedule, function(list){
+	var searcher = new Searcher();
+	searcher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstructionSchedule, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceSeacherPostData");
-
 
 	function viewCustomerServiceDetailIndex(orderId){
 		customerServicePostData["constructionSchedule.orderId"] = orderId;

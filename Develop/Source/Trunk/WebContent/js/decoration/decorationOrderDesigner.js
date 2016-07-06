@@ -144,6 +144,7 @@ $(function(){
 						["面积:", v.houseArea, "grey"],
 						["合同报价:", v.orderTotalPrice, "grey"],
 						["量房时间:", v.createTime, "grey"],
+						["签单时间:", v.contractTime, "grey"],
 						["状态:", v.status, "red"]
 					];
 
@@ -231,6 +232,7 @@ $(function(){
 		//增减项
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){
 			params.decorationOrderId = decorationOrderId;
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.addReduceIndex.url);
 		}
 

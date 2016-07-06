@@ -13,8 +13,6 @@ jQuery(function($) {
 
 	var displayFunc  = (function(){
 
-
-
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -39,7 +37,6 @@ jQuery(function($) {
 
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 
-
 			var propertyArr = [
 				["楼盘名:", v.village.villageName, "grey"],
 				["设计师:", v.designer, "grey"],
@@ -48,9 +45,8 @@ jQuery(function($) {
 				["折扣:", v.discount, "grey"],
 				["面积:", v.houseArea, "grey"],
 				["工程状态:", v.schedule, "grey"],
-				["进度:", scheduleInit(v)]
+				["进度:", v.projectStatus, "red"]
 			];
-
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
@@ -59,58 +55,16 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-
 			$divBtnWrap.append($btnView).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
-
-
-
 
 			$btnView.click(function(){
 				viewworkerAllocationDetail(v.orderId);
 			});
 
-
-
-
 			return $liLine;
 		};
-
-		var scheduleInit = function(v) {
-
-			var scheduleInfos = {
-				"铲大白": [10, "progress-bar-inverse"],
-				"放线": [10, "progress-bar-grey"],
-				"水电力": [20, "progress-bar-danger"],
-				"瓦工": [10, "progress-bar-pink"],
-				"地面找平": [10, "progress-bar-purple"],
-				"木工": [10, "progress-bar-warning"],
-				"油工": [10, "progress-bar-yellow"],
-				"水电验收": [10, "progress-bar-success"],
-				"保洁": [10, "progress-bar-progress"]
-			};
-
-			var $process = $('<div></div>').attr({
-				'data-percent' : v.projectStatus
-			}).css({
-				'margin-bottom' : '0px',
-				'width' : '150px',
-				'display' : 'inline-block',
-				'vertical-align' : 'middle',
-			}).addClass('progress');
-
-
-			$.each(scheduleInfos, function(k, val){
-				if(k == v.projectStatus) return false;
-				var $div = $('<div></div>').css({
-					'width' : val[0] + '%'
-				}).addClass('progress-bar ' + val[1]);
-				$div.appendTo($process);
-			});
-
-			return $process;
-		}
 
 		return {
 			init : function(tableId,listData){
@@ -123,21 +77,15 @@ jQuery(function($) {
 		}
 	})();
 
-	var _condArr = ['orderId', 'village', 'designer', 'schedule'];
-	var WorkerAllocationSeacher = new Searcher();
-	WorkerAllocationSeacher.init( _condArr, "condList", api.construction.pageDecorationOrderForSupervisionByUserId, function(list){
+	var searcher = new Searcher();
+	searcher.init(['orderId', 'village', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForSupervisionByUserId, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "workerAllocationSeacherPostData");
-
-
-
+	
+	function viewworkerAllocationDetail(orderId){
+		workerAllocationPostData["constructionSchedule.orderId"] = orderId;
+		$("#workerAllocationPageContent").load(api.index.workerAllocationDetailIndex.url);
+	}
 	
 });
-
-
-
-function viewworkerAllocationDetail(orderId){
-	workerAllocationPostData["constructionSchedule.orderId"] = orderId;
-	$("#workerAllocationPageContent").load(api.index.workerAllocationDetailIndex.url);
-}
 

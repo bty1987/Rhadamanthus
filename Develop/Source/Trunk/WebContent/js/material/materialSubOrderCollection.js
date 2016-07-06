@@ -89,7 +89,16 @@ jQuery(function($) {
 					var styleArr = [];
 					
 					v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
-					v.bank != null && v.bank != "0" ? styleArr.push(["银行卡:", v.bank, "grey"]) : true;
+					v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
+						  var info = bank + ", ";
+						  var _s = bankInfo.split('#');
+						  for(var i=1;i<_s.length-1;i++){
+						    var _i = _s[i].split('|');
+						    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+						  }
+						  
+						  return info
+					})(v.bank, v.bankInfo), "grey"]) : true;
 					v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
 					v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
 					v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "grey"]) : true;

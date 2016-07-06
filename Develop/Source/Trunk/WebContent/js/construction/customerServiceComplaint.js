@@ -8,10 +8,6 @@ jQuery(function($) {
 		cancellBtn: $("#cancelBtn"),
 		saveHandleBtn : $("#saveHandleBtn").on("click", saveHandleData),
 		canceHandlelBtn : $("#cancelBtn"),
-		backBtn : $('#btnBack').on("click", function(){
-			$(".tooltip").remove();
-			com.switchPage(api.index.customerServiceIndex.url);
-		}),
 		modal: $("#complaintModal").on('show.bs.modal',function(e){
 			com.clearValidator();
 		}),
@@ -38,7 +34,6 @@ jQuery(function($) {
 	complaint.complaintItems.handleComplaintLevel = $("#handleComplaintLevel");
 	complaint.complaintItems.handleComplaintType = $("#handleComplaintType");
 	complaint.complaintItems.complaintHandleDes = $("#complaintHandleDes");
-	
 
 	$('.date-picker').datepicker({autoclose:true});
 
@@ -118,28 +113,36 @@ jQuery(function($) {
 	CustomerServiceComplaintSeacher.init( [], "condList", api.construction.pageCustomerServiceComplaint, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceComplaintSeacherPostData", customerServicePostData, false, null,  function(){
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
+    	var $addspan = $('<span></span>').text('返回').appendTo($addb);
 
-		$adda.click(function(){
-			complaint.editFlag = false;
-			com.cleanItems(complaint.complaintItems);
-
-			complaint.complaintItems.orderId.val(customerServicePostData["customerServiceComplaint.orderId"]);
-			complaint.complaintItems.customerName.val(customerServicePostData["customerServiceComplaint.customerName"]);
-
-			complaint.complaintItems.orderId.attr("disabled", true);
-			complaint.complaintItems.customerName.attr("disabled", true);
-			complaint.complaintItems.complaintTime.attr("disabled", false);
-
-			complaint.modal.modal("show");
-		});
-
-		return [$adda];
-
+		return [$addb, $adda];
 	});
 
+	$('a[name="add"]', '#pagenation').click(function(){
+		complaint.editFlag = false;
+		
+		com.cleanItems(complaint.complaintItems);
+
+		complaint.complaintItems.orderId.val(customerServicePostData["customerServiceComplaint.orderId"]);
+		complaint.complaintItems.customerName.val(customerServicePostData["customerServiceComplaint.customerName"]);
+
+		complaint.complaintItems.orderId.attr("disabled", true);
+		complaint.complaintItems.customerName.attr("disabled", true);
+		complaint.complaintItems.complaintTime.attr("disabled", false);
+
+		complaint.modal.modal("show");
+	});
+	
+	$('a[name="back"]', '#pagenation').click(function(){
+		com.switchPage(api.index.customerServiceIndex.url);
+	});
 
 	function levelInit(levelcode){
 

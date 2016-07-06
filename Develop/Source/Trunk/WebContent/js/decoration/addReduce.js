@@ -104,7 +104,7 @@ jQuery(function($) {
 
 	//返回按钮
 	$('#btnBack').click(function(){
-		$("#fl-container").load(api.index.decorationOrderDesignerIndex.url);
+		com.switchPage(params.historyOrderPage);
 	});
 
 	//添加按钮

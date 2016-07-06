@@ -137,7 +137,7 @@ public class UserVO implements Serializable {
 	
 	private Short isLogin;
 	
-	private short extranet;
+	private Short extranet;
 
 	private List<UserContractVO> contracts;
 	
@@ -609,11 +609,11 @@ public class UserVO implements Serializable {
         this.isLogin = isLogin;
     }
 
-	public short getExtranet() {
+	public Short getExtranet() {
 		return extranet;
 	}
 
-	public void setExtranet(short extranet) {
+	public void setExtranet(Short extranet) {
 		this.extranet = extranet;
 	}
 

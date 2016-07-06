@@ -1,4 +1,4 @@
-#Sat Jul 02 15:39:59 CST 2016
+#Mon Jul 04 15:10:06 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/quotationDetail.html=UTF-8
 encoding//WebContent/backup/quotationDetail.js=UTF-8
@@ -33,7 +33,6 @@ encoding//WebContent/views/construction/qualityTesting.html=UTF-8
 encoding//WebContent/views/construction/qualityTestingDetail.html=UTF-8
 encoding//WebContent/views/construction/qualityTestingRecord.html=UTF-8
 encoding//WebContent/views/construction/supervision.html=UTF-8
-encoding//WebContent/views/construction/supervisionAddReduce.html=UTF-8
 encoding//WebContent/views/construction/supervisionDetail.html=UTF-8
 encoding//WebContent/views/construction/supervisionRework.html=UTF-8
 encoding//WebContent/views/construction/supervisionReworkDrawing.html=UTF-8

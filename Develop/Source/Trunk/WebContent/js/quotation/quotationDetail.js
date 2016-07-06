@@ -323,18 +323,20 @@ var QuotationDetail = (function(){
 
 				if(parseFloat(dis) < config.quotationLimitDiscount){
 					bootbox.prompt("折扣审批", function(res){
+						
+						if(res){
+							quo.basicParams['quotation.discount'] = config.quotationLimitDiscount;
+							var options = {
+								"approval.comment": res,
+								"approvalQuotationDiscount.orderId": quo.orderid,
+								"approvalQuotationDiscount.quotationId": quo.quotationid,
+								"approvalQuotationDiscount.newDiscount": dis,
+							}
 
-						quo.basicParams['quotation.discount'] = config.quotationLimitDiscount;
-						var options = {
-							"approval.comment": res,
-							"approvalQuotationDiscount.orderId": quo.orderid,
-							"approvalQuotationDiscount.quotationId": quo.quotationid,
-							"approvalQuotationDiscount.newDiscount": dis,
+							com.post(api.approval.submitApprovalForQuotationDiscount, options, function(res){
+								com.showAlert(com.info, "折扣申请成功.");
+							});
 						}
-
-						com.post(api.approval.submitApprovalForQuotationDiscount, options, function(res){
-							com.showAlert(com.info, "折扣申请成功.");
-						});
 					});
 				}else{
 					quo.basicParams['quotation.discount'] =  Math.round(parseFloat(dis) * 100) / 100;

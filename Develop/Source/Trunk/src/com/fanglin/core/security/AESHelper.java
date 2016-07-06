@@ -182,7 +182,7 @@ public class AESHelper {
 	
 	public static void main(String[] args) throws Exception {
 		String str = "12345" + 3;
-		String key = "userId";
+		String key = "FanglinServer";
 		String encrytStr;
 		// byte[] encrytByte;
 
@@ -197,7 +197,7 @@ public class AESHelper {
 		System.out.println("解密后：" + decryptByte(parseHexStr2Byte(encrytStr), key));
 		
 		System.out.println("加密后：" + encryptToString(str, key));
-		System.out.println("解密后：" + decryptString("44D13F0453FE3742A22844FD0B8F1B3ACEBC6C7A11205A4147DD1D2976DC35C710A3C46A3F474576FAA5CDEC85D853ACBA42795FB3ACD51E9C57B40DAFB4484BBA1BA0CA9ABCDE791647EABF354F1919B88B1C6B4614ADE25DA29FB75D3BD58B", "123456"));
+		System.out.println("解密后：" + decryptString("DCE1B1519CAF68B8BC3FCA5C7A2D6FAA9AB125D8712BA9EDA010A7ECD3DCE278B0B5CD21A0512789CFBCBFA8F08C1B429BCB3F5FA1C7523F88D99F4943E96A884A9F5F6A5841CA4B905CE627352FAF0A61914E4D770A06AC62AB934B11DCF1AF", "FanglinServer"));
 	}
 
 }

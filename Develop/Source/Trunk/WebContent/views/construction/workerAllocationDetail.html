@@ -57,78 +57,80 @@
 							<hr />
 							<div class="step-content row-fluid position-relative" id="step-container">
 								<div class="step-pane active" id="step1">
-									<div class="col-sm-6">
-										<form class="form-horizontal" role="form">
-											<div class="form-group text-center">
-												<h3 class="header smaller lighter blue col-sm-10">
-													<i class="icon-edit"></i>
-													铲大白信息
-												</h3>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label no-padding-right" for="chanStartTime">开工时间</label>
-												<div class="col-sm-4">
-													<input id="chanStartTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
+									<div class="row">
+										<div class="col-sm-6">
+											<form class="form-horizontal" role="form">
+												<div class="form-group text-center">
+													<h3 class="header smaller lighter blue col-sm-10">
+														<i class="icon-edit"></i>
+														铲大白信息
+													</h3>
 												</div>
-											</div>
-											<div class="space-4"></div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label no-padding-right" for="chanEndTime">完工时间</label>
-												<div class="col-sm-4">
-													<input id="chanEndTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
-												</div>
-											</div>
-											<div class="space-4"></div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label no-padding-right" for="status">铲大白状态</label>
-												<div id="chanStatus" class="col-sm-6"></div>
-											</div>
-											<div class="space-4"></div>
-											<div class="form-group" id="chanOperate">
-												<div class="col-sm-offset-2">
-													<button id="chanSuccess" class="btn btn-xs btn-success">成功</button>
-													<button id="chanFail" class="btn btn-xs btn-danger">失败</button>
-													<button id="chanDelay" class="btn btn-xs btn-warning">延迟</button>
-													<button id="chanPass" class="btn btn-xs btn-info">通过</button>
-												</div>
-											</div>
-										</form>
-									</div>
-									<div class="col-sm-6 text-center">
-										<div class="text-center">
-											<div id="chanWorkerEnter" style="display: none;">
-												<form class="form-horizontal" role="form">
-													<div class="form-group text-center">
-														<h3 class="header smaller lighter green">
-															<i class="icon-group"></i>
-															工人信息录入
-														</h3>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="chanStartTime">开工时间</label>
+													<div class="col-sm-4">
+														<input id="chanStartTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
 													</div>
-													<div class="form-group ">
-														<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
-														<select id="chanWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
-															<option value="">&nbsp;</option>
-														</select> 
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="chanEndTime">完工时间</label>
+													<div class="col-sm-4">
+														<input id="chanEndTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
 													</div>
-													<div class="form-group ">
-														<div class="col-sm-offset-2">
-															<button id="chanWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="status">铲大白状态</label>
+													<div id="chanStatus" class="col-sm-6"></div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group" id="chanOperate">
+													<div class="col-sm-offset-2">
+														<button id="chanSuccess" class="btn btn-xs btn-success">成功</button>
+														<button id="chanFail" class="btn btn-xs btn-danger">失败</button>
+														<button id="chanDelay" class="btn btn-xs btn-warning">延迟</button>
+														<button id="chanPass" class="btn btn-xs btn-info">通过</button>
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="col-sm-6 text-center">
+											<div class="text-center">
+												<div id="chanWorkerEnter" style="display: none;">
+													<form class="form-horizontal" role="form">
+														<div class="form-group text-center">
+															<h3 class="header smaller lighter green">
+																<i class="icon-group"></i>
+																工人信息录入
+															</h3>
 														</div>
-													</div>
-												</form>
-											</div>
-											<div id="chanWorkerInfo">
-												<h3 class="header smaller lighter green">
-													<i class="icon-group"></i>
-													工人信息
-												</h3>
-												<div class="profile-picture col-sm-6 col-sm-offset-3">
-													<img id="chanWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px">
-													<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-														<a href="#" class="red pull-left" id="removeChanWork">
-															<i class="icon-remove bigger-130"></i>
-														</a>
-														<span id="chanWorkerNameSpan" class="pull-right"></span>
+														<div class="form-group ">
+															<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
+															<select id="chanWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+																<option value="">&nbsp;</option>
+															</select> 
+														</div>
+														<div class="form-group ">
+															<div class="col-sm-offset-2">
+																<button id="chanWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+															</div>
+														</div>
+													</form>
+												</div>
+												<div id="chanWorkerInfo">
+													<h3 class="header smaller lighter green">
+														<i class="icon-group"></i>
+														工人信息
+													</h3>
+													<div class="profile-picture col-sm-6 col-sm-offset-3">
+														<img id="chanWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px">
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+															<a href="#" class="red pull-left" id="removeChanWork">
+																<i class="icon-remove bigger-130"></i>
+															</a>
+															<span id="chanWorkerNameSpan" class="pull-right"></span>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -137,70 +139,72 @@
 								</div>
 
 								<div class="step-pane" id="step2">
-									<div class="col-sm-6">
-										<form class="form-horizontal" role="form">
-											<div class="form-group text-center">
-												<h3 class="header smaller lighter blue col-sm-10">
-													<i class="icon-edit"></i>
-													放线信息
-												</h3>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label no-padding-right" for="putlineTime">放线时间</label>
-												<div class="col-sm-4">
-													<input id="putlineTime" type="text" class="col-sm-12" >
+									<div class="row">
+										<div class="col-sm-6">
+											<form class="form-horizontal" role="form">
+												<div class="form-group text-center">
+													<h3 class="header smaller lighter blue col-sm-10">
+														<i class="icon-edit"></i>
+														放线信息
+													</h3>
 												</div>
-											</div>
-											<div class="space-4"></div>
-									
-											<div class="form-group">
-												<label class="col-sm-2 control-label no-padding-right" for="putlineStatus">放线状态</label>
-												<div id="putlineStatus" class="col-sm-4">	</div>
-											</div>
-											<div class="space-4"></div>
-											<div class="form-group ">
-												<div class="col-sm-offset-2">
-													<button id="putlineSuccess" class="btn btn-xs btn-success">放线成功</button>
-													<button id="putlineFail" class="btn btn-xs btn-danger">放线失败</button>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="putlineTime">放线时间</label>
+													<div class="col-sm-4">
+														<input id="putlineTime" type="text" class="col-sm-12" >
+													</div>
 												</div>
-											</div>
-										</form>
-									</div>
-									<div class="col-sm-6 text-center">
-										<div class="text-center">
-											<div id="fangWorkerEnter" style="display: none;">
-												<form class="form-horizontal" role="form">
-													<div class="form-group text-center">
-														<h3 class="header smaller lighter green">
-															<i class="icon-group"></i>
-															工人信息录入
-														</h3>
+												<div class="space-4"></div>
+										
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="putlineStatus">放线状态</label>
+													<div id="putlineStatus" class="col-sm-4">	</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group ">
+													<div class="col-sm-offset-2">
+														<button id="putlineSuccess" class="btn btn-xs btn-success">放线成功</button>
+														<button id="putlineFail" class="btn btn-xs btn-danger">放线失败</button>
 													</div>
-													<div class="form-group ">
-														<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
-														<select id="fangWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
-															<option value="">&nbsp;</option>
-														</select> 
-													</div>
-													<div class="form-group ">
-														<div class="col-sm-offset-2">
-															<button id="fangWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+												</div>
+											</form>
+										</div>
+										<div class="col-sm-6 text-center">
+											<div class="text-center">
+												<div id="fangWorkerEnter" style="display: none;">
+													<form class="form-horizontal" role="form">
+														<div class="form-group text-center">
+															<h3 class="header smaller lighter green">
+																<i class="icon-group"></i>
+																工人信息录入
+															</h3>
 														</div>
-													</div>
-												</form>
-											</div>
-											<div id="fangWorkerInfo">
-												<h3 class="header smaller lighter green">
-													<i class="icon-group"></i>
-													工人信息
-												</h3>
-												<div class="profile-picture col-sm-6 col-sm-offset-3">
-													<img id="fangWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
-													<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-														<a href="#" class="red pull-left" id="removeFangWork">
-															<i class="icon-remove bigger-130"></i>
-														</a>
-														<span id="fangWorkerNameSpan" class="pull-right"></span>
+														<div class="form-group ">
+															<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
+															<select id="fangWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+																<option value="">&nbsp;</option>
+															</select> 
+														</div>
+														<div class="form-group ">
+															<div class="col-sm-offset-2">
+																<button id="fangWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
+															</div>
+														</div>
+													</form>
+												</div>
+												<div id="fangWorkerInfo">
+													<h3 class="header smaller lighter green">
+														<i class="icon-group"></i>
+														工人信息
+													</h3>
+													<div class="profile-picture col-sm-6 col-sm-offset-3">
+														<img id="fangWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+															<a href="#" class="red pull-left" id="removeFangWork">
+																<i class="icon-remove bigger-130"></i>
+															</a>
+															<span id="fangWorkerNameSpan" class="pull-right"></span>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -209,371 +213,385 @@
 								</div>
 
 								<div class="step-pane" id="step3">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												水力电信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="waterwayCircuitPowerStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													水力电信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="waterwayCircuitPowerStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="waterwayCircuitPowerEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitPowerEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="waterwayCircuitPowerEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="waterwayCircuitPowerWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="waterwayCircuitPowerWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="waterwayCircuitPowerWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="waterwayCircuitPowerWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="waterwayCircuitPowerWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="waterwayCircuitPowerWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="waterwayCircuitPowerWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="waterwayCircuitPowerWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 
 								<div class="step-pane" id="step4">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												瓦工信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="bricklayStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="bricklayStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													瓦工信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="bricklayStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="bricklayStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="bricklayEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="bricklayEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="bricklayEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="bricklayEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="bricklayWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="bricklayWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="bricklayWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="bricklayWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="bricklayWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="bricklayWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="bricklayWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="bricklayWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 								
 								<div class="step-pane" id="step5">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												地面找平信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="groundLevelingStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="groundLevelingStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													地面找平信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="groundLevelingStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="groundLevelingStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="groundLevelingEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="groundLevelingEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="groundLevelingEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="groundLevelingEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="groundLevelingWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="groundLevelingWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="groundLevelingWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="groundLevelingWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="groundLevelingWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="groundLevelingWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="groundLevelingWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="groundLevelingWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 								
 								<div class="step-pane" id="step6">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												木工信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="carpentStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="carpentStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													木工信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="carpentStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="carpentStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="carpentEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="carpentEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="carpentEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="carpentEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="carpentWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="carpentWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="carpentWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="carpentWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="carpentWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="carpentWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="carpentWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="carpentWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 								
 								<div class="step-pane" id="step7">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												油工信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="oilStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="oilStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													油工信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="oilStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="oilStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="oilEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="oilEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="oilEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="oilEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="oilWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="oilWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="oilWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="oilWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="oilWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="oilWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="oilWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="oilWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 								
 								<div class="step-pane" id="step8">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												水力电信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="waterwayCircuitCheckStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													水力电信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="waterwayCircuitCheckStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="waterwayCircuitCheckEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="waterwayCircuitCheckEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="waterwayCircuitCheckEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="waterwayCircuitCheckWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="waterwayCircuitCheckWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="waterwayCircuitCheckWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="waterwayCircuitCheckWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="waterwayCircuitCheckWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="waterwayCircuitCheckWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="waterwayCircuitCheckWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="waterwayCircuitCheckWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 								
 								<div class="step-pane" id="step9">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												保洁信息
-											</h3>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-12">
-												<label class="col-sm-1 control-label no-padding-right" for="cleaningStartTime">开工时间</label>
-												<div class="col-sm-2">
-													<input id="cleaningStartTime" type="text" class="col-sm-12" readonly="readonly">
+									<div class="row">
+										<form class="form-horizontal" role="form">
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													保洁信息
+												</h3>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-12">
+													<label class="col-sm-1 control-label no-padding-right" for="cleaningStartTime">开工时间</label>
+													<div class="col-sm-2">
+														<input id="cleaningStartTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
+													<label class="col-sm-1 control-label no-padding-right" for="cleaningEndTime">完工时间</label>
+													<div class="col-sm-2">
+														<input id="cleaningEndTime" type="text" class="col-sm-12" readonly="readonly">
+													</div>
 												</div>
-												<label class="col-sm-1 control-label no-padding-right" for="cleaningEndTime">完工时间</label>
-												<div class="col-sm-2">
-													<input id="cleaningEndTime" type="text" class="col-sm-12" readonly="readonly">
+											</div>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<h3 class="header smaller lighter blue">
+													<i class="icon-edit"></i>
+													工人信息
+												</h3>
+											</div>
+											
+											<div class="form-group">
+												<div id="cleaningWorkerEnter">
+													<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+													<select id="cleaningWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+														<option value="">&nbsp;</option>
+													</select> 
 												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<h3 class="header smaller lighter blue">
-												<i class="icon-edit"></i>
-												工人信息
-											</h3>
-										</div>
-										
-										<div class="form-group">
-											<div id="cleaningWorkerEnter">
-												<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
-												<select id="cleaningWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
-													<option value="">&nbsp;</option>
-												</select> 
+											<div class="form-group">
+												<div class="col-sm-offset-1">
+													<button id="cleaningWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-1">
-												<button id="cleaningWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+											<div class="space-4"></div>
+											
+											<div class="form-group">
+												<div id="cleaningWorkerInfos">
+												</div>
 											</div>
-										</div>
-										<div class="space-4"></div>
-										
-										<div class="form-group">
-											<div id="cleaningWorkerInfos">
-											</div>
-										</div>
-										<div class="space-4"></div>
-									</form>
+											<div class="space-4"></div>
+										</form>
+									</div>
 								</div>
 							</div>
 							<hr />

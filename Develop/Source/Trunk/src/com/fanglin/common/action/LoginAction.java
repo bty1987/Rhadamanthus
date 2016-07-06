@@ -168,7 +168,7 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "login", results = { @Result(name = "success", type = "dispatcher", location = "/login.html") })
+	@Action(value = "login", results = { @Result(name = "success", type = "dispatcher", location = "/dlogin.html") })
 	public String login() throws FLException {
 		
 		try {
