@@ -238,6 +238,7 @@ var api = {
 		changeMaterialSubOrderForOrderId: {url: "changeMaterialSubOrderForOrderId.do"},
 		changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},
 		subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"},
+		updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 		
 		exportMaterialPayment: {url: "exportMaterialPayment.do"},
 		

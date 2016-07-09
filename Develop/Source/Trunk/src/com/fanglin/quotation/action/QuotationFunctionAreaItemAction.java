@@ -68,6 +68,14 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateQuotationFunctionAreaItemByQuotationIdAType", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationFunctionAreaItemByQuotationIdAType() throws FLException{
+		
+		quotationFunctionAreaItemService.updateQuotationFunctionAreaItemByQuotationIdAType(quotation, quotationFunctionAreaItem);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteQuotationFunctionAreaItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationFunctionAreaItem() throws FLException{
 		

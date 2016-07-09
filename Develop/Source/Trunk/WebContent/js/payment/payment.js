@@ -92,7 +92,7 @@ jQuery(function($) {
 		$(".bankSel").bindData(payment.bank, 'key', 'name');
 		
 		$("#accountsBankName").bindData(payment.accounts, 'key', 'name');
-	});
+	}, null, false);
 	
 	$("#bankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -557,9 +557,11 @@ jQuery(function($) {
 		
 		var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
 		
+		console.log(payment.bank);
+		
 		var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
 		var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(payment.bank, 'key', 'value').appendTo(bankNameDiv);
+		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(payment.bank, 'key', 'name').appendTo(bankNameDiv);
 		var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
 		var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
 			$("#bankDiv_"+$(this).attr("index")).remove();

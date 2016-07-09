@@ -59,9 +59,6 @@ jQuery(function($) {
 	
 	decorationOrderDetail.btnSaveBaseDecorationOrderInfo = $("#btnSaveBaseDecorationOrderInfo").on("click", saveBaseDecorationOrderInfo);
 
-	decorationOrderDetail.materialPaymentListGrid = $("#materialPaymentListGrid");
-	decorationOrderDetail.materialPaymentGridPager = "#materialPaymentGridPager";
-	
 	decorationOrderDetail.activity.activity = $("#activity").on("change", function(){
 		var $this = $(this);
 		

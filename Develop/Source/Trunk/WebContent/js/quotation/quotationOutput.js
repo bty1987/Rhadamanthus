@@ -91,9 +91,11 @@ function printProjectTable(){
 			
 			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
 			
-			var _discountUnitPrice = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * discount / 10) * 1000) / 1000;
-			var _sum = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * discount*parseFloat(quotationFunctionAreaItem.num) / 10) * 1000) / 1000;
-			var _preSum = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * parseFloat(quotationFunctionAreaItem.num)) * 1000) / 1000;
+			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
+			
+			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
+			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
+			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
 			
 			if(quotationFunctionAreaItem.type == 2){
 				
@@ -112,16 +114,16 @@ function printProjectTable(){
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
 			contentHtml += '<td width="18%" align="left">' + quotationFunctionAreaItem.itemName + '</td>';
 			contentHtml += '<td width="5%" align="center">' + quotationFunctionAreaItem.measurementUnit + '</td>';
-			contentHtml += '<td width="5%" align="center">' + Math.round(quotationFunctionAreaItem.num*1000)/1000 + '</td>';
-			contentHtml += '<td width="5%" align="center">' + Math.round(_discountUnitPrice * 1000) / 1000 + '</td>';
-			contentHtml += '<td width="5%" align="center"> ' + Math.round(_sum * 1000)/1000 + '</td>';
+			contentHtml += '<td width="5%" align="center">' + quotationFunctionAreaItem.num + '</td>';
+			contentHtml += '<td width="5%" align="center">' + _discountUnitPrice + '</td>';
+			contentHtml += '<td width="5%" align="center"> ' + _sum + '</td>';
 			contentHtml += '<td width="52%" align="left">' + quotationFunctionAreaItem.content + '</td>';
 			contentHtml += '</tr>';
 		}
 	}
 	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="11" align="left">工程总价：' + Math.round(decorationOrderDetail.quotation.totalPrice*1000)/1000 + '元</td>';
+	contentHtml += '<td colspan="11" align="left">工程总价:' + decorationOrderDetail.quotation.totalPrice + '元</td>';
 	contentHtml += '</tr>';
 	
 	contentHtml += '</tbody>';
@@ -164,6 +166,7 @@ function printFinanceTable(){
 	contentHtml += '</tr>';
 	
 	var discountPrice = 0.0;
+	var preDiscountPrice = 0.0;
 	
 	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreas;
 	var quotationFunctionAreaLength = quotationFunctionAreas.length;
@@ -189,9 +192,13 @@ function printFinanceTable(){
 			
 			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
 			
-			var _discountUnitPrice = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * discount / 10) * 1000) / 1000;
-			var _sum = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * discount*parseFloat(quotationFunctionAreaItem.num) / 10) * 1000) / 1000;
-			var _preSum = Math.round((parseFloat(quotationFunctionAreaItem.unitPrice) * parseFloat(quotationFunctionAreaItem.num)) * 1000) / 1000;
+			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
+			
+			console.log(_discount);
+			
+			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
+			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
+			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
 			
 			if(quotationFunctionAreaItem.type == 2){
 				
@@ -216,9 +223,9 @@ function printFinanceTable(){
 			contentHtml += '<td>' + (j+1) + '</td> ';
 			contentHtml += '<td>' + quotationFunctionAreaItem.itemName + '</td>';
 			contentHtml += '<td>' + quotationFunctionAreaItem.measurementUnit + '</td>';
-			contentHtml += '<td>' + Math.round(quotationFunctionAreaItem.num * 1000) / 1000 + '</td>';
-			contentHtml += '<td>' + Math.round(quotationFunctionAreaItem.unitPrice * 1000) / 1000 + '</td>';
-			contentHtml += '<td>' + Math.round(_preSum * 1000) / 1000 + '</td>';
+			contentHtml += '<td>' + quotationFunctionAreaItem.num + '</td>';
+			contentHtml += '<td>' + quotationFunctionAreaItem.unitPrice + '</td>';
+			contentHtml += '<td>' + _preSum + '</td>';
 			
 			if(quotationFunctionAreaItem.discount == 0){
 				contentHtml += '<td>10</td>';
@@ -226,13 +233,15 @@ function printFinanceTable(){
 				contentHtml += '<td>' + discount + '</td>';
 			}
 			
-			contentHtml += '<td>' + Math.round(_discountUnitPrice * 1000) / 1000 + '</td>';
-			contentHtml += '<td>' + Math.round(_sum * 1000) / 1000 + '</td>';
+			contentHtml += '<td>' + _discountUnitPrice + '</td>';
+			contentHtml += '<td>' + _sum + '</td>';
 			contentHtml += '</tr>';
 			
 			sum = sum + _sum;
 			discountPrice = discountPrice + _sum;
 			preSum = preSum + _preSum;
+			
+			preDiscountPrice = preDiscountPrice + _preSum;
 		}
 		
 		contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
@@ -249,10 +258,8 @@ function printFinanceTable(){
 		contentHtml += '';
 	}
 	
-	var discountMoney = Math.round(parseFloat(discountPrice) / discount * (10 - discount) * 100) / 100;
-	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前：' + Math.round((totalPrice + discountMoney) * 100) / 100 + '&nbsp;&nbsp;&nbsp;&nbsp;折后：' + Math.round(totalPrice * 100) / 100 + '</strong></td>';
+	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + preDiscountPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + totalPrice + '</strong></td>';
 	contentHtml += '</tr>';
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
@@ -318,7 +325,7 @@ function printCustomerTable(){
 	contentHtml += '</tr>';
 	contentHtml += '<tr><td>2、装修许可证及抵押金、施工人员入园证及押金等相关费用、事宜由甲方负责.</td></tr><tr>';
 	contentHtml += '</tr><tr><td>3、施工项目以此工程明细表为准,未包含项目均由甲方提供或甲方委托乙方代购,效果图为辅助参考.</td></tr><tr>';
-	contentHtml += '</tr><tr><td>4、全市唯一1：1模拟专业放线系统需甲乙双方到场确认施工标准,乙方日后所有施工以放线为准,因甲方原因造成施工二次改动,所发生费用由甲方承担.</td></tr><tr>';
+	contentHtml += '</tr><tr><td>4、全市唯一1:1模拟专业放线系统需甲乙双方到场确认施工标准,乙方日后所有施工以放线为准,因甲方原因造成施工二次改动,所发生费用由甲方承担.</td></tr><tr>';
 	contentHtml += '</tr><tr><td>5、此施工项目内不含网络宽带进户、可视对讲移位(由小区物业负责)、煤气主管线改造(由煤气公司负责)、水钻打孔.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '<td>6、鉴于客户安全和国家施工规范要求,乙方不负责承重墙拆改\配电箱\水表\上下水主管道\烟道及排风道改造.如甲方强制要求乙方拆改,需签定相关协议,乙方只负责施工不承     &nbsp;&nbsp;&nbsp;担任何相关责任及处罚.如需复原甲方自行承担费用.</td>';
@@ -370,8 +377,8 @@ function printCustomerTable(){
 	contentHtml += '<td height="10"></td>';
 	contentHtml += '</tr>';
 	contentHtml += '<tr>';
-	contentHtml += '<td><b>&nbsp;客户签字：</b></td>';
-	contentHtml += '<td><b>设计师签字：</b></td>';
+	contentHtml += '<td><b>&nbsp;客户签字:</b></td>';
+	contentHtml += '<td><b>设计师签字:</b></td>';
 	contentHtml += '<td>&nbsp;</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr></tbody></table>';
