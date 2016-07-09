@@ -240,9 +240,7 @@ var decorationUtils = {
 		decorationOrderDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
 	}, initQuotationDetail: function(){
 		
-		var quotationItemListDiv = $("#quotationItemListDiv");
-		
-		quotationItemListDiv.html("");
+		var quotationItemListDiv = $("#quotationItemListDiv").html("");
 		
 		if ($("#showWay").val() == 0) {
 			_data = decorationOrderDetail.quotationFunctionAreaItemCs;
@@ -301,6 +299,10 @@ var decorationUtils = {
 			
 			$domain.appendTo(quotationItemListDiv);
 		});
+		
+		$domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"}).appendTo(quotationItemListDiv);
+		$dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
+		$dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + decorationOrderDetail.quotation.totalPrice)).appendTo($dhead);
 	}, initMaterial: function(orderId){
 		
 		var $material = $('#materialPaymentDiv').html("");

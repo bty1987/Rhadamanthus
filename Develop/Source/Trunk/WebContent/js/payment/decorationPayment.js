@@ -204,6 +204,7 @@ jQuery(function($) {
         		$btnCollect.text('减项款').addClass("btn-danger");
         		$divBtnWrap.append($btnDetail);
         	}else if(v.paymentType == "增项款"){
+        		$btnCollect.text('增项款').addClass("btn-info");
         		$divBtnWrap.append($btnDetail);
         	}else{
         		$btnCollect.text('收款').addClass("btn-info");
@@ -342,7 +343,7 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "designer", "customerPhone", "village", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hdecorationPaymentPostData");
+	}, "hpagenation", "hdecorationPaymentPostData", null, false, null, null, "hresultList");
 	
 	function dialogPayment(payment){
 		

@@ -120,7 +120,7 @@ jQuery(function($) {
 		$("#additionalInfo").html(decorationContract.additionalInfo);
 	}
 	
-	if (quotationDetail.houseType == '现房') {
+	if (decorationOrder.houseType == '现房') {
 		$("#threePayment").css("display", "block");
 		$("#fourPayment").css("display", "none");
 
@@ -158,7 +158,7 @@ jQuery(function($) {
 	$("#orderTotalPriceCN").html(totalCN);
 	$("#disgner").html(decorationOrder.designer);
 	$("#disgnerPhone").html(decorationOrder.designerPhone);
-	$("#houseAddr").html(decorationOrder.village.cityProper.city.cityName + decorationOrder.village.cityProper.cityProperName + decorationOrder.village.villageName + decorationOrder.houseNumber);
+	$("#houseAddr").html(decorationOrder.village.cityProper.cityProperName + decorationOrder.village.villageName + decorationOrder.houseNumber);
 	$("#houseArea").html(decorationOrder.houseArea);
 	$("#freeArea").html(decorationOrder.freeArea);
 	$("#totalArea").html(parseFloat(decorationOrder.houseArea) + parseFloat(decorationOrder.freeArea));

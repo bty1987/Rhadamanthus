@@ -22,6 +22,8 @@ public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaI
 	
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaIds(List<Long> functionAreaIds);
 	
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(long qId, short type);
+	
 	public int updateQuotationFunctionAreaItemForNum(long qfaiId, float num);
 	
 	public int deleteQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId);

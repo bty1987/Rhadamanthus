@@ -17,6 +17,7 @@ var Searcher = function(){
         extraParams : {},//额外的查询参数
         noPagingFlag : false,
         resultListName : null,
+        resultListId: null, // 显示内容标签id
     };
 
     /*查询条件各种操作*/
@@ -280,10 +281,10 @@ var Searcher = function(){
                 (result.paging.data && result.paging.data.length > 0) ? basicConf.displayFunc(result.paging.data) : emptyData();
             }, this), null, false);
         },
-        showPagenation : function(page, rows, totalPage, totalRecords ){
+        showPagenation: function(page, rows, totalPage, totalRecords){
 
-            $('li[name="prev"]', basicConf.$pager).attr('class',page == 1 ? 'previous disabled' : 'previous');
-            $('li[name="next"]', basicConf.$pager).attr('class',page == totalPage ? 'next disabled' : 'next');
+            $('li[name="prev"]', basicConf.$pager).attr('class', page == 1 || totalPage == 0 ? 'previous disabled' : 'previous');
+            $('li[name="next"]', basicConf.$pager).attr('class', page == totalPage || totalPage == 0 ? 'next disabled' : 'next');
 
             $('span[name="nowPage"]', basicConf.$pager).html(page);
             $('span[name="rows"]', basicConf.$pager).html(rows);
@@ -358,7 +359,7 @@ var Searcher = function(){
     };
     
     var emptyData = function(){
-    	var $resultList = $('#resultList').html('');
+    	var $resultList = $('#' + basicConf.resultListId).html('');
     	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
     	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
     	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
@@ -464,7 +465,7 @@ var Searcher = function(){
          *     extraParams: 分页查询的其他查询参数{key:val}形式
          *     noPagingFlag : 不分页标识，true，标识不分页
          * */
-        init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns){
+        init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns, resultListId){
             /*各种设置*/
             basicConf.condCodeArrs = condCodeArrs;
             basicConf.$searcher = $('#' + searchId);
@@ -475,6 +476,7 @@ var Searcher = function(){
             extraParams && typeof extraParams == "object" && (basicConf.extraParams = extraParams);
             noPagingFlag && (basicConf.noPagingFlag = noPagingFlag);
             basicConf.resultListName = resultListName;
+            basicConf.resultListId = resultListId ? resultListId : "resultList";
             
 			cusBtns && (basicConf.$cusBtns = cusBtns());
 			

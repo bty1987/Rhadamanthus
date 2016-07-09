@@ -1,5 +1,7 @@
 var management = {
 		
+	items: [],
+		
 	decorationOrderTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, ],
 	decorationOrderStatusMap: [{"key":"咨询", "value":"咨询"}, {"key":"量房", "value":"量房"}, {"key":"已报价", "value":"已报价"}, {"key":"定金", "value":"定金"}, {"key":"已签约", "value":"已签约"}, {"key":"废单", "value":"废单"}, {"key":"已完工", "value":"已完工"}, {"key":"合同终止", "value":"合同终止"}, ],
 	decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
@@ -9,78 +11,100 @@ var management = {
 
 jQuery(function($) {
 	
+	management.items.oldOrderId = $("#oldOrderId");
+	management.items.newOrderId = $("#newOrderId");
+	
+	management.items.orderIdForTime = $("#orderIdForTime");
+	management.items.orderDate = $("#orderDate");
+	management.items.orderTime = $("#orderTime");
+	
+	management.items.orderIdForVersionId = $("#orderIdForVersionId");
+	management.items.versionId = $("#versionId");
+	
+	management.items.orderIdForStatus = $("#orderIdForStatus");
+	
+	management.items.orderIdPaymentForTime = $("#orderIdPaymentForTime");
+	management.items.orderPaymentDate = $("#orderPaymentDate");
+	management.items.orderPaymentTime = $("#orderPaymentTime");
+	
+	management.items.refundOrderId = $("#refundOrderId");
+	
+	management.items.msoNo = $("#msoNo");
+	management.items.orderIdForOrderId = $("#orderIdForOrderId");
+	
+	management.items.msoNoForTime = $("#msoNoForTime");
+	management.items.materialPaymentDate = $("#materialPaymentDate");
+	management.items.materialPaymentTime = $("#materialPaymentTime");
+	
+	management.items.orderIdForQuotationTime = $("#orderIdForQuotationTime");
+	
+	management.items.quotationFunctionItemForManageRate = $("#quotationFunctionItemForManageRate");
+	management.items.quotationNames = $("#quotationNames");
+	management.items.manageRate = $("#manageRate");
+	
+	management.items.dateRange = $("#dateRange");
+	
+	management.items.contractTimeRange = $("#contractTimeRange");
+	
 	management.decorationOrderForOrderIdModal = $("#decorationOrderForOrderIdModal").on('show.bs.modal', function(e){
-		$("#oldOrderId").val("");
-		$("#newOrderId").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.decorationOrderForTimeModal = $("#decorationOrderForTimeModal").on('show.bs.modal', function(e){
-		$("#orderIdForTime").val("");
-		$("#orderDate").val("");
-		$("#orderTime").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.decorationOrderForVersionIdModal = $("#decorationOrderForVersionIdModal").on('show.bs.modal', function(e){
-		$("#orderIdForVersionId").val("");
-		$("#versionId").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.decorationOrderForStatusModal = $("#decorationOrderForStatusModal").on('show.bs.modal', function(e){
-		$("#orderIdForStatus").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.decorationPaymentForTimeModal = $("#decorationPaymentForTimeModal").on('show.bs.modal', function(e){
-		$("#orderIdPaymentForTime").val("");
-		$("#orderPaymentDate").val("");
-		$("#orderPaymentTime").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.refundOrderPaymentByOrderModal = $("#refundOrderPaymentByOrderModal").on('show.bs.modal', function(e){
-		$("#refundOrderId").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.materialSubOrderForOrderIdModal = $("#materialSubOrderForOrderIdModal").on('show.bs.modal', function(e){
-		$("#msoNo").val("");
-		$("#orderIdForOrderId").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.materialPaymentForTimeModal = $("#materialPaymentForTimeModal").on('show.bs.modal', function(e){
-		$("#msoNoForTime").val("");
-		$("#materialPaymentDate").val("");
-		$("#materialPaymentTime").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.subDecorationOrderForQuotationTimeModal = $("#subDecorationOrderForQuotationTimeModal").on('show.bs.modal', function(e){
-		$("#orderIdForQuotationTime").val("");
+		com.cleanItems(management.items);
+		com.clearValidator();
+	});
+	
+	management.updateQuotationFunctionItemForManageRateModal = $("#updateQuotationFunctionItemForManageRateModal").on('show.bs.modal', function(e){
+		management.items.quotationNames.bindData([], 'qid', 'quotationName');
 		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.exportMaterialPaymentModal = $("#exportMaterialPaymentModal").on('show.bs.modal', function(e){
-		$("#dateRange").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	management.exportDecorationOrderForContractTimeModal = $("#exportDecorationOrderForContractTimeModal").on('show.bs.modal', function(e){
-		$("#contractTimeRange").val("");
-		
+		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
@@ -89,6 +113,17 @@ jQuery(function($) {
 	$('#dateRange').daterangepicker(com.dateramgepickerdefault);
 	$('#contractTimeRange').daterangepicker(com.dateramgepickerdefault);
 	$(".daterangepicker").css("z-index", 1100);
+	
+	$('#quotationFunctionItemForManageRate').on("blur", function(){
+		
+		var options = {
+			"quotation.orderId": $(this).val(),
+		}
+		
+		com.post(api.quotation.queryQuotationByOrderId, options, function(res){
+			$("#quotationNames").bindData(res.quotations, 'qid', 'quotationName');
+		});
+	});
 	
 	$("#changeDecorationOrderForOrderId").click(function(){
 		management.decorationOrderForOrderIdModal.modal("show");
@@ -146,6 +181,11 @@ jQuery(function($) {
 	$("#subDecorationOrderForQuotationTime").click(function(){
 		
 		management.subDecorationOrderForQuotationTimeModal.modal("show");
+	});
+	
+	$("#updateQuotationFunctionItemForManageRate").click(function(){
+		
+		management.updateQuotationFunctionItemForManageRateModal.modal("show");
 	});
 	
 	$("#exportMaterialPayment").click(function(){
@@ -320,6 +360,25 @@ jQuery(function($) {
 		});
 		
 		management.subDecorationOrderForQuotationTimeModal.modal("hide");
+	});
+	
+	$("#saveQuotationFunctionItemForManageRateBtn").click(function(){
+		
+		if(com.validate()){
+			return;
+		}
+		
+		var options = {
+			"quotation.qid": management.items.quotationNames.val(),
+			"quotationFunctionAreaItem.type": 3,
+			"quotationFunctionAreaItem.unitPrice": management.items.manageRate.val(),
+		};
+		
+		com.post(api.common.updateQuotationFunctionAreaItemByQuotationIdAType, options, function(res){
+			com.showAlert(com.info, "操作成功");
+		});
+		
+		management.updateQuotationFunctionItemForManageRateModal.modal("hide");
 	});
 	
 	$("#exportMaterialPaymentBtn").click(function(){

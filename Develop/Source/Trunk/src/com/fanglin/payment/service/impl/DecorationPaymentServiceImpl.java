@@ -711,7 +711,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationReceiptDao.save(decorationReceiptPO);
 		decorationPaymentDao.update(decorationPaymentPO);
 		
-		if(DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(decorationPaymentPO.getPaymentType())){
+		if(DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(paymentType)){
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getAutoId());
 			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 			
@@ -936,10 +936,10 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationReceiptDao.save(decorationReceiptPO);
 		decorationPaymentDao.update(decorationPaymentPO);
-
+		
 		if(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())){
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getAutoId());
-			addReducePO.setStatus(AddReducePO.STATUS_SUBMIT_INT);
+			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 			
 			addReduceDao.update(addReducePO);
 		}

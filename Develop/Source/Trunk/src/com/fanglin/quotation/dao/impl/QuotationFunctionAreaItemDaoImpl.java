@@ -52,6 +52,11 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	}
 
 	@Override
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(long qId, short type) {
+		return (QuotationFunctionAreaItemPO) session().createCriteria(QuotationFunctionAreaItemPO.class).createAlias("quotationFunctionArea", "quotationFunctionArea").createAlias("quotationFunctionArea.quotation", "quotation").add(Restrictions.eq("quotation.qid", qId)).add(Restrictions.eq("type", type)).uniqueResult();
+	}
+
+	@Override
 	public int updateQuotationFunctionAreaItemForNum(long qfaiId, float num) {
 		
 		String hql = "update QuotationFunctionAreaItemPO set num= :num where qfaiId =:qfaiId";

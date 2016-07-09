@@ -42,7 +42,7 @@ jQuery(function($) {
 			var propertyArr = [
 				["总价:", v.total, "grey"],
 				["类别:", typeDict[v.type + ''], "grey"],
-				["状态:", statusDict[v.status], "grey"],
+				["状态:", statusDict[v.status], "red"],
 				["添加时间:", v.createTime, "grey"],
 			];
 

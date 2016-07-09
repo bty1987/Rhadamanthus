@@ -21,15 +21,15 @@ public class Paging implements Serializable {
 
 	public static final int DEFAULT_MAX_RESULTS = 20;
 	
-	private Integer totalRecords = DEFAULT_MAX_RESULTS; // 符合查询条件的总记录数
-	
 	private List<?> data = Collections.EMPTY_LIST; // 查询结果
 	
 	private Integer page = 0;
 	
 	private Integer rows = DEFAULT_MAX_RESULTS;
 	
-	private Integer totalPage = DEFAULT_MAX_RESULTS;
+	private Integer totalPage = 0;
+	
+	private Integer totalRecords = 0; // 符合查询条件的总记录数
 	
 	public Paging(){
 		super();

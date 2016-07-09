@@ -12,6 +12,7 @@
 package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionAreaItemForSpec(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 		
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT);
+		
 		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(quotationFunctionAreaItemVO.getQfaiId());
 		
 		if(quotationFunctionAreaItemPO == null){
@@ -120,7 +123,30 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		
 		short type = quotationFunctionAreaItemPO.getType();
 		
-		if(type == 2 || type == 3){
+		if(!types.contains(type)){
+			quotationFunctionAreaItemPO.setUnitPrice(quotationFunctionAreaItemVO.getUnitPrice());
+			
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
+		
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT);
+		
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQuotationIdAType(quotationVO.getQid(), quotationFunctionAreaItemVO.getType());
+		
+		if(quotationFunctionAreaItemPO == null){
+			throw new FLException(200013, "报价项不存在");
+		}
+		
+		short type = quotationFunctionAreaItemPO.getType();
+		
+		if(!types.contains(type)){
 			quotationFunctionAreaItemPO.setUnitPrice(quotationFunctionAreaItemVO.getUnitPrice());
 			
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);

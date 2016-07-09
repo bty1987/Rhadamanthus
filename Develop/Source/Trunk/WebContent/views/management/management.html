@@ -21,7 +21,7 @@
 				
 				<button id="changeDecorationOrderForStatus" class="btn btn-success" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					订单签单状态
+					订单状态
 				</button>
 				
 				<button id="changeDecorationPyamentForTime" class="btn btn-success" style="margin: 2px;">
@@ -48,6 +48,11 @@
 					<i class="icon-edit"></i>
 					报价复制次数修改
 				</button>
+				
+				<button id="updateQuotationFunctionItemForManageRate" class="btn btn-success" style="margin: 2px;">
+					<i class="icon-edit"></i>
+					报价管理费比例
+				</button>
 			</p>
 		</div>
 		
@@ -73,30 +78,29 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单编号更换</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="oldOrderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="oldOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="oldOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'  data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="newOrderId">修改订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="newOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="newOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'  data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveOrderIdBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveOrderIdBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -108,14 +112,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单相关时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15'  data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -138,11 +142,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveOrderDateBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveOrderDateBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -154,14 +157,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单报价版本修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdForVersionId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdForVersionId" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -173,11 +176,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveVersionIdBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveVersionIdBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -189,14 +191,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单签单状态修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderIdForStatus">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdForStatus" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdForStatus" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -208,11 +210,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveStatusBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveStatusBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -224,14 +225,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单款项收款时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdPaymentForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdPaymentForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -254,11 +255,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveOrderPaymentDateBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveOrderPaymentDateBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -270,14 +270,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单款项退款</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="refundOrderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="refundOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="refundOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -289,11 +289,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="refundOrderPaymentBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="refundOrderPaymentBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -305,30 +304,29 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">主材订单编号所属订单修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="msoNo">主材子订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="msoNo" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="msoNo" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderIdForOrderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdForOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdForOrderId" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveMaterialSubOrderOrderIdBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveMaterialSubOrderOrderIdBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -340,14 +338,14 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">主材订单款项收款时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="msoNoForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="msoNoForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -370,11 +368,10 @@
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveMaterialPaymentDateBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="saveMaterialPaymentDateBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -386,23 +383,64 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title" id="quotationDialog">订单报价复制次数增加</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderIdForOrderId">订单编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderIdForQuotationTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+								<input type="text" id="orderIdForQuotationTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 					</form>
 				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveDecorationOrderForQuotationTimeBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="saveDecorationOrderForQuotationTimeBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="updateQuotationFunctionItemForManageRateModal" tabindex="-1" role="dialog" aria-labelledby="updateQuotationFunctionItemForManageRateDialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="quotationDialog">报价管理费比例更新</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="orderIdForOrderId">订单编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="quotationFunctionItemForManageRate" class="col-xs-10 col-sm-5 v_required"  maxlength='15'  data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="quotationNames">报价名称</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="quotationNames" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="orderIdForStatus">管理费比例</label>
+							<div class="col-sm-9">
+								<input type="text" id="manageRate" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveQuotationFunctionItemForManageRateBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -421,16 +459,15 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">时间范围</label>
 							<div class="col-sm-9">
-								<input id="dateRange" class="col-sm-8 v_required" type="text" name="date-range-picker" />
+								<input id="dateRange" class="col-sm-8 v_required" type="text" name="date-range-picker" data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="exportMaterialPaymentBtn" class="btn btn-primary">导出</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="exportMaterialPaymentBtn" class="btn btn-primary">导出</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -449,16 +486,15 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="orderId">时间范围</label>
 							<div class="col-sm-9">
-								<input id="contractTimeRange" class="col-sm-8 v_required" type="text" name="date-range-picker" />
+								<input id="contractTimeRange" class="col-sm-8 v_required" type="text" name="date-range-picker" data-toggle="popover" data-trigger='manual'/>
 							</div>
 						</div>
 					</form>
 				</div>
-			</div>
-			
-			<div class="modal-footer">
-				<button type="button" id="exportDecorationOrderForContractTimeBtn" class="btn btn-primary">导出</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<div class="modal-footer">
+					<button type="button" id="exportDecorationOrderForContractTimeBtn" class="btn btn-primary">导出</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
 			</div>
 		</div>
 	</div>

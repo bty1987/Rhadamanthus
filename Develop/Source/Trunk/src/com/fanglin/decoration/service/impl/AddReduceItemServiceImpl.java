@@ -12,6 +12,7 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,10 +157,16 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 		
+		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
+		
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 		
 		if(addReducePO == null){
 			throw new FLException(140018, "增减项不存在");
+		}
+		
+		if(!statuses.contains(addReducePO.getStatus())){
+			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
@@ -240,10 +247,16 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 		
+		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
+		
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 		
 		if(addReducePO == null){
 			throw new FLException(140018, "增减项不存在");
+		}
+		
+		if(!statuses.contains(addReducePO.getStatus())){
+			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
