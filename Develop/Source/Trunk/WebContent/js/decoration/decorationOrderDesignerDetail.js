@@ -138,6 +138,24 @@ jQuery(function($) {
 	});
 	decorationOrderDetail.decorationPaymentModal = $("#decorationPaymentModal");
 	decorationOrderDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
+	
+	com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 5}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 8}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 8}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 1}, "autoFillKeyValue", "key", "value");
+	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 2}, "autoFillKeyValue", "key", "value");
+	com.initChosen('villageSel', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", 'key', 'value').on('change', function(e){
+		if ($("#villageSel").val() == null || $("#villageSel").val() == ""){
+			return;
+		}
+		
+		com.post(api.data.queryVillageById, {"village.villageId": $("#villageSel").val()}, function(res) {
+			$("#houseNumber").val("");
+			com.validator.houseNumber["regex"] = eval("/^"+res.village.buildingNameRule.rule+"$/g");
+			com.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+res.village.buildingNameRule.ruleContent+")";
+			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
+		});
+	});
 
 	$("#btnPrintDefaultQuotationInfo").on('click', function(res) {
 		decorationOrderDetail.printQuotationModal.modal("show");
@@ -191,8 +209,7 @@ jQuery(function($) {
 			$("#refundApproveManSel").addClass("v_required");
 			$("#changeReason").val("");
 			
-			var html1 = '<option value="">&nbsp;</option>';
-			$("#approveManSel").html(html1).trigger("chosen:updated");
+			com.updateChosen('approveManSel', '', '');
 			
 			decorationOrderDetail.refundDecorationPaymentModal.modal("show");
 		});
@@ -481,7 +498,9 @@ jQuery(function($) {
 			}
 		});
 		$("#customerDes").val("");
-		$("#approveManSel").html('<option value="">&nbsp;</option>').trigger("chosen:updated");
+		
+		com.updateChosen('approveManSel', '', '');
+		
 		$("#customerApproveModal").modal("show");
 	});
 	
@@ -551,27 +570,6 @@ jQuery(function($) {
 		decorationOrderDetail.applySpecialDecorationActivityItemModal.modal("show");
 	});
 	
-	$("#approveManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#approveManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 1}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					if (res.autoFillKeyValue != null) {
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#approveManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#approveManSel_chosen").css("width", "200px");
-
 	$("#cApproveSaveBtn").on("click", function() {
 		if (com.validate('customerApproveModal')){
 			return;
@@ -596,59 +594,25 @@ jQuery(function($) {
 	$('#villageApproveBtn').on("click", function() {
 		com.clearValidator();
 		com.clearValidator("#houseNumber", true);
-		$("#villageSel").html('<option value="'+decorationOrderDetail.village.villageId+'">'+decorationOrderDetail.village.villageName+'</option>');
-		$("#villageSel").trigger("chosen:updated");
+		
 		$("#houseNumber").val(decorationOrderDetail.village.houseNumber);
+		
+		com.updateChosen('villageSel', decorationOrderDetail.village.villageId, decorationOrderDetail.village.villageName);
+		com.updateChosen('vApproveManSel', '', '');
 		
 		com.validator.houseNumber["regex"] = eval("/^"+decorationOrderDetail.village.rule+"$/g");
 		com.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+decorationOrderDetail.village.ruleContent+")";
 		
 		$("#buildingRuleContent").text("说明："+decorationOrderDetail.village.ruleContent+";eg."+decorationOrderDetail.village.ruleExample);
 		$("#villageDes").val("");
-		$("#vApproveManSel").html('<option value="">&nbsp;</option>').trigger("chosen:updated");
+		
+		
 
 		approveData["villageName"] = decorationOrderDetail.village.villageName;
 		approveData["houseNumber"] = decorationOrderDetail.village.houseNumber;
 
 		$("#villageApproveModal").modal("show");
 	});
-	$("#villageSel").chosen({
-		allow_single_deselect : true
-	});
-
-	$("#villageSel_chosen input").bind("input", function() {
-		var auroFileSearchValue = $("#villageSel_chosen input").val();
-		
-		if ($("#villageSel_chosen input").val() != "") {
-			com.post(api.data.queryVillageForNameByPinyin, {"pinyinName": auroFileSearchValue}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					if (res.autoFillKeyValue != null) {
-						var i = 0;
-						for(i=0;i<res.autoFillList.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#villageSel").html(html1);
-					$("#villageSel").trigger("chosen:updated");
-				}
-			});
-		}
-	});
-
-	$("#villageSel").on("change", function(e) {
-		if ($("#villageSel").val() == null || $("#villageSel").val() == ""){
-			return;
-		}
-		
-		com.post(api.data.queryVillageById, {"village.villageId": $("#villageSel").val()}, function(res) {
-			$("#houseNumber").val("");
-			com.validator.houseNumber["regex"] = eval("/^"+res.village.buildingNameRule.rule+"$/g");
-			com.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+res.village.buildingNameRule.ruleContent+")";
-			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
-		});
-	});
-	$("#villageSel_chosen").css("width", "200px");
 	
 	$("#houseNumber").on("blur",function(e){
 		if($(this).val() == "" || $("#villageSel").val()==""){
@@ -666,28 +630,6 @@ jQuery(function($) {
 		});
 	});
 
-	// village approve: approve-man-select
-	$("#vApproveManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#vApproveManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 2}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					if (res.autoFillKeyValue != null) {
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#vApproveManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#vApproveManSel_chosen").css("width", "200px");
-	
 	$("#vApproveSaveBtn").on("click", function(){
 		if(com.validate('villageApproveModal')|| decorationOrderDetail.vRepeatFlg){
 			return;
@@ -731,73 +673,6 @@ jQuery(function($) {
 		}
 	});
 
-	$("#refundApproveManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#refundApproveManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 5}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					
-					if (res.autoFillKeyValue != null) {
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-
-					$("#refundApproveManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#refundApproveManSel_chosen").css("width", "200px");
-	
-	$("#approveActivityItemManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#approveActivityItemManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 8}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					
-					if (res.autoFillKeyValue != null) {
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-
-					$("#approveActivityItemManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#approveActivityItemManSel_chosen").css("width", "200px");
-	
-	$("#approveSpecialActivityItemManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#approveSpecialActivityItemManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 8}, function(res) {
-				var html1 = '<option value="">&nbsp;</option>';
-				
-				if (res.autoFillKeyValue != null) {
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-
-				$("#approveSpecialActivityItemManSel").html(html1).trigger("chosen:updated");
-			});
-		}
-	});
-	$("#approveSpecialActivityItemManSel_chosen").css("width", "200px");
-	
 	initWizard();
 	
 	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, function(decorationOrder){

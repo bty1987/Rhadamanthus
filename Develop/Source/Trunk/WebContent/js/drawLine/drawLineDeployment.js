@@ -18,7 +18,7 @@ var drawLineDeployment = {
 var drawLineDeploymentPostData = {};
 
 var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuit":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
+var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
 var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
 
 jQuery(function($) {
@@ -75,6 +75,29 @@ jQuery(function($) {
 		showSeconds: false,
 		showMeridian: false
 	});
+	
+	for(var qualityName in qualityInfo){
+		
+		var options = {};
+		
+		if(qualityName == "supervisor"){
+			options["duty"] = qualityInfo[qualityName];
+			queryUserNameUrl = api.personel.queryUserForNameByDuty;
+		}else if(qualityName == "waterwayCircuitPower"){
+			queryUserNameUrl = api.personel.queryUserForNameByDutysAO;
+			dutys = qualityInfo[qualityName].split(",");
+			for(var i=0;i<dutys.length;i++){
+				options["dutysO["+i+"]"] = dutys[i]+"工";
+			}
+			options["dutys[0]"] = "质检";
+		}else{
+			options["dutys[0]"] = qualityInfo[qualityName];
+			options["dutys[1]"] = "质检";
+			queryUserNameUrl = api.personel.queryUserForNameByDutys;
+		}
+		
+		com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
+	}
 	
 	var displayFunc  = (function(){
 
@@ -193,8 +216,9 @@ jQuery(function($) {
 	
 	function deployed(v){
 		
-		var options = {};
-		options["constructionSchedule.orderId"] = v.orderId;
+		var options = {
+			"constructionSchedule.orderId": v.orderId,
+		};
 		
 		com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res){
 			
@@ -202,45 +226,12 @@ jQuery(function($) {
 			
 			for(var qualityName in qualityInfo){
 				
-				var options = {};
-				if(qualityName == "supervisor"){
-					options["duty"] = qualityInfo[qualityName];
-					queryUserNameUrl = api.personel.queryUserForNameByDuty;
-				}else if(qualityName == "waterwayCircuitPower"){
-					queryUserNameUrl = api.personel.queryUserForNameByDutysAO;
-					dutys = qualityInfo[qualityName].split(",");
-					for(var i=0;i<dutys.length;i++){
-						options["dutysO["+i+"]"] = dutys[i]+"工";
-					}
-					options["dutys[0]"] = "质检";
-				}else{
-					options["dutys[0]"] = qualityInfo[qualityName];
-					options["dutys[1]"] = "质检";
-					queryUserNameUrl = api.personel.queryUserForNameByDutys;
-				}
-				
-				if(!qualityFlag[qualityName]){
-					initChange(qualityName, queryUserNameUrl, options);
-					qualityFlag[qualityName] = true;
-				}else{
-					var id = "#" + qualityName + "Quality";
-					$(id).html('<option value="">&nbsp;</option>').trigger("chosen:updated");
-				}
-				
-				if(res.constructionSchedule[qualityName+"QualityName"] == null){
-					$("#"+qualityName+"Quality").val("");
-					$("#"+qualityName+"Quality_chosen span")[0].textContent = "";
-				}else{
-					$("#"+qualityName+"Quality").val(res.constructionSchedule[qualityName + "QualityId"]);
-					$("#"+qualityName+"Quality_chosen span")[0].textContent = res.constructionSchedule[qualityName + "QualityName"] + "-" + res.constructionSchedule[qualityName + "QualityId"];
+				if(res.constructionSchedule[qualityName+"QualityName"] != null){
+					com.updateChosen(qualityName+"Quality", res.constructionSchedule[qualityName + "QualityId"], res.constructionSchedule[qualityName + "QualityName"])
 				}
 				
 				qualityIds[qualityName] = res.constructionSchedule[qualityName+"QualityId"];
-				
-				$("#"+qualityName+"Quality_chosen").css("width", "150px");
 			}
-			
-			var rowInfo = $("#"+gid).jqGrid('getRowData', rowId);
 		});
 		
 		drawLineDeploymentPostData.orderId = v.orderId;
@@ -290,81 +281,29 @@ jQuery(function($) {
 
 	function drawLineDeployed(){
 		
-		if(validateDeployed()){
-			return;
-		}
-		
-		var options = {};
+		var options = {
+			"constructionSchedule.orderId": drawLineDeploymentPostData["orderId"],
+		};
 		
 		for(var qualityId in qualityIds){
-			options["constructionSchedule."+qualityId+"QualityId"] = qualityIds[qualityId];
+			
+			console.log(qualityId);
+			
+			var $id = $('#' + qualityId + 'Quality').val();
+			
+			if(!$id){
+				com.showTips($("#"+qualityId+"Quality_chosen"), "内容不能为空");
+				return;
+			}
+			
+			options["constructionSchedule."+qualityId+"QualityId"] = $id;
 		}
-		options["constructionSchedule.orderId"] = drawLineDeploymentPostData["orderId"];
 		
 		com.post(api.construction.updateConstructionScheduleByOrderId, options, function(res){
 			searcher.doSearch();
 		});
 		
 		drawLineDeployment.drawLineDeploymentModal.modal("hide");
-	}
-
-	function initChange(initId, queryElementsUrl, options){
-		
-		id = "#" + initId + "Quality";
-		var chosenNameId = id+"_chosen input";
-		
-		$(id).chosen({
-		    allow_single_deselect: true
-		});
-		
-		$(id).on("change", function(){
-			qualityIds[initId] = $("#"+$(this).attr("id")).val();
-		});
-		
-		$(chosenNameId).on("change", function(){
-			qualityIds[initId] = $("#"+$(this).attr("id")).val();
-		});
-		
-		$(chosenNameId).unbind("input").bind("input", function(){
-			var _id = "#"+$(this).parents('.chosen-container').attr("id").split("_")[0];
-			var _chosenNameId = "#"+$(this).parents('.chosen-container').attr("id")+" input";
-			
-			var autoFileSearchValue = $(_chosenNameId).val();
-			options["pinyinName"] = autoFileSearchValue;
-			com.post(queryElementsUrl, options, function(res){
-				if(res.errorCode == 0){
-					var html1 = '<option value="">&nbsp;</option>';
-					if(res.autoFillKeyValue != null){
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					
-					$(_id).html(html1).trigger("chosen:updated");
-					$(_chosenNameId).val(autoFileSearchValue);
-				}
-			});
-		});
-	}
-
-	function validateDeployed(){
-		
-		com.clearValidator();
-		
-		var count = 0;
-		
-		for(var qualityName in qualityInfo){
-			
-			var inputObj = $("#"+qualityName+"Quality");
-			var chosenObj = $("#"+qualityName+"Quality_chosen span");
-			
-			if($.trim(chosenObj[0].textContent) == ""){
-				com.showTips(inputObj, "内容不能为空");
-				count++
-			}
-		}
-		
-		return count == 0 ? false : true;
 	}
 
 	drawLineDeployment.drawLineApplyModal.on('shown.bs.modal', function(e){

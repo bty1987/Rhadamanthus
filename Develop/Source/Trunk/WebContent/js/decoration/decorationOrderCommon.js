@@ -36,14 +36,14 @@ $(function(){
             var propertyArr = [
                 ["楼盘地址:", v.village.villageName, "grey"],
                 ["客户名:", v.customer.customerName, "grey"],
-                ["余额:", v.customer.balance, "grey"],
+                ["余额:", v.customer.balance, "blue"],
                 ["设计部:", v.designDepartment, "grey"],
                 ["设计师:", v.designer, "grey"],
                 ["业务部:", v.businessDepartment, "grey"],
                 ["业务员:", v.salesman, "grey"],
-                ["面积:", v.houseArea, "grey"],
-                ["合同报价:", v.orderTotalPrice, "grey"],
-                ["折扣:", v.discount, "grey"],
+                ["面积:", v.houseArea, "blue"],
+                ["合同报价:", v.orderTotalPrice, "blue"],
+                ["折扣:", v.discount, "blue"],
                 ["量房时间:", v.createTime, "grey"],
                 ["签单时间:", v.contractTime, "grey"],
                 ["状态:", v.status, "grey"],
@@ -118,8 +118,6 @@ $(function(){
 	//给全局变量赋值（主要操作是制定页面标签）
 	
 	order.agreementModal = $("#agreementModal");
-	
-	decorationUtils.createDecorationOrderCondition(order.listGrid, api.decoration.pageDecorationOrderForCommon.url, "orderSearchDiv", {}, "");
 	
 	//-----------------------------------合同----------------------------
 	$("#additionalInfoBtn").on('click',function(res){

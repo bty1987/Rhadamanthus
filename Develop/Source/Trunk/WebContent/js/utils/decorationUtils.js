@@ -565,8 +565,8 @@ var decorationUtils = {
 		}
 	}, initOrderBelongInfo: function(orderId){
 		
-		var $design = $("#belongDesignInfo");
-		var $salesman = $("#belongSalesmanInfo");
+		var $design = $("#belongDesignInfo").html('');
+		var $salesman = $("#belongSalesmanInfo").html('');
 		
 		var $designul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($design);
 		var $salesmanul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesman);

@@ -100,29 +100,7 @@ jQuery(function($) {
 		});
 	});
 	
-	$("#designerName").chosen({allow_single_deselect: true});
-	$("#designerName").on("change", function(){
-		console.log("designerName change");
-	});
-	$("#designerName_chosen input").bind("input", function(){
-		var auroFileSearchValue = $("#designerName_chosen input").val();
-		if($("#designerName_chosen input").val()!=""){
-			com.post(api.personel.queryUserForNameByDuty, {"pinyinName":auroFileSearchValue,"duty":"设计师"},function(res){
-				if(res.errorCode == 0){
-					var html1 = '<option value="">&nbsp;</option>';
-					if(res.autoFillList!=null){
-						var i = 0;
-						for(i=0;i<res.autoFillList.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#designerName").html(html1);
-					$("#designerName").trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#designerName_chosen").css("width", "150px");
+	com.initChosen('designerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"设计师"}, "autoFillKeyValue", "key", "value");
 	
 	initializeListgrid();
 	
@@ -184,7 +162,7 @@ function initializeListgrid(){
 			materialInsidePostData["materialInside.moId"] = row.moId;
 			materialInsidePostData["materialInside.customerId"] = row.customerId;
 			
-			$("#designerName_chosen span")[0].textContent = "";
+			com.updateChosen('designerName', row.designerId, row.designerName);
 			$("#buildingRuleContent").html("");
 			
 			materialInside.items.materialType.val(row.materialTypeId);
@@ -197,8 +175,6 @@ function initializeListgrid(){
 				
 				materialInside.items.materialBrand.val(row.materialBrandId);
 			}, null);
-			
-			$("#designerName_chosen span")[0].textContent = row.designerName;
 			
 			materialInside.items.materialBrand.val(row.materialBrand);
 			materialInside.items.designerName.val(row.designerName);
@@ -226,7 +202,7 @@ function initializeListgrid(){
 				$("#materialBrand").bindData(materialInside.data.materialBrandData[materialTypeId+""], "mbId", "materialBrandName");
 			}, null);
 			
-			$("#designerName_chosen span")[0].textContent = "";
+			com.updateChosen('designerName', '', '');
 			$("#buildingRuleContent").html("");
 			
 			com.cleanItems(materialInside.items);

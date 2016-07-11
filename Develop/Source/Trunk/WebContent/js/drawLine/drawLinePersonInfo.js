@@ -9,7 +9,7 @@ var personInfo = {
 var personInfoPostData = {};
 
 var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuit":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
+var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
 var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
 
 jQuery(function($) {
@@ -17,21 +17,6 @@ jQuery(function($) {
 	personInfo.cancelBtn = $("#cancelBtn");
 	personInfo.deployedBtn = $("#deployedBtn").on("click", drawLineDeployed);
 	personInfo.personInfoModal = $("#personInfoModal");
-	
-	var personInfoSearchOpts = {
-		url: api.construction.pageDecorationOrderByPersonInfo,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: personInfo.listGrid,
-		items: [
-	        {label:"订单编号",id:"searchOrderId",name:"orderId",type:"text"},
-			{label:"楼盘",id:"searchVillage",name:"village",type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-			{label:"楼号",id:"searchHouseNum",name:"houseNumber",type:"text"},
-			{label:"面积",id:"searchHouseArea",name:"houseArea",type:"text",op:"eq"},
-			{label:"业务员",id:"searchSalesman",name:"salesman",type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty,postData:{"duty":""}},
-			{label:"设计师",id:"searchDesigner",name:"designer",type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty,postData:{"duty":"设计师"}},
-		]
-	};
-	$("#personInfoSearchDiv").flSearch(personInfoSearchOpts);
 	
 	com.post(api.ds.constructionInfo, {}, function(res){
 		$("#scheduleSearch").bindData(res.constructionSchedule, "key", "value", true);
@@ -56,13 +41,7 @@ jQuery(function($) {
 			queryUserNameUrl = api.personel.queryUserForNameByDutys;
 		}
 		
-		if(!qualityFlag[qualityName]){
-			initChange(qualityName, queryUserNameUrl, options);
-			qualityFlag[qualityName] = true;
-		}else{
-			var id = "#" + qualityName + "Quality";
-			$(id).html('<option value="">&nbsp;</option>').trigger("chosen:updated");
-		}
+		com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
 	}
 	
 	var displayFunc  = (function(){
@@ -152,14 +131,10 @@ jQuery(function($) {
 			for(var qualityName in qualityInfo){
 				
 				if(res.constructionSchedule[qualityName+"QualityName"] == null){
-					$("#"+qualityName+"Quality_chosen span")[0].textContent = "";
+					com.updateChosen(qualityName + 'Quality', '', '');
 				}else{
-					$("#"+qualityName+"Quality_chosen span")[0].textContent = res.constructionSchedule[qualityName+"QualityName"]+"-"+res.constructionSchedule[qualityName+"QualityId"];
+					com.updateChosen(qualityName + 'Quality', res.constructionSchedule[qualityName+"QualityId"], res.constructionSchedule[qualityName+"QualityName"]);
 				}
-				
-				qualityIds[qualityName] = res.constructionSchedule[qualityName+"QualityId"];
-				
-				$("#"+qualityName+"Quality_chosen").css("width", "150px");
 			}
 			
 			personInfoPostData.orderId = v.orderId;
@@ -170,69 +145,26 @@ jQuery(function($) {
 
 	function drawLineDeployed(){
 		
-		for(var qualityName in qualityInfo){
-			
-			var qualityNameInput = $("#"+qualityName+"Quality_chosen span");
-			
-			console.log(qualityNameInput[0].textContent);
-			console.log(qualityNameInput[0].textContent.trim() == "");
-			
-			if(qualityNameInput[0].textContent.trim() == ""){
-				com.showTips($("#"+qualityName+"Quality_chosen"), "人员部署信息不能为空", true);
-				
-				return false;
-			}
-		}
-		
 		var options = {};
 		
 		for(var qualityId in qualityIds){
-			options["constructionSchedule."+qualityId+"QualityId"] = qualityIds[qualityId];
+			
+			console.log(qualityId);
+			
+			var $id = $('#' + qualityId + "Quality").val();
+			
+			if(!$id){
+				com.showTips($("#"+qualityName+"Quality_chosen"), "人员部署信息不能为空", true);
+				return false;
+			}
+			
+			options["constructionSchedule." + qualityId + "QualityId"] = $id;
 		}
 		options["constructionSchedule.orderId"] = personInfoPostData["orderId"];
 		
 		com.post(api.construction.updateConstructionScheduleByOrderId, options);
 		
 		personInfo.personInfoModal.modal("hide");
-	}
-	
-	function initChange(initId, queryElementsUrl, options){
-		
-		id = "#" + initId + "Quality";
-		var chosenNameId = id+"_chosen input";
-		
-		$(id).chosen({
-		    allow_single_deselect: true
-		});
-		
-		$(id).on("change", function(){
-			qualityIds[initId] = $("#"+$(this).attr("id")).val();
-		});
-		
-		$(chosenNameId).on("change", function(){
-			qualityIds[initId] = $("#"+$(this).attr("id")).val();
-		});
-		
-		$(chosenNameId).unbind("input").bind("input", function(){
-			var _id = "#"+$(this).parents('.chosen-container').attr("id").split("_")[0];
-			var _chosenNameId = "#"+$(this).parents('.chosen-container').attr("id")+" input";
-			
-			var autoFileSearchValue = $(_chosenNameId).val();
-			options["pinyinName"] = autoFileSearchValue;
-			com.post(queryElementsUrl, options, function(res){
-				if(res.errorCode == 0){
-					var html1 = '<option value="">&nbsp;</option>';
-					if(res.autoFillKeyValue != null){
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					
-					$(_id).html(html1).trigger("chosen:updated");
-					$(_chosenNameId).val(autoFileSearchValue);
-				}
-			});
-		});
 	}
 	
 });

@@ -76,12 +76,17 @@ jQuery(function($) {
 	materialSaleOrder.materialSaleOrderItems.msoType = $("#msoType");
 	materialSaleOrder.materialSaleOrderItems.des = $("#des");
 	
-	initChange("salesmanName", "salesmanId", api.personel.queryUserForNameByDuty, {"duty":""});
-	initChange("materialerName", "materialerId", api.personel.queryUserForNameByDutysAO, {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"});
-	initChange("instoreName", "instoreId", api.personel.queryUserForNameByDuty, {"duty":"驻店"});
-	initChange("materialBrand", "materialBrandName", api.data.queryBrandForPinYinNameACategoryName, {});
+	com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('materialerName', api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"}, "autoFillKeyValue", "key", "value");
+	com.initChosen('instoreName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"驻店"}, "autoFillKeyValue", "key", "value");
+	com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 	
-	defaultChange("salesmanName", "salesmanId", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
+//	initChange("salesmanName", "salesmanId", api.personel.queryUserForNameByDuty, {"duty":""});
+//	initChange("materialerName", "materialerId", api.personel.queryUserForNameByDutysAO, {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"});
+//	initChange("instoreName", "instoreId", api.personel.queryUserForNameByDuty, {"duty":"驻店"});
+//	initChange("materialBrand", "materialBrandName", api.data.queryBrandForPinYinNameACategoryName, {});
+	
+	com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 	
 	com.post(api.ds.materialInfo, {}, function(res){
 		materialSaleOrder.materialOrderType = res.materialOrderType;
@@ -275,7 +280,7 @@ jQuery(function($) {
 		var materialBrandFlag = true;
 		var salesmanNameFlag = false;
 		
-		if($("#salesmanName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
+		if($("#salesmanName").val() == ""){
 			com.showTips($("#salesmanName"), "字段不能为空!", true);
 			salesmanNameFlag = true;
 		}
@@ -310,15 +315,17 @@ jQuery(function($) {
 		var materialType = materialBrandStr.split('-')[1];
 		var materialBrand = materialBrandStr.split('-')[0];
 		
+		console.log($('#instoreName').val());
+		
 		options["materialSubOrder.orderId"] = orderId;
 		options["materialSubOrder.orderAddr"] = materialSaleOrder.materialSaleOrderItems.orderAddr.val();
 		options["materialSubOrder.customerId"] = customerId;
 		options["materialSubOrder.customerName"] = customerName;
 		options["materialSubOrder.msoType"] = materialSaleOrder.materialSaleOrderItems.msoType.val();
 		options["materialSubOrder.des"] = materialSaleOrder.materialSaleOrderItems.des.val();
-		options["materialSubOrder.salesmanId"] = materialSaleOrderPostData["salesmanId"];
-		options["materialSubOrder.materialerId"] = materialSaleOrderPostData["materialerId"];
-		options["materialSubOrder.instoreId"] = materialSaleOrderPostData["instoreId"];
+		options["materialSubOrder.salesmanId"] = $('#salesmanName').val();
+		options["materialSubOrder.materialerId"] = $('#materialerName').val();
+		options["materialSubOrder.instoreId"] = $('#instoreName').val() ? $('#instoreName').val() : "";
 		options["materialSubOrder.materialType"] = materialType;
 		options["materialSubOrder.materialBrand"] = materialBrand;
 		
@@ -379,6 +386,7 @@ jQuery(function($) {
 			materialOrderPostData["materialOrder.customerName"] = customerName;
 			
 			btn.button('reset');
+			
 			$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
 		}, function(){
 			btn.button('reset');

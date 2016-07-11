@@ -12,19 +12,41 @@ var decorationPaymentCheck = {
 };
 
 jQuery(function($) {
-	decorationPaymentCheck.listDecorationPaymentGrid = $("#listDecorationPaymentGrid");
-	decorationPaymentCheck.gridDecorationPaymentPager = "#gridDecorationPaymentPager";
 	
-	decorationPaymentCheck.listDecorationPaymentHistoryGrid = $("#listDecorationPaymentHistoryGrid");
-	decorationPaymentCheck.gridDecorationPaymentHistoryPager = "#gridDecorationPaymentHistoryPager";
-	
-	com.post(api.ds.bankType, {}, function(res){
-		decorationPaymentCheck.cashInfo = res.cashInfo;
-		decorationPaymentCheck.bankInfo = res.bankInfo;
-		decorationPaymentCheck.checkBankInfo = res.checkBankInfo;
-		decorationPaymentCheck.accountsInfo = res.accountsInfo;
+	com.post(api.common.queryReceiptType, {}, function(res){
+		
+		decorationPaymentCheck.cash = [];
+		decorationPaymentCheck.bank = [];
+		decorationPaymentCheck.checkBank = [];
+		decorationPaymentCheck.accounts = [];
+		decorationPaymentCheck.couponType = [];
+		
+		decorationPaymentCheck.cashInfo = {};
+		decorationPaymentCheck.bankInfo = {};
+		decorationPaymentCheck.checkBankInfo = {};
+		decorationPaymentCheck.accountsInfo = {};
+		decorationPaymentCheck.couponTypeData = {};
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				decorationPaymentCheck.cash.push(v);
+				decorationPaymentCheck.cashInfo[v.key] = v.name;
+			}else if(v.type == 2){
+				decorationPaymentCheck.bank.push(v);
+				decorationPaymentCheck.bankInfo[v.key] = v.name;
+			}else if(v.type == 3){
+				decorationPaymentCheck.checkBank.push(v);
+				decorationPaymentCheck.checkBankInfo[v.key] = v.name;
+			}else if(v.type == 4){
+				materialPadecorationPaymentCheckyment.accounts.push(v);
+				decorationPaymentCheck.accountsInfo[v.key] = v.name;
+			}else if(v.type == 5){
+				decorationPaymentCheck.couponType.push(v);
+				decorationPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
+			}
+		});
 	});
-	
+
 	decorationPaymentCheck.baseModal = $("#baseItemModal").on('show.bs.modal', function(e){
 		com.clearValidator();
 		com.clearValidator("#advancePayment", true);
@@ -33,32 +55,6 @@ jQuery(function($) {
 	decorationPaymentCheck.refundModal = $("#refundModal").on('show.bs.modal', function(e){
 		com.clearValidator();
 	});
-	
-	var searchOpts = {
-		url: api.payment.pageDecorationPaymentForCollect,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: decorationPaymentCheck.listDecorationPaymentGrid,
-		items: [
-	        {label:"订单编号", id:"searchOrderId", name:"orderId", type:'text', op:"eq"},
-	        {label:"楼盘", id:"searchVillage", name:"village", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-	        {label:"楼号", id:"searchHouseNum", name:"houseNumber", type:"text"},
-	        {label:"设计师", id:"searchDesigner", name:"designer", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
-		]
-	};
-	$("#searchDecorationPaymentDiv").flSearch(searchOpts);
-	
-	var searchHistoryOpts = {
-		url: api.payment.pageDecorationPaymentForConfirm.url,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: decorationPaymentCheck.listDecorationPaymentHistoryGrid,
-		items: [
-	        {label:"订单编号", id:"searchOrderId", name:"orderId", type:'text', op:"eq"},
-	        {label:"楼盘", id:"searchVillage", name:"village", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-	        {label:"楼号", id:"searchHouseNum", name:"houseNumber", type:"text"},
-	        {label:"设计师", id:"searchDesigner", name:"designer", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
-		]
-	};
-	$("#searchDecorationPaymentHistoryDiv").flSearch(searchHistoryOpts);
 	
 	decorationPaymentCheck.refundModal = $("#refundModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -132,7 +128,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += decorationPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info
@@ -231,7 +227,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += decorationPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info
@@ -269,7 +265,7 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "designer", "village", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hdecorationPaymentCheckPostData");
+	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){
 		

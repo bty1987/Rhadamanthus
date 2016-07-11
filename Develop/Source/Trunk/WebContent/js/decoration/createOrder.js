@@ -62,11 +62,7 @@ jQuery(function($) {
 		orderEntry.orderItems.houseClass.bindData(orderEntry.houseClass, 'key', 'value');
 	});
 	
-	$("#customerId").chosen({
-	    allow_single_deselect: true
-	});
-	
-	$("#customerId").on("change", function(e){
+	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFileCustomer", "key", "value").on("change", function(e){
 		if($(this).val() == "" || $("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
 			orderEntry.repeatCustomerFlg = false;
@@ -83,13 +79,7 @@ jQuery(function($) {
 		}, null, false);
 	});
 	
-	$("#customerId_chosen input").bind("input", funcCustomerChange);
-	
-	$("#villageId").chosen({
-	    allow_single_deselect: true
-	}); 
-	
-	$("#villageId").on("change", function(e){
+	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value").on("change", function(e){
 		if($("#villageId").val() == null || $("#villageId").val() == ""){
 			return;
 		}
@@ -103,6 +93,9 @@ jQuery(function($) {
 			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
 		}, null, false);
 	});
+	
+	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "设计师"}, "autoFillKeyValue", "key", "value");
+	com.initChosen('salesmanId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
 	
 	$("#houseNumber").on("blur", function(e){
 		if($(this).val() == "" || $("#villageId").val() == ""){
@@ -125,18 +118,6 @@ jQuery(function($) {
 		}, null, false);
 	});
 	
-	$("#villageId_chosen input").bind("input",funcVillageChange);
-	
-	$("#designerId").chosen({
-	    allow_single_deselect: true
-	}); 
-	$("#designerId_chosen input").bind("input",funcDesignerChange);
-	
-	$("#salesmanId").chosen({
-	    allow_single_deselect: true
-	}); 
-	$("#salesmanId_chosen input").bind("input",funcSalesmanChange);
-
 	$('#fl-statement').statement("订单管理", "录入订单");
 	
 	orderEntry.items.customerName = $("#customerName");
@@ -208,84 +189,6 @@ jQuery(function($) {
 		}
 	});
 });
-
-function funcCustomerChange(e){
-	if($("#customerId_chosen input").val() != ""){
-		com.post(api.data.queryCustomerForName, {"pinyinName":$("#customerId_chosen input").val()}, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFileCustomer != null){
-					for(var i=0;i<res.autoFileCustomer.length;++i){
-						html1+= '<option value="'+res.autoFileCustomer[i].key+'">'+res.autoFileCustomer[i].value+'</option>';
-					}
-				}
-				var auroFileSearchValue = $("#customerId_chosen input").val();
-				
-				$("#customerId").html(html1);
-				$("#customerId").trigger("chosen:updated");
-			}
-		}, null, false);
-	}
-}
-function funcVillageChange(e){
-	var auroFileSearchValue = $("#villageId_chosen input").val();
-	
-	if($("#villageId_chosen input").val() != ""){
-	com.post(api.data.queryVillageForNameByPinyin, {"pinyinName":auroFileSearchValue}, function(res){
-		if(res.errorCode == 0){
-			var html1 = '<option value="">&nbsp;</option>';
-			if(res.autoFillKeyValue != null){
-				for(var i=0;i<res.autoFillList.length;++i){
-					html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-				}
-			}
-			$("#villageId").html(html1);
-			$("#villageId").trigger("chosen:updated");
-			
-		}
-	}, null, false);
-	}
-}
-
-function funcDesignerChange(e){
-	var auroFileSearchValue = $("#designerId_chosen input").val();
-	if($("#designerId_chosen input").val()!=""){
-	com.post(api.personel.queryUserForNameByDuty, {"pinyinName":auroFileSearchValue,"duty":"设计师"}, function(res){
-		if(res.errorCode == 0){
-			var html1 = '<option value="">&nbsp;</option>';
-			
-			if(res.autoFillList != null){
-				for(var i=0;i<res.autoFillList.length;++i){
-					html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-				}
-			}
-			$("#designerId").html(html1);
-			$("#designerId").trigger("chosen:updated");
-		}
-	}, null, false);
-	}
-}
-
-function funcSalesmanChange(e){
-	var auroFileSearchValue = $("#salesmanId_chosen input").val();
-	
-	if($("#salesmanId_chosen input").val() != ""){
-		com.post(api.personel.queryUserForNameByDuty, {"pinyinName":auroFileSearchValue,"duty":""}, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				
-				if(res.autoFillList!=null){
-					for(var i=0;i<res.autoFillList.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				
-				$("#salesmanId").html(html1);
-				$("#salesmanId").trigger("chosen:updated");
-			}
-		}, null, false);
-	}
-}
 
 function createOrder(){
 	
@@ -374,10 +277,10 @@ function initCreate(){
 	orderEntry.orderItems.backOrderContent.val("");
 	orderEntry.orderItems.status.val("");
 	
-	utils.cleanChosen("customerId");
-	utils.cleanChosen("villageId");
-	utils.cleanChosen("designerId");
-	utils.cleanChosen("salesmanId");
+	com.updateChosen("customerId", '', '');
+	com.updateChosen("villageId", '', '');
+	com.updateChosen("designerId", '', '');
+	com.updateChosen("salesmanId", '', '');
 	
 	$(".chosen-single span").html("");
 	

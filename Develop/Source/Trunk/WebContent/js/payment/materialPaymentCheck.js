@@ -20,11 +20,38 @@ var materialPaymentCheck = {
 
 jQuery(function($) {
 	
-	com.post(api.ds.bankType, {}, function(res){
-		materialPaymentCheck.cashInfo = res.cashInfo;
-		materialPaymentCheck.bankInfo = res.bankInfo;
-		materialPaymentCheck.checkBankInfo = res.checkBankInfo;
-		materialPaymentCheck.accountsInfo = res.accountsInfo;
+	com.post(api.common.queryReceiptType, {}, function(res){
+		
+		materialPaymentCheck.cash = [];
+		materialPaymentCheck.bank = [];
+		materialPaymentCheck.checkBank = [];
+		materialPaymentCheck.accounts = [];
+		materialPaymentCheck.couponType = [];
+		
+		materialPaymentCheck.cashInfo = {};
+		materialPaymentCheck.bankInfo = {};
+		materialPaymentCheck.checkBankInfo = {};
+		materialPaymentCheck.accountsInfo = {};
+		materialPaymentCheck.couponTypeData = {};
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				materialPaymentCheck.cash.push(v);
+				materialPaymentCheck.cashInfo[v.key] = v.name;
+			}else if(v.type == 2){
+				materialPaymentCheck.bank.push(v);
+				materialPaymentCheck.bankInfo[v.key] = v.name;
+			}else if(v.type == 3){
+				materialPaymentCheck.checkBank.push(v);
+				materialPaymentCheck.checkBankInfo[v.key] = v.name;
+			}else if(v.type == 4){
+				materialPaymentCheck.accounts.push(v);
+				materialPaymentCheck.accountsInfo[v.key] = v.name;
+			}else if(v.type == 5){
+				materialPaymentCheck.couponType.push(v);
+				materialPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
+			}
+		});
 	});
 	
 	com.post(api.ds.materialInfo, {}, function(res){
@@ -34,35 +61,6 @@ jQuery(function($) {
 			materialPaymentCheck.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
 	});
-	
-	var searchOpts = {
-		url: api.payment.pageMaterialPaymentForCollectBySubOrder,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: materialPaymentCheck.listMaterialPaymentGrid,
-		items: [
-			{label:"装修订单号", id:"orderIdSearch", name:"orderId", type:'text', op:"eq"},
-			{label:"主材订单号", id:"orderIdSearch", name:"msoNo", type:'text', op:"eq"},
-			{label:"楼盘地址", id:"orderAddrSearch", name:"orderAddr", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-			{label:"设计师", id:"designerNameSearch", name:"salesmanName", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
-			{label:"业务员", id:"salesmanNameSearch", name:"salesmanName", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":""}},
-			{label:"收款时间", id:"collectTimeDateRange", name:"collectTime", type:"dateRangePicker", op:"between"},
-		]
-	};
-	$("#searchMaterialPaymentDiv").flSearch(searchOpts);
-	
-	var searchHisroryOpts = {
-			url: api.payment.pageMaterialPaymentForConfirmBySubOrder.url,
-			postParmas: {"paging.rows":10, "paging.page":1},
-			listgrid: materialPaymentCheck.listMaterialPaymentHistoryGrid,
-			items: [
-				{label:"装修订单号", id:"orderIdSearch", name:"orderId", type:'text', op:"eq"},
-				{label:"主材订单号", id:"orderIdSearch", name:"msoNo", type:'text', op:"eq"},
-				{label:"楼盘地址", id:"orderAddrSearch", name:"orderAddr", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-				{label:"设计师", id:"designerNameSearch", name:"salesmanName", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
-				{label:"业务员", id:"salesmanNameSearch", name:"salesmanName", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":""}},
-			]
-	};
-	$("#searchMaterialPaymentHistoryDiv").flSearch(searchHisroryOpts);
 	
 	com.post(api.ds.couponType, {}, function(res){
 		materialPaymentCheck.couponType = res.couponTypes;
@@ -212,7 +210,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info
@@ -252,7 +250,7 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirmBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hmaterialPaymentPostData");
+	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, null, "hresultList");
 	
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){

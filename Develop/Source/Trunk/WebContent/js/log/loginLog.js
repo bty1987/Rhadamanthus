@@ -1,8 +1,4 @@
 var loginLog = {
-	listgrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancelBtn: null,
 	modal: null,
 	loginLogItems:{},
 	
@@ -14,50 +10,65 @@ var loginLog = {
 };
 
 jQuery(function($) {
-	loginLog.listgrid = $("#listgrid");
-	loginLog.gridPager = "#gridPager";
 	
-	var searchOpts = {
-		url: api.log.pageLoginLog,
-		postParmas: {"paging.rows":30, "paging.page":1},
-		listgrid: loginLog.listgrid,
-		items: [
-	        {label:"登陆账号",id:"loginIdSearch",name:"loginId", type:'text'}, 
-	        {label:"登陆IP", id:"sourceIpSearch", name:"sourceIp", type:"text"},
-	        {label:"登陆时间", id:"loginTimeSearch", name:"loginTime",type:"dateRangePicker",op:"between"},
-	        {label:"登陆结果", id:"successFlagSearch", name:"successFlag",type:"select",op:"eq"}
-		]
-	};
+	var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){ 
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+        	
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.loginId));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var propertyArr = [
+               ["登陆Ip地址:", v.sourceIp, "grey"],
+               ["登陆时间:", v.loginTime, "grey"],
+               ["登陆结果:", v.successFlag == 1 ? "成功" : "失败", "red"],
+           ];
+            
+           $.each(propertyArr, function (index,value) {
+               var $liProperty = $('<li></li>');
+               $('<strong></strong>').html(value[0]).appendTo($liProperty);
+               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+               $liProperty.appendTo($ulProperty);
+           });
+
+            $liLine.append($h3).append($ulProperty);
+            
+            return $liLine;
+        };
+      
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
 	
-	$("#searchDiv").flSearch(searchOpts);
-	$("#successFlagSearch").bindData([{"key":1,"value":"成功"},{"key":0,"value":"失败"}], "key", "value", true);
+	var searcher = new Searcher();
 	
-	initializeListgrid();
+	searcher.init(["loginId", "sourceIp", "loginTime", "successFlag"], "condList", api.log.pageLoginLog, function(data){
+		displayFunc.init('resultList', data);
+	}, "pagenation", "loginLogPostData");
+	
 });
 
-function initializeListgrid(){
-	loginLog.listgrid.jqGrid({		
-		url: api.log.pageLoginLog.url,
-		postData: loginLog.postParam,
-		colNames:['编号', '登陆账号', '登陆IP','登陆时间',"登陆结果"],
-		colModel:[
-			{name:'id', hidden: true},
-			{name:'loginId'},
-			{name:'sourceIp'},
-			{name:'loginTime'},
-			{name:'successFlag',formatter:successFlagFormat},
-		], 
-		pager : loginLog.gridPager,
-		caption: "登陆日志列表"
-	});
-
-	loginLog.listgrid.navGrid(loginLog.gridPager, {edit:false,add:false,del:false,search:false,searchicon : 'icon-search orange', refresh: false,view: false}, {}, {}, {}, {});
-}
-
-function successFlagFormat( cellvalue, options, rowObject ){  
-	if(cellvalue==1){
-		return '成功<input type="text" value="1" class="hidden" />  ';
-	}
-	
-    return '失败<input type="text" value="0" class="hidden" />';  
-}  
