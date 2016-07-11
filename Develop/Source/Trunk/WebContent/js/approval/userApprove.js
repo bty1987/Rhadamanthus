@@ -13,7 +13,7 @@ jQuery(function($) {
 	approve.saveBtn = $("#saveBtn").on("click", saveData);
 	approve.cancelBtn = $("#cancelBtn");
 	approve.modal = $("#approveModal");
-	approve.items.userSel = $("#userSel").chosen({allow_single_deselect: true}); 
+	approve.items.userSel = $("#userSel");
 	
 	com.post(api.ds.approvalType, {"timestamp": new Date().getTime()}, function(res){
 		approve.approvalType = res.approvalType;
@@ -26,24 +26,7 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	$("#userSel_chosen input").bind("input", function(){
-		var pinyinName = $(this).val();
-		if($(this).val() != ""){
-			com.post(api.personel.queryUserForNameByPinyinName, {"pinyinName": pinyinName}, function(res){
-				if(res.errorCode == 0){
-					var options = '<option value="">&nbsp;</option>';
-					
-					if(res.autoFillList != null){
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							options += '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#userSel").html(options).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#userSel_chosen").css("width", "200px");
+	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 	
 	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
 	
@@ -131,7 +114,7 @@ jQuery(function($) {
 	$('a[name="addApprovalUser"]', '#pagenation').click(function(){
 		editFlg = false;
 		
-		approve.items.userSel.html('<option value="">&nbsp;</option>').trigger("chosen:updated");
+		com.updateChosen('userSel', '', '');
 		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
 		
 		approve.modal.modal("show");
@@ -143,8 +126,7 @@ jQuery(function($) {
 		
 		approve.items.approveId = approveId;
 		
-		approve.items.userSel.html('<option value="'+userId+'">'+userName+'-'+userId+'</option>').trigger("chosen:updated");
-		approve.items.userSel.prop("disabled", true).trigger("chosen:updated");
+		com.updateChosen('userSel', userId, userName);
 		approve.items.type.val(type);
 		
 		approve.modal.modal("show");

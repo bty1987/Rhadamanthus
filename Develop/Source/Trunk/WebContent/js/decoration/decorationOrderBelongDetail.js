@@ -18,18 +18,13 @@ jQuery(function($) {
 	orderBelongInfo.belongStatus = params.orderBelongStatus;
 	orderBelongInfo.belongType = params.orderBelongType;
 	
-	$("#belongUserId").chosen({
-	    allow_single_deselect: true
-	}); 
-	$("#belongUserId_chosen input").bind("input",funcUserChange);
-	
-	$("#belongUserId").on("change",function(e){
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": 3}, "autoFillKeyValue", "key", "value");
+	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : orderBelongInfo.belongType == "设计" ? "设计师" : ""}, "autoFillKeyValue", "key", "value").on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;
 		}
 		
 		com.post(api.personel.queryUserByUserId, {"user.userId":$("#belongUserId").val()}, function(res){
-			
 			$("#belongUser").val(res.user.userName);
 			$("#belongDept").val(res.user.dept.deptName);
 			$("#belongRegion").val(res.user.dept.fatherDept.deptName);
@@ -44,37 +39,13 @@ jQuery(function($) {
 		com.switchPage(api.index.decorationOrderBelongIndex.url);
 	});
 	
-	$('#saveBelongInfoBtn').on(ace.click_event, function(){
-		if(orderBelongInfo.lastEditId!=-1){
-			var gridEditRes = $("#belongInfoList").jqGrid('saveRow',orderBelongInfo.lastEditId);
-			if(gridEditRes){
-				var newRowData = $("#belongInfoList").jqGrid("getRowData", orderBelongInfo.lastEditId); 
-				var su=$("#belongInfoList").jqGrid('setRowData',orderBelongInfo.lastEditId,newRowData);
-				orderBelongInfo.lastEditId=-1;
-				changeItem("belongInfoList");
-			}else{
-				return;
-			}
-		}
-		saveOrderBelongInfo();
-	});
+	$('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
 		
 	$("#addNewUserBtn").on(ace.click_event, function(event){
-		if(orderBelongInfo.lastEditId!=-1){
-			var gridEditRes = $("#belongInfoList").jqGrid('saveRow',orderBelongInfo.lastEditId);
-			if(gridEditRes){
-				var newRowData = $("#belongInfoList").jqGrid("getRowData", orderBelongInfo.lastEditId); 
-				var su=$("#belongInfoList").jqGrid('setRowData',orderBelongInfo.lastEditId,newRowData);
-				orderBelongInfo.lastEditId=-1;
-				changeItem("belongInfoList");
-			}else{
-				return;
-			}
-		}
 		com.clearValidator();
 		
 		if(com.validate("addUserModal"))
-			return;
+			return false;
 		
 		var addRow = {};
 
@@ -86,49 +57,29 @@ jQuery(function($) {
 		addRow.belongDeptId= $("#belongDeptId").val();
 		addRow.belongRegionId= $("#belongRegionId").val();
 		addRow.defaultFlag = com.isOrNotType[$("#defaultFlag").prop("checked")];
-
-		for(var i=0;i<orderBelongInfo.orderBelongInfos.length;++i){
-			if(orderBelongInfo.orderBelongInfos[i].belongUserId == addRow.belongUserId){
+		
+		if(!/^(0\.\d{1,2})|1$/.test(addRow.belongRate)){
+			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
+			return false;
+		}
+		
+		var belongInfos = $('.item-orange');
+		
+		for(var i=0;i<belongInfos.length;i++){
+			var $v = $(belongInfos[i]);
+			
+			if($v.attr('belongUserId') == addRow.belongUserId){
 				bootbox.alert("该员工编号("+addRow.belongUserId+")已存在不能重复添加");
-				return;
+				return false;
 			}
 		}
 		
-		var ids = $("#belongInfoList").jqGrid('getDataIDs');
-		var maxid = Math.max.apply(null, ids);
-		if(maxid == -Infinity){
-			maxid = 0;
-		}
-		$("#belongInfoList").jqGrid('addRowData',maxid+1,addRow,"first");
-		orderBelongInfo.orderBelongInfos.push(addRow);
+		$('#resultList').append(displayFunc(addRow));
 		
-		changeItem("belongInfoList");
+		changeItem();
 		
-		event.stopPropagation();
+		return false;
 	});
-	
-	$("#approveManSel").chosen({allow_single_deselect: true}); 
-	$("#approveManSel_chosen input").bind("input", function(){
-		var pinyinName = $(this).val();
-		if($(this).val()!=""){
-			var shenPiType = 3;
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin": pinyinName, "userApprove.type": shenPiType}, function(res){
-				if(res.errorCode == 0){
-					
-					var html1 = '<option value="">&nbsp;</option>';
-					if(res.autoFillKeyValue!=null){
-						var i = 0;
-						for(i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-						
-					}
-					$("#approveManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#approveManSel_chosen").css("width", "200px");
 	
 	$("#cApproveSaveBtn").on("click", function(){
 		com.clearValidator();
@@ -139,26 +90,29 @@ jQuery(function($) {
 		
 		var options = {};
 		
-		var temOrderBelongInfos = orderBelongInfo.orderBelongInfos;
 		var num = 0;
 		var rate = 0;
 		var defaultCount = 0;
 		
-		for(var i = 0;i<temOrderBelongInfos.length;++i){
-			var _orderBelongInfo = temOrderBelongInfos[i];
+		$.each($('.item-orange'), function(i, v){
+			
+			var $v = $(v);
+			
+			var $belongRate = utils.changeTwoDecimal($v.attr('belongRate'));
+			var $defaultFlag = $v.attr('defaultFlag');
 			
 			options["approvalOrderBelongItems["+num+"].orderId"] = orderBelongInfo.decorationOrderId;
-			options["approvalOrderBelongItems["+num+"].belongUserId"] = _orderBelongInfo.belongUserId;
-			options["approvalOrderBelongItems["+num+"].belongRate"] = _orderBelongInfo.belongRate;
-			options["approvalOrderBelongItems["+num+"].defaultFlag"] = _orderBelongInfo.defaultFlag;
+			options["approvalOrderBelongItems["+num+"].belongUserId"] = $v.attr('belongUserId');
+			options["approvalOrderBelongItems["+num+"].belongRate"] = $belongRate;
+			options["approvalOrderBelongItems["+num+"].defaultFlag"] = $defaultFlag;
 			
-			if(temOrderBelongInfos[i].defaultFlag == '是'){
+			if($defaultFlag == '是'){
 				defaultCount++;
 			}
 			
-			rate += parseFloat(temOrderBelongInfos[i].belongRate);
+			rate += parseFloat($belongRate);
 			++num;
-		}
+		});
 		
 		if(rate != 1){
 			bootbox.alert("分配比例的和必须是1");
@@ -184,201 +138,76 @@ jQuery(function($) {
 		$("#approveModal").modal("hide");
 	});
 	
-	loadOrderBelongInfo();
-});
-
-function funcUserChange(e){
-	var auroFileSearchValue = $("#belongUserId_chosen input").val();
-	if($("#belongUserId_chosen input").val()!=""){
-		var options = null;
-		if(orderBelongInfo.belongType == "设计"){
-			options = {"pinyinName":auroFileSearchValue,"duty":"设计师"};
-		}else if(orderBelongInfo.belongType == "业务"){
-			options = {"pinyinName":auroFileSearchValue,"duty":""};
-		}
+	function displayFunc(v){
+		var $liLine = $('<li></li>').addClass('item-orange clearfix');
+		var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belongUser));
+		var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+		var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+		var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+		var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 		
-		com.post(api.personel.queryUserForNameByDuty, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillList!=null){
-					
-					var i = 0;
-					for(i=0;i<res.autoFillList.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$("#belongUserId").html(html1);
-				$("#belongUserId").trigger("chosen:updated");
-			}
+		var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+		
+		var propertyArr = [
+			["员工编号:", v.belongUserId, "grey"],
+			["所属部门:", v.belongDept, "grey"],
+			["所属大区:", v.belongRegion, "grey"],
+			["分配比例:", v.belongRate, "blue"],
+			["默认:", v.defaultFlag, "red"],
+		];
+		
+		$.each(propertyArr, function (index, value) {
+			var $liProperty = $('<li></li>');
+			$('<strong></strong>').html(value[0]).appendTo($liProperty);
+			$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+			$liProperty.appendTo($ulProperty);
 		});
+		
+		$btnDel.click(function(){
+			delRow(v.belongUserId);
+		});
+		
+		$divBtnWrap.append($btnDel).appendTo($h4);
+		
+		$liLine.attr('id', v.belongUserId).attr('belongUserId', v.belongUserId).attr('belongRate', v.belongRate).attr('defaultFlag', v.defaultFlag);
+		$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
+		
+		return $liLine;
 	}
-}
+	
+	function delRow(id){
+		$('#' + id).remove();
+	}
+	
+	function changeItem(){
+		com.updateChosen('belongUserId', '', '');
+		$('#belongRate').val(0);
+	}
 
-//--------------------------------------------------------服务器端加载数据-------------------------------------------------------
-function loadOrderBelongInfo(){
-	var url = "";
-	if(orderBelongInfo.belongType == '设计'){
-		url = api.decoration.queryOrderBelongInfoForDesignAChangeByOrderId;
-	}else if(orderBelongInfo.belongType == '业务'){
-		url = api.decoration.queryOrderBelongInfoForBusinessnAChangeByOrderId;
+	function saveOrderBelongInfo(){
+		$("#changeReason").val("");
+		
+		com.updateChosen('approveManSel', '', '');
+		
+		$("#approveModal").modal("show");	
 	}
+	
+	var url = orderBelongInfo.belongType == '设计' ? api.decoration.queryOrderBelongInfoForDesignAChangeByOrderId : api.decoration.queryOrderBelongInfoForBusinessnAChangeByOrderId;
+	
 	com.post(url, {"orderBelongInfo.orderId":orderBelongInfo.decorationOrderId}, function(res){
-		if(res.errorCode==0){
 
-			orderBelongInfo.orderBelongInfos = res.orderBelongInfos;
-			initOrderBelongInfo();
+		var $resultList = $('#resultList').html('');
+		var orderBelongInfos = res.orderBelongInfos;
+		
+		if(orderBelongInfos && orderBelongInfos.length > 0){
+			$.each(orderBelongInfos, function(i, v){
+				$resultList.append(displayFunc(v));
+			});
 		}else{
-			bootbox.alert("操作失败");
-		}
-	});
-}
-
-function initOrderBelongInfo(){
-	
-	var temOrderBelongInfos = orderBelongInfo.orderBelongInfos;
-	
-	$("#belongInfoDiv").html("");
-	$("#belongInfoDiv").html('<table id="belongInfoList"></table>'); 
-	
-	$("#belongInfoList").jqGrid({		
-		datatype: "local",
-		viewrecords : false,
-		multiselect : false,
-        multiboxonly: false,
-		colNames:['员工编号' , '员工名' ,  '所属部门' ,'所属大区' , '分配比例' ,"默认", '操作','belongDeptId','belongRegionId'],
-		colModel:[
-		  {name:"belongUserId"},
-		  {name:"belongUser"},
-		  {name:"belongDept"},
-		  {name:"belongRegion"},
-		  {name:"belongRate",editable:true,edittype: "text",editoptions:{maxlength:5},editrules:{ required:true ,custom:true,custom_func:checkGridBelongRate}},
-		  {name:"defaultFlag",formatter:"select",editable:true,edittype: "select",editoptions:{value:"是:是;否:否"}},
-		  {name:'deleteAction',title:false,formatter:deleteActionFormatter},
-		  {name:"belongDeptId",hidden:true},
-		  {name:"belongRegionId",hidden:true},
-		],onSelectRow: function(id){
-			if(id && (id !== orderBelongInfo.lastEditId)){
-				
-				var rowData = $(this).jqGrid("getRowData", id); 
-				
-				if(orderBelongInfo.lastEditId!=-1){
-					var gridEditRes = $("#belongInfoList").jqGrid('saveRow',orderBelongInfo.lastEditId);
-					if(gridEditRes){
-						var newRowData = $("#belongInfoList").jqGrid("getRowData", orderBelongInfo.lastEditId); 
-						var su=$("#belongInfoList").jqGrid('setRowData',orderBelongInfo.lastEditId,newRowData);
-						orderBelongInfo.lastEditId=-1;
-						changeItem("belongInfoList");
-					}else{
-						return;
-					}
-				}
-			
-				$(this).jqGrid('editRow',id,{
-					keys : true,		//这里按[enter]保存
-					url: "clientArray",
-					oneditfunc:function(rowid){
-						var rowObject = $(this).jqGrid("getRowData", rowid); 
-						
-						$("#"+rowid+"_belongRate").on('focus',function(){
-							this.select(); 
-						});
-					},
-					aftersavefunc: function(rowid){
-						var newRowData = $(this).jqGrid("getRowData", rowid); 
-						var su=jQuery(this).jqGrid('setRowData',rowid,newRowData);
-						orderBelongInfo.lastEditId = -1;
-					
-						changeItem($(this).attr("id"));
-					},
-					afterrestorefunc:function(rowid){
-						orderBelongInfo.lastEditId = -1;
-					}
-					
-				});
-				
-				orderBelongInfo.lastEditId=id;
-			}
+	    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
 		}
 	});
 	
-	for(var j=0;j<temOrderBelongInfos.length;j++){
-		$("#belongInfoList").jqGrid("addRowData",j,temOrderBelongInfos[j]);
-	}
-}
-
-//-------------------------------------------------报价项的格式化------------------------------------------
-function deleteActionFormatter(cellvalue, options, rowObject){
-	var str = '<div title="" style="float: right; margin-right: 5px; display: block;" class="ui-pg-div ui-inline-del" id="jDeleteButton_'+options.rowId+"\"";
-	  
-	str += ' onclick="removeItem('+options.rowId+')" onmouseover="jQuery(this).addClass(\'ui-state-hover\');" onmouseout="jQuery(this).removeClass(\'ui-state-hover\');" ><span class="ui-icon ui-icon-trash"></span></div>'
-	return str;
-}
-
-function checkGridBelongRate(value, colname){
-	if(value.length<=0 || value.length>5)
-		return [false,"\""+colname+"\"的长度应在1~5之间."];
-	 if ((/^((\d)+(\.)?(\d)*)$/).test(value)==false){
-         return [false,"\""+colname+"\"需要不小于0的数浮点数"];
-	 }else{
-         return [true,""];
-	 }
-}
-
-function removeItem(rowId){
-	var row = $("#belongInfoList").jqGrid('getRowData',rowId);
-	
-	if(orderBelongInfo.lastEditId!=-1&& orderBelongInfo.lastEditId!=rowId){
-		var gridEditRes = $("#belongInfoList").jqGrid('saveRow',orderBelongInfo.lastEditId);
-		if(gridEditRes){
-			var newRowData = $("#belongInfoList").jqGrid("getRowData", orderBelongInfo.lastEditId); 
-			var su=$("#belongInfoList").jqGrid('setRowData',orderBelongInfo.lastEditId,newRowData);
-			orderBelongInfo.lastEditId=-1;
-			changeItem("belongInfoList");
-		}else{
-			return;
-		}
-	}
-	
-	bootbox.confirm("确定要删除吗?",function(result){
-		if(result){
-		
-			console.log('--------------removeItem-');
-			orderBelongInfo.lastEditId = -1;
-			$("#belongInfoList").jqGrid('delRowData',rowId);
-			console.log('--------------removeItem-',orderBelongInfo.lastEditId);
-			changeItem("belongInfoList");
-			//initOrderBelongInfo();
-		}
-	});
-}
-
-function changeItem(tableId){
-	var temOrderBelongInfos = orderBelongInfo.orderBelongInfos;
-	var ids = $("#"+tableId).jqGrid('getDataIDs');
-	temOrderBelongInfos.splice(0);
-	
-	for(var index=0;index< ids.length;++index){
-		var rowData = $("#"+tableId).jqGrid('getRowData',ids[index]);
-		
-		var item = {};
-		
-		item.belongUserId = rowData.belongUserId;
-        item.belongUser= rowData.belongUser;
-        item.belongDept= rowData.belongDept;
-        item.belongRegion = rowData.belongRegion;
-        item.belongRate= rowData.belongRate;
-        item.belongDeptId= rowData.belongDeptId;
-        item.belongRegionId= rowData.belongRegionId;
-        item.defaultFlag = rowData.defaultFlag;
-        
-        temOrderBelongInfos.push(item);
-	}
-}
-
-//-------------------------------------------------------------save -------------------------------
-function saveOrderBelongInfo(){
-	$("#changeReason").val("");
-	var html1 = '<option value="">&nbsp;</option>';
-	$("#approveManSel").html(html1).trigger("chosen:updated");
-	$("#approveModal").modal("show");	
-}
+});

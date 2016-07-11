@@ -36,8 +36,8 @@ jQuery(function($) {
                 ["设计师:", v.designer, "grey"],
                 ["业务部:", v.businessDepartment, "grey"],
                 ["业务员:", v.salesman, "grey"],
-                ["面积:", v.houseArea, "grey"],
-                ["合同报价:", v.orderTotalPrice, "grey"],
+                ["面积:", v.houseArea, "blue"],
+                ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.createTime, "grey"],
                 ["状态:", v.status, "red"]
             ];

@@ -266,7 +266,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			materialSubOrderPO.setMaterialDeptName("");
 		}
 		
-		if(materialSubOrderVO.getInstoreId() == null || materialSubOrderVO.getInstoreId() == ""){
+		if(materialSubOrderVO.getInstoreId() == null || "".equals(materialSubOrderVO.getInstoreId())){
 			materialSubOrderPO.setInstoreId("");
 			materialSubOrderPO.setInstoreName("");
 		}else{

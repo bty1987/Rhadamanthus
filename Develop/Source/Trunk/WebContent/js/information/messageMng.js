@@ -1,7 +1,8 @@
 messagePostData = {};
+
 $(function(){
 
-	var message={
+	var message = {
 		saveBtn : $("#saveBtn").on("click", saveData),
 		messageList : $("#messageList"),
 	 	messageDetail : $("#messageDetail"),
@@ -22,6 +23,8 @@ $(function(){
 		editFlag: false,
 		repeatFlg: false,
 	};
+	
+	com.initChosen('receiver', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
 	$("#performanceSaveBtn").on("click", function(){
 		var isPerformance = com.isOrNotType[message.isPerformance.prop("checked")];
@@ -71,7 +74,6 @@ $(function(){
 
 	var displayFunc  = (function(){
 
-
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -102,14 +104,12 @@ $(function(){
 
 			var propertyArr = [
 				["消息分类:", v.type, "grey"],
-				["状态:", v.status, "grey"],
+				["状态:", v.status, "red"],
 				["发送人:", v.sender.userName, "grey"],
 				["时间:", v.createTime, "grey"],
 			];
 
-                //messageId
-
-				$.each(propertyArr, function (index,value) {
+			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
 				$('<strong></strong>').html(value[0]).appendTo($liProperty);
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -117,7 +117,6 @@ $(function(){
 			});
 
 			$label.append($input).append($span).appendTo($h3);
-
 
 			$liLine.append($h3).append($ulProperty);
 
@@ -135,11 +134,10 @@ $(function(){
 		}
 	})();
 
-
-	var MessageMngSeacher = new Searcher();
-	MessageMngSeacher.init( [], "condList", api.information.pageMessage, function(list){
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.information.pageMessage, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "messageMngSeacherPostData", null, false, null, function(){
+	}, "pagenation", "messageMngPostData", null, false, null, function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-envelope bigger-110').appendTo($adda);
@@ -147,18 +145,17 @@ $(function(){
 
 		$adda.click(function(){
 			message.editFlg = false;
+			
 			com.cleanItems(message.messageItems);
 
-			initChange("receiver", "receiver", api.personel.queryUserForNameByPinyinName, {});
-			$("#receiver_chosen").css("width", "50%");
+			com.updateChosen('receiver', '', '');
 
 			message.modal.modal("show");
 		});
 
-		var $reada = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
+		var $reada = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'addVillage').css('margin-top', '7px').css('margin-right', '7px');
 		var $readi = $('<i></i>').addClass('icon-eye-open bigger-110').appendTo($reada);
 		var $readspan = $('<span></span>').text('已读').appendTo($reada);
-
 
 		$reada.click(function(){
 			var nums = $('input[name="mmids"]:checked');
@@ -194,42 +191,8 @@ $(function(){
 	}
 
 	function successCallback(){
-		MessageMngSeacher.doSearch();
+		searcher.doSearch();
 		loadMessageCount();
-	}
-
-	function initChange(id, postId, queryElementsUrl, options){
-
-		id = "#" + id;
-		var chosenNameId = id+"_chosen input";
-
-		$(id).chosen({
-			allow_single_deselect: true
-		});
-
-		$(id).on("change", function(){
-			messagePostData[postId] = $(id).val();
-		});
-
-		$(chosenNameId).bind("input", function(){
-			var autoFileSearchValue = $(chosenNameId).val();
-			if(autoFileSearchValue == ""){
-				return false;
-			}
-			options["pinyinName"] = autoFileSearchValue;
-			com.post(queryElementsUrl, options, function(res){
-				if(res.errorCode == 0){
-					var html1 = '<option value="">&nbsp;</option>';
-					if(res.autoFillKeyValue != null){
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$(id).html(html1).trigger("chosen:updated");
-					$(chosenNameId).val(autoFileSearchValue);
-				}
-			});
-		});
 	}
 
 });

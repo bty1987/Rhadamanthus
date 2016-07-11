@@ -68,27 +68,7 @@ jQuery(function($) {
 		$("#couponType").bindData(materialSubOrder.couponType, 'key', 'value', false);
 	});
 	
-	$("#approveManSel").chosen({
-		allow_single_deselect : true
-	});
-	$("#approveManSel_chosen input").bind("input", function() {
-		var pinyinName = $(this).val();
-		if ($(this).val() != "") {
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin" : pinyinName, "userApprove.type" : 9}, function(res) {
-				if (res.errorCode == 0) {
-					var html1 = '<option value="">&nbsp;</option>';
-					if (res.autoFillKeyValue != null) {
-						var i = 0;
-						for(i=0;i<res.autoFillKeyValue.length;++i){
-							html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-						}
-					}
-					$("#approveManSel").html(html1).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#approveManSel_chosen").css("width", "200px");
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 9}, "autoFillKeyValue", "key", "value");
 	
 	materialSubOrder.approveSaveBtn = $("#approveSaveBtn").on("click", function(){
 		
@@ -107,17 +87,6 @@ jQuery(function($) {
 		
 		materialSubOrder.approvalMaterialFullPaymentModal.modal("hide");
 	});
-	
-	var subOrderSearchOpts = {
-		url: null,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: materialSubOrder.orderListGrid,
-		items: [
-	        {label:"设计师",id:"designerName",name:"designerName", type:'text'},
-	        {label:"楼盘",id:"village",name:"village",type:"text",op:"eq"}
-		]
-	};
-	$("#orderSearchDiv").flSearch(subOrderSearchOpts);
 	
 	var displayFunc  = (function(){
 
@@ -147,7 +116,7 @@ jQuery(function($) {
 						["品类:", v.materialType, "grey"],
 						["品牌:", v.materialBrand, "grey"],
 						["类型:", materialSubOrder.materialSaleOrderTypeData[v.msoType], "red"],
-						["总价:", v.point, "blue"],
+						["总价:", v.total, "blue"],
 						["定金:", v.depositPayment, "blue"],
 						["补款:", v.fullPayment, "blue"],
 						["抹零:", v.maling, "green"],
@@ -575,6 +544,8 @@ jQuery(function($) {
 			
 			materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
 			materialSubOrderPostData["approvalMaterialFullPayment.referMoney"] = materialSubOrder.materialSubOrderItems.fullPayment.val();
+			
+			com.updateChosen('approveManSel', '', '');
 			
 			materialSubOrder.materialSubOrderMoneyModal.modal("hide");
 			materialSubOrder.approvalMaterialFullPaymentModal.modal("show");

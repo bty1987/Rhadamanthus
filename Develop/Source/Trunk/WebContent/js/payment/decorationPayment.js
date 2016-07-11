@@ -295,7 +295,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += decorationPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info

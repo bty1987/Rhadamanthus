@@ -239,7 +239,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += payment.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info
@@ -281,9 +281,9 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "customerId", "customerPhone", "village", "houseNumber", "designer", "collectTimeDateRange"], "hcondList", api.payment.pagePaymentForHistory, function(data){
+	hsearcher.init(["orderId", "customerId", "customerPhone", "collectTimeDateRange"], "hcondList", api.payment.pagePaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hpaymentPostData");
+	}, "hpagenation", "hpaymentPostData", null, false, null, null, "hresultList");
 	
 	function showPaymentModal(v){
 		

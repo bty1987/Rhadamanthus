@@ -12,19 +12,6 @@ jQuery(function($) {
 		paymentCheck.accountsInfo = res.accountsInfo;
 	});
 	
-	var searchOpts = {
-		url: api.payment.pagePaymentForHistory,
-		postParmas: paymentCheck.postParams,
-		listgrid: paymentCheck.listgrid,
-		items: [
-	        {label:"客户编号",id:"customerIdSearch", name:'customerId', type:'text'}, 
-	        {label:"客户姓名", id:"customerNameSearch", name:"customerName", type:'autoFillPinyinText', url:api.data.queryCustomerForName},
-	        {label:"客户电话", id:"phoneSearch", name:"customerPhone", type:"text"},
-	        {label:"收款时间", id:"dateRangeSearch", name:"collectTimeDateRange",type:"dateRangePicker"}
-	    ]
-	};
-	$("#searchDiv").flSearch(searchOpts);
-	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -88,7 +75,7 @@ jQuery(function($) {
 				  var _s = bankInfo.split('#');
 				  for(var i=1;i<_s.length-1;i++){
 				    var _i = _s[i].split('|');
-				    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				    info += paymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
 				  return info

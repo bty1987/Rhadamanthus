@@ -455,7 +455,49 @@ com = {
           toLabel: '到',
           daysOfWeek: ['日', '一', '二', '三', '四', '五','六'],
           monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-      }        
+        }
+	}, initChosen: function(id, url, name, post, result, key, value){
+		
+		var $e = $('#' + id);
+		
+		$e.chosen({
+			allow_single_deselect : true
+		});
+		
+		var $i = $('#' + id + '_chosen input');
+		var $c = $('#' + id + '_chosen');
+		
+		$i.bind("input", function() {
+			var $pinyin = $(this).val();
+			
+			if ($(this).val() != "") {
+				
+				var $p = {}; $p[name] = $pinyin;
+				
+				com.post(url, $.extend({}, $p, post), function(res) {
+					
+					var html = '<option value="">&nbsp;</option>';
+					
+					if (res[result] != null){
+						var kv = res[result];
+						var length = kv.length;
+						
+						for(var i=0;i<length;i++){
+							var  _ = kv[i];
+							html+= '<option value="' +  _[key] + '">' +  _[value] + '</option>';
+						}
+					}
+					
+					$e.html(html).trigger("chosen:updated");
+				});
+			}
+		});
+		
+		$c.css("width", "200px");
+		
+		return $e;
+	}, updateChosen: function(id, key, value){
+		return $("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
 	}
 };
 

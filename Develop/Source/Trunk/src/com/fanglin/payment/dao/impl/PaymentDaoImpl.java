@@ -71,6 +71,9 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 			query.alias("advanceReceipt", "advanceReceipt");
 			
 			for(FilterVO filter: filters){
+				
+				System.out.println(filter.getField());
+				
 				if("customerId".equals(filter.getField())){
 					query.add(query.getCriterion("customer.customerId", filter));
 				} else if("customerName".equals(filter.getField())){

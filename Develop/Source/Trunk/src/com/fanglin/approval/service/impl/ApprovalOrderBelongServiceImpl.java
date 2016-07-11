@@ -116,7 +116,6 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			oldBelongRate.append(orderBelongInfoPO.getBelongRate());
 			oldBelongRate.append(",");
-			
 		}
 		
 		for(ApprovalOrderBelongItemVO approvalOrderBelongItemVO: approvalOrderBelongItemVOs){
@@ -137,6 +136,9 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			newBelongRate.append(",");
 			
 			rateCount = Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate());
+			
+			System.out.println(approvalOrderBelongItemVO.getBelongRate());
+			System.out.println(rateCount);
 			
 			if(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
 				defaultCount++;

@@ -54,32 +54,13 @@ jQuery(function($) {
 		$("#refund").val("");
 		$("#refundDes").val("");
 		
-		$("#approver").html('<option value="">&nbsp;</option>').trigger("chosen:updated");
+		com.updateChosen('approver', '', '');
 		
 		com.clearValidator();
 		com.clearValidator("#refund", true);
 	});
 	
-	$("#approver").chosen({allow_single_deselect: true}); 
-	$("#approver_chosen input").bind("input", function(){
-		var pinyinName = $(this).val();
-		if($(this).val() != ""){
-			var shenPiType = 6;
-			
-			com.post(api.system.queryApproveUserForNameByType, {"user.userNamePinYin": pinyinName, "userApprove.type": shenPiType}, function(res){
-				if(res.errorCode == 0){
-					var html = '<option value="">&nbsp;</option>';
-					if(res.autoFillKeyValue!=null){
-						for(var i=0;i<res.autoFillKeyValue.length;++i){
-							html += '<option value="' + res.autoFillKeyValue[i].key + '">' + res.autoFillKeyValue[i].value + '</option>';
-						}
-					}
-					$("#approver").html(html).trigger("chosen:updated");
-				}
-			});
-		}
-	});
-	$("#approver_chosen").css("width", "200px");
+	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": shenPiType}, "autoFillKeyValue", "key", "value");
 	
 	com.post(api.material.queryMaterialSubOrderItemByMsoId, materialSubOrderPostData, function(result){
 		
@@ -992,7 +973,6 @@ function saveRefundData(){
 	}
 	
 	var options = refundMaterialSubOrderItemData;
-	var args = refundMaterialSubOrderItemArgs;
 	
 	var rowIds = options["deleteRowIds"];
 	var url = options["url"];
@@ -1008,10 +988,6 @@ function saveRefundData(){
 	
 	options["materialSubOrder.refund"] = refund.val();
 	options["materialSubOrder.refundDes"] = refundDes.val();
-	
-	args += "r:" + refund.val() + ";"; // refund
-	args += "rd:" + refundDes.val() + ";"; // refundDes
-	args += "a:" + $("#approver").val(); // approver
 	
 	refundMaterialSubOrderData["approval.receiverId"] = $("#approver").val();
 	refundMaterialSubOrderData["approval.comment"] = refundDes.val();
