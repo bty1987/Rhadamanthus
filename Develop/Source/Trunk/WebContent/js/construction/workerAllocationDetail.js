@@ -654,14 +654,14 @@ function initWizardSept(operate, schedule){
 					$("#chanWorkerInfo").css("display", "none");
 				}
 				
-				initChange("chanWorkerName", api.personel.queryUserForNameByDuty, api.personel.queryUserByUserId, {"duty": operate.duty});
+				com.initChosen('chanWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 				
 				$("#chanWorkerSubmit").on("click", function(){
 					
 					var options = {};
 					options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
-					options[operate.elementName+".workerId"] = workerAllocationDetail.workerUserId["#chanWorkerName"];
+					options[operate.elementName+".workerId"] = $('#chanWorkerName').val();
 					
 					if($("#chanWorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
 						com.showAlert(com.error, "工人名称不能为空!");
@@ -789,14 +789,14 @@ function initWizardSept(operate, schedule){
 					$("#fangWorkerInfo").css("display", "none");
 				}
 				
-				initChange("fangWorkerName", api.personel.queryUserForNameByDuty, api.personel.queryUserByUserId, {"duty":operate.duty});
+				com.initChosen('fangWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 				
 				$("#fangWorkerSubmit").on("click", function(){
 					
 					var options = {};
 					options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
-					options[operate.elementName+".workerId"] = workerAllocationDetail.workerUserId["#fangWorkerName"];
+					options[operate.elementName+".workerId"] = $('#fangWorkerName').val();
 					
 					if($("#fangWorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
 						com.showAlert(com.error, "工人名称不能为空!");
@@ -886,9 +886,9 @@ function initWizardSept(operate, schedule){
 			}else{
 				
 				if(schedule == 3 || schedule == 8){
-					initChange(operate.name + "WorkerName", api.personel.queryUserForNameByDutysAO, api.personel.queryUserByUserId, {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty});
+					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty}, "autoFillKeyValue", "key", "value");
 				}else{
-					initChange(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, api.personel.queryUserByUserId, {"duty":operate.duty});
+					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");
 				}
 				
 				$("#"+operate.startTimeId).val(element.startTime);
@@ -958,7 +958,7 @@ function initWizardSept(operate, schedule){
 					args[operate.workerName+".csId"] = workerAllocationDetailPostData[operate.elementName+".csId"];
 					args[operate.workerName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
 					args[operate.workerName+".orderId"] = workerAllocationPostData["constructionSchedule.orderId"];
-					args[operate.workerName+".workerId"] = workerAllocationDetail.workerUserId["#" + operate.name + "WorkerName"];
+					args[operate.workerName+".workerId"] = $('#' + operate.name).val();
 					args[operate.workerName+".workerName"] = $("#" + operate.name + "WorkerName_chosen span")[0].textContent.split("-")[0];
 					
 					com.post(operate.addWorkerUrl, args, function(res){
@@ -1129,44 +1129,3 @@ function changeFangStatus(fangStatus){
 	}
 }
 
-function initChange(id, queryElementsUrl, queryElementUrl, options){
-	
-	console.log("initChange");
-	
-	id = "#" + id;
-	var imgId = id + "Img";
-	var chosenNameId = id+"_chosen input";
-	var chosenName = id+"_chosen";
-	
-	$(id).chosen({
-	    allow_single_deselect: true
-	})
-	
-	$(id).on("change", function(){
-		var args = {};
-		args["user.userId"] = $(id).val();
-		workerAllocationDetail.workerUserId[id] = $(id).val();
-	});
-	
-	$(chosenNameId).bind("input", function(){
-		var autoFileSearchValue = $(chosenNameId).val();
-		if(!autoFileSearchValue || autoFileSearchValue == ""){
-			return;
-		}
-		options["pinyinName"] = autoFileSearchValue;
-		com.post(queryElementsUrl, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillKeyValue != null){
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$(id).html(html1).trigger("chosen:updated");
-				$(chosenNameId).val(autoFileSearchValue);
-			}
-		});
-	});
-	
-	$(chosenName).css("width", "240px");
-}

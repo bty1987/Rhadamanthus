@@ -55,7 +55,6 @@ jQuery(function($) {
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
 
-
 			var propertyArr = [
 				["楼盘地址:", v.orderAddr, "grey"],
 				["客户名:", v.customerName, "grey"],
@@ -70,7 +69,6 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-
 
 			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
 
@@ -94,6 +92,7 @@ jQuery(function($) {
 
 				backVisit.modal.modal("show");
 			});
+			
 			$btnDel.click(function(){
 				removeRow(v.csbvId);
 			});
@@ -112,11 +111,10 @@ jQuery(function($) {
 		}
 	})();
 
-
-	var CustomerServiceBackVisitSeacher = new Searcher();
-	CustomerServiceBackVisitSeacher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "customerServiceBackVisitSeacherPostData", customerServicePostData, false, null,  function(){
+	}, "pagenation", "customerServiceBackVisitPostData", customerServicePostData, false, null,  function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css('margin-top', '7px').css('margin-right', '7px');
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -198,7 +196,7 @@ jQuery(function($) {
 	}
 
 	function successCallback(result){
-		CustomerServiceBackVisitSeacher.doSearch();
+		searcher.doSearch();
 	}
 
 	function failCallback(){

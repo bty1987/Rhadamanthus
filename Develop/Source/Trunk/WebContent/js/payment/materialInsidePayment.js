@@ -87,16 +87,31 @@ jQuery(function($) {
 		});
 	}
 	
-	com.post(api.ds.bankType, {}, function(res){
-		$("#bankName").bindData(res.bank, 'key', 'value');
-		$("#checkvBankName").bindData(res.bank, 'key', 'value');
-		$("#installmentBankName").bindData(res.bank, 'key', 'value');
-		$("#refundBankName").bindData(res.bank, 'key', 'value');
-	});
-	
-	com.post(api.ds.accountType, {"timestamp": new Date().getTime()}, function(res){
-		$("#accountsBankName").bindData(res.accountList, 'key', 'value');
-	});
+	com.post(api.common.queryReceiptType, {}, function(res){
+		
+		materialInsidePayment.cash = [];
+		materialInsidePayment.bank = [];
+		materialInsidePayment.checkBank = [];
+		materialInsidePayment.accounts = [];
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				materialInsidePayment.cash.push(v);
+			}else if(v.type == 2){
+				materialInsidePayment.bank.push(v);
+			}else if(v.type == 3){
+				materialInsidePayment.checkBank.push(v);
+			}else if(v.type == 4){
+				materialInsidePayment.accounts.push(v);
+			}
+		});
+		
+		$("#bankName").bindData(materialInsidePayment.bank, 'key', 'value');
+		$("#checkvBankName").bindData(materialInsidePayment.bank, 'key', 'value');
+		$("#installmentBankName").bindData(materialInsidePayment.bank, 'key', 'value');
+		$("#refundBankName").bindData(materialInsidePayment.bank, 'key', 'value');
+		$("#accountsBankName").bindData(materialInsidePayment.accounts, 'key', 'value');
+	}, null, false);
 	
 	initMaterialInsidePaymentList();
 	initMaterialInsidePaymentHistoryList();

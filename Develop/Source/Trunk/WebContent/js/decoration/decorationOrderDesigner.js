@@ -37,16 +37,10 @@ $(function(){
 					"drawLine.orderId":$("#decorationOrderId").val()
 				};
 
-				com.post(api.construction.applayDecorationOrderDrawLine, options, function(res){
-					if(res.errorCode == 0){
-						com.showAlert(com.info, "申请成功");
-						$.jgrid.refreshGrid(order.listGrid, order.postParam);
-					}
-				});
-				order.drawLineModal.modal("hide");
-			}else{
-				order.drawLineModal.modal("hide");
+				com.post(api.construction.applayDecorationOrderDrawLine, options);
 			}
+			
+			order.drawLineModal.modal("hide");
 		});
 	});
 

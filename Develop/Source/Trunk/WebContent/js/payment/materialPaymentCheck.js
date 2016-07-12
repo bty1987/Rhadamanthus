@@ -145,7 +145,7 @@ jQuery(function($) {
 	
 	searcher.init(["orderId", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollectBySubOrder, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "materialPaymentPostData", null, false, null, function(){
+	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css('margin-top', '7px').css('margin-right', '7px');
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -250,7 +250,7 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirmBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, null, "hresultList");
+	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
 	
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){

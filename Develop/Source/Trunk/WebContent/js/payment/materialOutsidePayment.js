@@ -1,23 +1,24 @@
-var materialOutsidePayment = {
-	
-	paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts"],
-	
-	saveBtn: null,
-	cancelBtn: null,
-	
-	baseModal: null,
-	addOrReduceModal: null,
-	refundModal: null,
-	materialOutsidePaymentItems: {},
-	
-	editFlg: false,
-	historyFlag: false,
-	batchFlag: true,
-	
-	queryUrl: null
-};
 
 jQuery(function($) {
+	
+	var materialOutsidePayment = {
+			
+		paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts"],
+		
+		saveBtn: null,
+		cancelBtn: null,
+		
+		baseModal: null,
+		addOrReduceModal: null,
+		refundModal: null,
+		materialOutsidePaymentItems: {},
+		
+		editFlg: false,
+		historyFlag: false,
+		batchFlag: true,
+		
+		queryUrl: null
+	};
 	
 	materialOutsidePayment.baseModal = $("#baseItemModal").on('show.bs.modal', function(e){
 		com.clearValidator();
@@ -52,23 +53,31 @@ jQuery(function($) {
 		});
 	}
 	
-	com.post(api.ds.bankType, {}, function(res){
+	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		materialOutsidePayment.cashInfo = res.cashInfo;
-		materialOutsidePayment.bankInfo = res.bankInfo;
-		materialOutsidePayment.checkBankInfo = res.checkBankInfo;
-		materialOutsidePayment.accountsInfo = res.accountsInfo;
+		materialOutsidePayment.cash = [];
+		materialOutsidePayment.bank = [];
+		materialOutsidePayment.checkBank = [];
+		materialOutsidePayment.accounts = [];
 		
-		$("#cashInfo").bindData(res.cash, 'key', 'value');
-		$("#bankName").bindData(res.bank, 'key', 'value');
-		$("#checkvBankName").bindData(res.checkBank, 'key', 'value');
-		$("#installmentBankName").bindData(res.bank, 'key', 'value');
-		$("#accountsBankName").bindData(res.accounts, 'key', 'value');
-		$("#refundBankName").bindData(res.bank, 'key', 'value');
-	});
-	
-	com.post(api.ds.accountType, {"timestamp": new Date().getTime()}, function(res){
-		$("#accountsBankName").bindData(res.accountList, 'key', 'value');
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				materialOutsidePayment.cash.push(v);
+			}else if(v.type == 2){
+				materialOutsidePayment.bank.push(v);
+			}else if(v.type == 3){
+				materialOutsidePayment.checkBank.push(v);
+			}else if(v.type == 4){
+				materialOutsidePayment.accounts.push(v);
+			}
+		});
+		
+		$("#cashInfo").bindData(materialOutsidePayment.cashInfo, 'key', 'value');
+		$("#bankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
+		$("#checkvBankName").bindData(materialOutsidePayment.checkBankInfo, 'key', 'value');
+		$("#installmentBankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
+		$("#accountsBankName").bindData(materialOutsidePayment.accountsInfo, 'key', 'value');
+		$("#refundBankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
 	});
 	
 	$("#history").removeClass("active");

@@ -261,7 +261,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "designer", "customerPhone", "orderAddr"], "condList", api.payment.pageMaterialPaymentBySubOrder, function(data){
+	searcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr"], "condList", api.payment.pageMaterialPaymentBySubOrder, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentPostData", null, false, null, function(){
 		
@@ -387,7 +387,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInitBySubOrder, function(data){
+	hsearcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInitBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, null, "hresultList");
 	
@@ -407,8 +407,6 @@ jQuery(function($) {
 		materialPaymentPostData.paymentInfo = [];
 		
 		$.each($inputs, function(i, v){
-			
-			console.log(v);
 			
 			var $input = $(v);
 			

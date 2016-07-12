@@ -579,45 +579,6 @@ function confirmWorderDeductSalaryPersonal(rowId){
 	});
 }
 
-function initChange(id, queryElementsUrl, queryElementUrl, options){
-	
-	id = "#" + id;
-	var chosenNameId = id+"_chosen input";
-	
-	$(id).chosen({
-	    allow_single_deselect: true,
-	});
-	
-	$(id).on("change", function(){
-		var args = {};
-		args["user.userId"] = $(id).val();
-		workerDeductSalary.workerUserId = $(id).val();
-	});
-	
-	$(chosenNameId).bind("input", function(){
-		var autoFileSearchValue = $(chosenNameId).val();
-		if(autoFileSearchValue == ""){
-			return false;
-		}
-		
-		options["pinyinName"] = autoFileSearchValue;
-		options["duty"] = workerDeductSalary.workerDuty;
-		
-		com.post(queryElementsUrl, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillKeyValue != null){
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$(id).html(html1).trigger("chosen:updated");
-				$(chosenNameId).val(autoFileSearchValue);
-			}
-		});
-	});
-}
-
 function detailSuccessCallback(){
 	com.showAlert(com.info, "操作成功");
 	workerDeductSalary.listGridOrderDetail.trigger("reloadGrid");

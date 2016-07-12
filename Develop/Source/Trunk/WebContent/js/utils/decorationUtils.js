@@ -723,16 +723,29 @@ var decorationUtils = {
 		}, null, false);
 		
 	}, init: function(){
-		com.post(api.ds.bankType, {}, function(res){
+		
+		com.post(api.common.queryReceiptType, {}, function(res){
 			
 			decorationUtils.qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
 			decorationUtils.scheduleInfos = ["铲大白", "放线", "水力电", "瓦工", "地面找平", "木工", "油工", "水电验收", "保洁"];
 			
-			decorationUtils.cashInfo = res.cashInfo;
-			decorationUtils.bankInfo = res.bankInfo;
-			decorationUtils.checkBankInfo = res.checkBankInfo;
-			decorationUtils.accountsInfo = res.accountsInfo;
-		});
+			decorationUtils.cashInfo = {};
+			decorationUtils.bankInfo = {};
+			decorationUtils.checkBankInfo = {};
+			decorationUtils.accountsInfo = {};
+			
+			$.each(res.receiptTypes, function(i, v){
+				if(v.type == 1){
+					decorationUtils.cashInfo[v.key] = v.name;
+				}else if(v.type == 2){
+					decorationUtils.bankInfo[v.key] = v.name;
+				}else if(v.type == 3){
+					decorationUtils.checkBankInfo[v.key] = v.name;
+				}else if(v.type == 4){
+					decorationUtils.accountsInfo[v.key] = v.name;
+				}
+			});
+		}, null, false);
 	}
 }
 
