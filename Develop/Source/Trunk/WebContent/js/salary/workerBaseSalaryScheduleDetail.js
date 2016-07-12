@@ -35,8 +35,6 @@ jQuery(function($) {
 		$("#userName_chosen").css("width", "42%");
 	});
 	
-	initChange("userName", api.personel.queryUserForNameByDuty, api.personel.queryUserByUserId.url, {});
-	
 	workerSalaryDetail.workerSalaryDetailItems.workType = $("#workType").on("change", function(){
 		workerSalaryDetail.workerDuty = $(this).find("option:selected").text();
 	});
@@ -140,9 +138,11 @@ jQuery(function($) {
 			
 			var row = workerSalaryDetail.listGrid.jqGrid("getRowData", num);
 			
+			com.initChosen('userName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : workerSalaryDetail.workerDuty}, "autoFillKeyValue", "key", "value");
+			com.updateChosen('userName', row.userId, row.userName);
+			
 			workerSalaryDetail.workerSalaryDetailItems.workType.val(row.workTypeId);
 			workerSalaryDetail.workerSalaryDetailItems.base.val(row.base);
-			$("#userName_chosen span")[0].textContent = row.userName + "-" + row.userId;
 			
 			workerSalaryDetail.workerUserId = row.userId;
 			workerSalaryDetail.workerDuty = row.workType;
@@ -160,6 +160,8 @@ jQuery(function($) {
 		onClickButton: function(){
 			editFlg = false;
 			com.cleanItems(workerSalaryDetail.workerSalaryDetailItems);
+			
+			com.initChosen('userName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : workerSalaryDetail.workerDuty}, "autoFillKeyValue", "key", "value");
 			
 			if($("#userName_chosen span").length > 0){
 				$("#userName_chosen span")[0].textContent = "";
@@ -294,45 +296,6 @@ function passWorderBaseSalary(rowId){
 		workerSalaryDetail.listGrid.setCell(rowId, "status", "1");
 		workerSalaryDetail.listGrid.setCell(rowId, "statusShow", "pass");
 		workerSalaryDetail.listGrid.setCell(rowId, "action", "pass");
-	});
-}
-
-function initChange(id, queryElementsUrl, queryElementUrl, options){
-	
-	id = "#" + id;
-	var chosenNameId = id+"_chosen input";
-	
-	$(id).chosen({
-	    allow_single_deselect: true,
-	});
-	
-	$(id).on("change", function(){
-		var args = {};
-		args["user.userId"] = $(id).val();
-		workerSalaryDetail.workerUserId = $(id).val();
-	});
-	
-	$(chosenNameId).bind("input", function(){
-		var autoFileSearchValue = $(chosenNameId).val();
-		if(autoFileSearchValue == ""){
-			return false;
-		}
-		
-		options["pinyinName"] = autoFileSearchValue;
-		options["duty"] = workerSalaryDetail.workerDuty;
-		
-		com.post(queryElementsUrl, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillKeyValue != null){
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$(id).html(html1).trigger("chosen:updated");
-				$(chosenNameId).val(autoFileSearchValue);
-			}
-		});
 	});
 }
 

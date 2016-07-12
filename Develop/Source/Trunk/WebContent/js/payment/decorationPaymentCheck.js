@@ -15,34 +15,11 @@ jQuery(function($) {
 	
 	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		decorationPaymentCheck.cash = [];
-		decorationPaymentCheck.bank = [];
-		decorationPaymentCheck.checkBank = [];
-		decorationPaymentCheck.accounts = [];
-		decorationPaymentCheck.couponType = [];
-		
-		decorationPaymentCheck.cashInfo = {};
 		decorationPaymentCheck.bankInfo = {};
-		decorationPaymentCheck.checkBankInfo = {};
-		decorationPaymentCheck.accountsInfo = {};
-		decorationPaymentCheck.couponTypeData = {};
 		
 		$.each(res.receiptTypes, function(i, v){
-			if(v.type == 1){
-				decorationPaymentCheck.cash.push(v);
-				decorationPaymentCheck.cashInfo[v.key] = v.name;
-			}else if(v.type == 2){
-				decorationPaymentCheck.bank.push(v);
+			if(v.type == 2){
 				decorationPaymentCheck.bankInfo[v.key] = v.name;
-			}else if(v.type == 3){
-				decorationPaymentCheck.checkBank.push(v);
-				decorationPaymentCheck.checkBankInfo[v.key] = v.name;
-			}else if(v.type == 4){
-				materialPadecorationPaymentCheckyment.accounts.push(v);
-				decorationPaymentCheck.accountsInfo[v.key] = v.name;
-			}else if(v.type == 5){
-				decorationPaymentCheck.couponType.push(v);
-				decorationPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
 			}
 		});
 	});

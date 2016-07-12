@@ -71,7 +71,7 @@ jQuery(function($) {
             var $btnDeploy = $('<a></a>').addClass('btn btn-minier btn-primary').html('人员部署');
             
             var propertyArr = [
-               ["楼盘地址:", v.village + ' ' + v.houseNumber, "grey"],
+               ["楼盘地址:", v.village.villageName + ' ' + v.houseNumber, "grey"],
                ["客户:", v.customer.customerName, "grey"],
                ["设计师:", v.designer, "grey"],
                ["面积:", v.houseArea, "blue"],

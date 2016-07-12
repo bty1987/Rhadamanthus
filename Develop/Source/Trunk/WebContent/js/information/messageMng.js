@@ -67,9 +67,10 @@ $(function(){
 
 	$("#returnBtn").on("click", function(){
 		$(".sysMessage").text("系统消息");
+		
 		message.messageList.show();
+		
 		message.messageDetail.hide();
-		$.jgrid.refreshGrid(message.listgrid);
 	});
 
 	var displayFunc  = (function(){

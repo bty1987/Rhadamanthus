@@ -4,13 +4,25 @@ var paymentCheck = {
 
 jQuery(function($) {
 	
-	com.post(api.ds.bankType, {}, function(res){
+	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		paymentCheck.cashInfo = res.cashInfo;
-		paymentCheck.bankInfo = res.bankInfo;
-		paymentCheck.checkBankInfo = res.checkBankInfo;
-		paymentCheck.accountsInfo = res.accountsInfo;
-	});
+		paymentCheck.cash = [];
+		paymentCheck.bank = [];
+		paymentCheck.checkBank = [];
+		paymentCheck.accounts = [];
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				paymentCheck.cash.push(v);
+			}else if(v.type == 2){
+				paymentCheck.bank.push(v);
+			}else if(v.type == 3){
+				paymentCheck.checkBank.push(v);
+			}else if(v.type == 4){
+				paymentCheck.accounts.push(v);
+			}
+		});
+	}, null, false);
 	
 	var displayFunc  = (function(){
 

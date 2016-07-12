@@ -28,14 +28,35 @@ jQuery(function($) {
 	
 	materialSubOrderCollectionPostData["materialPayment.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	
-	com.post(api.ds.bankType, {}, function(res){
-		materialSubOrderCollection.bank = res.bank;
+	com.post(api.common.queryReceiptType, {}, function(res){
 		
-		$("#bankName").bindData(res.bank, 'key', 'value');
-		$("#checkvBankName").bindData(res.bank, 'key', 'value');
-		$("#installmentBankName").bindData(res.bank, 'key', 'value');
-		$("#accountsBankName").bindData(res.bank, 'key', 'value');
-		$("#refundBankName").bindData(res.bank, 'key', 'value');
+		materialSubOrderCollection.cash = [];
+		materialSubOrderCollection.bank = [];
+		materialSubOrderCollection.checkBank = [];
+		materialSubOrderCollection.accounts = [];
+		materialSubOrderCollection.couponType = [];
+		
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				materialSubOrderCollection.cash.push(v);
+			}else if(v.type == 2){
+				materialSubOrderCollection.bank.push(v);
+			}else if(v.type == 3){
+				materialSubOrderCollection.checkBank.push(v);
+			}else if(v.type == 4){
+				materialSubOrderCollection.accounts.push(v);
+			}else if(v.type == 5){
+				materialSubOrderCollection.couponType.push(v);
+			}
+		});
+		
+		$("#bankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
+		$("#checkvBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
+		$("#installmentBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
+		$("#accountsBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
+		$("#refundBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
+		$("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'key', 'value');
+		$("#couponType").bindData(materialSubOrderCollection.couponType, 'key', 'value');
 	});
 	
 	com.post(api.ds.materialInfo, {}, function(res){
@@ -44,16 +65,6 @@ jQuery(function($) {
 			materialSubOrderCollection.materialPaymentTypeData[paymentType.key] = paymentType.value;
 			materialSubOrderCollection.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
-	});
-	
-	com.post(api.ds.accountType, {"timestamp": new Date().getTime()}, function(res){
-		materialSubOrderCollection.accountList = res.accountList;
-		$("#accountsBankName").bindData(materialSubOrderCollection.accountList, 'key', 'value');
-	});
-	
-	com.post(api.ds.couponType, {}, function(res){
-		materialSubOrderCollection.couponType = res.couponTypes;
-		$("#couponType").bindData(res.couponTypes, 'key', 'value');
 	});
 	
 	var displayFunc  = (function(){

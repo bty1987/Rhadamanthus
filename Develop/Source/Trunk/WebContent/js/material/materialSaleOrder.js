@@ -81,11 +81,6 @@ jQuery(function($) {
 	com.initChosen('instoreName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"驻店"}, "autoFillKeyValue", "key", "value");
 	com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 	
-//	initChange("salesmanName", "salesmanId", api.personel.queryUserForNameByDuty, {"duty":""});
-//	initChange("materialerName", "materialerId", api.personel.queryUserForNameByDutysAO, {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"});
-//	initChange("instoreName", "instoreId", api.personel.queryUserForNameByDuty, {"duty":"驻店"});
-//	initChange("materialBrand", "materialBrandName", api.data.queryBrandForPinYinNameACategoryName, {});
-	
 	com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 	
 	com.post(api.ds.materialInfo, {}, function(res){
@@ -557,40 +552,6 @@ function columnActionInit(id, data, flag){
 			$(_id).attr("disabled", "disabled");
 		}
 	}
-}
-
-function initChange(id, postId, queryElementsUrl, options){
-	
-	id = "#" + id;
-	var chosenNameId = id+"_chosen input";
-	
-	$(id).chosen({
-	    allow_single_deselect: true
-	});
-	
-	$(id).on("change", function(){
-		materialSaleOrderPostData[postId] = $(id).val();
-	});
-	
-	$(chosenNameId).bind("input", function(){
-		var autoFileSearchValue = $(chosenNameId).val();
-		if(autoFileSearchValue == ""){
-			return false;
-		}
-		options["pinyinName"] = autoFileSearchValue;
-		com.post(queryElementsUrl, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillKeyValue != null){
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$(id).html(html1).trigger("chosen:updated");
-				$(chosenNameId).val(autoFileSearchValue);
-			}
-		});
-	});
 }
 
 function defaultChange(id, postId, eid, ename){

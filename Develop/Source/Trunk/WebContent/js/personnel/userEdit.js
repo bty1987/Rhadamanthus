@@ -43,7 +43,7 @@ jQuery(function(a) {
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
         //com.switchPage(api.personel.userIndex);
-        com.switchPage("/views/personnel/user.html");
+        com.switchPage(api.personel.userIndex.url);
 
     });
     user.items.userId = a("#userId").on("blur",function() {
@@ -307,16 +307,14 @@ function saveData() {
             b["user.contracts[" + a + "].des"] = user.contractList[a].des,
             b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
         user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
+        
         com.post(a, b, successCallback, failCallback);
 
     }
 }
 
 function successCallback() {
-    com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
-    //$.jgrid.refreshGrid(user.listgrid, user.postParam);
-    //user.contractList = [];
-    //user.experienceList = []
+    com.showAlert(com.info, "操作成功");
     com.switchPage("/views/personnel/user.html");
 }
 

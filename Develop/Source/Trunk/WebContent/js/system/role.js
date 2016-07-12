@@ -31,8 +31,6 @@ var setting = {
 };
 
 jQuery(function($) {
-	role.listgrid = $("#listgrid");
-	role.gridPager = "#gridPager";
 	role.saveBtn = $("#saveBtn").on("click", saveData);
 	role.cancelBtn = $("#cancelBtn");
 	role.modal = $("#roleModal");
@@ -47,16 +45,6 @@ jQuery(function($) {
 	});
 	
 	$.extend(com.validator, role.validator);
-	
-	var searchOpts = {
-		url: api.system.pageRole,
-		postParmas: {"paging.rows":10, "paging.page":1},
-		listgrid: role.listgrid,
-		items: [
-		    {label:"角色名称",id:"roleNameSearch",name:"roleName", type:'text'}
-		]
-	};
-	$("#searchDiv").flSearch(searchOpts);
 	
 	$("#cancelRoleRightBtn").on("click",goBackRoleList);
 	$("#saveRoleRightBtn").on("click",saveRoleRight);
@@ -216,8 +204,6 @@ jQuery(function($) {
 		$("#roleList").removeClass("hidden");
 		$("#roleRightRoleId").val("");
 		$("#roleRightContent").html("配置角色()权限");
-		
-		$.jgrid.refreshGrid(role.listgrid, role.postParam);
 	}
 
 	function saveRoleRight(){

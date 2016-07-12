@@ -222,7 +222,7 @@ jQuery(function($) {
 
 	var orderId = qualityTestingPostData["constructionSchedule.orderId"];
 	
-	qualityTestingDetail.saveBtn = $("#saveBtn").on("click", saveData);
+	qualityTestingDetail.saveBtn = $("#saveBtn");
 	qualityTestingDetail.cancelBtn = $("#cancelBtn");
 	qualityTestingDetail.modal = $("#workerSalaryModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -355,7 +355,7 @@ jQuery(function($) {
 					$("#chanWorkerEnter").css("display", "block");
 					$("#chanWorkerInfo").css("display", "none");
 					
-					initChange("chanWorkerName", api.personel.queryUserForNameByDutyADept, api.personel.queryUserByUserId, {"duty":operate.duty});
+					com.initChosen('chanWorkerName', api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 					
 					$("#chanWorkerSubmit").on("click", function(){
 						console.log("chanWorkerSubmit");
@@ -363,7 +363,7 @@ jQuery(function($) {
 						var options = {};
 						options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
 						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".workerId"] = qualityTestingDetail.workerUserId["#chanWorkerName"];
+						options[operate.elementName+".workerId"] = $('#chanWorkerName').val();
 						
 						if($("#chanWorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
 							com.showAlert(com.error, "工人名称不能为空!");
@@ -432,7 +432,7 @@ jQuery(function($) {
 					$("#fangWorkerEnter").css("display", "block");
 					$("#fangWorkerInfo").css("display", "none");
 					
-					initChange("fangWorkerName", api.personel.queryUserForNameByDutyADept, api.personel.queryUserByUserId, {"duty":operate.duty});
+					com.initChosen('fangWorkerName', api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 					
 					$("#fangWorkerSubmit").on("click", function(){
 						console.log("fangWorkerSubmit");
@@ -537,8 +537,9 @@ jQuery(function($) {
 				
 				if(schedule == 3 || schedule == 8){
 					initChange("workerName", api.personel.queryUserForNameByDutysAODept, api.personel.queryUserByUserId, {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty});
+					com.initChosen("workerName", api.personel.queryUserForNameByDutysAODept, "pinyinName", {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty}, "autoFillKeyValue", "key", "value");
 				}else{
-					initChange("workerName", api.personel.queryUserForNameByDutyADept, api.personel.queryUserByUserId, {"duty":operate.duty});
+					com.initChosen("workerName", api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");
 				}
 				
 				$("#startTime").val(element.startTime);
@@ -593,7 +594,7 @@ jQuery(function($) {
 					args[operate.workerName+".csId"] = qualityTestingPostData[operate.elementName+".csId"];
 					args[operate.workerName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
 					args[operate.workerName+".orderId"] = qualityTestingPostData["constructionSchedule.orderId"];
-					args[operate.workerName+".workerId"] = qualityTestingDetail.workerUserId["#workerName"];
+					args[operate.workerName+".workerId"] = $('#workerName').val();
 					args[operate.workerName+".workerName"] = $("#workerName_chosen span")[0].textContent.split("-")[0];
 					
 					com.post(operate.addWorkerUrl, args, function(res){
@@ -781,40 +782,3 @@ function appendGalleryElement(galleryId, imgId, imgUrl, imgAddUrl, editUrl, dele
 	}).appendTo(toolsDiv);
 	$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 };
-
-function initChange(id, queryElementsUrl, queryElementUrl, options){
-	
-	id = "#" + id;
-	var imgId = id + "Img";
-	var chosenNameId = id+"_chosen input";
-	
-	$(id).chosen({
-	    allow_single_deselect: true
-	});
-	
-	$(id).on("change", function(){
-		var args = {};
-		args["user.userId"] = $(id).val();
-		qualityTestingDetail.workerUserId[id] = $(id).val();
-	});
-	
-	$(chosenNameId).bind("input", function(){
-		var autoFileSearchValue = $(chosenNameId).val();
-		if(!autoFileSearchValue || autoFileSearchValue == ""){
-			return;
-		}
-		options["pinyinName"] = autoFileSearchValue;
-		com.post(queryElementsUrl, options, function(res){
-			if(res.errorCode == 0){
-				var html1 = '<option value="">&nbsp;</option>';
-				if(res.autoFillKeyValue != null){
-					for(var i=0;i<res.autoFillKeyValue.length;++i){
-						html1+= '<option value="'+res.autoFillKeyValue[i].key+'">'+res.autoFillKeyValue[i].value+'</option>';
-					}
-				}
-				$(id).html(html1).trigger("chosen:updated");
-				$(chosenNameId).val(autoFileSearchValue);
-			}
-		});
-	});
-}

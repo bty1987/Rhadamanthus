@@ -1,39 +1,39 @@
-var decorationPayment = {
-	
-	paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"],
-	
-	couponType: {},
-	couponTypeData: {},
-	
-	orderPaymentId:null,
-	
-	saveBtn: null,
-	cancellBtn: null,
-	
-	baseModal: null,
-	addOrReduceModal:null,
-	refundModal:null,
-	decorationPaymentItems: {},
-	addReduceDetail:null,
-	
-	items: {},
-	
-	editFlg:false,
-	historyFlag: false,
-	batchFlag: true,
-	historyFlag: false,
-	
-	bankList:null,
-	accountsList: [],
-	
-	paymentType:"增项款",
-	orderId:null,
-	discount:10,
-};
 
 var decorationPaymentPostData = {};
 
 jQuery(function($) {
+	
+	var decorationPayment = {
+			
+		paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"],
+		
+		couponType: {},
+		couponTypeData: {},
+		
+		orderPaymentId:null,
+		
+		saveBtn: null,
+		cancellBtn: null,
+		
+		baseModal: null,
+		addOrReduceModal:null,
+		refundModal:null,
+		decorationPaymentItems: {},
+		addReduceDetail:null,
+		
+		items: {},
+		
+		editFlg:false,
+		historyFlag: false,
+		batchFlag: true,
+		historyFlag: false,
+		
+		bankList:null,
+		accountsList: [],
+		
+		paymentType:"增项款",
+		orderId:null,
+	};
 	
 	decorationPayment.baseModal = $("#baseItemModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -643,7 +643,7 @@ jQuery(function($) {
     function addReduceDetail(decorationPaymentId, paymentType, orderId){
     	
     	decorationPayment.orderPaymentId = decorationPaymentId;
-    	decorationPayment.paymentType =paymentType;
+    	decorationPayment.paymentType = paymentType;
     	decorationPayment.orderId = orderId;
     	decorationPayment.addReduceDetail.modal("show");
     	
@@ -653,7 +653,6 @@ jQuery(function($) {
     	};
     	
     	com.post(api.addReduce.queryAddReduceByDecorationPaymentId, options, function(res){
-//    		initAddOrReduceDetailListGrid();
     		
     		var quotationItemSeacher = new Searcher();
     		quotationItemSeacher.init([], "acondList", api.addReduce.queryAddReduceItemByAddReduceId,  function(data){
@@ -669,7 +668,7 @@ jQuery(function($) {
     				});
     				$ul.appendTo($tableWrap);
     			}
-    		}, "pagenation", "decorationPaymentAddReduceDetailPostData", {"addReduce.arId": res.addReduce.arId}, true, "addReduceItems");
+    		}, "pagenation", "decorationPaymentAddReduceDetailPostData", {"addReduce.arId": res.addReduce.arId}, true, "addReduceItems", null, 'aresultList');
     	});
     }
 

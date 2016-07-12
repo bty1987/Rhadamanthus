@@ -1,18 +1,20 @@
-var payment = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	cashOutModal: null,
-	items: {},
-	
-	temp: [],
-	
-	updateFlag: false,
-};
 
 var paymentPostData = {};
 
 jQuery(function($) {
+	
+	var payment = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		cashOutModal: null,
+		items: {},
+		
+		temp: [],
+		
+		updateFlag: false,
+	};
+	
 	payment.saveBtn = $("#collectBtn").on("click", saveData);
 	payment.cancelBtn = $("#cancelBtn");
 	payment.modal = $("#paymentModal").on('show.bs.modal',function(e){
@@ -586,4 +588,3 @@ jQuery(function($) {
 	}
 	
 });
-

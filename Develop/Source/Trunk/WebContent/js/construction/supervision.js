@@ -32,7 +32,7 @@ $(function(){
 			var $btnRe = $('<a></a>').addClass('btn btn-minier btn-primary').html('返工');
 
 			var propertyArr = [
-				["楼盘名:", v.village.villageName, "grey"],
+				["楼盘名:", v.village.villageName + " " + v.houseNumber, "grey"],
 				["设计师:", v.designer, "grey"],
 				["监理:", v.supervisor, "grey"],
 				["总价:", v.orderTotalPrice, "grey"],
