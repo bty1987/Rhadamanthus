@@ -229,7 +229,7 @@ var decorationUtils = {
 				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaName].push(addReduceItem);
 			}
 			
-			if(!decorationOrderDetail.decorationOrderQuotationItemGroupByJob[addReduceItem.workType]){
+			if(!quotationFunctionAreaItemWs[addReduceItem.workType]){
 				quotationFunctionAreaItemWs[addReduceItem.workType] = [];
 			}
 			
@@ -379,6 +379,8 @@ var decorationUtils = {
 		var options = {
 			"decorationActivity.orderId": orderId,
 		}
+		
+		activitys.html('');
 		
 		com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res){
 			var decorationActivitys = res.decorationActivitys;

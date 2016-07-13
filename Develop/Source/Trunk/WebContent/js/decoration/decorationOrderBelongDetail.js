@@ -4,8 +4,6 @@ var orderBelongInfo = {
 	belongStatus:null,
 	
 	orderBelongInfos:null,
-	loadOrderBelongInfo:loadOrderBelongInfo,
-	initOrderBelongInfo:initOrderBelongInfo,
 	
 	lastEditId:-1,
 };
