@@ -1,5 +1,13 @@
 var decorationOrderPostData = {};//页面跳转保存参数  跳转页面后  之前页面$(function()中定义的东西就没有了
+
 $(function(){
+	
+	var decorationOrderAdvance = {
+		items: {},
+	};
+	
+	decorationOrderAdvance.items.customerName = $('#customerName');
+	decorationOrderAdvance.items.phone = $('#phone');
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -273,6 +281,8 @@ $(function(){
 	    function signOrder(orderId, customerId){
 	    	decorationOrderPostData["decorationOrder.orderId"] = orderId;
 	    	decorationOrderPostData["customer.customerId"] = customerId;
+	    	
+	    	com.cleanItems(decorationOrderAdvance.items);
 	    	
 	    	order.customerInfoModal.modal("show");
 	    }

@@ -299,7 +299,7 @@ function initWizard(){
 		}
 		
 	}).on('finished', function(e) {
-		com.switchPage(api.index.decorationOrderDesignerIndex.url);
+		com.switchPage(api.index.decorationOrderAdvanceIndex.url);
 	}).on('stepclick', function(e,info){
 		
 		console.log(info.step);
