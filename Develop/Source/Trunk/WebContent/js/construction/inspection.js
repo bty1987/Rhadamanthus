@@ -34,7 +34,7 @@ $(function(){
 				["设计部门:", v.designDepartment, "grey"],
 				["设计师:", v.designer, "grey"],
 				["监理:", v.supervisor, "grey"],
-				["面积:", v.houseArea, "grey"],
+				["面积:", v.houseArea, "blue"],
 				["进度:", v.projectStatus, "red"],
 			];
 

@@ -120,8 +120,8 @@ jQuery(function($) {
 						["品类:", v.materialType, "grey"],
 						["品牌:", v.materialBrand, "grey"],
 						["创建时间:", v.createTime, "grey"],
-						["销售额:", v.sales, "grey"],
-						["利润:", v.profit, "grey"],
+						["销售额:", v.sales, "blue"],
+						["利润:", v.profit, "blue"],
 						["状态:", v.status == 0 ? '待收款' : v.status == 1 ? '已收款' : '已确认', "red"],
 					];
 					

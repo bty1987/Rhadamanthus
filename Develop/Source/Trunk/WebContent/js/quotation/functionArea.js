@@ -36,7 +36,7 @@ $(function(){
                 ["编号:", v.functionAreaId, "grey"],
                 ["报价版本:", v.version, "grey"],
                 ["类型:", v.functionAreaType, "grey"],
-                ["排序:", v.functionAreaOrder, "grey"],
+                ["排序:", v.functionAreaOrder, "blue"],
             ];
 
             $.each(propertyArr, function (index,value) {

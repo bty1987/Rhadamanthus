@@ -50,7 +50,7 @@ jQuery(function($) {
 				["楼盘名:", v.village.villageName, "grey"],
 				["设计师:", v.designer, "grey"],
 				["监理:", v.supervisor, "grey"],
-				["面积:", v.houseArea, "grey"],
+				["面积:", v.houseArea, "blue"],
 				["工程状态:", v.schedule, "grey"],
 				["进度:", v.projectStatus, "red"],
 			];

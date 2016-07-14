@@ -123,11 +123,11 @@ jQuery(function($) {
                 ["品类:", v.materialTypeName, "grey"],
                 ["品牌:", v.materialBrandName, "grey"],
                 ["单位:", v.measurementUnitName, "grey"],
-                ["进价:", v.materialPurchasePrice, "grey"],
-                ["标价:", v.materialUnitPrice, "grey"],
-                ["折扣:", v.discount, "grey"],
+                ["进价:", v.materialPurchasePrice, "blue"],
+                ["标价:", v.materialUnitPrice, "blue"],
+                ["折扣:", v.discount, "blue"],
                 ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
-                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "grey"]
+                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "blue"]
             ];
 
             $.each(propertyArr, function (index,value) {

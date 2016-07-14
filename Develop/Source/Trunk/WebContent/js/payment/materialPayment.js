@@ -205,7 +205,7 @@ jQuery(function($) {
                ["客户:", v.customerName, "grey"],
                ["品牌:", v.materialBrand, "grey"],
                ["操作人:", v.createUserName, "grey"],
-               ["应收金额:", v.referMoney, "red"],
+               ["应收金额:", v.referMoney, "blue"],
             ];
             
             var $label = $('<label></label>');
@@ -307,7 +307,7 @@ jQuery(function($) {
                ["客户:", v.customerName, "grey"],
                ["品牌:", v.materialBrand, "grey"],
                ["操作人:", v.createUserName, "grey"],
-               ["应收金额:", v.referMoney, "red"],
+               ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collectUser, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],

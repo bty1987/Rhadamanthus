@@ -1,17 +1,18 @@
-var materialOrder = {
-	modal: null,
-	materialOrderItems: {},
-	
-	msoId: null,
-	saleType: null,
-	
-	editFlag: false
-};
 
 var materialOrderPostData = {};
 
 jQuery(function($) {
 	$('#fl-statement').statement("主材订单", "订单信息列表");
+	
+	var materialOrder = {
+		modal: null,
+		materialOrderItems: {},
+		
+		msoId: null,
+		saleType: null,
+		
+		editFlag: false
+	};
 	
 	var displayFunc  = (function(){
 
@@ -37,7 +38,7 @@ jQuery(function($) {
 						["设计师:", v.designer, "grey"],
 						["监理:", v.supervisor, "grey"],
 						["业务员:", v.salesman, "grey"],
-						["面积:", v.houseArea, "grey"],
+						["面积:", v.houseArea, "blue"],
 					];
 
 					$.each(propertyArr, function (index,value) {
