@@ -44,12 +44,11 @@ $(function(){
                 ["类型:", v.quotationType, "grey"],
                 ["分类:", v.quotationClassification, "grey"],
                 ["大类:", v.quotationBigCategory, "grey"],
-
                 ["小类:", v.quotationSmallCategory, "grey"],
                 ["单位:", v.measurementUnit, "grey"],
                 ["工种:", v.workType, "grey"],
                 ["说明:", v.quotationItemDes, "grey"],
-                ["单价:", v.unitPrice, "grey"],
+                ["单价:", v.unitPrice, "blue"],
                 ["版本:", v.version, "grey"],
             ];
 

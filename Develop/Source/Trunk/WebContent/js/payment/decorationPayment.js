@@ -186,7 +186,7 @@ jQuery(function($) {
                ["客户:", v.customer, "grey"],
                ["设计师:", v.designer, "grey"],
                ["设计部:", v.designerDepartment, "grey"],
-               ["应收金额:", v.referMoney, "red"],
+               ["应收金额:", v.referMoney, "blue"],
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -274,7 +274,7 @@ jQuery(function($) {
                ["客户:", v.customer, "grey"],
                ["设计师:", v.designer, "grey"],
                ["设计部:", v.designerDepartment, "grey"],
-               ["应收金额:", v.referMoney, "red"],
+               ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collectUser, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus, "red"],

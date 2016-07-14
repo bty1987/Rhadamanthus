@@ -139,10 +139,10 @@ jQuery(function($) {
                ["客户:", v.customer.customerName, "grey"],
                ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
                ["设计师:", v.designer, "grey"],
-               ["合同余额:", v.customer.balance, "grey"],
-               ["工程余额:", v.customer.projectBalance, "grey"],
-               ["主材余额:", v.customer.materialBalance, "grey"],
-               ["正林余额:", v.customer.zhenglinBalance, "grey"],
+               ["合同余额:", v.customer.balance, "blue"],
+               ["工程余额:", v.customer.projectBalance, "blue"],
+               ["主材余额:", v.customer.materialBalance, "blue"],
+               ["正林余额:", v.customer.zhenglinBalance, "blue"],
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -219,8 +219,8 @@ jQuery(function($) {
                ["客户:", v.customer.customerName, "grey"],
                ["收款类型:", v.type, "grey"],
                ["预付款类型:", v.paymentType, "grey"],
-               ["操作金额:", v.recharge, "grey"],
-               ["余额:", v.balance, "grey"],
+               ["操作金额:", v.recharge, "blue"],
+               ["余额:", v.balance, "blue"],
                ["收款人:", v.collectUser.userName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.status, "red"],

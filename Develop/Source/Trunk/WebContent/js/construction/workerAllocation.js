@@ -1,15 +1,16 @@
-var workerAllocation = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	workerAllocationItems: {},
-	
-	editFlag: false
-};
 
 var workerAllocationPostData = {};
 
 jQuery(function($) {
+	
+	var workerAllocation = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		workerAllocationItems: {},
+		
+		editFlag: false
+	};
 
 	var displayFunc  = (function(){
 
@@ -41,9 +42,9 @@ jQuery(function($) {
 				["楼盘名:", v.village.villageName, "grey"],
 				["设计师:", v.designer, "grey"],
 				["监理:", v.supervisor, "grey"],
-				["总价:", v.orderTotalPrice, "grey"],
-				["折扣:", v.discount, "grey"],
-				["面积:", v.houseArea, "grey"],
+				["总价:", v.orderTotalPrice, "blue"],
+				["折扣:", v.discount, "blue"],
+				["面积:", v.houseArea, "blue"],
 				["工程状态:", v.schedule, "grey"],
 				["进度:", v.projectStatus, "red"]
 			];

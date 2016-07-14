@@ -34,7 +34,7 @@ jQuery(function($) {
                 ["客户名:", v.customer.customerName, "grey"],
                 ["设计师:", v.designer, "grey"],
                 ["业务员:", v.salesman, "grey"],
-                ["面积:", v.houseArea, "grey"],
+                ["面积:", v.houseArea, "blue"],
                 ["状态:", v.status, "red"],
             ];
 
