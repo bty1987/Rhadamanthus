@@ -250,8 +250,6 @@ jQuery(function($) {
 		options["materialSubOrderItem.prePoint"] = materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.value.val();
 		options["materialSubOrderItem.mosId"] = materialOrderPreBalanceDetailPostData.tmpItem.msoId;
 		
-		console.log(options);
-		
 		com.post(api.material.updateMaterialSubOrderItemForPrePT, options, function(result){
 			searcher.doSearch();
 		});

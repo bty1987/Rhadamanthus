@@ -185,8 +185,6 @@ jQuery(function($) {
 				options[_decorationPayment.paymentType] = option;
 			}
 			
-			console.log(options);
-			
 			if(options["尾款"]){
 				decorationPayment.refundType.push(options["尾款"]);
 			}else if(options["二期款"]){
@@ -248,8 +246,6 @@ jQuery(function($) {
 			"decorationPayment.autoId": decorationOrderDetail.decorationPaymentId,
 			"decorationPayment.referMoney": decorationPayment.decorationPayment.val(),
 		}
-		
-		console.log(options);
 		
 		com.post(api.payment.updateDecorationPaymentForReferMoney, options, function(res){
 			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
@@ -380,8 +376,6 @@ jQuery(function($) {
 			index++;
 		});
 		
-		console.log(options);
-		
 		if(!submitFlag){
 			return;
 		}
@@ -422,8 +416,6 @@ jQuery(function($) {
 			options["approvalActivityItems[0].num"] = 1;
 			options["approvalActivityItems[0].money"] = 0;
 		}
-		
-		console.log(options);
 		
 		com.post(api.approval.submitApprovalForDecorationActivity, options, function(res){
 			com.showAlert(com.info, "提交成功");
@@ -922,8 +914,6 @@ function deleteDecorationActivity(daId){
 	}
 	
 	com.post(api.decoration.deleteDecorationActivity, options, function(res){
-		console.log("dactivity_" + res.decorationActivity.daId);
-		console.log($("dactivity_" + res.decorationActivity.daId));
 		$("#dactivity_" + res.decorationActivity.daId).remove();
 	});
 }

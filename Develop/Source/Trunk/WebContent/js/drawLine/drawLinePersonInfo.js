@@ -149,8 +149,6 @@ jQuery(function($) {
 		
 		for(var qualityId in qualityIds){
 			
-			console.log(qualityId);
-			
 			var $id = $('#' + qualityId + "Quality").val();
 			
 			if(!$id){

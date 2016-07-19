@@ -261,8 +261,6 @@ function removeRow(params, rowNums){
 		}
 	}
 	
-	console.log(options);
-	
 	bootbox.confirm("删除数据中存在已经完成确认的记录 , 这些记录将不会进行删除操作!", function(result) {
 		if(result){
 			if(!isEmptyObject(options)){

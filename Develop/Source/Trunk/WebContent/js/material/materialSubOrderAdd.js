@@ -97,7 +97,6 @@ jQuery(function($) {
 			}
 		],
 		onSelectRow: function(id){
-			console.log("onSelectRow");
 			if(id && id !== _lastRowId){
 				
 				if(materialSubOrderAdd.record[_lastRowId]){
@@ -188,7 +187,6 @@ jQuery(function($) {
 			}
 		},
 		gridComplete: function () {
-			console.log("gridComplete");
 	        $(this).setGridParam().hideCol("cb");
 	        _lastRowId = -1;
 	    },
@@ -304,8 +302,6 @@ jQuery(function($) {
 			return false;
 		}
 		
-		console.log(options);
-		
 		var btn = $(this);
 		btn.button('loading');
 		
@@ -335,7 +331,6 @@ jQuery(function($) {
 });
 
 function saveRowData(rowId){
-	console.log("saveRowData");
 	
 	if(!materialSubOrderAdd.record[rowId]){
 		materialSubOrderAdd.listGrid.jqGrid('saveRow', rowId);
@@ -357,7 +352,6 @@ function saveRowData(rowId){
 }
 
 function cancleRowData(listGrid, rowId){
-	console.log("cancleRowData");
 	
 	if(rowId != _lastRowId){
 		if(materialSubOrderAdd.record[_lastRowId]){

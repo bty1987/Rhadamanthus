@@ -136,8 +136,6 @@ jQuery(function($) {
 		
 	}, null, false);
 	
-	console.log(receipt);
-	
 	if(receipt.paymentItems.length > 0){
 		createReceiptTable();
 	}
@@ -149,8 +147,6 @@ function createReceiptTable(){
 	var commonInfo = receipt.commonInfo;
 	var paymentItems = receipt.paymentItems;
 	var receiptItems = receipt.receiptItems;
-	
-	console.log(paymentItems);
 	
 	var center = $("<center></center>").appendTo("#materialPaymentReceipt");
 	

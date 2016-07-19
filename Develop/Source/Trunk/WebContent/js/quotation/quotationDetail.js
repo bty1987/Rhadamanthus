@@ -27,8 +27,6 @@ var QuotationDetail = (function(){
 				$btnSave : $('#saveQuotationBtn').on(ace.click_event, function(){ // 保存报价信息
 					com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res){
 						com.showAlert(com.info, "操作成功");
-					}, function(res){
-						console.log(res)
 					});
 				}),
 				//打印
@@ -554,9 +552,7 @@ var QuotationDetail = (function(){
 				var _params = $.extend({}, args, quo.basicParams);
 				com.post(api.quotation.updateQuotationFunctionAreaItem, _params, function(res){
 					that.$nowLine.find('input[name="deleteItems"]').val(res.quotationFunctionAreaItem.qfaiId);
-				}, function(res){
-					console.log(res);
-				}, false);
+				}, null, false);
 				if($line.length){
 					that.getNumCellFocus($line);
 				}else{
@@ -710,9 +706,7 @@ var QuotationDetail = (function(){
 				com.post(api.quotation.updateQuotationFunctionAreaItem, _params, function(res){
 					$item.find('input[name="deleteItems"]').val(res.quotationFunctionAreaItem.qfaiId);
 
-				}, function(res){
-					console.log(res);
-				}, false);
+				}, null, false);
 
 				quo.quoModals.$quoteAddModal.modal("hide");
 				return false;

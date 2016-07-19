@@ -16,14 +16,26 @@ jQuery(function(a){
         count == 30 ? $('.login_qrcode_refresh').html("您的二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post("queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag" : flag}).done(function(data){
             count ++ ;
             var statusCode = data.loginInfo.code;
-            -1 == statusCode ? setTimeout(function(){checkLogin(flag)} , 4000)   : 0 == statusCode ? (setCookie("authentication" , data.loginInfo.authentication , 1) ,window.location.href = "index.do?timestamp=" + new Date().getTime()) : $('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide');
+            
+            if(statusCode == -1){
+            	setTimeout(function(){checkLogin(flag)} , 4000)
+            }else if(0 == statusCode){
+            	setCookie("authentication" , data.loginInfo.authentication , 1);
+            	
+            	$.ajax({url: "updateCookie.do?timestamp=" + new  Date().getTime(), async: false});
+            	
+            	window.location.href = "main.html?timestamp=" + new Date().getTime();
+            }else{
+            	$('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide')
+            }
+            
         });
     };
 
     var setCookie =  function(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        var expires = "expires="+d.toUTCString();
+        var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + "; " + expires;
     }
 
@@ -88,7 +100,7 @@ function login() {
                 $("#errorMsg").html(data.errorMsg);
                 $("#Verify").attr("src", "verifyCode.do?timestamp="+ new Date().getTime());
             }else if(data.errorCode == 0) {
-                document.location.href = "index.do?timestamp="+ new Date().getTime();
+                document.location.href = "main.html?timestamp="+ new Date().getTime();
             }else{
                 $("#passwordIcon").attr("class", "icon-remove red");
                 $("#passwordIcon").attr("data-content", data.errorMsg);

@@ -324,6 +324,7 @@ jQuery(function($) {
 						
 						changeChanStatus(4);
 					});
+					
 					return false;
 				});
 				
@@ -358,7 +359,6 @@ jQuery(function($) {
 					com.initChosen('chanWorkerName', api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 					
 					$("#chanWorkerSubmit").on("click", function(){
-						console.log("chanWorkerSubmit");
 						
 						var options = {};
 						options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
@@ -435,9 +435,9 @@ jQuery(function($) {
 					com.initChosen('fangWorkerName', api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 					
 					$("#fangWorkerSubmit").on("click", function(){
-						console.log("fangWorkerSubmit");
 						
 						var options = {};
+						
 						options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
 						options[operate.elementName+".orderId"] = orderId;
 						options[operate.elementName+".workerId"] = qualityTestingDetail.workerUserId["#fangWorkerName"];

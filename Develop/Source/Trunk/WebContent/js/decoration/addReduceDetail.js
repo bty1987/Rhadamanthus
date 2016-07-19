@@ -314,9 +314,7 @@ var AddReduceDetail = (function(){
 					$item.find('input[name="deleteItems"]').val(res.addReduceItem.ariId);
 					arCalculator.changeSum(sumobj.sum, sumobj.sumd);
 
-				}, function(res){
-					console.log(res);
-				}, false);
+				}, null, false);
 
 				addReduceDetail.$modals.addItemModal.modal("hide");
 			});
@@ -577,8 +575,6 @@ var AddReduceDetail = (function(){
 
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			
-			console.log(v.num);
-
 			var propertyArr = [
 				["编号:", v.itemId, "grey"],
 				["大类:", v.quotationBigCategory, "grey quotationBigCategory"],
@@ -734,7 +730,7 @@ var AddReduceDetail = (function(){
 					});
 				}
 				var sumobj = arCalculator.calculateArFees();
-				console.log(sumobj);
+				
 				arCalculator.changeSum(sumobj.sum, sumobj.sumd);
 
 			}, null, false);

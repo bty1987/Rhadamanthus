@@ -660,8 +660,6 @@ jQuery(function($) {
     			var $tableWrap = $('#aresultList').empty();
     			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
     			
-    			console.log(data)
-
     			if(data && data.length){
     				$.each(data, function(i, v){
     					var $liLine = createAddReduceItem(v);
@@ -819,8 +817,6 @@ jQuery(function($) {
     		}
     	}
     	
-    	console.log(args);
-    	
     	if(referPayment != realPayment){
     		$("#paymentInfo").text("当前实收款项总数与应收款项不等,请核实再进行提交!");
     		return false;
@@ -860,8 +856,6 @@ jQuery(function($) {
 		options["decorationPayment.autoId"] = _info.autoId;
 		options["decorationPayment.des"] = $("#collectDes").val();
     	
-    	console.log(options);
-    	
     	com.post(url, options, function(result){
     		
     		decorationPayment.historyFlag = false;
@@ -890,7 +884,6 @@ jQuery(function($) {
     }
 
     function refund(){
-    	console.log("refund");
     	
     	if(com.validate()){
     		return;
@@ -965,8 +958,6 @@ jQuery(function($) {
     	}
     	
     	options["decorationPayment.des"] = $("#refundContent").val();
-    	
-    	console.log(options);
     	
     	com.post(url, options, function(result){
     		searcher.doSearch();

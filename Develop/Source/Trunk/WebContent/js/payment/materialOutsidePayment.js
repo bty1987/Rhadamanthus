@@ -284,7 +284,6 @@ jQuery(function($) {
 	}
 	
 	function payment(){
-		console.log("payment");
 		
 		if(com.validate()){
 			return;
@@ -363,8 +362,6 @@ jQuery(function($) {
 		
 		options["materialOutsidePayment.mopId"] = materialOutsidePayment.mopId;
 		
-		console.log(options);
-		
 		com.post(url, options, function(result){
 			
 			searcher.doSearch();
@@ -434,7 +431,6 @@ jQuery(function($) {
 	}
 
 	function initBaseModal(){
-		console.log("initBaseModal");
 		
 		for(var i=0;i<materialOutsidePayment.paymentModelNameData.length;i++){
 			var _name = materialOutsidePayment.paymentModelNameData[i];

@@ -603,8 +603,6 @@ jQuery(function($) {
 
 function initWizardSept(operate, schedule){
 	
-	console.log("initWizardSept : " + schedule);
-	
 	var elementPostData = {};
 	elementPostData[operate.elementName+".orderId"] = supervisionPostData["constructionSchedule.orderId"];
 	
@@ -944,7 +942,6 @@ function initWizardSept(operate, schedule){
 }
 
 function initUploadBtn(operate, element){
-	console.log("initUploadBtn");
 	
 	$("#"+operate.uploadId).html("").Huploadify({
         'debug' : false, // 开启调试
@@ -995,7 +992,6 @@ function initUploadBtn(operate, element){
 }
 
 function appendGalleryElement(galleryId, imgId, imgUrl, imgAddUrl, editUrl, deleteUrl, operate){
-	console.log("appendGalleryElement");
 	
 	var gallery = $("#"+galleryId);
 	

@@ -84,8 +84,8 @@ $(function(){
 
     var _condArr = ['villageName', 'cityId'];
 
-    var villageSeacher = new Searcher();
-    villageSeacher.init( _condArr, "condList", api.data.pageVillage, function(data){
+    var searcher = new Searcher();
+    searcher.init( _condArr, "condList", api.data.pageVillage, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "villagePostData", null, false, null, function(){
     	

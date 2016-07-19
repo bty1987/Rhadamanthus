@@ -152,8 +152,8 @@ jQuery(function($) {
 		duty.items.regionSel.val(regionId);
 		
 		$.when(
-			com.post(api.system.queryCityByRegionId, {"city.region.regionId": regionId}), 
-			com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": cityId})
+			com.post(api.system.queryCityByRegionId, {"city.region.regionId": regionId}, function(res){}), 
+			com.post(api.system.queryCityProperByCityId, {"cityProper.city.cityId": cityId}, function(res){})
 		).done(function(city, cityProper){
 			duty.items.citySel.bindData(city.cityList, "cityId", "cityName", false);
 			duty.items.cityProperSel.bindData(cityProper.cityProperList, "cityProperId", "cityProperName", false);

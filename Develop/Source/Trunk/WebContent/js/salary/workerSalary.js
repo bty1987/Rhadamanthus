@@ -240,7 +240,6 @@ function actionUnPayInit(cellvalue, options, rowdata){
 }
 
 function paySalary(rowId, wsId){
-	console.log("paySalary");
 	
 	var options = {};
 	options["workerSalary.wsId"] = wsId;
@@ -251,7 +250,6 @@ function paySalary(rowId, wsId){
 }
 
 function unpaySalary(rowId, wsId){
-	console.log("unpaySalary");
 	
 	var options = {};
 	options["workerSalary.wsId"] = wsId;

@@ -194,8 +194,6 @@ function printFinanceTable(){
 			
 			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
 			
-			console.log(_discount);
-			
 			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
 			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
 			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
@@ -395,8 +393,6 @@ jQuery(function($) {
 	
 	url.url = url.url+"?"+p;
 	
-	console.log(url.url);
-	
 	com.post(url, {}, function(res){
 		decorationOrderDetail.quotation = res.quotation;
 	}, null, false);
@@ -404,8 +400,6 @@ jQuery(function($) {
 	url = api.quotation.queryQuotationFunctionAreaByQuotationId;
 	
 	url.url = url.url+"?"+p;
-	
-	console.log(url.url);
 	
 	com.post(url, {}, function(res){
 		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
