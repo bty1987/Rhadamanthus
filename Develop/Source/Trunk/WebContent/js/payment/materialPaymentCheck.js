@@ -91,6 +91,7 @@ jQuery(function($) {
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var propertyArr = [
@@ -104,6 +105,7 @@ jQuery(function($) {
                ["收款人:", v.collectUserName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
+               ["备注:", v.des, "grey"],
             ];
             
             var $label = $('<label></label>');
@@ -122,10 +124,36 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
             
+            var styleArr = [];
+			
+			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
+				  var info = bank + ", ";
+				  var _s = bankInfo.split('#');
+				  for(var i=1;i<_s.length-1;i++){
+				    var _i = _s[i].split('|');
+				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
+				  }
+				  
+				  return info
+			})(v.bank, v.bankInfo), "grey"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
+			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
+			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "grey"]) : true;
+			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "grey"]) : true;
+			v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
+			
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+            
             $label.append($input).append($span).appendTo($h3);
 			$h3.append($('<small></small>').addClass('blue').html(materialPaymentCheck.materialPaymentTypeData[v.paymentType]));
            
-            $liLine.append($h3).append($ulProperty);
+            $liLine.append($h3).append($ulProperty).append($ulStyle);
             
             return $liLine;
         };
@@ -193,6 +221,7 @@ jQuery(function($) {
                ["收款人:", v.collectUserName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
+               ["备注:", v.des, "grey"],
             ];
             
             $.each(propertyArr, function (index,value) {

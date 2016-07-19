@@ -58,6 +58,7 @@ jQuery(function($) {
                ["收款人:", v.collectUser.userName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.status, "red"],
+               ["备注:", v.des, "grey"],
             ];
             
             var $label = $('<label></label>');

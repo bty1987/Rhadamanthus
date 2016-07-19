@@ -56,7 +56,7 @@ $(function(){
                 ["折扣:", v.discount, "blue"],
                 ["量房时间:", v.createTime, "grey"],
                 ["签单时间:", v.contractTime, "grey"],
-                ["状态:", v.status, "grey"]
+                ["状态:", v.status, "red"]
             ];
 
             $.each(propertyArr, function (index,value) {

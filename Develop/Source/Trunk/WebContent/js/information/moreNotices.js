@@ -1,7 +1,6 @@
 $(function(){
 	var displayFunc  = (function(){
 
-
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -40,8 +39,6 @@ $(function(){
 				$liProperty.appendTo($ulProperty);
 			});
 
-
-
 			$liLine.append($h3).append($ulProperty);
 
 			return $liLine;
@@ -59,14 +56,13 @@ $(function(){
 	})();
 
 	var _condArr = ['theme', 'dateRange'];
-	var MoreNoticesSeacher = new Searcher();
-	MoreNoticesSeacher.init( _condArr, "condList", api.information.pageNoticeForDeptAValid, function(list){
+	var searcher = new Searcher();
+	searcher.init( _condArr, "condList", api.information.pageNoticeForDeptAValid, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "moreNoticesSeacherPostData", {"notice.type" : params["notice.type"]});
+	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]});
 
 	$('#btnBack').click(function(){
 		isF5 = true;
-		$(".tooltip").remove();
-		window.location.reload();
+		location.reload(true);
 	});
 });
