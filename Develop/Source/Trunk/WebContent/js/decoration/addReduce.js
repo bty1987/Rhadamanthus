@@ -84,10 +84,10 @@ jQuery(function($) {
 
 	var _condArr = ['addReduceType'];
 
-	var addReduceSeacher = new Searcher();
-	addReduceSeacher.init( _condArr, "condList", api.addReduce.queryAddReduceByOrderId, function(data){
+	var search = new Searcher();
+	search.init( _condArr, "condList", api.addReduce.queryAddReduceByOrderId, function(data){
 		displayFunc.init('resultList', data);
-	}, null, "AddReduceCondPostData", extraParams, true, "addReduces");
+	}, null, "addReducePostData", extraParams, true, "addReduces");
 
 	var addReduce = {
 		decorationOrderId : params.decorationOrderId,
@@ -142,7 +142,7 @@ jQuery(function($) {
 				com.showAlert(com.warning, "删除增减项中存在提交状态,不能删除!");
 			}else{
 				com.showAlert(com.info, "操作成功!");
-				addReduceSeacher.doSearch();
+				search.doSearch();
 			}
 		});
 
@@ -167,7 +167,7 @@ jQuery(function($) {
 
 		com.post(url, options, function(res){
 			com.showAlert(com.info, "操作成功");
-			addReduceSeacher.doSearch();
+			search.doSearch();
 
 		});
 

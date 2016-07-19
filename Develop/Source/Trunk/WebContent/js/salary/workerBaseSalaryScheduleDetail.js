@@ -236,8 +236,6 @@ function saveData(){
 		"workerBaseSalary.orderId": workerSalaryDetailPostData["workerBaseSalary.orderId"],
 	};
 	
-	console.log(options);
-	
 	if(editFlg){
 		url = api.salary.updateWorkerBaseSalary;
 		options["workerBaseSalary.wbsId"] = workerSalaryDetailPostData["workerBaseSalary.wbsId"];

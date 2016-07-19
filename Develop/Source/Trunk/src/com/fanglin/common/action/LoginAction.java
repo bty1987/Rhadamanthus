@@ -104,7 +104,13 @@ public class LoginAction extends BaseListAction {
 				    
 					try {
 						String authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+						
 						CookieUtil.addCookie(response, Constant.COOKIE_AUTHENTICATION, authenticationEncode);
+						CookieUtil.addCookie(response, Constant.COOKIE_HOSTSERVER_STR, getHostServer());
+						CookieUtil.addCookie(response, Constant.COOKIE_MEDIASERVER_STR, getMediaServer());
+						CookieUtil.addCookie(response, Constant.COOKIE_COMMUNIONSERVER_STR, getCommunionServer());
+						CookieUtil.addCookie(response, Constant.COOKIE_DMEDIASERVER_STR, getDmediaServer());
+						CookieUtil.addCookie(response, Constant.COOKIE_VERSIONCODE_STR, SystemConfig.getString(Constant.COOKIE_VERSIONCODE_STR, ""));
 					} catch (Exception e) {
 						throw new FLException(110000, "系统处理问题");
 					}
@@ -163,6 +169,22 @@ public class LoginAction extends BaseListAction {
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateCookie", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateCookie() throws FLException{
+		
+		try {
+			CookieUtil.addCookie(response, Constant.COOKIE_HOSTSERVER_STR, getHostServer());
+			CookieUtil.addCookie(response, Constant.COOKIE_MEDIASERVER_STR, getMediaServer());
+			CookieUtil.addCookie(response, Constant.COOKIE_COMMUNIONSERVER_STR, getCommunionServer());
+			CookieUtil.addCookie(response, Constant.COOKIE_DMEDIASERVER_STR, getDmediaServer());
+			CookieUtil.addCookie(response, Constant.COOKIE_VERSIONCODE_STR, SystemConfig.getString(Constant.COOKIE_VERSIONCODE_STR, ""));
+		} catch (Exception e) {
+			throw new FLException(110000, "系统处理问题");
 		}
 		
 		return SUCCESS;

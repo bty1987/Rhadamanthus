@@ -123,8 +123,6 @@ jQuery(function($) {
 	
 	$("#print").on("click", function(){
 		
-		console.log("print");
-		
 		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrder.msoId"];
 		
 		var $inputs = $('input[name="idents"]:checked');

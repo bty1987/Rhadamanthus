@@ -283,10 +283,6 @@ function initWizard(){
 		
 		curstep == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
 		
-		console.log(curstep);
-		
-		console.log(curstep);
-		
 		if(curstep == 2){
 			decorationUtils.loadQuotationDetail();
 		}else if(curstep == 3){
@@ -301,10 +297,6 @@ function initWizard(){
 	}).on('finished', function(e) {
 		com.switchPage(api.index.decorationOrderAdvanceIndex.url);
 	}).on('stepclick', function(e,info){
-		
-		console.log(info.step);
-		
-		console.log(info.step);
 		
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
 		

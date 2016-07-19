@@ -76,7 +76,6 @@ jQuery(function($) {
 		materialSubOrderDetail.refundCancelBtn = $("#refundCancelBtn");
 		
 		materialSubOrderDetail.refundBtn.on("click", function(){
-			console.log("refundBtn");
 			
 			refundMaterialSubOrderItemIdData = [];
 			
@@ -446,7 +445,6 @@ function saveData(){
 }
 
 function editMaterialSubOrderItem(rowId, level, isLeaf){
-	console.log("editMaterialSubOrderItem");
 	
 	cancleRowData(_lastRowId);
 	cancelRowDataCancel(_lastRowId);
@@ -512,7 +510,6 @@ function editMaterialSubOrderItem(rowId, level, isLeaf){
 }
 
 function cancelMaterialSubOrderItem(rowId, level, isLeaf){
-	console.log("cancelMaterialSubOrderItem");
 	
 	cancleRowData(_lastRowId);
 	cancelRowDataCancel(_lastRowId);
@@ -589,7 +586,6 @@ function disabledInput(id){
 }
 
 function saveRowData(rowId){
-	console.log("saveRowData");
 	
 	var frowId = rowId;
 	var excuteRowId = [];
@@ -709,7 +705,6 @@ function saveRowData(rowId){
 }
 
 function saveRowDataCancel(rowId){
-	console.log("saveRowDataCancel");
 	
 	if(rowId < 0){
 		return false;
@@ -1029,7 +1024,6 @@ function saveRefundData(){
 }
 
 function cancleRowData(rowId){
-	console.log("cancleRowData");
 	
 	if(rowId < 0){
 		return false;
@@ -1054,7 +1048,6 @@ function cancleRowData(rowId){
 }
 
 function cancelRowDataCancel(rowId){
-	console.log("cancelRowDataCancel");
 	
 	if(rowId < 0){
 		return false;
@@ -1146,7 +1139,6 @@ function disabledColumn(rowId, columnName){
 }
 
 function submitMaterialSubOrderItem(rowId){
-	console.log("submitMaterialSubOrderItem");
 	
 	var materialSubOrderItem = materialSubOrderDetail.listGrid.jqGrid('getRowData', rowId);
 	
@@ -1174,7 +1166,6 @@ function submitMaterialSubOrderItem(rowId){
 }
 
 function submitMaterialSubOrderPackage(rowId){
-	console.log("submitMaterialSubOrderPackage");
 	
 	var options = {};
 	var materialSubOrderItem = materialSubOrderDetail.listGrid.jqGrid('getRowData', rowId);

@@ -116,7 +116,5 @@ function generatePrintPage(){
 		html += generateAddReduceItem("工程减项", addReduceDetail.reduceItems, addReduceDetail.sumReduce);
 	}
 	
-	console.log(html);
-	
 	$("#content").html(html);
 }

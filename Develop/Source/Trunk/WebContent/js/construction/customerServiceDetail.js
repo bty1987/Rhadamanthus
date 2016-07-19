@@ -283,7 +283,6 @@ jQuery(function($) {
 
 
 function initWizardSept(operate, schedule){
-	console.log("initWizardSept");
 	
 	var elementPostData = {};
 	elementPostData[operate.elementName+".orderId"] = customerServicePostData["constructionSchedule.orderId"];

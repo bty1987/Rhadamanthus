@@ -528,8 +528,6 @@ jQuery(function($) {
 
 function initWizardSept(operate, schedule){
 	
-	console.log("initWizardSept : " + schedule);
-	
 	var elementPostData = {};
 	var workerInfoCondition = false;
 	
@@ -692,8 +690,6 @@ function initWizardSept(operate, schedule){
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".workerId"] = "";
 					
-					console.log(options)
-					
 					com.post(operate.setWorkerUrl, options, function(res){
 						$("#chanWorkerEnter").css("display", "block");
 						$("#chanWorkerInfo").css("display", "none");
@@ -826,8 +822,6 @@ function initWizardSept(operate, schedule){
 					options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".workerId"] = "";
-					
-					console.log(options)
 					
 					com.post(operate.setWorkerUrl, options, function(res){
 						$("#fangWorkerEnter").css("display", "block");

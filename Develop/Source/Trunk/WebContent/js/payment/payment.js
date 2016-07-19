@@ -560,8 +560,6 @@ jQuery(function($) {
 		
 		var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
 		
-		console.log(payment.bank);
-		
 		var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
 		var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
 		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(payment.bank, 'key', 'name').appendTo(bankNameDiv);

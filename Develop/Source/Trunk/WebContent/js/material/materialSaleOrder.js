@@ -127,7 +127,7 @@ jQuery(function($) {
 				}
 			}
 		], onSelectRow: function(id){
-			console.log("onSelectRow");
+			
 			if(id && id !== _lastRowId){
 				
 				if(materialSaleOrder.record[_lastRowId]){
@@ -232,7 +232,6 @@ jQuery(function($) {
 			}
 		},
 		gridComplete: function () {
-			console.log("gridComplete");
 	        $(this).setGridParam().hideCol("cb");
 	        _lastRowId = -1;
 	    },
@@ -309,8 +308,6 @@ jQuery(function($) {
 		
 		var materialType = materialBrandStr.split('-')[1];
 		var materialBrand = materialBrandStr.split('-')[0];
-		
-		console.log($('#instoreName').val());
 		
 		options["materialSubOrder.orderId"] = orderId;
 		options["materialSubOrder.orderAddr"] = materialSaleOrder.materialSaleOrderItems.orderAddr.val();
@@ -394,7 +391,6 @@ jQuery(function($) {
 });
 
 function saveRowData(rowId){
-	console.log("saveRowData");
 	
 	if(!materialSaleOrder.record[rowId]){
 		materialSaleOrder.listGrid.jqGrid('saveRow', rowId);
@@ -416,7 +412,6 @@ function saveRowData(rowId){
 }
 
 function cancleRowData(listGrid, rowId){
-	console.log("cancleRowData");
 	
 	if(rowId != _lastRowId){
 		if(materialSaleOrder.record[_lastRowId]){
@@ -469,8 +464,6 @@ function fillData(id, content){
 	com.post(materialSaleOrder.typeahead.queryItemUrl, options, function(data){
 		
 		var _item = data[materialSaleOrder.typeahead.itemName];
-		
-		console.log(_item);
 		
 		columnActionInit(id, _item, true);
 	}, function(data){

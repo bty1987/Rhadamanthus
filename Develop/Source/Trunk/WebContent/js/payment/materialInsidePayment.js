@@ -194,8 +194,6 @@ function paymentTypeInit(cellvalue, options, rowdata){
 
 function actionInit(cellvalue, options, rowdata){
 	
-	console.log("actionInit");
-	
 	var result = '';
 	
 	if(cellvalue == "paymentCommit"){
@@ -216,7 +214,6 @@ function actionInit(cellvalue, options, rowdata){
 }
 
 function bankNameInit(cellvalue, options, rowdata){
-	console.log("bankNameInit");
 	
 	if(cellvalue == ""){
 		return "-";
@@ -267,7 +264,6 @@ function dialogPayment(rowId, mipId, paymentType){
 }
 
 function payment(){
-	console.log("payment");
 	
 	if(com.validate()){
 		return;
@@ -335,7 +331,6 @@ function payment(){
 	}
 	
 	if(_rowIds.length == 1){
-		console.log("rowids is 1");
 		if(materialInsidePayment.historyFlag){
 			url = api.payment.updateMaterialInsidePayment;
 		}else{
@@ -393,11 +388,8 @@ function payment(){
 		}
 	}
 	
-	console.log(options);
-	
 	com.post(url, options, function(result){
 		
-		console.log(result.errorCode);
 		if(result.errorCode == 1){
 			$("#paymentInfo").text(result.errorMsg);
 			return false;
@@ -445,7 +437,6 @@ function payment(){
 }
 
 function refund(){
-	console.log("refund");
 	
 	if(com.validate()){
 		return;
@@ -485,8 +476,6 @@ function refund(){
 		}
 	}
 	
-	console.log(options);
-	
 	com.post(url, options, function(result){
 		com.showAlert(com.info, "收款成功!");
 		for(var i=0;i<rowIds.length;i++){
@@ -517,7 +506,6 @@ function initRefundModal(){
 }
 
 function initBaseModal(){
-	console.log("initBaseModal");
 	
 	for(var i=0;i<materialInsidePayment.paymentModelNameData.length;i++){
 		var _name = materialInsidePayment.paymentModelNameData[i];

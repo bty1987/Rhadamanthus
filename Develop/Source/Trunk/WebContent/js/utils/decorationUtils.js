@@ -137,8 +137,6 @@ var decorationUtils = {
 			com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": decorationOrderDetail.decorationOrderId}, function(res){
 				var addReduces = res.addReduces;
 				
-				console.log(addReduces);
-				
 				var n = 0;
 				
 				$.each(addReduces, function(i, v){
@@ -147,13 +145,9 @@ var decorationUtils = {
 				
 			}, null, false);
 			
-			console.log(addReduceIds);
-			
 			com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function(res){
 				decorationOrderDetail.quotationDetail.addReduceItems = res.addReduceItems;
 			}, null, false);
-			
-			console.log(decorationOrderDetail.quotationDetail.addReduceItems);
 			
 			decorationUtils.initQuotationDetailItem(decorationOrderDetail.quotation, decorationOrderDetail.quotationDetail.quotationFunctionAreas, decorationOrderDetail.quotationDetail.addReduceItems);
 			

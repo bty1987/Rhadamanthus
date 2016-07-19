@@ -145,7 +145,6 @@ function unformatStatus(cellvalue, options, cell){
 }
 
 function bankNameInit(cellvalue, options, rowdata){
-	console.log("bankNameInit");
 	
 	if(cellvalue == ""){
 		return "-";

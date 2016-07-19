@@ -10,7 +10,6 @@ jQuery(function($) {
 	
 	decorationActivityItem.items.decorationActivityItems = $("#decorationActivityItems");
 	decorationActivityItem.items.backBtn = $("#backBtn").on("click", function(){
-		console.log("decorationActivityIndex");
 		$("#decorationActivityItemPageContent").load(api.index.decorationActivityIndex.url);
 	});
 	

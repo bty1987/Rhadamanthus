@@ -225,7 +225,6 @@ function statusInit(cellvalue, options, rowdata){
 }
 
 function paySalary(rowId, dsId){
-	console.log("paySalary");
 	
 	var options = {};
 	options["designerSalary.dsId"] = dsId;
@@ -236,7 +235,6 @@ function paySalary(rowId, dsId){
 }
 
 function unpaySalary(rowId, dsId){
-	console.log("unpaySalary");
 	
 	var options = {};
 	options["designerSalary.dsId"] = dsId;

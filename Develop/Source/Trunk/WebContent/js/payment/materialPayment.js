@@ -444,10 +444,6 @@ jQuery(function($) {
 				_paymentType = row.paymentType;
 			}
 			
-			console.log(row.referMoney);
-			console.log(row.paymentType);
-			console.log(_paymentType);
-			
 			if([4, 5, 6, 7].indexOf(row.paymentType) != -1){
 				sumMoney = utils.accSub(sumMoney, parseFloat(row.referMoney));
 				if([4, 5, 6, 7].indexOf(_paymentType) == -1){
@@ -477,8 +473,6 @@ jQuery(function($) {
 		
 		$("#sumMoney").val(sumMoney);
 		$("#sumMoneyShow").html(sumMoney);
-		
-		console.log(_paymentTypeFlag);
 		
 		if(_paymentTypeFlag != 0){
 			_paymentTypeFlag != 1 ? _paymentTypeFlag != 2 ? com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款不支持不同订单间的操作");
@@ -577,7 +571,6 @@ jQuery(function($) {
 	}
 
 	function initBaseModal(){
-		console.log("initBaseModal");
 		
 		for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
 			var _name = materialPayment.paymentModelNameData[i];
@@ -647,7 +640,6 @@ jQuery(function($) {
 	}
 	
 	function payment(){
-		console.log("payment");
 		
 		if(com.validate()){
 			return;
@@ -765,8 +757,6 @@ jQuery(function($) {
 			}
 		}
 		
-		console.log(args);
-		
 		if(referPayment != realPayment){
 			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
 			return false;
@@ -790,8 +780,6 @@ jQuery(function($) {
 		
 		url = api.payment.collectMaterialPayments;
 		
-		console.log(materialPaymentPostData.paymentInfo);
-		
 		$.each(materialPaymentPostData.paymentInfo, function(i, v){
 			options["materialPayments["+i+"].mpId"] = v.mpId;
 		})
@@ -803,8 +791,6 @@ jQuery(function($) {
 		resMrIdIndex = "materialReceipt";
 		
 		options["materialSubOrder.orderId"] = materialPaymentPostData.orderId;
-		
-		console.log(options);
 		
 		com.post(url, options, function(result){
 			
@@ -828,7 +814,6 @@ jQuery(function($) {
 	}
 
 	function refund(){
-		console.log("refund");
 		
 		if(com.validate()){
 			return;
@@ -893,8 +878,6 @@ jQuery(function($) {
 		}
 		
 		options["materialPayment.des"] = $("#refundContent").val();
-		
-		console.log(options);
 		
 		com.post(url, options, function(result){
 			searcher.doSearch();
