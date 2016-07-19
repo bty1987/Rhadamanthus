@@ -311,6 +311,7 @@ jQuery(function($) {
                ["收款人:", v.collectUser, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
+               ["备注:", v.des, "grey"],
             ];
             
             var $label = $('<label></label>');

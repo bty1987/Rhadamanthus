@@ -6,7 +6,7 @@ body {
 	padding-bottom:0;
 	background-color:#e4e6e9;
 	min-height:100%;
-	font-family:'Open Sans';
+	/*font-family:'Open Sans';*/
 	font-size:13px;
 	color:#393939;
 	line-height:1.5
@@ -84,7 +84,7 @@ a:focus,a:active {
 h1 {
 	font-size:32px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h1.smaller {
 	font-size:31px
@@ -98,7 +98,7 @@ h1.block {
 h2 {
 	font-size:26px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h2.smaller {
 	font-size:25px
@@ -112,7 +112,7 @@ h2.block {
 h3 {
 	font-size:22px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h3.smaller {
 	font-size:21px
@@ -126,7 +126,7 @@ h3.block {
 h4 {
 	font-size:18px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h4.smaller {
 	font-size:17px
@@ -140,7 +140,7 @@ h4.block {
 h5 {
 	font-size:15px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h5.smaller {
 	font-size:14px
@@ -154,7 +154,7 @@ h5.block {
 h6 {
 	font-size:13px;
 	font-weight:normal;
-	font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
+	/*font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif*/
 }
 h6.smaller {
 	font-size:12px
@@ -8202,7 +8202,7 @@ li.item-default {
 	line-height:26px;
 	font-size:13px;
 	font-weight:bold;
-	font-family:"Open Sans";
+	/*font-family:"Open Sans";*/
 	padding:0 8px
 }
 .profile-users .user {
@@ -10004,7 +10004,7 @@ ul.attachment-list>li {
 .tree .icon-plus[class*="icon-"]:first-child:before {
 	display:block;
 	content:"+";
-	font-family:"Open Sans";
+	/*font-family:"Open Sans";*/
 	font-size:16px;
 	position:relative;
 	z-index:1
