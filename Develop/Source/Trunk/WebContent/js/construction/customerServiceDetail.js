@@ -221,7 +221,6 @@ jQuery(function($) {
 	com.post(api.construction.queryConstructionScheduleByOrderId, customerServicePostData, function(res){
 		
 		customerServiceDetail.construstionSchedule = res.constructionSchedule;
-		customerServiceDetail.mediaServer = window.mediaServer;
 		
 		var schedule = res.constructionSchedule.schedule;
 		var operate = customerServiceDetail.operateDict[schedule];
@@ -301,7 +300,7 @@ function initWizardSept(operate, schedule){
 			if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
 				com.post(api.personel.queryUserByUserId, {"user.userId": element.workerId}, function(res){
 					if(res.user){
-						$("#chanWorkerImg").attr("src", customerServiceDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", res.user.userId+"'s Photo");
+						$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", res.user.userId+"'s Photo");
 						$("#chanWorkerNameSpan").text(res.user.userName);
 						
 						setWorkerRaty('#chanWorkerRaty', element.workerRaty);
@@ -336,7 +335,7 @@ function initWizardSept(operate, schedule){
 			if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
 				com.post(api.personel.queryUserByUserId, {"user.userId": element.workerId}, function(res){
 					if(res.user){
-						$("#putlineWorkerImg").attr("src", customerServiceDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", res.user.userId+"'s Photo");
+						$("#putlineWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", res.user.userId+"'s Photo");
 						$("#putlineWorkerNameSpan").text(res.user.userName);
 						
 						setWorkerRaty('#putlineWorkerRaty', element.workerRaty);
@@ -386,7 +385,7 @@ function initWizardSept(operate, schedule){
 						var img = $('<img class="editable img-responsive" style="height: 150px">').attr("alt", constructionScheduleWorkers[i]["workerId"]+"'s photo").attr("id", constructionScheduleWorkers[i][operate.worker]+"WorkerImg").appendTo(imgDiv);
 						
 						if(constructionScheduleWorkers[i]["workerPhoto"] != null && constructionScheduleWorkers[i]["workerPhoto"] != ""){
-							img.attr("src", customerServiceDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+constructionScheduleWorkers[i]["workerPhoto"]+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+							img.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+constructionScheduleWorkers[i]["workerPhoto"]+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 						}
 						
 						var horizontalDiv = $('<div class="form-horizontal col-sm-6">').appendTo(profileDiv);

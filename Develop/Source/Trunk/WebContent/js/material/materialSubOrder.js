@@ -66,7 +66,11 @@ jQuery(function($) {
 	com.post(api.ds.couponType, {}, function(res){
 		materialSubOrder.couponType = res.materialCouponTypes;
 		$("#couponType").bindData(materialSubOrder.couponType, 'key', 'value', false);
-	});
+	}, null, false);
+	
+	com.post(api.ds.materialInfo, {}, function(res){
+		
+	}, null, false);
 	
 	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 9}, "autoFillKeyValue", "key", "value");
 	
@@ -244,11 +248,11 @@ jQuery(function($) {
 		materialSubOrder.materialSubOrderItems.realFullPayment.val(v.fullPayment);
 		
 		for(var name in materialSubOrder.materialSubOrderPaymentTypeNameData){
-			$("#"+name+"Payment").val("").removeAttr("readonly");
-			$("#"+name+"CancelBtn").css("display", "none");
-			$("#"+name+"PaymentInfo").css("display", "none").html("");
-			$("#"+name+"PaymentBtn").css("display", "none");
-			$("#"+name+"RefundBtn").css("display", "none");
+			$("#" + name + "Payment").val("").removeAttr("readonly");
+			$("#" + name + "CancelBtn").css("display", "none");
+			$("#" + name + "PaymentInfo").css("display", "none").html("");
+			$("#" + name + "PaymentBtn").css("display", "none");
+			$("#" + name + "RefundBtn").css("display", "none");
 		}
 		
 		materialSubOrder.materialSubOrderItems.depositRefundBtn.css("display", "none");

@@ -26,8 +26,8 @@ public class AuthenticationUtil {
 	
 	private boolean isMobile;
 	
-	private String flag = "FIP";
-
+	private int company;
+	
 	public AuthenticationUtil() {
 		super();
 	}
@@ -55,17 +55,20 @@ public class AuthenticationUtil {
 				&& authentication[1].startsWith(Constant.COOKIE_AUTHENTICATION_ROLEID)
 				&& authentication[2].startsWith(Constant.COOKIE_AUTHENTICATION_USERNAME)
 				&& authentication[3].startsWith(Constant.COOKIE_AUTHENTICATION_UPDATETIME)
-				&& authentication[4].startsWith(Constant.COOKIE_AUTHENTICATION_ISMOBILE)){
+				&& authentication[4].startsWith(Constant.COOKIE_AUTHENTICATION_ISMOBILE)
+				&& authentication[5].startsWith(Constant.COOKIE_AUTHENTICATION_COMPANY)){
 				
 				this.userId = authentication[0].substring(Constant.COOKIE_AUTHENTICATION_USERID.length());
 				this.roleId = authentication[1].substring(Constant.COOKIE_AUTHENTICATION_ROLEID.length());
 				this.userName = authentication[2].substring(Constant.COOKIE_AUTHENTICATION_USERNAME.length());
 				String updateString = authentication[3].substring(Constant.COOKIE_AUTHENTICATION_UPDATETIME.length());
 				String isMobileStr = authentication[4].substring(Constant.COOKIE_AUTHENTICATION_ISMOBILE.length());
+				String company = authentication[5].substring(Constant.COOKIE_AUTHENTICATION_COMPANY.length());
 				
 				try{
 					Long updateLong = Long.parseLong(updateString);
 					this.updateTime = updateLong;
+					this.company = Integer.valueOf(company);
 					
 					Pattern pattern = Pattern.compile("[0-9]*");
 					if(isMobileStr != null && pattern.matcher(isMobileStr).matches()){
@@ -140,8 +143,8 @@ public class AuthenticationUtil {
 		authentication.append(Constant.COOKIE_AUTHENTICATION_ISMOBILE);
 		authentication.append(isMobile() ? "1" : "0");
 		authentication.append(Constant.COOKIE_AUTHENTICATION_SPLIT);
-		authentication.append(Constant.COOKIE_AUTHENTICATION_FLAG);
-		authentication.append(getFlag());
+		authentication.append(Constant.COOKIE_AUTHENTICATION_COMPANY);
+		authentication.append(getCompany());
 		
 		return authentication.toString();
 	}
@@ -186,12 +189,12 @@ public class AuthenticationUtil {
 		this.isMobile = isMobile;
 	}
 
-	public String getFlag() {
-		return flag;
+	public int getCompany() {
+		return company;
 	}
 
-	public void setFlag(String flag) {
-		this.flag = flag;
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

@@ -34,7 +34,25 @@ import java.io.ByteArrayInputStream;
 public class VerifyCodeAction extends BaseAction {
 
 	private ByteArrayInputStream imageStream; // 图片流
+	
+	private String securityCode;
+	
+	@Action(value = "queryVode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVode() throws Exception{
+		
+		securityCode = AESHelper.encryptToString(SecurityCodeHelper.getSecurityCode(), SystemConfig.getString("encryptKey"));
+		
+		return SUCCESS;
+	}
 
+	@Action(value = "verifyCode", results = { @Result(name = "success", type = "stream",  params={"ignoreHierarchy", "false", "contentType", "image/jpeg", "inputName", "imageStream", "bufferSize", "2048"}) })
+	public String verifyCode() throws Exception {
+		
+		imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
+		
+		return SUCCESS;
+	}
+	
 	public ByteArrayInputStream getImageStream(){
 		return imageStream;
 	}
@@ -43,15 +61,12 @@ public class VerifyCodeAction extends BaseAction {
 		this.imageStream = imageStream;
 	}
 
-	@Action(value = "verifyCode", results = { @Result(name = "success", type = "stream",  params={"ignoreHierarchy", "false", "contentType", "image/jpeg", "inputName", "imageStream", "bufferSize", "2048"}) })
-	public String verifyCode() throws Exception {
-		
-		String securityCode = SecurityCodeHelper.getSecurityCode(); // 获取默认难度和长度的验证码
-		imageStream = SecurityImageHelper.getImageAsInputStream(securityCode);
-		String securityCodeEncodeString = AESHelper.encryptToString(securityCode, SystemConfig.getString("encryptKey")); // 放入cookie中
-		
-		CookieUtil.addCookie(response, Constant.COOKIE_VERIFYCODE, securityCodeEncodeString);
-		
-		return SUCCESS;
+	public String getSecurityCode() {
+		return securityCode;
 	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+	
 }

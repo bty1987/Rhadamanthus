@@ -33,31 +33,32 @@
 		var jses = "";
 		
 		if(!window.jQuery){
-			jses += '<script src="' + hostServer + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+			jses += '<script src="' + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
 		}
 	
 		if("ontouchend" in document){
-			jses += '<script src="' + hostServer + 'assets/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
+			jses += '<script src="' + 'assets/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
 		}
 		
-		jses += '<script src="' + hostServer + 'assets/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
 		
-		jses += '<script src="' + hostServer + 'assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/jqGrid/i18n/grid.locale-cn.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/jqGrid/jquery.jqGrid.src.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/jqGrid/i18n/grid.locale-cn.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/jqGrid/jquery.jqGrid.src.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
 		
-		jses += '<script src="' + hostServer + 'assets/js/ace-elements.min.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'assets/js/ace.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/ace-elements.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'assets/js/ace.min.js?version=' + versionCode + '"><\/script>';
 		
-		jses += '<script src="' + hostServer + 'js/com/api.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'js/com/utils.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'js/com/core.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + hostServer + 'js/com/params.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/com/api.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/com/config.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/com/utils.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/com/core.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/com/params.js?version=' + versionCode + '"><\/script>';
 		
-		jses += '<script src="' + hostServer + 'js/payment/decorationPaymentReceipt.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + 'js/payment/decorationPaymentReceipt.js?version=' + versionCode + '"><\/script>';
 		
 		document.write(jses);
 	</script>

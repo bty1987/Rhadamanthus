@@ -8,8 +8,6 @@ var decorationOrderDetail = {
 	materialItemListGrid: null,
 	materialItemGridPager: null,
 	
-	mediaServer:null,
-	
 	quotationDetail:null,
 	decorationOrder:null,
 	decorationOrderQuotationItemData:[]
@@ -363,7 +361,7 @@ function printCustomerTable(){
 	contentHtml += '<td>17、甲方签署后,表示对此工程明细表的价格、工艺及各条款认可,并自愿承担相关法律责任.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr><tr>';
-	contentHtml += '<td>18、所有工程项目施工结束,甲乙双方清算增减项目交尾款后,甲方到乙方处开发票并补交8%税金.最终解释权归辽宁方林装饰有限公司所有.</td>';
+	contentHtml += '<td>18、所有工程项目施工结束,甲乙双方清算增减项目交尾款后,甲方到乙方处开发票并补交8%税金.最终解释权归' + config.companyFullName + '所有.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr></tbody></table>';
 	contentHtml += '</td>';
@@ -412,13 +410,13 @@ function generatePrintPage(type){
 	var html = "";
 
 	if(type == '1'){
-		html += printHeader("辽宁方林装饰工程有限公司家装预算(工程)");
+		html += printHeader(config.companyFullName + "家装预算(工程)");
 		html += printProjectTable();
 	}else if(type == '2'){
-		html += printHeader("辽宁方林装饰工程有限公司家装预算(财务)");
+		html += printHeader(config.companyFullName + "家装预算(财务)");
 		html += printFinanceTable();
 	}else if(type == '3'){
-		html += printHeader("辽宁方林装饰工程有限公司家装项目单");
+		html += printHeader(config.companyFullName + "家装项目单");
 		html += printCustomerTable();
 	}
 	                                                                                                                                                                                                       

@@ -1,16 +1,16 @@
 var main = {
-	mediaServer: "",
 	top: [],
 	skipFlag: false,
 	quotationIntervalId: -1,
 };
 
-params.hostServer = window.hostServer;
-params.communionServer = window.communionServer;
-params.mediaServer = window.mediaServer;
-params.authentication = window.authentication;
-
 $(function(){
+	
+	params.authentication = window.authentication;
+	
+	$(document).attr('title', config.name + ' ' + config.ename);
+    $('#name').text(config.name);
+    
 	com.post(api.common.createTree, {}, loadTreeCallback);
 	com.post(api.common.wmCode, {}, function(res){
 		params.watermark = res.watermark;
@@ -32,7 +32,8 @@ $(function(){
 	$(".messageList").data("level", 1);
 	
 	$("#logout").on("click", function(e){
-		window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
+//		window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
+		window.location.href = '/';
 	});
 	
 	$(".userProfile").on("click", function(e){
@@ -69,16 +70,28 @@ $(function(){
 		$('.breadcrumb .nav1').empty().append('<i class="icon-envelope"></i>&nbsp;消息查看');
 	});
 	
-	$(".moreLink").on("click", function(e){
-		var type = "";
-		if(e.target.id == "moreActivity"){
-			type = "活动";
-		}else{
-			type = "通知";
-		}
-		e.preventDefault();
-		com.switchPage(api.index.moreNoticesIndex.url, {}, function(){			params["notice.type"] = type;	
-		});
+//	$(".moreLink").on("click", function(e){
+//		var type = "";
+//		if(e.target.id == "moreActivity"){
+//			type = "活动";
+//		}else{
+//			type = "通知";
+//		}
+//		e.preventDefault();
+//		com.switchPage(api.index.moreNoticesIndex.url, {}, function(){//			params["notice.type"] = type;	
+//		});
+//	});
+	
+	$('#moreActivity').click(function(){
+		params["notice.type"] = "活动";
+		
+		com.switchPage(api.index.moreNoticesIndex.url);
+	});
+	
+	$('#moreNotice').click(function(){
+		params["notice.type"] = "通知";
+		
+		com.switchPage(api.index.moreNoticesIndex.url);
 	});
 	
 	$("#versionInfo").on("click", function(e){
@@ -96,7 +109,7 @@ $(function(){
 	});
 	
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-		$("#personalPic").attr("src", window.mediaServer + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime());
+		$("#personalPic").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime());
 	});
 	
 	loadNotices();
@@ -236,7 +249,7 @@ function getNoticeDOM(notice){
 			+ notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
 			+ notice.user.userName + '</span>&nbsp;&nbsp;</div></small>');
 	if(notice.filePath!=undefined && notice.filePath != null && notice.filePath != ""){
-		$(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href='+window.mediaServer+notice.filePath+"?t="+new Date().getTime()+' onclick="window.open(this.href); return false;">下载附件</a></span>');
+		$(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime()+' onclick="window.open(this.href); return false;">下载附件</a></span>');
 	}
 	
 	$wrap.append($title).append($contents).append($bottomInfo);
@@ -261,7 +274,6 @@ function loadMessageCount(){
 }
 
 function loadTreeCallback(nodes){
-	main.mediaServer = window.mediaServer;
 	$(".user-info .user-name").text(nodes.userName);
 	var treeData = nodes.tree;
 	var $tree = $("ul.nav-list");

@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: Constant.java
  * @Package		：com.fanglin.utils
  * @Version		: 1.0
@@ -27,7 +27,7 @@ public interface Constant {
 	
 	String COOKIE_AUTHENTICATION_ISMOBILE = "isMobile=";
 	
-	String COOKIE_AUTHENTICATION_FLAG = "flag=";
+	String COOKIE_AUTHENTICATION_COMPANY = "company=";
 	
 	String COOKIE_AUTHENTICATION_SPLIT = ",";
 	

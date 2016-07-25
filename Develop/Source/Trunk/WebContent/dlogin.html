@@ -2,14 +2,10 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="utf-8" />
-	<title>方林信息平台 Fanglin Information Platform</title>
-	<meta name="keywords" content="方林,装饰,FIP" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 	<link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico" type="image/x-icon">
 
 	<script>
-		//        var hostServer = "http://" + document.location.host + "/";
 		var hostServer = "";
 		var cookies = document.cookie.split(";");
 
@@ -53,8 +49,8 @@
 					<form class="form-horizontal" role="form" id="loginFrom">
 						<div align="center">
 							<img src="./images/icon.png" style="width: 120px;">
-							<h3><span class="white">方林信息平台</span></h3>
-							<h5><span class="white">Fanglin Information Platform</span></h5>
+							<h3><span class="white" id="name"></span></h3>
+							<h5><span class="white" id="ename"></span></h5>
 
 							<!--用户名密码登录-->
 							<div  id="unamePwdContainer" class="hide">
@@ -74,7 +70,7 @@
 										<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 									<div class="col-md-1">
-										<img class="" src="verifyCode.do" id="Verify" style="cursor: hand;" alt="看不清，换一张" />
+										<img class="" src="" id="Verify" style="cursor: hand;" alt="看不清，换一张" />
 									</div>
 
 									<div class="col-md-2 btn-toolbar" style="margin-right: 10px;float: left;">
@@ -119,7 +115,7 @@
 </div>
 
 <div id="backgroundImage">
-	<img src="./images/background.jpg" width="1920" height="1080" />
+	<img src="" width="1920" height="1080" />
 </div>
 
 <script type="text/javascript">
@@ -143,6 +139,8 @@
 	jses += '<script src="' + hostServer + 'assets/js/jquery.fullscreenBackground.min.js"><\/script>';
 
 	jses += '<script src="' + hostServer + 'js/com/api.js"><\/script>';
+	jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
+	jses += '<script src="' + hostServer + 'js/com/params.js"><\/script>';
 	jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
 
 	document.write(jses);

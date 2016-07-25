@@ -39,7 +39,6 @@ $(function(){
                 ["所在城市:", v.cityProper.city.cityName, "grey"],
                 ["所在城区:", v.cityProper.cityProperName, "grey"],
                 ["开发商:", v.developer ? v.developer : "--", "grey"],
-
                 ["售楼电话:", v.salesPhone ? v.salesPhone : "--", "grey"],
                 ["交房时间:", v.deliveryTime, "grey"],
                 ["楼号规则:", v.buildingNameRule.ruleContent, "grey"],
@@ -170,20 +169,27 @@ $(function(){
 
     //保存
     function saveData()  {
-        if (!com.validate() && !village.repeatFlg) {
-            var a = {
-                "village.villageId": village.items.villageId.val(),
-                "village.villageName": village.items.villageName.val(),
-                "village.cityProperId": village.items.cityProperSel.val(),
-                "village.buildingNameRuleId": village.items.nameRuleSel.val(),
-                "village.developer": village.items.developer.val(),
-                "village.salesPhone": village.items.salesPhone.val(),
-                "village.deliveryTime": "" == village.items.deliveryTime.val() ? void 0 : village.items.deliveryTime.val(),
-                "village.villageContent": village.items.villageContent.val()
-            };
-            com.post(village.editFlg ? api.data.updateVillage: api.data.addVillage, a, successCallback);
-            village.modal.modal("hide")
-        }
+    	
+    	if (com.validate() || village.repeatFlg){
+    		return false;
+    	}
+    	
+        var a = {
+            "village.villageId": village.items.villageId.val(),
+            "village.villageName": village.items.villageName.val(),
+            "village.cityProperId": village.items.cityProperSel.val(),
+            "village.buildingNameRuleId": village.items.nameRuleSel.val(),
+            "village.developer": village.items.developer.val(),
+            "village.salesPhone": village.items.salesPhone.val(),
+            "village.deliveryTime": "" == village.items.deliveryTime.val() ? void 0 : village.items.deliveryTime.val(),
+            "village.villageContent": village.items.villageContent.val()
+        };
+        
+        com.post(village.editFlg ? api.data.updateVillage: api.data.addVillage, a, function(res){
+        	searcher.doSearch();
+        });
+        
+        village.modal.modal("hide");
     }
 
     //编辑按钮
@@ -203,10 +209,6 @@ $(function(){
         village.items.villageContent.val(b.villageContent);
         village.modal.modal("show")
     }
-
-    function successCallback() {
-        com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
-    };
 
     function bindCityProper(a, b, d, c) {
         "" != a ? com.post(api.system.queryCityProperByCityId, {

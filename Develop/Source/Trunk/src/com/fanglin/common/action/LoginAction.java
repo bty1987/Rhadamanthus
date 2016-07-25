@@ -63,10 +63,11 @@ public class LoginAction extends BaseListAction {
 		String inputCode = request.getParameter("verifyCode");
 		String loginId = request.getParameter("userId");
 		String password = request.getParameter("password");
+		String securityCode = request.getParameter("securityCode");
 		String ip = IPUtil.getIpAddr(request);
 
 		try {
-			String verifyCode = getVerifyCode();
+			String verifyCode = getVerifyCode(securityCode);
 
 			if(verifyCode == null || !verifyCode.equals(inputCode)){
 				throw new FLException(110001, "验证码错误");
@@ -103,14 +104,7 @@ public class LoginAction extends BaseListAction {
 				    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false);
 				    
 					try {
-						String authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
-						
-						CookieUtil.addCookie(response, Constant.COOKIE_AUTHENTICATION, authenticationEncode);
-						CookieUtil.addCookie(response, Constant.COOKIE_HOSTSERVER_STR, getHostServer());
-						CookieUtil.addCookie(response, Constant.COOKIE_MEDIASERVER_STR, getMediaServer());
-						CookieUtil.addCookie(response, Constant.COOKIE_COMMUNIONSERVER_STR, getCommunionServer());
-						CookieUtil.addCookie(response, Constant.COOKIE_DMEDIASERVER_STR, getDmediaServer());
-						CookieUtil.addCookie(response, Constant.COOKIE_VERSIONCODE_STR, SystemConfig.getString(Constant.COOKIE_VERSIONCODE_STR, ""));
+						authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					} catch (Exception e) {
 						throw new FLException(110000, "系统处理问题");
 					}

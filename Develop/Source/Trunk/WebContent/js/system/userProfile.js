@@ -18,8 +18,8 @@ function initUser(){
 	$("#emergencyMan").val(userProfile.emergencyMan);
 	$("#emergencyPhone").val(userProfile.emergencyPhone);
 	$("#picture").val(userProfile.userPhoto);
-	$("#showImg").attr("src", window.mediaServer + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
-	$("#infoPicture").attr("href", window.mediaServer + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&timestamp='+ new Date().getTime());
+	$("#showImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+	$("#infoPicture").attr("href", config.media + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&timestamp='+ new Date().getTime());
 }
 
 function removePicture(){
@@ -90,7 +90,7 @@ jQuery(function($) {
 	        },
 	        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
 	        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-	        'uploader': window.mediaServer + api.common.uploadImg.url, // 上传处理程序
+	        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
 	        'width': '100', // 浏览按钮的宽度
 	        'height': '32', // 浏览按钮的高度
 	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
@@ -101,8 +101,8 @@ jQuery(function($) {
 				var dateObj=eval("("+data+")");
 				if(dateObj.errorCode == 0){
 				 	$("#picture").val(dateObj.resUrl);
-				 	$("#showImg").attr("src", window.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
-				 	$("#infoPicture").attr("href", window.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime());
+				 	$("#showImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+				 	$("#infoPicture").attr("href", config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime());
 				}else{
 					alert(data);
 				}

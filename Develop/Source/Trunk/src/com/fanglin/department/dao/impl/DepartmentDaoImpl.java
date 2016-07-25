@@ -22,7 +22,6 @@ import com.fanglin.core.vo.FilterVO;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("departmentDaoImpl")
 public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements DepartmentDao{
@@ -51,7 +50,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
         }
         
         if(company != null){
-        	criteria = criteria.add(Restrictions.eq("company", SystemConfig.getInt("company")));
+        	criteria = criteria.add(Restrictions.eq("company", company));
         }
         
         criteria.addOrder(Order.asc("deptId"));

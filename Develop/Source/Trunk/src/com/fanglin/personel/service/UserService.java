@@ -18,11 +18,11 @@ import com.fanglin.utils.Paging;
 
 public interface UserService {
 	
-	public void pageUser(Paging paging, List<FilterVO> filters, String userId, UserVO userVO) throws FLException;
+	public void pageUser(Paging paging, List<FilterVO> filters, UserVO userVO, int company) throws FLException;
 	
-	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, String userId) throws FLException;
+	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException;
 	
-	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, String userId) throws FLException;
+	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, int company) throws FLException;
 	
 	public UserVO queryUserByLoginId(String loginId);
 	

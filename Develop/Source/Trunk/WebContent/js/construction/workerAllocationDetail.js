@@ -1,6 +1,5 @@
 var workerAllocationDetail = {
 	
-	mediaServer: "",
 	construstionSchedule: {},
 	
 	controlCondition: false,
@@ -461,7 +460,6 @@ jQuery(function($) {
 	com.post(api.construction.queryConstructionScheduleByOrderId, workerAllocationPostData, function(res){
 		
 		workerAllocationDetail.construstionSchedule = res.constructionSchedule;
-		workerAllocationDetail.mediaServer = window.mediaServer;
 		
 		var schedule = res.constructionSchedule.schedule;
 		var operate = workerAllocationDetail.operateDict[schedule];
@@ -643,7 +641,7 @@ function initWizardSept(operate, schedule){
 				}
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#chanWorkerImg").attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerInfoCondition = true;
@@ -674,7 +672,7 @@ function initWizardSept(operate, schedule){
 						$("#chanWorkerEnter").css("display", "none");
 						$("#chanWorkerInfo").css("display", "block");
 						
-						$("#chanWorkerImg").attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+						$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
 						$("#chanWorkerNameSpan").html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 						
 						com.showAlert(com.info, "工人信息提交成功!");
@@ -776,7 +774,7 @@ function initWizardSept(operate, schedule){
 				$("#"+operate.putlineTimeId).val(element.startTime).attr("disabled", "disabled");
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#fangWorkerImg").attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerInfoCondition = true;
@@ -807,7 +805,7 @@ function initWizardSept(operate, schedule){
 						
 						var workerInfo = res[operate.elementName];
 						
-						$("#fangWorkerImg").attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+						$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
 						$("#fangWorkerNameSpan").html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 						
 						com.showAlert(com.info, "工人信息提交成功!");
@@ -910,7 +908,7 @@ function initWizardSept(operate, schedule){
 							var profileImg = $('<img></img>').addClass("editable img-responsive").css("height", "150px").attr("id", "workerImg").attr("alt", workerInfo.workerId+"'s Photo").appendTo(profileDiv);
 							
 							if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-								profileImg.attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+								profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 							}
 							
 							var buttonsDiv = $('<div></div>').addClass("visible-md visible-lg hidden-sm hidden-xs action-buttons").css("padding", "5px").appendTo(profileDiv);
@@ -967,7 +965,7 @@ function initWizardSept(operate, schedule){
 						var profileImg = $('<img src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(profileDiv);
 						
 						if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-							profileImg.attr("src", workerAllocationDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+							profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 						}
 						
 						var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
