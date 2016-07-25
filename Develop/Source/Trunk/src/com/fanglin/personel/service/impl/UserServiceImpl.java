@@ -39,16 +39,10 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageUser(Paging paging, List<FilterVO> filters, String userId, UserVO userVO) throws FLException{
+	public void pageUser(Paging paging, List<FilterVO> filters, UserVO userVO, int company) throws FLException{
 		
-		UserPO _userPO = userDao.get(userId);
-		
-		if(_userPO == null){
-			throw new FLException(190005, "员工不存在");
-		}
-		
-		if(_userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(_userPO.getCompany()), "eq"));
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			filters.add(new FilterVO("company", String.valueOf(company), "eq"));
 		}
 		
 		if(userVO != null && userVO.getDuty() != null){
@@ -66,20 +60,15 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, String userId) throws FLException {
+	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException {
 		
-		Integer company = null;
-		UserPO _userPO = userDao.get(userId);
+		Integer _company = null;
 		
-		if(_userPO == null){
-			throw new FLException(190005, "人员不存在");
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			_company = company;
 		}
 		
-		if(_userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			company = _userPO.getCompany();
-		}
-		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, userVO.getUserNamePinYin(), company);
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, userVO.getUserNamePinYin(), _company);
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 		
 		for(UserPO userPO: userPOs){
@@ -91,9 +80,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, String userId) throws FLException{
+	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, int company) throws FLException{
 		
-		pageUser(paging, filters, userId, null);
+		pageUser(paging, filters, null, company);
 		
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 		

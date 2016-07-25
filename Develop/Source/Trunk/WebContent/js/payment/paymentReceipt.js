@@ -117,7 +117,7 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 		var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
 		var headReceiptTd = $('<td colspan="3"></td>').appendTo(headReceiptTr);
 		var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
-		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text("方林装饰专用收款收据").appendTo(headReceiptDiv);
+		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(config.companyName + "专用收款收据").appendTo(headReceiptDiv);
 		
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var customerReceiptTd = $('<td style="width: 33%"></td>').text('客 户 名: ' + commonInfo["customerName"]).appendTo(presonReceiptTr);

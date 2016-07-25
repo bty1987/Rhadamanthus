@@ -196,7 +196,7 @@ jQuery(function($) {
 		}
 		
 		com.post(url, options, function(res){
-			searcher.doSearcher();
+			searcher.doSearch();
 		});
 		
 		customer.modal.modal("hide");

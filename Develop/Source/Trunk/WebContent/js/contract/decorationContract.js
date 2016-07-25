@@ -5,6 +5,8 @@ jQuery(function($) {
 	
 	params.hostServer = window.hostServer;
 	
+	$('.companyFullName').text(config.companyFullName);
+	
 	var orderId = "";
 	var args = window.location.search.substr(1).split('&');
 	

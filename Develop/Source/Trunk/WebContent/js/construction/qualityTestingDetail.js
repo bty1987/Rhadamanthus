@@ -1,6 +1,5 @@
 var qualityTestingDetail = {
 		
-	mediaServer: "",
 	construstionSchedule: {},
 	
 	qualityGalleryId: "qualityGallery",
@@ -230,8 +229,6 @@ jQuery(function($) {
 	
 	com.post(api.construction.queryConstructionScheduleByOrderId, qualityTestingPostData, function(res){
 		qualityTestingDetail.construstionSchedule = res.constructionSchedule;
-		qualityTestingDetail.mediaServer = window.mediaServer;
-		qualityTestingDetail.dmediaServer = window.dmediaServer;
 		
 		var operate = qualityTestingDetail.operateDict[qualityTestingDetail.construstionSchedule.schedule];
 		
@@ -350,7 +347,7 @@ jQuery(function($) {
 					$("#chanWorkerEnter").css("display", "none");
 					$("#chanWorkerInfo").css("display", "block");
 					
-					$("#chanWorkerImg").attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").text(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 				}else{
 					$("#chanWorkerEnter").css("display", "block");
@@ -378,7 +375,7 @@ jQuery(function($) {
 							$("#chanWorkerEnter").css("display", "none");
 							$("#chanWorkerInfo").css("display", "block");
 							
-							$("#chanWorkerImg").attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+							$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
 							$("#chanWorkerNameSpan").text(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 							
 							com.showAlert(com.info, "工人信息提交成功!");
@@ -426,7 +423,7 @@ jQuery(function($) {
 					$("#fangWorkerEnter").css("display", "none");
 					$("#fangWorkerInfo").css("display", "block");
 					
-					$("#fangWorkerImg").attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 				}else{
 					$("#fangWorkerEnter").css("display", "block");
@@ -455,7 +452,7 @@ jQuery(function($) {
 							$("#fangWorkerEnter").css("display", "none");
 							$("#fangWorkerInfo").css("display", "block");
 							
-							$("#fangWorkerImg").attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+							$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
 							$("#fangWorkerNameSpan").html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 							
 							com.showAlert(com.info, "工人信息提交成功!");
@@ -573,7 +570,7 @@ jQuery(function($) {
 							var profileImg = $('<img id="workerImg" src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(profileDiv);
 							
 							if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-								profileImg.attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+								profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 							}
 							
 							var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -605,7 +602,7 @@ jQuery(function($) {
 						var profileImg = $('<img src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(profileDiv);
 						
 						if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-							profileImg.attr("src", qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+							profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 						}
 						
 						var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -658,15 +655,15 @@ jQuery(function($) {
 					var drawing = drawings[i];
 					
 					if(drawing.type == 0){
-						imgAddUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-						imgUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
+						imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
+						imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
 					}else{
-						imgAddUrl = qualityTestingDetail.dmediaServer + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
-						imgUrl = qualityTestingDetail.dmediaServer + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
+						imgAddUrl = config.dmedia + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
+						imgUrl = config.dmedia + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
 					}
 					
-					var imgAddUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-					var imgUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
+					var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
+					var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
 					
 					options[operate.drawingName+"."+operate.drawingId] = drawing[operate.drawingId];
 					
@@ -736,7 +733,7 @@ function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, dele
         'buttonText': '上传',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader':qualityTestingDetail.mediaServer + api.common.uploadImg.url, // 上传处理程序
+        'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
         'height':'45', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
@@ -752,8 +749,8 @@ function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, dele
 				options[name+".drawingUrl"] = dateObj.resUrl;
 				options[name+".drawingAddUrl"] = "";
 				
-				var imgAddUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-				var imgUrl = qualityTestingDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
+				var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
+				var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
 				
 				com.post(addUrl, options, function(res){
 					var drawing = res[name];

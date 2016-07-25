@@ -1,6 +1,5 @@
 var supervisionDetail = {
 	
-	mediaServer: "",
 	construstionSchedule: {},
 	
 	controlCondition: false,
@@ -480,8 +479,6 @@ jQuery(function($) {
 	com.post(api.construction.queryConstructionScheduleByOrderId, supervisionPostData, function(res){
 		
 		supervisionDetail.construstionSchedule = res.constructionSchedule;
-		supervisionDetail.mediaServer = window.mediaServer;
-		supervisionDetail.dmediaServer = window.dmediaServer;
 		
 		var schedule = res.constructionSchedule.schedule;
 		var operate = supervisionDetail.operateDict[schedule];
@@ -636,7 +633,7 @@ function initWizardSept(operate, schedule){
 				}
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#chanWorkerImg").attr("src", supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerSalaryData["btnId"] = "chanWorkSalary";
@@ -743,7 +740,7 @@ function initWizardSept(operate, schedule){
 				var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#fangWorkerImg").attr("src", supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
 					$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerSalaryData["btnId"] = "fangWorkSalary";
@@ -812,7 +809,7 @@ function initWizardSept(operate, schedule){
 							var profileImg = $('<img id="workerImg" src="" alt="" class="editable img-responsive" style="height: 150px"></img>').attr("alt", workerInfo.workerId + "'s Photo").appendTo(profileDiv);
 							
 							if(workerInfo["workerPhoto"] != null && workerInfo.workerPhoto != ""){
-								profileImg.attr("src", supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+								profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
 							}
 							
 							var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -917,11 +914,11 @@ function initWizardSept(operate, schedule){
 					var imgUrl = null;
 					
 					if(drawing.type == 0){
-						imgAddUrl = supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-						imgUrl = supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
+						imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
+						imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
 					}else{
-						imgAddUrl = supervisionDetail.dmediaServer + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
-						imgUrl = supervisionDetail.dmediaServer + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
+						imgAddUrl = config.dmedia + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
+						imgUrl = config.dmedia + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
 					}
 					
 					options[operate.drawingName+"."+operate.drawingId] = drawing[operate.drawingId];
@@ -957,7 +954,7 @@ function initUploadBtn(operate, element){
         'buttonText': '上传',
         'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
         'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader':supervisionDetail.mediaServer + api.common.uploadImg.url, // 上传处理程序
+        'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
         'height': '45', // 浏览按钮的高度
         'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
@@ -977,8 +974,8 @@ function initUploadBtn(operate, element){
 				options[operate.drawingName+".drawingUrl"] = dateObj.resUrl;
 				options[operate.drawingName+".drawingAddUrl"] = "";
 				
-				var imgAddUrl = supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-				var imgUrl = supervisionDetail.mediaServer + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
+				var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
+				var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
 				
 				com.post(operate.addDrawingUrl, options, function(res){
 					var drawing = res[operate.drawingName];

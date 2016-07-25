@@ -18,7 +18,7 @@ var materialSubOrderAdd = {
 	editFlag: false,
 };
 
-var materialSubOrderAddOrderData = [ 
+var materialSubOrderAddOrderData = [
     {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, 
 ];
 
@@ -44,20 +44,22 @@ jQuery(function($) {
 		
 		materialSubOrderAddPostData = res;
 		
-		materialSubOrderAdd.materialSubOrderAddItems.msoNo = $("#msoNo").val(materialSubOrderAddPostData.materialSubOrder.msoNo);
-		materialSubOrderAdd.materialSubOrderAddItems.designerName = $("#designerName").val(materialSubOrderAddPostData.materialSubOrder.designerName);
-		materialSubOrderAdd.materialSubOrderAddItems.customerName = $("#customerName").val(materialSubOrderAddPostData.materialSubOrder.customerName);
-		materialSubOrderAdd.materialSubOrderAddItems.salesmanName = $("#salesmanName").val(materialSubOrderAddPostData.materialSubOrder.salesmanName);
-		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#materialerName").val(materialSubOrderAddPostData.materialSubOrder.materialerName);
-		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#instoreName").val(materialSubOrderAddPostData.materialSubOrder.instoreName);
-		materialSubOrderAdd.materialSubOrderAddItems.orderAddr = $("#orderAddr").val(materialSubOrderAddPostData.materialSubOrder.orderAddr);
-		materialSubOrderAdd.materialSubOrderAddItems.msoType = $("#msoType").val(materialSubOrderAddPostData.materialSubOrder.msoType);
-		materialSubOrderAdd.materialSubOrderAddItems.des = $("#des").val(materialSubOrderAddPostData.materialSubOrder.des);
+		var materialSubOrder = res.materialSubOrder;
+		
+		materialSubOrderAdd.materialSubOrderAddItems.msoNo = $("#msoNo").val(materialSubOrder.msoNo);
+		materialSubOrderAdd.materialSubOrderAddItems.designerName = $("#designerName").val(materialSubOrder.designerName);
+		materialSubOrderAdd.materialSubOrderAddItems.customerName = $("#customerName").val(materialSubOrder.customerName);
+		materialSubOrderAdd.materialSubOrderAddItems.salesmanName = $("#salesmanName").val(materialSubOrder.salesmanName);
+		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#materialerName").val(materialSubOrder.materialerName);
+		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#instoreName").val(materialSubOrder.instoreName);
+		materialSubOrderAdd.materialSubOrderAddItems.orderAddr = $("#orderAddr").val(materialSubOrder.orderAddr);
+		materialSubOrderAdd.materialSubOrderAddItems.msoType = $("#msoType").val(materialSubOrder.msoType);
+		materialSubOrderAdd.materialSubOrderAddItems.des = $("#des").val(materialSubOrder.des);
 		
 		materialSubOrderAdd.materialSubOrderAddItems.materialOrderBrand = $("#materialOrderBrand").text(materialSubOrderPostData["materialSubOrder.materialBrand"]);
 		
-		materialSubOrderAdd.materialSubOrderAddItems.originalTotal = $("#originalTotalSpan").text(materialSubOrderAddPostData.materialSubOrder.total);
-		materialSubOrderAdd.materialSubOrderAddItems.total = $("#totalSpan").text(materialSubOrderAddPostData.materialSubOrder.total);
+		materialSubOrderAdd.materialSubOrderAddItems.originalTotal = $("#originalTotalSpan").text(materialSubOrder.total);
+		materialSubOrderAdd.materialSubOrderAddItems.total = $("#totalSpan").text(materialSubOrder.total);
 	});
 	
 	materialSubOrderAdd.listGrid.jqGrid({		

@@ -25,8 +25,6 @@ import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.service.DepartmentService;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
@@ -48,20 +46,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	private CountingService countingService;
 	
-	@Autowired
-	private UserDao userDao;
-	
 	@Override
-	public void pageDepartment(Paging paging, List<FilterVO> filters, String userId, DepartmentVO departmentVO) throws FLException{
+	public void pageDepartment(Paging paging, List<FilterVO> filters, DepartmentVO departmentVO, int company) throws FLException{
 		
-		UserPO userPO = userDao.get(userId);
-		
-		if(userPO == null){
-			throw new FLException(190005, "人员不存在");
-		}
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			filters.add(new FilterVO("company", String.valueOf(company), "eq"));
 		}
 		
 		if(departmentVO != null && departmentVO.getType() != null){
@@ -79,20 +68,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 	
 	@Override
-	public List<DepartmentVO> queryDepartment(String type, String userId) throws FLException{
+	public List<DepartmentVO> queryDepartment(String type, int company) throws FLException{
+		
+		Integer _company = null;
+		
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			_company = company;
+		}
 
-		Integer company = null;
-		UserPO userPO = userDao.get(userId);
-		
-		if(userPO == null){
-			throw new FLException(190005, "人员不存在");
-		}
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			company = userPO.getCompany();
-		}
-		
-		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, company);
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, _company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		for(DepartmentPO departmentPO: departmentPOs){

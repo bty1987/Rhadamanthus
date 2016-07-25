@@ -173,7 +173,7 @@ function generateOneReceipt(){
 		var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
 		var headReceiptTd = $('<td colspan="4"></td>').appendTo(headReceiptTr);
 		var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
-		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text("方林装饰专用收款收据").appendTo(headReceiptDiv);
+		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(config.companyName + "专用收款收据").appendTo(headReceiptDiv);
 		
 		var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var noReceiptTd = $('<td style="width: 15%"></td>').text('订单编号: ' + receipt.order.orderId).appendTo(orderReceiptTr);

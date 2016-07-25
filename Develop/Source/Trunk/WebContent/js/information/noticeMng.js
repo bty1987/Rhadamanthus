@@ -176,7 +176,7 @@ $(function(){
             buttonClass: "btn btn-sm btn-primary lineheight0",
             overrideEvents: ["onDialogClose"],
             fileObjName: "strutsUploads",
-            uploader: window.mediaServer + api.common.uploadOther.url,
+            uploader: config.media + api.common.uploadOther.url,
             width: "78",
             onSelectError: function(a, b, c) {
                 switch (b) {

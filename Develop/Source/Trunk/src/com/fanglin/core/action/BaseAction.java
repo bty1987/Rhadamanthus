@@ -157,19 +157,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return SUCCESS;
 	}
 	
-	public String getVerifyCode() throws FLException{
+	public String getVerifyCode(String securityCode) throws FLException{
 		String verifyCode = null;
 		
 		try{
-			String value = CookieUtil.getCookie(request, Constant.COOKIE_VERIFYCODE);
-		
-			if(value != null){
-				String encryptKey = SystemConfig.getString("encryptKey");
-				verifyCode = AESHelper.decryptString(value, encryptKey);
-			}
+			verifyCode = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
 		}catch(Exception e){
-			e.printStackTrace();
-			throw new FLException(110005, "系统处理问题");
+			throw new FLException(110001, "验证码错误");
 		}
 		
 		return verifyCode;
@@ -239,6 +233,29 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		}
 		
 		return roleId;
+	}
+	
+	public int getCompany() throws FLException{
+		
+		int company = 0;
+		
+		try {
+			String authentication = getAuthentication();
+			
+			if(authentication != null){
+				String encryptKey = SystemConfig.getString("encryptKey");
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				
+				AuthenticationUtil au = new AuthenticationUtil(decryptString);
+				if(au.getUpdateTime() != -1){
+					company = au.getCompany();
+				}
+			}
+		} catch (Exception e) {
+			throw new FLException(110005, "系统处理问题");
+		}
+		
+		return company;
 	}
 	
 	private String getAuthentication() throws FLException{

@@ -345,7 +345,7 @@ function saveBaseDecorationOrderInfo(){
 }
 
 function downloadFile(picturePath,uploadFileName){
-	window.open(decorationOrderDetail.mediaServer + api.common.downloadFile.url + "?downloadFilePath="+picturePath+"&fileName="+uploadFileName);
+	window.open(config.media + api.common.downloadFile.url + "?downloadFilePath="+picturePath+"&fileName="+uploadFileName);
 }
 
 function quotationItemDesFormatter(cellvalue, options, rowObject){

@@ -2,7 +2,7 @@
  * Title: UserApproveServiceImpl
  * Description:
  * Copyright: Copyright (c) 2014 All rights reserved.
- * Company: YunFeng Corporation, China, Ltd.
+ * Company: 
  * @author bty1987
  *
  */

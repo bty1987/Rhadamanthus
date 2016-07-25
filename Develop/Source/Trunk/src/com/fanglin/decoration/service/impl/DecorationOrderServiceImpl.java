@@ -72,7 +72,6 @@ import com.fanglin.right.dao.DecorationOrderStatusRightDao;
 import com.fanglin.right.po.DecorationOrderDesignDepartmentRightPO;
 import com.fanglin.right.po.DecorationOrderSalesmanDepartmentRightPO;
 import com.fanglin.right.po.DecorationOrderStatusRightPO;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -144,10 +143,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		UserPO userPO = userDao.get(userId);
 		
 		if(userPO == null) return;
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
-		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
@@ -227,10 +222,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(statuses.size() == 0 || designDepartmentIds.size() == 0){
 			return;
-		}
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
 		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses);
@@ -315,10 +306,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(userPO == null) return;
 		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
-		}
-		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForPutline(paging, filters);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
@@ -369,10 +356,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		UserPO userPO = userDao.get(userId);
 		
 		if(userPO == null) return;
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
-		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForMaterial(paging, filters);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
@@ -463,10 +446,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(userPO == null) return;
 		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
-		}
-		
 		List<String> statuses = Arrays.asList(DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR, DecorationOrderPO.STATUS_COMPLETED_STR);
 		
 		filters.add(new FilterVO("statuses", statuses, "ni"));
@@ -544,10 +523,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			if(statuses.size() == 0 || designDepartmentIds.size() == 0){
 				return;
 			}
-		}
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
 		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, designDepartmentIds, statuses);
@@ -649,10 +624,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			if(statuses.size() == 0 || salesmanDepartmentIds.size() == 0){
 				return;
 			}
-		}
-		
-		if(userPO.getCompany() != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(userPO.getCompany()), "eq"));
 		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesman(paging, filters, salesmanDepartmentIds, statuses);

@@ -26,7 +26,7 @@ $(function(){
 
                 var $info = $('<div></div>').addClass('timeline-info');
 
-                var $infoImg = $('<img>').attr({"src" :  !v.senderPhoto ? 'assets/avatars/avatar2.png'  :  window.mediaServer + api.common.showImg.url + '?imgBasePath=' + v.senderPhoto + '&divFlag=1&width=36&height=36', "alt" : v.sender });
+                var $infoImg = $('<img>').attr({"src" :  !v.senderPhoto ? 'assets/avatars/avatar2.png': config.media + api.common.showImg.url + '?imgBasePath=' + v.senderPhoto + '&divFlag=1&width=36&height=36', "alt" : v.sender });
                 var $box = $('<div></div>').addClass('widget-box transparent');
                 var $bheader = $('<div></div>').addClass('widget-header widget-header-small');
                 var $name = $('<h5></h5>').addClass('smaller').html(v.sender);

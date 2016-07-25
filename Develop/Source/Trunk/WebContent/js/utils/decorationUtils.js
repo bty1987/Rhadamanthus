@@ -615,7 +615,7 @@ var decorationUtils = {
 	        'buttonText': ename,
 	        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
 	        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-	        'uploader': window.mediaServer + api.common.uploadImg.url, // 上传处理程序
+	        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
 	        'width':'100', // 浏览按钮的宽度
 	        'height': '32', // 浏览按钮的高度
 	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
@@ -678,8 +678,8 @@ var decorationUtils = {
 		});
 	},addPicture:function(e, i){
 		var $li = $('<li></li>').appendTo(e);
-		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', window.mediaServer + api.common.showImg.url + '?imgBasePath=' + i.path).attr('target', '_blank').appendTo($li);
-		var $img = $('<img></img>').attr('alt', '200x200').attr('width', 200).attr('height', 200).attr('src', window.mediaServer + api.common.showImg.url + '?imgBasePath=' + i.path + '&divFlag=1&width=200&height=200').appendTo($imgA);
+		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', config.media + api.common.showImg.url + '?imgBasePath=' + i.path).attr('target', '_blank').appendTo($li);
+		var $img = $('<img></img>').attr('alt', '200x200').attr('width', 200).attr('height', 200).attr('src', config.media + api.common.showImg.url + '?imgBasePath=' + i.path + '&divFlag=1&width=200&height=200').appendTo($imgA);
 		
 		var $tags = $('<div></div>').addClass('tags').appendTo($li);
 		var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -689,12 +689,12 @@ var decorationUtils = {
 		
 		var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
 		var $toolLabel = $('<label></label>').appendTo($tools);
-		var $downA = $('<a></a>').addClass("icon-download-alt").attr('href', window.mediaServer + api.common.downloadFile.url + '?downloadFilePath=' + i.path + '&fileName=' + i.name).attr('target', '_blank').appendTo($tools);
+		var $downA = $('<a></a>').addClass("icon-download-alt").attr('href', config.media + api.common.downloadFile.url + '?downloadFilePath=' + i.path + '&fileName=' + i.name).attr('target', '_blank').appendTo($tools);
 	}, addCAD: function(e, i){
 		
 		var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').appendTo(e);
 		var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
-		var $downIcon = $('<a></a>').addClass('icon-download-alt').attr('href', window.mediaServer + api.common.downloadFile.url + "?downloadFilePath=" + i.path + "&fileName=" + i.name).attr('target', '_blank').appendTo($infoboxIcon);
+		var $downIcon = $('<a></a>').addClass('icon-download-alt').attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + i.path + "&fileName=" + i.name).attr('target', '_blank').appendTo($infoboxIcon);
 		
 		var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
 		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxData);

@@ -29,13 +29,13 @@ com = {
 		
 		var server = "";
 		if(url.server){
-			server = params[url.server];
-			opts["authentication"] = params.authentication;
+			server = config.communion;
 		}else{
-			server = params.hostServer;
+			server = config.server;
 		}
 		
 		url = server + url.url;
+		opts["authentication"] = params.authentication;
 		
 		$.ajax({
 			url: url,
@@ -58,7 +58,8 @@ com = {
 					}
 				}else if(res.errorCode == 110005){
 					isF5 = true;
-					window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
+					//api.common.logout.url + "?timestamp="+new Date().getTime();
+					window.location.href = '/';
 				}else{
 					var errorMsg = res.errorMsg;
 					com.showAlert(com.error, errorMsg);

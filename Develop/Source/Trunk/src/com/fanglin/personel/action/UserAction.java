@@ -59,7 +59,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
 		
-		userService.pageUser(getPaging(), getFilters(), getUserId(), user);
+		userService.pageUser(getPaging(), getFilters(), user, getCompany());
 		
 		return SUCCESS;
 	}
@@ -67,7 +67,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUserByNameOPinyinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUserByNameOPinyinName() throws FLException{
 		
-		userService.pageUserByNameOPinyinName(getPaging(), user, getUserId());
+		userService.pageUserByNameOPinyinName(getPaging(), user, getCompany());
 		
 		return SUCCESS;
 	}
@@ -75,7 +75,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUserForResetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUserForResetPassword() throws FLException{
 		
-		userService.pageUserForResetPassword(getPaging(), getFilters(), getUserId());
+		userService.pageUserForResetPassword(getPaging(), getFilters(), getCompany());
 		
 		return SUCCESS;
 	}

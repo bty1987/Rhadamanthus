@@ -182,6 +182,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		query.add(Restrictions.eq("status", "在职"));
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
+		
 		return query.list();
 	}
 	
