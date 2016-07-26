@@ -162,6 +162,7 @@ var api = {
 		materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
 		
 		userIndex: {url: "/views/personnel/user.html"},
+		userEditIndex: {url: '/views/personnel/userEdit.html'},
 		userContractIndex: {url: "/views/personnel/userContract.html"},
 		userExperienceIndex: {url: "/views/personnel/userExperience.html"},
 		userSalaryIndex: {url: "/views/payment/userSalary.html"},

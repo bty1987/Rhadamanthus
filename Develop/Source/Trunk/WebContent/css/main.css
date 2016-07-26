@@ -295,3 +295,118 @@ ul.fl-inline-list li{
 	font-size: 15px;
 	color: rgb(34, 146, 221);
 }
+
+.flex-table{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-color: #E1E1E1;
+	border-width: 1px 0 0 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.flex-table .line{
+	display: -webkit-flex; /* Safari */
+	display: flex;
+	flex-direction: row;
+	flex-wrap : wrap;
+	justify-content : space-around;
+	align-items : stretch;
+	align-content : stretch;
+}
+
+.flex-table .line-wrap{
+	display: -webkit-inline-flex; /* Safari */
+	display: inline-flex;
+	flex-direction: row;
+	flex-wrap : wrap;
+	justify-content : space-around;
+	align-items : stretch;
+	align-content : stretch;
+}
+
+.flex-table .line-wrap:nth-of-type(2){
+	flex: 1;
+}
+
+.flex-table .cell{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: flex;
+	padding: 10px;
+	border: 1px solid #e8e8e8;
+	order: 0;
+	justify-content : center;
+	align-items : center;
+	margin : -1px 0 0 -1px;
+}
+
+.flex-table .cell.index{
+	width: 30px;
+}
+
+.flex-table .cell.name{
+	width: 15%;
+}
+
+.flex-table .cell.type{
+	width: 6%;
+}
+
+.flex-table .cell.brand{
+	width: 6%;
+}
+
+.flex-table .cell.unit{
+	width: 6%;
+}
+
+.flex-table .cell.money{
+	width: 8%;
+	order:7;
+}
+
+.flex-table .cell.decimal{
+	width: 5%;
+	order:7;
+}
+
+.flex-table .cell.num{
+	width: 5%;
+	order:7;
+}
+
+.flex-table .cell.package{
+	width: 8%;
+	order: 7;
+}
+
+.flex-table .cell.remark{
+	order: 7;
+	width: 13%;
+}
+
+.flex-table .cell.option{
+	width: 62px;
+}
+
+.flex-table .cell input{
+	width: 100%;
+}
+
+.flex-table .current{
+	/*background: #e4efc9;*/
+}
+
+.flex-table .table-title{
+	background: #eff4f7;
+	background-image:-webkit-gradient(linear,left 0,left 100%,from(#f8f8f8),to(#ececec));
+	background-image:-webkit-linear-gradient(top,#f8f8f8,0%,#ececec,100%);
+	background-image:-moz-linear-gradient(top,#f8f8f8 0,#ececec 100%);
+	background-image:linear-gradient(to bottom,#f8f8f8 0,#ececec 100%);
+	background-repeat:repeat-x;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
+}

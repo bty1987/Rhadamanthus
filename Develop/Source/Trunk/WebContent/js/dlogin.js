@@ -2,6 +2,7 @@ jQuery(function(a){
     var count = 0;
     
     $(document).attr('title', config.name + ' ' + config.ename);
+    $('#icon').attr('src', config.iconImg);
     $('#name').text(config.name);
     $('#ename').text(config.ename);
     

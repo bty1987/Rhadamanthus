@@ -5,9 +5,11 @@ var receipt = {
 	order: null,
 };
 
-params.hostServer = window.hostServer;
-
 jQuery(function($) {
+	
+	params.server = window.server;
+	params.authentication = window.authentication;
+	
 	var p = window.location.search.substr(1);
 	var a = p.split("&");
 	

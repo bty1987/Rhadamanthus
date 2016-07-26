@@ -218,10 +218,22 @@ $(function(){
 		//合同
 		var modalAgreementModal = function (decorationOrderId){
 			contract.decorationOrderId = decorationOrderId;
+			
+			com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
+				
+				var decorationContract = res.decorationContract;
+				
+	    		if(res.decorationContract == null || res.decorationContract.autoId == null){
+	    			$("#printContractBtn").attr("disabled",true);
+	    		}else{
+	    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId);
+	    		}
+	    		
+	    		order.agreementModal.modal("show");
+	    	});
 
-			$("#printContractBtn").attr('href', api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId);
-
-			order.agreementModal.modal("show");
+//			$("#printContractBtn").attr('href', config.server + api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId + "&authentication=" + params.authentication);
+//			order.agreementModal.modal("show");
 		}
 		//增减项
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){

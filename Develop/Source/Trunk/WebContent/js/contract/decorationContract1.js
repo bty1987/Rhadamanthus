@@ -3,7 +3,8 @@ var printContract = {
 
 jQuery(function($) {
 	
-	params.hostServer = window.hostServer;
+	params.server = window.server;
+	params.authentication = window.authentication;
 	
 	$('.companyFullName').text(config.companyFullName);
 	

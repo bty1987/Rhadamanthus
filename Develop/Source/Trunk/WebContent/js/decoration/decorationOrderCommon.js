@@ -211,15 +211,19 @@ $(function(){
     	contract.decorationOrderId = decorationOrderId;
     	
     	com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
-    		if(res.decorationContract == null || res.decorationContract.autoId == null){
+    		
+    		var decorationContract = res.decorationContract;
+    		
+    		if(decorationContract == null || decorationContract.autoId == null){
     			$("#printContractBtn").attr("disabled",true);
     		}else{
-    			$("#printContractBtn").attr("disabled",false);
+    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId);
     		}
+    		
     		order.agreementModal.modal("show");
     	});
     	
-    	$("#printContractBtn").attr('href', api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId);
+//    	$("#printContractBtn").attr('href', config.server + api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId + "&authentication=" + params.authentication);
     }
     
     function showErrorAlert (reason, detail) {

@@ -1,24 +1,25 @@
-var materialSubOrder = {
-	cancellBtn: null,
-	modal: null,
-	materialSubOrderItems: {},
-	
-	materialSubOrderPaymentTypeNameData: {"advance":"1", "deposit":"2", "full":"3", "fullRefund":"5"},
-	
-	materialSaleOrderTypeData: {"1":"普通", "2":"员工自购", "3":"老总关系"},
-	materialSaleOrderStatusData: {"0":"初始", "2":"退货", "3":"预结算", "4":"结算"},
-	materialSaleOrderPaymentStatusData: {"0":"初始", "1":"预付款", "2":"定金", "3":"补款", "5":"补款退款"},
-	materialSaleOrderDeliveryStatusData: {"0":"未送货", "1":"已送货"},
-	materialSubOrderPaymentStatusData: {"1": "提交", "2":"已收", "3":"已确认", "4":"审批中"},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
 
 var materialSubOrderPostData = {};
 
 jQuery(function($) {
 	$('#fl-statement').statement("主材子订单", "订单信息列表");
+	
+	var materialSubOrder = {
+		cancellBtn: null,
+		modal: null,
+		materialSubOrderItems: {},
+		
+		materialSubOrderPaymentTypeNameData: {"advance":"1", "deposit":"2", "full":"3", "fullRefund":"5"},
+		
+		materialSaleOrderTypeData: {"1":"普通", "2":"员工自购", "3":"老总关系"},
+		materialSaleOrderStatusData: {"0":"初始", "2":"退货", "3":"预结算", "4":"结算"},
+		materialSaleOrderPaymentStatusData: {"0":"初始", "1":"预付款", "2":"定金", "3":"补款", "5":"补款退款"},
+		materialSaleOrderDeliveryStatusData: {"0":"未送货", "1":"已送货"},
+		materialSubOrderPaymentStatusData: {"1": "提交", "2":"已收", "3":"已确认", "4":"审批中"},
+		
+		editFlag: false,
+		repeatFlg: false,
+	};
 	
 	materialSubOrder.cancelBtn = $("#cancelBtn");
 	
@@ -406,9 +407,6 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 	}
-	
-	
-	// -------------------------------------------------------------------------------------------------------
 	
 	materialSubOrder.materialSubOrderItems.depositPaymentBtn.unbind("click").on("click", function(){
 		

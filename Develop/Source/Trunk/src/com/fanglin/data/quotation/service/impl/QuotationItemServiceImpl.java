@@ -141,7 +141,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 		
-		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("itemId", "itemName", "quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion"));
+		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("itemId", "quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion"));
 		
 		quotationItemPO.setQuotationType(new QuotationTypePO(quotationItemVO.getQuotationTypeId()));
 		quotationItemPO.setQuotationClassification(new QuotationClassificationPO(quotationItemVO.getQuotationClassificationId()));

@@ -312,7 +312,7 @@ jQuery(function($) {
 				materialOrderPostData["materialOrder.orderId"] = orderId;
 				materialOrderPostData["materialOrder.customerId"] = customerId;
 				materialOrderPostData["materialOrder.customerName"] = customerName;
-				$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
+				com.switchPage(api.index.materialSubOrderIndex.url);
 				
 				btn.button('reset');
 			}, function(res){
@@ -328,7 +328,7 @@ jQuery(function($) {
 		materialOrderPostData["materialOrder.orderId"] = materialSubOrderAddPostData.materialSubOrder.orderId;
 		materialOrderPostData["materialOrder.customerId"] = materialSubOrderAddPostData.materialSubOrder.customerId;
 		materialOrderPostData["materialOrder.customerName"] = materialSubOrderAddPostData.materialSubOrder.customerName;
-		$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
+		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 });
 
