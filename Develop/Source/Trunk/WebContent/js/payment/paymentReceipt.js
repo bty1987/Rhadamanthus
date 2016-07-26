@@ -3,9 +3,11 @@ var receipt = {
 	tableList:[],
 };
 
-params.hostServer = window.hostServer;
-
 jQuery(function($) {
+	
+	params.server = window.server;
+	params.authentication = window.authentication;
+	
 	var args = window.location.search.substr(1);
 	
 	var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;

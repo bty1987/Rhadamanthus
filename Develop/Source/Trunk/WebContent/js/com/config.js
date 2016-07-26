@@ -9,7 +9,8 @@ var config = {
 	companyName: '方林装饰',
 	companyFullName: '辽宁方林装饰工程有限公司',
 	
-	backgroundImg: './images/background.jpg',
+	iconImg: './images/icon_ehome.png',
+	backgroundImg: './images/bg_fanglin.jpg',
 	
 	server: 'http://61.161.185.22:30002/',
     media: 'http://61.161.185.22:30000/',

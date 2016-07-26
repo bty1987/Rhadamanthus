@@ -96,14 +96,14 @@ $(function(){
 	
 	$("#versionInfo").on("click", function(e){
 		$('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;版本');
-		com.switchPage(api.index.versionIndex.url, {});
+		com.switchPage(api.index.versionIndex.url);
 		$('.breadcrumb .nav2').hide();
 		$('.breadcrumb .nav3').hide();
 	});
 	
 	$("#faqInfo").on("click", function(e){
-		$('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;版本');
-		com.switchPage(api.index.faqIndex.url, {});
+		$('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;帮助');
+		com.switchPage(api.index.faqIndex.url);
 		$('.breadcrumb .nav2').hide();
 		$('.breadcrumb .nav3').hide();
 	});

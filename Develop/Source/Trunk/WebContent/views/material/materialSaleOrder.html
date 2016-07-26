@@ -2,7 +2,7 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			
+
 			<div class="widget-box transparent">
 				<div class="widget-body">
 					<div class="widget-main">
@@ -16,16 +16,16 @@
 								<div class="col-sm-3">
 									<select id="salesmanName" class="chosen-select col-sm-6" data-placeholder="" data-toggle="popover" data-trigger='manual'>
 										<option value="">&nbsp;</option>
-									</select> 
+									</select>
 								</div>
 								<label class="col-sm-1 control-label no-padding-right" for="materialerName">主材导购</label>
 								<div class="col-sm-3">
 									<select id="materialerName" class="chosen-select col-sm-6 v_required" data-placeholder="" data-toggle="popover" data-trigger='manual'	>
 										<option value="">&nbsp;</option>
-									</select> 
+									</select>
 								</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label class="col-sm-1 control-label no-padding-right" for="orderId">订单号</label>
 								<div class="col-sm-2">
@@ -35,29 +35,29 @@
 								<div class="col-sm-3">
 									<input id="customerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
 								</div>
-								
+
 								<label class="col-sm-1 control-label no-padding-right" for="instoreName">主材驻店</label>
 								<div class="col-sm-3">
 									<select id="instoreName" class="chosen-select col-sm-6" data-placeholder="" data-toggle="popover" data-trigger='manual'	>
 										<option value="">&nbsp;</option>
-									</select> 
+									</select>
 								</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label class="col-sm-1 control-label no-padding-right" for="orderAddr">楼盘地址</label>
 								<div class="col-sm-6">
 									<input id="orderAddr" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
 								</div>
-								
+
 								<label class="col-sm-1 control-label no-padding-right" for="materialBrand">主材品牌</label>
 								<div class="col-sm-3">
 									<select id="materialBrand" class="chosen-select col-sm-6 v_required" data-placeholder="" data-toggle="popover" data-trigger='manual'	>
 										<option value="">&nbsp;</option>
-									</select> 
+									</select>
 								</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label class="col-sm-1 control-label no-padding-right" for="des">备注</label>
 								<div class="col-sm-6">
@@ -68,10 +68,37 @@
 					</div>
 				</div>
 			</div>
-		
-			<div id="saleOrderSearchDiv"></div>
-			<table id="listGrid"></table>
-			<div style="margin-top: 10px;">
+
+			<ul class="flex-table">
+				<li class="line  table-title">
+					<div class="line-wrap">
+						<div class="cell index"></div>
+					</div>
+					<div class="line-wrap">
+
+						<div class="cell name">名称</div>
+						<div class="cell type">品类</div>
+						<div class="cell brand">品牌</div>
+						<div class="cell unit">单位</div>
+						<div class="cell money">单价</div>
+						<div class="cell decimal">折扣</div>
+						<div class="cell money">折扣价</div>
+						<div class="cell decimal">折让</div>
+						<div class="cell money">售价</div>
+						<div class="cell num">数量</div>
+						<div class="cell money">总价</div>
+						<div class="cell package">套餐</div>
+						<div class="cell remark">备注</div>
+					</div>
+					<div class="line-wrap">
+						<div class="cell option">操作</div>
+					</div>
+				</li>
+			</ul>
+
+			<ul class="flex-table" id="list"></ul>
+
+			<div style="margin-top: 15px;">
 				<button id="addSaleOrder" class="btn btn-success inline col-xs-1">添加</button>
 				<button id="submitSaleOrder" class="btn btn-default inline col-xs-1" data-loading-text="提交中...">提交</button>
 				<button id="backBtn" class="btn btn-danger inline col-xs-1 pull-right inline">返回</button>
@@ -84,5 +111,7 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript('js/material/materialSaleOrder.js?version=' + versionCode);
+	//$.getScript(hostServer + 'js/material/materialSaleOrder.js?version=' + versionCode);
 </script>
+
+<script src="js/material/materialSaleOrder.js"></script>

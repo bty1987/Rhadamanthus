@@ -399,7 +399,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderVO.setBusinessDepartment("-");
 			}
 			
-			decorationOrderVO.setHouseNumber(decorationOrderPO.getVillagePO().getVillageName() + " " + decorationOrderPO.getHouseNumber());
+			decorationOrderVO.setHouseNumber(decorationOrderPO.getHouseNumber());
 			
 			if(decorationOrderPO.getSupervisorPO() != null){
 				decorationOrderVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());

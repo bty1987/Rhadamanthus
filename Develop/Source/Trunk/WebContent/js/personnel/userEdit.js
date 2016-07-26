@@ -42,7 +42,6 @@ jQuery(function(a) {
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
-        //com.switchPage(api.personel.userIndex);
         com.switchPage(api.personel.userIndex.url);
 
     });
@@ -315,7 +314,7 @@ function saveData() {
 
 function successCallback() {
     com.showAlert(com.info, "操作成功");
-    com.switchPage("/views/personnel/user.html");
+    com.switchPage(api.index.userIndex.url);
 }
 
 function failCallback() {

@@ -1,18 +1,18 @@
 
+var materialOrder = {
+	modal: null,
+	materialOrderItems: {},
+	
+	msoId: null,
+	saleType: null,
+	
+	editFlag: false
+};
+
 var materialOrderPostData = {};
 
 jQuery(function($) {
 	$('#fl-statement').statement("主材订单", "订单信息列表");
-	
-	var materialOrder = {
-		modal: null,
-		materialOrderItems: {},
-		
-		msoId: null,
-		saleType: null,
-		
-		editFlag: false
-	};
 	
 	var displayFunc  = (function(){
 

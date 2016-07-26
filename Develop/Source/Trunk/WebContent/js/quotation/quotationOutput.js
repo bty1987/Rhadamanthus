@@ -13,9 +13,10 @@ var decorationOrderDetail = {
 	decorationOrderQuotationItemData:[]
 };
 
-params.hostServer = window.hostServer;
-
 function printHeader(headStr){
+	
+	params.server = window.server;
+	params.authentication = window.authentication;
 	
 	var quotation = decorationOrderDetail.quotation;
 	

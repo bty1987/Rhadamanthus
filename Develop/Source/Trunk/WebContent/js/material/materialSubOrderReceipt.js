@@ -5,7 +5,8 @@ var receipt = {
 	paymentTypeData: {"2":"定金", "3":"补款", "5":"补款退款"},
 };
 
-params.hostServer = window.hostServer;
+params.server = window.server;
+params.authentication = window.authentication;
 
 jQuery(function($) {
 	var args = window.location.search.substr(1);

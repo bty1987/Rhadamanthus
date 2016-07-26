@@ -60,7 +60,7 @@ jQuery(function($) {
 		com.clearValidator("#refund", true);
 	});
 	
-	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": shenPiType}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": 6}, "autoFillKeyValue", "key", "value");
 	
 	com.post(api.material.queryMaterialSubOrderItemByMsoId, materialSubOrderPostData, function(result){
 		
