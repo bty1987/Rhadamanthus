@@ -1312,7 +1312,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
 		decorationOrderPO.setOrderTotalPrice((float) 0);
 		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());
-		decorationOrderPO.setCompany(decorationOrderVO.getCompany());
+		decorationOrderPO.setCompany(SystemConfig.getInt("company"));
 		
 		decorationOrderPO.setCustomerPO(new CustomerPO(decorationOrderVO.getCustomer().getId()));
 		decorationOrderPO.setVillagePO(new VillagePO(decorationOrderVO.getVillage().getVillageId()));

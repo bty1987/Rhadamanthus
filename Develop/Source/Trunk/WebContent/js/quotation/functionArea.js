@@ -29,8 +29,8 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-primary').html('删除');
-            var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-primary').html('分配报价项');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-success').html('分配报价项');
 
             var propertyArr = [
                 ["编号:", v.functionAreaId, "grey"],

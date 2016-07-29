@@ -220,7 +220,6 @@ function createOrder(){
 		"decorationOrder.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
 		"decorationOrder.status": orderEntry.orderItems.status.val(),
 		"decorationOrder.approveStatus": 0,
-		"decorationOrder.company": config.company,
 	};
 	
 //	if($("#decorationOrderFlag").is(":checked") != true && $("#materialOrderFlag").is(":checked") == true){

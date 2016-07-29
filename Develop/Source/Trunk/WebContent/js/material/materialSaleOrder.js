@@ -61,19 +61,23 @@ jQuery(function($) {
 		materialSaleOrder.typeahead.optionMsoId = "materialSubOrderItem.msoId";
 		materialSaleOrder.typeahead.optionItemId = "materialSubOrderItem.msoiId";
 	}
+	
+	if(materialOrder.saleType == "add"){
+		
+	}else{
+		com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":""}, "autoFillKeyValue", "key", "value");
+		com.initChosen('materialerName', api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('instoreName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"驻店"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
-	com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":""}, "autoFillKeyValue", "key", "value");
-	com.initChosen('materialerName', api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"}, "autoFillKeyValue", "key", "value");
-	com.initChosen('instoreName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"驻店"}, "autoFillKeyValue", "key", "value");
-	com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 
-	com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
+		com.post(api.ds.materialInfo, {}, function(res){
+			materialSaleOrder.materialOrderType = res.materialOrderType;
 
-	com.post(api.ds.materialInfo, {}, function(res){
-		materialSaleOrder.materialOrderType = res.materialOrderType;
-
-		materialSaleOrder.materialSaleOrderItems.msoType.bindData(materialSaleOrder.materialOrderType, "key", "value");
-	});
+			materialSaleOrder.materialSaleOrderItems.msoType.bindData(materialSaleOrder.materialOrderType, "key", "value");
+		});
+	}
 
 	//添加一条空行
 	addline(1).addClass('current').appendTo('#list');
@@ -216,30 +220,30 @@ jQuery(function($) {
 	});
 
 	$("#backBtn").on("click", function(){
-		com.switchPage(api.index.materialOrderIndex.url);
+		com.switchPage(params.historyOrderPage);
 	});
 
 	//添加一个空行
 	function addline(lineindex){
 
 		var $line = $('<li></li>').addClass('line');
-		var $indexWrap = $('<div></div>').addClass('line-wrap').append($('<div></div>').addClass('cell index').text(lineindex));
-		var $lineInfoWrap = $('<div></div>').addClass('line-wrap');
-		var $optWrap= $('<div></div>').addClass('line-wrap');
+		var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
+		var $lineInfoWrap = $('<div></div>').addClass('line-wrap content');
+		var $optWrap= $('<div></div>').addClass('line-wrap action');
 		var _lineInfoSet = [
-			{cellClass : "name materialModelName", hasInput : !0},
-			{cellClass : "type materialTypeName"},
-			{cellClass : "brand materialBrandName"},
-			{cellClass : "unit measurementUnitName"},
-			{cellClass : "money materialUnitPrice"},//materialPurchasePrice
-			{cellClass : "decimal discount"},
-			{cellClass : "money salePrice", hasInput : !0},
-			{cellClass : "decimal postDiscount", hasInput : !0},
-			{cellClass : "money price", hasInput : !0},//calcType point base
-			{cellClass : "num", hasInput : !0},
-			{cellClass : "money total", hasInput : !0},
-			{cellClass : "package packageName", hasInput : !0},
-			{cellClass : "remark des", hasInput : !0},
+			{cellClass: "name materialModelName", hasInput : !0},
+			{cellClass: "type materialTypeName"},
+			{cellClass: "brand materialBrandName"},
+			{cellClass: "unit measurementUnitName"},
+			{cellClass: "money materialUnitPrice"},//materialPurchasePrice
+			{cellClass: "decimal discount"},
+			{cellClass: "money salePrice", hasInput : !0},
+			{cellClass: "decimal postDiscount", hasInput : !0},
+			{cellClass: "money price", hasInput : !0},//calcType point base
+			{cellClass: "num", hasInput : !0},
+			{cellClass: "money total", hasInput : !0},
+			{cellClass: "package packageName", hasInput : !0},
+			{cellClass: "remark des", hasInput : !0},
 		];
 
 		var $btncheck = $('<div class="ui-pg-div ui-inline-save"><span class="ui-icon ui-icon-disk"></span></div>');
@@ -263,7 +267,10 @@ jQuery(function($) {
 					source: function (query, process) {
 						var options = {};
 
-						//options[materialSaleOrder.typeahead.optionMsoId] = materialOrder.msoId;
+						if(materialOrder.saleType == "mend"){
+							options[materialSaleOrder.typeahead.optionMsoId] = materialOrder.msoId;
+						}
+						
 						options[materialSaleOrder.typeahead.optionName] = query;
 
 						if(typeof this.options.url !== "string")
@@ -343,8 +350,8 @@ jQuery(function($) {
 			reorder();
 			cyclTotal();
 		});
+		
 		return $line;
-
 	}
 	
 	//获取主材信息
@@ -402,10 +409,9 @@ jQuery(function($) {
 			$line.attr('point', _materialModel.point);
 			$line.attr('base', _materialModel.base);
 		}
-
 	}
 
-	function  recount($line, recountPriceFlag){
+	function recount($line, recountPriceFlag){
 		console.log('recount');
 		if(checkDataValue($line)){
 			recountPriceFlag && $line.find('.price input').val(utils.changeTwoDecimal(utils.accMul(parseFloat($line.find('.salePrice input').val()), parseFloat($line.find('.postDiscount input').val()))));

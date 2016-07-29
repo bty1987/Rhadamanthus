@@ -7,7 +7,17 @@
 		
 		<link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico" type="image/x-icon">
 		
+		<link rel="stylesheet" href="assets/css/pace.min.css" />
+        <script src='assets/js/pace.min.js'></script>
+		
 		<script type="text/javascript">
+		
+			Pace.on('hide', function(){
+                console.log('done');
+                $('#navbar').fadeIn();
+                $('#main-container').fadeIn();
+            });
+		
 			var isF5 = false;
 			document.onkeydown = function (e) {
 	            var ev = window.event || e;
@@ -48,7 +58,6 @@
 			csses += '<link rel="stylesheet" href="assets/css/datepicker.css?version=' + versionCode + '" />';
 			csses += '<link rel="stylesheet" href="assets/css/daterangepicker.css?version=' + versionCode + '" />';
 			csses += '<link rel="stylesheet" href="assets/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
-			csses += '<link rel="stylesheet" href="assets/css/ui.jqgrid.css?version=' + versionCode + '" />';
 			csses += '<link rel="stylesheet" href="assets/css/zTreeStyle.css?version=' + versionCode + '" />';
 			csses += '<link rel="stylesheet" href="assets/css/huploadify.css?version=' + versionCode + '" />';
 			
@@ -72,7 +81,7 @@
 	</head>
 
 	<body class="navbar-fixed">
-		<div class="navbar navbar-default navbar-fixed-top" id="navbar">
+		<div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;'>
 			<script type="text/javascript">
 				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
 			</script>
@@ -113,7 +122,7 @@
 			</div>
 		</div>
 
-		<div class="main-container" id="main-container">
+		<div class="main-container" id="main-container" style='display:none;'>
 			<script type="text/javascript">
 				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 			</script>
@@ -183,7 +192,7 @@
 						<div class="page-content">
 							<div class="row">
 								<div class='col-xs-12' style='padding-left:0px;'>
-									<div class='col-sm-9 declare' style='display:none'>
+									<div class='col-sm-9 declare'>
 										<div class="widget-box transparent col-xs-12" style='background-color: #f8fafc;border: 1px solid #e0e2e5;border-radius:5px;box-shadow:0 0 4px 2px rgba(0,0,0,0.15);'>
 											<div class="widget-header widget-header-small label-primary">
 												<h4 class="smaller" style='color:#fff;/*color:#855d10*/margin-left:10px;line-height:39px;display:inline;'>
@@ -225,7 +234,7 @@
 										</div>
 									</div>
 									
-									<div class="col-xs-12 col-sm-3 pricing-span-body" style='display:none;'>
+									<div class="col-xs-12 col-sm-3 pricing-span-body">
 										<div class="col-sm-12 center">
 											<span class="profile-picture">
 												<img id="personalPic" class="editable img-responsive" alt="PersonalPic" src="#" width="180px" height="200px"/>
@@ -343,8 +352,6 @@
 			
 			jses += '<script src="assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>'; // page specific plugin scripts
 			jses += '<script src="assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-			jses += '<script src="assets/js/jqGrid/i18n/grid.locale-cn.js?version=' + versionCode + '"><\/script>';
-			jses += '<script src="assets/js/jqGrid/jquery.jqGrid.src.js?version=' + versionCode + '"><\/script>';
 			jses += '<script src="assets/js/typeahead-bs2.min.js?version=' + versionCode + '"><\/script>';
 			jses += '<script src="assets/js/tag.js?version=' + versionCode + '"><\/script>';
 			
@@ -373,10 +380,10 @@
 			
 			document.write(jses);
 			
-			$(function(){
-				$('.pricing-span-body').slideDown(2000, 'easeOutBounce');
-				$('.declare').fadeIn(2000)
-			})
+			//$(function(){
+			//	$('.pricing-span-body').slideDown(2000, 'easeOutBounce');
+			//	$('.declare').fadeIn(2000)
+			//});
 		</script>
 
 </body>

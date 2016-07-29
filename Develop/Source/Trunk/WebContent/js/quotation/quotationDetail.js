@@ -1142,22 +1142,22 @@ var QuotationDetail = (function(){
 							sumlcs = parseFloat($domain.attr('data-latexCutScaleTotalSum'));
 							$dmoney = painter.createDomainMoney(sumd, v);
 							$dmoney.appendTo($('#functionAreaSumList'));
-
+							
 							_totalfee = utils.changeThrDecimal(utils.accAdd(_totalfee, sum));
 							_dtotalfee = utils.changeThrDecimal(utils.accAdd(_dtotalfee, sumd));
 							_totallcs = utils.changeThrDecimal(utils.accAdd(_totallcs, sumlcs ? sumlcs : 0));
 						}
 					});
-
+					
 					_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text())));
 
 					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), parseFloat($('#manageCost').find('.discountprice .cell-wrap').text())));
 
 					$('#conveyanceCost').find('.num .cell-wrap').text(_transfee);
 					$('#manageCost').find('.num .cell-wrap').text(_managefee);
-
-					$('#sumLabSumMoney').text( utils.changeThrDecimal( utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee) ));
-					$('#sumLabDiscountMoney').text( utils.changeThrDecimal( utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee) ));
+					
+					$('#sumLabSumMoney').text( utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee) ));
+					$('#sumLabDiscountMoney').text( utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee) ));
 
 					quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal( utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));//报价总额
 					quo.basicParams["quotation.managePrice"] = _managefee;//管理费

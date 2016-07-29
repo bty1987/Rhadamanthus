@@ -1,12 +1,47 @@
-<div id="materialSubOrderDetailPageContent">
+<div id="materialSubOrderDetailPageContent" class="page-content">
 	<div id="fl-statement"></div>
 
 	<div class="row">
 		<div class="col-xs-12">
-			<table id="listGrid"></table>
+			<ul class="flex-table">
+				<li class="line  table-title">
+					<div class="line-wrap order">
+						<div class="cell index"></div>
+					</div>
+					<div class="line-wrap content">
+						<div class="cell name">名称</div>
+						<div class="cell type">品类</div>
+						<div class="cell brand">品牌</div>
+						<div class="cell unit">单位</div>
+						<div class="cell money">折扣价</div>
+						<div class="cell money">售价</div>
+						<div class="cell num">数量</div>
+						<div class="cell money">总价</div>
+						<div class="cell money">结算值</div>
+						<div class="cell seat">备注</div>
+						<div class="cell package "></div>
+					</div>
+					<div class="line-wrap action">
+						<div class="cell option">操作</div>
+					</div>
+				</li>
+			</ul>
+
+			<ul class="flex-table" id="list">
+				<!-- <div class="fl-quo-input hide" style="background: transparent"><input type="text" class="v_required v_float"></div>  -->
+			</ul>
+
+			<div>
+				<h3 class="clearfix">
+					<a style="margin-top: 7px;margin-right:10px;" class="btn btn-minier btn-danger pull-left" id="refundBtn"><i class="icon-shopping-basket bigger-110"></i>退货</a>
+					<a style="margin-top: 7px;margin-right:10px;" class="btn btn-minier btn-success pull-left hide" id="refundCommitBtn"><i class="icon-ok bigger-110"></i>确认</a>
+					<a style="margin-top: 7px;margin-right:10px;" class="btn btn-minier btn-purple pull-left hide" id="refundCancelBtn"><i class="icon-remove bigger-110"></i>取消</a>
+					<a style="margin-top: 7px;margin-right:10px;" class="btn btn-minier btn-primary pull-left" id="backBtn"><i class="icon-mail-forward bigger-110"></i>返回</a>
+				</h3>
+			</div>
 		</div>
 	</div>
-	
+
 	<div class="modal fade" id="rejectMaterialSubOrderModal" tabindex="-1" role="dialog" aria-labelledby="rejectMaterialSubOrderDialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -32,14 +67,14 @@
 								<input id="refund" type="text" value="0" class=" col-sm-6 v_required v_price" />
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="refundDes" >备注信息</label>
 							<div class="col-sm-9">
 								<textarea id="refundDes" maxlength="256" class="col-sm-6 v_required" rows="3"></textarea>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="refund">审批人</label>
 							<div class="col-sm-9">
@@ -60,9 +95,9 @@
 		</div>
 	</div>
 </div>
-
+<!--
 <script type="text/javascript">
-	//$.getScript('js/material/materialSubOrderDetail.js?version=' + versionCode);
-</script>
+	$.getScript(hostServer + 'js/material/materialSubOrderDetail.js?version=' + versionCode);
+</script>-->
 
 <script src="js/material/materialSubOrderDetail.js"></script>

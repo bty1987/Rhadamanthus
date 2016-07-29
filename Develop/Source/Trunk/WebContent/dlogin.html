@@ -19,13 +19,14 @@
 		}
 
 		var csses = "";
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/bootstrap.min.css" />' // basic styles
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/font-awesome.min.css" />'
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/jquery-ui-1.10.3.full.min.css" />' // page specific plugin styles
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/shaking.css" />';
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/bootstrap.min.css" />'; // basic styles
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/font-awesome.min.css" />';
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/jquery-ui-1.10.3.full.min.css" />'; // page specific plugin styles
 
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace.min.css" />' // ace styles
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace-rtl.min.css" />'
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace-skins.min.css" />'
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace.min.css" />'; // ace styles
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace-rtl.min.css" />';
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace-skins.min.css" />';
 
 		csses += '<link rel="stylesheet" href="' + hostServer + 'css/main.css" />';
 
@@ -42,9 +43,13 @@
 
 <body class="login-layout" >
 <div class="main-container">
+	<div style="position: fixed; display: inline-block; color: rgb(255, 255, 255); font-size: 72px; left: 20px; bottom: 20px; opacity:0.5">
+		<i class="icon-chrome"></i>
+		<i class="icon-firefox"></i>
+	</div>
 	<div class="main-content">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1" style="position:absolute; top:15%;">
+			<div class="col-sm-10 col-sm-offset-1" style="position:absolute; top:12%;">
 				<div id="login-box" class="visible no-border" style="overflow: visible;">
 					<form class="form-horizontal" role="form" id="loginFrom">
 						<div align="center">
@@ -114,14 +119,21 @@
 	</div>
 </div>
 
+<!-- 
 <div id="backgroundImage">
 	<img src="" width="1920" height="1080" />
+</div>
+ -->
+
+<div class="slide" style="width: 100%; height: 100%;">
+    <div class="bg" id="container" style="width: 100%; height: 100%;">
+        <div id="canvas"></div>
+    </div>
 </div>
 
 <script type="text/javascript">
 
 	var jses = "";
-
 
 	if(!window.jQuery){
 		jses += '<script src="' + hostServer + 'assets/js/jquery-2.0.3.min.js"><\/script>';
@@ -137,6 +149,8 @@
 	jses += '<script src="' + hostServer + 'assets/js/ace-elements.min.js"><\/script>';
 	jses += '<script src="' + hostServer + 'assets/js/ace-extra.min.js"><\/script>';
 	jses += '<script src="' + hostServer + 'assets/js/jquery.fullscreenBackground.min.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/js/cav.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/js/shaking.js"><\/script>';
 
 	jses += '<script src="' + hostServer + 'js/com/api.js"><\/script>';
 	jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';

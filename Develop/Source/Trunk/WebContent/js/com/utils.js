@@ -66,7 +66,8 @@ var utils = {
 	}, changeTwoDecimal: function(floatvar){
 		var f_x = parseFloat(floatvar);
 		if (isNaN(f_x)){
-			alert('function:changeTwoDecimal->parameter error');
+			 alert('function:changeTwoDecimal->parameter error');
+			console.log('function:changeTwoDecimal->parameter error');
 			return false;
 		}
 		var f_x = Math.round(floatvar*100)/100;
@@ -74,7 +75,8 @@ var utils = {
 	}, 	changeThrDecimal: function(floatvar){
 		var f_x = parseFloat(floatvar);
 		if (isNaN(f_x)){
-			alert('function:changeTwoDecimal->parameter error');
+			 alert('function:changeTwoDecimal->parameter error');
+			console.log('function:changeThrDecimal->parameter error');
 			return false;
 		}
 		var f_x = Math.round(floatvar*1000)/1000;
