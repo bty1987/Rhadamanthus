@@ -217,7 +217,9 @@ jQuery(function($) {
 		materialSubOrderPostData["materialSubOrder.msoId"] = v.msoId;
 		materialSubOrderPostData["materialSubOrder.materialBrand"] = v.materialBrand;
 		
-		$("#materialSubOrderPageContent").load(api.index.materialSubOrderAddIndex.url);
+		params.historyOrderPage = api.index.materialSubOrderIndex.url;
+		
+		com.switchPage(api.index.materialSubOrderAddIndex.url);
 	}
 	
 	function viewMaterialSubOrderDetailIndex(v){
@@ -232,7 +234,7 @@ jQuery(function($) {
 		materialSubOrderPostData["materialSubOrder.maling"] = v.maling;
 		materialSubOrderPostData["materialSubOrder.venderMaling"] = v.venderMaling;
 		
-		$("#materialSubOrderPageContent").load(api.index.materialSubOrderDetailIndex.url);
+		com.switchPage(api.index.materialSubOrderDetailIndex.url);
 	}
 	
 	function dialogMaterialSubOrderMoney(v){
@@ -371,7 +373,8 @@ jQuery(function($) {
 	
 	function viewMaterialSubOrderCollection(msoId){
 		materialSubOrderPostData["materialSubOrder.msoId"] = msoId;
-		$("#materialSubOrderPageContent").load(api.index.materialSubOrderCollectionIndex.url);
+		
+		com.switchPage(api.index.materialSubOrderCollectionIndex.url);
 	}
 	
 	function viewMaterialSubOrderMendIndex(v){
@@ -385,12 +388,15 @@ jQuery(function($) {
 		materialOrder.msoId = v.msoId;
 		materialOrder.saleType = "mend";
 		
-		$("#materialSubOrderPageContent").load(api.index.materialSaleOrderIndex.url);
+		params.historyOrderPage = api.index.materialSubOrderIndex.url;
+		
+		com.switchPage(api.index.materialSaleOrderIndex.url);
 	}
 	
 	function viewMaterialSubOrderRefundIndex(msoId){
 		materialSubOrderPostData["materialSubOrder.msoId"] = msoId;
-		$("#materialSubOrderPageContent").load(api.index.materialSubOrderRefundIndex.url);
+		
+		com.switchPage(api.index.materialSubOrderRefundIndex.url);
 	}
 	
 	function deliverMaterialSubOrder(msoId){

@@ -118,7 +118,7 @@ jQuery(function($) {
 	}, "pagenation", null, materialSubOrderPostData, true, "materialSubOrderRefunds");
 	
 	$("#back").on("click", function(){
-		$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
+		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 	
 	$("#print").on("click", function(){

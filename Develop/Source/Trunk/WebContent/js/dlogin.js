@@ -9,7 +9,7 @@ jQuery(function(a){
     verifyCode();
     
     var initQRCode = function(){
-        $.ajax(config.server + "/QRCode.do?timestamp=" + new  Date().getTime() + "&loginInfo.company=" + config.company).done(function(data){
+        $.ajax(config.communion + "/QRCode.do?timestamp=" + new  Date().getTime() + "&loginInfo.company=" + config.company).done(function(data){
             $('#qrcode img').prop('src', data.QRCode);
         }).fail(function(){alert("获取二维码失败!");}).done(function(data){
         	var _flag = data.loginInfo.loginFlag;
@@ -19,7 +19,7 @@ jQuery(function(a){
     };
 
     var checkLogin = function(flag){
-        count == 30 ? $('.login_qrcode_refresh').html("您的二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post(config.server + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag" : flag}).done(function(data){
+        count == 30 ? $('.login_qrcode_refresh').html("您的二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag" : flag}).done(function(data){
             count ++ ;
             var statusCode = data.loginInfo.code;
             
@@ -71,10 +71,12 @@ jQuery(function(a){
     });
     
     initPage();
+    
+    backgroundShaking('container', 'canvas', '#ba2454', config.shakingColor);
 
-    $("#backgroundImage > img").attr('src', config.backgroundImg);
-    $("#backgroundImage").fullscreenBackground();
-    $("#backgroundImage").css("position", "");
+    //$("#backgroundImage > img").attr('src', config.backgroundImg);
+    //$("#backgroundImage").fullscreenBackground();
+    //$("#backgroundImage").css("position", "");
     
     function verifyCode(){
     	$.ajax({

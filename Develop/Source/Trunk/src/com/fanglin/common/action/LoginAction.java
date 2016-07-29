@@ -101,7 +101,7 @@ public class LoginAction extends BaseListAction {
 				    
 				    this.user = user;
 				    
-				    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false);
+				    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany());
 				    
 					try {
 						authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
@@ -128,8 +128,12 @@ public class LoginAction extends BaseListAction {
 	public String requestAuthCode(){
 		
 		String userId = request.getParameter("userId");
+		String company = request.getParameter("company");
 		
 		try {
+			
+			int index = Integer.valueOf(company.substring(company.length() - 1));
+			int $company = Integer.valueOf(company.substring(index, index + 1));
 			
 			UserVO user = null;
 			AuthenticationUtil authenticationUtil = null;
@@ -149,7 +153,7 @@ public class LoginAction extends BaseListAction {
 				}
 			}
 			
-			authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true);
+			authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true, $company);
 		    authenticationUtil.setIsMobile(true);
 			
 			try {

@@ -32,13 +32,14 @@ public class AuthenticationUtil {
 		super();
 	}
 
-	public AuthenticationUtil(String userId, String userName, String roleId, long updateTime, boolean isMobile) {
+	public AuthenticationUtil(String userId, String userName, String roleId, long updateTime, boolean isMobile, int company) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.roleId = roleId;
 		this.updateTime = updateTime;
 		this.isMobile = isMobile;
+		this.company = company;
 	}
 
 	/**

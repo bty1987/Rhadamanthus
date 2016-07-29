@@ -29,7 +29,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-primary').html('删除');
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');

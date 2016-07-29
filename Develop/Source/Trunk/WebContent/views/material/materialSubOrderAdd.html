@@ -61,8 +61,34 @@
 				</div>
 			</div>
 		
-			<div id="addOrderSearchDiv"></div>
-			<table id="listGrid"></table>
+			<ul class="flex-table">
+				<li class="line  table-title">
+					<div class="line-wrap order">
+						<div class="cell index"></div>
+					</div>
+					<div class="line-wrap content">
+						<div class="cell name">名称</div>
+						<div class="cell type">品类</div>
+						<div class="cell brand">品牌</div>
+						<div class="cell unit">单位</div>
+						<div class="cell money">单价</div>
+						<div class="cell decimal">折扣</div>
+						<div class="cell money">折扣价</div>
+						<div class="cell decimal">折让</div>
+						<div class="cell money">售价</div>
+						<div class="cell num">数量</div>
+						<div class="cell money">总价</div>
+						<div class="cell package">套餐</div>
+						<div class="cell remark">备注</div>
+					</div>
+					<div class="line-wrap action">
+						<div class="cell option">操作</div>
+					</div>
+				</li>
+			</ul>
+
+			<ul class="flex-table" id="list"></ul>
+			
 			<div style="margin-top: 10px;">
 				<button id="addSubOrderItem" class="btn btn-success inline col-xs-1">添加</button>
 				<button id="submitSubOrderItem" class="btn btn-default inline col-xs-1" data-loading-text="提交中...">提交</button>

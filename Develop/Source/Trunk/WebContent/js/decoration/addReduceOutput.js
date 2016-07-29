@@ -8,9 +8,11 @@ function printHeader(headStr){
 	return headHtml;
 }
 
-params.hostServer = window.hostServer;
-
 jQuery(function($) {
+	
+	params.server = window.server;
+	params.authentication = window.authentication;
+	
 	var p = window.location.search.substr(1);
 	
 	var url = api.quotation.queryQuotationForDefaultByOrderId;

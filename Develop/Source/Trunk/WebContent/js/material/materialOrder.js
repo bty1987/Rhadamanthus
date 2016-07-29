@@ -100,6 +100,8 @@ jQuery(function($) {
 		
 		materialOrder.saleType = "sale";
 		
+		params.historyOrderPage = api.index.materialOrderIndex.url;
+		
 		$("#materialOrderPageContent").load(api.index.materialSaleOrderIndex.url);
 	}
 	

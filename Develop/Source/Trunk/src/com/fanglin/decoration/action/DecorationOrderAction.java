@@ -138,7 +138,7 @@ public class DecorationOrderAction extends BaseListAction {
 	
 	@Action(value = "createDecorationOrder", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createDecorationOrder() throws FLException{
-
+		
 		decorationOrder.setCreateUserId(getUserId());
 		
 		if(decorationOrder.getOrderType() == 1){
@@ -146,7 +146,7 @@ public class DecorationOrderAction extends BaseListAction {
 		}else{
 			decorationOrderService.createDecorationOrderForMaterial(decorationOrder);
 		}
-
+		
 		return SUCCESS;
 	}
 	

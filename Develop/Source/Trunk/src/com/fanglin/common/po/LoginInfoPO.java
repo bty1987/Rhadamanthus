@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "logininfo", catalog = "platform")
+@Table(name = "logininfo", catalog = "communion")
 public class LoginInfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7482866789664590219L;
@@ -30,18 +30,21 @@ public class LoginInfoPO implements java.io.Serializable {
 	private double x;
 	
 	private double y;
+	
+	private int company;
 
 	public LoginInfoPO() {
 		super();
 	}
 
-	public LoginInfoPO(String loginFlag, int code, String message, String authentication, long optime) {
+	public LoginInfoPO(String loginFlag, int code, String message, String authentication, long optime, int company) {
 		super();
 		this.loginFlag = loginFlag;
 		this.code = code;
 		this.message = message;
 		this.authentication = authentication;
 		this.optime = optime;
+		this.company = company;
 	}
 
 	@Id
@@ -100,6 +103,7 @@ public class LoginInfoPO implements java.io.Serializable {
 		this.optime = optime;
 	}
 
+	@Column(name = "x")
 	public double getX() {
 		return x;
 	}
@@ -108,12 +112,22 @@ public class LoginInfoPO implements java.io.Serializable {
 		this.x = x;
 	}
 
+	@Column(name = "y")
 	public double getY() {
 		return y;
 	}
 
 	public void setY(double y) {
 		this.y = y;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

@@ -21,6 +21,8 @@ public class LoginInfoVO implements java.io.Serializable {
 	private Double x;
 	
 	private Double y;
+	
+	private String company;
 
 	public Long getLiId() {
 		return this.liId;
@@ -92,6 +94,14 @@ public class LoginInfoVO implements java.io.Serializable {
 
 	public void setY(Double y) {
 		this.y = y;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }
