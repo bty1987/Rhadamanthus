@@ -9,11 +9,11 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.service;
+package com.fanglin.data.common.service;
 
 import java.util.List;
 
-import com.fanglin.common.vo.MeasurementUnitVO;
+import com.fanglin.data.common.vo.MeasurementUnitVO;
 
 public interface MeasurementUnitService {
 	

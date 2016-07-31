@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.vo;
+package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 

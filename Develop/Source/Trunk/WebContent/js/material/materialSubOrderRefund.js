@@ -14,7 +14,7 @@ var materialSubOrderRefundPostData = {};
 var materialSubOrderRefundData = [];
 
 jQuery(function($) {
-//	$('#fl-statement').statement("主材退款", "退款信息列表");
+	$('#fl-statement').statement("主材子订单", "退款信息");
 	
 	materialSubOrderRefund.saveBtn = $("#saveBtn");
 	materialSubOrderRefund.cancelBtn = $("#cancelBtn");

@@ -2,7 +2,6 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.common.vo.BuildingNameRuleVO;
 import com.fanglin.system.vo.CityProperVO;
 
 public class VillageVO implements Serializable {

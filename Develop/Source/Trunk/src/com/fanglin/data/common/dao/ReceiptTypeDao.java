@@ -9,13 +9,13 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.dao;
+package com.fanglin.data.common.dao;
 
 import java.util.List;
 
-import com.fanglin.common.po.ReceiptTypePO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.ReceiptTypePO;
 import com.fanglin.utils.Paging;
 
 public interface ReceiptTypeDao extends Dao<ReceiptTypePO> {

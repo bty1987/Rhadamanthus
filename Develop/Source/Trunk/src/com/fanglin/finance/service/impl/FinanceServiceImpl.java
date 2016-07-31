@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.dao.ReceiptTypeDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.dao.ReceiptTypeDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.finance.dao.AccountDao;
 import com.fanglin.finance.dao.AssistantDao;

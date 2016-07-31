@@ -1,4 +1,4 @@
-set @orderId = 1507070121;
+set @orderId = 1605220025;
 
 select * from decorationorder where orderId = @orderId;
 
@@ -6,7 +6,7 @@ select * from decorationpayment where orderId = @orderId;
 
 select * from decorationreceipt where drId in (select drId from decorationpayment where orderId = @orderId);
 
-set @customerId = 33626;
+set @customerId = 71168;
 
 select * from advancepayment where customerId = @customerId;
 
@@ -25,6 +25,3 @@ select * from materialsuborderrefund where msoId = @msoId;
 select * from materialpayment where msoId = @msoId;
 
 select * from materialreceipt where mrId in (select mrId from materialpayment where msoId = @msoId);
-
-
-

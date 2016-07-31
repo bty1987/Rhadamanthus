@@ -2,25 +2,18 @@ package com.fanglin.system.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class SubFunctionActionVO implements Serializable {
 	
 	private static final long serialVersionUID = 6244446516300615653L;
 
-	@SerializedName("操作编号")
 	private int actionId;
 	
-	@SerializedName("子功能信息")
 	private SubFunctionVO subFunction;
 	
-	@SerializedName("操作名")
 	private String actionName;
 	
-	@SerializedName("描述")
 	private String actionDes;
 
-	@SerializedName("默认标识")
 	private int defaultFlag;
 	
 	public int getActionId(){

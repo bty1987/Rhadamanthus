@@ -76,63 +76,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	private String errorMsg;
 	
-	private String hostServer;
-	
-	private String mediaServer;
-	
-	private String communionServer;
-	
-	private String dmediaServer;
-	
 	private LogVO logVO = new LogVO();
 	
 	Map<String, Object> logObjs = new HashMap<String, Object>();
 	
-	public String getHostServer(){
-		
-		String customerIp = request.getHeader("X-Real-IP");
-		
-		if(customerIp == null || "".equals(customerIp) || customerIp.startsWith("192") || customerIp.startsWith("127")){
-			hostServer = SystemConfig.getString("localHostServer");
-			return hostServer;
-		}else{
-			hostServer = SystemConfig.getString("hostServer");
-			return hostServer;
-		}
-	}
-
-	public String getMediaServer(){
-		
-		String customerIp = request.getHeader("X-Real-IP");
-		
-		if(customerIp == null || "".equals(customerIp) || customerIp.startsWith("192") || customerIp.startsWith("127")){
-			mediaServer = SystemConfig.getString("localMediaServer");
-			return mediaServer;
-		}else{
-			mediaServer = SystemConfig.getString("mediaServer");
-			return mediaServer;
-		}
-	}
-	
-	public String getCommunionServer(){
-		String customerIp = request.getHeader("X-Real-IP");
-		
-		if(customerIp == null || "".equals(customerIp) || customerIp.startsWith("192") || customerIp.startsWith("127")){
-			communionServer = SystemConfig.getString("localCommunionServer");
-			return communionServer;
-		}else{
-			communionServer = SystemConfig.getString("communionServer");
-			return communionServer;
-		}
-	}
-
-	public String getDmediaServer() {
-		
-		dmediaServer = SystemConfig.getString("dmediaHost");
-		
-		return dmediaServer;
-	}
-
 	@Action(value = "operateError", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
 	public String operateError(){
 		
@@ -364,14 +311,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 	public void setLogObjs(Map<String, Object> logObjs){
 		this.logObjs = logObjs;
-	}
-
-	public void setMediaServer(String mediaServer){
-		this.mediaServer = mediaServer;
-	}
-
-	public void setDmediaServer(String dmediaServer) {
-		this.dmediaServer = dmediaServer;
 	}
 
 }

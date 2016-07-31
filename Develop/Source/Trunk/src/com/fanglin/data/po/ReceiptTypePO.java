@@ -1,4 +1,4 @@
-package com.fanglin.common.po;
+package com.fanglin.data.po;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

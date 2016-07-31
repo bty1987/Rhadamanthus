@@ -1,5 +1,5 @@
 /**
- * @File Name		: WorkTypeVO.java
+ * @File Name		: MeasurementUnitVO.java
  * @Package   	: com.fanglin.vo
  * @Version		: 1.0
  * @Date			: 2014-7-29
@@ -9,25 +9,27 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.vo;
+package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WorkTypeVO implements Serializable{
+public class MeasurementUnitVO implements Serializable{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4274531910071238320L;
+	private static final long serialVersionUID = -2933157350352713324L;
 	
-	@SerializedName("工种编号")
+	@SerializedName("计量单位编号")
 	private int id;
-	@SerializedName("工种")
+	
+	@SerializedName("计量单位")
 	private String name;
+	
 	@SerializedName("描述")
-	protected String workTypeDes;
+	protected String unitDes;
 
 	public int getId(){
 		return id;
@@ -45,12 +47,12 @@ public class WorkTypeVO implements Serializable{
 		this.name = name;
 	}
 
-	public String getWorkTypeDes(){
-		return workTypeDes;
+	public String getUnitDes(){
+		return unitDes;
 	}
 
-	public void setWorkTypeDes(String workTypeDes){
-		this.workTypeDes = workTypeDes;
+	public void setUnitDes(String unitDes){
+		this.unitDes = unitDes;
 	}
 	
 }

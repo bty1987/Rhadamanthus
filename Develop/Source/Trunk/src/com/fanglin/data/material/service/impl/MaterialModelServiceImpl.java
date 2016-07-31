@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.material.dao.MaterialBrandRightDao;
@@ -30,6 +29,7 @@ import com.fanglin.data.po.BrandPO;
 import com.fanglin.data.po.CategoryPO;
 import com.fanglin.data.po.MaterialBrandRightPO;
 import com.fanglin.data.po.MaterialModelPO;
+import com.fanglin.data.po.MeasurementUnitPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;

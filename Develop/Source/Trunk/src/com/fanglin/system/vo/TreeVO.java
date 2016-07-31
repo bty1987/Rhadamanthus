@@ -3,25 +3,18 @@ package com.fanglin.system.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
-
 public class TreeVO implements Serializable{
 	                                                                
 	private static final long serialVersionUID = 793543025076046420L;
 
-	@SerializedName("编号")
 	private int id;
 	
-	@SerializedName("名称")
 	private String name;
 	
-	@SerializedName("url")
 	private String url;
 	
-	@SerializedName("图标")
 	private String icon;
 	
-	@SerializedName("子树")
 	private List<TreeVO> sub;
 
 	public int getId(){

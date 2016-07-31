@@ -9,22 +9,16 @@ public class SubFunctionVO implements Serializable {
 
 	private static final long serialVersionUID = 8882188430338671991L;
 
-	@SerializedName("自增主键")
 	private int id;
 	
-	@SerializedName("子功能编号")
 	private int subFunctionId;
 	
-	@SerializedName("子功能名")
 	private String subFunctionName;
 	
-	@SerializedName("功能信息")
 	private FunctionVO function;
 	
-	@SerializedName("子功能描述")
 	protected String subfunctionDes;
 
-	@SerializedName("子功能图标")
 	private String subfunctionIcon;
 	
 	@SerializedName("url")

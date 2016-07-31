@@ -1,4 +1,4 @@
-package com.fanglin.common.vo;
+package com.fanglin.data.common.vo;
 
 public class ReceiptTypeVO implements java.io.Serializable {
 

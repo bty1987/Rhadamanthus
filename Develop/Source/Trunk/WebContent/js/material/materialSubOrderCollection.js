@@ -1,30 +1,33 @@
-var materialSubOrderCollection = {
-	
-	materialPaymentTypeData: {"1":"预付款", "2":"定金", "3":"补款", "4":"退款", "5":"补款退款", "6":"券退款"},
-	materialPaymentRevTypeData: {"预付款":"1", "定金":"2", "补款":"3", "退款":"4", "补款退款":"5", "券退款":"6"},
-	
-	bankType: {},
-	couponType: {},
-	accountsType:{},
-	
-	saveBtn: null,
-	cancelBtn: null,
-	
-	baseModal: null,
-	addOrReduceModal: null,
-	refundModal: null,
-	materialSubOrderCollectionItems: {},
-	
-	editFlg: false,
-	historyFlag: false,
-	batchFlag: true,
-	
-	queryUrl: null,
-};
 
 var materialSubOrderCollectionPostData = {};
 
 jQuery(function($) {
+	
+	$('#fl-statement').statement("主材子订单", "收款信息");
+	
+	var materialSubOrderCollection = {
+			
+		materialPaymentTypeData: {"1":"预付款", "2":"定金", "3":"补款", "4":"退款", "5":"补款退款", "6":"券退款"},
+		materialPaymentRevTypeData: {"预付款":"1", "定金":"2", "补款":"3", "退款":"4", "补款退款":"5", "券退款":"6"},
+		
+		bankType: {},
+		couponType: {},
+		accountsType:{},
+		
+		saveBtn: null,
+		cancelBtn: null,
+		
+		baseModal: null,
+		addOrReduceModal: null,
+		refundModal: null,
+		materialSubOrderCollectionItems: {},
+		
+		editFlg: false,
+		historyFlag: false,
+		batchFlag: true,
+		
+		queryUrl: null,
+	};
 	
 	materialSubOrderCollectionPostData["materialPayment.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	
@@ -146,7 +149,7 @@ jQuery(function($) {
 	
 	$('#back').click(function(){
 		$(".tooltip").remove();
-		$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
+		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 	
 });
