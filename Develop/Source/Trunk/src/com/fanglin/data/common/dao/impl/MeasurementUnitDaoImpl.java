@@ -9,13 +9,13 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.dao.impl;
+package com.fanglin.data.common.dao.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.common.dao.MeasurementUnitDao;
-import com.fanglin.common.po.MeasurementUnitPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.data.common.dao.MeasurementUnitDao;
+import com.fanglin.data.po.MeasurementUnitPO;
 
 @Repository("measurementunit")
 public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implements 	MeasurementUnitDao {

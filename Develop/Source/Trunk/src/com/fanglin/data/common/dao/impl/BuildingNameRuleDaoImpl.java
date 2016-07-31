@@ -9,16 +9,16 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.dao.impl;
+package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.common.dao.BuildingNameRuleDao;
-import com.fanglin.common.po.BuildingNameRulePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.common.dao.BuildingNameRuleDao;
+import com.fanglin.data.po.BuildingNameRulePO;
 import com.fanglin.utils.Paging;
 
 @Repository("buildNameRuleDao")

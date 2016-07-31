@@ -9,13 +9,13 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.dao;
+package com.fanglin.data.common.dao;
 
 import java.util.List;
 
-import com.fanglin.common.po.BuildingNameRulePO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.po.BuildingNameRulePO;
 import com.fanglin.utils.Paging;
 
 public interface BuildingNameRuleDao extends Dao<BuildingNameRulePO> {

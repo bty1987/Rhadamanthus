@@ -11,6 +11,8 @@
 
 package com.fanglin.common.action;
 
+import java.io.ByteArrayInputStream;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -21,11 +23,7 @@ import com.fanglin.core.action.BaseAction;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityImageHelper;
-import com.fanglin.utils.Constant;
-import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.SystemConfig;
-
-import java.io.ByteArrayInputStream;
 
 @SuppressWarnings("serial")
 @ParentPackage("login")

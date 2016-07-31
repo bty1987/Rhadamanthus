@@ -20,8 +20,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.common.po.MeasurementUnitPO;
-import com.fanglin.common.po.WorkTypePO;
 
 @Entity
 @Table(name = "systemDefineitem", catalog = "platform")

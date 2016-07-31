@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.service.impl;
+package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.dao.MeasurementUnitDao;
-import com.fanglin.common.po.MeasurementUnitPO;
-import com.fanglin.common.service.MeasurementUnitService;
-import com.fanglin.common.vo.MeasurementUnitVO;
+import com.fanglin.data.common.dao.MeasurementUnitDao;
+import com.fanglin.data.common.service.MeasurementUnitService;
+import com.fanglin.data.common.vo.MeasurementUnitVO;
+import com.fanglin.data.po.MeasurementUnitPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("measurementUnitService")

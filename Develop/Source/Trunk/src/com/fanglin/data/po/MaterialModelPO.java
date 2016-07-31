@@ -19,7 +19,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.common.po.MeasurementUnitPO;
 
 @Entity
 @Table(name="materialmodel", catalog = "platform")

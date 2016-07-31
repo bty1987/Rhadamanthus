@@ -9,12 +9,12 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.service;
+package com.fanglin.data.common.service;
 
 import java.util.List;
 
-import com.fanglin.common.vo.BuildingNameRuleVO;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.data.common.vo.BuildingNameRuleVO;
 import com.fanglin.utils.Paging;
 
 

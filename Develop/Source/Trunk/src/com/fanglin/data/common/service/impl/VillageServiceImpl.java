@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.vo.BuildingNameRuleVO;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.data.common.service.VillageService;
+import com.fanglin.data.common.vo.BuildingNameRuleVO;
 import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.system.vo.CityProperVO;

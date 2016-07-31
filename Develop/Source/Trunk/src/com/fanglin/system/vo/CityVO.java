@@ -11,21 +11,16 @@ package com.fanglin.system.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class CityVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Integer cId;
 
-	@SerializedName("城市编号")
 	private String cityId;
 	
-	@SerializedName("城市名称")
 	private String cityName;
 	
-	@SerializedName("大区信息")
 	private RegionVO region;
 	
 	public CityVO() {

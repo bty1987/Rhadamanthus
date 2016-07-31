@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.action;
+package com.fanglin.data.common.action;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.common.service.MeasurementUnitService;
-import com.fanglin.common.vo.MeasurementUnitVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.data.common.service.MeasurementUnitService;
+import com.fanglin.data.common.vo.MeasurementUnitVO;
 
 @ParentPackage("base")
 @Namespace("/")

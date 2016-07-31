@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.common.po.BuildingNameRulePO;
 import com.fanglin.system.po.CityProperPO;
 
 @Entity
