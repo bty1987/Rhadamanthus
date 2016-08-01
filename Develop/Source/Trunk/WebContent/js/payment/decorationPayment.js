@@ -874,10 +874,6 @@ jQuery(function($) {
     		});
     	}, function(result){
     		$("#paymentInfo").text(result);
-//    		var row = materialPayment.listGrid.jqGrid('getRowData', 1);
-//    		com.post(api.payment.queryCustomerForAdvanceByCustomerId, {"materialPayment.customerId":row.customerId}, function(res){
-//    			$("#advanceBalance").val(res.money).attr("readonly", "readonly");
-//    		});
     	});
     	
     	decorationPaymentPostData.paymentInfo = null;

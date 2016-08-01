@@ -170,7 +170,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	public DepartmentVO convertBean(DepartmentPO departmentPO){
 		DepartmentVO departmentVO = new DepartmentVO();
-		BeanUtil.copyProperties(departmentPO, departmentVO, Arrays.asList("fatherDept", "cityProper"));
+		BeanUtil.copyProperties(departmentPO, departmentVO, Arrays.asList("fatherDept", "cityProper", "company"));
 		
 		if(departmentPO.getFatherDept() != null){
 			departmentVO.setFatherDept(new DepartmentVO());
