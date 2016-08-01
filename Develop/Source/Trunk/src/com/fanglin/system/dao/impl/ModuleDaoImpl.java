@@ -14,12 +14,13 @@ import com.fanglin.utils.Paging;
 
 @Repository("moduleDao")
 public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
+	
 	public ModuleDaoImpl(){
 		super(ModulePO.class);
 	}
 
 	@Override
-	public List<ModulePO> getPageModule(Paging paging, String moduleName){
+	public List<ModulePO> pageModule(Paging paging, String moduleName){
 		PagingQuery<ModulePO> query = pagingQuery(paging, ModulePO.class);
 		
 		if(StringUtils.isNotEmpty(moduleName)){

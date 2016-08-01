@@ -12,7 +12,6 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -33,12 +32,7 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 
 		PagingQuery<RegionPO> query = pagingQuery(paging, RegionPO.class);
 
-		if(filters != null){
-			for(FilterVO fv : filters){
-				if(StringUtils.isNotEmpty(fv.getData()))
-					query.add(query.getCriterion(fv.getField(), fv.getData(), fv.getOp()));
-			}
-		}
+		queryFilterExcute(query, filters);
 
 		return query.list();
 	}
@@ -47,6 +41,22 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 	@SuppressWarnings("unchecked")
 	public List<RegionPO> queryRegion(){
 		return session().createCriteria(RegionPO.class).list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
+		if(filters != null){
+			for(FilterVO filter: filters){
+					
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if("regionName".equals(field)){
+					query.add(query.getCriterion(field, data, op));
+				}
+			}
+		}
 	}
 
 }

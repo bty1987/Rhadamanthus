@@ -7,7 +7,7 @@
  *
  */
 
-package com.fanglin.system.dao;
+package com.fanglin.personel.dao;
 
 import java.util.List;
 

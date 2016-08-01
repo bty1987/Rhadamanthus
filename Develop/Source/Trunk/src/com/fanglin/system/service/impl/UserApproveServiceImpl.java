@@ -19,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.personel.dao.UserApproveDao;
 import com.fanglin.personel.po.UserApprovePO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserApproveVO;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.dao.UserApproveDao;
 import com.fanglin.system.service.UserApproveService;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;

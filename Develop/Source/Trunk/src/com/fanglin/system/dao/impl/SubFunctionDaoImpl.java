@@ -25,8 +25,7 @@ public class SubFunctionDaoImpl extends DaoImpl<SubFunctionPO> implements SubFun
 		PagingQuery<SubFunctionPO> query = pagingQuery(paging, SubFunctionPO.class);
 		
 		if(StringUtils.isNotEmpty(subFunctionName)){
-			query.add(Restrictions.ilike("subFunctionName", subFunctionName,
-					MatchMode.ANYWHERE));
+			query.add(Restrictions.ilike("subFunctionName", subFunctionName, MatchMode.ANYWHERE));
 		}
 		
 		return query.list();
@@ -46,28 +45,24 @@ public class SubFunctionDaoImpl extends DaoImpl<SubFunctionPO> implements SubFun
 
 	@Override
 	public SubFunctionPO querySubFunctionByName(String subFunctionName){
-		return (SubFunctionPO)session().createCriteria(SubFunctionPO.class)
-				.add(Restrictions.eq("subFunctionName",subFunctionName)).uniqueResult();
+		return (SubFunctionPO)session().createCriteria(SubFunctionPO.class).add(Restrictions.eq("subFunctionName",subFunctionName)).uniqueResult();
 	}
 	
 	@Override
 	public SubFunctionPO querySubFunctionById(int subFunctionId){
-		return (SubFunctionPO)session().createCriteria(SubFunctionPO.class)
-				.add(Restrictions.eq("subFunctionId",subFunctionId)).uniqueResult();
+		return (SubFunctionPO)session().createCriteria(SubFunctionPO.class).add(Restrictions.eq("subFunctionId",subFunctionId)).uniqueResult();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SubFunctionPO> querySubFunctionLikeName(String subFunctionName){
-		return (List<SubFunctionPO>)session().createCriteria(SubFunctionPO.class)
-				.add(Restrictions.like("subFunctionName",subFunctionName)).list();
+		return session().createCriteria(SubFunctionPO.class).add(Restrictions.like("subFunctionName",subFunctionName)).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SubFunctionPO> querySubFunctionByFunctionId(int functionId){
-		return (List<SubFunctionPO>)session().createCriteria(SubFunctionPO.class)
-				.add(Restrictions.eq("function.functionId", functionId)).list();
+		return session().createCriteria(SubFunctionPO.class)	.add(Restrictions.eq("function.functionId", functionId)).list();
 	}
 	
 }

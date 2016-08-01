@@ -19,27 +19,19 @@ public class RoleActionDaoImpl extends DaoImpl<RoleActionPO> implements RoleActi
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleActionPO> queryRoleActionByRoleId(String roleId){
-		return (List<RoleActionPO>)session().createCriteria(RoleActionPO.class)
-				.createAlias("role","role")
-				.add(Restrictions.eq("role.roleId", roleId))
-				.list();
+		return (List<RoleActionPO>)session().createCriteria(RoleActionPO.class).createAlias("role","role").add(Restrictions.eq("role.roleId", roleId)).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleActionPO> queryRoleActionByActionName(String actionName){
-		return (List<RoleActionPO>)session().createCriteria(RoleActionPO.class)
-				.createAlias("subFunctionAction", "subFunctionAction")
-				.add(Restrictions.eq("subFunctionAction.actionName", actionName))
-				.list();
+		return session().createCriteria(RoleActionPO.class).createAlias("subFunctionAction", "subFunctionAction").add(Restrictions.eq("subFunctionAction.actionName", actionName)).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleActionPO> queryRoleActionByActionId(int actionId){
-		return (List<RoleActionPO>)session().createCriteria(RoleActionPO.class)
-				.add(Restrictions.eq("subFunctionAction.actionId", actionId))
-				.list();
+		return session().createCriteria(RoleActionPO.class).add(Restrictions.eq("subFunctionAction.actionId", actionId)).list();
 	}
 
 	@Override
@@ -53,11 +45,7 @@ public class RoleActionDaoImpl extends DaoImpl<RoleActionPO> implements RoleActi
 	
 	@Override
 	public RoleActionPO queryRoleActionByActionNameARoleId(String roleId, String actionName){
-		return (RoleActionPO)session().createCriteria(RoleActionPO.class)
-				.createAlias("subFunctionAction", "subFunctionAction")
-				.add(Restrictions.eq("subFunctionAction.actionName", actionName))
-				.add(Restrictions.eq("role.roleId", roleId))
-				.uniqueResult();
+		return (RoleActionPO) session().createCriteria(RoleActionPO.class).createAlias("subFunctionAction", "subFunctionAction").add(Restrictions.eq("subFunctionAction.actionName", actionName)).add(Restrictions.eq("role.roleId", roleId)).uniqueResult();
 	}
 	
 }

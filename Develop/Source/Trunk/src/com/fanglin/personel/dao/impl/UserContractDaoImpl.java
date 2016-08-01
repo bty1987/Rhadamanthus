@@ -45,4 +45,5 @@ public class UserContractDaoImpl extends DaoImpl<UserContractPO> implements User
 	public List<UserContractPO> queryUserContractByUserId(String userId){
 		return session().createCriteria(UserContractPO.class).add(Restrictions.eq("userId", userId)).list();
 	}
+	
 }

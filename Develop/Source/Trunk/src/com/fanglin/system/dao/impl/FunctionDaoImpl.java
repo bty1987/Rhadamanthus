@@ -22,18 +22,17 @@ public class FunctionDaoImpl extends DaoImpl<FunctionPO> implements FunctionDao 
 	@Override
 	public List<FunctionPO> pageFunction(Paging paging, String functionName){
 		PagingQuery<FunctionPO> query = pagingQuery(paging, FunctionPO.class);
+		
 		if(StringUtils.isNotEmpty(functionName)){
-			query.add(Restrictions.ilike("functionName", functionName,
-					MatchMode.ANYWHERE));
+			query.add(Restrictions.ilike("functionName", functionName, MatchMode.ANYWHERE));
 		}
+		
 		return query.list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<FunctionPO> queryFuctionByModuleId(int moduleId){
-		return ( List<FunctionPO> )session().createCriteria(FunctionPO.class)
-				.add(Restrictions.eq("module.moduleId", moduleId))
-				.list();
+		return session().createCriteria(FunctionPO.class).add(Restrictions.eq("module.moduleId", moduleId)).list();
 	}
 }

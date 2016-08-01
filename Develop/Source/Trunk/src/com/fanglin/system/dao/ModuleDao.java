@@ -8,7 +8,7 @@ import com.fanglin.utils.Paging;
 
 public interface ModuleDao extends Dao<ModulePO> {
 
-	public List<ModulePO> getPageModule(Paging paging, String moduleName);
+	public List<ModulePO> pageModule(Paging paging, String moduleName);
 	
 	public List<ModulePO> queryModule();
 

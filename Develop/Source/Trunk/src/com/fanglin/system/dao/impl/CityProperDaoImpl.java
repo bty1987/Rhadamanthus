@@ -2,7 +2,6 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -23,21 +22,8 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 	public List<CityProperPO> pageCityProper(Paging paging, List<FilterVO> filters){
 		
 		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
-		if(filters != null){
-			query.alias("city", "city");
-			for(FilterVO filter:filters){
-				if(StringUtils.isNotEmpty(filter.getData())){
-					if(CityProperPO.CITY_PROPER_NAME.equals(filter.getField()))
-						query.add(query.getCriterion(CityProperPO.CITY_PROPER_NAME, filter));
-					else if("cityId".equals(filter.getField())){
-						query.add(query.getCriterion("city.cityId", filter));
-					}else if("regionId".equals(filter.getField())){
-						query.alias("city.region", "region");
-						query.add(query.getCriterion("region.regionId", filter));
-					}
-				}
-			}
-		}
+
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
@@ -52,6 +38,30 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 	@SuppressWarnings("unchecked")
 	public List<CityProperPO> queryCityProperByCityIds(List<String> cityIds) {
 		return  session().createCriteria(CityProperPO.class).add(Restrictions.in("city.cityId",cityIds)).list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
+		if(filters != null){
+			
+			query.alias("city", "city");
+			
+			for(FilterVO filter: filters){
+					
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if(CityProperPO.CITY_PROPER_NAME.equals(field))
+					query.add(query.getCriterion(CityProperPO.CITY_PROPER_NAME, data, op));
+				else if("cityId".equals(field)){
+					query.add(query.getCriterion("city.cityId", data, op));
+				}else if("regionId".equals(field)){
+					query.alias("city.region", "region");
+					query.add(query.getCriterion("region.regionId", data, op));
+				}
+			}
+		}
 	}
 	
 }
