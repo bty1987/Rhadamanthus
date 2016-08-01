@@ -23,13 +23,8 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 		
 		PagingQuery<RolePO> query = pagingQuery(paging, RolePO.class);
 		
-		if(filters != null){
-			for(FilterVO filterVO: filters){
-				if("roleName".equals(filterVO.getField())){
-					query.add(query.getCriterion("roleName", filterVO.getData(), filterVO.getOp()));
-				}
-			}
-		}
+		queryFilterExcute(query, filters);
+		
 		return query.list();
 	}
 
@@ -41,9 +36,23 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 	
 	@Override
 	public RolePO queryRoleByRoleName(String roleName){
-		return (RolePO)session().createCriteria(RolePO.class)
-				.add(Restrictions.eq("roleName", roleName))
-				.uniqueResult();
+		return (RolePO) session().createCriteria(RolePO.class).add(Restrictions.eq("roleName", roleName)).uniqueResult();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
+		if(filters != null){
+			for(FilterVO filter: filters){
+					
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if("roleName".equals(field)){
+					query.add(query.getCriterion("roleName", data, op));
+				}
+			}
+		}
 	}
 	
 }

@@ -32,16 +32,7 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 
 		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
 		
-		if(filters != null){
-			for(FilterVO filter: filters){
-				if(CityPO.CITY_NAME.equals(filter.getField())){
-					query.add(query.getCriterion(CityPO.CITY_NAME, filter.getData(), filter.getOp()));
-				}else if(CityPO.REGION_ID.equals(filter.getField())){
-					query.alias("region","region");
-					query.add(query.getCriterion("region.regionId", filter.getData(), filter.getOp()));
-				}
-			}
-		}
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
@@ -50,6 +41,25 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 	@SuppressWarnings("unchecked")
 	public List<CityPO> queryCityByRegionId(String regionId){
 		return session().createCriteria(CityPO.class).add(Restrictions.eq("region.regionId",regionId)).list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
+		if(filters != null){
+			for(FilterVO filter: filters){
+					
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if(CityPO.CITY_NAME.equals(field)){
+					query.add(query.getCriterion(field, data, op));
+				}else if(CityPO.REGION_ID.equals(field)){
+					query.alias("region","region");
+					query.add(query.getCriterion("region.regionId", data, op));
+				}
+			}
+		}
 	}
 	
 }

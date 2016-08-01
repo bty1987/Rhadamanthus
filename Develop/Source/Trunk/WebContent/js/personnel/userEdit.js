@@ -42,7 +42,7 @@ jQuery(function(a) {
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
-        com.switchPage(api.personel.userIndex.url);
+        com.switchPage(api.index.userIndex.url);
 
     });
     user.items.userId = a("#userId").on("blur",function() {

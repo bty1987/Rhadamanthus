@@ -7,7 +7,7 @@
  *
  */
 
-package com.fanglin.system.dao.impl;
+package com.fanglin.personel.dao.impl;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.personel.dao.UserApproveDao;
 import com.fanglin.personel.po.UserApprovePO;
-import com.fanglin.system.dao.UserApproveDao;
 import com.fanglin.utils.Paging;
 
 @Repository("userApproveDaoImpl")

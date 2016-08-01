@@ -160,11 +160,11 @@ public class UserVO implements Serializable {
 		this.currentName = currentName;
 	}
 
-	public int getUId() {
+	public int getuId() {
 		return uId;
 	}
 
-	public void setUId(int uId) {
+	public void setuId(int uId) {
 		this.uId = uId;
 	}
 

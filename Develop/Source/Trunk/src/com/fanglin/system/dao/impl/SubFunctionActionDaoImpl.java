@@ -22,22 +22,8 @@ public class SubFunctionActionDaoImpl extends DaoImpl<SubFunctionActionPO> imple
 	@Override
 	public List<SubFunctionActionPO> pageSubFunctionAction(Paging paging, List<FilterVO> filters){
 		PagingQuery<SubFunctionActionPO> query = pagingQuery(paging, SubFunctionActionPO.class);
-		if(filters != null){
-			for(FilterVO fv: filters){
-				if("actionName".equals(fv.getField())){
-					query.add(query.getCriterion("actionName", fv.getData(), fv.getOp()));
-				}else if("roleName".equals(fv.getField())){
-					query.alias("role", "role");
-					query.add(query.getCriterion("role.roleName", fv.getData(), fv.getOp()));
-				}else if("roleId".equals(fv.getField())){
-					query.alias("role", "role");
-					query.add(query.getCriterion("role.roleId", fv.getData(), fv.getOp()));
-				}else if("subFunctionName".equals(fv.getField())){
-					query.alias("subFunction", "subFunction");
-					query.add(query.getCriterion("subFunction.subFunctionName", fv.getData(), fv.getOp()));
-				}
-			}
-		}
+		
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
@@ -59,24 +45,37 @@ public class SubFunctionActionDaoImpl extends DaoImpl<SubFunctionActionPO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SubFunctionActionPO> querySubFunctionActionBySubFunctionId(int subFunctionId){
-		return session().createCriteria(SubFunctionActionPO.class)
-				.add(Restrictions.eq("subFuction.subFunctionId", subFunctionId))
-				.list();
+		return session().createCriteria(SubFunctionActionPO.class).add(Restrictions.eq("subFuction.subFunctionId", subFunctionId)).list();
 	}
 
 	@Override
 	public SubFunctionActionPO querySubFunctionActionByActionName(String actionName){
-		return (SubFunctionActionPO) session().createCriteria(SubFunctionActionPO.class)
-				.add(Restrictions.eq("actionName", actionName))
-				.uniqueResult();
+		return (SubFunctionActionPO) session().createCriteria(SubFunctionActionPO.class).add(Restrictions.eq("actionName", actionName)).uniqueResult();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SubFunctionActionPO> querySubFunctionActionLikeName(String actionName){
-		return  (List<SubFunctionActionPO>)session().createCriteria(SubFunctionActionPO.class)
-				.add(Restrictions.like("actionName", actionName))
-				.list();
+		return session().createCriteria(SubFunctionActionPO.class).add(Restrictions.like("actionName", actionName)).list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
+		if(filters != null){
+			for(FilterVO filter: filters){
+					
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if("actionName".equals(field)){
+					query.add(query.getCriterion("actionName", data, op));
+				}else if("subFunctionName".equals(field)){
+					query.alias("subFunction", "subFunction");
+					query.add(query.getCriterion("subFunction.subFunctionName", data, op));
+				}
+			}
+		}
 	}
 	
 }

@@ -240,7 +240,7 @@ var Condition = function(){
         },
 
         //-------部门 
-        regionName: {
+        sdeptName: {
             label:"大区名称",
             type:"text",
             submitConfig : {

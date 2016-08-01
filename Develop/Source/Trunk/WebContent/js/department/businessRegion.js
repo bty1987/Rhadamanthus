@@ -103,7 +103,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["regionName"], "condList", api.department.pageDepartment, function(data){
+	searcher.init(["sdeptName"], "condList", api.department.pageDepartment, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "businessRegionPostData", bRegion.postParam, false, null, function(){
 		
