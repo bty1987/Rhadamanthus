@@ -192,7 +192,6 @@ jQuery(function($) {
 			if(materialBrand == ""){
 				materialBrand =  $this.find('.materialBrandName').text();
 			}else{
-				console.log(materialBrand)
 				if(materialBrand !=  $this.find('.materialBrandName').text()){
 					materialBrandFlag = false;
 				}
@@ -370,8 +369,6 @@ jQuery(function($) {
 
 			var _item = data[materialSaleOrder.typeahead.itemName];
 
-			console.log(_item);
-
 			columnActionInit($line, _item, true);
 		}, function(data){
 			com.showAlert(com.error, "获取数据失败!");
@@ -412,7 +409,6 @@ jQuery(function($) {
 	}
 
 	function recount($line, recountPriceFlag){
-		console.log('recount');
 		if(checkDataValue($line)){
 			recountPriceFlag && $line.find('.price input').val(utils.changeTwoDecimal(utils.accMul(parseFloat($line.find('.salePrice input').val()), parseFloat($line.find('.postDiscount input').val()))));
 			$line.find('.total input').val(utils.changeTwoDecimal(utils.accMul(parseFloat($line.find('.price input').val()), parseFloat($line.find('.num input').val()))));
