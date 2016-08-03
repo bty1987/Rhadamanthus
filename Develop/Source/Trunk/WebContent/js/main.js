@@ -31,8 +31,15 @@ $(function(){
 	$(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
 	$(".messageList").data("level", 1);
 	
+	var setCookie =  function(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+	
 	$("#logout").on("click", function(e){
-//		window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
+		setCookie("authentication", "", -1);
 		window.location.href = '/';
 	});
 	
@@ -109,7 +116,12 @@ $(function(){
 	});
 	
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-		$("#personalPic").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime());
+		$("#personalPic").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime()).error(function(){
+		    $('.profile-picture').hide();
+		});
+		$("#userImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=30&height=30&timestamp='+ new Date().getTime()).error(function(){
+		    $(this).hide();
+		});
 	});
 	
 	loadNotices();
@@ -283,7 +295,7 @@ function loadTreeCallback(nodes){
 		var node = treeData[x];
 		if(typeof node !== "object")
 			continue;
-		var $li = $("<li></li>");
+		var $li = $("<li></li>").addClass('lv1');
 		if(node.sub){//level 1
 			var nodes2 = node.sub;
 			var $a = $("<a href='"+node.url+"' class='dropdown-toggle'></a>").data('level', 1);
@@ -297,7 +309,7 @@ function loadTreeCallback(nodes){
 				var node2 = nodes2[y];
 				if(typeof node2 !== "object")
 					continue;
-				var $li2 = $("<li></li>");
+				var $li2 = $("<li></li>").addClass('lv2');
 				$ul.append($li2);
 				if(node2.sub){//level 2
 					var nodes3 = node2.sub;
@@ -319,7 +331,7 @@ function loadTreeCallback(nodes){
 							var node3 = nodes3[z];
 							if(typeof node3 !== "object")
 								continue;
-							var $li3 = $("<li></li>");
+							var $li3 = $("<li></li>").addClass('lv3');
 							var $a3 = $("<a href='"+node3.url+"?timestamp="+ new Date().getTime()+"'></a>").data('level', 3);
 							var $i3 = $("<i class='"+node3.icon+"'></i>");
 							$a3.append($i3).append(node3.name);
@@ -347,15 +359,22 @@ function loadTreeCallback(nodes){
 	$("a", $tree).on("click", function(e){
 		$this = $(this);
 		navControl($this);
-		e.preventDefault();
 		
 		var hrefStr = $this.attr("href");
 		
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
-//			com.switchPage(hrefStr);
 			com.switchPage(hrefStr);
-			$(".daterangepicker").remove();
+//			$(".daterangepicker").remove();
+			
+			$('.lv1.active').removeClass('active');
+			$('.lv2.active').removeClass('active');
+			$('.lv3.active').removeClass('active');
+			
+			$this.parent('li').addClass("active");
+			$this.parents('li.lv1').addClass("active");
 		}
+		
+		e.preventDefault();
 	});
 }
 

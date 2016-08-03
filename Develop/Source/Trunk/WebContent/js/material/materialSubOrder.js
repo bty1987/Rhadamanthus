@@ -200,7 +200,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialSubOrderPostData", {"materialSubOrder.orderId":materialOrderPostData["materialOrder.orderId"]}, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin-top', '7px').css('margin-right', '7px');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin', '5px 5px 0 0');
     	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('返回').appendTo($adda);
     	
@@ -470,7 +470,6 @@ jQuery(function($) {
 		var options = {};
 		options["materialPayment.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
 		options["materialPayment.paymentType"] = 2;
-		options["materialPayment.paymentStatus"] = depositStatus;
 		
 		var btn = $(this).button("loading");
 		

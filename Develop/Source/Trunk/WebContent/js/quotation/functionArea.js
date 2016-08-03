@@ -1,4 +1,6 @@
 $(function(){
+	
+	$('#fl-statement').statement("子功能区", "报价项配置");
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -84,7 +86,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "functionAreaPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addFunctionArea').css('margin-top', '7px');
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addFunctionArea').css('margin', '5px 5px 0 0');
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
@@ -228,9 +230,7 @@ $(function(){
             var c = {"ids[0]" : id};
 
             flag && com.post(api.quotation.deleteFunctionArea, c, successFunctionAreaCallback);
-        })
-
-
+        });
     }
     //分配报价项
     function assignQuotationItemIndex(a, b, c) {
@@ -282,7 +282,7 @@ $(function(){
                         "name" : "areaItems",
                         "class" : "ace ace-checkbox-2",
                     }).val(v.faiId);
-                    var $span = $('<span></span>').addClass('lbl');
+                    var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.quotationItem.itemName);
 
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -304,7 +304,7 @@ $(function(){
                     });
 
                     $label.append($input).append($span).appendTo($h3);
-                    $h3.append($('<small></small>').addClass('blue').html(' ' + v.quotationItem.itemName));
+//                    $h3.append($('<small></small>').addClass('blue').html(' ' + v.quotationItem.itemName));
                     $liLine.append($h3).append($ulProperty);
 
                     $liLine.appendTo($ul);
@@ -368,7 +368,7 @@ $(function(){
                     "data-quotationClassification" : v.quotationClassification,
                     "data-itemName" : v.itemName
                 }).val(v.qiId);
-                var $span = $('<span></span>').addClass('lbl');
+                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
 
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -391,7 +391,7 @@ $(function(){
                 });
 
                 $label.append($input).append($span).appendTo($h3);
-                $h3.append($('<small></small>').addClass('blue').html(' ' + v.itemName));
+//                $h3.append($('<small></small>').addClass('blue').html(' ' + v.itemName));
                 $liLine.append($h3).append($ulProperty);
 
                 return $liLine;

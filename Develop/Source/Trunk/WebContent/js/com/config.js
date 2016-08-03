@@ -9,7 +9,7 @@ var config = {
 	companyName: '方林装饰',
 	companyFullName: '辽宁方林装饰工程有限公司',
 	
-	iconImg: './images/icon_ehome.png',
+	iconImg: './images/icon_fanglin.png',
 	backgroundImg: './images/bg_fanglin.jpg',
 	shakingColor: '#197bb5', // 1918: #892f89 , ehome: #3d677c
 	

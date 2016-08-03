@@ -109,7 +109,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "designRegionPostData", dRegion.postParam, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addDesignRegion').css('margin-top', '7px').css('margin-right', '7px');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addDesignRegion').css('margin', '5px 5px 0 0');
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	

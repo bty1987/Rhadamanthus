@@ -13,7 +13,7 @@
 			});
 
 			var list = conf.list;
-
+			
 			var excel="<table>";
 
 			// Header
@@ -25,24 +25,26 @@
 
 			// Row Vs Column
 			$.each(list, function(i, v){
+				
 				excel += "<tr>";
 				$.each(columnNames, function(index, val){
+					
+					v._$ = "$"; // 文件压缩过程需要赋值来确定v的名称 , 否则改域内没有使用到v , 不能命名
+					
 					if(typeof val != 'string'){
 						var tempstr = '';
 						$.each (val, function(si, sv){
-							tempstr += eval('v.'+sv) ? eval('v.'+sv) : "xxx";
+							tempstr += eval('e.' + sv);
 						});
 						excel += "<td>" + tempstr + "</td>";
 					}else{
-						excel += "<td>" + (eval('v.'+val) ? eval('v.'+val) : "xxx")   + "</td>";
+						excel += "<td>" + eval('e.' + val) + "</td>";
 					}
 				});
 				excel += '</tr>';
 			});
-
+			
 			excel += "</table>";
-
-			$('body').append(excel);
 
 			var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
 			excelFile += "<head>";

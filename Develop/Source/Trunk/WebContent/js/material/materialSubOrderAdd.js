@@ -25,9 +25,11 @@ jQuery(function($) {
 	
 	com.post(api.ds.materialInfo, {}, function(res){
 		$.each(res.materialOrderType, function(k, v){
-			materialSubOrderAdd.materialType[k] = v;
+			materialSubOrderAdd.materialType[v.key] = v.value;
 		});
 	}, null, false);
+	
+	console.log(materialSubOrderAdd.materialType);
 	
 	com.post(api.material.queryMaterialSubOrderByMsoId, materialSubOrderAddPostData, function(res){
 		
