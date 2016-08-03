@@ -3,171 +3,27 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '09a2adbcb9577c09793b9b4e72b6bd73e64fcab2'
-    oldFile: !uuid '5e75d1d90a3faf1fc54f315b70033568c1dcc07f'
+    newFile: !uuid '74ca858bcb53fcf91cd5a005481d90292e02bb12'
+    oldFile: !uuid '09a2adbcb9577c09793b9b4e72b6bd73e64fcab2'
   /Develop/Source:
-    newFile: !uuid 'f9215e7f43b8c0f4d1396490866ce577f2a27581'
-    oldFile: !uuid '76465469a2f261e5a7afc0096b3a6e20c1566d8a'
+    newFile: !uuid '2987a1076e8a87aa46eb63e8e7b021336e5d6bc4'
+    oldFile: !uuid 'f9215e7f43b8c0f4d1396490866ce577f2a27581'
   /Develop/Source/Trunk:
-    newFile: !uuid 'ffebd4ca6248e28bcf12814b08317cbe260d5e6f'
-    oldFile: !uuid '763ac41df28cbc089cdbb7a9a5aeae3683643c66'
+    newFile: !uuid '1aec0874a8f656c2f86911e956ab7cce5e40c8da'
+    oldFile: !uuid 'ffebd4ca6248e28bcf12814b08317cbe260d5e6f'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '96bfa25a35b6cbd14b076365014003c676143589'
-    oldFile: !uuid 'e5c2db28055e3ece3772e721a9bd20517020cab6'
-  /Develop/Source/Trunk/WebContent/assets:
-    newFile: !uuid '0bf26ce968bf95d172fa5f0079e072b44a305511'
-    oldFile: !uuid 'c0476ffd11977d8ba9a15a1473160c9e3f606cdf'
-  /Develop/Source/Trunk/WebContent/assets/images:
-    newFile: !uuid 'cb2a039e95ad4cf0e4814449ec5a2d29126cb431'
-    oldFile: !uuid '4d25c78004435a2b4c3b4345483e153d09c4300a'
-  /Develop/Source/Trunk/WebContent/assets/images/avatar2.png:
-    newFile: !uuid 'a87583eaca46b07e7874d7166a7458f81add37e6'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images:
-    newFile: !uuid 'c14ad68ebef44563e72deb4abbd5fee2f03dd593'
-    oldFile: !uuid '01c0fb4c8e01b08385ca96dbb3701968ed0dc49b'
-  /Develop/Source/Trunk/WebContent/images/faq:
-    newFile: !uuid 'adcbabe2eef93effcbcf8e71f37ce082826a3ca0'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/1-1.jpg:
-    newFile: !uuid '97d8bf5c9e4fd67c069c920da37dbfe461b8f006'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/1-2.jpg:
-    newFile: !uuid 'c17feecadaf678452c846d1ffd9c29916353d9b5'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/1.jpg:
-    newFile: !uuid '3591150de483cbe54844127061bb0fbcd6ed4dbb'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-1.jpg:
-    newFile: !uuid '1a7b820939da634e64692104a90f2e67c6ede7f3'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-2.jpg:
-    newFile: !uuid '223a14fed7f6e9b340b0fead8c69bd6bef6fb651'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-3.jpg:
-    newFile: !uuid '83de588f156ff6e0ee04304afdfcc39403fce3d6'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-4.jpg:
-    newFile: !uuid '23623196196d1ddd4b6c94288497c52d39fd9349'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-5.jpg:
-    newFile: !uuid 'e831ac715c4abf38aed844ffc6b21927a1688641'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2-6.jpg:
-    newFile: !uuid 'b7b89ee87cb339f02e9d35bdd75324d566a7826e'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/2.jpg:
-    newFile: !uuid '867117995be537c2ab5e85df49ddb28ce0c005f9'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/3-1.jpg:
-    newFile: !uuid '7f5c94284256e7fc3bda295e4797820cc8d2e093'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/3-2.jpg:
-    newFile: !uuid '0a003781994af86edc76e6c3d4b724ab77670e75'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/3-3.jpg:
-    newFile: !uuid '0529fc5618bdc98be6385b0d08e40539536aee7f'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/3-4.jpg:
-    newFile: !uuid 'cf6bfb1550a89f1db750efdf434decc877bfcf80'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/3.jpg:
-    newFile: !uuid 'f00349318a0260e4bd0e64bc0f7eff28757a5ef1'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/4-1.jpg:
-    newFile: !uuid '8251ade22096743efd31dce590cd918c0414c013'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/4-2.jpg:
-    newFile: !uuid 'bc608ee4a0bbf6cee0c14c921d93cea08a5ef2b4'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/4-3.jpg:
-    newFile: !uuid 'da81daf119b0dc66b217177bba68718f1e72590a'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/4.jpg:
-    newFile: !uuid '162a38e9c6b33a66bb793a5285ae81e2dc155d94'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/5-1.jpg:
-    newFile: !uuid '6b3dd92ee1cf3776da71615ec0709a2feb2f7839'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/5-2.jpg:
-    newFile: !uuid 'f02ad43dfc518743169096f46f02a64370d824f8'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/6-1.jpg:
-    newFile: !uuid '7ddf411ce0220e4cf918a69265692d98202b2039'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/7-1.jpg:
-    newFile: !uuid '00f6629c05d515da9f7a5d71d9a912788c7c09ac'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-1.jpg:
-    newFile: !uuid 'b3a35fa1a9784dcdc5fd5320522041782924947b'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-2.jpg:
-    newFile: !uuid 'd7292b516ad5ec1918d54de4504c6158c4de3f6e'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-3-1.jpg:
-    newFile: !uuid '37f661fe687fb24fcdb380c6e0d5bad4c079db46'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-3.jpg:
-    newFile: !uuid '6d02ce7e7b4209439c8fc9c30613228fcdfbf4de'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-4.jpg:
-    newFile: !uuid '7c7292770310140e11d41d1f3c592a84f7f768ad'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-5.jpg:
-    newFile: !uuid '2d739236cca24c18ca22246a795d5c72ba0d2188'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-6-1.jpg:
-    newFile: !uuid 'dacea2ebbaf40d9efb84b23f3a7edab040239183'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-6-2.jpg:
-    newFile: !uuid '798a6ee2cdef3e9cc797abf4a268ecba386946d3'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/8-6-3.jpg:
-    newFile: !uuid 'fa88b8660a2627847d9c256c393d7a1730878ef4'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/9-1.jpg:
-    newFile: !uuid '370eb726c509342fad9b162e6536b3c571586df2'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/9-2.jpg:
-    newFile: !uuid 'b8130dcc32daea356086c4d8ff3f5575f502d566'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/9-3.jpg:
-    newFile: !uuid '9b229cb5ed26cf6bd9e5f0129d036a9075815e15'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/all.jpg:
-    newFile: !uuid '2607a4e7f8b17d4e57b1e55bb4e656557b35b518'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/all_5_1.jpg:
-    newFile: !uuid '9c8285c7c41085bd4220708117d222d31ed96c52'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/all_5_2.jpg:
-    newFile: !uuid '702c00c203f3331e373b5ad2e25d6dec39f81adf'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/图片1.png:
-    newFile: !uuid '113431d79819e74705c6372b472d254e07b991d8'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/图片2.png:
-    newFile: !uuid '3fd6a86b342d210aa8a7719fbcd7209d4a9a6686'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/图片3.png:
-    newFile: !uuid '6d20070110c8aa905c42ec272db0d8a21a5d6357'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/图片4.png:
-    newFile: !uuid 'fa52c76e18a74ad320219fe8dd34eceaccdc84a3'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖1.png:
-    newFile: !uuid '113431d79819e74705c6372b472d254e07b991d8'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖2.png:
-    newFile: !uuid '3fd6a86b342d210aa8a7719fbcd7209d4a9a6686'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖3.png:
-    newFile: !uuid '6d20070110c8aa905c42ec272db0d8a21a5d6357'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖4.png:
-    newFile: !uuid 'fa52c76e18a74ad320219fe8dd34eceaccdc84a3'
-    oldFile: null
-gitCommitId: !uuid '4a8be45fa45451335d4c3f650e3e17704ddc3339'
+    newFile: !uuid '00072348578d42b667c97845583907ac25e91c3f'
+    oldFile: !uuid '96bfa25a35b6cbd14b076365014003c676143589'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid '4f13c5b5306432ecced8b5422e500e1182be5da8'
+    oldFile: !uuid 'a2933c92a52b156f355968c550320e99a7f0e35c'
+  /Develop/Source/Trunk/WebContent/js/material:
+    newFile: !uuid '7d467ecfce27a7054c57e2ae4e4d226aecbe28f2'
+    oldFile: !uuid '9d226b9ecdda3ee6b7ae78f9aa2334d67f577bc2'
+  /Develop/Source/Trunk/WebContent/js/material/materialSaleOrder.js:
+    newFile: !uuid '7e56a4ed053fbe82155fede8584ac5b0364e6e06'
+    oldFile: !uuid '01e81e9231f15c615b3e96a41a6cc15fcbbc8d96'
+gitCommitId: !uuid 'eff43e0b07fce06143c2903fbcf4a5c10afef2b6'
 renames: {
   }
-revisionId: 50
+revisionId: 51
