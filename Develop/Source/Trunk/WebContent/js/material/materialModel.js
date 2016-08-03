@@ -68,9 +68,7 @@ $(function(){
             $btnDelete.click(function() {
                 bootbox.confirm("确定删除吗？", function(result) {
                     if(result) {
-                        deleteMaterial(v.mmId, function(){
-                            $liLine.remove();
-                        });
+                        deleteMaterial(v.mmId);
                     }
                 });
             });
@@ -102,17 +100,21 @@ $(function(){
 
     var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId'];
 
-    var materialModelSeacher = new Searcher();
+    var searcher = new Searcher();
 
-    materialModelSeacher.init( _condArr, "condList", api.material.pageMaterialModel, function(data){
+    searcher.init( _condArr, "condList", api.material.pageMaterialModel, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "materialModelPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addMaterialModel').css('margin-top', '7px');
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css('margin', '5px 5px 0 0');
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
-    	return [$adda];
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$adda, $impa];
     });
 
     var materialModel = {
@@ -201,7 +203,7 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="addMaterialModel"]','#pagenation').click(function(){
+    $('a[name="add"]','#pagenation').click(function(){
         materialModel.editFlg = !1;
         com.cleanItems(materialModel.materialModelItems);
         materialModel.materialModelItems.materialModelNo.removeAttr("disabled");
@@ -217,7 +219,39 @@ $(function(){
             function(a) {
                 return {}
             });
-        materialModel.modal.modal("show")
+        materialModel.modal.modal("show");
+    });
+    
+    $('a[name="import"]','#pagenation').click(function(){
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 500){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.material.pageMaterialModel, $.extend({}, params.materialModelPostData, {"paging.noPage": 1}), function(res){
+			
+			$.Exporter({
+				column : [
+					["编号","materialModelNo"],
+					['品类','materialTypeName'],
+					['品牌','materialBrandName'],
+					['单位','measurementUnitName'],
+					['进价', 'materialPurchasePrice'],
+					['标价', 'materialUnitPrice'],
+					['折扣', 'discount'],
+					['计算方式','calcType'],
+					['点位', 'point'],
+					['底价', 'base'],
+				],
+				list: res.paging.data,
+			});
+		});
     });
 
     //保存
@@ -251,13 +285,13 @@ $(function(){
     }
 
     //删除
-    function deleteMaterial(mmid, callback) {
+    function deleteMaterial(mmid) {
         var  c = {};
+        
         c["ids[0]"] = mmid;
 
         com.post(api.material.deleteMaterialModelByIds, c, function(){
-            com.showAlert(com.info, "删除成功！");
-            callback();
+        	searcher.doSearch();
         });
     }
 

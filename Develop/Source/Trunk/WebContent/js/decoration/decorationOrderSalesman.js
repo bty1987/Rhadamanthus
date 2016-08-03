@@ -1,6 +1,23 @@
 var decorationOrderPostData = {};//页面跳转保存参数  跳转页面后  之前页面$(function()中定义的东西就没有了
 
 $(function(){
+	
+	//定义全局变量  json
+	var order = {
+	    listGrid: null,
+	    gridPager: null,
+	    saveBtn: null,
+	    cancellBtn: null,
+	    modal: null,
+	    orderItems: {},
+	    orderStatus: [],
+	    businessDepartments: [],
+	    postParam: {},
+	    editFlag: !1
+	},
+	contract = {
+		decorationOrderId: null
+	};
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -82,29 +99,53 @@ $(function(){
 
    var _condArr = ['orderId','village','houseNumber','houseArea','customerPhone','designer','salesman','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId', 'createTimeDateRange','signTimeDateRange','houseClass','status'];
  
-   var decorationOrderSalesmanSeacher = new Searcher();
+   var searcher = new Searcher();
    
-   decorationOrderSalesmanSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForSalesman, function(data){
+   searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForSalesman, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "DecorationOrderSalesmanPostData");
+    }, "pagenation", "decorationOrderSalesmanPostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    });
+   
+   $('a[name="import"]', '#pagenation').click(function(){
+		
+		if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+		
+		if($('span[name="totalRecords"]').text() > 200){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.decoration.pageDecorationOrderForSalesman, $.extend({}, params.decorationOrderSalesmanPostData, {"paging.noPage": 1}), function(res){
+			
+			$.Exporter({
+				column : [
+					["订单编号","orderId"],
+					['楼盘地址',['village.villageName', 'houseNumber']],
+					['客户名','customer.customerName'],
+					['设计部','designDepartment'],
+					['设计师', 'designer'],
+					['业务部', 'businessDepartment'],
+					['业务员', 'salesman'],
+					['监理','supervisor'],
+					['面积', 'houseArea'],
+					['合同报价', 'orderTotalPrice'],
+					['量房时间', 'createTime'],
+					['签单时间', 'contractTime'],
+				],
+				list: res.paging.data,
+			});
+		});
+   });
 
-   	//定义全局变量  json
-	var order = {
-	    listGrid: null,
-	    gridPager: null,
-	    saveBtn: null,
-	    cancellBtn: null,
-	    modal: null,
-	    orderItems: {},
-	    orderStatus: [],
-	    businessDepartments: [],
-	    postParam: {},
-	    editFlag: !1
-	},
-	contract = {
-		decorationOrderId: null
-	};
-	
     order.decorationOrderModal = $("#decorationOrderModal");
     order.agreementModal = $("#agreementModal");
     order.refundContractModal = $("#refundContractModal");
@@ -117,7 +158,7 @@ $(function(){
     }
   
     function successCallback() {
-	   decorationOrderSalesmanSeacher.doSearch();
+	   searcher.doSearch();
     }
     
 });

@@ -721,7 +721,7 @@ jQuery(function($) {
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
 	});
 	
-	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwt", function(data){
+	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwg;*.dwt", function(data){
 		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
 	});
 });

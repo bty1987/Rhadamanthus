@@ -316,20 +316,23 @@ public abstract class GenericDaoImpl implements GenericDao {
 		@SuppressWarnings("unchecked")
 		public List<T> list(){
 			
-			boolean query = true;
-			
-			// 统计数据总数
-			int totalCount = ((Number) criteria(false).setProjection(Projections.rowCount()).uniqueResult()).intValue();
-			paging.setTotalRecords(totalCount);
-			
-			if(totalCount <= (paging.getPage() - 1) * paging.getRows()){
-				query = false;
-			}
-
-			// 查询当前页数据
 			List<T> results = Collections.EMPTY_LIST;
 			
-			if(pagingFlag){
+			System.out.println(pagingFlag);
+			System.out.println(paging.getNoPage());
+			
+			if(pagingFlag && paging.getNoPage() == 0){
+				
+				boolean query = true;
+				
+				// 统计数据总数
+				int totalCount = ((Number) criteria(false).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+				paging.setTotalRecords(totalCount);
+				
+				if(totalCount <= (paging.getPage() - 1) * paging.getRows()){
+					query = false;
+				}
+	
 				if(!query){
 					paging.setPage(1);
 				}

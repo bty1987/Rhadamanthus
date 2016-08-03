@@ -100,7 +100,6 @@ $(function(){
 		$(this).prev().focus();
 	});
 
-
 	/**
 	 * 回调函数比速提供 init(tableId, result.list)方法
 	 * tableId ，用来显示的div的id
@@ -128,7 +127,7 @@ $(function(){
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
 					
 					var propertyArr = [
-						["楼盘地址:", v.village.cityProper.cityProperName + v.village.villageName + " " + v.houseNumber, "grey"],
+						["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
 						["客户名:", v.customer.customerName, "grey"],
 						["余额:", v.customer.balance, "blue"],
 						["设计部:", v.designDepartment, "grey"],
@@ -284,11 +283,53 @@ $(function(){
 	_condArr.push('houseClass');
 	_condArr.push('status');
 
-	var decorationOrderDesignerSeacher = new Searcher();
+	var searcher = new Searcher();
 
-	decorationOrderDesignerSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForDesigner, function(data){
+	searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForDesigner, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "decorationOrderDesignerPostData");
+	}, "pagenation", "decorationOrderDesignerPostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    });
+	
+	$('a[name="import"]', '#pagenation').click(function(){
+		
+		if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+		
+		if($('span[name="totalRecords"]').text() > 200){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.decoration.pageDecorationOrderForDesigner, $.extend({}, params.decorationOrderDesignerPostData, {"paging.noPage": 1}), function(res){
+			
+			$.Exporter({
+				column : [
+					["订单编号","orderId"],
+					['楼盘地址',['village.villageName', 'houseNumber']],
+					['客户名','customer.customerName'],
+					['设计部','designDepartment'],
+					['设计师', 'designer'],
+					['业务部', 'businessDepartment'],
+					['业务员', 'salesman'],
+					['监理','supervisor'],
+					['面积', 'houseArea'],
+					['合同报价', 'orderTotalPrice'],
+					['量房时间', 'createTime'],
+					['签单时间', 'contractTime'],
+				],
+				list: res.paging.data,
+			});
+		});
+    });
+	
 });
 
 //-----------------------------------------------------合同-----------------------------------------

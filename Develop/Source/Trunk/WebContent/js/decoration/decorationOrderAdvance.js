@@ -126,10 +126,51 @@ $(function(){
 
 	var _condArr = ['orderId','village','houseNumber','houseArea','customerPhone','designer','salesman','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId', 'createTimeDateRange','signTimeDateRange','houseClass','status'];
 	
-	var decorationOrderAdvanceSeacher = new Searcher();
-	decorationOrderAdvanceSeacher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
+	var searcher = new Searcher();
+	searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForCommon, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "DecorationOrderAdvancePostData");
+    }, "pagenation", "decorationOrderAdvancePostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    });
+	
+	$('a[name="import"]', '#pagenation').click(function(){
+		
+		if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+		
+		if($('span[name="totalRecords"]').text() > 200){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.decoration.pageDecorationOrderForCommon, $.extend({}, params.decorationOrderAdvancePostData, {"paging.noPage": 1}), function(res){
+			
+			$.Exporter({
+				column : [
+					["订单编号","orderId"],
+					['楼盘地址',['village.villageName', 'houseNumber']],
+					['客户名','customer.customerName'],
+					['设计部','designDepartment'],
+					['设计师', 'designer'],
+					['业务部', 'businessDepartment'],
+					['业务员', 'salesman'],
+					['监理','supervisor'],
+					['面积', 'houseArea'],
+					['合同报价', 'orderTotalPrice'],
+					['量房时间', 'createTime'],
+					['签单时间', 'contractTime'],
+				],
+				list: res.paging.data,
+			});
+		});
+    });
 
 	//定义全局变量  json
 	var order = {
@@ -216,7 +257,7 @@ $(function(){
 						
 						com.showAlert(com.info, "操作成功");
 						
-						decorationOrderAdvanceSeacher.doSearch();
+						searcher.doSearch();
 					}, null, false);
 				}else{
 					com.showAlert(com.error, res.errorMsg);
@@ -342,7 +383,7 @@ $(function(){
 	    }
 	    
         function successCallback() {
-    	   decorationOrderAdvanceSeacher.doSearch();
+    	   searcher.doSearch();
     }
     
 });

@@ -31,6 +31,8 @@ public class Paging implements Serializable {
 	
 	private Integer totalRecords = 0; // 符合查询条件的总记录数
 	
+	private Integer noPage = 0;
+	
 	public Paging(){
 		super();
 	}
@@ -79,6 +81,14 @@ public class Paging implements Serializable {
 
 	public void setTotalPage(Integer totalPage){
 		this.totalPage = totalPage;
+	}
+
+	public Integer getNoPage() {
+		return noPage;
+	}
+
+	public void setNoPage(Integer noPage) {
+		this.noPage = noPage;
 	}
 
 }

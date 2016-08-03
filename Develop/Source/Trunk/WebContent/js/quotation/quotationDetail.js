@@ -480,14 +480,15 @@ var QuotationDetail = (function(){
 			});
 		},
 		getNumCellFocus : function($line){
+			
 			var that = this;
 			var $numCell = $line.find('.cell.num');
 			var $editInput = that.$nowEditInput ? that.$nowEditInput : $line.parents('.widget-body-inner').find('.fl-quo-input');
 			domain.nowEditDomain = $line.parents('.widget-box');
-
+			
 			$('.fl-quo-item.current').removeClass('current');
 			$line.addClass('current');
-			$editInput.removeClass('hide').appendTo($numCell).find('input').val(null).focus();
+			$editInput.removeClass('hide').appendTo($numCell).find('input').val($numCell.find('.cell-wrap').text()).focus().select();
 			that.$nowLine = $line;
 			that.$nowEditInput = $editInput;
 			that.$nowEditInput.find('input').off('keydown').on("keydown",function (e) {
@@ -805,9 +806,9 @@ var QuotationDetail = (function(){
 
 			var _btnSet = {
 				"$btnEdit" : ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', dv.functionAreaType != 0],
-				"$btnAdd" : ["添加报价项", '<i class="bigger-125 icon-plus-sign purple"></i>', dv.functionAreaType != 0],
-				"$btnSet" : ["自定义报价项", '<i class="bigger-125 icon-cog purple"></i>', dv.functionAreaType != 0],
-				"$btnHistory" : ["历史报价项", '<i class="bigger-125 icon-hdd green"></i>', dv.functionAreaType != 0],
+				"$btnAdd" : ["添加报价项", '<i class="bigger-125 icon-plus purple"></i>', dv.functionAreaType != 0],
+				"$btnSet" : ["自定义报价项", '<i class="bigger-125 icon-plus-sign purple"></i>', dv.functionAreaType != 0],
+				"$btnHistory" : ["历史报价项", '<i class="bigger-125 icon-star green"></i>', dv.functionAreaType != 0],
 				"$btnDelQuo" : ["批量删除报价项", '<i class="bigger-125 icon-remove pink"></i>', dv.functionAreaType != 0],
 				"$btnDelDomain" : ["删除功能区", '<i class="bigger-125 icon-trash red"></i>', dv.functionAreaType != 0],
 				"$btnFold" : ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
@@ -1048,7 +1049,7 @@ var QuotationDetail = (function(){
 				"data-discount": v.discount
 
 			}).val(v.qiId);
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
 
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -1072,7 +1073,6 @@ var QuotationDetail = (function(){
 			});
 
 			$label.append($input).append($span).appendTo($h3);
-			$h3.append($('<small></small>').addClass('blue').html(' ' + v.itemName));
 			$liLine.append($h3).append($ulProperty);
 
 			$input.change(function(){

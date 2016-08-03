@@ -1,117 +1,5 @@
 var decorationUtils = {
-	createDecorationOrderCondition: function(listGrid, queryUrl, searchDivId, postParms, postDataName){
-		
-		var conditions = [
-			{label:"订单编号", id:"orderId", name:"orderId", type:'text', op:"eq"},
-			{label:"楼盘", id:"village", name:"village", type:"autoFillPinyinText", url:api.data.queryVillageForNameByPinyin},
-			{label:"楼号", id:"houseNumber", name:"houseNumber", type:"text"},
-			{label:"面积", id:"houseArea", name:"houseArea", type:"text", op:"eq"},
-			{label:"客户电话", id:"customerPhone", name:"customerPhone", type:"text"},
-			{label:"设计师", id:"designer", name:"designer", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":"设计师"}},
-			{label:"业务员", id:"salesman", name:"salesman", type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty, postData:{"duty":""}},
-		];
-		
-		var condition = 0;
-		var _postParms = {};
-		
-		var designerRegions = [];
-		var designerDepartment = [];
-		var salesmanRegions = [];
-		var salesmanDepartment = [];
-		
-		var statusData = {};
-		var houseClass = {};
-		
-		com.post(api.ds.decorationInfo, {"timestamp": new Date().getTime()}, function(res){
-			statusData = res.decorationOrderStatus;
-		}, null, false);
-		
-		com.post(api.ds.houseInfo, {"timestamp": new Date().getTime()}, function(res){
-			houseClass = res.houseClass;
-		}, null, false);
-		
-		com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
-			
-			condition = res.condition;
-			
-			if(condition == 0){
-				return conditions;
-			}
-			if((condition & 1) == 1){ // 设计师
-				//conditions.push();
-			}
-			if((condition & 2) == 2){ // 业务员
-				//conditions.push();
-			}
-			if((condition & 4) == 4){ // 设计中心
-				conditions.push({label:"设计中心", id:"designerRegionId", name:"designerRegionId", type:"select", op:"eq"});
-			}
-			if((condition & 8) == 8){ // 设计部
-				conditions.push({label:"设计部", id:"designerDepartmentId", name:"designerDepartmentId", type:"select", op:"eq"});
-			}
-			if((condition & 16) == 16){ // 业务中心
-				conditions.push({label:"业务中心", id:"salesmanRegionId", name:"salesmanRegionId", type:"select", op:"eq"});
-			}
-			if((condition & 32) == 32){ // 业务部
-				conditions.push({label:"业务部", id:"salesmanDepartmentId", name:"salesmanDepartmentId", type:"select", op:"eq"});
-			}
-			if((condition & 64) == 64){ // 量尺时间
-				conditions.push({label:"量尺时间", id:"createTimeDateRange", name:"createTimeDateRange", type:"dateRangePicker"});
-			}
-			if((condition & 128) == 128){ // 签单时间
-				conditions.push({label:"签单时间", id:"signTimeDateRange", name:"signTimeDateRange", type:"dateRangePicker"});
-			}
-		}, null, false);
-		
-		conditions.push({label:"房屋类型", id:"houseClass", name:"houseClass", type:"select", op:"eq", data:houseClass});
-		conditions.push({label:"状态", id:"status", name:"status", type:"select", op:"eq", data:statusData});
-		
-		for(var k in postParms){
-			_postParms[k] = postParms[k];
-		}
-		
-		$("#" + searchDivId).flSearch({
-			url: queryUrl,
-			postDataName: postDataName,
-			postParmas: _postParms,
-			listgrid: listGrid,
-			items: conditions
-		});
-		
-		com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
-			var deptList = res.deptList;
-			
-			for(var i=0;i<deptList.length;i++){
-				
-				var dept = deptList[i];
-				var type = dept.type;
-				
-				if(type == "设计部"){
-					designerDepartment.push(dept);
-				}else if(type == "设计大区"){
-					designerRegions.push(dept);
-					salesmanRegions.push(dept);
-				}else if(type == "业务大区"){
-					salesmanRegions.push(dept);
-				}
-				
-				salesmanDepartment.push(dept); // 业务部
-			}
-			
-			if(condition & 4 == 4){
-				$("#designerRegionId").bindData(designerRegions, 'deptId', 'deptName', true);
-			}
-			if(condition & 8 == 8){
-				$("#designerDepartmentId").bindData(designerDepartment, 'deptId', 'deptName', true);
-			}
-			if(condition & 16 == 16){
-				$("#salesmanRegionId").bindData(salesmanRegions, 'deptId', 'deptName', true);
-			}
-			if(condition & 32 == 32){
-				$("#salesmanDepartmentId").bindData(salesmanDepartment, 'deptId', 'deptName', true);
-			}
-		}, null, false);
-	},	loadQuotationDetail: function(){
+	loadQuotationDetail: function(){
 		
 		var quotation = null;
 		
@@ -621,7 +509,7 @@ var decorationUtils = {
 	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
 	        'fileTypeExts':fileType, // 允许上传的文件后缀
 	        'fileSizeLimit':'5MB', // 上传文件的大小限制
-	        'queueSizeLimit' : 1, // 上传数量
+	        'queueSizeLimit' : 5, // 上传数量
 	        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
 	        	callback(data);
 			}
@@ -632,27 +520,21 @@ var decorationUtils = {
 		var dateObj = eval("("+data+")");
     	
     	if(dateObj.errorCode == 0){
-    		 bootbox.prompt("请输入备注:", function(result) {
     			 
-    			 if(!result){
-    				 return;
-    			 }
-    			 
-				var options = {
-					"decorationPicture.path": dateObj.resUrl,
-					"decorationPicture.name": dateObj.strutsUploadsFileName,
-					"decorationPicture.content": result,
-					"decorationPicture.orderId": decorationOrderDetail.decorationOrderId,
-					"decorationPicture.type": type
-				};
-				
-				com.post(api.decoration.addDecorationPicture, options, function(res) {
-					if(type == 0){
-						decorationUtils.addCAD($("#" + eId), res.decorationPicture);
-					}else if(type == 1){
-						decorationUtils.addPicture($("#" + eId), res.decorationPicture);
-					}
-				});
+			var options = {
+				"decorationPicture.path": dateObj.resUrl,
+				"decorationPicture.name": dateObj.strutsUploadsFileName,
+				"decorationPicture.content": "",
+				"decorationPicture.orderId": decorationOrderDetail.decorationOrderId,
+				"decorationPicture.type": type
+			};
+			
+			com.post(api.decoration.addDecorationPicture, options, function(res) {
+				if(type == 0){
+					decorationUtils.addCAD($("#" + eId), res.decorationPicture);
+				}else if(type == 1){
+					decorationUtils.addPicture($("#" + eId), res.decorationPicture);
+				}
 			});
 		}else{
 			com.showAlert(com.error, dateObj.errorMsg);

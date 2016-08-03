@@ -101,11 +101,15 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "quotationItemPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationItem').css('margin-top', '7px');
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css('margin', '5px 5px 0 0');
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
-    	return [$adda];
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$adda, $impa];
     });
 
     var quotationItem = {
@@ -205,14 +209,46 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="addQuotationItem"]', '#pagenation').click(function () {
+    $('a[name="add"]', '#pagenation').click(function () {
         quotationItem.editFlg = !1;
         
         com.cleanItems(quotationItem.quotationItemItems);
         quotationItem.quotationItemItems.itemId.prop("disabled", !1);
         quotationItem.quotationItemItems.version.prop("disabled", !1);
         
-        quotationItem.modal.modal("show")
+        quotationItem.modal.modal("show");
+    });
+    
+    $('a[name="import"]', '#pagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 500){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.quotation.pageQuotationItem, $.extend({}, params.quotationItemPostData, {"paging.noPage": 1}), function(res){
+			
+			$.Exporter({
+				column : [
+					["编号","itemId"],
+					['类型','quotationType'],
+					['分类','quotationClassification'],
+					['大类','quotationBigCategory'],
+					['小类', 'quotationSmallCategory'],
+					['单位', 'measurementUnit'],
+					['工种', 'workType'],
+					['说明','quotationItemDes'],
+					['单价', 'unitPrice'],
+					['版本', 'version'],
+				],
+				list: res.paging.data,
+			});
+		});
     });
 
     //编辑按钮
