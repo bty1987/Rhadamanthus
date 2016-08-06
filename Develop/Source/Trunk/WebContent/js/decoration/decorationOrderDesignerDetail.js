@@ -644,7 +644,6 @@ jQuery(function($) {
 		com.switchPage(api.index.decorationOrderDesignerIndex.url);
 	});
 	
-	// ---------------------------------扣款审批
 	$("#paymentType").on("change", function(res) {
 		for (var i=0;i<decorationPayment.refundType.length;++i) {
 			if (decorationPayment.refundType[i].key == $(this).val()) {

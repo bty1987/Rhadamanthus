@@ -233,7 +233,7 @@ $(function(){
 		
 		com.post(api.quotation.pageQuotationItem, $.extend({}, params.quotationItemPostData, {"paging.noPage": 1}), function(res){
 			
-			$.Exporter({
+			$.exceler({
 				column : [
 					["编号","itemId"],
 					['类型','quotationType'],

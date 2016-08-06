@@ -26,7 +26,8 @@ jQuery(function(a){
             if(statusCode == -1){
             	setTimeout(function(){checkLogin(flag)} , 4000)
             }else if(0 == statusCode){
-            	setCookie("authentication" , data.loginInfo.authentication , 1);
+            	setCookie("authentication" , data.loginInfo.authentication , config.timeout);
+            	setCookie("loginTime" , new Date().getTime() , config.timeout);
             	
             	window.location.href = "main.html?timestamp=" + new Date().getTime();
             }else{
@@ -35,9 +36,9 @@ jQuery(function(a){
         });
     };
 
-    var setCookie =  function(cname, cvalue, exdays) {
+    var setCookie =  function(cname, cvalue, minutes) {
         var d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        d.setTime(d.getTime() + (minutes*60*1000));
         var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + "; " + expires;
     }
@@ -111,7 +112,8 @@ jQuery(function(a){
                     $("#errorMsg").html(data.errorMsg);
                     verifyCode();
                 }else if(data.errorCode == 0) {
-                	setCookie("authentication" , data.authenticationEncode , 1);
+                	setCookie("authentication" , data.authenticationEncode , config.timeout);
+                	setCookie("loginTime" , new Date().getTime() , config.timeout);
                 	setCookie("versionCode", config.versionCode, 1);
                     document.location.href = "main.html?timestamp="+ new Date().getTime();
                 }else{

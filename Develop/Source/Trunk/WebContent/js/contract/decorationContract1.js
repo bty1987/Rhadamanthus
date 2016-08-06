@@ -11,11 +11,13 @@ jQuery(function($) {
 	var orderId = "";
 	var args = window.location.search.substr(1).split('&');
 	
-	for(var i=0;i<args.length;i++){
-		if(args[i].indexOf("orderId") != -1){
+	$.each(args, function(i, v){
+		if(v.indexOf('time=') != -1){
+			params.loginTime = v.substring(v.indexOf('time=')).split('=')[1];
+		}else if(v.indexOf("decorationContract.orderId") != -1){
 			orderId = args[i].split('=')[1];
 		}
-	}
+	});
 	
 	var decorationOrder;
 	var decorationContract;

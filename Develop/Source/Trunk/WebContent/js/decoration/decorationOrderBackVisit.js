@@ -22,7 +22,7 @@ $(function(){
 
 		var creatLine = function(v){
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<b></b>').html(v.orderId));
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 			var $btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');

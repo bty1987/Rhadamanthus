@@ -119,7 +119,6 @@ $(function(){
 	
 	order.agreementModal = $("#agreementModal");
 	
-	//-----------------------------------合同----------------------------
 	$("#additionalInfoBtn").on('click',function(res){
 		
 		com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
@@ -217,7 +216,7 @@ $(function(){
     		if(decorationContract == null || decorationContract.autoId == null){
     			$("#printContractBtn").attr("disabled",true);
     		}else{
-    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId);
+    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId + "&time=" + params.loginTime);
     		}
     		
     		order.agreementModal.modal("show");

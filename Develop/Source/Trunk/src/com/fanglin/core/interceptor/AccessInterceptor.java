@@ -91,23 +91,23 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 					
-					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
-						throw new FLException(110005, "登陆超时");
+//					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
+//						throw new FLException(110005, "登陆超时");
+//					}
+					
+					authenticationUtil.setUpdateTime((new Date()).getTime());
+					String authenticationString = authenticationUtil.getAuthenticationStr();
+					String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
+					
+					CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
+					
+					userId = authenticationUtil.getUserId();
+					
+					// 权限认证
+					if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
+						result =  invocation.invoke();
 					}else{
-						authenticationUtil.setUpdateTime((new Date()).getTime());
-						String authenticationString = authenticationUtil.getAuthenticationStr();
-						String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
-						
-						CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
-						
-						userId = authenticationUtil.getUserId();
-						
-						// 权限认证
-						if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
-							result =  invocation.invoke();
-						}else{
-							throw new FLException(-2, "无操作权限");
-						}
+						throw new FLException(-2, "无操作权限");
 					}
 				}else{
 					throw new FLException(110005, "登陆超时");

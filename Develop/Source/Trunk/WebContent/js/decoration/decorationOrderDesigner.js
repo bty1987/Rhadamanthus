@@ -24,7 +24,6 @@ $(function(){
 	order.agreementModal = $("#agreementModal");
 	order.drawLineModal = $("#drawLineModal");
 
-	//--------------------------------放线申请 ---------------------
 	$("#applayDrawLineBtn").on("click",function(){
 		if(com.validate("drawLineModal")){
 			return;
@@ -48,7 +47,6 @@ $(function(){
 		$(this).prev().focus();
 	});
 
-	//-----------------------------------合同----------------------------
 	$("#additionalInfoBtn").on('click',function(res){
 
 		com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
@@ -114,7 +112,7 @@ $(function(){
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
 					var $liLine = $('<li></li>').addClass('item-orange clearfix');
-					var $h3 = $('<h3></h3>').addClass('oid').append($('<b></b>').html(v.orderId));
+					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -225,7 +223,7 @@ $(function(){
 	    		if(res.decorationContract == null || res.decorationContract.autoId == null){
 	    			$("#printContractBtn").attr("disabled",true);
 	    		}else{
-	    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId);
+	    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId + "&time=" + params.loginTime);
 	    		}
 	    		
 	    		order.agreementModal.modal("show");
@@ -310,7 +308,7 @@ $(function(){
 		
 		com.post(api.decoration.pageDecorationOrderForDesigner, $.extend({}, params.decorationOrderDesignerPostData, {"paging.noPage": 1}), function(res){
 			
-			$.Exporter({
+			$.exceler({
 				column : [
 					["订单编号","orderId"],
 					['楼盘地址',['village.villageName', 'houseNumber']],

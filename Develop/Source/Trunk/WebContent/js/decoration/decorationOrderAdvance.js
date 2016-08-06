@@ -152,7 +152,7 @@ $(function(){
 		
 		com.post(api.decoration.pageDecorationOrderForCommon, $.extend({}, params.decorationOrderAdvancePostData, {"paging.noPage": 1}), function(res){
 			
-			$.Exporter({
+			$.exceler({
 				column : [
 					["订单编号","orderId"],
 					['楼盘地址',['village.villageName', 'houseNumber']],
@@ -250,13 +250,10 @@ $(function(){
 				return false;
 			}
 			
-			com.post(api.data.updateCustomer, options, function(res){
-				
+			com.post(api.decoration.signDecorationContract, options, function(res){
 				if(res.errorCode == 0){
-					com.post(api.decoration.signDecorationContract, options, function(res){
-						
+					com.post(api.data.updateCustomer, options, function(res){
 						com.showAlert(com.info, "操作成功");
-						
 						searcher.doSearch();
 					}, null, false);
 				}else{

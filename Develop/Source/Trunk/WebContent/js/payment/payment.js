@@ -439,7 +439,7 @@ jQuery(function($) {
 	
 	function printPayment(paymentId){
 		
-		var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + paymentId;
+		var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + paymentId + "&time=" + params.loginTime;
 		window.open(url);
 	}
 
@@ -543,7 +543,7 @@ jQuery(function($) {
 				
 				bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 					if(result){
-						var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId;
+						var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + params.loginTime;
 						window.open(url);
 					}
 				});

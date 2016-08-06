@@ -7,6 +7,7 @@ var main = {
 $(function(){
 	
 	params.authentication = window.authentication;
+	params.loginTime = window.loginTime;
 	
 	$(document).attr('title', config.name + ' ' + config.ename);
     $('#name').text(config.name);
@@ -31,9 +32,9 @@ $(function(){
 	$(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
 	$(".messageList").data("level", 1);
 	
-	var setCookie =  function(cname, cvalue, exdays) {
+	var setCookie =  function(cname, cvalue, minutes) {
         var d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        d.setTime(d.getTime() + (minutes*60*1000));
         var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + "; " + expires;
     }
@@ -76,18 +77,6 @@ $(function(){
 		}
 		$('.breadcrumb .nav1').empty().append('<i class="icon-envelope"></i>&nbsp;消息查看');
 	});
-	
-//	$(".moreLink").on("click", function(e){
-//		var type = "";
-//		if(e.target.id == "moreActivity"){
-//			type = "活动";
-//		}else{
-//			type = "通知";
-//		}
-//		e.preventDefault();
-//		com.switchPage(api.index.moreNoticesIndex.url, {}, function(){//			params["notice.type"] = type;	
-//		});
-//	});
 	
 	$('#moreActivity').click(function(){
 		params["notice.type"] = "活动";
@@ -151,23 +140,23 @@ function queryTopInfo(url, name){
 			
 			var rankImg = '';
 			
-			if(i == 0){
-				rankImg = './images/golden_delicious.png';
-			}else if(i == 1){
-				rankImg = './images/silver_crown.png';
-			}else if(i == 2){
-				rankImg = './images/copper_crown.png';
-			}
-			
 			var rankLi = $("<li></li>");
 			var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
-			if(rankImg != ""){
-				var rankImg = $("<img></img>").attr("src", rankImg).appendTo(rankSpan);
-			}
 			var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
 			
 			if(_rank != null){
 				var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
+			}
+			
+			if(i == 0){
+				rankLi.addClass('bigger-150 orange');
+				rankSpan.text('1');
+			}else if(i == 1){
+				rankLi.addClass('bigger-120 blue');
+				rankSpan.text('2');
+			}else if(i == 2){
+				rankLi.addClass('bigger-120 blue');
+				rankSpan.text('3');
 			}
 			
 			rankLi.appendTo(topTable);
@@ -311,6 +300,7 @@ function loadTreeCallback(nodes){
 					continue;
 				var $li2 = $("<li></li>").addClass('lv2');
 				$ul.append($li2);
+				node2.icon = "";
 				if(node2.sub){//level 2
 					var nodes3 = node2.sub;
 					
@@ -358,13 +348,12 @@ function loadTreeCallback(nodes){
 	
 	$("a", $tree).on("click", function(e){
 		$this = $(this);
-		navControl($this);
+//		navControl($this);
 		
 		var hrefStr = $this.attr("href");
 		
 		if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
 			com.switchPage(hrefStr);
-//			$(".daterangepicker").remove();
 			
 			$('.lv1.active').removeClass('active');
 			$('.lv2.active').removeClass('active');

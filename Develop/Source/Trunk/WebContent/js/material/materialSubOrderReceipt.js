@@ -27,6 +27,10 @@ jQuery(function($) {
 		type = 2;
 	}
 	
+	if(args.indexOf('time=') != -1){
+		params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
+	}
+	
 	url.url = url.url + "?" + args;
 	
 	com.post(url, {}, function(res){

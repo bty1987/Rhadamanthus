@@ -1,7 +1,7 @@
 (function($){
 
 	$.extend({
-		Exporter: function(options) {
+		exceler: function(options) {
 			var defaults = {};
 
 			var conf = $.extend(defaults, options);
@@ -71,11 +71,23 @@
 			excelFile += "</html>";
 			var base64data = "base64," + Base64.encode(excelFile);
 			window.open('data:application/vnd.ms-excel;filename=exportData.doc;' + base64data);
+		}, pnger: function(options){
+			
+			var defaults = {};
+
+			var conf = $.extend(defaults, options);
+			
+			html2canvas($("#" + conf.eId), {
+				onrendered: function(canvas) {
+					var img = canvas.toDataURL("image/png");
+					window.open(img);
+				}
+			});
 		}
 	});
 
 	/*$('#export').click(function(){
-		$.Exporter({
+		$.exceler({
 			column : [
 				["订单编号","orderId"],
 				['楼盘地址',['village.villageName','houseNumber']],
