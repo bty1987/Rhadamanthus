@@ -126,7 +126,7 @@ jQuery(function($) {
 			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
 		});
 		
-		url += "quotation.orderId=" + params.decorationOrderId;
+		url += "quotation.orderId=" + params.decorationOrderId + "&time=" + params.loginTime;
 		
 		window.open(url);
 	});

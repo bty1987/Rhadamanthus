@@ -236,7 +236,7 @@ $(function(){
 		
 		com.post(api.material.pageMaterialModel, $.extend({}, params.materialModelPostData, {"paging.noPage": 1}), function(res){
 			
-			$.Exporter({
+			$.exceler({
 				column : [
 					["编号","materialModelNo"],
 					['品类','materialTypeName'],

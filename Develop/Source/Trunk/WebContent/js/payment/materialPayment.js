@@ -308,7 +308,7 @@ jQuery(function($) {
                ["品牌:", v.materialBrand, "grey"],
                ["操作人:", v.createUserName, "grey"],
                ["应收金额:", v.referMoney, "blue"],
-               ["收款人:", v.collectUser, "grey"],
+               ["收款人:", v.collectUserName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
                ["备注:", v.des, "grey"],
@@ -550,7 +550,7 @@ jQuery(function($) {
 	}
 	
 	function printPayment(mrId, orderId){
-		var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + orderId + "&materialReceipt.mrId=" + mrId;
+		var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + orderId + "&materialReceipt.mrId=" + mrId + "&time=" + params.loginTime;
 		window.open(url);
     }
 	
@@ -802,7 +802,7 @@ jQuery(function($) {
 			
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + mrId;
+					var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + mrId + "&time=" + params.loginTime;
 					window.open(url);
 				}
 			});

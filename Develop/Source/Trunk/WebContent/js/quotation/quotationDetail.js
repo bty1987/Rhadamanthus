@@ -30,7 +30,7 @@ var QuotationDetail = (function(){
 					});
 				}),
 				//打印
-				$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2"),
+				$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime),
 				//返回
 				$btnBack : $('#detailBckBtn').on(ace.click_event, function(){
 					bootbox.confirm("当前页面存在重要数据,是否进行当前操作?", function(result) {
@@ -917,7 +917,7 @@ var QuotationDetail = (function(){
 				["line", linenum],
 				["num", qv.num],
 				["name", qv.itemName],
-				["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "---", ["data-type", qv.type]],
+				["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
 				["unit", qv.measurementUnit],
 				["worktype", qv.workType],
 				["price unitprice", qv.type == 3 ? _dcp : qv.unitPrice],
@@ -1006,7 +1006,7 @@ var QuotationDetail = (function(){
 				}
 			}
 
-			$item.attr('data-totalprice', qv.type < 2 ? utils.changeThrDecimal(utils.accMul(qv.num ,  qv.unitPrice)) : "--");
+			$item.attr('data-totalprice', qv.type < 2 ? utils.changeThrDecimal(utils.accMul(qv.num ,  qv.unitPrice)) : "-");
 
 			//计算乳胶漆提点
 			if(qv.type < 2){
@@ -1045,7 +1045,7 @@ var QuotationDetail = (function(){
 				"data-itemPrice": v.unitPrice,
 				"data-itemUnite": v.measurementUnit,
 				"data-des": v.quotationItemDes,
-				"data-workType": v.workType ? v.workType : "---",
+				"data-workType": v.workType ? v.workType : "-",
 				"data-discount": v.discount
 
 			}).val(v.qiId);

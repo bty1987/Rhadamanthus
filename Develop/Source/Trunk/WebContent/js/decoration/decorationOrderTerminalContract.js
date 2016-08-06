@@ -42,7 +42,6 @@ jQuery(function($) {
 	initDecorationOrderList();
 	
 });
-//---------------------------------------------------------------------------init begin ---------------------------------------------------------
 
 function initDecorationOrderList(){
 	order.listGrid.jqGrid({		

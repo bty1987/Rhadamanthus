@@ -15,6 +15,10 @@ jQuery(function($) {
 	
 	var p = window.location.search.substr(1);
 	
+	if(p.indexOf('time=') != -1){
+		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+	}
+	
 	var url = api.quotation.queryQuotationForDefaultByOrderId;
 	url.url = url.url + "?" + p;
 	

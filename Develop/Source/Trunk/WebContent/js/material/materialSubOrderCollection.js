@@ -79,7 +79,7 @@ jQuery(function($) {
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
 					var $liLine = $('<li></li>').addClass('item-orange clearfix');
-					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').html(materialSubOrderCollection.materialPaymentTypeData[v.paymentType]));
+					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(materialSubOrderCollection.materialPaymentTypeData[v.paymentType]));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 					var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -88,7 +88,7 @@ jQuery(function($) {
 						["品类:", v.materialType, "grey"],
 						["品牌:", v.materialBrand, "grey"],
 						["应收额:", v.referMoney, "grey"],
-						["实收额:", v.realMoney, "grey"],
+						["实收额:", v.referMoney, "grey"],
 						["收款时间:", v.collectTime, "grey"],
 						["状态:", v.paymentStatus == 0 ? '待收款' : v.paymentStatus == 1 ? '待确认' : '已确认', "red"]
 					];
