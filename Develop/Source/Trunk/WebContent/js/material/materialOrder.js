@@ -23,7 +23,7 @@ jQuery(function($) {
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
 					var $liLine = $('<li></li>').addClass('item-orange clearfix');
-					var $h3 = $('<h3></h3>').addClass('oid').append($('<b></b>').html(v.orderId));
+					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');

@@ -43,7 +43,6 @@ var AddReduceDetail = (function(){
 				}),
 			};
 
-			//----------初始化弹出层数据
 			//系统定义弹出层
 			var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationWorkTypeId'];
 			var addReduceDetailSeacher = new Searcher();

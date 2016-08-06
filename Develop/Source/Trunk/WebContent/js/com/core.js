@@ -27,6 +27,14 @@ com = {
 			optAsync = false;
 		}
 		
+		var $ct = new Date();
+		if(!params.loginTime || (params.loginTime + config.timeout * 60 * 1000) < $ct.getTime()){
+			isF5 = true;
+			window.location.href = '/';
+		}else{
+			params.loginTime = $ct.getTime();
+		}
+		
 		var server = "";
 		if(url.server){
 			server = config.communion;

@@ -12,9 +12,9 @@ var decorationUtils = {
 		var quotationId = decorationOrderDetail.quotation.qid;
 		
 		if(quotationId){
-			$("#printProjectBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1");
-			$("#printFinanceBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=2");
-			$("#printCustomerBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=3");
+			$("#printProjectBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1&time=" + params.loginTime);
+			$("#printFinanceBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=2&time=" + params.loginTime);
+			$("#printCustomerBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=3&time=" + params.loginTime);
 			
 			com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function(res){
 				decorationOrderDetail.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
@@ -157,7 +157,7 @@ var decorationUtils = {
 					["line", linenum + 1],
 					["num", qv.num],
 					["name", qv.itemName],
-					["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "---", ["data-type", qv.type]],
+					["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
 					["unit", qv.measurementUnit],
 					["worktype", qv.workType],
 					["price unitprice", qv.unitPrice],

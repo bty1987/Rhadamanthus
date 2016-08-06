@@ -1,7 +1,8 @@
 var config = {
-	versionCode: "1.4.006",
+	versionCode: "1.5.001",
 	uploadTimeout: 30,
 	quotationLimitDiscount: 8.8,
+	timeout: 30,
 	
 	name: '方林信息平台',
 	ename: 'Fanglin Information Platform',

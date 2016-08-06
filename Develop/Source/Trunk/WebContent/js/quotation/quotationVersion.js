@@ -33,8 +33,8 @@ $(function(){
 
             var propertyArr = [
                 ["编号:", v.versionId, "grey"],
-                ["信息:", v.versionDes ? v.versionDes : '--', "grey"],
-                ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '--', "red"],
+                ["信息:", v.versionDes ? v.versionDes : '-', "grey"],
+                ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '-', "red"],
             ];
 
 

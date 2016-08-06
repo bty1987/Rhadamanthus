@@ -15,9 +15,6 @@ var decorationOrderDetail = {
 
 function printHeader(headStr){
 	
-	params.server = window.server;
-	params.authentication = window.authentication;
-	
 	var quotation = decorationOrderDetail.quotation;
 	
 	var headHtml = "";
@@ -384,9 +381,21 @@ function printCustomerTable(){
 }
 
 jQuery(function($) {
-	var p = window.location.search.substr(1);
 	
-	var type = p.split('type=');
+	params.server = window.server;
+	params.authentication = window.authentication;
+	
+	var type, p = window.location.search.substr(1);
+	
+	if(p.indexOf('time=') != -1){
+		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+	}
+	
+	$.each(p.split('&'), function(i, v){
+		if(v.indexOf('type=') != -1){
+			type = v.substring(v.indexOf('type=')).split('=')[1];
+		}
+	});
 	
 	var url = api.quotation.queryQuotationById;
 	
@@ -404,7 +413,7 @@ jQuery(function($) {
 		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
 	
-	generatePrintPage(type[1]);
+	generatePrintPage(type);
 });
 
 function generatePrintPage(type){

@@ -959,7 +959,7 @@ var Condition = function(){
         },
         // 放线
         actualDate : {
-            label:"量尺时间",
+            label:"放线时间",
             type:"datePicker",
             submitConfig : {
                 name : "actualDate",
