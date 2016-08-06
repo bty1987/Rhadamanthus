@@ -13,6 +13,10 @@ jQuery(function($) {
 	var p = window.location.search.substr(1);
 	var a = p.split("&");
 	
+	if(p.indexOf('time=') != -1){
+		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+	}
+	
 	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
 	
 	queryDecorationOrderForCommonByOrderId.url = queryDecorationOrderForCommonByOrderId.url + "?" + p;

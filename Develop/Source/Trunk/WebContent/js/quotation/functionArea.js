@@ -179,7 +179,6 @@ $(function(){
         };
 
     $.extend(com.validator, functionArea.validator);
-    //--------------------------functionArea-----------------------
     //功能区添加按钮
     $('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
         functionArea.editFlg = !1;

@@ -404,7 +404,7 @@ jQuery(function($) {
 	}
 	
 	function receiptMaterialSubOrder(msoId){
-		var url = api.index.materialSubOrderReceipt.url + "?type=1&materialSubOrder.msoId=" + msoId;
+		var url = api.index.materialSubOrderReceipt.url + "?type=1&materialSubOrder.msoId=" + msoId + "&time=" + params.loginTime;
 		window.open(url);
 	}
 	

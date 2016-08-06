@@ -17,6 +17,10 @@ jQuery(function($) {
 	
 	var args = window.location.search.substr(1);
 	
+	if(args.indexOf('time=') != -1){
+		params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
+	}
+	
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
 	queryMaterialPaymentForNotInitByMrId.url = queryMaterialPaymentForNotInitByMrId.url + "?" + args;
 	

@@ -158,7 +158,6 @@ jQuery(function(a) {
         toggle: !1
     });
 
-    //--------------------------
     //编辑用户，获取用户信息
     if(params.tempUserId){
         user.editFlg = !0;

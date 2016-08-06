@@ -126,7 +126,7 @@ $(function(){
 		
 		com.post(api.decoration.pageDecorationOrderForSalesman, $.extend({}, params.decorationOrderSalesmanPostData, {"paging.noPage": 1}), function(res){
 			
-			$.Exporter({
+			$.exceler({
 				column : [
 					["订单编号","orderId"],
 					['楼盘地址',['village.villageName', 'houseNumber']],

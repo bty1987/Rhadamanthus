@@ -181,14 +181,12 @@ jQuery(function($) {
 				}
 				
 				$this.removeAttr('checked');
-				
 			});
 
 			materialSubOrderDetail.refundBtn.removeClass('hide');
 			materialSubOrderDetail.refundCommitBtn.addClass('hide');
 			$(this).addClass('hide');
 		}),
-
 
 		modal: null,
 		materialSubOrderDetailItems: {},
@@ -297,25 +295,46 @@ jQuery(function($) {
 		}else{
 
 			if(fullStatus == 0){
+
+				if(v.packageName && v.isLeaf){
+					return;
+				}
 				$btnEdit = $('<button>编辑</button>').addClass('btn btn-minier btn-yellow')
 					.prop('name','edit')
 					.click(function(){
-						editMaterialSubOrderItem($line);
+						if(v.packageName){
+							editAll($line, v);
+						}else{
+							editMaterialSubOrderItem($line);
+						}
 					});
 				$btnDel = $('<button>删除</button>').addClass('btn btn-minier btn-danger')
 					.prop('name','del')
 					.click(function(){
-						deleteMaterialSubOrderItem($line, v);
+						if(v.packageName){
+							deleteAll($line, v);
+						}else{
+							deleteMaterialSubOrderItem($line, v);
+						}
 					});
 				$btnCommit = $('<div class="ui-pg-div ui-inline-save hide"><span class="ui-icon ui-icon-disk"></span></div>')
 					.prop('name','commit')
 					.click(function(){
-						saveRowData($line, v);
+						if(v.packageName){
+							saveAll($line, v);
+						}else{
+							saveRowData($line, v);
+						}
 					});
 				$btnCancel = $('<div class="ui-pg-div ui-inline-cancel hide"><span class="ui-icon ui-icon-cancel"></span></div>')
 					.prop('name','cancel')
 					.click(function(){
-						cancleRowData($line);
+						if(v.packageName){
+							cancleAll($line, v);
+						}else{
+							cancleRowData($line);
+						}
+
 					});
 				$option.append($btnEdit).append($btnDel).append($btnCommit).append($btnCancel);
 
@@ -332,18 +351,62 @@ jQuery(function($) {
 		}
 	}
 
+	function editAll($line, v){
+		var _index = $line.index();
+		var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+		arr.each(function(i){
+			var $numCell = $(this).find('.num');
+			var $numv = $(this).find('.num .numv');
+			$numv.hide();
+			var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
+			$editInput.find('input').val($numv.text()).focus().select();
+		});
+		$line.find('.option > button').addClass('hide');
+		$line.find('.option > div').removeClass('hide');
+
+		var $total = $line.find('.total');
+		var $editInput = $('<input/>').attr('type', 'text').addClass('v_required v_float').val($total.text()).focus().select();
+		$total.attr('total',$total.text()).html($editInput);
+	}
+
 	function editMaterialSubOrderItem($line){ // 编辑
 		var $numCell = $line.find('.num');
 		var $numv = $line.find('.num .numv');
 		
 		$numv.hide();
 		
-		var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input></input>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
+		var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
 		$editInput.find('input').val($numv.text()).focus().select();
 		$line.find('.option > button').addClass('hide');
 		$line.find('.option > div').removeClass('hide');
 	}
-	
+
+	function deleteAll($line, v){
+		bootbox.confirm("确认删除吗?", function(res){
+			if(res){
+				var options = {};
+				var materialSubOrderItem = v;
+
+				var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+
+				options["msoId"] = materialSubOrderItem.msoId;
+
+				arr.each(function(i){
+					var $this = $(this);
+					options["msoiIds["+i+"]"] = $this.attr('msoiId');
+				});
+
+				com.post(api.material.deleteMaterialSubOrderItem, options, function(result){
+					com.showAlert(com.info, "数据删除成功!");
+					initList();
+
+				}, function(result){
+					com.showAlert(com.error, "数据删除失败!");
+				});
+			}
+		});
+	}
+
 	function deleteMaterialSubOrderItem($line, v){ // 删除
 
 		bootbox.confirm("确认删除吗?", function(res){
@@ -377,7 +440,81 @@ jQuery(function($) {
 			$this.find('.index').text(i + 1)
 		});
 	}
-	
+
+	function saveAll($line, v){
+		var _index = $line.index();
+		var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+		var materialBrand = materialSubOrderItemPostData["materialSubOrder.materialBrand"];
+		var options = {};
+
+		var allempty = true;
+		var cansubmit = true;
+
+		var _total = $line.find('.total input').val();
+
+		arr.each(function(i){
+			var $this = $(this);
+			var $numOld = $this.find('.numv'),
+				$numNew = $this.find('.fl-ma-num-input input'),
+				_numOld, _numNew, _numNewRex;
+
+			_numOld = parseFloat($numOld.text());
+			_numNew = parseFloat($numNew.val());
+			_numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+			if(!_numNewRex.test(_numNew)){
+				$numNew.focus().select();
+				$numNew.addClass('tooltip-info').attr({
+					"data-rel" : "popover",
+					"data-placement" : "top",
+					"data-original-title" : "",
+					"title" : "",
+					"data-content" : "请输入大于零的数字!"
+				}).popover('show');
+				cansubmit = false;
+				return;
+			}else{
+				$numNew.popover('destroy');
+			}
+
+			if(_numNew){
+				allempty = false;
+			}
+
+			//_price = parseFloat($this.find('.price').text());
+			//_total = utils.changeTwoDecimal(utils.accMul(_price, _numNew));
+
+			options["materialSubOrderItems["+i+"].msoiId"] = $this.attr('msoiId');
+			options["materialSubOrderItems["+i+"].materialModelNo"] = $this.attr('materialModelNo');
+			options["materialSubOrderItems["+i+"].materialModelName"] = $this.find('.name').text();
+			options["materialSubOrderItems["+i+"].materialTypeName"] = $this.find('.type').text();
+			options["materialSubOrderItems["+i+"].materialBrandName"] = $this.find('.brand').text();
+			options["materialSubOrderItems["+i+"].measurementUnitName"] = $this.find('.unit').text();
+
+			options["materialSubOrderItems["+i+"].packageName"] = $this.attr('packageName');
+			options["materialSubOrderItems["+i+"].num"] = _numNew;
+			options["materialSubOrderItems["+i+"].total"] = _total;
+		});
+
+		options["materialSubOrder.msoId"] = materialSubOrderItemPostData["materialSubOrder.msoId"];
+
+		if(!cansubmit){
+			return false;
+		}
+
+		if((allempty && _total) || (_total == 0 && !allempty)){
+			com.showAlert(com.error, "总价金额为零或型号数量为零,请使用删除功能");
+			return false;
+		}
+
+		com.post(api.material.updateMaterialSubOrderItemForPackage, options, function(result){
+			com.showAlert(com.info, "数据提交成功!");
+
+			initList();
+		}, function(result){
+			com.showAlert(com.error, "数据提交失败!");
+		});
+	}
+
 	function saveRowData($line, v){ // 确认编辑
 
 		var materialBrand = materialSubOrderItemPostData["materialSubOrder.materialBrand"];
@@ -391,7 +528,7 @@ jQuery(function($) {
 		_numNew = parseFloat($numNew.val());
 
 		_numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-		if(!_numNewRex.test(_numNew)){
+		if(!_numNewRex.test(_numNew) || _numNew <= 0){
 			$numNew.focus().select();
 			$numNew.addClass('tooltip-info').attr({
 				"data-rel" : "popover",
@@ -407,6 +544,7 @@ jQuery(function($) {
 
 		_price = parseFloat(materialSubOrderItem.price);
 		_total = utils.changeTwoDecimal(utils.accMul(_price, _numNew));
+		
 		var options = {};
 		options["materialSubOrderItem.msoiId"] = materialSubOrderItem.msoiId;
 		options["materialSubOrderItem.materialModelNo"] = materialSubOrderItem.materialModelNo;
@@ -431,7 +569,22 @@ jQuery(function($) {
 			com.showAlert(com.error, "数据提交失败!");
 		});
 	}
-	
+
+
+	function cancleAll($line, v){
+		var _index = $line.index();
+		var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+		arr.each(function(i){
+			$(this).find('.fl-ma-num-input').remove();
+			$(this).find('.numv').show();
+		});
+		$line.find('.option > div').addClass('hide');
+		$line.find('.option > button').removeClass('hide');
+
+		var $total = $line.find('.total');
+		$total.html($total.attr('total'));
+	}
+
 	function cancleRowData($line){ // 取消编辑
 		var $editInput = $line.find('.fl-ma-num-input').remove();
 		$line.find('.numv').show();

@@ -154,7 +154,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "orderAddr", "salesman"], "condList", api.payment.pageMaterialOutsidePaymentForInit, function(data){
+	searcher.init(["orderId", "orderAddr"], "condList", api.payment.pageMaterialOutsidePaymentForInit, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialOutsidePaymentPostData");
 	
@@ -254,7 +254,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "orderAddr", "salesman"], "hcondList", api.payment.pageMaterialOutsidePaymentForNotInit, function(data){
+	hsearcher.init(["orderId", "orderAddr"], "hcondList", api.payment.pageMaterialOutsidePaymentForNotInit, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialOutsidePaymentPostData");
 	

@@ -602,7 +602,7 @@ jQuery(function($) {
 	}
 	
 	function printPayment(drId, orderId){
-		var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + drId;
+		var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + drId + "&time=" + params.loginTime;
 		window.open(url);    
     };
     
@@ -640,7 +640,6 @@ jQuery(function($) {
     	
     }
 
-    //------------------------------------增减项详细------------------------------
     function addReduceDetail(decorationPaymentId, paymentType, orderId){
     	
     	decorationPayment.orderPaymentId = decorationPaymentId;
@@ -868,7 +867,7 @@ jQuery(function($) {
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
-    				var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args;
+    				var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + params.loginTime;
     				window.open(url);
     			}
     		});
