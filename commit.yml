@@ -1,9 +1,74 @@
 !revision
 branches: {
   }
-fileChange: {
-  }
-gitCommitId: !uuid 'ec9f7b1cc2a1e74f8cbc1138957b71859872f83e'
+fileChange:
+  /Develop:
+    newFile: !uuid '48286742b5b14f58c074acb3e231ef1f6f3ce971'
+    oldFile: !uuid 'a4f771a08c7175e0630143ab082cb814f2d6ca1d'
+  /Develop/Source:
+    newFile: !uuid 'cf108d8d3b02840a0d998fe0258fdd60ce23e7f9'
+    oldFile: !uuid '42cc5caa849e2ba5ff1dbc2e4b9aedac6f33a489'
+  /Develop/Source/Trunk:
+    newFile: !uuid 'fb43339c7a4198c3a8aeaae82561ff963c2cbe0d'
+    oldFile: !uuid '927f68bf7b044f71b9c47da136f9bce1c1233b60'
+  /Develop/Source/Trunk/WebContent:
+    newFile: !uuid 'ab979901747b66e6aaa9a538892bcac20252d182'
+    oldFile: !uuid 'a738765b297b847718c4f359c641bc7a988a2d00'
+  /Develop/Source/Trunk/WebContent/assets:
+    newFile: !uuid 'a245692a9be1b470967144041fd7ab4a1600dddf'
+    oldFile: !uuid '78b6a82be8ef5632c97b9df4fc6f6e445d174f65'
+  /Develop/Source/Trunk/WebContent/assets/js:
+    newFile: !uuid '5727e9573f75b0c1f997f270a2c8615474502cc6'
+    oldFile: !uuid 'fff474dfb00503c6405d80cde4cec1eac60890bd'
+  /Develop/Source/Trunk/WebContent/assets/js/html2canvas.js:
+    newFile: !uuid '411dce5cdb55b978746c0a9d7cf7f6b15cb65040'
+    oldFile: !uuid 'b8e45f92f65775023e4d1d99df84802dcf0185a7'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid 'c657b0ccd24f250085f8a5890687e36fe41a75be'
+    oldFile: !uuid '5b05cd0a1008dc19301d6644e37a235fdb0a96a9'
+  /Develop/Source/Trunk/WebContent/js/material:
+    newFile: !uuid '1c95ff9ee5c4eaf80ec3bf44fe3b9a187779a1b7'
+    oldFile: !uuid '5bc9332bd85bb2b90b577301232337cf81847fa9'
+  /Develop/Source/Trunk/WebContent/js/material/materialSubOrderCollection.js:
+    newFile: !uuid '468de8223b238fc735c6b7938b2fda3bcf13ee18'
+    oldFile: !uuid '05c3422164610e6e8e43c633170b046608b147a4'
+  /Develop/Source/Trunk/WebContent/js/payment:
+    newFile: !uuid '1e76cf692496859eda1ae2b8041942666d98814a'
+    oldFile: !uuid '69c097adce10f5b6fb295ca28f71d3fad626779c'
+  /Develop/Source/Trunk/WebContent/js/payment/materialPaymentCheck.js:
+    newFile: !uuid '8acb35a0fcc1fbb4f1e42f20d0bd5fa69cdac791'
+    oldFile: !uuid '8b935d26d09daf3ecdd12aea24733ed3a600b766'
+  /Develop/Source/Trunk/WebContent/js/quotation:
+    newFile: !uuid '0aee9d5a13aa3b2c9eeeca607967f66076066607'
+    oldFile: !uuid 'da4afc6f8f765132128f04d5c509f59b6cd5cb1e'
+  /Develop/Source/Trunk/WebContent/js/quotation/quotationIndex.js:
+    newFile: !uuid 'da5d53a0a3a03634b0f3bac00a2fda459547c2eb'
+    oldFile: !uuid 'd49f831fdf1681726030342b82d1e9417351c6b5'
+  /Develop/Source/Trunk/src:
+    newFile: !uuid '9cf29fcd35ff67a223d9a270e59e2ffdffbd9eb0'
+    oldFile: !uuid '214a75b76a8f919c4518e4b3dae5053995eca621'
+  /Develop/Source/Trunk/src/com:
+    newFile: !uuid '8f373ae24eb05c8426d94456c43b3336e5e5aa77'
+    oldFile: !uuid '613ce057a96cb7fa2e2cdb29521b8c9b8d6ff267'
+  /Develop/Source/Trunk/src/com/fanglin:
+    newFile: !uuid 'a962cb51271087954a22ba3ee43d5e3d6116c202'
+    oldFile: !uuid 'e71128a1d146a53b911854b95d58fc7d87b77cb5'
+  /Develop/Source/Trunk/src/com/fanglin/data:
+    newFile: !uuid '24b8ceeb7aea761c2c5afa13692f13fe6bd0a0d9'
+    oldFile: !uuid 'dd25c430c07531e5412f27e1b4c986209465ac05'
+  /Develop/Source/Trunk/src/com/fanglin/data/common:
+    newFile: !uuid 'dcb7d1a4be80a6f19e41b861e36484a569a9502c'
+    oldFile: !uuid '12f0406ef4e1af2aed6290105286c40a9084c965'
+  /Develop/Source/Trunk/src/com/fanglin/data/common/vo:
+    newFile: !uuid 'c01b5ef0522bcac0867f2f0d29482cd6044b6e73'
+    oldFile: !uuid '06b9596388ee39ee087e1177b61ba89d501f0098'
+  /Develop/Source/Trunk/src/com/fanglin/data/common/vo/MeasurementUnitVO.java:
+    newFile: !uuid '699a6daa7cf9a1af8b4ea5b25f3a43a53663bbd1'
+    oldFile: !uuid '4fb4bdef7942467c771e23c38cd59dbbdb36d82f'
+  /Develop/Source/Trunk/src/com/fanglin/data/common/vo/WorkTypeVO.java:
+    newFile: !uuid 'cc801dfe171d77549ba44d3c46836987a1267438'
+    oldFile: !uuid 'b7d4117b13603477155345260e5d89b6d583ddfb'
+gitCommitId: !uuid '85b96935495997acf035ec26af767389acc2b23c'
 renames: {
   }
-revisionId: 53
+revisionId: 54
