@@ -39,11 +39,14 @@ jQuery(function($) {
 		materialSubOrderCollection.accounts = [];
 		materialSubOrderCollection.couponType = [];
 		
+		materialSubOrderCollection.bankInfo = {};
+		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialSubOrderCollection.cash.push(v);
 			}else if(v.type == 2){
 				materialSubOrderCollection.bank.push(v);
+				materialSubOrderCollection.bankInfo[v.key] = v.name;
 			}else if(v.type == 3){
 				materialSubOrderCollection.checkBank.push(v);
 			}else if(v.type == 4){
@@ -108,7 +111,7 @@ jQuery(function($) {
 						  var _s = bankInfo.split('#');
 						  for(var i=1;i<_s.length-1;i++){
 						    var _i = _s[i].split('|');
-						    info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+						    info += materialSubOrderCollection.bankInfo[_i[0]] + " " + _i[1] + ", ";
 						  }
 						  
 						  return info
