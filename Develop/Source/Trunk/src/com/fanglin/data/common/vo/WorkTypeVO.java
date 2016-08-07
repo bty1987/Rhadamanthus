@@ -13,20 +13,14 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class WorkTypeVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4274531910071238320L;
 	
-	@SerializedName("工种编号")
 	private int id;
-	@SerializedName("工种")
+	
 	private String name;
-	@SerializedName("描述")
+	
 	protected String workTypeDes;
 
 	public int getId(){

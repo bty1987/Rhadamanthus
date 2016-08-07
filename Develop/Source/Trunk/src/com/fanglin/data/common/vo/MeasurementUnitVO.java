@@ -13,22 +13,14 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class MeasurementUnitVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933157350352713324L;
 	
-	@SerializedName("计量单位编号")
 	private int id;
 	
-	@SerializedName("计量单位")
 	private String name;
 	
-	@SerializedName("描述")
 	protected String unitDes;
 
 	public int getId(){

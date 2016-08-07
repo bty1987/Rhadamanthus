@@ -57,7 +57,6 @@ _html2canvas.Util.asFloat = function(v) {
   };
 })();
 
-
 _html2canvas.Util.parseBackgroundImage = function (value) {
     var whitespace = ' \r\n\t',
         method, definition, prefix, prefix_i, block, results = [],
@@ -1109,7 +1108,18 @@ _html2canvas.Parse = function (images, options, cb) {
 
       // Trim off the :after and :before (or ::after and ::before)
       for (i = 0, j = classes.length; i < j; i++) {
-        classes[i] = classes[i].match(/(^[^:]*)/)[1];
+    	  
+    	  var $ = classes[i];
+    	  var $class = classes[i].match(/(^[^:]*)/)[1];
+    	  
+    	  if($class == '*, '){
+    		  console.log($);
+    		  console.log($class);
+    	  }
+    	  
+    	  if($class.indexOf(',') != -1) continue;
+    	  
+          classes[i] = $class;
       }
     }
 
