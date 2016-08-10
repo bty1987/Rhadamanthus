@@ -161,7 +161,6 @@ $(function(){
 					['设计师', 'designer'],
 					['业务部', 'businessDepartment'],
 					['业务员', 'salesman'],
-					['监理','supervisor'],
 					['面积', 'houseArea'],
 					['合同报价', 'orderTotalPrice'],
 					['量房时间', 'createTime'],

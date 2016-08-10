@@ -117,6 +117,7 @@ public class LoginAction extends BaseListAction {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 		}

@@ -882,6 +882,15 @@ var Condition = function(){
                 validate:null
             }
         },
+        advancePaymentcollectTime: {
+            label:"收款时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "collectTimeDateRange",
+                op : "between",
+                validate:null
+            }
+        },
 		// 主材
         msoNo : {
             label:"主材号",

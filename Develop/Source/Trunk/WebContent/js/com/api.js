@@ -228,7 +228,7 @@ var api = {
 		pageReceiptType: {url: "pageReceiptType.do"},
 		queryReceiptType: {url: "queryReceiptType.do"},
 		queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
-		addReceiptType: {url: "addReceiptType.do"},
+		addReceiptType: {url: "addReceiptType.do", server: "communionServer"},
 		
 		changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
 		changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},

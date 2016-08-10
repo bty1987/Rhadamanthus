@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import com.fanglin.finance.po.SubjectPO;
 
 @Entity
-@Table(name = "receipttype", catalog = "platform")
+@Table(name = "receipttype", catalog = "communion")
 public class ReceiptTypePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6777289778875951609L;

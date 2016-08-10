@@ -34,7 +34,7 @@ $(function(){
             var $btnAgreement = $('<a></a>').addClass('btn btn-minier').html('合同');
 
             var propertyArr = [
-                ["楼盘地址:", v.village.villageName, "grey"],
+                ["楼盘地址:", v.village.villageName + ' ' + v.houseNumber, "grey"],
                 ["客户名:", v.customer.customerName, "grey"],
                 ["余额:", v.customer.balance, "blue"],
                 ["设计部:", v.designDepartment, "grey"],

@@ -73,11 +73,15 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			if(addReduceItemType == AddReduceItemPO.TYPE_COMMON_QUOTATION_INT){
 				QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQuoteItemId());
 				
-				addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				if(quotationItemPO != null){
+					addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				}
 			}else if(addReduceItemType == AddReduceItemPO.TYPE_SYSTEM_QUOTATION_INT){
 				SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(addReduceItemPO.getQuoteItemId());
 				
-				addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
+				if(systemDefineItemPO != null){
+					addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
+				}
 			}else if(addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT){
 				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
 				
@@ -121,12 +125,15 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				
 				if(addReduceItemType == AddReduceItemPO.TYPE_COMMON_QUOTATION_INT){
 					QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQuoteItemId());
-					
-					addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
+					if(quotationItemPO != null){
+						addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
+					}
 				}else if(addReduceItemType == AddReduceItemPO.TYPE_SYSTEM_QUOTATION_INT){
 					SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(addReduceItemPO.getQuoteItemId());
 					
-					addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
+					if(systemDefineItemPO != null){
+						addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
+					}
 				}else if(addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT){
 					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
 					
@@ -199,9 +206,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
 				
-				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, addReduceItemNum));
-				
-				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+//				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, addReduceItemNum));
+//				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 			}
 		}else{
 			addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
@@ -227,9 +233,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
 				
-				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, _diff));
-				
-				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+//				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, _diff));
+//				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 			}
 			
 			addReduceItemPO.setNum(addReduceItemVO.getNum());
@@ -272,12 +277,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				throw new FLException(200013, "报价项不存在");
 			}
 			
-			float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
-			float addReduceItemNum = addReduceItemPO.getNum();
+//			float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+//			float addReduceItemNum = addReduceItemPO.getNum();
 			
-			quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
-			
-			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+//			quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
+//			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		}
 		
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);

@@ -18,4 +18,16 @@ var config = {
     media: 'http://192.168.5.21/Demeter/',
     dmedia: 'http://static.dingtalk.com/media/',
     communion: 'http://192.168.5.23/',
+    
 };
+
+$(function(){
+	
+	if(!location.hostname.startsWith('192.168')){
+		config.server = 'http://61.161.185.22/';
+		config.media = 'http://61.161.185.22/';
+		config.dmedia = 'http://static.dingtalk.com/media/';
+		config.communion = 'http://61.161.185.22:30001/';
+	}
+	
+});

@@ -10,12 +10,14 @@ jQuery(function($) {
 		paymentCheck.bank = [];
 		paymentCheck.checkBank = [];
 		paymentCheck.accounts = [];
+		paymentCheck.bankInfo = {};
 		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				paymentCheck.cash.push(v);
 			}else if(v.type == 2){
 				paymentCheck.bank.push(v);
+				paymentCheck.bankInfo[v.key] = v.name;
 			}else if(v.type == 3){
 				paymentCheck.checkBank.push(v);
 			}else if(v.type == 4){
