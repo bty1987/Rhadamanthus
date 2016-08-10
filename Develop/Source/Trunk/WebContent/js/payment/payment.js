@@ -284,7 +284,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "customerId", "customerPhone", "collectTimeDateRange"], "hcondList", api.payment.pagePaymentForHistory, function(data){
+	hsearcher.init(["orderId", "customerId", "customerPhone", "advancePaymentcollectTime"], "hcondList", api.payment.pagePaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hpaymentPostData", null, false, null, null, "hresultList");
 	

@@ -59,7 +59,7 @@ jQuery(function($) {
 	
 	initWizard();
 	
-	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, function(decorationOrder){
+	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 		
 		var statuses = ["咨询", "量房", "已报价", "定金"];
 		

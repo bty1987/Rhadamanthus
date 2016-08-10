@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.ReceiptTypeService;
 import com.fanglin.data.common.vo.ReceiptTypeVO;
 
@@ -63,14 +62,6 @@ public class ReceiptTypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="addReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addReceiptType() throws FLException{
-		
-		receiptTypeService.addReceiptType(receiptType);
-		
-		return SUCCESS;
-	}
-
 	public ReceiptTypeVO getReceiptType() {
 		return receiptType;
 	}

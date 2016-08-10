@@ -34,12 +34,6 @@ public interface Constant {
 	// cookie 验证码定义
 	String COOKIE_VERIFYCODE = "verifyCode";
 	
-	// cookie 地址
-	String COOKIE_HOSTSERVER_STR = "hostServer";
-	String COOKIE_MEDIASERVER_STR = "mediaServer";
-	String COOKIE_COMMUNIONSERVER_STR = "communionServer";
-	String COOKIE_DMEDIASERVER_STR = "dmediaServer";
-	
 	// 系统版本
 	String COOKIE_VERSIONCODE_STR = "versionCode";
 	

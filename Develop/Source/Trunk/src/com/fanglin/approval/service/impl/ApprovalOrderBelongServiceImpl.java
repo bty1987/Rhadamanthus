@@ -137,9 +137,6 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			rateCount = Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate());
 			
-			System.out.println(approvalOrderBelongItemVO.getBelongRate());
-			System.out.println(rateCount);
-			
 			if(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
 				defaultCount++;
 			}

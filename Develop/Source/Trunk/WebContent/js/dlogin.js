@@ -1,4 +1,5 @@
 jQuery(function(a){
+	
     var count = 0;
     
     $(document).attr('title', config.name + ' ' + config.ename);
@@ -69,6 +70,7 @@ jQuery(function(a){
 
     $("#loginBtn").on('click', function(){
     	login();
+    	return false;
     });
     
     initPage();

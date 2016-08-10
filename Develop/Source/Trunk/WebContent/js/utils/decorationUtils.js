@@ -71,7 +71,7 @@ var decorationUtils = {
 				var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
 
 				if(!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]){
-					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = [];
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
 				}
 				
 				var _dcp = quotationFunctionAreaItem.type < 2 ?  utils.changeTwoDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
@@ -91,7 +91,14 @@ var decorationUtils = {
 				}
 				
 				quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
-				quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType].push(quotationFunctionAreaItem);
+				
+				if(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName]){
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num = utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num, quotationFunctionAreaItem.num);
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp = utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp, quotationFunctionAreaItem.dcp);
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt = utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt, quotationFunctionAreaItem.dcpt);
+				}else{
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName] = $.extend({}, quotationFunctionAreaItem);
+				}
 			}
 		}
 		
@@ -112,10 +119,16 @@ var decorationUtils = {
 			}
 			
 			if(!quotationFunctionAreaItemWs[addReduceItem.workType]){
-				quotationFunctionAreaItemWs[addReduceItem.workType] = [];
+				quotationFunctionAreaItemWs[addReduceItem.workType] = {};
 			}
 			
-			quotationFunctionAreaItemWs[addReduceItem.workType].push(addReduceItem);
+			if(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName]){
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num = utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num, addReduceItem.num);
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp = utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp, addReduceItem.dcp);
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt = utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt, addReduceItem.dcpt);
+			}else{
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName] = $.extend({}, addReduceItem);
+			}
 		}
 		
 		decorationOrderDetail.quotationFunctionAreaItemCs = quotationFunctionAreaItemCs;
@@ -147,14 +160,16 @@ var decorationUtils = {
 			$dbodyInner.append($list).appendTo($dbody);
 			$domain.append($dhead).append($dbody);
 			
-			$.each(v, function(linenum, qv){
+			var linenum = 1;
+			
+			$.each(v, function(i, qv){
 				
 				$dcpts = utils.accAdd($dcpts, qv.dcpt)
 				
 				var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
 				
 				var _lineSet = [
-					["line", linenum + 1],
+					["line", linenum++],
 					["num", qv.num],
 					["name", qv.itemName],
 					["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
@@ -594,9 +609,9 @@ var decorationUtils = {
 			
 			$("#schedule").val(decorationUtils.scheduleInfos[parseInt(res.constructionSchedule.schedule)]);
 		});
-	}, initBaseInfo: function(orderId, callback){
+	}, initBaseInfo: function(orderId, $api, callback){
 		
-		com.post(api.decoration.queryDecorationOrderForCommonByOrderId, {"decorationOrder.orderId": orderId}, function(res){
+		com.post($api, {"decorationOrder.orderId": orderId}, function(res){
 			callback(res.decorationOrder);
 		}, null, false);
 		

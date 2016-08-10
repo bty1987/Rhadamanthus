@@ -318,9 +318,6 @@ public abstract class GenericDaoImpl implements GenericDao {
 			
 			List<T> results = Collections.EMPTY_LIST;
 			
-			System.out.println(pagingFlag);
-			System.out.println(paging.getNoPage());
-			
 			if(pagingFlag && paging.getNoPage() == 0){
 				
 				boolean query = true;
