@@ -129,6 +129,29 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", null, options, true, "materialSubOrderItems");
 	
+	$('#import').click(function(){
+		
+		com.post(api.material.queryMaterialSubOrderItemByMsoId, options, function(res){
+			
+			$.exceler({
+				column : [
+					["名称","materialModelName"],
+					['型号','materialModelNo'],
+					['品类','materialTypeName'],
+					['品牌', 'materialBrandName'],
+					['单位', 'measurementUnitName'],
+					['折扣价', 'salePrice'],
+					['售价', 'price'],
+					['数量', 'num'],
+					["总价", 'total'],
+					["结算值", 'prePoint'],
+					["说明", 'des'],
+				],
+				list: res.materialSubOrderItems,
+			});
+		});
+    });
+	
 	$('#prebalance').click(function(){
 		
 		var options = {};

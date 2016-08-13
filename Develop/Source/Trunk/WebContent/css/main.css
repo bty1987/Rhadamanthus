@@ -165,7 +165,6 @@ ul.fl-inline-list li{
 }
 
 .fl-page-wrap{
-    max-width: 600px;
     margin: 30px auto 20px;
 }
 
@@ -175,7 +174,6 @@ ul.fl-inline-list li{
 }
 
 .fl-page-wrap .pager-info{
-    line-height: 32px;
 }
 
 .fl-page-input{
@@ -188,6 +186,13 @@ ul.fl-inline-list li{
     text-align: center;
     width: 24px;
     margin: 1px;
+}
+
+.fl-page-select{
+	font-size: 10px; 
+	height: 22px;
+	padding: 3px 8px;
+	margin: 3px;
 }
 
 .status-lbl:before {

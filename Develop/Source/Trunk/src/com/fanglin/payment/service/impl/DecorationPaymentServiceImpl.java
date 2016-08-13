@@ -944,6 +944,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			addReduceDao.update(addReducePO);
 		}
 		
+		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
+		
 		return 0;
 	}
 	

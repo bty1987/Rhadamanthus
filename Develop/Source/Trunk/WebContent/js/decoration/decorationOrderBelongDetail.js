@@ -56,7 +56,7 @@ jQuery(function($) {
 		addRow.belongRegionId= $("#belongRegionId").val();
 		addRow.defaultFlag = com.isOrNotType[$("#defaultFlag").prop("checked")];
 		
-		if(!/^(0\.\d{1,2})|1$/.test(addRow.belongRate)){
+		if(!/^(0\.\d{1,2})|1|0$/.test(addRow.belongRate)){
 			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
 			return false;
 		}

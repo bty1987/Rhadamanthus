@@ -30,6 +30,10 @@ public class WMCodeUtil {
 	public static final Logger logger = LoggerFactory.getLogger(WMCodeUtil.class);
 	
 	public static String createImage(String name, String time){
+		
+		if(name == null) {
+			name = "方林";
+		}
         
         int width = 500;
 		int height = 500;

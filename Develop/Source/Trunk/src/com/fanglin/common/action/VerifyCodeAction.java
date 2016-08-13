@@ -20,6 +20,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityImageHelper;
@@ -44,9 +45,13 @@ public class VerifyCodeAction extends BaseAction {
 	}
 
 	@Action(value = "verifyCode", results = { @Result(name = "success", type = "stream",  params={"ignoreHierarchy", "false", "contentType", "image/jpeg", "inputName", "imageStream", "bufferSize", "2048"}) })
-	public String verifyCode() throws Exception {
+	public String verifyCode() throws FLException{
 		
-		imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
+		try {
+			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
+		} catch (Exception e) {
+			new FLException(110000, "系统处理问题");
+		}
 		
 		return SUCCESS;
 	}

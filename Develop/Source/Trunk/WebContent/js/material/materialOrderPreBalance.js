@@ -123,7 +123,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialOrderPreBalancePostData", null, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css('margin', '5px 5px 0 0');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
     	

@@ -52,7 +52,7 @@ jQuery(function($) {
 				materialPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
 			}
 		});
-	});
+	}, null, false);
 	
 	com.post(api.ds.materialInfo, {}, function(res){
 		for(var i=0;i<res.materialPaymentType.length;i++){
@@ -60,7 +60,7 @@ jQuery(function($) {
 			materialPaymentCheck.materialPaymentTypeData[paymentType.key] = paymentType.value;
 			materialPaymentCheck.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
-	});
+	}, null, false);
 	
 	com.post(api.ds.couponType, {}, function(res){
 		materialPaymentCheck.couponType = res.couponTypes;
@@ -175,7 +175,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css('margin', '5px 5px 0 0');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
     	

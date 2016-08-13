@@ -41,6 +41,7 @@ jQuery(function($) {
 		
 		materialSubOrderCollection.bankInfo = {};
 		
+		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialSubOrderCollection.cash.push(v);
@@ -63,7 +64,7 @@ jQuery(function($) {
 		$("#refundBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
 		$("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'key', 'value');
 		$("#couponType").bindData(materialSubOrderCollection.couponType, 'key', 'value');
-	});
+	}, null, false);
 	
 	com.post(api.ds.materialInfo, {}, function(res){
 		for(var i=0;i<res.materialPaymentType.length;i++){
@@ -71,7 +72,7 @@ jQuery(function($) {
 			materialSubOrderCollection.materialPaymentTypeData[paymentType.key] = paymentType.value;
 			materialSubOrderCollection.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
-	});
+	}, null, false);
 	
 	var displayFunc  = (function(){
 

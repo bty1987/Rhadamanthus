@@ -26,6 +26,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -213,6 +214,12 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
+		QuotationVersionPO quotationVersionPO = decorationOrderPO.getVersionPO();
+		
+		if(quotationVersionPO == null){
+			throw new FLException(200022, "报价版本不存在");
+		}
+		
 		quotationPO.setDecorationOrder(decorationOrderPO);
 		quotationPO.setCreateUser(new UserPO(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -236,8 +243,8 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationFunctionAreaDao.save(autogeneration);
 		
-		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", 0.015f, 1f, (short) 2, autogeneration, "");
-		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", 0.135f, 1f, (short) 3, autogeneration, "");
+		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", quotationVersionPO.getTrafficRate(), 1f, (short) 2, autogeneration, "");
+		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", quotationVersionPO.getManageRate(), 1f, (short) 3, autogeneration, "");
 		
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);

@@ -142,7 +142,7 @@ jQuery(function($) {
 		
 		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'key');
 		$("#refundCouponType").trigger("chosen:updated");
-	});
+	}, null, false);
 	
 	$("#bankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -443,7 +443,7 @@ jQuery(function($) {
 		
 		$("#refundCouponType").chosen("destroy");
 		$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
-		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'value');
+		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'name');
 		$("#refundCouponType").trigger("chosen:updated");
 	}
 	
@@ -838,6 +838,11 @@ jQuery(function($) {
     		}
     	}
     	
+    	if($.isEmptyObject(args)){
+			com.showAlert(com.warning, "无收款方式信息");
+			return false;
+		}
+    	
     	var _info = decorationPaymentPostData.paymentInfo;
     	
 		if(decorationPayment.historyFlag){
@@ -914,6 +919,7 @@ jQuery(function($) {
     	
     	var _info = decorationPaymentPostData.paymentInfo;
     	
+    	var orderId = _info.orderId;
     	var referMoney = _info.referMoney;
     	
     	options["decorationPayment.autoId"] = _info.autoId;
@@ -954,7 +960,15 @@ jQuery(function($) {
     	
     	options["decorationPayment.des"] = $("#refundContent").val();
     	
-    	com.post(url, options, function(result){
+    	com.post(url, options, function(res){
+    		
+    		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
+    			if(result){
+    				var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + params.loginTime;
+    				window.open(url);
+    			}
+    		});
+    		
     		searcher.doSearch();
     	});
     	

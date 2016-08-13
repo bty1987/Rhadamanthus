@@ -950,7 +950,7 @@ function initWizardSept(operate, schedule){
 					args[operate.workerName+".csId"] = workerAllocationDetailPostData[operate.elementName+".csId"];
 					args[operate.workerName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
 					args[operate.workerName+".orderId"] = workerAllocationPostData["constructionSchedule.orderId"];
-					args[operate.workerName+".workerId"] = $('#' + operate.name).val();
+					args[operate.workerName+".workerId"] = $('#' + operate.name + "WorkerName").val();
 					args[operate.workerName+".workerName"] = $("#" + operate.name + "WorkerName_chosen span")[0].textContent.split("-")[0];
 					
 					com.post(operate.addWorkerUrl, args, function(res){

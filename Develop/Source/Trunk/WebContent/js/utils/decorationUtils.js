@@ -86,8 +86,11 @@ var decorationUtils = {
 					quotationFunctionAreaItem.num = quotation.trafficPrice;
 					quotationFunctionAreaItem.dcpt = quotation.trafficPrice;
 				}else if(quotationFunctionAreaItem.type == 3){
+					var _unitPrice = utils.accAdd(quotationFunctionAreaItem.unitPrice, quotation.notSalesmanRate);
 					quotationFunctionAreaItem.num = quotation.managePrice;
 					quotationFunctionAreaItem.dcpt = quotation.managePrice;
+					quotationFunctionAreaItem.unitPrice = _unitPrice;
+					quotationFunctionAreaItem.dcp = _unitPrice;
 				}
 				
 				quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);

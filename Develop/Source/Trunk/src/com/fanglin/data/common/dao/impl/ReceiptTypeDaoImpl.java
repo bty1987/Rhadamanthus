@@ -42,7 +42,7 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ReceiptTypePO> queryReceiptType() {
-		return session().createCriteria(ReceiptTypePO.class).list();
+		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("status", ReceiptTypePO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override

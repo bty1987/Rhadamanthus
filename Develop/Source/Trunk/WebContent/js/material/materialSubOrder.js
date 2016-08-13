@@ -200,7 +200,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialSubOrderPostData", {"materialSubOrder.orderId":materialOrderPostData["materialOrder.orderId"]}, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css('margin', '5px 5px 0 0');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('返回').appendTo($adda);
     	

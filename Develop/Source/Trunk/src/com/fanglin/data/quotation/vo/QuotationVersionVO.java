@@ -17,7 +17,7 @@ public class QuotationVersionVO implements Serializable {
 
 	private static final long serialVersionUID = -6419575244318061433L;
 	
-	private int qvId;
+	private Integer qvId;
 	
 	private String versionId;
 	
@@ -25,13 +25,17 @@ public class QuotationVersionVO implements Serializable {
 	
 	protected String versionDes;
 	
-	private int defaultFlag;
+	private Integer defaultFlag;
+	
+	private Float trafficRate;
+	
+	private Float manageRate;
 
-	public int getQvId() {
+	public Integer getQvId() {
 		return qvId;
 	}
 
-	public void setQvId(int qvId) {
+	public void setQvId(Integer qvId) {
 		this.qvId = qvId;
 	}
 
@@ -59,12 +63,28 @@ public class QuotationVersionVO implements Serializable {
 		this.versionDes = versionDes;
 	}
 
-	public int getDefaultFlag(){
+	public Integer getDefaultFlag(){
 		return defaultFlag;
 	}
 
-	public void setDefaultFlag(int defaultFlag){
+	public void setDefaultFlag(Integer defaultFlag){
 		this.defaultFlag = defaultFlag;
+	}
+
+	public Float getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(Float trafficRate) {
+		this.trafficRate = trafficRate;
+	}
+
+	public Float getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Float manageRate) {
+		this.manageRate = manageRate;
 	}
 	
 }

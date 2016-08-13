@@ -54,6 +54,11 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 		return createCriteria(QuotationVersionPO.class).addOrder(Order.desc("defaultFlag")).list();
 	}
 	
+	@Override
+	public QuotationVersionPO queryQuotationVersionByVersionId(String versionId) {
+		return (QuotationVersionPO) session().createCriteria(QuotationVersionPO.class).add(Restrictions.eq("versionId", versionId)).uniqueResult();
+	}
+
 	private void queryFliterExcute(PagingQuery<?> query, List<FilterVO> filters){
 		
 		if(filters != null){
