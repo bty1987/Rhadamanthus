@@ -33,6 +33,7 @@ var Searcher = function(){
         renderConds : function(){
             var that = this;
             var $searchBtn = $('<button></button>').addClass('btn btn-xs btn-info btn-search').html('查询');
+            var $cleanBtn = $('<button></button>').addClass('btn btn-xs btn-danger btn-clean').css('margin', '0px 3px').html('重置');
 
             basicConf.$searcher.empty();
 
@@ -44,26 +45,32 @@ var Searcher = function(){
 
                     $item && $item.appendTo(basicConf.$searcher);
                 }),
-                    basicConf.$searcher.append($searchBtn),
-                    $searchBtn.click(function(){
-                        if(basicConf.noPagingFlag){
-                            _params = getParams();
-                            if(_params){
-                                queryData(_params);
-                            }
-
-                        }else{
-                            basicConf.$pager.hide();
-
-                            paging.nowPage["paging.page"] = 0;
-                            paging.nowPostParams = null;
-                            var _params = paging.getParams();
-                            if(_params){
-                                _params["paging.page"] += 1;
-                                paging.getDataByPage( _params);
-                            }
+                basicConf.$searcher.append($searchBtn),
+                basicConf.$searcher.append($cleanBtn),
+                $searchBtn.click(function(){
+                    if(basicConf.noPagingFlag){
+                        _params = getParams();
+                        if(_params){
+                            queryData(_params);
                         }
-                    })
+
+                    }else{
+                        basicConf.$pager.hide();
+
+                        paging.nowPage["paging.page"] = 0;
+                        paging.nowPostParams = null;
+                        var _params = paging.getParams();
+                        if(_params){
+                            _params["paging.page"] += 1;
+                            paging.getDataByPage( _params);
+                        }
+                    }
+                }),
+                $cleanBtn.click(function(){
+                	$('#condList>.inline').each(function(i, v){
+                		$($(v).children()[1]) && $($(v).children()[1]).val('');
+                	});
+                })
             );
         },
         /**
@@ -305,7 +312,7 @@ var Searcher = function(){
             	v.appendTo(basicConf.$pager);
             });
             
-            var $infodiv = $('<div></div>').addClass('pager-info pull-left').appendTo(basicConf.$pager);
+            var $infodiv = $('<div></div>').addClass('pager-info text-center').appendTo(basicConf.$pager);
             var $di = $('<span></span>').text('第').appendTo($infodiv);
             var $nowPage = $('<span></span>').addClass('bigger-120 blue').attr('name', 'nowPage').appendTo($infodiv);
             var $di = $('<span></span>').text('页, 共').appendTo($infodiv);
@@ -316,13 +323,14 @@ var Searcher = function(){
             var $totalRecords = $('<span></span>').addClass('bigger-120 blue').attr('name', 'totalRecords').appendTo($infodiv);
             var $di = $('<span></span>').text('条, 前往').appendTo($infodiv);
             var $input = $('<input></input>').addClass('fl-page-input').attr('type', 'text').css('font-size', '10px').attr('id', 'pginput').appendTo($infodiv);
-            var $di = $('<span></span>').text('页').appendTo($infodiv);
+            var $di = $('<span></span>').text('页, 条数').appendTo($infodiv);
+            var $select = $('<select></select>').addClass('fl-page-select').bindData([{'key': '10', 'value': '10'}, {'key': '30', 'value': '30'}], 'key', 'value').appendTo($infodiv);
             
-            var $ul = $('<ul></ul>').addClass('pager pull-right').appendTo(basicConf.$pager);
+            var $ul = $('<ul></ul>').addClass('pager pull-right').appendTo($infodiv);
             var $prevli = $('<li></li>').addClass('previous').attr('name', 'prev').appendTo($ul);
-            var $preva = $('<a></a>').attr('href', 'javascript:void(0);').text('← 上一页').appendTo($prevli);
+            var $preva = $('<a></a>').attr('href', 'javascript:void(0);').text('< 上一页').appendTo($prevli);
             var $nextli = $('<li></li>').addClass('next').attr('name', 'next').appendTo($ul);
-            var $nexta = $('<a></a>').attr('href', 'javascript:void(0);').text('下一页 →').appendTo($nextli);
+            var $nexta = $('<a></a>').attr('href', 'javascript:void(0);').text('下一页 >').appendTo($nextli);
 			
             //页面初始化的时候隐藏分页
             basicConf.$pager.hide();
@@ -354,7 +362,11 @@ var Searcher = function(){
                         _params && (_params["paging.page"] = _p, _pagenation.getDataByPage(_params))
                     );
             	}
-            })
+            });
+            $select.change(function(){
+            	_params = _pagenation.getParams(),
+            	_params && (_params["paging.rows"] = $(this).val(), _pagenation.getDataByPage(_params))
+            });
         }
     };
     
@@ -444,7 +456,11 @@ var Searcher = function(){
             jQuery.isEmptyObject(_params) && (_params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"]);
             
             _params = $.extend({},_params,basicConf.extraParams);
-            paging.nowPostParams = _params ;
+            paging.nowPostParams = _params;
+            
+            $('.fl-page-input').val(_params["paging.page"]);
+            $('.fl-page-select').val(_params["paging.rows"]);
+            
             paging.getDataByPage(_params);
         }else{
             _params = $.extend({},_params,basicConf.extraParams);

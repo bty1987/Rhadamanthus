@@ -158,13 +158,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(sourceVersionId);
 		
 		if(quotationVersionPO == null){
-			
-			StringBuffer errorInfo = new StringBuffer();
-			errorInfo.append("报价版本(");
-			errorInfo.append(sourceVersionId);
-			errorInfo.append(")已存在");
-			
-			throw new FLException(200016, errorInfo.toString());
+			throw new FLException(200016, String.format("报价版本(%s)已存在", sourceVersionId));
 		}
 		
 		quotationVersionPO = new QuotationVersionPO();

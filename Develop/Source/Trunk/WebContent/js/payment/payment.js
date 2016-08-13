@@ -85,13 +85,9 @@ jQuery(function($) {
 		});
 		
 		$("#cashInfo").bindData(payment.cash, 'key', 'name');
-		
 		$("#installmentBankName").bindData(payment.bank, 'key', 'name');
 		$("#refundBankName").bindData(payment.bank, 'key', 'name');
-		
 		$("#checkvBankName").bindData(payment.checkBank, 'key', 'name');
-		
-		$(".bankSel").bindData(payment.bank, 'key', 'name');
 		
 		$("#accountsBankName").bindData(payment.accounts, 'key', 'name');
 	}, null, false);

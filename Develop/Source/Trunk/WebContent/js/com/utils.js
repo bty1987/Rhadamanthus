@@ -81,6 +81,9 @@ var utils = {
 		}
 		var f_x = Math.round(floatvar*1000)/1000;
 		return f_x;
+	}, decimal: function (num, v){
+		var vv = Math.pow(10,v);
+		return Math.round(num * vv) / vv;
 	}, 	getBigNumber: function(currencyDigits){
 
 		var MAXIMUM_NUMBER = 99999999999;

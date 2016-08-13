@@ -22,7 +22,7 @@ jQuery(function($) {
 				decorationPaymentCheck.bankInfo[v.key] = v.name;
 			}
 		});
-	});
+	}, null, false);
 
 	decorationPaymentCheck.baseModal = $("#baseItemModal").on('show.bs.modal', function(e){
 		com.clearValidator();
@@ -146,7 +146,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationPaymentCheckPostData", null, false, null, function(){
 		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css('margin', '5px 5px 0 0');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
     	

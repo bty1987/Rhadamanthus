@@ -533,7 +533,7 @@ jQuery(function($) {
 				$("#common").css("display", "block");
 				
 				if(schedule == 3 || schedule == 8){
-					initChange("workerName", api.personel.queryUserForNameByDutysAODept, api.personel.queryUserByUserId, {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty});
+//					initChange("workerName", api.personel.queryUserForNameByDutysAODept, api.personel.queryUserByUserId, {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty});
 					com.initChosen("workerName", api.personel.queryUserForNameByDutysAODept, "pinyinName", {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty}, "autoFillKeyValue", "key", "value");
 				}else{
 					com.initChosen("workerName", api.personel.queryUserForNameByDutyADept, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");

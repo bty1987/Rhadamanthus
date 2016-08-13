@@ -140,7 +140,7 @@ $(function(){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "messageMngPostData", null, false, null, function(){
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css('margin', '5px 5px 0 0');
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-envelope bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('发消息').appendTo($adda);
 
@@ -154,7 +154,7 @@ $(function(){
 			message.modal.modal("show");
 		});
 
-		var $reada = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'addVillage').css('margin', '5px 5px 0 0');
+		var $reada = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
 		var $readi = $('<i></i>').addClass('icon-eye-open bigger-110').appendTo($reada);
 		var $readspan = $('<span></span>').text('已读').appendTo($reada);
 

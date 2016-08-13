@@ -33,10 +33,11 @@ $(function(){
 
             var propertyArr = [
                 ["编号:", v.versionId, "grey"],
+                ["车运费比例:", v.trafficRate, "blue"],
+                ["管理费比例:", v.manageRate, "blue"],
                 ["信息:", v.versionDes ? v.versionDes : '-', "grey"],
                 ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '-', "red"],
             ];
-
 
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
@@ -45,7 +46,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnCopy).appendTo($h3);
+            $divBtnWrap.append($btnEdit).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -73,12 +74,12 @@ $(function(){
 
     var _condArr = ['versionName'];
 
-    var quotationVersionSeacher = new Searcher();
-    quotationVersionSeacher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){
+    var searcher = new Searcher();
+    searcher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "quotationVersionPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css('margin', '5px 5px 0 0');
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
@@ -109,6 +110,8 @@ $(function(){
                 })
             }),
             copyVersionName: $("#copyVersionName"),
+            copyTrafficRate: $("#copyTrafficRate"),
+            copyManageRate: $("#copyManageRate"),
             copyVersionDes: $("#copyVersionDes"),
             versionId: $("#versionId").on("blur", function () {
                 $this = $(this);
@@ -120,6 +123,8 @@ $(function(){
                 })
             }),
             versionName: $("#versionName"),
+            trafficRate: $("#trafficRate"),
+            manageRate: $("#manageRate"),
             versionDes: $("#versionDes"),
             defaultFlag : $("#defaultFlag").switchBtn().on("click", function(a) {
                 quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0
@@ -150,6 +155,8 @@ $(function(){
 
         quotationVersion.editFlag = !0;
         quotationVersion.quotationVersionItems.versionId.val(b.versionId);
+        quotationVersion.quotationVersionItems.trafficRate.val(b.trafficRate);
+        quotationVersion.quotationVersionItems.manageRate.val(b.manageRate);
         quotationVersion.quotationVersionItems.versionName.val(b.versionName);
         quotationVersion.quotationVersionItems.versionDes.val(b.versionDes);
         quotationVersion.quotationVersionItems.versionId.prop("disabled", !0).css("display", "block");
@@ -167,13 +174,15 @@ $(function(){
         com.clearValidator();
         com.clearValidator("#versionId", !0);
         if (!com.validate("qtModal") && !quotationVersion.repeatFlg) {
-            var a = {
+            var options = {
                 "quotationVersion.versionId": quotationVersion.quotationVersionItems.versionId.val(),
                 "quotationVersion.versionName": quotationVersion.quotationVersionItems.versionName.val(),
+                "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.trafficRate.val(),
+                "quotationVersion.manageRate": quotationVersion.quotationVersionItems.manageRate.val(),
                 "quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
                 "quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
             };
-            com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, a, successCallback, failCallback);
+            com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, options, successCallback);
             quotationVersion.modal.modal("hide")
         }
     }
@@ -182,24 +191,25 @@ $(function(){
         com.clearValidator();
         com.clearValidator("#copyVersionId", !0);
         if (!com.validate("copyVersionModal") && !quotationVersion.repeatFlg) {
-            var a = quotationVersion.quotationVersionItems,
-                a = {
-                    versionId: $("#copySourceVersionId").val(),
-                    "quotationVersion.versionId": a.copyVersionId.val(),
-                    "quotationVersion.versionName": a.copyVersionName.val(),
-                    "quotationVersion.defaultFlag": 0,
-                    "quotationVersion.versionDes": a.copyVersionDes.val()
-                };
-            com.post(api.quotation.copyQuotationVersion, a, successCallback, failCallback);
-            quotationVersion.modalCopyVersion.modal("hide")
+        	
+        	var options = {
+    			"versionId": $("#copySourceVersionId").val(),
+                "quotationVersion.versionId": quotationVersion.quotationVersionItems.copyVersionId.val(),
+                "quotationVersion.versionName": quotationVersion.quotationVersionItems.copyVersionName.val(),
+                "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.copyTrafficRate.val(),
+                "quotationVersion.manageRate": quotationVersion.quotationVersionItems.copyManageRate.val(),
+                "quotationVersion.defaultFlag": 0,
+                "quotationVersion.versionDes": quotationVersion.quotationVersionItems.copyVersionDes.val()
+        	}
+        	
+            com.post(api.quotation.copyQuotationVersion, options, successCallback);
+            quotationVersion.modalCopyVersion.modal("hide");
         }
     }
 
     function successCallback() {
-        com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
-        $('#condList button.btn-search').click();
-
+        com.showAlert(com.info, "操作成功");
+        searcher.doSearch();
     }
-    function failCallback() {}
-
+    
 });

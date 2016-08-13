@@ -223,7 +223,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		}
 		
 		decorationPaymentPO.setPaymentStatus("未付款");
-		decorationPaymentPO.setReferMoney(addReducePO.getTotal());
+		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
 		
 		decorationPaymentPO.setDecorationOrderPO(new DecorationOrderPO(addReducePO.getOrderId()));
 		decorationPaymentPO.setCreateUserPO(new UserPO(userId));

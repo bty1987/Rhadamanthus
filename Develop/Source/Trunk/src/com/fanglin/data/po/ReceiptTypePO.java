@@ -31,6 +31,10 @@ public class ReceiptTypePO implements java.io.Serializable {
 	
 	public static final short TYPE_COUPON_INT = 5;
 	
+	public static final short STATUS_DISABLE_INT = 0;
+	
+	public static final short STATUS_ENABLE_INT = 1;
+	
 	private int rtId;
 	
 	private String name;

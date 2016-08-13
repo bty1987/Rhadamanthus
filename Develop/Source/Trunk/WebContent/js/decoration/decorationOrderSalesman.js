@@ -105,7 +105,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "decorationOrderSalesmanPostData", null, false, null, function(){
     	
-    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
     	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
     	var $impspan = $('<span></span>').text('导出').appendTo($impa);
     	

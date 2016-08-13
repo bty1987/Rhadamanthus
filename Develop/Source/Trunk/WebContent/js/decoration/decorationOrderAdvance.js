@@ -131,7 +131,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "decorationOrderAdvancePostData", null, false, null, function(){
     	
-    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin', '5px 5px 0 0');
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
     	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
     	var $impspan = $('<span></span>').text('导出').appendTo($impa);
     	
@@ -162,6 +162,7 @@ $(function(){
 					['业务部', 'businessDepartment'],
 					['业务员', 'salesman'],
 					['面积', 'houseArea'],
+					['折扣', 'discount'],
 					['合同报价', 'orderTotalPrice'],
 					['量房时间', 'createTime'],
 					['签单时间', 'contractTime'],

@@ -36,6 +36,10 @@ public class QuotationVersionPO implements Serializable{
 	
 	private int defaultFlag;
 	
+	private float trafficRate;
+	
+	private float manageRate;
+	
 	public QuotationVersionPO(){}
 	
 	public QuotationVersionPO(String versionId){
@@ -87,6 +91,24 @@ public class QuotationVersionPO implements Serializable{
 
 	public void setDefaultFlag(int defaultFlag){
 		this.defaultFlag = defaultFlag;
+	}
+
+	@Column(name="trafficRate")
+	public float getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(float trafficRate) {
+		this.trafficRate = trafficRate;
+	}
+
+	@Column(name="manageRate")
+	public float getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(float manageRate) {
+		this.manageRate = manageRate;
 	}
 	
 }

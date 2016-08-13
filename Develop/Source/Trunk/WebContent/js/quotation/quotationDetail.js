@@ -74,6 +74,7 @@ var QuotationDetail = (function(){
 					$("#num").val("");
 					$("#measurementUnit").get(0).selectedIndex = 0;
 					$("#workType").get(0).selectedIndex = 0;
+					$("#discountFlag").removeAttr("checked");
 				}),
 				//历史记录
 				$historyModal : $("#historyQuotationItemModal").on("show.bs.modal", function(a) {
@@ -354,21 +355,20 @@ var QuotationDetail = (function(){
 		},
 		//保存功能区修改
 		saveDomainTemplete : function(){
-			var  that = this;
+			var that = this;
 			$('#addFunctionAreasBtn').click(function(){
-
+				
 				var $darr = $('input[name="quotempl"]:checked');
-				var _param = quo.basicParams;
+				var _param = $.extend({}, quo.basicParams);
 				var $aimDomains = $('.widget-box', '#functionAreaDetailList');
 				if(!$darr.length){
 					return;
 				};
+				
 				$.each($darr, function(i, v){
 					_param['functionAreaIds[' + i + ']'] = $(v).val();
 				});
 
-				quo.quoModals.$domainTempletModal.modal("hide");
-				
 				com.post(api.quotation.addQuotationFuctionAreaByFunctionAreaIds, _param, function(data){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){
 						var sum = 0, sumd = 0, $dmoney;
@@ -389,6 +389,8 @@ var QuotationDetail = (function(){
 						quo.calculateQuoFees();
 					});
 				}, null, false);
+				
+				quo.quoModals.$domainTempletModal.modal("hide");
 			});
 		},
 		/*
@@ -641,7 +643,7 @@ var QuotationDetail = (function(){
 				var _fee = quo.calculateDomainFees(domain.nowEditDomain);
 				$('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
 				quo.calculateQuoFees();
-				_params = quo.basicParams;
+				_params = $.extend({}, quo.basicParams);
 				_params["qfaiIds[0]"] = _qid;
 				com.post(api.quotation.deleteQuotationFunctionAreaItem, _params, function(res){
 
@@ -659,7 +661,7 @@ var QuotationDetail = (function(){
 				}
 
 				var addRow = {
-					discount : 1,
+					discount : $("#discountFlag").prop("checked") ? 1 : 0,
 					num : $("#num").val(),
 					itemName : $("#itemName").val(),
 					measurementUnit : $("#measurementUnit").val(),
@@ -690,10 +692,10 @@ var QuotationDetail = (function(){
 				$historyItem = painter.createQuoteModalItem({
 					"itemName" : addRow.itemName,
 					"unitPrice" : addRow.unitPrice,
-					"measurementUnit" : addRow.measurementUnit,
+//					"measurementUnit" : addRow.measurementUnit,
 					"quotationItemDes" : addRow.content,
 					"workType" : $('#workType').val(),
-					"discount" : 1,
+					"discount" : addRow.discount,
 				});
 				quote.recordHistoryQuotes($historyItem);
 				_fee = quo.calculateDomainFees(domain.nowEditDomain);
@@ -1047,7 +1049,6 @@ var QuotationDetail = (function(){
 				"data-des": v.quotationItemDes,
 				"data-workType": v.workType ? v.workType : "-",
 				"data-discount": v.discount
-
 			}).val(v.qiId);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
 
