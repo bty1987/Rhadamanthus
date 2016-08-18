@@ -86,7 +86,7 @@ jQuery(function($) {
 				"class": "ace ace-checkbox-2",
 				"dpId": v.autoId,
 			}).val(v.arId);
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.paymentType);
             
             $.each(propertyArr, function (index,value) {
             var $liProperty = $('<li></li>');
@@ -96,7 +96,6 @@ jQuery(function($) {
             });
             
             $label.append($input).append($span).appendTo($h3);
-			$h3.append($('<small></small>').addClass('blue').html(v.paymentType));
             
             var styleArr = [];
 			

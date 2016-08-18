@@ -384,7 +384,7 @@ var AddReduceDetail = (function(){
 				}
 				var _quotval = {
 					"num" : 0,//工程预算量
-					"itemName" : $li.find('h3 small').text(),//名称
+					"itemName" : $li.find('.lbl').text(),//名称
 					"quotationFunctionAreaId" : modalEventBinding.functionAreaId,//功能区
 					"quotationFunctionAreaName" : modalEventBinding.functionAreaName,//功能区
 					"quotationBigCategory" : $li.find("li .quotationBigCategory").text(),//大类
@@ -561,7 +561,6 @@ var AddReduceDetail = (function(){
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
 
-
 			var $label = $('<label></label>');
 			var $input = $('<input>').attr({
 				"type" : "checkbox",
@@ -570,7 +569,7 @@ var AddReduceDetail = (function(){
 				"data-discount-flag" : v.discount,
 				//功能区
 			}).val(v[idname]);
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
 
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			
@@ -595,7 +594,6 @@ var AddReduceDetail = (function(){
 			});
 
 			$label.append($input).append($span).appendTo($h3);
-			$h3.append($('<small></small>').addClass('blue').html(v.itemName));
 			$liLine.append($h3).append($ulProperty);
 
 			$input.change(function(){

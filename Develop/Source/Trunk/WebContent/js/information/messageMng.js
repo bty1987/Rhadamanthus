@@ -95,13 +95,13 @@ $(function(){
 			var $h3 = $('<h3></h3>').addClass('oid');
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-			var $label = $('<label></label>').css('font-size', 'inherit');
+			var $label = $('<label></label>');
 			var $input = $('<input>').attr({
 				"type": "checkbox",
 				"name": "mmids",
 				"class": "ace ace-checkbox-2",
 			}).val(v.messageId);
-			var $span = $('<span></span>').addClass('lbl').append($('<small></small>').addClass('blue').css({'font-size': '0.75em', 'font-weight' : 'bold'}).html(" " + v.contents));
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.contents);
 
 			var propertyArr = [
 				["消息分类:", v.type, "grey"],

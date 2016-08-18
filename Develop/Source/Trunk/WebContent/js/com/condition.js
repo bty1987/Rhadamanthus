@@ -702,7 +702,10 @@ var Condition = function(){
             submitConfig : {
                 name : "houseArea",
                 op : "eq",
-                validate:null
+                validate:{
+                    "reg" : /^[0-9]*$/,
+                    "msg" : "请输入数字"
+                }
             }
         },
         customerId: {
