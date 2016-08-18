@@ -18,8 +18,12 @@ var QuotationDetail = (function(){
 					that.quoModals.$domainTempletModal.modal("show");
 				}),
 				//折扣
-				$btnDiscount  : $('#discountBtn').on(ace.click_event, function(){ // 折扣界面
+				$btnDiscount: $('#discountBtn').on(ace.click_event, function(){ // 折扣界面
 					that.quoModals.$domainDiscountModal.modal("show");
+				}),
+				//计算总价
+				$btnCalculateTotal: $('#calculateTotalBtn').on(ace.click_event, function(){
+					that.quoModals.$calculateTotalModal.modal("show");
 				}),
 				//统计
 				$btnReport : $('#viewStatisticalBtn'),
@@ -62,6 +66,8 @@ var QuotationDetail = (function(){
 				}),
 				//编辑折扣
 				$domainDiscountModal : $("#discountModal"),
+				//计算总价
+				$calculateTotalModal: $('#calculateTotalFeeModal'),
 				//添加默认报价项
 				$quoteModal : $("#quotationItemModal").on("show.bs.modal", function(a) {
 					$('input[name="modalQuots"]:checked').removeAttr('checked');
@@ -210,11 +216,45 @@ var QuotationDetail = (function(){
 			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
 			var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(quo.basicParams['quotation.discount'], 10) : 1)));
 			var _totalprice,_totalpriced;
-			_totalprice = utils.changeThrDecimal(utils.accMul(_num ,  _unitprice));
-			_totalpriced =  utils.changeThrDecimal(utils.accMul(_num ,  _discountprice));
+			_totalprice = utils.changeThrDecimal(utils.accMul(_num,  _unitprice));
+			_totalpriced =  utils.changeThrDecimal(utils.accMul(_num,  _discountprice));
 			$quote.find('.discountprice .cell-wrap').text(_discountprice);
 			$quote.find('.totalprice-discount .cell-wrap').text(_totalpriced);
 			$quote.attr('data-totalprice', _totalprice);
+		},
+		// 计算报价总金额
+		calculateTotalFee: function(discount){
+			var  _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0;
+			
+			var $arr = $('.fl-quo-item');
+			
+			$arr.length && $arr.each(function(i, v){
+				
+				var $quote = $(v);
+				
+				if(['0', '1'].indexOf($quote.find(".cell.type").attr('data-type')) == -1) return true;
+				
+				var _num = parseFloat($quote.find('.num .cell-wrap').text());
+				var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
+				var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+				var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(discount, 10) : 1)));
+				
+				var _totalprice = utils.accMul(_num,  _unitprice);
+				var _totalpriced =  utils.accMul(_num,  _discountprice);
+				
+				_totalfee = utils.accAdd(_totalfee, _totalprice);
+				_dtotalfee = utils.accAdd(_dtotalfee, _totalpriced);
+				
+			});
+			
+			_manageRate = parseFloat($('#manageCost').find('.discountprice .cell-wrap').text());
+			_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text())));
+			_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), parseFloat($('#manageCost').find('.discountprice .cell-wrap').text())));
+			_total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));
+			
+			$('#calTrafficPrice').val(_transfee);
+			$('#calManagePrice').val(_managefee);
+			$('#calTotalPrice').val(_total);
 		},
 		init : function () {
 			this.initQuoModals();
@@ -299,7 +339,24 @@ var QuotationDetail = (function(){
 				}
 			});
 		},
+		calculateTotal: function(){
+			$('#calculateTotalFeeBtn').on(ace.click_event, function(){
+				if(com.validate()){
+					return;
+				}
+				
+				var dis = $("#calDiscount").val();
 
+				if(parseFloat(dis) <= 0 || parseFloat(dis) > 10){
+					com.showTips($("#calDiscount"), "折扣非法", true);
+					return;
+				}else{
+					com.clearValidator("#calDiscount", true);
+				}
+				
+				quo.calculateTotalFee(dis);
+			});
+		},
 		//保存报价修改
 		saveDiscountEdit : function(){
 			$('#saveDisCountBtn').on(ace.click_event, function(){ //折扣保存
@@ -456,8 +513,9 @@ var QuotationDetail = (function(){
 		},
 
 		//绑定各种关于报价的操作
-		init : function(){
+		init: function(){
 			this.saveDomainEdit();
+			this.calculateTotal();
 			this.saveDiscountEdit();
 			this.saveDomainTemplete();
 			this.saveQuotesToDomain();
@@ -847,24 +905,38 @@ var QuotationDetail = (function(){
 			$dbody = $('<div></div>').addClass('widget-body');
 			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
 			$list = $('<ul></ul>').addClass('fl-quo-list');
-			$input = $('<div></div>').addClass('fl-quo-input  hide').append($('<input type="text">').addClass('v_required v_float'));
+			$input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float'));
 
 			$dhead.append($dname).append($dtoolbar);
 
 			$dbodyInner.append($list).append($input).appendTo($dbody);
 
 			$domain.append($dhead).append($dbody);
-
-			dv.quotationFunctionAreaItems.length && $.each(dv.quotationFunctionAreaItems, function(i,v){
-				var $item = that.createQuote( i + 1, v );
-				$item.appendTo($list);
-				sumd = utils.changeThrDecimal(utils.accAdd(sumd, parseFloat($item.find('.totalprice-discount .cell-wrap').text())));
-				if(!isNaN($item.attr('data-totalprice'))){
-					sum = utils.changeThrDecimal(utils.accAdd(sum, parseFloat($item.attr('data-totalprice'))));
-				}
-				sumlcs = utils.changeThrDecimal(utils.accAdd(sumlcs, parseFloat($item.attr('data-latexcutscaletotal') ? $item.attr('data-latexcutscaletotal') : 0)));
-
-			});
+			
+			console.log("---------------------------------");
+			
+			if(dv.quotationFunctionAreaItems.length){
+				
+				var _items = dv.quotationFunctionAreaItems;
+				
+				_items = _items.sort(function(a, b){ // 按照报价版本中的主键顺序排序
+					if(a.quotationItemId == null || b.quotationItemId == null){
+						return b.quotationItemId - a.quotationItemId;
+					}else{
+						return a.quotationItemId - b.quotationItemId;
+					}
+				});
+				
+				$.each(_items, function(i,v){
+					var $item = that.createQuote( i + 1, v );
+					$item.appendTo($list);
+					sumd = utils.changeThrDecimal(utils.accAdd(sumd, parseFloat($item.find('.totalprice-discount .cell-wrap').text())));
+					if(!isNaN($item.attr('data-totalprice'))){
+						sum = utils.changeThrDecimal(utils.accAdd(sum, parseFloat($item.attr('data-totalprice'))));
+					}
+					sumlcs = utils.changeThrDecimal(utils.accAdd(sumlcs, parseFloat($item.attr('data-latexcutscaletotal') ? $item.attr('data-latexcutscaletotal') : 0)));
+				});
+			}
 
 			if(dv.functionAreaType != 0){
 				//各种绑定事件
@@ -1175,6 +1247,7 @@ var QuotationDetail = (function(){
 	};
 
 })();
+
 $(function(){
 	QuotationDetail.init();
 });

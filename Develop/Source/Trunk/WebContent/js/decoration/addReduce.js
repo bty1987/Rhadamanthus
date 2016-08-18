@@ -37,7 +37,7 @@ jQuery(function($) {
 				"name": "arids",
 				"class": "ace ace-checkbox-2",
 			}).val(v.arId);
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
 
 			var propertyArr = [
 				["总价:", v.total, "grey"],
@@ -53,7 +53,6 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 			$label.append($input).append($span).appendTo($h3);
-			$h3.append($('<small></small>').addClass('blue').html(v.content));
 			$divBtnWrap.append($btnLook).append($btnDel).appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
 			//查看按钮点击事件

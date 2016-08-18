@@ -38,9 +38,28 @@
 			<!--左下角按钮-->
 			<div class="col-xs-12 col-md-3" style="position:fixed; bottom:10px; background-color: white;">
 				<div class="col-md-12">
+				    <div class="col-md-12">
+                        <div class="ui-pg-div">
+                            <button class="btn btn-minier btn-danger col-md-4" id="calculateTotalBtn">
+                                <i class="icon-calculator"></i>计算总价
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 space-8"></div>
+				    <div class="col-md-12">
+						<div class="ui-pg-div">
+							<button class="btn btn-minier col-md-4" id="openFunctionAreasBtn">
+							    <i class="icon-folder-close"></i>展开功能区
+							</button>
+							<button class="btn btn-minier col-md-4" id="closeFunctionAreasBtn" style="margin-left: 2px;">
+							    <i class="icon-folder-open "></i>收起功能区
+							</button>
+						</div>
+					</div>
+                    <div class="col-md-12 space-8"></div>
 					<div class="col-md-12">
 						<div class="ui-pg-div">
-							<button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3" style="margin-left: 2px;">
+							<button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3" >
 								<i class="icon-pencil"></i>功能区
 							</button>
 							<button id="discountBtn" class="btn btn-minier btn-success col-md-3" style="margin-left: 2px;">
@@ -54,12 +73,6 @@
 					<div class="col-md-12 space-8"></div>
 					<div class="col-md-12">
 						<div class="ui-pg-div">
-							<button id="saveQuotationDetailOKBtn" class="btn btn-minier btn-primary" data-loading-text="提交中..." style="display: none;">
-								<i class="icon-ok"></i>删除未用项
-							</button>
-							<button id="saveQuotationDetailBtn" class="btn btn-minier btn-primary" data-loading-text="提交中..." style="display: none;">
-								<i class="icon-save"></i>保存
-							</button>
 							<button id="saveQuotationBtn" class="btn btn-minier btn-inverse col-md-3">
 								<i class="icon-save"></i>保存
 							</button>
@@ -75,19 +88,19 @@
 			</div>
 
 			<!--右边表格-->
-			<div class="col-xs-12 col-md-9">
-				<div class="row clearfix">
-					<div class="col-xs-12">
-						<div class="ui-pg-div pull-right inline">
-							<button id="openFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中...">
-								<i class="icon-folder-close"></i>展开功能区
-							</button>
-							<button id="closeFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中...">
-								<i class="icon-folder-open "></i>收起功能区
-							</button>
-						</div>
-					</div>
-				</div>
+			<div class="col-xs-12 col-md-9" style="border-width: 0 0 0 1px;border-style: solid; border-color: #c1c1c1;">
+<!-- 				<div class="row clearfix"> -->
+<!-- 					<div class="col-xs-12"> -->
+<!-- 						<div class="ui-pg-div pull-right inline"> -->
+<!-- 							<button id="openFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中..."> -->
+<!-- 								<i class="icon-folder-close"></i>展开功能区 -->
+<!-- 							</button> -->
+<!-- 							<button id="closeFunctionAreasBtn" class="btn btn-minier" data-loading-text="提交中..."> -->
+<!-- 								<i class="icon-folder-open "></i>收起功能区 -->
+<!-- 							</button> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 				<div class="row clearfix">
 					<div class="col-xs-12" id="functionAreaDetailList"></div>
 				</div>
@@ -314,6 +327,57 @@
 					</div>
 				</div>
 			</div>
+			
+			<!-- 计算总价信息 -->
+			<div class="modal fade" id="calculateTotalFeeModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="calculateTotalFeeDialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">总价计算</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="discount">折扣</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="calDiscount" class="col-xs-10 col-md-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="discount">车运费</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="calTrafficPrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="discount">管理费</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="calManagePrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="discount">总价</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="calTotalPrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="calculateTotalFeeBtn" class="btn btn-primary">计算</button>
+                            <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 			<!--管理费比例设置弹窗-->
 			<div class="modal fade" id="manageRateModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="discountDialog" aria-hidden="true">

@@ -219,7 +219,7 @@ jQuery(function($) {
 				"customerId": v.customerId,
 				"paymentType": v.paymentType,
 			}).val(v.arId);
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(materialPayment.materialPaymentTypeData[v.paymentType]);
             
             $.each(propertyArr, function (index,value) {
             var $liProperty = $('<li></li>');
@@ -229,7 +229,6 @@ jQuery(function($) {
             });
             
             $label.append($input).append($span).appendTo($h3);
-			$h3.append($('<small></small>').addClass('blue').html(materialPayment.materialPaymentTypeData[v.paymentType]));
            
             $divBtnWrap.append($btnCollect).appendTo($h3);
             

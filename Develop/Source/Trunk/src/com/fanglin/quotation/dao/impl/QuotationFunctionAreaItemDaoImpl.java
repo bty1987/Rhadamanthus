@@ -14,7 +14,6 @@ package com.fanglin.quotation.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -32,10 +31,7 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId){
-		return createCriteria(QuotationFunctionAreaItemPO.class)
-				.add(Restrictions.eq("quotationFunctionArea.qfaId", functionAreaId))
-				.addOrder(Order.asc("qfaiId"))
-				.list();
+		return createCriteria(QuotationFunctionAreaItemPO.class).add(Restrictions.eq("quotationFunctionArea.qfaId", functionAreaId)).list();
 	}
 
 	@Override
