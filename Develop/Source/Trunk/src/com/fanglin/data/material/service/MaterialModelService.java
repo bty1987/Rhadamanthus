@@ -26,9 +26,9 @@ public interface MaterialModelService {
 	
 	public List<MaterialModelVO> queryMaterialModel(List<FilterVO> filters);
 	
-	public MaterialModelVO queryMaterialModelById(int materialModelId);
+	public MaterialModelVO queryMaterialModelById(MaterialModelVO materialModelVO);
 	
-	public MaterialModelVO queryMaterialModelByMmId(int mmId);
+	public MaterialModelVO queryMaterialModelByMmId(MaterialModelVO materialModelVO);
 	
 	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO);
 	
@@ -41,6 +41,8 @@ public interface MaterialModelService {
 	public void updateMaterialModel(MaterialModelVO materialModelVO);
 	
 	public void updateMaterialModelForStatus(MaterialModelVO materialModelVO);
+	
+	public void updateMaterialModelForAdvance(MaterialModelVO materialModelVO);
 	
 	public void deleteMaterialModel(MaterialModelVO materialModelVO);
 	

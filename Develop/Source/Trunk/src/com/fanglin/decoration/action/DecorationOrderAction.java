@@ -72,14 +72,6 @@ public class DecorationOrderAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDecorationOrderForPutline", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForPutline() throws FLException{
-		
-		decorationOrderService.pageDecorationOrderForPutline(getPaging(), getFilters(), getUserId());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "pageDecorationOrderForMaterial", results = { @Result(name = "success", type = "json", params = {	"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderByMaterial() throws FLException{
 		
@@ -208,10 +200,10 @@ public class DecorationOrderAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "changeDecorationOrderForActivity", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationOrderForActivity() throws FLException{
+	@Action(value = "changeDecorationOrderForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationOrderForAdvance() throws FLException{
 
-		decorationOrderService.changeDecorationOrderForActivity(decorationOrder);
+		decorationOrderService.changeDecorationOrderForAdvance(decorationOrder);
 		
 		return SUCCESS;
 	}

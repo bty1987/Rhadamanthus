@@ -50,15 +50,6 @@ public class MaterialBrandRightAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public MaterialBrandRightService getMaterialBrandRightService(){
-		return materialBrandRightService;
-	}
-
-	public void setMaterialBrandRightService(
-			MaterialBrandRightService materialBrandRightService){
-		this.materialBrandRightService = materialBrandRightService;
-	}
-
 	public MaterialBrandRightVO getMaterialBrandRight(){
 		return materialBrandRight;
 	}

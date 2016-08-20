@@ -127,7 +127,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
 		
 		if(materialModelPO != null){
-			BeanUtil.copyProperties(materialModelVO, materialModelPO);
+			BeanUtil.copyProperties(materialModelVO, materialModelPO, Arrays.asList("calcType", "base", "point"));
 			materialModelPO.setBrandPO(new BrandPO(materialModelVO.getMaterialBrandId()));
 			materialModelPO.setMeasurementUnitPO(new MeasurementUnitPO(materialModelVO.getMeasurementUnitId()));
 			
@@ -144,6 +144,21 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		if(materialModelPO != null){
 			
 			materialModelPO.setStatus(materialModelVO.getStatus());
+			
+			materialModelDao.saveOrUpdate(materialModelPO);
+		}
+	}
+
+	@Override
+	public void updateMaterialModelForAdvance(MaterialModelVO materialModelVO) {
+		
+		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
+		
+		if(materialModelPO != null){
+			
+			materialModelPO.setCalcType(materialModelVO.getCalcType());
+			materialModelPO.setBase(materialModelVO.getBase());
+			materialModelPO.setPoint(materialModelVO.getPoint());
 			
 			materialModelDao.saveOrUpdate(materialModelPO);
 		}
@@ -200,10 +215,9 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	}
 	
 	@Override
-	public MaterialModelVO queryMaterialModelByMmId(int mmId){
+	public MaterialModelVO queryMaterialModelByMmId(MaterialModelVO materialModelVO){
 		
-		MaterialModelPO materialModelPO = materialModelDao.get(mmId);
-		MaterialModelVO materialModelVO = new MaterialModelVO();
+		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
 		
 		BeanUtil.copyProperties(materialModelPO, materialModelVO);
 		
@@ -262,10 +276,9 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	}
 
 	@Override
-	public MaterialModelVO queryMaterialModelById(int materialModelId){
+	public MaterialModelVO queryMaterialModelById(MaterialModelVO materialModelVO){
 		
-		MaterialModelPO materialModelPO = materialModelDao.get(materialModelId);
-		MaterialModelVO materialModelVO = new MaterialModelVO();
+		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMaterialBrandId());
 		
 		BeanUtil.copyProperties(materialModelPO, materialModelVO);
 		

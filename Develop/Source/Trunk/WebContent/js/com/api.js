@@ -573,7 +573,7 @@ var api = {
 		createDecorationOrder: {url: "createDecorationOrder.do"},
 		obsoleteDecorationOrder: {url: "obsoleteDecorationOrder.do"},
 		terminalDecorationOrder: {url: "terminalDecorationOrder.do"},
-		changeDecorationOrderForActivity: {url: "changeDecorationOrderForActivity.do"},
+		changeDecorationOrderForAdvance: {url: "changeDecorationOrderForAdvance.do"},
 		
 		exportDecorationorderByContractTime: {url: "exportDecorationorderByContractTime.do"},
 		

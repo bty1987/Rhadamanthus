@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.common.vo.VillageVO;
 
@@ -68,9 +67,9 @@ public class DecorationOrderVO implements Serializable {
 	
 	private String salesmanId;
 	
-	private String orderSupervisorId;
+	private String supervisorId;
 	
-	private String orderInspectionId;
+	private String inspectionId;
 	
 	private String notSalesmanName;
 	
@@ -83,13 +82,12 @@ public class DecorationOrderVO implements Serializable {
 	private String backOrderPhone;
 	
 	private String backOrderContent;
-	//private Float quotationValue;
 	
 	private String contractCode;
 	
 	private Timestamp contractTime;
 	
-	private String contractOperateUserId;
+	private String contractUserId;
 	
 	private Timestamp measureTime;
 	
@@ -120,8 +118,6 @@ public class DecorationOrderVO implements Serializable {
 	private Float notSalesmanRate;
 
 	private String salesmanType;
-	
-	private PutlineConstructionScheduleVO putlineConstructionSchedule;
 	
 	private Integer company;
 	
@@ -260,21 +256,21 @@ public class DecorationOrderVO implements Serializable {
 	public void setSalesmanId(String salesmanId){
 		this.salesmanId = salesmanId;
 	}
-
-	public String getOrderSupervisorId(){
-		return orderSupervisorId;
+	
+	public String getSupervisorId() {
+		return supervisorId;
 	}
 
-	public void setOrderSupervisorId(String orderSupervisorId){
-		this.orderSupervisorId = orderSupervisorId;
+	public void setSupervisorId(String supervisorId) {
+		this.supervisorId = supervisorId;
 	}
 
-	public String getOrderInspectionId(){
-		return orderInspectionId;
+	public String getInspectionId() {
+		return inspectionId;
 	}
 
-	public void setOrderInspectionId(String orderInspectionId){
-		this.orderInspectionId = orderInspectionId;
+	public void setInspectionId(String inspectionId) {
+		this.inspectionId = inspectionId;
 	}
 
 	public String getNotSalesmanPhone(){
@@ -419,12 +415,12 @@ public class DecorationOrderVO implements Serializable {
 		this.contractTime = contractTime;
 	}
 
-	public String getContractOperateUserId() {
-		return contractOperateUserId;
+	public String getContractUserId() {
+		return contractUserId;
 	}
 
-	public void setContractOperateUserId(String contractOperateUserId) {
-		this.contractOperateUserId = contractOperateUserId;
+	public void setContractUserId(String contractUserId) {
+		this.contractUserId = contractUserId;
 	}
 
 	@JSON(format="yyyy-MM-dd")
@@ -486,14 +482,6 @@ public class DecorationOrderVO implements Serializable {
 
 	public String getSalesmanType(){
 		return salesmanType;
-	}
-
-	public PutlineConstructionScheduleVO getPutlineConstructionSchedule(){
-		return putlineConstructionSchedule;
-	}
-
-	public void setPutlineConstructionSchedule(PutlineConstructionScheduleVO putlineConstructionSchedule){
-		this.putlineConstructionSchedule = putlineConstructionSchedule;
 	}
 
 	public Integer getOtherStatus(){

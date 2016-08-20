@@ -29,7 +29,6 @@ import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
-import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.service.impl.CustomerServiceImpl;
@@ -290,57 +289,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
 				}
 			}
-			
-			decorationOrderVOs.add(decorationOrderVO);
-		}
-		
-		paging.setData(decorationOrderVOs);
-	}
-	
-	@Override
-	public void pageDecorationOrderForPutline(Paging paging, List<FilterVO> filters, String userId){
-		
-		if(filters.size() == 0) return;
-		
-		UserPO userPO = userDao.get(userId);
-		
-		if(userPO == null) return;
-		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForPutline(paging, filters);
-		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
-		
-		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
-			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
-			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
-			
-			if(decorationOrderVO.getOrderTotalPrice() == null){
-				decorationOrderVO.setOrderTotalPrice(new Float(0));
-			}
-			
-			VillageVO villageVO = new VillageVO();
-			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper", "buildingNameRule", "putlineConstructionSchedule"));	
-			decorationOrderVO.setVillage(villageVO);
-			
-			CustomerVO customerVO = new CustomerVO();
-			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-			customerVO.setConfidentialInfo();
-			decorationOrderVO.setCustomer(customerVO);
-			
-			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
-			decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
-			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
-			
-			if(decorationOrderPO.getDesignerPO().getDept().getFatherDept() != null){
-				decorationOrderVO.setDesignRegion(decorationOrderPO.getDesignerPO().getDept().getFatherDept().getDeptName());
-			}
-			
-			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
-			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
-			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
-			
-			PutlineConstructionScheduleVO putlineConstructionScheduleVO = new PutlineConstructionScheduleVO();
-			BeanUtil.copyProperties(decorationOrderPO.getPutlineConstructionSchedules().iterator().next(), putlineConstructionScheduleVO);
-			decorationOrderVO.setPutlineConstructionSchedule(putlineConstructionScheduleVO);
 			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
@@ -1034,7 +982,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int changeDecorationOrderForActivity(DecorationOrderVO decorationOrderVO) throws FLException{
+	public int changeDecorationOrderForAdvance(DecorationOrderVO decorationOrderVO) throws FLException{
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
 		

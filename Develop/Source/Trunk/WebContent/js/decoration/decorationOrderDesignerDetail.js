@@ -853,7 +853,7 @@ function saveBaseDecorationOrderInfo() {
 				"decorationOrder.freeArea" : $("#freeArea").val()
 			};
 
-			com.post(api.decoration.changeDecorationOrderForActivity, options, function(res) {
+			com.post(api.decoration.changeDecorationOrderForAdvance, options, function(res) {
 				com.showAlert(com.info, "操作成功");
 				btn.button('reset');
 			}, function(res) {

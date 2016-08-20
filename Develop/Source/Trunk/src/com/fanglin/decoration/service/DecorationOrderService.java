@@ -26,8 +26,6 @@ public interface DecorationOrderService {
 	
 	public void pageDecorationOrderForCommon(Paging paging, List<FilterVO> filters, String userId);
 	
-	public void pageDecorationOrderForPutline(Paging paging, List<FilterVO> filters, String userId);
-	
 	public void pageDecorationOrderForMaterial(Paging paging, List<FilterVO> filters, String userId);
 	
 	public void pageDecorationOrderForDesigner(Paging paging, List<FilterVO> filters, String userId);
@@ -52,7 +50,7 @@ public interface DecorationOrderService {
 	
 	public void checkDecorationOrderExist(DecorationOrderVO decorationOrderVO);
 	
-	public int changeDecorationOrderForActivity(DecorationOrderVO decorationOrderVO) throws FLException;
+	public int changeDecorationOrderForAdvance(DecorationOrderVO decorationOrderVO) throws FLException;
 	
 	public int changeDecorationOrderForOrderId(String oldOrderId, String newOrderId, String userId) throws FLException;
 	
