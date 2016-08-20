@@ -96,7 +96,7 @@ jQuery(function($) {
 	
 	searcher.init(["categoryId", "brandName"], "condList", api.data.pageBrand, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "categoryPostData", null, false, null, function(){
+	}, "pagenation", "brandPostData", null, false, null, function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);

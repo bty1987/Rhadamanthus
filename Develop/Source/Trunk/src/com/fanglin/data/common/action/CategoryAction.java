@@ -88,14 +88,6 @@ public class CategoryAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public CategoryService getCategoryService() {
-		return categoryService;
-	}
-
-	public void setCategoryService(CategoryService categoryService) {
-		this.categoryService = categoryService;
-	}
-
 	public CategoryVO getCategory() {
 		return category;
 	}

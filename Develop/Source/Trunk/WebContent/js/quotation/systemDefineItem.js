@@ -181,13 +181,16 @@ $(function(){
 		}
 		
 		com.post(systemDefineItem.checkItemIdUrl, {"systemDefineItem.itemId":$this.val()}, function(res){
-			if(res.systemDefineItem&&res.systemDefineItem.itemId){
+			if(res.systemDefineItem && res.systemDefineItem.itemId){
 				com.showTips($this, "该版本的编号已存在", true);
 				systemDefineItem.repeatFlg = true;
 			}else{
 				com.clearValidator("#itemId", true);
 				systemDefineItem.repeatFlg = false;
 			}
+		}, function(res){
+			com.clearValidator("#itemId", true);
+			systemDefineItem.repeatFlg = false;
 		});
 	});
 	
@@ -206,8 +209,8 @@ $(function(){
 	
 	initDataMap();
 
-//给select下拉列表绑定数据
-function initDataMap(){
+	//给select下拉列表绑定数据
+	function initDataMap(){
     	
     	com.post(api.common.queryMeasurementUnit, {}, function(res){
 

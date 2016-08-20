@@ -150,14 +150,6 @@ public class BrandAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public BrandService getBrandService() {
-		return brandService;
-	}
-
-	public void setBrandService(BrandService brandService) {
-		this.brandService = brandService;
-	}
-
 	public BrandVO getBrand() {
 		return brand;
 	}

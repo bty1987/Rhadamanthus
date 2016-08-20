@@ -336,7 +336,7 @@ function saveBaseDecorationOrderInfo(){
 				"decorationOrder.notSalesmanContent": $("#notSalesmanContent").val(),
 			};
 			
-			com.post(api.decoration.changeDecorationOrderForActivity, options, function(){
+			com.post(api.decoration.changeDecorationOrderForAdvance, options, function(){
 				com.showAlert(com.info, "操作成功");
 			});
 		}

@@ -11,9 +11,6 @@
 
 package com.fanglin.data.material.action;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -23,12 +20,10 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.common.vo.ExcelWorkSheet;
 import com.fanglin.core.action.BaseExportAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.service.MaterialModelService;
 import com.fanglin.data.material.vo.MaterialModelVO;
-import com.fanglin.utils.PoiExcelUtil;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -65,7 +60,7 @@ public class MaterialModelAction extends BaseExportAction{
 	@Action(value="queryMaterialModelById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialModelById(){
 		
-		materialModel = materialModelService.queryMaterialModelById(materialModel.getMmId());
+		materialModel = materialModelService.queryMaterialModelById(materialModel);
 		
 		return SUCCESS;
 	}
@@ -118,39 +113,19 @@ public class MaterialModelAction extends BaseExportAction{
 		return SUCCESS;
 	}
 	
+	@Action(value="updateMaterialModelForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateMaterialModelForAdvance(){
+		
+		materialModelService.updateMaterialModelForAdvance(materialModel);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="deleteMaterialModelByIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteMaterialModelByIds(){
 		
 		materialModelService.deleteMaterialModelByIds(ids);
 		
-		return SUCCESS;
-	}
-	
-	@Action(value = "exportMaterialModel", results = { @Result(name = "success", type = "stream",params = { "contentType", "text/html","contentDisposition","attachment;fileName=${fileName}","inputName","downloadFileInputStream","encode","true"}) })
-	public String exportMaterialModel() throws FLException {
-		
-		if(getFilters() == null){
-			throw new FLException(189000, "必须添加筛选条件,否则数据量过大");
-		}
-		
-		setFileName("主材型号.xls");
-		
-		List<MaterialModelVO> materialModelVOs = materialModelService.queryMaterialModel(getFilters());
-		
-		ExcelWorkSheet<MaterialModelVO> sheet = new ExcelWorkSheet<MaterialModelVO>();
-		sheet.setData(materialModelVOs);
-		sheet.setColumns(Arrays.asList("编号", "名称", "品类", "品牌", "单位", "单价", "进价", "折扣", "结算方式", "结算值"));
-		sheet.setPropertyNames(Arrays.asList("materialModelNo", "materialModelName", "materialTypeName", "materialBrandName", "measurementUnitName", "materialUnitPrice", "materialPurchasePrice", "discount", "calcTypeName", "calcValue"));
-		
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		PoiExcelUtil.exportExcel(sheet, os);
-		
-		byte[] b = os.toByteArray();
-		  
-		ByteArrayInputStream in = new ByteArrayInputStream(b);
-
-		setDownloadFileInputStream(in);
-	    
 		return SUCCESS;
 	}
 	

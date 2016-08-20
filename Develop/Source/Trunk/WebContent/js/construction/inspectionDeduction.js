@@ -10,10 +10,6 @@ var deduction = {
 	repeatFlg: false,
 };
 
-var deductionData = [
-	{"orderId":"D2193C022B046", "villageName":"鑫丰雍景豪城12#1-1-1", "customerName":"刘文伟", "designDepartment":"设计一部", "designerName":"李丽", "salesmanDepartment":"一部", "salesmanName":"王涛", "houseArea":"160", "houseStyle":"欧式", "measureTime":"2014-08-15", "status":"量房", "schedule":"1", "time":"2014-09-01", "money":"156", "comment":"卫生不合格"}
-];
-
 jQuery(function($) {
 	$('#fl-statement').statement("巡检控制", "扣款信息列表");
 	
