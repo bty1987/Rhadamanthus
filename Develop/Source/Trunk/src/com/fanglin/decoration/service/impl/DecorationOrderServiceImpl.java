@@ -41,10 +41,10 @@ import com.fanglin.data.po.VillagePO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
-import com.fanglin.decoration.dao.OrderBelongInfoDao;
+import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.po.OrderBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.service.DecorationOrderService;
 import com.fanglin.decoration.vo.DecorationOrderExportVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
@@ -111,7 +111,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 	
 	@Autowired
-	private OrderBelongInfoDao orderBelongInfoDao;
+	private DecorationBelongDao orderBelongInfoDao;
 	
 	@Autowired
 	private MessageService messageService;
@@ -278,13 +278,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
-			List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
-			for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(OrderBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){ // 设计归属
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){ // 设计归属
 					decorationOrderVO.setDesigner(decorationOrderVO.getDesigner() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
 					decorationOrderVO.setDesignDepartment(decorationOrderVO.getDesignDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){ // 业务归属
+				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){ // 业务归属
 					decorationOrderVO.setSalesman(decorationOrderVO.getSalesman() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
 					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
 				}
@@ -518,13 +518,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
-			List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
-			for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(OrderBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
 					decorationOrderVO.setDesigner(decorationOrderVO.getDesigner() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
 					decorationOrderVO.setDesignDepartment(decorationOrderVO.getDesignDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){
+				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){
 					decorationOrderVO.setSalesman(decorationOrderVO.getSalesman() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
 					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
 				}
@@ -708,6 +708,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderExportVO.setContractPrice(decorationOrderPO.getOrderTotalPrice());
 			decorationOrderExportVO.setUnpayPayment(decorationOrderPO.getOrderTotalPrice());
 			decorationOrderExportVO.setSalesmanType(decorationOrderPO.getSalesmanType());
+			decorationOrderExportVO.setHouseArea(decorationOrderPO.getHouseArea());
+			
+			if(decorationOrderPO.getSupervisorPO() != null){
+				decorationOrderExportVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
+			}
 			
 			AdvancePaymentPO advancePaymentPO = decorationOrderPO.getCustomerPO().getAdvancePaymentPO();
 			if(advancePaymentPO != null){
@@ -797,12 +802,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderExportVO.setPenalty(decorationPaymentPO.getReferMoney());
 			}else if(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(decorationPaymentPO.getPaymentType())){
 				decorationOrderExportVO.setDesignPayment(decorationPaymentPO.getReferMoney());
+				decorationOrderExportVO.setDesignPaymentStatus(decorationPaymentPO.getPaymentStatus());
 			}
 		}
 		
-		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIds(orderIds);
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIds(orderIds);
 		
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			
 			try {
 				DecorationOrderExportVO decorationOrderExportVO = (DecorationOrderExportVO) decorationOrderExportMap.get(orderBelongInfoPO.getDecorationOrderPO().getOrderId()).clone();
@@ -1100,9 +1106,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			newDecorationOrderPO.setAutoId(decorationOrderPO.getAutoId());
 			newDecorationOrderPO.setOrderId(newOrderId);
 			
-			List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(oldOrderId);
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(oldOrderId);
 			
-			for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 				orderBelongInfoPO.setDecorationOrderPO(newDecorationOrderPO);
 				
 				orderBelongInfoDao.update(orderBelongInfoPO);
@@ -1283,20 +1289,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderDao.save(decorationOrderPO);
 		
 		//创建订单归属信息
-		OrderBelongInfoPO belongDesignerInfo = new OrderBelongInfoPO();
+		DecorationBelongInfoPO belongDesignerInfo = new DecorationBelongInfoPO();
 		belongDesignerInfo.setBelongDeptPO(decorationOrderPO.getDesignerPO().getDept());
 		belongDesignerInfo.setBelongRate((float) 1);
 		belongDesignerInfo.setBelongRegionPO(decorationOrderPO.getDesignerPO().getDept().getFatherDept());
 		belongDesignerInfo.setBelongUserPO(decorationOrderPO.getDesignerPO());
-		belongDesignerInfo.setBelongType(OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		belongDesignerInfo.setDefaultFlag(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR);
+		belongDesignerInfo.setBelongType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		belongDesignerInfo.setDefaultFlag(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR);
 		belongDesignerInfo.setOperateUserPO(operater);
 		belongDesignerInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		belongDesignerInfo.setStatus(OrderBelongInfoPO.STATUS_PASS_STR);
+		belongDesignerInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongDesignerInfo.setDecorationOrderPO(decorationOrderPO);
 		orderBelongInfoDao.saveOrUpdate(belongDesignerInfo);
 		
-		OrderBelongInfoPO belongsalesmanInfo = new OrderBelongInfoPO();
+		DecorationBelongInfoPO belongsalesmanInfo = new DecorationBelongInfoPO();
 		belongsalesmanInfo.setBelongDeptPO(decorationOrderPO.getSalesmanPO().getDept());
 		belongsalesmanInfo.setBelongRate((float) 1);
 		
@@ -1307,11 +1313,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		}
 		
 		belongsalesmanInfo.setBelongUserPO(decorationOrderPO.getSalesmanPO());
-		belongsalesmanInfo.setBelongType(OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
-		belongsalesmanInfo.setDefaultFlag(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR);
+		belongsalesmanInfo.setBelongType(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		belongsalesmanInfo.setDefaultFlag(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR);
 		belongsalesmanInfo.setOperateUserPO(operater);
 		belongsalesmanInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		belongsalesmanInfo.setStatus(OrderBelongInfoPO.STATUS_PASS_STR);
+		belongsalesmanInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongsalesmanInfo.setDecorationOrderPO(decorationOrderPO);
 		
 		orderBelongInfoDao.saveOrUpdate(belongsalesmanInfo);

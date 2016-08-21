@@ -465,7 +465,7 @@ var decorationUtils = {
 				baseTypes.indexOf($paymentType) != -1 ? $liLine.appendTo($baseul) : $liLine.appendTo($otherul);
 			});
 		}
-	}, initOrderBelongInfo: function(orderId){
+	}, initDecorationBelong: function(orderId){
 		
 		var $design = $("#belongDesignInfo").html('');
 		var $salesman = $("#belongSalesmanInfo").html('');
@@ -473,14 +473,14 @@ var decorationUtils = {
 		var $designul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($design);
 		var $salesmanul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesman);
 		
-		var orderBelongInfos = null;
+		var decorationBelongs = null;
 		
-		com.post(api.decoration.queryOrderBelongInfoByOrderId, {"orderBelongInfo.orderId": orderId}, function(res){
-			orderBelongInfos = res.orderBelongInfos;
+		com.post(api.decoration.queryDecorationBelongByOrderId, {"decorationBelong.orderId": orderId}, function(res){
+			decorationBelongs = res.decorationBelongs;
 		}, null, false);
 		
-		if(orderBelongInfos && orderBelongInfos.length){
-			$.each(orderBelongInfos, function(i, v){
+		if(decorationBelongs && decorationBelongs.length){
+			$.each(decorationBelongs, function(i, v){
 				var $liLine = $('<li></li>').addClass('item-orange clearfix');
 				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belongUser));
 				var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');

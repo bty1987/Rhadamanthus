@@ -22,8 +22,6 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	
 	private Short state;
 	
-	private Integer total;
-	
 	private Integer num;
 	
 	private Float money;
@@ -90,14 +88,6 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setState(Short state) {
 		this.state = state;
-	}
-
-	public Integer getTotal() {
-		return total;
-	}
-
-	public void setTotal(Integer total) {
-		this.total = total;
 	}
 
 	public Integer getNum() {

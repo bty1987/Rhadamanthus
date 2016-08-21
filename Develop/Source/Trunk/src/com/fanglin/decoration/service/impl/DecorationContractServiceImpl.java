@@ -26,11 +26,11 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
-import com.fanglin.decoration.dao.OrderBelongInfoDao;
+import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.po.OrderBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.department.po.DepartmentPO;
@@ -65,7 +65,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private QuotationDao quotationDao;
 	
 	@Autowired
-	private OrderBelongInfoDao orderBelongInfoDao;
+	private DecorationBelongDao orderBelongInfoDao;
 	
 	@Autowired
 	private DecorationRankService decorationRankService;
@@ -130,7 +130,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			if(noUpdateStatus.contains(decorationContractPO.getDecorationOrderPO().getStatus())){
 				throw new FLException(140005, "订单合同不能修改");
 			}
-			
 		}else{
 			decorationContractPO = new DecorationContractPO();
 		}
@@ -206,16 +205,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 		
 		//更新归属信息的部门和大区
-		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
 			orderBelongInfoDao.saveOrUpdate(orderBelongInfoPO);
 		}
 		
-		orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR);
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			

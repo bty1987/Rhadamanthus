@@ -1,4 +1,4 @@
-var orderBelongInfo = {
+var decorationBelong = {
 	belongType:null,
 	decorationOrderId:null,
 	belongStatus:null,
@@ -10,11 +10,11 @@ var orderBelongInfo = {
 jQuery(function($) {
 	$('#fl-statement').statement("订单归属", "归属详细信息");
 	
-	orderBelongInfo.decorationOrderId = params.orderId;
+	decorationBelong.decorationOrderId = params.orderId;
 	
 	$('#btnBack').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationOrderBelongIndex.url);
 	});
 	
-	decorationUtils.initOrderBelongInfo(orderBelongInfo.decorationOrderId);
+	decorationUtils.initDecorationBelong(decorationBelong.decorationOrderId);
 });

@@ -28,7 +28,7 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "orderbelonginfo", catalog = "platform")
-public class OrderBelongInfoPO implements Serializable {
+public class DecorationBelongInfoPO implements Serializable {
 
 	private static final long serialVersionUID = 11111344461146L;
 	
