@@ -18,30 +18,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.decoration.dao.OrderBelongInfoDao;
-import com.fanglin.decoration.po.OrderBelongInfoPO;
-import com.fanglin.decoration.service.OrderBelongInfoService;
-import com.fanglin.decoration.vo.OrderBelongInfoVO;
+import com.fanglin.decoration.dao.DecorationBelongDao;
+import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.service.DecorationBelongService;
+import com.fanglin.decoration.vo.DecorationBelongVO;
 
 @Service("orderBelongInfoService")
 @Transactional(readOnly=true)
-public class OrderBelongInfoServiceImpl implements OrderBelongInfoService {
+public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Autowired
-	private OrderBelongInfoDao orderBelongInfoDao;
+	private DecorationBelongDao orderBelongInfoDao;
 	
 	@Override
-	public List<OrderBelongInfoVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId,String belongType){
+	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId,String belongType){
 		
-		List<OrderBelongInfoVO> orderBelongInfoVOs = new ArrayList<OrderBelongInfoVO>();
-		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIdAType(decorationOrderId, belongType);
+		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIdAType(decorationOrderId, belongType);
 		
 		if(orderBelongInfoPOs == null) {
 			return null;
 		}
 		
-		for(OrderBelongInfoPO orderBelongInfoPO : orderBelongInfoPOs){
-			OrderBelongInfoVO orderBelongInfoVO = new OrderBelongInfoVO();
+		for(DecorationBelongInfoPO orderBelongInfoPO : orderBelongInfoPOs){
+			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
 			if(orderBelongInfoPO.getApprovalUserPO() != null){
 				orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
 				orderBelongInfoVO.setApprovalTime(orderBelongInfoPO.getApprovalTime());
@@ -77,9 +77,9 @@ public class OrderBelongInfoServiceImpl implements OrderBelongInfoService {
 	}
 	
 	@Override
-	public List<OrderBelongInfoVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId,String belongType){
+	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId,String belongType){
 		
-		List<OrderBelongInfoVO> orderBelongInfoVOs = queryApprovalingOrderBelongInfosByOrderIdAndBelongType(decorationOrderId, belongType);
+		List<DecorationBelongVO> orderBelongInfoVOs = queryApprovalingOrderBelongInfosByOrderIdAndBelongType(decorationOrderId, belongType);
 		
 		if(orderBelongInfoVOs == null || orderBelongInfoVOs.size() == 0){
 			orderBelongInfoVOs = queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
@@ -89,12 +89,12 @@ public class OrderBelongInfoServiceImpl implements OrderBelongInfoService {
 	}
 	
 	@Override
-	public List<OrderBelongInfoVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId,String belongType){
-		List<OrderBelongInfoVO> orderBelongInfoVOs = new ArrayList<OrderBelongInfoVO>();
-		List<OrderBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
+	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId,String belongType){
+		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
 		
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-			OrderBelongInfoVO orderBelongInfoVO = new OrderBelongInfoVO();
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
 			
 			if(orderBelongInfoPO.getApprovalUserPO() != null){
 				orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
@@ -132,13 +132,13 @@ public class OrderBelongInfoServiceImpl implements OrderBelongInfoService {
 	}
 
 	@Override
-	public List<OrderBelongInfoVO> queryOrderBelongInfoByOrderId(OrderBelongInfoVO orderBelongInfoVO) {
+	public List<DecorationBelongVO> queryOrderBelongInfoByOrderId(DecorationBelongVO orderBelongInfoVO) {
 		
-		List<OrderBelongInfoVO> orderBelongInfoVOs = new ArrayList<OrderBelongInfoVO>();
-		List<OrderBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
+		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
 		
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-			OrderBelongInfoVO _orderBelongInfoVO = new OrderBelongInfoVO();
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+			DecorationBelongVO _orderBelongInfoVO = new DecorationBelongVO();
 			
 			if(orderBelongInfoPO.getApprovalUserPO() != null){
 				_orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());

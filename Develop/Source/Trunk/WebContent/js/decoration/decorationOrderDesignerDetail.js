@@ -808,7 +808,7 @@ function initWizard() {
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, activityBtnMethod, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, uiBtnMethod, decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 7){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}
 	}).on('finished', function(e) {
 		com.switchPage(api.index.decorationOrderDesignerIndex.url);
@@ -826,7 +826,7 @@ function initWizard() {
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, activityBtnMethod, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, uiBtnMethod, decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 7){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}
 	}).on('next', function(e, info) {
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")

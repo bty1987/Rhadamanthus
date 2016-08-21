@@ -47,12 +47,6 @@ public class DecorationPictureAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryOrderDesignPictureForCADByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOrderDesignPictureForCADByOrderId() throws Exception {
-
-		return SUCCESS;
-	}
-	
 	@Action(value = "addDecorationPicture", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationPicture() throws FLException{
 
@@ -61,18 +55,6 @@ public class DecorationPictureAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "addOrderDesignPictureForCAD", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addOrderDesignPictureForCAD() throws Exception {
-
-	    return SUCCESS;
-	}
-
-	@Action(value = "deleteOrderDesignPictureByIdAndOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteOrderDesignPictureByIdAndOrderId() throws FLException{
-
-		return SUCCESS;
-	}
-
 	public DecorationPictureVO getDecorationPicture() {
 		return decorationPicture;
 	}

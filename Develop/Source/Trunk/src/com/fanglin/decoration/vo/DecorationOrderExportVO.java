@@ -66,6 +66,8 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 	
 	private float designPayment;
 	
+	private String designPaymentStatus;
+	
 	private float firstPayment;
 	
 	private Timestamp firstCollectTime;
@@ -91,6 +93,10 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 	private float unpayPayment;
 	
 	private String salesmanType;
+	
+	private String supervisor;
+	
+	private float houseArea;
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -391,6 +397,30 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 
 	public void setSalesmanType(String salesmanType) {
 		this.salesmanType = salesmanType;
+	}
+
+	public String getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(String supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	public float getHouseArea() {
+		return houseArea;
+	}
+
+	public void setHouseArea(float houseArea) {
+		this.houseArea = houseArea;
+	}
+
+	public String getDesignPaymentStatus() {
+		return designPaymentStatus;
+	}
+
+	public void setDesignPaymentStatus(String designPaymentStatus) {
+		this.designPaymentStatus = designPaymentStatus;
 	}
 	
 }

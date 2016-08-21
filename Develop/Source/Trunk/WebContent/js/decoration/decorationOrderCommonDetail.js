@@ -130,7 +130,7 @@ function initWizard(){
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, null, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 7){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 8){
 			decorationUtils.initConstructionScheduleInfo();
 		}
@@ -148,7 +148,7 @@ function initWizard(){
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, null, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 7){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 8){
 			decorationUtils.initConstructionScheduleInfo();
 		}

@@ -1,9 +1,9 @@
-var orderBelongInfo = {
+var decorationBelong = {
 	belongType:null,
 	decorationOrderId:null,
 	belongStatus:null,
 	
-	orderBelongInfos:null,
+	decorationBelongs:null,
 	
 	lastEditId:-1,
 };
@@ -12,12 +12,12 @@ jQuery(function($) {
 	
 	$('#fl-statement').statement("订单归属", "归属详细信息");
 	
-	orderBelongInfo.decorationOrderId = params.orderId;
-	orderBelongInfo.belongStatus = params.orderBelongStatus;
-	orderBelongInfo.belongType = params.orderBelongType;
+	decorationBelong.decorationOrderId = params.orderId;
+	decorationBelong.belongStatus = params.orderBelongStatus;
+	decorationBelong.belongType = params.orderBelongType;
 	
 	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": 3}, "autoFillKeyValue", "key", "value");
-	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : orderBelongInfo.belongType == "设计" ? "设计师" : ""}, "autoFillKeyValue", "key", "value").on("change",function(e){
+	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : decorationBelong.belongType == "设计" ? "设计师" : ""}, "autoFillKeyValue", "key", "value").on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;
 		}
@@ -99,7 +99,7 @@ jQuery(function($) {
 			var $belongRate = utils.changeTwoDecimal($v.attr('belongRate'));
 			var $defaultFlag = $v.attr('defaultFlag');
 			
-			options["approvalOrderBelongItems["+num+"].orderId"] = orderBelongInfo.decorationOrderId;
+			options["approvalOrderBelongItems["+num+"].orderId"] = decorationBelong.decorationOrderId;
 			options["approvalOrderBelongItems["+num+"].belongUserId"] = $v.attr('belongUserId');
 			options["approvalOrderBelongItems["+num+"].belongRate"] = $belongRate;
 			options["approvalOrderBelongItems["+num+"].defaultFlag"] = $defaultFlag;
@@ -122,8 +122,8 @@ jQuery(function($) {
 			return;
 		}
 			
-		options["approvalOrderBelong.orderId"] = orderBelongInfo.decorationOrderId;
-		options["approvalOrderBelong.belongType"] = orderBelongInfo.belongType;
+		options["approvalOrderBelong.orderId"] = decorationBelong.decorationOrderId;
+		options["approvalOrderBelong.belongType"] = decorationBelong.belongType;
 		
 		options["approval.receiverId"] = $("#approveManSel").val();
 		options["approval.comment"] = $("#changeReason").val();
@@ -190,15 +190,15 @@ jQuery(function($) {
 		$("#approveModal").modal("show");	
 	}
 	
-	var url = orderBelongInfo.belongType == '设计' ? api.decoration.queryOrderBelongInfoForDesignAChangeByOrderId : api.decoration.queryOrderBelongInfoForBusinessnAChangeByOrderId;
+	var url = decorationBelong.belongType == '设计' ? api.decoration.queryDecorationBelongForDesignAChangeByOrderId : api.decoration.queryDecorationBelongForBusinessnAChangeByOrderId;
 	
-	com.post(url, {"orderBelongInfo.orderId":orderBelongInfo.decorationOrderId}, function(res){
+	com.post(url, {"decorationBelong.orderId":decorationBelong.decorationOrderId}, function(res){
 
 		var $resultList = $('#resultList').html('');
-		var orderBelongInfos = res.orderBelongInfos;
+		var decorationBelongs = res.decorationBelongs;
 		
-		if(orderBelongInfos && orderBelongInfos.length > 0){
-			$.each(orderBelongInfos, function(i, v){
+		if(decorationBelongs && decorationBelongs.length > 0){
+			$.each(decorationBelongs, function(i, v){
 				$resultList.append(displayFunc(v));
 			});
 		}else{

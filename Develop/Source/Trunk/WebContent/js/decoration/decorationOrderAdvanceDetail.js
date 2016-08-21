@@ -291,7 +291,7 @@ function initWizard(){
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, null, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 6){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}
 		
 	}).on('finished', function(e) {
@@ -308,7 +308,7 @@ function initWizard(){
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, null, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 6){
-			decorationUtils.initOrderBelongInfo(decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
 		}
 	}).on('next', function(e, info){
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");

@@ -79,14 +79,6 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "decorationContractIndex", results = { @Result(name = "success", type = "dispatcher", location = "/views/contract/${decorationContract.templateHtml}") })
-	public String decorationContractIndex() throws FLException {
-		
-		decorationContract = decorationContractService.queryDecorationContractForQuotationByOrderId(decorationContract);
-		
-		return SUCCESS;
-	}
-	
 	public String getDecorationOrderId(){
 		return decorationOrderId;
 	}

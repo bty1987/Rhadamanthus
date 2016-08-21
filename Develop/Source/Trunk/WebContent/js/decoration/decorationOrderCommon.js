@@ -221,8 +221,6 @@ $(function(){
     		
     		order.agreementModal.modal("show");
     	});
-    	
-//    	$("#printContractBtn").attr('href', config.server + api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId + "&authentication=" + params.authentication);
     }
     
     function showErrorAlert (reason, detail) {

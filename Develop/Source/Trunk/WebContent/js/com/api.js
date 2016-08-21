@@ -555,7 +555,6 @@ var api = {
 		generateDecorationContract: {url: "../../generateDecorationContract.do"},
 		signDecorationContract: {url: "signDecorationContract.do"},
 		resignDecorationContract: {url: "resignDecorationContract.do"},
-		decorationContractIndex: {url: "decorationContractIndex.do"},
 		
 		pageDecorationOrderForGeneral: {url: "pageDecorationOrderForGeneral.do"},
 		pageDecorationOrderForCommon: {url: "pageDecorationOrderForCommon.do"},
@@ -577,17 +576,14 @@ var api = {
 		
 		exportDecorationorderByContractTime: {url: "exportDecorationorderByContractTime.do"},
 		
-		queryOrderBelongInfoByOrderId: {url: "queryOrderBelongInfoByOrderId.do"},
-		queryOrderBelongInfoForDesignAChangeByOrderId: {url: "queryOrderBelongInfoForDesignAChangeByOrderId.do"},
-		queryOrderBelongInfoForDesignByOrderId: {url: "queryOrderBelongInfoForDesignByOrderId.do"},
-		queryOrderBelongInfoForBusinessnAChangeByOrderId: {url: "queryOrderBelongInfoForBusinessnAChangeByOrderId.do"},
-		queryOrderBelongInfoForBusinessnByOrderId: {url: "queryOrderBelongInfoForBusinessnByOrderId.do"},
+		queryDecorationBelongByOrderId: {url: "queryDecorationBelongByOrderId.do"},
+		queryDecorationBelongForDesignAChangeByOrderId: {url: "queryDecorationBelongForDesignAChangeByOrderId.do"},
+		queryDecorationBelongForDesignByOrderId: {url: "queryDecorationBelongForDesignByOrderId.do"},
+		queryDecorationBelongForBusinessnAChangeByOrderId: {url: "queryDecorationBelongForBusinessnAChangeByOrderId.do"},
+		queryDecorationBelongForBusinessnByOrderId: {url: "queryDecorationBelongForBusinessnByOrderId.do"},
 		
 		queryOrderDesignPictureByOrderId: {url: "queryOrderDesignPictureByOrderId.do"},
-		queryOrderDesignPictureForCADByOrderId: {url: "queryOrderDesignPictureForCADByOrderId.do"},
 		addOrderDesignPicture: {url: "addOrderDesignPicture.do"},
-		addOrderDesignPictureForCAD: {url: "addOrderDesignPictureForCAD.do"},
-		deleteOrderDesignPictureByIdAndOrderId: {url: "deleteOrderDesignPictureByIdAndOrderId.do"},
 		
 		queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do"},
 		addDecorationPicture: {url: "addDecorationPicture.do"},

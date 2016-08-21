@@ -31,9 +31,9 @@ import com.fanglin.approval.vo.ApprovalOrderBelongVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.dao.OrderBelongInfoDao;
+import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.po.OrderBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
@@ -60,7 +60,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 	private DecorationOrderDao decorationOrderDao;
 	
 	@Autowired
-	private OrderBelongInfoDao orderBelongInfoDao;
+	private DecorationBelongDao orderBelongInfoDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -96,7 +96,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		}
 		
 		List<String> unstatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
-		List<String> belongTypes = Arrays.asList(new String[]{OrderBelongInfoPO.BELONGTYPE_DESIGN_STR, OrderBelongInfoPO.BELONGTYPE_SALESMAN_STR});
+		List<String> belongTypes = Arrays.asList(new String[]{DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR, DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR});
 		
 		if(!unstatus.contains(decorationOrderPO.getStatus())){
 			throw new FLException(140011, "订单已签订不可修改归属信息");
@@ -106,9 +106,9 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			throw new FLException(140014, "订单归属类型错误");
 		}
 		
-		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
 		
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			UserPO belongUserPO = orderBelongInfoPO.getBelongUserPO();
 			
 			oldBelongUserName.append(belongUserPO.getCurrentName());
@@ -125,7 +125,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 				throw new FLException(220005, "员工不存在");
 			}
 			
-			if(OrderBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) && !userPO.getDuty().contains("设计师")){
+			if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) && !userPO.getDuty().contains("设计师")){
 				throw new FLException(140015, "订单设计归属人员职位需为设计师");
 			}
 			
@@ -137,7 +137,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			rateCount = Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate());
 			
-			if(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
+			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
 				defaultCount++;
 			}
 		}
@@ -205,10 +205,10 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<OrderBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
 		
-		for(OrderBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-			orderBelongInfoPO.setStatus(OrderBelongInfoPO.STATUS_REPLACE_STR);
+		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_REPLACE_STR);
 			orderBelongInfoDao.update(orderBelongInfoPO);
 		}
 		
@@ -220,13 +220,13 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 				throw new FLException(220005, "员工不存在");
 			}
 			
-			OrderBelongInfoPO orderBelongInfoPO = new OrderBelongInfoPO();
+			DecorationBelongInfoPO orderBelongInfoPO = new DecorationBelongInfoPO();
 			orderBelongInfoPO.setBelongDeptPO(userPO.getDept());
 			if(userPO.getDept().getFatherDept() != null){
 				orderBelongInfoPO.setBelongRegionPO(userPO.getDept().getFatherDept());
 			}
 			
-			if(OrderBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemPO.getDefaultFlag())){
+			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemPO.getDefaultFlag())){
 				defaultUser = approvalOrderBelongItemPO.getBelongUserId();
 			}
 			
@@ -239,11 +239,11 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			orderBelongInfoPO.setDefaultFlag(approvalOrderBelongItemPO.getDefaultFlag());
 			
 			orderBelongInfoPO.setBelongType(approvalOrderBelongPO.getBelongType());
-			orderBelongInfoPO.setStatus(OrderBelongInfoPO.STATUS_PASS_STR);
+			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 			orderBelongInfoDao.save(orderBelongInfoPO);
 		}
 		
-		if(OrderBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){
+		if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){
 			decorationOrderPO.setDesignerPO(new UserPO(defaultUser));
 		}else{
 			decorationOrderPO.setSalesmanPO(new UserPO(defaultUser));

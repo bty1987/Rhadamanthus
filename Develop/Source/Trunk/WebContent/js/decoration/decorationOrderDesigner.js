@@ -228,9 +228,6 @@ $(function(){
 	    		
 	    		order.agreementModal.modal("show");
 	    	});
-
-//			$("#printContractBtn").attr('href', config.server + api.decoration.decorationContractIndex.url + "?decorationContract.orderId=" + contract.decorationOrderId + "&authentication=" + params.authentication);
-//			order.agreementModal.modal("show");
 		}
 		//增减项
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){
