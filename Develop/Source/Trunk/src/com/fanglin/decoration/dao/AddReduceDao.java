@@ -29,5 +29,7 @@ public interface AddReduceDao extends Dao<AddReducePO> {
 	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId);
 	
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId);
+	
+	public List<AddReducePO> queryAddReduceForPayedByOrderId(String orderId);
 
 }

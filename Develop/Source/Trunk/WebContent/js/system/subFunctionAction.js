@@ -156,7 +156,7 @@ jQuery(function($) {
 		subFunctionAction.subFunctionActionItems.subFunctionId.val(subFunctionId);
 		
 		if(subFunctionAction.subFunctionActionItems.defaultFlag.value == undefined){
-			if(row.defaultFlag == 1){
+			if(defaultFlag == 1){
 				subFunctionAction.subFunctionActionItems.defaultFlag.click();
 			}
 			subFunctionAction.subFunctionActionItems.defaultFlag.value = defaultFlag;

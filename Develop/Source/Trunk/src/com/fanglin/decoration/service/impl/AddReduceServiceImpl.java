@@ -24,6 +24,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.dao.AddReduceItemDao;
+import com.fanglin.decoration.po.AddReduceItemPO;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.AddReduceService;
@@ -31,6 +32,9 @@ import com.fanglin.decoration.vo.AddReduceVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -44,6 +48,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
+	
+	@Autowired
+	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
@@ -86,6 +93,24 @@ public class AddReduceServiceImpl implements AddReduceService{
 		return addReduceVOs;
 	}
 	
+	@Override
+	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) {
+		
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForPayedByOrderId(addReduceVO.getOrderId());
+		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
+		
+		for(AddReducePO addReducePO: addReducePOs){
+			
+			AddReduceVO _addReduceVO = new AddReduceVO();
+			
+			BeanUtil.copyProperties(addReducePO, _addReduceVO);
+			
+			addReduceVOs.add(_addReduceVO);
+		}
+		
+		return addReduceVOs;
+	}
+
 	@Override
 	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException {
 		
@@ -183,11 +208,43 @@ public class AddReduceServiceImpl implements AddReduceService{
 			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
+		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
+		
+		for(AddReduceItemPO addReduceItemPO: addReduceItemPOs){
+			
+			if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT){
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				if(quotationFunctionAreaItemPO == null){
+					throw new FLException(200013, "报价项不存在");
+				}
+				
+				float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+				float addReduceItemNum = addReduceItemPO.getNum();
+				
+				quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
+				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+			}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT){
+				AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				if(_addReduceItemPO == null){
+					throw new FLException(140036, "增减项目不存在");
+				}
+				
+				float _addReduceItemNum = _addReduceItemPO.getNum();
+				float addReduceItemNum = addReduceItemPO.getNum();
+				
+				_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, addReduceItemNum));
+				addReduceItemDao.update(_addReduceItemPO);
+			}
+			
+			addReduceItemDao.delete(addReduceItemPO);
+		}
+		
 		if(addReducePO.getDpId() != null){
 			decorationPaymentDao.deleteById(addReducePO.getDpId());
 		}
 		
-		addReduceItemDao.deleteAddReductItemByAddReduceId(arId);
 		addReduceDao.delete(addReducePO);
 		
 		return 0;

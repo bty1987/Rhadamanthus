@@ -9,6 +9,7 @@ var config = {
 	company: 2952158214, // 1918: 8541268764 , ehome: 2153458453
 	companyName: '方林装饰',
 	companyFullName: '辽宁方林装饰工程有限公司',
+	companyAddr: '沈阳市铁西区兴华北街30号',
 	
 	iconImg: './images/icon_fanglin.png',
 	backgroundImg: './images/bg_fanglin.jpg',

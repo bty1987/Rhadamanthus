@@ -25,6 +25,8 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	public static final short TYPE_QUOTATION_ITEM_INT = 3;
 	
+	public static final short TYPE_ADD_ITEM_INT = 4;
+	
 	public static final String COLUMN_ARID_STR = "arId";
 
 	private long ariId;

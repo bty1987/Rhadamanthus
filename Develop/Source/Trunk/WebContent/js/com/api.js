@@ -252,6 +252,7 @@ var api = {
 		
 		pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
 		queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do"},
+		queryAddReduceForPayedByOrderId: {url: "queryAddReduceForPayedByOrderId.do"},
 		queryAddReduceByDecorationPaymentId: {url: "queryAddReduceByDecorationPaymentId.do"},
 		addAddReduce: {url: "addAddReduce.do"},
 		updateAddReduce: {url: "updateAddReduce.do"},
@@ -870,7 +871,7 @@ var api = {
 		copyQuotation: {url: "copyQuotation.do"},
 		changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
 		
-		queryQuotationFunctionAreaForCommonById: {url: "queryQuotationFunctionAreaForCommonById.do"},
+		queryQuotationFunctionAreaForCommonByQuotationId: {url: "queryQuotationFunctionAreaForCommonByQuotationId.do"},
 		queryQuotationFunctionAreaByQuotationId: {url: "queryQuotationFunctionAreaByQuotationId.do"},
 		addQuotationFuctionAreaByFunctionAreaIds: {url: "addQuotationFuctionAreaByFunctionAreaIds.do"},
 		updateQuotationFunctionArea: {url: "updateQuotationFunctionArea.do"},

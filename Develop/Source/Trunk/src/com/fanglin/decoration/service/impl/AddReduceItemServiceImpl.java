@@ -206,8 +206,24 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
 				
-//				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, addReduceItemNum));
-//				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, addReduceItemNum));
+				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+			}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT){
+				AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				if(_addReduceItemPO == null){
+					throw new FLException(140036, "增减项目不存在");
+				}
+				
+				float _addReduceItemNum = _addReduceItemPO.getNum();
+				float addReduceItemNum = addReduceItemPO.getNum();
+				
+				if(_addReduceItemNum < addReduceItemNum){
+					throw new FLException(140039, "减项工程量大于引用项目");
+				}
+				
+				_addReduceItemPO.setNum(Arith.sub(_addReduceItemNum, addReduceItemNum));
+				addReduceItemDao.update(_addReduceItemPO);
 			}
 		}else{
 			addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
@@ -233,8 +249,27 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
 				
-//				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, _diff));
-//				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, _diff));
+				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+			}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT){
+				AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				if(_addReduceItemPO == null){
+					throw new FLException(140036, "增减项目不存在");
+				}
+				
+				float _addReduceItemNum = _addReduceItemPO.getNum();
+				float addReduceItemNum = addReduceItemPO.getNum();
+				float _num = addReduceItemVO.getNum();
+				
+				float _diff = Arith.sub(_num, addReduceItemNum);
+				
+				if(_diff > 0 && _addReduceItemNum < _diff){
+					throw new FLException(140039, "减项工程量大于引用项目");
+				}
+				
+				_addReduceItemPO.setNum(Arith.sub(_addReduceItemNum, _diff));
+				addReduceItemDao.update(_addReduceItemPO);
 			}
 			
 			addReduceItemPO.setNum(addReduceItemVO.getNum());
@@ -277,11 +312,23 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				throw new FLException(200013, "报价项不存在");
 			}
 			
-//			float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
-//			float addReduceItemNum = addReduceItemPO.getNum();
+			float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+			float addReduceItemNum = addReduceItemPO.getNum();
 			
-//			quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
-//			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+			quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT){
+			AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
+			
+			if(_addReduceItemPO == null){
+				throw new FLException(140036, "增减项目不存在");
+			}
+			
+			float _addReduceItemNum = _addReduceItemPO.getNum();
+			float addReduceItemNum = addReduceItemPO.getNum();
+			
+			_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, addReduceItemNum));
+			addReduceItemDao.update(_addReduceItemPO);
 		}
 		
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);

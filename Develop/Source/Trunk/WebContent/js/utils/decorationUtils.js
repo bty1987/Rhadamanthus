@@ -22,13 +22,11 @@ var decorationUtils = {
 			
 			var addReduceIds = {};
 			
-			com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": decorationOrderDetail.decorationOrderId}, function(res){
+			com.post(api.addReduce.queryAddReduceForPayedByOrderId, {"addReduce.orderId": decorationOrderDetail.decorationOrderId}, function(res){
 				var addReduces = res.addReduces;
 				
-				var n = 0;
-				
 				$.each(addReduces, function(i, v){
-					v.type == 0 && (addReduceIds["addReduceIds[" + n + "]"] = v.arId, n++);
+					addReduceIds["addReduceIds[" + i + "]"] = v.arId;
 				});
 				
 			}, null, false);
@@ -48,6 +46,8 @@ var decorationUtils = {
 			$("#btnPrintDefaultQuotationInfo").attr("disabled", "disabled");
 		}
 	}, initQuotationDetailItem: function(quotation, quotationFunctionAreas, addReduceItems) {
+		
+		var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项"};
 		
 		var discount = quotation.discount;
 		
@@ -74,10 +74,10 @@ var decorationUtils = {
 					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
 				}
 				
-				var _dcp = quotationFunctionAreaItem.type < 2 ? utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1)) : quotationFunctionAreaItem.unitPrice;
-				var _dcpt = utils.accMul(quotationFunctionAreaItem.num,  _dcp);
+				var _dcp = quotationFunctionAreaItem.type < 2 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
+				var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.num,  _dcp));
 				
-				quotationFunctionAreaTotal = utils.accAdd(quotationFunctionAreaTotal, _dcpt)
+				quotationFunctionAreaTotal = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaTotal, _dcpt));
 				
 				quotationFunctionAreaItem.dcp = _dcp;
 				quotationFunctionAreaItem.dcpt = _dcpt;
@@ -86,7 +86,7 @@ var decorationUtils = {
 					quotationFunctionAreaItem.num = quotation.trafficPrice;
 					quotationFunctionAreaItem.dcpt = quotation.trafficPrice;
 				}else if(quotationFunctionAreaItem.type == 3){
-					var _unitPrice = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice, quotation.notSalesmanRate));
+					var _unitPrice = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice, quotation.notSalesmanRate));
 					quotationFunctionAreaItem.num = quotation.managePrice;
 					quotationFunctionAreaItem.dcpt = quotation.managePrice;
 					quotationFunctionAreaItem.unitPrice = _unitPrice;
@@ -96,9 +96,9 @@ var decorationUtils = {
 				quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
 				
 				if(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName]){
-					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num, quotationFunctionAreaItem.num));
-					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp, quotationFunctionAreaItem.dcp));
-					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt, quotationFunctionAreaItem.dcpt));
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num, quotationFunctionAreaItem.num));
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcp, quotationFunctionAreaItem.dcp));
+					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].dcpt, quotationFunctionAreaItem.dcpt));
 				}else{
 					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName] = $.extend({}, quotationFunctionAreaItem);
 				}
@@ -111,8 +111,17 @@ var decorationUtils = {
 			
 			var addReduceItem = addReduceItems[i];
 			
+			if([0, 2].indexOf(addReduceItem.type) != -1){
+				addReduceItem.itemName = addReduceItem.itemName + "(增项" + addReduceItemtypeDict[addReduceItem.type] + ")";
+			}else{
+				addReduceItem.num = -addReduceItem.num;
+				addReduceItem.itemName = addReduceItem.itemName + "(减项" + addReduceItemtypeDict[addReduceItem.type] + ")";
+			}
+			
+			addReduceItem.type = -1;
+			
 			var _dcp = addReduceItem.unitPrice;
-			var _dcpt = utils.accMul(addReduceItem.num,  _dcp);
+			var _dcpt = utils.changeThrDecimal(utils.accMul(addReduceItem.num,  _dcp));
 			
 			addReduceItem.dcp = _dcp;
 			addReduceItem.dcpt = _dcpt;
@@ -126,9 +135,9 @@ var decorationUtils = {
 			}
 			
 			if(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName]){
-				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num, addReduceItem.num));
-				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp, addReduceItem.dcp));
-				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt = utils.changeTwoDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt, addReduceItem.dcpt));
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].num, addReduceItem.num));
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcp, addReduceItem.dcp));
+				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName].dcpt, addReduceItem.dcpt));
 			}else{
 				quotationFunctionAreaItemWs[addReduceItem.workType][addReduceItem.itemName] = $.extend({}, addReduceItem);
 			}
