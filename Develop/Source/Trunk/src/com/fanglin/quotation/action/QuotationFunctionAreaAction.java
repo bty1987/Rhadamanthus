@@ -44,8 +44,8 @@ public class QuotationFunctionAreaAction extends BaseListAction{
 	
 	private List<Long> functionAreaIds;
 	
-	@Action(value = "queryQuotationFunctionAreaForCommonById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationFunctionAreaForCommonById() throws FLException{
+	@Action(value = "queryQuotationFunctionAreaForCommonByQuotationId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationFunctionAreaForCommonByQuotationId() throws FLException{
 		
 		quotationFunctionAreas = quotationFunctionAreaService.queryQuotationFunctionAreaForCommonByQuotationId(quotation);
 	    
@@ -71,7 +71,7 @@ public class QuotationFunctionAreaAction extends BaseListAction{
 	@Action(value = "updateQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationFunctionArea() throws FLException{
 		
-		quotationFunctionAreaService.updateQuotationFunctionArea(quotationFunctionArea, quotation);;
+		quotationFunctionAreaService.updateQuotationFunctionArea(quotationFunctionArea, quotation);
 		
 		return SUCCESS;
 	}

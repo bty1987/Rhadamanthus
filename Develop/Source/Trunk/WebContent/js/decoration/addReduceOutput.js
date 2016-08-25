@@ -81,10 +81,11 @@ function generateAddReduceItem(name, addReduceItems, total, html){
 	html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
 	html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
 	html += '<td width="40%">项目名称</td>';
-	html += '<td width="14%">单位</td>';
+	html += '<td width="14%">功能区</td>';
+	html += '<td width="10%">单位</td>';
 	html += '<td width="13%">数量</td>';
 	html += '<td width="13%">单价</td>';
-	html += '<td width="20%">金额</td>';
+	html += '<td width="10%">金额</td>';
 	html += '</tr>';
 	
 	var itemLength = addReduceItems.length;
@@ -94,6 +95,7 @@ function generateAddReduceItem(name, addReduceItems, total, html){
 		
 		html += '<tr align="center">';
 		html += '<td>'+item.itemName+'</td>';
+		html += '<td>'+item.quotationFunctionAreaName+'</td>';
 		html += '<td>'+item.measurementUnit+'</td>';
 		html += '<td>'+item.num+'</td>';
 		html += '<td>'+item.unitPrice+'</td>';
@@ -112,6 +114,9 @@ function generatePrintPage(){
 	html = "";
 	
 	$("#orderId").html("订单编号:" + addReduceDetail.quotation.orderId);
+	$("#orderAddr").html("楼盘地址:" + addReduceDetail.quotation.orderAddr);
+	$("#supervisor").html("监理:" + addReduceDetail.quotation.supervisorName);
+	$("#designer").html("设计师:" + addReduceDetail.quotation.designerName);
 	$("#labSumMoney").html("工程最终增减合计金额:" + Math.round(utils.accSub(addReduceDetail.sumAdd, addReduceDetail.sumReduce) * 100) / 100 + "元");
 	
 	if(addReduceDetail.sumAdd > 0){

@@ -24,6 +24,8 @@ public interface AddReduceService {
 	
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO);
 	
+	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO);
+	
 	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException ;
 	
 	public int addAddReduce(AddReduceVO addReduceVO);

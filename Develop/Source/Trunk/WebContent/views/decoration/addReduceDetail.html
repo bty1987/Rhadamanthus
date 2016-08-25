@@ -62,18 +62,22 @@
 											<i class="icon-pencil"></i>系统定义
 										</button>
 										
-										<button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
-											<i class="icon-ok"></i>提交
-										</button>
-
+										<button id="addItemBtn" class="btn btn-minier btn-danger col-md-4 hide" style="padding-left: 2px;" >
+                                            <i class="icon-pencil"></i>增项
+                                        </button>
 									</div>
 								</div>
 								<div class="col-md-12 space-6"></div>
 								<div class="col-md-12 ">
 									<div class="ui-pg-div">
+									   <button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
+                                            <i class="icon-ok"></i>提交
+                                        </button>
+                                        
 										<button id="saveAddReduceDetailBtn" class="btn btn-minier btn-primary col-md-4" style="padding-left: 2px;" >
 											<i class="icon-save"></i>保存
 										</button>
+										
 										<button id="detailBckBtn" class="btn btn-minier btn-info col-md-4" style="padding-left: 2px;" >
 											<i class="icon-mail-forward"></i>返回
 										</button>
@@ -209,6 +213,30 @@
 					</div>
 				</div>
 			</div>
+			
+			<div class="modal fade" id="addAddItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="addAddItemDialog" aria-hidden="true">
+                <div class="modal-dialog" style="width:900px;">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="addAddItemDialog">自定义项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div name="addItemList"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="addAddItemBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 			<!-- 系统定义报价项弹层-->
 			<div class="modal fade" id="systemDefineItemModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="systemDefineItemDialog" aria-hidden="true">

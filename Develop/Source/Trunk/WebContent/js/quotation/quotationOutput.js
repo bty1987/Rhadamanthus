@@ -72,6 +72,11 @@ function printProjectTable(){
 		
 		var quotationFunctionArea = quotationFunctionAreas[i];
 		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
+		
+		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
+			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
+		}
+		
 		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 		
 		contentHtml += '<tr bgcolor="#CCCCCC">';
@@ -171,6 +176,11 @@ function printFinanceTable(){
 		
 		var quotationFunctionArea = quotationFunctionAreas[i];
 		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
+		
+		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
+			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
+		}
+		
 		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 		
 		var discountUnitPrice = 0.0;
@@ -282,6 +292,11 @@ function printCustomerTable(){
 		
 		var quotationFunctionArea = quotationFunctionAreas[i];
 		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
+		
+		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
+			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
+		}
+		
 		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 		
 		contentHtml += '<tr bgcolor="#CCCCCC">';
@@ -305,6 +320,7 @@ function printCustomerTable(){
 			contentHtml += '<td align="left">' + quotationFunctionAreaItem.content + '</td>';
 			contentHtml += '</tr>';
 		}
+		
 	}
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
@@ -385,6 +401,8 @@ jQuery(function($) {
 	params.server = window.server;
 	params.authentication = window.authentication;
 	
+	var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项"};
+	
 	var type, p = window.location.search.substr(1);
 	
 	if(p.indexOf('time=') != -1){
@@ -411,6 +429,43 @@ jQuery(function($) {
 	
 	com.post(url, {}, function(res){
 		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
+	}, null, false);
+	
+	url = api.addReduce.queryAddReduceForPayedByOrderId;
+	
+	var addReduceIds = {};
+	var addReduceAreas = {};
+	
+	com.post(url, {'addReduce.orderId': decorationOrderDetail.quotation.orderId}, function(res){
+		$.each(res.addReduces, function(i, v){
+			addReduceIds['addReduceIds[' + i + ']'] = v.arId;
+		});
+	}, null, false);
+	
+	com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function(res){
+		
+		$.each(res.addReduceItems, function(i, v){
+			
+			if([0, 2].indexOf(v.type) != -1){
+				v.itemName = v.itemName + "(增项" + addReduceItemtypeDict[v.type] + ")";
+			}else{
+				v.num = -v.num;
+				v.itemName = v.itemName + "(减项" + addReduceItemtypeDict[v.type] + ")";
+			}
+			
+			v.type = -1;
+			
+			if(addReduceAreas[v.quotationFunctionAreaId]){
+				addReduceAreas[v.quotationFunctionAreaId].push(v);
+			}else{
+				addReduceAreas[v.quotationFunctionAreaId] = [v];
+			}
+		});
+		
+		decorationOrderDetail.addReduceAreas = addReduceAreas;
+		
+		console.log(addReduceAreas);
+		
 	}, null, false);
 	
 	generatePrintPage(type);

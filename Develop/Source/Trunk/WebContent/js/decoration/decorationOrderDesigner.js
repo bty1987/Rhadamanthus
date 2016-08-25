@@ -318,6 +318,7 @@ $(function(){
 					['合同报价', 'orderTotalPrice'],
 					['量房时间', 'createTime'],
 					['签单时间', 'contractTime'],
+					['状态', 'status'],
 				],
 				list: res.paging.data,
 			});

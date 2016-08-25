@@ -30,6 +30,8 @@ public class QuotationVO implements Serializable {
 	
 	private String designerName;
 	
+	private String supervisorName;
+	
 	private String designDepartmentName;
 	
 	private Float houseArea;
@@ -55,8 +57,6 @@ public class QuotationVO implements Serializable {
 	private Float totalPrice;
 	
 	private Integer status;
-	
-	private Integer saveStatus;
 	
 	private String content;
 	
@@ -115,6 +115,14 @@ public class QuotationVO implements Serializable {
 
 	public String getDesignDepartmentName() {
 		return designDepartmentName;
+	}
+
+	public String getSupervisorName() {
+		return supervisorName;
+	}
+
+	public void setSupervisorName(String supervisorName) {
+		this.supervisorName = supervisorName;
 	}
 
 	public void setDesignDepartmentName(String designDepartmentName) {
@@ -220,14 +228,6 @@ public class QuotationVO implements Serializable {
 
 	public void setNotSalesmanRate(Float notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
-	}
-
-	public Integer getSaveStatus() {
-		return saveStatus;
-	}
-
-	public void setSaveStatus(Integer saveStatus) {
-		this.saveStatus = saveStatus;
 	}
 
 	public String getContent() {

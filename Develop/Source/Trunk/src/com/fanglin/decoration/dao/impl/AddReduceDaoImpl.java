@@ -11,6 +11,7 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -79,8 +80,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, decorationPaymentId)).uniqueResult();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId){
 		return (List<AddReducePO>) createCriteria(AddReducePO.class)
 				.add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId))
@@ -88,10 +89,19 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				.list();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId){
 		return session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<AddReducePO> queryAddReduceForPayedByOrderId(String orderId) {
+		
+		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
+		
+		return session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.in(AddReducePO.COLUMN_STATUS_STR, statuses)).list();
 	}
 
 }

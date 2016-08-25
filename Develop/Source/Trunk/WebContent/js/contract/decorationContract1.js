@@ -7,6 +7,7 @@ jQuery(function($) {
 	params.authentication = window.authentication;
 	
 	$('.companyFullName').text(config.companyFullName);
+	$('.companyAddr').text(config.companyAddr);
 	
 	var orderId = "";
 	var args = window.location.search.substr(1).split('&');

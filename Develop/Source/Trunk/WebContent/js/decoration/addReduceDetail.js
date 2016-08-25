@@ -41,6 +41,9 @@ var AddReduceDetail = (function(){
 				quotationItemModal : $("#quotationItemModal").on("show.bs.modal", function(a) {
 					$('input[name="modalQuots"]:checked').removeAttr('checked');
 				}),
+				addAddItemModal: $('#addAddItemModal').on("show.bs.modal", function(a) {
+					$('input[name="modalQuots"]:checked').removeAttr('checked');
+				}),
 			};
 
 			//系统定义弹出层
@@ -87,9 +90,8 @@ var AddReduceDetail = (function(){
 				$("#workType").bindData(res.workTypes, "name", "name");
 			});
 
-
 			//功能区选择弹出层 todo
-			com.post(api.quotation.queryQuotationFunctionAreaForCommonById, {"quotation.qid": that.qid}, function(res){
+			com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {"quotation.qid": that.qid}, function(res){
 				$("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
 				$("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
 			});
@@ -117,6 +119,11 @@ var AddReduceDetail = (function(){
 				//系统定义
 				addSystemDefineItemBtn : $('#addSystemDefineItemBtn').on(ace.click_event, function(event){
 					modalEventBinding.showingModalName = "systemDefineItemModal";
+					that.$modals.functionAreaModal.modal("show");
+				}),
+				//增项
+				addItemBtn: $('#addItemBtn').on(ace.click_event, function(event){
+					modalEventBinding.showingModalName = "addAddItemModal";
 					that.$modals.functionAreaModal.modal("show");
 				}),
 
@@ -208,6 +215,8 @@ var AddReduceDetail = (function(){
 		functionAreaModalConfirm : function(){
 			var that = this;
 			$('#confirmItemBtn').off().on(ace.click_event, function(){
+				
+				console.log(that.showingModalName);
 
 				var funcid = $('#quotationFunctionAreaId').val();
 				that.functionAreaId = funcid;
@@ -230,13 +239,41 @@ var AddReduceDetail = (function(){
 							$ul.appendTo($tableWrap);
 						}
 					}, null, false);
+				}else if(that.showingModalName == "addAddItemModal"){
+					
+					var index = 0;
+					var arIds = {};
+					
+					com.post(api.addReduce.queryAddReduceForPayedByOrderId, {"addReduce.orderId": addReduceDetail.orderid}, function(res){
+						$.each(res.addReduces, function(i, v){
+							if(v.type == 0){
+								arIds['addReduceIds[' + index + ']'] = v.arId;
+								index++;
+							}
+						});
+					}, null, false);
+					
+					com.post(api.addReduce.queryAddReduceItemByAddReduceIds, arIds, function(res){
+						var $tableWrap = $('[name="addItemList"]', addReduceDetail.$modals.addAddItemModal).empty();
+						var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+						
+						if(res.addReduceItems && res.addReduceItems.length){
+							$.each(res.addReduceItems, function(i, v){
+								v.quotationItemDes = v.content;
+								var $liLine = painter.createQuoteModalItem(v, "ariId");
+								$liLine.appendTo($ul);
+							});
+							$ul.appendTo($tableWrap);
+						}
+					});
+					
 				}
 
 				addReduceDetail.$modals.functionAreaModal.modal('hide');
 				addReduceDetail.$modals[that.showingModalName].modal("show");
 			});
 		},
-		// 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目
+		// 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 , 4表示增项中项目
 		//普通报价项确认按钮点击
 		addNormalItemModalConfirm : function(){
 			$('#saveaddNormalItemBtn').off().on(ace.click_event, function(){
@@ -256,6 +293,13 @@ var AddReduceDetail = (function(){
 			$('#addItemsBtn').off().on(ace.click_event, function(){
 				quote.addQuotesFromModal(3);
 				addReduceDetail.$modals.quotationItemModal.modal('hide');
+			});
+		},
+		
+		addAddItemModalConfirm: function(){
+			$('#addAddItemBtn').off().on(ace.click_event, function(){
+				quote.addQuotesFromModal(4);
+				addReduceDetail.$modals.addAddItemModal.modal('hide');
 			});
 		},
 
@@ -324,6 +368,7 @@ var AddReduceDetail = (function(){
 			this.addNormalItemModalConfirm();
 			this.systemDefineItemModalConfirm();
 			this.quotationItemModalConfirm();
+			this.addAddItemModalConfirm();
 			this.addItemModalConfirm();
 		}
 	};
@@ -543,7 +588,8 @@ var AddReduceDetail = (function(){
 				com.post(api.addReduce.deleteAddReduceItem, _params, function(res){
 					$quote.remove();
 					arCalculator.changeSum(sumobj.sum, sumobj.sumd);
-				}, function(){
+				}, function(res){
+					com.showAlert(com.error, res.errorMsg);
 					$quote.removeAttr('del-flag');
 				}, false);
 			}
@@ -608,7 +654,7 @@ var AddReduceDetail = (function(){
 
 		createQuote : function(linenum, qv){
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
-			var typeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中"};
+			var typeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项"};
 
 			var _dcp =  qv.unitPrice;
 
@@ -702,6 +748,7 @@ var AddReduceDetail = (function(){
 				$('#sumLabType').text('减项')
 				$('#addQuotaionItemBtn').removeClass('hide');
 				$('#addSystemDefineItemBtn').removeClass('hide');
+				$('#addItemBtn').removeClass('hide');
 			}
 
 			addReduceDetail.arid = params.addReduceId;

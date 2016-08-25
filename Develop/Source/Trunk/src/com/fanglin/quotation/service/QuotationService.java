@@ -36,8 +36,6 @@ public interface QuotationService {
 	
 	public int updateQuotationForDefault(QuotationVO quotationVO) throws FLException;
 	
-	public int updateQuotationForStatus(QuotationVO quotationVO) throws FLException;
-	
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
 	
 	public int replicaQuotation(QuotationVO quotationVO) throws FLException;

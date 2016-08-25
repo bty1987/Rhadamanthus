@@ -90,6 +90,10 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			
+			if(decorationOrderPO.getSupervisorPO() != null){
+				quotationVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getCurrentName());
+			}
 		}
 		
 		return quotationVO;
@@ -120,6 +124,10 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
 			
 			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			
+			if(decorationOrderPO.getSupervisorPO() != null){
+				quotationVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getCurrentName());
+			}
 		}
 		
 		return quotationVO;
@@ -290,24 +298,6 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationDao.clearQuotationForDefaultByOrderId(quotationVO.getOrderId());
 			quotationDao.update(quotationPO);
 		}
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateQuotationForStatus(QuotationVO quotationVO) throws FLException{
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
-
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
-		
-		checkQuotationForStatusByOrderId(null, quotationPO, true);
-		
-		quotationPO.setSaveStatus(quotationVO.getSaveStatus());
-		
-		quotationDao.saveOrUpdate(quotationPO);
 		
 		return 0;
 	}

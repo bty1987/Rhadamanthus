@@ -278,7 +278,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	@Override
 	public MaterialModelVO queryMaterialModelById(MaterialModelVO materialModelVO){
 		
-		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMaterialBrandId());
+		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
 		
 		BeanUtil.copyProperties(materialModelPO, materialModelVO);
 		
