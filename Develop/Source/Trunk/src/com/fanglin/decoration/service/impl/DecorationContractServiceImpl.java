@@ -134,7 +134,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationContractPO = new DecorationContractPO();
 		}
 	
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationContractVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationContractVO.getOrderId());
 		
 		StringBuffer contractCode= new StringBuffer(SystemConfig.getString("contractStartWith", "FLJ-"));
 		contractCode.append(decorationOrderPO.getOrderId());
@@ -165,7 +165,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		boolean resignFlag = false;
 		String orderId = decorationContractVO.getOrderId();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -288,7 +288,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		String orderId = decorationContractVO.getOrderId();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

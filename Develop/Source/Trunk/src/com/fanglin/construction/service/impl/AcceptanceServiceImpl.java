@@ -107,7 +107,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		
 		acceptanceVO.setOrderId(orderId);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		if(decorationOrderPO != null){
 			acceptanceVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
 			acceptanceVO.setOrderAddr(decorationOrderPO.getVillagePO().getVillageName()+" "+decorationOrderPO.getHouseNumber());
@@ -193,7 +193,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		
 		acceptanceDao.saveOrUpdate(acceptancePO);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(acceptanceVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(acceptanceVO.getOrderId());
 		
 		if(decorationOrderPO != null){
 			decorationOrderPO.setProjectStatus("已完工");

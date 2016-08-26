@@ -100,7 +100,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 			throw new FLException(220005, "员工不存在");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialOutsideVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialOutsideVO.getOrderId());
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}

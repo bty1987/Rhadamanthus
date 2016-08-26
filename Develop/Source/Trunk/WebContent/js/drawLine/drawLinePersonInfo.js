@@ -111,7 +111,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "designer", "salesman"], "condList", api.construction.pageDecorationOrderByPersonInfo, function(data){
+	searcher.init(["orderId", "designer", "salesman"], "condList", api.decoration.pageDecorationOrderForGeneral, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLinePersonPostData");
 	

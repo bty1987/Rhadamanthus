@@ -21,17 +21,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.dao.DecorationOrderDrawLineDao;
 import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
 import com.fanglin.construction.po.ChanConstructionSchedulePO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.po.DecorationOrderDrawLinePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.service.PutlineConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.drawline.dao.DrawLineDao;
+import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.UserDao;
@@ -52,7 +52,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 	private PutlineConstructionScheduleDao putlineConstructionScheduleDao;
 	
 	@Autowired
-	private DecorationOrderDrawLineDao decorationOrderDrawLineDao;
+	private DrawLineDao drawLineDao;
 	
 	@Autowired
 	private WorkerBaseSalaryDao workerBaseSalaryDao;
@@ -137,15 +137,15 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		if(putlineConstructionSchedulePO != null){
 			putlineConstructionSchedulePO.setPutlineStatus(putlineStatus);
 			
-			List<DecorationOrderDrawLinePO> decorationOrderDrawLinePOs = decorationOrderDrawLineDao.queryDecorationOrderDrawLineByOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
+			List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
 				
-			if(decorationOrderDrawLinePOs != null && decorationOrderDrawLinePOs.size() > 0){
+			if(drawLinePOs != null && drawLinePOs.size() > 0){
 				
 				DecorationOrderPO decorationOrderPO = putlineConstructionSchedulePO.getDecorationOrder();
-				DecorationOrderDrawLinePO decorationOrderDrawLinePO = decorationOrderDrawLinePOs.get(0);
+				DrawLinePO drawLinePO = drawLinePOs.get(0);
 				
 				if(putlineConstructionScheduleVO.getPutlineStatus() == PutlineConstructionSchedulePO.PUTLINESTATUS_TYPE_SUCCESS_INT){
-					decorationOrderDrawLinePO.setStatus("放线成功");
+					drawLinePO.setStatus("放线成功");
 					
 					List<String> dutys = new ArrayList<String>();
 					dutys.add("前台咨询师");
@@ -164,7 +164,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 						messageDao.saveOrUpdate(messagePO);
 					}
 				}else if(putlineConstructionScheduleVO.getPutlineStatus() == PutlineConstructionSchedulePO.PUTLINESTATUS_TYPE_FAIL_INT){
-					decorationOrderDrawLinePO.setStatus("放线失败");
+					drawLinePO.setStatus("放线失败");
 					
 					ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(decorationOrderPO.getOrderId());
 					
@@ -180,7 +180,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 					messageDao.saveOrUpdate(messagePO);
 				}
 				
-				decorationOrderDrawLineDao.update(decorationOrderDrawLinePO);
+				drawLineDao.update(drawLinePO);
 			}
 			
 			putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);

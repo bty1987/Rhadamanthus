@@ -68,7 +68,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -120,7 +120,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(approvalVillagePO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(approvalVillagePO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

@@ -89,7 +89,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -199,7 +199,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		String orderId = approvalOrderBelongPO.getOrderId();
 		String belongType = approvalOrderBelongPO.getBelongType();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

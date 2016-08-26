@@ -67,7 +67,7 @@ var customerServiceDetail = {
 			queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
 			queryWorkerUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker,
 			updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
-			setWrokerRaty: api.construction.setWaterwayCircuitPowerConstructionScheduleWorkerForSalary,
+			setWrokerRaty: api.construction.setWaterwayCircuitPowerConstructionScheduleWorkerForRaty,
 			
 			elementId: "wcpcsId",
 			elementName: "waterwayCircuitPowerConstructionSchedule",

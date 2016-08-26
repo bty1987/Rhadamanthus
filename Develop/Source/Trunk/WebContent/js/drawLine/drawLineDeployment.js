@@ -175,7 +175,7 @@ jQuery(function($) {
            });
            
            $btnReset.click(function(){
-        	   reset(v.autoId);
+        	   reset(v.dlId);
            });
             
         };
@@ -193,7 +193,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["drawLineStatus", "actualDate"], "condList", api.construction.queryDecorationOrderDrawLine, function(data){
+	searcher.init(["drawLineStatus", "actualDate"], "condList", api.drawline.queryDrawLine, function(data){
 		$("#resultList").html("");
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLineDeploymentPostData", null, true, "drawLines");
@@ -205,7 +205,7 @@ jQuery(function($) {
 	});
 	
 	function updateDeployed(v){
-		$("#autoId").val(v.autoId);
+		$("#dlId").val(v.dlId);
 		$("#actualDate").datepicker('update', v.actualDate);
 		$("#startTime").val(v.startTime);
 		$("#endTime").val(v.endTime);
@@ -241,10 +241,10 @@ jQuery(function($) {
 		drawLineDeployment.drawLineDeploymentModal.modal("show");
 	}
 	
-	function reset(autoId){
+	function reset(dlId){
 		bootbox.confirm("确认重置申请吗？",function(res){
 			if(res){
-				com.post(api.construction.drawLineForFailure, {"drawLine.autoId":autoId}, function(res){
+				com.post(api.drawline.setDrawLineForFailure, {"drawLine.dlId":dlId}, function(res){
 					searcher.doSearch();
 				});
 			}
@@ -265,14 +265,14 @@ jQuery(function($) {
 		}
 		
 		var options ={
-			"drawLine.autoId":$("#autoId").val(),
+			"drawLine.dlId":$("#dlId").val(),
 			"drawLine.actualDate":$("#actualDate").val(),
 			"drawLine.startTime":$("#startTime").val(),
 			"drawLine.endTime":$("#endTime").val(),
 			"drawLine.drawLineGroup":$("#drawLineGroup").val()
 		};
 		
-		com.post(api.construction.saveDecorationOrderDrawLine, options, function(res){
+		com.post(api.drawline.resetDrawLine, options, function(res){
 			searcher.doSearch();
 		});
 		
@@ -331,7 +331,7 @@ jQuery(function($) {
 					"drawLine.endTime": endTime,
 				}
 				
-				com.post(api.construction.queryDecorationOrderDrawLineForCountByDate, options, function(res){
+				com.post(api.drawline.countDrawLineByDate, options, function(res){
 					drawLineDeployment.drawLineDateCount = res.drawLineDateCount;
 					
 					var events = [];

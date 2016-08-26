@@ -249,7 +249,7 @@ public class PaymentServiceImpl implements PaymentService {
 			customerDao.update(customerPO);
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(paymentVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentVO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -353,7 +353,7 @@ public class PaymentServiceImpl implements PaymentService {
 			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
 				advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_CONFIRM_INT);
 				
-				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(paymentPO.getOrderId());
+				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentPO.getOrderId());
 				
 				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, new UserPO(currentUserId));
 			}

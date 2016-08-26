@@ -70,7 +70,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 	@Transactional(rollbackFor=Exception.class)
 	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException {
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationActivityVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationActivityVO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

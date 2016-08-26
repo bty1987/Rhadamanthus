@@ -9,18 +9,18 @@
  * @Describing	: 
  */
 
-package com.fanglin.construction.vo;
+package com.fanglin.drawline.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class DecorationOrderDrawLineVO implements Serializable {
+public class DrawLineVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
 
-	private Long autoId;
+	private Long dlId;
 	
 	private String orderId;
 	
@@ -38,7 +38,7 @@ public class DecorationOrderDrawLineVO implements Serializable {
 	
 	private Float orderTotalPrice;
 	
-	private String orderSupervisor;
+	private String supervisor;
 	
 	private Timestamp contractTime;
 	
@@ -74,12 +74,12 @@ public class DecorationOrderDrawLineVO implements Serializable {
 	
 	private String drawLineUserId;
 	
-	public Long getAutoId(){
-		return autoId;
+	public Long getDlId(){
+		return dlId;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setDlId(Long dlId){
+		this.dlId = dlId;
 	}
 
 	public String getOrderId(){
@@ -284,12 +284,12 @@ public class DecorationOrderDrawLineVO implements Serializable {
 		this.designer = designer;
 	}
 
-	public String getOrderSupervisor(){
-		return orderSupervisor;
+	public String getSupervisor(){
+		return supervisor;
 	}
 
-	public void setOrderSupervisor(String orderSupervisor){
-		this.orderSupervisor = orderSupervisor;
+	public void setSupervisor(String supervisor){
+		this.supervisor = supervisor;
 	}
 
 }

@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.construction.dao.impl;
+package com.fanglin.drawline.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -21,23 +21,24 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.construction.dao.DecorationOrderDrawLineDao;
-import com.fanglin.construction.po.DecorationOrderDrawLinePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
+import com.fanglin.drawline.dao.DrawLineDao;
+import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("decorationOrderDrawLineDao")
-public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawLinePO> implements DecorationOrderDrawLineDao {
+public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao {
 
-	public DecorationOrderDrawLineDaoImpl(){
-		super(DecorationOrderDrawLinePO.class);
+	public DrawLineDaoImpl(){
+		super(DrawLinePO.class);
 	}
 	
 	@Override
-	public List<DecorationOrderDrawLinePO> pageDecorationOrderDrawLine(Paging paging, List<FilterVO> filters){
-		PagingQuery<DecorationOrderDrawLinePO> query = pagingQuery(paging, DecorationOrderDrawLinePO.class);
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<FilterVO> filters){
+		
+		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
 		
 		queryFilterExcute(query, filters);
 		
@@ -47,9 +48,9 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 	}
 	
 	@Override
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(List<FilterVO> filters) {
+	public List<DrawLinePO> queryDrawLine(List<FilterVO> filters) {
 		
-		PagingQuery<DecorationOrderDrawLinePO> query = pagingQuery(new Paging(), DecorationOrderDrawLinePO.class);
+		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
 		
 		queryFilterExcute(query, filters);
 		
@@ -60,9 +61,9 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLine(Timestamp startTime, Timestamp endTime){
+	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime){
 		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
-		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
+		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				.add(Restrictions.not(Restrictions.in("status", status)))
 				.add(Restrictions.ge("actualStartTime", startTime))
 				.add(Restrictions.le("actualStartTime", endTime))
@@ -71,18 +72,18 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByOrderId(String orderId){
-		return createCriteria(DecorationOrderDrawLinePO.class)
-				.add(Restrictions.eq("orderPO.orderId", orderId))
-				.addOrder(Order.desc("autoId"))
+	public List<DrawLinePO> queryDrawLineByOrderId(String orderId){
+		return createCriteria(DrawLinePO.class)
+				.add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				.addOrder(Order.desc("dlId"))
 				.list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDrawLinePO> queryDecorationOrderDrawLineByGroupATime(String group, Timestamp startTime,Timestamp endTime){
+	public List<DrawLinePO> queryDrawLineByGroupATime(String group, Timestamp startTime,Timestamp endTime){
 		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
-		return (List<DecorationOrderDrawLinePO>)createCriteria(DecorationOrderDrawLinePO.class)
+		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				.add(Restrictions.not(Restrictions.in("status", status)))
 				.add(Restrictions.or(
 					Restrictions.or(
@@ -99,10 +100,10 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
 		if(filters != null){
 
-			query.alias("orderPO", "orderPO");
-			query.alias("orderPO.villagePO", "villagePO");
-			query.alias("orderPO.designerPO", "designerPO");
-			query.alias("orderPO.salesmanPO", "salesmanPO");
+			query.alias("decorationOrderPO", "decorationOrderPO");
+			query.alias("decorationOrderPO.villagePO", "villagePO");
+			query.alias("decorationOrderPO.designerPO", "designerPO");
+			query.alias("decorationOrderPO.salesmanPO", "salesmanPO");
 			
 			query.alias("designerPO.dept", "designerDept");
 			query.alias("salesmanPO.dept", "salesmanDept");
@@ -110,7 +111,7 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 			for(FilterVO filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
-						query.add(query.getCriterion("orderPO.orderId",(filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));
 					}else if("villageId".equals(filter.getField())){
 						query.add(query.getCriterion("villagePO.villageId", (filter.getData()), filter.getOp()));
 					}else if("village".equals(filter.getField())){
@@ -118,9 +119,9 @@ public class DecorationOrderDrawLineDaoImpl extends DaoImpl<DecorationOrderDrawL
 					}else if("drawLineGroup".equals(filter.getField())){
 						query.add(query.getCriterion("drawLineGroup", (filter.getData()), filter.getOp()));
 					}else if("businessDepartment".equals(filter.getField())){				
-						query.add(query.getCriterion("dept.deptName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("salesmanDept.deptName", (filter.getData()), filter.getOp()));
 					}else if("designDepartment".equals(filter.getField())){
-						query.add(query.getCriterion("dept.deptName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("designerDept.deptName", (filter.getData()), filter.getOp()));
 					}else if("businessDepartmentId".equals(filter.getField())){				
 						query.add(query.getCriterion("salesmanDept.deptId", (filter.getData()), filter.getOp()));
 					}else if("designDepartmentId".equals(filter.getField())){

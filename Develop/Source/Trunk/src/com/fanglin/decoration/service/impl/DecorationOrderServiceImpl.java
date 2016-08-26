@@ -628,7 +628,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Override
 	public DecorationOrderVO queryDecorationOrderById(String decorationOrderId) throws FLException{
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -965,7 +965,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	public void checkDecorationOrderExist(DecorationOrderVO decorationOrderVO){
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		if(decorationOrderPO != null){
 			decorationOrderVO.setAutoId(decorationOrderPO.getAutoId());
@@ -990,7 +990,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Transactional(rollbackFor=Exception.class)
 	public int changeDecorationOrderForAdvance(DecorationOrderVO decorationOrderVO) throws FLException{
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同
 		
@@ -1041,7 +1041,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_WASTE_STR}); // 已签约, 已完工, 废单, 合同终止
 		
 		String oldVersionId = "";
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO != null && !status.contains(decorationOrderPO.getStatus())){
 			
@@ -1089,13 +1089,13 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOrderPO decorationOrderPO;
 		
-		decorationOrderPO = decorationOrderDao.queryOrderByOrderId(newOrderId);
+		decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(newOrderId);
 		
 		if(decorationOrderPO != null){
 			throw new FLException(140010, "订单编号已经存在");
 		}
 		
-		decorationOrderPO = decorationOrderDao.queryOrderByOrderId(oldOrderId);
+		decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(oldOrderId);
 		
 		if(decorationOrderPO != null){
 			decorationOrderPO.setOrderId(newOrderId);
@@ -1153,7 +1153,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		types.put(1, "录入时间");
 		types.put(2, "签单时间");
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO != null){
 			
@@ -1198,7 +1198,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		String status = decorationOrderVO.getStatus();
 		
 		String oldStatus = "";
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO != null){
 			oldStatus = decorationOrderPO.getStatus();
@@ -1423,7 +1423,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int obsoleteDecorationOrder(DecorationOrderVO decorationOrderVO, String userName) throws FLException{
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -1470,7 +1470,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Transactional(rollbackFor=Exception.class)
 	public int terminalDecorationOrder(DecorationOrderVO decorationOrderVO, float refundValue, float paymentValue, String userId) throws FLException{
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		if(DecorationOrderPO.STATUS_SIGNED_STR.equals(decorationOrderPO.getStatus())){ // 签约
 
@@ -1535,7 +1535,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Transactional(rollbackFor=Exception.class)
 	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userName) throws FLException {
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

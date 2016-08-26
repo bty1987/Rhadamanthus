@@ -397,7 +397,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		messageVO.setReceiver(new UserVO(decorationPaymentVO.getReceiverId()));
 
 		if(paymentTypes.contains(paymentType) || paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR)){
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationPaymentVO.getOrderId());
+			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationPaymentVO.getOrderId());
 			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
 
 			if(decorationPaymentVO.getPaymentType().contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR)){
@@ -522,7 +522,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 		
 		//设置装修订单状态
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(decorationPaymentPO.getDecorationOrderPO().getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationPaymentPO.getDecorationOrderPO().getOrderId());
 		
 		String orderPaymentStatus = decorationOrderPO.getPaymentStatus();
 		String paymentStatus = decorationPaymentPO.getPaymentStatus();
@@ -1057,7 +1057,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		List<String> paymentStatus = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		String decorationOrderStatus = decorationOrderPO.getStatus();
 		String decorationOrderPaymentStatus = decorationOrderPO.getPaymentStatus();

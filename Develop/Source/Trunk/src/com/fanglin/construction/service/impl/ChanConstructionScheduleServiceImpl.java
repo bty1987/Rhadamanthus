@@ -21,14 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ChanConstructionScheduleDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.dao.DecorationOrderDrawLineDao;
 import com.fanglin.construction.po.ChanConstructionSchedulePO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.po.DecorationOrderDrawLinePO;
 import com.fanglin.construction.service.ChanConstructionScheduleService;
 import com.fanglin.construction.vo.ChanConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.drawline.dao.DrawLineDao;
+import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.salary.dao.WorkerBaseSalaryDao;
@@ -47,7 +47,7 @@ public class ChanConstructionScheduleServiceImpl implements ChanConstructionSche
 	private ConstructionScheduleDao constructionScheduleDao;
 	
 	@Autowired
-	private DecorationOrderDrawLineDao decorationOrderDrawLineDao;
+	private DrawLineDao drawLineDao;
 	
 	@Autowired
 	private WorkerBaseSalaryDao workerBaseSalaryDao;
@@ -139,10 +139,10 @@ public class ChanConstructionScheduleServiceImpl implements ChanConstructionSche
 			}
 			
 			if(status == ChanConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
-				List<DecorationOrderDrawLinePO> lpos = decorationOrderDrawLineDao.queryDecorationOrderDrawLineByOrderId(chanConstructionSchedulePO.getOrderId());
-				if(lpos!=null && lpos.size()>0){
-					lpos.get(0).setStatus("放线失败");
-					decorationOrderDrawLineDao.update(lpos.get(0));
+				List<DrawLinePO> drawLinePOs  = drawLineDao.queryDrawLineByOrderId(chanConstructionSchedulePO.getOrderId());
+				if(drawLinePOs != null && drawLinePOs .size() > 0){
+					drawLinePOs.get(0).setStatus("放线失败");
+					drawLineDao.update(drawLinePOs.get(0));
 				}
 			}
 			
