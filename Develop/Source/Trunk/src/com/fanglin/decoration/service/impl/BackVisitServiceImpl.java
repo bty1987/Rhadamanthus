@@ -103,7 +103,7 @@ public class BackVisitServiceImpl implements BackVisitService {
 		
 		BackVisitPO backVisitPO = new BackVisitPO();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");

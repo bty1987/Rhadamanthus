@@ -648,7 +648,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		if(materialSubOrderPO != null){
 			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
 			
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
+			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
 			
 			materialSubOrderVO.setSupervisorName("");
 			materialSubOrderVO.setSupervisorPhone("");
@@ -699,7 +699,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		if(materialSubOrderPO != null){
 			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
 			
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
+			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
 			
 			materialSubOrderVO.setSupervisorName("");
 			materialSubOrderVO.setSupervisorPhone("");
@@ -1025,7 +1025,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		String notCountMaterialCollectUserId = SystemConfig.getString("notCountMaterialCollectUserId", "");
 		String notCountDesignDepartmentId = SystemConfig.getString("notCountDesignDepartmentId", "");
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderVO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -1503,7 +1503,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
 					materialReceiptPO.setStatus((short) MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
 					
-					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(materialSubOrderPO.getOrderId());
+					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
 					
 					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
 				}

@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.construction.po;
+package com.fanglin.drawline.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -27,14 +27,14 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "decorationorderdrawline", catalog = "platform")
-public class DecorationOrderDrawLinePO implements Serializable {
+@Table(name = "drawline", catalog = "platform")
+public class DrawLinePO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
 
-	private long autoId;
+	private long dlId;
 	
-	private DecorationOrderPO orderPO;
+	private DecorationOrderPO decorationOrderPO;
 
 	private Timestamp  applayTime;
 	
@@ -56,23 +56,23 @@ public class DecorationOrderDrawLinePO implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	@Column(name = "autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name = "dlId")
+	public long getDlId(){
+		return dlId;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+	public void setDlId(long dlId){
+		this.dlId = dlId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getOrderPO(){
-		return orderPO;
+	public DecorationOrderPO getDecorationOrderPO(){
+		return decorationOrderPO;
 	}
 
-	public void setOrderPO(DecorationOrderPO orderPO){
-		this.orderPO = orderPO;
+	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO){
+		this.decorationOrderPO = decorationOrderPO;
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)

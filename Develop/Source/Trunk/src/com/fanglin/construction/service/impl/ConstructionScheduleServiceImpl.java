@@ -25,7 +25,6 @@ import com.fanglin.construction.dao.CarpentConstructionScheduleDao;
 import com.fanglin.construction.dao.ChanConstructionScheduleDao;
 import com.fanglin.construction.dao.CleaningConstructionScheduleDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.dao.DecorationOrderDrawLineDao;
 import com.fanglin.construction.dao.GroundLevelingConstructionScheduleDao;
 import com.fanglin.construction.dao.OilConstructionScheduleDao;
 import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
@@ -37,7 +36,6 @@ import com.fanglin.construction.po.CarpentConstructionSchedulePO;
 import com.fanglin.construction.po.ChanConstructionSchedulePO;
 import com.fanglin.construction.po.CleaningConstructionSchedulePO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.po.DecorationOrderDrawLinePO;
 import com.fanglin.construction.po.GroundLevelingConstructionSchedulePO;
 import com.fanglin.construction.po.OilConstructionSchedulePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
@@ -54,6 +52,8 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.drawline.dao.DrawLineDao;
+import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -85,7 +85,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
-	private DecorationOrderDrawLineDao decorationOrderDrawLineDao;
+	private DrawLineDao drawLineDao;
 	
 	@Autowired
 	private QuotationDao quotationDao;
@@ -477,7 +477,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		BeanUtil.copyProperties(constructionScheduleVO, constructionSchedulePO);
 		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(constructionScheduleVO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(constructionScheduleVO.getOrderId());
 		if(decorationOrderPO != null){
 			if(constructionScheduleVO.getSupervisorQualityId() != null){
 				decorationOrderPO.setSupervisorPO(new UserPO(constructionScheduleVO.getSupervisorQualityId()));
@@ -529,7 +529,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		
 		String orderId = constructionScheduleVO.getOrderId();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -609,7 +609,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				}
 			}
 			
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 			if(decorationOrderPO != null){
 				decorationOrderTotalPrice = decorationOrderPO.getOrderTotalPrice();
 			}
@@ -659,7 +659,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		String orderId = constructionScheduleVO.getOrderId();
 		String currentTime = DateUtil.current(ChanConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -668,7 +668,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
 		if(constructionSchedulePO == null){
 			constructionSchedulePO = new ConstructionSchedulePO();
-			constructionSchedulePO.setDecorationOrderPO(new DecorationOrderPO(constructionScheduleVO.getOrderId()));
+			constructionSchedulePO.setDecorationOrderPO(new DecorationOrderPO(orderId));
 			constructionSchedulePO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
 		}else{
 			constructionSchedulePO.setSchedule(constructionScheduleVO.getSchedule());
@@ -692,9 +692,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			if(putlineConstructionSchedulePO == null){
 				putlineConstructionSchedulePO = new PutlineConstructionSchedulePO(csId, decorationOrderPO, currentTime, currentTime);
 				
-				List<DecorationOrderDrawLinePO> decorationOrderDrawLinePOs = decorationOrderDrawLineDao.queryDecorationOrderDrawLineByOrderId(orderId);
-				if(decorationOrderDrawLinePOs != null && decorationOrderDrawLinePOs.size() > 0){
-					String drawLineGroup = decorationOrderDrawLinePOs.get(0).getDrawLineGroup();
+				List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(orderId);
+				if(drawLinePOs != null && drawLinePOs.size() > 0){
+					String drawLineGroup = drawLinePOs.get(0).getDrawLineGroup();
 					List<UserPO> userPOs = userDao.queryUserByUserName(drawLineGroup);
 					
 					if(userPOs.size() > 0){

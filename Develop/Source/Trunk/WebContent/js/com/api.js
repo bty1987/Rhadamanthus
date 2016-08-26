@@ -287,16 +287,6 @@ var api = {
 		queryAcceptance: {url: "queryAcceptance.do"},
 		updateAcceptance: {url: "updateAcceptance.do"},
 		
-		pageDecorationOrderByPersonInfo: {url: "pageDecorationOrderByPersonInfo.do"},
-		pageDecorationOrderDrawLineForPlan: {url: "pageDecorationOrderDrawLineForPlan.do"},
-		pageDecorationOrderDrawLineForAssign: {url: "pageDecorationOrderDrawLineForAssign.do"},
-		queryDecorationOrderDrawLine: {url: "queryDecorationOrderDrawLine.do"},
-		queryDecorationOrderDrawLineForCountByDate: {url: "queryDecorationOrderDrawLineForCountByDate.do"},
-		saveDecorationOrderDrawLine: {url: "saveDecorationOrderDrawLine.do"},
-		applayDecorationOrderDrawLine: {url: "applayDecorationOrderDrawLine.do"},
-		drawLineForSuccess: {url: "drawLineForSuccess.do"},
-		drawLineForFailure: {url: "drawLineForFailure.do"},
-		
 		pageDecorationOrderForConstructionSchedule: {url: "pageDecorationOrderForConstructionSchedule.do"},
 		pageDecorationOrderForConstructionScheduleByPlace: {url: "pageDecorationOrderForConstructionScheduleByPlace.do"},
 		pageDecorationOrderForSupervisionByUserId: {url: "pageDecorationOrderForSupervisionByUserId.do"},
@@ -588,6 +578,17 @@ var api = {
 		
 		queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do"},
 		addDecorationPicture: {url: "addDecorationPicture.do"},
+		
+	}, drawline:{
+		
+		pageDrawLineForPlan: {url: "pageDrawLineForPlan.do"},
+		pageDrawLineForAssign: {url: "pageDrawLineForAssign.do"},
+		queryDrawLine: {url: "queryDrawLine.do"},
+		countDrawLineByDate: {url: "countDrawLineByDate.do"},
+		resetDrawLine: {url: "resetDrawLine.do"},
+		applayDrawLine: {url: "applayDrawLine.do"},
+		setDrawLineForSuccess: {url: "setDrawLineForSuccess.do"},
+		setDrawLineForFailure: {url: "setDrawLineForFailure.do"},
 		
 	}, payment: {
 		

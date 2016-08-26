@@ -141,7 +141,7 @@ public class QuotationServiceImpl implements QuotationService {
 		DecorationOrderPO decorationOrderPO = null;
 		
 		if(quotationVO != null){
-			decorationOrderPO = decorationOrderDao.queryOrderByOrderId(quotationVO.getOrderId());
+			decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(quotationVO.getOrderId());
 		}else if(quotationPO != null){
 			decorationOrderPO = quotationPO.getDecorationOrder();
 		}
@@ -216,7 +216,7 @@ public class QuotationServiceImpl implements QuotationService {
 		checkQuotationForStatusByOrderId(quotationVO, null, false);
 		
 		BeanUtil.copyProperties(quotationVO, quotationPO);
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -339,7 +339,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO.getQuotationTimeLimit() >= SystemConfig.getInt("quotationTimeLimit")){
 			throw new FLException(200018, "报价复制次数达到上线");
@@ -405,7 +405,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO.getQuotationTimeLimit() >= SystemConfig.getInt("quotationTimeLimit")){
 			throw new FLException(200018, "报价复制次数达到上线");

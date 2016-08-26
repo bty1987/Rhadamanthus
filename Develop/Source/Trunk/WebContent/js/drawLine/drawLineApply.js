@@ -1,6 +1,4 @@
 var drawLineApply = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
@@ -13,14 +11,12 @@ var drawLineApply = {
 };
 	
 jQuery(function($) {
-	drawLineApply.listGrid = $("#listGrid");
-	drawLineApply.gridPager = "#gridPager";
 	drawLineApply.saveBtn = $("#saveBtn").on("click", saveData);
 	drawLineApply.cancelBtn = $("#cancelBtn");
 	drawLineApply.drawLineApplyModal = $("#drawLineApplyModal");
 	drawLineApply.drawLineModal = $("#drawLineModal");
 	
-	drawLineApply.drawLineApplyItems.autoId =  $("#autoId");
+	drawLineApply.drawLineApplyItems.dlId =  $("#dlId");
 	drawLineApply.drawLineApplyItems.actualDate =  $("#actualDate");
 	drawLineApply.drawLineApplyItems.startTime =  $("#startTime");
 	drawLineApply.drawLineApplyItems.endTime =  $("#endTime");
@@ -98,7 +94,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "designer", "salesman"], "condList", api.construction.pageDecorationOrderDrawLineForPlan, function(data){
+	searcher.init(["orderId", "designer", "salesman"], "condList", api.drawline.pageDrawLineForPlan, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLineApplyPostData");
 	
@@ -108,7 +104,7 @@ jQuery(function($) {
 		com.clearValidator();
 		com.cleanItems(drawLineApply.drawLineApplyItems);
 		
-		drawLineApply.drawLineApplyItems.autoId.val(v.autoId);
+		drawLineApply.drawLineApplyItems.dlId.val(v.dlId);
 		drawLineApply.drawLineApplyItems.actualDate.datepicker('update', v.applayTime);
 		
 		drawLineApply.drawLineApplyItems.drawLineGroup.get(0).selectedIndex = 0;
@@ -132,14 +128,14 @@ jQuery(function($) {
 				}
 				
 				var options ={
-					"drawLine.autoId":drawLineApply.drawLineApplyItems.autoId.val(),
+					"drawLine.dlId":drawLineApply.drawLineApplyItems.dlId.val(),
 					"drawLine.actualDate":drawLineApply.drawLineApplyItems.actualDate.val(),
 					"drawLine.startTime":drawLineApply.drawLineApplyItems.startTime.val(),
 					"drawLine.endTime":drawLineApply.drawLineApplyItems.endTime.val(),
 					"drawLine.drawLineGroup":drawLineApply.drawLineApplyItems.drawLineGroup.val()
 				};
 				
-				com.post(api.construction.saveDecorationOrderDrawLine, options, function(res){
+				com.post(api.drawline.resetDrawLine, options, function(res){
 					searcher.doSearch();
 				});
 			
@@ -197,7 +193,7 @@ jQuery(function($) {
 					"drawLine.endTime": endTime,
 				}
 				
-				com.post(api.construction.queryDecorationOrderDrawLineForCountByDate, options, function(res){
+				com.post(api.drawline.countDrawLineByDate, options, function(res){
 					drawLineApply.drawLineDateCount = res.drawLineDateCount;
 					
 					var events = [];

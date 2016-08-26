@@ -219,7 +219,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public DecorationOrderPO queryOrderByOrderId(String OrderId){
+	public DecorationOrderPO queryDecorationOrderByOrderId(String OrderId){
 		return (DecorationOrderPO)session().createCriteria(DecorationOrderPO.class).add(Restrictions.eq("orderId", OrderId)).uniqueResult();
 	}
 	

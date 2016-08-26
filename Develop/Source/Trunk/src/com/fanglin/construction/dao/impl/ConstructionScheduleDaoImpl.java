@@ -277,7 +277,6 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 					}else{
 						query.add(query.getCriterion("decorationOrderPO.projectStatus", "已完工", "eq"));
 					}
-					
 				}else if("villageSeat".equals(field)){
 					
 					double x = Double.parseDouble(data.split(":")[0]);

@@ -517,7 +517,7 @@ var decorationUtils = {
 				v.belongType == "设计" ? $liLine.appendTo($designul) : $liLine.appendTo($salesmanul);
 			});
 		}
-	}, loadHuploadify: function(eId, ename, fileType, callback){
+	}, loadHuploadify: function(eId, ename, fileType, multi, callback){
 		
 		$("#" + eId).Huploadify({
 			'debug' : false, // 开启调试
@@ -536,6 +536,7 @@ var decorationUtils = {
 	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
 	        'fileTypeExts':fileType, // 允许上传的文件后缀
 	        'fileSizeLimit':'5MB', // 上传文件的大小限制
+	        'multi': multi,
 	        'queueSizeLimit' : 5, // 上传数量
 	        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里
 	        	callback(data);

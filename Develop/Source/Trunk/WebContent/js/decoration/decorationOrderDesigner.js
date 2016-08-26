@@ -36,7 +36,7 @@ $(function(){
 					"drawLine.orderId":$("#decorationOrderId").val()
 				};
 
-				com.post(api.construction.applayDecorationOrderDrawLine, options);
+				com.post(api.drawline.applayDrawLine, options);
 			}
 			
 			order.drawLineModal.modal("hide");

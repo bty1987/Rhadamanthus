@@ -42,7 +42,7 @@ public interface DecorationOrderDao extends Dao<DecorationOrderPO> {
 	
 	public List<DecorationOrderPO> queryDecorationOrderByOrderIds(List<FilterVO> filters, List<String> orderIds);
 	
-	public DecorationOrderPO queryOrderByOrderId(String orderId);
+	public DecorationOrderPO queryDecorationOrderByOrderId(String orderId);
 	
 	public DecorationOrderPO queryDecorationOrderByCustomer(Integer customerAutoId);
 	

@@ -339,7 +339,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	public int changeMaterialSubOrderForOrderId(String msoNo, String orderId, String userId) throws FLException{
 		
 		String oldOrderId = "";
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.queryMaterialSubOrderByMsoNo(msoNo);
 		
 		if(decorationOrderPO == null){

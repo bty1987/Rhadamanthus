@@ -104,11 +104,11 @@ jQuery(function($) {
 	
 	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
 	
-	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", function(data){
+	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
 	});
 	
-	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwt", function(data){
+	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwg;*.dwt", false, function(data){
 		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
 	});
 });

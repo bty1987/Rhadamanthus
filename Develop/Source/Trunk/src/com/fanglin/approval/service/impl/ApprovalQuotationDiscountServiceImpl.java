@@ -78,7 +78,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(orderId);
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(!status.contains(decorationOrderPO.getStatus())){
 			throw new FLException(200007, "订单合同已签订不可折扣修改");
@@ -146,7 +146,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryOrderByOrderId(approvalQuotationDiscountPO.getOrderId());
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(approvalQuotationDiscountPO.getOrderId());
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
