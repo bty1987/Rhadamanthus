@@ -45,8 +45,6 @@ public class BricklayConstructionSchedulePO implements Serializable{
 	
 	private String orderId;
 	
-	private String workerId;
-	
 	private String startTime;
 	
 	private int startTimeFlag;
@@ -55,13 +53,7 @@ public class BricklayConstructionSchedulePO implements Serializable{
 	
 	private int endTimeFlag;
 	
-	private int supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private int qualityRaty;
-	
-	private String qualityRatyDes;
+	private String workerId;
 	
 	public BricklayConstructionSchedulePO() {
 		super();
@@ -93,15 +85,6 @@ public class BricklayConstructionSchedulePO implements Serializable{
 
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
-	}
-
-	@Column(name = "workerId")
-	public String getWorkerId(){
-		return this.workerId;
-	}
-
-	public void setWorkerId(String workerId){
-		this.workerId = workerId;
 	}
 
 	@Column(name = "startTime")
@@ -140,42 +123,6 @@ public class BricklayConstructionSchedulePO implements Serializable{
 		this.endTimeFlag = endTimeFlag;
 	}
 
-	@Column(name = "supervisorRaty")
-	public int getSupervisorRaty(){
-		return this.supervisorRaty;
-	}
-
-	public void setSupervisorRaty(int supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	@Column(name = "supervisorRatyDes")
-	public String getSupervisorRatyDes(){
-		return this.supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	@Column(name = "qualityRaty")
-	public int getQualityRaty(){
-		return this.qualityRaty;
-	}
-
-	public void setQualityRaty(int qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	@Column(name = "qualityRatyDes", length = 256)
-	public String getQualityRatyDes(){
-		return this.qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
-	}
-
 	@Column(name = "csId")
 	public int getCsId(){
 		return csId;
@@ -185,5 +132,13 @@ public class BricklayConstructionSchedulePO implements Serializable{
 		this.csId = csId;
 	}
 
+	@Column(name = "workerId")
+	public String getWorkerId() {
+		return workerId;
+	}
+
+	public void setWorkerId(String workerId) {
+		this.workerId = workerId;
+	}
 
 }

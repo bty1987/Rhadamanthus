@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class BricklayConstructionScheduleVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2149301658564942676L;
 	
 	private Integer bcsId;
@@ -25,10 +22,6 @@ public class BricklayConstructionScheduleVO implements Serializable{
 	private Integer csId;
 	
 	private String orderId;
-	
-	private String workerId;
-	
-	private Float workerSalary;
 	
 	private String startTime;
 	
@@ -38,18 +31,6 @@ public class BricklayConstructionScheduleVO implements Serializable{
 	
 	private Integer endTimeFlag;
 	
-	private Integer workerRaty;
-	
-	private String workerRatyDes;
-	
-	private Integer supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private Integer qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public Integer getBcsId(){
 		return bcsId;
 	}
@@ -64,22 +45,6 @@ public class BricklayConstructionScheduleVO implements Serializable{
 
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
-	}
-
-	public String getWorkerId(){
-		return workerId;
-	}
-
-	public void setWorkerId(String workerId){
-		this.workerId = workerId;
-	}
-
-	public Float getWorkerSalary(){
-		return workerSalary;
-	}
-
-	public void setWorkerSalary(Float workerSalary){
-		this.workerSalary = workerSalary;
 	}
 
 	public String getStartTime(){
@@ -112,54 +77,6 @@ public class BricklayConstructionScheduleVO implements Serializable{
 
 	public void setEndTimeFlag(Integer endTimeFlag){
 		this.endTimeFlag = endTimeFlag;
-	}
-
-	public Integer getWorkerRaty(){
-		return workerRaty;
-	}
-
-	public void setWorkerRaty(Integer workerRaty){
-		this.workerRaty = workerRaty;
-	}
-
-	public String getWorkerRatyDes(){
-		return workerRatyDes;
-	}
-
-	public void setWorkerRatyDes(String workerRatyDes){
-		this.workerRatyDes = workerRatyDes;
-	}
-
-	public Integer getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(Integer supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	public Integer getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(Integer qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 	public Integer getCsId(){

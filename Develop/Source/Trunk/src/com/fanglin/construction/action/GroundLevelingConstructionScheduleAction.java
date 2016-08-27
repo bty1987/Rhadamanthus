@@ -88,12 +88,6 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "setGroundLevelingConstructionScheduleForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setGroundLevelingConstructionScheduleForService(){
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryGroundLevelingDrawingByCsId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGroundLevelingDrawingByCsId(){
 		

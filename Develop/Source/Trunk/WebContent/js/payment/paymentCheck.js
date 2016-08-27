@@ -125,7 +125,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "customerId", "customerPhone", "village", "houseNumber", "designer", "collectTimeDateRange"], "condList", api.payment.pagePaymentForHistory, function(data){
+	searcher.init(["orderId", "customerId", "customerPhone", "advancePaymentcollectTime"], "condList", api.payment.pagePaymentForHistory, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentCheckCheckPostData", null, false, null, function(){
 		

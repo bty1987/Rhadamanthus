@@ -356,7 +356,6 @@ var AddReduceDetail = (function(){
 				com.post(api.addReduce.updateAddReduceItem, _params, function(res){
 					$item.find('input[name="deleteItems"]').val(res.addReduceItem.ariId);
 					arCalculator.changeSum(sumobj.sum, sumobj.sumd);
-
 				}, null, false);
 
 				addReduceDetail.$modals.addItemModal.modal("hide");
@@ -523,7 +522,8 @@ var AddReduceDetail = (function(){
 					}else{
 						that.hideInputWrap();
 					}
-				}, function(){
+				}, function(res){
+					com.showAlert(com.error, res.errorMsg);
 					that.$nowLine.find('.cell.num .cell-wrap').text(oldmum);
 					that.$nowLine.removeAttr('data-del-flag');
 				}, false);
