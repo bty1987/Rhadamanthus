@@ -13,8 +13,6 @@ public class GroundLevelingConstructionScheduleVO implements java.io.Serializabl
 	
 	private String workerId;
 	
-	private Float workerSalary;
-	
 	private String startTime;
 	
 	private Short startTimeFlag;
@@ -27,14 +25,6 @@ public class GroundLevelingConstructionScheduleVO implements java.io.Serializabl
 	
 	private String workerRatyDes;
 	
-	private Short supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private Short qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public Integer getGlcsId(){
 		return glcsId;
 	}
@@ -65,14 +55,6 @@ public class GroundLevelingConstructionScheduleVO implements java.io.Serializabl
 
 	public void setWorkerId(String workerId){
 		this.workerId = workerId;
-	}
-
-	public Float getWorkerSalary(){
-		return workerSalary;
-	}
-
-	public void setWorkerSalary(Float workerSalary){
-		this.workerSalary = workerSalary;
 	}
 
 	public String getStartTime(){
@@ -121,38 +103,6 @@ public class GroundLevelingConstructionScheduleVO implements java.io.Serializabl
 
 	public void setWorkerRatyDes(String workerRatyDes){
 		this.workerRatyDes = workerRatyDes;
-	}
-
-	public Short getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(Short supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	public Short getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(Short qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 }

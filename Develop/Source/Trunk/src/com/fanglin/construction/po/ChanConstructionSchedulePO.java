@@ -82,14 +82,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 	
 	private String workerRatyDes;
 	
-	private int supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private int qualityRaty;
-	
-	private String qualityRatyDes;
-	
 	private int status;
 	
 	private Timestamp allocateTime;
@@ -196,42 +188,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 
 	public void setWorkerRatyDes(String workerRatyDes){
 		this.workerRatyDes = workerRatyDes;
-	}
-
-	@Column(name = "supervisorRaty")
-	public int getSupervisorRaty(){
-		return this.supervisorRaty;
-	}
-
-	public void setSupervisorRaty(int supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	@Column(name = "supervisorRatyDes")
-	public String getSupervisorRatyDes(){
-		return this.supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	@Column(name = "qualityRaty")
-	public int getQualityRaty(){
-		return this.qualityRaty;
-	}
-
-	public void setQualityRaty(int qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	@Column(name = "qualityRatyDes")
-	public String getQualityRatyDes(){
-		return this.qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 	@Column(name = "status")

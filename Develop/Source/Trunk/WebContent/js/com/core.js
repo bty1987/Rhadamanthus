@@ -69,9 +69,9 @@ com = {
 					//api.common.logout.url + "?timestamp="+new Date().getTime();
 					window.location.href = '/';
 				}else{
-					if(failCallback)
+					if(failCallback){
 						failCallback(res);
-					else{
+					}else{
 						com.showAlert(com.error, res.errorMsg);
 						dfd.reject(res);
 						return res;

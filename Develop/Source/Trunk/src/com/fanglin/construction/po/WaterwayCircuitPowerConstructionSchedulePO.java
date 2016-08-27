@@ -57,14 +57,6 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 	
 	private int endTimeFlag;
 	
-	private int supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private int qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public WaterwayCircuitPowerConstructionSchedulePO() {
 		super();
 	}
@@ -158,42 +150,6 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 
 	public void setEndTimeFlag(int endTimeFlag){
 		this.endTimeFlag = endTimeFlag;
-	}
-
-	@Column(name="supervisorRaty")
-	public int getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(int supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	@Column(name="supervisorRatyDes")
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	@Column(name="qualityRaty")
-	public int getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(int qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	@Column(name="qualityRatyDes")
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 	@Column(name = "csId")

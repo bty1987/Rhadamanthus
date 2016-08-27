@@ -31,26 +31,6 @@ public class WaterwayCircuitPowerConstructionScheduleVO implements Serializable 
 	
 	private Integer endTimeFlag;
 	
-	private Integer waterwayWorkerRaty;
-	
-	private String waterwayWorkerRatyDes;
-	
-	private Integer circuitWorkerRaty;
-	
-	private String circuitWorkerRatyDes;
-	
-	private Integer powerWorkerRaty;
-	
-	private String powerWorkerRatyDes;
-	
-	private Integer supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private Integer qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public Integer getWcpcsId(){
 		return wcpcsId;
 	}
@@ -97,86 +77,6 @@ public class WaterwayCircuitPowerConstructionScheduleVO implements Serializable 
 
 	public void setEndTimeFlag(Integer endTimeFlag){
 		this.endTimeFlag = endTimeFlag;
-	}
-
-	public Integer getWaterwayWorkerRaty(){
-		return waterwayWorkerRaty;
-	}
-
-	public void setWaterwayWorkerRaty(Integer waterwayWorkerRaty){
-		this.waterwayWorkerRaty = waterwayWorkerRaty;
-	}
-
-	public String getWaterwayWorkerRatyDes(){
-		return waterwayWorkerRatyDes;
-	}
-
-	public void setWaterwayWorkerRatyDes(String waterwayWorkerRatyDes){
-		this.waterwayWorkerRatyDes = waterwayWorkerRatyDes;
-	}
-
-	public Integer getCircuitWorkerRaty(){
-		return circuitWorkerRaty;
-	}
-
-	public void setCircuitWorkerRaty(Integer circuitWorkerRaty){
-		this.circuitWorkerRaty = circuitWorkerRaty;
-	}
-
-	public String getCircuitWorkerRatyDes(){
-		return circuitWorkerRatyDes;
-	}
-
-	public void setCircuitWorkerRatyDes(String circuitWorkerRatyDes){
-		this.circuitWorkerRatyDes = circuitWorkerRatyDes;
-	}
-
-	public Integer getPowerWorkerRaty(){
-		return powerWorkerRaty;
-	}
-
-	public void setPowerWorkerRaty(Integer powerWorkerRaty){
-		this.powerWorkerRaty = powerWorkerRaty;
-	}
-
-	public String getPowerWorkerRatyDes(){
-		return powerWorkerRatyDes;
-	}
-
-	public void setPowerWorkerRatyDes(String powerWorkerRatyDes){
-		this.powerWorkerRatyDes = powerWorkerRatyDes;
-	}
-
-	public Integer getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(Integer supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	public Integer getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(Integer qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 	public Integer getCsId(){

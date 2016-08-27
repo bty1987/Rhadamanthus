@@ -260,7 +260,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr"], "condList", api.payment.pageMaterialPaymentBySubOrder, function(data){
+	searcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr"], "condList", api.payment.pageMaterialPaymentBySubOrder, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentPostData", null, false, null, function(){
 		
@@ -391,7 +391,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInitBySubOrder, function(data){
+	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInitBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, null, "hresultList");
 	
@@ -816,6 +816,8 @@ jQuery(function($) {
 		for(var arg in args){
 			options["materialReceipt."+arg] = args[arg];
 		}
+		
+		options["materialReceipt.des"] = $("#des").val();
 		
 		resMrIdIndex = "materialReceipt";
 		

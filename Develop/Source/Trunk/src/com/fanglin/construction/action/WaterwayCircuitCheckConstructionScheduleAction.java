@@ -96,8 +96,8 @@ public class WaterwayCircuitCheckConstructionScheduleAction extends BaseListActi
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryWaterwayCircuitCheckDrawingByWcpcsId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryWaterwayCircuitCheckDrawingByWcpcsId(){
+	@Action(value = "queryWaterwayCircuitCheckDrawingByWcccsId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWaterwayCircuitCheckDrawingByWcccsId(){
 		
 		waterwayCircuitCheckDrawings = waterwayCircuitCheckDrawingService.queryWaterwayCircuitCheckDrawingByWcccsId(waterwayCircuitCheckDrawing);
 		

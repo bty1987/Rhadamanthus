@@ -42,14 +42,6 @@ public class GroundLevelingConstructionSchedulePO implements java.io.Serializabl
 	
 	private short endTimeFlag;
 	
-	private short supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private short qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public GroundLevelingConstructionSchedulePO() {
 		super();
 	}
@@ -134,42 +126,6 @@ public class GroundLevelingConstructionSchedulePO implements java.io.Serializabl
 
 	public void setEndTimeFlag(short endTimeFlag){
 		this.endTimeFlag = endTimeFlag;
-	}
-
-	@Column(name = "supervisorRaty")
-	public short getSupervisorRaty(){
-		return this.supervisorRaty;
-	}
-
-	public void setSupervisorRaty(short supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	@Column(name = "supervisorRatyDes")
-	public String getSupervisorRatyDes(){
-		return this.supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	@Column(name = "qualityRaty")
-	public short getQualityRaty(){
-		return this.qualityRaty;
-	}
-
-	public void setQualityRaty(short qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	@Column(name = "qualityRatyDes")
-	public String getQualityRatyDes(){
-		return this.qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 }

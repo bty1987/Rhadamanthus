@@ -2,8 +2,6 @@
 jQuery(function($) {
 	
 	var record = {
-		listGrid: null,
-		gridPager: null,
 		saveBtn: null,
 		cancellBtn: null,
 		modal: null,
@@ -72,29 +70,10 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+			$divBtnWrap.append($btnDel).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
 
-			$btnEdit.click(function(){
-				backVisit.editFlag = true;
-				var row = v;
-
-				backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
-				backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
-				backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
-				backVisit.backVisitItems.backVisitTime.val(row.backVisitTime);
-				backVisit.backVisitItems.backVisitType.val(row.backVisitType);
-				backVisit.backVisitItems.backVisitDes.val(row.backVisitDes);
-				customerServicePostData["customerServiceBackVisit.csbvId"] = row.csbvId;
-
-				backVisit.backVisitItems.orderId.attr('disabled', true);
-				backVisit.backVisitItems.orderAddr.attr("disabled", true);
-				backVisit.backVisitItems.customerName.attr('disabled', true);
-
-				backVisit.modal.modal("show");
-			});
-			
 			$btnDel.click(function(){
 				removeRow(v.qtrId);
 			});
@@ -114,9 +93,9 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
+	searcher.init( [], "condList", api.construction.pageQualityTestingRecordByOrderId, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "qualityTestingRecordPostData", customerServicePostData, false, null,  function(){
+	}, "pagenation", "qualityTestingRecordPostData", qualityTestingPostData, false, null,  function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px").css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);

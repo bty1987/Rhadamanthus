@@ -1115,6 +1115,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialReceiptPO.setCollectUserId(userId);
 		materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		materialReceiptPO.setReceiptType(MaterialReceiptPO.RECEIPT_TYPE_COLLECT_INT);
+		materialReceiptPO.setDes(materialReceiptVO.getDes());
 		
 		materialReceiptDao.save(materialReceiptPO);
 		

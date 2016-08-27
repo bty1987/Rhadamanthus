@@ -67,7 +67,7 @@ var Searcher = function(){
                     }
                 }),
                 $cleanBtn.click(function(){
-                	$('#condList>.inline').each(function(i, v){
+                	basicConf.$searcher.find('.inline').each(function(i, v){
                 		$($(v).children()[1]) && $($(v).children()[1]).val('');
                 	});
                 })
