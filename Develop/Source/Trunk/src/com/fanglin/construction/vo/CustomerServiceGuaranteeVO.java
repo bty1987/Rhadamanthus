@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class CustomerServiceGuaranteeVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8026794284060513279L;
 	
 	private int csgId;

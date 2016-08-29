@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class AcceptanceVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -665024502622400928L;
 
 	private Integer actId;

@@ -84,7 +84,10 @@ public class ReworkServiceImpl implements ReworkService{
 	public void updateRework(ReworkVO reworkVO){
 		
 		ReworkPO reworkPO = reworkDao.get(reworkVO.getRwId());
-		BeanUtil.copyProperties(reworkVO, reworkPO);
+		
+		reworkPO.setCreateTime(reworkVO.getCreateTime());
+		reworkPO.setReworkDes(reworkVO.getReworkDes());
+		
 		reworkDao.saveOrUpdate(reworkPO);
 	}
 

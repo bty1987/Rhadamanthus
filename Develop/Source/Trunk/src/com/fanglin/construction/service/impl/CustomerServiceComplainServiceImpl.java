@@ -74,8 +74,8 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 		
 		customerServiceComplaintPO.setOperaterId("");
 		customerServiceComplaintPO.setOperaterName("");
-		customerServiceComplaintPO.setComplaintHandleTime(DateUtil.current(CustomerServiceComplaintPO.CURRENT_TIME_FORMAT_STR));
-		customerServiceComplaintPO.setComplaintHandle("");
+		customerServiceComplaintPO.setHandleTime(DateUtil.current(CustomerServiceComplaintPO.CURRENT_TIME_FORMAT_STR));
+		customerServiceComplaintPO.setHandle("");
 		
 		customerServiceComplaintDao.saveOrUpdate(customerServiceComplaintPO);
 	}
@@ -100,8 +100,8 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 		if(customerServiceComplaintPO != null){
 			BeanUtil.copyProperties(customerServiceComplaintVO, customerServiceComplaintPO);
 			
-			customerServiceComplaintPO.setComplaintStatus(CustomerServiceComplaintPO.COMPLAINT_STATUS_TYPE_HANDLE_INT);
-			customerServiceComplaintPO.setComplaintHandleTime(DateUtil.current(CustomerServiceComplaintPO.CURRENT_TIME_FORMAT_STR));
+			customerServiceComplaintPO.setStatus(CustomerServiceComplaintPO.COMPLAINT_STATUS_TYPE_HANDLE_INT);
+			customerServiceComplaintPO.setHandleTime(DateUtil.current(CustomerServiceComplaintPO.CURRENT_TIME_FORMAT_STR));
 			
 			customerServiceComplaintDao.update(customerServiceComplaintPO);
 		}
@@ -130,7 +130,7 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 		for(String cscId: cscIds){
 			CustomerServiceComplaintPO customerServiceComplaintPO = customerServiceComplaintDao.get(Integer.valueOf(cscId));
 			if(customerServiceComplaintPO != null){
-				if(customerServiceComplaintPO.getComplaintStatus() == CustomerServiceComplaintPO.COMPLAINT_STATUS_TYPE_INIT_INT){
+				if(customerServiceComplaintPO.getStatus() == CustomerServiceComplaintPO.COMPLAINT_STATUS_TYPE_INIT_INT){
 					customerServiceComplaintDao.delete(customerServiceComplaintPO);
 				}
 			}

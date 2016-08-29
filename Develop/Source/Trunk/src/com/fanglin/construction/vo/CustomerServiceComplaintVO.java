@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class CustomerServiceComplaintVO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -28421212134426045L;
 	
 	private Integer cscId;
@@ -34,19 +31,19 @@ public class CustomerServiceComplaintVO implements Serializable {
 	
 	private String operaterName;
 
-	private Integer complaintType;
+	private Integer type;
 	
-	private Integer complaintLevel;
+	private Integer level;
 	
-	private String complaintTime;
+	private String createTime;
 	
-	private Integer complaintStatus;
+	private Integer status;
 	
-	private String complaintHandle;
+	private String handle;
 	
-	private String complaintHandleTime;
+	private String handleTime;
 	
-	private String complaintDes;
+	private String des;
 
 	public Integer getCscId(){
 		return cscId;
@@ -104,60 +101,61 @@ public class CustomerServiceComplaintVO implements Serializable {
 		this.createrName = createrName;
 	}
 
-	public Integer getComplaintType(){
-		return complaintType;
+	public Integer getType() {
+		return type;
 	}
 
-	public void setComplaintType(Integer complaintType){
-		this.complaintType = complaintType;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
-	public Integer getComplaintLevel(){
-		return complaintLevel;
+	public Integer getLevel() {
+		return level;
 	}
 
-	public void setComplaintLevel(Integer complaintLevel){
-		this.complaintLevel = complaintLevel;
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
-	public String getComplaintTime(){
-		return complaintTime;
+	public String getCreateTime() {
+		return createTime;
 	}
 
-	public void setComplaintTime(String complaintTime){
-		this.complaintTime = complaintTime;
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
 	}
 
-	public Integer getComplaintStatus(){
-		return complaintStatus;
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setComplaintStatus(Integer complaintStatus){
-		this.complaintStatus = complaintStatus;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
-	public String getComplaintHandle(){
-		return complaintHandle;
+	public String getHandle() {
+		return handle;
 	}
 
-	public void setComplaintHandle(String complaintHandle){
-		this.complaintHandle = complaintHandle;
+	public void setHandle(String handle) {
+		this.handle = handle;
 	}
 
-	public String getComplaintHandleTime(){
-		return complaintHandleTime;
+	public String getHandleTime() {
+		return handleTime;
 	}
 
-	public void setComplaintHandleTime(String complaintHandleTime){
-		this.complaintHandleTime = complaintHandleTime;
+	public void setHandleTime(String handleTime) {
+		this.handleTime = handleTime;
 	}
 
-	public String getComplaintDes(){
-		return complaintDes;
+	public String getDes() {
+		return des;
 	}
 
-	public void setComplaintDes(String complaintDes){
-		this.complaintDes = complaintDes;
+	public void setDes(String des) {
+		this.des = des;
 	}
+
 
 }

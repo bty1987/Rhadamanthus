@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class ReworkVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5360738026496521235L;
 	
 	private Integer rwId;

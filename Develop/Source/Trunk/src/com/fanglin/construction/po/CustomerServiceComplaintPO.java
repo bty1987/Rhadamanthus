@@ -46,19 +46,19 @@ public class CustomerServiceComplaintPO implements Serializable{
 	
 	private String operaterName;
 
-	private int complaintType;
+	private int type;
 	
-	private int complaintLevel;
+	private int level;
 	
-	private String complaintTime;
+	private String createTime;
 	
-	private int complaintStatus;
+	private int status;
 	
-	private String complaintHandle;
+	private String handle;
 	
-	private String complaintHandleTime;
+	private String handleTime;
 	
-	private String complaintDes;
+	private String des;
 
 	@Id
 	@Column(name="cscId")
@@ -88,33 +88,6 @@ public class CustomerServiceComplaintPO implements Serializable{
 		this.customerName = customerName;
 	}
 	
-	@Column(name="complaintLevel")
-	public int getComplaintLevel(){
-		return complaintLevel;
-	}
-
-	public void setComplaintLevel(int complaintLevel){
-		this.complaintLevel = complaintLevel;
-	}
-
-	@Column(name="complaintTime")
-	public String getComplaintTime(){
-		return complaintTime;
-	}
-
-	public void setComplaintTime(String complaintTime){
-		this.complaintTime = complaintTime;
-	}
-
-	@Column(name="complaintDes")
-	public String getComplaintDes(){
-		return complaintDes;
-	}
-
-	public void setComplaintDes(String complaintDes){
-		this.complaintDes = complaintDes;
-	}
-
 	@Column(name = "operaterId")
 	public String getOperaterId(){
 		return operaterId;
@@ -133,42 +106,6 @@ public class CustomerServiceComplaintPO implements Serializable{
 		this.operaterName = operaterName;
 	}
 
-	@Column(name = "complaintType")
-	public int getComplaintType(){
-		return complaintType;
-	}
-
-	public void setComplaintType(int complaintType){
-		this.complaintType = complaintType;
-	}
-
-	@Column(name = "complaintStatus")
-	public int getComplaintStatus(){
-		return complaintStatus;
-	}
-
-	public void setComplaintStatus(int complaintStatus){
-		this.complaintStatus = complaintStatus;
-	}
-
-	@Column(name = "complaintHandle")
-	public String getComplaintHandle(){
-		return complaintHandle;
-	}
-
-	public void setComplaintHandle(String complaintHandle){
-		this.complaintHandle = complaintHandle;
-	}
-
-	@Column(name = "complaintHandleTime")
-	public String getComplaintHandleTime(){
-		return complaintHandleTime;
-	}
-
-	public void setComplaintHandleTime(String complaintHandleTime){
-		this.complaintHandleTime = complaintHandleTime;
-	}
-
 	@Column(name = "createrId")
 	public String getCreaterId(){
 		return createrId;
@@ -185,6 +122,69 @@ public class CustomerServiceComplaintPO implements Serializable{
 
 	public void setCreaterName(String createrName){
 		this.createrName = createrName;
+	}
+
+	@Column(name = "type")
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Column(name = "level")
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	@Column(name = "createTime")
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "status")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	@Column(name = "handle")
+	public String getHandle() {
+		return handle;
+	}
+
+	public void setHandle(String handle) {
+		this.handle = handle;
+	}
+
+	@Column(name = "handleTime")
+	public String getHandleTime() {
+		return handleTime;
+	}
+
+	public void setHandleTime(String handleTime) {
+		this.handleTime = handleTime;
+	}
+
+	@Column(name = "des")
+	public String getDes() {
+		return des;
+	}
+
+	public void setDes(String des) {
+		this.des = des;
 	}
 	
 }
