@@ -170,7 +170,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollectBySubOrder, function(data){
+	searcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollectBySubOrder, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		
@@ -276,7 +276,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "msoNo", "designer", "customerPhone", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirmBySubOrder, function(data){
+	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirmBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
 	

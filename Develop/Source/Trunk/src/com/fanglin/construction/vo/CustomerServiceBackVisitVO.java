@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class CustomerServiceBackVisitVO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5152110275519942956L;
 	
 	private int csbvId;

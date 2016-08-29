@@ -851,6 +851,7 @@ var api = {
 		deleteFunctionAreaItemByIds: {url: "deleteFunctionAreaItemByIds.do"},
 		
 		pageSystemDefineItem: {url: "pageSystemDefineItem.do"},
+		pageSystemDefineItemForEnable: {url: "pageSystemDefineItemForEnable.do"},
 		querySystemDefineItemByItemId: {url: "querySystemDefineItemByItemId.do"},
 		addSystemDefineItem: {url: "addSystemDefineItem.do"},
 		updateSystemDefineItem: {url: "updateSystemDefineItem.do"},

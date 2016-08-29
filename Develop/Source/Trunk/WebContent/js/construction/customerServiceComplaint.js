@@ -68,12 +68,12 @@ jQuery(function($) {
 				["客户名:", v.customerName, "grey"],
 				["创建人:", v.createrName, "grey"],
 				["操作人:", v.operaterName, "grey"],
-				["等级:", levelInit(v.complaintLevel), null],
-				["类型:", complaint.typeDict[v.complaintType], "grey"],
-				["时间:", v.complaintTime, "grey"],
-				["备注:", v.complaintDes, "grey"],
-				["状态:", v.complaintStatus, "grey"],
-				["处理信息:", v.reworkDes, "grey"],
+				["等级:", levelInit(v.level), null],
+				["类型:", complaint.typeDict[v.type], "grey"],
+				["时间:", v.createTime, "grey"],
+				["备注:", v.des, "grey"],
+				["状态:", v.status, "grey"],
+				["处理信息:", v.handle, "grey"],
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -82,7 +82,6 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-
 
 			$divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
 
@@ -167,9 +166,9 @@ jQuery(function($) {
 		var options = {
 			"customerServiceComplaint.orderId": complaint.complaintItems.orderId.val(),
 			"customerServiceComplaint.customerName": complaint.complaintItems.customerName.val(),
-			"customerServiceComplaint.complaintLevel": complaint.complaintItems.complaintLevel.val(),
-			"customerServiceComplaint.complaintTime": complaint.complaintItems.complaintTime.val(),
-			"customerServiceComplaint.complaintDes": complaint.complaintItems.complaintDes.val(),
+			"customerServiceComplaint.level": complaint.complaintItems.complaintLevel.val(),
+			"customerServiceComplaint.createTime": complaint.complaintItems.complaintTime.val(),
+			"customerServiceComplaint.des": complaint.complaintItems.complaintDes.val(),
 		};
 
 		if(complaint.editFlag){
@@ -197,10 +196,11 @@ jQuery(function($) {
 		var url = api.construction.handleCustomerServiceComplaint.url;
 		var options = {
 			"customerServiceComplaint.cscId": customerServicePostData["customerServiceComplaint.cscId"],
-			"customerServiceComplaint.complaintHandle": complaint.complaintItems.complaintHandleDes.val(),
+			"customerServiceComplaint.handle": complaint.complaintItems.complaintHandleDes.val(),
 		};
 
-		com.post(url, options, successCallback, failCallback);
+		com.post(url, options, successCallback);
+		
 		complaint.handleModal.modal("hide");
 	}
 
@@ -241,9 +241,4 @@ jQuery(function($) {
 		CustomerServiceComplaintSeacher.doSearch();
 	}
 
-	function failCallback(){
-
-	}
-
-	
 });

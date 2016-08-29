@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.quotation.service.SystemDefineItemService;
 import com.fanglin.data.quotation.vo.SystemDefineItemVO;
 
@@ -41,6 +42,16 @@ public class SystemDefineItemAction extends BaseListAction {
 	
 	@Action(value="pageSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageSystemDefineItem(){
+		
+		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageSystemDefineItemForEnable", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageSystemDefineItemForEnable(){
+		
+		getFilters().add(new FilterVO("status", "1", "eq"));
 		
 		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters());
 		

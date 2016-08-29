@@ -49,7 +49,7 @@ var AddReduceDetail = (function(){
 			//系统定义弹出层
 			var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationWorkTypeId'];
 			var addReduceDetailSeacher = new Searcher();
-			addReduceDetailSeacher.init( _condArr, "condList", api.quotation.pageSystemDefineItem,  function(data){
+			addReduceDetailSeacher.init( _condArr, "condList", api.quotation.pageSystemDefineItemForEnable,  function(data){
 				var $tableWrap = $('#resultList').empty();
 				var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
