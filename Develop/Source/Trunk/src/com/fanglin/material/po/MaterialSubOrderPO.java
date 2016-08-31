@@ -84,7 +84,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	public static final int DELIVERY_STATUS_TYPE_INIT_INT = 0;
 	
-	public static final int DELIVERY_STATUS_TYPE_DELIVE_INT =1;
+	public static final int DELIVERY_STATUS_TYPE_DELIVE_INT = 1;
 	
 	public static final int DESIGNERFLAG_TYPE_OTHER_INT = 0;
 	

@@ -35,9 +35,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.finance.service.FinanceService;
 import com.fanglin.material.dao.MaterialSubOrderDao;
-import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
-import com.fanglin.material.po.MaterialSubOrderItemPO;
 import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.material.po.MaterialSubOrderRefundPO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
@@ -73,9 +71,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private MaterialSubOrderDao materialSubOrderDao;
-	
-	@Autowired
-	private MaterialSubOrderItemDao materialSubOrderItemDao;
 	
 	@Autowired
 	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
@@ -989,12 +984,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					}
 				}
 				
-				List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoIdNotRefund(materialSubOrderPO.getMsoId());
-				for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-					materialSubOrderItemPO.setPaymentStatus(MaterialSubOrderItemPO.PAYMENTSTATUS_TYPE_PAYMENT_INT);
-					materialSubOrderItemDao.update(materialSubOrderItemPO);
-				}
-				
 				materialSubOrderDao.update(materialSubOrderPO);
 			}
 			
@@ -1162,12 +1151,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					}else{
 						count = Arith.add(Arith.add(count, materialPaymentPO.getReferMoney()), materialSubOrderPO.getCoupon());
 					}
-				}
-				
-				List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoIdNotRefund(materialSubOrderPO.getMsoId());
-				for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-					materialSubOrderItemPO.setPaymentStatus(MaterialSubOrderItemPO.PAYMENTSTATUS_TYPE_PAYMENT_INT);
-					materialSubOrderItemDao.update(materialSubOrderItemPO);
 				}
 				
 				materialSubOrderDao.update(materialSubOrderPO);
@@ -1483,12 +1466,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 							materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT);
 						}else if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT || materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
 							materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT);
-						}
-						
-						List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoIdNotRefund(materialSubOrderPO.getMsoId());
-						for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-							materialSubOrderItemPO.setPaymentStatus(MaterialSubOrderItemPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
-							materialSubOrderItemDao.update(materialSubOrderItemPO);
 						}
 						
 						materialSubOrderDao.update(materialSubOrderPO);

@@ -51,11 +51,7 @@ public class MaterialSubOrderItemVO implements Serializable{
 	
 	private float total;
 	
-	private String type;
-	
 	private int status; // 无 , 退货 , 预结算 , 结算 , 删除
-	
-	private int paymentStatus;
 	
 	private int balanceStatus;
 	
@@ -311,28 +307,12 @@ public class MaterialSubOrderItemVO implements Serializable{
 		this.refundStatus = refundStatus;
 	}
 
-	public int getPaymentStatus(){
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(int paymentStatus){
-		this.paymentStatus = paymentStatus;
-	}
-
 	public int getCalcType(){
 		return calcType;
 	}
 
 	public void setCalcType(int calcType){
 		this.calcType = calcType;
-	}
-
-	public String getType(){
-		return type;
-	}
-
-	public void setType(String type){
-		this.type = type;
 	}
 
 	public int getRawCalcType() {

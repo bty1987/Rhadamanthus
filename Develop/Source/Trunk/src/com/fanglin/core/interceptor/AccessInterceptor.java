@@ -141,8 +141,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 			
 			result = BaseAction.BACKVALUE_ERROR_STR;
 			
-//			e.printStackTrace();
-			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
+			e.printStackTrace();
+//			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
 //		if(result == BaseAction.BACKVALUE_ERROR_STR){
