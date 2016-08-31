@@ -176,7 +176,7 @@ jQuery(function($) {
 	$('a[name="add"]','#pagenation').click(function(){
 		editFlg = false;
 		
-		materialOutside.saveFlag = false;
+		materialOutside.editFlag = false;
 		
 		materialOutside.items.orderId.removeAttr("disabled");
 		materialOutside.items.orderAddr.css("display", "none");

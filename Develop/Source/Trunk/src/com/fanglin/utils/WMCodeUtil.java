@@ -44,7 +44,7 @@ public class WMCodeUtil {
 		g.setColor(Color.WHITE); // 设置背景色
         g.fillRect(0, 0, width, height); // 填充背景
         
-        g.setColor(new Color(190, 190, 190)); // 设置字体颜色和样式
+        g.setColor(new Color(215, 215, 215)); // 设置字体颜色和样式
 		g.setFont(new Font("宋体", Font.BOLD, 20));
 		
 		g.translate(50, 50);

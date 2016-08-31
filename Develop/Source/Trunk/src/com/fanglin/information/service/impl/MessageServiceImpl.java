@@ -144,11 +144,22 @@ public class MessageServiceImpl implements MessageService {
 		
 		BeanUtil.copyProperties(messagePO, messageVO, Arrays.asList("receiver", "sender"));
 		
-		messageVO.setReceiver(new UserVO());
-		messageVO.setSender(new UserVO());
+		UserVO receiver = new UserVO();
+		UserVO sender = new UserVO();
 		
-		BeanUtil.copyProperties(messagePO.getReceiver(), messageVO.getReceiver(), Arrays.asList("role", "dept"));
-		BeanUtil.copyProperties(messagePO.getSender(), messageVO.getSender(), Arrays.asList("role", "dept"));
+		UserPO _receiver = messagePO.getReceiver();
+		UserPO _sender = messagePO.getSender();
+		
+		receiver.setUserName(_receiver.getUserName());
+		receiver.setCurrentName(_receiver.getCurrentName());
+		receiver.setUserId(_receiver.getUserId());
+		
+		sender.setUserName(_sender.getUserName());
+		sender.setCurrentName(_sender.getCurrentName());
+		sender.setUserId(_sender.getUserId());
+		
+		messageVO.setReceiver(receiver);
+		messageVO.setSender(sender);
 		
 		return messageVO;
 	}

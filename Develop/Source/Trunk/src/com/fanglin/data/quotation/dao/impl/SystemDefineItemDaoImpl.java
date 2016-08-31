@@ -55,7 +55,7 @@ public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> impleme
 				}else if("quotationWorkTypeId".equals(filter.getField())){
 					query.add(query.getCriterion("workType.id", Integer.parseInt(filter.getData()), filter.getOp()));
 				}else if("status".equals(filter.getField())){
-					query.add(query.getCriterion("workType.id", Integer.parseInt(filter.getData()), filter.getOp()));
+					query.add(query.getCriterion("status", Short.parseShort(filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}

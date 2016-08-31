@@ -30,6 +30,12 @@ public class DepartmentPO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
 	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short STATUS_DISABLE_INT = 0;
+	
+	public static final short STATUS_ENABLE_INT = 1;
+	
 	private int dId;
 
 	private String deptId;
@@ -52,6 +58,8 @@ public class DepartmentPO implements Serializable {
 	
 	private int company;
 	
+	private short status;
+	
 	public DepartmentPO(){
 		super();
 	}
@@ -72,7 +80,7 @@ public class DepartmentPO implements Serializable {
 	}
 
 	@Id
-	@Column(nullable = false)
+	@Column(name = "deptId")
 	public String getDeptId(){
 		return deptId;
 	}
@@ -81,7 +89,7 @@ public class DepartmentPO implements Serializable {
 		this.deptId = deptId;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "deptName")
 	public String getDeptName(){
 		return deptName;
 	}
@@ -90,7 +98,7 @@ public class DepartmentPO implements Serializable {
 		this.deptName = deptName;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "type")
 	public String getType(){
 		return type;
 	}
@@ -99,6 +107,7 @@ public class DepartmentPO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "subType")
 	public String getSubType(){
 		return subType;
 	}
@@ -107,7 +116,7 @@ public class DepartmentPO implements Serializable {
 		this.subType = subType;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "createTime")
 	public String getCreateTime(){
 		return createTime;
 	}
@@ -116,6 +125,7 @@ public class DepartmentPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "des")
 	public String getDes(){
 		return des;
 	}
@@ -124,6 +134,7 @@ public class DepartmentPO implements Serializable {
 		this.des = des;
 	}
 
+	@Column(name = "contractPrefix")
 	public String getContractPrefix(){
 		return contractPrefix;
 	}
@@ -152,12 +163,22 @@ public class DepartmentPO implements Serializable {
 		this.cityProper = cityProper;
 	}
 
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

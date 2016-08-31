@@ -236,6 +236,7 @@ $(function(){
 			$.exceler({
 				column : [
 					["编号","itemId"],
+					["名称","itemName"],
 					['类型','quotationType'],
 					['分类','quotationClassification'],
 					['大类','quotationBigCategory'],
