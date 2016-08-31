@@ -35,6 +35,8 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
         PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
         
+        query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
+        
         queryFilterExcute(query, filters);
 
         return query.list();
@@ -44,6 +46,8 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     @SuppressWarnings("unchecked")
     public List<DepartmentPO> queryDepartment(String type, Integer company){
         Criteria criteria = session().createCriteria(DepartmentPO.class);
+        
+        criteria.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
         
         if(!type.equals("all")){
             criteria = criteria.add(Restrictions.eq("type", type));
@@ -62,7 +66,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     @SuppressWarnings("unchecked")
     public List<String> queryDepartmentForChildren(String fatherDeptId){
     	
-        String sql = "select deptId from communion.department where fatherDeptId = '" + fatherDeptId + "'";
+        String sql = "select deptId from communion.department where fatherDeptId = '" + fatherDeptId + "' and status = 1";
         Query query = session().createSQLQuery(sql);
         
         return query.list();

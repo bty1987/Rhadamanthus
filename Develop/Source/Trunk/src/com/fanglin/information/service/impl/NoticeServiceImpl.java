@@ -160,11 +160,21 @@ public class NoticeServiceImpl implements NoticeService{
         
         BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("user", "dept"));
         
-        noticeVO.setUser(new UserVO());
-        noticeVO.setDept(new DepartmentVO());
+        UserVO userVO = new UserVO();
+        DepartmentVO departmentVO = new DepartmentVO();
         
-        BeanUtil.copyProperties(noticePO.getUser(), noticeVO.getUser(), Arrays.asList("role", "dept"));
-        BeanUtil.copyProperties(noticePO.getDept(), noticeVO.getDept(), Arrays.asList("fatherDept", "cityProper"));
+        UserPO userPO = noticePO.getUser();
+        DepartmentPO departmentPO = noticePO.getDept();
+        
+        userVO.setUserId(userPO.getUserId());
+        userVO.setUserName(userPO.getUserName());
+        userVO.setCurrentName(userPO.getCurrentName());
+        
+        departmentVO.setDeptId(departmentPO.getDeptId());
+        departmentVO.setDeptName(departmentPO.getDeptName());
+        
+        noticeVO.setUser(userVO);
+        noticeVO.setDept(departmentVO);
         
         return noticeVO;
     }

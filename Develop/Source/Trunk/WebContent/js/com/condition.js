@@ -922,7 +922,7 @@ var Condition = function(){
             label:"收款时间",
             type:"dateRangePicker",
             submitConfig : {
-                name : "fullCollectTime",
+                name : "fullCollectTimeRange",
                 op : "between",
                 validate:null
             }
