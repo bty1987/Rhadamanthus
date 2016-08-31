@@ -130,11 +130,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="deleteMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteMaterialSubOrder() throws FLException{
 		
-		int code = materialSubOrderService.deleteMaterialSubOrder(materialSubOrder.getMsoId());
-		
-		if(code == 1){
-			throw new FLException(180005, "主材订单不能进行删除动作");
-		}
+		materialSubOrderService.deleteMaterialSubOrder(materialSubOrder.getMsoId());
 		
 		return SUCCESS;
 	}

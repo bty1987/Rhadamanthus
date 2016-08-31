@@ -91,8 +91,6 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 	
 	private int status;
 	
-	private int paymentStatus;
-	
 	private int balanceStatus;
 	
 	private int refundStatus;
@@ -317,15 +315,6 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 
 	public void setRefundStatus(int refundStatus){
 		this.refundStatus = refundStatus;
-	}
-
-	@Column(name = "paymentStatus")
-	public int getPaymentStatus(){
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(int paymentStatus){
-		this.paymentStatus = paymentStatus;
 	}
 
 	@Column(name = "calcType")
