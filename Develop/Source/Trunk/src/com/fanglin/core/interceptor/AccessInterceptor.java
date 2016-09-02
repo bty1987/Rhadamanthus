@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fanglin.core.action.BaseAction;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
@@ -46,11 +45,10 @@ public class AccessInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
-		List<String> passLogNames = Arrays.asList(new String[]{"index", "doLogin", "login", "logout", "verifyCode"});
+		List<String> passLogNames = Arrays.asList(new String[]{"doLogin", "login"});
 		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError", "error"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
 		
 		String userId = "";
-		String result = Action.SUCCESS;
 		
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
@@ -63,7 +61,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		try {
 			
 			if(passActionNames.contains(actionName)){
-				result = invocation.invoke();
+				invocation.invoke();
 			}else{
 				
 				if(authentication == null){
@@ -105,7 +103,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					
 					// 权限认证
 					if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
-						result =  invocation.invoke();
+						invocation.invoke();
 					}else{
 						throw new FLException(-2, "无操作权限");
 					}
@@ -130,26 +128,18 @@ public class AccessInterceptor extends AbstractInterceptor {
 		}catch (LockAcquisitionException e) {
 			invocation.getStack().setValue("errorCode", "-2");
 			invocation.getStack().setValue("errorMsg", "数据冲突,请重新再试!");
-			result = BaseAction.BACKVALUE_ERROR_STR;
 		}catch (FLException e) {
 			invocation.getStack().setValue("errorCode", e.getCode());
 			invocation.getStack().setValue("errorMsg", e.getErrorMessage());
-			result = "index".equals(actionName) ? BaseAction.BACKVALUE_LOGIN_STR : BaseAction.BACKVALUE_ERROR_STR;
 		}catch (Exception e) {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
-			result = BaseAction.BACKVALUE_ERROR_STR;
-			
-			e.printStackTrace();
-//			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
+//			e.printStackTrace();
+			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
-//		if(result == BaseAction.BACKVALUE_ERROR_STR){
-//			CookieUtil.delCookie((HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST), (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION);
-//		}
-		
-		return result;
+		return Action.SUCCESS;
 	}
 	
 }

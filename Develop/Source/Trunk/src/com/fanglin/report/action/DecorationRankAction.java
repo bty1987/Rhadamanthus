@@ -47,7 +47,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="queryDecorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationDesignerDepartmentRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(getUserId(), -1);
+		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="queryDecorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationDesignerRegionRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(getUserId(), -1);
+		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -71,7 +71,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="decorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String decorationDesignerDepartmentRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(getUserId(), 10);
+		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}
@@ -79,7 +79,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="decorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String decorationDesignerRegionRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(getUserId(), 10);
+		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}

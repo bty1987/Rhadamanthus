@@ -200,7 +200,6 @@ jQuery(function($) {
 		}else{
 			url = api.department.addDepartment;
 			options['dept.deptId'] = "ZD_";
-			options['dept.company'] = config.company;
 		}
 		
 		com.post(url, options, function(res){

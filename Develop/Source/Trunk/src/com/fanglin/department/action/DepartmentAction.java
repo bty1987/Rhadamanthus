@@ -43,7 +43,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDepartment() throws FLException{
 		
-		departmentService.pageDepartment(getPaging(), getFilters(), dept, getCompany());
+		departmentService.pageDepartment(getPaging(), getFilters(), dept, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -51,7 +51,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "queryDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartment() throws FLException{
 		
-		deptList = departmentService.queryDepartment(dept.getType(), getCompany());
+		deptList = departmentService.queryDepartment(dept.getType(), queryCompany());
 		
 		return SUCCESS;
 	}

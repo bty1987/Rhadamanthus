@@ -141,7 +141,7 @@ jQuery(function($) {
 		businessDept.items.businessDeptId.prop("disabled", false).css("display", "none");
 		businessDept.items.regionSel.trigger("change");
 		
-		businessDept.modal.modal("show");    
+		businessDept.modal.modal("show");
     });
 	
 	function editBusinessDept(deptId, deptName, fatherDeptId, regionId, cityId, cityProperId, des){
@@ -202,7 +202,6 @@ jQuery(function($) {
 		}else{
 			url = api.department.addDepartment;
 			options['dept.deptId'] = "BD_";
-			options['dept.company'] = config.company;
 		}
 		
 		com.post(url, options, function(res){

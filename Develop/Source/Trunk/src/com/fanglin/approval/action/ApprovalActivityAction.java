@@ -46,7 +46,7 @@ public class ApprovalActivityAction extends BaseListAction {
 	@Action(value = "submitApprovalForDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForDecorationActivity() throws FLException{
 		
-		approvalActivityService.submitApprovalForDecorationActivity(approval, approvalActivity, approvalActivityItems, getUserId());
+		approvalActivityService.submitApprovalForDecorationActivity(approval, approvalActivity, approvalActivityItems, queryUserId());
 		
 		return SUCCESS;
 	}

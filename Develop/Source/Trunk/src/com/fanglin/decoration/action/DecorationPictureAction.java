@@ -50,7 +50,7 @@ public class DecorationPictureAction extends BaseListAction {
 	@Action(value = "addDecorationPicture", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationPicture() throws FLException{
 
-		decorationPictureService.addDecorationPicture(decorationPicture, getUserId());
+		decorationPictureService.addDecorationPicture(decorationPicture, queryUserId());
 
 		return SUCCESS;
 	}

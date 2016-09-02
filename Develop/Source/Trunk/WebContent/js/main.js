@@ -105,6 +105,7 @@ $(function(){
 	});
 	
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
+		$(".user-info .user-name").text(res.user.currentName);
 		$("#personalPic").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime()).error(function(){
 		    $('.profile-picture').hide();
 		});
@@ -275,7 +276,6 @@ function loadMessageCount(){
 }
 
 function loadTreeCallback(nodes){
-	$(".user-info .user-name").text(nodes.userName);
 	var treeData = nodes.tree;
 	var $tree = $("ul.nav-list");
 	var $main = $('<li><a href="#" onclick="reloadPage();"><i class="icon-home"></i><span class="menu-text">首页</span></a></li>');

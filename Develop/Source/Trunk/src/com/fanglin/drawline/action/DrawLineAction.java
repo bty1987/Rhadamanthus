@@ -85,7 +85,7 @@ public class DrawLineAction extends BaseListAction{
 	@Action(value = "applayDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String applayDecorationOrderDrawLine() throws FLException{
 		
-		drawLineService.applayDrawLine(drawLine, getUserId());
+		drawLineService.applayDrawLine(drawLine, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -103,7 +103,7 @@ public class DrawLineAction extends BaseListAction{
 		
 		drawLine.setStatus("放线成功");
 		
-		drawLineService.updateDrawLineForStatus(drawLine, getUserId());
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
 	
 		return SUCCESS;
 	}
@@ -113,7 +113,7 @@ public class DrawLineAction extends BaseListAction{
 		
 		drawLine.setStatus("放线失败");
 		
-		drawLineService.updateDrawLineForStatus(drawLine, getUserId());
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
 	
 		return SUCCESS;
 	}

@@ -46,7 +46,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="pageMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMessage() throws FLException{
 		
-		messageService.pageMessage(getPaging(), getFilters(), getUserId());
+		messageService.pageMessage(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -54,7 +54,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="queryMessageForUnRead", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMessageForUnRead() throws FLException{
 		
-		messageList = messageService.queryMessageForUnRead(getUserId());
+		messageList = messageService.queryMessageForUnRead(queryUserId());
 		
 		return SUCCESS;
 	}
@@ -62,7 +62,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="countMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String countMessage() throws FLException{
 		
-		messageCount = messageService.countMessage(getUserId());
+		messageCount = messageService.countMessage(queryUserId());
 		
 		return SUCCESS;
 	}
@@ -70,7 +70,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="sendMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String sendMessage() throws FLException{
 		
-		message.setSender(new UserVO(getUserId()));
+		message.setSender(new UserVO(queryUserId()));
 		
 		messageService.sendMessage(message);
 		

@@ -38,7 +38,8 @@ $(function(){
                     });
 
                     $btnEdit.click(function(){
-                        viewUser(v.userId+"");
+                        params.tempUserId = v.userId;
+                        com.switchPage(api.index.userEditIndex.url);
                     });
 
                     $divBtnWrap.append($btnEdit).appendTo($h3);
@@ -49,25 +50,11 @@ $(function(){
                 $ul.appendTo($tableWrap);
             }
         };
-        //查看
-        var viewUser = function (userId){
-            params.tempUserId = userId;
-            com.switchPage(api.index.userEditIndex.url);
-        };
-        //添加
-        var addUser = function(){
-            params.tempUserId = null;
-            com.switchPage(api.index.userEditIndex.url);
-        };
 
         return {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
                 renderList(tableId,listData);
-            }, initAddUser: function(){
-            	$('a[name="addUser"]','#pagenation').click(function(){
-                    addUser();
-                });
             }
         }
     })();
@@ -84,8 +71,42 @@ $(function(){
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
-    	return [$adda];
+    	var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
+    	var $importspan = $('<span></span>').text('上传').appendTo($importa);
+    	
+    	return [$adda, $importa];
     });
-
-    displayFunc.initAddUser();
+    
+    $('a[name="addUser"]','#pagenation').click(function(){
+    	params.tempUserId = null;
+        com.switchPage(api.index.userEditIndex.url);
+    });
+    
+    $('a[name="import"]','#pagenation').click(function(){
+    	$('#importModal').modal("show");
+    });
+    
+    $('#import').Huploadify({
+        'debug' : false, // 开启调试
+        'auto':true, // 是否自动上传
+        'successTimeout':config.uploadTimeout, // 超时时间
+        'formData':{
+        	'uploadType':4,
+        },
+        'buttonClass': 'btn btn-success col-sm-12',
+        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'uploader': config.server + 'importUserSalary.do', // 上传处理程序
+        'height':'30', // 浏览按钮的高度
+        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit':'5MB', // 上传文件的大小限制
+        'queueSizeLimit' : 1, // 上传数量
+        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+        	console.log(data);
+        	var dateObj = eval("("+data+")");
+        }
+    });
+    
 });

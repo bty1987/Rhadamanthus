@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -48,9 +47,6 @@ import com.opensymphony.xwork2.ActionSupport;
 @Namespace("/")
 @Controller
 @Results({ 
-	@Result(name = BaseAction.BACKVALUE_NOPERATE_STR,  location = "noperateAuthority", type = "chain"),
-	@Result(name = BaseAction.BACKVALUE_ERROR_STR,  location = "operateError", type = "chain"),
-	@Result(name = BaseAction.BACKVALUE_TIMEOUT_STR, location = "timeout", type = "chain"),
 	@Result(name = BaseAction.BACKVALUE_LOGIN_STR, location = "login", type = "chain")
 })
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
@@ -58,14 +54,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 
 	private static final long serialVersionUID = 1638203239536571772L;
 	
-	public static final String BACKVALUE_NOPERATE_STR = "noperate";
-	
-	public static final String BACKVALUE_ERROR_STR = "error";
-	
 	public static final String BACKVALUE_LOGIN_STR = "login";
 	
-	public static final String BACKVALUE_TIMEOUT_STR = "timeout";
-
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected HttpServletRequest request;
@@ -80,43 +70,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	Map<String, Object> logObjs = new HashMap<String, Object>();
 	
-	@Action(value = "operateError", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String operateError(){
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "noperateAuthority", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String noperateAuthority(){
-		
-		setErrorCode(-2);
-		setErrorMsg("无操作权限");
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "timeout", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String timeout(){
-		
-		setErrorCode(110005);
-		setErrorMsg("登陆超时");
-		
-		return SUCCESS;
-	}
-	
-	public String getVerifyCode(String securityCode) throws FLException{
-		String verifyCode = null;
-		
-		try{
-			verifyCode = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
-		}catch(Exception e){
-			throw new FLException(110001, "验证码错误");
-		}
-		
-		return verifyCode;
-	}
-	
-	public String getUserName() throws FLException{
+	public String queryUserName() throws FLException{
 		String userName = null;
 		
 		try{
@@ -138,7 +92,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return userName;
 	}
 	
-	public String getUserId() throws FLException{
+	public String queryUserId() throws FLException{
 		String userId = null;
 		
 		try{
@@ -160,7 +114,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return userId;
 	}
 	
-	public String getRoleId() throws FLException{
+	public String queryRoleId() throws FLException{
 		String roleId = null;
 		
 		try{
@@ -182,7 +136,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return roleId;
 	}
 	
-	public int getCompany() throws FLException{
+	public int queryCompany() throws FLException{
 		
 		int company = 0;
 		

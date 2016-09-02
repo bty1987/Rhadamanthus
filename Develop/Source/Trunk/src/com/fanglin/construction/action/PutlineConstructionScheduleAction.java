@@ -70,7 +70,7 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 	@Action(value = "setPutlineConstructionScheduleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setPutlineConstructionScheduleForStatus() throws FLException{
 		
-		putlineConstructionScheduleService.setPutlineConstructionScheduleForStatus(putlineConstructionSchedule, getUserId());
+		putlineConstructionScheduleService.setPutlineConstructionScheduleForStatus(putlineConstructionSchedule, queryUserId());
 		
 		return SUCCESS;
 	}

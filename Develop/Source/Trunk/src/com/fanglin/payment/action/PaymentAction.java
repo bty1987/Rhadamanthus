@@ -68,7 +68,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryPaymentByPaymentId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPaymentByPaymentId() throws FLException{
 		
-		payment = paymentService.queryPaymentByPaymentId(payment, getUserId());
+		payment = paymentService.queryPaymentByPaymentId(payment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -76,7 +76,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "collectPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectPayment() throws FLException{
 		
-		paymentService.collectPayment(payment, getUserId());
+		paymentService.collectPayment(payment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -84,7 +84,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "confirmPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmPayment() throws FLException{
 		
-		paymentService.confirmPayment(paymentIds, getUserId());
+		paymentService.confirmPayment(paymentIds, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -100,7 +100,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "withdrawPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String withdrawPayment() throws FLException{
 		
-		paymentService.withdrawPayment(payment, getUserId());
+		paymentService.withdrawPayment(payment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -108,7 +108,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "convertPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String convertPayment() throws FLException{
 		
-		paymentService.convertPayment(payment, convertLeftType, convertRightType, convertCash, getUserId());
+		paymentService.convertPayment(payment, convertLeftType, convertRightType, convertCash, queryUserId());
 		
 		return SUCCESS;
 	}

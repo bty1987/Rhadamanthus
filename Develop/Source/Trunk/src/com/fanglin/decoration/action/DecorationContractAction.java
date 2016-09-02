@@ -66,7 +66,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "signDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String signDecorationContract() throws FLException{
 		
-		decorationContractService.signDecorationContract(decorationContract, getUserId());
+		decorationContractService.signDecorationContract(decorationContract, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -74,7 +74,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "resignDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resignDecorationContract() throws FLException{
 		
-		decorationContractService.resignDecorationContract(decorationContract, getUserId());
+		decorationContractService.resignDecorationContract(decorationContract, queryUserId());
 		
 		return SUCCESS;
 	}

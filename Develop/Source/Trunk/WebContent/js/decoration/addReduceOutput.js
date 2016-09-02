@@ -40,6 +40,8 @@ jQuery(function($) {
 
 function calAddReduceSum(){
 	
+	console.log(addReduceDetail.addReduceItems);
+	
 	var addReduceItems = addReduceDetail.addReduceItems;
 	var addReduceItemLength = addReduceItems.length;
 	

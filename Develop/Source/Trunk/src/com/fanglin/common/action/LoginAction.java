@@ -67,7 +67,7 @@ public class LoginAction extends BaseListAction {
 		String ip = IPUtil.getIpAddr(request);
 
 		try {
-			String verifyCode = getVerifyCode(securityCode);
+			String verifyCode = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
 
 			if(verifyCode == null || !verifyCode.equals(inputCode)){
 				throw new FLException(110001, "验证码错误");
@@ -117,7 +117,6 @@ public class LoginAction extends BaseListAction {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 		}
@@ -129,12 +128,10 @@ public class LoginAction extends BaseListAction {
 	public String requestAuthCode(){
 		
 		String userId = request.getParameter("userId");
-		String company = request.getParameter("company");
 		
 		try {
 			
-			int index = Integer.valueOf(company.substring(company.length() - 1));
-			int $company = Integer.valueOf(company.substring(index, index + 1));
+			int $company = 0;
 			
 			UserVO user = null;
 			AuthenticationUtil authenticationUtil = null;
@@ -152,6 +149,8 @@ public class LoginAction extends BaseListAction {
 			            throw new FLException(110004, "该用户不能登陆系统");
 				    }
 				}
+				
+				$company = user.getCompany();
 			}
 			
 			authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true, $company);

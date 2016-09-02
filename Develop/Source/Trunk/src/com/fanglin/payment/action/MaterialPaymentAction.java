@@ -210,7 +210,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="queryMaterialPaymentByMpIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentByMpIds() throws FLException{
 		
-		Map<String, Object> result = materialPaymentService.queryMaterialPaymentByMpIds(mpIds, getUserId());
+		Map<String, Object> result = materialPaymentService.queryMaterialPaymentByMpIds(mpIds, queryUserId());
 		
 		materialSubOrder = (MaterialSubOrderVO) result.get("materialSubOrder");
 		materialPayments = (List<MaterialPaymentVO>) result.get("materialPayments");
@@ -222,7 +222,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="queryMaterialPaymentForNotInitByMrId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentForNotInitByMrId() throws FLException{
 		
-		Map<String, Object> result = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt, getUserId());
+		Map<String, Object> result = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt, queryUserId());
 		
 		materialSubOrder = (MaterialSubOrderVO) result.get("materialSubOrder");
 		materialPayments = (List<MaterialPaymentVO>) result.get("materialPayments");
@@ -241,7 +241,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="addMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMaterialPayment() throws FLException{
 		
-		materialPaymentService.addMaterialPayment(materialPayment, getUserId());
+		materialPaymentService.addMaterialPayment(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -257,7 +257,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="changeMaterialPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String changeMaterialPaymentForTime() throws FLException{
 		
-		materialPaymentService.changeMaterialPaymentForTime(materialPayment, dateTime, getUserId());
+		materialPaymentService.changeMaterialPaymentForTime(materialPayment, dateTime, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -265,7 +265,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayment() throws FLException{
 		
-		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, getUserId());
+		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -273,7 +273,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialInsidePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialInsidePayment() throws FLException{
 		
-		materialInsidePaymentService.collectMaterialInsidePayment(materialInsidePayment, getUserId());
+		materialInsidePaymentService.collectMaterialInsidePayment(materialInsidePayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -281,7 +281,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialOutsidePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialOutsidePayment() throws FLException{
 		
-		materialOutsidePaymentService.collectMaterialOutsidePayment(materialOutsidePayment, getUserId(), getUserName());
+		materialOutsidePaymentService.collectMaterialOutsidePayment(materialOutsidePayment, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}
@@ -289,7 +289,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayments", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayments() throws FLException{
 		
-		materialPaymentService.collectMaterialPayments(materialSubOrder, materialPayments, materialReceipt, getUserId());
+		materialPaymentService.collectMaterialPayments(materialSubOrder, materialPayments, materialReceipt, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -297,7 +297,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialRefundPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialRefundPayment() throws FLException{
 		
-		materialPaymentService.collectMaterialRefundPayment(materialPayment, getUserId());
+		materialPaymentService.collectMaterialRefundPayment(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -305,7 +305,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="updateMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateMaterialPayment() throws FLException{
 		
-		materialPaymentService.updateMaterialPayment(materialPayment, getUserId());
+		materialPaymentService.updateMaterialPayment(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -313,7 +313,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="confirmMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String confirmMaterialPayment() throws FLException{
 		
-		materialPaymentService.confirmMaterialPayment(mpIds, getUserId());
+		materialPaymentService.confirmMaterialPayment(mpIds, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -337,7 +337,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="refundMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundMaterialPayment() throws FLException{
 		
-		materialPaymentService.refundMaterialPayment(materialPayment, getUserId());
+		materialPaymentService.refundMaterialPayment(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -345,7 +345,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="refundMaterialPaymentForCoupon", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundMaterialPaymentForCoupon() throws FLException{
 		
-		int code = materialPaymentService.refundMaterialPaymentForCoupon(materialSubOrder, getUserId(), getUserName());
+		int code = materialPaymentService.refundMaterialPaymentForCoupon(materialSubOrder, queryUserId(), queryUserName());
 		
 		setErrorCode(code);
 		if(code == 1){

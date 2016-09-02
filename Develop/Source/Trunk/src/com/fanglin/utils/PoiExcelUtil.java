@@ -159,8 +159,23 @@ public class PoiExcelUtil {
 		String extension = filePath.lastIndexOf(".") == -1 ? "" : filePath.substring(filePath.lastIndexOf(".") + 1);
 		
 		if("xls".equals(extension)){
-			// 构造 XSSFWorkbook 对象，strPath 传入文件路径
-			wb = new HSSFWorkbook(new FileInputStream(file));
+			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象，strPath 传入文件路径
+		} else if("xlsx".equals(extension)){
+			wb = new XSSFWorkbook(new FileInputStream(file));
+		} else {
+			throw new IOException("不支持的文件类型");
+		}
+
+		return readExcel(wb);
+	}
+	
+	public static List<List<String>> readExcel(File file, String fileName) throws IOException{
+		
+		Workbook wb = null;
+		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		if("xls".equals(extension)){
+			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象，strPath 传入文件路径
 		} else if("xlsx".equals(extension)){
 			wb = new XSSFWorkbook(new FileInputStream(file));
 		} else {
@@ -208,12 +223,10 @@ public class PoiExcelUtil {
 					case Cell.CELL_TYPE_NUMERIC: // + " 列 is Number type ; DateFormt:" + cell.getCellStyle().getDataFormatString());
 						if("@".equals(cell.getCellStyle().getDataFormatString())){
 							value = df.format(cell.getNumericCellValue());
-						} else if("General".equals(cell.getCellStyle()
-								.getDataFormatString())){
+						} else if("General".equals(cell.getCellStyle().getDataFormatString())){
 							value = nf.format(cell.getNumericCellValue());
 						} else {
-							value = sdf.format(HSSFDateUtil.getJavaDate(cell
-									.getNumericCellValue()));
+							value = sdf.format(HSSFDateUtil.getJavaDate(cell.getNumericCellValue()));
 						}
 						break;
 					case Cell.CELL_TYPE_BOOLEAN:

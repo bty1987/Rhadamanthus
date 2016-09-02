@@ -47,7 +47,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="queryMaterialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialDesignerDepartmentRank() throws FLException{
 		
-		ranks = materialRankService.queryMaterialDesignerDepartmentRankForTop(getUserId(), -1);
+		ranks = materialRankService.queryMaterialDesignerDepartmentRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="queryMaterialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialDesignerRegionRank() throws FLException{
 		
-		ranks = materialRankService.queryMaterialDesignerRegionRankForTop(getUserId(), -1);
+		ranks = materialRankService.queryMaterialDesignerRegionRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -71,7 +71,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="materialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String materialDesignerDepartmentRank() throws FLException{
 		
-		ranks = materialRankService.queryMaterialDesignerDepartmentRankForTop(getUserId(), 10);
+		ranks = materialRankService.queryMaterialDesignerDepartmentRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}
@@ -79,7 +79,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="materialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String materialDesignerRegionRank() throws FLException{
 		
-		ranks = materialRankService.queryMaterialDesignerRegionRankForTop(getUserId(), 10);
+		ranks = materialRankService.queryMaterialDesignerRegionRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}
@@ -95,7 +95,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="queryZaterialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryZaterialDesignerDepartmentRank() throws FLException{
 		
-		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(getUserId(), -1);
+		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -103,7 +103,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="queryZaterialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryZaterialDesignerRegionRank() throws FLException{
 		
-		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(getUserId(), -1);
+		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(queryUserId(), -1);
 		
 		return SUCCESS;
 	}
@@ -119,7 +119,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="zaterialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String zaterialDesignerDepartmentRank() throws FLException{
 		
-		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(getUserId(), 10);
+		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}
@@ -127,7 +127,7 @@ public class MaterialRankAction extends BaseListAction {
 	@Action(value="zaterialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String zaterialDesignerRegionRank() throws FLException{
 		
-		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(getUserId(), 10);
+		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(queryUserId(), 10);
 		
 		return SUCCESS;
 	}

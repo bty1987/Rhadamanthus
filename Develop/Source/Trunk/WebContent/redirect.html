@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FIP</title>
+    <meta name="keywords" content="╥╫аж,в╟йн,ERP" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico" type="image/x-icon">
+    
+    <script type="text/javascript" src="assets/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="js/com/config.js"></script>
+	
+    <script>
+    
+    var setCookie =  function(cname, cvalue, minutes) {
+        var d = new Date();
+            d.setTime(d.getTime() + (minutes*60*1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+        
+        var authentication;
+        var args = window.location.search.substr(1);
+    
+	    if(args.indexOf('authentication=') != -1){
+	        authentication = args.substring(args.indexOf('authentication=')).split('=')[1];
+	        
+	        setCookie("authentication" , authentication , config.timeout);
+	        setCookie("loginTime" , new Date().getTime() , config.timeout);
+	        
+	        window.location.href = "main.html?timestamp=" + new Date().getTime();
+	    }
+		
+    </script>
+    
+  </head>
+  
+  <body>
+  </body>
+</html>

@@ -8096,13 +8096,13 @@ li.item-default {
 	padding-left:12px
 }
 .profile-picture {
-	border:1px solid #CCC;
+	/*border:1px solid #CCC;*/
 	background-color:#FFF;
 	padding:4px;
 	display:inline-block;
 	max-width:100%;
 	-moz-box-sizing:border-box;
-	box-shadow:1px 1px 1px rgba(0,0,0,0.15)
+	/*box-shadow:1px 1px 1px rgba(0,0,0,0.15)*/
 }
 .profile-activity {
 	padding:10px 4px;

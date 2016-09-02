@@ -21,6 +21,7 @@ $.fn.Huploadify = function(opts){
 		showUploadedPercent:true,//是否实时显示上传的百分比，如20%
 		showUploadedSize:false,//是否实时显示已上传的文件大小，如1M/2M
 		buttonText:'选择文件',//上传按钮上的文字
+		buttonClass:'',
 		removeTimeout: 1000,//上传完成后进度条的消失时间
 		itemTemplate:itemTemp,//上传队列显示的模板
 		breakPoints:false,//是否开启断点续传
@@ -129,11 +130,14 @@ $.fn.Huploadify = function(opts){
 		inputStr += ' accept="';
 		inputStr += getAcceptString(option.fileTypeExts);
 		inputStr += '"/>';
-		inputStr += '<a id="file_upload_'+instanceNumber+'-button" href="javascript:void(0)" class="uploadify-button">';
+		inputStr += '<a id="file_upload_'+instanceNumber+'-button" href="javascript:void(0)" class="uploadify-button ' + option.buttonClass + '">';
 		inputStr += option.buttonText;
 		inputStr += '</a>';
 		var uploadFileListStr = '<div id="file_upload_'+instanceNumber+'-queue" class="uploadify-queue" style="width: 300px;"></div>';
-		_this.append(inputStr+uploadFileListStr);	
+		_this.append(inputStr+uploadFileListStr);
+		
+		console.log(option.buttonText);
+		console.log(option.buttonClass);
 		
 		//创建文件对象
 	  fileObj = {
@@ -225,8 +229,6 @@ $.fn.Huploadify = function(opts){
 					 			return function(){fileObj.funDeleteFile(file.index);}
 					 		})(file));
 			 	}
-
-			 
 			},				
 		  onProgress: function(file, loaded, total) {
 				var eleProgress = _this.find('#fileupload_'+instanceNumber+'_'+file.index+' .uploadify-progress');

@@ -1,5 +1,6 @@
-#Tue Jul 19 11:03:37 CST 2016
+#Fri Sep 02 08:50:10 CST 2016
 eclipse.preferences.version=1
+encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
 encoding//WebContent/backup/quotationDetail.html=UTF-8
 encoding//WebContent/backup/quotationDetail.js=UTF-8
 encoding//WebContent/configure/appconf/sysconfig.properties=UTF-8
@@ -99,6 +100,7 @@ encoding//WebContent/views/payment/materialPayment.html=UTF-8
 encoding//WebContent/views/payment/materialPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/payment.html=UTF-8
 encoding//WebContent/views/payment/paymentCheck.html=UTF-8
+encoding//WebContent/views/payment/userSalary.html=UTF-8
 encoding//WebContent/views/personnel/user.html=UTF-8
 encoding//WebContent/views/personnel/userAdvance.html=UTF-8
 encoding//WebContent/views/personnel/userEdit.html=UTF-8

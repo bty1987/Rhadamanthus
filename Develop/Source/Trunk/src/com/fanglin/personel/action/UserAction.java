@@ -59,7 +59,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
 		
-		userService.pageUser(getPaging(), getFilters(), user, getCompany());
+		userService.pageUser(getPaging(), getFilters(), user, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -67,7 +67,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUserByNameOPinyinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUserByNameOPinyinName() throws FLException{
 		
-		userService.pageUserByNameOPinyinName(getPaging(), user, getCompany());
+		userService.pageUserByNameOPinyinName(getPaging(), user, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -75,7 +75,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "pageUserForResetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUserForResetPassword() throws FLException{
 		
-		userService.pageUserForResetPassword(getPaging(), getFilters(), getCompany());
+		userService.pageUserForResetPassword(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForSelfByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForSelfByUserId() throws FLException{
 		
-		user = userService.queryUserByUserId(getUserId());
+		user = userService.queryUserByUserId(queryUserId());
 		
 		return SUCCESS;
 	}
@@ -145,7 +145,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutyADept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserNamesByDutyDept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutyADept(pinyinName, duty, getUserId());
+		List<UserVO> userVOs = userService.queryUserForNameByDutyADept(pinyinName, duty, queryUserId());
 		
 		packageUserName(userVOs);
 		
@@ -155,7 +155,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysADept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysADept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutysADept(pinyinName, dutys, getUserId());
+		List<UserVO> userVOs = userService.queryUserForNameByDutysADept(pinyinName, dutys, queryUserId());
 		
 		packageUserName(userVOs);
 		
@@ -175,7 +175,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysAODept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysAODept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutysAODept(pinyinName, dutys, dutysO, getUserId());
+		List<UserVO> userVOs = userService.queryUserForNameByDutysAODept(pinyinName, dutys, dutysO, queryUserId());
 		
 		packageUserName(userVOs);
 		

@@ -132,7 +132,7 @@ jQuery(function($) {
 
 	function viewDetailAddReduce(addReduceId){
 		params["addReduceId"] = addReduceId;
-		$("#fl-container").load(api.index.addReduceDetailIndex.url, {});
+		com.switchPage(api.index.addReduceDetailIndex.url);
 	}
 
 	function removeRow(arid){

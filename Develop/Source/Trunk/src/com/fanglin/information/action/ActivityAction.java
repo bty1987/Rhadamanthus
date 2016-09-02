@@ -51,7 +51,7 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="pageActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageActivity() throws FLException{
 		
-		activityService.pageActivity(getPaging(), getFilters(), getUserId());
+		activityService.pageActivity(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -75,7 +75,7 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="addActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addActivity() throws FLException{
 		
-		activityService.addActivity(activity, getUserId(), getUserName());
+		activityService.addActivity(activity, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}
@@ -91,7 +91,7 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="updateActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateActivity() throws FLException{
 		
-		activityService.updateActivity(activity, getUserId());
+		activityService.updateActivity(activity, queryUserId());
 		
 		return SUCCESS;
 	}

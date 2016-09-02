@@ -157,7 +157,7 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	@Action(value="refundMaterialSubOrderItemForModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundMaterialSubOrderItemForModel() throws FLException{
 		
-		redirect = materialSubOrderItemService.refundMaterialSubOrderItemForModel(materialSubOrder, materialSubOrderItem, msoId, getUserId(), getUserName());
+		redirect = materialSubOrderItemService.refundMaterialSubOrderItemForModel(materialSubOrder, materialSubOrderItem, msoId, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}
@@ -165,7 +165,7 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	@Action(value="refundMaterialSubOrderItemForPackage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundMaterialSubOrderItemForPackage() throws FLException{
 		
-		redirect = materialSubOrderItemService.refundMaterialSubOrderItemForPackage(materialSubOrder, materialSubOrderItems, msoId, getUserId(), getUserName());
+		redirect = materialSubOrderItemService.refundMaterialSubOrderItemForPackage(materialSubOrder, materialSubOrderItems, msoId, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}
@@ -173,7 +173,7 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	@Action(value="changeMaterialSubOrderItemForCaclType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String changeMaterialSubOrderItemForCaclType() throws FLException{
 		
-		materialSubOrderItemService.changeMaterialSubOrderItemForCaclType(materialSubOrderItem, getUserId());
+		materialSubOrderItemService.changeMaterialSubOrderItemForCaclType(materialSubOrderItem, queryUserId());
 		
 		return SUCCESS;
 	}

@@ -53,7 +53,7 @@ public class RankAction extends BaseListAction {
 	@Action(value="queryRankForPlace", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryRankForPlace() throws FLException{
 		
-		String userId = getUserId();
+		String userId = queryUserId();
 		
 		List<String> decoration = decorationRankService.queryDecorationDesignerForPlaceByUserId(userId);
 		List<String> material = materialRankService.queryMaterialDesignerRankForPlaceByUserId(userId);

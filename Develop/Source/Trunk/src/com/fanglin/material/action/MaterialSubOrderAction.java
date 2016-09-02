@@ -55,7 +55,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="pageMaterialSubOrderByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialSubOrderByUserId() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderByUserId(getPaging(), getFilters(), materialSubOrder.getOrderId(), getUserId());
+		materialSubOrderService.pageMaterialSubOrderByUserId(getPaging(), getFilters(), materialSubOrder.getOrderId(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -71,7 +71,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="pageMaterialSubOrderByOrderIdADeptId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialSubOrderByOrderIdADeptId() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderByOrderIdADeptId(getPaging(), getFilters(), materialSubOrder.getOrderId(), getUserId());
+		materialSubOrderService.pageMaterialSubOrderByOrderIdADeptId(getPaging(), getFilters(), materialSubOrder.getOrderId(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -90,7 +90,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="addMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMaterialSubOrder() throws FLException{
 		
-		materialSubOrderService.addMaterialSubOrder(materialSubOrder, materialSubOrderItems, getUserId());
+		materialSubOrderService.addMaterialSubOrder(materialSubOrder, materialSubOrderItems, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -98,7 +98,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="changeMaterialSubOrderForOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String changeMaterialSubOrderForOrderId() throws FLException{
 		
-		materialSubOrderService.changeMaterialSubOrderForOrderId(materialSubOrder.getMsoNo(), materialSubOrder.getOrderId(), getUserId());
+		materialSubOrderService.changeMaterialSubOrderForOrderId(materialSubOrder.getMsoNo(), materialSubOrder.getOrderId(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -122,7 +122,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="deliverMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deliverMaterialSubOrder() throws FLException{
 		
-		materialSubOrderService.deliverMaterialSubOrder(materialSubOrder, getUserId());
+		materialSubOrderService.deliverMaterialSubOrder(materialSubOrder, queryUserId());
 		
 		return SUCCESS;
 	}

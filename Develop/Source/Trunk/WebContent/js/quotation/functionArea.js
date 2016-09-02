@@ -143,11 +143,11 @@ $(function(){
     var functionAreaItem = {
             btnBack: $("#btnBack").on("click", showFunctionAreaList),
             modal: $("#selectItemModal").on("show.bs.modal", function(a) {}),
-            btnAdd : $('#itemBtns a[name="addBtn"]').on('click',function(){
+            btnAdd : $('#addBtn').on('click',function(){
                 functionAreaItem.modal.modal("show");
                 initQuotationItemList();
             }),
-            btnDel : $('#itemBtns a[name="delBtn"]').on('click',function(){
+            btnDel : $('#delBtn').on('click',function(){
 
                 var ids = {};
                 var aitems = $('input[type="checkbox"][name="areaItems"]:checked');

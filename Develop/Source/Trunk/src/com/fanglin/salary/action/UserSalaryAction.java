@@ -56,7 +56,7 @@ public class UserSalaryAction extends BaseListAction {
 	@Action(value = "addUserSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addUserSalary() throws FLException{
 		
-		userSalary.setCreateUserId(getUserId());
+		userSalary.setCreateUserId(queryUserId());
 		
 		userSalaryService.saveUserSalary(userSalary);
 		
@@ -66,7 +66,7 @@ public class UserSalaryAction extends BaseListAction {
 	@Action(value = "updateUserSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserSalary() throws FLException{
 		
-		userSalary.setCreateUserId(getUserId());
+		userSalary.setCreateUserId(queryUserId());
 		
 		userSalaryService.updateUserSalary(userSalary);
 		
