@@ -52,7 +52,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Action(value = "pageDecorationOrderForConstructionScheduleByPlace", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForConstructionScheduleByPlace() throws FLException{
 		
-		constructionScheduleService.pageDecorationOrderForConstructionScheduleByPlace(getPaging(), getFilters(), getUserId());
+		constructionScheduleService.pageDecorationOrderForConstructionScheduleByPlace(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
 		
-		constructionScheduleService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), getUserId(), null);
+		constructionScheduleService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null);
 		
 		return SUCCESS;
 	}
@@ -68,7 +68,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Action(value = "pageDecorationOrderForQualityByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForQualityByUserId() throws FLException{
 		
-		constructionScheduleService.pageDecorationOrderForQualityByUserId(getPaging(), getFilters(), getUserId(), null);
+		constructionScheduleService.pageDecorationOrderForQualityByUserId(getPaging(), getFilters(), queryUserId(), null);
 		
 		return SUCCESS;
 	}
@@ -84,7 +84,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Action(value = "queryConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionScheduleByOrderId() throws FLException{
 		
-		constructionSchedule = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule, getUserId());
+		constructionSchedule = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -140,7 +140,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 	@Action(value = "checkFinalyPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkFinalyPayment() throws FLException{
 		
-		constructionScheduleService.checkFinalyPayment(constructionSchedule, getUserId());
+		constructionScheduleService.checkFinalyPayment(constructionSchedule, queryUserId());
 		
 		return SUCCESS;
 	}

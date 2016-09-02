@@ -42,7 +42,7 @@ public class QualityTestingRecordAction extends BaseListAction{
 	@Action(value = "pageQualityTestingRecordByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQualityTestingRecordByOrderId() throws FLException{
 		
-		qualityTestingRecordService.pageQualityTestingRecordByOrderId(getPaging(), getFilters(), qualityTestingRecord, getUserId());
+		qualityTestingRecordService.pageQualityTestingRecordByOrderId(getPaging(), getFilters(), qualityTestingRecord, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -50,8 +50,8 @@ public class QualityTestingRecordAction extends BaseListAction{
 	@Action(value = "addQualityTestingRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQualityTestingRecord() throws FLException{
 		
-		qualityTestingRecord.setOperaterId(getUserId());
-		qualityTestingRecord.setOperaterName(getUserName());
+		qualityTestingRecord.setOperaterId(queryUserId());
+		qualityTestingRecord.setOperaterName(queryUserName());
 		
 		qualityTestingRecordService.addQualityTestingRecord(qualityTestingRecord);
 		

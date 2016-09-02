@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.common.action;
+package com.fanglin.exports.action;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

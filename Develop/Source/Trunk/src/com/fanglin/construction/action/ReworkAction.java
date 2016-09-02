@@ -59,8 +59,8 @@ public class ReworkAction extends BaseListAction{
 	@Action(value = "addRework", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addRework() throws FLException{
 		
-		rework.setCreaterId(getUserId());
-		rework.setCreaterName(getUserName());
+		rework.setCreaterId(queryUserId());
+		rework.setCreaterName(queryUserName());
 		
 		reworkService.saveOrUpdateRework(rework);
 		
@@ -94,7 +94,7 @@ public class ReworkAction extends BaseListAction{
 	@Action(value = "addReworkDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addReworkDrawing() throws FLException{
 		
-		int rwdId = reworkDrawingService.saveOrUpdateReworkDrawing(reworkDrawing, getUserName());
+		int rwdId = reworkDrawingService.saveOrUpdateReworkDrawing(reworkDrawing, queryUserName());
 		reworkDrawing.setRwdId(rwdId);
 		
 		return SUCCESS;

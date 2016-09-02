@@ -46,7 +46,7 @@ public class ApprovalMaterialRefundAction extends BaseListAction {
 	@Action(value = "submitApprovalForMaterialRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForMaterialRefund() throws FLException{
 		
-		approvalMaterialRefundService.submitApprovalForMaterialRefund(approval, approvalMaterialRefund, approvalMaterialRefundItems, getUserId());
+		approvalMaterialRefundService.submitApprovalForMaterialRefund(approval, approvalMaterialRefund, approvalMaterialRefundItems, queryUserId());
 		
 		return SUCCESS;
 	}

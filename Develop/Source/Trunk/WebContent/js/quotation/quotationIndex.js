@@ -61,10 +61,9 @@ jQuery(function($) {
 					
 					initQuotationList();
 					
-					btn.button("reset");
-				}, function(error){
-					btn.button("reset");
-				});
+				}, null, false);
+				
+				btn.button("reset");
 				
 			}else if(decorationQuotation.editFlg == 1){
 				var options = {
@@ -83,11 +82,9 @@ jQuery(function($) {
 					}
 					
 					initQuotationList();
-					
-					btn.button("reset");
-				}, function(error){
-					btn.button("reset");
-				});
+				}, null, false);
+				
+				btn.button("reset");
 			}else{
 				var options = {
 					"quotation.qid": $("#qid").val(),
@@ -105,13 +102,10 @@ jQuery(function($) {
 					}
 					
 					initQuotationList();
-					
-					btn.button("reset");
-				}, function(error){
-					btn.button("reset");
-				});
+				}, null, false);
+				
+				btn.button("reset");
 			}
-		
 		}else{
 			bootbox.alert("该报价已经不可以修改");
 		}
@@ -138,11 +132,9 @@ jQuery(function($) {
 			}
 			
 			initQuotationList();
-			
-			btn.button("reset");
-		}, function(res){
-			btn.button("reset");
-		});
+		}, null, false);
+		
+		btn.button("reset");
 		
 		decorationQuotation.replicaQuotationModal.modal("hide");
 	});

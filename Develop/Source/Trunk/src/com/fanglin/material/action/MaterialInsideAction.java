@@ -53,7 +53,7 @@ public class MaterialInsideAction extends BaseListAction {
 	@Action(value="pageMaterialInsideByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialInsideByUserId() throws FLException{
 		
-		materialInsideService.pageMaterialInsideByUserId(getPaging(), getFilters(), getUserId());
+		materialInsideService.pageMaterialInsideByUserId(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -61,7 +61,7 @@ public class MaterialInsideAction extends BaseListAction {
 	@Action(value="addMaterialInside", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMaterialInside() throws FLException{
 		
-		materialInsideService.addMaterialInside(materialInside, getUserId());
+		materialInsideService.addMaterialInside(materialInside, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -69,7 +69,7 @@ public class MaterialInsideAction extends BaseListAction {
 	@Action(value="updateMaterialInside", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateMaterialInside() throws FLException{
 		
-		materialInsideService.updateMaterialInside(materialInside, getUserId());
+		materialInsideService.updateMaterialInside(materialInside, queryUserId());
 		
 		return SUCCESS;
 	}

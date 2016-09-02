@@ -42,7 +42,7 @@ public class NoticeAction extends BaseListAction {
 	@Action(value="pageNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageNotice() throws FLException{
 		
-		noticeService.pageNotice(getPaging(), getFilters(), getUserId());
+		noticeService.pageNotice(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -50,7 +50,7 @@ public class NoticeAction extends BaseListAction {
 	@Action(value="pageNoticeForDeptAValid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
     public String pageNoticeForDeptAValid() throws FLException{
 		
-        noticeService.pageNoticeForDeptAValid(getPaging(), notice, getUserId());
+        noticeService.pageNoticeForDeptAValid(getPaging(), notice, queryUserId());
         
         return SUCCESS;
     }
@@ -74,7 +74,7 @@ public class NoticeAction extends BaseListAction {
 	@Action(value="addNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addNotice() throws FLException{
 		
-		notice.setUser(new UserVO(getUserId()));
+		notice.setUser(new UserVO(queryUserId()));
 		noticeService.saveOrUpdateNotice(notice);
 		
 		return SUCCESS;

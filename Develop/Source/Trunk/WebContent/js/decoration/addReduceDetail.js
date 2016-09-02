@@ -139,6 +139,7 @@ var AddReduceDetail = (function(){
 				}),//保存
 				detailBckBtn : $('#detailBckBtn').on(ace.click_event, function(){//返回
 					$("#fl-container").load(api.index.addReduceIndex.url);
+					
 				}),
 			};
 		},
@@ -227,7 +228,7 @@ var AddReduceDetail = (function(){
 						"quotationFunctionAreaItem.quotationFunctionAreaId" : funcid,
 					};
 					com.post(api.quotation.queryQuotationFunctionAreaItemByQuotationFunctionAreaId, _params, function(res){
-						var $tableWrap = $('[name="quolist"]', addReduceDetail.$modals.quotationItemModal).empty();
+						var $tableWrap = $('#quolist', addReduceDetail.$modals.quotationItemModal).empty();
 						var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 						if(res.quotationFunctionAreaItems && res.quotationFunctionAreaItems.length){
@@ -254,7 +255,7 @@ var AddReduceDetail = (function(){
 					}, null, false);
 					
 					com.post(api.addReduce.queryAddReduceItemByAddReduceIds, arIds, function(res){
-						var $tableWrap = $('[name="addItemList"]', addReduceDetail.$modals.addAddItemModal).empty();
+						var $tableWrap = $('#addItemList', addReduceDetail.$modals.addAddItemModal).empty();
 						var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 						
 						if(res.addReduceItems && res.addReduceItems.length){

@@ -40,7 +40,7 @@ public class IndexAction extends BaseAction {
 	@Action(value = "createTree", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
 	public String createTree() throws FLException{
 		
-		tree = roleSubfunctionService.getTreeByRoleId(getRoleId());
+		tree = roleSubfunctionService.getTreeByRoleId(queryRoleId());
 	
 		return SUCCESS;
 	}

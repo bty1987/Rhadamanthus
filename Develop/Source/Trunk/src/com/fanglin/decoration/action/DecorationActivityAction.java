@@ -99,7 +99,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Action(value="receiveDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String receiveDecorationActivityItem() throws FLException{
 		
-		decorationActivityItemService.receiveDecorationActivityItem(decorationActivityItem, getUserId(), getUserName());
+		decorationActivityItemService.receiveDecorationActivityItem(decorationActivityItem, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}

@@ -94,7 +94,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="pageWorkerBaseSalaryByOrderIdAUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageWorkerBaseSalaryByOrderIdAUserId() throws FLException{
 		
-		workerBaseSalaryService.pageWorkerBaseSalaryByOrderIdAUserId(getPaging(), getFilters(), workerBaseSalary, getUserId());
+		workerBaseSalaryService.pageWorkerBaseSalaryByOrderIdAUserId(getPaging(), getFilters(), workerBaseSalary, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -110,7 +110,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="pageWorkerDeductSalaryByOrderIdAUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageWorkerDeductSalaryByOrderIdAUserId() throws FLException{
 		
-		workerDeductSalaryService.pageWorkerDeductSalaryByOrderIdAUserId(getPaging(), getFilters(), workerDeductSalary, getUserId());
+		workerDeductSalaryService.pageWorkerDeductSalaryByOrderIdAUserId(getPaging(), getFilters(), workerDeductSalary, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -158,7 +158,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="addWorkerBaseSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addWorkerBaseSalary() throws FLException{
 		
-		workerBaseSalaryService.addWorkerBaseSalary(workerBaseSalary, getUserId());
+		workerBaseSalaryService.addWorkerBaseSalary(workerBaseSalary, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -190,7 +190,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="passWorkerBaseSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String passWorkerBaseSalary() throws FLException{
 		
-		workerBaseSalaryService.passWorkerBaseSalary(workerBaseSalary, getUserId());
+		workerBaseSalaryService.passWorkerBaseSalary(workerBaseSalary, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -222,7 +222,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="cancelWorkerBaseSalaryToInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String cancelWorkerBaseSalaryToInit() throws FLException{
 		
-		workerBaseSalaryService.cancelWorkerBaseSalaryToInit(workerBaseSalary, getUserId());
+		workerBaseSalaryService.cancelWorkerBaseSalaryToInit(workerBaseSalary, queryUserId());
 		
 		return SUCCESS;
 	}

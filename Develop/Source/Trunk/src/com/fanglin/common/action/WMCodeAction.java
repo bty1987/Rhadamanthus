@@ -33,7 +33,7 @@ public class WMCodeAction extends BaseAction {
 	@Action(value = "wmCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String wmCode() throws Exception {
 		
-		watermark = WMCodeUtil.createImage(getUserName(), DateUtil.current("yyyyMMdd"));
+		watermark = WMCodeUtil.createImage(queryUserName(), DateUtil.current("yyyyMMdd"));
 		
 		return SUCCESS;
 	}

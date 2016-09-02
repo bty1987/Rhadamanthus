@@ -58,7 +58,7 @@ public class BackVisitAction extends BaseListAction {
 	@Action(value = "addBackVisit", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBackVisit() throws FLException{
 
-		backVisitService.addBackVisit(backVisit, getUserId());
+		backVisitService.addBackVisit(backVisit, queryUserId());
 
 		return SUCCESS;
 	}

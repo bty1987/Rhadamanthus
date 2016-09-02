@@ -6,7 +6,7 @@ public class ApprovalMaterialOutsideRefundVO implements java.io.Serializable {
 
 	private Integer amorId;
 	
-	private Integer amrId;
+	private Integer aid;
 	
 	private Long moId;
 
@@ -18,12 +18,12 @@ public class ApprovalMaterialOutsideRefundVO implements java.io.Serializable {
 		this.amorId = amorId;
 	}
 
-	public Integer getAmrId() {
-		return this.amrId;
+	public Integer getAid() {
+		return aid;
 	}
 
-	public void setAmrId(Integer amrId) {
-		this.amrId = amrId;
+	public void setAid(Integer aid) {
+		this.aid = aid;
 	}
 
 	public Long getMoId() {

@@ -42,7 +42,7 @@ public class ApprovalQuotationDiscountAction extends BaseListAction {
 	@Action(value = "submitApprovalForQuotationDiscount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForQuotationDiscount() throws FLException{
 		
-		approvalQuotationDiscountService.submitApprovalForQuotationDiscount(approval, approvalQuotationDiscount, getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT);
+		approvalQuotationDiscountService.submitApprovalForQuotationDiscount(approval, approvalQuotationDiscount, queryUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT);
 		
 		return SUCCESS;
 	}

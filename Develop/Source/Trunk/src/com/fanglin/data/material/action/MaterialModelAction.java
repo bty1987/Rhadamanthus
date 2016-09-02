@@ -44,7 +44,7 @@ public class MaterialModelAction extends BaseExportAction{
 	@Action(value="pageMaterialModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialModel() throws FLException{
 		
-		materialModelService.pageMaterialModel(getPaging(), getFilters(), getUserId());
+		materialModelService.pageMaterialModel(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}

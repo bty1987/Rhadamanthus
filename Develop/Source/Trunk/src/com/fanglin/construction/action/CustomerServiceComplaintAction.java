@@ -50,8 +50,8 @@ public class CustomerServiceComplaintAction extends BaseListAction{
 	@Action(value = "addCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerServiceComplaint() throws FLException{
 		
-		customerServiceComplaint.setCreaterId(getUserId());
-		customerServiceComplaint.setCreaterName(getUserName());
+		customerServiceComplaint.setCreaterId(queryUserId());
+		customerServiceComplaint.setCreaterName(queryUserName());
 		
 		customerServiceComplaintService.saveOrUpdateCustomerServiceComplaint(customerServiceComplaint);
 		
@@ -61,8 +61,8 @@ public class CustomerServiceComplaintAction extends BaseListAction{
 	@Action(value = "updateCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateCustomerServiceComplaint() throws FLException{
 		
-		customerServiceComplaint.setOperaterId(getUserId());
-		customerServiceComplaint.setOperaterName(getUserName());
+		customerServiceComplaint.setOperaterId(queryUserId());
+		customerServiceComplaint.setOperaterName(queryUserName());
 		
 		customerServiceComplaintService.updateCustomerServiceComplaint(customerServiceComplaint);
 		
@@ -72,8 +72,8 @@ public class CustomerServiceComplaintAction extends BaseListAction{
 	@Action(value = "handleCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String handleCustomerServiceComplaint() throws FLException{
 		
-		customerServiceComplaint.setOperaterId(getUserId());
-		customerServiceComplaint.setOperaterName(getUserName());
+		customerServiceComplaint.setOperaterId(queryUserId());
+		customerServiceComplaint.setOperaterName(queryUserName());
 		
 		customerServiceComplaintService.handleCustomerServiceComplaint(customerServiceComplaint);
 		

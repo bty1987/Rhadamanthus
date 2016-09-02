@@ -38,7 +38,7 @@ public class ApprovalAction extends BaseListAction {
 	@Action(value = "pageApprovalByReceiveId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageApprovalByReceiveId() throws FLException{
 		
-		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(), getUserId());
+		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}

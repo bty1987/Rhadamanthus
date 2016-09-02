@@ -50,8 +50,8 @@ public class InspectionRecordAction extends BaseListAction{
 	@Action(value = "addInspectionRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addInspectionRecord() throws FLException{
 		
-		inspectionRecord.setOperaterId(getUserId());
-		inspectionRecord.setOperaterName(getUserName());
+		inspectionRecord.setOperaterId(queryUserId());
+		inspectionRecord.setOperaterName(queryUserName());
 		
 		inspectionRecordService.saveOrUpdateInspectionRecord(inspectionRecord);
 		
@@ -69,7 +69,7 @@ public class InspectionRecordAction extends BaseListAction{
 	@Action(value = "deleteInspectionRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteInspectionRecord() throws FLException{
 		
-		inspectionRecordService.deleteInspectionRecords(irIds, getUserId());
+		inspectionRecordService.deleteInspectionRecords(irIds, queryUserId());
 		
 		return SUCCESS;
 	}
