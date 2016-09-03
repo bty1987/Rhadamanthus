@@ -1,0 +1,89 @@
+{
+  "company": 0,
+  "decorationPicture": {
+    "content": null,
+    "dpId": null,
+    "name": null,
+    "orderId": "1607290003",
+    "path": null,
+    "type": null,
+    "uploadTime": null,
+    "userId": null,
+    "userName": null
+  },
+  "decorationPictures": [
+    {
+      "content": "",
+      "dpId": 21,
+      "name": "fanglin1.png",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/08\/21\/2\/1d71b215664e4e5084baf670d0370658.png",
+      "type": 1,
+      "uploadTime": "2016-08-21 15:48:54",
+      "userId": "FL-00479",
+      "userName": null
+    },
+    {
+      "content": "",
+      "dpId": 19,
+      "name": "approval.png",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/08\/02\/2\/c7ec4da2429a4debbc3cca21eb5035b9.png",
+      "type": 1,
+      "uploadTime": "2016-08-02 14:28:23",
+      "userId": "FL-00479",
+      "userName": null
+    },
+    {
+      "content": "",
+      "dpId": 18,
+      "name": "1.dwt",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/08\/02\/2\/8b7ae378d6384fa182ad61485cf7c8eb.dwt",
+      "type": 0,
+      "uploadTime": "2016-08-02 14:27:44",
+      "userId": "FL-00479",
+      "userName": null
+    },
+    {
+      "content": "",
+      "dpId": 17,
+      "name": "fanglin.png",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/08\/02\/2\/7d73513470854ccaac1e0e4c1af49c94.png",
+      "type": 1,
+      "uploadTime": "2016-08-02 14:27:04",
+      "userId": "FL-00479",
+      "userName": null
+    },
+    {
+      "content": "",
+      "dpId": 16,
+      "name": "baity.jpg",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/08\/02\/2\/ad0b6ac818dc40dca8c882c2858d1c54.jpg",
+      "type": 1,
+      "uploadTime": "2016-08-02 14:26:10",
+      "userId": "FL-00479",
+      "userName": null
+    },
+    {
+      "content": "123",
+      "dpId": 15,
+      "name": "2.dwt",
+      "orderId": "1607290003",
+      "path": "\/upload\/Imag\/\/2016\/07\/29\/2\/137c640705f04db586be5fe3d3228598.dwt",
+      "type": 0,
+      "uploadTime": "2016-07-29 09:38:34",
+      "userId": "FL-00479",
+      "userName": null
+    }
+  ],
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

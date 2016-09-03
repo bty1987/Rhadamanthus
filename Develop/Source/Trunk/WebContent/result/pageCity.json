@@ -1,0 +1,121 @@
+{
+  "autoFillList": null,
+  "city": null,
+  "cityList": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 8,
+        "cityId": "C_02",
+        "cityName": "朝阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 10,
+        "cityId": "C_03",
+        "cityName": "大连",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 12,
+        "cityId": "C_04",
+        "cityName": "本溪",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 14,
+        "cityId": "C_05",
+        "cityName": "抚顺",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 16,
+        "cityId": "C_06",
+        "cityName": "锦州",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 18,
+        "cityId": "C_07",
+        "cityName": "阜新",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 20,
+        "cityId": "C_08",
+        "cityName": "盘锦",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 22,
+        "cityId": "C_09",
+        "cityName": "铁岭",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      {
+        "cId": 24,
+        "cityId": "C_10",
+        "cityName": "辽阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 2,
+    "totalRecords": 19
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

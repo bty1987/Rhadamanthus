@@ -1,0 +1,92 @@
+{
+  "company": 0,
+  "decorationPlace": "0",
+  "decorationRank": "0",
+  "decorationRankService": {
+    "advisors": [
+      {
+        "advice": {
+          "transactionAttributeSource": {},
+          "transactionManager": null
+        },
+        "adviceBeanName": "org.springframework.transaction.interceptor.TransactionInterceptor#0",
+        "order": 2147483647,
+        "perInstance": true,
+        "pointcut": {
+          "classFilter": {},
+          "methodMatcher": null,
+          "runtime": false
+        }
+      }
+    ],
+    "callbacks": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "exposeProxy": false,
+    "frozen": false,
+    "preFiltered": true,
+    "proxiedInterfaces": [],
+    "proxyTargetClass": true,
+    "targetClass": "class com.fanglin.report.service.impl.DecorationRankServiceImpl",
+    "targetSource": {
+      "static": true,
+      "target": {},
+      "targetClass": "class com.fanglin.report.service.impl.DecorationRankServiceImpl"
+    }
+  },
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialPlace": "0",
+  "materialRank": "0",
+  "materialRankService": {
+    "advisors": [
+      {
+        "advice": {
+          "transactionAttributeSource": {},
+          "transactionManager": null
+        },
+        "adviceBeanName": "org.springframework.transaction.interceptor.TransactionInterceptor#0",
+        "order": 2147483647,
+        "perInstance": true,
+        "pointcut": {
+          "classFilter": {},
+          "methodMatcher": null,
+          "runtime": false
+        }
+      }
+    ],
+    "callbacks": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "exposeProxy": false,
+    "frozen": false,
+    "preFiltered": true,
+    "proxiedInterfaces": [],
+    "proxyTargetClass": true,
+    "targetClass": "class com.fanglin.report.service.impl.MaterialRankServiceImpl",
+    "targetSource": {
+      "static": true,
+      "target": {},
+      "targetClass": "class com.fanglin.report.service.impl.MaterialRankServiceImpl"
+    }
+  },
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "zaterialPlace": "0",
+  "zaterialRank": "0"
+}

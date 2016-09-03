@@ -1,0 +1,35 @@
+{
+  "company": 0,
+  "decorationContract": {
+    "additionalInfo": "",
+    "autoId": 48,
+    "contractCode": "FLJ-1607290003-TY10",
+    "endTime": null,
+    "orderId": "1607290003",
+    "orderTotalPrice": 0.0,
+    "paymentRates": [
+      30,
+      35,
+      32,
+      3
+    ],
+    "payments": {
+      "首付款": "39000.0",
+      "尾款": "1800.0",
+      "设计费": "200.0",
+      "二期款": "19200.0"
+    },
+    "signTime": "2016-08-24",
+    "startTime": null,
+    "templateHtml": "decorationContract1.html",
+    "workingDuration": 90
+  },
+  "decorationOrderId": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

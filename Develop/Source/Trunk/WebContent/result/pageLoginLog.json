@@ -1,0 +1,98 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "id": "df2fe7bba5ce4e16a59d81ce775190ac",
+        "llId": 1842,
+        "loginId": "wangshuai",
+        "loginTime": "2016-08-30",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "10bb136bb0274251a7bb5eb95ec9db7e",
+        "llId": 1841,
+        "loginId": "yuanshuai",
+        "loginTime": "2016-08-30",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "7975a772dec34751acad5f2aaf81fb26",
+        "llId": 1840,
+        "loginId": "liutingting",
+        "loginTime": "2016-08-30",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "f1d1d02a4c244a7cb0c5619e4c6d0b56",
+        "llId": 1839,
+        "loginId": "lushuang",
+        "loginTime": "2016-08-30",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "ca336f1c798c4d4f80bca4e2ed0deeba",
+        "llId": 1838,
+        "loginId": "baitianyu",
+        "loginTime": "2016-08-30",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "1f0df7dd7f4f435cac6867f99744929f",
+        "llId": 1837,
+        "loginId": "lushuang",
+        "loginTime": "2016-08-29",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "1046314120514dfcaaa5585022325e8d",
+        "llId": 1836,
+        "loginId": "liuwenwei",
+        "loginTime": "2016-08-29",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "0d01382329cd40349852200ec7873682",
+        "llId": 1835,
+        "loginId": "lushuang",
+        "loginTime": "2016-08-29",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "b7a296b04aa74ea681b8da069f0b24f8",
+        "llId": 1834,
+        "loginId": "baitianyu",
+        "loginTime": "2016-08-29",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      },
+      {
+        "id": "50ef2548e95f480e82ae59beb5b1ecec",
+        "llId": 1833,
+        "loginId": "baitianyu",
+        "loginTime": "2016-08-29",
+        "sourceIp": "192.168.5.21",
+        "successFlag": 1
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 185,
+    "totalRecords": 1842
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

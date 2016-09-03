@@ -18,8 +18,7 @@ function initUser(){
 	$("#emergencyMan").val(userProfile.emergencyMan);
 	$("#emergencyPhone").val(userProfile.emergencyPhone);
 	$("#picture").val(userProfile.userPhoto);
-	$("#showImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
-	$("#infoPicture").attr("href", config.media + api.common.showImg.url + '?imgBasePath='+userProfile.userPhoto+'&timestamp='+ new Date().getTime());
+	$("#infoPicture").attr("href", com.showImg($("#showImg"), userProfile.userPhoto, 150, 150, ''));
 }
 
 function removePicture(){

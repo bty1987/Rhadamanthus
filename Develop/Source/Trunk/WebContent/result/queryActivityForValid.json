@@ -1,0 +1,48 @@
+{
+  "activity": null,
+  "activityItem": null,
+  "activityItems": null,
+  "activitys": [
+    {
+      "activityName": "年中活动",
+      "aid": 7,
+      "content": "",
+      "createTime": "2016-07-21 10:48:04",
+      "createUserId": "manager9961",
+      "createUserName": "刘文伟",
+      "endTime": "2016-08-31 23:59:59",
+      "startTime": "2016-07-01 00:00:00",
+      "status": 0
+    },
+    {
+      "activityName": "方林8月活动",
+      "aid": 9,
+      "content": "",
+      "createTime": "2016-07-31 16:26:35",
+      "createUserId": "FL-00478",
+      "createUserName": "陆爽",
+      "endTime": "2016-08-31 23:59:59",
+      "startTime": "2016-08-01 00:00:00",
+      "status": 0
+    },
+    {
+      "activityName": "aaa",
+      "aid": 11,
+      "content": "",
+      "createTime": "2016-08-24 09:12:27",
+      "createUserId": "FL_03051",
+      "createUserName": "刘婷婷",
+      "endTime": "2016-08-31 23:59:59",
+      "startTime": "2016-08-04 00:00:00",
+      "status": 0
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -633,7 +633,7 @@ function initWizardSept(operate, schedule){
 				}
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					com.showImg($("#chanWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerSalaryData["btnId"] = "chanWorkSalary";
@@ -740,7 +740,7 @@ function initWizardSept(operate, schedule){
 				var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					com.showImg($("#fangWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 					$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerSalaryData["btnId"] = "fangWorkSalary";
@@ -809,7 +809,7 @@ function initWizardSept(operate, schedule){
 							var profileImg = $('<img id="workerImg" src="" alt="" class="editable img-responsive" style="height: 150px"></img>').attr("alt", workerInfo.workerId + "'s Photo").appendTo(profileDiv);
 							
 							if(workerInfo["workerPhoto"] != null && workerInfo.workerPhoto != ""){
-								profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+								com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, '');
 							}
 							
 							var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -913,17 +913,9 @@ function initWizardSept(operate, schedule){
 					var imgAddUrl = null;
 					var imgUrl = null;
 					
-					if(drawing.type == 0){
-						imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-						imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
-					}else{
-						imgAddUrl = config.dmedia + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
-						imgUrl = config.dmedia + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
-					}
-					
 					options[operate.drawingName+"."+operate.drawingId] = drawing[operate.drawingId];
 					
-					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], imgUrl, imgAddUrl, "", operate.deleteDrawingUrl, operate);
+					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], drawing.drawingUrl, drawing.type, "", operate.deleteDrawingUrl, operate);
 				}
 			});
 			
@@ -974,12 +966,9 @@ function initUploadBtn(operate, element){
 				options[operate.drawingName+".drawingUrl"] = dateObj.resUrl;
 				options[operate.drawingName+".drawingAddUrl"] = "";
 				
-				var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-				var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
-				
 				com.post(operate.addDrawingUrl, options, function(res){
 					var drawing = res[operate.drawingName];
-					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], imgUrl, imgAddUrl, "", operate.deleteDrawingUrl, operate);
+					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], dateObj.resUrl, drawing.type, "", operate.deleteDrawingUrl, operate);
 				});
 			}else{
 				console.log(data);
@@ -988,13 +977,13 @@ function initUploadBtn(operate, element){
     });
 }
 
-function appendGalleryElement(galleryId, imgId, imgUrl, imgAddUrl, editUrl, deleteUrl, operate){
+function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, operate){
 	
 	var gallery = $("#"+galleryId);
 	
 	var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-	var imgA = $("<a></a>").attr("href", imgUrl).attr("data-rel", "colorbox").css("height", "150px").appendTo(imgLi);
-	$("<img></img>").attr("src", imgAddUrl).attr("alt", "150x150").appendTo(imgA);
+	var img = $('<img></img>');
+	var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
 	var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 	var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
 		var options = {};

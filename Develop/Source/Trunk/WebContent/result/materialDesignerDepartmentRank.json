@@ -1,0 +1,89 @@
+{
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "ranks": [
+    {
+      "createTime": "2016-04-30",
+      "designerDeptId": "FL_DD_15",
+      "designerDeptName": "设计中心三部",
+      "endTime": "2016-04-30",
+      "mddrId": 4,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2015-10-28",
+      "designerDeptId": "FL_DD_04",
+      "designerDeptName": "设计中心十部",
+      "endTime": "2015-10-28",
+      "mddrId": 2,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2015-10-28",
+      "designerDeptId": "FL_DD_24",
+      "designerDeptName": "设计中心十五部",
+      "endTime": "2015-10-28",
+      "mddrId": 3,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-07-28",
+      "designerDeptId": "FL_DD_03",
+      "designerDeptName": "设计中心九部",
+      "endTime": "2016-07-28",
+      "mddrId": 8,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-08-04",
+      "designerDeptId": "FL_DD_10",
+      "designerDeptName": "设计中心二部",
+      "endTime": "2016-08-04",
+      "mddrId": 9,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-05-22",
+      "designerDeptId": "FL_DD_17",
+      "designerDeptName": "设计中心八部",
+      "endTime": "2016-05-22",
+      "mddrId": 5,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-07-10",
+      "designerDeptId": "FL_DD_07",
+      "designerDeptName": "设计中心一部",
+      "endTime": "2016-07-10",
+      "mddrId": 6,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-07-12",
+      "designerDeptId": "FL_DD_16",
+      "designerDeptName": "设计中心七部",
+      "endTime": "2016-07-12",
+      "mddrId": 7,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2015-03-11",
+      "designerDeptId": "FL_DD_01",
+      "designerDeptName": "大东分公司",
+      "endTime": "2015-03-11",
+      "mddrId": 1,
+      "rank": null,
+      "status": 0
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "measurementUnits": [
+    {
+      "id": 1,
+      "name": "米",
+      "unitDes": ""
+    },
+    {
+      "id": 2,
+      "name": "平方米",
+      "unitDes": ""
+    },
+    {
+      "id": 3,
+      "name": "立方米",
+      "unitDes": ""
+    },
+    {
+      "id": 4,
+      "name": "车",
+      "unitDes": ""
+    },
+    {
+      "id": 5,
+      "name": "个",
+      "unitDes": ""
+    },
+    {
+      "id": 6,
+      "name": "根",
+      "unitDes": ""
+    },
+    {
+      "id": 7,
+      "name": "公里",
+      "unitDes": ""
+    },
+    {
+      "id": 8,
+      "name": "块",
+      "unitDes": ""
+    },
+    {
+      "id": 9,
+      "name": "扇",
+      "unitDes": ""
+    },
+    {
+      "id": 10,
+      "name": "踏",
+      "unitDes": ""
+    },
+    {
+      "id": 11,
+      "name": "套",
+      "unitDes": ""
+    },
+    {
+      "id": 12,
+      "name": "项",
+      "unitDes": ""
+    },
+    {
+      "id": 13,
+      "name": "延米",
+      "unitDes": ""
+    },
+    {
+      "id": 14,
+      "name": "组",
+      "unitDes": ""
+    }
+  ],
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

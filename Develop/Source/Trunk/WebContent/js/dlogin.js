@@ -2,20 +2,25 @@ jQuery(function(a){
 	
     var count = 0;
     
+    var QRCode = '/QRCode.do';
+    var queryVode = '/queryVode.do';
+    
     $(document).attr('title', config.name + ' ' + config.ename);
     $('#icon').attr('src', config.iconImg);
     $('#name').text(config.name);
     $('#ename').text(config.ename);
     
+    config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
+    
     verifyCode();
     
     var initQRCode = function(){
-        $.ajax(config.communion + "/QRCode.do?timestamp=" + new  Date().getTime() + "&loginInfo.company=" + config.company).done(function(data){
+        $.ajax(config.communion + QRCode + "?timestamp=" + new  Date().getTime() + "&loginInfo.company=" + config.company).done(function(data){
             $('#qrcode img').prop('src', data.QRCode);
         }).fail(function(){alert("获取二维码失败!");}).done(function(data){
         	var _flag = data.loginInfo.loginFlag;
         	
-        	_flag && checkLogin(_flag);
+        	!config.demo && _flag && checkLogin(_flag);
         });
     };
 
@@ -82,18 +87,30 @@ jQuery(function(a){
     //$("#backgroundImage").css("position", "");
     
     function verifyCode(){
+    	
+    	if(config.demo){
+    		$("#Verify").attr("src", 'images/verifyCode.jpg');
+    		return false;
+    	}
+    	
     	$.ajax({
-    		url: config.server + "queryVode.do",
+    		url: config.server + queryVode,
     		type: "POST",
             dataType: "json",
             success: function(data){
-            	params.securityCode = data.securityCode;
+        		params.securityCode = data.securityCode;
             	$("#Verify").attr("src", config.server + "/verifyCode.do?timestamp="+ new Date().getTime() + "&securityCode=" + data.securityCode);
             }
     	});
     }
 
     function login(){
+    	
+    	if(config.demo){
+    		window.location.href = "main.html?timestamp=" + new Date().getTime();
+    		return false;
+    	}
+    	
     	$.ajax({
             type: "POST",
             dataType: "json",

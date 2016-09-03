@@ -1,0 +1,71 @@
+{
+  "cIds": null,
+  "category": null,
+  "categorys": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "categoryId": "C_001",
+        "categoryName": "涂料",
+        "cid": 1
+      },
+      {
+        "categoryId": "C_002",
+        "categoryName": "瓷砖",
+        "cid": 2
+      },
+      {
+        "categoryId": "C_003",
+        "categoryName": "地板",
+        "cid": 3
+      },
+      {
+        "categoryId": "C_004",
+        "categoryName": "壁纸",
+        "cid": 4
+      },
+      {
+        "categoryId": "C_005",
+        "categoryName": "净水器",
+        "cid": 5
+      },
+      {
+        "categoryId": "C_006",
+        "categoryName": "水槽",
+        "cid": 6
+      },
+      {
+        "categoryId": "C_007",
+        "categoryName": "净水器",
+        "cid": 7
+      },
+      {
+        "categoryId": "C_008",
+        "categoryName": "壁挂电热水器",
+        "cid": 8
+      },
+      {
+        "categoryId": "C_009",
+        "categoryName": "洁具",
+        "cid": 9
+      },
+      {
+        "categoryId": "C_010",
+        "categoryName": "陶瓷盆",
+        "cid": 10
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 3,
+    "totalRecords": 25
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

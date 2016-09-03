@@ -42,8 +42,23 @@ com = {
 			server = config.server;
 		}
 		
-		url = server + url.url;
-		opts["authentication"] = params.authentication;
+		if(config.demo){
+			
+			console.log(url.url);
+			console.log(url.demo);
+			
+			if(!url.demo){
+				com.showAlert(com.warning, "Demo状态不能完成此操作");
+				return;
+			}
+			
+			url = 'result/' + url.url.split('.')[0] + '.json';
+		}else{
+			url = server + url.url;
+			opts["authentication"] = params.authentication;
+		}
+		
+		console.log(url);
 		
 		$.ajax({
 			url: url,
@@ -84,6 +99,7 @@ com = {
 				}
 			}
 		});
+		
 		return dfd.promise();
 	}, adaptDataArray: function(obj,callback){
 		var result = [];
@@ -340,6 +356,19 @@ com = {
 		return $e;
 	}, updateChosen: function(id, key, value){
 		return $("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
+	}, showImg: function($e, url, width, height, alt, defaultUrl, type){
+		
+		var $media = type ? config.dmedia : config.media;
+		
+		var imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp='+ new Date().getTime() :  defaultUrl ;
+		
+		$e.attr("src", imgUrl).attr("alt", alt).error(function(){
+		    $(this).hide();
+		});
+		
+		return $media + api.common.showImg.url + '?imgBasePath=' + url;
+	}, downloadFile: function($e, url, name){
+		$e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
 	}
 };
 

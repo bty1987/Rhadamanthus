@@ -1,0 +1,39 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "inspectionRecord": {
+    "endTime": null,
+    "irId": 0,
+    "operaterId": null,
+    "operaterName": null,
+    "orderAddr": "凯旋门三期",
+    "orderId": "1510220003",
+    "recordDes": null,
+    "startTime": null
+  },
+  "irIds": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "endTime": "2016-08-28 10:32:30",
+        "irId": 12,
+        "operaterId": "FL_03051",
+        "operaterName": "刘婷婷",
+        "orderAddr": "凯旋门三期",
+        "orderId": "1510220003",
+        "recordDes": "a",
+        "startTime": "2016-08-27 10:35:30"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 1,
+    "totalRecords": 1
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

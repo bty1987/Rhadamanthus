@@ -1,0 +1,20 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "quotationTypes": [
+    {
+      "id": 1,
+      "name": "普通"
+    },
+    {
+      "id": 2,
+      "name": "大宅"
+    }
+  ],
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -1,0 +1,856 @@
+{
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "tree": [
+    {
+      "icon": "icon-dashboard",
+      "id": 1,
+      "name": "系统",
+      "sub": [
+        {
+          "icon": "",
+          "id": 1,
+          "name": "大区",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 1,
+              "name": "大区",
+              "sub": [],
+              "url": "\/views\/system\/region.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "",
+          "id": 2,
+          "name": "城市",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 2,
+              "name": "城市",
+              "sub": [],
+              "url": "\/views\/system\/city.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "",
+          "id": 3,
+          "name": "城区",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 3,
+              "name": "城区",
+              "sub": [],
+              "url": "\/views\/system\/cityProper.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 19,
+          "name": "操作",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 25,
+              "name": "操作",
+              "sub": [],
+              "url": "\/views\/system\/subFunctionAction.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 20,
+          "name": "权限",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 6,
+              "name": "角色",
+              "sub": [],
+              "url": "\/views\/system\/role.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 25,
+          "name": "密码",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 33,
+              "name": "密码重置",
+              "sub": [],
+              "url": "\/views\/system\/resetPassword.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-edit",
+      "id": 2,
+      "name": "部门",
+      "sub": [
+        {
+          "icon": "",
+          "id": 4,
+          "name": "设计大区",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 4,
+              "name": "设计大区",
+              "sub": [],
+              "url": "\/views\/department\/designRegion.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 21,
+          "name": "业务大区",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 26,
+              "name": "业务大区",
+              "sub": [],
+              "url": "\/views\/department\/businessRegion.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 22,
+          "name": "设计部",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 27,
+              "name": "设计部",
+              "sub": [],
+              "url": "\/views\/department\/designDept.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 23,
+          "name": "业务部",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 28,
+              "name": "业务部",
+              "sub": [],
+              "url": "\/views\/department\/businessDept.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 24,
+          "name": "主材部",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 29,
+              "name": "主材部",
+              "sub": [],
+              "url": "\/views\/department\/materialDept.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 37,
+          "name": "工程部",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 51,
+              "name": "工程部",
+              "sub": [],
+              "url": "\/views\/department\/engineeringDept.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 38,
+          "name": "职能部",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 52,
+              "name": "职能部",
+              "sub": [],
+              "url": "\/views\/department\/dutyDept.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-group",
+      "id": 3,
+      "name": "人事",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 5,
+          "name": "员工",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 5,
+              "name": "员工",
+              "sub": [],
+              "url": "\/views\/personnel\/user.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 54,
+          "name": "员工权配",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 92,
+              "name": "员工权配",
+              "sub": [],
+              "url": "\/views\/personnel\/userAdvance.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-cloud",
+      "id": 4,
+      "name": "数据",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 7,
+          "name": "客户",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 7,
+              "name": "客户",
+              "sub": [],
+              "url": "\/views\/data\/customer.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 8,
+          "name": "楼盘",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 8,
+              "name": "楼盘",
+              "sub": [],
+              "url": "\/views\/data\/village.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 9,
+          "name": "报价",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 9,
+              "name": "报价项",
+              "sub": [],
+              "url": "\/views\/quotation\/quotationItem.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 10,
+              "name": "报价版本",
+              "sub": [],
+              "url": "\/views\/quotation\/quotationVersion.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 12,
+              "name": "功能区",
+              "sub": [],
+              "url": "\/views\/quotation\/functionArea.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 65,
+              "name": "定义项目",
+              "sub": [],
+              "url": "\/views\/quotation\/systemDefineItem.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 11,
+          "name": "主材",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 15,
+              "name": "型号",
+              "sub": [],
+              "url": "\/views\/material\/materialModel.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 84,
+              "name": "型号权限",
+              "sub": [],
+              "url": "\/views\/material\/materialBrandRight.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 85,
+              "name": "结算值管理",
+              "sub": [],
+              "url": "\/views\/material\/materialBalanceValue.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 53,
+          "name": "厂商",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 13,
+              "name": "品类",
+              "sub": [],
+              "url": "\/views\/data\/category.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 14,
+              "name": "品牌",
+              "sub": [],
+              "url": "\/views\/data\/brand.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-tag",
+      "id": 5,
+      "name": "订单",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 12,
+          "name": "装修订单",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 47,
+              "name": "装修订单-设计",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderDesigner.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 48,
+              "name": "装修订单-业务",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderSalesman.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 49,
+              "name": "装修订单-通用",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderCommon.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 66,
+              "name": "装修订单-高级",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderAdvance.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 91,
+              "name": "订单活动",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationActivity.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 93,
+              "name": "订单归属",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderBelong.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 13,
+          "name": "放线部署",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 18,
+              "name": "放线申请",
+              "sub": [],
+              "url": "\/views\/drawLine\/drawLineApply.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 19,
+              "name": "人员部署",
+              "sub": [],
+              "url": "\/views\/drawLine\/drawLineDeployment.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 81,
+              "name": "人员信息",
+              "sub": [],
+              "url": "\/views\/drawLine\/drawLinePersonInfo.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 14,
+          "name": "施工进度",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 20,
+              "name": "监理控制",
+              "sub": [],
+              "url": "\/views\/construction\/supervision.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 30,
+              "name": "巡检控制",
+              "sub": [],
+              "url": "\/views\/construction\/inspection.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 31,
+              "name": "质检控制",
+              "sub": [],
+              "url": "\/views\/construction\/qualityTesting.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 32,
+              "name": "客服控制",
+              "sub": [],
+              "url": "\/views\/construction\/customerService.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 53,
+              "name": "工程验收",
+              "sub": [],
+              "url": "\/views\/construction\/acceptance.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 87,
+              "name": "工人分配",
+              "sub": [],
+              "url": "\/views\/construction\/workerAllocation.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 15,
+          "name": "主材订单",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 38,
+              "name": "主材订单",
+              "sub": [],
+              "url": "\/views\/material\/materialOrder.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 39,
+              "name": "预结算",
+              "sub": [],
+              "url": "\/views\/material\/materialOrderPreBalance.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 54,
+              "name": "结算",
+              "sub": [],
+              "url": "\/views\/material\/materialOrderPostBalance.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 68,
+              "name": "场外结算",
+              "sub": [],
+              "url": "\/views\/material\/materialOutside.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 30,
+          "name": "订单录入",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 42,
+              "name": "订单录入",
+              "sub": [],
+              "url": "\/views\/decoration\/createOrder.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 55,
+          "name": "订单回访",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 94,
+              "name": "订单回访",
+              "sub": [],
+              "url": "\/views\/decoration\/decorationOrderBackVisit.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-list-alt",
+      "id": 6,
+      "name": "信息",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 16,
+          "name": "公告",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 22,
+              "name": "公告",
+              "sub": [],
+              "url": "\/views\/information\/noticeMng.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 52,
+          "name": "活动",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 90,
+              "name": "活动",
+              "sub": [],
+              "url": "\/views\/information\/activity.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-calendar",
+      "id": 7,
+      "name": "日志",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 17,
+          "name": "日志",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 34,
+              "name": "登录日志",
+              "sub": [],
+              "url": "\/views\/log\/loginLog.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-picture",
+      "id": 8,
+      "name": "报表",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 18,
+          "name": "报表",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 71,
+              "name": "主材部门业绩",
+              "sub": [],
+              "url": "\/views\/report\/materialDepartmentReport.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 72,
+              "name": "主材设计相关业绩",
+              "sub": [],
+              "url": "\/views\/report\/materialDesignReport.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 73,
+              "name": "主材厂商业绩",
+              "sub": [],
+              "url": "\/views\/report\/materialMerchantReport.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-bar-chart",
+      "id": 9,
+      "name": "财务",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 26,
+          "name": "装修收款",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 35,
+              "name": "装修收款",
+              "sub": [],
+              "url": "\/views\/payment\/decorationPayment.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 27,
+          "name": "主材收款",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 36,
+              "name": "主材收款",
+              "sub": [],
+              "url": "\/views\/payment\/materialPayment.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 33,
+          "name": "装修收款确认",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 44,
+              "name": "装修收款确认",
+              "sub": [],
+              "url": "\/views\/payment\/decorationPaymentCheck.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 34,
+          "name": "主材收款确认",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 45,
+              "name": "主材收款确认",
+              "sub": [],
+              "url": "\/views\/payment\/materialPaymentCheck.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 39,
+          "name": "预付款",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 55,
+              "name": "预付款",
+              "sub": [],
+              "url": "\/views\/payment\/payment.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 40,
+          "name": "预付款确认",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 56,
+              "name": "预付款确认",
+              "sub": [],
+              "url": "\/views\/payment\/paymentCheck.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 51,
+          "name": "主材场外收款",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 89,
+              "name": "主材场外收款",
+              "sub": [],
+              "url": "\/views\/payment\/materialOutsidePayment.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-list",
+      "id": 12,
+      "name": "排名",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 50,
+          "name": "排名",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 88,
+              "name": "排名",
+              "sub": [],
+              "url": "\/views\/report\/rank.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    },
+    {
+      "icon": "icon-exchange ",
+      "id": 13,
+      "name": "审批",
+      "sub": [
+        {
+          "icon": "icon-double-angle-right",
+          "id": 47,
+          "name": "审批人员",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 80,
+              "name": "审批人员管理",
+              "sub": [],
+              "url": "\/views\/approval\/userApprove.html"
+            }
+          ],
+          "url": "#"
+        },
+        {
+          "icon": "icon-double-angle-right",
+          "id": 48,
+          "name": "审批消息",
+          "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 83,
+              "name": "审批消息查看",
+              "sub": [],
+              "url": "\/views\/approval\/approvalTrack.html"
+            }
+          ],
+          "url": "#"
+        }
+      ],
+      "url": "#"
+    }
+  ]
+}

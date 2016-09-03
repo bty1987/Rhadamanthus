@@ -1,0 +1,18 @@
+{
+  "company": 0,
+  "condition": 255,
+  "contractTotal": 0.0,
+  "dateTime": null,
+  "decorationOrder": null,
+  "decorationOrderId": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "paymentValue": 0.0,
+  "refundValue": 0.0,
+  "roleId": "R_50",
+  "timeType": 0,
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

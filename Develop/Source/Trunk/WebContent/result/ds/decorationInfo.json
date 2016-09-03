@@ -1,0 +1,40 @@
+{
+	"houseClass": [
+		{"key":"", "value":""},
+		{"key":"清水", "value":"清水"},
+		{"key":"二手", "value":"二手"},
+		{"key":"别墅", "value":"别墅"},
+		{"key":"阁楼", "value":"阁楼"},
+		{"key":"地下", "value":"地下"}
+	], "status": [
+		{"key":"咨询", "value":"咨询"},
+		{"key":"量房", "value":"量房"}
+	], "houseType": [
+		{"key": "期房", "value":"期房"},
+		{"key": "现房", "value":"现房"}
+	], "decorationOrderStatus": [
+		{"key":"咨询", "value":"咨询"},
+		{"key":"量房", "value":"量房"},
+		{"key":"已报价", "value":"已报价"},
+		{"key":"定金", "value":"定金"},
+		{"key":"重签合同", "value":"重签合同"},
+		{"key":"已签约", "value":"已签约"},
+		{"key":"废单", "value":"废单"},
+		{"key":"已完工", "value":"已完工"},
+		{"key":"合同终止", "value":"合同终止"}
+    ], "salesmanType": [
+		{"key":"守园","value":"守园"},
+		{"key":"资源","value":"资源"},
+		{"key":"监理","value":"监理"},
+		{"key":"400","value":"400"},
+		{"key":"网络","value":"网络"},
+		{"key":"上门","value":"上门"},
+		{"key":"公司","value":"公司"},
+		{"key":"工人","value":"工人"},
+		{"key":"设计师","value":"设计师"},
+		{"key":"咨询","value":"咨询"},
+		{"key":"非业务人员","value":"非业务人员"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}

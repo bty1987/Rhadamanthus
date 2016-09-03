@@ -1,0 +1,88 @@
+{
+  "autoFillKeyValue": [],
+  "autoFillList": [],
+  "bIds": null,
+  "brand": {
+    "bid": null,
+    "brandId": null,
+    "brandName": null,
+    "brandNamePinyin": null,
+    "categoryId": null,
+    "categoryName": null,
+    "cid": 1
+  },
+  "brands": [
+    {
+      "bid": 9,
+      "brandId": "B_001",
+      "brandName": "嘉宝莉",
+      "brandNamePinyin": "jiabaoli",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 10,
+      "brandId": "B_002",
+      "brandName": "立邦",
+      "brandNamePinyin": "libang",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 44,
+      "brandId": "B_040",
+      "brandName": "333",
+      "brandNamePinyin": "333",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 45,
+      "brandId": "B_041",
+      "brandName": "444",
+      "brandNamePinyin": "444",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 47,
+      "brandId": "B_002",
+      "brandName": "test1",
+      "brandNamePinyin": "[test1]",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 48,
+      "brandId": "B_003",
+      "brandName": "test",
+      "brandNamePinyin": "test",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 50,
+      "brandId": "B_005",
+      "brandName": "test",
+      "brandNamePinyin": "test",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "pinyinName": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

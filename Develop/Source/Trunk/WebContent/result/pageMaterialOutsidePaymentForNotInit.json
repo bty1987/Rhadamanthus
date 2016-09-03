@@ -1,0 +1,25 @@
+{
+  "dateTime": null,
+  "decorationActivityItems": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialInsidePayment": null,
+  "materialOutsidePayment": null,
+  "materialPayment": null,
+  "materialPayments": null,
+  "materialReceipt": null,
+  "materialReceipts": null,
+  "materialSubOrder": null,
+  "mipIds": null,
+  "mpIds": null,
+  "mrIds": null,
+  "paging": {
+    "data": [],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 0,
+    "totalRecords": 0
+  }
+}

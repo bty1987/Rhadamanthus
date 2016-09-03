@@ -1,0 +1,42 @@
+{
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "putlineConstructionSchedule": null,
+  "putlineDrawing": {
+    "csId": 7,
+    "drawingAddUrl": null,
+    "drawingName": null,
+    "drawingUrl": null,
+    "plcsId": null,
+    "pldId": null,
+    "type": null
+  },
+  "putlineDrawings": [
+    {
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/7\/0254aaa2157848feadf71031ff94c4bc.jpg",
+      "plcsId": 9,
+      "pldId": 28,
+      "type": 0
+    },
+    {
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/7\/7611ebef6f5c414885615cc037031cc8.jpg",
+      "plcsId": 9,
+      "pldId": 29,
+      "type": 0
+    }
+  ],
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

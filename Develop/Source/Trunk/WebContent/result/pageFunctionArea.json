@@ -1,0 +1,111 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "functionArea": null,
+  "functionAreas": null,
+  "ids": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "faId": 4,
+        "functionAreaId": "D_004",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 7,
+        "functionAreaType": "综合项目",
+        "version": "rrewt",
+        "versionId": "QV_001"
+      },
+      {
+        "faId": 5,
+        "functionAreaId": "D_006",
+        "functionAreaName": "自定义功能区",
+        "functionAreaOrder": 1,
+        "functionAreaType": "普通",
+        "version": "rrewt",
+        "versionId": "QV_001"
+      },
+      {
+        "faId": 6,
+        "functionAreaId": "D_005",
+        "functionAreaName": "卧室",
+        "functionAreaOrder": 3,
+        "functionAreaType": "普通",
+        "version": "rrewt",
+        "versionId": "QV_001"
+      },
+      {
+        "faId": 11,
+        "functionAreaId": "D_063",
+        "functionAreaName": "厨房",
+        "functionAreaOrder": 2,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 13,
+        "functionAreaId": "D_065",
+        "functionAreaName": "门厅",
+        "functionAreaOrder": 1,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 14,
+        "functionAreaId": "D_066",
+        "functionAreaName": "主卧室",
+        "functionAreaOrder": 4,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 15,
+        "functionAreaId": "D_067",
+        "functionAreaName": "儿童房",
+        "functionAreaOrder": 5,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 16,
+        "functionAreaId": "D_068",
+        "functionAreaName": "老人房",
+        "functionAreaOrder": 5,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 17,
+        "functionAreaId": "D_069",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 6,
+        "functionAreaType": "综合项目",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      },
+      {
+        "faId": 18,
+        "functionAreaId": "D_070",
+        "functionAreaName": "赠送大礼包",
+        "functionAreaOrder": 7,
+        "functionAreaType": "普通",
+        "version": "QV_002",
+        "versionId": "QV_002"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 2,
+    "totalRecords": 16
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

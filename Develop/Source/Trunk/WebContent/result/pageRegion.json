@@ -1,0 +1,30 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      },
+      {
+        "rId": 8,
+        "regionId": "A_02",
+        "regionName": "华北区"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 1,
+    "totalRecords": 2
+  },
+  "region": null,
+  "regionList": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

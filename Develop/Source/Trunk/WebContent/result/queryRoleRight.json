@@ -1,0 +1,1995 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "role": {
+    "roleDes": null,
+    "roleId": "R_36",
+    "roleName": null
+  },
+  "roleActionVO": null,
+  "roleId": "R_50",
+  "roleList": null,
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "zTree": [
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 4,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                },
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 105,
+                  "name": "111",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 1,
+              "name": "大区",
+              "nocheck": null,
+              "open": "true"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 1,
+          "name": "大区",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 26,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 2,
+              "name": "城市",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 2,
+          "name": "城市",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "true",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 27,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 3,
+              "name": "城区",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 3,
+          "name": "城区",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 28,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 25,
+              "name": "操作",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 19,
+          "name": "操作",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 29,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 6,
+              "name": "角色",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 20,
+          "name": "权限",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 30,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 33,
+              "name": "密码重置",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 25,
+          "name": "密码",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 1,
+      "name": "系统",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 31,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 4,
+              "name": "设计大区",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 4,
+          "name": "设计大区",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 32,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 26,
+              "name": "业务大区",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 21,
+          "name": "业务大区",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 18,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 27,
+              "name": "设计部",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 22,
+          "name": "设计部",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 33,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 28,
+              "name": "业务部",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 23,
+          "name": "业务部",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 34,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 29,
+              "name": "主材部",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 24,
+          "name": "主材部",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 35,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 51,
+              "name": "工程部",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 37,
+          "name": "工程部",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 36,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 52,
+              "name": "职能部",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 38,
+          "name": "职能部",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 2,
+      "name": "部门",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 5,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 5,
+              "name": "员工",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 5,
+          "name": "员工",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 37,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 41,
+              "name": "工资扣款",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 29,
+          "name": "工资扣款",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 100,
+                  "name": "员工权配",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 92,
+              "name": "员工权配",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 54,
+          "name": "员工权配",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 3,
+      "name": "人事",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 38,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 7,
+              "name": "客户",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 7,
+          "name": "客户",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 39,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 8,
+              "name": "楼盘",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 8,
+          "name": "楼盘",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 40,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 9,
+              "name": "报价项",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 41,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 10,
+              "name": "报价版本",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 90,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 12,
+              "name": "功能区",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 42,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 65,
+              "name": "定义项目",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 9,
+          "name": "报价",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 45,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 15,
+              "name": "型号",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 84,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 84,
+              "name": "型号权限",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 86,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 85,
+              "name": "结算值管理",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 11,
+          "name": "主材",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 43,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 13,
+              "name": "品类",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 44,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 14,
+              "name": "品牌",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 53,
+          "name": "厂商",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 4,
+      "name": "数据",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 6,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 47,
+              "name": "装修订单-设计",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 49,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 48,
+              "name": "装修订单-业务",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 50,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 49,
+              "name": "装修订单-通用",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 16,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 66,
+              "name": "装修订单-高级",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 99,
+                  "name": "订单活动",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 91,
+              "name": "订单活动",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 101,
+                  "name": "装修订单-高级",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 93,
+              "name": "订单归属",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 12,
+          "name": "装修订单",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 8,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 18,
+              "name": "放线申请",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 3,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 19,
+              "name": "人员部署",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 74,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 81,
+              "name": "人员信息",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 13,
+          "name": "放线部署",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 17,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 20,
+              "name": "监理控制",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 51,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 30,
+              "name": "巡检控制",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 19,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 31,
+              "name": "质检控制",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 52,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 32,
+              "name": "客服控制",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 53,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 53,
+              "name": "工程验收",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 54,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 57,
+              "name": "工人工资",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 94,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 87,
+              "name": "工人分配",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 14,
+          "name": "施工进度",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 20,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 38,
+              "name": "主材订单",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 21,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 39,
+              "name": "预结算",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 23,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 54,
+              "name": "结算",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 22,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 68,
+              "name": "场外结算",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 92,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 82,
+              "name": "收货确认",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 15,
+          "name": "主材订单",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 7,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 42,
+              "name": "订单录入",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 30,
+          "name": "订单录入",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 102,
+                  "name": "订单回访",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 94,
+              "name": "订单回访",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 55,
+          "name": "订单回访",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 5,
+      "name": "订单",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 55,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 22,
+              "name": "公告",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 16,
+          "name": "公告",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 98,
+                  "name": "活动",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 90,
+              "name": "活动",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 52,
+          "name": "活动",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 6,
+      "name": "信息",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 57,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 23,
+              "name": "日志",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 58,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 34,
+              "name": "登录日志",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 17,
+          "name": "日志",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 7,
+      "name": "日志",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 60,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 71,
+              "name": "主材部门业绩",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 61,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 72,
+              "name": "主材设计相关业绩",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 62,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 73,
+              "name": "主材厂商业绩",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 18,
+          "name": "报表",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 8,
+      "name": "报表",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 9,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 35,
+              "name": "装修收款",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 26,
+          "name": "装修收款",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 24,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 36,
+              "name": "主材收款",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 27,
+          "name": "主材收款",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 63,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 58,
+              "name": "基本",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 64,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 59,
+              "name": "扣款",
+              "nocheck": null,
+              "open": "false"
+            },
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 65,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 60,
+              "name": "工资",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 28,
+          "name": "工人工资",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "true",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 11,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 43,
+              "name": "转换款项",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 32,
+          "name": "转换款项",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 10,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 44,
+              "name": "装修收款确认",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 33,
+          "name": "装修收款确认",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 25,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 45,
+              "name": "主材收款确认",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 34,
+          "name": "主材收款确认",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 12,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 55,
+              "name": "预付款",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 39,
+          "name": "预付款",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 66,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 56,
+              "name": "预付款确认",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 40,
+          "name": "预付款确认",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 97,
+                  "name": "主材场外收款",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 89,
+              "name": "主材场外收款",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 51,
+          "name": "主材场外收款",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 9,
+      "name": "财务",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 72,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 67,
+              "name": "装修订单查询",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 42,
+          "name": "装修订单查询",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 10,
+      "name": "预算审核",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 88,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 86,
+              "name": "管理功能",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 49,
+          "name": "管理功能",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 11,
+      "name": "管理",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 96,
+                  "name": "排名信息",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 88,
+              "name": "排名",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 50,
+          "name": "排名",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 12,
+      "name": "排名",
+      "nocheck": "true",
+      "open": "true"
+    },
+    {
+      "checked": "false",
+      "children": [
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 81,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 80,
+              "name": "审批人员管理",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 47,
+          "name": "审批人员",
+          "nocheck": "true",
+          "open": "true"
+        },
+        {
+          "checked": "false",
+          "children": [
+            {
+              "checked": "false",
+              "children": [
+                {
+                  "checked": "false",
+                  "children": [],
+                  "chkDisabled": null,
+                  "id": 82,
+                  "name": "",
+                  "nocheck": null,
+                  "open": "false"
+                }
+              ],
+              "chkDisabled": null,
+              "id": 83,
+              "name": "审批消息查看",
+              "nocheck": null,
+              "open": "false"
+            }
+          ],
+          "chkDisabled": null,
+          "id": 48,
+          "name": "审批消息",
+          "nocheck": "true",
+          "open": "true"
+        }
+      ],
+      "chkDisabled": null,
+      "id": 13,
+      "name": "审批",
+      "nocheck": "true",
+      "open": "true"
+    }
+  ]
+}

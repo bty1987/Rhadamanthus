@@ -1,0 +1,269 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "role": null,
+  "roleId": "R_50",
+  "roleIds": null,
+  "roleList": [
+    {
+      "roleDes": "ERP",
+      "roleId": "R_36",
+      "roleName": "ERP主管"
+    },
+    {
+      "roleDes": "ERP",
+      "roleId": "R_37",
+      "roleName": "ERP开发专员"
+    },
+    {
+      "roleDes": "系统里没有此角色不用管",
+      "roleId": "R_04",
+      "roleName": "业务员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_51",
+      "roleName": "主材前台"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_34",
+      "roleName": "主材前台收款"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_42",
+      "roleName": "主材客服"
+    },
+    {
+      "roleDes": "主材导购",
+      "roleId": "R_07",
+      "roleName": "主材导购"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_41",
+      "roleName": "主材核算"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_53",
+      "roleName": "主材点位"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_14",
+      "roleName": "主材组长"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_19",
+      "roleName": "主材财务"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_22",
+      "roleName": "主材财务主管"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_13",
+      "roleName": "主材部副总"
+    },
+    {
+      "roleDes": "人事专员",
+      "roleId": "R_08",
+      "roleName": "人事专员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_38",
+      "roleName": "企划部总监"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_21",
+      "roleName": "出纳"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_09",
+      "roleName": "前台"
+    },
+    {
+      "roleDes": "前台经理",
+      "roleId": "R_45",
+      "roleName": "前台经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_17",
+      "roleName": "外店面前台"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_39",
+      "roleName": "外店面经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_30",
+      "roleName": "客服"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_28",
+      "roleName": "工人"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_47",
+      "roleName": "工程中心文员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_54",
+      "roleName": "工程库房"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_25",
+      "roleName": "工程财务"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_24",
+      "roleName": "工程财务主管"
+    },
+    {
+      "roleDes": "质检",
+      "roleId": "R_05",
+      "roleName": "工程质检"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_16",
+      "roleName": "工程部监理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_15",
+      "roleName": "工程部经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_33",
+      "roleName": "市场部总监"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_12",
+      "roleName": "市场部经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_40",
+      "roleName": "平面设计"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_31",
+      "roleName": "总经理"
+    },
+    {
+      "roleDes": "收款确认",
+      "roleId": "R_46",
+      "roleName": "收款确认"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_52",
+      "roleName": "放线专员"
+    },
+    {
+      "roleDes": "无功能",
+      "roleId": "R_35",
+      "roleName": "游客"
+    },
+    {
+      "roleDes": "管理员",
+      "roleId": "R_02",
+      "roleName": "管理员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_50",
+      "roleName": "系统管理员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_27",
+      "roleName": "行政物品专员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_18",
+      "roleName": "装修前台收款"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_20",
+      "roleName": "装修财务"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_23",
+      "roleName": "装修财务主管"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_03",
+      "roleName": "设计师"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_11",
+      "roleName": "设计部总监"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_10",
+      "roleName": "设计部经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_26",
+      "roleName": "预算审核专员"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_49",
+      "roleName": "驻店导购"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_55",
+      "roleName": "客服部经理"
+    },
+    {
+      "roleDes": "",
+      "roleId": "R_56",
+      "roleName": "客户管家"
+    },
+    {
+      "roleDes": "财务系统测试",
+      "roleId": "R_57",
+      "roleName": "测试"
+    },
+    {
+      "roleDes": "111",
+      "roleId": "R_58",
+      "roleName": "test1"
+    }
+  ],
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

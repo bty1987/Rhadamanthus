@@ -1,0 +1,11 @@
+{
+	"houseClass": [
+		{"key":"清水", "value":"清水"},  
+		{"key":"二手", "value":"二手"}, 
+		{"key":"别墅", "value":"别墅"}, 
+		{"key":"阁楼", "value":"阁楼"}, 
+		{"key":"地下", "value":"地下"}
+	],
+    "errorCode": 0,
+    "errorMsg": null
+}

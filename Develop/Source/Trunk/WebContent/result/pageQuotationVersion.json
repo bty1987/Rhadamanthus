@@ -1,0 +1,111 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "defaultFlag": 1,
+        "manageRate": 0.1,
+        "qvId": 2,
+        "trafficRate": 0.1,
+        "versionDes": "fsdfsfsdf11",
+        "versionId": "QV_002",
+        "versionName": "QV_002"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.135,
+        "qvId": 16,
+        "trafficRate": 0.15,
+        "versionDes": "test",
+        "versionId": "QV_005",
+        "versionName": "test"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 10,
+        "trafficRate": 0.0,
+        "versionDes": "dfafsaf",
+        "versionId": "QV_999",
+        "versionName": "111"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.135,
+        "qvId": 16,
+        "trafficRate": 0.15,
+        "versionDes": "test",
+        "versionId": "QV_005",
+        "versionName": "test"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 8,
+        "trafficRate": 0.0,
+        "versionDes": "",
+        "versionId": "QV_122",
+        "versionName": "WWW"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 7,
+        "trafficRate": 0.0,
+        "versionDes": "",
+        "versionId": "QV_124",
+        "versionName": "WWW"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 6,
+        "trafficRate": 0.0,
+        "versionDes": "",
+        "versionId": "QV_333",
+        "versionName": "333"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 5,
+        "trafficRate": 0.0,
+        "versionDes": "",
+        "versionId": "QV_111",
+        "versionName": "222"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 4,
+        "trafficRate": 0.0,
+        "versionDes": "",
+        "versionId": "QV_004",
+        "versionName": "QV_004"
+      },
+      {
+        "defaultFlag": 0,
+        "manageRate": 0.0,
+        "qvId": 3,
+        "trafficRate": 0.0,
+        "versionDes": "nmbmbm",
+        "versionId": "QV_003",
+        "versionName": "QV_003"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 2,
+    "totalRecords": 16
+  },
+  "quotationVersion": null,
+  "quotationVersions": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "versionId": null
+}

@@ -1,0 +1,67 @@
+{
+  "company": 0,
+  "cscIds": null,
+  "customerServiceComplaint": {
+    "complaintDes": null,
+    "complaintHandle": null,
+    "complaintHandleTime": null,
+    "complaintLevel": null,
+    "complaintStatus": null,
+    "complaintTime": null,
+    "complaintType": null,
+    "createrId": null,
+    "createrName": null,
+    "cscId": null,
+    "customerName": "王先生",
+    "operaterId": null,
+    "operaterName": null,
+    "orderId": "1510220003"
+  },
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "complaintDes": "sadasd",
+        "complaintHandle": "",
+        "complaintHandleTime": "2016-07-03",
+        "complaintLevel": 0,
+        "complaintStatus": 0,
+        "complaintTime": "2016-07-12",
+        "complaintType": 0,
+        "createrId": "FL_03051",
+        "createrName": "刘婷婷",
+        "cscId": 2,
+        "customerName": "王先生",
+        "operaterId": "",
+        "operaterName": "",
+        "orderId": "1510220003"
+      },
+      {
+        "complaintDes": "dadadad",
+        "complaintHandle": "",
+        "complaintHandleTime": "2016-07-03",
+        "complaintLevel": 1,
+        "complaintStatus": 0,
+        "complaintTime": "2016-07-13",
+        "complaintType": 0,
+        "createrId": "FL_03051",
+        "createrName": "刘婷婷",
+        "cscId": 3,
+        "customerName": "王先生",
+        "operaterId": "",
+        "operaterName": "",
+        "orderId": "1510220003"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 1,
+    "totalRecords": 2
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

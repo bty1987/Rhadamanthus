@@ -1,0 +1,33 @@
+{
+  "bricklayConstructionSchedule": {
+    "bcsId": 4972,
+    "csId": 4,
+    "endTime": null,
+    "endTimeFlag": null,
+    "orderId": null,
+    "qualityRaty": null,
+    "qualityRatyDes": null,
+    "startTime": null,
+    "startTimeFlag": null,
+    "supervisorRaty": null,
+    "supervisorRatyDes": null,
+    "workerId": null,
+    "workerRaty": null,
+    "workerRatyDes": null,
+    "workerSalary": null
+  },
+  "bricklayConstructionScheduleWorker": null,
+  "bricklayDrawing": null,
+  "bricklayDrawings": null,
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": [],
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

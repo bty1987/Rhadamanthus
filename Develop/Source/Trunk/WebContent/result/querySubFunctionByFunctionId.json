@@ -1,0 +1,55 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "subFunction": {
+    "function": {
+      "functionDes": null,
+      "functionIcon": null,
+      "functionId": 13,
+      "functionName": null,
+      "id": 0,
+      "module": null
+    },
+    "id": 0,
+    "subFunctionId": 0,
+    "subFunctionName": null,
+    "subfunctionDes": null,
+    "subfunctionIcon": null,
+    "url": null
+  },
+  "subFunctionList": [
+    {
+      "function": null,
+      "id": 18,
+      "subFunctionId": 18,
+      "subFunctionName": "放线申请",
+      "subfunctionDes": "放线申请",
+      "subfunctionIcon": "icon-pencil",
+      "url": "\/views\/drawLine\/drawLineApply.html"
+    },
+    {
+      "function": null,
+      "id": 19,
+      "subFunctionId": 19,
+      "subFunctionName": "人员部署",
+      "subfunctionDes": "人员部署",
+      "subfunctionIcon": "icon-pencil",
+      "url": "\/views\/drawLine\/drawLineDeployment.html"
+    },
+    {
+      "function": null,
+      "id": 80,
+      "subFunctionId": 81,
+      "subFunctionName": "人员信息",
+      "subfunctionDes": "人员信息",
+      "subfunctionIcon": "icon-pencil",
+      "url": "\/views\/drawLine\/drawLinePersonInfo.html"
+    }
+  ],
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

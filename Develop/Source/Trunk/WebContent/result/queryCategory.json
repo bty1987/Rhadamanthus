@@ -1,0 +1,139 @@
+{
+  "cIds": null,
+  "category": null,
+  "categorys": [
+    {
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": 1
+    },
+    {
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": 2
+    },
+    {
+      "categoryId": "C_003",
+      "categoryName": "地板",
+      "cid": 3
+    },
+    {
+      "categoryId": "C_004",
+      "categoryName": "壁纸",
+      "cid": 4
+    },
+    {
+      "categoryId": "C_005",
+      "categoryName": "净水器",
+      "cid": 5
+    },
+    {
+      "categoryId": "C_006",
+      "categoryName": "水槽",
+      "cid": 6
+    },
+    {
+      "categoryId": "C_007",
+      "categoryName": "净水器",
+      "cid": 7
+    },
+    {
+      "categoryId": "C_008",
+      "categoryName": "壁挂电热水器",
+      "cid": 8
+    },
+    {
+      "categoryId": "C_009",
+      "categoryName": "洁具",
+      "cid": 9
+    },
+    {
+      "categoryId": "C_010",
+      "categoryName": "陶瓷盆",
+      "cid": 10
+    },
+    {
+      "categoryId": "C_011",
+      "categoryName": "浴室柜",
+      "cid": 11
+    },
+    {
+      "categoryId": "C_012",
+      "categoryName": "木门",
+      "cid": 12
+    },
+    {
+      "categoryId": "C_013",
+      "categoryName": "壁画",
+      "cid": 13
+    },
+    {
+      "categoryId": "C_014",
+      "categoryName": "窗帘",
+      "cid": 14
+    },
+    {
+      "categoryId": "C_015",
+      "categoryName": "消毒柜",
+      "cid": 15
+    },
+    {
+      "categoryId": "C_016",
+      "categoryName": "烟机",
+      "cid": 16
+    },
+    {
+      "categoryId": "C_017",
+      "categoryName": "开关",
+      "cid": 17
+    },
+    {
+      "categoryId": "C_018",
+      "categoryName": "灯具",
+      "cid": 18
+    },
+    {
+      "categoryId": "C_019",
+      "categoryName": "吊顶",
+      "cid": 19
+    },
+    {
+      "categoryId": "C_020",
+      "categoryName": "拉门",
+      "cid": 20
+    },
+    {
+      "categoryId": "C_021",
+      "categoryName": "锁具",
+      "cid": 21
+    },
+    {
+      "categoryId": "C_022",
+      "categoryName": "test1",
+      "cid": 22
+    },
+    {
+      "categoryId": "C_001",
+      "categoryName": "test1",
+      "cid": 23
+    },
+    {
+      "categoryId": "C_002",
+      "categoryName": "test",
+      "cid": 24
+    },
+    {
+      "categoryId": "C_003",
+      "categoryName": "楼梯",
+      "cid": 25
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

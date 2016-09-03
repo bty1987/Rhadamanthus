@@ -1,0 +1,41 @@
+{
+  "designerDepartments": [
+    {
+      "createTime": null,
+      "designerDeptId": "FL_DD_01",
+      "designerDeptName": "大东分公司",
+      "designerRegionId": null,
+      "designerRegionName": null,
+      "mddcId": null,
+      "total": -5000.0
+    },
+    {
+      "createTime": null,
+      "designerDeptId": "FL_DD_03",
+      "designerDeptName": "设计中心九部",
+      "designerRegionId": null,
+      "designerRegionName": null,
+      "mddcId": null,
+      "total": 81209.6
+    },
+    {
+      "createTime": null,
+      "designerDeptId": "FL_DD_04",
+      "designerDeptName": "设计中心十部",
+      "designerRegionId": null,
+      "designerRegionName": null,
+      "mddcId": null,
+      "total": 142021.0
+    }
+  ],
+  "designerRegions": null,
+  "designers": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": null,
+  "materialDepartmentCounts": null,
+  "materialTypeCounts": null,
+  "paging": null,
+  "reportType": 1
+}

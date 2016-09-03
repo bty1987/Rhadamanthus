@@ -1,0 +1,104 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "module": null,
+  "moduleList": [
+    {
+      "id": 1,
+      "moduleDes": "1",
+      "moduleIcon": "icon-dashboard",
+      "moduleId": 1,
+      "moduleName": "系统"
+    },
+    {
+      "id": 2,
+      "moduleDes": "1",
+      "moduleIcon": "icon-exchange ",
+      "moduleId": 13,
+      "moduleName": "审批"
+    },
+    {
+      "id": 3,
+      "moduleDes": "1",
+      "moduleIcon": "icon-edit",
+      "moduleId": 2,
+      "moduleName": "部门"
+    },
+    {
+      "id": 4,
+      "moduleDes": "1",
+      "moduleIcon": "icon-group",
+      "moduleId": 3,
+      "moduleName": "人事"
+    },
+    {
+      "id": 5,
+      "moduleDes": "1",
+      "moduleIcon": "icon-cloud",
+      "moduleId": 4,
+      "moduleName": "数据"
+    },
+    {
+      "id": 6,
+      "moduleDes": "1",
+      "moduleIcon": "icon-tag",
+      "moduleId": 5,
+      "moduleName": "订单"
+    },
+    {
+      "id": 7,
+      "moduleDes": "1",
+      "moduleIcon": "icon-list-alt",
+      "moduleId": 6,
+      "moduleName": "信息"
+    },
+    {
+      "id": 8,
+      "moduleDes": "1",
+      "moduleIcon": "icon-calendar",
+      "moduleId": 7,
+      "moduleName": "日志"
+    },
+    {
+      "id": 9,
+      "moduleDes": "1",
+      "moduleIcon": "icon-picture",
+      "moduleId": 8,
+      "moduleName": "报表"
+    },
+    {
+      "id": 10,
+      "moduleDes": "1",
+      "moduleIcon": "icon-bar-chart",
+      "moduleId": 9,
+      "moduleName": "财务"
+    },
+    {
+      "id": 11,
+      "moduleDes": "1",
+      "moduleIcon": "icon-legal",
+      "moduleId": 10,
+      "moduleName": "预算审核"
+    },
+    {
+      "id": 12,
+      "moduleDes": "1",
+      "moduleIcon": "icon-cog",
+      "moduleId": 11,
+      "moduleName": "管理"
+    },
+    {
+      "id": 13,
+      "moduleDes": "1",
+      "moduleIcon": "icon-list",
+      "moduleId": 12,
+      "moduleName": "排名"
+    }
+  ],
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

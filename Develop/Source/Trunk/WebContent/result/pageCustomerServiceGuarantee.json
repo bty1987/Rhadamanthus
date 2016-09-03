@@ -1,0 +1,40 @@
+{
+  "company": 0,
+  "csgIds": null,
+  "customerServiceGuarantee": {
+    "csgId": 0,
+    "customerName": "王先生",
+    "guaranteeDes": null,
+    "guaranteeTime": null,
+    "orderId": "1510220003"
+  },
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "csgId": 1,
+        "customerName": "王先生",
+        "guaranteeDes": "dasdas",
+        "guaranteeTime": "2016-07-06",
+        "orderId": "1510220003"
+      },
+      {
+        "csgId": 2,
+        "customerName": "王先生",
+        "guaranteeDes": "lajaewihaowga",
+        "guaranteeTime": "2016-07-19",
+        "orderId": "1510220003"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 1,
+    "totalRecords": 2
+  },
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

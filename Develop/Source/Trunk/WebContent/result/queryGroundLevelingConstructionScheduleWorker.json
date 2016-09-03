@@ -1,0 +1,49 @@
+{
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": [
+    {
+      "csId": 7,
+      "glcsId": 16,
+      "glcswId": 17,
+      "orderId": "1603230005",
+      "workerDuty": "地面找平",
+      "workerId": "FL-00720",
+      "workerName": "崔跃亮",
+      "workerOldId": "GR.03.001",
+      "workerPhone": "13840043143",
+      "workerPhoto": "\/upload\/Imag\/\/userImg\/2015\/06\/95feb11b140747b7b32ff4caf652723d.jpg",
+      "workerRaty": 0,
+      "workerRatyDes": "",
+      "workerSalary": 0.0
+    }
+  ],
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "groundLevelingConstructionSchedule": {
+    "csId": 7,
+    "endTime": null,
+    "endTimeFlag": null,
+    "glcsId": 16,
+    "orderId": null,
+    "qualityRaty": null,
+    "qualityRatyDes": null,
+    "startTime": null,
+    "startTimeFlag": null,
+    "supervisorRaty": null,
+    "supervisorRatyDes": null,
+    "workerId": null,
+    "workerRaty": null,
+    "workerRatyDes": null,
+    "workerSalary": null
+  },
+  "groundLevelingConstructionScheduleWorker": null,
+  "groundLevelingDrawing": null,
+  "groundLevelingDrawings": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

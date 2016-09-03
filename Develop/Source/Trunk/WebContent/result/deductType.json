@@ -1,0 +1,19 @@
+{
+	"orderDeductType": [
+		{"key":"1", "value":"工程质保金"},  
+		{"key":"2", "value":"工具押金"}, 
+		{"key":"3", "value":"工人借款"}, 
+		{"key":"4", "value":"工人工作服"}, 
+		{"key":"5", "value":"工人保险"}, 
+		{"key":"6", "value":"手机款"}, 
+		{"key":"7", "value":"工地赔偿款"}, 
+		{"key":"8", "value":"以前年度工程工人罚款"}, 
+		{"key":"9", "value":"以前年度工程工地维修款"}
+	], "personDeductType":[
+		{"key":"10", "value":"工人罚款"}, 
+		{"key":"11", "value":"工地维修款"},
+		{"key":"0", "value":"其他"}
+	],
+    "errorCode": 0,
+    "errorMsg": null
+}

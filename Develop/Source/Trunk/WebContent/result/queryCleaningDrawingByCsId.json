@@ -1,0 +1,50 @@
+{
+  "cleaningConstructionSchedule": null,
+  "cleaningConstructionScheduleWorker": null,
+  "cleaningDrawing": {
+    "ccsId": null,
+    "cdId": null,
+    "csId": 7,
+    "drawingAddUrl": null,
+    "drawingName": null,
+    "drawingUrl": null,
+    "operateTime": null,
+    "operatorName": null,
+    "type": null
+  },
+  "cleaningDrawings": [
+    {
+      "ccsId": 1842,
+      "cdId": 2,
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/14\/a5746a73ac164d3d955c9632318190a1.jpg",
+      "operateTime": null,
+      "operatorName": null,
+      "type": 0
+    },
+    {
+      "ccsId": 1842,
+      "cdId": 3,
+      "csId": 7,
+      "drawingAddUrl": "",
+      "drawingName": "",
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/30\/14\/82a9fe07fe1a45d68f2af54df93f2cab.jpg",
+      "operateTime": null,
+      "operatorName": null,
+      "type": 0
+    }
+  ],
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -1,0 +1,36 @@
+{
+  "designerDepartments": null,
+  "designerRegions": null,
+  "designers": [
+    {
+      "createTime": null,
+      "designerDepartmentId": null,
+      "designerDepartmentName": null,
+      "designerId": "FL-00168",
+      "designerName": "杜若平",
+      "designerRegionId": null,
+      "designerRegionName": null,
+      "mdcId": null,
+      "total": 250567.0
+    },
+    {
+      "createTime": null,
+      "designerDepartmentId": null,
+      "designerDepartmentName": null,
+      "designerId": "FL-00206",
+      "designerName": "何伟",
+      "designerRegionId": null,
+      "designerRegionName": null,
+      "mdcId": null,
+      "total": 2360.0
+    }
+  ],
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": null,
+  "materialDepartmentCounts": null,
+  "materialTypeCounts": null,
+  "paging": null,
+  "reportType": 1
+}

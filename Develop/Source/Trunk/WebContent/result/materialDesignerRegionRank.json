@@ -1,0 +1,44 @@
+{
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "ranks": [
+    {
+      "createTime": "2016-04-30",
+      "designerRegionId": "FL_DR_04",
+      "designerRegionName": "设计四分区",
+      "endTime": "2016-04-30",
+      "mdrrId": 3,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2015-03-11",
+      "designerRegionId": "FL_DR_01",
+      "designerRegionName": "设计一分区",
+      "endTime": "2015-03-11",
+      "mdrrId": 1,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2015-10-28",
+      "designerRegionId": "FL_DR_02",
+      "designerRegionName": "设计二分区",
+      "endTime": "2015-10-28",
+      "mdrrId": 2,
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-08-04",
+      "designerRegionId": "FL_DR_03",
+      "designerRegionName": "设计三分区",
+      "endTime": "2016-08-04",
+      "mdrrId": 4,
+      "rank": null,
+      "status": 0
+    }
+  ]
+}
