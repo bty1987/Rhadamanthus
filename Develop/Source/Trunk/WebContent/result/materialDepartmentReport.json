@@ -1,0 +1,342 @@
+{
+  "company": 0,
+  "designerDepartments": null,
+  "designerRegions": null,
+  "designers": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": null,
+  "materialDepartmentCounts": [
+    {
+      "createTime": "2015-10-28",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 15,
+      "total": 2950.0
+    },
+    {
+      "createTime": "2015-10-28",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 16,
+      "total": 12697.0
+    },
+    {
+      "createTime": "2015-11-07",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 17,
+      "total": 4720.0
+    },
+    {
+      "createTime": "2015-11-12",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 18,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2015-11-12",
+      "materialDeptId": "FL_MD_16",
+      "mdcId": 19,
+      "total": 1614.0
+    },
+    {
+      "createTime": "2015-11-20",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 20,
+      "total": 30000.0
+    },
+    {
+      "createTime": "2015-11-25",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 21,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2015-11-26",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 22,
+      "total": 2680.0
+    },
+    {
+      "createTime": "2015-11-27",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 25,
+      "total": 5960.0
+    },
+    {
+      "createTime": "2015-11-27",
+      "materialDeptId": "FL_MD_16",
+      "mdcId": 26,
+      "total": 4247.7
+    },
+    {
+      "createTime": "2015-12-08",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 27,
+      "total": 2360.0
+    },
+    {
+      "createTime": "2015-12-13",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 28,
+      "total": 10390.0
+    },
+    {
+      "createTime": "2016-01-02",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 29,
+      "total": 2320.0
+    },
+    {
+      "createTime": "2016-01-11",
+      "materialDeptId": "FL_MD_01",
+      "mdcId": 30,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2016-01-11",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 31,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2016-03-25",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 32,
+      "total": 1111.0
+    },
+    {
+      "createTime": "2016-04-30",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 33,
+      "total": 2360.0
+    },
+    {
+      "createTime": "2016-05-15",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 34,
+      "total": 12650.0
+    },
+    {
+      "createTime": "2016-05-15",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 35,
+      "total": 5700.0
+    },
+    {
+      "createTime": "2016-05-17",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 36,
+      "total": 22000.0
+    },
+    {
+      "createTime": "2016-05-19",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 37,
+      "total": 407.0
+    },
+    {
+      "createTime": "2016-05-22",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 38,
+      "total": 9000.0
+    },
+    {
+      "createTime": "2016-06-30",
+      "materialDeptId": "FL_MD_01",
+      "mdcId": 39,
+      "total": -5000.0
+    },
+    {
+      "createTime": "2016-06-30",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 40,
+      "total": 1560.0
+    },
+    {
+      "createTime": "2016-06-30",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 41,
+      "total": 35340.0
+    },
+    {
+      "createTime": "2016-07-02",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 42,
+      "total": 8790.0
+    },
+    {
+      "createTime": "2016-07-10",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 43,
+      "total": 424.65
+    },
+    {
+      "createTime": "2016-07-12",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 44,
+      "total": 3684.1
+    },
+    {
+      "createTime": "2016-07-28",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 45,
+      "total": 5500.0
+    },
+    {
+      "createTime": "2016-07-30",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 46,
+      "total": 19186.0
+    },
+    {
+      "createTime": "2016-07-30",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 47,
+      "total": 58119.2
+    },
+    {
+      "createTime": "2016-07-30",
+      "materialDeptId": "FL_MD_16",
+      "mdcId": 48,
+      "total": 236000.0
+    },
+    {
+      "createTime": "2016-07-31",
+      "materialDeptId": "FL_MD_08",
+      "mdcId": 49,
+      "total": 14160.0
+    },
+    {
+      "createTime": "2016-08-02",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 50,
+      "total": -700.0
+    },
+    {
+      "createTime": "2016-08-04",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 51,
+      "total": 12759.5
+    },
+    {
+      "createTime": "2016-08-05",
+      "materialDeptId": "FL_MD_09",
+      "mdcId": 52,
+      "total": 10350.0
+    },
+    {
+      "createTime": "2016-08-06",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 53,
+      "total": 3000.0
+    },
+    {
+      "createTime": "2016-08-06",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 54,
+      "total": 14438.9
+    },
+    {
+      "createTime": "2016-08-06",
+      "materialDeptId": "FL_MD_08",
+      "mdcId": 55,
+      "total": 0.0
+    },
+    {
+      "createTime": "2016-08-06",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 56,
+      "total": 8360.0
+    },
+    {
+      "createTime": "2016-08-07",
+      "materialDeptId": "FL_MD_13",
+      "mdcId": 57,
+      "total": 3900.0
+    },
+    {
+      "createTime": "2016-08-07",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 58,
+      "total": 0.0
+    },
+    {
+      "createTime": "2016-08-07",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 59,
+      "total": 14453.0
+    },
+    {
+      "createTime": "2016-08-08",
+      "materialDeptId": "FL_MD_01",
+      "mdcId": 60,
+      "total": 7000.0
+    },
+    {
+      "createTime": "2016-08-12",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 61,
+      "total": 9000.0
+    },
+    {
+      "createTime": "2016-08-12",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 62,
+      "total": 17530.0
+    },
+    {
+      "createTime": "2016-08-13",
+      "materialDeptId": "FL_MD_04",
+      "mdcId": 63,
+      "total": -10670.8
+    },
+    {
+      "createTime": "2016-08-20",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 64,
+      "total": 0.0
+    },
+    {
+      "createTime": "2016-08-21",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 65,
+      "total": 6104.4
+    },
+    {
+      "createTime": "2016-08-25",
+      "materialDeptId": "FL_MD_14",
+      "mdcId": 66,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2016-08-27",
+      "materialDeptId": "FL_MD_02",
+      "mdcId": 67,
+      "total": 7360.0
+    },
+    {
+      "createTime": "2016-08-27",
+      "materialDeptId": "FL_MD_14",
+      "mdcId": 68,
+      "total": 13470.0
+    },
+    {
+      "createTime": "2016-08-27",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 69,
+      "total": 1000.0
+    },
+    {
+      "createTime": "2016-08-29",
+      "materialDeptId": "FL_MD_05",
+      "mdcId": 70,
+      "total": 3450.0
+    }
+  ],
+  "materialTypeCounts": null,
+  "paging": null,
+  "reportType": 0,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

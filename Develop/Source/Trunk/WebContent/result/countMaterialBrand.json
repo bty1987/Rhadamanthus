@@ -1,0 +1,42 @@
+{
+  "company": 0,
+  "designerDepartments": null,
+  "designerRegions": null,
+  "designers": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": [
+    {
+      "createTime": null,
+      "materialBrand": "安华卫浴",
+      "mbcId": null,
+      "total": 12488.0
+    },
+    {
+      "createTime": null,
+      "materialBrand": "箭牌卫浴",
+      "mbcId": null,
+      "total": 501109.7
+    },
+    {
+      "createTime": null,
+      "materialBrand": "达尔玛",
+      "mbcId": null,
+      "total": 1000.0
+    },
+    {
+      "createTime": null,
+      "materialBrand": "金意陶",
+      "mbcId": null,
+      "total": 122137.95
+    }
+  ],
+  "materialDepartmentCounts": null,
+  "materialTypeCounts": null,
+  "paging": null,
+  "reportType": 1,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

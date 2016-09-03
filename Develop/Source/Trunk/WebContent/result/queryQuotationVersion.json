@@ -1,0 +1,158 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "quotationVersion": null,
+  "quotationVersions": [
+    {
+      "defaultFlag": 1,
+      "manageRate": 0.1,
+      "qvId": 2,
+      "trafficRate": 0.1,
+      "versionDes": "fsdfsfsdf11",
+      "versionId": "QV_002",
+      "versionName": "QV_002"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 0,
+      "trafficRate": 0.0,
+      "versionDes": "fgsdfgsdfg",
+      "versionId": "QV_001",
+      "versionName": "rrewt"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 15,
+      "trafficRate": 0.0,
+      "versionDes": "1",
+      "versionId": "QV_009",
+      "versionName": "fsdfsdf"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 14,
+      "trafficRate": 0.0,
+      "versionDes": "gsdgsdg",
+      "versionId": "QV_008",
+      "versionName": "gfdgs"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 13,
+      "trafficRate": 0.0,
+      "versionDes": "dhfdhfd",
+      "versionId": "QV_007",
+      "versionName": "gfhfgh"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 12,
+      "trafficRate": 0.0,
+      "versionDes": "dfdsdsfd",
+      "versionId": "QV_006",
+      "versionName": "testlalala"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 11,
+      "trafficRate": 0.0,
+      "versionDes": "sfdsf",
+      "versionId": "QV_005",
+      "versionName": "test1"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 10,
+      "trafficRate": 0.0,
+      "versionDes": "dfafsaf",
+      "versionId": "QV_999",
+      "versionName": "111"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 11,
+      "trafficRate": 0.0,
+      "versionDes": "sfdsf",
+      "versionId": "QV_005",
+      "versionName": "test1"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 8,
+      "trafficRate": 0.0,
+      "versionDes": "",
+      "versionId": "QV_122",
+      "versionName": "WWW"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 7,
+      "trafficRate": 0.0,
+      "versionDes": "",
+      "versionId": "QV_124",
+      "versionName": "WWW"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 6,
+      "trafficRate": 0.0,
+      "versionDes": "",
+      "versionId": "QV_333",
+      "versionName": "333"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 5,
+      "trafficRate": 0.0,
+      "versionDes": "",
+      "versionId": "QV_111",
+      "versionName": "222"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 4,
+      "trafficRate": 0.0,
+      "versionDes": "",
+      "versionId": "QV_004",
+      "versionName": "QV_004"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 3,
+      "trafficRate": 0.0,
+      "versionDes": "nmbmbm",
+      "versionId": "QV_003",
+      "versionName": "QV_003"
+    },
+    {
+      "defaultFlag": 0,
+      "manageRate": 0.0,
+      "qvId": 11,
+      "trafficRate": 0.0,
+      "versionDes": "sfdsf",
+      "versionId": "QV_005",
+      "versionName": "test1"
+    }
+  ],
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "versionId": null
+}

@@ -1,0 +1,33 @@
+{
+  "cleaningConstructionSchedule": {
+    "ccsId": 1842,
+    "csId": 7,
+    "endTime": "2016-05-13",
+    "endTimeFlag": 0,
+    "orderId": "1603230005",
+    "qualityRaty": 0,
+    "qualityRatyDes": null,
+    "startTime": "2016-05-13",
+    "startTimeFlag": 1,
+    "supervisorRaty": 0,
+    "supervisorRatyDes": null,
+    "workerId": "FL-00660",
+    "workerRaty": null,
+    "workerRatyDes": null,
+    "workerSalary": null
+  },
+  "cleaningConstructionScheduleWorker": null,
+  "cleaningDrawing": null,
+  "cleaningDrawings": null,
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

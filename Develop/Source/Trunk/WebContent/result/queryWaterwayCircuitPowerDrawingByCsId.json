@@ -1,0 +1,53 @@
+{
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "waterwayCircuitPowerConstructionSchedule": null,
+  "waterwayCircuitPowerConstructionScheduleWorker": null,
+  "waterwayCircuitPowerDrawing": {
+    "csId": 4,
+    "drawingAddUrl": null,
+    "drawingName": null,
+    "drawingUrl": null,
+    "type": null,
+    "wcpcsId": null,
+    "wcpdId": null
+  },
+  "waterwayCircuitPowerDrawings": [
+    {
+      "csId": 4,
+      "drawingAddUrl": "",
+      "drawingName": "",
+      "drawingUrl": "\/upload\/Imag\/\/2016\/08\/04\/8\/c77cb476b89e49689ffaad0712c5240c.jpg",
+      "type": 0,
+      "wcpcsId": 18,
+      "wcpdId": 15
+    },
+    {
+      "csId": 4,
+      "drawingAddUrl": "",
+      "drawingName": "",
+      "drawingUrl": "\/upload\/Imag\/\/2016\/08\/04\/8\/3c352d96fefb4cabb20292ca2f641dd3.png",
+      "type": 0,
+      "wcpcsId": 18,
+      "wcpdId": 16
+    },
+    {
+      "csId": 4,
+      "drawingAddUrl": "",
+      "drawingName": "",
+      "drawingUrl": "\/upload\/Imag\/\/2016\/08\/04\/8\/a8fcdfad3b17462bb49de1ee9ab33e77.png",
+      "type": 0,
+      "wcpcsId": 18,
+      "wcpdId": 17
+    }
+  ]
+}

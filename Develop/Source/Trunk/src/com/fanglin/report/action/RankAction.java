@@ -71,22 +71,6 @@ public class RankAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public DecorationRankService getDecorationRankService() {
-		return decorationRankService;
-	}
-
-	public void setDecorationRankService(DecorationRankService decorationRankService) {
-		this.decorationRankService = decorationRankService;
-	}
-
-	public MaterialRankService getMaterialRankService() {
-		return materialRankService;
-	}
-
-	public void setMaterialRankService(MaterialRankService materialRankService) {
-		this.materialRankService = materialRankService;
-	}
-
 	public String getDecorationRank() {
 		return decorationRank;
 	}

@@ -1,0 +1,11 @@
+{
+    "relationshipType": [
+    	{"key":"普通客户","value":"普通客户"},
+		{"key":"企业高端客户","value":"企业高端客户"},
+		{"key":"企业关系客户","value":"企业关系客户"},
+		{"key":"领导关系客户","value":"领导关系客户"},
+		{"key":"员工关系","value":"员工关系"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}

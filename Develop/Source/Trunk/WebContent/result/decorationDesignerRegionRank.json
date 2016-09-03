@@ -1,0 +1,53 @@
+{
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "ranks": [
+    {
+      "createTime": "2015-10-23",
+      "ddrrId": 102,
+      "designerRegionId": "FL_DR_01",
+      "designerRegionName": "设计一分区",
+      "endTime": "2015-10-23",
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-06-29",
+      "ddrrId": 105,
+      "designerRegionId": "FL_DR_02",
+      "designerRegionName": "设计二分区",
+      "endTime": "2016-06-29",
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-05-16",
+      "ddrrId": 104,
+      "designerRegionId": "FL_DR_04",
+      "designerRegionName": "设计四分区",
+      "endTime": "2016-05-16",
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-07-09",
+      "ddrrId": 106,
+      "designerRegionId": "FL_DR_03",
+      "designerRegionName": "设计三分区",
+      "endTime": "2016-07-09",
+      "rank": null,
+      "status": 0
+    },
+    {
+      "createTime": "2016-03-24",
+      "ddrrId": 103,
+      "designerRegionId": "FL_DR_05",
+      "designerRegionName": "外阜分区",
+      "endTime": "2016-03-24",
+      "rank": null,
+      "status": 0
+    }
+  ]
+}

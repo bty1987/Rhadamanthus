@@ -1,0 +1,46 @@
+{
+  "company": 0,
+  "designerDepartments": null,
+  "designerRegions": [
+    {
+      "createTime": null,
+      "designerRegionId": "FL_DR_01",
+      "designerRegionName": "设计一分区",
+      "mdrcId": null,
+      "total": 236980.6
+    },
+    {
+      "createTime": null,
+      "designerRegionId": "FL_DR_02",
+      "designerRegionName": "设计二分区",
+      "mdrcId": null,
+      "total": 76924.25
+    },
+    {
+      "createTime": null,
+      "designerRegionId": "FL_DR_03",
+      "designerRegionName": "设计三分区",
+      "mdrcId": null,
+      "total": 37672.7
+    },
+    {
+      "createTime": null,
+      "designerRegionId": "FL_DR_04",
+      "designerRegionName": "设计四分区",
+      "mdrcId": null,
+      "total": 265611.1
+    }
+  ],
+  "designers": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": null,
+  "materialDepartmentCounts": null,
+  "materialTypeCounts": null,
+  "paging": null,
+  "reportType": 1,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -60,11 +60,16 @@ jQuery(function($) {
 		materialOutsidePayment.checkBank = [];
 		materialOutsidePayment.accounts = [];
 		
+		materialOutsidePayment.cashInfo = {};
+		materialOutsidePayment.bankInfo = {};
+		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialOutsidePayment.cash.push(v);
+				materialOutsidePayment.cashInfo[v.key] = v.name;
 			}else if(v.type == 2){
 				materialOutsidePayment.bank.push(v);
+				materialOutsidePayment.bankInfo[v.key] = v.name;
 			}else if(v.type == 3){
 				materialOutsidePayment.checkBank.push(v);
 			}else if(v.type == 4){
@@ -72,13 +77,13 @@ jQuery(function($) {
 			}
 		});
 		
-		$("#cashInfo").bindData(materialOutsidePayment.cashInfo, 'key', 'value');
-		$("#bankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
-		$("#checkvBankName").bindData(materialOutsidePayment.checkBankInfo, 'key', 'value');
-		$("#installmentBankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
-		$("#accountsBankName").bindData(materialOutsidePayment.accountsInfo, 'key', 'value');
-		$("#refundBankName").bindData(materialOutsidePayment.bankInfo, 'key', 'value');
-	});
+		$("#cashInfo").bindData(materialOutsidePayment.cash, 'key', 'name');
+		$("#bankName").bindData(materialOutsidePayment.bank, 'key', 'name');
+		$("#checkvBankName").bindData(materialOutsidePayment.checkBank, 'key', 'name');
+		$("#installmentBankName").bindData(materialOutsidePayment.bank, 'key', 'name');
+		$("#accountsBankName").bindData(materialOutsidePayment.accounts, 'key', 'name');
+		$("#refundBankName").bindData(materialOutsidePayment.bank, 'key', 'name');
+	}, null, false);
 	
 	$("#history").removeClass("active");
 	
@@ -256,7 +261,7 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "orderAddr"], "hcondList", api.payment.pageMaterialOutsidePaymentForNotInit, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hmaterialOutsidePaymentPostData");
+	}, "hpagenation", "hmaterialOutsidePaymentPostData", null, false, null, null, "hresultList");
 	
 	function dialogPayment(v){
 		
@@ -337,17 +342,6 @@ jQuery(function($) {
 		if(referPayment != realPayment){
 			$("#paymentInfo").text("当前实收款项总数与应收款项不等,请核实再进行提交!");
 			return false;
-		}
-		
-		var _rowIds;
-		var _listGrid;
-		
-		if(!materialOutsidePayment.historyFlag){
-			_rowIds = materialOutsidePayment.listGrid.jqGrid('getGridParam','selarrrow');
-			_listGrid = materialOutsidePayment.listGrid;
-		}else{
-			_rowIds = materialOutsidePayment.listMaterialOutsidePaymentHistoryGrid.jqGrid('getGridParam','selarrrow');
-			_listGrid = materialOutsidePayment.listMaterialOutsidePaymentHistoryGrid;
 		}
 		
 		if(materialOutsidePayment.historyFlag){

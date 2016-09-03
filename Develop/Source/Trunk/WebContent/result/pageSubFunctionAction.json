@@ -1,0 +1,300 @@
+{
+  "actionIds": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "actionDes": "",
+        "actionId": 3,
+        "actionName": "人员部署1",
+        "defaultFlag": 1,
+        "subFunction": {
+          "function": {
+            "functionDes": "放线部署",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 13,
+            "functionName": "放线部署",
+            "id": 13,
+            "module": {
+              "id": 6,
+              "moduleDes": "1",
+              "moduleIcon": "icon-tag",
+              "moduleId": 5,
+              "moduleName": "订单"
+            }
+          },
+          "id": 19,
+          "subFunctionId": 19,
+          "subFunctionName": "人员部署",
+          "subfunctionDes": "人员部署",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/drawLine\/drawLineDeployment.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 4,
+        "actionName": "大区管理",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "大区管理",
+            "functionIcon": "",
+            "functionId": 1,
+            "functionName": "大区",
+            "id": 1,
+            "module": {
+              "id": 1,
+              "moduleDes": "1",
+              "moduleIcon": "icon-dashboard",
+              "moduleId": 1,
+              "moduleName": "系统"
+            }
+          },
+          "id": 1,
+          "subFunctionId": 1,
+          "subFunctionName": "大区",
+          "subfunctionDes": "大区管理",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/system\/region.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 5,
+        "actionName": "员工管理",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "员工管理",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 5,
+            "functionName": "员工",
+            "id": 5,
+            "module": {
+              "id": 4,
+              "moduleDes": "1",
+              "moduleIcon": "icon-group",
+              "moduleId": 3,
+              "moduleName": "人事"
+            }
+          },
+          "id": 5,
+          "subFunctionId": 5,
+          "subFunctionName": "员工",
+          "subfunctionDes": "员工管理",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/personnel\/user.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 6,
+        "actionName": "装修订单-设计",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "装修订单",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 12,
+            "functionName": "装修订单",
+            "id": 12,
+            "module": {
+              "id": 6,
+              "moduleDes": "1",
+              "moduleIcon": "icon-tag",
+              "moduleId": 5,
+              "moduleName": "订单"
+            }
+          },
+          "id": 17,
+          "subFunctionId": 47,
+          "subFunctionName": "装修订单-设计",
+          "subfunctionDes": "装修订单-设计",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/decoration\/decorationOrderDesigner.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 7,
+        "actionName": "订单录入",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "订单录入",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 30,
+            "functionName": "订单录入",
+            "id": 33,
+            "module": {
+              "id": 6,
+              "moduleDes": "1",
+              "moduleIcon": "icon-tag",
+              "moduleId": 5,
+              "moduleName": "订单"
+            }
+          },
+          "id": 42,
+          "subFunctionId": 42,
+          "subFunctionName": "订单录入",
+          "subfunctionDes": "订单录入",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/decoration\/createOrder.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 8,
+        "actionName": "放线申请",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "放线部署",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 13,
+            "functionName": "放线部署",
+            "id": 13,
+            "module": {
+              "id": 6,
+              "moduleDes": "1",
+              "moduleIcon": "icon-tag",
+              "moduleId": 5,
+              "moduleName": "订单"
+            }
+          },
+          "id": 18,
+          "subFunctionId": 18,
+          "subFunctionName": "放线申请",
+          "subfunctionDes": "放线申请",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/drawLine\/drawLineApply.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 9,
+        "actionName": "装修收款",
+        "defaultFlag": 1,
+        "subFunction": {
+          "function": {
+            "functionDes": "装修收款",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 26,
+            "functionName": "装修收款",
+            "id": 31,
+            "module": {
+              "id": 10,
+              "moduleDes": "1",
+              "moduleIcon": "icon-bar-chart",
+              "moduleId": 9,
+              "moduleName": "财务"
+            }
+          },
+          "id": 35,
+          "subFunctionId": 35,
+          "subFunctionName": "装修收款",
+          "subfunctionDes": "装修收款",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/payment\/decorationPayment.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 10,
+        "actionName": "装修收款确认",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "装修收款确认",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 33,
+            "functionName": "装修收款确认",
+            "id": 35,
+            "module": {
+              "id": 10,
+              "moduleDes": "1",
+              "moduleIcon": "icon-bar-chart",
+              "moduleId": 9,
+              "moduleName": "财务"
+            }
+          },
+          "id": 44,
+          "subFunctionId": 44,
+          "subFunctionName": "装修收款确认",
+          "subfunctionDes": "装修收款确认",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/payment\/decorationPaymentCheck.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 11,
+        "actionName": "转换款项",
+        "defaultFlag": 1,
+        "subFunction": {
+          "function": {
+            "functionDes": "转换款项",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 32,
+            "functionName": "转换款项",
+            "id": 34,
+            "module": {
+              "id": 10,
+              "moduleDes": "1",
+              "moduleIcon": "icon-bar-chart",
+              "moduleId": 9,
+              "moduleName": "财务"
+            }
+          },
+          "id": 43,
+          "subFunctionId": 43,
+          "subFunctionName": "转换款项",
+          "subfunctionDes": "转换款项",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/payment\/changePaymentItem.html"
+        }
+      },
+      {
+        "actionDes": "",
+        "actionId": 12,
+        "actionName": "预付款",
+        "defaultFlag": 0,
+        "subFunction": {
+          "function": {
+            "functionDes": "预付款",
+            "functionIcon": "icon-double-angle-right",
+            "functionId": 39,
+            "functionName": "预付款",
+            "id": 41,
+            "module": {
+              "id": 10,
+              "moduleDes": "1",
+              "moduleIcon": "icon-bar-chart",
+              "moduleId": 9,
+              "moduleName": "财务"
+            }
+          },
+          "id": 54,
+          "subFunctionId": 55,
+          "subFunctionName": "预付款",
+          "subfunctionDes": "预付款",
+          "subfunctionIcon": "icon-pencil",
+          "url": "\/views\/payment\/payment.html"
+        }
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 8,
+    "totalRecords": 74
+  },
+  "roleId": "R_50",
+  "subFunctionActions": null,
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -1,0 +1,61 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "createTime": "2016-07-05",
+        "createrId": "FL-02037",
+        "createrName": "王家维",
+        "orderId": "1510220003",
+        "reworkDes": "啦啦啦啦",
+        "rwId": 1
+      },
+      {
+        "createTime": "2016-07-14",
+        "createrId": "FL-02037",
+        "createrName": "王家维",
+        "orderId": "1510220003",
+        "reworkDes": "发顺丰",
+        "rwId": 3
+      },
+      {
+        "createTime": "2016-07-08",
+        "createrId": "FL-02037",
+        "createrName": "王家维",
+        "orderId": "1510220003",
+        "reworkDes": "dasdada",
+        "rwId": 4
+      },
+      {
+        "createTime": "2016-07-14",
+        "createrId": "FL_03051",
+        "createrName": "刘婷婷",
+        "orderId": "1510220003",
+        "reworkDes": "sdada",
+        "rwId": 6
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 1,
+    "totalRecords": 4
+  },
+  "rework": {
+    "createTime": null,
+    "createrId": null,
+    "createrName": null,
+    "orderId": "1510220003",
+    "reworkDes": null,
+    "rwId": null
+  },
+  "reworkDrawing": null,
+  "reworkDrawings": null,
+  "roleId": "R_50",
+  "rwIds": null,
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

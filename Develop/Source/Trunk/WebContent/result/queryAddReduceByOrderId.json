@@ -1,0 +1,33 @@
+{
+  "addReduce": {
+    "arId": null,
+    "content": null,
+    "createTime": null,
+    "dpId": null,
+    "orderId": "1606290003",
+    "status": null,
+    "total": null,
+    "type": null
+  },
+  "addReduces": [
+    {
+      "arId": 44,
+      "content": "test",
+      "createTime": "2016-08-13",
+      "dpId": 335,
+      "orderId": "1606290003",
+      "status": 2,
+      "total": 4.53,
+      "type": 0
+    }
+  ],
+  "arIds": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

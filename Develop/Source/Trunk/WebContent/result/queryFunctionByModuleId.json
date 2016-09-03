@@ -1,0 +1,74 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "function": {
+    "functionDes": null,
+    "functionIcon": null,
+    "functionId": 0,
+    "functionName": null,
+    "id": 0,
+    "module": {
+      "id": 0,
+      "moduleDes": null,
+      "moduleIcon": null,
+      "moduleId": 5,
+      "moduleName": null
+    }
+  },
+  "functionList": [
+    {
+      "functionDes": "装修订单",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 12,
+      "functionName": "装修订单",
+      "id": 12,
+      "module": null
+    },
+    {
+      "functionDes": "放线部署",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 13,
+      "functionName": "放线部署",
+      "id": 13,
+      "module": null
+    },
+    {
+      "functionDes": "施工进度",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 14,
+      "functionName": "施工进度",
+      "id": 14,
+      "module": null
+    },
+    {
+      "functionDes": "主材订单",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 15,
+      "functionName": "主材订单",
+      "id": 15,
+      "module": null
+    },
+    {
+      "functionDes": "订单录入",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 30,
+      "functionName": "订单录入",
+      "id": 33,
+      "module": null
+    },
+    {
+      "functionDes": "订单回访",
+      "functionIcon": "icon-double-angle-right",
+      "functionId": 55,
+      "functionName": "订单回访",
+      "id": 57,
+      "module": null
+    }
+  ],
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

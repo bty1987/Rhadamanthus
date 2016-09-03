@@ -588,8 +588,8 @@ var decorationUtils = {
 		});
 	},addPicture:function(e, i){
 		var $li = $('<li></li>').appendTo(e);
-		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', config.media + api.common.showImg.url + '?imgBasePath=' + i.path).attr('target', '_blank').appendTo($li);
-		var $img = $('<img></img>').attr('alt', '200x200').attr('width', 200).attr('height', 200).attr('src', config.media + api.common.showImg.url + '?imgBasePath=' + i.path + '&divFlag=1&width=200&height=200').appendTo($imgA);
+		var $img = $('<img></img>').attr('width', 200).attr('height', 200);
+		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
 		
 		var $tags = $('<div></div>').addClass('tags').appendTo($li);
 		var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -599,12 +599,17 @@ var decorationUtils = {
 		
 		var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
 		var $toolLabel = $('<label></label>').appendTo($tools);
-		var $downA = $('<a></a>').addClass("icon-download-alt").attr('href', config.media + api.common.downloadFile.url + '?downloadFilePath=' + i.path + '&fileName=' + i.name).attr('target', '_blank').appendTo($tools);
+		var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
+		
+		com.downloadFile($downA, i.path, i.name);
+		
 	}, addCAD: function(e, i){
 		
 		var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').appendTo(e);
 		var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
-		var $downIcon = $('<a></a>').addClass('icon-download-alt').attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + i.path + "&fileName=" + i.name).attr('target', '_blank').appendTo($infoboxIcon);
+		var $downIcon = $('<a></a>').addClass('icon-download-alt').appendTo($infoboxIcon);
+		
+		com.downloadFile($downIcon, i.path, i.name);
 		
 		var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
 		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxData);

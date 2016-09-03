@@ -1,0 +1,211 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "functionAreaIds": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "quotation": {
+    "content": null,
+    "createTime": null,
+    "createrId": null,
+    "createrName": null,
+    "customerName": null,
+    "decorationStyle": null,
+    "designDepartmentName": null,
+    "designerName": null,
+    "discount": null,
+    "houseArea": null,
+    "latexCut": null,
+    "managePrice": null,
+    "manageRate": null,
+    "notSalesmanRate": 0.0,
+    "orderAddr": null,
+    "orderId": null,
+    "orderTotalPrice": null,
+    "qid": 128,
+    "quotationName": null,
+    "status": null,
+    "supervisorName": null,
+    "totalPrice": null,
+    "trafficPrice": null,
+    "versionId": null
+  },
+  "quotationFunctionArea": null,
+  "quotationFunctionAreas": [
+    {
+      "functionAreaName": "门厅",
+      "functionAreaOrder": 1,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1526,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "门厅",
+      "functionAreaOrder": 1,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1547,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "门厅",
+      "functionAreaOrder": 1,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1553,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "赠送大礼包",
+      "functionAreaOrder": 2,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1518,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "主卧室",
+      "functionAreaOrder": 3,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1488,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "综合项目",
+      "functionAreaOrder": 4,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1530,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "厨房",
+      "functionAreaOrder": 4,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1548,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "主卧室",
+      "functionAreaOrder": 4,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1554,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "厨房",
+      "functionAreaOrder": 5,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1492,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "老人房",
+      "functionAreaOrder": 5,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1555,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "门厅",
+      "functionAreaOrder": 6,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1525,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "综合项目",
+      "functionAreaOrder": 6,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1529,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "厨房",
+      "functionAreaOrder": 6,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1533,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "客",
+      "functionAreaOrder": 7,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1458,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "赠送大礼包",
+      "functionAreaOrder": 7,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1524,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "门厅",
+      "functionAreaOrder": 7,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1532,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "赠送大礼包",
+      "functionAreaOrder": 7,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1534,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "厨房",
+      "functionAreaOrder": 8,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1497,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    },
+    {
+      "functionAreaName": "赠送大礼包",
+      "functionAreaOrder": 9,
+      "functionAreaType": "普通",
+      "id": 0,
+      "qfaId": 1537,
+      "quotationFunctionAreaItems": null,
+      "sum": null
+    }
+  ],
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

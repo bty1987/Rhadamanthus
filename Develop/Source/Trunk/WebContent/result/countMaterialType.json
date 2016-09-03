@@ -1,0 +1,48 @@
+{
+  "company": 0,
+  "designerDepartments": null,
+  "designerRegions": null,
+  "designers": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "materialBrandCounts": null,
+  "materialDepartmentCounts": null,
+  "materialTypeCounts": [
+    {
+      "createTime": null,
+      "materialType": "水槽",
+      "mtcId": null,
+      "total": 1000.0
+    },
+    {
+      "createTime": null,
+      "materialType": "洁具",
+      "mtcId": null,
+      "total": 510237.7
+    },
+    {
+      "createTime": null,
+      "materialType": "浴室柜",
+      "mtcId": null,
+      "total": 1000.0
+    },
+    {
+      "createTime": null,
+      "materialType": "瓷砖",
+      "mtcId": null,
+      "total": 122137.95
+    },
+    {
+      "createTime": null,
+      "materialType": "陶瓷盆",
+      "mtcId": null,
+      "total": 2360.0
+    }
+  ],
+  "paging": null,
+  "reportType": 1,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

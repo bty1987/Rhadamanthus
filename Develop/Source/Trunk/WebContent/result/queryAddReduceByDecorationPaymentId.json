@@ -1,0 +1,22 @@
+{
+  "addReduce": {
+    "arId": 39,
+    "content": "test",
+    "createTime": "2016-07-12",
+    "dpId": 291,
+    "orderId": "1606030003",
+    "status": 1,
+    "total": 165.0,
+    "type": 0
+  },
+  "addReduces": null,
+  "arIds": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

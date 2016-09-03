@@ -1,0 +1,51 @@
+{
+  "chanConstructionSchedule": null,
+  "chanDrawing": {
+    "ccsId": null,
+    "cdId": null,
+    "csId": 7,
+    "drawingAddUrl": null,
+    "drawingName": null,
+    "drawingUrl": null,
+    "type": null
+  },
+  "chanDrawings": [
+    {
+      "ccsId": 6,
+      "cdId": 184,
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/6\/84df178d5fbe44d5b26ae7883ae1cf46.jpg",
+      "type": 0
+    },
+    {
+      "ccsId": 6,
+      "cdId": 185,
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/6\/33b1ee51f1aa41f3ac43ea4402f11329.jpg",
+      "type": 0
+    },
+    {
+      "ccsId": 6,
+      "cdId": 186,
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/6\/fb24b4efb52240a5abf1c3bee9556db7.jpg",
+      "type": 0
+    }
+  ],
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

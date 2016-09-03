@@ -1,0 +1,309 @@
+{
+  "cityProper": {
+    "city": {
+      "cId": null,
+      "cityId": "C_01",
+      "cityName": null,
+      "region": null
+    },
+    "cityProperId": null,
+    "cityProperName": null,
+    "cpId": null
+  },
+  "cityProperIds": null,
+  "cityProperList": [
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_01",
+      "cityProperName": "皇姑",
+      "cpId": 6
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_02",
+      "cityProperName": "铁西",
+      "cpId": 8
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_03",
+      "cityProperName": "大东",
+      "cpId": 10
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_04",
+      "cityProperName": "于洪",
+      "cpId": 12
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_05",
+      "cityProperName": "沈北",
+      "cpId": 14
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_06",
+      "cityProperName": "东陵",
+      "cpId": 16
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_07",
+      "cityProperName": "和平",
+      "cpId": 18
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_08",
+      "cityProperName": "沈河",
+      "cpId": 20
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_09",
+      "cityProperName": "浑南",
+      "cpId": 22
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_10",
+      "cityProperName": "苏家屯",
+      "cpId": 24
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_11",
+      "cityProperName": "棋盘山开发区",
+      "cpId": 26
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_12",
+      "cityProperName": "新民",
+      "cpId": 28
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_13",
+      "cityProperName": "辽中",
+      "cpId": 30
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_14",
+      "cityProperName": "康平",
+      "cpId": 32
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_15",
+      "cityProperName": "法库",
+      "cpId": 34
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_16",
+      "cityProperName": "其他",
+      "cpId": 36
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_17",
+      "cityProperName": "铁岭",
+      "cpId": 38
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_24",
+      "cityProperName": "丹东",
+      "cpId": 52
+    },
+    {
+      "city": {
+        "cId": 6,
+        "cityId": "C_01",
+        "cityName": "沈阳",
+        "region": {
+          "rId": 6,
+          "regionId": "A_01",
+          "regionName": "东北区"
+        }
+      },
+      "cityProperId": "R_26",
+      "cityProperName": "兴城",
+      "cpId": 56
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -1,0 +1,204 @@
+{
+  "autoFillList": null,
+  "city": null,
+  "cityList": [
+    {
+      "cId": 6,
+      "cityId": "C_01",
+      "cityName": "沈阳",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 8,
+      "cityId": "C_02",
+      "cityName": "朝阳",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 10,
+      "cityId": "C_03",
+      "cityName": "大连",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 12,
+      "cityId": "C_04",
+      "cityName": "本溪",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 14,
+      "cityId": "C_05",
+      "cityName": "抚顺",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 16,
+      "cityId": "C_06",
+      "cityName": "锦州",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 18,
+      "cityId": "C_07",
+      "cityName": "阜新",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 20,
+      "cityId": "C_08",
+      "cityName": "盘锦",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 22,
+      "cityId": "C_09",
+      "cityName": "铁岭",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 24,
+      "cityId": "C_10",
+      "cityName": "辽阳",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 26,
+      "cityId": "C_11",
+      "cityName": "鞍山",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 28,
+      "cityId": "C_12",
+      "cityName": "四平",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 30,
+      "cityId": "C_13",
+      "cityName": "通辽",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 32,
+      "cityId": "C_14",
+      "cityName": "营口市",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 34,
+      "cityId": "C_15",
+      "cityName": "内蒙市",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 36,
+      "cityId": "C_16",
+      "cityName": "丹东",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 39,
+      "cityId": "C_17",
+      "cityName": "海城",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 40,
+      "cityId": "C_18",
+      "cityName": "葫芦岛",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    },
+    {
+      "cId": 42,
+      "cityId": "C_19",
+      "cityName": "通化",
+      "region": {
+        "rId": 6,
+        "regionId": "A_01",
+        "regionName": "东北区"
+      }
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

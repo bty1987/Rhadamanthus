@@ -300,6 +300,7 @@ function initWizardSept(operate, schedule){
 			if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
 				com.post(api.personel.queryUserByUserId, {"user.userId": element.workerId}, function(res){
 					if(res.user){
+						
 						$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", res.user.userId+"'s Photo");
 						$("#chanWorkerNameSpan").text(res.user.userName);
 						

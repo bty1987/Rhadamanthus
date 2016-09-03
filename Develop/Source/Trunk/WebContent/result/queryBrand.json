@@ -1,0 +1,368 @@
+{
+  "autoFillKeyValue": [],
+  "autoFillList": [],
+  "bIds": null,
+  "brand": null,
+  "brands": [
+    {
+      "bid": 9,
+      "brandId": "B_001",
+      "brandName": "嘉宝莉",
+      "brandNamePinyin": "jiabaoli",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 10,
+      "brandId": "B_002",
+      "brandName": "立邦",
+      "brandNamePinyin": "libang",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 11,
+      "brandId": "B_003",
+      "brandName": "圣象地板",
+      "brandNamePinyin": "shengxiangdiban",
+      "categoryId": "C_003",
+      "categoryName": "地板",
+      "cid": null
+    },
+    {
+      "bid": 12,
+      "brandId": "B_004",
+      "brandName": "菲林格尔",
+      "brandNamePinyin": "feilingeer",
+      "categoryId": "C_003",
+      "categoryName": "地板",
+      "cid": null
+    },
+    {
+      "bid": 13,
+      "brandId": "B_005",
+      "brandName": "欧雅壁纸",
+      "brandNamePinyin": "ouyabizhi",
+      "categoryId": "C_004",
+      "categoryName": "壁纸",
+      "cid": null
+    },
+    {
+      "bid": 14,
+      "brandId": "B_006",
+      "brandName": "蒙娜丽莎",
+      "brandNamePinyin": "mengnalisha",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 15,
+      "brandId": "B_007",
+      "brandName": "冠军瓷砖",
+      "brandNamePinyin": "guanjuncizhuan",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 16,
+      "brandId": "B_009",
+      "brandName": "米奇",
+      "brandNamePinyin": "[miqi, miji]",
+      "categoryId": "C_005",
+      "categoryName": "净水器",
+      "cid": null
+    },
+    {
+      "bid": 17,
+      "brandId": "B_010",
+      "brandName": "达尔玛",
+      "brandNamePinyin": "[daerma]",
+      "categoryId": "C_006",
+      "categoryName": "水槽",
+      "cid": null
+    },
+    {
+      "bid": 18,
+      "brandId": "B_011",
+      "brandName": "派斯",
+      "brandNamePinyin": "[paisi, pasi]",
+      "categoryId": "C_007",
+      "categoryName": "净水器",
+      "cid": null
+    },
+    {
+      "bid": 19,
+      "brandId": "B_012",
+      "brandName": "AO史密斯热水器",
+      "brandNamePinyin": "[AOshimisireshuiqi]",
+      "categoryId": "C_008",
+      "categoryName": "壁挂电热水器",
+      "cid": null
+    },
+    {
+      "bid": 20,
+      "brandId": "B_013",
+      "brandName": "箭牌卫浴",
+      "brandNamePinyin": "[jianpaiweiyu]",
+      "categoryId": "C_009",
+      "categoryName": "洁具",
+      "cid": null
+    },
+    {
+      "bid": 21,
+      "brandId": "B_014",
+      "brandName": "箭牌卫浴",
+      "brandNamePinyin": "[jianpaiweiyu]",
+      "categoryId": "C_010",
+      "categoryName": "陶瓷盆",
+      "cid": null
+    },
+    {
+      "bid": 22,
+      "brandId": "B_015",
+      "brandName": "安华卫浴",
+      "brandNamePinyin": "[anhuaweiyu]",
+      "categoryId": "C_011",
+      "categoryName": "浴室柜",
+      "cid": null
+    },
+    {
+      "bid": 23,
+      "brandId": "B_017",
+      "brandName": "名雅居木门",
+      "brandNamePinyin": "[mingyajumumen, mingyajimumen]",
+      "categoryId": "C_012",
+      "categoryName": "木门",
+      "cid": null
+    },
+    {
+      "bid": 24,
+      "brandId": "B_018",
+      "brandName": "欧汇美",
+      "brandNamePinyin": "[ouhuimei]",
+      "categoryId": "C_013",
+      "categoryName": "壁画",
+      "cid": null
+    },
+    {
+      "bid": 25,
+      "brandId": "B_019",
+      "brandName": "思迈博窗帘",
+      "brandNamePinyin": "[simaibochuanglian, saimaibochuanglian]",
+      "categoryId": "C_014",
+      "categoryName": "窗帘",
+      "cid": null
+    },
+    {
+      "bid": 26,
+      "brandId": "B_020",
+      "brandName": "华帝电器",
+      "brandNamePinyin": "[huadidianqi]",
+      "categoryId": "C_015",
+      "categoryName": "消毒柜",
+      "cid": null
+    },
+    {
+      "bid": 27,
+      "brandId": "B_021",
+      "brandName": "帅康电器",
+      "brandNamePinyin": "[shuaikangdianqi]",
+      "categoryId": "C_016",
+      "categoryName": "烟机",
+      "cid": null
+    },
+    {
+      "bid": 28,
+      "brandId": "B_022",
+      "brandName": "松下开关",
+      "brandNamePinyin": "[songxiakaiguan]",
+      "categoryId": "C_017",
+      "categoryName": "开关",
+      "cid": null
+    },
+    {
+      "bid": 29,
+      "brandId": "B_023",
+      "brandName": "松下灯具",
+      "brandNamePinyin": "[songxiadengju]",
+      "categoryId": "C_018",
+      "categoryName": "灯具",
+      "cid": null
+    },
+    {
+      "bid": 30,
+      "brandId": "B_024",
+      "brandName": "乐思龙",
+      "brandNamePinyin": "[lesilong, lesailong, yuesilong, yuesailong]",
+      "categoryId": "C_019",
+      "categoryName": "吊顶",
+      "cid": null
+    },
+    {
+      "bid": 31,
+      "brandId": "B_025",
+      "brandName": "正林拉门",
+      "brandNamePinyin": "[zhenglinlamen]",
+      "categoryId": "C_020",
+      "categoryName": "拉门",
+      "cid": null
+    },
+    {
+      "bid": 32,
+      "brandId": "B_026",
+      "brandName": "惠万家",
+      "brandNamePinyin": "[huiwanjia, huiwangu, huiwanjie, huimojia, huimogu, huimojie]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 33,
+      "brandId": "B_027",
+      "brandName": "金意陶",
+      "brandNamePinyin": "[jinyitao, jinyiyao]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 34,
+      "brandId": "B_028",
+      "brandName": "陶一郎",
+      "brandNamePinyin": "[taoyilang, yaoyilang]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 35,
+      "brandId": "B_030",
+      "brandName": "罗马瓷砖",
+      "brandNamePinyin": "[luomacizhuan]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 36,
+      "brandId": "B_031",
+      "brandName": "九牧",
+      "brandNamePinyin": "[jiumu]",
+      "categoryId": "C_009",
+      "categoryName": "洁具",
+      "cid": null
+    },
+    {
+      "bid": 37,
+      "brandId": "B_032",
+      "brandName": "安华卫浴",
+      "brandNamePinyin": "[anhuaweiyu]",
+      "categoryId": "C_009",
+      "categoryName": "洁具",
+      "cid": null
+    },
+    {
+      "bid": 38,
+      "brandId": "B_033",
+      "brandName": "欧路莎",
+      "brandNamePinyin": "[oulusha, oulusuo]",
+      "categoryId": "C_009",
+      "categoryName": "洁具",
+      "cid": null
+    },
+    {
+      "bid": 39,
+      "brandId": "B_036",
+      "brandName": "诗兰",
+      "brandNamePinyin": "[shilan]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 40,
+      "brandId": "B_037",
+      "brandName": "金朝阳",
+      "brandNamePinyin": "[jinchaoyang, jinzhaoyang]",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 41,
+      "brandId": "B_039",
+      "brandName": "圣德保",
+      "brandNamePinyin": "shengdebao",
+      "categoryId": "C_002",
+      "categoryName": "瓷砖",
+      "cid": null
+    },
+    {
+      "bid": 44,
+      "brandId": "B_040",
+      "brandName": "333",
+      "brandNamePinyin": "333",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 45,
+      "brandId": "B_041",
+      "brandName": "444",
+      "brandNamePinyin": "444",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 47,
+      "brandId": "B_002",
+      "brandName": "test1",
+      "brandNamePinyin": "[test1]",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 48,
+      "brandId": "B_003",
+      "brandName": "test",
+      "brandNamePinyin": "test",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    },
+    {
+      "bid": 49,
+      "brandId": "B_004",
+      "brandName": "111",
+      "brandNamePinyin": "111",
+      "categoryId": "C_003",
+      "categoryName": "楼梯",
+      "cid": null
+    },
+    {
+      "bid": 50,
+      "brandId": "B_005",
+      "brandName": "test",
+      "brandNamePinyin": "test",
+      "categoryId": "C_001",
+      "categoryName": "涂料",
+      "cid": null
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "pinyinName": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

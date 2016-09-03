@@ -1,0 +1,29 @@
+{
+  "canChange": 0,
+  "company": 0,
+  "configs": {
+    "trafficRates": [
+      "0.015",
+      "0.02"
+    ],
+    "latexCutScales": [
+      "21:2",
+      "22:3",
+      "23:4",
+      "24:5"
+    ],
+    "manageRates": [
+      "0.135",
+      "0.165"
+    ]
+  },
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "quotation": null,
+  "quotations": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

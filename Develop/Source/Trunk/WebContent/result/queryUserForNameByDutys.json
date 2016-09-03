@@ -1,0 +1,29 @@
+{
+  "autoFillKeyValue": [
+    {
+      "key": "FL_02063",
+      "value": "王芳-放线部"
+    }
+  ],
+  "autoFillList": [
+    "王芳"
+  ],
+  "company": 0,
+  "duty": null,
+  "dutys": [
+    "放线小组",
+    "质检"
+  ],
+  "dutysO": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "pinyinName": "a",
+  "roleId": "R_50",
+  "roleList": [],
+  "user": null,
+  "userId": "FL_03051",
+  "userIds": null,
+  "userName": "刘婷婷"
+}

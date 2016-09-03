@@ -1,0 +1,35 @@
+{
+  "company": 0,
+  "constructionScheduleWorker": null,
+  "constructionScheduleWorkers": null,
+  "drawingUrls": null,
+  "errorCode": 0,
+  "errorMsg": null,
+  "groundLevelingConstructionSchedule": null,
+  "groundLevelingConstructionScheduleWorker": null,
+  "groundLevelingDrawing": {
+    "csId": 7,
+    "drawingAddUrl": null,
+    "drawingName": null,
+    "drawingUrl": null,
+    "glcsId": null,
+    "gldId": null,
+    "type": null
+  },
+  "groundLevelingDrawings": [
+    {
+      "csId": 7,
+      "drawingAddUrl": null,
+      "drawingName": null,
+      "drawingUrl": "\/upload\/Imag\/\/2016\/05\/19\/10\/e30c36d3bb5f48d89740b4cfb0b1b49d.jpg",
+      "glcsId": 16,
+      "gldId": 6,
+      "type": 0
+    }
+  ],
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

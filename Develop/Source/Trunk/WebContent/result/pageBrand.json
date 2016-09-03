@@ -1,0 +1,114 @@
+{
+  "autoFillKeyValue": [],
+  "autoFillList": [],
+  "bIds": null,
+  "brand": null,
+  "brands": null,
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "bid": 9,
+        "brandId": "B_001",
+        "brandName": "嘉宝莉",
+        "brandNamePinyin": "jiabaoli",
+        "categoryId": "C_001",
+        "categoryName": "涂料",
+        "cid": 1
+      },
+      {
+        "bid": 10,
+        "brandId": "B_002",
+        "brandName": "立邦",
+        "brandNamePinyin": "libang",
+        "categoryId": "C_001",
+        "categoryName": "涂料",
+        "cid": 1
+      },
+      {
+        "bid": 11,
+        "brandId": "B_003",
+        "brandName": "圣象地板",
+        "brandNamePinyin": "shengxiangdiban",
+        "categoryId": "C_003",
+        "categoryName": "地板",
+        "cid": 3
+      },
+      {
+        "bid": 12,
+        "brandId": "B_004",
+        "brandName": "菲林格尔",
+        "brandNamePinyin": "feilingeer",
+        "categoryId": "C_003",
+        "categoryName": "地板",
+        "cid": 3
+      },
+      {
+        "bid": 13,
+        "brandId": "B_005",
+        "brandName": "欧雅壁纸",
+        "brandNamePinyin": "ouyabizhi",
+        "categoryId": "C_004",
+        "categoryName": "壁纸",
+        "cid": 4
+      },
+      {
+        "bid": 14,
+        "brandId": "B_006",
+        "brandName": "蒙娜丽莎",
+        "brandNamePinyin": "mengnalisha",
+        "categoryId": "C_002",
+        "categoryName": "瓷砖",
+        "cid": 2
+      },
+      {
+        "bid": 15,
+        "brandId": "B_007",
+        "brandName": "冠军瓷砖",
+        "brandNamePinyin": "guanjuncizhuan",
+        "categoryId": "C_002",
+        "categoryName": "瓷砖",
+        "cid": 2
+      },
+      {
+        "bid": 16,
+        "brandId": "B_009",
+        "brandName": "米奇",
+        "brandNamePinyin": "[miqi, miji]",
+        "categoryId": "C_005",
+        "categoryName": "净水器",
+        "cid": 5
+      },
+      {
+        "bid": 17,
+        "brandId": "B_010",
+        "brandName": "达尔玛",
+        "brandNamePinyin": "[daerma]",
+        "categoryId": "C_006",
+        "categoryName": "水槽",
+        "cid": 6
+      },
+      {
+        "bid": 18,
+        "brandId": "B_011",
+        "brandName": "派斯",
+        "brandNamePinyin": "[paisi, pasi]",
+        "categoryId": "C_007",
+        "categoryName": "净水器",
+        "cid": 7
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 4,
+    "totalRecords": 39
+  },
+  "pinyinName": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

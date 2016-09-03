@@ -1,7 +1,5 @@
 var main = {
 	top: [],
-	skipFlag: false,
-	quotationIntervalId: -1,
 };
 
 $(function(){
@@ -106,12 +104,9 @@ $(function(){
 	
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
 		$(".user-info .user-name").text(res.user.currentName);
-		$("#personalPic").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=180&height=200&timestamp='+ new Date().getTime()).error(function(){
-		    $('.profile-picture').hide();
-		});
-		$("#userImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+res.user.userPhoto+'&divFlag=1&width=30&height=30&timestamp='+ new Date().getTime()).error(function(){
-		    $(this).hide();
-		});
+		
+		com.showImg($("#personalPic"), res.user.userPhoto, 180, 180, '');
+		com.showImg($("#userImg"), res.user.userPhoto, 30, 30, '');
 	});
 	
 	loadNotices();

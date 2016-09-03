@@ -1,0 +1,390 @@
+{
+  "autoFillKeyValue": [],
+  "autoFillList": [],
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_16",
+          "id": 16,
+          "rule": "[A-Z]#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "字母#×-×-×",
+          "ruleExample": "A#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 18,
+            "cityId": "C_07",
+            "cityName": "阜新",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_25",
+          "cityProperName": "彰武",
+          "cpId": 54
+        },
+        "count": 8,
+        "deliveryTime": null,
+        "developer": "222",
+        "salesPhone": "",
+        "status": 0,
+        "vId": 6,
+        "villageContent": "字母数字#A或B或C-×-×",
+        "villageId": "P_0001",
+        "villageName": "万达广场一期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.36799621582031,
+        "y": 41.78799819946289
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_24",
+          "id": 24,
+          "rule": "[A-Z][0-9]#[A-Z]-[0-9]{1,3}-[0-9]{1,3}",
+          "ruleContent": "字母数字#字母-×-×",
+          "ruleExample": "A1#A-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 6,
+        "deliveryTime": null,
+        "developer": "",
+        "salesPhone": "",
+        "status": 0,
+        "vId": 8,
+        "villageContent": "大写英文字母后加数字#A或B或C-×-×",
+        "villageId": "P_0002",
+        "villageName": "万达广场二期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.36799621582031,
+        "y": 41.78799819946289
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_03",
+          "id": 3,
+          "rule": "[A-Z][0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "字母数字#×-×-×",
+          "ruleExample": "A1#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 16,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 10,
+        "villageContent": "大写英文字母后加数字#×-×-×",
+        "villageId": "P_0003",
+        "villageName": "第一城",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.3489990234375,
+        "y": 41.81380081176758
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 6,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 12,
+        "villageContent": "",
+        "villageId": "P_0004",
+        "villageName": "鑫丰御景华庭",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.38099670410156,
+        "y": 41.81019973754883
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 3,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 14,
+        "villageContent": "",
+        "villageId": "P_0005",
+        "villageName": "万科金域国际",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.3740005493164,
+        "y": 41.802799224853516
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 0,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 16,
+        "villageContent": "",
+        "villageId": "P_0006",
+        "villageName": "东环国际一期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.38300323486328,
+        "y": 41.79970169067383
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 0,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 18,
+        "villageContent": "",
+        "villageId": "P_0007",
+        "villageName": "东环国际二期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.38300323486328,
+        "y": 41.79970169067383
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 11,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 20,
+        "villageContent": "",
+        "villageId": "P_0008",
+        "villageName": "保利心语一期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.35900115966797,
+        "y": 41.80569839477539
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_02",
+          "cityProperName": "铁西",
+          "cpId": 8
+        },
+        "count": 7,
+        "deliveryTime": null,
+        "developer": null,
+        "salesPhone": null,
+        "status": 0,
+        "vId": 22,
+        "villageContent": "",
+        "villageId": "P_0009",
+        "villageName": "保利心语二期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.35900115966797,
+        "y": 41.80569839477539
+      },
+      {
+        "buildingNameRule": {
+          "buildingNameRuleId": "BNR_01",
+          "id": 1,
+          "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+          "ruleContent": "数字#×-×-×",
+          "ruleExample": "9#1-1-1"
+        },
+        "cityProper": {
+          "city": {
+            "cId": 6,
+            "cityId": "C_01",
+            "cityName": "沈阳",
+            "region": {
+              "rId": 6,
+              "regionId": "A_01",
+              "regionName": "东北区"
+            }
+          },
+          "cityProperId": "R_01",
+          "cityProperName": "皇姑",
+          "cpId": 6
+        },
+        "count": 24,
+        "deliveryTime": null,
+        "developer": "",
+        "salesPhone": "",
+        "status": 0,
+        "vId": 24,
+        "villageContent": "",
+        "villageId": "P_0010",
+        "villageName": "保利心语三期",
+        "villagePinYinAB": null,
+        "villagePinYinAll": null,
+        "x": 123.35900115966797,
+        "y": 41.80569839477539
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 243,
+    "totalRecords": 2424
+  },
+  "pinyinName": null,
+  "village": null,
+  "villageIds": null,
+  "villages": null
+}

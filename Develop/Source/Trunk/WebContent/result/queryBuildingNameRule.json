@@ -1,0 +1,223 @@
+{
+  "buildingNameRule": null,
+  "buildingNameRules": [
+    {
+      "buildingNameRuleId": "BNR_01",
+      "id": 1,
+      "rule": "[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "数字#×-×-×",
+      "ruleExample": "9#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_02",
+      "id": 2,
+      "rule": "[A-Z][0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母后加数字#×-×-×",
+      "ruleExample": "A1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_03",
+      "id": 3,
+      "rule": "[A-Z][0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母数字#×-×-×",
+      "ruleExample": "A1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_04",
+      "id": 4,
+      "rule": "[0-9]{1,3}[A-Z]#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "数字字母#×-×-×",
+      "ruleExample": "1A#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_05",
+      "id": 5,
+      "rule": "[A-Z][0-9]{1,3}#[0-9]{1,2}[0-9]{1,2}[0-9]{1,2}",
+      "ruleContent": "字母数字#×××",
+      "ruleExample": "A1#111"
+    },
+    {
+      "buildingNameRuleId": "BNR_06",
+      "id": 6,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "数字-数字#×-×-×",
+      "ruleExample": "1-1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_07",
+      "id": 7,
+      "rule": "[A-Z][0-9]{1,3}#[0-9]{1,3}",
+      "ruleContent": "字母数字#×",
+      "ruleExample": "A1#1"
+    },
+    {
+      "buildingNameRuleId": "BNR_08",
+      "id": 8,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "×-×",
+      "ruleExample": "1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_09",
+      "id": 9,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}#[0-9]{1,3}门",
+      "ruleContent": "×-×#×门",
+      "ruleExample": "1-1#1门"
+    },
+    {
+      "buildingNameRuleId": "BNR_10",
+      "id": 10,
+      "rule": "[0-9]{1,3}#[0-9]{1,3}",
+      "ruleContent": "数字#数字",
+      "ruleExample": "1#1"
+    },
+    {
+      "buildingNameRuleId": "BNR_11",
+      "id": 11,
+      "rule": "[A-Z]座#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母座#x-x-x",
+      "ruleExample": "字母座#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_12",
+      "id": 12,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "×-×#×-×-×",
+      "ruleExample": "1-1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_13",
+      "id": 13,
+      "rule": "[A-Z]座[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母座×-×-×",
+      "ruleExample": "A座1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_14",
+      "id": 14,
+      "rule": "[0-9]{1,3}\\s[0-9]{1,3}#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "× ×#×-×-×",
+      "ruleExample": "1 1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_15",
+      "id": 15,
+      "rule": ".+",
+      "ruleContent": "特殊规则",
+      "ruleExample": "任意字符"
+    },
+    {
+      "buildingNameRuleId": "BNR_16",
+      "id": 16,
+      "rule": "[A-Z]#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母#×-×-×",
+      "ruleExample": "A#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_17",
+      "id": 17,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "×-×-×",
+      "ruleExample": "1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_18",
+      "id": 18,
+      "rule": "[A-Z][0-9]-[0-9]#[0-9]{1,2}-[0-9]{1,2}-[0-9]{1,2}",
+      "ruleContent": "字母数字-数字#×-×-×",
+      "ruleExample": "A1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_19",
+      "id": 19,
+      "rule": "[A-Z][0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "字母×-×",
+      "ruleExample": "A1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_20",
+      "id": 20,
+      "rule": "[0-9]{1,3}#[0-9]{1,3}门",
+      "ruleContent": "×-×门",
+      "ruleExample": "1-1门"
+    },
+    {
+      "buildingNameRuleId": "BNR_21",
+      "id": 21,
+      "rule": "[0-9]{1,3}-[0-9]{1,3}#[0-9]{1,3}",
+      "ruleContent": "×-×#×",
+      "ruleExample": "1-1#1"
+    },
+    {
+      "buildingNameRuleId": "BNR_22",
+      "id": 22,
+      "rule": "[0-9]{1,3}#",
+      "ruleContent": "×#",
+      "ruleExample": "1#"
+    },
+    {
+      "buildingNameRuleId": "BNR_23",
+      "id": 23,
+      "rule": "[0-9]{1,3}#[0-9]{1,3}-[0-9]{1,3}门",
+      "ruleContent": "×#×-×门",
+      "ruleExample": "1#1-1门"
+    },
+    {
+      "buildingNameRuleId": "BNR_24",
+      "id": 24,
+      "rule": "[A-Z][0-9]#[A-Z]-[0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "字母数字#字母-×-×",
+      "ruleExample": "A1#A-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_25",
+      "id": 25,
+      "rule": "[A-Z]座[A-Z]-[0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "字母座字母-×-×",
+      "ruleExample": "A座A-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_26",
+      "id": 26,
+      "rule": "[0-9]{1,3}#[0-9]{1,3}门",
+      "ruleContent": "×#×门",
+      "ruleExample": "1#1门"
+    },
+    {
+      "buildingNameRuleId": "BNR_27",
+      "id": 27,
+      "rule": "[0-9]{1,3}#[A-Z][0-9]{1,3}门",
+      "ruleContent": "×#字母×门",
+      "ruleExample": "1#A1门"
+    },
+    {
+      "buildingNameRuleId": "BNR_28",
+      "id": 28,
+      "rule": "[A-Z]-[0-9]{1,3}#[0-9]{1,3}-[0-9]{1,3}-[0-9]{1,3}",
+      "ruleContent": "字母-×#×-×-×",
+      "ruleExample": "A-1#1-1-1"
+    },
+    {
+      "buildingNameRuleId": "BNR_29",
+      "id": 29,
+      "rule": "[A-Z][0-9]{1,3}#",
+      "ruleContent": "字母×#",
+      "ruleExample": "A1#"
+    },
+    {
+      "buildingNameRuleId": "BNR_30",
+      "id": 30,
+      "rule": "[A-Z][0-9]-[0-9]",
+      "ruleContent": "字母×-×",
+      "ruleExample": "A1-1"
+    }
+  ],
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

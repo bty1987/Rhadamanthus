@@ -1,0 +1,36 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "quotationBigCategorys": [
+    {
+      "id": 1,
+      "name": "基础部分"
+    },
+    {
+      "id": 2,
+      "name": "木作及油饰"
+    },
+    {
+      "id": 3,
+      "name": "隐蔽工程"
+    },
+    {
+      "id": 4,
+      "name": "其他部分"
+    },
+    {
+      "id": 5,
+      "name": "综合部分"
+    },
+    {
+      "id": 6,
+      "name": "管理费"
+    }
+  ],
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -40,12 +40,17 @@
 		params.hostServer = window.hostServer;
 		
         //创建地图函数
-		var mp = new BMap.Map("allmap"); // 在百度地图容器中创建一个地图 
+		var mp = new BMap.Map("allmap", {enableMapClick:false}); // 在百度地图容器中创建一个地图 
 		var point = new BMap.Point(123.38497,41.810947);//定义一个中心点
 		mp.centerAndZoom(point, 15); // 设定地图中心和坐标并将地图显示在地图容器中
 		mp.setMapStyle({style:'light'});
 		mp.enableKeyboard();
 		mp.enableScrollWheelZoom(true);
+		
+		function showInfo(e){
+	        alert(e.point.lng + ", " + e.point.lat);
+	    }
+	    mp.addEventListener("click", showInfo);
         
         //自定义覆盖物  
 		function ComplexCustomOverlay(point, text, mouseoverText){  
@@ -122,25 +127,7 @@
 
 		var points = [];
 		
-		com.post(api.data.queryVillage, {}, function(res){
 		
-			var villages = res.villages;
-			
-			for(var i=0;i<villages.length;i++){
-			
-				var village = villages[i];
-				var villageName = village.villageName;
-				var x = village.x;
-				var y = village.y;
-				var count = village.count;
-				var comment = villageName + "已完成订单" + count + "套";
-	
-				var address = new BMap.Point(point.lng, point.lat);
-				var mytext = new ComplexCustomOverlay(new BMap.Point(x, y), villageName, comment); //控制标注地址和备注信息
-				
-				mp.addOverlay(mytext);
-			}
-		}, null, false);
         
 </script>  
 </body>  

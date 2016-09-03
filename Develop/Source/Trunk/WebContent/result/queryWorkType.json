@@ -1,0 +1,62 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷",
+  "workTypes": [
+    {
+      "id": 1,
+      "name": "力",
+      "workTypeDes": ""
+    },
+    {
+      "id": 2,
+      "name": "水",
+      "workTypeDes": ""
+    },
+    {
+      "id": 3,
+      "name": "电",
+      "workTypeDes": ""
+    },
+    {
+      "id": 4,
+      "name": "瓦",
+      "workTypeDes": ""
+    },
+    {
+      "id": 5,
+      "name": "木",
+      "workTypeDes": ""
+    },
+    {
+      "id": 6,
+      "name": "油",
+      "workTypeDes": ""
+    },
+    {
+      "id": 7,
+      "name": "铲大白",
+      "workTypeDes": ""
+    },
+    {
+      "id": 8,
+      "name": "保洁",
+      "workTypeDes": ""
+    },
+    {
+      "id": 9,
+      "name": "综合",
+      "workTypeDes": ""
+    },
+    {
+      "id": 10,
+      "name": "其他",
+      "workTypeDes": ""
+    }
+  ]
+}

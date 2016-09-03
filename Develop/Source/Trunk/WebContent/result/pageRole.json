@@ -1,0 +1,66 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "locale": "zh_CN",
+  "paging": {
+    "data": [
+      {
+        "roleDes": "ERP",
+        "roleId": "R_36",
+        "roleName": "ERP主管"
+      },
+      {
+        "roleDes": "ERP",
+        "roleId": "R_37",
+        "roleName": "ERP开发专员"
+      },
+      {
+        "roleDes": "系统里没有此角色不用管",
+        "roleId": "R_04",
+        "roleName": "业务员"
+      },
+      {
+        "roleDes": "",
+        "roleId": "R_51",
+        "roleName": "主材前台"
+      },
+      {
+        "roleDes": "",
+        "roleId": "R_34",
+        "roleName": "主材前台收款"
+      },
+      {
+        "roleDes": "",
+        "roleId": "R_42",
+        "roleName": "主材客服"
+      },
+      {
+        "roleDes": "主材导购",
+        "roleId": "R_07",
+        "roleName": "主材导购"
+      },
+      {
+        "roleDes": "",
+        "roleId": "R_41",
+        "roleName": "主材核算"
+      },
+      {
+        "roleDes": "",
+        "roleId": "R_53",
+        "roleName": "主材点位"
+      }
+    ],
+    "noPage": 0,
+    "page": 1,
+    "rows": 10,
+    "totalPage": 6,
+    "totalRecords": 52
+  },
+  "role": null,
+  "roleId": "R_50",
+  "roleIds": null,
+  "roleList": [],
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

@@ -1,0 +1,166 @@
+{
+  "company": 0,
+  "errorCode": 0,
+  "errorMsg": null,
+  "functionAreaItem": {
+    "faiId": null,
+    "functionArea": {
+      "faId": 4,
+      "functionAreaId": null,
+      "functionAreaName": null,
+      "functionAreaOrder": 0,
+      "functionAreaType": "综合项目",
+      "version": null,
+      "versionId": null
+    },
+    "quotationItem": null
+  },
+  "functionAreaItems": [
+    {
+      "faiId": 102,
+      "functionArea": {
+        "faId": 4,
+        "functionAreaId": "D_004",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 0,
+        "functionAreaType": null,
+        "version": "rrewt",
+        "versionId": null
+      },
+      "quotationItem": {
+        "discount": null,
+        "itemId": "QI38000",
+        "itemName": "远程运输费(150平以下)",
+        "measurementUnit": "项",
+        "measurementUnitId": 12,
+        "qiId": 362,
+        "quotationBigCategory": "综合部分",
+        "quotationBigCategoryId": 5,
+        "quotationClassification": "综合项目",
+        "quotationClassificationId": 4,
+        "quotationItemDes": null,
+        "quotationSmallCategory": "综合项目",
+        "quotationSmallCategoryId": 20,
+        "quotationType": "普通",
+        "quotationTypeId": 1,
+        "status": null,
+        "unitPrice": 300.0,
+        "version": "rrewt",
+        "versionId": "QV_001",
+        "workType": "其他",
+        "workTypeId": 10
+      }
+    },
+    {
+      "faiId": 54,
+      "functionArea": {
+        "faId": 4,
+        "functionAreaId": "D_004",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 0,
+        "functionAreaType": null,
+        "version": "rrewt",
+        "versionId": null
+      },
+      "quotationItem": {
+        "discount": null,
+        "itemId": "QI38100",
+        "itemName": "远程运输费(150-200平)",
+        "measurementUnit": "项",
+        "measurementUnitId": 12,
+        "qiId": 363,
+        "quotationBigCategory": "综合部分",
+        "quotationBigCategoryId": 5,
+        "quotationClassification": "综合项目",
+        "quotationClassificationId": 4,
+        "quotationItemDes": null,
+        "quotationSmallCategory": "综合项目",
+        "quotationSmallCategoryId": 20,
+        "quotationType": "普通",
+        "quotationTypeId": 1,
+        "status": null,
+        "unitPrice": 600.0,
+        "version": "rrewt",
+        "versionId": "QV_001",
+        "workType": "其他",
+        "workTypeId": 10
+      }
+    },
+    {
+      "faiId": 55,
+      "functionArea": {
+        "faId": 4,
+        "functionAreaId": "D_004",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 0,
+        "functionAreaType": null,
+        "version": "rrewt",
+        "versionId": null
+      },
+      "quotationItem": {
+        "discount": null,
+        "itemId": "QI38200",
+        "itemName": "远程运输费(200平以上)",
+        "measurementUnit": "项",
+        "measurementUnitId": 12,
+        "qiId": 364,
+        "quotationBigCategory": "综合部分",
+        "quotationBigCategoryId": 5,
+        "quotationClassification": "综合项目",
+        "quotationClassificationId": 4,
+        "quotationItemDes": null,
+        "quotationSmallCategory": "综合项目",
+        "quotationSmallCategoryId": 20,
+        "quotationType": "普通",
+        "quotationTypeId": 1,
+        "status": null,
+        "unitPrice": 1000.0,
+        "version": "rrewt",
+        "versionId": "QV_001",
+        "workType": "其他",
+        "workTypeId": 10
+      }
+    },
+    {
+      "faiId": 101,
+      "functionArea": {
+        "faId": 4,
+        "functionAreaId": "D_004",
+        "functionAreaName": "综合项目",
+        "functionAreaOrder": 0,
+        "functionAreaType": null,
+        "version": "rrewt",
+        "versionId": null
+      },
+      "quotationItem": {
+        "discount": null,
+        "itemId": "QI_02156",
+        "itemName": "车运费",
+        "measurementUnit": "公里",
+        "measurementUnitId": 7,
+        "qiId": 683,
+        "quotationBigCategory": "综合部分",
+        "quotationBigCategoryId": 5,
+        "quotationClassification": "综合项目",
+        "quotationClassificationId": 4,
+        "quotationItemDes": null,
+        "quotationSmallCategory": "综合项目",
+        "quotationSmallCategoryId": 20,
+        "quotationType": "普通",
+        "quotationTypeId": 1,
+        "status": null,
+        "unitPrice": 0.1,
+        "version": "rrewt",
+        "versionId": "QV_001",
+        "workType": "综合",
+        "workTypeId": 9
+      }
+    }
+  ],
+  "ids": null,
+  "locale": "zh_CN",
+  "paging": null,
+  "roleId": "R_50",
+  "userId": "FL_03051",
+  "userName": "刘婷婷"
+}

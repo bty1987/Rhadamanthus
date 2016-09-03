@@ -1,0 +1,15 @@
+{
+    "salaryTypeList": [
+	    {"key":"报价扣款","value":"报价扣款"},
+		{"key":"考勤扣款","value":"考勤扣款"},
+		{"key":"保险扣款","value":"保险扣款"},
+		{"key":"其他扣款","value":"其他扣款"},
+		{"key":"月度奖金","value":"月度奖金"},
+		{"key":"季度奖金","value":"季度奖金"},
+		{"key":"年终奖金","value":"年终奖金"},
+		{"key":"其他奖金","value":"其他奖金"},
+		{"key":"补款","value":"补款"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}
