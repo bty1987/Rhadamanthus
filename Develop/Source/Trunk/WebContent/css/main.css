@@ -431,3 +431,57 @@ ul.fl-inline-list li{
 	background-repeat:repeat-x;
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
 }
+#mapContainer{
+    border:1px solid slategray;
+    height: 371px;
+    /*width: 540px;*/
+    margin: auto;
+}
+
+#mapContainer .position-mark{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #BC3B3A;
+}
+
+#mapContainer .position-mark .txt{
+    position: absolute;
+    left: -9px;
+    top: -36px;
+    padding: 3px 6px;
+    border: 1px solid #BC3B3A;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 12px;
+    line-height: 18px;
+    white-space: nowrap;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#mapContainer .position-mark .arrow-border{
+    position: absolute;
+    top: 24px;
+    left: 8px;
+    width: 0;
+    height:0;
+    border-style: solid;
+    border-width: 12px 5px;
+    border-color: #BC3B3A transparent transparent transparent;
+    overflow: hidden;
+}
+
+#mapContainer .position-mark .arrow{
+    position: absolute;
+    top: 22px;
+    left: 8px;
+    width: 0;
+    height:0;
+    border-style: solid;
+    border-width: 12px 5px;
+    border-color: #fff transparent transparent transparent;
+    overflow: hidden;
+}

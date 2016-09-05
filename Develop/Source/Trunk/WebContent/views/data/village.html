@@ -110,8 +110,56 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="mapModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">楼盘地址</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" id="mapForm">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="villageId">楼盘编号</label>
+							<div class="col-sm-9">
+								<input disabled type="text" name="villageId" maxlength="10" class="col-xs-10 col-sm-6 v_required v_villageId" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="villageName">楼盘名称</label>
+							<div class="col-sm-9">
+								<!-- 								<input class="col-xs-10 col-sm-6 v_required v_villageName input-mask-villageName" type="text" id="villageName" data-toggle="popover" data-trigger='manual'/> -->
+								<input disabled class="col-xs-10 col-sm-6 v_required v_name" maxlength="20" type="text" name="villageName" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<a name="resetPositionBtn" class="btn btn-minier btn-warning">重选位置</a>
+							<a class="btn btn-minier btn-success" name="resetMapBtn">重新加载地图</a>
+						</div>
+
+						<div class="form-group" id="mapContainer"></div>
+						<div class="space-4"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveMapBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
+	$.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx');
 	$.getScript('js/data/village.js?version=' + versionCode);
 </script>
