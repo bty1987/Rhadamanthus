@@ -14,7 +14,7 @@
         "functionAreaName": "综合项目",
         "functionAreaOrder": 7,
         "functionAreaType": "综合项目",
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001"
       },
       {
@@ -23,7 +23,7 @@
         "functionAreaName": "自定义功能区",
         "functionAreaOrder": 1,
         "functionAreaType": "普通",
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001"
       },
       {
@@ -32,7 +32,7 @@
         "functionAreaName": "卧室",
         "functionAreaOrder": 3,
         "functionAreaType": "普通",
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001"
       },
       {
@@ -106,6 +106,6 @@
     "totalRecords": 16
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

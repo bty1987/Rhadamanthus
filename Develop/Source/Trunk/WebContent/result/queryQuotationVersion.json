@@ -22,7 +22,7 @@
       "trafficRate": 0.0,
       "versionDes": "fgsdfgsdfg",
       "versionId": "QV_001",
-      "versionName": "rrewt"
+      "versionName": "QV_002"
     },
     {
       "defaultFlag": 0,
@@ -152,7 +152,7 @@
     }
   ],
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷",
+  "userId": "03051",
+  "userName": "刘晓斌",
   "versionId": null
 }

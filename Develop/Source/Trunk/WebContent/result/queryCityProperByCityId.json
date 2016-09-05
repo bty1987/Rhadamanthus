@@ -24,7 +24,7 @@
         }
       },
       "cityProperId": "R_01",
-      "cityProperName": "皇姑",
+      "cityProperName": "",
       "cpId": 6
     },
     {
@@ -39,7 +39,7 @@
         }
       },
       "cityProperId": "R_02",
-      "cityProperName": "铁西",
+      "cityProperName": "",
       "cpId": 8
     },
     {
@@ -84,7 +84,7 @@
         }
       },
       "cityProperId": "R_05",
-      "cityProperName": "沈北",
+      "cityProperName": "",
       "cpId": 14
     },
     {
@@ -304,6 +304,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

@@ -36,8 +36,8 @@
     {
       "content": "111",
       "createTime": "2016-08-22",
-      "createrId": "FL-00479",
-      "createrName": "白添宇",
+      "createrId": "00479",
+      "createrName": "白帝忠",
       "customerName": null,
       "decorationStyle": "现代简约",
       "designDepartmentName": null,
@@ -62,8 +62,8 @@
     {
       "content": "",
       "createTime": "2016-08-13",
-      "createrId": "FL-00479",
-      "createrName": "白添宇",
+      "createrId": "00479",
+      "createrName": "白帝忠",
       "customerName": null,
       "decorationStyle": "现代简约",
       "designDepartmentName": null,
@@ -88,8 +88,8 @@
     {
       "content": "111",
       "createTime": "2016-08-07",
-      "createrId": "FL-00478",
-      "createrName": "陆爽",
+      "createrId": "00478",
+      "createrName": "金龙",
       "customerName": null,
       "decorationStyle": "现代简约",
       "designDepartmentName": null,
@@ -113,6 +113,6 @@
     }
   ],
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

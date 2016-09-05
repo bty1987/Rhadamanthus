@@ -69,8 +69,8 @@
       "ident": 1954,
       "isLeaf": true,
       "level": 0,
-      "materialBrandName": "箭牌卫浴",
-      "materialModelName": "箭牌卫浴AB1208",
+      "materialBrandName": "卫浴",
+      "materialModelName": "卫浴AB1208",
       "materialModelNo": "JPWY0002",
       "materialPurchasePrice": 1.0,
       "materialTypeName": "洁具",
@@ -96,6 +96,6 @@
   "msorIds": null,
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

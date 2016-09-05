@@ -8,7 +8,7 @@
       "glcswId": 17,
       "orderId": "1603230005",
       "workerDuty": "地面找平",
-      "workerId": "FL-00720",
+      "workerId": "00720",
       "workerName": "崔跃亮",
       "workerOldId": "GR.03.001",
       "workerPhone": "13840043143",
@@ -44,6 +44,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

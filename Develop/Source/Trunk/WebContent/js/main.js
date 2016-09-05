@@ -12,7 +12,10 @@ $(function(){
     
 	com.post(api.common.createTree, {}, loadTreeCallback);
 	com.post(api.common.wmCode, {}, function(res){
-		params.watermark = res.watermark;
+		var img = new Image();
+		img.src = res.watermark;
+		url = 'url("' + img.src + '")'
+		$("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
 	}, null, false);
 	
 	var img = new Image();

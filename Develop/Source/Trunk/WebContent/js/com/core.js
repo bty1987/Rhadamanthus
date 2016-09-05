@@ -44,9 +44,6 @@ com = {
 		
 		if(config.demo){
 			
-			console.log(url.url);
-			console.log(url.demo);
-			
 			if(!url.demo){
 				com.showAlert(com.warning, "Demo状态不能完成此操作");
 				return;
@@ -57,8 +54,6 @@ com = {
 			url = server + url.url;
 			opts["authentication"] = params.authentication;
 		}
-		
-		console.log(url);
 		
 		$.ajax({
 			url: url,

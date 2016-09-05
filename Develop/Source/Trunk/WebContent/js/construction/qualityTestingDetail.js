@@ -347,7 +347,7 @@ jQuery(function($) {
 					$("#chanWorkerEnter").css("display", "none");
 					$("#chanWorkerInfo").css("display", "block");
 					
-					$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					com.showImg($("#chanWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").text(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 				}else{
 					$("#chanWorkerEnter").css("display", "block");
@@ -375,7 +375,7 @@ jQuery(function($) {
 							$("#chanWorkerEnter").css("display", "none");
 							$("#chanWorkerInfo").css("display", "block");
 							
-							$("#chanWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+							com.showImg($("#chanWorkerImg"), workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
 							$("#chanWorkerNameSpan").text(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 							
 							com.showAlert(com.info, "工人信息提交成功!");
@@ -423,7 +423,7 @@ jQuery(function($) {
 					$("#fangWorkerEnter").css("display", "none");
 					$("#fangWorkerInfo").css("display", "block");
 					
-					$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+element.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", element.workerId+"'s Photo");
+					com.showImg($("#fangWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 					$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 				}else{
 					$("#fangWorkerEnter").css("display", "block");
@@ -452,7 +452,7 @@ jQuery(function($) {
 							$("#fangWorkerEnter").css("display", "none");
 							$("#fangWorkerInfo").css("display", "block");
 							
-							$("#fangWorkerImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime()).attr("alt", workerInfo.workerId+"'s Photo");
+							com.showImg($("#fangWorkerImg"), workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
 							$("#fangWorkerNameSpan").html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty);
 							
 							com.showAlert(com.info, "工人信息提交成功!");
@@ -570,7 +570,7 @@ jQuery(function($) {
 							var profileImg = $('<img id="workerImg" src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(profileDiv);
 							
 							if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-								profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+								com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
 							}
 							
 							var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -602,7 +602,7 @@ jQuery(function($) {
 						var profileImg = $('<img src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(profileDiv);
 						
 						if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
-							profileImg.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.workerPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
+							com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
 						}
 						
 						var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
@@ -654,20 +654,9 @@ jQuery(function($) {
 					
 					var drawing = drawings[i];
 					
-					if(drawing.type == 0){
-						imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-						imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
-					}else{
-						imgAddUrl = config.dmedia + drawing.drawingUrl + '_150x150.' + drawing.drawingUrl.split('.')[1] + '?timestamp='+ new Date().getTime();
-						imgUrl = config.dmedia + drawing.drawingUrl + '?timestamp='+ new Date().getTime();
-					}
-					
-					var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-					var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+drawing.drawingUrl+'&timestamp='+ new Date().getTime();
-					
 					options[operate.drawingName+"."+operate.drawingId] = drawing[operate.drawingId];
 					
-					appendGalleryElement(qualityTestingDetail.qualityGalleryId, drawing[operate.drawingId], imgUrl, imgAddUrl, "", operate.deleteDrawingUrl, options);
+					appendGalleryElement(qualityTestingDetail.qualityGalleryId, drawing[operate.drawingId], drawing.drawingUrl, drawing.type, "", operate.deleteDrawingUrl, options);
 				}
 			});
 			
@@ -749,14 +738,11 @@ function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, dele
 				options[name+".drawingUrl"] = dateObj.resUrl;
 				options[name+".drawingAddUrl"] = "";
 				
-				var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime();
-				var imgUrl = config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime();
-				
 				com.post(addUrl, options, function(res){
 					var drawing = res[name];
 					var args = {};
 					args[name+"."+drawingId] = res[name][drawingId];
-					appendGalleryElement(galleryId, drawing[id], imgUrl, imgAddUrl, "", deleteUrl, args);
+					appendGalleryElement(galleryId, drawing[id], dateObj.resUrl, 0, "", deleteUrl, args);
 				});
 			}else{
 				console.log(data);
@@ -765,12 +751,12 @@ function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, dele
     });
 }
 
-function appendGalleryElement(galleryId, imgId, imgUrl, imgAddUrl, editUrl, deleteUrl, options){
+function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, options){
 	
 	var gallery = $("#"+galleryId);
 	var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-	var imgA = $("<a></a>").attr("href", imgUrl).attr("data-rel", "colorbox").css("height", "150px").appendTo(imgLi);
-	$("<img></img>").attr("src", imgAddUrl).attr("alt", "暂无照片").appendTo(imgA);
+	var img = $('<img></img>');
+	var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
 	var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 	var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
 		com.post(deleteUrl, options, function(res){

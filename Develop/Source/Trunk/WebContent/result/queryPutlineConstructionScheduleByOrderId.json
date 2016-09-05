@@ -21,7 +21,7 @@
     "supervisorRaty": 0,
     "supervisorRatyDes": null,
     "workerDuty": "放线小组",
-    "workerId": "FL_02674",
+    "workerId": "02674",
     "workerName": "陈朋",
     "workerOldId": "FXJL.001",
     "workerPhone": "13811111111",
@@ -33,6 +33,6 @@
   "putlineDrawing": null,
   "putlineDrawings": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

@@ -30,18 +30,18 @@
         "collectUserId": null,
         "collectUserName": null,
         "createTime": null,
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "customerId": null,
         "customerName": "白先生",
         "des": null,
         "installment": null,
         "installmentBankName": null,
-        "materialBrandName": "蒙娜丽莎",
+        "materialBrandName": "娜莎",
         "materialTypeName": "瓷砖",
         "moId": 5,
         "mopId": 6,
-        "orderAddr": "保利心语三期 4#4-5-7",
+        "orderAddr": "美景三期 4#4-5-7",
         "orderId": "1607290003",
         "paymentStatus": 0,
         "paymentType": 0,
@@ -55,6 +55,6 @@
     "totalRecords": 1
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

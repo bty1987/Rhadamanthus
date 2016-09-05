@@ -2,7 +2,7 @@
   "designerDepartments": [
     {
       "createTime": null,
-      "designerDeptId": "FL_DD_01",
+      "designerDeptId": "DD_01",
       "designerDeptName": "大东分公司",
       "designerRegionId": null,
       "designerRegionName": null,
@@ -11,7 +11,7 @@
     },
     {
       "createTime": null,
-      "designerDeptId": "FL_DD_03",
+      "designerDeptId": "DD_03",
       "designerDeptName": "设计中心九部",
       "designerRegionId": null,
       "designerRegionName": null,
@@ -20,7 +20,7 @@
     },
     {
       "createTime": null,
-      "designerDeptId": "FL_DD_04",
+      "designerDeptId": "DD_04",
       "designerDeptName": "设计中心十部",
       "designerRegionId": null,
       "designerRegionName": null,

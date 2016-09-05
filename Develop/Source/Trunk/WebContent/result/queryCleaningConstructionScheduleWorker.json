@@ -28,9 +28,9 @@
       "csId": 0,
       "orderId": "1603230005",
       "workerDuty": "保洁",
-      "workerId": "FL-00660",
+      "workerId": "00660",
       "workerName": "代福昌",
-      "workerOldId": "FL-00660",
+      "workerOldId": "00660",
       "workerPhone": "",
       "workerPhoto": null,
       "workerRaty": 0,
@@ -43,7 +43,7 @@
       "csId": 0,
       "orderId": "1603230005",
       "workerDuty": "工程部质检,保洁工",
-      "workerId": "FL-02038",
+      "workerId": "02038",
       "workerName": "方章桃",
       "workerOldId": "ZJ.0028",
       "workerPhone": "13904030959",
@@ -59,6 +59,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

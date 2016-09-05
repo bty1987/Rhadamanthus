@@ -9,25 +9,25 @@
   "materialBrandCounts": [
     {
       "createTime": null,
-      "materialBrand": "安华卫浴",
+      "materialBrand": "盛发卫浴",
       "mbcId": null,
       "total": 12488.0
     },
     {
       "createTime": null,
-      "materialBrand": "箭牌卫浴",
+      "materialBrand": "卫浴",
       "mbcId": null,
       "total": 501109.7
     },
     {
       "createTime": null,
-      "materialBrand": "达尔玛",
+      "materialBrand": "玛达",
       "mbcId": null,
       "total": 1000.0
     },
     {
       "createTime": null,
-      "materialBrand": "金意陶",
+      "materialBrand": "瓷砖",
       "mbcId": null,
       "total": 122137.95
     }
@@ -37,6 +37,6 @@
   "paging": null,
   "reportType": 1,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

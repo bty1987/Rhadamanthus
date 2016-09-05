@@ -7,7 +7,7 @@
     "backVisitType": 0,
     "csbvId": 0,
     "customerName": "王先生",
-    "orderAddr": "凯旋门三期",
+    "orderAddr": "盛夏一期",
     "orderId": "1510220003"
   },
   "errorCode": 0,
@@ -21,7 +21,7 @@
         "backVisitType": 1,
         "csbvId": 1,
         "customerName": "王先生",
-        "orderAddr": "凯旋门三期",
+        "orderAddr": "盛夏一期",
         "orderId": "1510220003"
       }
     ],
@@ -32,6 +32,6 @@
     "totalRecords": 1
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

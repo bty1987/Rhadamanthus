@@ -6,8 +6,8 @@
   "ranks": [
     {
       "createTime": "2016-05-19",
-      "designerId": "FL-00168",
-      "designerName": "杜若平",
+      "designerId": "00168",
+      "designerName": "金龙",
       "endTime": "2016-05-19",
       "mdrId": 6,
       "rank": 250567.0,
@@ -15,8 +15,8 @@
     },
     {
       "createTime": "2015-10-28",
-      "designerId": "FL-00186",
-      "designerName": "白雪峰",
+      "designerId": "00186",
+      "designerName": "赵芳",
       "endTime": "2015-10-28",
       "mdrId": 3,
       "rank": 163721.0,
@@ -24,8 +24,8 @@
     },
     {
       "createTime": "2016-05-22",
-      "designerId": "FL-00237",
-      "designerName": "李博文",
+      "designerId": "00237",
+      "designerName": "王越",
       "endTime": "2016-05-22",
       "mdrId": 7,
       "rank": 90210.0,
@@ -33,8 +33,8 @@
     },
     {
       "createTime": "2015-10-28",
-      "designerId": "FL-00277",
-      "designerName": "白旭坤",
+      "designerId": "00277",
+      "designerName": "邓红",
       "endTime": "2015-10-28",
       "mdrId": 4,
       "rank": 82169.0,
@@ -42,8 +42,8 @@
     },
     {
       "createTime": "2016-08-07",
-      "designerId": "FL-00157",
-      "designerName": "班馨月",
+      "designerId": "00157",
+      "designerName": "王平",
       "endTime": "2016-08-07",
       "mdrId": 12,
       "rank": 21453.0,
@@ -51,8 +51,8 @@
     },
     {
       "createTime": "2016-08-04",
-      "designerId": "FL-00160",
-      "designerName": "高娜",
+      "designerId": "00160",
+      "designerName": "赵忱",
       "endTime": "2016-08-04",
       "mdrId": 10,
       "rank": 16220.0,
@@ -60,38 +60,11 @@
     },
     {
       "createTime": "2016-08-06",
-      "designerId": "FL-00142",
-      "designerName": "刘浩",
+      "designerId": "00142",
+      "designerName": "刘月",
       "endTime": "2016-08-06",
       "mdrId": 11,
       "rank": 7028.0,
-      "status": 0
-    },
-    {
-      "createTime": "2015-05-25",
-      "designerId": "shejishi2",
-      "designerName": "设计师2",
-      "endTime": "2015-05-25",
-      "mdrId": 2,
-      "rank": 4720.0,
-      "status": 0
-    },
-    {
-      "createTime": "2016-07-12",
-      "designerId": "FL-00166",
-      "designerName": "刘芳芳",
-      "endTime": "2016-07-12",
-      "mdrId": 9,
-      "rank": 3684.0,
-      "status": 0
-    },
-    {
-      "createTime": "2016-04-30",
-      "designerId": "FL-00206",
-      "designerName": "何伟",
-      "endTime": "2016-04-30",
-      "mdrId": 5,
-      "rank": 2360.0,
       "status": 0
     }
   ]

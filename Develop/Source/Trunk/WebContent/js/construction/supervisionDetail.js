@@ -968,7 +968,7 @@ function initUploadBtn(operate, element){
 				
 				com.post(operate.addDrawingUrl, options, function(res){
 					var drawing = res[operate.drawingName];
-					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], dateObj.resUrl, drawing.type, "", operate.deleteDrawingUrl, operate);
+					appendGalleryElement(operate.galleryId, drawing[operate.drawingId], dateObj.resUrl, 0, "", operate.deleteDrawingUrl, operate);
 				});
 			}else{
 				console.log(data);

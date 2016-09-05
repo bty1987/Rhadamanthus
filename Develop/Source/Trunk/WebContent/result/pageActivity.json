@@ -10,45 +10,45 @@
   "paging": {
     "data": [
       {
-        "activityName": "测试",
+        "activityName": "国庆活动",
         "aid": 4,
         "content": "",
         "createTime": "2016-06-28 13:46:23",
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "endTime": "2016-06-03 23:59:59",
         "startTime": "2016-06-01 00:00:00",
         "status": 1
       },
       {
-        "activityName": "test2",
+        "activityName": "主材活动",
         "aid": 5,
         "content": "",
         "createTime": "2016-06-28 17:24:53",
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "endTime": "2016-06-29 23:59:59",
         "startTime": "2016-06-01 00:00:00",
         "status": 1
       },
       {
-        "activityName": "测试",
+        "activityName": "七一活动",
         "aid": 6,
         "content": "",
         "createTime": "2016-06-28 17:25:05",
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "endTime": "2016-06-29 23:59:59",
         "startTime": "2016-06-01 00:00:00",
         "status": 1
       },
       {
-        "activityName": "aaa",
+        "activityName": "年中活动",
         "aid": 11,
         "content": "",
         "createTime": "2016-08-24 09:12:27",
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "endTime": "2016-08-31 23:59:59",
         "startTime": "2016-08-04 00:00:00",
         "status": 0
@@ -61,6 +61,6 @@
     "totalRecords": 4
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

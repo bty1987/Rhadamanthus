@@ -100,8 +100,7 @@ jQuery(function($) {
 				var dateObj=eval("("+data+")");
 				if(dateObj.errorCode == 0){
 				 	$("#picture").val(dateObj.resUrl);
-				 	$("#showImg").attr("src", config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
-				 	$("#infoPicture").attr("href", config.media + api.common.showImg.url + '?imgBasePath='+dateObj.resUrl+'&timestamp='+ new Date().getTime());
+				 	$("#infoPicture").attr("href", com.showImg($("#showImg"), dateObj.resUrl, 150, 150, ''));
 				}else{
 					alert(data);
 				}

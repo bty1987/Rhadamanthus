@@ -1,26 +1,26 @@
 {
   "company": 0,
   "constructionSchedule": {
-    "bricklayQualityId": "FL-02035",
+    "bricklayQualityId": "02035",
     "bricklayQualityName": null,
-    "carpentQualityId": "FL-02031",
+    "carpentQualityId": "02031",
     "carpentQualityName": null,
-    "chanQualityId": "FL-02037",
+    "chanQualityId": "02037",
     "chanQualityName": null,
-    "cleaningQualityId": "FL-02038",
+    "cleaningQualityId": "02038",
     "cleaningQualityName": null,
     "csId": 4,
-    "oilQualityId": "FL-02040",
+    "oilQualityId": "02040",
     "oilQualityName": null,
     "orderId": "1510220003",
     "powerQualityId": null,
     "powerQualityName": null,
-    "putlineQualityId": "FL_02063",
+    "putlineQualityId": "02063",
     "putlineQualityName": null,
     "schedule": 3,
-    "supervisorQualityId": "FL-00479",
+    "supervisorQualityId": "00479",
     "supervisorQualityName": null,
-    "waterwayCircuitPowerQualityId": "FL-02026",
+    "waterwayCircuitPowerQualityId": "02026",
     "waterwayCircuitPowerQualityName": null
   },
   "constructionScheduleWorkers": null,
@@ -29,6 +29,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

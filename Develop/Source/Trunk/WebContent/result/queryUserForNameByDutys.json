@@ -1,7 +1,7 @@
 {
   "autoFillKeyValue": [
     {
-      "key": "FL_02063",
+      "key": "02063",
       "value": "王芳-放线部"
     }
   ],
@@ -23,7 +23,7 @@
   "roleId": "R_50",
   "roleList": [],
   "user": null,
-  "userId": "FL_03051",
+  "userId": "03051",
   "userIds": null,
-  "userName": "刘婷婷"
+  "userName": "刘晓斌"
 }

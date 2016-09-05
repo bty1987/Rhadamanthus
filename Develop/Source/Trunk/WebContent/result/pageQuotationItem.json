@@ -23,7 +23,7 @@
         "quotationTypeId": 1,
         "status": 0,
         "unitPrice": 100.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "力",
         "workTypeId": 1
@@ -69,7 +69,7 @@
         "quotationTypeId": 1,
         "status": 0,
         "unitPrice": 10.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "力",
         "workTypeId": 1
@@ -115,7 +115,7 @@
         "quotationTypeId": 1,
         "status": 0,
         "unitPrice": 4.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "油",
         "workTypeId": 6
@@ -161,7 +161,7 @@
         "quotationTypeId": 1,
         "status": 0,
         "unitPrice": 16.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "油",
         "workTypeId": 6
@@ -207,7 +207,7 @@
         "quotationTypeId": 1,
         "status": 0,
         "unitPrice": 24.5,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "油",
         "workTypeId": 6
@@ -244,6 +244,6 @@
   },
   "quotationItem": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

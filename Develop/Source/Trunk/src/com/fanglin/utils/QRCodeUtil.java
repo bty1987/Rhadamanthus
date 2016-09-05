@@ -82,7 +82,7 @@ public class QRCodeUtil {
 	
 	public static void main(String[] args) {
 		
-        String contents = "http://61.161.185.22//dingding/login/login.html?loginFlag=726f19f84a214b2594fa3aefe502ea5a";
+        String contents = "By Baitianyu Email bty1987@163.com";
   
         int width = 210, height = 210;
   

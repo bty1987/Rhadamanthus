@@ -543,6 +543,13 @@
               "name": "场外结算",
               "sub": [],
               "url": "\/views\/material\/materialOutside.html"
+            },
+            {
+              "icon": "icon-pencil",
+              "id": 82,
+              "name": "收货确认",
+              "sub": [],
+              "url": "\/views\/material\/materialOrderArrival.html"
             }
           ],
           "url": "#"
@@ -628,6 +635,13 @@
           "id": 17,
           "name": "日志",
           "sub": [
+            {
+              "icon": "icon-pencil",
+              "id": 23,
+              "name": "日志",
+              "sub": [],
+              "url": "\/views\/log\/actionLog.html"
+            },
             {
               "icon": "icon-pencil",
               "id": 34,

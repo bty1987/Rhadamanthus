@@ -8,7 +8,7 @@
       "ocswId": 6,
       "orderId": "1603230005",
       "workerDuty": "油工",
-      "workerId": "FL-01752",
+      "workerId": "01752",
       "workerName": "曹广宝",
       "workerOldId": "GR.07.003",
       "workerPhone": "15640591329",
@@ -23,7 +23,7 @@
       "ocswId": 7,
       "orderId": "1603230005",
       "workerDuty": "油工",
-      "workerId": "FL-01919",
+      "workerId": "01919",
       "workerName": "査冯才",
       "workerOldId": "GR.07.379",
       "workerPhone": "15040182335",
@@ -59,6 +59,6 @@
   "oilDrawings": null,
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }
