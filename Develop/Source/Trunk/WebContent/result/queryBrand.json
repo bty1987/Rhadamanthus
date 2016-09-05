@@ -7,7 +7,7 @@
     {
       "bid": 9,
       "brandId": "B_001",
-      "brandName": "嘉宝莉",
+      "brandName": "地板",
       "brandNamePinyin": "jiabaoli",
       "categoryId": "C_001",
       "categoryName": "涂料",
@@ -52,7 +52,7 @@
     {
       "bid": 14,
       "brandId": "B_006",
-      "brandName": "蒙娜丽莎",
+      "brandName": "娜莎",
       "brandNamePinyin": "mengnalisha",
       "categoryId": "C_002",
       "categoryName": "瓷砖",
@@ -79,7 +79,7 @@
     {
       "bid": 17,
       "brandId": "B_010",
-      "brandName": "达尔玛",
+      "brandName": "玛达",
       "brandNamePinyin": "[daerma]",
       "categoryId": "C_006",
       "categoryName": "水槽",
@@ -106,7 +106,7 @@
     {
       "bid": 20,
       "brandId": "B_013",
-      "brandName": "箭牌卫浴",
+      "brandName": "卫浴",
       "brandNamePinyin": "[jianpaiweiyu]",
       "categoryId": "C_009",
       "categoryName": "洁具",
@@ -115,7 +115,7 @@
     {
       "bid": 21,
       "brandId": "B_014",
-      "brandName": "箭牌卫浴",
+      "brandName": "卫浴",
       "brandNamePinyin": "[jianpaiweiyu]",
       "categoryId": "C_010",
       "categoryName": "陶瓷盆",
@@ -124,7 +124,7 @@
     {
       "bid": 22,
       "brandId": "B_015",
-      "brandName": "安华卫浴",
+      "brandName": "盛发卫浴",
       "brandNamePinyin": "[anhuaweiyu]",
       "categoryId": "C_011",
       "categoryName": "浴室柜",
@@ -223,7 +223,7 @@
     {
       "bid": 33,
       "brandId": "B_027",
-      "brandName": "金意陶",
+      "brandName": "瓷砖",
       "brandNamePinyin": "[jinyitao, jinyiyao]",
       "categoryId": "C_002",
       "categoryName": "瓷砖",
@@ -250,7 +250,7 @@
     {
       "bid": 36,
       "brandId": "B_031",
-      "brandName": "九牧",
+      "brandName": "花洒",
       "brandNamePinyin": "[jiumu]",
       "categoryId": "C_009",
       "categoryName": "洁具",
@@ -259,7 +259,7 @@
     {
       "bid": 37,
       "brandId": "B_032",
-      "brandName": "安华卫浴",
+      "brandName": "盛发卫浴",
       "brandNamePinyin": "[anhuaweiyu]",
       "categoryId": "C_009",
       "categoryName": "洁具",
@@ -363,6 +363,6 @@
   "paging": null,
   "pinyinName": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

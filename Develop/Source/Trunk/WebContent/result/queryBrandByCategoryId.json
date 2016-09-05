@@ -15,7 +15,7 @@
     {
       "bid": 9,
       "brandId": "B_001",
-      "brandName": "嘉宝莉",
+      "brandName": "地板",
       "brandNamePinyin": "jiabaoli",
       "categoryId": "C_001",
       "categoryName": "涂料",
@@ -83,6 +83,6 @@
   "paging": null,
   "pinyinName": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

@@ -16,8 +16,8 @@
       "createTime": "2016-08-21 15:31:38",
       "orderId": "1607290003",
       "receivers": null,
-      "sender": "白添宇",
-      "senderId": "FL-00479",
+      "sender": "白帝忠",
+      "senderId": "00479",
       "senderPhoto": "\/upload\/Imag\/\/2016\/07\/26\/0\/bd9f4736d3334afd87318c5c24fe6c44.jpg"
     }
   ],
@@ -27,6 +27,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

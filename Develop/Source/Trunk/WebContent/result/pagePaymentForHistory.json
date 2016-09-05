@@ -28,7 +28,7 @@
           "birthday": "1983-01-02",
           "company": 0,
           "contracts": [],
-          "currentName": "刘婷婷",
+          "currentName": "刘晓斌",
           "dept": null,
           "deptType": "职能部",
           "duty": "系统工程师",
@@ -76,13 +76,13 @@
           "status": "在职",
           "statusUpdateTime": "2016-05-28 08:00:17",
           "uId": 5476,
-          "userId": "FL_03051",
-          "userName": "刘婷婷",
+          "userId": "03051",
+          "userName": "刘晓斌",
           "userNamePinYin": "[liutingting]",
           "userPhoto": "\/upload\/Imag\/\/2016\/08\/29\/0\/694f3f38493d4aab81739714296f3dcf.jpg",
           "wechat": ""
         },
-        "collectUserName": "刘婷婷",
+        "collectUserName": "刘晓斌",
         "confirmTime": null,
         "confirmUser": {
           "address": null,
@@ -191,6 +191,6 @@
   "payments": null,
   "roleId": "R_50",
   "status": null,
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

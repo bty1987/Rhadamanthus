@@ -641,7 +641,7 @@ function initWizardSept(operate, schedule){
 				}
 				
 				if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-					com.showImg($("#chanWorkerImg"), element.element, 150, 150, element.workerId+"'s Photo");
+					com.showImg($("#chanWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 					$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
 					
 					workerInfoCondition = true;

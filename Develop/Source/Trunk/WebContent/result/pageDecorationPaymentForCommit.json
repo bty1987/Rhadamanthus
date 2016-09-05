@@ -24,7 +24,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -41,7 +41,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -64,7 +64,7 @@
         "referMoney": 19600.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -78,7 +78,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -95,7 +95,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -118,7 +118,7 @@
         "referMoney": 18000.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -132,7 +132,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -149,7 +149,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -172,7 +172,7 @@
         "referMoney": 1600.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -186,7 +186,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -203,7 +203,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -226,7 +226,7 @@
         "referMoney": 100.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -240,7 +240,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "沈北",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -257,7 +257,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -278,9 +278,9 @@
         "receiver": null,
         "receiverId": null,
         "referMoney": 165.0,
-        "salesman": "陈长青",
+        "salesman": "李清",
         "versionId": null,
-        "village": "中铁人杰水岸一期"
+        "village": "杰水一期"
       },
       {
         "accounts": null,
@@ -294,7 +294,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -311,7 +311,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -334,7 +334,7 @@
         "referMoney": 100.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -348,7 +348,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -365,7 +365,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -388,7 +388,7 @@
         "referMoney": 100.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -402,7 +402,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "彰武",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -419,7 +419,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -442,7 +442,7 @@
         "referMoney": 100.0,
         "salesman": "李宁",
         "versionId": null,
-        "village": "万达广场一期"
+        "village": "广场一期"
       },
       {
         "accounts": null,
@@ -456,7 +456,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "沈北",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -473,7 +473,7 @@
         "customer": "赵先生",
         "customerId": "1510220065",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -494,9 +494,9 @@
         "receiver": null,
         "receiverId": null,
         "referMoney": 0.0,
-        "salesman": "陈长青",
+        "salesman": "李清",
         "versionId": null,
-        "village": "中铁人杰水岸一期"
+        "village": "杰水一期"
       },
       {
         "accounts": null,
@@ -510,7 +510,7 @@
         "cashInfo": null,
         "checkv": null,
         "checkvBankName": null,
-        "cityProper": "皇姑",
+        "cityProper": "",
         "collectTime": null,
         "collectUser": null,
         "collectUserId": null,
@@ -527,7 +527,7 @@
         "customer": "白先生",
         "customerId": "1501040011",
         "des": null,
-        "designer": "白雪峰",
+        "designer": "白雪",
         "designerDepartment": "设计中心十部",
         "discount": null,
         "drId": 0,
@@ -548,9 +548,9 @@
         "receiver": null,
         "receiverId": null,
         "referMoney": 200.0,
-        "salesman": "白添宇",
+        "salesman": "白帝忠",
         "versionId": null,
-        "village": "保利心语三期"
+        "village": "美景三期"
       }
     ],
     "noPage": 0,
@@ -561,6 +561,6 @@
   },
   "paymentIds": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

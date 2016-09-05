@@ -13,7 +13,7 @@
       {
         "bid": 9,
         "brandId": "B_001",
-        "brandName": "嘉宝莉",
+        "brandName": "地板",
         "brandNamePinyin": "jiabaoli",
         "categoryId": "C_001",
         "categoryName": "涂料",
@@ -31,7 +31,7 @@
       {
         "bid": 11,
         "brandId": "B_003",
-        "brandName": "圣象地板",
+        "brandName": "圣板",
         "brandNamePinyin": "shengxiangdiban",
         "categoryId": "C_003",
         "categoryName": "地板",
@@ -40,7 +40,7 @@
       {
         "bid": 12,
         "brandId": "B_004",
-        "brandName": "菲林格尔",
+        "brandName": "菲尔",
         "brandNamePinyin": "feilingeer",
         "categoryId": "C_003",
         "categoryName": "地板",
@@ -49,7 +49,7 @@
       {
         "bid": 13,
         "brandId": "B_005",
-        "brandName": "欧雅壁纸",
+        "brandName": "欧纸",
         "brandNamePinyin": "ouyabizhi",
         "categoryId": "C_004",
         "categoryName": "壁纸",
@@ -58,7 +58,7 @@
       {
         "bid": 14,
         "brandId": "B_006",
-        "brandName": "蒙娜丽莎",
+        "brandName": "蒙莎",
         "brandNamePinyin": "mengnalisha",
         "categoryId": "C_002",
         "categoryName": "瓷砖",
@@ -67,7 +67,7 @@
       {
         "bid": 15,
         "brandId": "B_007",
-        "brandName": "冠军瓷砖",
+        "brandName": "冠砖",
         "brandNamePinyin": "guanjuncizhuan",
         "categoryId": "C_002",
         "categoryName": "瓷砖",
@@ -76,7 +76,7 @@
       {
         "bid": 16,
         "brandId": "B_009",
-        "brandName": "米奇",
+        "brandName": "奇米",
         "brandNamePinyin": "[miqi, miji]",
         "categoryId": "C_005",
         "categoryName": "净水器",
@@ -85,7 +85,7 @@
       {
         "bid": 17,
         "brandId": "B_010",
-        "brandName": "达尔玛",
+        "brandName": "玛达",
         "brandNamePinyin": "[daerma]",
         "categoryId": "C_006",
         "categoryName": "水槽",
@@ -94,7 +94,7 @@
       {
         "bid": 18,
         "brandId": "B_011",
-        "brandName": "派斯",
+        "brandName": "斯派",
         "brandNamePinyin": "[paisi, pasi]",
         "categoryId": "C_007",
         "categoryName": "净水器",
@@ -109,6 +109,6 @@
   },
   "pinyinName": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

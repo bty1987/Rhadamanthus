@@ -7,8 +7,8 @@
     {
       "createTime": "2015-10-23",
       "ddrId": 2,
-      "designerId": "FL-00186",
-      "designerName": "白世忱",
+      "designerId": "00186",
+      "designerName": "赵忱",
       "endTime": "2015-10-23",
       "rank": 424111.0,
       "status": 0
@@ -16,8 +16,8 @@
     {
       "createTime": "2016-06-29",
       "ddrId": 7,
-      "designerId": "FL-00478",
-      "designerName": "陆爽",
+      "designerId": "00478",
+      "designerName": "金龙",
       "endTime": "2016-06-29",
       "rank": 272800.0,
       "status": 0
@@ -25,8 +25,8 @@
     {
       "createTime": "2016-06-28",
       "ddrId": 5,
-      "designerId": "FL-00173",
-      "designerName": "王东斌",
+      "designerId": "00173",
+      "designerName": "王越",
       "endTime": "2016-06-28",
       "rank": 120000.0,
       "status": 0
@@ -34,8 +34,8 @@
     {
       "createTime": "2016-07-17",
       "ddrId": 10,
-      "designerId": "FL-00020",
-      "designerName": "冯玲玲",
+      "designerId": "00020",
+      "designerName": "赵芳",
       "endTime": "2016-07-17",
       "rank": 90000.0,
       "status": 0
@@ -43,55 +43,19 @@
     {
       "createTime": "2016-07-13",
       "ddrId": 9,
-      "designerId": "FL-00168",
-      "designerName": "杜若平",
+      "designerId": "00168",
+      "designerName": "王平",
       "endTime": "2016-07-13",
       "rank": 80000.0,
       "status": 0
     },
     {
-      "createTime": "2016-07-12",
-      "ddrId": 8,
-      "designerId": "FL-00166",
-      "designerName": "刘芳芳",
-      "endTime": "2016-07-12",
-      "rank": 0.0,
-      "status": 0
-    },
-    {
-      "createTime": "2016-06-28",
-      "ddrId": 6,
-      "designerId": "FL-00237",
-      "designerName": "李博文",
-      "endTime": "2016-06-28",
-      "rank": 0.0,
-      "status": 0
-    },
-    {
-      "createTime": "2016-03-24",
-      "ddrId": 3,
-      "designerId": "FL-00104",
-      "designerName": "丁红",
-      "endTime": "2016-03-24",
-      "rank": 0.0,
-      "status": 0
-    },
-    {
-      "createTime": "2015-06-26",
-      "ddrId": 1,
-      "designerId": "U_00001",
-      "designerName": "设计师",
-      "endTime": "2015-06-26",
-      "rank": -10000.0,
-      "status": 0
-    },
-    {
       "createTime": "2016-05-16",
       "ddrId": 4,
-      "designerId": "FL-02703",
-      "designerName": "邓琦",
+      "designerId": "02703",
+      "designerName": "邓红",
       "endTime": "2016-05-16",
-      "rank": -60000.0,
+      "rank": 60000.0,
       "status": 0
     }
   ]

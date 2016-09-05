@@ -9,12 +9,12 @@
       "applayCount": 0,
       "applayDes": "test",
       "applayTime": "2016-08-31",
-      "applayUser": "白添宇",
-      "applayUserId": "FL-00479",
-      "cityProper": "皇姑",
+      "applayUser": "白帝忠",
+      "applayUserId": "00479",
+      "cityProper": "",
       "contractTime": null,
       "customer": "白先生",
-      "designer": "白雪峰",
+      "designer": "白雪",
       "discount": 10.0,
       "dlId": 20,
       "drawLineGroup": "放线一组",
@@ -31,7 +31,7 @@
       "supervisor": null,
       "versionId": "QV_002",
       "versionName": "QV_002",
-      "village": "保利心语三期"
+      "village": "美景三期"
     }
   ],
   "errorCode": 0,
@@ -39,6 +39,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

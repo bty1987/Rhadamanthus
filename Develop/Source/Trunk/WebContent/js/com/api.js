@@ -516,6 +516,7 @@ var api = {
 		addVillage: {url: "addVillage.do", server: "communionServer"},
 		updateVillage: {url: "updateVillage.do", server: "communionServer"},
 		updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communionServer"},
+		updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communionServer"},
 		
 	}, department: {
 		

@@ -145,7 +145,7 @@
       "oneCode": "1108",
       "rtId": 12,
       "status": 1,
-      "subjectName": "农业银行皇姑支行-人民币(一般户)",
+      "subjectName": "农业银行支行-人民币(一般户)",
       "thrCode": "201",
       "twoCode": "007",
       "type": 2
@@ -169,7 +169,7 @@
       "oneCode": "1105",
       "rtId": 14,
       "status": 1,
-      "subjectName": "锦州银行铁西支行",
+      "subjectName": "锦州银行支行",
       "thrCode": "201",
       "twoCode": "005",
       "type": 3
@@ -181,7 +181,7 @@
       "oneCode": "1113",
       "rtId": 15,
       "status": 1,
-      "subjectName": "阜新银行铁西支行",
+      "subjectName": "阜新银行支行",
       "thrCode": "201",
       "twoCode": "016",
       "type": 3
@@ -205,7 +205,7 @@
       "oneCode": "1107",
       "rtId": 17,
       "status": 1,
-      "subjectName": "建设银行铁西支行-人民币(一般户)",
+      "subjectName": "建设银行支行-人民币(一般户)",
       "thrCode": "201",
       "twoCode": "009",
       "type": 3
@@ -241,7 +241,7 @@
       "oneCode": "1105",
       "rtId": 20,
       "status": 1,
-      "subjectName": "锦州银行铁西支行",
+      "subjectName": "锦州银行支行",
       "thrCode": "201",
       "twoCode": "005",
       "type": 4
@@ -253,7 +253,7 @@
       "oneCode": "1113",
       "rtId": 21,
       "status": 1,
-      "subjectName": "阜新银行铁西支行",
+      "subjectName": "阜新银行支行",
       "thrCode": "201",
       "twoCode": "016",
       "type": 4
@@ -368,6 +368,6 @@
     }
   ],
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

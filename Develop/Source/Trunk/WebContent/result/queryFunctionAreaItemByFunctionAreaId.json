@@ -24,7 +24,7 @@
         "functionAreaName": "综合项目",
         "functionAreaOrder": 0,
         "functionAreaType": null,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": null
       },
       "quotationItem": {
@@ -45,7 +45,7 @@
         "quotationTypeId": 1,
         "status": null,
         "unitPrice": 300.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "其他",
         "workTypeId": 10
@@ -59,7 +59,7 @@
         "functionAreaName": "综合项目",
         "functionAreaOrder": 0,
         "functionAreaType": null,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": null
       },
       "quotationItem": {
@@ -80,7 +80,7 @@
         "quotationTypeId": 1,
         "status": null,
         "unitPrice": 600.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "其他",
         "workTypeId": 10
@@ -94,7 +94,7 @@
         "functionAreaName": "综合项目",
         "functionAreaOrder": 0,
         "functionAreaType": null,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": null
       },
       "quotationItem": {
@@ -115,7 +115,7 @@
         "quotationTypeId": 1,
         "status": null,
         "unitPrice": 1000.0,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "其他",
         "workTypeId": 10
@@ -129,7 +129,7 @@
         "functionAreaName": "综合项目",
         "functionAreaOrder": 0,
         "functionAreaType": null,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": null
       },
       "quotationItem": {
@@ -150,7 +150,7 @@
         "quotationTypeId": 1,
         "status": null,
         "unitPrice": 0.1,
-        "version": "rrewt",
+        "version": "QV_002",
         "versionId": "QV_001",
         "workType": "综合",
         "workTypeId": 9
@@ -161,6 +161,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

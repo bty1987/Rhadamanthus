@@ -38,8 +38,8 @@
     },
     "designDepartment": "设计中心十部",
     "designRegion": null,
-    "designer": "白雪峰",
-    "designerId": "FL-00186",
+    "designer": "白雪",
+    "designerId": "00186",
     "designerPhone": null,
     "discount": null,
     "freeArea": 11.0,
@@ -61,7 +61,7 @@
     "paymentStatus": null,
     "projectStatus": "铲大白",
     "salesman": "李宁",
-    "salesmanId": "FL-00638",
+    "salesmanId": "00638",
     "salesmanPhone": null,
     "salesmanType": "守园",
     "status": "已签约",
@@ -81,7 +81,7 @@
       "cityProper": {
         "city": null,
         "cityProperId": "R_25",
-        "cityProperName": "彰武",
+        "cityProperName": "",
         "cpId": 54
       },
       "count": 8,
@@ -92,7 +92,7 @@
       "vId": 6,
       "villageContent": "字母数字#A或B或C-×-×",
       "villageId": "P_0001",
-      "villageName": "万达广场一期",
+      "villageName": "广场一期",
       "villagePinYinAB": null,
       "villagePinYinAll": null,
       "x": 123.36799621582031,
@@ -108,6 +108,6 @@
   "refundValue": 0.0,
   "roleId": "R_50",
   "timeType": 0,
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

@@ -22,251 +22,252 @@
   "paging": {
     "data": [
       {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
-        },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 6,
-        "deptId": "FL_BD_01",
-        "deptName": "市场营销一部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 64,
-          "deptId": "FL_BR_01",
-          "deptName": "市场营销一分区",
-          "des": "市场营销一分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2015-10-07",
+            "dId": 291,
+            "deptId": "DR_01",
+            "deptName": "设计一分区",
+            "des": null,
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "设计大区"
       },
       {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-10-17",
+            "dId": 64,
+            "deptId": "BR_01",
+            "deptName": "市场营销一分区",
+            "des": "市场营销一分区",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "业务大区"
         },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 8,
-        "deptId": "FL_BD_02",
-        "deptName": "市场营销二部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 64,
-          "deptId": "FL_BR_01",
-          "deptName": "市场营销一分区",
-          "des": "市场营销一分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
+        {
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-10-17",
+            "dId": 66,
+            "deptId": "BR_02",
+            "deptName": "市场营销二分区",
+            "des": "市场营销二分区",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "业务大区"
         },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
       {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": "TY4",
+            "createTime": "2014-12-03",
+            "dId": 80,
+            "deptId": "DD_02",
+            "deptName": "设计中心四部",
+            "des": "",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "设计部"
         },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 10,
-        "deptId": "FL_BD_03",
-        "deptName": "市场营销三部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 64,
-          "deptId": "FL_BR_01",
-          "deptName": "市场营销一分区",
-          "des": "市场营销一分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
+        {
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-12-03",
+            "dId": 202,
+            "deptId": "MD_01",
+            "deptName": "主材中心一组",
+            "des": "",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "主材部"
+        
         },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
-      {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
+        {
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-12-03",
+            "dId": 204,
+            "deptId": "MD_02",
+            "deptName": "主材中心二组",
+            "des": "",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": null,
+            "type": "主材部"
         },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 12,
-        "deptId": "FL_BD_04",
-        "deptName": "市场营销四部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 64,
-          "deptId": "FL_BR_01",
-          "deptName": "市场营销一分区",
-          "des": "市场营销一分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
-      {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
-        },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 14,
-        "deptId": "FL_BD_05",
-        "deptName": "市场营销五部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 66,
-          "deptId": "FL_BR_02",
-          "deptName": "市场营销二分区",
-          "des": "市场营销二分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
-      {
-        "cityProper": {
-          "city": {
-            "cId": 6,
-            "cityId": "C_01",
-            "cityName": "沈阳",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_01",
-          "cityProperName": "皇姑",
-          "cpId": 6
-        },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 16,
-        "deptId": "FL_BD_06",
-        "deptName": "市场营销六部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-10-17",
-          "dId": 66,
-          "deptId": "FL_BR_02",
-          "deptName": "市场营销二分区",
-          "des": "市场营销二分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
       {
         "cityProper": {
           "city": {
@@ -287,8 +288,8 @@
         "contractPrefix": null,
         "createTime": "2014-12-03",
         "dId": 18,
-        "deptId": "FL_BD_07",
-        "deptName": "抚顺市场部一组",
+        "deptId": "BD_07",
+        "deptName": "市场部一组",
         "des": "",
         "fatherDept": {
           "cityProper": null,
@@ -296,7 +297,7 @@
           "contractPrefix": null,
           "createTime": "2014-12-03",
           "dId": 70,
-          "deptId": "FL_BR_04",
+          "deptId": "BR_04",
           "deptName": "外阜市场分区",
           "des": "外阜市场分区",
           "fatherDept": null,
@@ -321,15 +322,15 @@
             }
           },
           "cityProperId": "R_10",
-          "cityProperName": "苏家屯",
+          "cityProperName": "",
           "cpId": 24
         },
         "company": 0,
         "contractPrefix": null,
         "createTime": "2014-12-03",
         "dId": 20,
-        "deptId": "FL_BD_08",
-        "deptName": "抚顺市场部二组",
+        "deptId": "BD_08",
+        "deptName": "市场部二组",
         "des": "",
         "fatherDept": {
           "cityProper": null,
@@ -337,7 +338,7 @@
           "contractPrefix": null,
           "createTime": "2014-12-03",
           "dId": 70,
-          "deptId": "FL_BR_04",
+          "deptId": "BR_04",
           "deptName": "外阜市场分区",
           "des": "外阜市场分区",
           "fatherDept": null,
@@ -350,87 +351,87 @@
         "type": "业务部"
       },
       {
-        "cityProper": {
-          "city": {
-            "cId": 18,
-            "cityId": "C_07",
-            "cityName": "阜新",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_20",
-          "cityProperName": "阜新",
-          "cpId": 44
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-12-03",
+            "dId": 238,
+            "deptId": "ZD_03",
+            "deptName": "前台咨询部",
+            "des": "",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": "行政部",
+            "type": "职能部"
         },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 22,
-        "deptId": "FL_BD_09",
-        "deptName": "阜新市场部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-12-03",
-          "dId": 70,
-          "deptId": "FL_BR_04",
-          "deptName": "外阜市场分区",
-          "des": "外阜市场分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      },
       {
-        "cityProper": {
-          "city": {
-            "cId": 12,
-            "cityId": "C_04",
-            "cityName": "本溪",
-            "region": {
-              "rId": 6,
-              "regionId": "A_01",
-              "regionName": "东北区"
-            }
-          },
-          "cityProperId": "R_27",
-          "cityProperName": "本溪",
-          "cpId": 58
-        },
-        "company": 0,
-        "contractPrefix": null,
-        "createTime": "2014-12-03",
-        "dId": 24,
-        "deptId": "FL_BD_10",
-        "deptName": "本溪市场部",
-        "des": "",
-        "fatherDept": {
-          "cityProper": null,
-          "company": 1,
-          "contractPrefix": null,
-          "createTime": "2014-12-03",
-          "dId": 70,
-          "deptId": "FL_BR_04",
-          "deptName": "外阜市场分区",
-          "des": "外阜市场分区",
-          "fatherDept": null,
-          "ident": 0,
-          "subType": null,
-          "type": "业务大区"
-        },
-        "ident": 0,
-        "subType": null,
-        "type": "业务部"
-      }
+            "cityProper": {
+                "city": {
+                    "cId": 6,
+                    "cityId": "C_01",
+                    "cityName": "沈阳",
+                    "region": {
+                        "rId": 6,
+                        "regionId": "A_01",
+                        "regionName": "东北区"
+                    }
+                },
+                "cityProperId": "R_01",
+                "cityProperName": "",
+                "cpId": 6
+            },
+            "company": 0,
+            "contractPrefix": null,
+            "createTime": "2014-12-03",
+            "dId": 2,
+            "deptId": "ED_02",
+            "deptName": "铲大白/地面找平部",
+            "des": "",
+            "fatherDept": {
+                "cityProper": null,
+                "company": 1,
+                "contractPrefix": null,
+                "createTime": "2015-10-07",
+                "dId": 291,
+                "deptId": "DR_01",
+                "deptName": "设计一分区",
+                "des": null,
+                "fatherDept": null,
+                "ident": 0,
+                "subType": null,
+                "type": "设计大区"
+            },
+            "ident": 0,
+            "subType": "质检部",
+            "type": "工程部"
+        }
     ],
     "noPage": 0,
     "page": 1,
@@ -439,6 +440,6 @@
     "totalRecords": 37
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

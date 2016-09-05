@@ -16,69 +16,6 @@
       },
       {
         "defaultFlag": 0,
-        "manageRate": 0.135,
-        "qvId": 16,
-        "trafficRate": 0.15,
-        "versionDes": "test",
-        "versionId": "QV_005",
-        "versionName": "test"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.0,
-        "qvId": 10,
-        "trafficRate": 0.0,
-        "versionDes": "dfafsaf",
-        "versionId": "QV_999",
-        "versionName": "111"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.135,
-        "qvId": 16,
-        "trafficRate": 0.15,
-        "versionDes": "test",
-        "versionId": "QV_005",
-        "versionName": "test"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.0,
-        "qvId": 8,
-        "trafficRate": 0.0,
-        "versionDes": "",
-        "versionId": "QV_122",
-        "versionName": "WWW"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.0,
-        "qvId": 7,
-        "trafficRate": 0.0,
-        "versionDes": "",
-        "versionId": "QV_124",
-        "versionName": "WWW"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.0,
-        "qvId": 6,
-        "trafficRate": 0.0,
-        "versionDes": "",
-        "versionId": "QV_333",
-        "versionName": "333"
-      },
-      {
-        "defaultFlag": 0,
-        "manageRate": 0.0,
-        "qvId": 5,
-        "trafficRate": 0.0,
-        "versionDes": "",
-        "versionId": "QV_111",
-        "versionName": "222"
-      },
-      {
-        "defaultFlag": 0,
         "manageRate": 0.0,
         "qvId": 4,
         "trafficRate": 0.0,
@@ -99,13 +36,13 @@
     "noPage": 0,
     "page": 1,
     "rows": 10,
-    "totalPage": 2,
-    "totalRecords": 16
+    "totalPage": 1,
+    "totalRecords": 3
   },
   "quotationVersion": null,
   "quotationVersions": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷",
+  "userId": "03051",
+  "userName": "刘晓斌",
   "versionId": null
 }

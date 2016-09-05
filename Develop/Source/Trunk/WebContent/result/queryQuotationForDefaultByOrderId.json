@@ -9,19 +9,19 @@
   "quotation": {
     "content": "111",
     "createTime": "2016-08-07",
-    "createrId": "FL-00478",
-    "createrName": "陆爽",
+    "createrId": "00478",
+    "createrName": "金龙",
     "customerName": "白先生",
     "decorationStyle": "现代简约",
     "designDepartmentName": "设计中心十部",
-    "designerName": "白雪峰",
+    "designerName": "白雪",
     "discount": 10.0,
     "houseArea": 111.0,
     "latexCut": 0.0,
     "managePrice": 1574.098,
     "manageRate": 0.135,
     "notSalesmanRate": 0.03,
-    "orderAddr": "保利心语三期 4#4-5-7",
+    "orderAddr": "美景三期 4#4-5-7",
     "orderId": "1607290003",
     "orderTotalPrice": 60000.0,
     "qid": 150,
@@ -34,6 +34,6 @@
   },
   "quotations": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

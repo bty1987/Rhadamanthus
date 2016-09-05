@@ -10,21 +10,6 @@
     "data": [
       {
         "city": {
-          "cId": 12,
-          "cityId": "C_04",
-          "cityName": "本溪",
-          "region": {
-            "rId": 6,
-            "regionId": "A_01",
-            "regionName": "东北区"
-          }
-        },
-        "cityProperId": "R_41",
-        "cityProperName": "test1",
-        "cpId": 0
-      },
-      {
-        "city": {
           "cId": 6,
           "cityId": "C_01",
           "cityName": "沈阳",
@@ -166,6 +151,6 @@
     "totalRecords": 41
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
+  "userId": "03051",
   "userName": "刘婷婷"
 }

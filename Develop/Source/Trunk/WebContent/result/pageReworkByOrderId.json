@@ -7,7 +7,7 @@
     "data": [
       {
         "createTime": "2016-07-05",
-        "createrId": "FL-02037",
+        "createrId": "02037",
         "createrName": "王家维",
         "orderId": "1510220003",
         "reworkDes": "啦啦啦啦",
@@ -15,7 +15,7 @@
       },
       {
         "createTime": "2016-07-14",
-        "createrId": "FL-02037",
+        "createrId": "02037",
         "createrName": "王家维",
         "orderId": "1510220003",
         "reworkDes": "发顺丰",
@@ -23,7 +23,7 @@
       },
       {
         "createTime": "2016-07-08",
-        "createrId": "FL-02037",
+        "createrId": "02037",
         "createrName": "王家维",
         "orderId": "1510220003",
         "reworkDes": "dasdada",
@@ -31,8 +31,8 @@
       },
       {
         "createTime": "2016-07-14",
-        "createrId": "FL_03051",
-        "createrName": "刘婷婷",
+        "createrId": "03051",
+        "createrName": "刘晓斌",
         "orderId": "1510220003",
         "reworkDes": "sdada",
         "rwId": 6
@@ -56,6 +56,6 @@
   "reworkDrawings": null,
   "roleId": "R_50",
   "rwIds": null,
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

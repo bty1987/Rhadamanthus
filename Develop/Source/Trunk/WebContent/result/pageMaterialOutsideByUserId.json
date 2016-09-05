@@ -9,22 +9,22 @@
     "data": [
       {
         "createTime": "2016-08-28 14:05:06",
-        "createUserId": "FL_03051",
-        "createUserName": "刘婷婷",
+        "createUserId": "03051",
+        "createUserName": "刘晓斌",
         "customerName": "白先生",
-        "deptId": "FL_BD_01",
+        "deptId": "BD_01",
         "deptName": "市场营销一部",
         "des": "aaa",
-        "materialBrand": "蒙娜丽莎",
+        "materialBrand": "娜莎",
         "materialType": "瓷砖",
         "moId": 5,
-        "orderAddr": "保利心语三期 4#4-5-7",
+        "orderAddr": "美景三期 4#4-5-7",
         "orderId": "1607290003",
         "profit": 100.0,
-        "regionId": "FL_BR_01",
+        "regionId": "BR_01",
         "regionName": "市场营销一分区",
         "sales": 120.0,
-        "salesmanId": "FL-00638",
+        "salesmanId": "00638",
         "salesmanName": "李万宇",
         "status": 0
       }
@@ -36,6 +36,6 @@
     "totalRecords": 1
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

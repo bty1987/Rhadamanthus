@@ -8,10 +8,10 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷",
+  "userId": "03051",
+  "userName": "刘晓斌",
   "waterwayCircuitCheckConstructionSchedule": {
-    "circuitWorkerId": "FL-01112",
+    "circuitWorkerId": "01112",
     "circuitWorkerRaty": null,
     "circuitWorkerRatyDes": null,
     "circuitWorkerSalary": null,

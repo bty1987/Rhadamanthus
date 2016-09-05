@@ -20,15 +20,15 @@
     "birthday": "1983-01-02",
     "company": 0,
     "contracts": [],
-    "currentName": "刘婷婷",
+    "currentName": "刘晓斌",
     "dept": {
       "cityProper": null,
       "company": 1,
       "contractPrefix": null,
       "createTime": "2015-01-01",
       "dId": 250,
-      "deptId": "FL_ZD_09",
-      "deptName": "ERP开发部",
+      "deptId": "ZD_09",
+      "deptName": "业务三部",
       "des": "ERP",
       "fatherDept": null,
       "ident": 0,
@@ -85,13 +85,13 @@
     "status": "在职",
     "statusUpdateTime": "2016-05-28 08:00:17",
     "uId": 5476,
-    "userId": "FL_03051",
-    "userName": "刘婷婷",
+    "userId": "03051",
+    "userName": "刘晓斌",
     "userNamePinYin": "[liutingting]",
     "userPhoto": "\/upload\/Imag\/\/2016\/06\/01\/0\/568ca7bf93c343a5aad151d64d197527.jpg",
     "wechat": ""
   },
-  "userId": "FL_03051",
+  "userId": "03051",
   "userIds": null,
-  "userName": "刘婷婷"
+  "userName": "刘晓斌"
 }

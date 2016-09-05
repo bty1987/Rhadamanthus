@@ -107,6 +107,7 @@ jQuery(function(a){
     function login(){
     	
     	if(config.demo){
+    		setCookie("loginTime" , new Date().getTime() , config.timeout);
     		window.location.href = "main.html?timestamp=" + new Date().getTime();
     		return false;
     	}

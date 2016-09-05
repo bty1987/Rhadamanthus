@@ -14,8 +14,8 @@
     "calcValue": 0.0,
     "discount": 1.0,
     "materialBrandId": 20,
-    "materialBrandName": "箭牌卫浴",
-    "materialModelName": "箭牌卫浴AB1240",
+    "materialBrandName": "卫浴",
+    "materialModelName": "卫浴AB1240",
     "materialModelNo": "JPWY0007",
     "materialPurchasePrice": 1.0,
     "materialTypeId": 0,
@@ -30,6 +30,6 @@
   "materialModels": null,
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

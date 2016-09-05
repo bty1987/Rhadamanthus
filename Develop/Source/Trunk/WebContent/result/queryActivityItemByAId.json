@@ -13,8 +13,8 @@
   "activityItem": null,
   "activityItems": [
     {
-      "activityItemName": "sadasd",
-      "activityName": "测试",
+      "activityItemName": "券",
+      "activityName": "国庆活动",
       "aiId": 11,
       "aid": 4,
       "money": 3.0,
@@ -29,6 +29,6 @@
   "locale": "zh_CN",
   "paging": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

@@ -30,8 +30,8 @@
         "complaintStatus": 0,
         "complaintTime": "2016-07-12",
         "complaintType": 0,
-        "createrId": "FL_03051",
-        "createrName": "刘婷婷",
+        "createrId": "03051",
+        "createrName": "刘晓斌",
         "cscId": 2,
         "customerName": "王先生",
         "operaterId": "",
@@ -46,8 +46,8 @@
         "complaintStatus": 0,
         "complaintTime": "2016-07-13",
         "complaintType": 0,
-        "createrId": "FL_03051",
-        "createrName": "刘婷婷",
+        "createrId": "03051",
+        "createrName": "刘晓斌",
         "cscId": 3,
         "customerName": "王先生",
         "operaterId": "",
@@ -62,6 +62,6 @@
     "totalRecords": 2
   },
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

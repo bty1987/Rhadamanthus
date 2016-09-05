@@ -109,7 +109,7 @@
       "referMoney": 0.0,
       "salesman": null,
       "versionId": null,
-      "village": "万达广场一期"
+      "village": "广场一期"
     },
     {
       "accounts": null,
@@ -163,7 +163,7 @@
       "referMoney": 100.0,
       "salesman": null,
       "versionId": null,
-      "village": "万达广场一期"
+      "village": "广场一期"
     },
     {
       "accounts": null,
@@ -217,7 +217,7 @@
       "referMoney": 100.0,
       "salesman": null,
       "versionId": null,
-      "village": "万达广场一期"
+      "village": "广场一期"
     },
     {
       "accounts": null,
@@ -271,7 +271,7 @@
       "referMoney": 100.0,
       "salesman": null,
       "versionId": null,
-      "village": "万达广场一期"
+      "village": "广场一期"
     },
     {
       "accounts": null,
@@ -325,7 +325,7 @@
       "referMoney": -200.0,
       "salesman": null,
       "versionId": null,
-      "village": "万达广场一期"
+      "village": "广场一期"
     }
   ],
   "decorationReceipt": null,
@@ -337,6 +337,6 @@
   "paging": null,
   "paymentIds": null,
   "roleId": "R_50",
-  "userId": "FL_03051",
-  "userName": "刘婷婷"
+  "userId": "03051",
+  "userName": "刘晓斌"
 }

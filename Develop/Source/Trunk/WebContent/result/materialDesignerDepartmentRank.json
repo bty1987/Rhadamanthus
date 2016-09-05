@@ -6,7 +6,7 @@
   "ranks": [
     {
       "createTime": "2016-04-30",
-      "designerDeptId": "FL_DD_15",
+      "designerDeptId": "DD_15",
       "designerDeptName": "设计中心三部",
       "endTime": "2016-04-30",
       "mddrId": 4,
@@ -15,7 +15,7 @@
     },
     {
       "createTime": "2015-10-28",
-      "designerDeptId": "FL_DD_04",
+      "designerDeptId": "DD_04",
       "designerDeptName": "设计中心十部",
       "endTime": "2015-10-28",
       "mddrId": 2,
@@ -24,7 +24,7 @@
     },
     {
       "createTime": "2015-10-28",
-      "designerDeptId": "FL_DD_24",
+      "designerDeptId": "DD_24",
       "designerDeptName": "设计中心十五部",
       "endTime": "2015-10-28",
       "mddrId": 3,
@@ -33,7 +33,7 @@
     },
     {
       "createTime": "2016-07-28",
-      "designerDeptId": "FL_DD_03",
+      "designerDeptId": "DD_03",
       "designerDeptName": "设计中心九部",
       "endTime": "2016-07-28",
       "mddrId": 8,
@@ -42,7 +42,7 @@
     },
     {
       "createTime": "2016-08-04",
-      "designerDeptId": "FL_DD_10",
+      "designerDeptId": "DD_10",
       "designerDeptName": "设计中心二部",
       "endTime": "2016-08-04",
       "mddrId": 9,
@@ -51,7 +51,7 @@
     },
     {
       "createTime": "2016-05-22",
-      "designerDeptId": "FL_DD_17",
+      "designerDeptId": "DD_17",
       "designerDeptName": "设计中心八部",
       "endTime": "2016-05-22",
       "mddrId": 5,
@@ -60,7 +60,7 @@
     },
     {
       "createTime": "2016-07-10",
-      "designerDeptId": "FL_DD_07",
+      "designerDeptId": "DD_07",
       "designerDeptName": "设计中心一部",
       "endTime": "2016-07-10",
       "mddrId": 6,
@@ -69,7 +69,7 @@
     },
     {
       "createTime": "2016-07-12",
-      "designerDeptId": "FL_DD_16",
+      "designerDeptId": "DD_16",
       "designerDeptName": "设计中心七部",
       "endTime": "2016-07-12",
       "mddrId": 7,
@@ -78,7 +78,7 @@
     },
     {
       "createTime": "2015-03-11",
-      "designerDeptId": "FL_DD_01",
+      "designerDeptId": "DD_01",
       "designerDeptName": "大东分公司",
       "endTime": "2015-03-11",
       "mddrId": 1,
