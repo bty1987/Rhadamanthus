@@ -3,42 +3,72 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'f8d5fc8ae78ee0bf719f450b77b4d8f405fa3bcd'
-    oldFile: !uuid 'ccc3e123bc82ec7a7c5680eb69fc170fa1711577'
+    newFile: !uuid 'c82db204a54dc048741373162701e22e0bc03d76'
+    oldFile: !uuid 'f8d5fc8ae78ee0bf719f450b77b4d8f405fa3bcd'
   /Develop/Source:
-    newFile: !uuid '0139f3b3b603c81aa6baeaef58910c4d7331ced3'
-    oldFile: !uuid '0cf9112e8c36479d79369be7ea07d6bf3d97bbab'
+    newFile: !uuid '1e78aef18e0107cc522ec7f41dae5c1cd8ae0c14'
+    oldFile: !uuid '0139f3b3b603c81aa6baeaef58910c4d7331ced3'
   /Develop/Source/Trunk:
-    newFile: !uuid '8fa87ab42cd28e54490eff8991f7a65a03f4f05c'
-    oldFile: !uuid '28fe28eb8fa3238f34fa62d0dbd15c4a983a4e0c'
+    newFile: !uuid '14c35dbe3460202c11d31da165a67e420b52a84d'
+    oldFile: !uuid '8fa87ab42cd28e54490eff8991f7a65a03f4f05c'
+  /Develop/Source/Trunk/.settings:
+    newFile: !uuid '6f8b8e2726137beadb32c6dafb93ddfa30fee3e9'
+    oldFile: !uuid 'ff0651923064601cec276aac1dc160bc951103ea'
+  /Develop/Source/Trunk/.settings/org.eclipse.core.resources.prefs:
+    newFile: !uuid '66464b2d54bbf468cefefeebd6f27c594ee88915'
+    oldFile: !uuid '0c78415793e96d7f450b8993861bfa6d92ff10be'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '7ceb0ea8353440f4a0709f8d9218777c64814a6e'
-    oldFile: !uuid '4107c89b7de4cd46a82e21e0445ff355e0d8ec6b'
+    newFile: !uuid '50080d8c5b04f13b2909cc0cbdc7e29baaa94c25'
+    oldFile: !uuid '7ceb0ea8353440f4a0709f8d9218777c64814a6e'
   /Develop/Source/Trunk/WebContent/css:
-    newFile: !uuid '1a433f4b4633fe97c92431cffdcb33f9dac0f107'
-    oldFile: !uuid 'd6fd05f0f7c7431a01565d280f5dec81b72bd862'
+    newFile: !uuid 'f609b53a0930078999b971316d482d08d540398a'
+    oldFile: !uuid '1a433f4b4633fe97c92431cffdcb33f9dac0f107'
   /Develop/Source/Trunk/WebContent/css/main.css:
-    newFile: !uuid 'b03494d761ab759ef1b7b1401c646abfe192ce2c'
-    oldFile: !uuid '1e103806b5211ee8c50bc665f05d5b3f1e30035c'
+    newFile: !uuid 'fe0b8680ab4c1a1f04349eaa47065b5c60b3b149'
+    oldFile: !uuid 'b03494d761ab759ef1b7b1401c646abfe192ce2c'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '3c680c6c518311e57c92cb9ba6aac38cd9db19c3'
-    oldFile: !uuid '64948f51afc65ebaef7c5bda479c7ffbab7040ed'
+    newFile: !uuid '8080070c59cedeb015225d9753c00eb9264e76e6'
+    oldFile: !uuid '3c680c6c518311e57c92cb9ba6aac38cd9db19c3'
+  /Develop/Source/Trunk/WebContent/js/com:
+    newFile: !uuid 'cd638b54949ed489b5723adf46b6015610a7ed60'
+    oldFile: !uuid '7e9b5cb2b997ffef971c24a9cbe15a89b022806a'
+  /Develop/Source/Trunk/WebContent/js/com/error.js:
+    newFile: !uuid '7cf31f6c5805ebbee2f72c644a93e1cee967c7f0'
+    oldFile: !uuid '3d4ccda53859a55d75c22420ff8cb018a999463a'
   /Develop/Source/Trunk/WebContent/js/data:
-    newFile: !uuid 'd8df494c9fbe39b86cdf8ed2292296a219bc0bf4'
-    oldFile: !uuid 'f8372b1393cea5c6c9a4971a004fe6fba660b1fe'
+    newFile: !uuid '01282a47c1d6bd2dc6c69ce6703736e0a4687e31'
+    oldFile: !uuid 'd8df494c9fbe39b86cdf8ed2292296a219bc0bf4'
   /Develop/Source/Trunk/WebContent/js/data/village.js:
-    newFile: !uuid 'd54e4e222905a56623cebd6f89cef73b05f08d3b'
-    oldFile: !uuid '8b497cd1f6610b194152e9dbdda3a6a48ffbddae'
+    newFile: !uuid 'b9821d17e80f9412e0f12dc7eb20289ebd343351'
+    oldFile: !uuid 'd54e4e222905a56623cebd6f89cef73b05f08d3b'
+  /Develop/Source/Trunk/WebContent/js/decoration:
+    newFile: !uuid '46ddb0881d99f74f6d8bfd8831d534f7a78c09c2'
+    oldFile: !uuid '7202ce6fc7b52621e3ee83e4abed9ab5b37f983a'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderMap.js:
+    newFile: !uuid '1650f072e4ba87136ed824b64e92233d4681664d'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/result:
+    newFile: !uuid '1135960a03f13b9e5dc44464fb82ad788cb3777f'
+    oldFile: !uuid '3c1c735bda6fae71883293c43f6b2c74ac445162'
+  /Develop/Source/Trunk/WebContent/result/pageSystemDefineItem.json:
+    newFile: !uuid 'b5a75fceb995c157decbb95a14cfff667201654f'
+    oldFile: !uuid '117a7228b7a41e0d760793ebadec8e1fdd23da3d'
   /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '889dd97d2da31d9f456c6d16ce2fdc1895bd1e53'
-    oldFile: !uuid 'c3941638beca72b4bb395a962f3ded870869cf95'
+    newFile: !uuid 'eb102de8c9c1dc7381eced7f7ca4c93d21710f6c'
+    oldFile: !uuid '889dd97d2da31d9f456c6d16ce2fdc1895bd1e53'
   /Develop/Source/Trunk/WebContent/views/data:
-    newFile: !uuid '02ead676833b88f7102fb00aed7afb13c70ad563'
-    oldFile: !uuid 'e853743bbd9a2867d5fd2fa0fc62b97f48e6a387'
+    newFile: !uuid '18430cff95f8ff1dbef072ae114603f5efe95790'
+    oldFile: !uuid '02ead676833b88f7102fb00aed7afb13c70ad563'
   /Develop/Source/Trunk/WebContent/views/data/village.html:
-    newFile: !uuid 'fc5a52782f17cb96616f4220317669cc01952d24'
-    oldFile: !uuid '8793712266881f86aa7c553c601c240af564aa2d'
-gitCommitId: !uuid '07f5ee70c3753e19094f392c2db50ac4b144849c'
+    newFile: !uuid 'e2944227d6f21149e999a925a45a6a07360422f7'
+    oldFile: !uuid 'fc5a52782f17cb96616f4220317669cc01952d24'
+  /Develop/Source/Trunk/WebContent/views/decoration:
+    newFile: !uuid '36b68b721382be256fe0a39dbee4b624eff27e7d'
+    oldFile: !uuid 'e37cd0714268efc8dc738b47629f1f6bb1120d7e'
+  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderMap.html:
+    newFile: !uuid 'd6a04dfd32678995a5ef2dc7484008dadc46d158'
+    oldFile: null
+gitCommitId: !uuid 'bed259e7d6f08e4aa65fb23b18a0c859b14846c1'
 renames: {
   }
-revisionId: 69
+revisionId: 70
