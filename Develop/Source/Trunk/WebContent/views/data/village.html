@@ -140,17 +140,13 @@
 						</div>
 						<div class="space-4"></div>
 
-						<div class="form-group">
-							<a name="resetPositionBtn" class="btn btn-minier btn-warning">重选位置</a>
-							<a class="btn btn-minier btn-success" name="resetMapBtn">重新加载地图</a>
-						</div>
-
 						<div class="form-group" id="mapContainer"></div>
-						<div class="space-4"></div>
 
 					</form>
 				</div>
 				<div class="modal-footer">
+				    <button type="button" name="resetPositionBtn" class="btn btn-warning">重选位置</button>
+				    <button type="button" name="resetMapBtn" class="btn btn-success">重新加载地图</button>
 					<button type="button" id="saveMapBtn" class="btn btn-primary">保存</button>
 					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
@@ -160,6 +156,9 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx');
-	$.getScript('js/data/village.js?version=' + versionCode);
+	$(function(){
+        $.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx', function(){
+            $.getScript('js/data/village.js?version=' + versionCode);
+        });
+    });
 </script>
