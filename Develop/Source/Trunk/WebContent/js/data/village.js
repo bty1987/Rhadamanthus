@@ -1,8 +1,4 @@
 
-var testmp;
-
-var testCenter;
-
 $(function(){
 
     /**
@@ -257,26 +253,6 @@ $(function(){
         arrow.setAttribute('class', 'arrow');
         div.appendChild(arrow);
 
-        //鼠标放上和离开的触发事件
-        div.onmouseover = function(){
-            this.style.zIndex = 1000;
-            this.style.backgroundColor = "#BC3B3A";
-            this.style.color = '#fff';
-            this.getElementsByTagName("span")[0].innerHTML = that._mouseoverText;
-            arrow.style.borderColor = '#BC3B3A transparent transparent transparent';
-        };
-
-        div.onmouseout = function(){
-            this.style.zIndex = 1;
-            this.style.backgroundColor = "#fff";
-            this.style.color = '#000';
-            this.getElementsByTagName("span")[0].innerHTML = that._text;
-            arrow.style.borderColor = '#fff transparent transparent transparent';
-        };
-
-//        mp.getPanes().labelPane.appendChild(div);
-//        return div;
-
         circle.appendChild(div);
         return circle;//当调用map.removeOverlay或者map.clearOverlays方法时，API会自动将initialize方法返回的DOM元素进行移除。
     };
@@ -290,16 +266,15 @@ $(function(){
     };
 
     //重选位置点击
-    $('#mapForm [name="resetPositionBtn"]').click(function(){
+    $('[name="resetPositionBtn"]').click(function(){
         $('#mapContainer').addClass('changing-point');
         mp.clearOverlays();
     });
 
     //重新加载地图
-    $('#mapForm [name="resetMapBtn"]').click(function(){
+    $('[name="resetMapBtn"]').click(function(){
         //mp.reset();
         drawMap();
-
     });
 
     $(".date-picker").datepicker({autoclose: !0}).next().on(ace.click_event,function() {
