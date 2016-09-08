@@ -115,7 +115,11 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		materialModelPO.setBrandPO(new BrandPO(materialModelVO.getMaterialBrandId()));
 		materialModelPO.setMeasurementUnitPO(new MeasurementUnitPO(materialModelVO.getMeasurementUnitId()));
 		
-		materialModelDao.saveOrUpdate(materialModelPO);
+		materialModelPO.setBase(0);
+		materialModelPO.setPoint(0);
+		materialModelPO.setStatus(MaterialModelPO.TYPE_DISABLE_INT);
+		
+		materialModelDao.save(materialModelPO);
 		
 		return 0;
 	}
@@ -131,7 +135,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			materialModelPO.setBrandPO(new BrandPO(materialModelVO.getMaterialBrandId()));
 			materialModelPO.setMeasurementUnitPO(new MeasurementUnitPO(materialModelVO.getMeasurementUnitId()));
 			
-			materialModelDao.saveOrUpdate(materialModelPO);
+			materialModelDao.update(materialModelPO);
 		}
 	}
 
@@ -145,11 +149,12 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			
 			materialModelPO.setStatus(materialModelVO.getStatus());
 			
-			materialModelDao.saveOrUpdate(materialModelPO);
+			materialModelDao.update(materialModelPO);
 		}
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public void updateMaterialModelForAdvance(MaterialModelVO materialModelVO) {
 		
 		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
@@ -160,7 +165,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			materialModelPO.setBase(materialModelVO.getBase());
 			materialModelPO.setPoint(materialModelVO.getPoint());
 			
-			materialModelDao.saveOrUpdate(materialModelPO);
+			materialModelDao.update(materialModelPO);
 		}
 	}
 
