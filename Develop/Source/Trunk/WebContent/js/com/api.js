@@ -721,6 +721,7 @@ var api = {
 		addMaterialModel: {url: "addMaterialModel.do"},
 		updateMaterialModel: {url: "updateMaterialModel.do"},
 		updateMaterialModelForStatus: {url: "updateMaterialModelForStatus.do"},
+		updateMaterialModelForAdvance: {url: "updateMaterialModelForAdvance.do"},
 		deleteMaterialModelByIds: {url: "deleteMaterialModelByIds.do"},
 		
 		pageMaterialSubOrderForPreBalance: {url: "pageMaterialSubOrderForPreBalance.do", demo: true},

@@ -1,4 +1,4 @@
-#Wed Sep 07 09:33:12 CST 2016
+#Thu Sep 08 13:35:03 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
 encoding//WebContent/backup/quotationDetail.html=UTF-8
@@ -81,6 +81,7 @@ encoding//WebContent/views/material/materialBalanceValue.html=UTF-8
 encoding//WebContent/views/material/materialBrandRight.html=UTF-8
 encoding//WebContent/views/material/materialInside.html=UTF-8
 encoding//WebContent/views/material/materialModel.html=UTF-8
+encoding//WebContent/views/material/materialModelAdvance.html=UTF-8
 encoding//WebContent/views/material/materialOrder.html=UTF-8
 encoding//WebContent/views/material/materialOrderPostBalance.html=UTF-8
 encoding//WebContent/views/material/materialOrderPostBalanceDetail.html=UTF-8
