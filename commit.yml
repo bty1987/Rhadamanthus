@@ -3,72 +3,84 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'c82db204a54dc048741373162701e22e0bc03d76'
-    oldFile: !uuid 'f8d5fc8ae78ee0bf719f450b77b4d8f405fa3bcd'
+    newFile: !uuid '2b0a49596e39b118021a09f212c4dd9bfe07ee4c'
+    oldFile: !uuid 'c82db204a54dc048741373162701e22e0bc03d76'
   /Develop/Source:
-    newFile: !uuid '1e78aef18e0107cc522ec7f41dae5c1cd8ae0c14'
-    oldFile: !uuid '0139f3b3b603c81aa6baeaef58910c4d7331ced3'
+    newFile: !uuid '32ffdfc6bcf1f5599a6f425f97ddcbc9b0301475'
+    oldFile: !uuid '1e78aef18e0107cc522ec7f41dae5c1cd8ae0c14'
   /Develop/Source/Trunk:
-    newFile: !uuid '14c35dbe3460202c11d31da165a67e420b52a84d'
-    oldFile: !uuid '8fa87ab42cd28e54490eff8991f7a65a03f4f05c'
+    newFile: !uuid '597b2140594b93edb54cbd2210912ed00b53374c'
+    oldFile: !uuid '14c35dbe3460202c11d31da165a67e420b52a84d'
   /Develop/Source/Trunk/.settings:
-    newFile: !uuid '6f8b8e2726137beadb32c6dafb93ddfa30fee3e9'
-    oldFile: !uuid 'ff0651923064601cec276aac1dc160bc951103ea'
+    newFile: !uuid 'dccc2e330ed4e5e555dc74d57aaa5646cbf4d777'
+    oldFile: !uuid '6f8b8e2726137beadb32c6dafb93ddfa30fee3e9'
   /Develop/Source/Trunk/.settings/org.eclipse.core.resources.prefs:
-    newFile: !uuid '66464b2d54bbf468cefefeebd6f27c594ee88915'
-    oldFile: !uuid '0c78415793e96d7f450b8993861bfa6d92ff10be'
+    newFile: !uuid '3f680b5d14285cf8c76c12191993831229afacfc'
+    oldFile: !uuid '66464b2d54bbf468cefefeebd6f27c594ee88915'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '50080d8c5b04f13b2909cc0cbdc7e29baaa94c25'
-    oldFile: !uuid '7ceb0ea8353440f4a0709f8d9218777c64814a6e'
-  /Develop/Source/Trunk/WebContent/css:
-    newFile: !uuid 'f609b53a0930078999b971316d482d08d540398a'
-    oldFile: !uuid '1a433f4b4633fe97c92431cffdcb33f9dac0f107'
-  /Develop/Source/Trunk/WebContent/css/main.css:
-    newFile: !uuid 'fe0b8680ab4c1a1f04349eaa47065b5c60b3b149'
-    oldFile: !uuid 'b03494d761ab759ef1b7b1401c646abfe192ce2c'
+    newFile: !uuid '378de59c09d15282448a96460fafa6f1e9932fe7'
+    oldFile: !uuid '50080d8c5b04f13b2909cc0cbdc7e29baaa94c25'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '8080070c59cedeb015225d9753c00eb9264e76e6'
-    oldFile: !uuid '3c680c6c518311e57c92cb9ba6aac38cd9db19c3'
+    newFile: !uuid '033f66046208d1088efbb495ce96cc32e6aecfed'
+    oldFile: !uuid '8080070c59cedeb015225d9753c00eb9264e76e6'
   /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid 'cd638b54949ed489b5723adf46b6015610a7ed60'
-    oldFile: !uuid '7e9b5cb2b997ffef971c24a9cbe15a89b022806a'
-  /Develop/Source/Trunk/WebContent/js/com/error.js:
-    newFile: !uuid '7cf31f6c5805ebbee2f72c644a93e1cee967c7f0'
-    oldFile: !uuid '3d4ccda53859a55d75c22420ff8cb018a999463a'
-  /Develop/Source/Trunk/WebContent/js/data:
-    newFile: !uuid '01282a47c1d6bd2dc6c69ce6703736e0a4687e31'
-    oldFile: !uuid 'd8df494c9fbe39b86cdf8ed2292296a219bc0bf4'
-  /Develop/Source/Trunk/WebContent/js/data/village.js:
-    newFile: !uuid 'b9821d17e80f9412e0f12dc7eb20289ebd343351'
-    oldFile: !uuid 'd54e4e222905a56623cebd6f89cef73b05f08d3b'
-  /Develop/Source/Trunk/WebContent/js/decoration:
-    newFile: !uuid '46ddb0881d99f74f6d8bfd8831d534f7a78c09c2'
-    oldFile: !uuid '7202ce6fc7b52621e3ee83e4abed9ab5b37f983a'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderMap.js:
-    newFile: !uuid '1650f072e4ba87136ed824b64e92233d4681664d'
+    newFile: !uuid '36c58457dcebc016f24f7d853e574c8f0ce8d3a3'
+    oldFile: !uuid 'cd638b54949ed489b5723adf46b6015610a7ed60'
+  /Develop/Source/Trunk/WebContent/js/com/api.js:
+    newFile: !uuid '3ddea90a3f51d3b3c02199be00ecde073e9df8c2'
+    oldFile: !uuid '9eb2a14fe4b171d057527b57d37a6a6fa1adedbe'
+  /Develop/Source/Trunk/WebContent/js/material:
+    newFile: !uuid '8a0e11ad719fbaaeb96b1bfb51ce46e8fc0e26ed'
+    oldFile: !uuid '3c9704616f5ae520ec749dd96c3bf5202ab17fb2'
+  /Develop/Source/Trunk/WebContent/js/material/materialModel.js:
+    newFile: !uuid 'e3553bc03c4ee3f9333c5899ed4e3cd107f5ec77'
+    oldFile: !uuid '71a90915f34e9afaee90d7fa97d47947eacde32f'
+  /Develop/Source/Trunk/WebContent/js/material/materialModelAdvance.js:
+    newFile: !uuid '54e053a15d40d8758651accc703c2e9169a45cd5'
     oldFile: null
-  /Develop/Source/Trunk/WebContent/result:
-    newFile: !uuid '1135960a03f13b9e5dc44464fb82ad788cb3777f'
-    oldFile: !uuid '3c1c735bda6fae71883293c43f6b2c74ac445162'
-  /Develop/Source/Trunk/WebContent/result/pageSystemDefineItem.json:
-    newFile: !uuid 'b5a75fceb995c157decbb95a14cfff667201654f'
-    oldFile: !uuid '117a7228b7a41e0d760793ebadec8e1fdd23da3d'
   /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid 'eb102de8c9c1dc7381eced7f7ca4c93d21710f6c'
-    oldFile: !uuid '889dd97d2da31d9f456c6d16ce2fdc1895bd1e53'
-  /Develop/Source/Trunk/WebContent/views/data:
-    newFile: !uuid '18430cff95f8ff1dbef072ae114603f5efe95790'
-    oldFile: !uuid '02ead676833b88f7102fb00aed7afb13c70ad563'
-  /Develop/Source/Trunk/WebContent/views/data/village.html:
-    newFile: !uuid 'e2944227d6f21149e999a925a45a6a07360422f7'
-    oldFile: !uuid 'fc5a52782f17cb96616f4220317669cc01952d24'
-  /Develop/Source/Trunk/WebContent/views/decoration:
-    newFile: !uuid '36b68b721382be256fe0a39dbee4b624eff27e7d'
-    oldFile: !uuid 'e37cd0714268efc8dc738b47629f1f6bb1120d7e'
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderMap.html:
-    newFile: !uuid 'd6a04dfd32678995a5ef2dc7484008dadc46d158'
+    newFile: !uuid 'a0b876567e5e90dac01e35a519a6a118704bb865'
+    oldFile: !uuid 'eb102de8c9c1dc7381eced7f7ca4c93d21710f6c'
+  /Develop/Source/Trunk/WebContent/views/contract:
+    newFile: !uuid 'feab2d985aab5dcdd8466bcb06f414297eb32912'
+    oldFile: !uuid '2b71d66cb5fa0e70de23d932aef5f05b6e180564'
+  /Develop/Source/Trunk/WebContent/views/contract/decorationContract1.html:
+    newFile: !uuid '6a04e2b076042e5ba0cafbf78c49c9d27808289c'
+    oldFile: !uuid 'e88989c739ec48baf11b26d0708f0d240bc17bbf'
+  /Develop/Source/Trunk/WebContent/views/material:
+    newFile: !uuid '92e6a23d2742d67e0ca3d640f7bff2fd4d47536a'
+    oldFile: !uuid 'aa2b6ec6796b8e21ab20db159f0d1b415415bbd6'
+  /Develop/Source/Trunk/WebContent/views/material/materialModel.html:
+    newFile: !uuid 'c60b3c7e3250743ce46ff2187ccfc9ff23ef205e'
+    oldFile: !uuid '562e418210dc413ae3b9ba57be351c4f0d7e39d3'
+  /Develop/Source/Trunk/WebContent/views/material/materialModelAdvance.html:
+    newFile: !uuid '802941de1ce43857bc2883cb482ba5b1d8b018bb'
     oldFile: null
-gitCommitId: !uuid 'bed259e7d6f08e4aa65fb23b18a0c859b14846c1'
+  /Develop/Source/Trunk/src:
+    newFile: !uuid '76da2b4d9e8c3372db89253f5e446bdf02776c70'
+    oldFile: !uuid 'e169920d3c5b1f1b7490f0bcdffb3ffd55e43041'
+  /Develop/Source/Trunk/src/com:
+    newFile: !uuid 'e1199ed86c615a9a27bc02728714b6ad6832730a'
+    oldFile: !uuid '7f5161610af37036316329dfa31b3414f9200d17'
+  /Develop/Source/Trunk/src/com/fanglin:
+    newFile: !uuid 'd29b87b8a1e2257a914e552599fc4376ee0ca583'
+    oldFile: !uuid '9810541f0f3bbba4a1c2b89ce4b0e62fb56d8a2b'
+  /Develop/Source/Trunk/src/com/fanglin/data:
+    newFile: !uuid '08fa88960473292796e8e6add43785aef7bbef74'
+    oldFile: !uuid 'f5715e5e7c55ac62e41f9a7d2bbc63c176fb5de5'
+  /Develop/Source/Trunk/src/com/fanglin/data/material:
+    newFile: !uuid '61d2ba56d6dadd704df80bf5a8cbb82108e23a2c'
+    oldFile: !uuid 'd2fe0f77742925d280cb724a2eadf372fe00142b'
+  /Develop/Source/Trunk/src/com/fanglin/data/material/service:
+    newFile: !uuid '714f54e062d36131d920f840ede2a01bd3d81f0e'
+    oldFile: !uuid '29202fc0c82e220a7b808b39fe1b3d2ca49d124c'
+  /Develop/Source/Trunk/src/com/fanglin/data/material/service/impl:
+    newFile: !uuid '6abfdbff661e676a848fdec736c1f4e87dacc34f'
+    oldFile: !uuid 'd155551f2f19d68761346309cd5535e349b36fdb'
+  /Develop/Source/Trunk/src/com/fanglin/data/material/service/impl/MaterialModelServiceImpl.java:
+    newFile: !uuid '18aadfe796e41c28e1bee67830f4f0b798a31552'
+    oldFile: !uuid '0b220f102f936914bd78aa04c753b3c02508bebd'
+gitCommitId: !uuid 'a1c86ea553c99122c33357ca82aeaea57bf16770'
 renames: {
   }
-revisionId: 70
+revisionId: 71
