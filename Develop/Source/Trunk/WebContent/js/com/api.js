@@ -992,10 +992,6 @@ var api = {
 		updateCityProper: {url: "updateCityProper.do", server: "communionServer"},
 		deleteCityProper: {url: "deleteCityProper.do", server: "communionServer"},
 		
-		queryFunctionByModuleId: {url: "queryFunctionByModuleId.do", demo: true},
-		
-		queryModule: {url: "queryModule.do", demo: true},
-
 		pageRegion: {url: "pageRegion.do", demo: true},
 		queryRegion: {url: "queryRegion.do", demo: true},
 		queryRegionById: {url: "queryRegionById.do"},
@@ -1010,6 +1006,23 @@ var api = {
 		addRole: {url: "addRole.do", server: "communionServer"},
 		updateRole: {url: "updateRole.do", server: "communionServer"},
 		deleteRoleByIds: {url: "deleteRoleByIds.do", server: "communionServer"},
+		
+		queryModule: {url: "queryModule.do", demo: true},
+		queryModuleForLogin: {url: "queryModuleForLogin.do", demo: true},
+		queryModuleByUserId: {url: "queryModuleByUserId.do", demo: true},
+		addModule: {url: "addModule.do", server: "communionServer"},
+		updateRoleModuleByRoleId: {url: "updateRoleModuleByRoleId.do", server: "communionServer"},
+		deleteModule: {url: "deleteModule.do", server: "communionServer"},
+		
+		queryOperation: {url: "queryOperation.do", demo: true},
+		queryOperationForLogin: {url: "queryOperationForLogin.do", demo: true},
+		queryOperationByUserId: {url: "queryOperationByUserId.do", demo: true},
+		addOperation: {url: "addOperation.do", server: "communionServer"},
+		updateRoleOperationByRoleId: {url: "updateRoleOperationByRoleId.do", server: "communionServer"},
+		updateRoleOperationByUserId: {url: "updateRoleOperationByUserId.do", server: "communionServer"},
+		deleteOperation: {url: "deleteOperation.do", server: "communionServer"},
+
+		queryFunctionByModuleId: {url: "queryFunctionByModuleId.do", demo: true},
 		
 		queryRoleRight: {url: "queryRoleRight.do", demo: true},
 		updateRoleRight: {url: "updateRoleRight.do", server: "communionServer"},
