@@ -29,6 +29,11 @@ public class RolePO implements Serializable {
 		super();
 	}
 	
+	public RolePO(int rId) {
+		super();
+		this.rId = rId;
+	}
+
 	public RolePO(String roleId){
 		super();
 		this.roleId = roleId;
@@ -71,4 +76,5 @@ public class RolePO implements Serializable {
 	public void setRoleDes(String roleDes){
 		this.roleDes = roleDes;
 	}
+	
 }

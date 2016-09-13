@@ -18,7 +18,7 @@ import com.fanglin.core.security.AESHelper;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.system.service.RoleActionService;
+import com.fanglin.system.service.OperationService;
 import com.fanglin.utils.AuthenticationUtil;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
@@ -37,7 +37,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	public RoleActionService roleActionService;
+	private OperationService operationService;
 	
 	@Autowired
 	public LogService logService;
@@ -101,8 +101,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					
 					userId = authenticationUtil.getUserId();
 					
-					// 权限认证
-					if(roleActionService.checkRoleActionRight(authenticationUtil.getRoleId(), invocation.getProxy().getActionName())){
+					if(operationService.checkOperationByUserId(authenticationUtil.getUserId(), actionName)){
 						invocation.invoke();
 					}else{
 						throw new FLException(-2, "无操作权限");
@@ -135,8 +134,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
-//			e.printStackTrace();
-			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
+			e.printStackTrace();
+//			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
 		}
 		
 		return Action.SUCCESS;

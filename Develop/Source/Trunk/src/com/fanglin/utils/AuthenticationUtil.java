@@ -1,14 +1,3 @@
-/*
- * @File Name	: AuthenticationUtil.java
- * @Package		：com.fanglin.utils
- * @Version		: 1.0
- * @Date		: 2014-7-9
- * @Copyright	: Copyright Creators 2014
- * @Author		: bty1987
- * @Email		: 
- * Describing	: cookie认证相关的操作的工具类
- */
-
 package com.fanglin.utils;
 
 import java.util.Date;

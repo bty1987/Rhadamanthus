@@ -14,9 +14,9 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.service.impl.UserApproveService;
 import com.fanglin.personel.vo.UserApproveVO;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.service.UserApproveService;
 
 @ParentPackage("base")
 @Namespace("/")
