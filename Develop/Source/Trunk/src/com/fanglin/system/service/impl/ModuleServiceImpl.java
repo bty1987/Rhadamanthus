@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.FilterVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -35,6 +36,7 @@ import com.fanglin.system.service.ModuleService;
 import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("moduleService")
 @Transactional(readOnly=true)
@@ -53,12 +55,31 @@ public class ModuleServiceImpl implements ModuleService {
 	private RoleModuleDao roleModuleDao;
 
 	@Override
+	public void pageModule(Paging paging, List<FilterVO> filters) {
+		
+		List<ModulePO> modulePOs = moduleDao.pageModule(paging, filters);
+		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
+		
+		for(ModulePO modulePO: modulePOs){
+			
+			ModuleVO moduleVO = new ModuleVO();
+			
+			convertModule(modulePO, moduleVO);
+			
+			moduleVOs.add(moduleVO);
+		}
+		
+		paging.setData(moduleVOs);
+	}
+
+	@Override
 	public List<ModuleVO> queryModule() {
 		
 		List<ModulePO> modulePOs = moduleDao.queryModule();
 		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 		
 		for(ModulePO modulePO: modulePOs){
+			
 			ModuleVO moduleVO = new ModuleVO();
 			
 			convertModule(modulePO, moduleVO);
@@ -76,9 +97,12 @@ public class ModuleServiceImpl implements ModuleService {
 		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 		
 		for(ModulePO modulePO: modulePOs){
-			convertModule(modulePO, moduleVO);
 			
-			moduleVOs.add(moduleVO);
+			ModuleVO _moduleVO = new ModuleVO();
+			
+			convertModule(modulePO, _moduleVO);
+			
+			moduleVOs.add(_moduleVO);
 		}
 		
 		return moduleVOs;
@@ -236,8 +260,8 @@ public class ModuleServiceImpl implements ModuleService {
 			moduleVO.setFatherModule(fatherModuleVO);
 		}
 		
-		if(modules.get(moduleVO.getmId()) == null){
-			modules.put(moduleVO.getmId(), moduleVO);
+		if(modules.get(moduleVO.getMid()) == null){
+			modules.put(moduleVO.getMid(), moduleVO);
 		}
 		
 		return 0;

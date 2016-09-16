@@ -1,4 +1,4 @@
-#Thu Sep 08 13:35:03 CST 2016
+#Fri Sep 16 17:23:16 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
 encoding//WebContent/backup/quotationDetail.html=UTF-8
@@ -128,10 +128,11 @@ encoding//WebContent/views/salary/workerSalary.html=UTF-8
 encoding//WebContent/views/system/changePassword.html=UTF-8
 encoding//WebContent/views/system/city.html=UTF-8
 encoding//WebContent/views/system/cityProper.html=UTF-8
+encoding//WebContent/views/system/module.html=UTF-8
+encoding//WebContent/views/system/operation.html=UTF-8
 encoding//WebContent/views/system/region.html=UTF-8
 encoding//WebContent/views/system/resetPassword.html=UTF-8
 encoding//WebContent/views/system/role.html=UTF-8
-encoding//WebContent/views/system/subFunctionAction.html=UTF-8
 encoding//WebContent/views/system/userProfile.html=UTF-8
 encoding//conf/sysconfig.properties=UTF-8
 encoding//src/com/fanglin/core/action=UTF-8

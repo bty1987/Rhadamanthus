@@ -17,14 +17,26 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.FilterVO;
 import com.fanglin.system.dao.OperationDao;
 import com.fanglin.system.po.OperationPO;
+import com.fanglin.utils.Paging;
 
 @Repository("operationDao")
 public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationDao {
 
 	public OperationDaoImpl(){
 		super(OperationPO.class);
+	}
+
+	@Override
+	public List<OperationPO> pageOperation(Paging paging, List<FilterVO> filters) {
+		
+		PagingQuery<OperationPO> query = pagingQuery(paging, OperationPO.class);
+		
+		queryFilterExcute(query, filters);
+		
+		return query.list();
 	}
 
 	@Override
@@ -42,6 +54,10 @@ public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationD
 	@Override
 	public OperationPO queryOperationByOperation(String operation) {
 		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).uniqueResult();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
 	}
 
 }

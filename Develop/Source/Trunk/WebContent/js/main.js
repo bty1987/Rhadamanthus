@@ -10,7 +10,7 @@ $(function(){
 	$(document).attr('title', config.name + ' ' + config.ename);
     $('#name').text(config.name);
     
-	com.post(api.common.createTree, {}, loadTreeCallback);
+	com.post(api.system.queryModuleForLogin, {"module.system": config.system}, createMenu);
 	com.post(api.common.wmCode, {}, function(res){
 		var img = new Image();
 		img.src = res.watermark;
@@ -18,20 +18,11 @@ $(function(){
 		$("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
 	}, null, false);
 	
-	var img = new Image();
-	img.src = params.watermark;
-	url = 'url("' + img.src + '")'
-	$("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
-	
 	$("#versionCode").text(config.versionCode);
 	
-	$(".userProfile").attr("href", api.index.userProfile.url + "?timestamp="+ new Date().getTime());
-	$(".userProfile").data("level", 1);
-	$(".changePassword").attr("href", api.index.changePasswordIndex.url + "?timestamp=" + new Date().getTime());
-	$(".changePassword").data("level", 1);
-	
-	$(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
-	$(".messageList").data("level", 1);
+	$(".userProfile").attr("href", api.index.userProfile.url + "?timestamp="+ new Date().getTime()).data("level", 1);
+	$(".changePassword").attr("href", api.index.changePasswordIndex.url + "?timestamp=" + new Date().getTime()).data("level", 1);
+	$(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime()).data("level", 1);
 	
 	var setCookie =  function(cname, cvalue, minutes) {
         var d = new Date();
@@ -120,7 +111,7 @@ $(function(){
 //		loadMessageCount();
 //	}, 1800000);
 	
-	queryTopInfo('decorationDesignerRank', 'designerName')
+	queryTopInfo('decorationDesignerRank', 'designerName');
 	loadTopSelf();
 });
 
@@ -181,11 +172,6 @@ function loadTopSelf(opts){
 }
 
 function loadNotices(){
-	
-	var img = new Image();
-	img.src = params.watermark;
-	url = 'url("' + img.src + '")'
-	$(".page-content").css('background-size', '300px').css('background-image', url).css('bottom', '0');
 	
 	var options = {
 		"paging.rows":5,
@@ -269,136 +255,105 @@ function loadMessageCount(){
 			}
 		}
 	}, function(res){
-		console.log("get message count fail...");
 	});
 }
 
-function loadTreeCallback(nodes){
-	var treeData = nodes.tree;
-	var $tree = $("ul.nav-list");
-	var $main = $('<li><a href="#" onclick="reloadPage();"><i class="icon-home"></i><span class="menu-text">首页</span></a></li>');
-	$tree.append($main);
-	for(var x in treeData){
-		var node = treeData[x];
-		if(typeof node !== "object")
-			continue;
-		var $li = $("<li></li>").addClass('lv1');
-		if(node.sub){//level 1
-			var nodes2 = node.sub;
-			var $a = $("<a href='"+node.url+"' class='dropdown-toggle'></a>").data('level', 1);
-			var $i = $("<i class='"+node.icon+"'></i>");
-			var $span = $("<span class='menu-text'>"+node.name+"</span>");
-			var $b = $("<b class='arrow icon-angle-down'></b>");
-			$a.append($i).append($span).append($b);
-			var $ul = $("<ul class='submenu'></ul>");
-			$li.append($a).append($ul);
-			for(var y in nodes2){
-				var node2 = nodes2[y];
-				if(typeof node2 !== "object")
-					continue;
-				var $li2 = $("<li></li>").addClass('lv2');
-				$ul.append($li2);
-				node2.icon = "";
-				if(node2.sub){//level 2
-					var nodes3 = node2.sub;
-					
-					if(nodes3.length==1){
-						var $a2 = $("<a href='"+nodes3[0].url+"?timestamp="+ new Date().getTime()+"'>"+nodes3[0].name+"</a>").data('level', 2);
-						var $i2 = $("<i class='"+node2.icon+"'></i>");
-						$a2.append($i2);
-						$li2.append($a2);
-						
-					}else{
-						var $a2 = $("<a href='"+node2.url+"' class='dropdown-toggle'></a>").data('level', 2);
-						var $i2 = $("<i class='"+node2.icon+"'></i>");
-						var $b2 = $("<b class='arrow icon-angle-down'></b>");
-						$a2.append($i2).append(node2.name).append($b2);
-						var $ul2 = $("<ul class='submenu'></ul>");
-						$li2.append($a2).append($ul2);
-						for(var z in nodes3){//level 3
-							var node3 = nodes3[z];
-							if(typeof node3 !== "object")
-								continue;
-							var $li3 = $("<li></li>").addClass('lv3');
-							var $a3 = $("<a href='"+node3.url+"?timestamp="+ new Date().getTime()+"'></a>").data('level', 3);
-							var $i3 = $("<i class='"+node3.icon+"'></i>");
-							$a3.append($i3).append(node3.name);
-							$li3.append($a3);
-							$ul2.append($li3);
-						}
-					}
-				}else{
-					var $a2 = $("<a href='"+node2.url+"?timestamp="+ new Date().getTime()+"'>"+node2.name+"</a>").data('level', 2);
-					var $i2 = $("<i class='"+node2.icon+"'></i>");
-					$a2.append($i2);
-					$li2.append($a2);
-				}
-			}
-		}else{
-			var $a = $("<a href='"+node.url+"'></a>").data('level', 1);
-			var $i = $("<i class='"+node.icon+"'></i>");
-			var $span = $("<span class='menu-text'>"+node.name+"</span>");
-			$a.append($i).append($span);
-			$li.append($a);
-		}
-		$tree.append($li);
+function createMenu(data){
+
+	var menuArr = {
+		level1 : [],
+		level2 : [],
+		level3 : [],
+	};
+
+	var menuObj = {
+		level1 : {},
+		level2 : {},
 	}
-	
+	var treeData = data.modules;
+	var $tree = $("ul.nav-list");
+	var $main = $('<li class="active"><a href="#" onclick="reloadPage();"><i class="icon-home"></i><span class="menu-text">首页</span></a></li>');
+	var arr ;
+	$tree.append($main);
+
+	if(!treeData || !treeData.length){
+		return;
+	}
+
+	$.each(treeData , function(i, v){
+		arr = menuArr['level' + v.level]
+		arr[arr.length] = v;
+	});
+
+	$.each(menuArr, function(key, val){
+		menuArr[key] = val.sort(function(a,b){
+			return a.mid-b.mid});
+	});
+
+	if(menuArr.level1.length){
+		$.each(menuArr.level1, function(i, v){
+			var $li = $('<li></li>');
+			var $a = $('<a href="#"></a>');
+			var $i = $('<i></i>').addClass(v.icon);
+			var $span = $('<span></span>').addClass('menu-text').text(v.name);
+			$a.append($i).append($span).appendTo($li);
+			menuObj.level1[v.mid] = $li;
+			$li.appendTo($tree);
+		});
+	}
+
+	if(menuArr.level2.length){
+		$.each(menuArr.level2, function(i, v){
+			var $li = $('<li></li>');
+			var $a = $('<a></a>').attr('href', v.url ? v.url : '#');
+			var $i = $('<i></i>').addClass(v.icon);
+			var $span = $('<span></span>').addClass('menu-text').text(v.name);
+			$a.append($i).append($span).appendTo($li);
+			menuObj.level2[v.mid] = $li;
+
+			var $parent = menuObj.level1[v.fatherModule.mid];
+			$parent.children('a').children('b').length || $('<b></b>').addClass('arrow icon-angle-down').appendTo($parent.children('a'));
+			var $pul = $parent.children('ul').length ? $parent.children('ul') : $('<ul></ul>').addClass('submenu').appendTo($parent);
+			$li.appendTo($pul);
+		});
+	}
+
+	if(menuArr.level3.length){
+		$.each(menuArr.level3, function(i, v){
+			var $li = $('<li></li>');
+			var $a = $('<a></a>').attr('href', v.url ? v.url : '#');
+			var $i = $('<i></i>').addClass(v.icon);
+			var $span = $('<span></span>').addClass('menu-text').text(v.name);
+			$a.append($i).append($span).appendTo($li);
+
+			var $parent = menuObj.level2[v.fatherModule.mid];
+			$parent.children('a').children('b').length || $('<b></b>').addClass('arrow icon-angle-down').appendTo($parent.children('a'));
+			var $pul = $parent.children('ul').length ? $parent.children('ul') : $('<ul></ul>').addClass('submenu').appendTo($parent);
+			$li.appendTo($pul);
+		});
+	}
+
 	$("a", $tree).on("click", function(e){
 		$this = $(this);
 //		navControl($this);
-		
+
 		var hrefStr = $this.attr("href");
-		
-		if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
-			com.switchPage(hrefStr);
-			
-			$('.lv1.active').removeClass('active');
-			$('.lv2.active').removeClass('active');
-			$('.lv3.active').removeClass('active');
-			
-			$this.parent('li').addClass("active");
-			$this.parents('li.lv1').addClass("active");
+
+		if($this.siblings('ul').length){
+			if(!$this.parent('li').hasClass('active')){
+				$this.parent('li').toggleClass('open');
+				$this.parent('li').siblings('li').not('.active').removeClass('open');
+			}
+		}else{
+			if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
+				com.switchPage(hrefStr);
+				$('.active').not($this.parents('li')).removeClass('active').removeClass('open');
+				$this.parent('li').addClass('active');
+				$this.parents('.nav-list > li').addClass('active');
+			}
 		}
-		
+
 		e.preventDefault();
 	});
-}
 
-function navControl($this){
-	if($this.data('level') == 1){
-		$('.level1').removeClass('level1');
-		$this.addClass('level1');
-		if($this.attr('href')!='#'){
-			$('ul.breadcrumb .nav1').html("<i class='"+$('i', $this).attr('class')+"'></i> "+$this.text());
-			$('ul.breadcrumb .nav2').hide();
-			$('ul.breadcrumb .nav3').hide();
-		}
-	}else if($this.data('level') == 2){
-		$('.level2').removeClass('level2');
-		$this.addClass('level2');
-		if($this.attr('href')!='#'){
-			$('ul.breadcrumb .nav1').html("<i class='"+$('.nav-list .level1 i').attr('class')+"'></i> "+$('.nav-list .level1').text());
-			$a = $('<a href='+$this.attr("href")+'>'+$this.text()+'</a>');
-			$('ul.breadcrumb .nav2').show().html($a);
-			$('ul.breadcrumb .nav3').hide();
-			$a.on('click', function(e){
-				e.preventDefault();
-				com.switchPage(e.target.href);
-			});
-		}
-	}else if($this.data('level') == 3){
-		$('.level3').removeClass('level3');
-		$this.addClass('level3');
-		if($this.attr('href')!='#'){
-			$('ul.breadcrumb .nav1').html("<i class='"+$('.nav-list .level1 i').attr('class')+"'></i> "+$('.nav-list .level1').text());
-			$('ul.breadcrumb .nav2').show().text($('.nav-list .level2').text());
-			$a = $('<a href='+$this.attr("href")+'>'+$this.text()+'</a>');
-			$('ul.breadcrumb .nav3').show().html($a);
-			$a.on('click', function(e){
-				e.preventDefault();
-				com.switchPage(e.target.href);
-			});
-		}
-	}
 }

@@ -40,18 +40,18 @@ input.ace.ace-switch.ace-switch-5[type="checkbox"] + .lbl.gender:before{content:
 /* .top-table > li > span.col-sm-1, .top-table > li > span.col-sm-5{float:none;} */
 /* .top-table li span:first-child{font-weight:bold;width:13px;}  */
 .profile-feed > div{margin:0 5px 5px;border-radius:0px;-webkit-transition: all 0.3s;padding:10px 4px;}
-.profile-feed > div:hover{border-color:#80C6EE;-webkit-transform: scale(1.01);-ms-transform: scale(1.01);transform:scale(1.01)} 
+.profile-feed > div:hover{border-color:#80C6EE;-webkit-transform: scale(1.01);-ms-transform: scale(1.01);transform:scale(1.01)}
 .widget-box{}
 .sidebar-shortcuts .badge{position: absolute!important;top: -10px;right: -10px;padding: 1px 3px;text-align: center;font-size: 7px;border-radius: 0px;}
 .tooltip {
-position: absolute;
-z-index: 100000;
-display: block;
-font-size: 12px;
-line-height: 1.4;
-opacity: 0;
-filter: alpha(opacity=0);
-visibility: visible;
+	position: absolute;
+	z-index: 100000;
+	display: block;
+	font-size: 12px;
+	line-height: 1.4;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	visibility: visible;
 }
 .login_content {
 	background: #fff none repeat scroll 0 0;
@@ -132,45 +132,45 @@ visibility: visible;
 }
 
 textarea, select,input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-    background-color: #fff;
-    border: 1px solid #d5d5d5;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    color: #000000;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.2;
-    padding: 5px 4px;
-    transition-duration: 0.1s;
+	background-color: #fff;
+	border: 1px solid #d5d5d5;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	color: #000000;
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 1.2;
+	padding: 5px 4px;
+	transition-duration: 0.1s;
 }
 
 textarea[disabled],input[disabled],select[disabled] {
-    background-color: #eee !important;
-    color: #848484 !important;
+	background-color: #eee !important;
+	color: #848484 !important;
 }
 
 .item-list.fl-table-list h3.oid{
-    margin-top: 0;
+	margin-top: 0;
 }
 
 .item-list.fl-table-list small{
-    font-size: .9em;
+	font-size: .9em;
 }
 
 ul.fl-inline-list li{
-    display: inline-block;
-    float: left;
-    padding-right: 20px;
-    font-size: 14px;
+	display: inline-block;
+	float: left;
+	padding-right: 20px;
+	font-size: 14px;
 }
 
 .fl-page-wrap{
-    margin: 30px auto 20px;
+	margin: 30px auto 20px;
 }
 
 .fl-page-wrap .pager{
-    margin-top: 0;
-    margin-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .fl-page-wrap .pager-info{
@@ -178,18 +178,18 @@ ul.fl-inline-list li{
 
 .fl-page-input{
 	box-sizing: content-box;
-    font-size: inherit;
-    height: 10px;
-    line-height: 16px;
-    padding-bottom: 1px;
-    padding-top: 1px;
-    text-align: center;
-    width: 24px;
-    margin: 1px;
+	font-size: inherit;
+	height: 10px;
+	line-height: 16px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	text-align: center;
+	width: 24px;
+	margin: 1px;
 }
 
 .fl-page-select{
-	font-size: 10px; 
+	font-size: 10px;
 	height: 22px;
 	padding: 3px 8px;
 	margin: 3px;
@@ -239,6 +239,8 @@ ul.fl-inline-list li{
 	display: flex;
 	justify-content: center;/*主轴上的对齐方式*/
 	align-items: center;/*交叉轴上如何对齐*/
+
+
 }
 .fl-quo-list .cell.line{
 	flex-grow : 0;
@@ -337,6 +339,7 @@ ul.fl-inline-list li{
 
 .flex-table .order{
 	width: 3%;
+	min-width: 36px;
 }
 
 .flex-table .content{
@@ -345,6 +348,7 @@ ul.fl-inline-list li{
 
 .flex-table .action{
 	width: 7%;
+	min-width: 70px;
 }
 
 .flex-table .cell{
@@ -358,6 +362,7 @@ ul.fl-inline-list li{
 	justify-content : center;
 	align-items : center;
 	margin : -1px 0 0 -1px;
+	word-break: break-all;
 }
 
 .flex-table .cell.index{
@@ -412,6 +417,7 @@ ul.fl-inline-list li{
 
 .flex-table .cell.option{
 	width: 100%;
+	flex-wrap: wrap;
 }
 
 .flex-table .cell input{
@@ -432,51 +438,71 @@ ul.fl-inline-list li{
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8',endColorstr='#ffececec',GradientType=0);
 }
 #mapContainer{
-    height: 100%;
-    min-height: 500px;
+	height: 100%;
+	min-height: 500px;
 }
 #mapContainer .position-mark{
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #BC3B3A;
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #BC3B3A;
 
 }
 #mapContainer .position-mark .txt{
-    position: absolute;
-    left: -9px;
-    top: -36px;
-    padding: 3px 6px;
-    border: 1px solid #BC3B3A;
-    border-radius: 5px;
-    background-color: #fff;
-    font-size: 12px;
-    line-height: 18px;
-    white-space: nowrap;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+	position: absolute;
+	left: -9px;
+	top: -36px;
+	padding: 3px 6px;
+	border: 1px solid #BC3B3A;
+	border-radius: 5px;
+	background-color: #fff;
+	font-size: 12px;
+	line-height: 18px;
+	white-space: nowrap;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 #mapContainer .position-mark .arrow-border{
-    position: absolute;
-    top: 24px;
-    left: 8px;
-    width: 0;
-    height:0;
-    border-style: solid;
-    border-width: 12px 5px;
-    border-color: #BC3B3A transparent transparent transparent;
-    overflow: hidden;
+	position: absolute;
+	top: 24px;
+	left: 8px;
+	width: 0;
+	height:0;
+	border-style: solid;
+	border-width: 12px 5px;
+	border-color: #BC3B3A transparent transparent transparent;
+	overflow: hidden;
 }
 #mapContainer .position-mark .arrow{
-    position: absolute;
-    top: 22px;
-    left: 8px;
-    width: 0;
-    height:0;
-    border-style: solid;
-    border-width: 12px 5px;
-    border-color: #fff transparent transparent transparent;
-    overflow: hidden;
+	position: absolute;
+	top: 22px;
+	left: 8px;
+	width: 0;
+	height:0;
+	border-style: solid;
+	border-width: 12px 5px;
+	border-color: #fff transparent transparent transparent;
+	overflow: hidden;
 }
+
+#sidebar li.open > ul{
+	display: block;
+}
+
+.flex-table .cell .dropdown-menu{
+	width: 100%;
+	min-width: 30px;
+}
+
+.flex-table .cell > .btn-group{
+	width: 100%;
+}
+
+.flex-table .cell > .btn-group .btn{
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 100%;
+}
+

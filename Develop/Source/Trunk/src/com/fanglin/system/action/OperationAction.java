@@ -20,7 +20,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.core.action.BaseAction;
+import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.service.OperationService;
@@ -30,7 +30,7 @@ import com.fanglin.system.vo.RoleVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class OperationAction extends BaseAction{
+public class OperationAction extends BaseListAction{
 
 	private static final long serialVersionUID = 4693120315577831019L;
 	
@@ -46,6 +46,14 @@ public class OperationAction extends BaseAction{
 	private OperationVO operation;
 	
 	private RoleVO role;
+	
+	@Action(value = "pageOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
+	public String pageOperation(){
+		
+		operationService.pageOperation(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
 	
 	@Action(value = "queryOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
 	public String queryOperation(){
@@ -67,6 +75,14 @@ public class OperationAction extends BaseAction{
 	public String queryOperationByUserId() throws FLException{
 		
 		operations = operationService.queryOperationByUserId(operation, user);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryOperationByRoleId", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
+	public String queryOperationByRoleId() throws FLException{
+		
+		operations = operationService.queryOperationByRoleId(operation, role);
 		
 		return SUCCESS;
 	}

@@ -24,6 +24,8 @@ public interface RoleOperationDao extends Dao<RoleOperationPO> {
 	
 	public RoleOperationPO queryRoleOperationByOperationARId(String operation, int rId, short system);
 	
+	public RoleOperationPO queryRoleOperationByRIdAOId(int rId, int oId);
+	
 	public int deleteRoleOperationByRId(int rId, short system);
 	
 }

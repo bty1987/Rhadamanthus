@@ -7,7 +7,7 @@ public class ModuleVO implements Serializable {
 	
 	private static final long serialVersionUID = 5406770839477574587L;
 	
-	private Integer mId;
+	private Integer mid;
 
 	private ModuleVO fatherModule;
 	
@@ -23,12 +23,12 @@ public class ModuleVO implements Serializable {
 	
 	private Set<OperationVO> operations;
 	
-	public Integer getmId() {
-		return mId;
+	public Integer getMid() {
+		return mid;
 	}
 
-	public void setmId(Integer mId) {
-		this.mId = mId;
+	public void setMid(Integer mid) {
+		this.mid = mid;
 	}
 
 	public ModuleVO getFatherModule() {

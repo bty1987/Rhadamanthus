@@ -19,7 +19,7 @@ public class OperationPO implements java.io.Serializable {
 	
 	public static final String COLUMN_OPERATION_STR = "operation";
 
-	private int oId;
+	private int oid;
 	
 	private ModulePO module;
 	
@@ -33,20 +33,20 @@ public class OperationPO implements java.io.Serializable {
 		super();
 	}
 
-	public OperationPO(int oId) {
+	public OperationPO(int oid) {
 		super();
-		this.oId = oId;
+		this.oid = oid;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "oId")
-	public int getoId() {
-		return oId;
+	public int getOid() {
+		return oid;
 	}
 
-	public void setoId(int oId) {
-		this.oId = oId;
+	public void setOid(int oid) {
+		this.oid = oid;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
