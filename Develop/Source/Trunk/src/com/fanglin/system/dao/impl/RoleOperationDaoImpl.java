@@ -44,6 +44,11 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	}
 
 	@Override
+	public RoleOperationPO queryRoleOperationByRIdAOId(int rId, int oId) {
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").createAlias("role", "role").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("operation.oId", oId)).uniqueResult();
+	}
+
+	@Override
 	public int deleteRoleOperationByRId(int rId, short system) {
 		
 		String sql = "delete from communion.roleoperation where rId = :rId and oId in (select oId from communion.operation where system = :system)";

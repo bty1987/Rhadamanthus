@@ -33,6 +33,9 @@ import com.fanglin.system.vo.RoleVO;
 public class ModuleAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5295311320323779589L;
+	
+	@Autowired
+	private ModuleService moduleService;
 
 	private ModuleVO module;
 	
@@ -44,8 +47,13 @@ public class ModuleAction extends BaseListAction {
 	
 	private List<Integer> mids;
 	
-	@Autowired
-	private ModuleService moduleService;
+	@Action(value = "pageModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
+	public String pageModule(){
+		
+		moduleService.pageModule(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
 	
 	@Action(value = "queryModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
 	public String queryModule(){

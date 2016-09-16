@@ -1,0 +1,105 @@
+
+<div class="page-content">
+
+	<div class="row">
+		<div class="col-xs-12">
+
+			<div class="row">
+
+				<h3 class="grey lighter  position-relative">
+					<i class="icon-leaf green"></i>
+					模块
+					<button class="btn blue pull-right btn-sm" id="addModule">添加</button>
+				</h3>
+				<div class="hr hr8 hr-double hr-dotted"></div>
+			</div>
+
+			<div id="moduleTable" class="row"></div>
+		</div>
+		<div class="col-xs-5">
+
+		</div>
+
+	</div>
+
+
+
+
+</div>
+
+<div class="modal fade" id="moduleModal" tabindex="-1" role="dialog"	aria-labelledby="moduleDialog" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content col-md-12">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="moduleDialog">模块</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+						<div class="col-sm-9">
+							<input type="text" id="moduleName" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" data-trigger='manual' maxlength='5'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="icon">图标</label>
+						<div class="col-sm-9">
+							<input type="text" id="icon" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="url">地址</label>
+						<div class="col-sm-9">
+							<input type="text" id="url" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="level">等级</label>
+						<div class="col-sm-9">
+							<select class="col-xs-10 col-sm-5 v_required" id="level" data-toggle="popover" data-trigger='manual'>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="fatherModule">上级</label>
+						<div class="col-sm-9">
+
+							<input type="text"  autocomplete="off" id="fatherModule" class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual'/>
+
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script src="js/system/module.js"></script>
+<!--
+<script type="text/javascript">
+	$.getScript('js/system/module.js?version=' + versionCode);
+</script>-->

@@ -14,11 +14,15 @@ package com.fanglin.system.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.FilterVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.Paging;
 
 public interface ModuleService {
+	
+	public void pageModule(Paging paging, List<FilterVO> filters);
 	
 	public List<ModuleVO> queryModule();
 	

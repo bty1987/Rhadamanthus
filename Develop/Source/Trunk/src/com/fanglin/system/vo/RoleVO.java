@@ -8,13 +8,10 @@ public class RoleVO implements Serializable {
 
 	private static final long serialVersionUID = 9045008682677539729L;
 
-	@SerializedName("编号")
 	private String roleId;
 	
-	@SerializedName("名称")
 	private String roleName;
 
-	@SerializedName("描述")
 	protected String roleDes;
 	
 	public RoleVO(){

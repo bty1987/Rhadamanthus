@@ -17,14 +17,26 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.FilterVO;
 import com.fanglin.system.dao.ModuleDao;
 import com.fanglin.system.po.ModulePO;
+import com.fanglin.utils.Paging;
 
 @Repository("moduleDao")
 public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 	
 	public ModuleDaoImpl(){
 		super(ModulePO.class);
+	}
+
+	@Override
+	public List<ModulePO> pageModule(Paging paging, List<FilterVO> filters) {
+		
+		PagingQuery<ModulePO> query = pagingQuery(paging, ModulePO.class);
+		
+		queryFilterExcute(query, filters);
+		
+		return query.list();
 	}
 
 	@Override
@@ -37,6 +49,10 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 	@SuppressWarnings("unchecked")
 	public List<ModulePO> queryModuleBySystem(short system) {
 		return session().createCriteria(ModulePO.class).add(Restrictions.eq("system", system)).list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+		
 	}
 
 }

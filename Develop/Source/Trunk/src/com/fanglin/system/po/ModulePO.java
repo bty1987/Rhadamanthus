@@ -19,7 +19,7 @@ public class ModulePO implements Serializable {
 	
 	private static final long serialVersionUID = -8993777631048468352L;
 
-	private int mId;
+	private int mid;
 	
 	private ModulePO fatherModule;
 	
@@ -37,22 +37,22 @@ public class ModulePO implements Serializable {
 		super();
 	}
 
-	public ModulePO(int mId) {
+	public ModulePO(int mid) {
 		super();
-		this.mId = mId;
+		this.mid = mid;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "mId") 
-	public int getMid(){
-		return mId;
+	@Column(name = "mId")
+	public int getMid() {
+		return mid;
 	}
 
-	public void setMid(int mId){
-		this.mId = mId;
+	public void setMid(int mid) {
+		this.mid = mid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "fatherModuleId", referencedColumnName = "mId")
 	public ModulePO getFatherModule() {

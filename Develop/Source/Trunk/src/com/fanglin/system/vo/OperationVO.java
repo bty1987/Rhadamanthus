@@ -4,7 +4,7 @@ public class OperationVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6174194941685386010L;
 
-	private Integer oId;
+	private Integer oid;
 	
 	private ModuleVO module;
 	
@@ -14,12 +14,12 @@ public class OperationVO implements java.io.Serializable {
 	
 	private Short system;
 	
-	public Integer getoId() {
-		return oId;
+	public Integer getOid() {
+		return oid;
 	}
 
-	public void setoId(Integer oId) {
-		this.oId = oId;
+	public void setOid(Integer oid) {
+		this.oid = oid;
 	}
 
 	public ModuleVO getModule() {

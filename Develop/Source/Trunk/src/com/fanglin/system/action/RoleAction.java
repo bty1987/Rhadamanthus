@@ -12,7 +12,6 @@
 
 package com.fanglin.system.action;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -32,16 +31,15 @@ import com.fanglin.system.vo.RoleVO;
 public class RoleAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5295311320323779589L;
+	
+	@Autowired
+	private RoleService roleService;
 
 	private RoleVO role;
 
 	private List<String> roleIds;
 
-	@SuppressWarnings("unchecked")
-	private List<RoleVO> roleList = Collections.EMPTY_LIST;
-
-	@Autowired
-	private RoleService roleService;
+	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageRole(){

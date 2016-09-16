@@ -1,0 +1,143 @@
+$(function(){
+
+    var fatherModuleArr = null;
+
+    var Operation = (function(){
+
+        var createLine = function(v){
+
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.operation));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
+
+            var propertyArr = [
+                ["编号:", v.oid, "grey"],
+                ["操作说明:", v.name, "grey"],
+                ["模块:", v.module  ? v.module.name : "---", "blue"],
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $divBtnWrap.append($btnDel);
+
+            $divBtnWrap.appendTo($h3);
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnDel.click(function(){
+                deleteOperation(v.oid);
+            });
+
+            return $liLine;
+        };
+
+        return {
+            renderList : function(listData, tableId){
+                var $tableWrap = $('#' + tableId).empty();
+                if(listData && listData.length){
+
+                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                    $ul.appendTo($tableWrap);
+
+                    $.each(listData, function(i, v){
+                        var $li = createLine(v);
+                        $li.appendTo($ul);
+                    });
+                }
+            }
+        };
+    })();
+
+    com.post(api.system.queryModule, {'module.system' : config.system}, function(data){
+        fatherModuleArr =  data.modules;
+    }, null, false);
+
+
+    function search(){
+        com.post(api.system.queryOperation, {}, function(data){
+            Operation.renderList( data.operations ,'operationTable');
+        }, null, false);
+    }
+
+    search();
+
+    var operation = {
+
+        modal : $('#operationModal').on("show.bs.modal", function(a) {
+            com.clearValidator();
+            com.clearValidator("#materialModelName", !0);
+            com.clearValidator("#materialModelNo", !0)
+        }),
+        btnAdd : $('#addModule').click(function(){
+            $('#operationModal').modal("show");
+        }),
+        saveBtn: $("#saveBtn").on("click", saveData),
+        operationModalItems : {
+            operation  : $('#operation'),
+            operationName : $('#operationName'),
+            fatherModule : $('#fatherModule').typeahead({
+
+                list: [],
+                source: function (query, process) {
+
+                    var level = $('#level').val() - 1;
+
+                    var result = $.map(fatherModuleArr, function(val){
+                        return val.name.indexOf(query) == -1 ? null : val;
+                    });
+
+                    result = result.length ? result : fatherModuleArr;
+
+                    this.options.callback.call(this,result);
+                }, matcher: function (item) {
+                    return true;
+                }, callback: function(data){
+                    //this.options.list = data;
+                    this.flprocess(data ,'mId', 'name');
+                },
+                isResultTypeMap : true //必填值为true，获取key，value的标识，
+                , flupdater: function(k,v){//下拉列表选中时的一些处理，必填对选中项的key和value做处理
+                    //k: key, v:value
+                    return v;
+                }
+            })
+        }
+    };
+
+    function saveData() {
+        if (com.validate()) {
+            return;
+        }
+
+        var params = {
+            "operation.name": operation.operationModalItems.operationName.val(),
+            "operation.operation": operation.operationModalItems.operation.val(),
+            "operation.module.mId": operation.operationModalItems.fatherModule.attr('data-typeahead-key'),
+            "operation.system": config.system,
+        };
+
+        com.post(api.system.addOperation, params,function(a) {
+            operation.modal.modal('hide');
+            search();
+        });
+    }
+
+    function deleteOperation(oid){
+        bootbox.confirm("确定删除吗？", function(result) {
+            if(result) {
+                com.post(api.system.deleteOperation, {"operation.oid": oid}, function(){
+                    search();
+                });
+            }
+        });
+    }
+
+});
