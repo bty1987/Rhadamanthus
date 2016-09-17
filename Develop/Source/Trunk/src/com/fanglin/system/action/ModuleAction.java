@@ -79,6 +79,14 @@ public class ModuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryModuleByRoleId", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
+	public String queryModuleByRoleId() throws FLException{
+		
+		modules = moduleService.queryModuleByRoleId(module, role);
+		
+		return SUCCESS;
+	}
+	
 	public ModuleVO getModule(){
 		return module;
 	}
