@@ -255,7 +255,7 @@ public class ModuleServiceImpl implements ModuleService {
 			
 			ModuleVO fatherModuleVO = new ModuleVO();
 			
-			BeanUtil.copyProperties(modulePO.getFatherModule(), fatherModuleVO);
+			BeanUtil.copyProperties(modulePO.getFatherModule(), fatherModuleVO, Arrays.asList("fatherModule", "operations"));
 			
 			moduleVO.setFatherModule(fatherModuleVO);
 		}
