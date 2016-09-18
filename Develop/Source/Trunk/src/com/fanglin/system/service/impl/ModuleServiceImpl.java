@@ -118,7 +118,7 @@ public class ModuleServiceImpl implements ModuleService {
 		}
 		
 		if("1".equals(roleVO.getRoleId())){
-			List<ModulePO> modulePOs = moduleDao.queryModule();
+			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 			
 			for(ModulePO modulePO: modulePOs){
@@ -154,7 +154,7 @@ public class ModuleServiceImpl implements ModuleService {
 		}
 		
 		if("1".equals(userPO.getUserId())){
-			List<ModulePO> modulePOs = moduleDao.queryModule();
+			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 			
 			for(ModulePO modulePO: modulePOs){

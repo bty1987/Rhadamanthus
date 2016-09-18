@@ -2022,7 +2022,7 @@ CREATE TABLE servicerecord (
 
 DROP TABLE IF EXISTS systemdefineitem;
 CREATE TABLE systemdefineitem (
-  autoId bigint(20) NOT NULL AUTO_INCREMENT,
+  `sdiId` bigint(20) NOT NULL AUTO_INCREMENT,
   itemId varchar(10) NOT NULL,
   quotationBigCategoryId int(11) NOT NULL,
   itemName varchar(128) NOT NULL,
@@ -2032,7 +2032,7 @@ CREATE TABLE systemdefineitem (
   unitPrice decimal(10,3) NOT NULL,
   status tinyint(4) NOT NULL DEFAULT 0,
   discount tinyint(4) NOT NULL DEFAULT 0,
-  PRIMARY KEY (autoId)
+  PRIMARY KEY (sdiId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
 
 DROP TABLE IF EXISTS userapprove;
