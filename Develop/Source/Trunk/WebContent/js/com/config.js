@@ -20,7 +20,6 @@ var config = {
     media: 'http://192.168.5.21/Demeter/',
     dmedia: 'http://static.dingtalk.com/media/',
     communion: 'http://192.168.5.23/',
-    
 };
 
 $(function(){
