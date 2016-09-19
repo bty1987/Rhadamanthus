@@ -24,7 +24,7 @@ public interface OperationService {
 	
 	public void pageOperation(Paging paging, List<FilterVO> filters);
 	
-	public List<OperationVO> queryOperation();
+	public List<OperationVO> queryOperation(OperationVO operationVO);
 	
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException;
 	

@@ -71,18 +71,18 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<OperationVO> queryOperation() {
+	public List<OperationVO> queryOperation(OperationVO operationVO) {
 		
-		List<OperationPO> operationPOs = operationDao.queryOperation();
+		List<OperationPO> operationPOs = operationDao.queryOperationBySystem(operationVO.getSystem());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(OperationPO operationPO: operationPOs){
 			
-			OperationVO operationVO = new OperationVO();
+			OperationVO _operationVO = new OperationVO();
 			
-			BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
+			BeanUtil.copyProperties(operationPO, _operationVO, Arrays.asList("module"));
 			
-			operationVOs.add(operationVO);
+			operationVOs.add(_operationVO);
 		}
 		
 		return operationVOs;

@@ -1072,8 +1072,6 @@ CREATE TABLE loginlog (
   KEY indexone (loginId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
-
-
 DROP TABLE IF EXISTS materialbrand;
 CREATE TABLE materialbrand (
   mbId int(11) NOT NULL AUTO_INCREMENT,
