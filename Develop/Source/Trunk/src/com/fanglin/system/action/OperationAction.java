@@ -58,7 +58,7 @@ public class OperationAction extends BaseListAction{
 	@Action(value = "queryOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
 	public String queryOperation(){
 		
-		operations = operationService.queryOperation();
+		operations = operationService.queryOperation(operation);
 		
 		return SUCCESS;
 	}
