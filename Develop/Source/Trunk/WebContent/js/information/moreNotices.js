@@ -20,6 +20,9 @@ $(function(){
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.theme));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			
+			var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
 
 			var propertyArr = [
 				["类型:", v.type, "grey"],
@@ -38,8 +41,19 @@ $(function(){
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
+			
+			if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
+            	$divBtnWrap.append($btnDown);
+        	}
+			
+			$divBtnWrap.appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
+			
+			$btnDown.click(function(){
+            	window.open(config.media + v.filePath);
+            	return false;
+            });
 
 			return $liLine;
 		};

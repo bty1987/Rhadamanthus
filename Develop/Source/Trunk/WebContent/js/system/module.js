@@ -55,7 +55,6 @@ $(function(){
             }
 
             $.each(listData , function(i, v){
-
                 menuArr['level' + v.level][menuArr['level' + v.level].length] = v;
                 //menuArr['level' + v.level].push(v);
             });
@@ -156,6 +155,7 @@ $(function(){
                 list: [],
                 source: function (query, process) {
 
+
                     var level = $('#level').val() - 1;
 
                     var result = $.map(fatherModuleArr['level' + level], function(val){
@@ -176,9 +176,7 @@ $(function(){
                     //k: key, v:value
                     return v;
                 }
-
             }).attr('readonly', true)
-
         }
     };
 
@@ -200,7 +198,8 @@ $(function(){
         com.post(api.system.addModule, params,function(a) {
             module.modal.modal('hide');
             search();
-        });
+
+        })
     }
 
     function deleteModule(mid){

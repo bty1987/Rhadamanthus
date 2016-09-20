@@ -39,6 +39,7 @@ $(function(){
                 ["进价:", v.materialPurchasePrice, "blue"],
                 ["标价:", v.materialUnitPrice, "blue"],
                 ["折扣:", v.discount, "blue"],
+                ["状态:", v.status == 0 ? '启用' : '禁用' , v.status == 0 ? 'green' : "red"],
 //                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
 //                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "blue"]
             ];
@@ -93,7 +94,11 @@ $(function(){
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	
-    	return [$adda];
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$adda, $impa];
     });
 
     var materialModel = {
@@ -186,6 +191,37 @@ $(function(){
         });
         
         materialModel.modal.modal("show");
+    });
+    
+    $('a[name="import"]','#pagenation').click(function(){
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 500){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.material.pageMaterialModel, $.extend({}, params.materialModelPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+				    ["编号","mmId"],
+					["编号","materialModelNo"],
+					['品类','materialTypeName'],
+					['品牌','materialBrandName'],
+					['单位','measurementUnitName'],
+					['进价', 'materialPurchasePrice'],
+					['标价', 'materialUnitPrice'],
+					['折扣', 'discount'],
+					['状态', 'status'],
+				],
+				list: res.paging.data,
+			});
+		});
     });
     
     //保存

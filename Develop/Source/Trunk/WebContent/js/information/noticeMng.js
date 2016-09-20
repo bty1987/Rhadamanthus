@@ -22,8 +22,6 @@ $(function(){
 
     bindUploadfiy();
 
-
-
     $(".date-picker").datepicker({autoclose : !0}).on("show", function() {
         setTimeout(function() {
             $(".dropdown-menu").css("z-index", 1060);
@@ -55,9 +53,9 @@ $(function(){
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
 
             var propertyArr = [
                 ["类型:", v.type, "grey"],
@@ -68,7 +66,7 @@ $(function(){
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", v.isPublic, "blue"],
                 ["内容:", v.contentsText, "grey"],
-            ];//
+            ];
 
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
@@ -76,12 +74,19 @@ $(function(){
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
-
+            
+            if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
+            	$divBtnWrap.append($btnDown);
+        	}
 
             $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
-
+            
+            $btnDown.click(function(){
+            	window.open(config.media + v.filePath);
+            	return false;
+            });
 
             $btnEdit.click(function(){
                 notice.editFlg = !0;
@@ -93,12 +98,9 @@ $(function(){
                 bootbox.confirm("确定删除吗？", function(result) {
                     if(result) {
                         removeRow(v.noticeId);
-
                     }
                 });
-
             });
-
 
             return $liLine;
         };
@@ -163,6 +165,7 @@ $(function(){
         com.showAlert(com.info, "操作成功");
         NoticeMngSeacher.doSearch();
     }
+    
     function bindUploadfiy() {
         $("#attachment").Huploadify({
             auto: !0,
