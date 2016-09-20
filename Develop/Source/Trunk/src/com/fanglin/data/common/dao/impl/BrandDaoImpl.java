@@ -65,6 +65,12 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<BrandPO> queryBrandByBrandIds(List<String> brandIds) {
+		return session().createCriteria(BrandPO.class).add(Restrictions.in("brandId", brandIds)).list();
+	}
+
+	@Override
 	public BrandPO queryBrandByBId(long bId) {
 		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BID_STR, bId)).uniqueResult();
 	}

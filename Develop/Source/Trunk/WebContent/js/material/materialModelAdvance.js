@@ -101,7 +101,7 @@ $(function(){
 
     searcher.init( _condArr, "condList", api.material.pageMaterialModel, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "materialModelPostData", null, false, null, function(){
+    }, "pagenation", "materialModelAdvancePostData", null, false, null, function(){
     	
     	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -241,6 +241,7 @@ $(function(){
 			
 			$.exceler({
 				column : [
+				    ["编号","mmId"],
 					["编号","materialModelNo"],
 					['品类','materialTypeName'],
 					['品牌','materialBrandName'],

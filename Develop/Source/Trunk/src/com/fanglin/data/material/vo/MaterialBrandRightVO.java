@@ -1,5 +1,9 @@
 package com.fanglin.data.material.vo;
 
+import java.util.List;
+
+import com.fanglin.data.common.vo.BrandVO;
+
 public class MaterialBrandRightVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2471732452681836855L;
@@ -9,6 +13,8 @@ public class MaterialBrandRightVO implements java.io.Serializable {
 	private String userId;
 	
 	private String brandId;
+	
+	private List<BrandVO> brands;
 
 	public Integer getMbrId(){
 		return this.mbrId;
@@ -34,4 +40,12 @@ public class MaterialBrandRightVO implements java.io.Serializable {
 		this.brandId = brandId;
 	}
 
+	public List<BrandVO> getBrands() {
+		return brands;
+	}
+
+	public void setBrands(List<BrandVO> brands) {
+		this.brands = brands;
+	}
+	
 }

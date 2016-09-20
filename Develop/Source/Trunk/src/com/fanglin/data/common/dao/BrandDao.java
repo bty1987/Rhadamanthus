@@ -26,6 +26,8 @@ public interface BrandDao extends Dao<BrandPO> {
 	
 	public List<BrandPO> queryBrandByCategoryId(long categoryId);
 	
+	public List<BrandPO> queryBrandByBrandIds(List<String> brandIds);
+	
 	public BrandPO queryBrandByBId(long bId);
 	
 	public BrandPO queryBrandByBrandId(String brandId);

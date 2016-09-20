@@ -60,9 +60,8 @@ $(function(){
         fatherModuleArr =  data.modules;
     }, null, false);
 
-
     function search(){
-        com.post(api.system.queryOperation, {}, function(data){
+        com.post(api.system.queryOperation, {'operation.system': config.system}, function(data){
             Operation.renderList( data.operations ,'operationTable');
         }, null, false);
     }
@@ -88,6 +87,7 @@ $(function(){
                 list: [],
                 source: function (query, process) {
 
+
                     var level = $('#level').val() - 1;
 
                     var result = $.map(fatherModuleArr, function(val){
@@ -112,6 +112,7 @@ $(function(){
         }
     };
 
+    //保存
     function saveData() {
         if (com.validate()) {
             return;
@@ -125,9 +126,10 @@ $(function(){
         };
 
         com.post(api.system.addOperation, params,function(a) {
-            operation.modal.modal('hide');
             search();
         });
+        
+        operation.modal.modal('hide');
     }
 
     function deleteOperation(oid){

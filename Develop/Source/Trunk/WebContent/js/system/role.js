@@ -1,7 +1,11 @@
 var role = {
 	saveBtn: null,
+	operationSaveBtn: null,
+	moduleSaveBtn: null,
 	cancelBtn: null,
 	modal: null,
+	operationModal : null,
+	moduleModal : null,
 	roleItems: {},
 	
 	validator: {
@@ -32,8 +36,12 @@ var setting = {
 
 jQuery(function($) {
 	role.saveBtn = $("#saveBtn").on("click", saveData);
+	role.operationSaveBtn = $('#operationModal').find(' button[name="saveBtn"]').on("click", saveOperation);
+	role.moduleSaveBtn = $('#moduleModal').find(' button[name="saveBtn"]').on("click", saveModule);
 	role.cancelBtn = $("#cancelBtn");
 	role.modal = $("#roleModal");
+	role.operationModal = $("#operationModal");
+	role.moduleModal = $("#moduleModal");
 	role.roleItems.roleId = $("#roleId");
 	role.roleItems.roleDes = $("#roleDes");
 	role.roleItems.roleName = $("#roleName");
@@ -48,7 +56,205 @@ jQuery(function($) {
 	
 	$("#cancelRoleRightBtn").on("click",goBackRoleList);
 	$("#saveRoleRightBtn").on("click",saveRoleRight);
-	
+
+	function queryOperationByRoleId(roleId){
+		var $wrap = $('#operationModal').find('.modal-body').empty();
+		//获取全部操作
+		com.post(api.system.queryOperation, {"operation.system": config.system}, function(data){
+
+			if(data.operations.length){
+				$.each(data.operations, function(i, v){
+
+					var $indexInput = $('<input>').attr({
+						type:'checkbox',
+						name:'operation',
+						'data-oid' : v.oid
+					}).addClass('ace').val(v.oid);
+					var $indexCheck = $('<label class="col-xs-4"></label>')
+						.append($indexInput)
+						.append('<span class="lbl">' + v.name +'</span>');
+
+					$indexCheck.appendTo($wrap);
+				});
+			}
+		}, null, false);
+
+		//获取角色的操作
+		com.post(api.system.queryOperationByRoleId, {'operation.system' : 1, "role.roleId": roleId}, function(data){
+			if(data.operations.length){
+				$.each(data.operations, function(i, v){
+					$wrap.find('input[value="'+ v.oid +'"]').prop('checked', true).addClass('checked');
+				});
+			}
+		}, null, false);
+	}
+
+	function queryModuleByRoleId(roleId){
+		var $wrap = $('#moduleModal').find('.modal-body');
+		//获取全部模块
+		com.post(api.system.queryModule, {'module.system' : 1}, function(data){
+
+			var menuArr = {
+				level1 : [],
+				level2 : [],
+				level3 : [],
+			};
+
+			var menuObj = {
+				level1 : {},
+				level2 : {},
+			};
+			var treeData = data.modules;
+
+			var $tree = $('<ol class="dd-list"></ol>');
+			var arr ;
+			$wrap.append($tree);
+
+			if(!treeData || !treeData.length){
+				return;
+			}
+
+			$.each(treeData , function(i, v){
+				arr = menuArr['level' + v.level]
+				arr[arr.length] = v;
+			});
+
+			$.each(menuArr, function(key, val){
+				menuArr[key] = val.sort(function(a,b){
+					return a.mid-b.mid});
+			});
+
+			if(menuArr.level1.length){
+				$.each(menuArr.level1, function(i, v){
+
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+
+					var $input = $('<input>')
+						.attr({
+							type : 'checkbox',
+							name : 'module'
+						})
+						.addClass('ace')
+						.val(v.mid);
+					var $label = $('<label></label>')
+						.addClass('pull-right')
+						.css({
+							'margin-top' : '-2px',
+							'margin-bottom' : '0'
+						});
+
+					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+
+					$li.append($div).appendTo($tree);
+					menuObj.level1[v.mid] = $li;
+
+				});
+			}
+
+			if(menuArr.level2.length){
+				$.each(menuArr.level2, function(i, v){
+
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+
+					var $input = $('<input>')
+						.attr({
+							type : 'checkbox',
+							name : 'module'
+						})
+						.addClass('ace')
+						.val(v.mid);
+					var $label = $('<label></label>')
+						.addClass('pull-right')
+						.css({
+							'margin-top' : '-2px',
+							'margin-bottom' : '0'
+						});
+
+					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+
+					menuObj.level2[v.mid] = $li;
+
+					$li.append($div);
+
+					var $parent = menuObj.level1[v.fatherModule.mid];
+					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+					if(!$parent.children('button').length){
+						var $title = $parent.children('div');
+						$('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
+						$('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+					}
+
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list').appendTo($parent);
+					$li.appendTo($pol);
+				});
+			}
+
+			if(menuArr.level3.length){
+				$.each(menuArr.level3, function(i, v){
+
+					var $li = $('<li></li>').addClass('dd-item item-blue2');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+
+					var $input = $('<input>')
+						.attr({
+							type : 'checkbox',
+							name : 'module'
+						})
+						.addClass('ace')
+						.val(v.mid);
+					var $label = $('<label></label>')
+						.addClass('pull-right')
+						.css({
+							'margin-top' : '-2px',
+							'margin-bottom' : '0'
+						});
+
+					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+
+					menuObj.level2[v.mid] = $li;
+
+					$li.append($div);
+
+					var $parent = menuObj.level2[v.fatherModule.mid];
+					if(!$parent.children('button').length){
+						var $title = $parent.children('div');
+						$('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
+						$('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+					}
+
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list').appendTo($parent);
+					$li.appendTo($pol);
+				});
+			}
+
+			$('button[data-action="collapse"]').click(function(){
+				var $this = $(this);
+				$this.siblings('ol').addClass('hide');
+				$this.parent().find('.plus').toggleClass('hide');
+				$this.toggleClass('hide');
+			});
+
+			$('button[data-action="expand"]').click(function(){
+				var $this = $(this);
+				$this.siblings('ol').removeClass('hide');
+				$this.parent().find('.minus').toggleClass('hide');
+				$this.toggleClass('hide');
+			});
+
+		}, null, false);
+
+		//获取角色的模块
+		com.post(api.system.queryModuleByRoleId, {'module.system' : 1, "role.roleId": roleId}, function(data){
+			if(data.modules.length){
+				$.each(data.modules, function(i, v){
+					$wrap.find('input[value="'+ v.mid +'"]').prop('checked', true).addClass('checked');
+				});
+			}
+		}, null, false);
+	}
+
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -75,8 +281,9 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-success').html('配置权限');
-            
+            var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
+            var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
+
             var propertyArr = [
                ["编号:", v.roleId, "grey"],
                ["描述:", v.roleDes, "grey"],
@@ -89,12 +296,23 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($btnConfig).append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap
+				.append($btnModule)
+				.append($btnOperation)
+				.append($btnEdit)
+				.append($btnDel)
+				.appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
-            
-            $btnConfig.click(function(){
-            	gotoRoleRight(v.roleId);
+
+			$btnModule.click(function(){
+				queryModuleByRoleId(v.roleId);
+				role.moduleModal.attr('data-roleid', v.roleId).modal('show');
+			});
+
+			$btnOperation.click(function(){
+				queryOperationByRoleId(v.roleId);
+            	role.operationModal.attr('data-roleid', v.roleId).modal('show');
             });
             
             $btnEdit.click(function(){
@@ -161,7 +379,53 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 	}
-	
+
+	function saveModule(){
+
+		var idarrs = role.moduleModal.find('input[name="module"]:checked');
+
+		var roleid = role.moduleModal.attr('data-roleid');
+
+		var params = {
+			// "mids[0]": 1,
+			"module.system": 1,
+			"role.roleId": roleid,
+		}
+
+		if(idarrs.length){
+			idarrs.each(function(i){
+				params['mids[' + i + ']'] = $(this).val();
+			});
+		}
+
+		com.post(api.system.updateRoleModuleByRoleId, params, function(){
+			role.moduleModal.modal('hide').removeAttr('data-roleid');
+		});
+
+	}
+
+	function saveOperation(){
+
+		var idarrs = $('input[name="operation"]:checked');
+		var roleid = role.operationModal.attr('data-roleid');
+
+		var params = {
+			//"oids[0]": 1
+			"operation.system": 1,
+			"role.roleId": roleid,
+		}
+
+		if(idarrs.length){
+			idarrs.each(function(i){
+				params['oids[' + i + ']'] = $(this).val();
+			});
+		}
+
+		com.post(api.system.updateRoleOperationByRoleId, params, function(){
+			role.operationModal.modal('hide').removeAttr('data-roleid');
+		});
+	}
+
 	function saveData(){
 		
 		if(com.validate()){

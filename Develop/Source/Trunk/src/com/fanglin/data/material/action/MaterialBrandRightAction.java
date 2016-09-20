@@ -37,7 +37,15 @@ public class MaterialBrandRightAction extends BaseListAction {
 	@Action(value="queryMaterialBrandRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialBrandRight(){
 		
-		materialBrandRight = materialBrandRightService.queryMaterialBrandRightByUserId(materialBrandRight.getUserId());
+		materialBrandRight = materialBrandRightService.queryMaterialBrandRightByUserId(materialBrandRight);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="queryMaterialBrandRightForBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialBrandRightForBrand(){
+		
+		materialBrandRight = materialBrandRightService.queryMaterialBrandForBrandByUserId(materialBrandRight);
 		
 		return SUCCESS;
 	}
