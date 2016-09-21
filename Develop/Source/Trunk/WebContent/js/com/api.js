@@ -704,6 +704,8 @@ var api = {
 		deleteMaterialBrandByIds: {url: "deleteMaterialBrandByIds.do"},
 		
 		queryMaterialBrandRight: {url: "queryMaterialBrandRight.do", demo: true},
+		queryMaterialBrandRightForLogin: {url: "queryMaterialBrandRightForLogin.do", demo: true},
+		queryMaterialBrandRightForBrand: {url: "queryMaterialBrandRightForLogin.do", demo: true},
 		saveMaterialBrandRight: {url: "saveMaterialBrandRight.do"},
 		
 		pageMaterialInside: {url: "pageMaterialInside.do"},

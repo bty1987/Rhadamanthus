@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.service.MaterialBrandRightService;
 import com.fanglin.data.material.vo.MaterialBrandRightVO;
 
@@ -36,6 +37,17 @@ public class MaterialBrandRightAction extends BaseListAction {
 	
 	@Action(value="queryMaterialBrandRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialBrandRight(){
+		
+		materialBrandRight = materialBrandRightService.queryMaterialBrandRightByUserId(materialBrandRight);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="queryMaterialBrandRightForLogin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialBrandRightForLogin() throws FLException{
+		
+		materialBrandRight = new MaterialBrandRightVO();
+		materialBrandRight.setUserId(queryUserId());
 		
 		materialBrandRight = materialBrandRightService.queryMaterialBrandRightByUserId(materialBrandRight);
 		

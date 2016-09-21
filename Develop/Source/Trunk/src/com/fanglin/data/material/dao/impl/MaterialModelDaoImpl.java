@@ -102,10 +102,15 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 		
 		if(filters != null){
 			for(FilterVO filter: filters){
-				if("materialTypeId".equals(filter.getField())){
+				
+				String field = filter.getField();
+				
+				if("materialTypeId".equals(field)){
 					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), "eq"));
 				}else if("materialBrandId".equals(filter.getField())){
 					query.add(query.getCriterion("brand.bid", Long.valueOf(filter.getData()), "eq"));
+				}else if(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR.equals(field)){
+					query.add(query.getCriterion(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR, filter.getData(), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}
