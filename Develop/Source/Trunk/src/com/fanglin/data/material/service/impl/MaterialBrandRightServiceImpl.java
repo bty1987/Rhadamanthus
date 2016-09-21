@@ -50,6 +50,23 @@ public class MaterialBrandRightServiceImpl implements MaterialBrandRightService 
 			materialBrandRightVO.setBrandId("");
 		}else{
 			BeanUtil.copyProperties(materialBrandRightPO, materialBrandRightVO, Arrays.asList("brands"));
+			
+			if(!"".equals(materialBrandRightPO.getBrandId())){
+				
+				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
+				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
+				
+				for(BrandPO brandPO: brandPOs){
+					BrandVO brandVO = new BrandVO();
+					
+					BeanUtil.copyProperties(brandPO, brandVO);
+					BeanUtil.copyProperties(brandPO.getCategory(), brandVO);
+					
+					brandVOs.add(brandVO);
+				}
+				
+				materialBrandRightVO.setBrands(brandVOs);
+			}
 		}
 		
 		return materialBrandRightVO;
