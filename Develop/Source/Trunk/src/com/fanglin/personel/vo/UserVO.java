@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.vo.RoleVO;
 
 public class UserVO implements Serializable {
@@ -645,6 +646,18 @@ public class UserVO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+	
+	public UserVO setBaseInfo(UserPO userPO){
+		setuId(userPO.getUId());
+		setUserId(userPO.getUserId());
+		setCurrentName(userPO.getCurrentName());
+		setUserName(userPO.getUserName());
+		setUserPhoto(userPO.getUserPhoto());
+		setPhone(userPO.getPhone());
+		setDuty(userPO.getDuty());
+		
+		return this;
 	}
 
 }

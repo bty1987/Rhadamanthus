@@ -13,7 +13,6 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,10 +21,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.po.VillagePO;
@@ -154,8 +151,6 @@ public class DecorationOrderPO implements Serializable {
 	private Float notSalesmanRate = 0f;
 	
 	private String salesmanType = "守园";
-	
-	private Set<PutlineConstructionSchedulePO> putlineConstructionSchedules;
 	
 	private int company;
 	
@@ -467,15 +462,6 @@ public class DecorationOrderPO implements Serializable {
 		return salesmanType;
 	}
 	
-	@OneToMany(mappedBy = "decorationOrder", fetch = FetchType.LAZY)
-	public Set<PutlineConstructionSchedulePO> getPutlineConstructionSchedules(){
-		return putlineConstructionSchedules;
-	}
-	
-	public void setPutlineConstructionSchedules(Set<PutlineConstructionSchedulePO> putlineConstructionSchedules){
-		this.putlineConstructionSchedules = putlineConstructionSchedules;
-	}
-
 	public Integer getOtherStatus(){
 		return otherStatus;
 	}
