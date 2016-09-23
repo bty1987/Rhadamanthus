@@ -29,14 +29,12 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
-import com.fanglin.material.dao.MaterialSubOrderPostBalanceDao;
-import com.fanglin.material.dao.MaterialSubOrderPreBalanceDao;
+import com.fanglin.material.po.MaterialSubOrderBalancePO;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
 import com.fanglin.material.po.MaterialSubOrderPO;
-import com.fanglin.material.po.MaterialSubOrderPostBalancePO;
-import com.fanglin.material.po.MaterialSubOrderPreBalancePO;
 import com.fanglin.material.service.MaterialSubOrderService;
 import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
@@ -68,10 +66,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	private MaterialPaymentDao materialPaymentDao;
 	
 	@Autowired
-	private MaterialSubOrderPreBalanceDao materialSubOrderPreBalanceDao;
-	
-	@Autowired
-	private MaterialSubOrderPostBalanceDao materialSubOrderPostBalanceDao;
+	private MaterialSubOrderBalanceDao materialSubOrderBalanceDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -508,15 +503,16 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 				materialSubOrderPO.setBalanceStatus(MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT);
 				materialSubOrderDao.update(materialSubOrderPO);
 				
-				MaterialSubOrderPreBalancePO materialSubOrderPreBalancePO = new MaterialSubOrderPreBalancePO();
-				materialSubOrderPreBalancePO.setMsoId(materialSubOrderPO.getMsoId());
-				materialSubOrderPreBalancePO.setMsoNo(materialSubOrderPO.getMsoNo());
-				materialSubOrderPreBalancePO.setUserId(userId);
-				materialSubOrderPreBalancePO.setUserName(userName);
-				materialSubOrderPreBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				materialSubOrderPreBalancePO.setPreBalance(totalBalance);
+				MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
+				materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
+				materialSubOrderBalancePO.setUser(new UserPO(userId));
+				materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+				materialSubOrderBalancePO.setBalance(totalBalance);
+				materialSubOrderBalancePO.setDifference(Arith.sub(materialSubOrderPO.getTotal(), totalBalance));
+				materialSubOrderBalancePO.setType(MaterialSubOrderBalancePO.TYPE_ADD_INT);
+				materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_INIT_INT);
 				
-				materialSubOrderPreBalanceDao.save(materialSubOrderPreBalancePO);
+				materialSubOrderBalanceDao.save(materialSubOrderBalancePO);
 			}
 		}
 	}
@@ -582,16 +578,6 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			materialSubOrderPO.setBalanceStatus(MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT);
 			
 			materialSubOrderDao.update(materialSubOrderPO);
-			
-			MaterialSubOrderPostBalancePO materialSubOrderPostBalancePO = new MaterialSubOrderPostBalancePO();
-			materialSubOrderPostBalancePO.setMsoId(materialSubOrderPO.getMsoId());
-			materialSubOrderPostBalancePO.setMsoNo(materialSubOrderPO.getMsoNo());
-			materialSubOrderPostBalancePO.setUserId(userId);
-			materialSubOrderPostBalancePO.setUserName(userName);
-			materialSubOrderPostBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			materialSubOrderPostBalancePO.setPostBalance(totalBalance);
-			
-			materialSubOrderPostBalanceDao.save(materialSubOrderPostBalancePO);
 		}
 	}
 	

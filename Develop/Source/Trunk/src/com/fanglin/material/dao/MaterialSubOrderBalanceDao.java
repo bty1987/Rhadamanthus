@@ -12,8 +12,8 @@
 package com.fanglin.material.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.material.po.MaterialSubOrderPreBalancePO;
+import com.fanglin.material.po.MaterialSubOrderBalancePO;
 
-public interface MaterialSubOrderPreBalanceDao extends Dao<MaterialSubOrderPreBalancePO> {
+public interface MaterialSubOrderBalanceDao extends Dao<MaterialSubOrderBalancePO> {
 
 }

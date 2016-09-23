@@ -12,11 +12,9 @@
 package com.fanglin.material.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,26 +24,14 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
-import com.fanglin.material.dao.MaterialSubOrderPostBalanceDao;
-import com.fanglin.material.dao.MaterialSubOrderPreBalanceDao;
-import com.fanglin.material.dao.MaterialSubOrderRefundDao;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
 import com.fanglin.material.po.MaterialSubOrderPO;
-import com.fanglin.material.po.MaterialSubOrderPostBalancePO;
-import com.fanglin.material.po.MaterialSubOrderPreBalancePO;
-import com.fanglin.material.po.MaterialSubOrderRefundPO;
 import com.fanglin.material.service.MaterialSubOrderItemService;
 import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
-import com.fanglin.payment.dao.MaterialPaymentDao;
-import com.fanglin.payment.po.MaterialPaymentPO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("materialSubOrderItemService")
 @Transactional(readOnly=true)
@@ -58,21 +44,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 	
 	@Autowired
 	private MaterialSubOrderItemDao materialSubOrderItemDao;
-	
-	@Autowired
-	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
-	
-	@Autowired
-	private MaterialPaymentDao materialPaymentDao;
-	
-	@Autowired
-	private MaterialSubOrderPreBalanceDao materialSubOrderPreBalanceDao;
-	
-	@Autowired
-	private MaterialSubOrderPostBalanceDao materialSubOrderPostBalanceDao;
-	
-	@Autowired
-	private UserDao userDao;
 	
 	@Override
 	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<FilterVO> filters, long msoId){
@@ -492,239 +463,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		}
 	}
 	
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int refundMaterialSubOrderItemForModel(MaterialSubOrderVO materialSubOrderVO, MaterialSubOrderItemVO materialSubOrderItemVO, long msoId, String userId, String userName){
-		
-		int redirect = 0;
-		
-		MaterialSubOrderPO materialSubOrderPO = null;
-		MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderItemVO.getMsoiId());
-		
-		int ident = new Random().nextInt(9999);
-		
-		if(materialSubOrderItemPO != null){
-			
-			msoId = materialSubOrderItemPO.getMsoId();
-			
-			float refundTotal = Arith.mul(materialSubOrderItemPO.getPrice(), materialSubOrderItemVO.getNum());
-			
-			MaterialSubOrderRefundPO materialSubOrderRefundPO = new MaterialSubOrderRefundPO();
-			BeanUtil.copyProperties(materialSubOrderItemPO, materialSubOrderRefundPO);
-			materialSubOrderRefundPO.setIdent(ident);
-			materialSubOrderRefundPO.setNum(materialSubOrderItemVO.getNum());
-			materialSubOrderRefundPO.setTotal(refundTotal);
-			materialSubOrderRefundPO.setStatus(MaterialSubOrderRefundPO.STATUS_TYPE_REFUND_INT);
-			materialSubOrderRefundPO.setBalanceType(materialSubOrderItemPO.getBalanceStatus());
-			materialSubOrderRefundPO.setRefundDes(materialSubOrderVO.getRefundDes());
-			
-			MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
-			
-			materialPaymentPO.setMsoId(msoId);
-			materialPaymentPO.setMsoNo(materialSubOrderVO.getMsoNo());
-			
-			materialPaymentPO.setMaterialType(materialSubOrderRefundPO.getMaterialTypeName());
-			materialPaymentPO.setMaterialBrand(materialSubOrderRefundPO.getMaterialBrandName());
-			
-			UserPO userPO = userDao.get(userId);
-			if(userPO != null){
-				materialPaymentPO.setCreateUserId(userPO.getUserId());
-				materialPaymentPO.setCreateUserName(userPO.getCurrentName());
-			}else{
-				materialPaymentPO.setCreateUserId("");
-				materialPaymentPO.setCreateUserName("");
-			}
-			
-			materialPaymentPO.setCustomerId(materialSubOrderVO.getCustomerId());
-			materialPaymentPO.setCustomerName(materialSubOrderVO.getCustomerName());
-			
-			materialPaymentPO.setReferMoney(materialSubOrderVO.getRefund());
-			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT);
-			
-			materialPaymentDao.save(materialPaymentPO);
-			
-			materialSubOrderRefundPO.setMpId(materialPaymentPO.getMpId());
-			
-			float refundMoney = 0;
-			
-			materialSubOrderPO = materialSubOrderDao.get(msoId);
-			if(materialSubOrderPO != null){
-				if(materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT){
-					
-					if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_BASE_INT){
-						// 利润 : (售价 - 预结算底价) * 数量 , 成本 : 预结算底价 * 数量
-						refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(materialSubOrderItemPO.getPrice(), materialSubOrderItemPO.getPrePoint()), materialSubOrderItemVO.getNum()));
-					}else if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_POINT_INT){
-						// 利润 : (售价 - 折扣价 * (1 - 预结算点位)) * 数量 , 成本 : 折扣价 * (1 - 预结算点位) * 数量
-						refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.mul(materialSubOrderItemPO.getPrice(), materialSubOrderItemPO.getPrePoint()), materialSubOrderItemVO.getNum()));
-					}
-					
-					MaterialSubOrderPreBalancePO materialSubOrderPreBalancePO = new MaterialSubOrderPreBalancePO();
-					materialSubOrderPreBalancePO.setMsoId(materialSubOrderPO.getMsoId());
-					materialSubOrderPreBalancePO.setMsoNo(materialSubOrderPO.getMsoNo());
-					materialSubOrderPreBalancePO.setUserId(userId);
-					materialSubOrderPreBalancePO.setUserName(userName);
-					materialSubOrderPreBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					materialSubOrderPreBalancePO.setPreBalance(refundMoney);
-					
-					materialSubOrderPreBalanceDao.save(materialSubOrderPreBalancePO);
-				}else if(materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){
-					
-					if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_BASE_INT){
-						// 利润 : (售价 - 结算底价) * 数量 , 成本 : 结算底价 * 数量
-						refundMoney = Arith.mul(Arith.sub(materialSubOrderItemPO.getPrice(), materialSubOrderItemPO.getPostPoint()), materialSubOrderItemVO.getNum());
-					}else if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_POINT_INT){
-						// 利润 : (售价 - 折扣价 * (1 - 结算点位)) * 数量 , 成本 : 折扣价 * (1 - 结算点位) * 数量
-						refundMoney = Arith.mul(Arith.mul(materialSubOrderItemPO.getPrice(), materialSubOrderItemPO.getPostPoint()), materialSubOrderItemVO.getNum());
-					}
-					
-					MaterialSubOrderPostBalancePO materialSubOrderPostBalancePO = new MaterialSubOrderPostBalancePO();
-					materialSubOrderPostBalancePO.setMsoId(materialSubOrderPO.getMsoId());
-					materialSubOrderPostBalancePO.setMsoNo(materialSubOrderPO.getMsoNo());
-					materialSubOrderPostBalancePO.setUserId(userId);
-					materialSubOrderPostBalancePO.setUserName(userName);
-					materialSubOrderPostBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					materialSubOrderPostBalancePO.setPostBalance(refundMoney);
-					
-					materialSubOrderPostBalanceDao.save(materialSubOrderPostBalancePO);
-				}
-				
-				materialSubOrderRefundDao.saveOrUpdate(materialSubOrderRefundPO);
-				
-				int itemNum = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(msoId).size();
-				if(itemNum == 0 && materialSubOrderPO != null){
-					materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_REFUND_INT);
-					redirect = 1;
-				}
-				
-				materialSubOrderPO.setProfit(Arith.add(materialSubOrderPO.getProfit(), refundMoney));
-				materialSubOrderDao.update(materialSubOrderPO);
-			}
-		}
-		
-		return redirect;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int refundMaterialSubOrderItemForPackage(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, long msoId, String userId, String userName){
-		
-		int redirect = 0;
-		
-		MaterialSubOrderPO materialSubOrderPO = null;
-		
-		int ident = new Random().nextInt(9999);
-		float refundTotal = 0;
-		float prePoint = 0;
-		float postPoint = 0;
-		int balanceType = 0;
-		
-		String materialTypeName = "";
-		String materialBrandName = "";
-		
-		List<MaterialSubOrderRefundPO> materialSubOrderRefundPOs = new ArrayList<MaterialSubOrderRefundPO>();
-		
-		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
-		
-		materialPaymentPO.setMsoId(msoId);
-		materialPaymentPO.setMsoNo(materialSubOrderVO.getMsoNo());
-		
-		materialPaymentPO.setMaterialType("");
-		materialPaymentPO.setMaterialBrand("");
-		
-		UserPO userPO = userDao.get(userId);
-		if(userPO != null){
-			materialPaymentPO.setCreateUserId(userPO.getUserId());
-			materialPaymentPO.setCreateUserName(userPO.getCurrentName());
-		}else{
-			materialPaymentPO.setCreateUserId("");
-			materialPaymentPO.setCreateUserName("");
-		}
-		
-		materialPaymentPO.setCustomerId(materialSubOrderVO.getCustomerId());
-		materialPaymentPO.setCustomerName(materialSubOrderVO.getCustomerName());
-		
-		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT);
-		
-		materialPaymentDao.save(materialPaymentPO);
-		
-		for(MaterialSubOrderItemVO materialSubOrderItemVO: materialSubOrderItemVOs){
-			
-			MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderItemVO.getMsoiId());
-			
-			materialBrandName = materialSubOrderItemPO.getMaterialBrandName();
-			materialTypeName = materialSubOrderItemPO.getMaterialTypeName();
-			
-			if(materialSubOrderItemPO != null){
-				
-				MaterialSubOrderRefundPO materialSubOrderRefundPO = new MaterialSubOrderRefundPO();
-				BeanUtil.copyProperties(materialSubOrderItemPO, materialSubOrderRefundPO);
-				
-				materialSubOrderRefundPO.setIdent(ident);
-				materialSubOrderRefundPO.setNum(materialSubOrderItemVO.getNum());
-				materialSubOrderRefundPO.setTotal(materialSubOrderItemVO.getTotal());
-				materialSubOrderRefundPO.setStatus(MaterialSubOrderRefundPO.STATUS_TYPE_REFUND_INT);
-				materialSubOrderRefundPO.setBalanceType(materialSubOrderItemPO.getBalanceStatus());
-				materialSubOrderRefundPO.setRefundDes(materialSubOrderVO.getRefundDes());
-				materialSubOrderRefundPO.setMpId(materialPaymentPO.getMpId());
-				
-				materialSubOrderRefundPOs.add(materialSubOrderRefundPO);
-				
-				balanceType = materialSubOrderItemPO.getBalanceStatus();
-				if(balanceType == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT){
-					prePoint = materialSubOrderItemPO.getPrePoint();
-				}else if(balanceType == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){
-					postPoint = materialSubOrderItemPO.getPostPoint();
-				}
-				
-				refundTotal = materialSubOrderItemVO.getTotal();
-			}
-		}
-		
-		materialPaymentPO.setMaterialType(materialTypeName);
-		materialPaymentPO.setMaterialBrand(materialBrandName);
-		materialPaymentPO.setReferMoney(materialSubOrderVO.getRefund());
-		materialPaymentDao.saveOrUpdate(materialPaymentPO);
-		
-		materialSubOrderPO = materialSubOrderDao.get(msoId);
-		
-		float refundMoney = 0;
-		
-		float materialDesignerSalaryScale = Float.valueOf(SystemConfig.getFloat("materialDesignerSalaryScale", 0.5f));
-		
-		if(materialSubOrderPO != null){
-			if(materialSubOrderPO != null && balanceType == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT){
-				// 利润 : 退款总价 * 预结算点位 * 0.5 , 成本 : 退款总价 * (1 - 预结算点位)
-				refundMoney = Arith.sub(refundMoney, Arith.mul(refundTotal, prePoint));
-			}else if(materialSubOrderPO != null && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){
-				// 利润 : 退款总价 * 结算点位 * 0.5 , 成本 : 退款总价 * (1 - 结算点位)
-				refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.mul(refundTotal, postPoint), materialDesignerSalaryScale));
-			}
-			
-			MaterialSubOrderPostBalancePO materialSubOrderPostBalancePO = new MaterialSubOrderPostBalancePO();
-			materialSubOrderPostBalancePO.setMsoId(materialSubOrderPO.getMsoId());
-			materialSubOrderPostBalancePO.setMsoNo(materialSubOrderPO.getMsoNo());
-			materialSubOrderPostBalancePO.setUserId(userId);
-			materialSubOrderPostBalancePO.setUserName(userName);
-			materialSubOrderPostBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			materialSubOrderPostBalancePO.setPostBalance(refundMoney);
-			
-			materialSubOrderPostBalanceDao.save(materialSubOrderPostBalancePO);
-			
-			int itemNum = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(msoId).size();
-			if(materialSubOrderPO != null && itemNum == 0){
-				materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_REFUND_INT);
-				redirect = 1;
-			}
-			
-			materialSubOrderPO.setProfit(Arith.add(materialSubOrderPO.getProfit(), refundMoney));
-			materialSubOrderDao.update(materialSubOrderPO);
-		}
-		
-		return redirect;
-	}
-
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int changeMaterialSubOrderItemForCaclType(MaterialSubOrderItemVO materialSubOrderItemVO, String userId) throws FLException{

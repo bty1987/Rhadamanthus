@@ -282,6 +282,7 @@ CREATE TABLE approvalmaterialrefund (
   aId int(11) NOT NULL,
   msoId int(11) NOT NULL,
   refund decimal(10,3) NOT NULL,
+  type tinyint(4) NOT NULL,
   PRIMARY KEY (amrId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材退货审批表';
 

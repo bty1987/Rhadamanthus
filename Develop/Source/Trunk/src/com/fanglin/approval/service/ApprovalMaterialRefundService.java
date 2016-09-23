@@ -21,6 +21,8 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalMaterialRefundService {
 	
+	public List<ApprovalMaterialRefundItemVO> queryApprovalForMaterialRefundItem(ApprovalVO approvalVO) throws FLException;
+	
 	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId) throws FLException;
 	
 	public int approvalForMaterialRefund(ApprovalPO approvalPO) throws FLException;

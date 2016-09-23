@@ -66,6 +66,14 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	public static final int STATUS_TYPE_POSTBALANCE_INT = 5;
 	
+	public static final int STATUS_TYPE_FULLREFUND_INT = 6;
+	
+	public static final int STATUS_TYPE_DAODAN_INT = 7;
+	
+	public static final int STATUS_TYPE_WASTE_INT = 8;
+	
+	public static final int STATUS_TYPE_FINISH_INT = 9;
+	
 	public static final int FINANCE_STATUS_TYPE_INIT_INT = 0;
 	
 	public static final int FINANCE_STATUS_TYPE_COMMIT_INT = 1;
@@ -148,9 +156,9 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	private int msoType;
 	
-	private int status; // 初始 , 删除
+	private int status;
 	
-	private float  depositPayment;
+	private float depositPayment;
 	
 	private int depositStatus;
 	

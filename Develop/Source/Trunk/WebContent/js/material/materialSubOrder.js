@@ -70,8 +70,11 @@ jQuery(function($) {
 	}, null, false);
 	
 	com.post(api.ds.materialInfo, {}, function(res){
-		
+		console.log(res);
+		materialSubOrder.materialStatus = res.materialStatus;
 	}, null, false);
+	
+	console.log(materialSubOrder.materialStatus);
 	
 	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 9}, "autoFillKeyValue", "key", "value");
 	
@@ -128,6 +131,7 @@ jQuery(function($) {
 						["厂商抹零:", v.venderMaling, "green"],
 						["券额:", v.coupon, "green"],
 						["券信息:", v.couponInfo, "grey"],
+						["状态:", materialSubOrder.materialStatus[v.status], "red"],
 						["备注:", v.des, "grey"],
 					];
 					
@@ -174,10 +178,14 @@ jQuery(function($) {
 						deleteMaterialSubOrder(v.msoId);
 					});
 					
-					v.fullStatus == 0 && $divBtnWrap.append($btnAdd);
-					(v.fullStatus == 3 || v.otherStatus & 2 == 2) && $divBtnWrap.append($btnMend);
-					
-					$divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnSend).append($btnPrint).appendTo($h3);
+					if([0, 1, 2, 3, 4, 5].indexOf(v.status) != -1){
+						v.fullStatus == 0 && $divBtnWrap.append($btnAdd);
+						(v.fullStatus == 3 || v.otherStatus & 2 == 2) && $divBtnWrap.append($btnMend);
+						
+						$divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnSend).append($btnPrint).appendTo($h3);
+					}else{
+						$divBtnWrap.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
+					}
 					
 					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
 				});

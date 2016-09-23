@@ -65,3 +65,5 @@ CHANGE COLUMN `complaintDes` `des` VARCHAR(256) NOT NULL;
 ALTER TABLE `platform`.`materialsuborderitem` 
 DROP COLUMN `paymentStatus`;
 
+ALTER TABLE `platform`.`approvalmaterialrefund` 
+ADD COLUMN `type` TINYINT(4) NOT NULL AFTER `refund`;

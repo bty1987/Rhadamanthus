@@ -38,7 +38,7 @@ $(function(){
 	
 	$(".userProfile").on("click", function(e){
 		$this = $(this);
-		navControl($this);
+//		navControl($this);
 
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
@@ -49,7 +49,7 @@ $(function(){
 	
 	$(".changePassword").on("click", function(e){
 		$this = $(this);
-		navControl($this);
+//		navControl($this);
 
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
@@ -60,7 +60,7 @@ $(function(){
 	
 	$(".messageList").on("click", function(e){
 		$this = $(this);
-		navControl($this);
+//		navControl($this);
 
 		e.preventDefault();
 		var hrefStr = $this.attr("href");
