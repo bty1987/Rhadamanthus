@@ -1564,6 +1564,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_INIT_INT);
 			materialSubOrderPO.setDepositPayment(0);
+			materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_WASTE_INT);
 			
 			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT);
 		}else if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){

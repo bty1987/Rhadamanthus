@@ -54,6 +54,34 @@ jQuery(function($) {
 			$(this).addClass('hide');
 			materialSubOrderDetail.refundCommitBtn.removeClass('hide');
 			materialSubOrderDetail.refundCancelBtn.removeClass('hide');
+			materialSubOrderDetail.fullRefundBtn.addClass('hide');
+			materialSubOrderDetail.daodanBtn.addClass('hide');
+		}),
+		//全退按钮
+		fullRefundBtn: $('#fullRefundBtn').on("click", function(){
+			
+			var options = {};
+			
+			$("#refundTotal").val(fullFunctionData(options));
+			refundMaterialSubOrderItemData = options;
+			
+			materialSubOrderDetail.refundType = 6;
+			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+
+			console.log(refundMaterialSubOrderItemData);
+		}),
+		//倒单按钮
+		daodanBtn: $('#daodanBtn').on("click", function(){
+			
+			var options = {};
+			
+			$("#refundTotal").val(fullFunctionData(options));
+			refundMaterialSubOrderItemData = options;
+			
+			materialSubOrderDetail.refundType = 7;
+			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+
+			console.log(refundMaterialSubOrderItemData);
 		}),
 		//退货确认按钮
 		refundCommitBtn : $("#refundCommitBtn").click(function(){
@@ -115,7 +143,7 @@ jQuery(function($) {
 					linetotal= utils.changeTwoDecimal(utils.accMul(_numNew, _price));
 					totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, linetotal));
 					
-					options["approvalMaterialRefundItems[" + index + "].msoiId"] = $line.attr('msoiid');
+					options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = linetotal;
 					
@@ -125,7 +153,7 @@ jQuery(function($) {
 					_numNew = utils.changeTwoDecimal(parseFloat($line.find('input').val()));
 					_totalNew = utils.changeTwoDecimal(parseFloat($('[packageName=' + $line.attr('packageName') + '][level=0]').find('input[name="refundnum"]').val()));
 					
-					options["approvalMaterialRefundItems[" + index + "].msoiId"] = $line.attr('msoiid');
+					options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = _totalNew;
 					
@@ -146,8 +174,10 @@ jQuery(function($) {
 			}
 			
 			$("#refundTotal").val(totalPrice);
-			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
 			refundMaterialSubOrderItemData = options;
+			
+			materialSubOrderDetail.refundType = 0;
+			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
 
 			console.log(refundMaterialSubOrderItemData);
 		}),
@@ -185,11 +215,15 @@ jQuery(function($) {
 
 			materialSubOrderDetail.refundBtn.removeClass('hide');
 			materialSubOrderDetail.refundCommitBtn.addClass('hide');
+			materialSubOrderDetail.fullRefundBtn.removeClass('hide');
+			materialSubOrderDetail.daodanBtn.removeClass('hide');
 			$(this).addClass('hide');
 		}),
 
 		modal: null,
 		materialSubOrderDetailItems: {},
+		
+		refundType: 0,
 
 		columnNames:["materialModelNo", "materialModelName", "materialTypeName", "materialBrandName", "measurementUnitName"],
 		disabledColumnNames: ["materialTypeName", "materialBrandName", "measurementUnitName", "salePrice", "price"],
@@ -271,12 +305,16 @@ jQuery(function($) {
 		$line.append($indexWrap).append($lineInfoWrap).append($optWrap)
 			.attr({
 				'materialModelNo' : v.materialModelNo,
+				'materialModelName': v.materilModelName,
 				'id' : v.id,
 				'msoiId' : v.msoiId,
 				'msoId' : v.msoId,
 				'status' : v.status,
 				'level' : v.level,
 				'isLeaf' : v.isLeaf,
+				'price': v.price,
+				'num': v.num,
+				'total': v.total,
 				'packageName': v.packageName,
 			});
 
@@ -615,6 +653,7 @@ jQuery(function($) {
 		options["approvalMaterialRefund.msoId"] = materialSubOrderItemPostData["materialSubOrder.msoId"];
 		options["approval.receiverId"] = $("#approver").val();
 		options["approval.comment"] = refundDes.val();
+		options["approvalMaterialRefund.type"] = materialSubOrderDetail.refundType;
 		options["approvalMaterialRefund.refund"] = refund.val();
 
 		materialSubOrderDetail.saveRefundBtn.button('loading');
@@ -632,9 +671,45 @@ jQuery(function($) {
 			
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("hide");
 		}, function(result){
-			com.showAlert(com.error, result);
+			com.showAlert(com.error, result.errorMsg);
 			materialSubOrderDetail.saveRefundBtn.button('reset');
 		});
+	}
+	
+	function fullFunctionData(options){
+		
+		var index = 0;
+		var total = 0;
+		var totalPrice = 0;
+		
+		$('#list>li').each(function(i, e){
+			  
+			  var linetotal = 0;
+			  
+			  var $line = $(e);
+			  
+			  if($line.attr('level') == 0 && $line.attr('isleaf') == 'true'){
+			    
+			    totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, parseFloat($line.attr('total'))));
+
+			    options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
+			    options["approvalMaterialRefundItems[" + index + "].num"] = $line.attr('num');
+			    options["approvalMaterialRefundItems[" + index + "].total"] = $line.attr('total');
+
+			    index++;
+			  }else if($line.attr('level') == 1 && $line.attr('isleaf') == 'true'){
+
+			    options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
+			    options["approvalMaterialRefundItems[" + index + "].num"] = $line.attr('num');
+			    options["approvalMaterialRefundItems[" + index + "].total"] = parseFloat($('[packageName=' + $line.attr('packageName') + '][level=0]').attr('total'));
+
+			    index++;
+			  }else{
+			    totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, $line.attr('total')));
+			  }
+		});
+		
+		return totalPrice;
 	}
 
 });

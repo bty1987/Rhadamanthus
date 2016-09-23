@@ -14,14 +14,14 @@ package com.fanglin.material.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.material.dao.MaterialSubOrderPreBalanceDao;
-import com.fanglin.material.po.MaterialSubOrderPreBalancePO;
+import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
+import com.fanglin.material.po.MaterialSubOrderBalancePO;
 
-@Repository("materialSubOrderPreBalanceDao")
-public class MaterialSubOrderPreBalanceDaoImpl extends DaoImpl<MaterialSubOrderPreBalancePO> implements MaterialSubOrderPreBalanceDao {
+@Repository("materialSubOrderBalanceDao")
+public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBalancePO> implements MaterialSubOrderBalanceDao {
 	
-	public MaterialSubOrderPreBalanceDaoImpl(){
-		super(MaterialSubOrderPreBalancePO.class);
+	public MaterialSubOrderBalanceDaoImpl(){
+		super(MaterialSubOrderBalancePO.class);
 	}
 	
 	

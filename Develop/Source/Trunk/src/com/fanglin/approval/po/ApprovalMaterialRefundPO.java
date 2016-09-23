@@ -22,6 +22,8 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 	private long msoId;
 	
 	private float refund;
+	
+	private short type;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -59,6 +61,15 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 
 	public void setRefund(float refund) {
 		this.refund = refund;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }

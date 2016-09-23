@@ -1,5 +1,7 @@
 package com.fanglin.approval.vo;
 
+import com.fanglin.material.vo.MaterialSubOrderItemVO;
+
 public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6670407153414810186L;
@@ -10,13 +12,22 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 	
 	private Long msoId;
 	
-	private Long msoiId;
-	
 	private Float num;
 	
 	private Float total;
 	
 	private String packageName;
+	
+	private MaterialSubOrderItemVO materialSubOrderItem;
+
+	public ApprovalMaterialRefundItemVO() {
+		super();
+	}
+
+	public ApprovalMaterialRefundItemVO(MaterialSubOrderItemVO materialSubOrderItem) {
+		super();
+		this.materialSubOrderItem = materialSubOrderItem;
+	}
 
 	public Integer getAmriId() {
 		return amriId;
@@ -42,14 +53,6 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 		this.msoId = msoId;
 	}
 
-	public Long getMsoiId() {
-		return this.msoiId;
-	}
-
-	public void setMsoiId(Long msoiId) {
-		this.msoiId = msoiId;
-	}
-
 	public Float getNum() {
 		return this.num;
 	}
@@ -72,6 +75,14 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	public MaterialSubOrderItemVO getMaterialSubOrderItem() {
+		return materialSubOrderItem;
+	}
+
+	public void setMaterialSubOrderItem(MaterialSubOrderItemVO materialSubOrderItem) {
+		this.materialSubOrderItem = materialSubOrderItem;
 	}
 
 }

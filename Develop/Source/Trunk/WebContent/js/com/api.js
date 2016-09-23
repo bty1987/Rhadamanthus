@@ -763,8 +763,6 @@ var api = {
 		updateMaterialSubOrderItemForPackage: {url: "updateMaterialSubOrderItemForPackage.do"},
 		updateMaterialSubOrderItemForPrePT: {url: "updateMaterialSubOrderItemForPrePT.do"},
 		updateMaterialSubOrderItemForPostPT: {url: "updateMaterialSubOrderItemForPostPT.do"},
-		refundMaterialSubOrderItemForModel: {url: "refundMaterialSubOrderItemForModel.do"},
-		refundMaterialSubOrderItemForPackage: {url: "refundMaterialSubOrderItemForPackage.do"},
 		changeMaterialSubOrderItemForCaclType: {url: "changeMaterialSubOrderItemForCaclType.do"},
 		deleteMaterialSubOrderItem: {url: "deleteMaterialSubOrderItem.do"},
 		

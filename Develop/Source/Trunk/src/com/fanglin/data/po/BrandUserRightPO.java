@@ -47,6 +47,10 @@ public class BrandUserRightPO implements java.io.Serializable {
 		return burId;
 	}
 
+	public void setBurId(int burId) {
+		this.burId = burId;
+	}
+
 	@Column(name = "userId")
 	public String getUserId() {
 		return userId;

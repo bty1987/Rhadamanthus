@@ -47,10 +47,6 @@ public interface MaterialSubOrderItemService {
 	
 	public void updateMaterialSubOrderItemForPostPT(List<Long> msoiIds, MaterialSubOrderItemVO materialSubOrderItemVO);
 	
-	public int refundMaterialSubOrderItemForModel(MaterialSubOrderVO materialSubOrderVO, MaterialSubOrderItemVO materialSubOrderItemVO, long msoId, String userId, String userName);
-	
-	public int refundMaterialSubOrderItemForPackage(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, long msoId, String userId, String userName);
-	
 	public int changeMaterialSubOrderItemForCaclType(MaterialSubOrderItemVO materialSubOrderItemVO, String userId) throws FLException;
 	
 	public int deleteMaterialSubOrderItem(List<Long> msoiIds, long msoId) throws FLException;
