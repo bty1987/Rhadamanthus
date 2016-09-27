@@ -21,5 +21,5 @@ import com.fanglin.utils.Paging;
 public interface MaterialSubOrderBalanceDao extends Dao<MaterialSubOrderBalancePO> {
 	
 	public List<MaterialSubOrderBalancePO> pageMaterialSubOrderBalance(Paging paging, List<FilterVO> filters);
-
+	
 }

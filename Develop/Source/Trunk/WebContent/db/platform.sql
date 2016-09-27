@@ -1508,7 +1508,9 @@ DROP TABLE IF EXISTS materialsuborderbalance;
 CREATE TABLE materialsuborderbalance (
   msobId int(11) NOT NULL AUTO_INCREMENT,
   msoId int(11) NOT NULL,
-  userId varchar(15) NOT NULL,
+  createrId varchar(15) NOT NULL,
+  instorerId varchar(15),
+  posterId varchar(15),
   balanceTime timestamp NULL NOT NULL,
   balance decimal(10,3) NOT NULL DEFAULT '0.000',
   difference decimal(10,3) NOT NULL DEFAULT '0.000',

@@ -482,6 +482,15 @@ var api = {
 		
 	}, data: {
 		
+		pageSupplier: {url: "pageSupplier.do", demo: true},
+		addSupplier: {url: "addSupplier.do", server: "communionServer"},
+		updateSupplier: {url: "updateSupplier.do", server: "communionServer"},
+		updateSupplierForLogin: {url: "updateSupplierForLogin.do", server: "communionServer"},
+		updateSupplierForPassword: {url: "updateSupplierForPassword.do", server: "communionServer"},
+		
+		querySupplierUserRightBySId: {url: "querySupplierUserRightBySId.do", demo: true},
+		updateSupplierUserRight: {url: "updateSupplierUserRight.do", server: "communionServer"},
+		
 		pageBrand: {url: "pageBrand.do", demo: true},
 		queryBrand: {url: "queryBrand.do", demo: true},
 		queryBrandByBId: {url: "queryBrandByBId.do"},
@@ -726,11 +735,15 @@ var api = {
 		updateMaterialModelForAdvance: {url: "updateMaterialModelForAdvance.do"},
 		deleteMaterialModelByIds: {url: "deleteMaterialModelByIds.do"},
 		
+		pageMaterialSubOrderBalance: {url: "pageMaterialSubOrderBalance.do", demo: true},
+		pageMaterialSubOrderBalanceForVender: {url: "pageMaterialSubOrderBalanceForVender.do", demo: true},
 		pageMaterialSubOrderForPreBalance: {url: "pageMaterialSubOrderForPreBalance.do", demo: true},
-		pageMaterialSubOrderForPostBalance: {url: "pageMaterialSubOrderForPostBalance.do", demo: true},
 		updateMaterialSubOrderForPreBalancePT: {url: "updateMaterialSubOrderForPreBalancePT.do"},
+		updateMaterialSubOrderBalanceForVBalance: {url: "updateMaterialSubOrderBalanceForVBalance.do"},
+		updateMaterialSubOrderBalanceForBalance: {url: "updateMaterialSubOrderBalanceForBalance.do"},
 		preBalanceMaterialSubOrder: {url: "preBalanceMaterialSubOrder.do"},
-		postBalanceMaterialSubOrder: {url: "postBalanceMaterialSubOrder.do"},
+		vpostMaterialSubOrderBalance: {url: "vpostMaterialSubOrderBalance.do"},
+		postMaterialSubOrderBalance: {url: "postMaterialSubOrderBalance.do"},
 		
 		pageMaterialOutside: {url: "pageMaterialOutside.do", demo: true},
 		pageMaterialOutsideByUserId: {url: "pageMaterialOutsideByUserId.do", demo: true},

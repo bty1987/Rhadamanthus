@@ -25,3 +25,5 @@ select * from materialsuborderrefund where msoId = @msoId;
 select * from materialpayment where msoId = @msoId;
 
 select * from materialreceipt where mrId in (select mrId from materialpayment where msoId = @msoId);
+
+stop slave;set global sql_slave_skip_counter=1;start slave;
