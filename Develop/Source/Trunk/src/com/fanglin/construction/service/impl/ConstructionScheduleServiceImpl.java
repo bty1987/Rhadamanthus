@@ -501,16 +501,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				
 				if(constructionSchedulePO != null){
 					
-					StringBuffer contents = new StringBuffer();
-					contents.append("装修订单编号");
-					contents.append(constructionSchedulePO.getDecorationOrderPO().getOrderId());
-					contents.append("施工进度中,铲大白状态需要标记为成功或者通过.");
-					
 					MessagePO messagePO = new MessagePO();
 					messagePO.setSender(new UserPO(constructionSchedulePO.getSupervisorQualityId()));
 					messagePO.setReceiver(new UserPO(constructionSchedulePO.getChanQualityId()));
 					messagePO.setType("施工进度消息");
-					messagePO.setContents(contents.toString());
+					messagePO.setContents(String.format("装修订单编号%s施工进度中,铲大白状态需要标记为成功或者通过.", constructionSchedulePO.getDecorationOrderPO().getOrderId()));
 					messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 					messagePO.setStatus("未读");
 					messagePO.setArgs("");
@@ -628,16 +623,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 					
 					decorationPaymentDao.saveOrUpdate(_decorationPaymentPO);
 					
-					StringBuffer contents = new StringBuffer();
-					contents.append("装修订单编号:");
-					contents.append(decorationOrderPO.getOrderId());
-					contents.append("生成一条违约金记录信息");
-					
 					MessagePO messagePO = new MessagePO();
 					messagePO.setSender(new UserPO(userId));
 					messagePO.setReceiver(decorationOrderPO.getDesignerPO());
 					messagePO.setType("违约金消息");
-					messagePO.setContents(contents.toString());
+					messagePO.setContents(String.format("装修订单编号:%s生成一条违约金记录信息", decorationOrderPO.getOrderId()));
 					messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 					messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
 					messagePO.setArgs("");
@@ -857,17 +847,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		
 		for(UserPO userPO: userPOs){
 			
-			StringBuffer contents = new StringBuffer();
-			contents.append("装修订单编号:");
-			contents.append(orderId);
-			contents.append(scheduleInfo);
-			contents.append("进度已经结束,请尽快回访客户");
-			
 			MessagePO messagePO = new MessagePO();
 			messagePO.setSender(new UserPO(qualityId));
 			messagePO.setReceiver(userPO);
 			messagePO.setType("施工消息");
-			messagePO.setContents(contents.toString());
+			messagePO.setContents(String.format("装修订单编号:%s%s进度已经结束,请尽快回访客户", orderId, scheduleInfo));
 			messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
 			messagePO.setArgs("");

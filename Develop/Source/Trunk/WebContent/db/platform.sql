@@ -1504,33 +1504,22 @@ CREATE TABLE materialsuborderitem (
   KEY indextwo (msoId,status,refundStatus)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
 
-DROP TABLE IF EXISTS materialsuborderpostbalance;
-CREATE TABLE materialsuborderpostbalance (
-  msopobId int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS materialsuborderbalance;
+CREATE TABLE materialsuborderbalance (
+  msobId int(11) NOT NULL AUTO_INCREMENT,
   msoId int(11) NOT NULL,
-  msoNo varchar(15) NOT NULL,
   userId varchar(15) NOT NULL,
-  userName varchar(32) NOT NULL,
-  createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  postBalance decimal(10,3) NOT NULL DEFAULT '0.000',
+  balanceTime timestamp NULL NOT NULL,
+  balance decimal(10,3) NOT NULL DEFAULT '0.000',
+  difference decimal(10,3) NOT NULL DEFAULT '0.000',
+  vbalance decimal(10,3) NOT NULL DEFAULT '0.000',
+  vbalanceTime timestamp NULL NOT NULL,
   status tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (msopobId),
-  KEY indexone (msoId,status)
+  type tinyint(4) NOT NULL,
+  ident int(11) NOT NULL,
+  PRIMARY KEY (msobId),
+  KEY indexone (msoId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
-
-DROP TABLE IF EXISTS materialsuborderprebalance;
-CREATE TABLE materialsuborderprebalance (
-  msoprbId int(11) NOT NULL AUTO_INCREMENT,
-  msoId int(11) NOT NULL,
-  msoNo varchar(15) NOT NULL,
-  userId varchar(15) NOT NULL,
-  userName varchar(32) NOT NULL,
-  createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  preBalance decimal(10,3) NOT NULL DEFAULT '0.000',
-  status tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (msoprbId),
-  KEY indexone (msoId,status)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单预结算表';
 
 DROP TABLE IF EXISTS materialsuborderrefund;
 CREATE TABLE materialsuborderrefund (

@@ -67,3 +67,20 @@ DROP COLUMN `paymentStatus`;
 
 ALTER TABLE `platform`.`approvalmaterialrefund` 
 ADD COLUMN `type` TINYINT(4) NOT NULL AFTER `refund`;
+
+DROP TABLE IF EXISTS materialsuborderbalance;
+CREATE TABLE materialsuborderbalance (
+  msobId int(11) NOT NULL AUTO_INCREMENT,
+  msoId int(11) NOT NULL,
+  userId varchar(15) NOT NULL,
+  balanceTime timestamp NULL NOT NULL,
+  balance decimal(10,3) NOT NULL DEFAULT '0.000',
+  difference decimal(10,3) NOT NULL DEFAULT '0.000',
+  vbalance decimal(10,3) NOT NULL DEFAULT '0.000',
+  vbalanceTime timestamp NULL NOT NULL,
+  status tinyint(4) NOT NULL DEFAULT '0',
+  type tinyint(4) NOT NULL,
+  ident int(11) NOT NULL,
+  PRIMARY KEY (msobId),
+  KEY indexone (msoId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';

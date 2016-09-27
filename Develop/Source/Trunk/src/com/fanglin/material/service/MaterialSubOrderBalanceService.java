@@ -11,6 +11,13 @@
 
 package com.fanglin.material.service;
 
+import java.util.List;
+
+import com.fanglin.core.vo.FilterVO;
+import com.fanglin.utils.Paging;
+
 public interface MaterialSubOrderBalanceService {
+	
+	public void pageMaterialSubOrderBalance(Paging paging, List<FilterVO> filters);
 
 }
