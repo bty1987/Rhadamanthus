@@ -110,15 +110,9 @@ public class BrandAction extends BaseListAction {
 		List<BrandVO> brandVOs = brandService.queryBrandForPinYinName(pinyinName);
 		
 		for(BrandVO brandVO: brandVOs){
-			
-			StringBuffer materialInfo = new StringBuffer();
-			materialInfo.append(brandVO.getBrandName());
-			materialInfo.append("-");
-			materialInfo.append(brandVO.getCategoryName());
-			
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(brandVO.getBrandId());
-			keyValueVO.setValue(materialInfo.toString());
+			keyValueVO.setValue(String.format("%s-%s", brandVO.getBrandName(), brandVO.getCategoryName()));
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(brandVO.getCategoryName());
 		}

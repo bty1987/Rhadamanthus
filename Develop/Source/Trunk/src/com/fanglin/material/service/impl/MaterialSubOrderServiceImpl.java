@@ -370,19 +370,11 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			
 			materialSubOrderDao.update(materialSubOrderPO);
 			
-			StringBuffer serviceRecoraInfo = new StringBuffer();
-			serviceRecoraInfo.append("主材子订单修改订单编号,主材子订单编号:");
-			serviceRecoraInfo.append(msoNo);
-			serviceRecoraInfo.append(",原订单编号为:");
-			serviceRecoraInfo.append(oldOrderId);
-			serviceRecoraInfo.append(",修改订单编号为:");
-			serviceRecoraInfo.append(orderId);
-			
 			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_MATERIALSUBORDER_ORDERID_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+			serviceRecordPO.setInfo(String.format("主材子订单修改订单编号,主材子订单编号:%s,原订单编号为:%s,修改订单编号为:%s", msoNo, oldOrderId, orderId));
 			
 			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}

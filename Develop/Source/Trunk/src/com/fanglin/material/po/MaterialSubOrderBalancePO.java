@@ -34,11 +34,7 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	private MaterialSubOrderPO materialSubOrder;
 	
-	private String msoNo;
-	
 	private UserPO user;
-	
-	private String userName;
 	
 	private Timestamp balanceTime;
 	
@@ -54,7 +50,7 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	private short type;
 	
-	private short ident;
+	private int ident;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -77,15 +73,6 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 		this.materialSubOrder = materialSubOrder;
 	}
 
-	@Column(name = "msoNo")
-	public String getMsoNo(){
-		return this.msoNo;
-	}
-
-	public void setMsoNo(String msoNo){
-		this.msoNo = msoNo;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId", referencedColumnName="userId")
 	public UserPO getUser() {
@@ -94,15 +81,6 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 
 	public void setUser(UserPO user) {
 		this.user = user;
-	}
-
-	@Column(name = "userName")
-	public String getUserName(){
-		return this.userName;
-	}
-
-	public void setUserName(String userName){
-		this.userName = userName;
 	}
 
 	@Column(name = "balanceTime")
@@ -169,11 +147,11 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	}
 
 	@Column(name = "ident")
-	public short getIdent() {
+	public int getIdent() {
 		return ident;
 	}
 
-	public void setIdent(short ident) {
+	public void setIdent(int ident) {
 		this.ident = ident;
 	}
 
