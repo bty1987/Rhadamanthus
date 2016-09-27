@@ -12,7 +12,11 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 	
 	private MaterialSubOrderVO materialSubOrder;
 	
-	private UserVO user;
+	private UserVO creater;
+	
+	private UserVO instorer;
+	
+	private UserVO poster;
 	
 	private Timestamp balanceTime;
 	
@@ -34,10 +38,12 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		super();
 	}
 
-	public MaterialSubOrderBalanceVO(MaterialSubOrderVO materialSubOrder, UserVO user) {
+	public MaterialSubOrderBalanceVO(MaterialSubOrderVO materialSubOrder, UserVO creater, UserVO instorer, UserVO poster) {
 		super();
 		this.materialSubOrder = materialSubOrder;
-		this.user = user;
+		this.creater = creater;
+		this.instorer = instorer;
+		this.poster = poster;
 	}
 
 	public Integer getMsobId() {
@@ -56,12 +62,28 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		this.materialSubOrder = materialSubOrder;
 	}
 
-	public UserVO getUser() {
-		return user;
+	public UserVO getCreater() {
+		return creater;
 	}
 
-	public void setUser(UserVO user) {
-		this.user = user;
+	public void setCreater(UserVO creater) {
+		this.creater = creater;
+	}
+
+	public UserVO getInstorer() {
+		return instorer;
+	}
+
+	public void setInstorer(UserVO instorer) {
+		this.instorer = instorer;
+	}
+
+	public UserVO getPoster() {
+		return poster;
+	}
+
+	public void setPoster(UserVO poster) {
+		this.poster = poster;
 	}
 
 	public Timestamp getBalanceTime() {

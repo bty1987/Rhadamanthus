@@ -312,12 +312,14 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			
 			MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 			materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
-			materialSubOrderBalancePO.setUser(approvalPO.getSender());
+			materialSubOrderBalancePO.setCreater(approvalPO.getSender());
+			materialSubOrderBalancePO.setInstorer(new UserPO(materialSubOrderPO.getInstoreId()));
 			materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			materialSubOrderBalancePO.setBalance(refundMoney);
 			materialSubOrderBalancePO.setDifference(refundMoney);
 			materialSubOrderBalancePO.setType(MaterialSubOrderBalancePO.TYPE_SUB_INT);
-			materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_INIT_INT);
+			materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT);
+			materialSubOrderBalancePO.setIdent(ident);
 			
 			materialSubOrderBalanceDao.save(materialSubOrderBalancePO);
 		}

@@ -649,13 +649,16 @@ public class UserVO implements Serializable {
 	}
 	
 	public UserVO setBaseInfo(UserPO userPO){
-		setuId(userPO.getUId());
-		setUserId(userPO.getUserId());
-		setCurrentName(userPO.getCurrentName());
-		setUserName(userPO.getUserName());
-		setUserPhoto(userPO.getUserPhoto());
-		setPhone(userPO.getPhone());
-		setDuty(userPO.getDuty());
+		
+		if(userPO != null){
+			setuId(userPO.getUId());
+			setUserId(userPO.getUserId());
+			setCurrentName(userPO.getCurrentName());
+			setUserName(userPO.getUserName());
+			setUserPhoto(userPO.getUserPhoto());
+			setPhone(userPO.getPhone());
+			setDuty(userPO.getDuty());
+		}
 		
 		return this;
 	}

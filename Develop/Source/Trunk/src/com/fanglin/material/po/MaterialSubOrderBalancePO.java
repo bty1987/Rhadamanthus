@@ -20,7 +20,9 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7169809440225703812L;
 	
-	public static final short STATUS_INIT_INT = 0;
+	public static final String COLUMN_USERID_STR = "user.userId";
+	
+	public static final short STATUS_PRE_BALANCE_INT = 0;
 	
 	public static final short STATUS_VENDER_BALANCE_INT = 1;
 	
@@ -34,7 +36,11 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	private MaterialSubOrderPO materialSubOrder;
 	
-	private UserPO user;
+	private UserPO creater;
+	
+	private UserPO instorer;
+	
+	private UserPO poster;
 	
 	private Timestamp balanceTime;
 	
@@ -74,13 +80,33 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName="userId")
-	public UserPO getUser() {
-		return user;
+	@JoinColumn(name = "createrId", referencedColumnName="userId")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setUser(UserPO user) {
-		this.user = user;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "instorerId", referencedColumnName="userId")
+	public UserPO getInstorer() {
+		return instorer;
+	}
+
+	public void setInstorer(UserPO instorer) {
+		this.instorer = instorer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "posterId", referencedColumnName="userId")
+	public UserPO getPoster() {
+		return poster;
+	}
+
+	public void setPoster(UserPO poster) {
+		this.poster = poster;
 	}
 
 	@Column(name = "balanceTime")

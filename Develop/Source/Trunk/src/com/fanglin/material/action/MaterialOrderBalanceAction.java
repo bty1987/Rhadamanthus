@@ -22,7 +22,9 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.material.service.MaterialSubOrderBalanceService;
 import com.fanglin.material.service.MaterialSubOrderService;
+import com.fanglin.material.vo.MaterialSubOrderBalanceVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 
 @ParentPackage("base")
@@ -35,24 +37,37 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 	@Autowired
 	private MaterialSubOrderService materialSubOrderService;
 	
+	@Autowired
+	private MaterialSubOrderBalanceService materialSubOrderBalanceService;
+	
 	private MaterialSubOrderVO materialSubOrder;
+	
+	private MaterialSubOrderBalanceVO materialSubOrderBalance;
 	
 	private int caclType;
 	
 	public List<Long> msoIds;
 	
-	@Action(value="pageMaterialSubOrderForPreBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialSubOrderForPreBalance() throws FLException{
+	@Action(value="pageMaterialSubOrderBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialSubOrderBalance() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderForPreBalance(getPaging(), getFilters(), queryUserId());
+		materialSubOrderBalanceService.pageMaterialSubOrderBalance(getPaging(), getFilters());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialSubOrderForPostBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialSubOrderForPostBalance(){
+	@Action(value="pageMaterialSubOrderBalanceForVender", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialSubOrderBalanceForVender() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderForPostBalance(getPaging(), getFilters());
+		materialSubOrderBalanceService.pageMaterialSubOrderBalanceForVender(getPaging(), getFilters(), queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageMaterialSubOrderForPreBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialSubOrderForPreBalance() throws FLException{
+		
+		materialSubOrderService.pageMaterialSubOrderForPreBalance(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -65,6 +80,22 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value="updateMaterialSubOrderBalanceForVBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateMaterialSubOrderBalanceForVBalance() throws FLException{
+		
+		materialSubOrderBalanceService.updateMaterialSubOrderBalanceForVBalance(materialSubOrderBalance);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateMaterialSubOrderBalanceForBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateMaterialSubOrderBalanceForBalance() throws FLException{
+		
+		materialSubOrderBalanceService.updateMaterialSubOrderBalanceForBalance(materialSubOrderBalance);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="preBalanceMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String preBalanceMaterialSubOrder() throws FLException{
 		
@@ -73,14 +104,22 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="postBalanceMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String postBalanceMaterialSubOrder() throws FLException{
+	@Action(value="vpostMaterialSubOrderBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String vpostMaterialSubOrderBalance() throws FLException{
 		
-		materialSubOrderService.postBalanceMaterialSubOrder(materialSubOrder, queryUserId(), queryUserName());
+		materialSubOrderBalanceService.vpostMaterialSubOrderBalance(materialSubOrderBalance);
 		
 		return SUCCESS;
 	}
-
+	
+	@Action(value="postMaterialSubOrderBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String postMaterialSubOrderBalance() throws FLException{
+		
+		materialSubOrderBalanceService.postMaterialSubOrderBalance(materialSubOrderBalance, queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	public MaterialSubOrderVO getMaterialSubOrder(){
 		return materialSubOrder;
 	}
