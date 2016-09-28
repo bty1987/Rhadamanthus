@@ -82,7 +82,7 @@ $(function(){
         }
     })();
 
-    var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId'];
+    var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId', 'materialBrandName'];
 
     var searcher = new Searcher();
 
@@ -119,16 +119,6 @@ $(function(){
                 })
             }),
             materialModelName : $("#materialModelName"),
-            materialTypeId : $("#materialTypeId").change(function() {
-                var b = materialModel.materialModelItems.materialTypeId.val();
-                com.post(api.data.queryBrandByCategoryId, {
-                        "brand.cid": b
-                    },
-                    function(c) {
-                        materialModel.data.materialBrandData[b] = c.brands;
-                        $("#materialBrandId").bindData(materialModel.data.materialBrandData[b + ""], "bid", "brandName")
-                    })
-            }),
             materialBrandId : $("#materialBrandId"),
             measurementUnitId : $("#measurementUnitId"),
             materialUnitPrice : $("#materialUnitPrice"),
@@ -178,18 +168,18 @@ $(function(){
         $("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name")
     });
 
+    com.post(api.material.queryMaterialBrandRightForLogin, {}, function(c) {
+
+        $("#materialBrandId").bindData(c.brands, "bid", "brandName")
+    });
+
     //添加按钮
     $('a[name="add"]','#pagenation').click(function(){
         materialModel.editFlg = !1;
         com.cleanItems(materialModel.materialModelItems);
         materialModel.materialModelItems.materialModelNo.removeAttr("disabled");
         materialModel.materialModelItems.materialBrandId.html("");
-        var b = materialModel.materialModelItems.materialTypeId.val();
-        com.post(api.data.queryBrandByCategoryId, {"brand.cid": b}, function(c) {
-            materialModel.data.materialBrandData[b] = c.brands;
-            $("#materialBrandId").bindData(materialModel.data.materialBrandData[b + ""], "bid", "brandName")
-        });
-        
+
         materialModel.modal.modal("show");
     });
     
@@ -233,7 +223,6 @@ $(function(){
                 "materialModel.materialModelName": materialModel.materialModelItems.materialModelName.val(),
                 "materialModel.materialBrandId": materialModel.materialModelItems.materialBrandId.val(),
                 "materialModel.materialBrandName": materialModel.materialModelItems.materialBrandId.find("option:selected").text(),
-                "materialModel.materialTypeName": materialModel.materialModelItems.materialTypeId.find("option:selected").text(),
                 "materialModel.measurementUnitId": materialModel.materialModelItems.measurementUnitId.val(),
                 "materialModel.measurementUnitName": materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
                 "materialModel.materialUnitPrice": materialModel.materialModelItems.materialUnitPrice.val(),
@@ -266,12 +255,6 @@ $(function(){
         materialModel.materialModelItems.mmId.val(c.mmId);
         materialModel.materialModelItems.materialModelNo.val(c.materialModelNo).attr("disabled", !0);
         materialModel.materialModelItems.materialModelName.val(c.materialModelName);
-        materialModel.materialModelItems.materialTypeId.val(c.materialTypeId);
-        com.post(api.data.queryBrandByCategoryId, {"brand.cid": c.materialTypeId}, function(b) {
-            materialModel.data.materialBrandData[c.materialTypeId] = b.brands;
-            $("#materialBrandId").bindData(materialModel.data.materialBrandData[c.materialTypeId + ""], "bid", "brandName");
-            materialModel.materialModelItems.materialBrandId.val(c.materialBrandId)
-        });
         materialModel.materialModelItems.measurementUnitId.val(c.measurementUnitId);
         materialModel.materialModelItems.materialUnitPrice.val(c.materialUnitPrice);
         materialModel.materialModelItems.materialPurchasePrice.val(c.materialPurchasePrice);

@@ -60,7 +60,7 @@ jQuery(function($) {
 	function queryOperationByRoleId(roleId){
 		var $wrap = $('#operationModal').find('.modal-body').empty();
 		//获取全部操作
-		com.post(api.system.queryOperation, {"operation.system": config.system}, function(data){
+		com.post(api.system.queryOperation, {'operation.system' : 1}, function(data){
 
 			if(data.operations.length){
 				$.each(data.operations, function(i, v){
@@ -70,11 +70,11 @@ jQuery(function($) {
 						name:'operation',
 						'data-oid' : v.oid
 					}).addClass('ace').val(v.oid);
-					var $indexCheck = $('<label class="col-xs-4"></label>')
-						.append($indexInput)
-						.append('<span class="lbl">' + v.name +'</span>');
 
-					$indexCheck.appendTo($wrap);
+					var $indexCheck = $('<div></div>').addClass('checkbox col-xs-4');
+					var $label = $('<label></label>').append($indexInput).append('<span class="lbl">' + v.name +'</span>');
+
+					$indexCheck.append($label).appendTo($wrap);
 				});
 			}
 		}, null, false);
@@ -83,14 +83,14 @@ jQuery(function($) {
 		com.post(api.system.queryOperationByRoleId, {'operation.system' : 1, "role.roleId": roleId}, function(data){
 			if(data.operations.length){
 				$.each(data.operations, function(i, v){
-					$wrap.find('input[value="'+ v.oid +'"]').prop('checked', true).addClass('checked');
+					$wrap.find('input[value="'+ v.oid +'"]').prop('checked', true);
 				});
 			}
 		}, null, false);
 	}
 
 	function queryModuleByRoleId(roleId){
-		var $wrap = $('#moduleModal').find('.modal-body');
+		var $wrap = $('#moduleModal').find('.modal-body').empty();
 		//获取全部模块
 		com.post(api.system.queryModule, {'module.system' : 1}, function(data){
 
@@ -121,7 +121,8 @@ jQuery(function($) {
 
 			$.each(menuArr, function(key, val){
 				menuArr[key] = val.sort(function(a,b){
-					return a.mid-b.mid});
+					return a.mid-b.mid
+				});
 			});
 
 			if(menuArr.level1.length){
@@ -130,25 +131,14 @@ jQuery(function($) {
 					var $li = $('<li></li>').addClass('dd-item');
 					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
 
-					var $input = $('<input>')
-						.attr({
-							type : 'checkbox',
-							name : 'module'
-						})
-						.addClass('ace')
-						.val(v.mid);
-					var $label = $('<label></label>')
-						.addClass('pull-right')
-						.css({
-							'margin-top' : '-2px',
-							'margin-bottom' : '0'
-						});
+					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
 
-					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+					$indexCheck.append($label).appendTo($div);
 
 					$li.append($div).appendTo($tree);
 					menuObj.level1[v.mid] = $li;
-
 				});
 			}
 
@@ -158,21 +148,11 @@ jQuery(function($) {
 					var $li = $('<li></li>').addClass('dd-item');
 					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
 
-					var $input = $('<input>')
-						.attr({
-							type : 'checkbox',
-							name : 'module'
-						})
-						.addClass('ace')
-						.val(v.mid);
-					var $label = $('<label></label>')
-						.addClass('pull-right')
-						.css({
-							'margin-top' : '-2px',
-							'margin-bottom' : '0'
-						});
+					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
 
-					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+					$indexCheck.append($label).appendTo($div);
 
 					menuObj.level2[v.mid] = $li;
 
@@ -197,21 +177,12 @@ jQuery(function($) {
 					var $li = $('<li></li>').addClass('dd-item item-blue2');
 					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
 
-					var $input = $('<input>')
-						.attr({
-							type : 'checkbox',
-							name : 'module'
-						})
-						.addClass('ace')
-						.val(v.mid);
-					var $label = $('<label></label>')
-						.addClass('pull-right')
-						.css({
-							'margin-top' : '-2px',
-							'margin-bottom' : '0'
-						});
+					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
 
-					$label.append($input).append('<span class="lbl"></span>').appendTo($div);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+
+					$indexCheck.append($label).appendTo($div);
 
 					menuObj.level2[v.mid] = $li;
 
@@ -245,11 +216,12 @@ jQuery(function($) {
 
 		}, null, false);
 
+
 		//获取角色的模块
 		com.post(api.system.queryModuleByRoleId, {'module.system' : 1, "role.roleId": roleId}, function(data){
 			if(data.modules.length){
 				$.each(data.modules, function(i, v){
-					$wrap.find('input[value="'+ v.mid +'"]').prop('checked', true).addClass('checked');
+					$wrap.find('input[value="'+ v.mid +'"]').prop('checked', true);
 				});
 			}
 		}, null, false);
@@ -296,12 +268,7 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap
-				.append($btnModule)
-				.append($btnOperation)
-				.append($btnEdit)
-				.append($btnDel)
-				.appendTo($h3);
+            $divBtnWrap.append($btnModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
 
@@ -383,7 +350,6 @@ jQuery(function($) {
 	function saveModule(){
 
 		var idarrs = role.moduleModal.find('input[name="module"]:checked');
-
 		var roleid = role.moduleModal.attr('data-roleid');
 
 		var params = {
@@ -401,7 +367,6 @@ jQuery(function($) {
 		com.post(api.system.updateRoleModuleByRoleId, params, function(){
 			role.moduleModal.modal('hide').removeAttr('data-roleid');
 		});
-
 	}
 
 	function saveOperation(){

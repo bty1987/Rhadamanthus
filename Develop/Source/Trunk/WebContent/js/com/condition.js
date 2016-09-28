@@ -4,7 +4,6 @@
 
 var Condition = function(){
 
-
     var _condRules = {
 
         //例子 autofill
@@ -25,7 +24,7 @@ var Condition = function(){
             }
         },
         //text
-        orderId : { //
+        orderId : {
             label:"订单编号",
             type:"text",
             submitConfig : {
@@ -64,7 +63,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         //-------订单-施工进度-工程验收
         acceptanceFlag : {
             label:"验收状态",
@@ -85,7 +83,6 @@ var Condition = function(){
                 valuePath : "value"
             }
         },
-
         //-------订单-施工进度-监理控制查询条件
         schedule : {
             label:"进度",
@@ -159,7 +156,6 @@ var Condition = function(){
                 valuePath:"value"
             }
         },
-
         //-------系统
         regionName: {
             label:"大区名称",
@@ -238,7 +234,6 @@ var Condition = function(){
                 valuePath:"cityName"
             }
         },
-
         //-------部门 
         sdeptName: {
             label:"大区名称",
@@ -258,9 +253,8 @@ var Condition = function(){
                 validate:null
             }
         },
-
         //-------信息-公告查询条件
-        theme : { //
+        theme : {
             label:"主题",
             type:"text",
             submitConfig : {
@@ -278,10 +272,8 @@ var Condition = function(){
                 validate:null
             }
         },
-
         //-------信息-活动查询条件
-
-        activityName : { //
+        activityName : {
             label:"名称",
             type:"text",
             submitConfig : {
@@ -290,7 +282,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         activityStatus : {
             label:"类型",
             type:"select",
@@ -307,7 +298,6 @@ var Condition = function(){
                 valuePath:"value"
             }
         },
-
         //-------增减项查询条件
         addReduceType : {
             label:"类型",
@@ -325,9 +315,8 @@ var Condition = function(){
                 valuePath:"value"
             }
         },
-
         //-------数据-报价-报价版本
-        versionName : { //
+        versionName : {
             label:"版本名称",
             type:"text",
             submitConfig : {
@@ -336,10 +325,8 @@ var Condition = function(){
                 validate:null
             }
         },
-
         //--------数据-报价-报价项
-
-        itemName : { //
+        itemName : {
             label:"名称",
             type:"text",
             submitConfig : {
@@ -348,7 +335,6 @@ var Condition = function(){
                 validate:null
             }
         },
-
         quotationTypeId : {
             label:"类型",
             type:"select",
@@ -365,7 +351,6 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
-
         quotationClassificationId : {
             label:"分类",
             type:"select",
@@ -382,7 +367,6 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
-
         quotationBigCategoryId : {
             label:"大类",
             type:"select",
@@ -399,7 +383,6 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
-
         quotationSmallCategoryId : {
             label:"小类",
             type:"select",
@@ -416,7 +399,6 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
-
         versionId : {
             label:"版本",
             type:"select",
@@ -433,7 +415,6 @@ var Condition = function(){
                 valuePath:"versionName"
             }
         },
-
         quotationWorkTypeId : {
             label:"工种",
             type:"select",
@@ -450,7 +431,6 @@ var Condition = function(){
                 valuePath:"name"
             }
         },
-
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -485,8 +465,6 @@ var Condition = function(){
             }
         },
         cityProperId : null,
-
-
         //---------数据-主材-型号 页面的各种查询条件
         materialModelNo : { //
             label:"编号",
@@ -569,6 +547,22 @@ var Condition = function(){
                 name : "brandName",
                 op : "cn",
                 validate : null
+            }
+        },
+        materialBrandName : {
+            label : "品牌",//中文名
+            type : "autofill",//类型
+            submitConfig : {//向后台提交的配置
+                name : "materialBrandName",//接口中的参数名
+                op : "cn",//查询方式
+                validate: null//校验规则
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                postData:{},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath:"key",//用来向后台提交的字段的json路径
+                valuePath:"value"//用来在页面显示的字段的json路径
             }
         },
         //--------人事-员工 页面的各种查询条件

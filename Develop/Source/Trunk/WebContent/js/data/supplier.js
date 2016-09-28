@@ -4,6 +4,12 @@ $(function(){
         $nowLine : null,
         saveBtn: $("#saveBtn").on("click", saveData),
         cancelBtn: $("#cancelBtn"),
+        saveUserBtn : $("#saveUserBtn").on("click", saveUser),
+        supplierRightModal  : $("#supplierRightModal").on("show.bs.modal", function(a) {
+
+        }).on("hide.bs.modal", function(a) {
+
+        }),
         modal: $("#supplierModal").on("show.bs.modal", function(a) {
             com.clearValidator();
         }).on("hide.bs.modal", function(a) {
@@ -24,6 +30,21 @@ $(function(){
         editFlg: !1,
         repeatFlg: !1,
     };
+    var tag_input = $("#user");
+
+    tag_input.tag({
+        placeholder:tag_input.attr('placeholder'),
+        //enable typeahead by specifying the source array
+        isStaticResource : false,
+        flsource: {
+            url : api.personel.queryUserForNameByDuty,
+            postData : {duty: '驻店'},
+            resultList : "autoFillKeyValue",
+            keyPath : "key",
+            valuePath : "value",
+            isResultTypeMap : true, //是否是key - value 形式的列表
+        },
+    });
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -54,7 +75,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnUser = $('<a></a>').addClass('btn btn-minier btn-warning').html('驻店');
 
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -76,9 +97,12 @@ $(function(){
 
             $btnStatus.append($statusSwitch).append($span);
 
-            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnUser).append($btnEdit).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+            $btnUser.click(function(){
+                dialogSupplierRight(v.sid);
+            });
 
             $btnEdit.click(function(){
                 supplier.$nowLine = v.sid;
@@ -188,4 +212,49 @@ $(function(){
         });
     }
 
+    function dialogSupplierRight(sid){
+        supplier.sid = sid;
+
+        com.post(api.data.querySupplierUserRightBySId, {"supplierUserRight.sid": sid}, function(res){
+
+            var _tag = $('#user').data('tag');
+
+            if(_tag){
+                while(_tag.values.length > 0){
+                    _tag.remove(0)
+                }
+
+                if(res.supplierUserRights.length){
+                    $.each(res.supplierUserRights.brands, function(i, v){
+                        _tag.fladd(v.user.uid, v.user.userName);
+                    });
+                }
+            }
+        });
+
+        supplier.supplierRightModal.modal("show");
+    }
+
+
+    function saveUser(){
+
+        var options = {
+            "supplierUserRight.sid": supplier.sid,
+        };
+
+        var users = $("#user").val();
+
+        if(users){
+            users = users.split(', ');
+            if(users.length){
+                $.each(users, function( i, v){
+                    options[ 'userIds[' + i + ']' ] = v;
+                });
+            }
+        }
+
+        com.post(api.data.updateSupplierUserRight, options, function(){
+            supplier.supplierRightModal.modal("hide");
+        });
+    }
 });

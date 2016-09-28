@@ -94,6 +94,10 @@ function printProjectTable(){
 			
 			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
 			
+			if(decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]){
+				quotationFunctionAreaItem.num = utils.accAdd(quotationFunctionAreaItem.num, decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]);
+			}
+			
 			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
 			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
 			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
@@ -199,6 +203,10 @@ function printFinanceTable(){
 			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
 			
 			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
+			
+			if(decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]){
+				quotationFunctionAreaItem.num = utils.accAdd(quotationFunctionAreaItem.num, decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]);
+			}
 			
 			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
 			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
@@ -430,11 +438,13 @@ jQuery(function($) {
 	com.post(url, {}, function(res){
 		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
-	
-	url = api.addReduce.queryAddReduceForPayedByOrderId;
+
+	url = api.addReduce.queryAddReduceByOrderId;
+//	url = api.addReduce.queryAddReduceForPayedByOrderId;
 	
 	var addReduceIds = {};
 	var addReduceAreas = {};
+	var reduceNums = {};
 	
 	com.post(url, {'addReduce.orderId': decorationOrderDetail.quotation.orderId}, function(res){
 		$.each(res.addReduces, function(i, v){
@@ -449,6 +459,13 @@ jQuery(function($) {
 			if([0, 2].indexOf(v.type) != -1){
 				v.itemName = v.itemName + "(增项" + addReduceItemtypeDict[v.type] + ")";
 			}else{
+				
+				if(reduceNums[v.quoteItemId]){
+					reduceNums[v.quoteItemId] = utils.accAdd(reduceNums[v.quoteItemId], v.num);
+				}else{
+					reduceNums[v.quoteItemId] = v.num;
+				}
+				
 				v.num = -v.num;
 				v.itemName = v.itemName + "(减项" + addReduceItemtypeDict[v.type] + ")";
 			}
@@ -463,8 +480,10 @@ jQuery(function($) {
 		});
 		
 		decorationOrderDetail.addReduceAreas = addReduceAreas;
+		decorationOrderDetail.reduceNums = reduceNums;
 		
 		console.log(addReduceAreas);
+		console.log(reduceNums);
 		
 	}, null, false);
 	

@@ -22,7 +22,7 @@ var decorationUtils = {
 			
 			var addReduceIds = {};
 			
-			com.post(api.addReduce.queryAddReduceForPayedByOrderId, {"addReduce.orderId": decorationOrderDetail.decorationOrderId}, function(res){
+			com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": decorationOrderDetail.decorationOrderId}, function(res){
 				var addReduces = res.addReduces;
 				
 				$.each(addReduces, function(i, v){
@@ -53,6 +53,7 @@ var decorationUtils = {
 		
 		var quotationFunctionAreaItemCs = {};
 		var quotationFunctionAreaItemWs = {};
+		var reduceNums = {};
 		
 		var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
@@ -64,7 +65,7 @@ var decorationUtils = {
 			var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
 			var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 			
-			quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName] = [];
+			quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName] = [];
 			
 			for(var j=0;j<quotationFunctionAreaItemLength;j++) {
 				
@@ -73,6 +74,8 @@ var decorationUtils = {
 				if(!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]){
 					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
 				}
+				
+				quotationFunctionAreaItem.typestr = quotationFunctionAreaItem.type == 0 ? "普通" : quotationFunctionAreaItem.type== 1 ? "自定义" : "-";
 				
 				var _dcp = quotationFunctionAreaItem.type < 2 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
 				var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.num,  _dcp));
@@ -93,7 +96,7 @@ var decorationUtils = {
 					quotationFunctionAreaItem.dcp = _unitPrice;
 				}
 				
-				quotationFunctionAreaItemCs[quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
+				quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
 				
 				if(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName]){
 					quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType][quotationFunctionAreaItem.itemName].num, quotationFunctionAreaItem.num));
@@ -112,10 +115,17 @@ var decorationUtils = {
 			var addReduceItem = addReduceItems[i];
 			
 			if([0, 2].indexOf(addReduceItem.type) != -1){
-				addReduceItem.itemName = addReduceItem.itemName + "(增项" + addReduceItemtypeDict[addReduceItem.type] + ")";
+				addReduceItem.typestr = "增项 " + addReduceItemtypeDict[addReduceItem.type];
 			}else{
+				
+				if(reduceNums[addReduceItem.quoteItemId]){
+					reduceNums[addReduceItem.quoteItemId] = utils.accAdd(reduceNums[addReduceItem.quoteItemId], addReduceItem.num);
+				}else{
+					reduceNums[addReduceItem.quoteItemId] = addReduceItem.num;
+				}
+				
 				addReduceItem.num = -addReduceItem.num;
-				addReduceItem.itemName = addReduceItem.itemName + "(减项" + addReduceItemtypeDict[addReduceItem.type] + ")";
+				addReduceItem.typestr = "减项 " + addReduceItemtypeDict[addReduceItem.type];
 			}
 			
 			addReduceItem.type = -1;
@@ -126,8 +136,10 @@ var decorationUtils = {
 			addReduceItem.dcp = _dcp;
 			addReduceItem.dcpt = _dcpt;
 			
-			if(quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaName]){
-				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaName].push(addReduceItem);
+			console.log(addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName);
+			
+			if(quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName]){
+				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
 			}
 			
 			if(!quotationFunctionAreaItemWs[addReduceItem.workType]){
@@ -145,6 +157,12 @@ var decorationUtils = {
 		
 		decorationOrderDetail.quotationFunctionAreaItemCs = quotationFunctionAreaItemCs;
 		decorationOrderDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
+		decorationOrderDetail.reduceNums = reduceNums;
+		
+		console.log(quotationFunctionAreaItemCs);
+		console.log(quotationFunctionAreaItemWs);
+		console.log(reduceNums);
+		
 	}, initQuotationDetail: function(){
 		
 		var quotationItemListDiv = $("#quotationItemListDiv").html("");
@@ -162,7 +180,7 @@ var decorationUtils = {
 			
 			$domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"});
 			$dhead = $('<div></div>').addClass('widget-header');
-			$dname = $('<h4></h4>').append($('<strong></strong>').html(i));
+			$dname = $('<h4></h4>').append($('<strong></strong>').html(i.split('-')[1]));
 			
 			$dbody = $('<div></div>').addClass('widget-body');
 			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
@@ -180,11 +198,16 @@ var decorationUtils = {
 				
 				var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
 				
+				if(decorationOrderDetail.reduceNums[qv.qfaiId]){
+					qv.num = utils.accAdd(qv.num, decorationOrderDetail.reduceNums[qv.qfaiId]);
+					qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num,  qv.dcp));
+				}
+				
 				var _lineSet = [
 					["line", linenum++],
 					["num", qv.num],
 					["name", qv.itemName],
-					["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
+					["type", qv.typestr, ["data-type", qv.type]],
 					["unit", qv.measurementUnit],
 					["worktype", qv.workType],
 					["price unitprice", qv.unitPrice],
@@ -202,7 +225,7 @@ var decorationUtils = {
 				$item.appendTo($list);
 			});
 			
-			var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + $dcpts);
+			var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + utils.changeTwoDecimal($dcpts));
 			var $total = $('<div></div>').addClass("pull-right inline").append($totalInner);
 			var $item = $('<li></li>').append($total).appendTo($list);
 			

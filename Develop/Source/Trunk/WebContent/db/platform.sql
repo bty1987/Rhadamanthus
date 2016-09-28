@@ -1516,11 +1516,13 @@ CREATE TABLE materialsuborderbalance (
   difference decimal(10,3) NOT NULL DEFAULT '0.000',
   vbalance decimal(10,3) NOT NULL DEFAULT '0.000',
   vbalanceTime timestamp NULL NOT NULL,
+  postTime timestamp NULL NOT NULL,
   status tinyint(4) NOT NULL DEFAULT '0',
   type tinyint(4) NOT NULL,
   ident int(11) NOT NULL,
   PRIMARY KEY (msobId),
-  KEY indexone (msoId)
+  KEY indexone (msoId),
+  KEY indextwo (instorerId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
 DROP TABLE IF EXISTS materialsuborderrefund;
