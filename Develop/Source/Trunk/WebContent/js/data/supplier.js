@@ -1,0 +1,191 @@
+$(function(){
+
+    var supplier = {
+        $nowLine : null,
+        saveBtn: $("#saveBtn").on("click", saveData),
+        cancelBtn: $("#cancelBtn"),
+        modal: $("#supplierModal").on("show.bs.modal", function(a) {
+            com.clearValidator();
+        }).on("hide.bs.modal", function(a) {
+            supplier.editFlg = false;
+            supplier.repeatFlg = false;
+            $("#password").removeAttr('disabled')
+        }),
+        supplierModelItems: {
+            supplierName : $("#supplierName"),
+            loginId : $("#loginId"),
+            password : $("#password"),
+        },
+        data: {
+            materialTypeData: {},
+            materialBrandData: {},
+            measurementUnitData: {}
+        },
+        editFlg: !1,
+        repeatFlg: !1,
+    };
+
+    /**
+     * 回调函数必须提供 init(tableId, result.list)方法
+     * tableId ，用来显示的div的id
+     * result.list 列表的json数组
+     * */
+    var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = $('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+
+            //启用禁用
+            var $btnStatus = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $span = $('<span></span>').addClass('lbl');
+
+            var propertyArr = [
+                ["厂商ID:", v.sid , "grey"],
+                ["登陆名:", v.loginId , "grey"],
+                ["登陆状态:", v.isLogin == 0 ? "禁用" : "启用", "grey"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $btnStatus.append($statusSwitch).append($span);
+
+            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnEdit.click(function(){
+                supplier.$nowLine = v.sid;
+                editSupplier(v);
+            });
+
+            v.isLogin && $statusSwitch.prop("checked", true);
+            $statusSwitch.switchBtn("status-lbl").on("click",function() {
+                $statusSwitch.prop("checked") ? (updateStatus(v.sid, 1, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.sid, 0,function(){$statusSwitch.prop("checked")}));
+            });
+
+            return $liLine;
+        };
+
+        return {
+            init : function(tableId,listData){
+                $('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        }
+    })();
+
+    var _condArr = [];
+
+    var searcher = new Searcher();
+
+    searcher.init( _condArr, "condList", api.data.pageSupplier, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "materialModelPostData", null, false, null, function(){
+    	
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
+    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        /*$adda.click(function(){
+            $("#supplierModal").modal('show');
+        });*/
+
+    	return [$adda];
+    });
+
+    //添加按钮
+    $('a[name="add"]','#pagenation').click(function(){
+        supplier.editFlg = !1;
+        com.cleanItems(supplier.supplierModelItems);
+        supplier.modal.modal("show");
+    });
+
+    //保存
+    function saveData() {
+
+        if (!com.validate('supplierModal') && !supplier.repeatFlg) {
+
+            var _params = {
+                "supplier.name": supplier.supplierModelItems.supplierName.val(),
+                "supplier.loginId": supplier.supplierModelItems.loginId.val(),
+            };
+
+            var extra = supplier.editFlg ?{
+                "supplier.sid": supplier.$nowLine
+            } : {
+                "supplier.password": supplier.supplierModelItems.password.val()
+            };
+
+            com.post(supplier.editFlg ? api.data.updateSupplier: api.data.addSupplier, $.extend({},_params,extra), function(a) {
+                supplier.modal.modal("hide");
+                searcher.doSearch();
+            });
+        }
+    }
+
+    //删除
+    function deleteMaterial(mmid) {
+        var  options = {};
+        
+        options["ids[0]"] = mmid;
+
+        com.post(api.material.deleteMaterialModelByIds, options, function(){
+        	searcher.doSearch();
+        });
+    }
+
+    //编辑按钮
+    function editSupplier(c) {
+        supplier.editFlg = !0;
+
+        supplier.supplierModelItems.supplierName.val(c.name);
+        supplier.supplierModelItems.loginId.val(c.loginId);
+        supplier.supplierModelItems.password.val(null).attr('disabled' ,true);
+
+        supplier.modal.modal("show");
+    }
+
+    //启用禁用功能
+    function updateStatus(id, isLogin, failcallBack) {
+
+        com.post(api.data.updateSupplierForLogin, {
+            "supplier.sid": id,
+            "supplier.isLogin": isLogin,
+        }, function () {
+
+        }, function () {
+            failcallBack && failcallBack();
+        });
+    }
+
+});
