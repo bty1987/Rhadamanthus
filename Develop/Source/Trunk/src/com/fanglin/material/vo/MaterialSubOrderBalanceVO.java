@@ -28,6 +28,8 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 	
 	private Timestamp vbalanceTime;
 	
+	private Timestamp postTime;
+	
 	private Short status;
 	
 	private Short type;
@@ -124,6 +126,14 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 
 	public void setVbalanceTime(Timestamp vbalanceTime) {
 		this.vbalanceTime = vbalanceTime;
+	}
+
+	public Timestamp getPostTime() {
+		return postTime;
+	}
+
+	public void setPostTime(Timestamp postTime) {
+		this.postTime = postTime;
 	}
 
 	public Short getStatus() {

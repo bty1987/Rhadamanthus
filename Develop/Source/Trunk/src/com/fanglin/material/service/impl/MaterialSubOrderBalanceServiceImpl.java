@@ -27,7 +27,9 @@ import com.fanglin.data.common.dao.SupplierUserRightDao;
 import com.fanglin.data.po.SupplierPO;
 import com.fanglin.data.po.SupplierUserRightPO;
 import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
+import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.po.MaterialSubOrderBalancePO;
+import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.material.service.MaterialSubOrderBalanceService;
 import com.fanglin.material.vo.MaterialSubOrderBalanceVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
@@ -43,6 +45,9 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	
 	@Autowired
 	private MaterialSubOrderBalanceDao materialSubOrderBalanceDao;
+	
+	@Autowired
+	private MaterialSubOrderDao materialSubOrderDao;
 	
 	@Autowired
 	private SupplierDao supplierDao;
@@ -190,9 +195,14 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		}
 		
 		materialSubOrderBalancePO.setPoster(new UserPO(userId));
-		materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+		materialSubOrderBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
 		materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_FINISH_INT);
 		
+		MaterialSubOrderPO materialSubOrderPO = materialSubOrderBalancePO.getMaterialSubOrder();
+		
+		materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_POSTBALANCE_INT);
+		
+		materialSubOrderDao.update(materialSubOrderPO);
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
 	}
 

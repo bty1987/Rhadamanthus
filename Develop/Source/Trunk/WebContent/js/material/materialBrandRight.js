@@ -18,7 +18,21 @@ jQuery(function($) {
 	materialBrandRight.cancelBtn = $("#cancelBtn");
 	materialBrandRight.modal = $("#materialBrandRightModal");
 	
-	$("#brandright").chosen({width: "216px"});
+	var tag_input = $("#brandright");
+
+	tag_input.tag({
+		placeholder:tag_input.attr('placeholder'),
+		//enable typeahead by specifying the source array
+		isStaticResource : false,
+		flsource: {
+			url : api.data.queryBrandForPinYinName,
+			postData : {},
+			resultList : "autoFillKeyValue",
+			keyPath : "key",
+			valuePath : "value",
+			isResultTypeMap : true, //是否是key - value 形式的列表
+		},
+	});
 	
 	com.post(api.data.queryBrand, {}, function(res){
 		materialBrandRight.materialBrands = res.brands;
@@ -93,26 +107,24 @@ jQuery(function($) {
 	function dialogMaterialBrandRight(userId){
 		
 		materialBrandRight.userId = userId;
-		
+
 		com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
-			
-			$("#brandright").chosen("destroy");
-			$("#brandright").chosen({width: "216px"});
-			$("#brandright").bindData(materialBrandRight.materialBrands, 'brandId', 'brandName');
-			$("#brandright").trigger("chosen:updated");
-			
-			var brandId = res.materialBrandRight.brandId;
-			var brandIds = brandId.split("#");
-			
-			for(var i=0;i<brandIds.length;i++){
-				
-				var _brandId = brandIds[i];
-				
-				$("option[value='"+_brandId+"']", $("#brandright")).attr("selected", "selected");
-				$("#brandright").trigger("chosen:updated");
+
+
+			var _tag = $('#brandright').data('tag');
+
+			while(_tag.values.length > 0){
+				_tag.remove(0)
+			}
+
+			if(res.materialBrandRight.brands.length){
+				$.each(res.materialBrandRight.brands, function(i, v){
+					_tag.fladd(v.brandId, v.brandName);
+				});
+
 			}
 		});
-		
+
 		materialBrandRight.modal.modal("show");
 	}
 	
@@ -129,9 +141,12 @@ jQuery(function($) {
 		if(brandIds == null){
 			brandright = "";
 		}else{
-			for(var i=0;i<brandIds.length;i++){
+			/*for(var i=0;i<brandIds.length;i++){
 				brandright += brandIds[i] + "#";
-			}
+			}*/
+
+			brandIds = brandIds.split(', ');
+			brandright = brandIds.join('#');
 		}
 		
 		options["materialBrandRight.userId"] = materialBrandRight.userId;

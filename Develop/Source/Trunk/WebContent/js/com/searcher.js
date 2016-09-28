@@ -106,7 +106,7 @@ var Searcher = function(){
             if(_rtype=="text"){
                 $showItem = $('<input>').attr({
                     "type" : "text",
-                    "placeholder" : "请输入" + _rlabel,
+//                    "placeholder" : "请输入" + _rlabel,
                     "name" : condCode,
                     "data-rqs" : _rname,
                     "data-op" : _rop
@@ -117,7 +117,7 @@ var Searcher = function(){
             if(_rtype == "dateRangePicker"){
                 $showItem = $('<input>').attr({
                     "type": "text",
-                    "placeholder": "请输入" + _rlabel,
+//                    "placeholder": "请输入" + _rlabel,
                     "name": condCode,
                     "data-op": _rop,
                     "data-rqs": _rname,
@@ -132,7 +132,7 @@ var Searcher = function(){
             if(_rtype == "datePicker"){
             	$showItem = $('<input>').attr({
                     "type": "text",
-                    "placeholder": "请输入" + _rlabel,
+//                    "placeholder": "请输入" + _rlabel,
                     "name": condCode,
                     "data-op": _rop,
                     "data-rqs": _rname,
@@ -146,7 +146,7 @@ var Searcher = function(){
             if(_rtype=="autofill"){
                 $showItem = $('<input>').attr({
                     "type": "text",
-                    "placeholder": "请输入" + _rlabel,
+//                    "placeholder": "请输入" + _rlabel,
                     "name": condCode,
                     "autocomplete": "off",
                     "data-op": _rop,
