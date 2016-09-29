@@ -2,6 +2,8 @@ package com.fanglin.material.vo;
 
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserVO;
 
 public class MaterialSubOrderBalanceVO implements java.io.Serializable {
@@ -88,6 +90,7 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		this.poster = poster;
 	}
 
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -120,6 +123,7 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		this.vbalance = vbalance;
 	}
 
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getVbalanceTime() {
 		return vbalanceTime;
 	}
@@ -128,6 +132,7 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		this.vbalanceTime = vbalanceTime;
 	}
 
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getPostTime() {
 		return postTime;
 	}

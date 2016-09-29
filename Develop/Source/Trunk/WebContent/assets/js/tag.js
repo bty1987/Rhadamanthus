@@ -32,7 +32,6 @@
         },
     });
 
-
  * 3.静态 list
      var tag_input2 = $('#form-field-tags2');
      tag_input2.tag({
@@ -40,7 +39,7 @@
         isStaticResource : true,
         source: ace.variable_US_STATES,
     });
- * */
+ **/
 
 !
     function(c) {
