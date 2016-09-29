@@ -22,6 +22,20 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	public static final String COLUMN_USERID_STR = "user.userId";
 	
+	public static final String COLUMN_MSOID_STR = "materialSubOrder.msoId";
+	
+	public static final String COLUMN_ORDERID_STR = "materialSubOrder.orderId";
+	
+	public static final String COLUMN_MSONO_STR = "materialSubOrder.msoNo";
+	
+	public static final String COLUMN_INSTOREID_STR = "instorer.userId";
+	
+	public static final String COLUMN_FULLCOLLECTTIME_STR = "materialSubOrder.fullCollectTime";
+	
+	public static final String COLUMN_TYPE_STR = "type";
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
 	public static final short STATUS_PRE_BALANCE_INT = 0;
 	
 	public static final short STATUS_VENDER_BALANCE_INT = 1;

@@ -345,12 +345,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="refundMaterialPaymentForCoupon", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundMaterialPaymentForCoupon() throws FLException{
 		
-		int code = materialPaymentService.refundMaterialPaymentForCoupon(materialSubOrder, queryUserId(), queryUserName());
-		
-		setErrorCode(code);
-		if(code == 1){
-			setErrorMsg("当前订单退券款项已经存在.");
-		}
+		materialPaymentService.refundMaterialPaymentForCoupon(materialSubOrder, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}

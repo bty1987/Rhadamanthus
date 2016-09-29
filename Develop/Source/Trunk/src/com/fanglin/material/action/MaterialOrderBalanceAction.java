@@ -144,4 +144,12 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 		this.msoIds = msoIds;
 	}
 
+	public MaterialSubOrderBalanceVO getMaterialSubOrderBalance() {
+		return materialSubOrderBalance;
+	}
+
+	public void setMaterialSubOrderBalance(MaterialSubOrderBalanceVO materialSubOrderBalance) {
+		this.materialSubOrderBalance = materialSubOrderBalance;
+	}
+
 }
