@@ -225,8 +225,8 @@ $(function(){
                 }
 
                 if(res.supplierUserRights.length){
-                    $.each(res.supplierUserRights.brands, function(i, v){
-                        _tag.fladd(v.user.uid, v.user.userName);
+                    $.each(res.supplierUserRights, function(i, v){
+                        _tag.fladd(v.user.userId, v.user.currentName);
                     });
                 }
             }

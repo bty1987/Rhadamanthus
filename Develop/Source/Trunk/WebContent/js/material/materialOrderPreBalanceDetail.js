@@ -13,6 +13,8 @@ var materialOrderPreBalanceDetailPostData = {};
 
 jQuery(function($) {
 	
+	$('#fl-statement').statement("主材订单", "型号信息");
+	
 	materialOrderPreBalanceDetail.saveBtn = $("#saveBtn").on("click", saveData);
 	materialOrderPreBalanceDetail.cancelBtn = $("#cancelBtn");
 	materialOrderPreBalanceDetail.materialSubOrderItemBalanceModal = $("#materialSubOrderItemBalanceModal").on('show.bs.modal',function(e){
