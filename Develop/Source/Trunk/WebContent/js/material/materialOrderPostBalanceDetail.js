@@ -1,30 +1,16 @@
-var materialOrderPostBalanceDetail = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	materialOrderBalanceDetailItems: {},
-	
-	editFlag: false,
-	
-	packages: {},
-};
-
-var materialOrderPostBalanceDetailPostData = {};
 
 jQuery(function($) {
 	
-	materialOrderPostBalanceDetail.saveBtn = $("#saveBtn").on("click", saveData);
-	materialOrderPostBalanceDetail.cancelBtn = $("#cancelBtn");
-	materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal = $("#materialSubOrderItemBalanceModal").on('show.bs.modal',function(e){
-		com.clearValidator("#value", true);
-		com.clearValidator();
-	});
-	
-	materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.calcType = $("#calcType");
-	materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value = $("#value");
+	$('#fl-statement').statement("主材订单", "型号信息");
 	
 	var options = {};
-	options["materialSubOrder.msoId"] = materialOrderPostBalancePostData["materialOrderPostBalance.msoId"];
+	options["materialSubOrder.msoId"] = params['materialSubOrder.msoId'];
+
+	if(params['materialOrderPostBalance.type'] == 1){
+		options['idents[0]'] = params['idents[0]'];
+	}
+
+	var url = params['materialOrderPostBalance.type'] == 1 ? api.material.queryMaterialSubOrderRefundByMsoIdAIdent :api.material.queryMaterialSubOrderItemByMsoId;
 	
 	var displayFunc  = (function(){
 
@@ -40,16 +26,12 @@ jQuery(function($) {
 					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success');
-					
 					var propertyArr = [];
 					
 					if(v.level == 0 && v.isLeaf == true){
-						v.calcType == 0 ? $btnValue.html('底价') : $btnValue.html('点位');
-						$divBtnWrap.append($btnValue);
-						
+
 						$h3.append($('<small></small>').addClass('blue').html(v.materialModelName));
-						
+
 						propertyArr = [
 							["型号:", v.materialModelNo, "grey"],
 							["品类:", v.materialTypeName, "grey"],
@@ -64,11 +46,9 @@ jQuery(function($) {
 							["说明:", v.des, "grey"],
 						];
 					}else if(v.level == 0 && v.isLeaf == false){
-						$btnValue.html('点位');
-						$divBtnWrap.append($btnValue);
-						
+
 						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.materialModelName));
-						
+
 						propertyArr = [
 							["总价:", v.total, "green"],
 							["预结算值:", v.prePoint, "grey"],
@@ -76,7 +56,7 @@ jQuery(function($) {
 						];
 					}else{
 						materialOrderPostBalanceDetail.packages[v.packageName] ? materialOrderPostBalanceDetail.packages[v.packageName].push(v) : (materialOrderPostBalanceDetail.packages[v.packageName] = [v]);
-						
+
 						propertyArr = [
 						    ["名称:", v.materialModelName, "grey"],
 							["型号:", v.materialModelNo, "grey"],
@@ -89,18 +69,14 @@ jQuery(function($) {
 							["说明:", v.des, "grey"],
 						];
 					}
-					
+
 					$.each(propertyArr, function (index,value) {
 						var $liProperty = $('<li></li>');
 						$('<strong></strong>').html(value[0]).appendTo($liProperty);
 						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 						$liProperty.appendTo($ulProperty);
 					});
-					
-					$btnValue.click(function(){
-						dialogMaterialSubOrderItemBalanceModal(v);
-					});
-					
+
 					$divBtnWrap.appendTo($h3);
 					
 					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
@@ -117,96 +93,14 @@ jQuery(function($) {
 			}
 		}
 	})();
-	
-	var searcher = new Searcher();
-	
-	searcher.init([], "condList", api.material.queryMaterialSubOrderItemByMsoId, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", null, options, true, "materialSubOrderItems");
-	
-	$('#import').click(function(){
-		
-		com.post(api.material.queryMaterialSubOrderItemByMsoId, options, function(res){
-			
-			$.exceler({
-				column : [
-					['名称',"materialModelName"],
-					['型号','materialModelNo'],
-					['品类','materialTypeName'],
-					['品牌', 'materialBrandName'],
-					['单位', 'measurementUnitName'],
-					['折扣价', 'salePrice'],
-					['售价', 'price'],
-					['数量', 'num'],
-					["总价", 'total'],
-					["预结算值", 'prePoint'],
-					["结算值", 'postPoint'],
-					["说明", 'des'],
-				],
-				list: res.materialSubOrderItems,
-			});
-		});
-    });
-	
-	$('#back').click(function(){
-		$(".tooltip").remove();
-		$("#materialOrderPostBalancePageContent").load(api.index.materialOrderPostBalanceIndex.url);
+
+	com.post(url, options, function(data){
+
+		displayFunc.init('resultList', params['materialOrderPostBalance.type'] != 1 ? data.materialSubOrderItems : data.materialSubOrderRefunds);
 	});
-	
-	function dialogMaterialSubOrderItemBalanceModal(v){
-		
-		materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.calcType.val(v.calcType == 0 ? "底价" : "点位");
-		materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val(v.postPoint);
-		
-		materialOrderPostBalanceDetailPostData.tmpItem = v;
-		
-		materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("show");
-	}
-	
-	function saveData(){
-		
-		var i = 0;
-		var options = {};
-		
-		var rowInfo = materialOrderPostBalanceDetailPostData.tmpItem;
-		
-		if(rowInfo.calcType == "0"){
-			var base = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-			var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-			if(!(priceRex.test(base) && parseFloat(base) > 0)){
-				materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
-				com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "底价输入内容格式错误!", true);
-				return false;
-			}
-		}else if(rowInfo.calcType == "1"){
-			var point = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-			var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-			if(!postDiscountRex.test(point)){
-				materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.focus().select();
-				com.showTips(materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value, "点位输入内容格式错误!", true);
-				return false;
-			}
-		}
-		
-		if(rowInfo.isLeaf){
-			options["msoiIds[" + i++ + "]"] = rowInfo.msoiId;
-		}else if(!rowInfo.isLeaf){
-			
-			var _packageItems = materialOrderPostBalanceDetail.packages[rowInfo.packageName];
-			
-			_packageItems && _packageItems.length > 0 && ($.each(_packageItems, function(i, v){
-				options["msoiIds[" + i++ + "]"] = v.msoiId;
-			}));
-		}
-		
-		options["materialSubOrderItem.postPoint"] = materialOrderPostBalanceDetail.materialOrderBalanceDetailItems.value.val();
-		options["materialSubOrderItem.mosId"] = materialOrderPostBalancePostData["materialOrderPostBalance.msoId"];
-		
-		com.post(api.material.updateMaterialSubOrderItemForPostPT, options, function(result){
-			searcher.doSearch();
-		});
-		
-		materialOrderPostBalanceDetail.materialSubOrderItemBalanceModal.modal("hide");
-	}
-	
+
+	$('#back').click(function(){
+		com.switchPage('views/material/materialOrderPostBalance.html');
+	});
+
 });

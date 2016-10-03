@@ -151,8 +151,6 @@ var api = {
 		materialSubOrderReceipt: {url: "/views/material/materialSubOrderReceipt.html"},
 		materialOrderPreBalanceIndex: {url: "/views/material/materialOrderPreBalance.html"},
 		materialOrderPreBalanceDetailIndex: {url: "/views/material/materialOrderPreBalanceDetail.html"},
-		materialOrderArrivalIndex: {url: "/views/material/materialOrderArrival.html"},
-		materialOrderArrivalDetailIndex: {url: "/views/material/materialOrderArrivalDetail.html"},
 		materialOrderPostBalanceIndex: {url: "/views/material/materialOrderPostBalance.html"},
 		materialOrderPostBalanceDetailIndex: {url: "/views/material/materialOrderPostBalanceDetail.html"},
 		materialOutsideIndex: {url: "/views/material/materialOutside.html"},

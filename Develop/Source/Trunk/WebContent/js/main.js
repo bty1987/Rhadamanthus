@@ -111,14 +111,16 @@ $(function(){
 //		loadMessageCount();
 //	}, 1800000);
 	
-	queryTopInfo('decorationDesignerRank', 'designerName');
+	queryTopInfo('decorationDesignerRank', 'designerName', '设计分区业绩排名');
 	loadTopSelf();
 });
 
-function queryTopInfo(url, name){
+function queryTopInfo(url, name, info){
 	var url = api.report[url];
 	
 	var topTable = $('.top-table').html("");
+	
+	$('.nowTopType').html(info);
 	
 	com.post(url, {}, function(res){
 		var topList = "";

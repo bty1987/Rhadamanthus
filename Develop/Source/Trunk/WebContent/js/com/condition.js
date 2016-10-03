@@ -888,7 +888,43 @@ var Condition = function(){
                 validate:null
             }
         },
-		// 主材
+
+    //status (Short) – 状态 , 0: 预结算 , 1: 厂商结算 , 2: 结算
+    //    type (Short) – 类型 , 0: 购货 , 1: 退货
+
+
+        balanceStatus : {
+            label:"状态",
+            type:"select",
+            submitConfig : {
+                name : "status",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : {url : 'ds/materialInfo.json'},
+                postData:{},
+                listPath: "balanceStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        }, balanceType : {
+            label:"设计中心",
+            type:"select",
+            submitConfig : {
+                name : "type",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : {url : 'ds/materialInfo.json'},
+                postData:{},
+                listPath: "balanceType",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        // 主材
         msoNo : {
             label:"主材号",
             type:"text",

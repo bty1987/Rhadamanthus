@@ -152,8 +152,7 @@ jQuery(function($) {
 	}, "pagenation", null, materialSubOrderCollectionPostData, true, "materialPayments");
 	
 	$('#back').click(function(){
-		$(".tooltip").remove();
-		com.switchPage(api.index.materialSubOrderIndex.url);
+		com.switchPage(params.historyPage);
 	});
 	
 });

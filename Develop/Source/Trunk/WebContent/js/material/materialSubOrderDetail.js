@@ -240,7 +240,7 @@ jQuery(function($) {
 	var autoFillList = [];
 	var autoFillNameList = [];
 
-	$('#fl-statement').statement("子订单项", "子订单项信息列表");
+	$('#fl-statement').statement("主材订单", "型号信息");
 
 	if(materialSubOrderPostData["materialSubOrder.fullStatus"] ==2 || materialSubOrderPostData["materialSubOrder.fullStatus"] ==3 ){
 		$("#refundBtn").removeClass('hide');

@@ -380,8 +380,8 @@ jQuery(function($) {
 	}
 	
 	function viewMaterialSubOrderCollection(msoId){
+		params.historyPage = api.index.materialSubOrderIndex.url;
 		materialSubOrderPostData["materialSubOrder.msoId"] = msoId;
-		
 		com.switchPage(api.index.materialSubOrderCollectionIndex.url);
 	}
 	

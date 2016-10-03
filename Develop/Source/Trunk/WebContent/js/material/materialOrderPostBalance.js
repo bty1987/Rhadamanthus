@@ -1,25 +1,23 @@
+
+var materialSubOrderPostData = {};
+
 $(function(){
 
     var materialOrderPostBalance = {
         vsaveBtn: $("#vsaveBtn").on("click", updateMaterialSubOrderBalanceForVBalance),
         saveBtn: $("#saveBtn").on("click", updateMaterialSubOrderBalanceForBalance),
-        smodal : $('#smodal')
-            .on("show.bs.modal", function(a) {
-                com.clearValidator();
-                $('#vbalance').val(null);
-            })
-            .on("hide.bs.modal", function(a) {
-                materialOrderPostBalance.msobId = null;
-                $('#balance').val(null);
-
-            }),
-        modal : $('#modal')
-            .on("show.bs.modal", function(a) {
-                com.clearValidator();
-            })
-            .on("hide.bs.modal", function(a) {
-                materialOrderPostBalance.msobId = null;
-            }),
+        smodal: $('#smodal').on("show.bs.modal", function(a) {
+            com.clearValidator();
+            $('#vbalance').val(null);
+        }).on("hide.bs.modal", function(a) {
+            materialOrderPostBalance.msobId = null;
+            $('#balance').val(null);
+        }),
+        modal: $('#modal').on("show.bs.modal", function(a) {
+            com.clearValidator();
+        }).on("hide.bs.modal", function(a) {
+            materialOrderPostBalance.msobId = null;
+        }),
     };
 
     /**
@@ -54,6 +52,8 @@ $(function(){
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算值');
             var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-purple').html('厂商结算');
             var $btnPost = $('<a></a>').addClass('btn btn-minier btn-danger').html('结算');
+            var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+            var $btnCharge = $('<a></a>').addClass('btn btn-minier').html('收款');
 
             var propertyArr = [
                 ["创建人:", v.creater.currentName , "grey"],
@@ -75,12 +75,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap
-                .append($btnSupBalance)
-                .append($btnBalance)
-                .append($btnSupPost)
-                .append($btnPost)
-                .appendTo($h3);
+            $divBtnWrap.append($btnSupBalance).append($btnBalance).append($btnSupPost).append($btnPost).append($btnSub).append($btnCharge).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -102,6 +97,29 @@ $(function(){
                 postMaterialSubOrderBalance(v.msobId);
             });
 
+            $btnSub.click(function(){
+                params['materialOrderPostBalance.type'] = 0;
+                params['materialSubOrder.msoId'] = v.materialSubOrder.msoId;
+                com.switchPage('views/material/materialOrderPostBalanceDetail.html');
+            });
+
+            $btnCharge.click(function(){
+            	params.historyPage = api.index.materialOrderPostBalanceIndex.url;
+                materialSubOrderPostData["materialSubOrder.msoId"] = v.materialSubOrder.msoId;
+                com.switchPage(api.index.materialSubOrderCollectionIndex.url);
+            });
+
+            if(v.type == 1){
+                var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
+                $divBtnWrap.append($btnReject);
+                $btnReject.click(function(){
+                    params['materialOrderPostBalance.type'] = 1;
+                    params['materialSubOrder.msoId'] = v.materialSubOrder.msoId;
+                    params['idents[0]'] = v.ident;
+                    com.switchPage('views/material/materialOrderPostBalanceDetail.html');
+                });
+            }
+
             return $liLine;
         };
 
@@ -116,7 +134,7 @@ $(function(){
         }
     })();
 
-    var _condArr = [];
+    var _condArr = ['msoNo', 'orderId', 'fullCollectTimeRange', 'balanceStatus', 'balanceType' ];
 
     var searcher = new Searcher();
 
@@ -146,7 +164,7 @@ $(function(){
                 "materialSubOrderBalance.msobId": materialOrderPostBalance.msobId,
                 "materialSubOrderBalance.balance": $('#balance').val()
             };
-            com.post(api.material.updateMaterialSubOrderBalanceForVBalance, _params, function(a) {
+            com.post(api.material.updateMaterialSubOrderBalanceForBalance, _params, function(a) {
                 searcher.doSearch();
                 materialOrderPostBalance.modal.modal("hide");
             });
@@ -160,8 +178,8 @@ $(function(){
             "materialSubOrderBalance.msobId": id
         };
 
-        com.post(api.material.updateMaterialSubOrderBalanceForVBalance, _params, function(a) {
-            com.showInfo('提示','厂商结算成功');
+        com.post(api.material.vpostMaterialSubOrderBalance, _params, function(a) {
+            com.showAlert(com.info, '厂商成功结算');
             searcher.doSearch();
         });
     }
@@ -173,8 +191,8 @@ $(function(){
             "materialSubOrderBalance.msobId": id
         };
 
-        com.post(api.material.updateMaterialSubOrderBalanceForVBalance, _params, function(a) {
-            com.showInfo('提示','结算成功');
+        com.post(api.material.postMaterialSubOrderBalance, _params, function(a) {
+        	com.showAlert(com.info, '成功结算');
             searcher.doSearch();
         });
     }
