@@ -57,7 +57,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<Integer> dIds = new ArrayList<Integer>();
 		
-		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUId());
+		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
 		
 		for(DecorationOrderDesignDepartmentRightPO decorationOrderDesignDepartmentRightPO: decorationOrderDesignDepartmentRightPOs){
 			dIds.add(decorationOrderDesignDepartmentRightPO.getDid());
@@ -76,9 +76,9 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 			throw new FLException(220005, "员工不存在");
 		}
 		
-		int uId = userPO.getUId();
+		int uId = userPO.getUid();
 		
-		decorationOrderDesignDepartmentRightDao.deleteDecorationOrderDesignDepartmentRightByUId(userPO.getUId());
+		decorationOrderDesignDepartmentRightDao.deleteDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
 		
 		if(dIds != null){
 			for(Integer dId: dIds){
@@ -100,7 +100,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<Integer> dIds = new ArrayList<Integer>();
 		
-		List<DecorationOrderSalesmanDepartmentRightPO> decorationOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUId());
+		List<DecorationOrderSalesmanDepartmentRightPO> decorationOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid());
 		
 		for(DecorationOrderSalesmanDepartmentRightPO decorationOrderSalesmanDepartmentRightPO: decorationOrderSalesmanDepartmentRightPOs){
 			dIds.add(decorationOrderSalesmanDepartmentRightPO.getDid());
@@ -119,7 +119,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 			throw new FLException(220005, "员工不存在");
 		}
 		
-		int uId = userPO.getUId();
+		int uId = userPO.getUid();
 		
 		decorationOrderSalesmanDepartmentRightDao.deleteDecorationOrderSalesmanDepartmentRightByUId(uId);
 		
@@ -143,7 +143,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<String> statuses = new ArrayList<String>();
 		
-		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUId());
+		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid());
 		
 		for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
 			statuses.add(decorationOrderStatusRightPO.getStatus());
@@ -162,7 +162,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 			throw new FLException(220005, "员工不存在");
 		}
 		
-		int uId = userPO.getUId();
+		int uId = userPO.getUid();
 		
 		decorationOrderStatusRightDao.deleteDecorationOrderStatusRightByUId(uId);
 		

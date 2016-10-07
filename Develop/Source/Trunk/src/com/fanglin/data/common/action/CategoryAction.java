@@ -64,30 +64,6 @@ public class CategoryAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="addCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCategory(){
-		
-		categoryService.addCategory(category);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCategory(){
-		
-		categoryService.updateCategory(category);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteCategoryByCIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteCategoryByCIds(){
-		
-		categoryService.deleteCategoryByCIds(cIds);
-		
-		return SUCCESS;
-	}
-
 	public CategoryVO getCategory() {
 		return category;
 	}

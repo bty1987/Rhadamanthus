@@ -48,14 +48,6 @@ public class SupplierUserRightAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="updateSupplierUserRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSupplierUserRight(){
-		
-		supplierUserRightService.updateSupplierUserRight(supplierUserRight, userIds);
-		
-		return SUCCESS;
-	}
-
 	public SupplierUserRightVO getSupplierUserRight() {
 		return supplierUserRight;
 	}

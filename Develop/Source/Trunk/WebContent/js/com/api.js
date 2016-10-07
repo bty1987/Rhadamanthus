@@ -500,6 +500,10 @@ var api = {
 		updateBrand: {url: "updateBrand.do", server: "communionServer"},
 		deleteBrandByBIds: {url: "deleteBrandByBIds.do", server: "communionServer"},
 		
+		queryBrandUserRightForUserId: {url: "queryBrandUserRightForUserId.do"},
+		queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do"},
+		updateBrandUserRight: {url: "updateBrandUserRight.do", server: "communionServer"},
+		
 		pageCategory: {url: "pageCategory.do", demo: true},
 		queryCategory: {url: "queryCategory.do", demo: true},
 		queryCategoryByCId: {url: "queryCategoryByCId.do"},
@@ -739,6 +743,7 @@ var api = {
 		updateMaterialSubOrderForPreBalancePT: {url: "updateMaterialSubOrderForPreBalancePT.do"},
 		updateMaterialSubOrderBalanceForVBalance: {url: "updateMaterialSubOrderBalanceForVBalance.do"},
 		updateMaterialSubOrderBalanceForBalance: {url: "updateMaterialSubOrderBalanceForBalance.do"},
+		passBalanceMaterialSubOrder: {url: "passBalanceMaterialSubOrder.do"},
 		preBalanceMaterialSubOrder: {url: "preBalanceMaterialSubOrder.do"},
 		vpostMaterialSubOrderBalance: {url: "vpostMaterialSubOrderBalance.do"},
 		postMaterialSubOrderBalance: {url: "postMaterialSubOrderBalance.do"},

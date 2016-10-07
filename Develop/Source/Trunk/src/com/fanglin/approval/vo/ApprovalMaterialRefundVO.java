@@ -12,6 +12,8 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 	
 	private Float refund;
 	
+	private Float referMoney;
+	
 	private Short type;
 
 	public Integer getAmrId() {
@@ -52,6 +54,14 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Float getReferMoney() {
+		return referMoney;
+	}
+
+	public void setReferMoney(Float referMoney) {
+		this.referMoney = referMoney;
 	}
 
 }

@@ -460,6 +460,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		types.put(4, MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR);
 		types.put(5, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR);
 		types.put(6, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR);
+		types.put(7, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR);
 		
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();

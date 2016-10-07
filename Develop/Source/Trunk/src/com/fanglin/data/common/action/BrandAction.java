@@ -91,9 +91,9 @@ public class BrandAction extends BaseListAction {
 	@Action(value="queryBrandForPinYinName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryBrandForPinYinName(){
 		
-		List<BrandVO> brandVOs = brandService.queryBrandForPinYinName(pinyinName);
+		brands = brandService.queryBrandForPinYinName(pinyinName);
 		
-		for(BrandVO brandVO: brandVOs){
+		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(brandVO.getBrandId());
 			keyValueVO.setValue(brandVO.getBrandName());
@@ -107,39 +107,15 @@ public class BrandAction extends BaseListAction {
 	@Action(value="queryBrandForPinYinNameACategoryName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryBrandForPinYinNameACategoryName(){
 		
-		List<BrandVO> brandVOs = brandService.queryBrandForPinYinName(pinyinName);
+		brands = brandService.queryBrandForPinYinName(pinyinName);
 		
-		for(BrandVO brandVO: brandVOs){
+		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(brandVO.getBrandId());
 			keyValueVO.setValue(String.format("%s-%s", brandVO.getBrandName(), brandVO.getCategoryName()));
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(brandVO.getCategoryName());
 		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addBrand(){
-		
-		brandService.addBrand(brand);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateBrand(){
-		
-		brandService.updateBrand(brand);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteBrandByBIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteBrandByBIds(){
-		
-		brandService.deleteBrandByBIds(bIds);
 		
 		return SUCCESS;
 	}

@@ -31,7 +31,7 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> queryPageMaterialModel(Paging paging, List<FilterVO> filters){
+	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<FilterVO> filters){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
 		
@@ -41,11 +41,11 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> queryPageMaterialModelByBrandIds(Paging paging, List<FilterVO> filters, List<Integer> brandIds){
+	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<FilterVO> filters, List<String> brandIds){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
 		
-		query.add(Restrictions.in("materialBrandPO.mbId", brandIds));
+		query.add(Restrictions.in("brand.brandId", brandIds));
 		queryFilterExcute(query, filters);
 		
 		return query.list();
@@ -97,7 +97,7 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
 		
-		query.alias("brandPO", "brand");
+		query.alias("brand", "brand");
 		query.alias("brand.category", "category");
 		
 		if(filters != null){

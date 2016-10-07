@@ -91,7 +91,7 @@ public class PaymentExportAction extends BaseExportAction {
 		sheet.setData(materialPaymentVOs);
 		
 		sheet.setColumns(Arrays.asList("装修编号", "主材编号", "楼盘地址", "客户", "装修顾问", "部门", "分区", "品类", "品牌", "现金", "刷卡", "刷卡信息", "主材券值", "主材券", "收款券值", "收款券", "收款类型", "应收金额", "创建人", "收款人", "收款时间"));
-		sheet.setPropertyNames(Arrays.asList("msoNo", "orderId", "orderAddr", "customerName", "salesmanName", "departmentName", "regionName", "materialType", "materialBrand", "cash", "bank", "bankInfo", "msoCoupon", "msoCouponInfo", "coupon", "couponInfo", "paymentTypeName", "referMoney", "createUserName", "collectUserName", "collectTime"));
+		sheet.setPropertyNames(Arrays.asList("orderId", "msoNo", "orderAddr", "customerName", "salesmanName", "departmentName", "regionName", "materialType", "materialBrand", "cash", "bank", "bankInfo", "msoCoupon", "msoCouponInfo", "coupon", "couponInfo", "paymentTypeName", "referMoney", "createUserName", "collectUserName", "collectTime"));
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PoiExcelUtil.exportExcel(sheet, os);

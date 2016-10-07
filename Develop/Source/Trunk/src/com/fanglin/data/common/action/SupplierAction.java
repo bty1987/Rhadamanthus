@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.SupplierService;
 import com.fanglin.data.common.vo.SupplierVO;
 
@@ -35,8 +34,6 @@ public class SupplierAction extends BaseListAction {
 	
 	private SupplierVO supplier;
 	
-	private String password;
-	
 	@Action(value="pageSupplier", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageBrand(){
 		
@@ -45,38 +42,6 @@ public class SupplierAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="addSupplier", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSupplier() throws FLException{
-		
-		supplierService.addSupplier(supplier);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateSupplier", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSupplier() throws FLException{
-		
-		supplierService.updateSupplier(supplier);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateSupplierForLogin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSupplierForLogin() throws FLException{
-		
-		supplierService.updateSupplierForLogin(supplier);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateSupplierForPassword", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSupplierForPassword() throws FLException{
-		
-		supplierService.updateSupplierForPassword(supplier, password);
-		
-		return SUCCESS;
-	}
-
 	public SupplierVO getSupplier() {
 		return supplier;
 	}

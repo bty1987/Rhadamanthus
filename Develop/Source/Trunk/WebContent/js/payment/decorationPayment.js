@@ -365,10 +365,10 @@ jQuery(function($) {
 			decorationPaymentPostData.orderId = payment.orderId;
 			decorationPaymentPostData.customerId = payment.customerId;
 			
-			var options = {
-				"decorationOrder.orderId": payment.orderId,
-			}
-			
+//			var options = {
+//				"decorationOrder.orderId": payment.orderId
+//			}
+//			
 //			com.post(api.decoration.queryDecorationActivityItemForCouponAVaildByOrderId, options, function(res){
 //				var decorationActivityItems = res.decorationActivityItems;
 //				

@@ -126,7 +126,11 @@ jQuery(function($) {
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
     	
-    	return [$adda];
+    	var $passa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'passbalances').css("margin", "0px 3px");
+    	var $passi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($passa);
+    	var $passspan = $('<span></span>').text('完结').appendTo($passa);
+    	
+    	return [$adda, $passa];
 	});
 	
 	$('a[name="prebalances"]', '#pagenation').click(function(){
@@ -157,6 +161,20 @@ jQuery(function($) {
 		});
 	});
 	
+	$('a[name="passbalances"]', '#pagenation').click(function(){
+		
+		var $inputs = $('input[name="msoIds"]:checked');
+		
+		var options = {};
+		
+		$.each($inputs, function(i, v){
+			options["msoIds[" + i + "]"] = $(v).attr("msoId");
+		});
+		
+		com.post(api.material.passBalanceMaterialSubOrder, options, function(result){
+			searcher.doSearch();
+		});
+	});
 	
 	function viewMaterialOrderBalanceDetailIndex(msoId){
 		materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = msoId;

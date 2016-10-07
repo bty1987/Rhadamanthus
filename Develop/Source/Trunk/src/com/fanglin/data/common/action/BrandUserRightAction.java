@@ -56,14 +56,6 @@ public class BrandUserRightAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
-	@Action(value="updateBrandUserRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateBrandUserRight(){
-		
-		brandUserRightService.updateBrandUserRight(brandUserRight, bids);
-		
-		return SUCCESS;
-	}
 
 	public BrandUserRightVO getBrandUserRight() {
 		return brandUserRight;

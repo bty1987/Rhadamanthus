@@ -141,7 +141,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(msoId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund()));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney()));
 		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
 		approvalPO.setSender(new UserPO(userId));
 		

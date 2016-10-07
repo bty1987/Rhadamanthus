@@ -46,6 +46,8 @@ public class UserAction extends BaseListAction {
 	
 	private String duty;
 	
+	private List<UserVO> users;
+	
 	private List<String> dutys;
 	
 	private List<String> dutysO;
@@ -115,9 +117,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByPinyinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByPinyinName(){
 		
-		List<UserVO> userVOs = userService.queryUserForNameByPinyinName(pinyinName);
+		users = userService.queryUserForNameByPinyinName(pinyinName);
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -125,9 +127,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDuty(){
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDuty(pinyinName, duty);
+		users = userService.queryUserForNameByDuty(pinyinName, duty);
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -135,9 +137,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutys", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutys(){
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutys(pinyinName, dutys);
+		users = userService.queryUserForNameByDutys(pinyinName, dutys);
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -145,9 +147,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutyADept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserNamesByDutyDept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutyADept(pinyinName, duty, queryUserId());
+		users = userService.queryUserForNameByDutyADept(pinyinName, duty, queryUserId());
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -155,9 +157,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysADept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysADept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutysADept(pinyinName, dutys, queryUserId());
+		users = userService.queryUserForNameByDutysADept(pinyinName, dutys, queryUserId());
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -165,9 +167,9 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysAO", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysAO(){
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutysAO(pinyinName, dutys, dutysO);
+		users = userService.queryUserForNameByDutysAO(pinyinName, dutys, dutysO);
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
@@ -175,15 +177,15 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysAODept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysAODept() throws FLException{
 		
-		List<UserVO> userVOs = userService.queryUserForNameByDutysAODept(pinyinName, dutys, dutysO, queryUserId());
+		users = userService.queryUserForNameByDutysAODept(pinyinName, dutys, dutysO, queryUserId());
 		
-		packageUserName(userVOs);
+		packageUserName(users);
 		
 		return SUCCESS;
 	}
 	
-	private void packageUserName(List<UserVO> userVOs){
-		for(UserVO userVO: userVOs){
+	private void packageUserName(List<UserVO> users){
+		for(UserVO userVO: users){
 			KeyValueVO keyValueVO = new KeyValueVO();
 			
 			StringBuffer value = new StringBuffer();
@@ -275,6 +277,14 @@ public class UserAction extends BaseListAction {
 
 	public void setDutysO(List<String> dutysO){
 		this.dutysO = dutysO;
+	}
+
+	public List<UserVO> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<UserVO> users) {
+		this.users = users;
 	}
 
 }

@@ -110,7 +110,6 @@ jQuery(function($) {
 
 		com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
 
-
 			var _tag = $('#brandright').data('tag');
 
 			while(_tag.values.length > 0){
