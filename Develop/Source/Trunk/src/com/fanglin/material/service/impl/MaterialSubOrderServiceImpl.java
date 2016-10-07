@@ -441,6 +441,21 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public void passBalanceMaterialSubOrder(List<Long> msoIds) {
+		
+		for(Long msoId: msoIds){
+			MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
+			
+			if(materialSubOrderPO != null && materialSubOrderPO.getStatus() == MaterialSubOrderPO.STATUS_TYPE_INIT_INT && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
+				materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_FINISH_INT);
+				
+				materialSubOrderDao.update(materialSubOrderPO);
+			}
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public void preBalanceMaterialSubOrder(List<Long> msoIds, String userId, String userName){
 		
 		float totalBalance;
@@ -448,7 +463,8 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 		
 		for(Long msoId: msoIds){
 			MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
-			if(materialSubOrderPO != null && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
+			
+			if(materialSubOrderPO != null && materialSubOrderPO.getStatus() == MaterialSubOrderPO.STATUS_TYPE_INIT_INT && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
 				
 				totalBalance = 0;
 				

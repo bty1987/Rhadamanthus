@@ -49,6 +49,8 @@ public interface MaterialSubOrderService {
 	
 	public int changeMaterialSubOrderForOrderId(String msoNo, String orderId, String userId) throws FLException;
 	
+	public void passBalanceMaterialSubOrder(List<Long> msoIds);
+	
 	public void preBalanceMaterialSubOrder(List<Long> msoIds, String userId, String userName);
 	
 	public void postBalanceMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, String userId, String userName) throws FLException;

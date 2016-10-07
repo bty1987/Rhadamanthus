@@ -95,7 +95,7 @@ $(function(){
         }
     })();
 
-    var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId'];
+    var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId', 'materialBrandName'];
 
     var searcher = new Searcher();
 

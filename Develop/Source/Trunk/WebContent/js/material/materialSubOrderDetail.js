@@ -655,6 +655,7 @@ jQuery(function($) {
 		options["approval.comment"] = refundDes.val();
 		options["approvalMaterialRefund.type"] = materialSubOrderDetail.refundType;
 		options["approvalMaterialRefund.refund"] = refund.val();
+		options["approvalMaterialRefund.referMoney"] = refundTotal.val();
 
 		materialSubOrderDetail.saveRefundBtn.button('loading');
 

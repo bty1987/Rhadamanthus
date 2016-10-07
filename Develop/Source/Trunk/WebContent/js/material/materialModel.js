@@ -169,8 +169,7 @@ $(function(){
     });
 
     com.post(api.material.queryMaterialBrandRightForLogin, {}, function(c) {
-
-        $("#materialBrandId").bindData(c.brands, "bid", "brandName")
+        $("#materialBrandId").bindData(c.materialBrandRight.brands, "bid", "brandName")
     });
 
     //添加按钮
@@ -178,7 +177,6 @@ $(function(){
         materialModel.editFlg = !1;
         com.cleanItems(materialModel.materialModelItems);
         materialModel.materialModelItems.materialModelNo.removeAttr("disabled");
-        materialModel.materialModelItems.materialBrandId.html("");
 
         materialModel.modal.modal("show");
     });

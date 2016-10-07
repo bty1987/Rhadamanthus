@@ -30,7 +30,7 @@ public class MaterialModelPO implements Serializable {
 	
 	public static final String COLUMN_MATERIALMODELNO_STR = "materialModelNo";
 	
-	public static final String COLUMN_MATERIALBRANDID_STR = "brandPO.bid";
+	public static final String COLUMN_MATERIALBRANDID_STR = "brand.bid";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
@@ -52,13 +52,13 @@ public class MaterialModelPO implements Serializable {
 	
 	private String materialModelName;
 	
-	private BrandPO brandPO;
+	private BrandPO brand;
 	
 	private String materialTypeName;
 	
 	private String materialBrandName;
 	
-	private MeasurementUnitPO measurementUnitPO;
+	private MeasurementUnitPO measurementUnit;
 	
 	private String measurementUnitName;
 	
@@ -115,22 +115,22 @@ public class MaterialModelPO implements Serializable {
 
 	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable=false, name="brandId")
-	public BrandPO getBrandPO(){
-		return brandPO;
+	public BrandPO getBrand(){
+		return brand;
 	}
 
-	public void setBrandPO(BrandPO brandPO){
-		this.brandPO = brandPO;
+	public void setBrand(BrandPO brand){
+		this.brand = brand;
 	}
 
 	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable=false, name="measurementUnitId")
-	public MeasurementUnitPO getMeasurementUnitPO(){
-		return measurementUnitPO;
+	public MeasurementUnitPO getMeasurementUnit(){
+		return measurementUnit;
 	}
 
-	public void setMeasurementUnitPO(MeasurementUnitPO measurementUnitPO){
-		this.measurementUnitPO = measurementUnitPO;
+	public void setMeasurementUnit(MeasurementUnitPO measurementUnit){
+		this.measurementUnit = measurementUnit;
 	}
 
 	public String getMeasurementUnitName(){

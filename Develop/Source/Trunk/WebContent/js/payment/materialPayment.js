@@ -524,10 +524,10 @@ jQuery(function($) {
 			materialPaymentPostData.orderId = payment.orderId;
 			materialPaymentPostData.customerId = payment.customerId;
 			
-			var options = {
-				"decorationOrder.orderId": payment.orderId,
-			}
-			
+//			var options = {
+//				"decorationOrder.orderId": payment.orderId,
+//			}
+//			
 //			com.post(api.decoration.queryDecorationActivityItemForCouponAVaildByOrderId, options, function(res){
 //				var decorationActivityItems = res.decorationActivityItems;
 //				

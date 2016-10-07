@@ -1,5 +1,4 @@
 /**
-
  * Title: UserPO
  * Description:
  * Copyright: Copyright (c) 2013 All rights reserved.
@@ -40,7 +39,7 @@ public class UserPO implements Serializable {
 	
 	public static final short ISLOGIN_FS_INT = 2;
 	
-	private int uId;
+	private int uid;
 
 	private String userId;
 	
@@ -157,21 +156,26 @@ public class UserPO implements Serializable {
 	private short extranet;
 
 	public UserPO(){
-		
+		super();
 	}
 	
+	public UserPO(int uid) {
+		super();
+		this.uid = uid;
+	}
+
 	public UserPO(String userId){
 		this.userId = userId;
 	}
 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "uId") 
-	public int getUId() {
-		return uId;
+	public int getUid() {
+		return uid;
 	}
 
-	public void setUId(int uId) {
-		this.uId = uId;
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
 	@Id

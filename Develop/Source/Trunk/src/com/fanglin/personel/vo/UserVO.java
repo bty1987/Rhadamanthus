@@ -11,8 +11,6 @@ package com.fanglin.personel.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -24,7 +22,7 @@ public class UserVO implements Serializable {
 
 	private static final long serialVersionUID = -7041891388073738568L;
 	
-	private int uId;
+	private int uid;
 
 	private String userId;
 	
@@ -140,10 +138,6 @@ public class UserVO implements Serializable {
 	
 	private Short extranet;
 
-	private List<UserContractVO> contracts;
-	
-	private List<UserExperienceVO> experiences;
-	
 	public UserVO(){
 		super();
 	}
@@ -161,12 +155,18 @@ public class UserVO implements Serializable {
 		this.currentName = currentName;
 	}
 
-	public int getuId() {
-		return uId;
+	public UserVO(RoleVO role, DepartmentVO dept) {
+		super();
+		this.role = role;
+		this.dept = dept;
 	}
 
-	public void setuId(int uId) {
-		this.uId = uId;
+	public int getUid() {
+		return uid;
+	}
+
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
 	public String getUserId(){
@@ -618,28 +618,6 @@ public class UserVO implements Serializable {
 		this.extranet = extranet;
 	}
 
-	public List<UserContractVO> getContracts(){
-		if(contracts == null){
-			contracts = new ArrayList<UserContractVO>();
-		}
-		return contracts;
-	}
-
-	public void setContracts(List<UserContractVO> contracts){
-		this.contracts = contracts;
-	}
-
-	public List<UserExperienceVO> getExperiences(){
-		if(experiences == null){
-			experiences = new ArrayList<UserExperienceVO>();
-		}
-		return experiences;
-	}
-
-	public void setExperiences(List<UserExperienceVO> experiences){
-		this.experiences = experiences;
-	}
-
 	public int getCompany() {
 		return company;
 	}
@@ -651,7 +629,7 @@ public class UserVO implements Serializable {
 	public UserVO setBaseInfo(UserPO userPO){
 		
 		if(userPO != null){
-			setuId(userPO.getUId());
+			setUid(userPO.getUid());
 			setUserId(userPO.getUserId());
 			setCurrentName(userPO.getCurrentName());
 			setUserName(userPO.getUserName());

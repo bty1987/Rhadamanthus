@@ -203,7 +203,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<Integer> designDepartmentIds = null;
 		List<String> statuses = null;
 		
-		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUId());
+		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
 		
 		designDepartmentIds = new ArrayList<Integer>();
 		
@@ -211,7 +211,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			designDepartmentIds.add(decorationOrderDesignDepartmentRightPO.getDid());
 		}
 		
-		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUId());
+		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid());
 		
 		statuses = new ArrayList<String>();
 		
@@ -452,7 +452,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		if(duty.contains("设计师")){
 			filters.add(new FilterVO("designerId", userPO.getUserId(), "eq"));
 		}else{
-			List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUId());
+			List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
 			
 			designDepartmentIds = new ArrayList<Integer>();
 			
@@ -460,7 +460,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				designDepartmentIds.add(decorationOrderDesignDepartmentRightPO.getDid());
 			}
 			
-			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUId());
+			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid());
 			
 			statuses = new ArrayList<String>();
 			
@@ -553,7 +553,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		if(duty.contains("业务员")){
 			filters.add(new FilterVO("userSalesman", userPO.getUserId(), "eq"));
 		}else{
-			List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUId());
+			List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid());
 			
 			salesmanDepartmentIds = new ArrayList<Integer>();
 			
@@ -561,7 +561,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				salesmanDepartmentIds.add(decorationOrderSalesmanDepartmentRightPO.getDid());
 			}
 			
-			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUId());
+			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid());
 			
 			statuses = new ArrayList<String>();
 			

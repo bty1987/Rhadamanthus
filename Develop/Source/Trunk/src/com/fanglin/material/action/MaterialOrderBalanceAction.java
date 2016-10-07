@@ -96,6 +96,14 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value="passBalanceMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String passBalanceMaterialSubOrder(){
+		
+		materialSubOrderService.passBalanceMaterialSubOrder(msoIds);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="preBalanceMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String preBalanceMaterialSubOrder() throws FLException{
 		
