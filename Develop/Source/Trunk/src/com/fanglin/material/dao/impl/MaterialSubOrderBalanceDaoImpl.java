@@ -56,9 +56,9 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 				query.alias("instorer", "instorer");
 				query.add(Restrictions.eq(MaterialSubOrderBalancePO.COLUMN_INSTOREID_STR, filter.getData()));
 			}else if(MaterialSubOrderBalancePO.COLUMN_TYPE_STR.equals(filter.getField())){
-				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_TYPE_STR, filter.getData(), filter.getOp()));
+				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_TYPE_STR, Short.parseShort(filter.getData()), filter.getOp()));
 			}else if(MaterialSubOrderBalancePO.COLUMN_STATUS_STR.equals(filter.getField())){
-				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_STATUS_STR, filter.getData(), filter.getOp()));
+				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_STATUS_STR, Short.parseShort(filter.getData()), filter.getOp()));
 			}else if(MaterialSubOrderPO.COLUMN_FULLCOLLECTTIME_RANGE_STR.equals(filter.getField())){
 				
 				String data = filter.getData();

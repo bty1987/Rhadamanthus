@@ -55,14 +55,6 @@ public class CleaningConstructionSchedulePO implements Serializable {
     
     private int endTimeFlag;
     
-    private int supervisorRaty;
-    
-    private String supervisorRatyDes;
-    
-    private int qualityRaty;
-    
-    private String qualityRatyDes;
-    
     public CleaningConstructionSchedulePO() {
 		super();
 	}
@@ -140,42 +132,6 @@ public class CleaningConstructionSchedulePO implements Serializable {
         this.endTimeFlag = endTimeFlag;
     }
     
-    @Column(name="supervisorRaty")
-    public int getSupervisorRaty(){
-        return this.supervisorRaty;
-    }
-    
-    public void setSupervisorRaty(int supervisorRaty){
-        this.supervisorRaty = supervisorRaty;
-    }
-    
-    @Column(name="supervisorRatyDes")
-    public String getSupervisorRatyDes(){
-        return this.supervisorRatyDes;
-    }
-    
-    public void setSupervisorRatyDes(String supervisorRatyDes){
-        this.supervisorRatyDes = supervisorRatyDes;
-    }
-    
-    @Column(name="qualityRaty")
-    public int getQualityRaty(){
-        return this.qualityRaty;
-    }
-    
-    public void setQualityRaty(int qualityRaty){
-        this.qualityRaty = qualityRaty;
-    }
-    
-    @Column(name="qualityRatyDes")
-    public String getQualityRatyDes(){
-        return this.qualityRatyDes;
-    }
-    
-    public void setQualityRatyDes(String qualityRatyDes){
-        this.qualityRatyDes = qualityRatyDes;
-    }
-
     @Column(name = "csId")
 	public int getCsId(){
 		return csId;

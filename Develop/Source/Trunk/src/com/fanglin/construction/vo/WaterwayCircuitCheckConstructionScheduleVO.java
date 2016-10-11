@@ -43,14 +43,6 @@ public class WaterwayCircuitCheckConstructionScheduleVO implements java.io.Seria
 	
 	private String powerWorkerRatyDes;
 	
-	private Short supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private Short qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public Integer getWcccsId(){
 		return wcccsId;
 	}
@@ -201,38 +193,6 @@ public class WaterwayCircuitCheckConstructionScheduleVO implements java.io.Seria
 
 	public void setPowerWorkerRatyDes(String powerWorkerRatyDes){
 		this.powerWorkerRatyDes = powerWorkerRatyDes;
-	}
-
-	public Short getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(Short supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	public Short getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(Short qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 }

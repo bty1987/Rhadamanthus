@@ -247,6 +247,7 @@ $(function(){
 				column : [
 				    ["编号","mmId"],
 					["编号","materialModelNo"],
+					["名称",'materialModelName'],
 					['品类','materialTypeName'],
 					['品牌','materialBrandName'],
 					['单位','measurementUnitName'],
