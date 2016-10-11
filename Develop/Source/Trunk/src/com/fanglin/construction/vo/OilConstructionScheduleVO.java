@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 public class OilConstructionScheduleVO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6936490660864782156L;
 	
 	private Integer ocsId;
@@ -42,14 +39,6 @@ public class OilConstructionScheduleVO implements Serializable{
 	
 	private String workerRatyDes;
 	
-	private Integer supervisorRaty;
-	
-	private String supervisorRatyDes;
-	
-	private Integer qualityRaty;
-	
-	private String qualityRatyDes;
-
 	public Integer getOcsId(){
 		return ocsId;
 	}
@@ -128,38 +117,6 @@ public class OilConstructionScheduleVO implements Serializable{
 
 	public void setWorkerRatyDes(String workerRatyDes){
 		this.workerRatyDes = workerRatyDes;
-	}
-
-	public Integer getSupervisorRaty(){
-		return supervisorRaty;
-	}
-
-	public void setSupervisorRaty(Integer supervisorRaty){
-		this.supervisorRaty = supervisorRaty;
-	}
-
-	public String getSupervisorRatyDes(){
-		return supervisorRatyDes;
-	}
-
-	public void setSupervisorRatyDes(String supervisorRatyDes){
-		this.supervisorRatyDes = supervisorRatyDes;
-	}
-
-	public Integer getQualityRaty(){
-		return qualityRaty;
-	}
-
-	public void setQualityRaty(Integer qualityRaty){
-		this.qualityRaty = qualityRaty;
-	}
-
-	public String getQualityRatyDes(){
-		return qualityRatyDes;
-	}
-
-	public void setQualityRatyDes(String qualityRatyDes){
-		this.qualityRatyDes = qualityRatyDes;
 	}
 
 	public Integer getCsId(){
