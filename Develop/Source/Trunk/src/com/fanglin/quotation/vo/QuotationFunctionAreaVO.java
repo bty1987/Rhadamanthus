@@ -19,6 +19,10 @@ public class QuotationFunctionAreaVO implements Serializable {
 	
 	private String functionAreaType;
 	
+	private Short type;
+	
+	private Float total;
+	
 	private List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems;
 
 	public int getId() {
@@ -76,6 +80,22 @@ public class QuotationFunctionAreaVO implements Serializable {
 	public void setQuotationFunctionAreaItems(
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
 		this.quotationFunctionAreaItems = quotationFunctionAreaItems;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
 	}
 
 }

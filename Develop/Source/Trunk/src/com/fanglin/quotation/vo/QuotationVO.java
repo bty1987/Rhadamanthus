@@ -58,7 +58,7 @@ public class QuotationVO implements Serializable {
 	
 	private Integer status;
 	
-	private String content;
+	private Short type;
 	
 	private Float latexCut;
 	
@@ -67,6 +67,16 @@ public class QuotationVO implements Serializable {
 	private Float manageRate;
 	
 	private Float trafficPrice;
+	
+	private float setpackage;
+	
+	private float basicPrice;
+	
+	private float qdiff;
+	
+	private float mdiff;
+	
+	private String content;
 	
 	public QuotationVO() {
 		super();
@@ -268,6 +278,46 @@ public class QuotationVO implements Serializable {
 
 	public void setTrafficPrice(Float trafficPrice) {
 		this.trafficPrice = trafficPrice;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public float getSetpackage() {
+		return setpackage;
+	}
+
+	public void setSetpackage(float setpackage) {
+		this.setpackage = setpackage;
+	}
+
+	public float getBasicPrice() {
+		return basicPrice;
+	}
+
+	public void setBasicPrice(float basicPrice) {
+		this.basicPrice = basicPrice;
+	}
+
+	public float getQdiff() {
+		return qdiff;
+	}
+
+	public void setQdiff(float qdiff) {
+		this.qdiff = qdiff;
+	}
+
+	public float getMdiff() {
+		return mdiff;
+	}
+
+	public void setMdiff(float mdiff) {
+		this.mdiff = mdiff;
 	}
 
 }

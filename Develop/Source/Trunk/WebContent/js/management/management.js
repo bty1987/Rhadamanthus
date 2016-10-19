@@ -45,7 +45,9 @@ jQuery(function($) {
 	management.items.dateRange = $("#dateRange");
 	
 	management.items.contractTimeRange = $("#contractTimeRange");
-	
+
+	management.items.paymentTimeRange = $("#paymentTimeRange");
+
 	management.decorationOrderForOrderIdModal = $("#decorationOrderForOrderIdModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
@@ -107,11 +109,17 @@ jQuery(function($) {
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
+
+	management.exportDecorationPaymentForContractTimeModal = $("#exportDecorationPaymentForContractTimeModal").on('show.bs.modal', function(e){
+		com.cleanItems(management.items);
+		com.clearValidator();
+	});
 	
 	$(".date-picker-date").datepicker({autoclose:true});
 	$(".maskInput").mask('99:99:99');
 	$('#dateRange').daterangepicker(com.dateramgepickerdefault);
 	$('#contractTimeRange').daterangepicker(com.dateramgepickerdefault);
+	$('#paymentTimeRange').daterangepicker(com.dateramgepickerdefault);
 	$(".daterangepicker").css("z-index", 1100);
 	
 	$('#quotationFunctionItemForManageRate').on("blur", function(){
@@ -196,6 +204,11 @@ jQuery(function($) {
 	$("#exportDecorationOrderForContractTime").click(function(){
 		
 		management.exportDecorationOrderForContractTimeModal.modal("show");
+	});
+
+	$("#exportDecorationPaymentForContractTime").click(function(){
+
+		management.exportDecorationPaymentForContractTimeModal.modal("show");
 	});
 	
 	$("#saveOrderIdBtn").click(function(){
@@ -398,6 +411,16 @@ jQuery(function($) {
 		
 		var url = api.decoration.exportDecorationorderByContractTime.url + "?filters[0].data=" + $("#contractTimeRange").val() + "&filters[0].field=signTimeDateRange&filters[0].op=between&filters[1].field=status&filters[1].data=已签约&filters[1].op=eq";
 		
+		window.open(decodeURI(url));
+	});
+
+	$("#exportDecorationPaymentForContractTimeBtn").click(function(){
+		if(com.validate()){
+			return;
+		}
+
+		var url = api.payment.exportDecorationPayment.url + "?filters[0].data=" + $("#paymentTimeRange").val() + "&filters[0].field=collectTime&filters[0].op=between";
+
 		window.open(decodeURI(url));
 	});
 });

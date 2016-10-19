@@ -787,7 +787,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 		BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 		
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 		
 		if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 			if(quotationPO == null){

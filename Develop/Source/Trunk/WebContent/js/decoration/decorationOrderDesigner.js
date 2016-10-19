@@ -150,7 +150,7 @@ $(function(){
 						viewDecorationOrderDetail(v.orderId+"");
 					});
 					$btnPrice.click(function(){
-						viewDecorationQuotateIndex(v.orderId+"");
+						viewDecorationQuotateIndex(v.orderId+"", v.type);
 					});
 					$btnRevie.click(function(){
 						viewDecorationOrderBackVisitIndex(v.orderId+"");
@@ -192,8 +192,9 @@ $(function(){
 			com.switchPage(api.index.decorationOrderDesignerDetailIndex.url);
 		}
 		//报价
-		var viewDecorationQuotateIndex = function (decorationOrderId){
+		var viewDecorationQuotateIndex = function (decorationOrderId, type){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
+			decorationOrderPostData["decorationOrderType"] = type;
 			com.switchPage(api.index.quotationIndex.url);
 		}
 		//回访

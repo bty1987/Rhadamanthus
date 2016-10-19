@@ -12,6 +12,7 @@ jQuery(function($) {
 	$('#fl-statement').statement("装修订单报价", "报价信息列表");
 	
 	decorationQuotation.decorationOrderId = decorationOrderPostData.decorationOrderId;
+	decorationQuotation.type = decorationOrderPostData.decorationOrderType;
 	
 	decorationQuotation.quotationItems.qid = $("#qid");
 	decorationQuotation.quotationItems.quotationName = $("#quotationName");
@@ -34,80 +35,61 @@ jQuery(function($) {
 	
 	$('#saveBtn').click(function(){
 		
-		if(decorationQuotation.canChangeStatus > 0){
-			if(com.validate()){
-				return;
-			}
+		if(com.validate()){
+			return;
+		}
+		
+		decorationQuotation.quotationModal.modal("hide");
+		
+		var btn = $(this).button('loading');
+		
+		if(decorationQuotation.editFlg == 0){
+		
+			var options = {
+				"quotation.orderId":decorationQuotation.decorationOrderId,
+				"quotation.quotationName":$("#quotationName").val(),
+				"quotation.decorationStyle":$("#decorationStyle").val(),
+				"quotation.content":$("#content").val(),
+			};
 			
-			decorationQuotation.quotationModal.modal("hide");
+			com.post(api.quotation.addQuotation, options, function(res){
+				com.showAlert(com.info, "操作成功");
+				initQuotationList();
+				
+			}, null, false);
 			
-			var btn = $(this).button('loading');
+			btn.button("reset");
 			
-			if(decorationQuotation.editFlg == 0){
+		}else if(decorationQuotation.editFlg == 1){
+			var options = {
+				"quotation.orderId":decorationQuotation.decorationOrderId,
+				"quotation.qid":$("#qid").val(),
+				"quotation.quotationName":$("#quotationName").val(),
+				"quotation.decorationStyle":$("#decorationStyle").val(),
+				"quotation.content":$("#content").val()
+			};
 			
-				var options = {
-					"quotation.orderId":decorationQuotation.decorationOrderId,
-					"quotation.quotationName":$("#quotationName").val(),
-					"quotation.decorationStyle":$("#decorationStyle").val(),
-					"quotation.content":$("#content").val()
-				};
-				
-				com.post(api.quotation.addQuotation, options, function(res){
-					if(res.errorCode == 0){
-						com.showAlert(com.info, "操作成功");
-					}else{
-						com.showAlert(com.info, "操作失败");
-					}
-					
-					initQuotationList();
-					
-				}, null, false);
-				
-				btn.button("reset");
-				
-			}else if(decorationQuotation.editFlg == 1){
-				var options = {
-					"quotation.orderId":decorationQuotation.decorationOrderId,
-					"quotation.qid":$("#qid").val(),
-					"quotation.quotationName":$("#quotationName").val(),
-					"quotation.decorationStyle":$("#decorationStyle").val(),
-					"quotation.content":$("#content").val()
-				};
-				
-				com.post(api.quotation.updateQuotation, options, function(res){
-					if(res.errorCode == 0){
-						com.showAlert(com.info, "操作成功");
-					}else{
-						com.showAlert(com.error, "操作失败");
-					}
-					
-					initQuotationList();
-				}, null, false);
-				
-				btn.button("reset");
-			}else{
-				var options = {
-					"quotation.qid": $("#qid").val(),
-					"quotation.orderId": decorationQuotation.decorationOrderId,
-					"quotation.quotationName": $("#quotationName").val(),
-					"quotation.decorationStyle": $("#decorationStyle").val(),
-					"quotation.content": $("#content").val()
-				};
-				
-				com.post(api.quotation.copyQuotation, options, function(res){
-					if(res.errorCode == 0){
-						com.showAlert(com.info, "操作成功");
-					}else{
-						com.showAlert(com.info, "操作失败");
-					}
-					
-					initQuotationList();
-				}, null, false);
-				
-				btn.button("reset");
-			}
+			com.post(api.quotation.updateQuotation, options, function(res){
+				com.showAlert(com.info, "操作成功");
+				initQuotationList();
+			}, null, false);
+			
+			btn.button("reset");
 		}else{
-			bootbox.alert("该报价已经不可以修改");
+			var options = {
+				"quotation.qid": $("#qid").val(),
+				"quotation.orderId": decorationQuotation.decorationOrderId,
+				"quotation.quotationName": $("#quotationName").val(),
+				"quotation.decorationStyle": $("#decorationStyle").val(),
+				"quotation.content": $("#content").val(),
+			};
+			
+			com.post(api.quotation.copyQuotation, options, function(res){
+				com.showAlert(com.info, "操作成功");
+				initQuotationList();
+			}, null, false);
+			
+			btn.button("reset");
 		}
 	});
 	
@@ -122,15 +104,10 @@ jQuery(function($) {
 			"quotation.orderId":decorationQuotation.decorationOrderId,
 		};
 		
-		var btn = $(this).button('loading');
+		van = $(this).button('loading');
 		
 		com.post(api.quotation.replicaQuotation, options, function(res){
-			if(res.errorCode == 0){
-				com.showAlert(com.info, "操作成功");
-			}else{
-				com.showAlert(com.error, res.errorMsg);
-			}
-			
+			com.showAlert(com.info, "操作成功");
 			initQuotationList();
 		}, null, false);
 		
@@ -144,17 +121,13 @@ jQuery(function($) {
 	});
 	
 	$('#createQuotation').on(ace.click_event, function(){
-		if(decorationQuotation.canChangeStatus > 0){
-			decorationQuotation.editFlg = 0;
-			
-			com.clearValidator();
-			com.cleanItems(decorationQuotation.quotationItems);
-			
-			decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
-			decorationQuotation.quotationModal.modal("show");
-		}else{
-			bootbox.alert("该报价已经不可以修改");
-		}
+		decorationQuotation.editFlg = 0;
+		
+		com.clearValidator();
+		com.cleanItems(decorationQuotation.quotationItems);
+		
+		decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
+		decorationQuotation.quotationModal.modal("show");
 	});
 	
 	$('#replicaQuotation').on(ace.click_event, function(){
@@ -235,16 +208,12 @@ function initQuotationList(){
 			}
 			
 			$(".ui-icon.icon-copy.blue").on(ace.click_event, function(){
-				if(decorationQuotation.canChangeStatus > 0){
-					decorationQuotation.editFlg = 2;
-					com.clearValidator();
-					com.cleanItems(decorationQuotation.quotationItems);
-					decorationQuotation.quotationItems.qid.val($(this).attr("data"));
-					decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
-					decorationQuotation.quotationModal.modal("show");
-				}else{
-					bootbox.alert("该报价已经不可以修改");
-				}
+				decorationQuotation.editFlg = 2;
+				com.clearValidator();
+				com.cleanItems(decorationQuotation.quotationItems);
+				decorationQuotation.quotationItems.qid.val($(this).attr("data"));
+				decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
+				decorationQuotation.quotationModal.modal("show");
 			});
 			
 			$(".ui-icon.icon-pencil.blue").on(ace.click_event, function(){
@@ -262,13 +231,9 @@ function initQuotationList(){
 			});
 			
 			$(".ace.ace-switch.ace-switch-5").on(ace.click_event, function(){
-				if(decorationQuotation.canChangeStatus > 0){
-					com.post(api.quotation.changeQuotationForDefault, {"quotation.qid":$(this).attr("data"), "quotation.orderId":decorationQuotation.decorationOrderId}, function(res){
-						initQuotationList();
-					});
-				}else{
-					bootbox.alert("该报价已经不可以修改");
-				}
+				com.post(api.quotation.changeQuotationForDefault, {"quotation.qid":$(this).attr("data"), "quotation.orderId":decorationQuotation.decorationOrderId}, function(res){
+					initQuotationList();
+				});
 			});
 			
 			$(".ui-icon.ui-icon-trash").on(ace.click_event, function(){
@@ -278,35 +243,27 @@ function initQuotationList(){
 					return;
 				}
 				
-				if(decorationQuotation.canChangeStatus > 0){
-					var autoData = $(this).attr("data");
-					bootbox.confirm("确定要删除报价("+$(this).attr("dataname")+")?",function(result){
-						if(result){
-							com.post(api.quotation.deleteQuotationById, {"quotation.qid":autoData,"quotation.orderId":decorationQuotation.decorationOrderId}, function(res){
-								initQuotationList();
-							});
-						}
-					});
-				}else{
-					bootbox.alert("该报价已经不可以修改");
-				}
+				var autoData = $(this).attr("data");
+				bootbox.confirm("确定要删除报价("+$(this).attr("dataname")+")?",function(result){
+					if(result){
+						com.post(api.quotation.deleteQuotationById, {"quotation.qid":autoData,"quotation.orderId":decorationQuotation.decorationOrderId}, function(res){
+							initQuotationList();
+						});
+					}
+				});
 			});
 			
 			$(".ui-icon.icon-edit.blue").on(ace.click_event, function(){
+//				setTimeout("editQuotationDetail('"+$(this).attr("data")+"')", 300);
 				
-				if(decorationQuotation.canChangeStatus > 0){
-					setTimeout("editQuotationDetail('"+$(this).attr("data")+"')", 300);
-				}else{
-					bootbox.alert("该报价已经不可以修改");
-				}
+				params["orderId"] = decorationQuotation.decorationOrderId;
+				params["quotationId"] = quotationId;
+				
+				com.switchPage(api.index.quotationDetailIndex.url);
 			});
 			
 			$('[data-rel=tooltip]').tooltip();
 		}
-	});
-	
-	com.post(api.quotation.queryQuotationForStatusByOrderId,{"quotation.orderId":decorationQuotation.decorationOrderId},function(res){
-		decorationQuotation.canChangeStatus = res.canChange;
 	});
 }
 

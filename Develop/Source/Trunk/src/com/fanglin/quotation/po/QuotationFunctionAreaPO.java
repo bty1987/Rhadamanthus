@@ -28,9 +28,13 @@ public class QuotationFunctionAreaPO implements Serializable {
 
 	private static final long serialVersionUID = 7743703726911437039L;
 
-	public static final String TYPE_COMMON_STR = "普通";
+	public static final short TYPE_MANAGEMENT_INT = 0; // 管理
 	
-	public static final String TYPE_MANAGEMENT_STR = "管理费";
+	public static final short TYPE_PROJECT_NUM_INT = 1; // 工程量
+	
+	public static final short TYPE_FUNCTIONAREA_TOTAL_INT = 2; // 功能区总价
+	
+	public static final short TYPE_NOT_COUNT_INT = 3; // 不计算
 	
 	private long qfaId;
 	
@@ -41,6 +45,10 @@ public class QuotationFunctionAreaPO implements Serializable {
 	private int functionAreaOrder;
 	
 	private String functionAreaType;
+	
+	private short type;
+	
+	private float total;
 
 	public QuotationFunctionAreaPO(){
 		super();
@@ -50,11 +58,11 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 	
-	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, String functionAreaType) {
+	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, short type) {
 		this.quotation = quotation;
 		this.functionAreaName = functionAreaName;
 		this.functionAreaOrder = functionAreaOrder;
-		this.functionAreaType = functionAreaType;
+		this.type = type;
 	}
 
 	@Id
@@ -100,6 +108,22 @@ public class QuotationFunctionAreaPO implements Serializable {
 
 	public String getFunctionAreaType(){
 		return functionAreaType;
+	}
+
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
 	}
 
 }

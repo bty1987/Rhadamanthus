@@ -30,7 +30,13 @@ import com.fanglin.personel.po.UserPO;
 @Table(name = "quotation", catalog = "platform")
 public class QuotationPO implements Serializable {
 
-	private static final long serialVersionUID = 1344461146L;
+	private static final long serialVersionUID = 3361405245563596740L;
+
+	public static final int STATUS_DEFAULT_INT = 1;
+	
+	public static final short TYPE_PART_INT = 0;
+	
+	public static final short TYPE_WHOLE_INT = 1;
 
 	private long qid;
 	
@@ -49,6 +55,8 @@ public class QuotationPO implements Serializable {
 	private float totalPrice;
 	
 	private int status;
+	
+	private short type;
 
 	private int saveStatus;
 	
@@ -61,6 +69,14 @@ public class QuotationPO implements Serializable {
 	private float manageRate;
 	
 	private float trafficPrice;
+	
+	private float setpackage;
+	
+	private float basicPrice;
+	
+	private float qdiff;
+	
+	private float mdiff;
 	
 	private String content;
 	
@@ -150,6 +166,14 @@ public class QuotationPO implements Serializable {
 		this.status = status;
 	}
 
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
 	public void setTotalPrice(float totalPrice){
 		this.totalPrice = totalPrice;
 	}
@@ -204,6 +228,38 @@ public class QuotationPO implements Serializable {
 
 	public void setTrafficPrice(float trafficPrice) {
 		this.trafficPrice = trafficPrice;
+	}
+
+	public float getSetpackage() {
+		return setpackage;
+	}
+
+	public void setSetpackage(float setpackage) {
+		this.setpackage = setpackage;
+	}
+
+	public float getBasicPrice() {
+		return basicPrice;
+	}
+
+	public void setBasicPrice(float basicPrice) {
+		this.basicPrice = basicPrice;
+	}
+
+	public float getQdiff() {
+		return qdiff;
+	}
+
+	public void setQdiff(float qdiff) {
+		this.qdiff = qdiff;
+	}
+
+	public float getMdiff() {
+		return mdiff;
+	}
+
+	public void setMdiff(float mdiff) {
+		this.mdiff = mdiff;
 	}
 
 }

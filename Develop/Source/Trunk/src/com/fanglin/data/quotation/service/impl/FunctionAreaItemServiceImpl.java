@@ -26,7 +26,6 @@ import com.fanglin.data.quotation.service.FunctionAreaItemService;
 import com.fanglin.data.quotation.vo.FunctionAreaItemVO;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
-import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Service("functionAreaItemService")
 @Transactional(readOnly = true)
@@ -126,18 +125,6 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 		}
 		
 		for(FunctionAreaItemVO functionAreaItemVO: functionAreaItems){
-			
-			String functionAreaType = functionAreaPO.getFunctionAreaType();
-			
-			String quotationClassification = functionAreaItemVO.getQuotationItem().getQuotationClassification();
-			
-			if(QuotationFunctionAreaPO.TYPE_COMMON_STR.equals(functionAreaType)){
-				if(!QuotationClassificationPO.TYPE_BASIC_PART_STR.equals(quotationClassification) && !QuotationClassificationPO.TYPE_OTHER_PART_STR.equals(quotationClassification)){
-					continue;
-				}
-			}else if(!functionAreaType.equals(quotationClassification)){
-				continue;
-			}
 			
 			long functionAreaId = functionAreaItemVO.getFunctionArea().getFaId();
 			long itemId =  functionAreaItemVO.getQuotationItem().getQiId();

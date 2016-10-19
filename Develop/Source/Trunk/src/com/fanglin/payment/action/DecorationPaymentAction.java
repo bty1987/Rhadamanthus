@@ -106,14 +106,6 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDecorationPaymentForChange", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationPaymentForChange(){
-		
-		decorationPaymentService.pageDecorationPaymentForChange(getPaging(), getFilters());
-
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDecorationPaymentByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationPaymentByOrderId(){
 		

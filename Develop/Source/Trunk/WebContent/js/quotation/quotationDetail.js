@@ -865,12 +865,12 @@ var QuotationDetail = (function(){
 				$dbody, $dbodyInner, $list, $input;
 
 			var _btnSet = {
-				"$btnEdit" : ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', dv.functionAreaType != 0],
-				"$btnAdd" : ["添加报价项", '<i class="bigger-125 icon-plus purple"></i>', dv.functionAreaType != 0],
-				"$btnSet" : ["自定义报价项", '<i class="bigger-125 icon-plus-sign purple"></i>', dv.functionAreaType != 0],
-				"$btnHistory" : ["历史报价项", '<i class="bigger-125 icon-star green"></i>', dv.functionAreaType != 0],
-				"$btnDelQuo" : ["批量删除报价项", '<i class="bigger-125 icon-remove pink"></i>', dv.functionAreaType != 0],
-				"$btnDelDomain" : ["删除功能区", '<i class="bigger-125 icon-trash red"></i>', dv.functionAreaType != 0],
+				"$btnEdit" : ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', dv.type == 1],
+				"$btnAdd" : ["添加报价项", '<i class="bigger-125 icon-plus purple"></i>', dv.type == 1],
+				"$btnSet" : ["自定义报价项", '<i class="bigger-125 icon-plus-sign purple"></i>', dv.type == 1],
+				"$btnHistory" : ["历史报价项", '<i class="bigger-125 icon-star green"></i>', dv.type == 1],
+				"$btnDelQuo" : ["批量删除报价项", '<i class="bigger-125 icon-remove pink"></i>', dv.type == 1],
+				"$btnDelDomain" : ["删除功能区", '<i class="bigger-125 icon-trash red"></i>', dv.type == 1],
 				"$btnFold" : ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
 			};
 
@@ -881,11 +881,11 @@ var QuotationDetail = (function(){
 			$domain = $('<div></div>').addClass('widget-box transparent').attr({
 				"data-dlevel" : dv.functionAreaOrder,
 				"data-qfaId" : dv.qfaId,
-				"data-fatype" : dv.functionAreaType
+				"data-fatype" : dv.type
 			}).css({"margin-bottom" : "20px"});
 
 			$dhead = $('<div></div>').addClass('widget-header');
-			$dname = $('<h5></h5>').append($('<em></em>').text(dv.functionAreaType != 0 ? dv.functionAreaOrder : '')).append('  ').append($('<strong></strong>').html(dv.functionAreaName));
+			$dname = $('<h5></h5>').append($('<em></em>').text(dv.type == 0 ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.functionAreaName));
 			$dtoolbar = $('<div></div>').addClass('widget-toolbar no-border');
 
 			$.each(_btnSet, function(k, v){
@@ -913,8 +913,6 @@ var QuotationDetail = (function(){
 
 			$domain.append($dhead).append($dbody);
 			
-			console.log("---------------------------------");
-			
 			if(dv.quotationFunctionAreaItems.length){
 				
 				var _items = dv.quotationFunctionAreaItems;
@@ -938,7 +936,7 @@ var QuotationDetail = (function(){
 				});
 			}
 
-			if(dv.functionAreaType != 0){
+			if(dv.type == 1){
 				//各种绑定事件
 
 				$btns.$btnEdit.click(function(){//编辑功能区
@@ -1122,8 +1120,8 @@ var QuotationDetail = (function(){
 				"data-workType": v.workType ? v.workType : "-",
 				"data-discount": v.discount
 			}).val(v.qiId);
+			
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
-
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
 			var propertyArr = [
@@ -1162,8 +1160,10 @@ var QuotationDetail = (function(){
 			var $dorder =$('<span class="order"></span>').text(v.functionAreaOrder);
 			var $dname = $('<span class="name"></span>').text(v.functionAreaName);
 			var $dsum = $('<label></label>').addClass('col-md-6 no-padding-left').text(sum);
+			
 			$dwrap.append($dorder).append("  ").append($dname);
 			$item.attr("data-qfaId" , v.qfaId ).append($dwrap).append($dsum);
+			
 			return $item;
 		}
 	};
@@ -1209,7 +1209,7 @@ var QuotationDetail = (function(){
 						var sum, sumd, $dmoney, sumlcs;
 						var $domain = painter.createdomain(v);
 						$domain.appendTo($('#functionAreaDetailList'));
-						if(v.functionAreaType != 0){
+						if(v.type == 1){
 							sum = parseFloat($domain.attr('data-totalprice'));
 							sumd = parseFloat($domain.attr('data-d-totalprice'));
 							sumlcs = parseFloat($domain.attr('data-latexCutScaleTotalSum'));
@@ -1223,7 +1223,6 @@ var QuotationDetail = (function(){
 					});
 					
 					_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text())));
-
 					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), parseFloat($('#manageCost').find('.discountprice .cell-wrap').text())));
 
 					$('#conveyanceCost').find('.num .cell-wrap').text(_transfee);

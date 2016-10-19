@@ -514,7 +514,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 				MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 				materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
 				materialSubOrderBalancePO.setCreater(new UserPO(userId));
-				materialSubOrderBalancePO.setInstorer(new UserPO(materialSubOrderPO.getInstoreId()));
+				materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : new UserPO(materialSubOrderPO.getInstoreId()));
 				materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 				materialSubOrderBalancePO.setBalance(totalBalance);
 				materialSubOrderBalancePO.setDifference(Arith.sub(materialSubOrderPO.getTotal(), totalBalance));

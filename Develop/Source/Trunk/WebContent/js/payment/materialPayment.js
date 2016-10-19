@@ -393,7 +393,14 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInitBySubOrder, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, null, "hresultList");
+	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    }, "hresultList");
 	
 	$('a[name="showTotal"]', '#pagenation').click(function(){
 		
@@ -513,6 +520,35 @@ jQuery(function($) {
 		}else{
 			com.showAlert(com.warning, "退款不支持批量操作!");
 		}
+    });
+	
+	$('a[name="import"]', '#hpagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.payment.pageMaterialPaymentForNotInitBySubOrder, $.extend({}, params.hmaterialPaymentPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+					["订单号","orderId"],
+					["主材号","msoNo"],
+					['楼盘地址','orderAddr'],
+					['品牌','customerName'],
+					['应收金额', 'referMoney'],
+					['收款时间', 'collectTime'],
+					['备注', 'des'],
+				],
+				list: res.paging.data,
+			});
+		});
     });
 	
 	function dialogPayment(payment){

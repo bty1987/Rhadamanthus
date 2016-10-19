@@ -617,7 +617,6 @@ var api = {
 		pageDecorationPaymentForCollect: {url: "pageDecorationPaymentForCollect.do", demo: true},
 		pageDecorationPaymentForConfirm: {url: "pageDecorationPaymentForConfirm.do", demo: true},
 		pageDecorationPaymentForHistory: {url: "pageDecorationPaymentForHistory.do", demo: true},
-		pageDecorationPaymentForChange: {url: "pageDecorationPaymentForChange.do", demo: true},
 		queryDecorationPaymentByOrderId: {url: "queryDecorationPaymentByOrderId.do", demo: true},
 		queryDecorationPaymentForBaseByOrderId: {url: "queryDecorationPaymentForBaseByOrderId.do", demo: true},
 		queryDecorationPaymentByOrderIdAIds: {url: "queryDecorationPaymentByOrderIdAIds.do"},
@@ -670,7 +669,7 @@ var api = {
 		refundMaterialPayment: {url: "refundMaterialPayment.do"},
 		refundMaterialPaymentForCoupon: {url: "refundMaterialPaymentForCoupon.do"},
 		
-		exportDecorationPayments: {url: "exportDecorationPayments.do"},
+		exportDecorationPayment: {url: "exportDecorationPayment.do"},
 		
 	}, information: {
 		

@@ -137,11 +137,13 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		String refundType = approvalMaterialRefundVO.getType() == MaterialSubOrderPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialSubOrderPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(msoId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney()));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
 		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
 		approvalPO.setSender(new UserPO(userId));
 		
@@ -313,7 +315,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 			materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
 			materialSubOrderBalancePO.setCreater(approvalPO.getSender());
-			materialSubOrderBalancePO.setInstorer(new UserPO(materialSubOrderPO.getInstoreId()));
+			materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : new UserPO(materialSubOrderPO.getInstoreId()));
 			materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			materialSubOrderBalancePO.setBalance(refundMoney);
 			materialSubOrderBalancePO.setDifference(refundMoney);
