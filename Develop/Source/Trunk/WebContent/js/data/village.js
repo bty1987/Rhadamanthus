@@ -315,8 +315,8 @@ $(function(){
         var a = {
             "village.villageId": village.items.villageId.val(),
             "village.villageName": village.items.villageName.val(),
-            "village.cityProperId": village.items.cityProperSel.val(),
-            "village.buildingNameRuleId": village.items.nameRuleSel.val(),
+            "village.cityProper.cityProperId": village.items.cityProperSel.val(),
+            "village.buildingNameRule.id": village.items.nameRuleSel.val(),
             "village.developer": village.items.developer.val(),
             "village.salesPhone": village.items.salesPhone.val(),
             "village.deliveryTime": "" == village.items.deliveryTime.val() ? void 0 : village.items.deliveryTime.val(),
@@ -361,13 +361,11 @@ $(function(){
         var comment = villageName + "已完成订单" + count + "套";
 
         if(x && y){
-
             var mytext = new ComplexCustomOverlay(new BMap.Point(x, y), villageName, comment); //控制标注地址和备注信息
 
             mp.addOverlay(mytext);
             //mp.panTo(mytext);
             mp.setCenter(new BMap.Point(x, y));
-
         }
 
     }

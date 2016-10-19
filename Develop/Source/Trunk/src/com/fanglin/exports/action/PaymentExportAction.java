@@ -55,18 +55,15 @@ public class PaymentExportAction extends BaseExportAction {
 	@Action(value = "exportDecorationPayment", results = { @Result(name = "success", type = "stream", params = { "contentType", "text/html","contentDisposition", "attachment;fileName=${fileName}", "inputName", "downloadFileInputStream", "encode", "true"}) })
 	public String exportDecorationPayment() throws FLException {
 		
-		if(getFilters() == null){
-			throw new FLException(119000, "必须添加筛选条件,否则数据量过大");
-		}
-		
 		setFileName("装修收款信息.xls");
 		
-		List<DecorationPaymentVO> decorationPaymentVOs = decorationPaymentService.queryDecorationPayments(getFilters());
+		List<DecorationPaymentVO> decorationPaymentVOs = decorationPaymentService.queryDecorationPayment(getFilters());
 		
 		ExcelWorkSheet<DecorationPaymentVO> sheet = new ExcelWorkSheet<DecorationPaymentVO>();
 		sheet.setData(decorationPaymentVOs);
-		sheet.setColumns(Arrays.asList("订单编号", "收款类型","客户名", "设计师", "应收款", "现金", "刷卡", "刷卡信息", "券金额", "券信息", "预付款", "支票", "支票银行", "分期", "分期银行", "对公", "对公银行", "收款人", "收款时间"));
-		sheet.setPropertyNames(Arrays.asList("orderId", "paymentType", "customer", "designer", "referMoney", "cash", "bank", "bankInfo", "coupon", "couponInfo", "advance", "checkv", "checkvBankName", "installment", "installmentBankName", "accounts", "accountsBankName", "collectUser", "collectTime"));
+		
+		sheet.setColumns(Arrays.asList("订单编号", "楼盘", "楼号", "设计师", "设计部", "分区", "收款类型", "金额", "券", "券信息", "收款时间"));
+		sheet.setPropertyNames(Arrays.asList("orderId", "village", "houseNumber", "designer", "designerDepartment", "designerRegion", "paymentType", "referMoney", "coupon", "couponInfo", "collectTime"));
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PoiExcelUtil.exportExcel(sheet, os);

@@ -103,11 +103,7 @@ public class LoginAction extends BaseListAction {
 				    
 				    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany());
 				    
-					try {
-						authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
-					} catch (Exception e) {
-						throw new FLException(110000, "系统处理问题");
-					}
+					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					
 					loginLogVO.setSuccessFlag(1);
 					loginLogService.addLoginLog(loginLogVO);

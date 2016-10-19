@@ -124,7 +124,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		MaterialModelPO materialModelPO = materialModelDao.get(materialModelVO.getMmId());
 		
 		if(materialModelPO != null){
-			BeanUtil.copyProperties(materialModelVO, materialModelPO, Arrays.asList("brand", "measurementUnit", "calcType", "base", "point"));
+			BeanUtil.copyProperties(materialModelVO, materialModelPO, Arrays.asList("brand", "measurementUnit", "calcType", "base", "point", "status"));
 			materialModelPO.setBrand(new BrandPO(materialModelVO.getMaterialBrandId()));
 			materialModelPO.setMeasurementUnit(new MeasurementUnitPO(materialModelVO.getMeasurementUnitId()));
 			

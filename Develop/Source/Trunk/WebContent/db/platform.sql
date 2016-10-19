@@ -668,9 +668,9 @@ CREATE TABLE `decorationorder` (
   `createTime` timestamp NULL DEFAULT NULL COMMENT '订单创建时间',
   `createUser` varchar(15) DEFAULT NULL COMMENT '订单创建人',
   `status` varchar(10) DEFAULT NULL COMMENT '咨询、量房、已报价、定金、已签约、废单、已完工、合同终止',
+  `type` tinyint(4) NOT NULL DEFAULT 0 COMMENT '半包 , 全包',
   `projectStatus` varchar(10) DEFAULT NULL COMMENT '等待施工、放线申请、放线失败、放线成功、水电申请、水电、水电验收、瓦工申请、瓦工、瓦工验收、木工申请、木工、木工验收、油工申请、油工、油工验收、保洁申请、保洁、保洁验收、',
   `paymentStatus` varchar(10) DEFAULT NULL COMMENT '预付款、设计费、定金、首付款、首付二期款、二期款、尾款',
-  `orderType` int(11) DEFAULT '1' COMMENT '1 装修订单 2 主材订单',
   `versionId` varchar(11) NOT NULL COMMENT '订单使用报价版本号',
   `orderTotalPrice` decimal(10,3) DEFAULT '0.000' COMMENT '折后合同额',
   `notSalesmanRate` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -895,8 +895,8 @@ CREATE TABLE `drawline` (
   KEY `indexone` (`drawLineGroup`,`status`,`applayTime`),
   KEY `indextwo` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
-DROP TABLE IF EXISTS `functionarea`;
 
+DROP TABLE IF EXISTS `functionarea`;
 CREATE TABLE `functionarea` (
   `faId` bigint(20) NOT NULL AUTO_INCREMENT,
   `functionAreaId` varchar(10) NOT NULL,
@@ -904,6 +904,8 @@ CREATE TABLE `functionarea` (
   `versionId` varchar(11) NOT NULL,
   `functionAreaOrder` int(11) NOT NULL,
   `functionAreaType` varchar(10) NOT NULL DEFAULT '普通' COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
+  `type` TINYINT NOT NULL DEFAULT '0',
+  `total` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`faId`),
   KEY `indexone` (`functionAreaId`,`versionId`,`functionAreaType`,`functionAreaOrder`),
   KEY `indextwo` (`versionId`)
@@ -1703,12 +1705,17 @@ CREATE TABLE `quotation` (
   `content` varchar(45) DEFAULT NULL,
   `totalPrice` decimal(10,3) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1、默认',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包 , 全包',
   `saveStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
   `calFlag` int(11) NOT NULL DEFAULT '1',
   `latexCut` decimal(10,3) DEFAULT '0.000',
   `managePrice` decimal(10,3) DEFAULT '0.000',
   `manageRate` decimal(10,3) DEFAULT '0.000',
   `trafficPrice` decimal(10,3) DEFAULT '0.000',
+  `basicPrice` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
+  `setpackage` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
+  `qdiff` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
+  `mdiff` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`qId`),
   KEY `indexone` (`orderId`,`createTime`,`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价表';
@@ -1733,6 +1740,8 @@ CREATE TABLE `quotationfunctionarea` (
   `functionAreaName` varchar(10) NOT NULL,
   `functionAreaOrder` int(11) DEFAULT NULL,
   `functionAreaType` varchar(10) NOT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
+  `type` TINYINT NOT NULL DEFAULT '0',
+  `total` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`qfaId`),
   KEY `indexone` (`quotationId`,`functionAreaOrder`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价功能区';

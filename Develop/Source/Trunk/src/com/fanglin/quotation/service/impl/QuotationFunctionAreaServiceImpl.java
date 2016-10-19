@@ -147,6 +147,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			quotationFunctionAreaVO.setFunctionAreaName(functionAreaPO.getFunctionAreaName());
 			quotationFunctionAreaVO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
 			quotationFunctionAreaVO.setFunctionAreaType(functionAreaPO.getFunctionAreaType());
+			quotationFunctionAreaVO.setType(functionAreaPO.getType());
+			quotationFunctionAreaVO.setTotal(functionAreaPO.getTotal());
 			
 			QuotationFunctionAreaPO quotationFunctionAreaPO = new QuotationFunctionAreaPO();
 			

@@ -26,7 +26,13 @@ import javax.persistence.Table;
 @Table(name = "functionArea", catalog = "platform")
 public class FunctionAreaPO implements Serializable {
 
-	private static final long serialVersionUID = 13444646L;
+	public static final long serialVersionUID = 13444646L;
+	
+	public static final String COLUMN_TYPE_STR = "type";
+	
+	public static final short TYPE_PART_INT = 0;
+	
+	public static final short TYPE_WHOLE_INT = 1;
 	
 	private long faId;
 	
@@ -39,6 +45,10 @@ public class FunctionAreaPO implements Serializable {
 	private int functionAreaOrder;
 	
 	private String functionAreaType;
+	
+	private short type;
+	
+	private float total;
 
 	@Id
 	@Column(name="faId")
@@ -90,6 +100,24 @@ public class FunctionAreaPO implements Serializable {
 
 	public void setFunctionAreaType(String functionAreaType){
 		this.functionAreaType = functionAreaType;
+	}
+
+	@Column(name="type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name="total")
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
 	}
 
 }

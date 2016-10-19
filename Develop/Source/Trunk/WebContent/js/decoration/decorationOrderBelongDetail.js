@@ -32,6 +32,7 @@ jQuery(function($) {
 	});
 	
 	$("#defaultFlag").switchBtn("isOrNot");
+	$("#updateDefaultFlag").switchBtn("isOrNot");
 	
 	$('#detailBckBtn').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationOrderBelongIndex.url);
@@ -136,6 +137,32 @@ jQuery(function($) {
 		$("#approveModal").modal("hide");
 	});
 	
+	$('#updateBtn').on('click', function(){
+		com.clearValidator();
+		
+		if(com.validate("updateModal")){
+			return;
+		}
+		
+		var rate = $('#updateBelongRate').val();
+		var flag = com.isOrNotType[$("#updateDefaultFlag").prop("checked")];
+		
+		if(!/^(0\.\d{1,2})|1|0$/.test(rate)){
+			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
+			return false;
+		}
+		
+		var $e = $('#' + decorationBelong.belongUserId);
+		
+		$e.attr('belongrate', rate);
+		$e.attr('defaultflag', flag);
+		
+		$e.find('li :eq(7)').text(rate);
+		$e.find('li :eq(9)').text(flag);
+		
+		$('#updateModal').modal('hide');
+	})
+	
 	function displayFunc(v){
 		var $liLine = $('<li></li>').addClass('item-orange clearfix');
 		var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belongUser));
@@ -144,6 +171,7 @@ jQuery(function($) {
 		var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
 		var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 		
+		var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-warning').html('修改');
 		var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 		
 		var propertyArr = [
@@ -161,16 +189,31 @@ jQuery(function($) {
 			$liProperty.appendTo($ulProperty);
 		});
 		
+		$btnUpdate.click(function(){
+			console.log("update");
+			dialogUpdate(v.belongUserId);
+		});
+		
 		$btnDel.click(function(){
 			delRow(v.belongUserId);
 		});
 		
-		$divBtnWrap.append($btnDel).appendTo($h4);
+		$divBtnWrap.append($btnUpdate).append($btnDel).appendTo($h4);
 		
 		$liLine.attr('id', v.belongUserId).attr('belongUserId', v.belongUserId).attr('belongRate', v.belongRate).attr('defaultFlag', v.defaultFlag);
 		$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 		
 		return $liLine;
+	}
+	
+	function dialogUpdate(belongUserId){
+		decorationBelong.belongUserId = belongUserId;
+		
+		var $info = $('#' + belongUserId);
+		
+		$('#updateBelongRate').val($info.attr('belongrate'));
+		
+		$('#updateModal').modal('show');
 	}
 	
 	function delRow(id){

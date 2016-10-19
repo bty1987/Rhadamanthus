@@ -169,7 +169,17 @@ $(function(){
     });
 
     com.post(api.material.queryMaterialBrandRightForLogin, {}, function(c) {
-        $("#materialBrandId").bindData(c.materialBrandRight.brands, "bid", "brandName")
+    	
+    	var $brands = [];
+    	var brands = c.materialBrandRight.brands;
+    	
+    	$.each(brands, function(i, v){
+    		v.name = v.brandName + "-" + v.categoryName;
+    	});
+    	
+    	console.log(brands);
+    	
+        $("#materialBrandId").bindData(c.materialBrandRight.brands, "bid", "name");
     });
 
     //添加按钮
@@ -220,8 +230,9 @@ $(function(){
                 "materialModel.mmId": materialModel.materialModelItems.mmId.val(),
                 "materialModel.materialModelNo": materialModel.materialModelItems.materialModelNo.val(),
                 "materialModel.materialModelName": materialModel.materialModelItems.materialModelName.val(),
+                "materialModel.materialTypeName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[1],
                 "materialModel.materialBrandId": materialModel.materialModelItems.materialBrandId.val(),
-                "materialModel.materialBrandName": materialModel.materialModelItems.materialBrandId.find("option:selected").text(),
+                "materialModel.materialBrandName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[0],
                 "materialModel.measurementUnitId": materialModel.materialModelItems.measurementUnitId.val(),
                 "materialModel.measurementUnitName": materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
                 "materialModel.materialUnitPrice": materialModel.materialModelItems.materialUnitPrice.val(),

@@ -22,10 +22,10 @@ public interface QuotationDao extends Dao<QuotationPO> {
 	
 	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds);
 
-	public QuotationPO queryQuotationForDefaultByOrderId(String orderId);
+	public QuotationPO queryQuotationForDefaultByOrderId(String orderId, short type);
 	
-	public int countQuotationByOrderId(String orderId);
+	public int countQuotationByOrderId(String orderId, short type);
 	
-	public int clearQuotationForDefaultByOrderId(String orderId);
+	public int clearQuotationForDefaultByOrderId(String orderId, short type);
 	
 }

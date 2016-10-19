@@ -41,30 +41,31 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds) {
-		return session().createCriteria(QuotationPO.class).add(Restrictions.eq("status", 1)).add(Restrictions.in("decorationOrder.orderId", orderIds)).list();
+		return session().createCriteria(QuotationPO.class).add(Restrictions.eq("status", QuotationPO.STATUS_DEFAULT_INT)).add(Restrictions.in("decorationOrder.orderId", orderIds)).list();
 	}
 
 	@Override
-	public QuotationPO queryQuotationForDefaultByOrderId(String orderId){
+	public QuotationPO queryQuotationForDefaultByOrderId(String orderId, short type){
 		return (QuotationPO) createCriteria(QuotationPO.class)
 				.add(Restrictions.eq("decorationOrder.orderId", orderId))
-				.add(Restrictions.eq("status", 1))
+				.add(Restrictions.eq("type", type))
+				.add(Restrictions.eq("status", QuotationPO.STATUS_DEFAULT_INT))
 				.uniqueResult();
 	}
 
 	@Override
-	public int countQuotationByOrderId(String orderId) {
+	public int countQuotationByOrderId(String orderId, short type) {
 		
-		String sql = "select count(*) from platform.quotation where orderId = :orderId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+		String sql = "select count(*) from platform.quotation where orderId = :orderId and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).uniqueResult();
 		
 		return count.intValue();
 	}
 
 	@Override
-	public int clearQuotationForDefaultByOrderId(String orderId){
-		String sql = "update platform.quotation q set q.status = 0 where q.orderId = :orderId";
-		return session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
+	public int clearQuotationForDefaultByOrderId(String orderId, short type){
+		String sql = "update platform.quotation q set q.status = 0 where q.orderId = :orderId and q.type = :type";
+		return session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).executeUpdate();
 	}
 
 }

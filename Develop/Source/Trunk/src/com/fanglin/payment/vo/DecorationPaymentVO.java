@@ -32,13 +32,15 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String designerDepartment;
 	
+	private String designerRegion;
+	
 	private String salesman;
 	
 	private String village;
 	
 	private String houseNumber;
 	
-	private String OrderStatus;
+	private String orderStatus;
 	
 	private Integer orderActivityId;
 	
@@ -141,11 +143,11 @@ public class DecorationPaymentVO implements Serializable {
 	}
 
 	public String getOrderStatus(){
-		return OrderStatus;
+		return orderStatus;
 	}
 
 	public void setOrderStatus(String orderStatus){
-		OrderStatus = orderStatus;
+		this.orderStatus = orderStatus;
 	}
 
 	public Integer getOrderActivityId(){
@@ -542,6 +544,14 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setDrId(long drId) {
 		this.drId = drId;
+	}
+
+	public String getDesignerRegion() {
+		return designerRegion;
+	}
+
+	public void setDesignerRegion(String designerRegion) {
+		this.designerRegion = designerRegion;
 	}
 
 }

@@ -30,6 +30,10 @@ public class FunctionAreaVO implements Serializable {
 	private String versionId;
 	
 	private String version;
+	
+	private Short type;
+	
+	private Float total;
 
 	public Long getFaId(){
 		return faId;
@@ -85,6 +89,22 @@ public class FunctionAreaVO implements Serializable {
 
 	public void setVersion(String version){
 		this.version = version;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
 	}
 
 }

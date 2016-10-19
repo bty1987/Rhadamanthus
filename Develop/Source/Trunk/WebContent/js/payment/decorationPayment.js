@@ -344,7 +344,14 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "designer", "customerPhone", "village", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hdecorationPaymentPostData", null, false, null, null, "hresultList");
+	}, "hpagenation", "hdecorationPaymentPostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    }, "hresultList");
 	
 	function dialogPayment(payment){
 		
@@ -876,8 +883,6 @@ jQuery(function($) {
     				window.open(url);
     			}
     		});
-    	}, function(result){
-    		$("#paymentInfo").text(result);
     	});
     	
     	decorationPaymentPostData.paymentInfo = null;
@@ -976,6 +981,36 @@ jQuery(function($) {
     	
     	decorationPaymentPostData.paymentInfo = null;
     }
+    
+    $('a[name="import"]', '#hpagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.payment.pageDecorationPaymentForHistory, $.extend({}, params.hdecorationPaymentPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+					["订单号","orderId"],
+					['楼盘地址',['village', 'houseNumber']],
+					['客户','customer'],
+					['设计师','designer'],
+					['设计部','designerDepartment'],
+					['应收金额', 'referMoney'],
+					['收款时间', 'collectTime'],
+					['备注', 'des'],
+				],
+				list: res.paging.data,
+			});
+		});
+    });
 	
 	$("#history").removeClass("active");
 });

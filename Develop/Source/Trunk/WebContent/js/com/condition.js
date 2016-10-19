@@ -892,7 +892,6 @@ var Condition = function(){
     //status (Short) – 状态 , 0: 预结算 , 1: 厂商结算 , 2: 结算
     //    type (Short) – 类型 , 0: 购货 , 1: 退货
 
-
         balanceStatus : {
             label:"状态",
             type:"select",
@@ -909,7 +908,7 @@ var Condition = function(){
                 valuePath:"value"
             }
         }, balanceType : {
-            label:"设计中心",
+            label:"类型",
             type:"select",
             submitConfig : {
                 name : "type",

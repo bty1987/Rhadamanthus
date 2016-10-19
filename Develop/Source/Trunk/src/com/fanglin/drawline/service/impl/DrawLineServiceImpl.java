@@ -158,7 +158,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				drawLineVO.setDrawLineUserId(drawLinePO.getDrawLineUserPO().getUserId());
 			}
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			if(quotationPO == null){
 				drawLineVO.setDiscount((float) 10);
 			}else{
@@ -227,7 +227,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				drawLineVO.setDrawLineUserId(drawLinePO.getDrawLineUserPO().getUserId());
 			}
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			if(quotationPO == null){
 				drawLineVO.setDiscount((float) 10);
 			}else{

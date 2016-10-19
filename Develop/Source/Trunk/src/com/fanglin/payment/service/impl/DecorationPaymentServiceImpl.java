@@ -50,6 +50,8 @@ import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -62,7 +64,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
-
+	
 	@Autowired
 	private DecorationContractDao decorationContractDao;
 	
@@ -71,6 +73,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
+	
+	@Autowired
+	private QuotationDao quotationDao;
 	
 	@Autowired
 	private FinanceService financeService;
@@ -189,27 +194,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 	
 	@Override
-	public void pageDecorationPaymentForChange(Paging paging, List<FilterVO> filters){
-
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR, "ne"));
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPASS_STR, "ne"));
-		
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_FINAL_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_ADD_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR, "ne"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, "nc"));
-		filters.add(new FilterVO("paymentType", DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR, "ne"));
-		
-		pageDecorationPayment(paging, filters, 0);
-	}
-	
-	@Override
-	public List<DecorationPaymentVO> queryDecorationPayments(List<FilterVO> filters){
+	public List<DecorationPaymentVO> queryDecorationPayment(List<FilterVO> filters){
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPayment(filters);
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
@@ -1067,10 +1052,28 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			if(decorationOrderPaymentStatus != null && paymentStatus.contains(decorationOrderPaymentStatus)){
 				throw new FLException(150001, "款项已付,不可修改");
 			}
-
-			float first = SystemConfig.getFloat("firstRate", 30);
-			float firstSecond = SystemConfig.getFloat("firstSecondRate", 35);
-			float second = SystemConfig.getFloat("secondRate", 32);
+			
+			float first = 30;
+			float firstSecond = 35;
+			float second = 32;
+			
+			if(QuotationPO.TYPE_PART_INT == decorationOrderPO.getType()){
+				first = SystemConfig.getFloat("firstRate", 30);
+				firstSecond = SystemConfig.getFloat("firstSecondRate", 35);
+				second = SystemConfig.getFloat("secondRate", 32);
+			}else if(QuotationPO.TYPE_WHOLE_INT == decorationOrderPO.getType()){
+				first = SystemConfig.getFloat("wfirstRate", 30);
+				firstSecond = SystemConfig.getFloat("wfirstSecondRate", 35);
+				second = SystemConfig.getFloat("wsecondRate", 32);
+				
+				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, decorationOrderPO.getType());
+				
+				if(quotationPO == null){
+					throw new FLException(200003, "报价不存在");
+				}
+				
+				sumMoney = Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff()));
+			}
 
 			//重新生成款项时，由于首付款已经生成过且定金余额已被减 所以需要把自动减去的定金剩余金额补回来
 			DecorationPaymentPO firstPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAType(orderId, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
@@ -1263,6 +1266,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setHouseNumber(decorationOrderPO.getHouseNumber());
 		decorationPaymentVO.setDesigner(designer.getCurrentName());
 		decorationPaymentVO.setDesignerDepartment(designer.getDept().getDeptName());
+		decorationPaymentVO.setDesignerRegion(designer.getDept().getFatherDept().getDeptName());
 		decorationPaymentVO.setSalesman(salesman.getCurrentName());
 		
 		decorationPaymentVO.setCityProper(villagePO.getCityProper().getCityProperName());

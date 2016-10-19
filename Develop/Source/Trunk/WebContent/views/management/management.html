@@ -67,6 +67,11 @@
 					<i class="icon-cloud-download"></i>
 					订单签单信息
 				</button>
+
+				<button id="exportDecorationPaymentForContractTime" class="btn btn-info" style="margin: 2px;">
+					<i class="icon-cloud-download"></i>
+					装修收款信息
+				</button>
 			</p>
 		</div>
 	</div>
@@ -494,6 +499,33 @@
 				<div class="modal-footer">
 					<button type="button" id="exportDecorationOrderForContractTimeBtn" class="btn btn-primary">导出</button>
 					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="exportDecorationPaymentForContractTimeModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="paymentDialog"></h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="orderId">时间范围</label>
+							<div class="col-sm-9">
+								<input id="paymentTimeRange" class="col-sm-8 v_required" type="text" name="date-range-picker" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="exportDecorationPaymentForContractTimeBtn" class="btn btn-primary">导出</button>
+					<button type="button" id="pcancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
 		</div>

@@ -282,7 +282,14 @@ jQuery(function($) {
 	
 	hsearcher.init(["orderId", "customerId", "customerPhone", "advancePaymentcollectTime"], "hcondList", api.payment.pagePaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
-	}, "hpagenation", "hpaymentPostData", null, false, null, null, "hresultList");
+	}, "hpagenation", "hpaymentPostData", null, false, null, function(){
+    	
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$impa];
+    }, "hresultList");
 	
 	function showPaymentModal(v){
 		
@@ -581,5 +588,33 @@ jQuery(function($) {
 		var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
 		var bankTimeInput =  $('<input></input>').addClass('col-sm-6 v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 	}
+	
+	$('a[name="import"]', '#hpagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.payment.pagePaymentForHistory, $.extend({}, params.hpaymentPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+					["订单号","orderId"],
+					['收款类型','type'],
+					['预付款类型','paymentType'],
+					['操作金额','balance'],
+					['收款时间', 'collectTime'],
+					['备注', 'des'],
+				],
+				list: res.paging.data,
+			});
+		});
+    });
 	
 });

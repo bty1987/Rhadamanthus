@@ -230,7 +230,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
 			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
 				if(quotationPO == null){
@@ -314,7 +314,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 				
-				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 				if(quotationPO == null){
 					decorationOrderVO.setOrderTotalPrice(new Float(0));
 				}else{
@@ -480,7 +480,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
 			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
 				if(quotationPO == null){
@@ -584,7 +584,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderVO.setOrderTotalPrice(new Float(0));
 			}
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
 			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
 				if(quotationPO == null){
@@ -670,7 +670,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			if(quotationPO == null){
 				decorationOrderVO.setOrderTotalPrice(new Float(0));
 			}else{
@@ -735,7 +735,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<QuotationPO> quotationPOs = quotationDao.queryQuotationForDefaultByOrderIds(orderIds);
 		
 		for(QuotationPO quotationPO: quotationPOs){
+			
+			if(quotationPO.getType() != quotationPO.getDecorationOrder().getType()) continue;
+			
 			DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
+			
 			decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
 			decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
 			decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
@@ -1262,7 +1266,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
 		decorationOrderPO.setHouseNumber(decorationOrderVO.getHouseNumber());
 		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
-		decorationOrderPO.setOrderType(decorationOrderVO.getOrderType());
 		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
 		decorationOrderPO.setOrderTotalPrice((float) 0);
 		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());
@@ -1379,7 +1382,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
 		decorationOrderPO.setHouseNumber(decorationOrderVO.getHouseNumber());
 		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
-		decorationOrderPO.setOrderType(decorationOrderVO.getOrderType());
 		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
 		decorationOrderPO.setOrderTotalPrice((float) 0);
 		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());

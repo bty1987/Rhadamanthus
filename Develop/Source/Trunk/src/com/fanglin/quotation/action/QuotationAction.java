@@ -53,7 +53,7 @@ public class QuotationAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryQuotationForDefaultByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationForDefaultByOrderId(){
+	public String queryQuotationForDefaultByOrderId() throws FLException{
 		
 		quotation = quotationService.queryQuotationForDefaultByOrderId(quotation);
 

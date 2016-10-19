@@ -95,13 +95,13 @@ public class DecorationOrderVO implements Serializable {
 	
 	private String status;
 	
+	private Short type;
+	
 	private String projectStatus;
 	
 	private String paymentStatus;
 	
 	private Integer otherStatus;
-	
-	private Integer orderType;
 	
 	private String versionId;
 	
@@ -339,6 +339,14 @@ public class DecorationOrderVO implements Serializable {
 		this.status = status;
 	}
 
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
 	public String getProjectStatus(){
 		return projectStatus;
 	}
@@ -369,14 +377,6 @@ public class DecorationOrderVO implements Serializable {
 
 	public String getBackOrderName(){
 		return backOrderName;
-	}
-
-	public void setOrderType(Integer orderType){
-		this.orderType = orderType;
-	}
-
-	public Integer getOrderType(){
-		return orderType;
 	}
 
 	public void setVersionId(String versionId){

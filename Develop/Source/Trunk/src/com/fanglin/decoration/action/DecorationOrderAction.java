@@ -133,11 +133,7 @@ public class DecorationOrderAction extends BaseListAction {
 		
 		decorationOrder.setCreateUserId(queryUserId());
 		
-		if(decorationOrder.getOrderType() == 1){
-			decorationOrderService.createDecorationOrder(decorationOrder);
-		}else{
-			decorationOrderService.createDecorationOrderForMaterial(decorationOrder);
-		}
+		decorationOrderService.createDecorationOrder(decorationOrder);
 		
 		return SUCCESS;
 	}

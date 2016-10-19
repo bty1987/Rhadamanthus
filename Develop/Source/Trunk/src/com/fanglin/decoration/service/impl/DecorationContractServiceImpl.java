@@ -190,7 +190,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationContractPO.setDecorationOrderPO(decorationOrderPO);
 		}
 		
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, decorationOrderPO.getType());
 		
 		if(quotationPO == null){
 			throw new FLException(140008, "订单没有报价信息");

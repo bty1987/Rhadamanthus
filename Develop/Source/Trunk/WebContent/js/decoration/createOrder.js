@@ -222,13 +222,6 @@ function createOrder(){
 		"decorationOrder.approveStatus": 0,
 	};
 	
-//	if($("#decorationOrderFlag").is(":checked") != true && $("#materialOrderFlag").is(":checked") == true){
-//		options["decorationOrder.orderType"]=2;
-//	}else{
-//		options["decorationOrder.orderType"]=1;
-//	}
-	options["decorationOrder.orderType"] = 1;
-	
 	if(com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)
 		return;
 	

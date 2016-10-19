@@ -22,7 +22,7 @@ public interface QuotationService {
 	
 	public QuotationVO queryQuotationById(long qId);
 
-	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO);
+	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO) throws FLException;
 	
 	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
 	
