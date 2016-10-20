@@ -14,7 +14,22 @@ ALTER TABLE `platform`.`functionarea` ADD COLUMN `total` DECIMAL(10,3) NOT NULL 
 ALTER TABLE `platform`.`quotationfunctionarea` ADD COLUMN `type` TINYINT NOT NULL DEFAULT 0;
 ALTER TABLE `platform`.`quotationfunctionarea` ADD COLUMN `total` DECIMAL(10,3) NOT NULL DEFAULT 0.000;
 
-
+DROP TABLE IF EXISTS `quotationmaterialitem`;
+CREATE TABLE `quotationmaterialitem` (
+  `qmiId` int(11) NOT NULL AUTO_INCREMENT,
+  `qid` bigint(20) NOT NULL,
+  `no` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `category` varchar(32) NOT NULL,
+  `brand` varchar(32) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `price` decimal(10,3) NOT NULL,
+  `diff` decimal(10,3) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `des` varchar(128),
+  PRIMARY KEY (`qmiId`),
+  KEY `indexone` (`qid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
 
 
