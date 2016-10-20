@@ -1720,19 +1720,6 @@ CREATE TABLE `quotation` (
   KEY `indexone` (`orderId`,`createTime`,`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价表';
 
-DROP TABLE IF EXISTS `quotationfuncationareaitem`;
-CREATE TABLE `quotationfuncationareaitem` (
-  `uuid` varchar(32) NOT NULL,
-  `functionAreaId` bigint(20) NOT NULL,
-  `quoteItemId` bigint(20) NOT NULL,
-  `num` decimal(10,3) NOT NULL,
-  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`qfaiId`),
-  KEY `indexone` (`functionAreaId`),
-  KEY `indextwo` (`quoteItemId`),
-  KEY `indexthr` (`uuid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
-
 DROP TABLE IF EXISTS `quotationfunctionarea`;
 CREATE TABLE `quotationfunctionarea` (
   `qfaId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1783,6 +1770,23 @@ CREATE TABLE `quotationitem` (
   PRIMARY KEY (`qiId`),
   KEY `indexone` (`itemId`,`versionId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价项目表';
+
+DROP TABLE IF EXISTS `quotationmaterialitem`;
+CREATE TABLE `quotationmaterialitem` (
+  `qmiId` int(11) NOT NULL AUTO_INCREMENT,
+  `qid` bigint(20) NOT NULL,
+  `no` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `category` varchar(32) NOT NULL,
+  `brand` varchar(32) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `price` decimal(10,3) NOT NULL,
+  `diff` decimal(10,3) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `des` varchar(128),
+  PRIMARY KEY (`qmiId`),
+  KEY `indexone` (`qid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
 DROP TABLE IF EXISTS `quotationversion`;
 CREATE TABLE `quotationversion` (

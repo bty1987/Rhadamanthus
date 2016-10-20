@@ -257,7 +257,7 @@ function initQuotationList(){
 //				setTimeout("editQuotationDetail('"+$(this).attr("data")+"')", 300);
 				
 				params["orderId"] = decorationQuotation.decorationOrderId;
-				params["quotationId"] = quotationId;
+				params["quotationId"] = $(this).attr("data");
 				
 				com.switchPage(api.index.quotationDetailIndex.url);
 			});

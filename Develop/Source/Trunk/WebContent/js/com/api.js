@@ -172,6 +172,8 @@ var api = {
 		
 		quotationIndex: {url: "/views/quotation/quotationIndex.html"},
 		quotationDetailIndex: {url: "/views/quotation/quotationDetail.html"},
+		quotationPartIndex: {url: "/views/quotation/quotationPart.html"},
+		quotationWholeIndex: {url: "/views/quotation/quotationWhole.html"},
 		quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"},
 		
 		reportBizDeptIndex: {url: "/views/report/reportBizDept.html"},
