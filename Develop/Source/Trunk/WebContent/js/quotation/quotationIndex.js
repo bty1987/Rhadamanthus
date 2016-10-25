@@ -29,9 +29,22 @@ jQuery(function($) {
 			decorationQuotation.quotationItems.quotationNames.bindData(res.quotations, 'qid', 'quotationName');
 		});
 	});
-	
+
+	decorationQuotation.quotationItems.quotationType = $('#quotationType').on('change', function(){
+		if($(this).val() == 1) $('#setpackage').addClass('v_required').removeAttr('disabled');
+		else $("#setpackage").removeClass('v_required').attr('disabled', true).val('');
+	});
+	decorationQuotation.quotationItems.setpackage = $('#setpackage');
+
 	decorationQuotation.quotationModal = $('#quotationModal');
 	decorationQuotation.replicaQuotationModal = $('#replicaQuotationModal');
+
+	com.post(api.ds.quotationInfo, {}, function(res){
+		if(res.setpackage.length){
+			$('#setpackage').bindData(res.setpackage, 'key', 'value');
+			$("<option value='' selected>请选择</option>").insertBefore($('option:eq(0)','#setpackage'))
+		}
+	});
 	
 	$('#saveBtn').click(function(){
 		
@@ -50,6 +63,9 @@ jQuery(function($) {
 				"quotation.quotationName":$("#quotationName").val(),
 				"quotation.decorationStyle":$("#decorationStyle").val(),
 				"quotation.content":$("#content").val(),
+
+				"quotation.type": $('#quotationType').val(),
+				"quotation.setpackage": $('#setpackage').val() ? $('#setpackage').val() : 0
 			};
 			
 			com.post(api.quotation.addQuotation, options, function(res){
@@ -66,7 +82,9 @@ jQuery(function($) {
 				"quotation.qid":$("#qid").val(),
 				"quotation.quotationName":$("#quotationName").val(),
 				"quotation.decorationStyle":$("#decorationStyle").val(),
-				"quotation.content":$("#content").val()
+				"quotation.content":$("#content").val(),
+				"quotation.type": $('#quotationType').val(),
+				"quotation.setpackage": $('#setpackage').val() ? $('#setpackage').val() : 0
 			};
 			
 			com.post(api.quotation.updateQuotation, options, function(res){
@@ -127,6 +145,12 @@ jQuery(function($) {
 		com.cleanItems(decorationQuotation.quotationItems);
 		
 		decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
+		decorationQuotation.quotationItems.quotationType.get(0).selectedIndex = 0;
+
+		decorationQuotation.quotationItems.quotationType.removeAttr('v_required');
+		$('#setpackage').attr('disabled',true).removeClass('v_required');
+
+
 		decorationQuotation.quotationModal.modal("show");
 	});
 	
@@ -157,14 +181,15 @@ function initQuotationList(){
 			}
 			
 			var quotationList = $("#quotationList").html("");
-			
+			var quotationList2 = $("#quotationList2").html("");
+
 			for(var i = 0;i<res.quotations.length;++i){
 				
 				var qid = res.quotations[i].qid;
 				
-				var quotationDiv = $('<div></div>').addClass("col-xs-12 col-md-3").appendTo(quotationList);
+				var quotationDiv = $('<div></div>').addClass("col-xs-12 col-md-3").appendTo(res.quotations[i].type == 0 ? quotationList : quotationList2);
 				var quotationWidget = $('<div></div>').addClass("widget-box").appendTo(quotationDiv);
-				var quotationWidgetHeader = $('<div></div>').addClass("widget-header header-color-blue").appendTo(quotationWidget);
+				var quotationWidgetHeader = $('<div></div>').addClass("widget-header " + (res.quotations[i].type == 0 ? 'header-color-blue' : 'header-color-green')).appendTo(quotationWidget);
 				
 				if(res.quotations[i].saveStatus == 0){
 					quotationWidgetHeader.addClass("header-color-red");
@@ -192,7 +217,7 @@ function initQuotationList(){
 				var quotationWidgetToolDiv = $('<div></div>').addClass("ui-pg-div").appendTo(quotationWidgetMain);
 				var copySpan = $('<span></span>').addClass('ui-icon icon-copy blue').attr('title', '复制').attr('id', 'copyQuotation_'+qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '复制').appendTo(quotationWidgetToolDiv);
 				var editSpan = $('<span></span>').addClass('ui-icon icon-pencil blue').attr('title', '修改').attr('id', 'editQuotation_'+qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '修改').appendTo(quotationWidgetToolDiv);
-				var editDetailSpan = $('<span></span>').addClass('ui-icon icon-edit blue').attr('title', '报价').attr('id', 'editQuotationDetail_'+qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '报价').appendTo(quotationWidgetToolDiv);
+				var editDetailSpan = $('<span></span>').addClass('ui-icon icon-edit blue').attr('title', '报价').attr('id', 'editQuotationDetail_'+qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '报价').appendTo(quotationWidgetToolDiv).attr('data-type', res.quotations[i].type);
 				var deleteSpan = $('<span></span>').addClass('ui-icon ui-icon-trash').attr('title', '删除').attr('id', 'deleteQuotation_'+qid).attr('data', qid).attr('data-rel', 'tooltip').attr('dataname', res.quotations[i].quotationName).attr('data-original-title', '删除').appendTo(quotationWidgetToolDiv);
 				
 				var statusDiv = $('<div></div>').addClass('pull-right inline').appendTo(quotationWidgetToolDiv);
@@ -213,7 +238,19 @@ function initQuotationList(){
 				com.cleanItems(decorationQuotation.quotationItems);
 				decorationQuotation.quotationItems.qid.val($(this).attr("data"));
 				decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
-				decorationQuotation.quotationModal.modal("show");
+
+
+				com.post(api.quotation.queryQuotationById, {"quotation.qid":$(this).attr("data")} ,function(res){
+					if(res.quotation != null){
+						decorationQuotation.quotationItems.quotationType.val(res.quotation.type);
+						decorationQuotation.quotationItems.setpackage.val(res.quotation.setpackage);
+						$('#quotationType').attr('disabled',true);
+						if(res.quotation.type == 1)$('#setpackage').removeAttr('disabled').addClass('v_required');
+						else $('#setpackage').attr('disabled',true).removeClass('v_required');
+
+						decorationQuotation.quotationModal.modal("show");
+					}
+				});
 			});
 			
 			$(".ui-icon.icon-pencil.blue").on(ace.click_event, function(){
@@ -225,6 +262,13 @@ function initQuotationList(){
 						decorationQuotation.quotationItems.quotationName.val(res.quotation.quotationName);
 						decorationQuotation.quotationItems.decorationStyle.val(res.quotation.decorationStyle);
 						decorationQuotation.quotationItems.content.val(res.quotation.content);
+						decorationQuotation.quotationItems.quotationType.val(res.quotation.type);
+						decorationQuotation.quotationItems.setpackage.val(res.quotation.setpackage);
+
+						$('#quotationType').attr('disabled',true);
+						if(res.quotation.type == 1)$('#setpackage').removeAttr('disabled').addClass('v_required');
+						else $('#setpackage').attr('disabled',true).removeClass('v_required');
+
 						decorationQuotation.quotationModal.modal("show");
 					}
 				});
@@ -254,12 +298,9 @@ function initQuotationList(){
 			});
 			
 			$(".ui-icon.icon-edit.blue").on(ace.click_event, function(){
-//				setTimeout("editQuotationDetail('"+$(this).attr("data")+"')", 300);
-				
-				params["orderId"] = decorationQuotation.decorationOrderId;
-				params["quotationId"] = $(this).attr("data");
-				
-				com.switchPage(api.index.quotationDetailIndex.url);
+				//setTimeout("editQuotationDetail('"+$(this).attr("data")+"')", 300);
+
+				editQuotationDetail($(this).attr("data"), $(this).attr("data-type"));
 			});
 			
 			$('[data-rel=tooltip]').tooltip();
@@ -267,10 +308,15 @@ function initQuotationList(){
 	});
 }
 
-function editQuotationDetail(quotationId){
+function editQuotationDetail(quotationId, type){
 	
 	params["orderId"] = decorationQuotation.decorationOrderId;
 	params["quotationId"] = quotationId;
-	
-	com.switchPage(api.index.quotationDetailIndex.url);
+
+	if(type == 0){
+		com.switchPage(api.index.quotationPartIndex.url);
+	}
+	if(type == 1){
+		com.switchPage(api.index.quotationWholeIndex.url);
+	}
 }

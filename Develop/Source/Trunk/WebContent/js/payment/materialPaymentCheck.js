@@ -178,7 +178,11 @@ jQuery(function($) {
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
     	
-    	return [$adda];
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$adda, $impa];
 	});
 	
 	var hdisplayFunc  = (function(){
@@ -302,7 +306,57 @@ jQuery(function($) {
 				});
 			}
 		});
-		
 	});
+	
+	$('a[name="import"]', '#pagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.payment.pageMaterialPaymentForCollectBySubOrder, $.extend({}, params.materialPaymentCheckPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+					["订单号","orderId"],
+					["主材号","msoNo"],
+					['楼盘地址','orderAddr'],
+					['品牌','customerName'],
+					['应收金额', 'referMoney'],
+					['收款时间', 'collectTime'],
+					['备注', 'des'],
+					['现金', 'cash'],
+					['银行', ['bank', 'bankInfo']],
+					['转账', ['checkv', 'checkvBankName']],
+					['分期', ['installment', 'installmentBankName']],
+					['对公', ['accounts', 'accountsBankName']],
+					['预付款', 'advance'],
+					['券', ['coupon', 'couponInfo']],
+				],
+				list: res.paging.data,
+			}, function(v){
+				if(v.bank != null && v.bank != 0){
+					  var $info = ' ';
+					  var _s = v.bankInfo.split('#');
+					  for(var i=1;i<_s.length-1;i++){
+					    var _i = _s[i].split('|');
+					    $info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					  }
+					  
+					  v.bankInfo = $info;
+				}
+				
+				v.checkvBankName = v.checkv != null && v.checkv != "0" ? materialPaymentCheck.checkBankInfo[v.checkvBankName] : '';
+				v.installmentBankName = v.installment != null && v.installment != "0" ? materialPaymentCheck.bankInfo[v.installmentBankName] : '';
+				v.accountsBankName = v.accounts != null && v.accounts != "0" ? materialPaymentCheck.accountsInfo[v.accountsBankName] : '';
+			});
+		});
+    });
 	
 });

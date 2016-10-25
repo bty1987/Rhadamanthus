@@ -60,10 +60,6 @@ public class DecorationOrderPO implements Serializable {
 	
 	public static final String PROJECTSTATUS_FANG_FAIL_STR = "放线失败";
 	
-	public static final int ORDERTYPE_DECORATION_INT = 1;
-	
-	public static final int ORDERTYPE_MATERIAL_INT = 2;
-	
 	public static final String HOUSETYPE_COMPLETE_STR = "现房";
 	
 	public static final String HOUSETYPE_OFFPLAN_STR = "期房";
@@ -79,6 +75,10 @@ public class DecorationOrderPO implements Serializable {
 	public static final int APPROVAL_PASS_INT = 2;
 	
 	public static final int APPROVAL_UNPASS_INT = 3;
+	
+	public static final short TYPE_PART_INT = 0;
+	
+	public static final short TYPE_WHOLE_INT = 1;
 	
 	private Long autoId;
 	

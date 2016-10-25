@@ -75,7 +75,7 @@ public class QuotationMaterialItemAction extends BaseListAction {
 	}
 	
 	@Action(value = "deleteQuotationMaterialItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotationMaterialItem(){
+	public String deleteQuotationMaterialItem() throws FLException{
 		
 		quotationMaterialItemService.deleteQuotationMaterialItem(quotationMaterialItem);
 		

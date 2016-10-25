@@ -46,6 +46,7 @@ $(function(){
                 ["折扣:", v.discount, "blue"],
                 ["量房时间:", v.createTime, "grey"],
                 ["签单时间:", v.contractTime, "grey"],
+                ["类型:", v.type == 0 ? '半包' : '全包', "red"],
                 ["状态:", v.status, "red"],
             ];
 

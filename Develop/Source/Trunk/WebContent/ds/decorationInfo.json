@@ -34,6 +34,9 @@
 		{"key":"设计师","value":"设计师"},
 		{"key":"咨询","value":"咨询"},
 		{"key":"非业务人员","value":"非业务人员"}
+    ], "type": [
+        {"key":"0", "value":"半包"},
+        {"key":"1", "value":"全包"}
     ],
     "errorCode": 0,
     "errorMsg": null

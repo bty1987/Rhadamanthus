@@ -27,6 +27,6 @@ public interface QuotationMaterialItemService {
 	
 	public int discountQuotationMaterialItem(QuotationMaterialItemVO quotationMaterialItemVO) throws FLException;
 	
-	public int deleteQuotationMaterialItem(QuotationMaterialItemVO quotationMaterialItemVO);
+	public int deleteQuotationMaterialItem(QuotationMaterialItemVO quotationMaterialItemVO) throws FLException;
 
 }

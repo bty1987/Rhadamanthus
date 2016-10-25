@@ -45,11 +45,10 @@ jQuery(function($) {
 					}).val(v.arId);
 					var $span = $('<span></span>').addClass('lbl');
 					
-					$label.append($input).append($span).appendTo($h3);
-
 					var propertyArr = [];
 					
 					if(v.level == 0 && v.isLeaf == true){
+						$label.append($input).append($span).appendTo($h3);
 						$h3.append($('<small></small>').addClass('blue').html(v.materialModelName));
 						
 						propertyArr = [
@@ -65,8 +64,11 @@ jQuery(function($) {
 							["结算值:", v.postPoint, "grey"],
 							["说明:", v.des, "grey"],
 						];
+						
+						
 					}else if(v.level == 0 && v.isLeaf == false){
-						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.materialModelName));
+						$label.append($input).append($span).appendTo($h3);
+						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.packageName));
 						
 						propertyArr = [
 							["总价:", v.total, "green"],
@@ -123,12 +125,13 @@ jQuery(function($) {
 	
 	$("#print").on("click", function(){
 		
-		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrder.msoId"];
+		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrder.msoId"] + "&time=" + params.loginTime;
 		
 		var $inputs = $('input[name="idents"]:checked');
 		
 		$inputs && $inputs.length > 0 && ($.each($inputs, function(i, v){
 	    	 url += "&idents[" + i + "]=" + $(v).attr('ident');
+	    	 
 		 }), window.open(url));
 	});
 	

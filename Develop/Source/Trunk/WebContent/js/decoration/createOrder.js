@@ -27,6 +27,7 @@ jQuery(function($) {
 	orderEntry.orderItems.materialOrderFlag = $("#materialOrderFlag");
 	orderEntry.orderItems.customerId = $("#customerId");
 	orderEntry.orderItems.villageId = $("#villageId");
+	orderEntry.orderItems.orderType = $("#orderType");
 	orderEntry.orderItems.houseNumber = $("#houseNumber");
 	orderEntry.orderItems.houseType = $("#houseType");
 	orderEntry.orderItems.houseClass = $("#houseClass");
@@ -51,6 +52,8 @@ jQuery(function($) {
 	com.post(api.ds.decorationInfo, {}, function(res){
 		orderEntry.salesmanType = res.salesmanType;
 		orderEntry.orderItems.salesmanType.bindData(orderEntry.salesmanType, 'key', 'value');
+		
+		orderEntry.orderItems.orderType.bindData(res.type, 'key', 'value');
 		
 		orderEntry.houseType = res.houseType;
 		orderEntry.orderItems.houseType.bindData(orderEntry.houseType, 'key', 'value');
@@ -193,12 +196,6 @@ jQuery(function($) {
 function createOrder(){
 	
 	var btn = $(this);
-	
-	if($("#decorationOrderFlag").is(":checked") != true && $("#materialOrderFlag").is(":checked") != true){
-		bootbox.alert("请选择订单类型");
-		btn.button('reset');
-		return;
-	}
 	
 	var options = {
 		"decorationOrder.customer.id": orderEntry.orderItems.customerId.val(),

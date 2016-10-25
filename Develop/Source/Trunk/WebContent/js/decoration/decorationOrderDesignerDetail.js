@@ -2,6 +2,7 @@
 var decorationOrderDetail = {
 	decorationOrderId : null,
 
+	decorationOrder: {},
 	customer: {},
 	village: {},
 	materialPaymentListGrid: null,
@@ -161,9 +162,20 @@ jQuery(function($) {
 
 	$("#btnSetDecorationPaymentInfo").on('click', function(res) {
 		com.clearValidator();
-
-		$("#decorationOrderTotalMoney").val("");
-		decorationOrderDetail.quotationTotalPriceModal.modal("show");
+		
+		if(decorationOrderDetail.decorationOrder.type == 0){
+			$("#decorationOrderTotalMoney").val("");
+			decorationOrderDetail.quotationTotalPriceModal.modal("show");
+		}else if(decorationOrderDetail.decorationOrder.type == 1){
+			var options = {
+				"decorationPayment.referMoney": 0,
+				"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
+			}
+			
+			com.post(api.payment.makeDecorationPayment, options, function(res){
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			});
+		}
 	});
 	
 	$("#btnRebackPayment").on('click', function(res){
@@ -712,17 +724,23 @@ jQuery(function($) {
 		decorationOrderDetail.village.ruleExample = decorationOrder.village.buildingNameRule.ruleExample;
 		decorationOrderDetail.village.ruleContent = decorationOrder.village.buildingNameRule.ruleContent;
 		decorationOrderDetail.village.rule = decorationOrder.village.buildingNameRule.rule;
+		
+		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
 	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
 	
-	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
+	decorationUtils.loadHuploadify("designPictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
-	});
+	}, "btn-success");
 	
-	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwg;*.dwt", false, function(data){
+	decorationUtils.loadHuploadify("projectPictureUpload", "上传工程图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
+		decorationUtils.addDecorationPicture(data, 2, "projectPictures");
+	}, "btn-primary");
+	
+	decorationUtils.loadHuploadify("CADUpload", "上传工程文件", "*.dwg;*.dwt", false, function(data){
 		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
-	});
+	}, "btn-warning");
 });
 
 function submintPayment(paymentId, paymentType){
@@ -801,7 +819,7 @@ function initWizard() {
 		if (curstep == 2) {
 			decorationUtils.loadQuotationDetail();
 		} else if (curstep == 3) {
-			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if (curstep == 4){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if (curstep == 5) {
@@ -819,7 +837,7 @@ function initWizard() {
 		if (info.step == 2) {
 			decorationUtils.loadQuotationDetail();
 		} else if (info.step == 3) {
-			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if (info.step == 4){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if (info.step == 5) {

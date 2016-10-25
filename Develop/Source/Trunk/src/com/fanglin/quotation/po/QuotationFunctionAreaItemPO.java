@@ -38,6 +38,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public static final short TYPE_QUOTATION_TRAFFIC_INT = 2;
 	
 	public static final short TYPE_QUOTATION_MANAGE_INT = 3;
+	
+	public static final short TYPE_QUOTATION_FIX_INT = 4;
 
 	private long qfaiId;
 

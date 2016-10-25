@@ -996,6 +996,23 @@ jQuery(function($) {
 		
 		com.post(api.payment.pageDecorationPaymentForHistory, $.extend({}, params.hdecorationPaymentPostData, {"paging.noPage": 1}), function(res){
 			
+//			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
+//			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
+//				  var info = bank + ", ";
+//				  var _s = bankInfo.split('#');
+//				  for(var i=1;i<_s.length-1;i++){
+//				    var _i = _s[i].split('|');
+//				    info += decorationPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
+//				  }
+//				  
+//				  return info
+//			})(v.bank, v.bankInfo), "grey"]) : true;
+//			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
+//			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
+//			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "grey"]) : true;
+//			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "grey"]) : true;
+//			v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
+			
 			$.exceler({
 				column : [
 					["订单号","orderId"],
@@ -1004,10 +1021,33 @@ jQuery(function($) {
 					['设计师','designer'],
 					['设计部','designerDepartment'],
 					['应收金额', 'referMoney'],
+					['收款人', 'collectUser'],
 					['收款时间', 'collectTime'],
 					['备注', 'des'],
+					['现金', 'cash'],
+					['银行', ['bank', 'bankInfo']],
+					['转账', ['checkv', 'checkvBankName']],
+					['分期', ['installment', 'installmentBankName']],
+					['对公', ['accounts', 'accountsBankName']],
+					['预付款', 'advance'],
+					['券', ['coupon', 'couponInfo']],
 				],
 				list: res.paging.data,
+			}, function(v){
+				if(v.bank != null && v.bank != 0){
+					  var $info = ' ';
+					  var _s = v.bankInfo.split('#');
+					  for(var i=1;i<_s.length-1;i++){
+					    var _i = _s[i].split('|');
+					    $info += decorationPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					  }
+					  
+					  v.bankInfo = $info;
+				}
+				
+				v.checkvBankName = v.checkv != null && v.checkv != "0" ? decorationPayment.checkBankInfo[v.checkvBankName] : '';
+				v.installmentBankName = v.installment != null && v.installment != "0" ? decorationPayment.bankInfo[v.installmentBankName] : '';
+				v.accountsBankName = v.accounts != null && v.accounts != "0" ? decorationPayment.accountsInfo[v.accountsBankName] : '';
 			});
 		});
     });

@@ -39,12 +39,12 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
+import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
-import com.fanglin.decoration.dao.DecorationBelongDao;
+import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.service.DecorationOrderService;
 import com.fanglin.decoration.vo.DecorationOrderExportVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
@@ -1173,22 +1173,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			decorationOrderDao.update(decorationOrderPO);
 			
-			StringBuffer serviceRecoraInfo = new StringBuffer();
-			serviceRecoraInfo.append("订单编号:");
-			serviceRecoraInfo.append(orderId);
-			serviceRecoraInfo.append(",类型为:");
-			serviceRecoraInfo.append(types.get(timeType));
-			serviceRecoraInfo.append(",录入时间修改,原录入时间:");
-			serviceRecoraInfo.append(oldCreateTime != null ? oldCreateTime.toString() : "空");
-			serviceRecoraInfo.append(",修改录入时间为:");
-			serviceRecoraInfo.append(dateTime.toString());
-			serviceRecoraInfo.append(".");
-			
 			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_DATETIME_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+			serviceRecordPO.setInfo(String.format("订单编号:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, types.get(timeType), oldCreateTime != null ? oldCreateTime.toString() : "空", dateTime.toString()));
 			
 			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}
@@ -1211,25 +1200,39 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			decorationOrderDao.update(decorationOrderPO);
 			
-			StringBuffer serviceRecoraInfo = new StringBuffer();
-			serviceRecoraInfo.append("订单编号:");
-			serviceRecoraInfo.append(orderId);
-			serviceRecoraInfo.append("状态修改,原状态:");
-			serviceRecoraInfo.append(oldStatus);
-			serviceRecoraInfo.append(",修改状态为:");
-			serviceRecoraInfo.append(status);
-			serviceRecoraInfo.append(".");
-			
 			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_DATETIME_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+			serviceRecordPO.setInfo(String.format("订单编号:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status));
 			
 			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}
 	}
 	
+	@Override
+	public void changeDecorationOrderForType(DecorationOrderVO decorationOrderVO, String userId) {
+		String orderId = decorationOrderVO.getOrderId();
+		
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		
+		if(decorationOrderPO != null){
+			short oldType = decorationOrderPO.getType();
+			
+			decorationOrderPO.setType(decorationOrderVO.getType());
+			
+			decorationOrderDao.update(decorationOrderPO);
+			
+			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_DATETIME_INT);
+			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			serviceRecordPO.setOperateUserId(userId);
+			serviceRecordPO.setInfo(String.format("订单编号:%s状态修改,原类型:%s,修改类型为:%s.", orderId, String.valueOf(oldType), String.valueOf(decorationOrderVO.getType())));
+			
+			serviceRecordDao.saveOrUpdate(serviceRecordPO);
+		}
+	}
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void createDecorationOrder(DecorationOrderVO decorationOrderVO) throws FLException{
