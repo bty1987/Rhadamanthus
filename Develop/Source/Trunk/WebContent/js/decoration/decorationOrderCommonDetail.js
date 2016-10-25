@@ -1,6 +1,7 @@
 var decorationOrderDetail = {
 	decorationOrderId:null,
 	
+	decorationOrder: {},
 	customer:{},
 	village:{},
 	materialPaymentListGrid: null,
@@ -100,17 +101,12 @@ jQuery(function($) {
 		decorationOrderDetail.customer.email = decorationOrder.customer.email;
 		decorationOrderDetail.customer.relationshipType = decorationOrder.customer.relationshipType;
 		decorationOrderDetail.customer.approveStatus = decorationOrder.customer.approveStatus;
+		
+		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
 	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
 	
-	decorationUtils.loadHuploadify("pictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
-		decorationUtils.addDecorationPicture(data, 1, "designPictures");
-	});
-	
-	decorationUtils.loadHuploadify("CADUpload", "上传工程图", "*.dwg;*.dwt", false, function(data){
-		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
-	});
 });
 
 function initWizard(){
@@ -123,7 +119,7 @@ function initWizard(){
 		if(curstep == 2){
 			decorationUtils.loadQuotationDetail();
 		}else if(curstep == 3){
-			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 4){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 5){
@@ -141,7 +137,7 @@ function initWizard(){
 		if(info.step == 2){
 			decorationUtils.loadQuotationDetail();
 		}else if(info.step == 3){
-			decorationUtils.initDecorationPicture("designPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 4){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 5){

@@ -1,6 +1,7 @@
 var decorationOrderDetail = {
 	decorationOrderId:null,
 	
+	decorationOrder: {},
 	customer:{},
 	village:{},
 	materialPaymentListGrid: null,
@@ -269,6 +270,8 @@ jQuery(function($) {
 		decorationOrderDetail.village.ruleExample = decorationOrder.village.buildingNameRule.ruleExample;
 		decorationOrderDetail.village.ruleContent = decorationOrder.village.buildingNameRule.ruleContent;
 		decorationOrderDetail.village.rule = decorationOrder.village.buildingNameRule.rule;
+		
+		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
 	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);

@@ -234,6 +234,7 @@ var api = {
 		changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
 		changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},
 		changeDecorationOrderForStatus: {url: "changeDecorationOrderForStatus.do"},
+		changeDecorationOrderForType: {url: "cheangeDecorationOrderForType.do"},
 		changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},
 		refundDecorationPaymentForManage: {url: "refundDecorationPaymentForManage.do"},
 		changeMaterialSubOrderForOrderId: {url: "changeMaterialSubOrderForOrderId.do"},
@@ -900,6 +901,12 @@ var api = {
 		updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
 		updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
 		deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
+		
+		queryQuotationMaterialItemByQId: {url:"queryQuotationMaterialItemByQId.do"},
+		addQuotationMaterialItem: {url:"addQuotationMaterialItem.do"},
+		upgradeQuotationMaterialItem: {url:"upgradeQuotationMaterialItem.do"},
+		discountQuotationMaterialItem: {url:"discountQuotationMaterialItem.do"},
+		deleteQuotationMaterialItem: {url:"deleteQuotationMaterialItem.do"},
 		
 	}, report: {
 		

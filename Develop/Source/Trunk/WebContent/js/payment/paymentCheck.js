@@ -10,18 +10,25 @@ jQuery(function($) {
 		paymentCheck.bank = [];
 		paymentCheck.checkBank = [];
 		paymentCheck.accounts = [];
+		
+		paymentCheck.cashInfo = {};
 		paymentCheck.bankInfo = {};
+		paymentCheck.checkBankInfo = {};
+		paymentCheck.accountsInfo = {};
 		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				paymentCheck.cash.push(v);
+				paymentCheck.cashInfo[v.key] = v.name;
 			}else if(v.type == 2){
 				paymentCheck.bank.push(v);
 				paymentCheck.bankInfo[v.key] = v.name;
 			}else if(v.type == 3){
 				paymentCheck.checkBank.push(v);
+				paymentCheck.checkBankInfo[v.key] = v.name;
 			}else if(v.type == 4){
 				paymentCheck.accounts.push(v);
+				paymentCheck.accountsInfo[v.key] = v.name;
 			}
 		});
 	}, null, false);
@@ -133,7 +140,11 @@ jQuery(function($) {
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
     	
-    	return [$adda];
+    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
+    	
+    	return [$adda, $impa];
 	});
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){
@@ -154,5 +165,53 @@ jQuery(function($) {
 			}
 		});
 	});
+	
+	$('a[name="import"]', '#pagenation').click(function () {
+    	
+    	if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+    	
+    	if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+		
+		com.post(api.payment.pagePaymentForHistory, $.extend({}, params.paymentCheckCheckPostData, {"paging.noPage": 1}), function(res){
+			
+			$.exceler({
+				column : [
+					["订单号","orderId"],
+					['收款类型','type'],
+					['预付款类型','paymentType'],
+					['操作金额','balance'],
+					['收款时间', 'collectTime'],
+					['备注', 'des'],
+					['现金', 'cash'],
+					['银行', ['bank', 'bankInfo']],
+					['转账', ['checkv', 'checkvBankName']],
+					['分期', ['installment', 'installmentBankName']],
+					['对公', ['accounts', 'accountsBankName']],
+				],
+				list: res.paging.data,
+			}, function(v){
+				if(v.bank != null && v.bank != 0){
+					var $info = ' ';
+					var _s = v.bankInfo.split('#');
+					for(var i=1;i<_s.length-1;i++){
+						var _i = _s[i].split('|');
+						$info += paymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					}
+					
+					v.bankInfo = $info;
+				}
+				
+				v.checkvBankName = v.checkv != null && v.checkv != "0" ? paymentCheck.checkBankInfo[v.checkvBankName] : '';
+				v.installmentBankName = v.installment != null && v.installment != "0" ? paymentCheck.bankInfo[v.installmentBankName] : '';
+				v.accountsBankName = v.accounts != null && v.accounts != "0" ? paymentCheck.accountsInfo[v.accountsBankName] : '';
+			});
+		});
+    });
 	
 });

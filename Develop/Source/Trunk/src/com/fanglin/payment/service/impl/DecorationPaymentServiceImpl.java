@@ -162,7 +162,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "eq"));
 		
-		pageDecorationPayment(paging, filters, 0);
+		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
@@ -172,7 +172,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_PAY_STR, "eq"));
 
-		pageDecorationPayment(paging, filters, 0);
+		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR, "eq"));
 		
-		pageDecorationPayment(paging, filters, 1);
+		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
@@ -190,7 +190,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		if(filters.size() == 0) return;
 		
-		pageDecorationPayment(paging, filters, DecorationOrderPO.ORDERTYPE_DECORATION_INT);
+		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
@@ -1336,34 +1336,22 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		return 0;
 	}
 
-	private void pageDecorationPayment(Paging paging, List<FilterVO> filters, int orderType){
+	private void pageDecorationPayment(Paging paging, List<FilterVO> filters){
 		
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 		List<DecorationPaymentPO> decorationPaymentPOs = null;
 		
-		if(orderType == DecorationOrderPO.ORDERTYPE_DECORATION_INT){
-			
-			filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
-			filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
-			
-			decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
-			
-			for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-				DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
-				decorationPaymentVOs.add(decorationPaymentVO);
-			}
-			
-			paging.setData(decorationPaymentVOs);
-		}else{
-			decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
-			
-			for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-				DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
-				decorationPaymentVOs.add(decorationPaymentVO);
-			}
-			
-			paging.setData(decorationPaymentVOs);
+		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
+		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
+		
+		decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
+		
+		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
+			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
+			decorationPaymentVOs.add(decorationPaymentVO);
 		}
+		
+		paging.setData(decorationPaymentVOs);
 	}
 
 }

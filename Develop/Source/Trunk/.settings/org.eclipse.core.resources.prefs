@@ -1,4 +1,4 @@
-#Wed Sep 28 09:44:36 CST 2016
+#Sun Oct 23 18:05:37 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -113,7 +113,9 @@ encoding//WebContent/views/quotation/quotationDetail.html=UTF-8
 encoding//WebContent/views/quotation/quotationIndex.html=UTF-8
 encoding//WebContent/views/quotation/quotationItem.html=UTF-8
 encoding//WebContent/views/quotation/quotationOutput.html=UTF-8
+encoding//WebContent/views/quotation/quotationPart.html=UTF-8
 encoding//WebContent/views/quotation/quotationVersion.html=UTF-8
+encoding//WebContent/views/quotation/quotationWhole.html=UTF-8
 encoding//WebContent/views/quotation/systemDefineItem.html=UTF-8
 encoding//WebContent/views/report/materialDepartmentReport.html=UTF-8
 encoding//WebContent/views/report/materialDesignReport.html=UTF-8

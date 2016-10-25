@@ -1,7 +1,7 @@
 (function($){
 
 	$.extend({
-		exceler: function(options) {
+		exceler: function(options, preFunc) {
 			var defaults = {};
 
 			var conf = $.extend(defaults, options);
@@ -22,9 +22,11 @@
 				excel += "<td>" + v + "</td>";
 			});
 			excel += '</tr>';
-
+			
 			// Row Vs Column
 			$.each(list, function(i, v){
+				
+				preFunc && (preFunc(v));
 				
 				excel += "<tr>";
 				$.each(columnNames, function(index, val){
@@ -32,13 +34,13 @@
 					v._$ = "$"; // 文件压缩过程需要赋值来确定v的名称 , 否则改域内没有使用到v , 不能命名
 					
 					if(typeof val != 'string'){
-						var tempstr = '';
+						var tempstr = ' ';
 						$.each (val, function(si, sv){
-							tempstr += eval('e.' + sv);
+							tempstr += eval('d.' + sv);
 						});
 						excel += "<td>" + tempstr + "</td>";
 					}else{
-						excel += "<td>" + eval('e.' + val) + "</td>";
+						excel += "<td>" + eval('d.' + val) + "</td>";
 					}
 				});
 				excel += '</tr>';

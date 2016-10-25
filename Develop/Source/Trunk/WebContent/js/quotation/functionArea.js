@@ -123,6 +123,12 @@ $(function(){
                 }),
                 functionAreaType: $("#functionAreaType"),
                 functionAreaOrder: $("#functionAreaOrder"),
+                type : $("#type").on('change', function(){
+                    if($(this).val() == 2)
+                    $("#total").addClass('v_required').removeAttr('readonly');
+                    else $("#total").removeClass('v_required').attr('readonly', true).val(null);
+                }),
+                total : $("#total"),
             },
             oldFunctionAreaType: null,
             quotationVersionList: [],
@@ -179,6 +185,13 @@ $(function(){
         };
 
     $.extend(com.validator, functionArea.validator);
+
+    com.post(api.ds.quotationInfo, {}, function(res){
+        $('#type').bindData(res.functionType, 'key', 'value');
+
+    });
+
+
     //功能区添加按钮
     $('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
         functionArea.editFlg = !1;
@@ -186,6 +199,9 @@ $(function(){
         bindVersion();
         functionArea.functionAreaItems.functionAreaId.css("display", "none");
         functionArea.functionAreaItems.versionId.prop("disabled", !1);
+
+        functionArea.functionAreaItems.type.find('option:eq(0)').attr('selected', true);
+        functionArea.functionAreaItems.total.attr('disabled', true);
         functionArea.modal.modal("show")
     });
 
@@ -200,6 +216,10 @@ $(function(){
         functionArea.functionAreaItems.functionAreaType.val(a.functionAreaType);
         functionArea.oldFunctionAreaType = a.functionAreaType;
         functionArea.functionAreaItems.versionId.val(a.versionId);
+
+        functionArea.functionAreaItems.type.val(a.type);
+        if(a.type ==2)functionArea.functionAreaItems.total.val(a.total).removeAttr('readonly').addClass('v_required');
+
         functionArea.functionAreaItems.functionAreaId.prop("disabled", !0).css("display", "block");
         functionArea.functionAreaItems.versionId.prop("disabled", !0), functionArea.modal.modal("show");
     }
@@ -211,7 +231,9 @@ $(function(){
                 "functionArea.functionAreaName": functionArea.functionAreaItems.functionAreaName.val(),
                 "functionArea.functionAreaOrder": functionArea.functionAreaItems.functionAreaOrder.val(),
                 "functionArea.functionAreaType": functionArea.functionAreaItems.functionAreaType.val(),
-                "functionArea.versionId": functionArea.functionAreaItems.versionId.val()
+                "functionArea.versionId": functionArea.functionAreaItems.versionId.val(),
+                "functionArea.type": functionArea.functionAreaItems.type.val(),
+                "functionArea.total": functionArea.functionAreaItems.total.val() ? functionArea.functionAreaItems.total.val() : 0
             };
             functionArea.editFlg ? (
                 a = api.quotation.updateFunctionArea,

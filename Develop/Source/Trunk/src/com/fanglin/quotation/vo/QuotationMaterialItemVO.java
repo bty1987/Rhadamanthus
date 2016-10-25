@@ -4,9 +4,9 @@ public class QuotationMaterialItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2104165919741560073L;
 
-	private Integer qmiId;
+	private Long qmiId;
 	
-	private long qid;
+	private Long qid;
 	
 	private String no;
 	
@@ -18,27 +18,27 @@ public class QuotationMaterialItemVO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
-	private float price;
+	private Float price;
 	
-	private float diff;
+	private Float diff;
 	
-	private short status;
+	private Short status;
 	
 	private String des;
 
-	public Integer getQmiId() {
+	public Long getQmiId() {
 		return qmiId;
 	}
 
-	public void setQmiId(Integer qmiId) {
+	public void setQmiId(Long qmiId) {
 		this.qmiId = qmiId;
 	}
 
-	public long getQid() {
+	public Long getQid() {
 		return qid;
 	}
 
-	public void setQid(long qid) {
+	public void setQid(Long qid) {
 		this.qid = qid;
 	}
 
@@ -82,27 +82,27 @@ public class QuotationMaterialItemVO implements java.io.Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public float getPrice() {
+	public Float getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(Float price) {
 		this.price = price;
 	}
 
-	public float getDiff() {
+	public Float getDiff() {
 		return diff;
 	}
 
-	public void setDiff(float diff) {
+	public void setDiff(Float diff) {
 		this.diff = diff;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 

@@ -235,6 +235,10 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderDao.saveOrUpdate(decorationOrderPO);
 		}
 		
+		quotationPO.setBasicPrice(Arith.mul(decorationOrderPO.getHouseArea(), quotationPO.getSetpackage()));
+		
+		quotationDao.save(quotationPO);
+		
 		if(type == QuotationPO.TYPE_PART_INT){
 			QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, (short) 0);
 			
@@ -245,11 +249,7 @@ public class QuotationServiceImpl implements QuotationService {
 			
 			quotationFunctionAreaItemDao.save(trafficPrice);
 			quotationFunctionAreaItemDao.save(managePrice);
-		}else if(type == QuotationPO.TYPE_WHOLE_INT){
-			quotationPO.setBasicPrice(Arith.mul(decorationOrderPO.getHouseArea(), quotationPO.getSetpackage()));
 		}
-		
-		quotationDao.save(quotationPO);
 		
 		return 0;
 	}

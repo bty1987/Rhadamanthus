@@ -160,6 +160,12 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 			
+			short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT;
+			
+			if(Arrays.asList(new Short[]{QuotationFunctionAreaPO.TYPE_FUNCTIONAREA_TOTAL_INT, QuotationFunctionAreaPO.TYPE_NOT_COUNT_INT}).contains(quotationFunctionAreaPO.getType())){
+				itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT;
+			}
+			
 			for(FunctionAreaItemPO functionAreaItemPO: functionAreaItemPOs){
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 				
@@ -171,7 +177,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				quotationFunctionAreaItemVO.setWorkType(quotationItemPO.getWorkType().getName());
 				quotationFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
 				quotationFunctionAreaItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
-				quotationFunctionAreaItemVO.setType(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT);
+				quotationFunctionAreaItemVO.setType(itemType);
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 				quotationFunctionAreaItemVO.setNum(0f);
 				

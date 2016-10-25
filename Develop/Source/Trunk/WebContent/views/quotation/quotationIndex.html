@@ -2,118 +2,150 @@
 <div id="quotationIndexPageContent" class="page-content">
 	<div id="fl-statement"></div>
 
+	<div class="clearfix">
+		<div class="col-xs-12">
+			<a href="#" id="createQuotation" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
+				<i class="icon-plus-sign bigger-230"></i>
+				创建
+			</a>
+
+			<a href="#" id="replicaQuotation" class="btn btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
+				<i class="icon-hdd bigger-230"></i>
+				拷贝报价
+			</a>
+
+			<a href="#" id="btnBack" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
+				<i class="icon-mail-forward bigger-230"></i>
+				返回
+			</a>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="" id="quotationList"></div>
-			
-			<div class="modal fade" id="quotationModal" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content col-md-12">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">
-								<span>&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 class="modal-title" id="quotationDialog">报价</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="quotationName">名称</label>
-									<div class="col-sm-9">
-										<input type="text" id="quotationName" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
-										<input type="text" id="qid" class="col-xs-10 col-sm-5 hide"/>
-									</div>
-								</div>
-								<div class="space-4"></div>
-								
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="decorationStyle">装修风格</label>
-									<div class="col-sm-9">
-										<select class="col-xs-10 col-sm-5 v_required" id="decorationStyle" data-toggle="popover" data-trigger='manual'>
-											<option value="现代简约" selected="selected">现代简约</option>
-											<option value="中式">中式</option>
-											<option value="欧式">欧式</option>
-											<option value="田园">田园</option>
-											<option value="日式">日式</option>
-											<option value="东南亚">东南亚</option>
-											<option value="地中海">地中海</option>
-											<option value="美式">美式</option>
-											<option value="其他">其他</option>
-										</select>
-									</div>
-								</div>
-								
-								<div class="space-4"></div>
-								
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="content">备注</label>
-									<div class="col-sm-9">
-										<textarea id="content" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual'  maxlength='25'></textarea>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-					
-					<div class="modal-footer">
-						<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-					</div>
+		</div>
+
+	</div>
+
+	<div class="hr hr32 hr-dotted"></div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="" id="quotationList2"></div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="quotationModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="quotationDialog">报价</h4>
 				</div>
-			</div>
-			
-			<div class="modal fade" id="replicaQuotationModal" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content col-md-12">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">
-								<span>&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 class="modal-title" id="quotationDialog">拷贝报价</h4>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="quotationName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="quotationName" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
+								<input type="text" id="qid" class="col-xs-10 col-sm-5 hide"/>
+							</div>
 						</div>
-						<div class="modal-body">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="replicaOrderId">订单编号</label>
-									<div class="col-sm-9">
-										<input type="text" id="replicaOrderId" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
-									</div>
-								</div>
-								<div class="space-4"></div>
-								
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="quotationNames">报价名称</label>
-									<div class="col-sm-9">
-										<select class="col-xs-10 col-sm-5 v_required" id="quotationNames" data-toggle="popover" data-trigger='manual'>
-										</select>
-									</div>
-								</div>
-							</form>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="decorationStyle">装修风格</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="decorationStyle" data-toggle="popover" data-trigger='manual'>
+									<option value="现代简约" selected="selected">现代简约</option>
+									<option value="中式">中式</option>
+									<option value="欧式">欧式</option>
+									<option value="田园">田园</option>
+									<option value="日式">日式</option>
+									<option value="东南亚">东南亚</option>
+									<option value="地中海">地中海</option>
+									<option value="美式">美式</option>
+									<option value="其他">其他</option>
+								</select>
+							</div>
 						</div>
-					</div>
-					
-					<div class="modal-footer">
-						<button type="button" id="replicaBtn" class="btn btn-primary">保存</button>
-						<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-					</div>
+
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="content">备注</label>
+							<div class="col-sm-9">
+								<textarea id="content" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual'  maxlength='25'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="decorationStyle">报价类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="quotationType" data-toggle="popover" data-trigger='manual'>
+									<option value="0" selected="selected">半包</option>
+									<option value="1">全包</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="decorationStyle">套系金额</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5" id="setpackage" disabled data-toggle="popover" data-trigger='manual'>
+									<option value="" selected="selected">请选择</option>
+								</select>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 
-			<div class="col-xs-12 col-sm-1 center ">
-				<a href="#" id="createQuotation" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
-					<i class="icon-plus-sign bigger-230"></i>
-					创建
-				</a>
-				
-				<a href="#" id="replicaQuotation" class="btn btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
-					<i class="icon-hdd bigger-230"></i>
-					拷贝报价
-				</a>
-				
-				<a href="#" id="btnBack" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
-					<i class="icon-mail-forward bigger-230"></i>
-					返回
-				</a>
+			<div class="modal-footer">
+				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="replicaQuotationModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="replicaQuotationDialog">拷贝报价</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="replicaOrderId">订单编号</label>
+							<div class="col-sm-9">
+								<input type="text" id="replicaOrderId" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="quotationNames">报价名称</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="quotationNames" data-toggle="popover" data-trigger='manual'>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" id="replicaBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="rcancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
 	</div>

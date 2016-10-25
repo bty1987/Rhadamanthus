@@ -5,7 +5,7 @@ var decorationUtils = {
 		
 		decorationOrderDetail.quotationDetail = {};
 		
-		com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationOrderDetail.decorationOrderId}, function(res){
+		com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationOrderDetail.decorationOrderId, "quotation.type": decorationOrderDetail.decorationOrder.type}, function(res){
 			decorationOrderDetail.quotation = res.quotation;
 		}, null, false);
 		
@@ -540,7 +540,7 @@ var decorationUtils = {
 				v.belongType == "设计" ? $liLine.appendTo($designul) : $liLine.appendTo($salesmanul);
 			});
 		}
-	}, loadHuploadify: function(eId, ename, fileType, multi, callback){
+	}, loadHuploadify: function(eId, ename, fileType, multi, callback, btnstyle){
 		
 		$("#" + eId).Huploadify({
 			'debug' : false, // 开启调试
@@ -549,7 +549,7 @@ var decorationUtils = {
 			'formData' : { // 附带值
 				'uploadType' : 2
 			},
-			'buttonClass': 'btn btn-success',
+			'buttonClass': 'btn ' + btnstyle ? btnstyle : "btn-success",
 	        'buttonText': ename,
 	        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
 	        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
@@ -585,13 +585,16 @@ var decorationUtils = {
 					decorationUtils.addCAD($("#" + eId), res.decorationPicture);
 				}else if(type == 1){
 					decorationUtils.addPicture($("#" + eId), res.decorationPicture);
+				}else if(type == 2){
+					decorationUtils.addPicture($("#" + eId), res.decorationPicture);
 				}
 			});
 		}else{
 			com.showAlert(com.error, dateObj.errorMsg);
 		}
-	}, initDecorationPicture: function(pictureId, cadId, orderId) {
+	}, initDecorationPicture: function(designId, pictureId, cadId, orderId) {
 		
+		var $desgin = $("#" + designId).html("");
 		var $picture = $("#" + pictureId).html("");
 		var $cad = $("#" + cadId).html("");
 		
@@ -605,6 +608,8 @@ var decorationUtils = {
 				if(decorationPicture.type == 0){
 					decorationUtils.addCAD($cad, decorationPicture);
 				}else if(decorationPicture.type == 1){
+					decorationUtils.addPicture($desgin, decorationPicture);
+				}else if(decorationPicture.type == 2){
 					decorationUtils.addPicture($picture, decorationPicture);
 				}
 			}

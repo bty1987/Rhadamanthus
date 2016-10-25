@@ -51,7 +51,6 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		
 		queryFilterExcute(query, filters);
 		
-		query.add(Restrictions.eq("orderType", DecorationOrderPO.ORDERTYPE_DECORATION_INT));
 		query.desc("autoId");
 
 		return query.list();
@@ -139,7 +138,6 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		
 		query.add(Restrictions.in("status", Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_COMPLETED_STR})));
 		query.add(Restrictions.eq("putlineConstructionSchedule.putlineStatus", 1));
-		query.add(Restrictions.eq("orderType", DecorationOrderPO.ORDERTYPE_DECORATION_INT));
 		
 		query.desc("autoId");
 		
@@ -184,8 +182,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_TERMINATION_STR});
 		
 		Criteria criteria = session().createCriteria(DecorationOrderPO.class)
-				.add(Restrictions.not(Restrictions.in("status", status)))
-				.add(Restrictions.eq("orderType", DecorationOrderPO.ORDERTYPE_DECORATION_INT));
+				.add(Restrictions.not(Restrictions.in("status", status)));
 
 		if(filters != null){
 			for(FilterVO filter: filters){
@@ -233,7 +230,6 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 				 .createAlias("customerPO", "customer")
 				 .add(Restrictions.eq("customer.id", customerAutoId))
 				 .add(Restrictions.not(Restrictions.in("status", status)))
-				 .add(Restrictions.eq("orderType", DecorationOrderPO.ORDERTYPE_DECORATION_INT))
 				 .addOrder(Order.desc("autoId"))
 				 .list();
 		 
@@ -253,7 +249,6 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 				.add(Restrictions.eq("villagePO.villageId", villageId))
 				.add(Restrictions.eq("houseNumber", hoseNumber))
 				.add(Restrictions.not(Restrictions.in("status", status)))
-				.add(Restrictions.eq("orderType", DecorationOrderPO.ORDERTYPE_DECORATION_INT))
 				.uniqueResult();
 	}
 	

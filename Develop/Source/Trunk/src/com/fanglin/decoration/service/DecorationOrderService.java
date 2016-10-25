@@ -59,6 +59,8 @@ public interface DecorationOrderService {
 	public void changeDecorationOrderForTime(DecorationOrderVO decorationOrderVO, int timeType, Timestamp dateTime, String userId);
 	
 	public void changeDecorationOrderForStatus(DecorationOrderVO decorationOrderVO, String userId);
+	
+	public void changeDecorationOrderForType(DecorationOrderVO decorationOrderVO, String userId);
 
 	public void createDecorationOrder(DecorationOrderVO decorationOrderVO) throws FLException;
 

@@ -758,6 +758,19 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setDepositPayment(materialPaymentPO.getReferMoney());
 		}else if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
+			
+			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+			
+			if(materialPaymentPOs.size() > 1){
+				throw new FLException(150027, "主材定金已存在,不能多次收取定金");
+			}else if(materialPaymentPOs.size() == 1){
+				MaterialPaymentPO depositPayment = materialPaymentPOs.get(0);
+				
+				if(depositPayment.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+					throw new FLException(150029, "主材定金未收款");
+				}
+			}
+			
 			materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setFullPayment(materialPaymentPO.getReferMoney());
 		}else if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){

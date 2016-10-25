@@ -13,13 +13,13 @@
 	   <div id="fl-statement"></div>
 		<div  class="col-xs-12">
 			<input type="text" id="selectFunctionAreaId" class="hide">
-                        <input type="text" id="selectVersionId" class="hide">
-                        <div id="itemList"></div>
-                        <h3 id="itemBtns">
-                            <a id="addBtn" class="btn btn-minier btn-success"><i class="icon-plus bigger-110"></i>添加</a>
-                            <a id="delBtn" class="btn btn-minier btn-danger"><i class="icon-trash bigger-110"></i>删除</a>
-                            <a id="btnBack" class="btn btn-minier btn-primary"><i class="icon-mail-forward bigger-110"></i>返回</a>
-                        </h3>
+            <input type="text" id="selectVersionId" class="hide">
+            <div id="itemList"></div>
+            <h3 id="itemBtns">
+                <a id="addBtn" class="btn btn-minier btn-success"><i class="icon-plus bigger-110"></i>添加</a>
+                <a id="delBtn" class="btn btn-minier btn-danger"><i class="icon-trash bigger-110"></i>删除</a>
+                <a id="btnBack" class="btn btn-minier btn-primary"><i class="icon-mail-forward bigger-110"></i>返回</a>
+            </h3>
 		</div>
 	</div>
 
@@ -57,7 +57,7 @@
 						</div>
 						<div class="space-4"></div>
 						
-							<div class="form-group">
+						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="functionAreaType">类型</label>
 							<div class="col-sm-9">
 								<select class="col-xs-10 col-sm-5 v_required" id="functionAreaType" data-toggle="popover" data-trigger='manual'>
@@ -74,6 +74,22 @@
 							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder">排序</label>
 							<div class="col-sm-9">
 								<input type="text" id="functionAreaOrder" class="col-xs-10 col-sm-5 v_required v_number"  data-toggle="popover" data-trigger='manual' maxlength='5'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaType">类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="type" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder">总价</label>
+							<div class="col-sm-9">
+								<input type="text" id="total" class="col-xs-10 col-sm-5 v_number" readonly  data-toggle="popover" data-trigger='manual' maxlength='5'/>
 							</div>
 						</div>
 						<div class="space-4"></div>

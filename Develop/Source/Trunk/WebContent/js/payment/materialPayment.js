@@ -545,8 +545,30 @@ jQuery(function($) {
 					['应收金额', 'referMoney'],
 					['收款时间', 'collectTime'],
 					['备注', 'des'],
+					['现金', 'cash'],
+					['银行', ['bank', 'bankInfo']],
+					['转账', ['checkv', 'checkvBankName']],
+					['分期', ['installment', 'installmentBankName']],
+					['对公', ['accounts', 'accountsBankName']],
+					['预付款', 'advance'],
+					['券', ['coupon', 'couponInfo']],
 				],
 				list: res.paging.data,
+			}, function(v){
+				if(v.bank != null && v.bank != 0){
+					  var $info = ' ';
+					  var _s = v.bankInfo.split('#');
+					  for(var i=1;i<_s.length-1;i++){
+					    var _i = _s[i].split('|');
+					    $info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					  }
+					  
+					  v.bankInfo = $info;
+				}
+				
+				v.checkvBankName = v.checkv != null && v.checkv != "0" ? materialPayment.checkBankInfo[v.checkvBankName] : '';
+				v.installmentBankName = v.installment != null && v.installment != "0" ? materialPayment.bankInfo[v.installmentBankName] : '';
+				v.accountsBankName = v.accounts != null && v.accounts != "0" ? materialPayment.accountsInfo[v.accountsBankName] : '';
 			});
 		});
     });
