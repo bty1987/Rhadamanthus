@@ -3,72 +3,57 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'a820ccb6671ec52687190b1755fc563ad0b7c067'
-    oldFile: !uuid 'dd048f9e7be44b4650ce4d2c9127943bc2b3828a'
+    newFile: !uuid '43b33d4dd700fb669b0873023843d9f490095ebf'
+    oldFile: !uuid 'a820ccb6671ec52687190b1755fc563ad0b7c067'
   /Develop/Source:
-    newFile: !uuid '5ea2099d0a89491c4e52dc5f5981c02913f3387b'
-    oldFile: !uuid '5e7d724b570363e021c1e8fad5e1e95c547477fe'
+    newFile: !uuid '573c60531a9da6098d208d8e234aa5d21d4e0446'
+    oldFile: !uuid '5ea2099d0a89491c4e52dc5f5981c02913f3387b'
   /Develop/Source/Trunk:
-    newFile: !uuid 'efa830a2d2cf4597f950cdd68ed352dd68747dbd'
-    oldFile: !uuid '2d79604559e82616d378b6b02df7a61a7af53299'
+    newFile: !uuid '44d53956bc7a5dae1ef8b1afcf318d36407fabcd'
+    oldFile: !uuid 'efa830a2d2cf4597f950cdd68ed352dd68747dbd'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '4721e40faf647e82de3a95d173023328d47acdfb'
-    oldFile: !uuid 'bb34dadcbb47d05f7b6a56b1175b00811691ef81'
+    newFile: !uuid '5dc565c090c4af3b15f17f214d3f6907347f5bf3'
+    oldFile: !uuid '4721e40faf647e82de3a95d173023328d47acdfb'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '006d6494816051001518f5bcbe1b2f14e6a78fcb'
-    oldFile: !uuid 'c66b913c146ea148c78b3a25564ef6b9ba2319d2'
-  /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid '184cac6b3778473d6ef182892930db52d871ec82'
-    oldFile: !uuid '02ee84884c8b82f0bc160da5fe33b1827d4b4bad'
-  /Develop/Source/Trunk/WebContent/js/com/core.js:
-    newFile: !uuid 'b75e6193eb65cf781975095bf89c499112a5b1cf'
-    oldFile: !uuid '3b6b51edeefda6e9eb695c156419534ca5089bb3'
+    newFile: !uuid '8460ac23f7a9ce7bcfc9d0e3219a0a5734c6ecfc'
+    oldFile: !uuid '006d6494816051001518f5bcbe1b2f14e6a78fcb'
   /Develop/Source/Trunk/WebContent/js/quotation:
-    newFile: !uuid 'a6dfb73f735fe27a7f182401a68194f2080016cd'
-    oldFile: !uuid '6c02eb3045a46a7ccc34f9c57379bb634274ea71'
-  /Develop/Source/Trunk/WebContent/js/quotation/quotationIndex.js:
-    newFile: !uuid '60e826c7c271ab18dfaa4807c0d2b4092fbe7cc1'
-    oldFile: !uuid 'e4346c6a6e16a34b671f4581ff8795d4eebff43e'
-  /Develop/Source/Trunk/WebContent/js/quotation/quotationPart.js:
-    newFile: !uuid '960487aad6cd043411064e8f894108e59ddcb83c'
-    oldFile: !uuid '48995136e32d7f90463d4ab3b852097e55dbd3d1'
+    newFile: !uuid '4811acf783674ae4ee62e38c2d20e1f4d82dd0ce'
+    oldFile: !uuid 'a6dfb73f735fe27a7f182401a68194f2080016cd'
   /Develop/Source/Trunk/WebContent/js/quotation/quotationWhole.js:
-    newFile: !uuid '3e5603bd43f715a8d99e6b1e67a68bdfb632b7bc'
-    oldFile: !uuid '14d53e65dd23ed7f13c2d425668f9ac51900ac70'
+    newFile: !uuid '7a9eafadc42321755f4e4896a7bbbab3dfc3284d'
+    oldFile: !uuid '3e5603bd43f715a8d99e6b1e67a68bdfb632b7bc'
   /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '1650bea0ec704e043caf07fe93b8f0146a40d507'
-    oldFile: !uuid '55c65d9bb30efb1212484ed074a711efc62215f3'
+    newFile: !uuid 'c81dd49bbcef211dbba7325311ea873376b39069'
+    oldFile: !uuid '1650bea0ec704e043caf07fe93b8f0146a40d507'
   /Develop/Source/Trunk/WebContent/views/quotation:
-    newFile: !uuid '6103378fc398afa55d095fbd8bf6a4bf519d6808'
-    oldFile: !uuid 'e00d1f95fe876dde8edd6f532c46d2e6e8a95b4d'
-  /Develop/Source/Trunk/WebContent/views/quotation/functionArea.html:
-    newFile: !uuid 'fbfab151b28a997341876845db58915f9860740d'
-    oldFile: !uuid '4b018836ac785f801f67b29a12814495d031796c'
-  /Develop/Source/Trunk/WebContent/views/quotation/quotationIndex.html:
-    newFile: !uuid '833972524793e2ea6109685472dddc42ac6bf5cd'
-    oldFile: !uuid '0204a724af20c2b3b27194cc706e6ea7279126e0'
+    newFile: !uuid '9a005479583e91d69ec44db038796693144203c7'
+    oldFile: !uuid '6103378fc398afa55d095fbd8bf6a4bf519d6808'
   /Develop/Source/Trunk/WebContent/views/quotation/quotationWhole.html:
-    newFile: !uuid '2dade3f0aae1d6a2f9c3d9b7dfe49d3b5f28d24c'
-    oldFile: !uuid '70d4302887faa733cfbf74d4ccdc6a8dec1ad092'
+    newFile: !uuid '5b59d60a7a70173425173441c3d98c45532b4d63'
+    oldFile: !uuid '2dade3f0aae1d6a2f9c3d9b7dfe49d3b5f28d24c'
   /Develop/Source/Trunk/src:
-    newFile: !uuid '9d31d050c9626f878d70aca0076bee74685887dd'
-    oldFile: !uuid '42153ab43b97a5853e6b1a5e91a5aac7db5f6b97'
+    newFile: !uuid '50c1fe4fbd126664b82ae22c3cdeb147fcba815d'
+    oldFile: !uuid '9d31d050c9626f878d70aca0076bee74685887dd'
   /Develop/Source/Trunk/src/com:
-    newFile: !uuid 'bea3ce443caed525e94a3c8b45e6f6e8afdbd17b'
-    oldFile: !uuid 'e578128b609a79b30ee014832b13c6297b7ba17f'
+    newFile: !uuid 'a7ff545484ae15abf88854598b44d23296855502'
+    oldFile: !uuid 'bea3ce443caed525e94a3c8b45e6f6e8afdbd17b'
   /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid '8416ece91d1ee224cdf7127c0c1160bbd57ef88b'
-    oldFile: !uuid '499286bc3fc79da7ae4adc1ee6721ad35beaf6da'
-  /Develop/Source/Trunk/src/com/fanglin/decoration:
-    newFile: !uuid '809fcebe805e9eea98788ec0601ea9ec45096217'
-    oldFile: !uuid '9985a3984db6b643775b760792b4f99cb84e4a89'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/action:
-    newFile: !uuid 'ff4a9d0c551c764d22c69c060f5961288c708625'
-    oldFile: !uuid '5463dc52987c384eea263ada8746e91bb12c2ad6'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/action/DecorationOrderAction.java:
-    newFile: !uuid '48c339458094d5e4fb5c4041d888c53b6c27628f'
-    oldFile: !uuid 'd597e6b2a069bda12577817802e59150ee45b076'
-gitCommitId: !uuid 'd440fddbcbe89072a52bacd45e91e18d271e91ea'
+    newFile: !uuid '998b16e2e8cb87d7529586fba1e3ab166be1857c'
+    oldFile: !uuid '8416ece91d1ee224cdf7127c0c1160bbd57ef88b'
+  /Develop/Source/Trunk/src/com/fanglin/quotation:
+    newFile: !uuid '7f2adab748e3a0eab4efb7408d9b6f6aab606fc2'
+    oldFile: !uuid '3f03216267f62e2236a913d2f9ed2803d6c79229'
+  /Develop/Source/Trunk/src/com/fanglin/quotation/service:
+    newFile: !uuid 'f710fe77340f4e648fad1a08126b9af5474961ca'
+    oldFile: !uuid 'd3423e69c1bb2d4105bb48f8aaacc7346d7f50a7'
+  /Develop/Source/Trunk/src/com/fanglin/quotation/service/impl:
+    newFile: !uuid '686fbbb8742f0a8643343507e109be3463fae24e'
+    oldFile: !uuid '190828f0b0606e0cb4fe5787cc8cd4a6c1ee940b'
+  /Develop/Source/Trunk/src/com/fanglin/quotation/service/impl/QuotationMaterialItemServiceImpl.java:
+    newFile: !uuid '53fa96a0001d830258a41684b9afdcbc09a97544'
+    oldFile: !uuid '16a1bfc6ccf69466b41fba0d245f9d8e6c234ec5'
+gitCommitId: !uuid 'baaf7b6de44f9be36c32f28255055a61a23bc90b'
 renames: {
   }
-revisionId: 93
+revisionId: 94
