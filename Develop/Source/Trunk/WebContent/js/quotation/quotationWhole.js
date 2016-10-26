@@ -780,28 +780,34 @@ var QuotationDetail = (function(){
 
 			$domain.append($dhead).append($dbody);
 
-			//1(工程量), 2(功能区总额), 3(不计算)
-			if(dv.type == 1){
-				if(dv.quotationFunctionAreaItems.length){
 
-					var _items = dv.quotationFunctionAreaItems;
 
-					_items = _items.sort(function(a, b){ // 按照报价版本中的主键顺序排序
-						if(a.quotationItemId == null || b.quotationItemId == null){
-							return b.quotationItemId - a.quotationItemId;
-						}else{
-							return a.quotationItemId - b.quotationItemId;
-						}
-					});
+			if(dv.quotationFunctionAreaItems.length){
 
-					$.each(_items, function(i,v){
-						var $item = that.createQuote( i + 1, v );
-						$item.appendTo($list);
+				var _items = dv.quotationFunctionAreaItems;
+
+				_items = _items.sort(function(a, b){ // 按照报价版本中的主键顺序排序
+					if(a.quotationItemId == null || b.quotationItemId == null){
+						return b.quotationItemId - a.quotationItemId;
+					}else{
+						return a.quotationItemId - b.quotationItemId;
+					}
+				});
+
+				$.each(_items, function(i,v){
+					var $item = that.createQuote( i + 1, v );
+					$item.appendTo($list);
+
+					//1(工程量), 2(功能区总额), 3(不计算)
+					if(dv.type == 1){
 						if(!isNaN($item.attr('data-totalprice'))){
 							sum = utils.changeThrDecimal(utils.accAdd(sum, parseFloat($item.attr('data-totalprice'))));
 						}
-					});
-				}
+					}
+
+
+
+				});
 			}
 
 			if(dv.type == 2){
@@ -810,6 +816,9 @@ var QuotationDetail = (function(){
 			if(dv.type == 3){
 				sum = 0;
 			}
+
+
+
 
 			$btns.$btnEdit.click(function(){//编辑功能区
 				domain.editDomain($domain);
@@ -1014,142 +1023,50 @@ var QuotationDetail = (function(){
 
 		options : {
 			add : function(){
-				$('#addSaleOrder').click(function(){
-					var num = $('.line', '#list').length;
+				var num = $('.line.existed', '#list').length;
 
-					var returnFlag = false;
-					var $lines = $('.line', '#list');
-					$lines.each(function(){
-						var $this = $(this);
-						if(!material.tools.checkRowValue($this)){
-							returnFlag = true;
-							return false;
-						};
-					});
+				quo.calculateQuoFees();
+				var $line = material.tools.addline(num + 1);
+				$line.appendTo('#list');
+			},
+			changeBtns : function($line){
+				$line.find('.option .ui-inline-save').remove();
 
-					if(returnFlag) return;
+				var $btnUpgrade = $('<div class="ui-pg-div action-buttons upgrade"><a href="javascript:void(0)" class="blue"><i class="icon-arrow-up bigger-110"></i></a></div>');
+				var $btnDiscount = $('<div class="ui-pg-div action-buttons discount"><a href="javascript:void(0)" class="purple"><i class="icon-arrow-down bigger-110"></i></a></div>');
 
-					material.tools.cyclTotal();
-					var $line = material.tools.addline(num + 1);
-					$line.appendTo('#list');
+				$line.find('.option').append($btnUpgrade).append($btnDiscount);
+
+				$btnDiscount.click(function(){
+					material.tools.changePice($line, 0);
 				});
+				$btnUpgrade.click(function(){
+					material.tools.changePice($line, 1);
+				});
+
 			},
 
-			submit : function(){
-				$('#submitSaleOrder').click(function(){
+			//升级和折扣保存按钮
+			saveMaterial : function(){
+				$('#saveMaterialBtn').click(function(){
 
-					com.clearValidator("#salesmanName", true);
+					if(!com.validate('saveMaterialBtn')){
+						var flag = $('#materialModal').attr('data-action');
+						var diff = $('#diff').val();
 
-					var options = {};
-
-					var materialBrandStr = "";
-					var materialBrandFlag = true;
-					var salesmanNameFlag = false;
-
-					if($("#salesmanName").val() == ""){
-						com.showTips($("#salesmanName"), "字段不能为空!", true);
-						salesmanNameFlag = true;
-					}
-
-					if(com.validate() || salesmanNameFlag)
-						return;
-
-					var $lines = $('li.selected', '#list');
-//		if(!$lines.length) return;
-
-					var returnFlag = false;
-					$lines.each(function(){
-						var $this = $(this);
-						if(!checkRowValue($this)){
-							returnFlag = true;
-							return false;
+						var options = {
+							"quotationMaterialItem.qmiId": $('#materialModal').attr('data-qmiid'),
+							"quotationMaterialItem.diff": diff
 						};
-					});
-
-					if(returnFlag) return;
-
-					cyclTotal();
-
-					if(materialSaleOrder.totalSum < 0){
-						com.showAlert(com.error, "当前录入订单总数小于0");
-						return false;
+						com.post(flag == 0 ? api.quotation.discountQuotationMaterialItem : api.quotation.upgradeQuotationMaterialItem, options, function(res){
+							$('#materialModal').modal('hide');
+							material.$line.find('.total').html(diff);
+							quo.calculateQuoFees();
+						});
 					}
 
-					materialBrandStr = $("#materialBrand_chosen span")[0].textContent;
-					var orderId = materialSaleOrder.materialSaleOrderItems.orderId.val();
-					var customerId = materialSaleOrderPostData["materialSubOrder.customerId"];
-					var customerName = materialSaleOrder.materialSaleOrderItems.customerName.val();
-
-					var materialType = materialBrandStr.split('-')[1];
-					var materialBrand = materialBrandStr.split('-')[0];
-
-					options["materialSubOrder.orderId"] = orderId;
-					options["materialSubOrder.orderAddr"] = materialSaleOrder.materialSaleOrderItems.orderAddr.val();
-					options["materialSubOrder.customerId"] = customerId;
-					options["materialSubOrder.customerName"] = customerName;
-					options["materialSubOrder.msoType"] = materialSaleOrder.materialSaleOrderItems.msoType.val();
-					options["materialSubOrder.des"] = materialSaleOrder.materialSaleOrderItems.des.val();
-					options["materialSubOrder.salesmanId"] = $('#salesmanName').val();
-					options["materialSubOrder.materialerId"] = $('#materialerName').val();
-					options["materialSubOrder.instoreId"] = $('#instoreName').val() ? $('#instoreName').val() : "";
-					options["materialSubOrder.materialType"] = materialType;
-					options["materialSubOrder.materialBrand"] = materialBrand;
-
-					var $list = $('li.selected', '#list');
-					$list.length && $list.each(function(i){
-						var $this = $(this);
-
-						options["materialSubOrderItems["+i+"].materialModelNo"] = $this.attr('materialModelNo');
-						options["materialSubOrderItems["+i+"].materialModelName"] = $this.find('.materialModelName input').val();
-						options["materialSubOrderItems["+i+"].materialTypeName"] = $this.find('.materialTypeName').text();
-						options["materialSubOrderItems["+i+"].materialBrandName"] = $this.find('.materialBrandName').text();
-						options["materialSubOrderItems["+i+"].measurementUnitName"] = $this.find('.measurementUnitName').text();
-						options["materialSubOrderItems["+i+"].materialUnitPrice"] = $this.find('.materialUnitPrice').text();
-						options["materialSubOrderItems["+i+"].materialPurchasePrice"] = $this.attr('materialPurchasePrice');
-						options["materialSubOrderItems["+i+"].discount"] = $this.find('.discount').text();
-						options["materialSubOrderItems["+i+"].salePrice"] = $this.find('.salePrice input').val();
-						options["materialSubOrderItems["+i+"].postDiscount"] = $this.find('.postDiscount input').val();
-						options["materialSubOrderItems["+i+"].price"] = $this.find('.price input').val();
-						options["materialSubOrderItems["+i+"].calcType"] = $this.attr('calcType');
-						options["materialSubOrderItems["+i+"].num"] = $this.find('.num input').val();
-						options["materialSubOrderItems["+i+"].total"] = $this.find('.total input').val();
-						options["materialSubOrderItems["+i+"].packageName"] = $this.find('.packageName input').val();
-						options["materialSubOrderItems["+i+"].des"] = $this.find('.des input').val();
-
-						if($this.attr('calcType') == 1){
-							options["materialSubOrderItems["+i+"].prePoint"] = $this.attr('point');
-						}else{
-							options["materialSubOrderItems["+i+"].prePoint"] = $this.attr('base');
-						}
-
-						if(materialBrand == ""){
-							materialBrand =  $this.find('.materialBrandName').text();
-						}else{
-							if(materialBrand !=  $this.find('.materialBrandName').text()){
-								materialBrandFlag = false;
-							}
-						}
-					});
-
-					if(!materialBrandFlag){
-						com.showAlert(com.error, "销售订单中,所有项目需要是相同品牌信息!");
-						return false;
-					}
-
-					var btn = $(this);
-					btn.button('loading');
-
-					com.post(api.material.addMaterialSubOrder, options, function(){
-						materialOrderPostData["materialOrder.orderId"] = orderId;
-						materialOrderPostData["materialOrder.customerId"] = customerId;
-						materialOrderPostData["materialOrder.customerName"] = customerName;
-
-						btn.button('reset');
-						com.switchPage(api.index.materialSubOrderIndex.url);
-					}, function(){
-						btn.button('reset');
-					});
 				});
+
 			},
 		},
 
@@ -1158,9 +1075,9 @@ var QuotationDetail = (function(){
 			addline : function (lineindex){
 				var tools = material.tools;
 
-				var $line = $('<li></li>').addClass('line');
+				var $line = $('<li></li>').addClass('line editable');
 				var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-				var $lineInfoWrap = $('<div></div>').addClass('line-wrap content');
+				var $lineInfoWrap = $('<div></div>').addClass('line-wrap content').css('width', '10%');
 				var $optWrap= $('<div></div>').addClass('line-wrap action');
 				var _lineInfoSet = [
 					{cellClass: "name materialModelName", hasInput : !0},
@@ -1281,15 +1198,16 @@ var QuotationDetail = (function(){
 				if(flag){
 
 					//给总价赋值
-					$line.find('.materialModelName input').val(0).attr('disabled',true);//名称
+					$line.find('.materialModelName').html(_materialModel.name );//名称
 					$line.find('.materialTypeName').text(_materialModel.category);//品类
 					$line.find('.materialBrandName').text(_materialModel.brand);//品牌
 					$line.find('.measurementUnitName').text(_materialModel.measurementUnit);//单位
-					$line.find('.total input').val(_materialModel.price).attr('disabled',true);//总价
-					$line.find('.des input').val(_materialModel.des).attr('disabled',true);//备注
+					$line.find('.total').html(_materialModel.price);//总价
+					$line.find('.des').html(_materialModel.des);//备注
 					$line.attr('data-qmiid', _materialModel.qmiId);
 					$line.attr('materialModelNo', _materialModel.no);
-					$line.addClass('existed');
+					$line.addClass('existed').removeClass('editable');
+					material.options.changeBtns($line);
 				}
 			},
 			//获取主材信息
@@ -1416,8 +1334,8 @@ var QuotationDetail = (function(){
 				var $list = $('.line.existed', '#list');
 				$list.length && $list.each(function(){
 					var $this = $(this);
-					if($this.find('.total input').val()){
-						_total = utils.accAdd(parseFloat($this.find('.total input').val()+''), _total);
+					if($this.find('.total').text()){
+						_total = utils.accAdd(parseFloat($this.find('.total').text()), _total);
 					}
 				});
 
@@ -1438,6 +1356,7 @@ var QuotationDetail = (function(){
             //添加主材项
 			addQuotationMaterialItem : function($line){
 				var options = {
+					'quotationMaterialItem.qid': quo.quotationid,
 					"quotationMaterialItem.no": $line.attr('materialModelNo'),
 					"quotationMaterialItem.name": $line.find('.materialModelName input').val(),
 					"quotationMaterialItem.category": $line.find('.materialTypeName').text(),
@@ -1447,15 +1366,27 @@ var QuotationDetail = (function(){
 					"quotationMaterialItem.des": $line.find('.des input').val()
 				};
 				com.post(api.quotation.addQuotationMaterialItem, options, function(res){
-					$line.find('.materialModelName input').attr('disabled', true);
-					$line.find('.total input').attr('disabled', true);
-					$line.find('.des input').attr('disabled', true);
-					$line.addClass('existed').attr('data-qmiid', res.quotationMaterialItem.qmiId);
+
+					var name = $line.find('.materialModelName input').val();
+					var total = $line.find('.total input').val();
+					var des = $line.find('.des input').val();
+
+					$line.find('.materialModelName').html(name);
+					$line.find('.total').html(total);
+					$line.find('.des').html(des);
+					$line.addClass('existed').removeClass('editable').attr('data-qmiid', res.quotationMaterialItem.qmiId);
+					material.options.changeBtns($line);
 					quo.calculateQuoFees();
+
+					if (!$('.line.editable', '#list').length){
+						material.options.add();
+					}
+
 				});
 			},
 			//删除主材项
 			deleteQuotationMaterialItem : function($line){
+
 				var options = {
 					"quotationMaterialItem.qmiId": $line.attr('data-qmiid')
 				};
@@ -1464,6 +1395,24 @@ var QuotationDetail = (function(){
 					material.tools.reorder();
 					quo.calculateQuoFees();
 				});
+			},
+
+			//升级折价报价中主材项 0:折扣, 1升级
+			changePice : function($line, flag){
+				//materialModal materialTitle diff
+
+				$('#diff').val(null);
+
+				$('#materialModal').attr({
+					'data-action' : flag,
+					'data-qmiid' : $line.attr('data-qmiid')
+				}).modal('show');
+
+				$('#materialTitle').text(flag == 0 ? '折扣' : '升级');
+
+				material.$line = $line;
+
+
 			},
 		},
 
@@ -1476,6 +1425,8 @@ var QuotationDetail = (function(){
 						var $line = that.tools.addline(i + 1).addClass('current').appendTo('#list');
 						that.tools.initline($line, v, true);
 					});
+					//添加一条空行
+					that.tools.addline(res.quotationMaterialItems.length + 1).addClass('current').appendTo('#list');
 				}else{
 					//添加一条空行
 					that.tools.addline(1).addClass('current').appendTo('#list');
@@ -1483,7 +1434,8 @@ var QuotationDetail = (function(){
 				}
 			}, null, false);
 
-			this.options.add();
+			that.options.saveMaterial();
+
 		},
 	};
 

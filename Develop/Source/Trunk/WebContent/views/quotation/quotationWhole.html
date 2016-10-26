@@ -94,7 +94,7 @@
 				<div class="row clearfix">
 					<div class="col-xs-12" >
 						<div class="tabbable">
-							<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+							<ul class="nav nav-tabs padding-12" id="myTab4">
 								<li class="active">
 									<a data-toggle="tab" href="#functionAreaDetailList">报价</a>
 								</li>
@@ -104,7 +104,7 @@
 								</li>
 							</ul>
 
-							<div class="tab-content">
+							<div class="tab-content" style="body: 0px;">
 								<div id="functionAreaDetailList" class="tab-pane in active">
 								</div>
 
@@ -133,7 +133,7 @@
 										<ul class="flex-table" id="list"></ul>
 
 										<div style="margin-top: 15px;" class="clearfix">
-											<button id="addSaleOrder" class="btn btn-success inline col-xs-1">添加</button>
+											<!--<button id="addSaleOrder" class="btn btn-success inline col-xs-1">添加</button>-->
 
 											<div class=" pull-right inline" style="margin-top: 10px">
 												<span>总价:</span>
@@ -366,6 +366,36 @@
 						<div class="modal-footer">
 							<button type="button" id="saveMrBtn" class="btn btn-primary">保存</button>
 							<button type="button" id="cancelMrBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--升级折价主材弹窗-->
+			<div class="modal fade" id="materialModal" tabindex="-1" data-backdrop="static">
+				<div class="modal-dialog">
+					<div class="modal-content col-md-12">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span>&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="materialTitle"></h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label class="col-md-3 control-label no-padding-right" for="manageRate">价格</label>
+									<div class="col-md-9">
+										<input type="text" id="diff" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="5"/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</form>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" id="saveMaterialBtn" class="btn btn-primary">保存</button>
+							<button type="button" id="cancelMBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</div>
 				</div>
