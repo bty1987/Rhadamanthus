@@ -96,18 +96,11 @@ public class QuotationMaterialItemServiceImpl implements QuotationMaterialItemSe
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		QuotationMaterialItemPO _quotationMaterialItemPO = new QuotationMaterialItemPO();
-		
-		BeanUtil.copyProperties(quotationMaterialItemPO, _quotationMaterialItemPO);
-		
-		_quotationMaterialItemPO.setDiff(quotationMaterialItemVO.getDiff());
-		_quotationMaterialItemPO.setStatus(QuotationMaterialItemPO.STATUS_INIT_INT);
-		
+		quotationMaterialItemPO.setDiff(quotationMaterialItemVO.getDiff());
 		quotationMaterialItemPO.setStatus(QuotationMaterialItemPO.STATUS_UPGRADE_INT);
 		
 		quotationPO.setMdiff(Arith.add(quotationPO.getMdiff(), quotationMaterialItemVO.getDiff()));
 		
-		quotationMaterialItemDao.save(_quotationMaterialItemPO);
 		quotationMaterialItemDao.update(quotationMaterialItemPO);
 		quotationDao.update(quotationPO);
 		
@@ -134,18 +127,11 @@ public class QuotationMaterialItemServiceImpl implements QuotationMaterialItemSe
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		QuotationMaterialItemPO _quotationMaterialItemPO = new QuotationMaterialItemPO();
-		
-		BeanUtil.copyProperties(quotationMaterialItemPO, _quotationMaterialItemPO);
-		
-		_quotationMaterialItemPO.setDiff(quotationMaterialItemVO.getDiff());
-		_quotationMaterialItemPO.setStatus(QuotationMaterialItemPO.STATUS_INIT_INT);
-		
+		quotationMaterialItemPO.setDiff(quotationMaterialItemVO.getDiff());
 		quotationMaterialItemPO.setStatus(QuotationMaterialItemPO.STATUS_DISCOUNT_INT);
 		
 		quotationPO.setMdiff(Arith.add(quotationPO.getMdiff(), quotationMaterialItemVO.getDiff()));
 		
-		quotationMaterialItemDao.save(_quotationMaterialItemPO);
 		quotationMaterialItemDao.update(quotationMaterialItemPO);
 		quotationDao.update(quotationPO);
 		

@@ -1408,7 +1408,7 @@ var QuotationDetail = (function(){
 					'data-qmiid' : $line.attr('data-qmiid')
 				}).modal('show');
 
-				$('#materialTitle').text(flag == 0 ? '折扣' : '升级');
+				$('#materialTitle').text(flag == 0 ? '折价' : '升级');
 
 				material.$line = $line;
 
