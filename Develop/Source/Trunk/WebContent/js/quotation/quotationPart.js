@@ -94,8 +94,10 @@ var QuotationDetail = (function(){
 			//初始化功能区添加弹层
 			com.post(api.quotation.queryFunctionAreaByVersionId, {"functionArea.versionId" : that.versionId}, function(data){
 				data.functionAreas.length && $.each(data.functionAreas, function(i, v){
-					var $dtempl = painter.createDomainTemplete(v);
-					that.quoModals.$domainTempletModal.find('.modal-body').append($dtempl);
+					if(v.type == 1){
+						var $dtempl = painter.createDomainTemplete(v);
+						that.quoModals.$domainTempletModal.find('.modal-body').append($dtempl);
+					}
 				});
 			}, null, false);
 			//初始化报价项选择弹层

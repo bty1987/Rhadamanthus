@@ -171,10 +171,9 @@ public class DecorationOrderAction extends BaseListAction {
 	}
 	
 	@Action(value = "changeDecorationOrderForType", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationOrderForType(){
+	public String changeDecorationOrderForType() throws FLException{
 		
-		
-		
+		decorationOrderService.changeDecorationOrderForType(decorationOrder, queryUserId());
 		
 		return SUCCESS;
 	}

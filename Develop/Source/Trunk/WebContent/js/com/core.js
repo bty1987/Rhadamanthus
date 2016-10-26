@@ -43,7 +43,6 @@ com = {
 		}
 		
 		if(config.demo){
-			
 			if(!url.demo){
 				com.showAlert(com.warning, "Demo状态不能完成此操作");
 				return;
