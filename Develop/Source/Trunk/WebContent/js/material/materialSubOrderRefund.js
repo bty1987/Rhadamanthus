@@ -123,6 +123,26 @@ jQuery(function($) {
 		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 	
+	$("#import").on("click", function(){
+		com.post(api.material.queryMaterialSubOrderRefund, materialSubOrderPostData, function(res){
+			
+			$.exceler({
+				column : [
+					["名称","materialModelName"],
+					['品类',"materialTypeName"],
+					['品牌','materialBrandName'],
+					['单位','measurementUnitName'],
+					['折扣','salePrice'],
+					['售价', 'price'],
+					['数量', 'num'],
+					['总价', 'total'],
+					['说明', 'des'],
+				],
+				list: res.materialSubOrderRefunds,
+			});
+		});
+	});
+	
 	$("#print").on("click", function(){
 		
 		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrder.msoId"] + "&time=" + params.loginTime;

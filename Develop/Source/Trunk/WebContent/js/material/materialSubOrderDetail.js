@@ -14,6 +14,26 @@ jQuery(function($) {
 		backBtn : $("#backBtn").on("click", function(){
 			com.switchPage(api.index.materialSubOrderIndex.url);
 		}),
+		importBtn: $('#importBtn').on("click", function(){
+			com.post(api.material.queryMaterialSubOrderItemByMsoId, materialSubOrderPostData, function(res){
+				
+				$.exceler({
+					column : [
+						["名称","materialModelName"],
+						['品类',"materialTypeName"],
+						['品牌','materialBrandName'],
+						['单位','measurementUnitName'],
+						['折扣','salePrice'],
+						['售价', 'price'],
+						['数量', 'num'],
+						['总价', 'total'],
+						['结算值', 'prePoint'],
+						['备注', 'des'],
+					],
+					list: res.materialSubOrderItems,
+				});
+			});
+		}),
 		rejectMaterialSubOrderModal : $("#rejectMaterialSubOrderModal").on('show.bs.modal',function(e){
 			$("#refund").val("");
 			$("#refundDes").val("");
@@ -607,7 +627,6 @@ jQuery(function($) {
 			com.showAlert(com.error, "数据提交失败!");
 		});
 	}
-
 
 	function cancleAll($line, v){
 		var _index = $line.index();

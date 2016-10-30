@@ -613,11 +613,32 @@ var decorationUtils = {
 					decorationUtils.addPicture($picture, decorationPicture);
 				}
 			}
+			
+			$('.ace-thumbnails [data-rel="colorbox"]').colorbox({
+				reposition:true,
+				scalePhotos:true,
+				scrolling:false,
+				previous:'<i class="icon-arrow-left"></i>',
+				next:'<i class="icon-arrow-right"></i>',
+				close:'&times;',
+				current:'{current} of {total}',
+				maxWidth:'100%',
+				maxHeight:'100%',
+				onOpen:function(){
+					document.body.style.overflow = 'hidden';
+				},
+				onClosed:function(){
+					document.body.style.overflow = 'auto';
+				},
+				onComplete:function(){
+					$.colorbox.resize();
+				}
+			});
 		});
 	},addPicture:function(e, i){
 		var $li = $('<li></li>').appendTo(e);
 		var $img = $('<img></img>').attr('width', 200).attr('height', 200);
-		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
+		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li); 
 		
 		var $tags = $('<div></div>').addClass('tags').appendTo($li);
 		var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -633,14 +654,16 @@ var decorationUtils = {
 		
 	}, addCAD: function(e, i){
 		
+		var $name = i.name;
+		
 		var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').appendTo(e);
 		var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
 		var $downIcon = $('<a></a>').addClass('icon-download-alt').appendTo($infoboxIcon);
 		
-		com.downloadFile($downIcon, i.path, i.name);
+		com.downloadFile($downIcon, i.path, $name);
 		
 		var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
-		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.name).appendTo($infoboxData);
+		var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxData);
 		var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxData);
 		
 	}, initConstructionScheduleInfo: function(){
