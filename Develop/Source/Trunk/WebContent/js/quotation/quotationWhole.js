@@ -81,10 +81,29 @@ var QuotationDetail = (function(){
 			};
 			//初始化功能区添加弹层
 			com.post(api.quotation.queryFunctionAreaByVersionId, {"functionArea.versionId" : that.versionId}, function(data){
-				data.functionAreas.length && $.each(data.functionAreas, function(i, v){
-					var $dtempl = painter.createDomainTemplete(v);
-					that.quoModals.$domainTempletModal.find('.modal-body').append($dtempl);
-				});
+
+				if(data.functionAreas.length){
+
+					var _type1 = $('<div class="clearfix"></div>');
+					var _type2 = $('<div class="clearfix"></div>');
+					var _type3 = $('<div class="clearfix"></div>');
+
+					that.quoModals.$domainTempletModal.find('.modal-body')
+						.append(_type1).append('<div class="hr hr8 hr-double"></div>')
+						.append(_type2).append('<div class="hr hr8 hr-double"></div>')
+						.append(_type3);
+
+
+					$.each(data.functionAreas, function(i, v){
+
+						var $dtempl = painter.createDomainTemplete(v);
+
+						if(v.type == 1){$dtempl.appendTo(_type1);}
+						if(v.type == 2){$dtempl.appendTo(_type2);}
+						if(v.type == 3){$dtempl.appendTo(_type3);}
+					});
+				}
+
 			}, null, false);
 			//初始化报价项选择弹层
 			var extraParams  = {"quotationItem.versionId": quo.versionId};
@@ -142,15 +161,17 @@ var QuotationDetail = (function(){
 				var sum;
 				var $this = $(this);
 				var _fatype = $this.attr('data-fatype');
-				if(_fatype == 1){
+				if(_fatype == 1 || _fatype == 2){
 					
 					if(func){
 						func($this);
 					}
-					
-					sum = parseFloat($this.attr('data-totalprice'));
-					_totalfee = utils.changeThrDecimal(utils.accAdd(_totalfee, sum));
 				}
+				sum = parseFloat($this.attr('data-totalprice'));
+				if(_fatype == 2){
+					sum =  utils.accAdd(sum , parseFloat($this.attr('data-extra-totalprice')))
+				}
+				_totalfee = utils.changeThrDecimal(utils.accAdd(_totalfee, sum));
 			});
 
 			$('#quotionMoney').text( _totalfee );
@@ -164,28 +185,44 @@ var QuotationDetail = (function(){
 		},
 		//计算功能区总价
 		calculateDomainFees  : function($domain, func){
-			var _domanFees = 0;
+			var _domanFees = 0, _domanExtraFees = 0;
 			var $arr = $('.fl-quo-item', $domain);
 			var sum = 0;
 
 			var fatype = $domain.attr('data-fatype');
 
-			if(fatype == 1){
-				if($arr.length){
-					$arr.each(function(){
-						$this = $(this);
-						if(func){
-							func($this);
-						}
-						var _totlaPrice = parseFloat($this.attr("data-totalprice"));
+			if($arr.length){
+				$arr.each(function(){
+					var _totlaPrice = 0;
+					$this = $(this);
+					if(func){
+						func($this);
+					}
+
+					_totlaPrice = parseFloat($this.attr("data-totalprice"));
+
+					if(fatype == 1){
 						sum = utils.changeThrDecimal(utils.accAdd(sum, _totlaPrice));
-					});
+					}
+
+					if(fatype == 2 && $this.find('.type').attr('data-type') != 4){
+						_domanExtraFees = utils.changeThrDecimal(utils.accAdd(_domanExtraFees, _totlaPrice));
+					}
+
+				});
+				if(fatype == 1){
 					$domain.attr('data-totalprice', sum);
 					_domanFees = sum;
 				}
+				if(fatype == 2){
+					$domain.attr('data-extra-totalprice', _domanExtraFees);
+				}
 			}
+
 			if(fatype == 2){
 				_domanFees = utils.changeThrDecimal(parseFloat($domain.attr('data-totalprice')));
+
+				_domanFees = utils.changeThrDecimal(utils.accAdd(_domanExtraFees, _domanFees));
 			}
 
 			return _domanFees;
@@ -331,10 +368,15 @@ var QuotationDetail = (function(){
 						that.insertDomainByOrder(v.functionAreaOrder, $domain, $aimDomains, false);
 
 						sum = parseFloat($domain.attr('data-totalprice'));
+
+						if(v.type == 2){
+							sum = utils.accAdd(sum, parseFloat($domain.attr('data-extra-totalprice')));
+						}
+
 						sumd = parseFloat($domain.attr('data-d-totalprice'));
 
 						var _index = $domain.index();
-						$dmoney = painter.createDomainMoney(sumd, v);
+						$dmoney = painter.createDomainMoney(sum, v);
 						if(_index == 0){
 							$dmoney.appendTo($('#functionAreaSumList'));
 						}else{
@@ -536,7 +578,6 @@ var QuotationDetail = (function(){
 				}else{
 					$q2[$q2.length] = v;
 				}
-
 			});
 
 			$q2.length && $.each($q2, function(i, v){
@@ -746,6 +787,7 @@ var QuotationDetail = (function(){
 			};
 
 			var sum = 0; //功能区总价(折前)
+			var extraSum = 0;
 
 			$domain = $('<div></div>').addClass('widget-box transparent').attr({
 				"data-dlevel" : dv.functionAreaOrder,
@@ -780,8 +822,6 @@ var QuotationDetail = (function(){
 
 			$domain.append($dhead).append($dbody);
 
-
-
 			if(dv.quotationFunctionAreaItems.length){
 
 				var _items = dv.quotationFunctionAreaItems;
@@ -805,20 +845,23 @@ var QuotationDetail = (function(){
 						}
 					}
 
-
-
+					if(dv.type == 2){
+						if(v.type != 4 && !isNaN($item.attr('data-totalprice'))){
+							extraSum = utils.changeThrDecimal(utils.accAdd(extraSum, parseFloat($item.attr('data-totalprice'))));
+						}
+					}
 				});
 			}
 
 			if(dv.type == 2){
 				sum = utils.changeThrDecimal(dv.total);
+				$domain.attr('data-extra-totalprice', extraSum);
+
 			}
+			
 			if(dv.type == 3){
 				sum = 0;
 			}
-
-
-
 
 			$btns.$btnEdit.click(function(){//编辑功能区
 				domain.editDomain($domain);
@@ -931,7 +974,7 @@ var QuotationDetail = (function(){
 		createDomainTemplete : function(v){
 			var $label = $('<label></label>').addClass('col-xs-6');
 			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.faId);
-			var $span = $('<span></span>').addClass('lbl').text(v.functionAreaName);
+			var $span = $('<span></span>').addClass('lbl').text(v.functionAreaName + (v.type == 2 ? '(总价固定)' : v.type == 3 ? '(基础，不计算)' : ''));
 			$label.append($radio).append($span);
 			return $label;
 		},
@@ -1003,7 +1046,8 @@ var QuotationDetail = (function(){
 	};
 
 	var material = {
-
+		//0: 初始 , 1: 升级 , 2: 折价
+		statusSetting : ['初始', '升级', '折价'],
 		materialSaleOrder : {
 			saveBtn:  $("#saveBtn"),
 			cancellBtn: $("#cancelBtn"),
@@ -1060,19 +1104,19 @@ var QuotationDetail = (function(){
 						};
 						com.post(flag == 0 ? api.quotation.discountQuotationMaterialItem : api.quotation.upgradeQuotationMaterialItem, options, function(res){
 							$('#materialModal').modal('hide');
-							material.$line.find('.total').html(diff);
+							material.$line.find('.diff').html(diff);
+							material.$line.find('.status').html(flag == 0 ? material.statusSetting[2] : material.statusSetting[1]);
 							quo.calculateQuoFees();
 						});
 					}
-
 				});
-
 			},
 		},
 
 		tools : {
 			//添加一个空行
 			addline : function (lineindex){
+
 				var tools = material.tools;
 
 				var $line = $('<li></li>').addClass('line editable');
@@ -1085,7 +1129,9 @@ var QuotationDetail = (function(){
 					{cellClass: "brand materialBrandName"},
 					{cellClass: "unit measurementUnitName"},
 					//{cellClass: "num", hasInput : !0},
+					{cellClass: "type status", hasInput : !0},
 					{cellClass: "money total", hasInput : !0},
+					{cellClass: "money diff", hasInput : !0},
 					{cellClass: "remark des", hasInput : !0},
 				];
 
@@ -1189,6 +1235,10 @@ var QuotationDetail = (function(){
 					$line.find('.materialTypeName').text(_materialModel.materialTypeName);
 					$line.find('.materialBrandName').text(_materialModel.materialBrandName);
 					$line.find('.measurementUnitName').text(_materialModel.measurementUnitName);
+
+					$line.find('.diff').text('0');
+					$line.find('.status').text(material.statusSetting[0]);
+
 					$line.attr('materialModelNo', _materialModel.materialModelNo);
 				}
 			},
@@ -1204,6 +1254,10 @@ var QuotationDetail = (function(){
 					$line.find('.measurementUnitName').text(_materialModel.measurementUnit);//单位
 					$line.find('.total').html(_materialModel.price);//总价
 					$line.find('.des').html(_materialModel.des);//备注
+
+					$line.find('.diff').text(_materialModel.diff);
+					$line.find('.status').text(material.statusSetting[_materialModel.status]);
+
 					$line.attr('data-qmiid', _materialModel.qmiId);
 					$line.attr('materialModelNo', _materialModel.no);
 					$line.addClass('existed').removeClass('editable');
@@ -1334,8 +1388,15 @@ var QuotationDetail = (function(){
 				var $list = $('.line.existed', '#list');
 				$list.length && $list.each(function(){
 					var $this = $(this);
-					if($this.find('.total').text()){
-						_total = utils.accAdd(parseFloat($this.find('.total').text()), _total);
+					if($this.find('.diff').text()){
+						var _status = $this.find('.status').text();
+						var _money = $this.find('.diff').text();
+						if( _status == material.statusSetting[1]){
+							_money = parseFloat(_money);
+						}else{
+							_money = -parseFloat(_money);
+						}
+						_total = utils.accAdd(_money, _total);
 					}
 				});
 
@@ -1381,7 +1442,6 @@ var QuotationDetail = (function(){
 					if (!$('.line.editable', '#list').length){
 						material.options.add();
 					}
-
 				});
 			},
 			//删除主材项
@@ -1411,8 +1471,6 @@ var QuotationDetail = (function(){
 				$('#materialTitle').text(flag == 0 ? '折价' : '升级');
 
 				material.$line = $line;
-
-
 			},
 		},
 
@@ -1435,7 +1493,6 @@ var QuotationDetail = (function(){
 			}, null, false);
 
 			that.options.saveMaterial();
-
 		},
 	};
 
@@ -1474,13 +1531,16 @@ var QuotationDetail = (function(){
 						$domain.appendTo($('#functionAreaDetailList'));
 
 						sum = parseFloat($domain.attr('data-totalprice'));
+
+						if(v.type == 2){
+							sum = utils.accAdd(sum, parseFloat($domain.attr('data-extra-totalprice')));
+						}
+
 						$dmoney = painter.createDomainMoney(sum, v);
 						$dmoney.appendTo($('#functionAreaSumList'));
 						_totalfee = utils.changeThrDecimal(utils.accAdd(_totalfee, sum));
 					});
-
 				}
-
 			}, null, false);
 
 			quo.init();

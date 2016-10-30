@@ -617,7 +617,6 @@ var QuotationDetail = (function(){
 				}else{
 					$q2[$q2.length] = v;
 				}
-
 			});
 
 			$q2.length && $.each($q2, function(i, v){
@@ -780,6 +779,7 @@ var QuotationDetail = (function(){
 				if($this.val() && $('input[data-qiid="' + $this.val() +'"]', domain.nowEditDomain).length){
 					return;
 				}
+				
 				var _quotval = {
 					"discount" : $this.attr('data-discount'),
 					"content" : $this.attr('data-des'),
@@ -930,9 +930,11 @@ var QuotationDetail = (function(){
 				_dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(quo.basicParams['quotation.discount'], 10) : 1));//折后单价1打折，0不打折
 				_dcp = utils.changeThrDecimal(_dcp);
 			}
+			
 			if(qv.type == 2){
 				_dcp =  qv.unitPrice;
 			}
+			
 			if(qv.type == 3){
 				_dcp = qv.unitPrice + quo.notSalesmanRate;
 			}

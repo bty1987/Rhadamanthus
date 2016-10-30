@@ -732,15 +732,15 @@ jQuery(function($) {
 	
 	decorationUtils.loadHuploadify("designPictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
-	}, "btn-success");
+	}, "btn btn-success");
 	
 	decorationUtils.loadHuploadify("projectPictureUpload", "上传工程图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
 		decorationUtils.addDecorationPicture(data, 2, "projectPictures");
-	}, "btn-primary");
+	}, "btn btn-primary");
 	
 	decorationUtils.loadHuploadify("CADUpload", "上传工程文件", "*.dwg;*.dwt", false, function(data){
 		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
-	}, "btn-warning");
+	}, "btn btn-warning");
 });
 
 function submintPayment(paymentId, paymentType){

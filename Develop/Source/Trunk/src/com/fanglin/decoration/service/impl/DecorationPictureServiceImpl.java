@@ -62,8 +62,13 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO);
 		
+		String name = decorationPictureVO.getName();
+		String _name = name.split(".")[0];
+		String _suffix = name.split(".")[1];
+		
 		decorationPicturePO.setUserPO(new UserPO(userId));
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationPicturePO.setName(String.format("%s.%s", _name.substring(0, _name.length() > 8 ? 8 : _name.length()), _suffix));
 		
 		orderDesignPictureDao.save(decorationPicturePO);
 		
