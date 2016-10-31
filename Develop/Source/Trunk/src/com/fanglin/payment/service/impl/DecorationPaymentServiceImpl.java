@@ -190,6 +190,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		if(filters.size() == 0) return;
 		
+		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
+		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
+		
 		pageDecorationPayment(paging, filters);
 	}
 	
@@ -1340,9 +1343,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 		List<DecorationPaymentPO> decorationPaymentPOs = null;
-		
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
 		
 		decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
 		

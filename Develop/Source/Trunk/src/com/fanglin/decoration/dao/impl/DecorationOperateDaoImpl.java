@@ -14,14 +14,14 @@ package com.fanglin.decoration.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
-import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
+import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.po.DecorationOperatePO;
 
-@Repository("decorationOrderOperateHistoryDao")
-public class DecorationOrderOperateHistoryDaoImpl extends DaoImpl<DecorationOrderOperateHistoryPO> implements DecorationOrderOperateHistoryDao {
+@Repository("decorationOperateDao")
+public class DecorationOperateDaoImpl extends DaoImpl<DecorationOperatePO> implements DecorationOperateDao {
 	
-	public DecorationOrderOperateHistoryDaoImpl(){
-		super(DecorationOrderOperateHistoryPO.class);
+	public DecorationOperateDaoImpl(){
+		super(DecorationOperatePO.class);
 	}
 
 }

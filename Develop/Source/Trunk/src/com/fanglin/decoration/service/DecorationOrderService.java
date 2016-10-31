@@ -64,8 +64,6 @@ public interface DecorationOrderService {
 
 	public void createDecorationOrder(DecorationOrderVO decorationOrderVO) throws FLException;
 
-	public void createDecorationOrderForMaterial(DecorationOrderVO decorationOrderVO) throws FLException;
-	
 	public int obsoleteDecorationOrder(DecorationOrderVO decorationOrderVO, String userName) throws FLException;
 
 	public int terminalDecorationOrder(DecorationOrderVO decorationOrderVO, float refundValue, float paymentValue, String userId) throws FLException;

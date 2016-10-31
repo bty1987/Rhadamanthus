@@ -182,7 +182,7 @@ public class DecorationOrderAction extends BaseListAction {
 	public String obsoleteDecorationOrder() throws FLException{
 
 		decorationOrder.setDesignerId(queryUserId());
-		decorationOrderService.obsoleteDecorationOrder(decorationOrder, queryUserName());
+		decorationOrderService.obsoleteDecorationOrder(decorationOrder, queryUserId());
 		
 		return SUCCESS;
 	}

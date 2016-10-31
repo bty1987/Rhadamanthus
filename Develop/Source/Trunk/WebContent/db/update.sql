@@ -31,7 +31,21 @@ CREATE TABLE `quotationmaterialitem` (
   KEY `indexone` (`qid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
-
+DROP TABLE IF EXISTS `decorationoperate`;
+CREATE TABLE `decorationoperate` (
+  `doId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `targerId` varchar(15),
+  `operaterId` varchar(15),
+  `operateTime` timestamp NULL DEFAULT NULL,
+  `value` float NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `des` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`doId`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`operateTime`, `type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
 
 
 

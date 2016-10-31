@@ -638,6 +638,22 @@ CREATE TABLE `decorationdesignerregionrank` (
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
 
+DROP TABLE IF EXISTS `decorationoperate`;
+CREATE TABLE `decorationoperate` (
+  `doId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `targerId` varchar(15),
+  `operaterId` varchar(15),
+  `operateTime` timestamp NULL DEFAULT NULL,
+  `value` float NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `des` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`doId`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`operateTime`, `type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
+
 DROP TABLE IF EXISTS `decorationorder`;
 CREATE TABLE `decorationorder` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,

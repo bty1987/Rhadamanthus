@@ -40,25 +40,21 @@ import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
+import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
-import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
+import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.DecorationOrderService;
 import com.fanglin.decoration.vo.DecorationOrderExportVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -111,19 +107,16 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 	
 	@Autowired
-	private DecorationBelongDao orderBelongInfoDao;
-	
-	@Autowired
-	private MessageService messageService;
-	
-	@Autowired
-	private DecorationOrderOperateHistoryDao decorationOrderOperateHistoryDao;
+	private DecorationBelongDao decorationBelongDao;
 	
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
 	
 	@Autowired
 	private DecorationRankService decorationRankService;
+	
+	@Autowired
+	private DecorationOperateDao decorationOperateDao;
 	
 	@Autowired
 	private DecorationOrderDesignDepartmentRightDao decorationOrderDesignDepartmentRightDao;
@@ -278,7 +271,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){ // 设计归属
@@ -518,7 +511,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
@@ -810,7 +803,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			}
 		}
 		
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIds(orderIds);
+		List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderIds(orderIds);
 		
 		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			
@@ -1110,12 +1103,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			newDecorationOrderPO.setAutoId(decorationOrderPO.getAutoId());
 			newDecorationOrderPO.setOrderId(newOrderId);
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderId(oldOrderId);
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(oldOrderId);
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 				orderBelongInfoPO.setDecorationOrderPO(newDecorationOrderPO);
 				
-				orderBelongInfoDao.update(orderBelongInfoPO);
+				decorationBelongDao.update(orderBelongInfoPO);
 			}
 			
 			List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(oldOrderId);
@@ -1306,7 +1299,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongDesignerInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		belongDesignerInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongDesignerInfo.setDecorationOrderPO(decorationOrderPO);
-		orderBelongInfoDao.saveOrUpdate(belongDesignerInfo);
+		decorationBelongDao.saveOrUpdate(belongDesignerInfo);
 		
 		DecorationBelongInfoPO belongsalesmanInfo = new DecorationBelongInfoPO();
 		belongsalesmanInfo.setBelongDeptPO(decorationOrderPO.getSalesmanPO().getDept());
@@ -1326,24 +1319,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongsalesmanInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongsalesmanInfo.setDecorationOrderPO(decorationOrderPO);
 		
-		orderBelongInfoDao.saveOrUpdate(belongsalesmanInfo);
-		
-		//通知业务员及设计师
-		
-		StringBuffer contents = new StringBuffer();
-		contents.append("您有新的订单,订单号:");
-		contents.append(decorationOrderPO.getOrderId());
-		
-		MessageVO message = new MessageVO();
-		message.setContents(contents.toString());
-		message.setReceiver(new UserVO(decorationOrderPO.getDesignerPO().getUserId()));
-		message.setSender(new UserVO(decorationOrderVO.getCreateUserId()));
-		message.setType(MessagePO.MESSAGE_TYPE_BELONG_STR);
-		
-		messageService.sendMessage(message);
-		
-		message.setReceiver(new UserVO(decorationOrderPO.getSalesmanPO().getUserId()));
-		messageService.sendMessage(message);
+		decorationBelongDao.saveOrUpdate(belongsalesmanInfo);
 		
 		DecorationPaymentPO designFee = new DecorationPaymentPO();
 		
@@ -1353,81 +1329,46 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		designFee.setDecorationOrderPO(decorationOrderPO);
 		
 		decorationPaymentDao.save(designFee);
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void createDecorationOrderForMaterial(DecorationOrderVO decorationOrderVO) throws FLException{
-		DecorationOrderPO decorationOrderPO = new DecorationOrderPO();
 		
-		if(queryDecorationOrderByVillageIdAHouseNumber(decorationOrderVO) != null){
-			throw new FLException(140034, "订单楼盘,楼号已存在");
-		}
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+		decorationOperatePO.setDecorationOrder(decorationOrderPO);
+		decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setType(DecorationOperatePO.TYPE_CREATE_DECORATION_ORDER_INT);
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setDes("创建订单");
 		
-		QuotationVersionPO versionPO = quotationVersionDao.queryQuotationVersionByDefaultFlag(1).get(0);
-		decorationOrderPO.setVersionPO(versionPO);
+		decorationOperateDao.save(decorationOperatePO);
 		
-		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate);
+		DecorationOperatePO designDecorationOperatePO = new DecorationOperatePO();
+		designDecorationOperatePO.setDecorationOrder(decorationOrderPO);
+		designDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		designDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		designDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
+		designDecorationOperatePO.setType(DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT);
+		designDecorationOperatePO.setValue(1f);
+		designDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		designDecorationOperatePO.setDes("订单设计归属");
 		
-		String orderId = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		decorationOperateDao.save(designDecorationOperatePO);
 		
-		decorationOrderPO.setOrderId(orderId);
-		decorationOrderPO.setBackOrderContent(decorationOrderVO.getBackOrderContent());
-		decorationOrderPO.setBackOrderName(decorationOrderVO.getBackOrderName());
-		decorationOrderPO.setBackOrderPhone(decorationOrderVO.getBackOrderPhone());
-		decorationOrderPO.setNotSalesmanContent(decorationOrderVO.getNotSalesmanContent());
-		decorationOrderPO.setNotSalesmanName(decorationOrderVO.getNotSalesmanName());
-		decorationOrderPO.setNotSalesmanRate(decorationOrderVO.getNotSalesmanRate());
-		decorationOrderPO.setNotSalesmanPhone(decorationOrderVO.getNotSalesmanPhone());
-		decorationOrderPO.setHouseArea(decorationOrderVO.getHouseArea());
-		decorationOrderPO.setFreeArea((float) 0);
-		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
-		decorationOrderPO.setHouseNumber(decorationOrderVO.getHouseNumber());
-		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
-		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
-		decorationOrderPO.setOrderTotalPrice((float) 0);
-		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());
-		decorationOrderPO.setCompany(decorationOrderVO.getCompany());
+		DecorationOperatePO salesmanDecorationOperatePO = new DecorationOperatePO();
+		salesmanDecorationOperatePO.setDecorationOrder(decorationOrderPO);
+		salesmanDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		salesmanDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesmanDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
+		salesmanDecorationOperatePO.setType(DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+		salesmanDecorationOperatePO.setValue(1f);
+		salesmanDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		salesmanDecorationOperatePO.setDes("订单业务归属");
 		
-		decorationOrderPO.setCustomerPO(new CustomerPO(decorationOrderVO.getCustomer().getId()));
-		decorationOrderPO.setVillagePO(new VillagePO(decorationOrderVO.getVillage().getVillageId()));
-		
-		decorationOrderPO.setDesignerPO(new UserPO(decorationOrderVO.getDesignerId()));
-		decorationOrderPO.setSalesmanPO(new UserPO(decorationOrderVO.getSalesmanId()));
-		
-		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		UserPO operater = new UserPO(decorationOrderVO.getCreateUserId());
-		decorationOrderPO.setCreateUserPO(operater);
-			
-		decorationOrderPO.setProjectStatus(DecorationOrderPO.PROJECTSTATUS_WAITING_STR);
-		
-		decorationOrderDao.save(decorationOrderPO);
-		decorationOrderDao.refresh(decorationOrderPO);
-		
-		//通知业务员及设计师
-		
-		MessageVO message = new MessageVO();
-		message.setContents("您有新的主材订单,订单号:" + decorationOrderPO.getOrderId());
-		message.setSender(new UserVO(decorationOrderVO.getCreateUserId()));
-		message.setType(MessagePO.MESSAGE_TYPE_BELONG_STR);
-		
-		if(decorationOrderPO.getDesignerPO() != null){
-			message.setReceiver(new UserVO(decorationOrderPO.getDesignerPO().getUserId()));
-			messageService.sendMessage(message);
-		}
-		
-		if(decorationOrderPO.getSalesmanPO()!=null){
-			message.setReceiver(new UserVO(decorationOrderPO.getSalesmanPO().getUserId()));
-			messageService.sendMessage(message);
-		}
+		decorationOperateDao.save(salesmanDecorationOperatePO);
 		
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int obsoleteDecorationOrder(DecorationOrderVO decorationOrderVO, String userName) throws FLException{
+	public int obsoleteDecorationOrder(DecorationOrderVO decorationOrderVO, String userId) throws FLException{
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
 		if(decorationOrderPO == null){
@@ -1458,15 +1399,17 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_WASTE_STR);
 		
-		decorationOrderDao.saveOrUpdate(decorationOrderPO);
+		decorationOrderDao.update(decorationOrderPO);
 		
-		DecorationOrderOperateHistoryPO decorationOrderOperateHistoryPO = new DecorationOrderOperateHistoryPO();
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+		decorationOperatePO.setDecorationOrder(decorationOrderPO);
+		decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setDes("废弃订单");
 		
-		decorationOrderOperateHistoryPO.setOrderId(decorationOrderPO.getOrderId());
-		decorationOrderOperateHistoryPO.setDes(String.format("订单废单,操作人:%s", userName));
-		decorationOrderOperateHistoryPO.setOperateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-		
-		decorationOrderOperateHistoryDao.save(decorationOrderOperateHistoryPO);
+		decorationOperateDao.save(decorationOperatePO);
 		
 		return 0;
 	}
@@ -1530,6 +1473,16 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, orderTotalPrice, currentTimeStr);
 			}
 			
+			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+			decorationOperatePO.setDecorationOrder(decorationOrderPO);
+			decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
+			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+			decorationOperatePO.setDes("订单合同终止");
+			
+			decorationOperateDao.save(decorationOperatePO);
+			
 			return 0;
 		}
 
@@ -1550,15 +1503,17 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderPO.setQuotationTimeLimit(decorationOrderPO.getQuotationTimeLimit() - 1);
 			
 			decorationOrderDao.update(decorationOrderPO);
+			
+			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+			decorationOperatePO.setDecorationOrder(decorationOrderPO);
+			decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationOperatePO.setType(DecorationOperatePO.TYPE_SUB_DECORATION_QUOTATION_NUM_INT);
+			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+			decorationOperatePO.setDes("订单报价限制次数减少");
+			
+			decorationOperateDao.save(decorationOperatePO);
 		}
-		
-		DecorationOrderOperateHistoryPO decorationOrderOperateHistoryPO = new DecorationOrderOperateHistoryPO();
-		
-		decorationOrderOperateHistoryPO.setOrderId(decorationOrderPO.getOrderId());
-		decorationOrderOperateHistoryPO.setDes(String.format("订单增加复制次数,操作人:%s", userName));
-		decorationOrderOperateHistoryPO.setOperateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-		
-		decorationOrderOperateHistoryDao.save(decorationOrderOperateHistoryPO);
 		
 		return 0;
 	}
