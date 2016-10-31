@@ -30,8 +30,10 @@ import com.fanglin.approval.vo.ApprovalOrderBelongItemVO;
 import com.fanglin.approval.vo.ApprovalOrderBelongVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
+import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.information.po.MessagePO;
@@ -61,6 +63,9 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 	
 	@Autowired
 	private DecorationBelongDao orderBelongInfoDao;
+	
+	@Autowired
+	private DecorationOperateDao decorationOperateDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -210,6 +215,18 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_REPLACE_STR);
 			orderBelongInfoDao.update(orderBelongInfoPO);
+			
+			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+			decorationOperatePO.setDecorationOrder(decorationOrderPO);
+			decorationOperatePO.setOperater(approvalPO.getReceiver());
+			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+			decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) ? DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+			decorationOperatePO.setValue(Arith.sub(0f, orderBelongInfoPO.getBelongRate()));
+			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+			decorationOperatePO.setDes("订单业务归属");
+			
+			decorationOperateDao.save(decorationOperatePO);
 		}
 		
 		List<ApprovalOrderBelongItemPO> approvalOrderBelongItemPOs = approvalOrderBelongItemDao.queryApprovalOrderBelongItemByAobId(approvalOrderBelongPO.getAobId());
@@ -241,6 +258,18 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			orderBelongInfoPO.setBelongType(approvalOrderBelongPO.getBelongType());
 			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 			orderBelongInfoDao.save(orderBelongInfoPO);
+			
+			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+			decorationOperatePO.setDecorationOrder(decorationOrderPO);
+			decorationOperatePO.setOperater(approvalPO.getReceiver());
+			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+			decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) ? DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+			decorationOperatePO.setValue(orderBelongInfoPO.getBelongRate());
+			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+			decorationOperatePO.setDes("订单业务归属");
+			
+			decorationOperateDao.save(decorationOperatePO);
 		}
 		
 		if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){

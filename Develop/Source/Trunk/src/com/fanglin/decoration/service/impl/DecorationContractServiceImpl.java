@@ -23,14 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.dao.DecorationContractDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.dao.DecorationOrderOperateHistoryDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
-import com.fanglin.decoration.po.DecorationContractPO;
-import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationContractDao;
+import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationContractPO;
+import com.fanglin.decoration.po.DecorationOperatePO;
+import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.department.po.DepartmentPO;
@@ -59,9 +59,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
-	private DecorationOrderOperateHistoryDao decorationOrderOperateHistoryDao;
-	
-	@Autowired
 	private QuotationDao quotationDao;
 	
 	@Autowired
@@ -72,6 +69,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	
 	@Autowired
 	private ApprovalDao approvalDao;
+	
+	@Autowired
+	private DecorationOperateDao decorationOperateDao;
 	
 	@Override
 	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException{
@@ -210,7 +210,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
-			orderBelongInfoDao.saveOrUpdate(orderBelongInfoPO);
+			orderBelongInfoDao.update(orderBelongInfoPO);
 		}
 		
 		orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
@@ -218,7 +218,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
-			orderBelongInfoDao.saveOrUpdate(orderBelongInfoPO);
+			orderBelongInfoDao.update(orderBelongInfoPO);
 		}
 		
 		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_SIGNED_STR);
@@ -229,7 +229,14 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationOrderPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 		
-		decorationOrderDao.saveOrUpdate(decorationOrderPO);
+		decorationOrderDao.update(decorationOrderPO);
+		
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+		decorationOperatePO.setDecorationOrder(decorationOrderPO);
+		decorationOperatePO.setOperater(new UserPO(userId));
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setDes("签订合同");
 		
 		if(!resignFlag){
 			
@@ -269,15 +276,13 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 				decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, rank, currentTimeStr);
 				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, rank, currentTimeStr);
 			}
+			
+			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
+		}else{
+			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGNED_DECORATION_ORDER_INT);
 		}
 		
-		DecorationOrderOperateHistoryPO decorationOrderOperateHistoryPO = new DecorationOrderOperateHistoryPO();
-		
-		decorationOrderOperateHistoryPO.setOrderId(orderId);
-		decorationOrderOperateHistoryPO.setDes("订单签订合同");
-		decorationOrderOperateHistoryPO.setOperateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-		
-		decorationOrderOperateHistoryDao.save(decorationOrderOperateHistoryPO);
+		decorationOperateDao.save(decorationOperatePO);
 		
 		return 0;
 	}
@@ -306,13 +311,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		decorationOrderDao.update(decorationOrderPO);
 		
-		DecorationOrderOperateHistoryPO decorationOrderOperateHistoryPO = new DecorationOrderOperateHistoryPO();
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+		decorationOperatePO.setDecorationOrder(decorationOrderPO);
+		decorationOperatePO.setOperater(new UserPO(userId));
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setDes("重签合同");
 		
-		decorationOrderOperateHistoryPO.setOrderId(orderId);
-		decorationOrderOperateHistoryPO.setDes("订单重新签订合同");
-		decorationOrderOperateHistoryPO.setOperateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-		
-		decorationOrderOperateHistoryDao.save(decorationOrderOperateHistoryPO);
+		decorationOperateDao.save(decorationOperatePO);
 		
 		return 0;
 	}

@@ -12,9 +12,9 @@
 package com.fanglin.decoration.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.decoration.po.DecorationOrderOperateHistoryPO;
+import com.fanglin.decoration.po.DecorationOperatePO;
 
-public interface DecorationOrderOperateHistoryDao extends Dao<DecorationOrderOperateHistoryPO> {
+public interface DecorationOperateDao extends Dao<DecorationOperatePO> {
 	
 	
 
