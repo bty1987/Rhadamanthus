@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-8-2
  * @Copyright	: Copyright Decoration 2014
- * @Author		: bty1987
+ * @Author		: Howard
  * @Describing	: 
  */
 package com.fanglin.system.vo;
@@ -22,6 +22,10 @@ public class CityVO implements Serializable {
 	private String cityName;
 	
 	private RegionVO region;
+	
+	private Double x;
+	
+	private Double y;
 	
 	public CityVO() {
 		super();
@@ -62,6 +66,22 @@ public class CityVO implements Serializable {
 
 	public void setRegion(RegionVO region){
 		this.region = region;
+	}
+
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 }

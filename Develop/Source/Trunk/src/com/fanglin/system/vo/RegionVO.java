@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-7-28
  * @Copyright	: Copyright Decoration 2014
- * @Author		: bty1987
+ * @Author		: Howard
  * @Describing	: 
  */
 
@@ -21,6 +21,10 @@ public class RegionVO implements Serializable {
 	private String regionId;
 	
 	private String regionName;
+
+	private Double x;
+	
+	private Double y;
 
 	public int getrId() {
 		return rId;
@@ -44,6 +48,22 @@ public class RegionVO implements Serializable {
 
 	public void setRegionName(String regionName){
 		this.regionName = regionName;
+	}
+
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 }

@@ -29,6 +29,10 @@ public class CityProperPO implements Serializable {
 	
 	private CityPO city;
 	
+	private double x;
+	
+	private double y;
+	
 	public CityProperPO(){
 	}
 	
@@ -73,6 +77,24 @@ public class CityProperPO implements Serializable {
 
 	public void setCity(CityPO city){
 		this.city = city;
+	}
+
+	@Column(name = "x") 
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	@Column(name = "y") 
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
 	}
 	
 }

@@ -4,13 +4,11 @@
  * @Version		: 1.0
  * @Date		: 2014-8-2
  * @Copyright	: Copyright Decoration 2014
- * @Author		: bty1987
+ * @Author		: Howard
  * @Describing	: 
  */
 
 package com.fanglin.system.po;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 
@@ -46,7 +44,11 @@ public class CityPO implements Serializable {
 
 	private RegionPO region;
 	
-	@GeneratedValue(strategy = IDENTITY)
+	private double x;
+	
+	private double y;
+	
+	@GeneratedValue
 	@Column(name = "cId")
 	public int getcId() {
 		return cId;
@@ -83,6 +85,24 @@ public class CityPO implements Serializable {
 
 	public void setRegion(RegionPO region){
 		this.region = region;
+	}
+
+	@Column(name = "x")
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	@Column(name = "y")
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
 	}
 	
 }
