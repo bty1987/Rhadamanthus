@@ -25,6 +25,10 @@ public class CityProperVO implements Serializable {
 	
 	private CityVO city;
 	
+	private Double x;
+	
+	private Double y;
+	
 	public Integer getCpId() {
 		return cpId;
 	}
@@ -55,6 +59,22 @@ public class CityProperVO implements Serializable {
 
 	public void setCity(CityVO city){
 		this.city = city;
+	}
+
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 }

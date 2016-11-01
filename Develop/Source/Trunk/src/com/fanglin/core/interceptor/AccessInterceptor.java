@@ -46,7 +46,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
 		List<String> passLogNames = Arrays.asList(new String[]{"doLogin", "login"});
-		List<String> passActionNames = Arrays.asList(new String[]{"noperateAuthority", "timeout", "operateError", "error"}); // "index", "doLogin", "getConfig", "requestAuthCode", 
+		List<String> passActionNames = Arrays.asList(new String[]{}); // 
 		
 		String userId = "";
 		

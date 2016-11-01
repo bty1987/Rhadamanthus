@@ -4,7 +4,7 @@
  * @Version		: 1.0
  * @Date		: 2014-7-28
  * @Copyright	: Copyright Decoration 2014
- * @Author		: bty1987
+ * @Author		: Howard
  * @Describing	: 
  */
 package com.fanglin.system.po;
@@ -24,14 +24,20 @@ public class RegionPO implements Serializable {
 
 	private static final long serialVersionUID = -3881595135226541201L;
 	
+	public static final String REGION_ID = "regionId";
+	
+	public static final String REGION_NAME = "regionName";
+	
 	private int rId;
 
 	private String regionId;
 	
 	private String regionName;
-
-	public static final String REGION_ID = "regionId";
 	
+	private double x;
+	
+	private double y;
+
 	public RegionPO() {
 		super();
 	}
@@ -52,7 +58,7 @@ public class RegionPO implements Serializable {
 	}
 	
 	@Id
-	@Column(name = REGION_ID, nullable = false)
+	@Column(name = REGION_ID)
 	public String getRegionId(){
 		return regionId;
 	}
@@ -61,15 +67,31 @@ public class RegionPO implements Serializable {
 		this.regionId = regionId;
 	}
 
-	public static final String REGION_NAME = "regionName";
-
-	@Column(name = REGION_NAME, nullable = false)
+	@Column(name = REGION_NAME)
 	public String getRegionName(){
 		return regionName;
 	}
 
 	public void setRegionName(String regionName){
 		this.regionName = regionName;
+	}
+
+	@Column(name = "x")
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	@Column(name = "y")
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
 	}
 
 }
