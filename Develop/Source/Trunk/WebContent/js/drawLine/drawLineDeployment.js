@@ -310,6 +310,7 @@ jQuery(function($) {
 	
 	function initPlan(){
 		
+		
 		$('#calendar').fullCalendar('destroy');
 		$('#calendar').fullCalendar('today');
 		

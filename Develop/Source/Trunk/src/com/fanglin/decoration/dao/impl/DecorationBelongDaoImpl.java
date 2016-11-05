@@ -61,4 +61,14 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> imp
 	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIds(List<String> orderIds) {
 		return session().createCriteria(DecorationBelongInfoPO.class).add(Restrictions.in("decorationOrderPO.orderId", orderIds)).add(Restrictions.ne("status", DecorationBelongInfoPO.STATUS_REPLACE_STR)).list();
 	}
+
+	@Override
+	public int changeOrderBelongInfoForOrderId(String newOrderId, String oldOrderId) {
+		
+		String sql = "update platform.orderbelonginfo set orderId=:newOrderId where orderId=:oldOrderId";
+	    
+	    session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
+		
+		return 0;
+	}
 }

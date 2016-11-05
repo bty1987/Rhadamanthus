@@ -296,7 +296,7 @@ function createCustomer(){
 		"customer.email": orderEntry.items.email.val(),
 		"customer.relationshipType": orderEntry.items.relationshipType.val(),
 		"customer.address": orderEntry.items.address.val(),
-		"customer.approveStatus": 0,
+		"customer.approveStatus": 0
 	};
 	
 	com.post(api.data.addCustomer, options, function(res){

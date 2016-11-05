@@ -385,7 +385,7 @@ $(function(){
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'importMaterialModule.do', // 上传处理程序
+        'uploader': config.host + 'importMaterialModule.do', // 上传处理程序
         'height':'30', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀

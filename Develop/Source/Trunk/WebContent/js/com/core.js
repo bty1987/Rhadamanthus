@@ -57,7 +57,7 @@ com = {
 		$.ajax({
 			url: url,
 			data: opts,
-			type: "post",
+			type: url.indexOf('.json') != -1 ? "get" : "post",
 			dataType: "json",
 			async: optAsync, //设为false就是同步请求
 			success: function(res) {
