@@ -1095,43 +1095,19 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(oldOrderId);
 		
 		if(decorationOrderPO != null){
+			
+			decorationBelongDao.changeOrderBelongInfoForOrderId(newOrderId, oldOrderId);
+			decorationPaymentDao.changeDecorationPaymentForOrderId(oldOrderId, newOrderId);
+			
 			decorationOrderPO.setOrderId(newOrderId);
-			
 			decorationOrderDao.update(decorationOrderPO);
-			
-			DecorationOrderPO newDecorationOrderPO = new DecorationOrderPO();
-			newDecorationOrderPO.setAutoId(decorationOrderPO.getAutoId());
-			newDecorationOrderPO.setOrderId(newOrderId);
-			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(oldOrderId);
-			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				orderBelongInfoPO.setDecorationOrderPO(newDecorationOrderPO);
-				
-				decorationBelongDao.update(orderBelongInfoPO);
-			}
-			
-			List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(oldOrderId);
-			
-			for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-				decorationPaymentPO.setDecorationOrderPO(newDecorationOrderPO);
-				
-				decorationPaymentDao.update(decorationPaymentPO);
-			}
 		}
-		
-		StringBuffer serviceRecoraInfo = new StringBuffer();
-		serviceRecoraInfo.append("订单编号修改,原订单编号:");
-		serviceRecoraInfo.append(oldOrderId);
-		serviceRecoraInfo.append(",修改编号为:");
-		serviceRecoraInfo.append(newOrderId);
-		serviceRecoraInfo.append(".");
 		
 		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 		serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_ORDERID_INT);
 		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+		serviceRecordPO.setInfo(String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId));
 		
 		serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		

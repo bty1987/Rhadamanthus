@@ -16,6 +16,7 @@ var config = {
 	backgroundImg: './images/bg_fanglin.jpg',
 	shakingColor: '#197bb5', // 1918: #892f89 , ehome: #3d677c
 	
+	host: 'http://192.168.5.21/',
 	server: 'http://192.168.5.21/',
     media: 'http://192.168.5.21/Demeter/',
     dmedia: 'http://static.dingtalk.com/media/',
@@ -25,6 +26,7 @@ var config = {
 $(function(){
 	
 	if(!location.hostname.startsWith('192.168')){
+		config.host = 'http://61.161.185.22/';
 		config.server = 'http://61.161.185.22/';
 		config.media = 'http://61.161.185.22/';
 		config.dmedia = 'http://static.dingtalk.com/media/';

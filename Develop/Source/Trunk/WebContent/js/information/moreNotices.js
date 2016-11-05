@@ -73,17 +73,6 @@ $(function(){
 	var searcher = new Searcher();
 	searcher.init( _condArr, "condList", api.information.pageNoticeForDeptAValid, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]}, false, null, function(){
-		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'btnBack').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('返回').appendTo($adda);
-    	
-    	return [$adda];
-	});
+	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]}, false);
 
-	$('a[name="btnBack"]').click(function(){
-		isF5 = true;
-		location.reload(true);
-	});
 });

@@ -341,12 +341,61 @@ var QuotationDetail = (function(){
 				}
 			});
 		},
+		calculateTotal: function(){
+			$('#calculateTotalFeeBtn').on(ace.click_event, function(){
+				if(com.validate()){
+					return;
+				}
+				
+				var dis = $("#calDiscount").val();
+
+				if(parseFloat(dis) <= 0 || parseFloat(dis) > 10){
+					com.showTips($("#calDiscount"), "折扣非法", true);
+					return;
+				}else{
+					com.clearValidator("#calDiscount", true);
+				}
+				
+				quo.calculateTotalFee(dis);
+			});
+		},
 		//保存报价修改
 		saveDiscountEdit : function(){
 			$('#saveDisCountBtn').on(ace.click_event, function(){ //折扣保存
 				
 				if(com.validate()){
 					return;
+				}
+				
+				var dis = $("#discount").val();
+
+				if(parseFloat(dis) <= 0 || parseFloat(dis) > 10){
+					com.showTips($("#discount"), "折扣非法", true);
+					return;
+				}else{
+					com.clearValidator("#discount", true);
+				}
+
+				if(parseFloat(dis) < config.quotationLimitDiscount){
+					bootbox.prompt("折扣审批", function(res){
+						
+						if(res){
+							quo.basicParams['quotation.discount'] = config.quotationLimitDiscount;
+							var options = {
+								"approval.comment": res,
+								"approvalQuotationDiscount.orderId": quo.orderid,
+								"approvalQuotationDiscount.quotationId": quo.quotationid,
+								"approvalQuotationDiscount.newDiscount": dis,
+							}
+
+							com.post(api.approval.submitApprovalForQuotationDiscount, options, function(res){
+								com.showAlert(com.info, "折扣申请成功.");
+							});
+						}
+					});
+				}else{
+					quo.basicParams['quotation.discount'] =  Math.round(parseFloat(dis) * 100) / 100;
+					$('#sumLabDiscount').text(quo.basicParams['quotation.discount']);
 				}
 
 				quo.calculateQuoFees(function($domain){
@@ -468,6 +517,7 @@ var QuotationDetail = (function(){
 		//绑定各种关于报价的操作
 		init: function(){
 			this.saveDomainEdit();
+			this.calculateTotal();
 			this.saveDiscountEdit();
 			this.saveDomainTemplete();
 			this.saveQuotesToDomain();

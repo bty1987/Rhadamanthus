@@ -42,7 +42,7 @@ public class CustomerAction extends BaseListAction {
 
 	private Set<Integer> customerIds;
 
-	private List<KeyValueVO> autoFileCustomer;
+	private List<KeyValueVO> autoFillCustomer;
 
 	private List<String> autoFillList;
 
@@ -67,7 +67,7 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "queryCustomerById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerById(){
 		
-		customerService.queryCustomerById(customer);
+		customer = customerService.queryCustomerById(customer);
 		
 		return SUCCESS;
 	}
@@ -81,7 +81,7 @@ public class CustomerAction extends BaseListAction {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(String.valueOf(customerVO.getId()));
 			keyValueVO.setValue(customerVO.getCustomerName() + "-" + customerVO.getPhone().split(",")[0]);
-			getAutoFileCustomer().add(keyValueVO);
+			getAutoFillCustomer().add(keyValueVO);
 			getAutoFillList().add(customerVO.getCustomerName());
 		}
 		
@@ -133,15 +133,15 @@ public class CustomerAction extends BaseListAction {
 		this.customerIds = customerIds;
 	}
 
-	public List<KeyValueVO> getAutoFileCustomer(){
-		if(autoFileCustomer == null){
-			autoFileCustomer = new ArrayList<KeyValueVO>();
+	public List<KeyValueVO> getAutoFillCustomer(){
+		if(autoFillCustomer == null){
+			autoFillCustomer = new ArrayList<KeyValueVO>();
 		}
-		return autoFileCustomer;
+		return autoFillCustomer;
 	}
 
-	public void setAutoFileCustomer(List<KeyValueVO> autoFileCustomer){
-		this.autoFileCustomer = autoFileCustomer;
+	public void setAutoFillCustomer(List<KeyValueVO> autoFillCustomer){
+		this.autoFillCustomer = autoFillCustomer;
 	}
 
 	public List<String> getAutoFillList(){
