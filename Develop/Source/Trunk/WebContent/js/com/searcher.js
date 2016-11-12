@@ -121,7 +121,7 @@ var Searcher = function(){
                     "name": condCode,
                     "data-op": _rop,
                     "data-rqs": _rname,
-//                    "readonly": true,
+                    "readonly": true,
                 }).appendTo($item);
 
                 $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
@@ -137,7 +137,7 @@ var Searcher = function(){
                     "data-op": _rop,
                     "data-rqs": _rname,
                     "data-date-format": "dd-mm-yyyy",
-//                    "readonly": true,
+                    "readonly": true,
                 }).appendTo($item);
             	
             	$showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});

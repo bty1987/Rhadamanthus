@@ -60,7 +60,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		
 		try {
 			
-			if(passActionNames.contains(actionName)){
+			if(passActionNames.contains(actionName) || actionName.startsWith("report")){
 				invocation.invoke();
 			}else{
 				
@@ -135,7 +135,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
 			e.printStackTrace();
-//			logger.error(String.format("%s - %s - %s", "AI", "E", e.getMessage()));
+//			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
 		}
 		
 		return Action.SUCCESS;

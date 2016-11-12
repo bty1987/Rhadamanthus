@@ -14,10 +14,10 @@ package com.fanglin.dingding.utils;
 public interface DDApi {
 	
 //	public static final String DDAPI_GET_TOKEN_STR = "%s/gettoken?corpid=%s&corpsecret=%s";
-	public static final String DDAPI_GET_TOKEN_STR = "%s/queryDAccessTokenForNew.do";
+	public static final String DDAPI_GET_TOKEN_STR = "%s/queryDAccessTokenForNew.do?company=%s";
 	
 //	public static final String DDAPI_GET_JSAPI_TICKET_STR = "%s/get_jsapi_ticket?type=jsapi&access_token=%s";
-	public static final String DDAPI_GET_JSAPI_TICKET_STR = "%s/queryDJsapiTicketForNew.do"; 
+	public static final String DDAPI_GET_JSAPI_TICKET_STR = "%s/queryDJsapiTicketForNew.do?company=%s"; 
 	
 	public static final String DDAPI_SIGN_STR = "jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s";
 	

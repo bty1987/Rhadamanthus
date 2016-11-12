@@ -11,6 +11,7 @@
 
 package com.fanglin.report.dao;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -20,8 +21,8 @@ import com.fanglin.utils.Paging;
 
 public interface CityProperCountDetailDao extends Dao<CityProperCountDetailPO> {
 	
-	public List<CityProperCountDetailPO> pageCityProperCountDetail(Paging paging, List<FilterVO> filters);
+	public List<CityProperCountDetailPO> pageCityProperCountDetail(Paging paging, List<FilterVO> filters) throws ParseException;
 	
-	public List<CityProperCountDetailPO> queryCityProperCountDetail(List<FilterVO> filters);
+	public List<CityProperCountDetailPO> queryCityProperCountDetail(List<FilterVO> filters) throws ParseException;
 
 }

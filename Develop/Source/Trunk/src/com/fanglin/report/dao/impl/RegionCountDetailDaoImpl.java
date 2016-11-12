@@ -11,6 +11,9 @@
 
 package com.fanglin.report.dao.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -29,7 +32,7 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 	}
 	
 	@Override
-	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<FilterVO> filters) {
+	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
 		
 		PagingQuery<RegionCountDetailPO> query = pagingQuery(paging, RegionCountDetailPO.class);
 		
@@ -39,7 +42,7 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 	}
 
 	@Override
-	public List<RegionCountDetailPO> queryRegionCountDetail(List<FilterVO> filters) {
+	public List<RegionCountDetailPO> queryRegionCountDetail(List<FilterVO> filters) throws ParseException {
 		
 		PagingQuery<RegionCountDetailPO> query = pagingQuery(new Paging(), RegionCountDetailPO.class);
 		
@@ -50,7 +53,19 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters) throws ParseException{
+		
+		for(FilterVO filter: filters){
+			
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+			
+			if("createDate".equals(field)){
+				Date date = new SimpleDateFormat("yyyy-MM-dd").parse(data);
+				query.add(query.getCriterion(field, date, op));
+			}
+		}
 		
 	}
 

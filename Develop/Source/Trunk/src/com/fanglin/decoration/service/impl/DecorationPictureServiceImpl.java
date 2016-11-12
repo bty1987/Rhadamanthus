@@ -59,12 +59,12 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId) throws FLException{
 		
 		DecorationPicturePO decorationPicturePO = new DecorationPicturePO();
-
+		
 		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO);
 		
 		String name = decorationPictureVO.getName();
-		String _name = name.split(".")[0];
-		String _suffix = name.split(".")[1];
+		String _name = name.split("\\.")[0];
+		String _suffix = name.split("\\.")[1];
 		
 		decorationPicturePO.setUserPO(new UserPO(userId));
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));

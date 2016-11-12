@@ -305,6 +305,8 @@ public class DateUtil {
 		System.out.println(DateUtil.getDateToTimestamp(DateUtil.getFirstDay(new Date())));
 		
 		System.out.println(DateUtil.getDateToTimestamp(new Date()));
+		
+		System.out.println(DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"));
 
 	}
 }

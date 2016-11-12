@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.data.common.vo.VillageVO;
@@ -31,6 +32,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("villageCountService")
+@Transactional(readOnly=true)
 public class VillageCountServiceImpl implements VillageCountService {
 	
 	@Autowired

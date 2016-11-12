@@ -148,23 +148,23 @@ $(function(){
 					});
 
 					$btnView.click(function(){
-						viewDecorationOrderDetail(v.orderId+"");
+						viewDecorationOrderDetail(v.orderId);
 					});
 					$btnPrice.click(function(){
-						viewDecorationQuotateIndex(v.orderId+"", v.type);
+						viewDecorationQuotateIndex(v.orderId, v.type);
 					});
 					$btnRevie.click(function(){
-						viewDecorationOrderBackVisitIndex(v.orderId+"");
+						viewDecorationOrderBackVisitIndex(v.orderId);
 					});
 					$btnLine.click(function(){
-						modalDrawLineModal(v.orderId+"");
+						modalDrawLineModal(v.orderId);
 					});
 
 					$btnContract.click(function(){
-						modalAgreementModal(v.orderId+"");
+						modalAgreementModal(v.orderId);
 					});
 					$btnAddMinus.click(function(){
-						viewDecorationOrderInDecreaseIndex(v.orderId+"");
+						viewDecorationOrderInDecreaseIndex(v.orderId, v.type);
 					});
 
 					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
@@ -232,8 +232,10 @@ $(function(){
 	    	});
 		}
 		//增减项
-		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId){
+		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId, type){
+			console.log(type);
 			params.decorationOrderId = decorationOrderId;
+			params.decorationOrderType = type;
 			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.addReduceIndex.url);
 		}

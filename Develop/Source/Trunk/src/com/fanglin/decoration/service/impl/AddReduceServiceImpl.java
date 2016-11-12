@@ -24,6 +24,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.dao.AddReduceItemDao;
+import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReduceItemPO;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
@@ -54,6 +55,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
+	
+	@Autowired
+	private DecorationOrderDao decorationOrderDao;
 	
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, AddReduceVO addReduceVO) {
@@ -267,6 +271,12 @@ public class AddReduceServiceImpl implements AddReduceService{
 			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(addReducePO.getOrderId());
+		
+		if(decorationOrderPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
 		DecorationPaymentPO decorationPaymentPO = null;
 		
 		if(addReducePO.getDpId() != null){
@@ -282,7 +292,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		decorationPaymentPO.setPaymentStatus("未付款");
 		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
 		
-		decorationPaymentPO.setDecorationOrderPO(new DecorationOrderPO(addReducePO.getOrderId()));
+		decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
 		decorationPaymentPO.setCreateUserPO(new UserPO(userId));
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
@@ -292,7 +302,8 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		addReducePO.setStatus(1);
 		addReducePO.setDpId(decorationPaymentPO.getAutoId());
-		addReduceDao.saveOrUpdate(addReducePO);
+		
+		addReduceDao.update(addReducePO);
 		
 		return 0;
 	}
