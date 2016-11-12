@@ -27,10 +27,26 @@ public class VillageCountPO implements java.io.Serializable {
 	
 	private VillagePO village;
 	
-	private Integer newOrderNum;
+	private int consult;
 	
-	private Integer signOrderNum;
-
+	private int amount;
+	
+	private int quotation;
+	
+	private int deposit;
+	
+	private int resigned;
+	
+	private int signed;
+	
+	private int waste;
+	
+	private int completed;
+	
+	private int termination;
+	
+	private double contractPrice;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "vcId")
@@ -51,23 +67,95 @@ public class VillageCountPO implements java.io.Serializable {
 	public void setVillage(VillagePO village) {
 		this.village = village;
 	}
-
-	@Column(name = "newOrderNum")
-	public Integer getNewOrderNum() {
-		return this.newOrderNum;
+	
+	@Column(name = "consult")
+	public int getConsult() {
+		return consult;
 	}
 
-	public void setNewOrderNum(Integer newOrderNum) {
-		this.newOrderNum = newOrderNum;
+	public void setConsult(int consult) {
+		this.consult = consult;
 	}
 
-	@Column(name = "signOrderNum")
-	public Integer getSignOrderNum() {
-		return this.signOrderNum;
+	@Column(name = "amount")
+	public int getAmount() {
+		return amount;
 	}
 
-	public void setSignOrderNum(Integer signOrderNum) {
-		this.signOrderNum = signOrderNum;
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+	@Column(name = "quotation")
+	public int getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(int quotation) {
+		this.quotation = quotation;
+	}
+
+	@Column(name = "deposit")
+	public int getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(int deposit) {
+		this.deposit = deposit;
+	}
+
+	@Column(name = "resigned")
+	public int getResigned() {
+		return resigned;
+	}
+
+	public void setResigned(int resigned) {
+		this.resigned = resigned;
+	}
+
+	@Column(name = "signed")
+	public int getSigned() {
+		return signed;
+	}
+
+	public void setSigned(int signed) {
+		this.signed = signed;
+	}
+
+	@Column(name = "waste")
+	public int getWaste() {
+		return waste;
+	}
+
+	public void setWaste(int waste) {
+		this.waste = waste;
+	}
+
+	@Column(name = "completed")
+	public int getCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(int completed) {
+		this.completed = completed;
+	}
+
+	@Column(name = "termination")
+	public int getTermination() {
+		return termination;
+	}
+
+	public void setTermination(int termination) {
+		this.termination = termination;
+	}
+
+	@Column(name = "contractPrice")
+	public double getContractPrice() {
+		return contractPrice;
+	}
+
+	public void setContractPrice(double contractPrice) {
+		this.contractPrice = contractPrice;
 	}
 
 }

@@ -65,7 +65,7 @@ jQuery(function($) {
 		orderEntry.orderItems.houseClass.bindData(orderEntry.houseClass, 'key', 'value');
 	});
 	
-	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFileCustomer", "key", "value").on("change", function(e){
+	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
 		if($(this).val() == "" || $("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
 			orderEntry.repeatCustomerFlg = false;

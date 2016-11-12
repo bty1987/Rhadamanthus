@@ -55,6 +55,7 @@ jQuery(function($) {
 			$label.append($input).append($span).appendTo($h3);
 			$divBtnWrap.append($btnLook).append($btnDel).appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
+			
 			//查看按钮点击事件
 			$btnLook.click(function(){
 				params["addReduce.type"] = v.type;
@@ -125,7 +126,7 @@ jQuery(function($) {
 			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
 		});
 		
-		url += "quotation.orderId=" + params.decorationOrderId + "&time=" + params.loginTime;
+		url += "quotation.orderId=" + params.decorationOrderId + "&quotation.type=" + params.decorationOrderType + "&time=" + params.loginTime;
 		
 		window.open(url);
 	});

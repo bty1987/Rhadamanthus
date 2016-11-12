@@ -68,6 +68,6 @@ public interface DecorationOrderService {
 
 	public int terminalDecorationOrder(DecorationOrderVO decorationOrderVO, float refundValue, float paymentValue, String userId) throws FLException;
 	
-	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userName) throws FLException;
+	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userId) throws FLException;
 	
 }

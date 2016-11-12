@@ -25,6 +25,14 @@ public class FormatUtil {
 		return df.format(number);
 	}
 	
+	public static short decodeCompany(String company){
+		
+		int $length = company.length();
+		int $index = Integer.parseInt(company.substring($length-1));
+		
+		return Short.parseShort(company.substring($index, $index+1));
+	}
+	
 	public static void main(String[] args){
 		System.out.println(fillZero(offset(3), "0000"));
 	}

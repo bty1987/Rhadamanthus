@@ -23,6 +23,8 @@ public interface Constant {
 	
 	public static final String SECRET_STR = "secret";
 	
+	public static final String COMPANY_STR = "company";
+	
 	public static final String APPROVAL_AGENTID_STR = "approvalAgentId";
 	
 	public static final String MESSAGE_AGENTID_STR = "messageAgentId";

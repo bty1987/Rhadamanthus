@@ -1241,7 +1241,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
 		decorationOrderPO.setOrderTotalPrice((float) 0);
 		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());
-		decorationOrderPO.setCompany(SystemConfig.getInt("company"));
+		decorationOrderPO.setCompany(FormatUtil.decodeCompany(SystemConfig.getString("company")));
 		
 		decorationOrderPO.setCustomerPO(new CustomerPO(decorationOrderVO.getCustomer().getId()));
 		decorationOrderPO.setVillagePO(new VillagePO(decorationOrderVO.getVillage().getVillageId()));
@@ -1451,7 +1451,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+			decorationOperatePO.setOperater(new UserPO(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
@@ -1467,7 +1467,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userName) throws FLException {
+	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userId) throws FLException {
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
 		
@@ -1482,7 +1482,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+			decorationOperatePO.setOperater(new UserPO(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SUB_DECORATION_QUOTATION_NUM_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);

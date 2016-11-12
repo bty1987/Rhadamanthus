@@ -215,7 +215,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "subDecorationOrderForQuotationTime", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String subDecorationOrderForQuotationTime() throws FLException{
 
-		decorationOrderService.subDecorationOrderForQuotationTime(decorationOrder, queryUserName());
+		decorationOrderService.subDecorationOrderForQuotationTime(decorationOrder, queryUserId());
 		
 		return SUCCESS;
 	}

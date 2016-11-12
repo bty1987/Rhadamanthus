@@ -51,3 +51,13 @@ select cp.cpId, count(o.orderId), cp.cityproperName from decorationorder o, comm
 select c.cid, count(o.orderId), c.cityName from decorationorder o, communion.village v, communion.cityproper cp, communion.city c where o.status = '已签约' and o.villageId = v.villageId and v.cityProperId = cp.cityProperId and cp.cityId = c.cityId group by c.cityId limit 100;
 
 select r.rid, count(o.orderId), r.regionName from decorationorder o, communion.village v, communion.cityproper cp, communion.city c, communion.region r where o.status = '已签约' and o.villageId = v.villageId and v.cityProperId = cp.cityProperId and cp.cityId = c.cityId and c.cityregionId = r.regionId group by r.regionId limit 100;
+
+/* 根据订单操作统计对应订单状态相关信息 */
+select v.vid, count(o.orderId), v.villageName from decorationoperate op, decorationorder o, communion.village v where op.type = 1 and op.operateTime > '2016-10-31 00:00:00' and op.operateTime < '2016-11-31 : 23:59:59' and op.orderId = o.orderId and o.villageId = v.villageId group by v.villageId;
+
+
+/*update*/
+REPLACE INTO regioncount(rid, newOrderNum, signOrderNum) VALUES(6,1,2); 
+
+INSERT INTO regioncount (rid, newOrderNum, signOrderNum) VALUES (1,2,3) ON DUPLICATE KEY UPDATE signOrderNum=signOrderNum + 3;
+

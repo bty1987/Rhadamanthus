@@ -352,9 +352,15 @@ com = {
 		return $("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
 	}, showImg: function($e, url, width, height, alt, defaultUrl, type){
 		
-		var $media = type ? config.dmedia : config.media;
+		var $media = '', imgUrl = '';
 		
-		var imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp='+ new Date().getTime() :  defaultUrl ;
+		if(type){
+			$media = config.dmedia;
+			imgUrl = url ? $media + url + '_' + alt + '.jpg' :  defaultUrl ;
+		}else{
+			$media = config.media;
+			imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp='+ new Date().getTime() :  defaultUrl ;
+		}
 		
 		$e.attr("src", imgUrl).attr("alt", alt).error(function(){
 		    $(this).hide();

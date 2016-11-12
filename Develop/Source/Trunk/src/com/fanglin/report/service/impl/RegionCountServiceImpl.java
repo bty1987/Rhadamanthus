@@ -13,6 +13,7 @@ package com.fanglin.report.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.FilterVO;
-import com.fanglin.report.dao.RegionCountDao;
 import com.fanglin.report.dao.RegionCountDetailDao;
 import com.fanglin.report.po.RegionCountDetailPO;
-import com.fanglin.report.po.RegionCountPO;
 import com.fanglin.report.service.RegionCountService;
 import com.fanglin.report.vo.RegionCountDetailVO;
-import com.fanglin.report.vo.RegionCountVO;
 import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("regionCountService")
@@ -36,13 +35,10 @@ import com.fanglin.utils.Paging;
 public class RegionCountServiceImpl implements RegionCountService {
 	
 	@Autowired
-	private RegionCountDao regionCountDao;
-	
-	@Autowired
 	private RegionCountDetailDao regionCountDetailDao;
 
 	@Override
-	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) {
+	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws Exception {
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.pageRegionCountDetail(paging, filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -51,9 +47,10 @@ public class RegionCountServiceImpl implements RegionCountService {
 		
 		for(RegionCountDetailPO regionCountDetailPO: regionCountDetailPOs){
 			
-			regionCountDetailVO = new RegionCountDetailVO();
+			regionCountDetailVO = new RegionCountDetailVO(new RegionVO());
 			
-			BeanUtil.copyProperties(regionCountDetailPO, regionCountDetailVO);
+			BeanUtil.copyProperties(regionCountDetailPO, regionCountDetailVO, Arrays.asList("region"));
+			BeanUtil.copyProperties(regionCountDetailPO.getRegion(), regionCountDetailVO.getRegion());
 			
 			regionCountDetailVOs.add(regionCountDetailVO);
 		}
@@ -62,28 +59,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	}
 
 	@Override
-	public List<RegionCountVO> queryRegionCount() {
-		
-		List<RegionCountPO> regionCountPOs = regionCountDao.queryRegionCount();
-		List<RegionCountVO> regionCountVOs = new ArrayList<RegionCountVO>();
-		
-		RegionCountVO regionCountVO;
-		
-		for(RegionCountPO regionCountPO: regionCountPOs){
-			
-			regionCountVO = new RegionCountVO(new RegionVO());
-			
-			BeanUtil.copyProperties(regionCountPO, regionCountVO, Arrays.asList("region"));
-			BeanUtil.copyProperties(regionCountPO.getRegion(), regionCountVO.getRegion());
-			
-			regionCountVOs.add(regionCountVO);
-		}
-		
-		return regionCountVOs;
-	}
-
-	@Override
-	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) {
+	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) throws Exception {
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.queryRegionCountDetail(filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -92,9 +68,33 @@ public class RegionCountServiceImpl implements RegionCountService {
 		
 		for(RegionCountDetailPO regionCountDetailPO: regionCountDetailPOs){
 			
-			regionCountDetailVO = new RegionCountDetailVO();
+			regionCountDetailVO = new RegionCountDetailVO(new RegionVO());
 			
-			BeanUtil.copyProperties(regionCountDetailPO, regionCountDetailVO);
+			BeanUtil.copyProperties(regionCountDetailPO, regionCountDetailVO, Arrays.asList("region"));
+			BeanUtil.copyProperties(regionCountDetailPO.getRegion(), regionCountDetailVO.getRegion());
+			
+			regionCountDetailVOs.add(regionCountDetailVO);
+		}
+		
+		return regionCountDetailVOs;
+	}
+
+	@Override
+	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<FilterVO> filters) throws Exception {
+		
+		filters.add(new FilterVO(RegionCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
+		
+		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.queryRegionCountDetail(filters);
+		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
+		
+		RegionCountDetailVO regionCountDetailVO;
+		
+		for(RegionCountDetailPO regionCountDetailPO: regionCountDetailPOs){
+			
+			regionCountDetailVO = new RegionCountDetailVO(new RegionVO());
+			
+			BeanUtil.copyProperties(regionCountDetailPO, regionCountDetailVO, Arrays.asList("region"));
+			BeanUtil.copyProperties(regionCountDetailPO.getRegion(), regionCountDetailVO.getRegion());
 			
 			regionCountDetailVOs.add(regionCountDetailVO);
 		}

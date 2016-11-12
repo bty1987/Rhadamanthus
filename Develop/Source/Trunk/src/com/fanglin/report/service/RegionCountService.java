@@ -15,15 +15,14 @@ import java.util.List;
 
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.report.vo.RegionCountDetailVO;
-import com.fanglin.report.vo.RegionCountVO;
 import com.fanglin.utils.Paging;
 
 public interface RegionCountService {
 	
-	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters);
+	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws Exception;
 	
-	public List<RegionCountVO> queryRegionCount();
+	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) throws Exception;
 	
-	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters);
+	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<FilterVO> filters) throws Exception;
 
 }

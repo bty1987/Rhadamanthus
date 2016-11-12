@@ -182,7 +182,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@Override
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId) {
 		
-		String sql = "update platform.decoratinpayment set orderId=:newOrderId where orderId=:oldOrderId";
+		String sql = "update platform.decorationpayment set orderId=:newOrderId where orderId=:oldOrderId";
 	    
 	    session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 		

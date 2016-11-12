@@ -757,7 +757,7 @@ var AddReduceDetail = (function(){
 			addReduceDetail.basicParams["addReduceItem.arId"] = params.addReduceId;
 			addReduceDetail.orderid = params.decorationOrderId;//订单编号
             //根据订单编号获取默认报价
-			com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId" : addReduceDetail.orderid}, function(res){
+			com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId" : addReduceDetail.orderid, "quotation.type": params.decorationOrderType}, function(res){
 				addReduceDetail.discount = res.quotation.discount;
 				$('#sumLabDiscount').text(res.quotation.discount);
 				addReduceDetail.qid = res.quotation.qid;

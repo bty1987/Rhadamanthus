@@ -18,7 +18,7 @@ public class AuthHelper {
 
 	public static String getAccessToken() {
 		
-		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, SystemConfig.getString(Constant.MP_HOST_STR));
+		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, SystemConfig.getString(Constant.MP_HOST_STR), SystemConfig.getString(Constant.COMPANY_STR));
 		
 		JSONObject response = HttpHelper.httpGet(url);
 		
@@ -29,7 +29,7 @@ public class AuthHelper {
 	
 	public static String getJsapiTicket() {
 		
-		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, SystemConfig.getString(Constant.MP_HOST_STR));
+		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, SystemConfig.getString(Constant.MP_HOST_STR), SystemConfig.getString(Constant.COMPANY_STR));
 		
 		JSONObject response = HttpHelper.httpGet(url);
 		
