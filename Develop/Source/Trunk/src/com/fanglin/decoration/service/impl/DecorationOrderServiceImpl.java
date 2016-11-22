@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,8 +78,6 @@ import com.fanglin.utils.SystemConfig;
 @Transactional(readOnly=true)
 public class DecorationOrderServiceImpl implements DecorationOrderService {
 
-	protected Logger log = LoggerFactory.getLogger(getClass());
-	
 	@Autowired
 	private CountingService countingService;
 	
@@ -1275,7 +1271,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongDesignerInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		belongDesignerInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongDesignerInfo.setDecorationOrderPO(decorationOrderPO);
-		decorationBelongDao.saveOrUpdate(belongDesignerInfo);
+		decorationBelongDao.save(belongDesignerInfo);
 		
 		DecorationBelongInfoPO belongsalesmanInfo = new DecorationBelongInfoPO();
 		belongsalesmanInfo.setBelongDeptPO(decorationOrderPO.getSalesmanPO().getDept());
@@ -1295,7 +1291,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongsalesmanInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 		belongsalesmanInfo.setDecorationOrderPO(decorationOrderPO);
 		
-		decorationBelongDao.saveOrUpdate(belongsalesmanInfo);
+		decorationBelongDao.save(belongsalesmanInfo);
 		
 		DecorationPaymentPO designFee = new DecorationPaymentPO();
 		
@@ -1316,30 +1312,16 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		decorationOperateDao.save(decorationOperatePO);
 		
-		DecorationOperatePO designDecorationOperatePO = new DecorationOperatePO();
-		designDecorationOperatePO.setDecorationOrder(decorationOrderPO);
-		designDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
-		designDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		designDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
-		designDecorationOperatePO.setType(DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT);
-		designDecorationOperatePO.setValue(1f);
-		designDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		designDecorationOperatePO.setDes("订单设计归属");
-		
-		decorationOperateDao.save(designDecorationOperatePO);
-		
-		DecorationOperatePO salesmanDecorationOperatePO = new DecorationOperatePO();
-		salesmanDecorationOperatePO.setDecorationOrder(decorationOrderPO);
-		salesmanDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
-		salesmanDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesmanDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
-		salesmanDecorationOperatePO.setType(DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
-		salesmanDecorationOperatePO.setValue(1f);
-		salesmanDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		salesmanDecorationOperatePO.setDes("订单业务归属");
-		
-		decorationOperateDao.save(salesmanDecorationOperatePO);
-		
+		DecorationOperatePO belongDecorationOperatePO = new DecorationOperatePO();
+		belongDecorationOperatePO.setDecorationOrder(decorationOrderPO);
+		belongDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		belongDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		belongDecorationOperatePO.setSourcer(decorationOrderPO.getSalesmanPO());
+		belongDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
+		belongDecorationOperatePO.setType(DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT);
+		belongDecorationOperatePO.setValue(1f);
+		belongDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		belongDecorationOperatePO.setDes("订单归属");
 	}
 	
 	@Override

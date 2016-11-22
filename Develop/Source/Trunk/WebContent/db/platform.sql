@@ -642,6 +642,7 @@ DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
   `doId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
+  `sourcerId` varchar(15),
   `targerId` varchar(15),
   `operaterId` varchar(15),
   `operateTime` timestamp NULL DEFAULT NULL,

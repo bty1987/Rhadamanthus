@@ -223,6 +223,15 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMsoId(long msoId) {
+		return session().createCriteria(MaterialPaymentPO.class)
+				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId))
+				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
+				.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMpIds(List<Long> mpIds){
 		return session().createCriteria(MaterialPaymentPO.class).add(Restrictions.in(MaterialPaymentPO.COLUMN_MPID_STR, mpIds)).list();
 	}

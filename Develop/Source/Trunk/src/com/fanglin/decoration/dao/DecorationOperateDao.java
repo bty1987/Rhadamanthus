@@ -16,6 +16,4 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 
 public interface DecorationOperateDao extends Dao<DecorationOperatePO> {
 	
-	
-
 }

@@ -23,6 +23,8 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	public static final short STATUS_INIT_INT = 0;
 	
+	public static final short STATUS_DISABLED_INT = 1;
+	
 	public static final short TYPE_CREATE_DECORATION_ORDER_INT = 1;
 	
 	public static final short TYPE_WASTE_DECORATION_ORDER_INT = 2;
@@ -37,13 +39,17 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;
 	
-	public static final short TYPE_DESIGN_DECORATION_ORDER_INT = 8;
+	public static final short TYPE_DESIGNER_DECORATION_ORDER_INT = 8;
 	
 	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;
 	
-	private Long doId;
+	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;
+	
+	private long doId;
 	
 	private DecorationOrderPO decorationOrder;
+	
+	private UserPO sourcer;
 	
 	private UserPO targer;
 	
@@ -78,6 +84,16 @@ public class DecorationOperatePO implements java.io.Serializable {
 
 	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
 		this.decorationOrder = decorationOrder;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "sourcerId", referencedColumnName="userId")
+	public UserPO getSourcer() {
+		return sourcer;
+	}
+
+	public void setSourcer(UserPO sourcer) {
+		this.sourcer = sourcer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

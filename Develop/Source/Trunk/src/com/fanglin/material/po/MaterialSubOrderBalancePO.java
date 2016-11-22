@@ -45,6 +45,8 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	public static final short TYPE_ADD_INT = 0;
 	
 	public static final short TYPE_SUB_INT = 1;
+	
+	public static final short TYPE_SUBED_INT = 2; // 结算之后退货
 
 	private int msobId;
 	

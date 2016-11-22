@@ -134,6 +134,12 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentForInitByMsoId(msoId);
+		
+		if(materialPaymentPOs.size() > 0){
+			throw new FLException(240006, "存在未处理收款信息");
+		}
+		
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
@@ -270,7 +276,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			
 			materialSubOrderRefundDao.save(materialSubOrderRefundPO);
 			
-			if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT){ // 预结算状态计算利润
+			if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT || balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){ // 预结算状态计算利润
 				
 				float prePoint = materialSubOrderItemPO.getPrePoint();
 				
@@ -310,7 +316,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			}
 		}
 		
-		if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT){
+		if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT || balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){
 			
 			MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 			materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
@@ -319,7 +325,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			materialSubOrderBalancePO.setBalance(refundMoney);
 			materialSubOrderBalancePO.setDifference(refundMoney);
-			materialSubOrderBalancePO.setType(MaterialSubOrderBalancePO.TYPE_SUB_INT);
+			materialSubOrderBalancePO.setType(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT ? MaterialSubOrderBalancePO.TYPE_SUB_INT : MaterialSubOrderBalancePO.TYPE_SUBED_INT);
 			materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT);
 			materialSubOrderBalancePO.setIdent(ident);
 			

@@ -26,7 +26,7 @@ public class MaterialModelPO implements Serializable {
 
 	private static final long serialVersionUID = 7005034712246904666L;
 	
-	public static final String COLUMN_MATERIALMODELNAME_STR = "materialModelName";
+	public static final String COLUMN_MATERIALMODELNAME_STR = "brand.brandName";
 	
 	public static final String COLUMN_MATERIALMODELNO_STR = "materialModelNo";
 	

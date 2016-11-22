@@ -62,3 +62,8 @@ CREATE TABLE `decorationoperate` (
 update functionarea set type = 1;
 update quotationfunctionarea set type = 1;
 update quotationfunctionarea set type = 0 where functionAreaType = '0';
+
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+ALTER TABLE `platform`.`decorationoperate` ADD COLUMN `sourcerId` VARCHAR(15) NULL AFTER `orderId`;
