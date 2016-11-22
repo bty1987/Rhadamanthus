@@ -205,16 +205,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 		
 		//更新归属信息的部门和大区
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		for(DecorationBelongInfoPO orderBelongInfoPO: designerOrderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
 			orderBelongInfoDao.update(orderBelongInfoPO);
 		}
 		
-		orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		for(DecorationBelongInfoPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
 			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
 			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
 			
@@ -237,6 +237,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		decorationOperatePO.setDes("签订合同");
+		decorationOperatePO.setValue(decorationOrderPO.getOrderTotalPrice());
 		
 		if(!resignFlag){
 			
@@ -284,6 +285,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		decorationOperateDao.save(decorationOperatePO);
 		
+		// 生成业务员对应设计师的合同额信息
+		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), 1);
+		
 		return 0;
 	}
 
@@ -320,6 +324,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperatePO.setDes("重签合同");
 		
 		decorationOperateDao.save(decorationOperatePO);
+		
+		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		
+		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), -1);
 		
 		return 0;
 	}

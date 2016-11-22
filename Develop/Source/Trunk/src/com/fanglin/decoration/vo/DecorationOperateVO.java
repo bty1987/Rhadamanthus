@@ -14,6 +14,8 @@ public class DecorationOperateVO implements java.io.Serializable {
 	
 	private UserVO targer;
 	
+	private UserVO sourcer;
+	
 	private UserVO operater;
 	
 	private Timestamp operateTime;
@@ -40,6 +42,14 @@ public class DecorationOperateVO implements java.io.Serializable {
 
 	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
 		this.decorationOrder = decorationOrder;
+	}
+
+	public UserVO getSourcer() {
+		return sourcer;
+	}
+
+	public void setSourcer(UserVO sourcer) {
+		this.sourcer = sourcer;
 	}
 
 	public UserVO getTarger() {

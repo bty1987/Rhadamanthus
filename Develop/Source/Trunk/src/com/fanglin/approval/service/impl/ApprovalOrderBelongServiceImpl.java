@@ -203,6 +203,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		String defaultUser = "";
 		String orderId = approvalOrderBelongPO.getOrderId();
 		String belongType = approvalOrderBelongPO.getBelongType();
+		String reverseType = DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR : DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR;
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
@@ -211,22 +212,28 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		}
 		
 		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
+		List<DecorationBelongInfoPO> reverseBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, reverseType);
 		
 		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_REPLACE_STR);
 			orderBelongInfoDao.update(orderBelongInfoPO);
 			
-			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(approvalPO.getReceiver());
-			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
-			decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) ? DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
-			decorationOperatePO.setValue(Arith.sub(0f, orderBelongInfoPO.getBelongRate()));
-			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-			decorationOperatePO.setDes("订单业务归属");
-			
-			decorationOperateDao.save(decorationOperatePO);
+			for(DecorationBelongInfoPO reverseBelongInfoPO: reverseBelongInfoPOs){
+				
+				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+				
+				decorationOperatePO.setDecorationOrder(decorationOrderPO);
+				decorationOperatePO.setSourcer(reverseBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setOperater(approvalPO.getReceiver());
+				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+				decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getBelongRate(), Arith.sub(0f, orderBelongInfoPO.getBelongRate())));
+				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
+				decorationOperatePO.setDes("订单归属");
+				
+				decorationOperateDao.save(decorationOperatePO);
+			}
 		}
 		
 		List<ApprovalOrderBelongItemPO> approvalOrderBelongItemPOs = approvalOrderBelongItemDao.queryApprovalOrderBelongItemByAobId(approvalOrderBelongPO.getAobId());
@@ -259,17 +266,22 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
 			orderBelongInfoDao.save(orderBelongInfoPO);
 			
-			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(approvalPO.getReceiver());
-			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
-			decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) ? DecorationOperatePO.TYPE_DESIGN_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
-			decorationOperatePO.setValue(orderBelongInfoPO.getBelongRate());
-			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-			decorationOperatePO.setDes("订单业务归属");
-			
-			decorationOperateDao.save(decorationOperatePO);
+			for(DecorationBelongInfoPO reverseBelongInfoPO: reverseBelongInfoPOs){
+				
+				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+				
+				decorationOperatePO.setDecorationOrder(decorationOrderPO);
+				decorationOperatePO.setSourcer(reverseBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setOperater(approvalPO.getReceiver());
+				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+				decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getBelongRate(), orderBelongInfoPO.getBelongRate()));
+				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
+				decorationOperatePO.setDes("订单归属");
+				
+				decorationOperateDao.save(decorationOperatePO);
+			}
 		}
 		
 		if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){
