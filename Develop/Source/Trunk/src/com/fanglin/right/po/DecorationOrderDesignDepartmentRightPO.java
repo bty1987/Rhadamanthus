@@ -13,6 +13,8 @@ public class DecorationOrderDesignDepartmentRightPO implements java.io.Serializa
 
 	private static final long serialVersionUID = -2244025448541318424L;
 	
+	public static final int DEPARTMENT_ALL_ENABLE_INT = -1;
+	
 	public static final String COLUMN_UID_STR = "uid";
 
 	private int doddrId;

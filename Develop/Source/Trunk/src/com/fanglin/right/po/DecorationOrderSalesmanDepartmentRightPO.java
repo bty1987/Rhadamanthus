@@ -13,6 +13,8 @@ public class DecorationOrderSalesmanDepartmentRightPO implements java.io.Seriali
 
 	private static final long serialVersionUID = 8662490182490903380L;
 	
+	public static final int DEPARTMENT_ALL_ENABLE_INT = -1;
+	
 	public static final String COLUMN_UID_STR = "uid";
 
 	private int dosdrId;

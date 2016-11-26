@@ -98,11 +98,11 @@ jQuery(function($) {
 			//设计权限配置
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list, userList;
+				var list = [{dId: -1, deptName: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.department.queryDepartment, { "dept.type" : "设计部"}, function(data){
-					list = data.deptList;
+					list = list.concat(data.deptList);
 				}, null, false);
 				com.post(api.right.queryDecorationOrderDesignDepartmentRightByUserId, { "user.userId" : userId}, function(data){
 					userList = data.dids;
@@ -132,11 +132,12 @@ jQuery(function($) {
 			//业务权限配置
 			openSalesDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list, userList;
+				var list = [{dId: -1, deptName: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.department.queryDepartment, { "dept.type" : "业务部"}, function(data){
-					list = data.deptList;
+					list = list.concat(data.deptList);
+					list.push();
 				}, null, false);
 				com.post(api.right.queryDecorationOrderSalesmanDepartmentRightByUserId, { "user.userId" : userId}, function(data){
 					userList = data.dids;
@@ -166,11 +167,11 @@ jQuery(function($) {
 			//订单权限配置
 			openOrderDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list, userList;
+				var list=[{key: "全部", value: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
-				com.post(api.ds.decorationInfo, { "dept.type" : "业务部"}, function(data){
-					list = data.decorationOrderStatus;
+				com.post(api.ds.decorationInfo, {}, function(data){
+					list = list.concat(data.decorationOrderStatus);
 				}, null, false);
 				com.post(api.right.queryDecorationOrderStatusRightByUserId, { "user.userId" : userId}, function(data){
 					userList = data.statuses;
@@ -208,7 +209,9 @@ jQuery(function($) {
 					
 					list.length && (
 						$.each(list, function(i, v){
-							params[postConf.name + "[" + i + "]"] = $(this).val();
+							var $v = $(this).val();
+							params[postConf.name + "[" + i + "]"] = $v;
+							if($v == -1 || $v == '全部') return false;
 						}),
 						com.post(postConf.path, params, function(data){
 							$dialog.modal("hide");

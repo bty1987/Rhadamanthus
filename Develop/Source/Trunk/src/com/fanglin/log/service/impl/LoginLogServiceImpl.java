@@ -19,7 +19,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
-import com.fanglin.utils.UUIDUtil;
 
 @Service("loginLogService")
 @Transactional(readOnly = true)
@@ -38,7 +37,7 @@ public class LoginLogServiceImpl implements LoginLogService {
 		LoginLogPO loginLogPO = new LoginLogPO();
 		
 		BeanUtil.copyProperties(loginLog, loginLogPO);
-		loginLogPO.setId(UUIDUtil.getUuid());
+		loginLogPO.setId("");
 		
 		Timestamp beforeTime = new Timestamp(DateUtil.getTimestampToDate(loginLogPO.getLoginTime()).getTime() - SystemConfig.getInt("recordLoginLogDay", 30) * 24 * 60*60*1000L);
 		

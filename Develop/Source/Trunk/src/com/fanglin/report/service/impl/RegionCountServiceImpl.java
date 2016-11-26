@@ -11,6 +11,7 @@
 
 package com.fanglin.report.service.impl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,7 +39,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	private RegionCountDetailDao regionCountDetailDao;
 
 	@Override
-	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws Exception {
+	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.pageRegionCountDetail(paging, filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -59,7 +60,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	}
 
 	@Override
-	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) throws Exception {
+	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) throws ParseException{
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.queryRegionCountDetail(filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -80,7 +81,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	}
 
 	@Override
-	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<FilterVO> filters) throws Exception {
+	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<FilterVO> filters) throws ParseException {
 		
 		filters.add(new FilterVO(RegionCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
 		

@@ -609,7 +609,9 @@ jQuery(function($) {
 					['收款类型','type'],
 					['预付款类型','paymentType'],
 					['操作金额','balance'],
+					['收款人', 'collectUserName'],
 					['收款时间', 'collectTime'],
+					['状态', 'status'],
 					['备注', 'des'],
 					['现金', 'cash'],
 					['银行', ['bank', 'bankInfo']],
@@ -624,7 +626,7 @@ jQuery(function($) {
 					var _s = v.bankInfo.split('#');
 					for(var i=1;i<_s.length-1;i++){
 					    var _i = _s[i].split('|');
-					    $info += payment.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					    $info += payment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
 					}
 					  
 					v.bankInfo = $info;

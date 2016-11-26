@@ -543,7 +543,10 @@ jQuery(function($) {
 					['楼盘地址','orderAddr'],
 					['品牌','customerName'],
 					['应收金额', 'referMoney'],
+					['收款人', 'collectUserName'],
 					['收款时间', 'collectTime'],
+					['类型', 'paymentType'],
+					['状态', 'paymentStatus'],
 					['备注', 'des'],
 					['现金', 'cash'],
 					['银行', ['bank', 'bankInfo']],
@@ -560,7 +563,7 @@ jQuery(function($) {
 					  var _s = v.bankInfo.split('#');
 					  for(var i=1;i<_s.length-1;i++){
 					    var _i = _s[i].split('|');
-					    $info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					    $info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
 					  }
 					  
 					  v.bankInfo = $info;
@@ -569,6 +572,9 @@ jQuery(function($) {
 				v.checkvBankName = v.checkv != null && v.checkv != "0" ? materialPayment.checkBankInfo[v.checkvBankName] : '';
 				v.installmentBankName = v.installment != null && v.installment != "0" ? materialPayment.bankInfo[v.installmentBankName] : '';
 				v.accountsBankName = v.accounts != null && v.accounts != "0" ? materialPayment.accountsInfo[v.accountsBankName] : '';
+				
+				v.paymentType = materialPayment.materialPaymentTypeData[v.paymentType];
+				v.paymentStatus = v.paymentStatus == 1 ? '待确认' : '已确认';
 			});
 		});
     });
