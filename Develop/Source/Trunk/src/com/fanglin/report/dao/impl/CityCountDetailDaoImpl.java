@@ -11,6 +11,7 @@
 
 package com.fanglin.report.dao.impl;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +23,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.report.dao.CityCountDetailDao;
 import com.fanglin.report.po.CityCountDetailPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("cityCountDetailDao")
@@ -61,9 +63,21 @@ public class CityCountDetailDaoImpl extends DaoImpl<CityCountDetailPO> implement
 			String data = filter.getData();
 			String op = filter.getOp();
 			
-			if("createDate".equals(field)){
+			if(CityCountDetailPO.COLUMN_CREATEDATE_STR.equals(field)){
 				Date date = new SimpleDateFormat("yyyy-MM-dd").parse(data);
-				query.add(query.getCriterion(field, date, op));
+				query.add(query.getCriterion(CityCountDetailPO.COLUMN_CREATEDATE_STR, date, op));
+			}else if("createDateRange".equals(field)){
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+				
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				
+				query.add(query.getCriterion(CityCountDetailPO.COLUMN_CREATEDATE_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(CityCountDetailPO.COLUMN_CREATEDATE_STR, sTimestamp, "ge"));
 			}
 		}
 	}

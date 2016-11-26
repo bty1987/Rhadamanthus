@@ -4,16 +4,16 @@ jQuery(function(){
         params["notice.type"] = "活动";
         $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
         com.switchPage(api.index.moreNoticesIndex.url);
-		$('.breadcrumb .nav2').hide();
-		$('.breadcrumb .nav3').hide();
+        $('.breadcrumb .nav2').hide();
+        $('.breadcrumb .nav3').hide();
     });
 
     $('#moreNotice').click(function(){
         params["notice.type"] = "通知";
         $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
         com.switchPage(api.index.moreNoticesIndex.url);
-		$('.breadcrumb .nav2').hide();
-		$('.breadcrumb .nav3').hide();
+        $('.breadcrumb .nav2').hide();
+        $('.breadcrumb .nav3').hide();
     });
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
@@ -30,10 +30,6 @@ jQuery(function(){
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
 
-    /* var img = new Image();
-     img.src = params.watermark;
-     url = 'url("' + img.src + '")'
-     $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');*/
 
     loadNotices();
     loadActivities();
@@ -79,23 +75,6 @@ jQuery(function(){
         editable: true,//判断该日程能否拖动
         droppable: true, // this allows things to be dropped onto the calendar !!!
 
-        events: [
-            {
-                title: '当天事件',
-                start: new Date(y, m, 1),
-                className: 'label-important'
-            },
-            {
-                title: '长期事件',
-                start: new Date(y, m, d-5),
-                end: new Date(y, m, d-2),
-                className: 'label-success'
-            },
-            {
-                title: '其他事件(时间提示)',
-                start: new Date(y, m, d-3, 16, 0),
-                allDay: false
-            }],//初始化事件
         drop: function(date, allDay) {
 
             // retrieve the dropped element's stored Event Object
@@ -146,16 +125,39 @@ jQuery(function(){
         },
         eventClick: function(calEvent, jsEvent, view) {
 
-            var form = $("<form class='form-inline'><label>Change event name &nbsp;</label></form>");
-            form.append("<input class='middle' autocomplete=off type=text value='" + calEvent.title + "' /> ");
-            form.append("<button type='submit' class='btn btn-sm btn-success'><i class='icon-ok'></i> Save</button>");
+
+            var form = $("<form class='form-horizontal'  style='margin-top:20px'></form>");
+
+            var $g1 = $('<div></div>').addClass('form-group');
+            $g1.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 标题 </label>');
+            $g1.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.title + '</span></div>');
+
+            var $g2 = $('<div></div>').addClass('form-group');
+            $g2.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 内容 </label>');
+            $g2.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.content + '</span></div>');
+
+            var $g3 = $('<div></div>').addClass('form-group');
+            $g3.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建人 </label>');
+            $g3.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.creater.currentName + '</span></div>');
+
+            var $g4 = $('<div></div>').addClass('form-group');
+            $g4.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建时间 </label>');
+            $g4.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10" >' + (calEvent.createTime && calEvent.createTime.split('T')[0].toString()) + '</span></div>');
+
+
+            form.append($g1)
+                .append($g2)
+                .append($g3)
+                .append($g4);
+
 
             var div = bootbox.dialog({
                 message: form,
 
                 buttons: {
+
                     "delete" : {
-                        "label" : "<i class='icon-trash'></i> Delete Event",
+                        "label" : "<i class='icon-trash'></i> 删除",
                         "className" : "btn-sm btn-danger",
                         "callback": function() {
                             calendar.fullCalendar('removeEvents' , function(ev){
@@ -164,7 +166,7 @@ jQuery(function(){
                         }
                     } ,
                     "close" : {
-                        "label" : "<i class='icon-remove'></i> Close",
+                        "label" : "<i class='icon-remove'></i> 取消",
                         "className" : "btn-sm"
                     }
                 }
@@ -177,12 +179,6 @@ jQuery(function(){
                 return false;
             });
 
-            //console.log(calEvent.id);
-            //console.log(jsEvent);
-            //console.log(view);
-
-            // change the border color just for fun
-            //$(this).css('border-color', 'red');
 
         },
 
@@ -190,22 +186,44 @@ jQuery(function(){
 
         firstDay: 1,
 
-        /*viewDisplay: function (view) {
-         var viewStart = $.fullCalendar.formatDate(view.start, "yyyy-MM-dd HH:mm:ss");
-         var viewEnd = $.fullCalendar.formatDate(view.end, "yyyy-MM-dd HH:mm:ss");
-         $("#calendar").fullCalendar('removeEvents');//清空事件
+        events: function(start, end, callback){
 
-         console.log(viewStart + ' ' + viewEnd);
+            var viewStart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+            var viewEnd = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
 
-         $.getJSON("data/events.json", { start: viewStart, end: viewEnd }, function (data) {
+            com.post(api.information.queryEvent, {"event.beginDate" : viewStart, "event.endDate" :  viewEnd}, function(data){
 
-         var resultCollection = data.events;
-         $.each(resultCollection, function (index, term) {
-         $("#calendar").fullCalendar('renderEvent', term, true);
-         });
+                var resultCollection = data.events;
 
-         }); //把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
-         },*///动态把数据查出，按照月份动态查询
+                if(!resultCollection.length) return;
+
+                var events = [];
+
+                $.each(resultCollection, function (index, term) {
+
+                    var start = new Date(term.showDate);
+                    var end = new Date(term.endDate || term.showDate);
+
+                    events.push({
+                        title: term.title,
+                        start: start,
+
+                        className: 'label-success',
+                        creater : term.creater,
+                        createTime : term.createTime,
+                        content : term.content
+                    });
+                });
+
+                console.log(events);
+                callback(events);
+
+            }, null);//把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
+        },
+
+        viewDisplay: function (view) {
+
+        },//动态把数据查出，按照月份动态查询
 
         dayClick: function (date, allDay, jsEvent, view) {
             var selectdate = $.fullCalendar.formatDate(date, "yyyy-MM-dd");//选择当前日期的时间转换
@@ -240,9 +258,13 @@ jQuery(function(){
     //$('#calendar').fullCalendar('gotoDate', y, m);
 
     //$('#myTab4 li:eq(0) a').trigger('click');
-    
+
     $('#calendarTab').removeClass('active');
     $('#calendarPage').removeClass('in active');
+
+    $('#calendarTab').click(function(){
+        setTimeout("$('#calendar').fullCalendar('rerenderEvents')", 500)
+    });
 
 });
 

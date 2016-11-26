@@ -6,23 +6,34 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fanglin.department.po.DepartmentPO;
 
 @Entity
 @Table(name = "dregioncountdetail", catalog = "report")
 public class DRegionCountDetailPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7346601311002659577L;
+	
+	public static final String COLUMN_DESIGN_DEPTID_STR = "designRegion.deptId";
+	
+	public static final String COLUMN_SALESMAN_DEPTID_STR = "salesmanRegion.deptId";
+	
+	public static final String COLUMN_CREATEDATE_STR = "createDate";
 
 	private long drcdId;
 	
-	private int ddId;
+	private DepartmentPO designRegion;
 	
-	private int sdId;
+	private DepartmentPO salesmanRegion;
 	
 	private float createNum;
 	
@@ -43,22 +54,24 @@ public class DRegionCountDetailPO implements java.io.Serializable {
 		this.drcdId = drcdId;
 	}
 
-	@Column(name = "ddId")
-	public int getDdId() {
-		return this.ddId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ddId", referencedColumnName="dId")
+	public DepartmentPO getDesignRegion() {
+		return designRegion;
 	}
 
-	public void setDdId(int ddId) {
-		this.ddId = ddId;
+	public void setDesignRegion(DepartmentPO designRegion) {
+		this.designRegion = designRegion;
 	}
 
-	@Column(name = "sdId")
-	public int getSdId() {
-		return this.sdId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "sdId", referencedColumnName="dId")
+	public DepartmentPO getSalesmanRegion() {
+		return salesmanRegion;
 	}
 
-	public void setSdId(int sdId) {
-		this.sdId = sdId;
+	public void setSalesmanRegion(DepartmentPO salesmanRegion) {
+		this.salesmanRegion = salesmanRegion;
 	}
 
 	@Column(name = "createNum")

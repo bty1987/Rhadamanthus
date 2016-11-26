@@ -13,6 +13,8 @@ public class DecorationOrderStatusRightPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6652444709974531640L;
 	
+	public static final String STATUS_ALL_ENABLE_STR = "全部";
+	
 	public static final String COLUMN_UID_STR = "uid";
 
 	private int dosrId;

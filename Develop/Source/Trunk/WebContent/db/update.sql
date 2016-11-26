@@ -47,7 +47,20 @@ CREATE TABLE `decorationoperate` (
   KEY `indextwo` (`operateTime`, `type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
 
-
+DROP TABLE IF EXISTS `events`;
+CREATE TABLE `events` (
+  `eId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL,
+  `content` varchar(256) NOT NULL DEFAULT '',
+  `createrId` varchar(15),
+  `holderId` varchar(15) NOT NULL,
+  `createTime` timestamp NULL DEFAULT NULL,
+  `deptId` varchar(10),
+  `regionId` varchar(10),
+  `showDate` date NOT NULL, 
+  `type` tinyint NOT NULL,
+  PRIMARY KEY (`eId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件表';
 
 
 

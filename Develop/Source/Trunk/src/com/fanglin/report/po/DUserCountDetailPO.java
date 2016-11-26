@@ -6,23 +6,34 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "dusercountdetail", catalog = "report")
 public class DUserCountDetailPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2273639497474419489L;
+	
+	public static final String COLUMN_DESIGNER_USERID_STR = "designer.userId";
+	
+	public static final String COLUMN_SALEMSNA_USERID_STR = "salesman.userId";
+	
+	public static final String COLUMN_CREATEDATE_STR = "createDate";
 
 	private long ducdId;
 	
-	private int duId;
+	private UserPO designer;
 	
-	private int suId;
+	private UserPO salesman;
 	
 	private float createNum;
 	
@@ -43,22 +54,24 @@ public class DUserCountDetailPO implements java.io.Serializable {
 		this.ducdId = ducdId;
 	}
 
-	@Column(name = "duId")
-	public int getDuId() {
-		return this.duId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "duId", referencedColumnName="uId")
+	public UserPO getDesigner() {
+		return designer;
 	}
 
-	public void setDuId(int duId) {
-		this.duId = duId;
+	public void setDesigner(UserPO designer) {
+		this.designer = designer;
 	}
 
-	@Column(name = "suId")
-	public int getSuId() {
-		return this.suId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "suId", referencedColumnName="uId")
+	public UserPO getSalesman() {
+		return salesman;
 	}
 
-	public void setSuId(int suId) {
-		this.suId = suId;
+	public void setSalesman(UserPO salesman) {
+		this.salesman = salesman;
 	}
 
 	@Column(name = "createNum")

@@ -11,6 +11,7 @@
 
 package com.fanglin.report.action;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -37,9 +38,17 @@ public class RegionCountAction extends BaseListAction {
 	private List<RegionCountDetailVO> regionCounts;
 	
 	@Action(value="reportRegionCountForCurrent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String reportRegionCountForCurrent() throws Exception{
+	public String reportRegionCountForCurrent() throws ParseException{
 		
 		regionCounts = regionCountService.queryRegionCountDetailForCurrent(getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="reportRegionCount", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String reportRegionCount() throws ParseException{
+		
+		regionCounts = regionCountService.queryRegionCountDetail(getFilters());
 		
 		return SUCCESS;
 	}

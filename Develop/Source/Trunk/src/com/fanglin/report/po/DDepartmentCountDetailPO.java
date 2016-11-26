@@ -6,11 +6,16 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fanglin.department.po.DepartmentPO;
 
 @Entity
 @Table(name = "ddepartmentcountdetail", catalog = "report")
@@ -18,11 +23,17 @@ public class DDepartmentCountDetailPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7500316305714817316L;
 	
+	public static final String COLUMN_DESIGN_DEPTID_STR = "designDepartment.deptId";
+	
+	public static final String COLUMN_SALESMAN_DEPTID_STR = "salesmanDepartment.deptId";
+	
+	public static final String COLUMN_CREATEDATE_STR = "createDate";
+	
 	private long ddcdId;
 	
-	private int ddId;
+	private DepartmentPO designDepartment;
 	
-	private int sdId;
+	private DepartmentPO salesmanDepartment;
 	
 	private float createNum;
 	
@@ -43,22 +54,24 @@ public class DDepartmentCountDetailPO implements java.io.Serializable {
 		this.ddcdId = ddcdId;
 	}
 
-	@Column(name = "ddId")
-	public int getDdId() {
-		return this.ddId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ddId", referencedColumnName="dId")
+	public DepartmentPO getDesignDepartment() {
+		return designDepartment;
 	}
 
-	public void setDdId(int ddId) {
-		this.ddId = ddId;
+	public void setDesignDepartment(DepartmentPO designDepartment) {
+		this.designDepartment = designDepartment;
 	}
 
-	@Column(name = "sdId")
-	public int getSdId() {
-		return this.sdId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "sdId", referencedColumnName="dId")
+	public DepartmentPO getSalesmanDepartment() {
+		return salesmanDepartment;
 	}
 
-	public void setSdId(int sdId) {
-		this.sdId = sdId;
+	public void setSalesmanDepartment(DepartmentPO salesmanDepartment) {
+		this.salesmanDepartment = salesmanDepartment;
 	}
 
 	@Column(name = "createNum")

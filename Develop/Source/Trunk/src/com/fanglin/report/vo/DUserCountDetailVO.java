@@ -2,6 +2,8 @@ package com.fanglin.report.vo;
 
 import java.util.Date;
 
+import org.apache.struts2.json.annotations.JSON;
+
 public class DUserCountDetailVO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 5346238041428533130L;
@@ -72,6 +74,7 @@ public class DUserCountDetailVO implements java.io.Serializable {
 		this.contractPrice = contractPrice;
 	}
 
+	@JSON(format="yyyy-MM-dd")
 	public Date getCreateDate() {
 		return createDate;
 	}

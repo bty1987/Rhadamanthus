@@ -286,7 +286,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperateDao.save(decorationOperatePO);
 		
 		// 生成业务员对应设计师的合同额信息
-		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), 1);
+		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), 1, decorationOperatePO.getType());
 		
 		return 0;
 	}
@@ -328,7 +328,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
 		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
 		
-		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), -1);
+		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationOrderPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, userId, decorationOrderPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
 		
 		return 0;
 	}

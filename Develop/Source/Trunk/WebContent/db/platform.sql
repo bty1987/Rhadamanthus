@@ -913,6 +913,21 @@ CREATE TABLE `drawline` (
   KEY `indextwo` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
+DROP TABLE IF EXISTS `events`;
+CREATE TABLE `events` (
+  `eId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL,
+  `content` varchar(256) NOT NULL DEFAULT '',
+  `createrId` varchar(15),
+  `holderId` varchar(15) NOT NULL,
+  `createTime` timestamp NULL DEFAULT NULL,
+  `deptId` varchar(10),
+  `regionId` varchar(10),
+  `showDate` date NOT NULL, 
+  `type` tinyint NOT NULL,
+  PRIMARY KEY (`eId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件表';
+
 DROP TABLE IF EXISTS `functionarea`;
 CREATE TABLE `functionarea` (
   `faId` bigint(20) NOT NULL AUTO_INCREMENT,

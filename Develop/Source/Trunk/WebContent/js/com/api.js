@@ -701,6 +701,10 @@ var api = {
 		updateActivityItem: {url: "updateActivityItem.do"},
 		deleteActivityItemByAiId: {url: "deleteActivityItemByAiId.do"},
 		
+		queryEvent: {url: "queryEvent.do", demo:true},
+		addEvent: {url: "addEvent.do"},
+		deleteEvent: {url: "deleteEvent.do"},
+		
 	}, log: {
 		
 		pageActionLog: {url: "pageActionLog.do"},

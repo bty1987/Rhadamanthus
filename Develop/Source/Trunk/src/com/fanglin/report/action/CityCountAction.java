@@ -52,6 +52,14 @@ public class CityCountAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="reportCityCount", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String reportCityCount() throws ParseException{
+		
+		cityCounts = cityCountService.queryCityCountDetail(getFilters());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="reportCityProperCountForCurrent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String reportCityProperCountForCurrent() throws ParseException{
 		

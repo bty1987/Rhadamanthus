@@ -212,6 +212,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			return;
 		}
 		
+		if(designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationOrderDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+			designDepartmentIds = null;
+		}
+		
+		if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+			statuses = null;
+		}
+		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
@@ -460,6 +468,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			if(statuses.size() == 0 || designDepartmentIds.size() == 0){
 				return;
 			}
+			
+			if(designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationOrderDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+				designDepartmentIds = null;
+			}
+			
+			if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+				statuses = null;
+			}
 		}
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, designDepartmentIds, statuses);
@@ -560,6 +576,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			if(statuses.size() == 0 || salesmanDepartmentIds.size() == 0){
 				return;
+			}
+			
+			if(salesmanDepartmentIds.size() == 1 && salesmanDepartmentIds.get(0) == DecorationOrderSalesmanDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+				salesmanDepartmentIds = null;
+			}
+			
+			if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+				statuses = null;
 			}
 		}
 		
