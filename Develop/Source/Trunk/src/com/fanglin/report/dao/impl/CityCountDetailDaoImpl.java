@@ -67,6 +67,10 @@ public class CityCountDetailDaoImpl extends DaoImpl<CityCountDetailPO> implement
 				Date date = new SimpleDateFormat("yyyy-MM-dd").parse(data);
 				query.add(query.getCriterion(CityCountDetailPO.COLUMN_CREATEDATE_STR, date, op));
 			}else if("createDateRange".equals(field)){
+				
+				System.out.println(field);
+				System.out.println(data);
+				
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 				

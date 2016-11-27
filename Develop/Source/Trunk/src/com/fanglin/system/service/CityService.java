@@ -18,6 +18,8 @@ import com.fanglin.utils.Paging;
 public interface CityService {
 	
 	public void pageCity(Paging paging, List<FilterVO> filters);
+	
+	public void pageCityByName(Paging paging, CityVO cityVO);
 
 	public List<CityVO> queryCity();
 	
@@ -25,12 +27,4 @@ public interface CityService {
 	
 	public List<CityVO> queryCityByRegionId(CityVO cityVO);
 	
-	public void addCity(CityVO cityVO);
-
-	public void updateCity(CityVO cityVO);
-	
-	public void deleteCityById(CityVO cityVO);
-
-	public String deleteCityByIds(List<String> cityIds);
-
 }

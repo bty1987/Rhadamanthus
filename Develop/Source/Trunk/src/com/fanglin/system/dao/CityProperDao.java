@@ -12,6 +12,8 @@ public interface CityProperDao extends Dao<CityProperPO> {
 	
 	public List<CityProperPO> pageCityProper(Paging paging, List<FilterVO> filters);
 	
+	public List<CityProperPO> pageCityProperByName(Paging paging, String name);
+	
 	public List<CityProperPO> queryCityProperByCityId(String cityId);
 	
 	public List<CityProperPO> queryCityProperByCityIds(List<String> cityIds);

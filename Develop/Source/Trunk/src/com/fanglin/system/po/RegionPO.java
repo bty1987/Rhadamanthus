@@ -28,11 +28,15 @@ public class RegionPO implements Serializable {
 	
 	public static final String REGION_NAME = "regionName";
 	
+	public static final String COLUMN_PINYIN_STR = "pinyin";
+	
 	private int rId;
 
 	private String regionId;
 	
 	private String regionName;
+	
+	private String pinyin;
 	
 	private double x;
 	
@@ -74,6 +78,15 @@ public class RegionPO implements Serializable {
 
 	public void setRegionName(String regionName){
 		this.regionName = regionName;
+	}
+
+	@Column(name = COLUMN_PINYIN_STR)
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@Column(name = "x")

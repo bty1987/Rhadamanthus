@@ -36,7 +36,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
-import com.fanglin.log.vo.LogVO;
 import com.fanglin.utils.AuthenticationUtil;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
@@ -65,8 +64,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	private int errorCode = 0;
 	
 	private String errorMsg;
-	
-	private LogVO logVO = new LogVO();
 	
 	Map<String, Object> logObjs = new HashMap<String, Object>();
 	
@@ -240,15 +237,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return super.getErrors();
 	}
 
-	public void setLogVO(LogVO logVO){
-		this.logVO = logVO;
-	}
-
-	@JSON(serialize = false)
-	public LogVO getLogVO(){
-		return logVO;
-	}
-	
 	@JSON(serialize = false)
 	public Map<String, Object> getLogObjs(){
 		if(logObjs == null){

@@ -30,7 +30,13 @@ public class DepartmentPO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
 	
+	public static final String COLUMN_DEPTNAME_STR = "deptName";
+	
+	public static final String COLUMN_PINYIN_STR = "pinyin";
+	
 	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 	
 	public static final short STATUS_DISABLE_INT = 0;
 	
@@ -41,6 +47,8 @@ public class DepartmentPO implements Serializable {
 	private String deptId;
 	
 	private String deptName;
+	
+	private String pinyin;
 	
 	private String type;
 	
@@ -64,11 +72,16 @@ public class DepartmentPO implements Serializable {
 		super();
 	}
 	
+	public DepartmentPO(int dId) {
+		super();
+		this.dId = dId;
+	}
+	
 	public DepartmentPO(String deptId) {
 		super();
 		this.deptId = deptId;
 	}
-
+	
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "dId") 
 	public int getdId() {
@@ -96,6 +109,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setDeptName(String deptName){
 		this.deptName = deptName;
+	}
+
+	@Column(name = "pinyin")
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@Column(name = "type")

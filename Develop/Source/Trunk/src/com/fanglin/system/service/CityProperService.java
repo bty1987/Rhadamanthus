@@ -21,16 +21,12 @@ public interface CityProperService {
 	
 	public void pageCityProper(Paging paging, List<FilterVO> filters);
 	
+	public void pageCityProperByName(Paging paging, CityProperVO cityProperVO);
+	
 	public List<CityProperVO> queryCityProper();
 	
 	public CityProperVO queryCityProperById(CityProperVO cityProperVO);
 	
 	public List<CityProperVO> queryCityProperByCityId(CityProperVO cityProperVO);
-	
-	public void saveOrUpdateCityProper(CityProperVO cityProperVO);
-	
-	public void deleteCityProperById(String id);
-	
-	public String deleteCityProper(List<String> ids);
 	
 }

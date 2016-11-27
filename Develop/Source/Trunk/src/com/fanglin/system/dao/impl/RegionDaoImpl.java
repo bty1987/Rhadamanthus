@@ -12,6 +12,8 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -34,6 +36,16 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 
 		queryFilterExcute(query, filters);
 
+		return query.list();
+	}
+	
+	@Override
+	public List<RegionPO> pageRegionByName(Paging paging, String name) {
+		
+		PagingQuery<RegionPO> query = pagingQuery(paging, RegionPO.class);
+		
+		query.add(Restrictions.or(Restrictions.ilike(RegionPO.REGION_NAME, name, MatchMode.ANYWHERE), Restrictions.ilike(RegionPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
+		
 		return query.list();
 	}
 

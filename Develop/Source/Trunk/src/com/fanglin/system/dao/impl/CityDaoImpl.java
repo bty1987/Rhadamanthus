@@ -11,6 +11,7 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +34,16 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
 		
 		queryFilterExcute(query, filters);
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<CityPO> pageCityByName(Paging paging, String name) {
+		
+		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
+		
+		query.add(Restrictions.or(Restrictions.ilike(CityPO.CITY_NAME, name, MatchMode.ANYWHERE), Restrictions.ilike(CityPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
 		
 		return query.list();
 	}
