@@ -20,10 +20,10 @@ public interface DepartmentService {
 	
 	public void pageDepartment(Paging paging, List<FilterVO> filters, DepartmentVO departmentVO, int company) throws FLException;
 	
-	public void pageDepartmentByName(Paging paging, DepartmentVO departmentVO, int company);
-	
 	public List<DepartmentVO> queryDepartment(String type, int company) throws FLException;
 
 	public DepartmentVO queryDepartmentById(String id);
+	
+	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company);
 
 }

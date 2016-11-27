@@ -53,25 +53,6 @@ public class CityServiceImpl implements CityService {
 	}
 	
 	@Override
-	public void pageCityByName(Paging paging, CityVO cityVO) {
-		
-		List<CityPO> cityPOs = cityDao.pageCityByName(paging, cityVO.getCityName());
-		List<CityVO> cityVOs = new ArrayList<CityVO>();
-		
-		for(CityPO cityPO: cityPOs){
-			cityVO = new CityVO();
-			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-			
-			cityVO.setRegion(new RegionVO());
-			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-			
-			cityVOs.add(cityVO);
-		}
-
-		paging.setData(cityVOs);
-	}
-
-	@Override
 	public List<CityVO> queryCity(){
 
 		List<CityPO> cityPOs = cityDao.list();
@@ -122,6 +103,25 @@ public class CityServiceImpl implements CityService {
 		}
 
 		return cityVO;
+	}
+
+	@Override
+	public List<CityVO> queryCityByName(CityVO cityVO) {
+		
+		List<CityPO> cityPOs = cityDao.pageCityByName(new Paging(0, 50), cityVO.getCityName());
+		List<CityVO> cityVOs = new ArrayList<CityVO>();
+		
+		for(CityPO cityPO: cityPOs){
+			cityVO = new CityVO();
+			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
+			
+			cityVO.setRegion(new RegionVO());
+			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
+			
+			cityVOs.add(cityVO);
+		}
+
+		return cityVOs;
 	}
 
 }

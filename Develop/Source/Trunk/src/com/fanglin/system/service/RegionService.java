@@ -19,10 +19,10 @@ public interface RegionService {
 	
 	public void pageRegion(Paging paging, List<FilterVO> filters);
 	
-	public void pageRegionByName(Paging paging, RegionVO regionVO);
-	
 	public List<RegionVO> queryRegion();
 	
 	public RegionVO queryRegionById(RegionVO regionVO);
+	
+	public List<RegionVO> queryRegionByName(RegionVO regionVO);
 
 }

@@ -59,19 +59,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 	
 	@Override
-	public void pageDepartmentByName(Paging paging, DepartmentVO departmentVO, int company) {
-
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(paging, departmentVO.getDeptName(), company);
-		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
-		
-		for(DepartmentPO departmentPO: departmentPOs){
-			departmentVOs.add(convertBean(departmentPO));
-		}
-		
-		paging.setData(departmentVOs);
-	}
-
-	@Override
 	public List<DepartmentVO> queryDepartment(String type, int company) throws FLException{
 		
 		Integer _company = null;
@@ -100,6 +87,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 		
 		return departmentVO;
+	}
+
+	@Override
+	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
+		
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), company);
+		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
+		
+		for(DepartmentPO departmentPO: departmentPOs){
+			departmentVOs.add(convertBean(departmentPO));
+		}
+		
+		return departmentVOs;
 	}
 
 	public DepartmentVO convertBean(DepartmentPO departmentPO){
