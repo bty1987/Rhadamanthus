@@ -17,24 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.po.CountingPO;
-import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.FilterVO;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.service.DepartmentService;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("departmentService")
 @Transactional(readOnly = true)
@@ -42,9 +36,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Autowired
 	private DepartmentDao departmentDao;
-	
-	@Autowired
-	private CountingService countingService;
 	
 	@Override
 	public void pageDepartment(Paging paging, List<FilterVO> filters, DepartmentVO departmentVO, int company) throws FLException{
@@ -67,6 +58,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 		paging.setData(departmentVOs);
 	}
 	
+	@Override
+	public void pageDepartmentByName(Paging paging, DepartmentVO departmentVO, int company) {
+
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(paging, departmentVO.getDeptName(), company);
+		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
+		
+		for(DepartmentPO departmentPO: departmentPOs){
+			departmentVOs.add(convertBean(departmentPO));
+		}
+		
+		paging.setData(departmentVOs);
+	}
+
 	@Override
 	public List<DepartmentVO> queryDepartment(String type, int company) throws FLException{
 		
@@ -96,76 +100,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 		
 		return departmentVO;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addDepartment(DepartmentVO departmentVO){
-		if(departmentVO.getCreateTime() == null || departmentVO.getCreateTime().trim().equals("")){
-			departmentVO.setCreateTime(DateUtil.current());
-		}
-		
-		DepartmentPO departmentPO = new DepartmentPO();
-		
-		int count = countingService.queryCountingByTypeDate(departmentVO.getIdent(), CountingPO.COUNTING_DATE_SILNLE_STR);
-		
-		StringBuffer deptId = new StringBuffer();
-		deptId.append(SystemConfig.getString("companyIdent", ""));
-		deptId.append(SystemConfig.getString("departmentIdent", "FL_"));
-		deptId.append(departmentVO.getDeptId());
-		deptId.append(FormatUtil.fillZero(count, "00"));
-		
-		departmentPO.setDeptId(deptId.toString());
-		
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("deptId", "fatherDept", "cityProper"));
-		
-		if(departmentVO.getFatherDept() != null){
-			departmentPO.setFatherDept(new DepartmentPO());
-			BeanUtil.copyProperties(departmentVO.getFatherDept(), departmentPO.getFatherDept());
-		}
-		
-		if(departmentVO.getCityProper() != null){
-			departmentPO.setCityProper(new CityProperPO());
-			BeanUtil.copyProperties(departmentVO.getCityProper(), departmentPO.getCityProper());
-		}
-
-		departmentDao.saveOrUpdate(departmentPO);
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateDepartment(DepartmentVO departmentVO) {
-		
-		DepartmentPO departmentPO = departmentDao.get(departmentVO.getDeptId());
-		
-		if(departmentPO != null){
-			BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("deptId", "fatherDept", "cityProper", "dId"));
-			
-			if(departmentVO.getFatherDept() != null){
-				departmentPO.setFatherDept(new DepartmentPO());
-				BeanUtil.copyProperties(departmentVO.getFatherDept(), departmentPO.getFatherDept());
-			}
-			
-			if(departmentVO.getCityProper() != null){
-				departmentPO.setCityProper(new CityProperPO());
-				BeanUtil.copyProperties(departmentVO.getCityProper(), departmentPO.getCityProper());
-			}
-			
-			departmentDao.update(departmentPO);
-		}
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteDepartment(List<String> ids){
-		for(String id: ids)
-			deleteDepartmentById(id);
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteDepartmentById(String id){
-		departmentDao.deleteById(id);
 	}
 
 	public DepartmentVO convertBean(DepartmentPO departmentPO){

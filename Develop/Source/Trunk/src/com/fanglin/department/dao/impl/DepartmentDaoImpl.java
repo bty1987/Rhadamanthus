@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -41,6 +42,17 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
         return query.list();
     }
+    
+    @Override
+	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company) {
+		
+		PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
+		
+		query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
+		query.add(Restrictions.or(Restrictions.ilike(DepartmentPO.COLUMN_DEPTNAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(DepartmentPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
+		
+		return query.list();
+	}
 
 	@Override
     @SuppressWarnings("unchecked")

@@ -72,7 +72,7 @@ public class CityCountServiceImpl implements CityCountService {
 			cityCountDetailVO = new CityCountDetailVO(new CityVO());
 			
 			BeanUtil.copyProperties(cityCountDetailPO, cityCountDetailVO, Arrays.asList("city"));
-			BeanUtil.copyProperties(cityCountDetailPO.getCity(), cityCountDetailVO.getCity());
+			BeanUtil.copyProperties(cityCountDetailPO.getCity(), cityCountDetailVO.getCity(), Arrays.asList("region"));
 			
 			cityCountDetailVOs.add(cityCountDetailVO);
 		}

@@ -19,15 +19,10 @@ public interface RegionService {
 	
 	public void pageRegion(Paging paging, List<FilterVO> filters);
 	
+	public void pageRegionByName(Paging paging, RegionVO regionVO);
+	
 	public List<RegionVO> queryRegion();
-
-	public void addRegion(RegionVO regionVO);
-
-	public void updateRegion(RegionVO regionVO);
-
+	
 	public RegionVO queryRegionById(RegionVO regionVO);
 
-	public String deleteRegion(List<String> regionIds);
-
-	public void deleteRegionById(String regionId);
 }

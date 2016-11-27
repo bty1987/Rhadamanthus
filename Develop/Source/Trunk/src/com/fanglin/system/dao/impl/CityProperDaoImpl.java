@@ -2,6 +2,7 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,16 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
 
 		queryFilterExcute(query, filters);
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<CityProperPO> pageCityProperByName(Paging paging, String name) {
+		
+		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
+		
+		query.add(Restrictions.or(Restrictions.ilike(CityProperPO.CITY_PROPER_NAME, name, MatchMode.ANYWHERE), Restrictions.ilike(CityProperPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
 		
 		return query.list();
 	}

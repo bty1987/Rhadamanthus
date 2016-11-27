@@ -19,8 +19,8 @@ public interface DepartmentDao extends Dao<DepartmentPO> {
 
     public List<DepartmentPO> pageDepartment(Paging paging, List<FilterVO> filters);
     
-//    public List<DepartmentPO> pageDepartmentForSubset(Paging paging, List<FilterVO> filters);
-
+    public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company);
+    
     public List<DepartmentPO> queryDepartment(String type, Integer company);
 
     public List<String> queryDepartmentForChildren(String fatherDeptId);

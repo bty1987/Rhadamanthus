@@ -48,6 +48,14 @@ public class CityProperAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageCityProperByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCityProperByName(){
+		
+		cityProperService.pageCityProperByName(getPaging(), cityProper);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityProper(){
 		

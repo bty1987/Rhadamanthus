@@ -20,6 +20,8 @@ public interface RegionDao extends Dao<RegionPO> {
 
 	public List<RegionPO> pageRegion(Paging paging, List<FilterVO> filters);
 	
+	public List<RegionPO> pageRegionByName(Paging paging, String name);
+	
 	public List<RegionPO> queryRegion();
 	
 }

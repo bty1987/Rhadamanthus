@@ -21,13 +21,17 @@ public class CityProperPO implements Serializable {
 	
 	public static final String CITY_PROPER_NAME = "cityProperName";
 	
+	public static final String COLUMN_PINYIN_STR = "pinyin";
+	
 	private int cpId;
+	
+	private CityPO city;
 	
 	private String cityProperId;
 	
 	private String cityProperName;
 	
-	private CityPO city;
+	private String pinyin;
 	
 	private double x;
 	
@@ -49,26 +53,7 @@ public class CityProperPO implements Serializable {
 	public void setCpId(int cpId) {
 		this.cpId = cpId;
 	}
-
-	@Id
-	@Column(name=CITY_PROPER_ID)
-	public String getCityProperId(){
-		return cityProperId;
-	}
-
-	public void setCityProperId(String cityProperId){
-		this.cityProperId = cityProperId;
-	}
-
-	@Column(name=CITY_PROPER_NAME)
-	public String getCityProperName(){
-		return cityProperName;
-	}
-
-	public void setCityProperName(String cityProperName){
-		this.cityProperName = cityProperName;
-	}
-
+	
 	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable=false, name="cityId", referencedColumnName="cityId")
 	public CityPO getCity(){
@@ -77,6 +62,34 @@ public class CityProperPO implements Serializable {
 
 	public void setCity(CityPO city){
 		this.city = city;
+	}
+
+	@Id
+	@Column(name = CITY_PROPER_ID)
+	public String getCityProperId(){
+		return cityProperId;
+	}
+
+	public void setCityProperId(String cityProperId){
+		this.cityProperId = cityProperId;
+	}
+
+	@Column(name = CITY_PROPER_NAME)
+	public String getCityProperName(){
+		return cityProperName;
+	}
+
+	public void setCityProperName(String cityProperName){
+		this.cityProperName = cityProperName;
+	}
+
+	@Column(name = COLUMN_PINYIN_STR)
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@Column(name = "x") 

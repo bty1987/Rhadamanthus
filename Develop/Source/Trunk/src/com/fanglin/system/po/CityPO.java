@@ -26,8 +26,8 @@ import javax.persistence.Table;
 @Table(name = "city", catalog = "communion")
 public class CityPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -5885986511194210020L;
+
 	public static final String CITY_ID = "cityId";
 	
 	public static final String CITY_NAME = "cityName";
@@ -36,14 +36,18 @@ public class CityPO implements Serializable {
 	
 	public static final String REGION_ID = "regionId";
 	
+	public static final String COLUMN_PINYIN_STR = "pinyin";
+	
 	private int cId;
+	
+	private RegionPO region;
 
 	private String cityId;
 
 	private String cityName;
-
-	private RegionPO region;
 	
+	private String pinyin;
+
 	private double x;
 	
 	private double y;
@@ -58,25 +62,6 @@ public class CityPO implements Serializable {
 		this.cId = cId;
 	}
 	
-	@Id
-	@Column(name = CITY_ID, nullable = false)
-	public String getCityId(){
-		return cityId;
-	}
-
-	public void setCityId(String cityId){
-		this.cityId = cityId;
-	}
-
-	@Column(name = CITY_NAME, nullable = false)
-	public String getCityName(){
-		return cityName;
-	}
-
-	public void setCityName(String cityName){
-		this.cityName = cityName;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = CITY_REGION_ID, referencedColumnName="regionId")
 	public RegionPO getRegion(){
@@ -85,6 +70,34 @@ public class CityPO implements Serializable {
 
 	public void setRegion(RegionPO region){
 		this.region = region;
+	}
+	
+	@Id
+	@Column(name = CITY_ID)
+	public String getCityId(){
+		return cityId;
+	}
+
+	public void setCityId(String cityId){
+		this.cityId = cityId;
+	}
+
+	@Column(name = CITY_NAME)
+	public String getCityName(){
+		return cityName;
+	}
+
+	public void setCityName(String cityName){
+		this.cityName = cityName;
+	}
+
+	@Column(name = COLUMN_PINYIN_STR)
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@Column(name = "x")
