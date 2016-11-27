@@ -47,14 +47,6 @@ public class RegionAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageRegionByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageRegionByName(){
-		
-		regionService.pageRegionByName(getPaging(), region);
-		
-		return SUCCESS;
-	}
-
 	@Action(value = "queryRegion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRegion(){
 		
@@ -67,6 +59,14 @@ public class RegionAction extends BaseListAction {
 	public String queryRegionById(){
 		
 		region = regionService.queryRegionById(region);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryRegionByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageRegionByName(){
+		
+		regionList = regionService.queryRegionByName(region);
 		
 		return SUCCESS;
 	}

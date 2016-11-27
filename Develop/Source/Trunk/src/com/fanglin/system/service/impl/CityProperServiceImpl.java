@@ -48,19 +48,6 @@ public class CityProperServiceImpl implements CityProperService {
 	}
 	
 	@Override
-	public void pageCityProperByName(Paging paging, CityProperVO cityProperVO) {
-
-		List<CityProperPO> cityProperPOs = cityProperDao.pageCityProperByName(paging, cityProperVO.getCityProperName());
-		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
-		
-		for(CityProperPO cityProperPO: cityProperPOs){
-			cityProperVOs.add(covertBean(cityProperPO));
-		}
-		
-		paging.setData(cityProperVOs);
-	}
-
-	@Override
 	public List<CityProperVO> queryCityProper(){
 
 		List<CityProperPO> cityProperPOs = cityProperDao.list();
@@ -108,6 +95,19 @@ public class CityProperServiceImpl implements CityProperService {
 		BeanUtil.copyProperties(cityProperPO.getCity().getRegion(), cityProperVO.getCity().getRegion());
 
 		return cityProperVO;
+	}
+
+	@Override
+	public List<CityProperVO> queryCityProperByName(CityProperVO cityProperVO) {
+		
+		List<CityProperPO> cityProperPOs = cityProperDao.pageCityProperByName(new Paging(0, 50), cityProperVO.getCityProperName());
+		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
+		
+		for(CityProperPO cityProperPO: cityProperPOs){
+			cityProperVOs.add(covertBean(cityProperPO));
+		}
+
+		return cityProperVOs;
 	}
 
 }

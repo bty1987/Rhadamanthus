@@ -48,14 +48,6 @@ public class DepartmentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDepartmentByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDepartmentByName() throws FLException{
-		
-		departmentService.pageDepartmentByName(getPaging(), dept, queryCompany());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartment() throws FLException{
 		
@@ -68,6 +60,14 @@ public class DepartmentAction extends BaseListAction {
 	public String queryDepartmentById(){
 		
 		dept = departmentService.queryDepartmentById(dept.getDeptId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryDepartmentByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDepartmentByName() throws FLException{
+		
+		deptList = departmentService.queryDepartmentByName(dept, queryCompany());
 		
 		return SUCCESS;
 	}

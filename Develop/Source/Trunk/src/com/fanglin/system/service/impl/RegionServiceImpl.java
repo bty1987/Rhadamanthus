@@ -48,22 +48,6 @@ public class RegionServiceImpl implements RegionService {
 	}
 	
 	@Override
-	public void pageRegionByName(Paging paging, RegionVO regionVO) {
-		
-		List<RegionPO> regionPOs = regionDao.pageRegionByName(paging, regionVO.getRegionName());
-		List<RegionVO> regionVOs = new ArrayList<RegionVO>();
-		
-		for(RegionPO regionPO: regionPOs){
-			regionVO = new RegionVO();
-			BeanUtil.copyProperties(regionPO, regionVO);
-			
-			regionVOs.add(regionVO);
-		}
-
-		paging.setData(regionVOs);
-	}
-	
-	@Override
 	public List<RegionVO> queryRegion(){
 
 		List<RegionPO> regionPOs = regionDao.queryRegion();
@@ -90,6 +74,22 @@ public class RegionServiceImpl implements RegionService {
 		}
 
 		return regionVO;
+	}
+
+	@Override
+	public List<RegionVO> queryRegionByName(RegionVO regionVO) {
+		
+		List<RegionPO> regionPOs = regionDao.pageRegionByName(new Paging(0, 50), regionVO.getRegionName());
+		List<RegionVO> regionVOs = new ArrayList<RegionVO>();
+		
+		for(RegionPO regionPO: regionPOs){
+			regionVO = new RegionVO();
+			BeanUtil.copyProperties(regionPO, regionVO);
+			
+			regionVOs.add(regionVO);
+		}
+
+		return regionVOs;
 	}
 
 }

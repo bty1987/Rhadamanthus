@@ -19,12 +19,12 @@ public interface CityService {
 	
 	public void pageCity(Paging paging, List<FilterVO> filters);
 	
-	public void pageCityByName(Paging paging, CityVO cityVO);
-
 	public List<CityVO> queryCity();
 	
 	public CityVO queryCityById(CityVO cityVO);
 	
 	public List<CityVO> queryCityByRegionId(CityVO cityVO);
+	
+	public List<CityVO> queryCityByName(CityVO cityVO);
 	
 }
