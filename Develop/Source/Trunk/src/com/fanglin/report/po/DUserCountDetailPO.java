@@ -54,7 +54,7 @@ public class DUserCountDetailPO implements java.io.Serializable {
 		this.ducdId = ducdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "duId", referencedColumnName="uId")
 	public UserPO getDesigner() {
 		return designer;
@@ -64,7 +64,7 @@ public class DUserCountDetailPO implements java.io.Serializable {
 		this.designer = designer;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "suId", referencedColumnName="uId")
 	public UserPO getSalesman() {
 		return salesman;

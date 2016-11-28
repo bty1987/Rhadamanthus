@@ -30,12 +30,11 @@ jQuery(function(){
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
 
-
     loadNotices();
     loadActivities();
     loadMessageCount();
     loadTopSelf();
-    queryTopInfo('decorationDesignerRank', 'designerName')
+    queryTopInfo('decorationDesignerRank', 'designerName', '设计分区业绩排名');
 
     /* initialize the calendar
      -----------------------------------------------------------------*/
@@ -105,18 +104,61 @@ jQuery(function(){
         selectHelper: true,
         select: function(start, end, allDay) {
 
-            bootbox.prompt("New Event Title:", function(title) {
-//				if (title !== null) {
-                if (title) {
-                    calendar.fullCalendar('renderEvent',
-                        {
-                            title: title,
-                            start: start,
-                            end: end,
-                            allDay: allDay
-                        },
-                        true // make the event "stick"
-                    );
+            var form = $("<form class='form-horizontal' id='eventadding' style='margin-top:20px'></form>");
+
+            var $g1 = $('<div></div>').addClass('form-group');
+            $g1.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 标题 </label>');
+            $g1.append('<div class="col-sm-9"><input class="col-xs-10 col-sm-6 v_required" autocomplete="off" type="text" name="title" data-toggle="popover" data-trigger="manual"/></div>');
+
+            var $g2 = $('<div></div>').addClass('form-group');
+            $g2.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 内容 </label>');
+            $g2.append('<div class="col-sm-9"><textarea class="col-xs-10 col-sm-6 v_required" name="content" data-toggle="popover" data-trigger="manual"></textarea></div>');
+
+            form.append($g1).append($g2);
+
+            var div = bootbox.dialog({
+                message: form,
+
+                buttons: {
+
+                    "save" : {
+                        "label" : "<i class='icon-check'></i> 确认",
+                        "className" : "btn-sm btn-success",
+                        "callback": function() {
+
+                            var validator = com.validate('eventadding');
+                            if(validator){
+                                return false;
+                            }
+
+                            var params = {
+                                "event.title": $('[name="title"]', form).val(),
+                                "event.content": $('[name="content"]', form).val(),
+                                "event.showDate": $.fullCalendar.formatDate(start, "yyyy-MM-dd")
+                            };
+
+                            com.post(api.information.addEvent, params, function(res){
+
+                                calendar.fullCalendar('renderEvent',
+                                    {
+                                        title: res.event.title,
+                                        start: new Date(res.event.showDate),
+
+                                        className: 'label-success',
+                                        creater : res.event.creater,
+                                        createTime : res.event.createTime,
+                                        content : res.event.content,
+                                        eid : res.event.eid
+                                    },
+                                    true // make the event "stick"
+                                );
+                            });
+                        }
+                    } ,
+                    "close" : {
+                        "label" : "<i class='icon-remove'></i> 取消",
+                        "className" : "btn-sm"
+                    }
                 }
             });
 
@@ -124,7 +166,6 @@ jQuery(function(){
 
         },
         eventClick: function(calEvent, jsEvent, view) {
-
 
             var form = $("<form class='form-horizontal'  style='margin-top:20px'></form>");
 
@@ -144,12 +185,7 @@ jQuery(function(){
             $g4.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建时间 </label>');
             $g4.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10" >' + (calEvent.createTime && calEvent.createTime.split('T')[0].toString()) + '</span></div>');
 
-
-            form.append($g1)
-                .append($g2)
-                .append($g3)
-                .append($g4);
-
+            form.append($g1).append($g2).append($g3).append($g4);
 
             var div = bootbox.dialog({
                 message: form,
@@ -160,9 +196,16 @@ jQuery(function(){
                         "label" : "<i class='icon-trash'></i> 删除",
                         "className" : "btn-sm btn-danger",
                         "callback": function() {
-                            calendar.fullCalendar('removeEvents' , function(ev){
-                                return (ev._id == calEvent._id);
-                            })
+
+                             com.post(api.information.deleteEvent, {
+                                 "event.eid": calEvent.eid
+                             }, function(){
+                                 calendar.fullCalendar('removeEvents' , function(ev){
+                                     return (ev._id == calEvent._id);
+                                 })
+                             });
+
+
                         }
                     } ,
                     "close" : {
@@ -178,8 +221,6 @@ jQuery(function(){
                 div.modal("hide");
                 return false;
             });
-
-
         },
 
         handleWindowResize : true,
@@ -190,6 +231,7 @@ jQuery(function(){
 
             var viewStart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
             var viewEnd = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+            $("#calendar").fullCalendar('removeEvents');//清空事件
 
             com.post(api.information.queryEvent, {"event.beginDate" : viewStart, "event.endDate" :  viewEnd}, function(data){
 
@@ -208,10 +250,11 @@ jQuery(function(){
                         title: term.title,
                         start: start,
 
-                        className: 'label-success',
+                        className: term.type == 1? 'label-info' : 'label-success',
                         creater : term.creater,
                         createTime : term.createTime,
-                        content : term.content
+                        content : term.content,
+                        eid : term.eid
                     });
                 });
 
@@ -235,28 +278,11 @@ jQuery(function(){
             if (bool) $('#loading').show();
             else $('#loading').hide();
         },
-
-        eventDrop: function(calEvent, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view){
-            alert(1)
-            /*
-             9.8.1. dayDelta: 保存了这次拖动导致该日程事件移动了多少天, 向前为正数, 向后为负数.
-             9.8.2. minuteDelta: 保存了这次拖动导致该日程事件移动了多少分钟, 向前为正数, 向后为负数. 该值只有在agenda view下有效.
-             9.8.3. allDay: 如果在month view下移动, 或在agenda view下移动到all-day区域, 则allDay为true, 移动到agenda view的其他区域则为false
-             9.8.4. revertFunc: 调用该方法, 可以将刚才的拖动恢复到原状. 这个方法多用于ajax的提交, 移动之后, 提交数据到后台, 如果后台更新失败, 根据返回消息, 调用这个方法, 可以使页面回复原状.
-             9.8.5. eventResizeStart, eventResizeStop: function(calEvent, jsEvent, ui, view): 在一个日程事件改变大小之前之后发生(不一定要改变成功.) calEvent保存了日程事件信息(date, title, 等等)
-             9.8.6. eventResize: function(calEvent, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view): 在日程事件改变大小并成功后调用, 参数和eventDrop参数用法一致.
-             */
-        },
-
-        eventResize: function(calEvent, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view){
-            alert(2)
-        },
         weekMode : 'variable',
 
     });
 
     //$('#calendar').fullCalendar('gotoDate', y, m);
-
     //$('#myTab4 li:eq(0) a').trigger('click');
 
     $('#calendarTab').removeClass('active');
@@ -361,43 +387,45 @@ function loadMessageCount(){
     });
 }
 
-function queryTopInfo(url, name){
-    var url = api.report[url];
-
-    var topTable = $('.top-table').html("");
-
-    com.post(url, {}, function(res){
-        var topList = "";
-
-        $.each(res.ranks, function(i, v){
-
-            var _name = v[name];
-            var _rank = v["rank"];
-
-            var rankImg = '';
-
-            var rankLi = $("<li></li>");
-            var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
-            var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
-
-            if(_rank != null){
-                var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
-            }
-
-            if(i == 0){
-                rankLi.addClass('bigger-150 orange');
-                rankSpan.text('1');
-            }else if(i == 1){
-                rankLi.addClass('bigger-120 blue');
-                rankSpan.text('2');
-            }else if(i == 2){
-                rankLi.addClass('bigger-120 blue');
-                rankSpan.text('3');
-            }
-
-            rankLi.appendTo(topTable);
-        });
-    });
+function queryTopInfo(url, name, info){
+	var url = api.report[url];
+	
+	var topTable = $('.top-table').html("");
+	
+	$('.nowTopType').html(info);
+	
+	com.post(url, {}, function(res){
+		var topList = "";
+		
+		$.each(res.ranks, function(i, v){
+			
+			var _name = v[name];
+			var _rank = v["rank"];
+			
+			var rankImg = '';
+			
+			var rankLi = $("<li></li>");
+			var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
+			var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
+			
+			if(_rank != null){
+				var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
+			}
+			
+			if(i == 0){
+				rankLi.addClass('bigger-150 orange');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+			}else if(i == 1){
+				rankLi.addClass('bigger-120 blue');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+			}else if(i == 2){
+				rankLi.addClass('bigger-120 blue');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+			}
+			
+			rankLi.appendTo(topTable);
+		});
+	});
 }
 
 function loadTopSelf(opts){

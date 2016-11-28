@@ -1,5 +1,4 @@
 package com.fanglin.approval.po;
-// default package
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

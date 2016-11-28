@@ -61,7 +61,7 @@ public class CityProperCountDetailPO implements java.io.Serializable {
 		this.cpcdId = cpcdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "cpId", referencedColumnName="cpId")
 	public CityProperPO getCityProper() {
 		return cityProper;

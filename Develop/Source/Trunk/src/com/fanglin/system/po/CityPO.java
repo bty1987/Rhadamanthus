@@ -62,7 +62,7 @@ public class CityPO implements Serializable {
 		this.cId = cId;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = CITY_REGION_ID, referencedColumnName="regionId")
 	public RegionPO getRegion(){
 		return region;

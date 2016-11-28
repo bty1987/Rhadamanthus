@@ -142,13 +142,13 @@ function queryTopInfo(url, name, info){
 			
 			if(i == 0){
 				rankLi.addClass('bigger-150 orange');
-				rankSpan.text('1');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
 			}else if(i == 1){
 				rankLi.addClass('bigger-120 blue');
-				rankSpan.text('2');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
 			}else if(i == 2){
 				rankLi.addClass('bigger-120 blue');
-				rankSpan.text('3');
+				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
 			}
 			
 			rankLi.appendTo(topTable);

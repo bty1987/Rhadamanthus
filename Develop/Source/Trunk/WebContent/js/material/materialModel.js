@@ -51,7 +51,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnDelete).appendTo($h3);
+            $divBtnWrap.append($btnDelete).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
