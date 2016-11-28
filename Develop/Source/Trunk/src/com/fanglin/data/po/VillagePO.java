@@ -109,7 +109,7 @@ public class VillagePO implements Serializable {
 		this.villageNamePinYinAB = villageNamePinYinAB;
 	}
 
-	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.ManyToOne(fetch = FetchType.EAGER)
 	@javax.persistence.JoinColumn(nullable = false, name = "cityProperId", referencedColumnName = "cityProperId")
 	public CityProperPO getCityProper(){
 		return cityProper;

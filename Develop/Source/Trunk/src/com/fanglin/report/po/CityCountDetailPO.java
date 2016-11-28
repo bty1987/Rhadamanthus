@@ -65,7 +65,7 @@ public class CityCountDetailPO implements java.io.Serializable {
 		this.ccdId = ccdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "cId", referencedColumnName="cId")
 	public CityPO getCity() {
 		return city;

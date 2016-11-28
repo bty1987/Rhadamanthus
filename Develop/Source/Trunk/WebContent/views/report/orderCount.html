@@ -1,0 +1,246 @@
+
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-sm-4">
+           <div id="container" ></div>
+        </div>
+        
+        <div class="col-sm-4">
+           <div id="deposit" ></div>
+        </div>
+        
+        <div class="col-sm-4">
+           <div id="signed" ></div>
+        </div>
+    </div>
+    
+    <hr />
+    
+    <div class="row">
+        <div class="col-sm-6">
+           <div id="quotation" ></div>
+        </div>
+        
+        <div class="col-sm-6">
+           <div id="amount" ></div>
+        </div>
+    </div>
+    
+    <hr />
+    
+    <div class="row">
+        <div class="col-sm-6">
+           <div id="termination" ></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.ajax({
+        url: "http://192.168.5.21/reportCityCount.do",
+        data: {},
+        type: "post",
+        dataType: "json",
+        async: true, //设为false就是同步请求
+        success: function (res) {
+            var shenyangConsult= [];
+            var fushunConsult= [];
+            var fuxinConsult= [];
+            var dandongConsult= [];  
+            var shenyangDeposit= [];
+            var fushunDeposit= [];
+            var fuxinDeposit= [];
+            var dandongDeposit= [];
+            var shenyangSigned= [];
+            var fushunSigned= [];
+            var fuxinSigned= [];
+            var dandongSigned= [];
+            var shenyangQuotation= [];
+            var fushunQuotation= [];
+            var fuxinQuotation= [];
+            var dandongQuotation= [];
+            var shenyangAmount= [];
+            var fushunAmount= [];
+            var fuxinAmount= [];
+            var dandongAmount= [];
+            var shenyangTermination= [];
+            var fushunTermination= [];
+            var fuxinTermination= [];
+            var dandongTermination= [];
+            var createDate= [];
+            
+            $.each(res.cityCounts, function (i, v) {
+            
+                createDate.push(v.createDate.split('-')[1] + "." + v.createDate.split('-')[2]);
+            
+                if(v.city.cityName=="沈阳") {
+                    shenyangConsult.push(v.consult);
+                    shenyangDeposit.push(v.deposit)
+                    shenyangSigned.push(v.signed)
+                    shenyangQuotation.push(v.quotation)
+                    shenyangAmount.push(v.amount)
+                    shenyangTermination.push(v.termination)
+                }else if(v.city.cityName=="抚顺"){
+                    fushunConsult.push(v.consult);
+                    fushunDeposit.push(v.deposit)
+                    fushunSigned.push(v.signed)
+                    fushunQuotation.push(v.quotation)
+                    fushunAmount.push(v.amount)
+                    fushunTermination.push(v.termination)
+                }else if(v.city.cityName=="阜新"){
+                    fuxinConsult.push(v.consult);
+                    fuxinDeposit.push(v.deposit)
+                    fuxinSigned.push(v.signed)
+                    fuxinQuotation.push(v.quotation)
+                    fuxinAmount.push(v.amount)
+                    fuxinTermination.push(v.termination)
+                }else if(v.city.cityName=="丹东"){
+                    dandongConsult.push(v.consult);
+                    dandongDeposit.push(v.deposit)
+                    dandongSigned.push(v.signed)
+                    dandongQuotation.push(v.quotation)
+                    dandongAmount.push(v.amount)
+                    dandongTermination.push(v.termination)
+                }
+            });
+            
+            function Charts(chartId, title, categories, series){
+                $('#' + chartId).highcharts({
+	                credits:{
+	                     enabled: false // 禁用版权信息
+	                },
+	                title: {
+	                    text: title,
+	                    x: -20
+	                },
+	                subtitle: {
+	                    text: '',
+	                    x: -20
+	                },
+	                xAxis: {
+	                    labels:{
+	                        step: 3,
+	                    },
+	                    categories: categories,
+	                },
+	                yAxis: { 
+	                    min: 0,
+	                    tickInterval:2,
+	                    title: {
+	                        text: '订单数量'
+	                    },
+	                    plotLines: [{
+	                        value: 0,
+	                        width: 1,
+	                        color: '#808080'
+	                    }]
+	                },
+	                tooltip: {
+	                    valueSuffix: '单'
+	                },
+	                legend: {
+	                    layout: 'horizontal',
+	                    align: 'center',
+	                    verticalAlign: 'bottom',
+	                    borderWidth: 0
+	                },
+	                series: series
+	            });
+            }
+            
+            Charts('container', '咨询', createDate, [{
+                    name: '沈阳',
+                    data: shenyangConsult
+                }, {
+                    name: '抚顺',
+                    data: fushunConsult
+                }, {
+                    name: '阜新',
+                    data: fuxinConsult
+                }, {
+                    name: '丹东',
+                    data: dandongConsult
+                }]
+            );
+            
+            Charts('deposit', '定金', createDate, [{
+                    name: '沈阳',
+                    data: shenyangDeposit
+                }, {
+                    name: '抚顺',
+                    data: fushunDeposit
+                }, {
+                    name: '阜新',
+                    data: fuxinDeposit
+                }, {
+                    name: '丹东',
+                    data: dandongDeposit
+                }]
+            );
+            
+            Charts('signed', '签单', createDate, [{
+                    name: '沈阳',
+                    data: shenyangSigned
+                }, {
+                    name: '抚顺',
+                    data: fushunSigned
+                }, {
+                    name: '阜新',
+                    data: fuxinSigned
+                }, {
+                    name: '丹东',
+                    data: dandongSigned
+                }]
+            );
+            
+            Charts('quotation', '报价', createDate, [{
+                    name: '沈阳',
+                    data: shenyangQuotation
+                }, {
+                    name: '抚顺',
+                    data: fushunQuotation
+                }, {
+                    name: '阜新',
+                    data: fuxinQuotation
+                }, {
+                    name: '丹东',
+                    data: dandongQuotation
+                }]
+            );
+            
+            Charts('amount', '量房', createDate, [{
+                    name: '沈阳',
+                    data: shenyangAmount
+                }, {
+                    name: '抚顺',
+                    data: fushunAmount
+                }, {
+                    name: '阜新',
+                    data: fuxinAmount
+                }, {
+                    name: '丹东',
+                    data: dandongAmount
+                }]
+            );
+            
+            Charts('termination', '合同终止', createDate, [{
+                    name: '沈阳',
+                    data: shenyangTermination
+                }, {
+                    name: '抚顺',
+                    data: fushunTermination
+                }, {
+                    name: '阜新',
+                    data: fuxinTermination
+                }, {
+                    name: '丹东',
+                    data: dandongTermination
+                }]
+            );
+        }
+    });
+
+</script>
+
+

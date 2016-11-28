@@ -54,7 +54,7 @@ public class CityProperPO implements Serializable {
 		this.cpId = cpId;
 	}
 	
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
+	@javax.persistence.ManyToOne(fetch=FetchType.EAGER)
 	@javax.persistence.JoinColumn(nullable=false, name="cityId", referencedColumnName="cityId")
 	public CityPO getCity(){
 		return city;

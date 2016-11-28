@@ -28,6 +28,7 @@ import com.fanglin.information.dao.EventsDao;
 import com.fanglin.information.po.EventsPO;
 import com.fanglin.information.service.EventsService;
 import com.fanglin.information.vo.EventsVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
@@ -39,6 +40,9 @@ public class EventsServiceImpl implements EventsService {
 	
 	@Autowired
 	private EventsDao eventsDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) throws HibernateException, ParseException {
@@ -66,8 +70,14 @@ public class EventsServiceImpl implements EventsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addEvents(EventsVO eventsVO, String userId) throws ParseException, FLException {
 		
-		if(eventsDao.countEvents(userId, eventsVO.getShowDate().toString()) > 6){
+		if(eventsDao.countEvents(userId, DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5){
 			throw new FLException(160014, "事件数量到达上限");
+		}
+		
+		UserPO userPO = userDao.get(userId);
+		
+		if(userPO == null){
+			throw new FLException(220005, "员工不存在");
 		}
 		
 		EventsPO eventsPO = new EventsPO();
@@ -75,12 +85,19 @@ public class EventsServiceImpl implements EventsService {
 		eventsPO.setTitle(eventsVO.getTitle());
 		eventsPO.setContent(eventsVO.getContent());
 		eventsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		eventsPO.setCreater(new UserPO(userId));
-		eventsPO.setHolder(new UserPO(userId));
+		eventsPO.setCreater(userPO);
+		eventsPO.setHolder(userPO);
 		eventsPO.setType(EventsPO.TYPE_CUSTOM_INT);
-		eventsPO.setShowDate(new Date());
+		eventsPO.setShowDate(eventsVO.getShowDate());
 		
 		eventsDao.save(eventsPO);
+		
+		eventsVO.setEid(eventsPO.getEid());
+		eventsVO.setCreateTime(eventsPO.getCreateTime());
+		eventsVO.setCreater(new UserVO());
+		eventsVO.setHolder(new UserVO());
+		eventsVO.getCreater().setBaseInfo(userPO);
+		eventsVO.getHolder().setBaseInfo(userPO);
 		
 		return 0;
 	}
@@ -95,7 +112,7 @@ public class EventsServiceImpl implements EventsService {
 			throw new FLException(160015, "事件不存在");
 		}
 		
-		if(!userId.equals(eventsPO.getCreater())){
+		if(eventsPO.getType() == EventsPO.TYPE_SYSTEM_INT || !userId.equals(eventsPO.getCreater().getUserId())){
 			throw new FLException(160016, "无权限删除事件");
 		}
 		

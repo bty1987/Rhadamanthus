@@ -54,7 +54,7 @@ public class DDepartmentCountDetailPO implements java.io.Serializable {
 		this.ddcdId = ddcdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "ddId", referencedColumnName="dId")
 	public DepartmentPO getDesignDepartment() {
 		return designDepartment;
@@ -64,7 +64,7 @@ public class DDepartmentCountDetailPO implements java.io.Serializable {
 		this.designDepartment = designDepartment;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "sdId", referencedColumnName="dId")
 	public DepartmentPO getSalesmanDepartment() {
 		return salesmanDepartment;

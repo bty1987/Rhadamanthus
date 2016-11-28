@@ -61,7 +61,7 @@ public class RegionCountDetailPO implements java.io.Serializable {
 		this.rcdId = rcdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "rId", referencedColumnName="rId")
 	public RegionPO getRegion() {
 		return region;

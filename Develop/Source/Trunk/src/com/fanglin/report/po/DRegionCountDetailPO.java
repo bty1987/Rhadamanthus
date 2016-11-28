@@ -54,7 +54,7 @@ public class DRegionCountDetailPO implements java.io.Serializable {
 		this.drcdId = drcdId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "ddId", referencedColumnName="dId")
 	public DepartmentPO getDesignRegion() {
 		return designRegion;
@@ -64,7 +64,7 @@ public class DRegionCountDetailPO implements java.io.Serializable {
 		this.designRegion = designRegion;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "sdId", referencedColumnName="dId")
 	public DepartmentPO getSalesmanRegion() {
 		return salesmanRegion;

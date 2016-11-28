@@ -58,7 +58,7 @@ public class VillageCountPO implements java.io.Serializable {
 		this.vcId = vcId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "vId", referencedColumnName="vId")
 	public VillagePO getVillage() {
 		return village;

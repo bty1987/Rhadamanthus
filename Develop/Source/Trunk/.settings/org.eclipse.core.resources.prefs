@@ -1,4 +1,4 @@
-#Mon Nov 21 08:58:58 CST 2016
+#Mon Nov 28 10:08:16 CST 2016
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -122,6 +122,7 @@ encoding//WebContent/views/quotation/systemDefineItem.html=UTF-8
 encoding//WebContent/views/report/materialDepartmentReport.html=UTF-8
 encoding//WebContent/views/report/materialDesignReport.html=UTF-8
 encoding//WebContent/views/report/materialMerchantReport.html=UTF-8
+encoding//WebContent/views/report/orderCount.html=UTF-8
 encoding//WebContent/views/report/rank.html=UTF-8
 encoding//WebContent/views/salary/designerBalanceSalary.html=UTF-8
 encoding//WebContent/views/salary/designerSalary.html=UTF-8
