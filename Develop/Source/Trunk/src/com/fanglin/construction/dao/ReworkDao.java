@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.fanglin.construction.po.ReworkPO;
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ReworkDao extends Dao<ReworkPO>{
 	
-	public List<ReworkPO> pageRework(Paging paging, List<FilterVO> filters);
+	public List<ReworkPO> pageRework(Paging paging, List<Filter> filters);
 	
-	public List<ReworkPO> pageReworkByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public List<ReworkPO> pageReworkByOrderId(Paging paging, List<Filter> filters, String orderId);
 	
 }

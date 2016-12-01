@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.CustomerServiceBackVisitDao;
 import com.fanglin.construction.po.CustomerServiceBackVisitPO;
 import com.fanglin.construction.service.CustomerServiceBackVisitService;
 import com.fanglin.construction.vo.CustomerServiceBackVisitVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +34,7 @@ public class CustomerServiceBackVisitServiceImpl implements CustomerServiceBackV
 	private CustomerServiceBackVisitDao customerServiceBackVisitDao;
 
 	@Override
-	public void pageCustomerServiceBackVisit(Paging paging, List<FilterVO> filters){
+	public void pageCustomerServiceBackVisit(Paging paging, List<Filter> filters){
 		
 		List<CustomerServiceBackVisitPO> customerServiceBackVisitPOs = customerServiceBackVisitDao.pageCustomerServiceBackVisit(paging, filters);
 		List<CustomerServiceBackVisitVO> customerServiceBackVisitVOs = new ArrayList<CustomerServiceBackVisitVO>();
@@ -49,7 +49,7 @@ public class CustomerServiceBackVisitServiceImpl implements CustomerServiceBackV
 	}
 
 	@Override
-	public void pageCustomerServiceBackVisitByOrderId(Paging paging, List<FilterVO> filters, CustomerServiceBackVisitVO customerServiceBackVisitVO){
+	public void pageCustomerServiceBackVisitByOrderId(Paging paging, List<Filter> filters, CustomerServiceBackVisitVO customerServiceBackVisitVO){
 		
 		List<CustomerServiceBackVisitPO> customerServiceBackVisitPOs = customerServiceBackVisitDao.pageCustomerServiceBackVisitByOrderId(paging, filters, customerServiceBackVisitVO.getOrderId());
 		List<CustomerServiceBackVisitVO> customerServiceBackVisitVOs = new ArrayList<CustomerServiceBackVisitVO>();

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.MaterialBrandCountDao;
 import com.fanglin.report.dao.MaterialDepartmentCountDao;
 import com.fanglin.report.dao.MaterialDesignerCountDao;
@@ -283,7 +283,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialTypeCountVO> reportMaterialTypeCount(List<FilterVO> filters) {
+	public List<MaterialTypeCountVO> reportMaterialTypeCount(List<Filter> filters) {
 		
 		List<MaterialTypeCountPO> materialTypeCountPOs = materialTypeCountDao.queryMaterialTypeCount(filters);
 		List<MaterialTypeCountVO> materialTypeCountVOs = new ArrayList<MaterialTypeCountVO>();
@@ -299,7 +299,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialBrandCountVO> reportMaterialBrandCount(List<FilterVO> filters) {
+	public List<MaterialBrandCountVO> reportMaterialBrandCount(List<Filter> filters) {
 		
 		List<MaterialBrandCountPO> materialBrandCountPOs = materialBrandCountDao.queryMaterialBrandCount(filters);
 		List<MaterialBrandCountVO> materialBrandCountVOs = new ArrayList<MaterialBrandCountVO>();
@@ -315,7 +315,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialDepartmentCountVO> reportMaterialDepartmentCount(List<FilterVO> filters){
+	public List<MaterialDepartmentCountVO> reportMaterialDepartmentCount(List<Filter> filters){
 		
 		List<MaterialDepartmentCountPO> materialDepartmentCountPOs = materialDepartmentCountDao.queryMaterialDepartmentCount(filters);
 		List<MaterialDepartmentCountVO> materialDepartmentCountVOs = new ArrayList<MaterialDepartmentCountVO>();
@@ -330,7 +330,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<MaterialDesignerCountVO> reportMaterialDesignerCount(List<FilterVO> filters) {
+	public List<MaterialDesignerCountVO> reportMaterialDesignerCount(List<Filter> filters) {
 		
 		List<MaterialDesignerCountPO> materialDesignerCountPOs = materialDesignerCountDao.queryMaterialDesignerCount(filters);
 		List<MaterialDesignerCountVO> materialDesignerCountVOs = new ArrayList<MaterialDesignerCountVO>();
@@ -346,7 +346,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialDesignerDepartmentCountVO> reportMaterialDesignerDepartmentCount(List<FilterVO> filters){
+	public List<MaterialDesignerDepartmentCountVO> reportMaterialDesignerDepartmentCount(List<Filter> filters){
 		
 		List<MaterialDesignerDepartmentCountPO> materialDesignerDepartmentCountPOs = materialDesignerDepartmentCountDao.queryMaterialDesignerDepartmentCount(filters);
 		List<MaterialDesignerDepartmentCountVO> materialDesignerDepartmentCountVOs = new ArrayList<MaterialDesignerDepartmentCountVO>();
@@ -361,7 +361,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<ZaterialDesignerDepartmentCountVO> reportZaterialDesignerDepartmentCount(List<FilterVO> filters){
+	public List<ZaterialDesignerDepartmentCountVO> reportZaterialDesignerDepartmentCount(List<Filter> filters){
 		
 		List<ZaterialDesignerDepartmentCountPO> zaterialDesignerDepartmentCountPOs = zaterialDesignerDepartmentCountDao.queryZaterialDesignerDepartmentCount(filters);
 		List<ZaterialDesignerDepartmentCountVO> zaterialDesignerDepartmentCountVOs = new ArrayList<ZaterialDesignerDepartmentCountVO>();
@@ -376,7 +376,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<ZaterialDesignerCountVO> reportZaterialDesignerCount(List<FilterVO> filters) {
+	public List<ZaterialDesignerCountVO> reportZaterialDesignerCount(List<Filter> filters) {
 		
 		List<ZaterialDesignerCountPO> zaterialDesignerCountPOs = zaterialDesignerCountDao.queryZaterialDesignerCount(filters);
 		List<ZaterialDesignerCountVO> zaterialDesignerCountVOs = new ArrayList<ZaterialDesignerCountVO>();
@@ -392,7 +392,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialDesignerRegionCountVO> reportMaterialDesignerRegionCount(List<FilterVO> filters){
+	public List<MaterialDesignerRegionCountVO> reportMaterialDesignerRegionCount(List<Filter> filters){
 		
 		List<MaterialDesignerRegionCountPO> materialDesignerRegionCountPOs = materialDesignerRegionCountDao.queryMaterialDesignerRegionCount(filters);
 		List<MaterialDesignerRegionCountVO> materialDesignerRegionCountVOs = new ArrayList<MaterialDesignerRegionCountVO>();
@@ -407,7 +407,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<ZaterialDesignerRegionCountVO> reportZaterialDesignerRegionCount(List<FilterVO> filters){
+	public List<ZaterialDesignerRegionCountVO> reportZaterialDesignerRegionCount(List<Filter> filters){
 		
 		List<ZaterialDesignerRegionCountPO> zaterialDesignerRegionCountPOs = zaterialDesignerRegionCountDao.queryZaterialDesignerRegionCount(filters);
 		List<ZaterialDesignerRegionCountVO> zaterialDesignerRegionCountVOs = new ArrayList<ZaterialDesignerRegionCountVO>();
@@ -422,7 +422,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialTypeCountVO> countMaterialTypeCount(List<FilterVO> filters) {
+	public List<MaterialTypeCountVO> countMaterialTypeCount(List<Filter> filters) {
 		
 		List<Object> result = materialTypeCountDao.countMaterialTypeCount(filters);
 		List<MaterialTypeCountVO> materialTypeCountVOs = new ArrayList<MaterialTypeCountVO>();
@@ -440,7 +440,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialBrandCountVO> countMaterialBrandCount(List<FilterVO> filters) {
+	public List<MaterialBrandCountVO> countMaterialBrandCount(List<Filter> filters) {
 		
 		List<Object> result = materialBrandCountDao.countMaterialBrandCount(filters);
 		List<MaterialBrandCountVO> materialBrandCountVOs = new ArrayList<MaterialBrandCountVO>();
@@ -458,7 +458,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialDesignerCountVO> countMaterialDesignerCount(List<FilterVO> filters) {
+	public List<MaterialDesignerCountVO> countMaterialDesignerCount(List<Filter> filters) {
 		
 		List<Object> result = materialDesignerCountDao.countMaterialDesignerCount(filters);
 		List<MaterialDesignerCountVO> materialDesignerCountVOs = new ArrayList<MaterialDesignerCountVO>();
@@ -478,7 +478,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialDesignerDepartmentCountVO> countMaterialDesignerDepartmentCount(List<FilterVO> filters) {
+	public List<MaterialDesignerDepartmentCountVO> countMaterialDesignerDepartmentCount(List<Filter> filters) {
 		
 		List<Object> result = materialDesignerDepartmentCountDao.countMaterialDesignerDepartmentCount(filters);
 		List<MaterialDesignerDepartmentCountVO> materialDesignerDepartmentCountVOs = new ArrayList<MaterialDesignerDepartmentCountVO>();
@@ -498,7 +498,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<MaterialDesignerRegionCountVO> countMaterialDesignerRegionCount(List<FilterVO> filters) {
+	public List<MaterialDesignerRegionCountVO> countMaterialDesignerRegionCount(List<Filter> filters) {
 		
 		List<Object> result = materialDesignerRegionCountDao.countMaterialDesignerRegionCount(filters);
 		List<MaterialDesignerRegionCountVO> materialDesignerRegionCountVOs = new ArrayList<MaterialDesignerRegionCountVO>();
@@ -519,7 +519,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 	
 	@Override
-	public List<ZaterialDesignerCountVO> countZaterialDesignerCount(List<FilterVO> filters) {
+	public List<ZaterialDesignerCountVO> countZaterialDesignerCount(List<Filter> filters) {
 		
 		List<Object> result = zaterialDesignerCountDao.countZaterialDesignerCount(filters);
 		List<ZaterialDesignerCountVO> zaterialDesignerCountVOs = new ArrayList<ZaterialDesignerCountVO>();
@@ -539,7 +539,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<ZaterialDesignerDepartmentCountVO> countZaterialDesignerDepartmentCount(List<FilterVO> filters) {
+	public List<ZaterialDesignerDepartmentCountVO> countZaterialDesignerDepartmentCount(List<Filter> filters) {
 		
 		List<Object> result = zaterialDesignerDepartmentCountDao.countZaterialDesignerDepartmentCount(filters);
 		List<ZaterialDesignerDepartmentCountVO> zaterialDesignerDepartmentCountVOs = new ArrayList<ZaterialDesignerDepartmentCountVO>();
@@ -559,7 +559,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<ZaterialDesignerRegionCountVO> countZaterialDesignerRegionCount(List<FilterVO> filters) {
+	public List<ZaterialDesignerRegionCountVO> countZaterialDesignerRegionCount(List<Filter> filters) {
 		
 		List<Object> result = zaterialDesignerRegionCountDao.countZaterialDesignerRegionCount(filters);
 		List<ZaterialDesignerRegionCountVO> zaterialdeDesignerRegionCountVOs = new ArrayList<ZaterialDesignerRegionCountVO>();

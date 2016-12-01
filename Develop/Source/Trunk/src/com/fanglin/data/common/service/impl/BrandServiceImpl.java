@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.BrandDao;
 import com.fanglin.data.common.service.BrandService;
 import com.fanglin.data.common.vo.BrandVO;
@@ -44,7 +44,7 @@ public class BrandServiceImpl implements BrandService {
 	private CountingService countingService;
 
 	@Override
-	public void pageBrand(Paging paging, List<FilterVO> filters) {
+	public void pageBrand(Paging paging, List<Filter> filters) {
 		
 		List<BrandPO> brandPOs = brandDao.pageBrand(paging, filters);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.WorkerBaseSalaryDao;
 import com.fanglin.salary.dao.WorkerDeductSalaryDao;
 import com.fanglin.salary.dao.WorkerSalaryDao;
@@ -47,7 +47,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private WorkerDeductSalaryDao workerDeductSalaryDao;
 
 	@Override
-	public void pageWorkerSalaryForInit(Paging paging, List<FilterVO> filters){
+	public void pageWorkerSalaryForInit(Paging paging, List<Filter> filters){
 		
 		List<Integer> status = new ArrayList<Integer>();
 		status.add(WorkerSalaryPO.STATUS_TYPE_INIT_INT);
@@ -66,7 +66,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	}
 
 	@Override
-	public void pageWorkerSalaryForPayOff(Paging paging, List<FilterVO> filters){
+	public void pageWorkerSalaryForPayOff(Paging paging, List<Filter> filters){
 		
 		List<Integer> status = new ArrayList<Integer>();
 		status.add(WorkerSalaryPO.STATUS_TYPE_PAYOFF);
@@ -85,7 +85,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	}
 
 	@Override
-	public void pageWorkerSalaryForUnPayOff(Paging paging, List<FilterVO> filters){
+	public void pageWorkerSalaryForUnPayOff(Paging paging, List<Filter> filters){
 		
 		List<Integer> status = new ArrayList<Integer>();
 		status.add(WorkerSalaryPO.STATUS_TYPE_UNPAYOFF);

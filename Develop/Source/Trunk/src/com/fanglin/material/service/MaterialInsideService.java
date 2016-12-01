@@ -13,15 +13,15 @@ package com.fanglin.material.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialInsideVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialInsideService {
 	
-	public void pageMaterialInside(Paging paging, List<FilterVO> filters);
+	public void pageMaterialInside(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialInsideByUserId(Paging paging, List<FilterVO> filters, String userId);
+	public void pageMaterialInsideByUserId(Paging paging, List<Filter> filters, String userId);
 	
 	public void addMaterialInside(MaterialInsideVO materialInsideVO, String userId);
 	

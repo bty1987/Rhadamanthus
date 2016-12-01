@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.MaterialModelDao;
 import com.fanglin.data.po.MaterialModelPO;
 import com.fanglin.utils.Paging;
@@ -31,7 +31,7 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<FilterVO> filters){
+	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
 		
@@ -41,7 +41,7 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<FilterVO> filters, List<String> brandIds){
+	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<String> brandIds){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
 		
@@ -52,7 +52,7 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> queryMaterialModel(List<FilterVO> filters){
+	public List<MaterialModelPO> queryMaterialModel(List<Filter> filters){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(new Paging(), MaterialModelPO.class);
 		
@@ -95,13 +95,13 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 				.uniqueResult();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		query.alias("brand", "brand");
 		query.alias("brand.category", "category");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				String field = filter.getField();
 				

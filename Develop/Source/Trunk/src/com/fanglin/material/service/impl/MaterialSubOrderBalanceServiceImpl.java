@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.SupplierDao;
 import com.fanglin.data.common.dao.SupplierUserRightDao;
 import com.fanglin.data.po.SupplierPO;
@@ -56,7 +56,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	private SupplierUserRightDao supplierUserRightDao;
 
 	@Override
-	public void pageMaterialSubOrderBalance(Paging paging, List<FilterVO> filters) {
+	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
 		
 		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters);
 		List<MaterialSubOrderBalanceVO> materialSubOrderBalanceVOs = new ArrayList<MaterialSubOrderBalanceVO>();
@@ -81,7 +81,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	}
 
 	@Override
-	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<FilterVO> filters, String userId) throws FLException {
+	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId) throws FLException {
 		
 		SupplierPO supplierPO = supplierDao.querySupplierByLoginId(userId);
 		
@@ -96,7 +96,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 			userIds.add(supplierUserRightPO.getUser().getUserId());
 		}
 		
-		filters.add(new FilterVO(MaterialSubOrderBalancePO.COLUMN_USERID_STR, userIds, "in"));
+		filters.add(new Filter(MaterialSubOrderBalancePO.COLUMN_USERID_STR, userIds, "in"));
 		
 		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters);
 		List<MaterialSubOrderBalanceVO> materialSubOrderBalanceVOs = new ArrayList<MaterialSubOrderBalanceVO>();

@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerOutsideSalaryDao;
 import com.fanglin.salary.po.DesignerOutsideSalaryPO;
 import com.fanglin.utils.Paging;
@@ -31,12 +31,12 @@ public class DesignerOutsideSalaryDaoImpl extends DaoImpl<DesignerOutsideSalaryP
 	}
 	
 	@Override
-	public List<DesignerOutsideSalaryPO> pageDesignerOutsideSalary(Paging paging, List<FilterVO> filters) {
+	public List<DesignerOutsideSalaryPO> pageDesignerOutsideSalary(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<DesignerOutsideSalaryPO> query = pagingQuery(paging, DesignerOutsideSalaryPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(DesignerOutsideSalaryPO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else{
@@ -50,12 +50,12 @@ public class DesignerOutsideSalaryDaoImpl extends DaoImpl<DesignerOutsideSalaryP
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DesignerOutsideSalaryPO> queryDesignerOutsideSalary(List<FilterVO> filters) {
+	public List<DesignerOutsideSalaryPO> queryDesignerOutsideSalary(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(DesignerOutsideSalaryPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(Restrictions.eq(filter.getField(), filter.getData()));
 			}
 		}

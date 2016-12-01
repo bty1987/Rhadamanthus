@@ -23,13 +23,13 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.log.service.LoginLogService;
 import com.fanglin.log.vo.LoginLogVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
-import com.fanglin.utils.AuthenticationUtil;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
@@ -101,7 +101,7 @@ public class LoginAction extends BaseListAction {
 				    
 				    this.user = user;
 				    
-				    AuthenticationUtil authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany());
+				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany());
 				    
 					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					
@@ -130,7 +130,7 @@ public class LoginAction extends BaseListAction {
 			int $company = 0;
 			
 			UserVO user = null;
-			AuthenticationUtil authenticationUtil = null;
+			Authentication authenticationUtil = null;
 			
 			if("hades".equals(userId)){
 				user = new UserVO(userId, userId, userId, new RoleVO(userId));
@@ -149,7 +149,7 @@ public class LoginAction extends BaseListAction {
 				$company = user.getCompany();
 			}
 			
-			authenticationUtil = new AuthenticationUtil(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true, $company);
+			authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true, $company);
 		    authenticationUtil.setIsMobile(true);
 			
 			try {

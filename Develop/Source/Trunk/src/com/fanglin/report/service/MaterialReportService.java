@@ -13,7 +13,7 @@ package com.fanglin.report.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.vo.MaterialBrandCountVO;
 import com.fanglin.report.vo.MaterialDepartmentCountVO;
 import com.fanglin.report.vo.MaterialDesignerCountVO;
@@ -44,38 +44,38 @@ public interface MaterialReportService {
 	
 	public int updateZaterialDesignerRegionCount(String regionId, String regionName, String materialBrand, float count, String currentTime);
 	
-	public List<MaterialTypeCountVO> reportMaterialTypeCount(List<FilterVO> filters);
+	public List<MaterialTypeCountVO> reportMaterialTypeCount(List<Filter> filters);
 	
-	public List<MaterialBrandCountVO> reportMaterialBrandCount(List<FilterVO> filters);
+	public List<MaterialBrandCountVO> reportMaterialBrandCount(List<Filter> filters);
 	
-	public List<MaterialDesignerCountVO> reportMaterialDesignerCount(List<FilterVO> filters);
+	public List<MaterialDesignerCountVO> reportMaterialDesignerCount(List<Filter> filters);
 
-	public List<MaterialDepartmentCountVO> reportMaterialDepartmentCount(List<FilterVO> filters);
+	public List<MaterialDepartmentCountVO> reportMaterialDepartmentCount(List<Filter> filters);
 
-	public List<MaterialDesignerDepartmentCountVO> reportMaterialDesignerDepartmentCount(List<FilterVO> filters);
+	public List<MaterialDesignerDepartmentCountVO> reportMaterialDesignerDepartmentCount(List<Filter> filters);
 	
-	public List<MaterialDesignerRegionCountVO> reportMaterialDesignerRegionCount(List<FilterVO> filters);
+	public List<MaterialDesignerRegionCountVO> reportMaterialDesignerRegionCount(List<Filter> filters);
 	
-	public List<ZaterialDesignerCountVO> reportZaterialDesignerCount(List<FilterVO> filters) ;
+	public List<ZaterialDesignerCountVO> reportZaterialDesignerCount(List<Filter> filters) ;
 
-	public List<ZaterialDesignerDepartmentCountVO> reportZaterialDesignerDepartmentCount(List<FilterVO> filters);
+	public List<ZaterialDesignerDepartmentCountVO> reportZaterialDesignerDepartmentCount(List<Filter> filters);
 
-	public List<ZaterialDesignerRegionCountVO> reportZaterialDesignerRegionCount(List<FilterVO> filters);
+	public List<ZaterialDesignerRegionCountVO> reportZaterialDesignerRegionCount(List<Filter> filters);
 	
-	public List<MaterialTypeCountVO> countMaterialTypeCount(List<FilterVO> filters);
+	public List<MaterialTypeCountVO> countMaterialTypeCount(List<Filter> filters);
 	
-	public List<MaterialBrandCountVO> countMaterialBrandCount(List<FilterVO> filters);
+	public List<MaterialBrandCountVO> countMaterialBrandCount(List<Filter> filters);
 	
-	public List<MaterialDesignerCountVO> countMaterialDesignerCount(List<FilterVO> filters);
+	public List<MaterialDesignerCountVO> countMaterialDesignerCount(List<Filter> filters);
 	
-	public List<MaterialDesignerDepartmentCountVO> countMaterialDesignerDepartmentCount(List<FilterVO> filters);
+	public List<MaterialDesignerDepartmentCountVO> countMaterialDesignerDepartmentCount(List<Filter> filters);
 	
-	public List<MaterialDesignerRegionCountVO> countMaterialDesignerRegionCount(List<FilterVO> filters);
+	public List<MaterialDesignerRegionCountVO> countMaterialDesignerRegionCount(List<Filter> filters);
 	
-	public List<ZaterialDesignerCountVO> countZaterialDesignerCount(List<FilterVO> filters);
+	public List<ZaterialDesignerCountVO> countZaterialDesignerCount(List<Filter> filters);
 	
-	public List<ZaterialDesignerDepartmentCountVO> countZaterialDesignerDepartmentCount(List<FilterVO> filters);
+	public List<ZaterialDesignerDepartmentCountVO> countZaterialDesignerDepartmentCount(List<Filter> filters);
 	
-	public List<ZaterialDesignerRegionCountVO> countZaterialDesignerRegionCount(List<FilterVO> filters);
+	public List<ZaterialDesignerRegionCountVO> countZaterialDesignerRegionCount(List<Filter> filters);
 
 }

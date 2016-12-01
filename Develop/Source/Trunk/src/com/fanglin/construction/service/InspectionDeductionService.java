@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.InspectionDeductionVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface InspectionDeductionService {
 	
-	public void pageInspectionDeduction(Paging paging, List<FilterVO> filters);
+	public void pageInspectionDeduction(Paging paging, List<Filter> filters);
 	
-	public void pageInspectionDeductionByOrderId(Paging paging, List<FilterVO> filters, InspectionDeductionVO inspectionDeductionVO);
+	public void pageInspectionDeductionByOrderId(Paging paging, List<Filter> filters, InspectionDeductionVO inspectionDeductionVO);
 	
 	public void saveOrUpdateInspectionDeduction(InspectionDeductionVO inspectionDeductionVO);
 	

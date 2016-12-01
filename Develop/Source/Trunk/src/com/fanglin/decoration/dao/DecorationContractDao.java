@@ -14,13 +14,13 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationContractDao extends Dao<DecorationContractPO> {
 
-	public List<DecorationContractPO> pageDecorationContract(Paging paging, List<FilterVO> filters);
+	public List<DecorationContractPO> pageDecorationContract(Paging paging, List<Filter> filters);
 
 	public DecorationContractPO queryDecorationContractByOrderId(String orderId);
 }

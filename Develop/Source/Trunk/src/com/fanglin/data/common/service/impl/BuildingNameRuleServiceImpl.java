@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.BuildingNameRuleDao;
 import com.fanglin.data.common.service.BuildingNameRuleService;
 import com.fanglin.data.common.vo.BuildingNameRuleVO;
@@ -43,7 +43,7 @@ public class BuildingNameRuleServiceImpl implements BuildingNameRuleService {
 	}
 
 	@Override
-	public void queryBuildNameRulePage(Paging paging, List<FilterVO> filters){
+	public void queryBuildNameRulePage(Paging paging, List<Filter> filters){
 
 		List<BuildingNameRulePO> buildingNameRulePOs = buildingNameRuleDao.queryPageBuildingNameRule(paging, filters);
 		List<BuildingNameRuleVO> buildingNameRuleVOs = new ArrayList<BuildingNameRuleVO>();

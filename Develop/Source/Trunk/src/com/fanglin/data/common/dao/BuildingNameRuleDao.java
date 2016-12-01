@@ -14,12 +14,12 @@ package com.fanglin.data.common.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.BuildingNameRulePO;
 import com.fanglin.utils.Paging;
 
 public interface BuildingNameRuleDao extends Dao<BuildingNameRulePO> {
 	
-	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<FilterVO> filters);
+	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<Filter> filters);
 	
 }

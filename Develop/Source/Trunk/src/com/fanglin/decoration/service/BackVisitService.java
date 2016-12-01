@@ -14,13 +14,13 @@ package com.fanglin.decoration.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.BackVisitVO;
 import com.fanglin.utils.Paging;
 
 public interface BackVisitService {
 	
-	public void pageBackVisitByOrderId(Paging paging,List<FilterVO> filters, BackVisitVO backVisitVO);
+	public void pageBackVisitByOrderId(Paging paging,List<Filter> filters, BackVisitVO backVisitVO);
 	
 	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO);
 	

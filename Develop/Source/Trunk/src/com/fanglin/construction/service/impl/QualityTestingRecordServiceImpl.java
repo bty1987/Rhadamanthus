@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.QualityTestingRecordDao;
 import com.fanglin.construction.po.QualityTestingRecordPO;
 import com.fanglin.construction.service.QualityTestingRecordService;
 import com.fanglin.construction.vo.QualityTestingRecordVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +34,7 @@ public class QualityTestingRecordServiceImpl implements QualityTestingRecordServ
 	private QualityTestingRecordDao qualityTestingRecordDao;
 
 	@Override
-	public void pageQualityTestingRecord(Paging paging, List<FilterVO> filters){
+	public void pageQualityTestingRecord(Paging paging, List<Filter> filters){
 		
 		List<QualityTestingRecordPO> qualityTestingRecordPOs = qualityTestingRecordDao.pageQualityTestingRecord(paging, filters);
 		List<QualityTestingRecordVO> qualityTestingRecordVOs = new ArrayList<QualityTestingRecordVO>();
@@ -49,7 +49,7 @@ public class QualityTestingRecordServiceImpl implements QualityTestingRecordServ
 	}
 
 	@Override
-	public void pageQualityTestingRecordByOrderId(Paging paging, List<FilterVO> filters, QualityTestingRecordVO qualityTestingRecordVO, String operaterId){
+	public void pageQualityTestingRecordByOrderId(Paging paging, List<Filter> filters, QualityTestingRecordVO qualityTestingRecordVO, String operaterId){
 		
 		List<QualityTestingRecordPO> qualityTestingRecordPOs = qualityTestingRecordDao.pageQualityTestingRecordByOrderId(paging, filters, qualityTestingRecordVO.getOrderId(), operaterId);
 		List<QualityTestingRecordVO> qualityTestingRecordVOs = new ArrayList<QualityTestingRecordVO>();

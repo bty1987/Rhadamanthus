@@ -15,16 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.service.OperationService;
-import com.fanglin.utils.AuthenticationUtil;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
-import com.fanglin.utils.UUIDUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -46,7 +45,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
 		List<String> passLogNames = Arrays.asList(new String[]{"doLogin", "login"});
-		List<String> passActionNames = Arrays.asList(new String[]{}); // 
+		List<String> passActionNames = Arrays.asList(new String[]{});
 		
 		String userId = "";
 		
@@ -75,7 +74,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				String encryptKey = SystemConfig.getString("encryptKey");
 				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
+				Authentication authenticationUtil = new Authentication(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
 				
 				if(authenticationUtil.getUserId() != null){
@@ -117,7 +116,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				Integer errorCode = (Integer) valueStack.findValue("errorCode");
 				if(errorCode != null || !passLogNames.contains(actionName)){
 					
-					ActionLogPO actionLogPO = new ActionLogPO(UUIDUtil.getUuid(), actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
+					ActionLogPO actionLogPO = new ActionLogPO(actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
 					
 					if(actionLogPO.getRunTime() > 5000){
 						logService.addActionLog(actionLogPO);
@@ -134,8 +133,11 @@ public class AccessInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
-			e.printStackTrace();
-//			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
+			if(SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
+				e.printStackTrace();
+			}else{
+				logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
+			}
 		}
 		
 		return Action.SUCCESS;

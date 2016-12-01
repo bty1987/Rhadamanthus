@@ -12,13 +12,13 @@ package com.fanglin.personel.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface UserDao extends Dao<UserPO> {
 	
-	public List<UserPO> pageUser(Paging paging, List<FilterVO> filters);
+	public List<UserPO> pageUser(Paging paging, List<Filter> filters);
 	
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company);
 	
@@ -34,7 +34,7 @@ public interface UserDao extends Dao<UserPO> {
 
 	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId);
 
-	public List<UserPO> pageUserForWorking(Paging paging, List<FilterVO> filters);
+	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters);
 	
 	public UserPO queryUserByLoginId(String loginId);
 

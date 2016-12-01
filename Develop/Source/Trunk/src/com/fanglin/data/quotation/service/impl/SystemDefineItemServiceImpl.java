@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.MeasurementUnitPO;
 import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.data.po.SystemDefineItemPO;
@@ -43,7 +43,7 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	private SystemDefineItemDao systemDefineItemDao;
 	
 	@Override
-	public void pageSystemDefineItem(Paging paging, List<FilterVO> filters){
+	public void pageSystemDefineItem(Paging paging, List<Filter> filters){
 		
 		List<SystemDefineItemPO> systemDefineItemPOs = systemDefineItemDao.pageSystemDefineItem(paging, filters);
 		List<SystemDefineItemVO> systemDefineItemVOs = new ArrayList<SystemDefineItemVO>();

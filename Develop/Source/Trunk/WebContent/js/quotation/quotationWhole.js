@@ -1259,6 +1259,7 @@ var QuotationDetail = (function(){
 					$line.find('.status').text(material.statusSetting[_materialModel.status]);
 
 					$line.attr('data-qmiid', _materialModel.qmiId);
+					$line.attr('data-diff', _materialModel.diff);
 					$line.attr('materialModelNo', _materialModel.no);
 					$line.addClass('existed').removeClass('editable');
 					material.options.changeBtns($line);
@@ -1448,7 +1449,8 @@ var QuotationDetail = (function(){
 			deleteQuotationMaterialItem : function($line){
 
 				var options = {
-					"quotationMaterialItem.qmiId": $line.attr('data-qmiid')
+					"quotationMaterialItem.qmiId": $line.attr('data-qmiid'),
+					"quotationMaterialItem.diff": $line.attr('data-diff')
 				};
 				com.post(api.quotation.deleteQuotationMaterialItem, options, function(res){
 					$line.remove();

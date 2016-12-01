@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.MaterialOutsidePaymentDao;
 import com.fanglin.payment.po.MaterialOutsidePaymentPO;
 import com.fanglin.utils.Paging;
@@ -30,12 +30,12 @@ public class MaterialOutsidePaymentDaoImpl extends DaoImpl<MaterialOutsidePaymen
 	}
 
 	@Override
-	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePayment(Paging paging, List<FilterVO> filters) {
+	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePayment(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<MaterialOutsidePaymentPO> query = pagingQuery(paging, MaterialOutsidePaymentPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -44,14 +44,14 @@ public class MaterialOutsidePaymentDaoImpl extends DaoImpl<MaterialOutsidePaymen
 	}
 
 	@Override
-	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePaymentByInit(Paging paging, List<FilterVO> filters) {
+	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePaymentByInit(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<MaterialOutsidePaymentPO> query = pagingQuery(paging, MaterialOutsidePaymentPO.class);
 		
 		query.add(Restrictions.eq(MaterialOutsidePaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialOutsidePaymentPO.PAYMENTSTATUS_INTI_INT));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -60,14 +60,14 @@ public class MaterialOutsidePaymentDaoImpl extends DaoImpl<MaterialOutsidePaymen
 	}
 
 	@Override
-	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePaymentByNotInit(Paging paging, List<FilterVO> filters) {
+	public List<MaterialOutsidePaymentPO> pageMaterialOutsidePaymentByNotInit(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<MaterialOutsidePaymentPO> query = pagingQuery(paging, MaterialOutsidePaymentPO.class);
 		
 		query.add(Restrictions.ne(MaterialOutsidePaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialOutsidePaymentPO.PAYMENTSTATUS_INTI_INT));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

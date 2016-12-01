@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.ReworkVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ReworkService {
 	
-	public void pageRework(Paging paging, List<FilterVO> filters);
+	public void pageRework(Paging paging, List<Filter> filters);
 	
-	public void pageReworkByOrderId(Paging paging, List<FilterVO> filters, ReworkVO reworkVO);
+	public void pageReworkByOrderId(Paging paging, List<Filter> filters, ReworkVO reworkVO);
 	
 	public int saveOrUpdateRework(ReworkVO reworkVO);
 	

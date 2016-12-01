@@ -25,7 +25,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.DateUtil;
@@ -39,7 +39,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 	
 	@Override
-	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<FilterVO> filters){
+	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters){
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 		
 		queryFilterExcute(query, filters);
@@ -122,7 +122,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<FilterVO> filters){
+	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<Filter> filters){
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 		
 		queryFilterExcute(query, filters);
@@ -132,7 +132,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 	
 	@Override
-	public List<DecorationPaymentPO> queryDecorationPayment(List<FilterVO> filters) {
+	public List<DecorationPaymentPO> queryDecorationPayment(List<Filter> filters) {
 		
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(new Paging(), DecorationPaymentPO.class);
 		
@@ -143,7 +143,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<FilterVO> filters){
+	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<Filter> filters){
 		
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 		
@@ -199,7 +199,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	    return session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentTypes", paymentTypes).executeUpdate();
 	}
 
-	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){
 		
 		if(filters != null){
 			query.alias("decorationOrderPO", "order");
@@ -207,7 +207,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 			query.alias("order.villagePO", "village");
 			query.alias("order.designerPO", "designer");
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
 						query.add(query.getCriterion("order.orderId", filter.getData(), filter.getOp()));

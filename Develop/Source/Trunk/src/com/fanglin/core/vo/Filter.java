@@ -1,12 +1,11 @@
 /**
- * @File Name	: FilterVO.java
+ * @File Name	: Filter.java
  * @Package		：com.fanglin.vo 
  * @Version		: 1.0
  * @Date		: 2014-7-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email		: bty1987@163.com
- * Describing	: TODO
  */
 
 package com.fanglin.core.vo;
@@ -14,7 +13,7 @@ package com.fanglin.core.vo;
 import java.io.Serializable;
 import java.util.List;
 
-public class FilterVO implements Serializable{
+public class Filter implements Serializable{
 
 	private static final long serialVersionUID = 6936704306368277265L;
 	
@@ -28,18 +27,18 @@ public class FilterVO implements Serializable{
 	
 	private String Logic;
 	
-	public FilterVO(){
+	public Filter(){
 		super();
 	}
 	
-	public FilterVO(String field, String data, String op){
+	public Filter(String field, String data, String op){
 		super();
 		setField(field);
 		setData(data);
 		setOp(op);
 	}
 	
-	public FilterVO(String field, String data, String op, String logic){
+	public Filter(String field, String data, String op, String logic){
 		super();
 		setField(field);
 		setData(data);
@@ -47,7 +46,7 @@ public class FilterVO implements Serializable{
 		setLogic(logic);
 	}
 	
-	public FilterVO(String field, List<String> range, String op) {
+	public Filter(String field, List<String> range, String op) {
 		super();
 		this.op = op;
 		this.field = field;

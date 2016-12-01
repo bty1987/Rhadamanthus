@@ -15,15 +15,15 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineDao extends Dao<DrawLinePO> {
 	
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<FilterVO> filters);
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters);
 	
-	public List<DrawLinePO> queryDrawLine(List<FilterVO> filters);
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters);
 
 	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime);
 	

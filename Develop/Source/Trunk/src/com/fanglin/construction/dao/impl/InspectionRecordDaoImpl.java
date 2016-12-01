@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.InspectionRecordDao;
 import com.fanglin.construction.po.InspectionRecordPO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("inspectionRecordDao")
@@ -29,12 +29,12 @@ public class InspectionRecordDaoImpl extends DaoImpl<InspectionRecordPO> impleme
 	}
 
 	@Override
-	public List<InspectionRecordPO> pageInspectionRecord(Paging paging, List<FilterVO> filters){
+	public List<InspectionRecordPO> pageInspectionRecord(Paging paging, List<Filter> filters){
 		
 		PagingQuery<InspectionRecordPO> query = pagingQuery(paging, InspectionRecordPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -43,14 +43,14 @@ public class InspectionRecordDaoImpl extends DaoImpl<InspectionRecordPO> impleme
 	}
 
 	@Override
-	public List<InspectionRecordPO> pageInspectionRecordByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<InspectionRecordPO> pageInspectionRecordByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<InspectionRecordPO> query = pagingQuery(paging, InspectionRecordPO.class);
 		
 		query.add(query.getCriterion(InspectionRecordPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

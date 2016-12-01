@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: SystemConfig.java
  * @Package		：com.fanglin.utils 
  * @Version		: 1.0
@@ -19,6 +19,10 @@ public class SystemConfig {
 	private static String configFilePathName = "/sysconfig.properties";
 
 	private static Properties prop;
+	
+	public static final String DEBUG_FALSE_STR = "false";
+	
+	public static final String DEBUG_TRUE_STR = "true";
 
 	static {
 		try {

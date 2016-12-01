@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.fanglin.construction.po.CustomerServiceBackVisitPO;
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CustomerServiceBackVisitDao extends Dao<CustomerServiceBackVisitPO> {
 	
-	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisit(Paging paging, List<FilterVO> filters);
+	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisit(Paging paging, List<Filter> filters);
 	
-	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisitByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisitByOrderId(Paging paging, List<Filter> filters, String orderId);
 
 }

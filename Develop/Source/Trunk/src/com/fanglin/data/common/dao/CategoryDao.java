@@ -14,13 +14,13 @@ package com.fanglin.data.common.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.CategoryPO;
 import com.fanglin.utils.Paging;
 
 public interface CategoryDao extends Dao<CategoryPO> {
 	
-	public List<CategoryPO> pageCategory(Paging paging, List<FilterVO> filters);
+	public List<CategoryPO> pageCategory(Paging paging, List<Filter> filters);
 	
 	public CategoryPO queryCategoryByCId(long cId);
 	

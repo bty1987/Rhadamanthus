@@ -13,13 +13,13 @@ package com.fanglin.salary.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.DesignerPostBalanceSalaryVO;
 import com.fanglin.utils.Paging;
 
 public interface DesignerPostBalanceSalaryService {
 	
-	public void pageDesignerPostBalanceSalary(Paging paging, List<FilterVO> filters);
+	public void pageDesignerPostBalanceSalary(Paging paging, List<Filter> filters);
 	
 	public void addDesignerPostBalanceSalary(DesignerPostBalanceSalaryVO designerPostBalanceSalaryVO);
 

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
@@ -75,7 +75,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	private ServiceRecordDao serviceRecordDao;
 	
 	@Override
-	public void pageMaterialSubOrder(Paging paging, List<FilterVO> filters){
+	public void pageMaterialSubOrder(Paging paging, List<Filter> filters){
 		
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrder(paging, filters);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
@@ -90,7 +90,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 	
 	@Override
-	public void pageMaterialSubOrderByUserId(Paging paging, List<FilterVO> filters, String orderId, String userId){
+	public void pageMaterialSubOrderByUserId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -102,7 +102,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
@@ -117,11 +117,11 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 	
 	@Override
-	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<FilterVO> filters, String orderId, String userId){
+	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		if(userPO != null){
-			filters.add(new FilterVO(MaterialSubOrderPO.COLUMN_MATERIALDEPTID_STR, userPO.getDept().getDeptId(), "eq"));
+			filters.add(new Filter(MaterialSubOrderPO.COLUMN_MATERIALDEPTID_STR, userPO.getDept().getDeptId(), "eq"));
 		}
 		
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
@@ -137,9 +137,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<FilterVO> filters, String orderId, String userId){
+	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
-		filters.add(new FilterVO(MaterialSubOrderPO.COLUMN_INSTOREID_STR, userId, "eq"));
+		filters.add(new Filter(MaterialSubOrderPO.COLUMN_INSTOREID_STR, userId, "eq"));
 		
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
@@ -154,7 +154,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderForPreBalance(Paging paging, List<FilterVO> filters, String userId){
+	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId){
 		
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPreBalance(paging, filters);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
@@ -170,7 +170,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderForPostBalance(Paging paging, List<FilterVO> filters){
+	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters){
 
 		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPostBalance(paging, filters);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();

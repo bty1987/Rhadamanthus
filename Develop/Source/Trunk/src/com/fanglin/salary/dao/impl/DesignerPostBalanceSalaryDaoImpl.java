@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerPostBalanceSalaryDao;
 import com.fanglin.salary.po.DesignerPostBalanceSalaryPO;
 import com.fanglin.utils.Paging;
@@ -30,12 +30,12 @@ public class DesignerPostBalanceSalaryDaoImpl extends DaoImpl<DesignerPostBalanc
 	}
 	
 	@Override
-	public List<DesignerPostBalanceSalaryPO> pageDesignerPostBalanceSalary(Paging paging, List<FilterVO> filters) {
+	public List<DesignerPostBalanceSalaryPO> pageDesignerPostBalanceSalary(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<DesignerPostBalanceSalaryPO> query = pagingQuery(paging, DesignerPostBalanceSalaryPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}
@@ -44,14 +44,14 @@ public class DesignerPostBalanceSalaryDaoImpl extends DaoImpl<DesignerPostBalanc
 	}
 
 	@Override
-	public List<DesignerPostBalanceSalaryPO> pageDesignerPostBalanceSalaryByMsoId(Paging paging, List<FilterVO> filters, long msoId) {
+	public List<DesignerPostBalanceSalaryPO> pageDesignerPostBalanceSalaryByMsoId(Paging paging, List<Filter> filters, long msoId) {
 		
 		PagingQuery<DesignerPostBalanceSalaryPO> query = pagingQuery(paging, DesignerPostBalanceSalaryPO.class);
 		
 		query.add(query.getCriterion(DesignerPostBalanceSalaryPO.COLUMN_MSOID_STR, msoId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}

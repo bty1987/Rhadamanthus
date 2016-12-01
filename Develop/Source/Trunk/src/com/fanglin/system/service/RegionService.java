@@ -11,13 +11,13 @@ package com.fanglin.system.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.Paging;
 
 public interface RegionService {
 	
-	public void pageRegion(Paging paging, List<FilterVO> filters);
+	public void pageRegion(Paging paging, List<Filter> filters);
 	
 	public List<RegionVO> queryRegion();
 	

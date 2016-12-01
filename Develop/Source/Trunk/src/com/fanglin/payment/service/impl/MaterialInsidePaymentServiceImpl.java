@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.MaterialInsidePaymentDao;
 import com.fanglin.payment.po.MaterialInsidePaymentPO;
 import com.fanglin.payment.service.MaterialInsidePaymentService;
@@ -40,7 +40,7 @@ public class MaterialInsidePaymentServiceImpl implements MaterialInsidePaymentSe
 	private UserDao userDao;
 	
 	@Override
-	public void pageMaterialInside(Paging paging, List<FilterVO> filters){
+	public void pageMaterialInside(Paging paging, List<Filter> filters){
 		
 		List<MaterialInsidePaymentPO> materialInsidePaymentPOs = materialInsidePaymentDao.pageMaterialInsidePayment(paging, filters);
 		List<MaterialInsidePaymentVO> materialInsidePaymentVOs = new ArrayList<MaterialInsidePaymentVO>();
@@ -55,7 +55,7 @@ public class MaterialInsidePaymentServiceImpl implements MaterialInsidePaymentSe
 	}
 	
 	@Override
-	public void pageMaterialInsidePaymentForInit(Paging paging, List<FilterVO> filters){
+	public void pageMaterialInsidePaymentForInit(Paging paging, List<Filter> filters){
 		
 		List<MaterialInsidePaymentPO> materialInsidePaymentPOs = materialInsidePaymentDao.pageMaterialInsidePaymentByInit(paging, filters);
 		List<MaterialInsidePaymentVO> materialInsidePaymentVOs = new ArrayList<MaterialInsidePaymentVO>();
@@ -70,7 +70,7 @@ public class MaterialInsidePaymentServiceImpl implements MaterialInsidePaymentSe
 	}
 
 	@Override
-	public void pageMaterialInsidePaymentForNotInit(Paging paging, List<FilterVO> filters){
+	public void pageMaterialInsidePaymentForNotInit(Paging paging, List<Filter> filters){
 		
 		List<MaterialInsidePaymentPO> materialInsidePaymentPOs = materialInsidePaymentDao.pageMaterialInsidePaymentByNotInit(paging, filters);
 		List<MaterialInsidePaymentVO> materialInsidePaymentVOs = new ArrayList<MaterialInsidePaymentVO>();

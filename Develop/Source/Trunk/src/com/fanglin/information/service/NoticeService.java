@@ -10,14 +10,14 @@ package com.fanglin.information.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.vo.NoticeVO;
 import com.fanglin.utils.Paging;
 
 
 public interface NoticeService {
 	
-	public void pageNotice(Paging paging, List<FilterVO> filters, String userId);
+	public void pageNotice(Paging paging, List<Filter> filters, String userId);
 
 	public NoticeVO queryNoticeById(Integer id);
 	

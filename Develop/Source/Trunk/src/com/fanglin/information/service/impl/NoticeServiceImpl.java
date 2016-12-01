@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
@@ -47,7 +47,7 @@ public class NoticeServiceImpl implements NoticeService{
     public DepartmentDao departmentDao;
     
     @Override
-    public void pageNotice(Paging paging, List<FilterVO> filters, String userId){
+    public void pageNotice(Paging paging, List<Filter> filters, String userId){
     	
         List<NoticePO> noticePOs = noticeDao.queryPageNotices(paging, filters, userId);
         List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();

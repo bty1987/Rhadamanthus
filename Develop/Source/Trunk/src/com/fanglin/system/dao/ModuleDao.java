@@ -13,13 +13,13 @@ package com.fanglin.system.dao;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.po.ModulePO;
 import com.fanglin.utils.Paging;
 
 public interface ModuleDao {
 	
-	public List<ModulePO> pageModule(Paging paging, List<FilterVO> filters);
+	public List<ModulePO> pageModule(Paging paging, List<Filter> filters);
 	
 	public List<ModulePO> queryModule();
 	

@@ -19,7 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
 import com.fanglin.utils.Paging;
@@ -32,14 +32,14 @@ public class MaterialSubOrderItemDaoImpl extends DaoImpl<MaterialSubOrderItemPO>
 	}
 
 	@Override
-	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<FilterVO> filters, long msoId){
+	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId){
 		
 		PagingQuery<MaterialSubOrderItemPO> query = pagingQuery(paging, MaterialSubOrderItemPO.class);
 		
 		query.add(query.getCriterion(MaterialSubOrderItemPO.COLUMN_MSOID_STR, msoId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

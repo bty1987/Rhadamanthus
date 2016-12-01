@@ -228,7 +228,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 		
-		materialPaymentPO.setMsoId(materialSubOrderPO.getMsoId());
+		materialPaymentPO.setMaterialSubOrder(materialSubOrderPO);
 		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
 		
 		materialPaymentPO.setMaterialType(materialSubOrderPO.getMaterialType());

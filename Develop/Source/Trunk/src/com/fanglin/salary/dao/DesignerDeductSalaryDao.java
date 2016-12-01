@@ -14,15 +14,15 @@ package com.fanglin.salary.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.DesignerDeductSalaryPO;
 import com.fanglin.utils.Paging;
 
 public interface DesignerDeductSalaryDao extends Dao<DesignerDeductSalaryPO>{
 	
-	public List<DesignerDeductSalaryPO> pageDesignerDeductSalary(Paging paging, List<FilterVO> filters);
+	public List<DesignerDeductSalaryPO> pageDesignerDeductSalary(Paging paging, List<Filter> filters);
 	
-	public List<DesignerDeductSalaryPO> queryDesignerDeductSalary(List<FilterVO> filters);
+	public List<DesignerDeductSalaryPO> queryDesignerDeductSalary(List<Filter> filters);
 	
 	public List<DesignerDeductSalaryPO> queryDesignerDeductSalaryByDsId(int dsId);
 

@@ -21,7 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.MaterialDesignerRegionCountDao;
 import com.fanglin.report.po.MaterialDesignerRegionCountPO;
 
@@ -42,14 +42,14 @@ public class MaterialDesignerRegionCountDaoImpl extends DaoImpl<MaterialDesigner
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MaterialDesignerRegionCountPO> queryMaterialDesignerRegionCount(List<FilterVO> filters){
+	public List<MaterialDesignerRegionCountPO> queryMaterialDesignerRegionCount(List<Filter> filters){
 		
 		Criteria query = session().createCriteria(MaterialDesignerRegionCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialDesignerRegionCountPO.COLUMN_DESIGNERREGIONID_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					if(criterion == null){
 						criterion = Restrictions.ge(MaterialDesignerRegionCountPO.COLUMN_CREATETIME_STR, filter.getData());
@@ -77,14 +77,14 @@ public class MaterialDesignerRegionCountDaoImpl extends DaoImpl<MaterialDesigner
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> countMaterialDesignerRegionCount(List<FilterVO> filters) {
+	public List<Object> countMaterialDesignerRegionCount(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(MaterialDesignerRegionCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialDesignerRegionCountPO.COLUMN_DESIGNERREGIONID_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					criterion = Restrictions.and(criterion, Restrictions.ge(MaterialDesignerRegionCountPO.COLUMN_CREATETIME_STR, filter.getData()));
 				}else if("endTime".equals(filter.getField())){

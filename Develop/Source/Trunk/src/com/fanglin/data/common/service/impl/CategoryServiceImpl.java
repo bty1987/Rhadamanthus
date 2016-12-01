@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CategoryDao;
 import com.fanglin.data.common.service.CategoryService;
 import com.fanglin.data.common.vo.CategoryVO;
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 	private CountingService countingService;
 
 	@Override
-	public void pageCategory(Paging paging, List<FilterVO> filters) {
+	public void pageCategory(Paging paging, List<Filter> filters) {
 		
 		List<CategoryPO> categoryPOs = categoryDao.pageCategory(paging, filters);
 		List<CategoryVO> categoryVOs = new ArrayList<CategoryVO>();

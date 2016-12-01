@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.VenderBalanceDao;
 import com.fanglin.salary.po.VenderBalancePO;
 import com.fanglin.utils.Paging;
@@ -31,7 +31,7 @@ public class VenderBalanceDaoImpl extends DaoImpl<VenderBalancePO> implements Ve
 	}
 	
 	@Override
-	public List<VenderBalancePO> pageVenderBalance(Paging paging, List<FilterVO> filters, Integer status) {
+	public List<VenderBalancePO> pageVenderBalance(Paging paging, List<Filter> filters, Integer status) {
 		
 		PagingQuery<VenderBalancePO> query = pagingQuery(paging, VenderBalancePO.class);
 		
@@ -42,7 +42,7 @@ public class VenderBalanceDaoImpl extends DaoImpl<VenderBalancePO> implements Ve
 		}
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}else{

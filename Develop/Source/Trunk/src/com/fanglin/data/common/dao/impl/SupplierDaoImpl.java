@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.SupplierDao;
 import com.fanglin.data.po.SupplierPO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class SupplierDaoImpl extends DaoImpl<SupplierPO> implements SupplierDao 
 	}
 
 	@Override
-	public List<SupplierPO> pageSupplier(Paging paging, List<FilterVO> filters) {
+	public List<SupplierPO> pageSupplier(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<SupplierPO> query = pagingQuery(paging, SupplierPO.class);
 		
@@ -49,15 +49,15 @@ public class SupplierDaoImpl extends DaoImpl<SupplierPO> implements SupplierDao 
 		return (SupplierPO) session().createCriteria(SupplierPO.class).add(Restrictions.eq(SupplierPO.COLUMN_LOGINID_STR, loginId)).uniqueResult();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filterVO: filters){
+			for(Filter filter: filters){
 				
-				String field = filterVO.getField();
+				String field = filter.getField();
 				
 				if(SupplierPO.COLUMN_NAME_STR.equals(field)){
-					query.add(query.getCriterion(SupplierPO.COLUMN_NAME_STR, filterVO.getData(), filterVO.getOp()));
+					query.add(query.getCriterion(SupplierPO.COLUMN_NAME_STR, filter.getData(), filter.getOp()));
 				}
 			}
 		}

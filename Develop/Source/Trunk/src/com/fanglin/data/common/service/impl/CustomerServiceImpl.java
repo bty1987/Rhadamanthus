@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private AdvanceReceiptDao advanceReceiptDao;
 
 	@Override
-	public void pageCustomer(Paging paging, List<FilterVO> filters){
+	public void pageCustomer(Paging paging, List<Filter> filters){
 
 		List<CustomerPO> customerPOs = customerDao.pageCustomer(paging, filters);
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();

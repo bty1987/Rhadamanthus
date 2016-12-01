@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.RegionCountDetailDao;
 import com.fanglin.report.po.RegionCountDetailPO;
 import com.fanglin.report.service.RegionCountService;
@@ -39,7 +39,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	private RegionCountDetailDao regionCountDetailDao;
 
 	@Override
-	public void pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
+	public void pageRegionCountDetail(Paging paging, List<Filter> filters) throws ParseException {
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.pageRegionCountDetail(paging, filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -60,7 +60,7 @@ public class RegionCountServiceImpl implements RegionCountService {
 	}
 
 	@Override
-	public List<RegionCountDetailVO> queryRegionCountDetail(List<FilterVO> filters) throws ParseException{
+	public List<RegionCountDetailVO> queryRegionCountDetail(List<Filter> filters) throws ParseException{
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.queryRegionCountDetail(filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();
@@ -81,9 +81,9 @@ public class RegionCountServiceImpl implements RegionCountService {
 	}
 
 	@Override
-	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<FilterVO> filters) throws ParseException {
+	public List<RegionCountDetailVO> queryRegionCountDetailForCurrent(List<Filter> filters) throws ParseException {
 		
-		filters.add(new FilterVO(RegionCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
+		filters.add(new Filter(RegionCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
 		
 		List<RegionCountDetailPO> regionCountDetailPOs = regionCountDetailDao.queryRegionCountDetail(filters);
 		List<RegionCountDetailVO> regionCountDetailVOs = new ArrayList<RegionCountDetailVO>();

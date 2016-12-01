@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.drawline.service.DrawLineService;
 import com.fanglin.drawline.vo.DrawLineVO;
 
@@ -48,7 +48,7 @@ public class DrawLineAction extends BaseListAction{
 	@Action(value = "pageDrawLineForPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDrawLineForPlan(){
 		
-		getFilters().add(new FilterVO("status", "排队", "eq"));
+		getFilters().add(new Filter("status", "排队", "eq"));
 		
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters());
 	
@@ -58,8 +58,8 @@ public class DrawLineAction extends BaseListAction{
 	@Action(value = "pageDrawLineForAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDrawLineForAssign(){
 		
-		getFilters().add(new FilterVO("status", "排队", "ne"));
-		getFilters().add(new FilterVO("drawLineGroup", drawLine.getDrawLineGroup(), "eq"));
+		getFilters().add(new Filter("status", "排队", "ne"));
+		getFilters().add(new Filter("drawLineGroup", drawLine.getDrawLineGroup(), "eq"));
 		
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters());
 	

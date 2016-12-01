@@ -13,13 +13,13 @@ package com.fanglin.data.common.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.CategoryVO;
 import com.fanglin.utils.Paging;
 
 public interface CategoryService {
 	
-	public void pageCategory(Paging paging, List<FilterVO> filters);
+	public void pageCategory(Paging paging, List<Filter> filters);
 	
 	public List<CategoryVO> queryCategory();
 	

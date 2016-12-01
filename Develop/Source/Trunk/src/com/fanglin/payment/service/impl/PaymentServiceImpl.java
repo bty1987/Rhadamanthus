@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.common.service.impl.CustomerServiceImpl;
 import com.fanglin.data.common.vo.CustomerVO;
@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private DecorationOrderDao decorationOrderDao;
 	
 	@Override
-	public void pagePaymentForHistory(Paging paging, List<FilterVO> filters){
+	public void pagePaymentForHistory(Paging paging, List<Filter> filters){
 		
 		if(filters.size() == 0) return;
 		
@@ -101,7 +101,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public List<PaymentVO> queryPayment(List<FilterVO> filters) {
+	public List<PaymentVO> queryPayment(List<Filter> filters) {
 		
 		List<PaymentPO> paymentPOs = paymentDao.queryPayment(filters);
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();

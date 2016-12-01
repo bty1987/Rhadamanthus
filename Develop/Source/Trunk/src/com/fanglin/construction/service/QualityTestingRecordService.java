@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.QualityTestingRecordVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface QualityTestingRecordService {
 	
-	public void pageQualityTestingRecord(Paging paging, List<FilterVO> filters);
+	public void pageQualityTestingRecord(Paging paging, List<Filter> filters);
 	
-	public void pageQualityTestingRecordByOrderId(Paging paging, List<FilterVO> filters, QualityTestingRecordVO qualityTestingRecordVO, String operaterId);
+	public void pageQualityTestingRecordByOrderId(Paging paging, List<Filter> filters, QualityTestingRecordVO qualityTestingRecordVO, String operaterId);
 	
 	public void addQualityTestingRecord(QualityTestingRecordVO qualityTestingRecordVO);
 	

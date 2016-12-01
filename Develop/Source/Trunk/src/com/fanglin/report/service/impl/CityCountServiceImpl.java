@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.CityCountDetailDao;
 import com.fanglin.report.po.CityCountDetailPO;
 import com.fanglin.report.service.CityCountService;
@@ -39,7 +39,7 @@ public class CityCountServiceImpl implements CityCountService {
 	private CityCountDetailDao cityCountDetailDao;
 
 	@Override
-	public void pageCityCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
+	public void pageCityCountDetail(Paging paging, List<Filter> filters) throws ParseException {
 		
 		List<CityCountDetailPO> cityCountDetailPOs = cityCountDetailDao.pageCityCountDetail(paging, filters);
 		List<CityCountDetailVO> cityCountDetailVOs = new ArrayList<CityCountDetailVO>();
@@ -60,7 +60,7 @@ public class CityCountServiceImpl implements CityCountService {
 	}
 
 	@Override
-	public List<CityCountDetailVO> queryCityCountDetail(List<FilterVO> filters) throws ParseException {
+	public List<CityCountDetailVO> queryCityCountDetail(List<Filter> filters) throws ParseException {
 		
 		List<CityCountDetailPO> cityCountDetailPOs = cityCountDetailDao.queryCityCountDetail(filters);
 		List<CityCountDetailVO> cityCountDetailVOs = new ArrayList<CityCountDetailVO>();
@@ -81,9 +81,9 @@ public class CityCountServiceImpl implements CityCountService {
 	}
 
 	@Override
-	public List<CityCountDetailVO> queryCityCountDetailByCurrent(List<FilterVO> filters) throws ParseException {
+	public List<CityCountDetailVO> queryCityCountDetailByCurrent(List<Filter> filters) throws ParseException {
 		
-		filters.add(new FilterVO(CityCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
+		filters.add(new Filter(CityCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
 
 		List<CityCountDetailPO> cityCountDetailPOs = cityCountDetailDao.queryCityCountDetail(filters);
 		List<CityCountDetailVO> cityCountDetailVOs = new ArrayList<CityCountDetailVO>();

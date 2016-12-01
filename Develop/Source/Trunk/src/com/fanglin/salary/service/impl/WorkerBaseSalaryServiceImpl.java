@@ -30,7 +30,7 @@ import com.fanglin.construction.po.OilConstructionSchedulePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.po.WaterwayCircuitPowerConstructionScheduleWorkerPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.UserDao;
@@ -66,7 +66,7 @@ public class WorkerBaseSalaryServiceImpl implements WorkerBaseSalaryService {
 	private MessageDao messageDao;
 	
 	@Override
-	public void pageWorkerBaseSalaryByOrderIdAUserId(Paging paging, List<FilterVO> filters, WorkerBaseSalaryVO workerBaseSalaryVO, String userId){
+	public void pageWorkerBaseSalaryByOrderIdAUserId(Paging paging, List<Filter> filters, WorkerBaseSalaryVO workerBaseSalaryVO, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		String duty = userPO.getDuty();
@@ -98,7 +98,7 @@ public class WorkerBaseSalaryServiceImpl implements WorkerBaseSalaryService {
 			}
 			
 			if(workType != 0){
-				filters.add(new FilterVO(WorkerBaseSalaryPO.COLUMN_WORKTYPEID_STR, String.valueOf(workType), "eq"));
+				filters.add(new Filter(WorkerBaseSalaryPO.COLUMN_WORKTYPEID_STR, String.valueOf(workType), "eq"));
 			}
 		}
 		
@@ -115,7 +115,7 @@ public class WorkerBaseSalaryServiceImpl implements WorkerBaseSalaryService {
 	}
 	
 	@Override
-	public void pageWorkerBaseSalary(Paging paging, List<FilterVO> filters){
+	public void pageWorkerBaseSalary(Paging paging, List<Filter> filters){
 		
 		List<WorkerBaseSalaryPO> workerBaseSalaryPOs = workerBaseSalaryDao.pageWorkerBaseSalary(paging, filters);
 		List<WorkerBaseSalaryVO> workerBaseSalaryVOs = new ArrayList<WorkerBaseSalaryVO>();
@@ -130,7 +130,7 @@ public class WorkerBaseSalaryServiceImpl implements WorkerBaseSalaryService {
 	}
 
 	@Override
-	public void pageWorkerBaseSalaryForPass(Paging paging, List<FilterVO> filters){
+	public void pageWorkerBaseSalaryForPass(Paging paging, List<Filter> filters){
 		
 		List<Integer> status = new ArrayList<Integer>();
 		status.add(WorkerBaseSalaryPO.STATUS_TYPE_PASS_INT);

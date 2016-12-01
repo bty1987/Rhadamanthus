@@ -38,6 +38,8 @@ public class DepartmentPO implements Serializable {
 	
 	public static final String COLUMN_COMPANY_STR = "company";
 	
+	public static final String COLUMN_TYPE_STR = "type";
+	
 	public static final short STATUS_DISABLE_INT = 0;
 	
 	public static final short STATUS_ENABLE_INT = 1;

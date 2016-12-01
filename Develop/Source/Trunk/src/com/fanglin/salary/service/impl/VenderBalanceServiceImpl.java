@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.VenderBalanceDao;
 import com.fanglin.salary.dao.VenderPostBalanceDao;
 import com.fanglin.salary.dao.VenderPreBalanceDao;
@@ -45,7 +45,7 @@ public class VenderBalanceServiceImpl implements VenderBalanceService {
 	private VenderPostBalanceDao venderPostBalanceDao;
 
 	@Override
-	public void pageVenderBalance(Paging paging, List<FilterVO> filters) {
+	public void pageVenderBalance(Paging paging, List<Filter> filters) {
 		
 		List<VenderBalancePO> venderBalancePOs = venderBalanceDao.pageVenderBalance(paging, filters, null);
 		List<VenderBalanceVO> venderBalanceVOs = new ArrayList<VenderBalanceVO>();
@@ -60,7 +60,7 @@ public class VenderBalanceServiceImpl implements VenderBalanceService {
 	}
 
 	@Override
-	public void pageVenderBalanceForInit(Paging paging, List<FilterVO> filters) {
+	public void pageVenderBalanceForInit(Paging paging, List<Filter> filters) {
 		
 		List<VenderBalancePO> venderBalancePOs = venderBalanceDao.pageVenderBalance(paging, filters, VenderBalancePO.STATUS_TYPE_INIT_INT);
 		List<VenderBalanceVO> venderBalanceVOs = new ArrayList<VenderBalanceVO>();
@@ -75,7 +75,7 @@ public class VenderBalanceServiceImpl implements VenderBalanceService {
 	}
 
 	@Override
-	public void pageVenderBalanceForPayOff(Paging paging, List<FilterVO> filters) {
+	public void pageVenderBalanceForPayOff(Paging paging, List<Filter> filters) {
 		
 		List<VenderBalancePO> venderBalancePOs = venderBalanceDao.pageVenderBalance(paging, filters, VenderBalancePO.STATUS_TYPE_PAYOFF_INT);
 		List<VenderBalanceVO> venderBalanceVOs = new ArrayList<VenderBalanceVO>();

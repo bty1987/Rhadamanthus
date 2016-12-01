@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	}
 
 	@Override
-	public List<CustomerPO> pageCustomer(Paging paging, List<FilterVO> filters){
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters){
 
 		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
 		
@@ -75,10 +75,10 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		return 0;
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filter : filters){
+			for(Filter filter : filters){
 				if("customerName".equals(filter.getField())){
 					query.add(query.getCriterion("customerName", filter));
 				} else if("customerPhone".equals(filter.getField())){

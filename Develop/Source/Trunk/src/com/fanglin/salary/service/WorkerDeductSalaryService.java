@@ -13,17 +13,17 @@ package com.fanglin.salary.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.WorkerDeductSalaryVO;
 import com.fanglin.utils.Paging;
 
 public interface WorkerDeductSalaryService {
 	
-	public void pageWorkerDeductSalaryByOrderIdAUserId(Paging paging, List<FilterVO> filters, WorkerDeductSalaryVO workerDeductSalaryVO, String userId);
+	public void pageWorkerDeductSalaryByOrderIdAUserId(Paging paging, List<Filter> filters, WorkerDeductSalaryVO workerDeductSalaryVO, String userId);
 	
-	public void pageWorkerDedectSalaryByPass(Paging paging, List<FilterVO> filters);
+	public void pageWorkerDedectSalaryByPass(Paging paging, List<Filter> filters);
 	
-	public void pageWorkerDeductSalaryForPersonal(Paging paging, List<FilterVO> filters, WorkerDeductSalaryVO workerDeductSalaryVO);
+	public void pageWorkerDeductSalaryForPersonal(Paging paging, List<Filter> filters, WorkerDeductSalaryVO workerDeductSalaryVO);
 	
 	public void addWorderDeductSalary(WorkerDeductSalaryVO workerDeductSalaryVO);
 	

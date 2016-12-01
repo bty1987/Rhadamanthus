@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.BrandDao;
 import com.fanglin.data.po.BrandPO;
 import com.fanglin.utils.Paging;
@@ -31,12 +31,12 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrand(Paging paging, List<FilterVO> filters) {
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("categoryId".equals(filter.getField())){
 					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
 				}else{

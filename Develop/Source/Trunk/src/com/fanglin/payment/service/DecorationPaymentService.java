@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
@@ -27,15 +27,15 @@ public interface DecorationPaymentService {
 	
 	public void pageDecorationPaymentForOtherByOrderId(Paging paging, DecorationPaymentVO decorationPaymentVO);
 
-	public void pageDecorationPaymentForCommit(Paging paging, List<FilterVO> filters);
+	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters);
 
-	public void pageDecorationPaymentForCollect(Paging paging, List<FilterVO> filters);
+	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	
-	public void pageDecorationPaymentForConfirm(Paging paging, List<FilterVO> filters);
+	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters);
 
-	public void pageDecorationPaymentForHistory(Paging paging, List<FilterVO> filters);
+	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters);
 	
-	public List<DecorationPaymentVO> queryDecorationPayment(List<FilterVO> filters);
+	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters);
 
 	public DecorationPaymentVO queryDecorationPaymentById(long autoId);
 	

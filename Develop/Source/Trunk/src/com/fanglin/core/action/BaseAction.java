@@ -36,7 +36,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
-import com.fanglin.utils.AuthenticationUtil;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.SystemConfig;
@@ -77,7 +77,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				String encryptKey = SystemConfig.getString("encryptKey");
 				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				AuthenticationUtil authenticationUtil = new AuthenticationUtil(decryptString);
+				Authentication authenticationUtil = new Authentication(decryptString);
 				if(authenticationUtil.getUpdateTime() != -1){
 					userName = authenticationUtil.getUserName();
 				}
@@ -99,7 +99,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				String encryptKey = SystemConfig.getString("encryptKey");
 				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				AuthenticationUtil au = new AuthenticationUtil(decryptString);
+				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
 					userId = au.getUserId();
 				}
@@ -121,7 +121,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				String encryptKey = SystemConfig.getString("encryptKey");
 				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				AuthenticationUtil au = new AuthenticationUtil(decryptString);
+				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
 					roleId = au.getRoleId();
 				}
@@ -144,7 +144,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				String encryptKey = SystemConfig.getString("encryptKey");
 				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
-				AuthenticationUtil au = new AuthenticationUtil(decryptString);
+				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
 					company = au.getCompany();
 				}

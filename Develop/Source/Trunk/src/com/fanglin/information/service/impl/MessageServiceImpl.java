@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -39,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
 	private MessageDao messageDao;
 	
 	@Override
-	public void pageMessage(Paging paging, List<FilterVO> filters, String userId){
+	public void pageMessage(Paging paging, List<Filter> filters, String userId){
 		List<MessagePO> messagePOs = messageDao.pageMessages(paging, filters, userId);
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
 		

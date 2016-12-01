@@ -15,21 +15,21 @@ import java.util.List;
 
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface ConstructionScheduleService {
 	
-	public void pageDecorationOrderForConstructionSchedule(Paging paging, List<FilterVO> filters);
+	public void pageDecorationOrderForConstructionSchedule(Paging paging, List<Filter> filters);
 	
-	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<FilterVO> filters, String userId, UserPO userPO);
+	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
 
-	public void pageDecorationOrderForQualityByUserId(Paging paging, List<FilterVO> filters, String userId, UserPO userPO);
+	public void pageDecorationOrderForQualityByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
 	
-	public void pageDecorationOrderForAcceptance(Paging paging, List<FilterVO> filters);
+	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters);
 	
 	public ConstructionScheduleVO queryConstructionScheduleById(int csId);
 	

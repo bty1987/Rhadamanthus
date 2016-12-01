@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.fanglin.construction.po.CustomerServiceComplaintPO;
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CustomerServiceComplaintDao extends Dao<CustomerServiceComplaintPO> {
 	
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<FilterVO> filters);
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<Filter> filters);
 	
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, String orderId);
 
 }

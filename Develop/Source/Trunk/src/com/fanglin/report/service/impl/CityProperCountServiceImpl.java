@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.CityProperCountDetailDao;
 import com.fanglin.report.po.CityProperCountDetailPO;
 import com.fanglin.report.service.CityProperCountService;
@@ -39,7 +39,7 @@ public class CityProperCountServiceImpl implements CityProperCountService {
 	private CityProperCountDetailDao cityProperCountDetailDao;
 
 	@Override
-	public void pageCityProperCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
+	public void pageCityProperCountDetail(Paging paging, List<Filter> filters) throws ParseException {
 		
 		List<CityProperCountDetailPO> cityProperCountDetailPOs = cityProperCountDetailDao.pageCityProperCountDetail(paging, filters);
 		List<CityProperCountDetailVO> cityProperCountDetailVOs = new ArrayList<CityProperCountDetailVO>();
@@ -60,7 +60,7 @@ public class CityProperCountServiceImpl implements CityProperCountService {
 	}
 
 	@Override
-	public List<CityProperCountDetailVO> queryCityProperCountDetail(List<FilterVO> filters) throws ParseException {
+	public List<CityProperCountDetailVO> queryCityProperCountDetail(List<Filter> filters) throws ParseException {
 		
 		List<CityProperCountDetailPO> cityProperCountDetailPOs = cityProperCountDetailDao.queryCityProperCountDetail(filters);
 		List<CityProperCountDetailVO> cityProperCountDetailVOs = new ArrayList<CityProperCountDetailVO>();
@@ -81,9 +81,9 @@ public class CityProperCountServiceImpl implements CityProperCountService {
 	}
 
 	@Override
-	public List<CityProperCountDetailVO> queryCityProperCountDetailByCurrent(List<FilterVO> filters) throws ParseException {
+	public List<CityProperCountDetailVO> queryCityProperCountDetailByCurrent(List<Filter> filters) throws ParseException {
 		
-		filters.add(new FilterVO(CityProperCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
+		filters.add(new Filter(CityProperCountDetailPO.COLUMN_CREATEDATE_STR, DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"), "eq"));
 
 		List<CityProperCountDetailPO> cityProperCountDetailPOs = cityProperCountDetailDao.queryCityProperCountDetail(filters);
 		List<CityProperCountDetailVO> cityProperCountDetailVOs = new ArrayList<CityProperCountDetailVO>();

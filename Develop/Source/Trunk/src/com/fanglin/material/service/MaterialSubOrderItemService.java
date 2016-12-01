@@ -14,14 +14,14 @@ package com.fanglin.material.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderItemService {
 	
-	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<FilterVO> filters, long msoId);
+	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId);
 	
 	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemByOrderId(String orderId);
 	

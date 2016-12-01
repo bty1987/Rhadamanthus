@@ -170,7 +170,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollectBySubOrder, function(data){
+	searcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		
@@ -280,7 +280,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirmBySubOrder, function(data){
+	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
 	
@@ -320,14 +320,14 @@ jQuery(function($) {
 			return false;
 		}
 		
-		com.post(api.payment.pageMaterialPaymentForCollectBySubOrder, $.extend({}, params.materialPaymentCheckPostData, {"paging.noPage": 1}), function(res){
+		com.post(api.payment.pageMaterialPaymentForCollect, $.extend({}, params.materialPaymentCheckPostData, {"paging.noPage": 1}), function(res){
 			
 			$.exceler({
 				column : [
 					["订单号","orderId"],
 					["主材号","msoNo"],
 					['楼盘地址','orderAddr'],
-					['品牌','customerName'],
+					['品牌','materialBrand'],
 					['应收金额', 'referMoney'],
 					['收款人', 'collectUserName'],
 					['收款时间', 'collectTime'],

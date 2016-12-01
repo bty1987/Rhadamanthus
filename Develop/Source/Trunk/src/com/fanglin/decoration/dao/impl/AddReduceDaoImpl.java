@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.utils.Paging;
@@ -31,12 +31,12 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public List<AddReducePO> pageAddReduce(Paging paging, List<FilterVO> filters){
+	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters){
 		
 		PagingQuery<AddReducePO> query = pagingQuery(paging, AddReducePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(AddReducePO.COLUMN_ORDERID_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}else if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){
@@ -53,14 +53,14 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<AddReducePO> query = pagingQuery(paging, AddReducePO.class);
 		
 		query.add(query.getCriterion(AddReducePO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
 				}else if(AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())){

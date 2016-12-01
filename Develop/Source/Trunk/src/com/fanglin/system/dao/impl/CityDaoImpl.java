@@ -16,7 +16,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.CityDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.utils.Paging;
@@ -29,7 +29,7 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 	}
 	
 	@Override
-	public List<CityPO> pageCity(Paging paging, List<FilterVO> filters){
+	public List<CityPO> pageCity(Paging paging, List<Filter> filters){
 
 		PagingQuery<CityPO> query = pagingQuery(paging, CityPO.class);
 		
@@ -54,10 +54,10 @@ public class CityDaoImpl extends DaoImpl<CityPO> implements CityDao {
 		return session().createCriteria(CityPO.class).add(Restrictions.eq("region.regionId",regionId)).list();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 					
 				String field = filter.getField();
 				String data = filter.getData();

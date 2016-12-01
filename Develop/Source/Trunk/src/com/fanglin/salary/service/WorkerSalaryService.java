@@ -13,18 +13,18 @@ package com.fanglin.salary.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.WorkerSalaryExcelVO;
 import com.fanglin.salary.vo.WorkerSalaryVO;
 import com.fanglin.utils.Paging;
 
 public interface WorkerSalaryService {
 	
-	public void pageWorkerSalaryForInit(Paging paging, List<FilterVO> filters);
+	public void pageWorkerSalaryForInit(Paging paging, List<Filter> filters);
 	
-	public void pageWorkerSalaryForPayOff(Paging paging, List<FilterVO> filters);
+	public void pageWorkerSalaryForPayOff(Paging paging, List<Filter> filters);
 	
-	public void pageWorkerSalaryForUnPayOff(Paging paging, List<FilterVO> filters);
+	public void pageWorkerSalaryForUnPayOff(Paging paging, List<Filter> filters);
 	
 	public List<WorkerSalaryExcelVO> payoffWorkerSalary();
 	

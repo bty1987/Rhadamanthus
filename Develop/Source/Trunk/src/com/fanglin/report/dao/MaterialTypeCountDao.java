@@ -14,15 +14,15 @@ package com.fanglin.report.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.po.MaterialTypeCountPO;
 
 public interface MaterialTypeCountDao extends Dao<MaterialTypeCountPO> {
 	
 	public MaterialTypeCountPO queryMaterialTypeCountByMaterialTypeATime(String materialType, String time);
 	
-	public List<MaterialTypeCountPO> queryMaterialTypeCount(List<FilterVO> filters);
+	public List<MaterialTypeCountPO> queryMaterialTypeCount(List<Filter> filters);
 	
-	public List<Object> countMaterialTypeCount(List<FilterVO> filters);
+	public List<Object> countMaterialTypeCount(List<Filter> filters);
 
 }

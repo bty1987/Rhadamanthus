@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialInsideDao;
 import com.fanglin.material.po.MaterialInsidePO;
 import com.fanglin.material.service.MaterialInsideService;
@@ -45,7 +45,7 @@ public class MaterialInsideServiceImpl implements MaterialInsideService {
 	private UserDao userDao;
 
 	@Override
-	public void pageMaterialInside(Paging paging, List<FilterVO> filters){
+	public void pageMaterialInside(Paging paging, List<Filter> filters){
 		
 		List<MaterialInsidePO> materialInsidePOs = materialInsideDao.pageMaterialInside(paging, filters);
 		List<MaterialInsideVO> materialInsideVOs = new ArrayList<MaterialInsideVO>();
@@ -60,9 +60,9 @@ public class MaterialInsideServiceImpl implements MaterialInsideService {
 	}
 
 	@Override
-	public void pageMaterialInsideByUserId(Paging paging, List<FilterVO> filters, String userId){
+	public void pageMaterialInsideByUserId(Paging paging, List<Filter> filters, String userId){
 		
-		filters.add(new FilterVO(MaterialInsidePO.COLUMN_MATERIALGUIDEID_STR, userId, "eq"));
+		filters.add(new Filter(MaterialInsidePO.COLUMN_MATERIALGUIDEID_STR, userId, "eq"));
 		
 		List<MaterialInsidePO> materialInsidePOs = materialInsideDao.pageMaterialInside(paging, filters);
 		List<MaterialInsideVO> materialInsideVOs = new ArrayList<MaterialInsideVO>();

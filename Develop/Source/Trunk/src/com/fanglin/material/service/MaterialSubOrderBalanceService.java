@@ -14,15 +14,15 @@ package com.fanglin.material.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialSubOrderBalanceVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderBalanceService {
 	
-	public void pageMaterialSubOrderBalance(Paging paging, List<FilterVO> filters);
+	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<FilterVO> filters, String userId) throws FLException;
+	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId) throws FLException;
 	
 	public void updateMaterialSubOrderBalanceForVBalance(MaterialSubOrderBalanceVO materialSubOrderBalanceVO) throws FLException;
 	

@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.SupplierDao;
 import com.fanglin.data.common.service.SupplierService;
 import com.fanglin.data.common.vo.SupplierVO;
@@ -37,7 +37,7 @@ public class SupplierServiceImpl implements SupplierService {
 	private SupplierDao supplierDao;
 
 	@Override
-	public void pageSupplier(Paging paging, List<FilterVO> filters) {
+	public void pageSupplier(Paging paging, List<Filter> filters) {
 		
 		List<SupplierPO> supplierPOs = supplierDao.pageSupplier(paging, filters);
 		List<SupplierVO> supplierVOs = new ArrayList<SupplierVO>();

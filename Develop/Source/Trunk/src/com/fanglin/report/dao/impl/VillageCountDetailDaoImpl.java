@@ -16,7 +16,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.VillageCountDetailDao;
 import com.fanglin.report.po.VillageCountDetailPO;
 import com.fanglin.utils.Paging;
@@ -29,7 +29,7 @@ public class VillageCountDetailDaoImpl extends DaoImpl<VillageCountDetailPO> imp
 	}
 	
 	@Override
-	public List<VillageCountDetailPO> pageVillageCountDetail(Paging paging, List<FilterVO> filters) {
+	public List<VillageCountDetailPO> pageVillageCountDetail(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<VillageCountDetailPO> query = pagingQuery(paging, VillageCountDetailPO.class);
 		
@@ -39,7 +39,7 @@ public class VillageCountDetailDaoImpl extends DaoImpl<VillageCountDetailPO> imp
 	}
 
 	@Override
-	public List<VillageCountDetailPO> queryVillageCountDetail(List<FilterVO> filters) {
+	public List<VillageCountDetailPO> queryVillageCountDetail(List<Filter> filters) {
 
 		PagingQuery<VillageCountDetailPO> query = pagingQuery(new Paging(), VillageCountDetailPO.class);	
 		
@@ -50,7 +50,7 @@ public class VillageCountDetailDaoImpl extends DaoImpl<VillageCountDetailPO> imp
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
 		
 	}
 

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.vo.ExcelWorkSheet;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.salary.dao.UserSalaryDao;
 import com.fanglin.salary.po.UserSalaryPO;
@@ -37,7 +37,7 @@ public class UserSalaryServiceImpl implements UserSalaryService {
 	private UserSalaryDao userSalaryDao;
 	
 	@Override
-	public void pageUserSalary(Paging paging, List<FilterVO> filters) throws FLException{
+	public void pageUserSalary(Paging paging, List<Filter> filters) throws FLException{
 		List<UserSalaryPO> userSalaryPOs = userSalaryDao.pageUserSalary(paging, filters);
 		List<UserSalaryVO> userSalaryVOs = new ArrayList<UserSalaryVO>();
 		

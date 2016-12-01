@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialOutsideDao;
 import com.fanglin.material.po.MaterialOutsidePO;
 import com.fanglin.payment.dao.MaterialOutsidePaymentDao;
@@ -47,7 +47,7 @@ public class MaterialOutsidePaymentServiceImpl implements MaterialOutsidePayment
 	private MaterialOutsideDao materialOutsideDao;
 
 	@Override
-	public void pageMaterialOutsidePayment(Paging paging, List<FilterVO> filters) {
+	public void pageMaterialOutsidePayment(Paging paging, List<Filter> filters) {
 		
 		List<MaterialOutsidePaymentPO> materialOutsidePaymentPOs = materialOutsidePaymentDao.pageMaterialOutsidePayment(paging, filters);
 		List<MaterialOutsidePaymentVO> materialOutsidePaymentVOs = new ArrayList<MaterialOutsidePaymentVO>();
@@ -69,7 +69,7 @@ public class MaterialOutsidePaymentServiceImpl implements MaterialOutsidePayment
 	}
 
 	@Override
-	public void pageMaterialOutsidePaymentForInit(Paging paging, List<FilterVO> filters) {
+	public void pageMaterialOutsidePaymentForInit(Paging paging, List<Filter> filters) {
 		
 		if(filters.size() == 0) return;
 		
@@ -93,7 +93,7 @@ public class MaterialOutsidePaymentServiceImpl implements MaterialOutsidePayment
 	}
 
 	@Override
-	public void pageMaterialOutsidePaymentForNotInit(Paging paging, List<FilterVO> filters) {
+	public void pageMaterialOutsidePaymentForNotInit(Paging paging, List<Filter> filters) {
 		
 		if(filters.size() == 0) return;
 		

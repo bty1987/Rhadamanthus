@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.MaterialInsidePaymentDao;
 import com.fanglin.payment.po.MaterialInsidePaymentPO;
 import com.fanglin.utils.Paging;
@@ -30,12 +30,12 @@ public class MaterialInsidePaymentDaoImpl extends DaoImpl<MaterialInsidePaymentP
 	}
 	
 	@Override
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePayment(Paging paging, List<FilterVO> filters){
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePayment(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialInsidePaymentPO> query = pagingQuery(paging, MaterialInsidePaymentPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter));
 			}
 		}
@@ -44,14 +44,14 @@ public class MaterialInsidePaymentDaoImpl extends DaoImpl<MaterialInsidePaymentP
 	}
 	
 	@Override
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByInit(Paging paging, List<FilterVO> filters){
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByInit(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialInsidePaymentPO> query = pagingQuery(paging, MaterialInsidePaymentPO.class);
 		
 		query.add(Restrictions.eq(MaterialInsidePaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialInsidePaymentPO.PAYMENTSTATUS_TYPE_INIT_INT));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}
@@ -60,14 +60,14 @@ public class MaterialInsidePaymentDaoImpl extends DaoImpl<MaterialInsidePaymentP
 	}
 
 	@Override
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByNotInit(Paging paging, List<FilterVO> filters){
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByNotInit(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialInsidePaymentPO> query = pagingQuery(paging, MaterialInsidePaymentPO.class);
 		
 		query.add(Restrictions.ne(MaterialInsidePaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialInsidePaymentPO.PAYMENTSTATUS_TYPE_INIT_INT));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}

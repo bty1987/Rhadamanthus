@@ -15,11 +15,11 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.vo.DRegionCountDetailVO;
 
 public interface DRegionCountDetailService {
 	
-	public List<DRegionCountDetailVO> queryDRegionCountDetail(List<FilterVO> filters, String userId) throws FLException, ParseException;
+	public List<DRegionCountDetailVO> queryDRegionCountDetail(List<Filter> filters, String userId) throws FLException, ParseException;
 
 }

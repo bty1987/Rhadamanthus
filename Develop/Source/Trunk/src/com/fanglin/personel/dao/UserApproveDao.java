@@ -12,13 +12,13 @@ package com.fanglin.personel.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.UserApprovePO;
 import com.fanglin.utils.Paging;
 
 public interface UserApproveDao extends Dao<UserApprovePO> {
 
-	public List<UserApprovePO> pageUserApprove(Paging paging, List<FilterVO> filters);
+	public List<UserApprovePO> pageUserApprove(Paging paging, List<Filter> filters);
 	
 	public List<UserApprovePO> queryApproveUserForNameByType(Paging paging, String pinyinName, String type);
 	

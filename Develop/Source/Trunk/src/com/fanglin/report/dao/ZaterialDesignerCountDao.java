@@ -14,15 +14,15 @@ package com.fanglin.report.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.po.ZaterialDesignerCountPO;
 
 public interface ZaterialDesignerCountDao extends Dao<ZaterialDesignerCountPO> {
 	
 	public ZaterialDesignerCountPO queryZaterialDesignerCountByDesignerIdATime(String designerId, String time);
 	
-	public List<ZaterialDesignerCountPO> queryZaterialDesignerCount(List<FilterVO> filters);
+	public List<ZaterialDesignerCountPO> queryZaterialDesignerCount(List<Filter> filters);
 	
-	public List<Object> countZaterialDesignerCount(List<FilterVO> filters);
+	public List<Object> countZaterialDesignerCount(List<Filter> filters);
 
 }

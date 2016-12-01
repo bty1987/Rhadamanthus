@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.CustomerServiceComplaintVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CustomerServiceComplaintService {
 	
-	public void pageCustomerServiceComplaint(Paging paging, List<FilterVO> filters);
+	public void pageCustomerServiceComplaint(Paging paging, List<Filter> filters);
 	
-	public void pageCustomerServiceComplaintByOrderId(Paging paging, List<FilterVO> filters, CustomerServiceComplaintVO customerServiceComplaintVO);
+	public void pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, CustomerServiceComplaintVO customerServiceComplaintVO);
 	
 	public void saveOrUpdateCustomerServiceComplaint(CustomerServiceComplaintVO customerServiceComplaintVO);
 	

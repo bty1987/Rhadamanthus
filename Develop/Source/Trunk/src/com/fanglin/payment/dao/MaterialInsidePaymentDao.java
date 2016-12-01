@@ -14,16 +14,16 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.MaterialInsidePaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialInsidePaymentDao extends Dao<MaterialInsidePaymentPO> {
 	
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePayment(Paging paging, List<FilterVO> filters);
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePayment(Paging paging, List<Filter> filters);
 	
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByInit(Paging paging, List<FilterVO> filters);
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByInit(Paging paging, List<Filter> filters);
 	
-	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByNotInit(Paging paging, List<FilterVO> filters);
+	public List<MaterialInsidePaymentPO> pageMaterialInsidePaymentByNotInit(Paging paging, List<Filter> filters);
 	
 }

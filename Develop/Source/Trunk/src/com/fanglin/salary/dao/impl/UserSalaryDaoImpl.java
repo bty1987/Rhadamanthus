@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.UserSalaryDao;
 import com.fanglin.salary.po.UserSalaryPO;
 import com.fanglin.utils.DateUtil;
@@ -32,7 +32,7 @@ public class UserSalaryDaoImpl extends DaoImpl<UserSalaryPO> implements UserSala
 	}
 	
 	@Override
-	public List<UserSalaryPO> pageUserSalary(Paging paging,  List<FilterVO> filters){
+	public List<UserSalaryPO> pageUserSalary(Paging paging,  List<Filter> filters){
 		PagingQuery<UserSalaryPO> query = pagingQuery(paging, UserSalaryPO.class);
 		
 		queryFilterExcute(query, filters);
@@ -75,10 +75,10 @@ public class UserSalaryDaoImpl extends DaoImpl<UserSalaryPO> implements UserSala
 		return res;
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters!=null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.alias("userPO", "user");
 				
 				if("userId".equals(filter.getField())){

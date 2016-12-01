@@ -14,13 +14,13 @@ package com.fanglin.data.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.utils.Paging;
 
 public interface FunctionAreaDao extends Dao<FunctionAreaPO> {
 	
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<FilterVO> filters);
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters);
 	
 	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId);
 	

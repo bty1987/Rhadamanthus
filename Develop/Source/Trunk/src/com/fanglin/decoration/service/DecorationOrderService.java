@@ -15,24 +15,24 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationOrderExportVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationOrderService {
 	
-	public void pageDecorationOrderForGeneral(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageDecorationOrderForCommon(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForCommon(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageDecorationOrderForMaterial(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForMaterial(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageDecorationOrderForDesigner(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForDesigner(Paging paging, List<Filter> filters, String userId);
 
-	public void pageDecorationOrderForSalesman(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageDecorationOrderForBelong(Paging paging, List<FilterVO> filters, String userId);
+	public void pageDecorationOrderForBelong(Paging paging, List<Filter> filters, String userId);
 	
 	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO);
 	
@@ -46,7 +46,7 @@ public interface DecorationOrderService {
 
 	public DecorationOrderVO queryDecorationOrderById(String decorationOrderId) throws FLException;
 	
-	public List<DecorationOrderExportVO> queryDecorationOrderForComplete(List<FilterVO> filters);
+	public List<DecorationOrderExportVO> queryDecorationOrderForComplete(List<Filter> filters);
 	
 	public void checkDecorationOrderExist(DecorationOrderVO decorationOrderVO);
 	

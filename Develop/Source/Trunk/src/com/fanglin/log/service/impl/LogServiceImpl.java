@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.log.dao.ActionLogDao;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
@@ -66,7 +66,7 @@ public class LogServiceImpl implements LogService {
 	}
 	
 	@Override
-	public void pageActionLog(Paging paging, List<FilterVO> filters){
+	public void pageActionLog(Paging paging, List<Filter> filters){
 		List<LogVO> logVOs = new ArrayList<LogVO>();
 		List<ActionLogPO> actionLogPOs = actionLogDao.getPageActionLogPOs(paging, filters);
 		
@@ -79,7 +79,7 @@ public class LogServiceImpl implements LogService {
 	}
 
 	@Override
-	public List<LogVO> getAllPageActionLogs(List<FilterVO> filters){
+	public List<LogVO> getAllPageActionLogs(List<Filter> filters){
 		
 		List<LogVO> logVOs = new ArrayList<LogVO>();
 		List<ActionLogPO> actionLogPOs = actionLogDao.getAllPageActionLogPOs(filters);

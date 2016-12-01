@@ -19,7 +19,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.CityProperCountDetailDao;
 import com.fanglin.report.po.CityProperCountDetailPO;
 import com.fanglin.utils.Paging;
@@ -32,7 +32,7 @@ public class CityProperCountDetailDaoImpl extends DaoImpl<CityProperCountDetailP
 	}
 	
 	@Override
-	public List<CityProperCountDetailPO> pageCityProperCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
+	public List<CityProperCountDetailPO> pageCityProperCountDetail(Paging paging, List<Filter> filters) throws ParseException {
 		
 		PagingQuery<CityProperCountDetailPO> query = pagingQuery(paging, CityProperCountDetailPO.class);
 		
@@ -42,7 +42,7 @@ public class CityProperCountDetailDaoImpl extends DaoImpl<CityProperCountDetailP
 	}
 
 	@Override
-	public List<CityProperCountDetailPO> queryCityProperCountDetail(List<FilterVO> filters) throws ParseException {
+	public List<CityProperCountDetailPO> queryCityProperCountDetail(List<Filter> filters) throws ParseException {
 		
 		PagingQuery<CityProperCountDetailPO> query = pagingQuery(new Paging(), CityProperCountDetailPO.class);
 		
@@ -53,9 +53,9 @@ public class CityProperCountDetailDaoImpl extends DaoImpl<CityProperCountDetailP
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters) throws ParseException{
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws ParseException{
 		
-		for(FilterVO filter: filters){
+		for(Filter filter: filters){
 			
 			String field = filter.getField();
 			String data = filter.getData();

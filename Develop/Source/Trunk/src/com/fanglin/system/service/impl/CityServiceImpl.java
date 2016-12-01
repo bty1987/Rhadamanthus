@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.CityDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.system.service.CityService;
@@ -34,7 +34,7 @@ public class CityServiceImpl implements CityService {
 	private CityDao cityDao;
 	
 	@Override
-	public void pageCity(Paging paging, List<FilterVO> filters){
+	public void pageCity(Paging paging, List<Filter> filters){
 
 		List<CityPO> cityPOs = cityDao.pageCity(paging, filters);
 		List<CityVO> cityVOs = new ArrayList<CityVO>();

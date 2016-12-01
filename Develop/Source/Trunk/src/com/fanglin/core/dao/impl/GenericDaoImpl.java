@@ -21,7 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StringType;
 
 import com.fanglin.core.dao.GenericDao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public abstract class GenericDaoImpl implements GenericDao {
@@ -300,15 +300,15 @@ public abstract class GenericDaoImpl implements GenericDao {
 		}
 		
 		@Override
-		public Criterion getCriterion(String propertyName, Object value, String op){
-			return super.getCriterion(propertyName, value, op);
+		public Criterion getCriterion(String propertyName, Object data, String op){
+			return super.getCriterion(propertyName, data, op);
 		}
 		
-		public Criterion getCriterion(String propertyName, FilterVO filter){
+		public Criterion getCriterion(String propertyName, Filter filter){
 			return getCriterion(propertyName, filter.getData(), filter.getOp());
 		}
 		
-		public Criterion getCriterion(FilterVO filter){
+		public Criterion getCriterion(Filter filter){
 			return getCriterion(filter);
 		}
 
@@ -345,6 +345,40 @@ public abstract class GenericDaoImpl implements GenericDao {
 			
 			paging.setData(results);
 
+			return results;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public List<T> list(String id, String select, String from, String where){
+			
+			boolean query = true;
+			
+			String hql = String.format("%s %s %s", select, from, where);
+			
+			int totalCount = ((Number) createQuery(String.format("select count(%s) %s %s", id, from, where)).uniqueResult()).intValue();
+			paging.setTotalRecords(totalCount);
+			
+			if(totalCount <= (paging.getPage() - 1) * paging.getRows()){
+				query = false;
+			}
+			
+			List<T> results = Collections.EMPTY_LIST;
+			
+			if(pagingFlag){
+				if(!query){
+					paging.setPage(1);
+				}
+				
+				results = createQuery(hql).setFirstResult((paging.getPage() - 1) * paging.getRows()).setMaxResults(paging.getRows()).list();
+
+				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
+				paging.setTotalPage(totalCount / (paging.getRows()) + offset);
+			}else{
+				results = createQuery(hql).list();
+			}
+			
+			paging.setData(results);
+			
 			return results;
 		}
 		

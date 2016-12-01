@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.utils.DateUtil;
@@ -31,7 +31,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentPO> pagePaymentForHistory(Paging paging, List<FilterVO> filters){
+	public List<PaymentPO> pagePaymentForHistory(Paging paging, List<Filter> filters){
 
 		PagingQuery<PaymentPO> query = pagingQuery(paging, PaymentPO.class);
 		
@@ -41,7 +41,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 	
 	@Override
-	public List<PaymentPO> queryPayment(List<FilterVO> filters) {
+	public List<PaymentPO> queryPayment(List<Filter> filters) {
 		
 		PagingQuery<PaymentPO> query = pagingQuery(new Paging(), PaymentPO.class);
 		
@@ -63,14 +63,14 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		return session().createCriteria(PaymentPO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
 			
 			query.alias("customer", "customer");
 			query.alias("advanceReceipt", "advanceReceipt");
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				if("customerId".equals(filter.getField())){
 					query.add(query.getCriterion("customer.customerId", filter));

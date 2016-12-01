@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.SystemDefineItemPO;
 import com.fanglin.data.quotation.dao.SystemDefineItemDao;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> impleme
 	}
 
 	@Override
-	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<FilterVO> filters){
+	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters){
 		
 		PagingQuery<SystemDefineItemPO> query = pagingQuery(paging, SystemDefineItemPO.class);
 		
@@ -46,10 +46,10 @@ public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> impleme
 		return (SystemDefineItemPO)session().createCriteria(SystemDefineItemPO.class).add(Restrictions.eq("itemId", itemId)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("quotationBigCategoryId".equals(filter.getField())){
 					query.add(query.getCriterion("quotationBigCategory.id", Integer.parseInt(filter.getData()), filter.getOp()));
 				}else if("quotationWorkTypeId".equals(filter.getField())){

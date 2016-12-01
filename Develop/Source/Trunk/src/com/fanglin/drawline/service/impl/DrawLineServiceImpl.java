@@ -45,7 +45,7 @@ import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.po.WaterwayCircuitCheckConstructionSchedulePO;
 import com.fanglin.construction.po.WaterwayCircuitPowerConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.drawline.dao.DrawLineDao;
@@ -112,7 +112,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private MessageService messageService;
 	
 	@Override
-	public List<DrawLineVO>  pageDrawLine(Paging paging,List<FilterVO> filters){
+	public List<DrawLineVO>  pageDrawLine(Paging paging,List<Filter> filters){
 		
 		List<DrawLinePO> drawLinePOs = drawlineDao.pageDrawLine(paging, filters);
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
@@ -178,7 +178,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	}
 	
 	@Override
-	public List<DrawLineVO> queryDrawLine(List<FilterVO> filters) {
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters) {
 		
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
 		

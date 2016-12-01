@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageUser(Paging paging, List<FilterVO> filters, UserVO userVO, int company) throws FLException{
+	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException{
 		
 		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(company), "eq"));
+			filters.add(new Filter("company", String.valueOf(company), "eq"));
 		}
 		
 		if(userVO != null && userVO.getDuty() != null){
-			filters.add(new FilterVO("duty", userVO.getDuty(), "eq"));
+			filters.add(new Filter("duty", userVO.getDuty(), "eq"));
 		}
 
 		List<UserPO> userPOs = userDao.pageUser(paging, filters);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, int company) throws FLException{
+	public void pageUserForResetPassword(Paging paging, List<Filter> filters, int company) throws FLException{
 		
 		pageUser(paging, filters, null, company);
 		
@@ -152,9 +152,9 @@ public class UserServiceImpl implements UserService {
 		paging.setPage(0);
 		paging.setRows(50);
 
-		List<FilterVO> filters = new ArrayList<FilterVO>();
-		filters.add(new FilterVO("duty", duty, "eq"));
-		filters.add(new FilterVO("deptId", deptId, "eq"));
+		List<Filter> filters = new ArrayList<Filter>();
+		filters.add(new Filter("duty", duty, "eq"));
+		filters.add(new Filter("deptId", deptId, "eq"));
 
 		List<UserPO> userPOs = userDao.pageUserForWorking(paging, filters);
 

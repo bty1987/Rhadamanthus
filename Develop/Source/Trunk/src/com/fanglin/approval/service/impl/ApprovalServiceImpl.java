@@ -33,7 +33,7 @@ import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.service.ApprovalVillageService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -73,7 +73,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private ApprovalVillageService approvalVillageService;
 	
 	@Override
-	public void pageApprovalByReceiveId(Paging paging, List<FilterVO> filters, String userId) {
+	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
 		
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalByReceiveId(paging, filters, userId);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();

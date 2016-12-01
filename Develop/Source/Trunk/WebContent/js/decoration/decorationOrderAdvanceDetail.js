@@ -4,8 +4,6 @@ var decorationOrderDetail = {
 	decorationOrder: {},
 	customer:{},
 	village:{},
-	materialPaymentListGrid: null,
-	materialPaymentGridPager: null,
 	
 	quotationDetail:{},
 	
@@ -19,6 +17,8 @@ var decorationOrderDetail = {
 		}
 	},
 	
+	items: {},
+	
 	vRepeatFlg: false,
 	cRepeatFlg: false
 };
@@ -27,9 +27,6 @@ var decorationPayment = {
 	postParam:{},
 	
 	items:{},
-	basePaymentGrid:null,
-	otherPaymentGrid:null,
-	otherPaymentPager:null,
 	
 	editFlag:0,
 };
@@ -37,6 +34,34 @@ var decorationPayment = {
 var materialSubOrderItemData = {};
 
 jQuery(function($) {
+	
+	decorationOrderDetail.items.orderId = $("#orderId");
+	decorationOrderDetail.items.customer = $("#customer");
+	decorationOrderDetail.items.houseAddr = $("#houseAddr");
+	decorationOrderDetail.items.designer = $("#designer");
+	decorationOrderDetail.items.salesman = $("#salesman");
+	decorationOrderDetail.items.designDepartment = $("#designDepartment");
+	decorationOrderDetail.items.businessDepartment = $("#businessDepartment");
+	
+	decorationOrderDetail.items.houseArea = $("#houseArea");
+	decorationOrderDetail.items.freeArea = $("#freeArea");
+	decorationOrderDetail.items.status = $("#status");
+	decorationOrderDetail.items.createTime = $("#createTime");
+	
+	decorationOrderDetail.items.houseType = $('#houseType');
+	decorationOrderDetail.items.houseClass = $('#houseClass');
+	decorationOrderDetail.items.orderType = $('#orderType');
+	
+	decorationOrderDetail.items.backOrderName = $('#backOrderName');
+	decorationOrderDetail.items.backOrderPhone = $('#backOrderPhone');
+	decorationOrderDetail.items.backOrderContent = $('#backOrderContent');
+	
+	decorationOrderDetail.items.notSalesmanName = $('#notSalesmanName');
+	decorationOrderDetail.items.notSalesmanPhone = $('#notSalesmanPhone');
+	decorationOrderDetail.items.notSalesmanRate = $('#notSalesmanRate');
+	decorationOrderDetail.items.notSalesmanContent = $('#notSalesmanContent');
+	
+	decorationOrderDetail.items.salesmanType = $('#salesmanType');
 	
 	decorationUtils.init();
 	
@@ -47,17 +72,16 @@ jQuery(function($) {
 	
 	decorationOrderDetail.btnSaveBaseDecorationOrderInfo = $("#btnSaveBaseDecorationOrderInfo").on("click", saveBaseDecorationOrderInfo);
 	
-	decorationOrderDetail.materialPaymentListGrid = $("#materialPaymentListGrid");
-	decorationOrderDetail.materialPaymentGridPager = "#materialPaymentGridPager";
-
-	decorationPayment.otherPaymentGrid=$("#otherPaymentTable");
-	decorationPayment.otherPaymentPager="#otherPaymentGridPager";
-	decorationPayment.basePaymentGrid = $("#basePaymentTable");
-	
 	decorationOrderDetail.printQuotationModal = $("#printQuotationModal");
 	
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
+	
+	com.post(api.ds.decorationInfo, {}, function(res){
+		decorationOrderDetail.items.orderType.bindData(res.type, 'key', 'value');
+		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
+		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
+	});
 	
 	$("#btnPrintDefaultQuotationInfo").on('click',function(res){
 		decorationOrderDetail.printQuotationModal.modal("show");
@@ -193,7 +217,6 @@ jQuery(function($) {
 		});
 	});
 	
-	//village approve modal save button
 	$("#vApproveSaveBtn").on("click", function(){
 		
 		if(com.validate('villageApproveModal')|| decorationOrderDetail.vRepeatFlg){
@@ -226,35 +249,36 @@ jQuery(function($) {
 		var statuses = ["咨询", "量房", "已报价", "定金"];
 		
 		if(statuses.indexOf(decorationOrder.status)){
-			$("#houseType").prop("disabled", false);
+			decorationOrderDetail.items.houseType.prop("disabled", false);
 		}else{
-			decorationOrder.status == "已签约" ? $("#houseType").prop("disabled", true) : $("#houseType").prop("disabled", false);
+			decorationOrder.status == "已签约" ? decorationOrderDetail.items.houseType.prop("disabled", true) : decorationOrderDetail.items.houseType.prop("disabled", false);
 		}
 		
-		$("#orderId").val(decorationOrder.orderId);
-		$("#customer").val(decorationOrder.customer.customerName);
-		$("#houseAddr").val(decorationOrder.village.villageName + decorationOrder.houseNumber);
-		$("#designDepartment").val(decorationOrder.designDepartment);
-		$("#designer").val(decorationOrder.designer);
-		$("#businessDepartment").val(decorationOrder.businessDepartment);
-		$("#salesman").val(decorationOrder.salesman);
-		$("#houseType").val(decorationOrder.houseType);
-		$("#houseClass").val(decorationOrder.houseClass);
-		$("#houseArea").val(decorationOrder.houseArea);
-		$("#freeArea").val(decorationOrder.freeArea);
-		$("#status").val(decorationOrder.status);
-		$("#createTime").val(decorationOrder.createTime);
+		decorationOrderDetail.items.orderId.val(decorationOrder.orderId);
+		decorationOrderDetail.items.customer.val(decorationOrder.customer.customerName);
+		decorationOrderDetail.items.houseAddr.val(decorationOrder.village.villageName + decorationOrder.houseNumber);
+		decorationOrderDetail.items.designDepartment.val(decorationOrder.designDepartment);
+		decorationOrderDetail.items.designer.val(decorationOrder.designer);
+		decorationOrderDetail.items.businessDepartment.val(decorationOrder.businessDepartment);
+		decorationOrderDetail.items.salesman.val(decorationOrder.salesman);
+		decorationOrderDetail.items.orderType.val(decorationOrder.type);
+		decorationOrderDetail.items.houseType.val(decorationOrder.houseType);
+		decorationOrderDetail.items.houseClass.val(decorationOrder.houseClass);
+		decorationOrderDetail.items.houseArea.val(decorationOrder.houseArea);
+		decorationOrderDetail.items.freeArea.val(decorationOrder.freeArea);
+		decorationOrderDetail.items.status.val(decorationOrder.status);
+		decorationOrderDetail.items.createTime.val(decorationOrder.createTime);
 		
-		$("#backOrderName").val(decorationOrder.backOrderName);
-		$("#backOrderPhone").val(decorationOrder.backOrderPhone);
-		$("#backOrderContent").val(decorationOrder.backOrderContent);
+		decorationOrderDetail.items.backOrderName.val(decorationOrder.backOrderName);
+		decorationOrderDetail.items.backOrderPhone.val(decorationOrder.backOrderPhone);
+		decorationOrderDetail.items.backOrderContent.val(decorationOrder.backOrderContent);
 		
-		$("#notSalesmanName").val(decorationOrder.notSalesmanName);
-		$("#notSalesmanPhone").val(decorationOrder.notSalesmanPhone);
-		$("#notSalesmanRate").val(decorationOrder.notSalesmanRate);
-		$("#notSalesmanContent").val(decorationOrder.notSalesmanContent);
+		decorationOrderDetail.items.notSalesmanName.val(decorationOrder.notSalesmanName);
+		decorationOrderDetail.items.notSalesmanPhone.val(decorationOrder.notSalesmanPhone);
+		decorationOrderDetail.items.notSalesmanRate.val(decorationOrder.notSalesmanRate);
+		decorationOrderDetail.items.notSalesmanContent.val(decorationOrder.notSalesmanContent);
 		
-		$("#salesmanType").val(decorationOrder.salesmanType);
+		decorationOrderDetail.items.salesmanType.val(decorationOrder.salesmanType);
 		
         decorationOrderDetail.customer.id = decorationOrder.customer.id;
 		decorationOrderDetail.customer.phone = decorationOrder.customer.phone;
@@ -329,14 +353,15 @@ function saveBaseDecorationOrderInfo(){
 		if(result) {
 			var options = {
 				"decorationOrder.orderId": decorationOrderDetail.decorationOrderId,
-				"decorationOrder.houseType": $("#houseType").val(),
-				"decorationOrder.houseClass": $("#houseClass").val(),
-				"decorationOrder.houseArea": $("#houseArea").val(),
-				"decorationOrder.freeArea": $("#freeArea").val(),
-				"decorationOrder.notSalesmanRate": $("#notSalesmanRate").val(),
-				"decorationOrder.notSalesmanName": $("#notSalesmanName").val(),
-				"decorationOrder.notSalesmanPhone": $("#notSalesmanPhone").val(),
-				"decorationOrder.notSalesmanContent": $("#notSalesmanContent").val(),
+				"decorationOrder.type": decorationOrderDetail.items.orderType.val(),
+				"decorationOrder.houseType": decorationOrderDetail.items.houseType.val(),
+				"decorationOrder.houseClass": decorationOrderDetail.items.houseClass.val(),
+				"decorationOrder.houseArea": decorationOrderDetail.items.houseArea.val(),
+				"decorationOrder.freeArea": decorationOrderDetail.items.freeArea.val(),
+				"decorationOrder.notSalesmanRate": decorationOrderDetail.items.notSalesmanRate.val(),
+				"decorationOrder.notSalesmanName": decorationOrderDetail.items.notSalesmanName.val(),
+				"decorationOrder.notSalesmanPhone": decorationOrderDetail.items.notSalesmanPhone.val(),
+				"decorationOrder.notSalesmanContent": decorationOrderDetail.items.notSalesmanContent.val(),
 			};
 			
 			com.post(api.decoration.changeDecorationOrderForAdvance, options, function(){

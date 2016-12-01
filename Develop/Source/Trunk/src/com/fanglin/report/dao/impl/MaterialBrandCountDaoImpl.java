@@ -21,7 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.MaterialBrandCountDao;
 import com.fanglin.report.po.MaterialBrandCountPO;
 
@@ -42,14 +42,14 @@ public class MaterialBrandCountDaoImpl extends DaoImpl<MaterialBrandCountPO> imp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialBrandCountPO> queryMaterialBrandCount(List<FilterVO> filters) {
+	public List<MaterialBrandCountPO> queryMaterialBrandCount(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(MaterialBrandCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialBrandCountPO.COLUMN_MATERIALBRAND_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					if(criterion == null){
 						criterion = Restrictions.ge(MaterialBrandCountPO.COLUMN_CREATETIME_STR, filter.getData());
@@ -77,14 +77,14 @@ public class MaterialBrandCountDaoImpl extends DaoImpl<MaterialBrandCountPO> imp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> countMaterialBrandCount(List<FilterVO> filters) {
+	public List<Object> countMaterialBrandCount(List<Filter> filters) {
 
 		Criteria query = session().createCriteria(MaterialBrandCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialBrandCountPO.COLUMN_MATERIALBRAND_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					criterion = Restrictions.and(criterion, Restrictions.ge(MaterialBrandCountPO.COLUMN_CREATETIME_STR, filter.getData()));
 				}else if("endTime".equals(filter.getField())){

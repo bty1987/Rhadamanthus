@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.utils.Paging;
@@ -30,11 +30,11 @@ public class DecorationContractDaoImpl extends DaoImpl<DecorationContractPO> imp
 	}
 	
 	@Override
-	public List<DecorationContractPO> pageDecorationContract(Paging paging, List<FilterVO> filters){
+	public List<DecorationContractPO> pageDecorationContract(Paging paging, List<Filter> filters){
 		PagingQuery<DecorationContractPO> query = pagingQuery(paging, DecorationContractPO.class);
 		if(filters != null){
 
-			for(FilterVO filter : filters){
+			for(Filter filter : filters){
 				if("orderId".equals(filter.getField())){
 					query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));
 				}else{

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerOutsideSalaryDao;
 import com.fanglin.salary.po.DesignerOutsideSalaryPO;
 import com.fanglin.salary.service.DesignerOutsideSalaryService;
@@ -34,7 +34,7 @@ public class DesignerOutsideSalaryServiceImpl implements DesignerOutsideSalarySe
 	private DesignerOutsideSalaryDao designerOutsideSalaryDao;
 
 	@Override
-	public void pageDesignerOutsideSalary(Paging paging, List<FilterVO> filters) {
+	public void pageDesignerOutsideSalary(Paging paging, List<Filter> filters) {
 		
 		List<DesignerOutsideSalaryPO> designerOutsideSalaryPOs = designerOutsideSalaryDao.pageDesignerOutsideSalary(paging, filters);
 		List<DesignerOutsideSalaryVO> designerOutsideSalaryVOs = new ArrayList<DesignerOutsideSalaryVO>();
