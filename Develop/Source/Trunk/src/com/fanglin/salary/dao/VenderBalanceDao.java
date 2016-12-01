@@ -14,13 +14,13 @@ package com.fanglin.salary.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.VenderBalancePO;
 import com.fanglin.utils.Paging;
 
 public interface VenderBalanceDao extends Dao<VenderBalancePO> {
 	
-	public List<VenderBalancePO> pageVenderBalance(Paging paging, List<FilterVO> filters, Integer status);
+	public List<VenderBalancePO> pageVenderBalance(Paging paging, List<Filter> filters, Integer status);
 	
 	public VenderBalancePO queryVenderBalanceByMaterialBrandIdInit(int materialBrandId);
 	

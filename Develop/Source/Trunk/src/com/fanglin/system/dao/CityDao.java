@@ -13,13 +13,13 @@ package com.fanglin.system.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.utils.Paging;
 
 public interface CityDao extends Dao<CityPO> {
 	
-	public List<CityPO> pageCity(Paging paging, List<FilterVO> filters);
+	public List<CityPO> pageCity(Paging paging, List<Filter> filters);
 	
 	public List<CityPO> pageCityByName(Paging paging, String name);
 

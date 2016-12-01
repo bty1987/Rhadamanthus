@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerDeductSalaryDao;
 import com.fanglin.salary.dao.DesignerOutsideSalaryDao;
 import com.fanglin.salary.dao.DesignerPostBalanceSalaryDao;
@@ -57,7 +57,7 @@ public class DesignerSalaryServiceImpl implements DesignerSalaryService {
 	private DesignerDeductSalaryDao designerDeductSalaryDao;
 
 	@Override
-	public void pageDesignerSalary(Paging paging, List<FilterVO> filters) {
+	public void pageDesignerSalary(Paging paging, List<Filter> filters) {
 		
 		List<DesignerSalaryPO> designerSalaryPOs = designerSalaryDao.pageDesignerSalary(paging, filters, null);
 		List<DesignerSalaryVO> designerSalaryVOs = new ArrayList<DesignerSalaryVO>();
@@ -73,7 +73,7 @@ public class DesignerSalaryServiceImpl implements DesignerSalaryService {
 	}
 
 	@Override
-	public void pageDesignerSalaryForInit(Paging paging, List<FilterVO> filters) {
+	public void pageDesignerSalaryForInit(Paging paging, List<Filter> filters) {
 		
 		List<DesignerSalaryPO> designerSalaryPOs = designerSalaryDao.pageDesignerSalary(paging, filters, DesignerSalaryPO.STATUS_TYPE_INIT_INT);
 		List<DesignerSalaryVO> designerSalaryVOs = new ArrayList<DesignerSalaryVO>();
@@ -90,7 +90,7 @@ public class DesignerSalaryServiceImpl implements DesignerSalaryService {
 	}
 
 	@Override
-	public void pageDesignerSalaryForPayOff(Paging paging, List<FilterVO> filters) {
+	public void pageDesignerSalaryForPayOff(Paging paging, List<Filter> filters) {
 		
 		List<DesignerSalaryPO> designerSalaryPOs = designerSalaryDao.pageDesignerSalary(paging, filters, DesignerSalaryPO.STATUS_TYPE_PAYOFF_INT);
 		List<DesignerSalaryVO> designerSalaryVOs = new ArrayList<DesignerSalaryVO>();
@@ -106,7 +106,7 @@ public class DesignerSalaryServiceImpl implements DesignerSalaryService {
 	}
 
 	@Override
-	public void pageDesignerSalaryForUnPayOff(Paging paging, List<FilterVO> filters) {
+	public void pageDesignerSalaryForUnPayOff(Paging paging, List<Filter> filters) {
 		
 		List<DesignerSalaryPO> designerSalaryPOs = designerSalaryDao.pageDesignerSalary(paging, filters, DesignerSalaryPO.STATUS_TYPE_UNPAYOFF_INT);
 		List<DesignerSalaryVO> designerSalaryVOs = new ArrayList<DesignerSalaryVO>();

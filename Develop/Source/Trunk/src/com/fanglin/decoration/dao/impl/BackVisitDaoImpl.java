@@ -19,7 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.BackVisitDao;
 import com.fanglin.decoration.po.BackVisitPO;
 import com.fanglin.utils.Paging;
@@ -32,7 +32,7 @@ public class BackVisitDaoImpl extends DaoImpl<BackVisitPO> implements BackVisitD
 	}
 	
 	@Override
-	public List<BackVisitPO> pageBackVisitByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<BackVisitPO> pageBackVisitByOrderId(Paging paging, List<Filter> filters, String orderId){
 		PagingQuery<BackVisitPO> query = pagingQuery(paging, BackVisitPO.class);
 		
 		if(!"".equals(orderId)){

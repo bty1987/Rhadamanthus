@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.report.dao.VillageCountDao;
 import com.fanglin.report.dao.VillageCountDetailDao;
@@ -42,7 +42,7 @@ public class VillageCountServiceImpl implements VillageCountService {
 	private VillageCountDetailDao villageCountDetailDao;
 
 	@Override
-	public void pageVillageCountDetail(Paging paging, List<FilterVO> filters) {
+	public void pageVillageCountDetail(Paging paging, List<Filter> filters) {
 		
 		List<VillageCountDetailPO> villageCountDetailPOs = villageCountDetailDao.pageVillageCountDetail(paging, filters);
 		List<VillageCountDetailVO> villageCountDetailVOs = new ArrayList<VillageCountDetailVO>();
@@ -83,7 +83,7 @@ public class VillageCountServiceImpl implements VillageCountService {
 	}
 
 	@Override
-	public List<VillageCountDetailVO> queryVillageCountDetails(List<FilterVO> filters) {
+	public List<VillageCountDetailVO> queryVillageCountDetails(List<Filter> filters) {
 		
 		List<VillageCountDetailPO> villageCountDetailPOs = villageCountDetailDao.queryVillageCountDetail(filters);
 		List<VillageCountDetailVO> villageCountDetailVOs = new ArrayList<VillageCountDetailVO>();

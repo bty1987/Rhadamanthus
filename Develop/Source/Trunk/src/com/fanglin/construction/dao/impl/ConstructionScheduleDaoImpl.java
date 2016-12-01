@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
@@ -36,7 +36,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 
 	@Override
-	public List<ConstructionSchedulePO> pageConstructionSchedule(Paging paging, List<FilterVO> filters) {
+	public List<ConstructionSchedulePO> pageConstructionSchedule(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<ConstructionSchedulePO> query = pagingQuery(paging, ConstructionSchedulePO.class);
 		
@@ -46,11 +46,11 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 
 	@Override
-	public List<ConstructionSchedulePO> pageConstructionScheduleForSupervision(Paging paging, List<FilterVO> filters){
+	public List<ConstructionSchedulePO> pageConstructionScheduleForSupervision(Paging paging, List<Filter> filters){
 		PagingQuery<ConstructionSchedulePO> query = pagingQuery(paging, ConstructionSchedulePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				String field = filter.getField();
 				String op = filter.getOp();
@@ -75,7 +75,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 	
 	@Override
-	public List<ConstructionSchedulePO> pageConstructionScheduleForSupervisionByUserId(Paging paging, List<FilterVO> filters, String workTypeQuality, String userId){
+	public List<ConstructionSchedulePO> pageConstructionScheduleForSupervisionByUserId(Paging paging, List<Filter> filters, String workTypeQuality, String userId){
 		
 		PagingQuery<ConstructionSchedulePO> query = pagingQuery(paging, ConstructionSchedulePO.class);
 		
@@ -91,7 +91,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 	
 	@Override
-	public List<ConstructionSchedulePO> pageConstructionScheduleForQuality(Paging paging, List<FilterVO> filters, List<Integer> schedules){
+	public List<ConstructionSchedulePO> pageConstructionScheduleForQuality(Paging paging, List<Filter> filters, List<Integer> schedules){
 		
 		if(schedules.size() == 0){
 			return new ArrayList<ConstructionSchedulePO>();
@@ -106,7 +106,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 		PagingQuery<ConstructionSchedulePO> query = pagingQuery(paging, ConstructionSchedulePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				boolean flag = false;
 				
@@ -159,14 +159,14 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 	
 	@Override
-	public List<ConstructionSchedulePO> pageConstructionScheduleForAcceptance(Paging paging, List<FilterVO> filters){
+	public List<ConstructionSchedulePO> pageConstructionScheduleForAcceptance(Paging paging, List<Filter> filters){
 		
 		PagingQuery<ConstructionSchedulePO> query = pagingQuery(paging, ConstructionSchedulePO.class);
 		query.add(query.getCriterion(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, ConstructionSchedulePO.SCHEDULE_TYPE_CLEANING_INT, "eq"));
 		
 		if(filters != null){
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				String field = filter.getField();
 				Object data = filter.getData();
 				String op = filter.getOp();
@@ -188,12 +188,12 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 	
 //	@Override
-//	public List<ConstructionSchedulePO> queryConstructionSchedule(List<FilterVO> filters){
+//	public List<ConstructionSchedulePO> queryConstructionSchedule(List<Filter> filters){
 //		
 //		PagingQuery<ConstructionSchedulePO> query = pagingQuery(new Paging(), ConstructionSchedulePO.class);
 //		
 //		if(filters != null){
-//			for(FilterVO filter: filters){
+//			for(Filter filter: filters){
 //				if(ConstructionSchedulePO.COLUMN_SCHEDULE_STR.equals(filter.getField())){
 //					query.add(Restrictions.eq(filter.getField(), Integer.valueOf(filter.getData())));
 //				}else if(ConstructionSchedulePO.COLUMN_SUPERVISORQUALITYID_STR.equals(filter.getField())){
@@ -211,12 +211,12 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructionSchedulePO> queryConstructionScheduleForSupervisionByUserId(List<FilterVO> filters, String supervisionUserId){
+	public List<ConstructionSchedulePO> queryConstructionScheduleForSupervisionByUserId(List<Filter> filters, String supervisionUserId){
 		
 		Criteria query = session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SUPERVISORQUALITYID_STR, supervisionUserId));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(ConstructionSchedulePO.COLUMN_SCHEDULE_STR.equals(filter.getField())){
 					query.add(Restrictions.eq(filter.getField(), filter.getData()));
 				}
@@ -231,12 +231,12 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		query.alias("decorationOrderPO", "decorationOrderPO");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 					
 				String field = filter.getField();
 				String data = filter.getData();

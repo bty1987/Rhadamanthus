@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.BackVisitDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.BackVisitPO;
@@ -48,7 +48,7 @@ public class BackVisitServiceImpl implements BackVisitService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageBackVisitByOrderId(Paging paging, List<FilterVO> filters, BackVisitVO backVisitVO){
+	public void pageBackVisitByOrderId(Paging paging, List<Filter> filters, BackVisitVO backVisitVO){
 		
 		List<BackVisitVO> backVisitVOs = new ArrayList<BackVisitVO>();
 		List<BackVisitPO> backVisitPOs = backVisitDao.pageBackVisitByOrderId(paging, filters, backVisitVO.getOrderId());

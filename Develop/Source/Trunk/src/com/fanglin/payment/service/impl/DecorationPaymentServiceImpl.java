@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
@@ -50,7 +50,6 @@ import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -74,8 +73,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
 	
-	@Autowired
-	private QuotationDao quotationDao;
+//	@Autowired
+//	private QuotationDao quotationDao;
 	
 	@Autowired
 	private FinanceService financeService;
@@ -156,48 +155,48 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 	
 	@Override
-	public void pageDecorationPaymentForCommit(Paging paging, List<FilterVO> filters){
+	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters){
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "eq"));
+		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "eq"));
 		
 		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
-	public void pageDecorationPaymentForCollect(Paging paging, List<FilterVO> filters){
+	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters){
 		
 		if(filters.size() == 0) return;
 
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_PAY_STR, "eq"));
+		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_PAY_STR, "eq"));
 
 		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
-	public void pageDecorationPaymentForConfirm(Paging paging, List<FilterVO> filters){
+	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters){
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR, "eq"));
+		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR, "eq"));
 		
 		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
-	public void pageDecorationPaymentForHistory(Paging paging, List<FilterVO> filters){
+	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters){
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
-		filters.add(new FilterVO("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
+		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, "ne"));
+		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
 		
 		pageDecorationPayment(paging, filters);
 	}
 	
 	@Override
-	public List<DecorationPaymentVO> queryDecorationPayment(List<FilterVO> filters){
+	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters){
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPayment(filters);
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
@@ -1069,13 +1068,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				firstSecond = SystemConfig.getFloat("wfirstSecondRate", 35);
 				second = SystemConfig.getFloat("wsecondRate", 32);
 				
-				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, decorationOrderPO.getType());
-				
-				if(quotationPO == null){
-					throw new FLException(200003, "报价不存在");
-				}
-				
-				sumMoney = Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff()));
+//				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, decorationOrderPO.getType());
+//				if(quotationPO == null){
+//					throw new FLException(200003, "报价不存在");
+//				}
+//				sumMoney = Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff()));
 			}
 
 			//重新生成款项时，由于首付款已经生成过且定金余额已被减 所以需要把自动减去的定金剩余金额补回来
@@ -1339,7 +1336,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		return 0;
 	}
 
-	private void pageDecorationPayment(Paging paging, List<FilterVO> filters){
+	private void pageDecorationPayment(Paging paging, List<Filter> filters){
 		
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 		List<DecorationPaymentPO> decorationPaymentPOs = null;

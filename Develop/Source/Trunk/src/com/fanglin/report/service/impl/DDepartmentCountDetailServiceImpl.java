@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.report.dao.DDepartmentCountDetailDao;
@@ -38,7 +38,7 @@ public class DDepartmentCountDetailServiceImpl implements DDepartmentCountDetail
 	private UserDao userDao;
 
 	@Override
-	public List<DDepartmentCountDetailVO> queryDDepartmentCountDetail(List<FilterVO> filters, String userId) throws FLException, ParseException {
+	public List<DDepartmentCountDetailVO> queryDDepartmentCountDetail(List<Filter> filters, String userId) throws FLException, ParseException {
 		
 		if(filters.size() == 0) return null;
 		
@@ -49,9 +49,9 @@ public class DDepartmentCountDetailServiceImpl implements DDepartmentCountDetail
 		}
 		
 		if(userPO.getDuty().contains("设计")){
-			filters.add(new FilterVO("designDepartmentId", userPO.getDept().getDeptId(), "eq"));
+			filters.add(new Filter("designDepartmentId", userPO.getDept().getDeptId(), "eq"));
 		}else if(userPO.getDuty().contains("业务")){
-			filters.add(new FilterVO("salesmanDepartmentId", userPO.getDept().getDeptId(), "eq"));
+			filters.add(new Filter("salesmanDepartmentId", userPO.getDept().getDeptId(), "eq"));
 		}
 		
 		List<DDepartmentCountDetailPO> dDepartmentCountDetailPOs = dDepartmentCountDetailDao.queryDDepartmentCountDetail(filters);

@@ -14,17 +14,17 @@ package com.fanglin.data.material.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.MaterialModelPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialModelDao extends Dao<MaterialModelPO> {
 	
-	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<FilterVO> filters);
+	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters);
 	
-	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<FilterVO> filters, List<String> brandIds);
+	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<String> brandIds);
 	
-	public List<MaterialModelPO> queryMaterialModel(List<FilterVO> filters);
+	public List<MaterialModelPO> queryMaterialModel(List<Filter> filters);
 	
 	public List<MaterialModelPO> queryMaterialModelByName(String materialModelName, int limit);
 	

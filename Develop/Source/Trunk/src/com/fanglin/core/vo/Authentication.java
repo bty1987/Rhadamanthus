@@ -1,9 +1,11 @@
-package com.fanglin.utils;
+package com.fanglin.core.vo;
 
 import java.util.Date;
 import java.util.regex.Pattern;
 
-public class AuthenticationUtil {
+import com.fanglin.utils.Constant;
+
+public class Authentication {
 	
 	private String userId;
 	
@@ -17,11 +19,11 @@ public class AuthenticationUtil {
 	
 	private int company;
 	
-	public AuthenticationUtil() {
+	public Authentication() {
 		super();
 	}
 
-	public AuthenticationUtil(String userId, String userName, String roleId, long updateTime, boolean isMobile, int company) {
+	public Authentication(String userId, String userName, String roleId, long updateTime, boolean isMobile, int company) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -35,7 +37,7 @@ public class AuthenticationUtil {
 	 * 构造函数
 	 * @param cookieAuthenticationStr 非加密的cookie认证串
 	 */
-	public AuthenticationUtil(String cookieAuthenticationStr){
+	public Authentication(String cookieAuthenticationStr){
 		
 		String[] authentication = cookieAuthenticationStr.split(Constant.COOKIE_AUTHENTICATION_SPLIT);
 

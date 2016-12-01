@@ -13,17 +13,17 @@ package com.fanglin.payment.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.vo.MaterialInsidePaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialInsidePaymentService {
 	
-	public void pageMaterialInside(Paging paging, List<FilterVO> filters);
+	public void pageMaterialInside(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialInsidePaymentForInit(Paging paging, List<FilterVO> filters);
+	public void pageMaterialInsidePaymentForInit(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialInsidePaymentForNotInit(Paging paging, List<FilterVO> filters);
+	public void pageMaterialInsidePaymentForNotInit(Paging paging, List<Filter> filters);
 	
 	public int collectMaterialInsidePayment(MaterialInsidePaymentVO materialInsidePaymentVO, String userId);
 	

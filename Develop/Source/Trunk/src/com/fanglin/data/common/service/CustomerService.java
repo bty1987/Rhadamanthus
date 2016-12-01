@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface CustomerService {
 	
-	public void pageCustomer(Paging paging, List<FilterVO> filters);
+	public void pageCustomer(Paging paging, List<Filter> filters);
 	
 	public CustomerVO queryCustomerById(CustomerVO customerVO);
 	

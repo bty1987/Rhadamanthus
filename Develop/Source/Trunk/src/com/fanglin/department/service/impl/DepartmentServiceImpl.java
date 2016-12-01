@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.service.DepartmentService;
@@ -38,14 +38,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 	private DepartmentDao departmentDao;
 	
 	@Override
-	public void pageDepartment(Paging paging, List<FilterVO> filters, DepartmentVO departmentVO, int company) throws FLException{
+	public void pageDepartment(Paging paging, List<Filter> filters, DepartmentVO departmentVO, int company) throws FLException{
 		
 		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new FilterVO("company", String.valueOf(company), "eq"));
+			filters.add(new Filter("company", String.valueOf(company), "eq"));
 		}
 		
 		if(departmentVO != null && departmentVO.getType() != null){
-			filters.add(new FilterVO("type", departmentVO.getType(), "eq"));
+			filters.add(new Filter("type", departmentVO.getType(), "eq"));
 		}
 		
 		List<DepartmentPO> departmentPOs = departmentDao.pageDepartment(paging, filters);
@@ -92,7 +92,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 		
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), company);
+		Integer _company = null;
+		
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			_company = company;
+		}
+		
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), _company, departmentVO.getType());
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		for(DepartmentPO departmentPO: departmentPOs){

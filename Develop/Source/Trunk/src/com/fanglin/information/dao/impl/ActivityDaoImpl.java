@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.utils.Paging;
@@ -30,17 +30,17 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 	}
 
 	@Override
-	public List<ActivityPO> pageActivity(Paging paging, List<FilterVO> filters) {
+	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<ActivityPO> query = pagingQuery(paging, ActivityPO.class);
 		
 		if(filters != null){
-			for(FilterVO filterVO: filters){
+			for(Filter filter: filters){
 				
-				if(ActivityPO.COLUMN_STATUS_STR.equals(filterVO.getField())){
-					query.add(query.getCriterion(filterVO.getField(), Short.valueOf(filterVO.getData()), filterVO.getOp()));
+				if(ActivityPO.COLUMN_STATUS_STR.equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 				}else{
-					query.add(query.getCriterion(filterVO.getField(), filterVO.getData(), filterVO.getOp()));
+					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}
 			}
 		}

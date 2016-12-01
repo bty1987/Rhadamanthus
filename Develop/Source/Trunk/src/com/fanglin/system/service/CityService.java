@@ -11,13 +11,13 @@ package com.fanglin.system.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Paging;
 
 public interface CityService {
 	
-	public void pageCity(Paging paging, List<FilterVO> filters);
+	public void pageCity(Paging paging, List<Filter> filters);
 	
 	public List<CityVO> queryCity();
 	

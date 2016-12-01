@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.report.dao.DRegionCountDetailDao;
@@ -40,7 +40,7 @@ public class DRegionCountDetailServiceImpl implements DRegionCountDetailService 
 	private UserDao userDao;
 
 	@Override
-	public List<DRegionCountDetailVO> queryDRegionCountDetail(List<FilterVO> filters, String userId) throws FLException, ParseException {
+	public List<DRegionCountDetailVO> queryDRegionCountDetail(List<Filter> filters, String userId) throws FLException, ParseException {
 		
 		if(filters.size() == 0) return null;
 		
@@ -53,9 +53,9 @@ public class DRegionCountDetailServiceImpl implements DRegionCountDetailService 
 		if(userPO.getDept().getFatherDept() == null){
 			return null;
 		}else if(userPO.getDuty().contains("设计")){
-			filters.add(new FilterVO("designRegionId", userPO.getDept().getDeptId(), "eq"));
+			filters.add(new Filter("designRegionId", userPO.getDept().getDeptId(), "eq"));
 		}else if(userPO.getDuty().contains("业务")){
-			filters.add(new FilterVO("salesmanRegionId", userPO.getDept().getDeptId(), "eq"));
+			filters.add(new Filter("salesmanRegionId", userPO.getDept().getDeptId(), "eq"));
 		}
 		
 		List<DRegionCountDetailPO> dRegionCountDetailPOs = dRegionCountDetailDao.queryDRegionCountDetail(filters);

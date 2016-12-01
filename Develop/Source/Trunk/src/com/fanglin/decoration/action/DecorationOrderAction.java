@@ -28,7 +28,7 @@ public class DecorationOrderAction extends BaseListAction {
 
 	private String decorationOrderId;
 	
-	private int condition = 0;
+	private int conditions = 0;
 	
 	private double contractTotal = 0;
 	
@@ -107,7 +107,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "queryDecorationOrderForCondition", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderForCondition() throws FLException{
 		
-		condition = decorationOrderService.queryDecorationOrderForCondition(queryUserId());
+		conditions = decorationOrderService.queryDecorationOrderForCondition(queryUserId());
 		
 		return SUCCESS;
 	}
@@ -232,12 +232,12 @@ public class DecorationOrderAction extends BaseListAction {
 		this.decorationOrderId = decorationOrderId;
 	}
 	
-	public int getCondition(){
-		return condition;
+	public int getConditions(){
+		return conditions;
 	}
 
-	public void setCondition(int condition){
-		this.condition = condition;
+	public void setConditions(int conditions){
+		this.conditions = conditions;
 	}
 
 	public double getContractTotal(){

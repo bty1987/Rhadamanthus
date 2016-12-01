@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 import com.fanglin.construction.dao.ReworkDao;
 import com.fanglin.construction.po.ReworkPO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 
 @Repository("reworkDao")
 public class ReworkDaoImpl extends DaoImpl<ReworkPO> implements ReworkDao{
@@ -30,12 +30,12 @@ public class ReworkDaoImpl extends DaoImpl<ReworkPO> implements ReworkDao{
 	}
 
 	@Override
-	public List<ReworkPO> pageRework(Paging paging, List<FilterVO> filters){
+	public List<ReworkPO> pageRework(Paging paging, List<Filter> filters){
 		
 		PagingQuery<ReworkPO> query = pagingQuery(paging, ReworkPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -44,14 +44,14 @@ public class ReworkDaoImpl extends DaoImpl<ReworkPO> implements ReworkDao{
 	}
 
 	@Override
-	public List<ReworkPO> pageReworkByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<ReworkPO> pageReworkByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<ReworkPO> query = pagingQuery(paging, ReworkPO.class);
 		
 		query.add(query.getCriterion(ReworkPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

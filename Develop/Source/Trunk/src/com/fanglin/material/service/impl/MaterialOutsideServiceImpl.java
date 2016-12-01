@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.department.po.DepartmentPO;
@@ -53,7 +53,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 	private UserDao userDao;
 
 	@Override
-	public void pageMaterialOutside(Paging paging, List<FilterVO> filters) {
+	public void pageMaterialOutside(Paging paging, List<Filter> filters) {
 		
 		List<MaterialOutsidePO> materialOutsidePOs = materialOutsideDao.pageMaterialOutside(paging, filters);
 		List<MaterialOutsideVO> materialOutsideVOs = new ArrayList<MaterialOutsideVO>();
@@ -69,9 +69,9 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 	}
 
 	@Override
-	public void pageMaterialOutsideByUserId(Paging paging, List<FilterVO> filters, String userId) {
+	public void pageMaterialOutsideByUserId(Paging paging, List<Filter> filters, String userId) {
 		
-		filters.add(new FilterVO(MaterialOutsidePO.COLUMN_CREATEUSERID_STR, userId, "eq"));
+		filters.add(new Filter(MaterialOutsidePO.COLUMN_CREATEUSERID_STR, userId, "eq"));
 		
 		List<MaterialOutsidePO> materialOutsidePOs = materialOutsideDao.pageMaterialOutside(paging, filters);
 		List<MaterialOutsideVO> materialOutsideVOs = new ArrayList<MaterialOutsideVO>();

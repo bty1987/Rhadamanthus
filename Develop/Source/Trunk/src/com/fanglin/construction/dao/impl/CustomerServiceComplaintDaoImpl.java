@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.CustomerServiceComplaintDao;
 import com.fanglin.construction.po.CustomerServiceComplaintPO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("customerServiceComplaintDao")
@@ -29,12 +29,12 @@ public class CustomerServiceComplaintDaoImpl extends DaoImpl<CustomerServiceComp
 	}
 
 	@Override
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<FilterVO> filters){
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<Filter> filters){
 		
 		PagingQuery<CustomerServiceComplaintPO> query = pagingQuery(paging, CustomerServiceComplaintPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -43,14 +43,14 @@ public class CustomerServiceComplaintDaoImpl extends DaoImpl<CustomerServiceComp
 	}
 
 	@Override
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<CustomerServiceComplaintPO> query = pagingQuery(paging, CustomerServiceComplaintPO.class);
 		
 		query.add(query.getCriterion(CustomerServiceComplaintPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

@@ -20,7 +20,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.RegionCountDetailDao;
 import com.fanglin.report.po.RegionCountDetailPO;
 import com.fanglin.utils.DateUtil;
@@ -34,7 +34,7 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 	}
 	
 	@Override
-	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws ParseException {
+	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<Filter> filters) throws ParseException {
 		
 		PagingQuery<RegionCountDetailPO> query = pagingQuery(paging, RegionCountDetailPO.class);
 		
@@ -44,7 +44,7 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 	}
 
 	@Override
-	public List<RegionCountDetailPO> queryRegionCountDetail(List<FilterVO> filters) throws ParseException {
+	public List<RegionCountDetailPO> queryRegionCountDetail(List<Filter> filters) throws ParseException {
 		
 		PagingQuery<RegionCountDetailPO> query = pagingQuery(new Paging(), RegionCountDetailPO.class);
 		
@@ -55,9 +55,9 @@ public class RegionCountDetailDaoImpl extends DaoImpl<RegionCountDetailPO> imple
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters) throws ParseException{
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws ParseException{
 		
-		for(FilterVO filter: filters){
+		for(Filter filter: filters){
 			
 			String field = filter.getField();
 			String data = filter.getData();

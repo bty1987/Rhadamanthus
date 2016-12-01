@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.data.common.service.VillageService;
 import com.fanglin.data.common.vo.BuildingNameRuleVO;
@@ -28,7 +28,7 @@ public class VillageServiceImpl implements VillageService {
 	private VillageDao villageDao;
 	
 	@Override
-	public void pageVillage(Paging paging, List<FilterVO> filters){
+	public void pageVillage(Paging paging, List<Filter> filters){
 
 		List<VillagePO> villagePOs = villageDao.pageVillages(paging, filters);
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();
@@ -41,7 +41,7 @@ public class VillageServiceImpl implements VillageService {
 	}
 	
 	@Override
-	public List<VillageVO> queryVillage(List<FilterVO> filters){
+	public List<VillageVO> queryVillage(List<Filter> filters){
 		
 		List<VillagePO> villagePOs = villageDao.queryVillage(filters);
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();

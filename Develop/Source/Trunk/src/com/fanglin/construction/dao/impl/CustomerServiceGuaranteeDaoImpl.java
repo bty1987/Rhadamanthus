@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.CustomerServiceGuaranteeDao;
 import com.fanglin.construction.po.CustomerServiceGuaranteePO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("customerServiceGuaranteeDao")
@@ -29,12 +29,12 @@ public class CustomerServiceGuaranteeDaoImpl extends DaoImpl<CustomerServiceGuar
 	}
 
 	@Override
-	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuarantee(Paging paging, List<FilterVO> filters){
+	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuarantee(Paging paging, List<Filter> filters){
 		
 		PagingQuery<CustomerServiceGuaranteePO> query = pagingQuery(paging, CustomerServiceGuaranteePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
@@ -43,14 +43,14 @@ public class CustomerServiceGuaranteeDaoImpl extends DaoImpl<CustomerServiceGuar
 	}
 
 	@Override
-	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuaranteeByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuaranteeByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<CustomerServiceGuaranteePO> query = pagingQuery(paging, CustomerServiceGuaranteePO.class);
 		
 		query.add(query.getCriterion(CustomerServiceGuaranteePO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}

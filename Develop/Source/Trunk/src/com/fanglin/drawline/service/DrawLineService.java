@@ -15,15 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.drawline.vo.DrawLineVO;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
 	
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<FilterVO> filters);
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters);
 	
-	public List<DrawLineVO> queryDrawLine(List<FilterVO> filters);
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters);
 	
 	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO);
 

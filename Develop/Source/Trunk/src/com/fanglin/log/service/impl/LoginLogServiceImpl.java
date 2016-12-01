@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.dao.LoginLogDao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.log.po.LoginLogPO;
 import com.fanglin.log.service.LoginLogService;
 import com.fanglin.log.vo.LoginLogVO;
@@ -49,7 +49,7 @@ public class LoginLogServiceImpl implements LoginLogService {
 	}
 
 	@Override
-	public void pageLoginLog(Paging paging, List<FilterVO> filters){
+	public void pageLoginLog(Paging paging, List<Filter> filters){
 		List<LoginLogPO> loginLogPOs = loginLogDao.getPageLoginLog(paging, filters);
 		List<LoginLogVO> loginLogVOs = new ArrayList<LoginLogVO>();
 		

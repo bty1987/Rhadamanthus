@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.material.po.MaterialSubOrderPO;
+
 @Entity
 @Table(name = "materialpayment", catalog = "platform")
 public class MaterialPaymentPO implements java.io.Serializable {
@@ -77,7 +79,7 @@ public class MaterialPaymentPO implements java.io.Serializable {
 
 	private long mpId;
 	
-	private long msoId;
+	private MaterialSubOrderPO materialSubOrder;
 	
 	private String msoNo;
 	
@@ -112,13 +114,14 @@ public class MaterialPaymentPO implements java.io.Serializable {
 		this.mpId = mpId;
 	}
 
-	@Column(name = "msoId")
-	public long getMsoId(){
-		return this.msoId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "msoId", referencedColumnName = "msoId")
+	public MaterialSubOrderPO getMaterialSubOrder() {
+		return materialSubOrder;
 	}
 
-	public void setMsoId(long msoId){
-		this.msoId = msoId;
+	public void setMaterialSubOrder(MaterialSubOrderPO materialSubOrder) {
+		this.materialSubOrder = materialSubOrder;
 	}
 
 	@Column(name = "paymentType")

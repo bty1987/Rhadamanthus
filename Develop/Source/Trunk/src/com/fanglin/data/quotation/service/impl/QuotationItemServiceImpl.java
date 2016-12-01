@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.MeasurementUnitPO;
 import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.data.po.QuotationClassificationPO;
@@ -47,7 +47,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 	private QuotationItemDao quotationItemDao;
 	
 	@Override
-	public void pageQuotationItem(Paging paging, List<FilterVO> filters){
+	public void pageQuotationItem(Paging paging, List<Filter> filters){
 		
 		List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
@@ -64,14 +64,14 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 	}
 	
 	@Override
-	public void pageQuotationItemByVersionId(Paging paging, List<FilterVO> filters, QuotationItemVO quotationItemVO){
+	public void pageQuotationItemByVersionId(Paging paging, List<Filter> filters, QuotationItemVO quotationItemVO){
 		
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
 		
 		if(quotationItemVO != null){
 			
-			filters.add(new FilterVO(QuotationItemPO.COLUMN_STATUS_STR, String.valueOf(QuotationItemPO.STATUS_ENABLE_INT), "eq"));
-			filters.add(new FilterVO("versionId", quotationItemVO.getVersionId(), "eq"));
+			filters.add(new Filter(QuotationItemPO.COLUMN_STATUS_STR, String.valueOf(QuotationItemPO.STATUS_ENABLE_INT), "eq"));
+			filters.add(new Filter("versionId", quotationItemVO.getVersionId(), "eq"));
 			
 			List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 			

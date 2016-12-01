@@ -14,13 +14,13 @@ package com.fanglin.data.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.SystemDefineItemPO;
 import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemDao extends Dao<SystemDefineItemPO> {
 	
-	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<FilterVO> filters);
+	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters);
 
 	public SystemDefineItemPO querySystemDefineItemById(String itemId);
 	

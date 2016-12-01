@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -55,7 +55,7 @@ public class ModuleServiceImpl implements ModuleService {
 	private RoleModuleDao roleModuleDao;
 
 	@Override
-	public void pageModule(Paging paging, List<FilterVO> filters) {
+	public void pageModule(Paging paging, List<Filter> filters) {
 		
 		List<ModulePO> modulePOs = moduleDao.pageModule(paging, filters);
 		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();

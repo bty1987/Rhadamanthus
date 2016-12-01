@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public class BaseListAction extends BaseAction {
@@ -25,7 +25,9 @@ public class BaseListAction extends BaseAction {
 	
 	private Paging paging;
 	
-	private List<FilterVO> filters = new ArrayList<FilterVO>();
+	private List<Filter> filters = new ArrayList<Filter>();
+	
+	private String condition;
 	
 	public Paging getPaging(){
 		return paging;
@@ -36,12 +38,20 @@ public class BaseListAction extends BaseAction {
 	}
 
 	@JSON(serialize = false)
-	public List<FilterVO> getFilters(){
+	public List<Filter> getFilters(){
 		return filters;
 	}
 
-	public void setFilters(List<FilterVO> filters){
+	public void setFilters(List<Filter> filters){
 		this.filters = filters;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 	
 }

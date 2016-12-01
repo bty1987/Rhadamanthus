@@ -45,11 +45,11 @@ public class DepartmentVO implements Serializable {
 		super();
 	}
 
-	public Integer getdId() {
+	public Integer getDid() {
 		return dId;
 	}
 
-	public void setdId(Integer dId) {
+	public void setDid(Integer dId) {
 		this.dId = dId;
 	}
 

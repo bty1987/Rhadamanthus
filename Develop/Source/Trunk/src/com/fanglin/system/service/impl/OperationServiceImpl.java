@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -53,7 +53,7 @@ public class OperationServiceImpl implements OperationService {
 	private UserDao userDao;
 
 	@Override
-	public void pageOperation(Paging paging, List<FilterVO> filters) {
+	public void pageOperation(Paging paging, List<Filter> filters) {
 		
 		List<OperationPO> operationPOs = operationDao.pageOperation(paging, filters);
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();

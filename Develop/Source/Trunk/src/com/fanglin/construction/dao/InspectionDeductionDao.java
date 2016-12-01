@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.fanglin.construction.po.InspectionDeductionPO;
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface InspectionDeductionDao extends Dao<InspectionDeductionPO> {
 	
-	public List<InspectionDeductionPO> pageInspectionDeduction(Paging paging, List<FilterVO> filters);
+	public List<InspectionDeductionPO> pageInspectionDeduction(Paging paging, List<Filter> filters);
 	
-	public List<InspectionDeductionPO> pageInspectionDeductionByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public List<InspectionDeductionPO> pageInspectionDeductionByOrderId(Paging paging, List<Filter> filters, String orderId);
 
 }

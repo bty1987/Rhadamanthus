@@ -46,7 +46,7 @@ public class UserCheckDaoImpl extends DaoImpl<UserCheckPO> implements UserCheckD
 		String startTime = checkDate + " 00:00:00";
 		String endTime = checkDate + " 23:59:59";
 		
-		String sql = "select count(ucId) from platform.usercheck where userId = :userId and checkTime > :startTime and checkTime < :endTime";
+		String sql = "select count(*) from platform.usercheck where userId = :userId and checkTime > :startTime and checkTime < :endTime";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("userId", userId).setString("startTime", startTime).setString("endTime", endTime).uniqueResult();
 		
 		return count.intValue();

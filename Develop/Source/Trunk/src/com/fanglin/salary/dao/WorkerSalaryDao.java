@@ -14,13 +14,13 @@ package com.fanglin.salary.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.WorkerSalaryPO;
 import com.fanglin.utils.Paging;
 
 public interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 	
-	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging, List<FilterVO> filters, List<Integer> status);
+	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging, List<Filter> filters, List<Integer> status);
 	
 	public List<WorkerSalaryPO> queryWorkerSalary(List<Integer> status);
 	

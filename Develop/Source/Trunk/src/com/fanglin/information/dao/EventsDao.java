@@ -17,12 +17,12 @@ import java.util.List;
 import org.hibernate.HibernateException;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.po.EventsPO;
 
 public interface EventsDao extends Dao<EventsPO> {
 	
-	public List<EventsPO> queryEvents(List<FilterVO> filters) throws ParseException;
+	public List<EventsPO> queryEvents(List<Filter> filters) throws ParseException;
 	
 	public List<EventsPO> queryEvents(String userId, String beginDate, String endDate) throws HibernateException, ParseException;
 	

@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.utils.Paging;
@@ -31,11 +31,11 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	}
 
 	@Override
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<FilterVO> filters){
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters){
 		PagingQuery<FunctionAreaPO> query = pagingQuery(paging, FunctionAreaPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("versionId".equals(filter.getField())){
 					query.add(query.getCriterion("quotationVersion.versionId", (filter.getData()), filter.getOp()));
 				}else{

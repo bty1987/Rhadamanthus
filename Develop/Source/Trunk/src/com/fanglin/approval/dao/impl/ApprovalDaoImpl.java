@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("approvalDao")
@@ -31,7 +31,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	}
 
 	@Override
-	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<FilterVO> filters, String userId) {
+	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
 		
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
 		
@@ -39,7 +39,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		query.add(Restrictions.eq("receiver.userId", userId));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("status".equals(filter.getField())){
 					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 				}else if("type".equals(filter.getField())){

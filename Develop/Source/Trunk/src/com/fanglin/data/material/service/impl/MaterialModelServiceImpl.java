@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.MaterialBrandRightDao;
 import com.fanglin.data.material.dao.MaterialModelDao;
 import com.fanglin.data.material.service.MaterialModelService;
@@ -51,7 +51,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	private MaterialBrandRightDao materialBrandRightDao;
 	
 	@Override
-	public void pageMaterialModel(Paging paging, List<FilterVO> filters, String userId){
+	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		List<MaterialModelPO> materialModelPOs = null;
@@ -163,7 +163,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	}
 
 	@Override
-	public List<MaterialModelVO> queryMaterialModel(List<FilterVO> filters){
+	public List<MaterialModelVO> queryMaterialModel(List<Filter> filters){
 		
 		List<MaterialModelPO> materialModelPOs = materialModelDao.queryMaterialModel(filters);
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();

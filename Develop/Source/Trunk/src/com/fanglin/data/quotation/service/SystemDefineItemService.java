@@ -14,13 +14,13 @@ package com.fanglin.data.quotation.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.SystemDefineItemVO;
 import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemService {
 	
-	public void pageSystemDefineItem(Paging paging, List<FilterVO> filters);
+	public void pageSystemDefineItem(Paging paging, List<Filter> filters);
 	
 	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO) throws FLException;
 	

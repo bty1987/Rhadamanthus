@@ -12,7 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.RolePO;
@@ -26,7 +26,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	public List<UserPO> pageUser(Paging paging, List<FilterVO> filters){
+	public List<UserPO> pageUser(Paging paging, List<Filter> filters){
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
@@ -235,7 +235,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
-	public List<UserPO> pageUserForWorking(Paging paging, List<FilterVO> filters){
+	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters){
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
@@ -302,19 +302,19 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	@Override
 	public int countUserByRoleId(String roleId){
-		String sql = "select count(userId) from communion.user where roleId = :roleId";
+		String sql = "select count(*) from communion.user where roleId = :roleId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("roleId", roleId).uniqueResult();
 		
 		return count.intValue();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
 			query.alias("dept", "dept");
 			query.alias("role", "role");
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				String field = filter.getField();
 				

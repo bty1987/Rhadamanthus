@@ -15,11 +15,11 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.vo.DUserCountDetailVO;
 
 public interface DUserCountDetailService {
 	
-	public List<DUserCountDetailVO> queryDUserCountDetail(List<FilterVO> filters, String userId) throws FLException, ParseException; 
+	public List<DUserCountDetailVO> queryDUserCountDetail(List<Filter> filters, String userId) throws FLException, ParseException; 
 	
 }

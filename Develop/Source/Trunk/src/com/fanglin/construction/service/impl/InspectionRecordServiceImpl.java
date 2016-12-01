@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.InspectionRecordDao;
 import com.fanglin.construction.po.InspectionRecordPO;
 import com.fanglin.construction.service.InspectionRecordService;
 import com.fanglin.construction.vo.InspectionRecordVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +34,7 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 	private InspectionRecordDao inspectionRecordDao;
 
 	@Override
-	public void pageInspectionRecord(Paging paging, List<FilterVO> filters){
+	public void pageInspectionRecord(Paging paging, List<Filter> filters){
 		
 		List<InspectionRecordPO> inspectionRecordPOs = inspectionRecordDao.pageInspectionRecord(paging, filters);
 		List<InspectionRecordVO> inspectionRecordVOs = new ArrayList<InspectionRecordVO>();
@@ -49,7 +49,7 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 	}
 
 	@Override
-	public void pageInspectionRecordByOrderId(Paging paging, List<FilterVO> filters, InspectionRecordVO inspectionRecordVO){
+	public void pageInspectionRecordByOrderId(Paging paging, List<Filter> filters, InspectionRecordVO inspectionRecordVO){
 		
 		List<InspectionRecordPO> inspectionRecordPOs = inspectionRecordDao.pageInspectionRecordByOrderId(paging, filters, inspectionRecordVO.getOrderId());
 		List<InspectionRecordVO> inspectionRecordVOs = new ArrayList<InspectionRecordVO>();

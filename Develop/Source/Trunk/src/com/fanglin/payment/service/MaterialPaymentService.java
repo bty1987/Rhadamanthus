@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 import com.fanglin.payment.vo.MaterialPaymentVO;
@@ -25,25 +25,25 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
 	
-	public void pageMaterialPaymentBySubOrder(Paging paging, List<FilterVO> filters);
+	public void pageMaterialPayment(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPaymentForCollectBySubOrder(Paging paging, List<FilterVO> filters);
+	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPaymentForConfirmBySubOrder(Paging paging, List<FilterVO> filters);
+	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPaymentForNotInitBySubOrder(Paging paging, List<FilterVO> filters);
+	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPayment(Paging paging, List<FilterVO> filters);
+	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPaymentByMsoId(Paging paging, List<FilterVO> filters, MaterialPaymentVO materialPaymentVO);
+	public void pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
-	public void pageMaterialPaymentForInitByMsoId(Paging paging, List<FilterVO> filters, MaterialPaymentVO materialPaymentVO);
+	public void pageMaterialPaymentForInitByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
-	public void pageMaterialPaymentByMsoIdAll(Paging paging, List<FilterVO> filters, MaterialPaymentVO materialPaymentVO);
+	public void pageMaterialPaymentByMsoIdAll(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
-	public void pageMaterialPaymentByOrderId(Paging paging, List<FilterVO> filters, MaterialPaymentVO materialPaymentVO);
+	public void pageMaterialPaymentByOrderId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
-	public List<MaterialPaymentVO> queryMaterialPayment(List<FilterVO> filters);
+	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
 	

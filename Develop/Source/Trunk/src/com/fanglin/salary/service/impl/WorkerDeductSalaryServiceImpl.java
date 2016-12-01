@@ -26,7 +26,7 @@ import com.fanglin.construction.po.GroundLevelingConstructionSchedulePO;
 import com.fanglin.construction.po.OilConstructionSchedulePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.po.WaterwayCircuitPowerConstructionScheduleWorkerPO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.salary.dao.WorkerDeductSalaryDao;
@@ -54,7 +54,7 @@ public class WorkerDeductSalaryServiceImpl implements WorkerDeductSalaryService 
 	private UserDao userDao;
 
 	@Override
-	public void pageWorkerDeductSalaryByOrderIdAUserId(Paging paging, List<FilterVO> filters, WorkerDeductSalaryVO workerDeductSalaryVO, String userId){
+	public void pageWorkerDeductSalaryByOrderIdAUserId(Paging paging, List<Filter> filters, WorkerDeductSalaryVO workerDeductSalaryVO, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		String duty = userPO.getDuty();
@@ -86,7 +86,7 @@ public class WorkerDeductSalaryServiceImpl implements WorkerDeductSalaryService 
 			}
 			
 			if(workType != 0){
-				filters.add(new FilterVO("workTypeId", String.valueOf(workType), "eq"));
+				filters.add(new Filter("workTypeId", String.valueOf(workType), "eq"));
 			}
 		}
 		
@@ -104,7 +104,7 @@ public class WorkerDeductSalaryServiceImpl implements WorkerDeductSalaryService 
 	}
 
 	@Override
-	public void pageWorkerDedectSalaryByPass(Paging paging, List<FilterVO> filters){
+	public void pageWorkerDedectSalaryByPass(Paging paging, List<Filter> filters){
 		
 		List<Integer> status = new ArrayList<Integer>();
 		status.add(WorkerDeductSalaryPO.STATUS_TYPE_PASS_INT);
@@ -126,7 +126,7 @@ public class WorkerDeductSalaryServiceImpl implements WorkerDeductSalaryService 
 	}
 
 	@Override
-	public void pageWorkerDeductSalaryForPersonal(Paging paging, List<FilterVO> filters, WorkerDeductSalaryVO workerDeductSalaryVO){
+	public void pageWorkerDeductSalaryForPersonal(Paging paging, List<Filter> filters, WorkerDeductSalaryVO workerDeductSalaryVO){
 		
 		List<WorkerDeductSalaryPO> workerDeductSalaryPOs = workerDeductSalaryDao.pageWorkerDeductSalaryPersonal(paging, filters);
 		List<WorkerDeductSalaryVO> workerDeductSalaryVOs = new ArrayList<WorkerDeductSalaryVO>();

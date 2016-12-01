@@ -14,14 +14,14 @@ package com.fanglin.log.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.utils.Paging;
 
 public interface ActionLogDao extends Dao<ActionLogPO> {
 
-	List<ActionLogPO> getPageActionLogPOs(Paging paging, List<FilterVO> filters);
+	List<ActionLogPO> getPageActionLogPOs(Paging paging, List<Filter> filters);
 
-	List<ActionLogPO> getAllPageActionLogPOs(List<FilterVO> filters);
+	List<ActionLogPO> getAllPageActionLogPOs(List<Filter> filters);
 	
 }

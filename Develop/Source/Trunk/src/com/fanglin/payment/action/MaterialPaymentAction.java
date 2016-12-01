@@ -86,34 +86,34 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialPaymentBySubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentBySubOrder(){
+	@Action(value="pageMaterialPaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForInit(){
 		
-		materialPaymentService.pageMaterialPaymentBySubOrder(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForCollectBySubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForCollectBySubOrder(){
-		
-		materialPaymentService.pageMaterialPaymentForCollectBySubOrder(getPaging(), getFilters());
+		materialPaymentService.pageMaterialPaymentForInit(getPaging(), getFilters());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialPaymentForConfirmBySubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForConfirmBySubOrder(){
+	@Action(value="pageMaterialPaymentForCollect", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForCollect(){
 		
-		materialPaymentService.pageMaterialPaymentForConfirmBySubOrder(getPaging(), getFilters());
+		materialPaymentService.pageMaterialPaymentForCollect(getPaging(), getFilters());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialPaymentForNotInitBySubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForNotInitBySubOrder(){
+	@Action(value="pageMaterialPaymentForConfirm", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForConfirm(){
 		
-		materialPaymentService.pageMaterialPaymentForNotInitBySubOrder(getPaging(), getFilters());
+		materialPaymentService.pageMaterialPaymentForConfirm(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageMaterialPaymentForNotInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForNotInit(){
+		
+		materialPaymentService.pageMaterialPaymentForNotInit(getPaging(), getFilters());
 		
 		return SUCCESS;
 	}

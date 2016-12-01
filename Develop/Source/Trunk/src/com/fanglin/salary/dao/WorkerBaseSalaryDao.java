@@ -14,17 +14,17 @@ package com.fanglin.salary.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.WorkerBaseSalaryPO;
 import com.fanglin.utils.Paging;
 
 public interface WorkerBaseSalaryDao extends Dao<WorkerBaseSalaryPO> {
 	
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalary(Paging paging, List<FilterVO> filters);
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalary(Paging paging, List<Filter> filters);
 	
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByStatus(Paging paging, List<FilterVO> filters, List<Integer> status);
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByStatus(Paging paging, List<Filter> filters, List<Integer> status);
 	
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByOrderId(Paging paging, List<FilterVO> filters, String orderId) ;
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByOrderId(Paging paging, List<Filter> filters, String orderId) ;
 	
 	public List<WorkerBaseSalaryPO> queryWorkerBaseSalaryByOrderId(String orderId);
 	

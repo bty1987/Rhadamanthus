@@ -13,13 +13,13 @@ import java.util.List;
 
 import com.fanglin.common.vo.ExcelWorkSheet;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.UserSalaryVO;
 import com.fanglin.utils.Paging;
 
 public interface UserSalaryService {
 	
-	public void pageUserSalary(Paging paging, List<FilterVO> filters) throws FLException;
+	public void pageUserSalary(Paging paging, List<Filter> filters) throws FLException;
 	
 	public void pageUserSalaryByUserId(Paging paging, UserSalaryVO userSalary) throws FLException;
 

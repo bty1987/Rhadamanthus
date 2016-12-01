@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.CustomerServiceComplaintDao;
 import com.fanglin.construction.po.CustomerServiceComplaintPO;
 import com.fanglin.construction.service.CustomerServiceComplaintService;
 import com.fanglin.construction.vo.CustomerServiceComplaintVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -35,7 +35,7 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 	private CustomerServiceComplaintDao customerServiceComplaintDao;
 
 	@Override
-	public void pageCustomerServiceComplaint(Paging paging, List<FilterVO> filters){
+	public void pageCustomerServiceComplaint(Paging paging, List<Filter> filters){
 		
 		List<CustomerServiceComplaintPO> customerServiceComplaintPOs = customerServiceComplaintDao.pageCustomerServiceComplaint(paging, filters);
 		List<CustomerServiceComplaintVO> customerServiceComplaintVOs = new ArrayList<CustomerServiceComplaintVO>();
@@ -51,7 +51,7 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 	}
 
 	@Override
-	public void pageCustomerServiceComplaintByOrderId(Paging paging, List<FilterVO> filters, CustomerServiceComplaintVO customerServiceComplaintVO){
+	public void pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, CustomerServiceComplaintVO customerServiceComplaintVO){
 		
 		List<CustomerServiceComplaintPO> customerServiceComplaintPOs = customerServiceComplaintDao.pageCustomerServiceComplaintByOrderId(paging, filters, customerServiceComplaintVO.getOrderId());
 		List<CustomerServiceComplaintVO> customerServiceComplaintVOs = new ArrayList<CustomerServiceComplaintVO>();

@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.AddReduceItemDao;
 import com.fanglin.decoration.po.AddReduceItemPO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 	}
 	
 	@Override
-	public List<AddReduceItemPO> pageAddReduceItem(Paging paging, List<FilterVO> filters) {
+	public List<AddReduceItemPO> pageAddReduceItem(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<AddReduceItemPO> query = pagingQuery(paging, AddReduceItemPO.class);
 		
@@ -38,7 +38,7 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 	}
 
 	@Override
-	public List<AddReduceItemPO> pageAddReduceItemByAddReduceId(Paging paging, List<FilterVO> filters, int arId) {
+	public List<AddReduceItemPO> pageAddReduceItemByAddReduceId(Paging paging, List<Filter> filters, int arId) {
 		
 		PagingQuery<AddReduceItemPO> query = pagingQuery(paging, AddReduceItemPO.class);
 		

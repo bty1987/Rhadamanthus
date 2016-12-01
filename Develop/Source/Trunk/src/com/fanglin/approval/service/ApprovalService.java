@@ -15,12 +15,12 @@ import java.util.List;
 
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ApprovalService {
 	
-	public void pageApprovalByReceiveId(Paging paging, List<FilterVO> filters, String userId);
+	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId);
 	
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException;
 	

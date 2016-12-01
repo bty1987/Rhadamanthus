@@ -12,13 +12,13 @@ package com.fanglin.system.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.po.RegionPO;
 import com.fanglin.utils.Paging;
 
 public interface RegionDao extends Dao<RegionPO> {
 
-	public List<RegionPO> pageRegion(Paging paging, List<FilterVO> filters);
+	public List<RegionPO> pageRegion(Paging paging, List<Filter> filters);
 	
 	public List<RegionPO> pageRegionByName(Paging paging, String name);
 	

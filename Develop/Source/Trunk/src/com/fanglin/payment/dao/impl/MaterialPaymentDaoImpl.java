@@ -12,16 +12,17 @@
 package com.fanglin.payment.dao.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.utils.DateUtil;
@@ -35,35 +36,17 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 	
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<FilterVO> filters){
+	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
 		
-		if(filters != null){
-			for(FilterVO filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
 	
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentBySubOrder(Paging paging, List<FilterVO> filters, List<Long> msoIds){
-		
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		if(msoIds.size() == 0){
-			return new ArrayList<MaterialPaymentPO>();
-		}else{
-			query.add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds));
-			
-			return query.list();
-		}
-	}
-
-	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<FilterVO> filters, long msoId, Integer paymentStatus){
+	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, long msoId, Integer paymentStatus){
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
 		
@@ -73,87 +56,25 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus, "eq"));
 		}
 		
-		if(filters != null){
-			for(FilterVO filter: filters){
-				if("orderId".equals(filter.getField())){
-					continue;
-				}
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
 	
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForInitByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds){
+	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op) {
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
 		
-		if(msoIds.size() != 0){
-			query.add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds));
-			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "eq"));
-		}else{
-			return new ArrayList<MaterialPaymentPO>();
-		}
+		query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, status, op));
 		
-		
-		return query.list();
-	}
-	
-	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForCollectByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds){
-
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		if(msoIds.size() != 0){
-			query.add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds));
-			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT, "eq"));
-			
-			queryFilterExcute(query, filters);
-		}else{
-			return new ArrayList<MaterialPaymentPO>();
-		}
-		
-		return query.list();
-	}
-	
-	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForConfirmByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds){
-
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		if(msoIds.size() != 0){
-			query.add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds));
-			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT, "eq"));
-			
-			queryFilterExcute(query, filters);
-		}else{
-			return new ArrayList<MaterialPaymentPO>();
-		}
+		queryFilterExcute(query, filters);
 		
 		return query.list();
 	}
 
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForNotInitByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds){
-		
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		if(msoIds.size() != 0){
-			query.add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds));
-			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "ne"));
-			
-			queryFilterExcute(query, filters);
-		}else{
-			return new ArrayList<MaterialPaymentPO>();
-		}
-		
-		return query.list();
-	}
-
-	@Override
-	public List<MaterialPaymentPO> queryMaterialPayment(List<FilterVO> filters){
+	public List<MaterialPaymentPO> queryMaterialPayment(List<Filter> filters){
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(new Paging(), MaterialPaymentPO.class);
 		
@@ -166,9 +87,15 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(String orderId) {
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.orderId", orderId)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoId(long msoId, Integer paymentStatus){
 		
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId));
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
 		
 		if(paymentStatus != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus));
@@ -180,13 +107,13 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIds(List<Long> msoIds) {
-		return session().createCriteria(MaterialPaymentPO.class).add(Restrictions.in(MaterialPaymentPO.COLUMN_MSOID_STR, msoIds)).list();
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.in("materialSubOrder.msoId", msoIds)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdAType(long msoId, Integer paymentType){
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId));
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
 		
 		if(paymentType != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
@@ -199,7 +126,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdATypeAStatus(long msoId, Integer paymentType, Integer paymentStatus) {
 		
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId));
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
 		
 		if(paymentType != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
@@ -215,8 +142,8 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMsoId(long msoId){
-		return session().createCriteria(MaterialPaymentPO.class)
-				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId))
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder")
+				.add(Restrictions.eq("materialSubOrder.msoId", msoId))
 				.add(Restrictions.ne(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
 				.list();
 	}
@@ -224,8 +151,8 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMsoId(long msoId) {
-		return session().createCriteria(MaterialPaymentPO.class)
-				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSOID_STR, msoId))
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder")
+				.add(Restrictions.eq("materialSubOrder.msoId", msoId))
 				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
 				.list();
 	}
@@ -253,19 +180,38 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialReceipt", "materialReceipt").add(Restrictions.eq("materialReceipt.mrId", mrId)).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
-		query.alias("materialReceipt", "materialReceipt");
+		query.alias("materialSubOrder", "materialSubOrder");
 		
 		if(filters != null){
-			for(FilterVO filterVO: filters){
-				if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(filterVO.getField())){
-					query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, Integer.parseInt(filterVO.getData()), filterVO.getOp()));
-				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(filterVO.getField())){
-					if("between".equals(filterVO.getOp())){
+			for(Filter filter: filters){
+				
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if(MaterialPaymentPO.COLUMN_ORDERID_STR.equals(field)){
+					query.add(query.getCriterion("materialSubOrder.orderId", data, op));
+				}else if(MaterialSubOrderPO.COLUMN_ORDERADDR_STR.equals(field)){
+					query.add(Restrictions.ilike("materialSubOrder.orderAddr", data, MatchMode.ANYWHERE));
+				}else if(MaterialSubOrderPO.COLUMN_MSOID_STR.equals(field)){
+					query.add(query.getCriterion("materialSubOrder.msoId", data, op));
+				}else if(MaterialPaymentPO.COLUMN_MSONO_STR.equals(field)){
+					query.add(query.getCriterion(field, data, op));
+				}else if(MaterialSubOrderPO.COLUMN_SALESMANNAME_STR.equals(field) || MaterialSubOrderPO.COLUMN_DESIGNERNAME_STR.equals(field)){
+					query.add(Restrictions.ilike("materialSubOrder.salesmanName", data, MatchMode.ANYWHERE));
+				}else if(MaterialSubOrderPO.COLUMN_SALESMANID_STR.equals(field)){
+					query.add(Restrictions.ilike("materialSubOrder.salesmanId", data, MatchMode.ANYWHERE));
+				}else if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)){
+					query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, Integer.parseInt(data), op));
+				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)){
+					query.alias("materialReceipt", "materialReceipt");
+					
+					if("between".equals(op)){
 						
-						String sTime = filterVO.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = filterVO.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 						
 						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
@@ -276,10 +222,11 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 						query.add(query.getCriterion("materialReceipt.collectTime", eTimestamp, "le"));
 						query.add(query.getCriterion("materialReceipt.collectTime", sTimestamp, "ge"));
 					}else{
-						query.add(query.getCriterion("materialReceipt.collectTime", filterVO.getData(), filterVO.getOp()));
+						query.add(query.getCriterion("materialReceipt.collectTime", data, op));
 					}
 				}
 			}
 		}
 	}
+
 }

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.service.RoleService;
@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
 	private RoleDao roleDao;
 
 	@Override
-	public void pageRole(Paging paging, List<FilterVO> filters){
+	public void pageRole(Paging paging, List<Filter> filters){
 
 		List<RolePO> rolePOs = roleDao.pageRole(paging, filters);
 		List<RoleVO> roleVOs = new ArrayList<RoleVO>();

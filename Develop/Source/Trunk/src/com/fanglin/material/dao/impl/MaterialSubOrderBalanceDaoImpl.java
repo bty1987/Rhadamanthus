@@ -19,7 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
 import com.fanglin.material.po.MaterialSubOrderBalancePO;
 import com.fanglin.material.po.MaterialSubOrderPO;
@@ -34,7 +34,7 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 	}
 
 	@Override
-	public List<MaterialSubOrderBalancePO> pageMaterialSubOrderBalance(Paging paging, List<FilterVO> filters) {
+	public List<MaterialSubOrderBalancePO> pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<MaterialSubOrderBalancePO> query = pagingQuery(paging, MaterialSubOrderBalancePO.class);
 		
@@ -43,11 +43,11 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
 		
 		query.alias("materialSubOrder", "materialSubOrder");
 		
-		for(FilterVO filter: filters){
+		for(Filter filter: filters){
 			if(MaterialSubOrderPO.COLUMN_MSONO_STR.equals(filter.getField())){
 				query.add(Restrictions.eq(MaterialSubOrderBalancePO.COLUMN_MSONO_STR, filter.getData()));
 			}else if(MaterialSubOrderPO.COLUMN_ORDERID_STR.equals(filter.getField())){

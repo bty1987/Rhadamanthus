@@ -14,15 +14,15 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.utils.Paging;
 
 public interface AddReduceDao extends Dao<AddReducePO> {
 	
-	public List<AddReducePO> pageAddReduce(Paging paging, List<FilterVO> filters);
+	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters);
 	
-	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<Filter> filters, String orderId);
 	
 	public AddReducePO queryAddReduceByDecorationPaymentId(Long orderPaymentId);
 	

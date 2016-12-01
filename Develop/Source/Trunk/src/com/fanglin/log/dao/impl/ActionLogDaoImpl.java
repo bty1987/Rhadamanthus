@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.log.dao.ActionLogDao;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.utils.DateUtil;
@@ -33,7 +33,7 @@ public class ActionLogDaoImpl extends DaoImpl<ActionLogPO> implements ActionLogD
 	}
 
 	@Override
-	public List<ActionLogPO> getPageActionLogPOs(Paging paging, List<FilterVO> filters){
+	public List<ActionLogPO> getPageActionLogPOs(Paging paging, List<Filter> filters){
 		PagingQuery<ActionLogPO> query = pagingQuery(paging, ActionLogPO.class);
 		
 		queryFilterExcute(query, filters);
@@ -44,7 +44,7 @@ public class ActionLogDaoImpl extends DaoImpl<ActionLogPO> implements ActionLogD
 	}
 
 	@Override
-	public List<ActionLogPO> getAllPageActionLogPOs(List<FilterVO> filters){
+	public List<ActionLogPO> getAllPageActionLogPOs(List<Filter> filters){
 		
 		PagingQuery<ActionLogPO> query = pagingQuery(new Paging(), ActionLogPO.class);
 		
@@ -56,12 +56,12 @@ public class ActionLogDaoImpl extends DaoImpl<ActionLogPO> implements ActionLogD
 		return query.list();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
 			query.alias("createUserPO", "createUserPO");
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				
 				String field = filter.getField();
 				String data = filter.getData();

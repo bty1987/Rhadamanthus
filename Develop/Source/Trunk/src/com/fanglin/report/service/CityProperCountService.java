@@ -14,16 +14,16 @@ package com.fanglin.report.service;
 import java.text.ParseException;
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.vo.CityProperCountDetailVO;
 import com.fanglin.utils.Paging;
 
 public interface CityProperCountService {
 	
-	public void pageCityProperCountDetail(Paging paging, List<FilterVO> filters) throws ParseException;
+	public void pageCityProperCountDetail(Paging paging, List<Filter> filters) throws ParseException;
 	
-	public List<CityProperCountDetailVO> queryCityProperCountDetail(List<FilterVO> filters) throws ParseException;
+	public List<CityProperCountDetailVO> queryCityProperCountDetail(List<Filter> filters) throws ParseException;
 	
-	public List<CityProperCountDetailVO> queryCityProperCountDetailByCurrent(List<FilterVO> filters) throws ParseException;
+	public List<CityProperCountDetailVO> queryCityProperCountDetailByCurrent(List<Filter> filters) throws ParseException;
 
 }

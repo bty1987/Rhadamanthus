@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.report.dao.DUserCountDetailDao;
@@ -40,7 +40,7 @@ public class DUserCountDetailServiceImpl implements DUserCountDetailService {
 	private UserDao userDao;
 
 	@Override
-	public List<DUserCountDetailVO> queryDUserCountDetail(List<FilterVO> filters, String userId) throws FLException, ParseException {
+	public List<DUserCountDetailVO> queryDUserCountDetail(List<Filter> filters, String userId) throws FLException, ParseException {
 		
 		if(filters.size() == 0) return null;
 		
@@ -51,9 +51,9 @@ public class DUserCountDetailServiceImpl implements DUserCountDetailService {
 		}
 		
 		if(userPO.getDuty().contains("设计师")){
-			filters.add(new FilterVO("designerUserId", userPO.getUserId(), "eq"));
+			filters.add(new Filter("designerUserId", userPO.getUserId(), "eq"));
 		}else if(userPO.getDuty().contains("业务员")){
-			filters.add(new FilterVO("salesmanUserId", userPO.getUserId(), "eq"));
+			filters.add(new Filter("salesmanUserId", userPO.getUserId(), "eq"));
 		}
 		
 		List<DUserCountDetailPO> dUserCountDetailPOs = dUserCountDetailDao.queryDUserCountDetail(filters);

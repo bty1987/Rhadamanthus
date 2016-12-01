@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.ReceiptTypeDao;
 import com.fanglin.data.po.ReceiptTypePO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	}
 
 	@Override
-	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<FilterVO> filters) {
+	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<ReceiptTypePO> query = pagingQuery(paging, ReceiptTypePO.class);
 		
@@ -56,7 +56,7 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq(ReceiptTypePO.COLUMN_KEY_STR, key)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 	}
 

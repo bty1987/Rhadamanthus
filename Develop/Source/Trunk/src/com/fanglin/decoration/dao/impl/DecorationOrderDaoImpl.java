@@ -22,7 +22,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.utils.DateUtil;
@@ -36,7 +36,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<FilterVO> filters, List<Integer> designDepartmentIds, List<String> statuses){
+	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
@@ -57,7 +57,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<FilterVO> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<Filter> filters){
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
@@ -72,7 +72,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<FilterVO> filters, List<Integer> designDepartmentIds, List<String> statuses) {
+	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
@@ -94,7 +94,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<FilterVO> filters, List<Integer> salesmanDepartmentIds, List<String> statuses) {
+	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
@@ -116,7 +116,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<FilterVO> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<Filter> filters){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
 		queryFilterExcute(query, filters);
@@ -129,7 +129,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<FilterVO> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<Filter> filters){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
 		query.alias("putlineConstructionSchedules", "putlineConstructionSchedule");
@@ -145,7 +145,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderByOrderIds(Paging paging, List<FilterVO> filters, List<String> orderIds){
+	public List<DecorationOrderPO> pageDecorationOrderByOrderIds(Paging paging, List<Filter> filters, List<String> orderIds){
 		
 		PagingQuery<DecorationOrderPO> query  = pagingQuery(paging, DecorationOrderPO.class);
 		
@@ -158,7 +158,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> queryDecorationOrder(List<FilterVO> filters){
+	public List<DecorationOrderPO> queryDecorationOrder(List<Filter> filters){
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(new Paging(), DecorationOrderPO.class);
 		
@@ -176,7 +176,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderPO> queryDecorationOrderForBackVisit(List<FilterVO> filters){
+	public List<DecorationOrderPO> queryDecorationOrderForBackVisit(List<Filter> filters){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(new Paging(), DecorationOrderPO.class);
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_TERMINATION_STR});
@@ -185,7 +185,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 				.add(Restrictions.not(Restrictions.in("status", status)));
 
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("status".equals(filter.getField())){
 					criteria.add(query.getCriterion("status", filter.getData(), filter.getOp()));
 				}else if("createTime".equals(filter.getField())){
@@ -201,7 +201,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> queryDecorationOrderByOrderIds(List<FilterVO> filters, List<String> orderIds){
+	public List<DecorationOrderPO> queryDecorationOrderByOrderIds(List<Filter> filters, List<String> orderIds){
 		
 		PagingQuery<DecorationOrderPO> query  = pagingQuery(new Paging(), DecorationOrderPO.class);
 		
@@ -253,7 +253,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public double countDecorationOrderForTotalPrice(List<FilterVO> filters) {
+	public double countDecorationOrderForTotalPrice(List<Filter> filters) {
 		
 		PagingQuery<DecorationOrderPO> query  = pagingQuery(new Paging(), DecorationOrderPO.class);
 		
@@ -267,10 +267,10 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		session().refresh(decorationOrderPO);
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 					
 				String field = filter.getField();
 				String data = filter.getData();

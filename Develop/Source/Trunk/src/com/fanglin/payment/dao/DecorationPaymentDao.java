@@ -14,21 +14,21 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
-	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<FilterVO> filters);
+	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters);
 	
 	public List<DecorationPaymentPO> pageDecorationPaymentForBaseByOrderId(Paging paging, String orderId);
 	
 	public List<DecorationPaymentPO> pageDecorationPaymentForOtherByOrderId(Paging paging, String orderId);
 
-	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<FilterVO> filters);
+	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	
-	public List<DecorationPaymentPO> queryDecorationPayment(List<FilterVO> filters);
+	public List<DecorationPaymentPO> queryDecorationPayment(List<Filter> filters);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByIds(List<Long> ids);
 	
@@ -38,7 +38,7 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentForBaseAConfirmByOrderId(String orderId);
 	
-	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<FilterVO> filters);
+	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId);
 	

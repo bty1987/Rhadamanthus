@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.service.ActivityService;
@@ -38,9 +38,9 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void pageActivity(Paging paging, List<FilterVO> filters, String userId) {
+	public void pageActivity(Paging paging, List<Filter> filters, String userId) {
 		
-		filters.add(new FilterVO(ActivityPO.COLUMN_CREATEUSERID_STR, userId, "eq"));
+		filters.add(new Filter(ActivityPO.COLUMN_CREATEUSERID_STR, userId, "eq"));
 		
 		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();

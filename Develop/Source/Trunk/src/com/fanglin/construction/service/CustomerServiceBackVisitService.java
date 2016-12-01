@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.CustomerServiceBackVisitVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CustomerServiceBackVisitService {
 	
-	public void pageCustomerServiceBackVisit(Paging paging, List<FilterVO> filters);
+	public void pageCustomerServiceBackVisit(Paging paging, List<Filter> filters);
 	
-	public void pageCustomerServiceBackVisitByOrderId(Paging paging, List<FilterVO> filters, CustomerServiceBackVisitVO customerServiceBackVisitVO);
+	public void pageCustomerServiceBackVisitByOrderId(Paging paging, List<Filter> filters, CustomerServiceBackVisitVO customerServiceBackVisitVO);
 	
 	public void saveOrderUpdateCustomerServiceBackVisit(CustomerServiceBackVisitVO customerServiceBackVisitVO);
 	

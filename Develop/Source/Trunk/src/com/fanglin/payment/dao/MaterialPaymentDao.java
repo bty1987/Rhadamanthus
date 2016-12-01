@@ -14,27 +14,21 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
-	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<FilterVO> filters);
+	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentBySubOrder(Paging paging, List<FilterVO> filters, List<Long> msoIds);
+	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, long msoId, Integer paymentStatus);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<FilterVO> filters, long msoId, Integer paymentStatus);
+	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentForInitByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds);
+	public List<MaterialPaymentPO> queryMaterialPayment(List<Filter> filters);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentForCollectByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds);
-	
-	public List<MaterialPaymentPO> pageMaterialPaymentForConfirmByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds);
-	
-	public List<MaterialPaymentPO> pageMaterialPaymentForNotInitByMsoIds(Paging paging, List<FilterVO> filters, List<Long> msoIds); 
-	
-	public List<MaterialPaymentPO> queryMaterialPayment(List<FilterVO> filters);
+	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(String orderId);
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoId(long msoId, Integer paymentStatus);
 	

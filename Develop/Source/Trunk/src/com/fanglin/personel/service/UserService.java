@@ -12,17 +12,17 @@ package com.fanglin.personel.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
 public interface UserService {
 	
-	public void pageUser(Paging paging, List<FilterVO> filters, UserVO userVO, int company) throws FLException;
+	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException;
 	
 	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException;
 	
-	public void pageUserForResetPassword(Paging paging, List<FilterVO> filters, int company) throws FLException;
+	public void pageUserForResetPassword(Paging paging, List<Filter> filters, int company) throws FLException;
 	
 	public UserVO queryUserByLoginId(String loginId);
 	

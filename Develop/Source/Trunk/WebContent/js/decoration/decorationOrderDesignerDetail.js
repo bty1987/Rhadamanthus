@@ -163,19 +163,9 @@ jQuery(function($) {
 	$("#btnSetDecorationPaymentInfo").on('click', function(res) {
 		com.clearValidator();
 		
-		if(decorationOrderDetail.decorationOrder.type == 0){
-			$("#decorationOrderTotalMoney").val("");
-			decorationOrderDetail.quotationTotalPriceModal.modal("show");
-		}else if(decorationOrderDetail.decorationOrder.type == 1){
-			var options = {
-				"decorationPayment.referMoney": 0,
-				"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
-			}
-			
-			com.post(api.payment.makeDecorationPayment, options, function(res){
-				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
-			});
-		}
+		$("#decorationOrderTotalMoney").val("");
+		decorationOrderDetail.quotationTotalPriceModal.modal("show");
+		
 	});
 	
 	$("#btnRebackPayment").on('click', function(res){

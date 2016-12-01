@@ -14,15 +14,15 @@ package com.fanglin.material.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialOutsideVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialOutsideService {
 	
-	public void pageMaterialOutside(Paging paging, List<FilterVO> filters);
+	public void pageMaterialOutside(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialOutsideByUserId(Paging paging, List<FilterVO> filters, String userId);
+	public void pageMaterialOutsideByUserId(Paging paging, List<Filter> filters, String userId);
 	
 	public void addMaterialOutside(MaterialOutsideVO materialOutsideVO, String userId) throws FLException;
 	

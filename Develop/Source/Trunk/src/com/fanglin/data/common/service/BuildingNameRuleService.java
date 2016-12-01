@@ -13,7 +13,7 @@ package com.fanglin.data.common.service;
 
 import java.util.List;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.BuildingNameRuleVO;
 import com.fanglin.utils.Paging;
 
@@ -22,7 +22,7 @@ public interface BuildingNameRuleService {
 	
 	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO);
 	
-	public void queryBuildNameRulePage(Paging paging, List<FilterVO> filters);
+	public void queryBuildNameRulePage(Paging paging, List<Filter> filters);
 	
 	public List<BuildingNameRuleVO> queryBuildNameRule();
 	

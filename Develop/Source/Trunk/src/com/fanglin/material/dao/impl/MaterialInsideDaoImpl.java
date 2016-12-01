@@ -16,7 +16,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialInsideDao;
 import com.fanglin.material.po.MaterialInsidePO;
 import com.fanglin.utils.Paging;
@@ -29,12 +29,12 @@ public class MaterialInsideDaoImpl extends DaoImpl<MaterialInsidePO> implements 
 	}
 	
 	@Override
-	public List<MaterialInsidePO> pageMaterialInside(Paging paging, List<FilterVO> filters){
+	public List<MaterialInsidePO> pageMaterialInside(Paging paging, List<Filter> filters){
 		
 		PagingQuery<MaterialInsidePO> query = pagingQuery(paging, MaterialInsidePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}

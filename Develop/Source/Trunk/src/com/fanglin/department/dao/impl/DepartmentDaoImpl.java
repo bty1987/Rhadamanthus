@@ -19,7 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.utils.Paging;
@@ -32,7 +32,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     }
 
     @Override
-    public List<DepartmentPO> pageDepartment(Paging paging, List<FilterVO> filters){
+    public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters){
 
         PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
         
@@ -44,12 +44,19 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     }
     
     @Override
-	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company) {
+	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, String type) {
 		
 		PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
 		
-		query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
 		query.add(Restrictions.or(Restrictions.ilike(DepartmentPO.COLUMN_DEPTNAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(DepartmentPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
+		
+		if(company != null){
+			query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
+        }
+		
+		if(type != null){
+			query.add(Restrictions.eq(DepartmentPO.COLUMN_TYPE_STR, type));
+		}
 		
 		return query.list();
 	}
@@ -84,9 +91,9 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
         return query.list();
     }
     
-    private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+    private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
     	if(filters != null){
-            for(FilterVO filter: filters){
+            for(Filter filter: filters){
                 if("type".equals(filter.getField())){
                     query.add(query.getCriterion("type", filter));
                 }else if("deptName".equals(filter.getField())){

@@ -14,17 +14,17 @@ package com.fanglin.payment.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.vo.MaterialOutsidePaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialOutsidePaymentService {
 	
-	public void pageMaterialOutsidePayment(Paging paging, List<FilterVO> filters);
+	public void pageMaterialOutsidePayment(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialOutsidePaymentForInit(Paging paging, List<FilterVO> filters);
+	public void pageMaterialOutsidePaymentForInit(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialOutsidePaymentForNotInit(Paging paging, List<FilterVO> filters);
+	public void pageMaterialOutsidePaymentForNotInit(Paging paging, List<Filter> filters);
 	
 	public int collectMaterialOutsidePayment(MaterialOutsidePaymentVO materialOutsidePaymentVO, String userId, String userName) throws FLException;
 	

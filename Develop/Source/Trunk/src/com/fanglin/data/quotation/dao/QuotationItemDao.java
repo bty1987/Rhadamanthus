@@ -14,13 +14,13 @@ package com.fanglin.data.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.utils.Paging;
 
 public interface QuotationItemDao extends Dao<QuotationItemPO> {
 	
-	public List<QuotationItemPO> pageQuotationItem(Paging paging, List<FilterVO> filters);
+	public List<QuotationItemPO> pageQuotationItem(Paging paging, List<Filter> filters);
 	
 	public List<QuotationItemPO> queryQuotationItemByIds(List<Long> ids);
 

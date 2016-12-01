@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationVersionPO;
@@ -53,7 +53,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageFunctionArea(Paging paging, List<FilterVO> filters){
+	public void pageFunctionArea(Paging paging, List<Filter> filters){
 		
 		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.pageFunctionArea(paging, filters);
 		List<FunctionAreaVO> functionAreaVOs = new ArrayList<FunctionAreaVO>();

@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerSalaryDao;
 import com.fanglin.salary.po.DesignerSalaryPO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class DesignerSalaryDaoImpl extends DaoImpl<DesignerSalaryPO> implements 
 	}
 
 	@Override
-	public List<DesignerSalaryPO> pageDesignerSalary(Paging paging, List<FilterVO> filters, Integer status) {
+	public List<DesignerSalaryPO> pageDesignerSalary(Paging paging, List<Filter> filters, Integer status) {
 		
 		PagingQuery<DesignerSalaryPO> query = pagingQuery(paging, DesignerSalaryPO.class);
 		
@@ -41,7 +41,7 @@ public class DesignerSalaryDaoImpl extends DaoImpl<DesignerSalaryPO> implements 
 		}
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}

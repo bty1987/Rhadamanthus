@@ -14,13 +14,13 @@ package com.fanglin.material.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderItemDao extends Dao<MaterialSubOrderItemPO> {
 	
-	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<FilterVO> filters, long msoId);
+	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId);
 	
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoIds(List<Long> msoIds);
 	

@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.InspectionDeductionDao;
 import com.fanglin.construction.po.InspectionDeductionPO;
 import com.fanglin.construction.service.InspectionDeductionService;
 import com.fanglin.construction.vo.InspectionDeductionVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +34,7 @@ public class InspectionDeductionServiceImpl implements InspectionDeductionServic
 	private InspectionDeductionDao inspectionDeductionDao;
 
 	@Override
-	public void pageInspectionDeduction(Paging paging, List<FilterVO> filters){
+	public void pageInspectionDeduction(Paging paging, List<Filter> filters){
 		
 		List<InspectionDeductionPO> inspectionDeductionPOs = inspectionDeductionDao.pageInspectionDeduction(paging, filters);
 		List<InspectionDeductionVO> inspectionDeductionVOs = new ArrayList<InspectionDeductionVO>();
@@ -49,7 +49,7 @@ public class InspectionDeductionServiceImpl implements InspectionDeductionServic
 	}
 
 	@Override
-	public void pageInspectionDeductionByOrderId(Paging paging, List<FilterVO> filters, InspectionDeductionVO inspectionDeductionVO){
+	public void pageInspectionDeductionByOrderId(Paging paging, List<Filter> filters, InspectionDeductionVO inspectionDeductionVO){
 
 		List<InspectionDeductionPO> inspectionDeductionPOs = inspectionDeductionDao.pageInspectionDeductionByOrderId(paging, filters, inspectionDeductionVO.getOrderId());
 		List<InspectionDeductionVO> inspectionDeductionVOs = new ArrayList<InspectionDeductionVO>();

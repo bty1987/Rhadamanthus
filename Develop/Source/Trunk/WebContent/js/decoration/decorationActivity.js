@@ -70,7 +70,7 @@ jQuery(function($) {
 	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman'];
 
 	com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
-		var condition = res.condition;
+		var condition = res.conditions;
 
 		if((condition & 4) == 4){ // 设计中心
 			_condArr.push('designerRegionId');

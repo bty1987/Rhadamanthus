@@ -516,7 +516,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				boolean _relat = relat ? false : true;
 				
-				List<MaterialPaymentPO> _materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(materialPaymentPO.getMsoId(), MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+				List<MaterialPaymentPO> _materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(materialPaymentPO.getMaterialSubOrder().getMsoId(), MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
 				
 				if(_materialPaymentPOs.size() > 1){
 					throw new FLException(250007, "主材定金存在多条");

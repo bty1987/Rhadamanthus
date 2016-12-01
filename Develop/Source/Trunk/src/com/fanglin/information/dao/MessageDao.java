@@ -11,13 +11,13 @@ package com.fanglin.information.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.utils.Paging;
 
 public interface MessageDao extends Dao<MessagePO> {
 	
-	public List<MessagePO> pageMessages(Paging paging, List<FilterVO> filters, String userId);
+	public List<MessagePO> pageMessages(Paging paging, List<Filter> filters, String userId);
 	
 	public List<MessagePO> queryMessageForUnreadByUserId(String userId);
 	

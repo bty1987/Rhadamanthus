@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.WorkerBaseSalaryDao;
 import com.fanglin.salary.po.WorkerBaseSalaryPO;
 import com.fanglin.utils.Paging;
@@ -31,14 +31,14 @@ public class WorkerBaseSalaryDaoImpl extends DaoImpl<WorkerBaseSalaryPO> impleme
 	}
 
 	@Override
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalary(Paging paging, List<FilterVO> filters){
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalary(Paging paging, List<Filter> filters){
 		
 		PagingQuery<WorkerBaseSalaryPO> query = pagingQuery(paging, WorkerBaseSalaryPO.class);
 		
 		query.add(query.getCriterion(WorkerBaseSalaryPO.COLUMN_ORDERID_STR, "", "ne"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(WorkerBaseSalaryPO.COLUMN_WORKTYPEID_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if(WorkerBaseSalaryPO.COLUMN_STATUS_STR.equals(filter.getField())){
@@ -56,7 +56,7 @@ public class WorkerBaseSalaryDaoImpl extends DaoImpl<WorkerBaseSalaryPO> impleme
 	}
 
 	@Override
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByStatus(Paging paging, List<FilterVO> filters, List<Integer> status){
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByStatus(Paging paging, List<Filter> filters, List<Integer> status){
 		
 		PagingQuery<WorkerBaseSalaryPO> query = pagingQuery(paging, WorkerBaseSalaryPO.class);
 		
@@ -68,7 +68,7 @@ public class WorkerBaseSalaryDaoImpl extends DaoImpl<WorkerBaseSalaryPO> impleme
 		}
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}else{
@@ -79,14 +79,14 @@ public class WorkerBaseSalaryDaoImpl extends DaoImpl<WorkerBaseSalaryPO> impleme
 	}
 
 	@Override
-	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByOrderId(Paging paging, List<FilterVO> filters, String orderId){
+	public List<WorkerBaseSalaryPO> pageWorkerBaseSalaryByOrderId(Paging paging, List<Filter> filters, String orderId){
 		
 		PagingQuery<WorkerBaseSalaryPO> query = pagingQuery(paging, WorkerBaseSalaryPO.class);
 		
 		query.add(query.getCriterion(WorkerBaseSalaryPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(WorkerBaseSalaryPO.COLUMN_WORKTYPEID_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else{

@@ -28,7 +28,7 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.service.impl.CustomerServiceImpl;
 import com.fanglin.data.common.vo.BuildingNameRuleVO;
 import com.fanglin.data.common.vo.CustomerVO;
@@ -124,7 +124,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	private DecorationOrderStatusRightDao decorationOrderStatusRightDao;
 	
 	@Override
-	public void pageDecorationOrderForGeneral(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, String userId){
 		
 		if(filters.size() == 0) return ;
 		
@@ -181,7 +181,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForCommon(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForCommon(Paging paging, List<Filter> filters, String userId){
 		
 		if(filters.size() == 0) return;
 		
@@ -294,7 +294,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForMaterial(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForMaterial(Paging paging, List<Filter> filters, String userId){
 		
 		if(filters.size() == 0) return;
 		
@@ -383,7 +383,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 
 	@Override
-	public void pageDecorationOrderForBelong(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForBelong(Paging paging, List<Filter> filters, String userId){
 		
 		if(filters.size() == 0) return;
 		
@@ -393,7 +393,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		List<String> statuses = Arrays.asList(DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR, DecorationOrderPO.STATUS_COMPLETED_STR);
 		
-		filters.add(new FilterVO("statuses", statuses, "ni"));
+		filters.add(new Filter("statuses", statuses, "ni"));
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
@@ -433,7 +433,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForDesigner(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForDesigner(Paging paging, List<Filter> filters, String userId){
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -447,7 +447,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<String> statuses = null;
 		
 		if(duty.contains("设计师")){
-			filters.add(new FilterVO("designerId", userPO.getUserId(), "eq"));
+			filters.add(new Filter("designerId", userPO.getUserId(), "eq"));
 		}else{
 			List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
 			
@@ -542,7 +542,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForSalesman(Paging paging, List<FilterVO> filters, String userId){
+	public void pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, String userId){
 		
 		if(filters.size() == 0) return;
 		
@@ -556,7 +556,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<String> statuses = null;
 		
 		if(duty.contains("业务员")){
-			filters.add(new FilterVO("userSalesman", userPO.getUserId(), "eq"));
+			filters.add(new Filter("userSalesman", userPO.getUserId(), "eq"));
 		}else{
 			List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid());
 			
@@ -695,7 +695,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 
 	@Override
-	public List<DecorationOrderExportVO> queryDecorationOrderForComplete(List<FilterVO> filters) {
+	public List<DecorationOrderExportVO> queryDecorationOrderForComplete(List<Filter> filters) {
 		
 		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.queryDecorationOrder(filters);
 		
@@ -1007,7 +1007,10 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Transactional(rollbackFor=Exception.class)
 	public int changeDecorationOrderForAdvance(DecorationOrderVO decorationOrderVO) throws FLException{
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
+		String orderId = decorationOrderVO.getOrderId();
+		Short type = decorationOrderVO.getType();
+		
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同
 		
@@ -1015,16 +1018,30 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		if(status.contains(decorationOrderPO.getStatus())){
+		if(!status.contains(decorationOrderPO.getStatus())){
+			throw new FLException(140040, "订单信息不可修改");
+		}
+		
+		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
+		decorationOrderPO.setHouseArea(decorationOrderVO.getHouseArea());
+		decorationOrderPO.setFreeArea(decorationOrderVO.getFreeArea());
+		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
+		
+		if(decorationOrderVO.getType() != decorationOrderPO.getType()){
 			
-			decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
-			decorationOrderPO.setHouseArea(decorationOrderVO.getHouseArea());
-			decorationOrderPO.setFreeArea(decorationOrderVO.getFreeArea());
-			decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
-		}else{
-			if(DecorationOrderPO.STATUS_SIGNED_STR.equals(decorationOrderVO.getStatus())){
-				decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, type);
+			
+			if(quotationPO == null){
+				throw new FLException(200003, "报价不存在");
 			}
+			
+			if(QuotationPO.TYPE_PART_INT == decorationOrderPO.getType()){
+				decorationOrderPO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else if(QuotationPO.TYPE_WHOLE_INT == decorationOrderPO.getType()){
+				decorationOrderPO.setOrderTotalPrice(Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff())));
+			}
+			
+			decorationOrderPO.setType(type);
 		}
 		
 		if(decorationOrderVO.getNotSalesmanRate() != null){
@@ -1043,7 +1060,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderPO.setNotSalesmanContent(decorationOrderVO.getNotSalesmanContent());
 		}
 		
-		decorationOrderDao.saveOrUpdate(decorationOrderPO);
+		decorationOrderDao.update(decorationOrderPO);
 		
 		return 0;
 	}
@@ -1385,7 +1402,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 		decorationOperatePO.setDecorationOrder(decorationOrderPO);
-		decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		decorationOperatePO.setOperater(new UserPO(userId));
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);

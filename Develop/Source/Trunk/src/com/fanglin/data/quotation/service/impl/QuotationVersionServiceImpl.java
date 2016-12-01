@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.QuotationVersionService;
@@ -47,7 +47,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageQuotationVersion(Paging paging, List<FilterVO> filters){
+	public void pageQuotationVersion(Paging paging, List<Filter> filters){
 		
 		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();

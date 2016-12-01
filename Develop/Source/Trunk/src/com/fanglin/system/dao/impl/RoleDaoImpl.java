@@ -6,7 +6,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.Paging;
@@ -19,7 +19,7 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 	}
 
 	@Override
-	public List<RolePO> pageRole(Paging paging, List<FilterVO> filters){
+	public List<RolePO> pageRole(Paging paging, List<Filter> filters){
 		
 		PagingQuery<RolePO> query = pagingQuery(paging, RolePO.class);
 		
@@ -39,10 +39,10 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 		return (RolePO) session().createCriteria(RolePO.class).add(Restrictions.eq("roleName", roleName)).uniqueResult();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 					
 				String field = filter.getField();
 				String data = filter.getData();

@@ -20,7 +20,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.MaterialDepartmentCountDao;
 import com.fanglin.report.po.MaterialDepartmentCountPO;
 
@@ -41,14 +41,14 @@ public class MaterialDepartmentCountDaoImpl extends DaoImpl<MaterialDepartmentCo
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialDepartmentCountPO> queryMaterialDepartmentCount(List<FilterVO> filters){
+	public List<MaterialDepartmentCountPO> queryMaterialDepartmentCount(List<Filter> filters){
 		
 		Criteria query = session().createCriteria(MaterialDepartmentCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialDepartmentCountPO.COLUMN_MATERIALDEPTID_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					if(criterion == null){
 						criterion = Restrictions.ge(MaterialDepartmentCountPO.COLUMN_CREATETIME_STR, filter.getData());

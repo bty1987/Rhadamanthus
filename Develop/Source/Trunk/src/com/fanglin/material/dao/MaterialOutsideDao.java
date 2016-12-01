@@ -14,12 +14,12 @@ package com.fanglin.material.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialOutsidePO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialOutsideDao extends Dao<MaterialOutsidePO>{
 	
-	public List<MaterialOutsidePO> pageMaterialOutside(Paging paging, List<FilterVO> filters);
+	public List<MaterialOutsidePO> pageMaterialOutside(Paging paging, List<Filter> filters);
 	
 }

@@ -14,13 +14,13 @@ package com.fanglin.data.common.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.SupplierVO;
 import com.fanglin.utils.Paging;
 
 public interface SupplierService {
 	
-	public void pageSupplier(Paging paging, List<FilterVO> filters);
+	public void pageSupplier(Paging paging, List<Filter> filters);
 	
 	public SupplierVO querySupplierBySId(SupplierVO supplierVO) throws FLException;
 	

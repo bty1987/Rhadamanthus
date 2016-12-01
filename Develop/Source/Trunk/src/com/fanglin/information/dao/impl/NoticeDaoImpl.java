@@ -15,7 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.NoticeDao;
 import com.fanglin.information.po.NoticePO;
 import com.fanglin.utils.DateUtil;
@@ -29,7 +29,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	}
 
 	@Override
-	public List<NoticePO> queryPageNotices(Paging paging, List<FilterVO> filters, String userId){
+	public List<NoticePO> queryPageNotices(Paging paging, List<Filter> filters, String userId){
 
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
@@ -37,7 +37,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		query.add(Restrictions.eq("user.userId", userId));
 		
 		if(filters != null){
-			for(FilterVO filter : filters){
+			for(Filter filter : filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("deptId".equals(filter.getField())){
 						query.alias("dept", "dept");

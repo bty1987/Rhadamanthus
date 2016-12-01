@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.VenderPostBalanceDao;
 import com.fanglin.salary.po.VenderPostBalancePO;
 import com.fanglin.utils.Paging;
@@ -30,12 +30,12 @@ public class VenderPostBalanceDaoImpl extends DaoImpl<VenderPostBalancePO> imple
 	}
 	
 	@Override
-	public List<VenderPostBalancePO> pageVenderPostBalance(Paging paging, List<FilterVO> filters) {
+	public List<VenderPostBalancePO> pageVenderPostBalance(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<VenderPostBalancePO> query = pagingQuery(paging, VenderPostBalancePO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}
@@ -44,14 +44,14 @@ public class VenderPostBalanceDaoImpl extends DaoImpl<VenderPostBalancePO> imple
 	}
 
 	@Override
-	public List<VenderPostBalancePO> pageVenderPostBalanceByMsoId(Paging paging, List<FilterVO> filters, long msoId) {
+	public List<VenderPostBalancePO> pageVenderPostBalanceByMsoId(Paging paging, List<Filter> filters, long msoId) {
 		
 		PagingQuery<VenderPostBalancePO> query = pagingQuery(paging, VenderPostBalancePO.class);
 		
 		query.add(Restrictions.eq(VenderPostBalancePO.COLUMN_MSOID_STR, msoId));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(query.getCriterion(filter.getField(), filter));
 			}
 		}

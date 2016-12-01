@@ -125,7 +125,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 		
-		materialPaymentPO.setMsoId(msoId);
+		materialPaymentPO.setMaterialSubOrder(materialSubOrderPO);
 		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
 		materialPaymentPO.setMaterialType(materialSubOrderPO.getMaterialType());
 		materialPaymentPO.setMaterialBrand(materialSubOrderPO.getMaterialBrand());

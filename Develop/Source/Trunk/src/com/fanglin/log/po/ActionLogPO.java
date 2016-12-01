@@ -35,8 +35,6 @@ public class ActionLogPO implements Serializable {
 	
 	private long alId;
 	
-	private String  uuid;
-	
 	private String actionName;
 	
 	private UserPO createUserPO;
@@ -49,9 +47,8 @@ public class ActionLogPO implements Serializable {
 		super();
 	}
 
-	public ActionLogPO(String uuid, String actionName, UserPO createUserPO, Timestamp createTime, long runTime){
+	public ActionLogPO(String actionName, UserPO createUserPO, Timestamp createTime, long runTime){
 		super();
-		this.uuid = uuid;
 		this.actionName = actionName;
 		this.createUserPO = createUserPO;
 		this.createTime = createTime;
@@ -69,15 +66,6 @@ public class ActionLogPO implements Serializable {
 		this.alId = alId;
 	}
 
-	@Column(name = "uuid")
-	public String getUuid(){
-		return uuid;
-	}
-	
-	public void setUuid(String uuid){
-		this.uuid = uuid;
-	}
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "createUserId", referencedColumnName = "userId")
 	public UserPO getCreateUserPO(){

@@ -18,7 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.DesignerDeductSalaryDao;
 import com.fanglin.salary.po.DesignerDeductSalaryPO;
 import com.fanglin.utils.Paging;
@@ -31,12 +31,12 @@ public class DesignerDeductSalaryDaoImpl extends DaoImpl<DesignerDeductSalaryPO>
 	}
 
 	@Override
-	public List<DesignerDeductSalaryPO> pageDesignerDeductSalary(Paging paging, List<FilterVO> filters) {
+	public List<DesignerDeductSalaryPO> pageDesignerDeductSalary(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<DesignerDeductSalaryPO> query = pagingQuery(paging, DesignerDeductSalaryPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(DesignerDeductSalaryPO.COLUMN_STATUS_STR.equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if(DesignerDeductSalaryPO.COLUMN_TYPE_STR.equals(filter.getField())){
@@ -52,12 +52,12 @@ public class DesignerDeductSalaryDaoImpl extends DaoImpl<DesignerDeductSalaryPO>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DesignerDeductSalaryPO> queryDesignerDeductSalary(List<FilterVO> filters) {
+	public List<DesignerDeductSalaryPO> queryDesignerDeductSalary(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(DesignerDeductSalaryPO.class);
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				query.add(Restrictions.eq(filter.getField(), filter.getData()));
 			}
 		}

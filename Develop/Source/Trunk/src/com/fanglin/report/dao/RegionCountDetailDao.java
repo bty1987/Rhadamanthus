@@ -15,14 +15,14 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.po.RegionCountDetailPO;
 import com.fanglin.utils.Paging;
 
 public interface RegionCountDetailDao extends Dao<RegionCountDetailPO> {
 	
-	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<FilterVO> filters) throws ParseException;
+	public List<RegionCountDetailPO> pageRegionCountDetail(Paging paging, List<Filter> filters) throws ParseException;
 	
-	public List<RegionCountDetailPO> queryRegionCountDetail(List<FilterVO> filters) throws ParseException;
+	public List<RegionCountDetailPO> queryRegionCountDetail(List<Filter> filters) throws ParseException;
 
 }

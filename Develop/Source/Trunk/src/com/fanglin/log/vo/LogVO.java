@@ -19,44 +19,27 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.UUIDUtil;
-import com.google.gson.annotations.SerializedName;
 
 public class LogVO implements Serializable {
 	
 	private static final long serialVersionUID = -7114740524313501162L;
 
-	@SerializedName("创建人编号")
 	private String createUserId;
 	
-	//创建人名
-	@SerializedName("创建人")
 	private String CreateUserName;
 	
-	//创建人职称
-	@SerializedName("职位")
 	private String duty;
 	
-	//创建人角色Id
-	@SerializedName("角色编号")
 	private String roleId;
 	
-	//创建人角色名
-	@SerializedName("角色名")
 	private String roleName;
 	
-	//操作结束时间
-	@SerializedName("耗时ms")
 	private long runTime;
 	
-	@SerializedName("操作")
 	private String actionName ;
 	
-	//主键
-	@SerializedName("主键")
 	private String uuid;
 	
-	//创建时间
-	@SerializedName("创建时间")
 	private Timestamp createTime;
 	
 	public LogVO(){

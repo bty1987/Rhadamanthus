@@ -15,11 +15,11 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.po.DUserCountDetailPO;
 
 public interface DUserCountDetailDao extends Dao<DUserCountDetailPO> {
 	
-	public List<DUserCountDetailPO> queryDUserCountDetail(List<FilterVO> filters) throws ParseException;
+	public List<DUserCountDetailPO> queryDUserCountDetail(List<Filter> filters) throws ParseException;
 	
 }

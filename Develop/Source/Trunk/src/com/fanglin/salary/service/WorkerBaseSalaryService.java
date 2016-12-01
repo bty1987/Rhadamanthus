@@ -14,17 +14,17 @@ package com.fanglin.salary.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.WorkerBaseSalaryVO;
 import com.fanglin.utils.Paging;
 
 public interface WorkerBaseSalaryService {
 	
-	public void pageWorkerBaseSalaryByOrderIdAUserId(Paging paging, List<FilterVO> filters, WorkerBaseSalaryVO workerBaseSalaryVO, String userId);
+	public void pageWorkerBaseSalaryByOrderIdAUserId(Paging paging, List<Filter> filters, WorkerBaseSalaryVO workerBaseSalaryVO, String userId);
 	
-	public void pageWorkerBaseSalary(Paging paging, List<FilterVO> filters);
+	public void pageWorkerBaseSalary(Paging paging, List<Filter> filters);
 	
-	public void pageWorkerBaseSalaryForPass(Paging paging, List<FilterVO> filters);
+	public void pageWorkerBaseSalaryForPass(Paging paging, List<Filter> filters);
 	
 	public List<WorkerBaseSalaryVO> queryWorkerBaseSalaryByOrder(WorkerBaseSalaryVO workerBaseSalaryVO);
 	

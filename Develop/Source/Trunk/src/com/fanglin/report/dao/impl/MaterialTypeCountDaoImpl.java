@@ -21,7 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.MaterialTypeCountDao;
 import com.fanglin.report.po.MaterialTypeCountPO;
 
@@ -42,14 +42,14 @@ public class MaterialTypeCountDaoImpl extends DaoImpl<MaterialTypeCountPO> imple
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialTypeCountPO> queryMaterialTypeCount(List<FilterVO> filters) {
+	public List<MaterialTypeCountPO> queryMaterialTypeCount(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(MaterialTypeCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialTypeCountPO.COLUMN_MATERIALTYPE_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					if(criterion == null){
 						criterion = Restrictions.ge(MaterialTypeCountPO.COLUMN_CREATETIME_STR, filter.getData());
@@ -77,14 +77,14 @@ public class MaterialTypeCountDaoImpl extends DaoImpl<MaterialTypeCountPO> imple
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> countMaterialTypeCount(List<FilterVO> filters) {
+	public List<Object> countMaterialTypeCount(List<Filter> filters) {
 
 		Criteria query = session().createCriteria(MaterialTypeCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(MaterialTypeCountPO.COLUMN_MATERIALTYPE_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					criterion = Restrictions.and(criterion, Restrictions.ge(MaterialTypeCountPO.COLUMN_CREATETIME_STR, filter.getData()));
 				}else if("endTime".equals(filter.getField())){

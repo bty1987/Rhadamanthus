@@ -20,7 +20,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.DUserCountDetailDao;
 import com.fanglin.report.po.DUserCountDetailPO;
 import com.fanglin.utils.DateUtil;
@@ -34,7 +34,7 @@ public class DUserCountDetailDaoImpl extends DaoImpl<DUserCountDetailPO> impleme
 	}
 
 	@Override
-	public List<DUserCountDetailPO> queryDUserCountDetail(List<FilterVO> filters) throws ParseException {
+	public List<DUserCountDetailPO> queryDUserCountDetail(List<Filter> filters) throws ParseException {
 		
 		PagingQuery<DUserCountDetailPO> query = pagingQuery(new Paging(), DUserCountDetailPO.class);
 		
@@ -43,13 +43,13 @@ public class DUserCountDetailDaoImpl extends DaoImpl<DUserCountDetailPO> impleme
 		return query.list();
 	}
 	
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters) throws ParseException{
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws ParseException{
 		
-		for(FilterVO filterVO: filters){
+		for(Filter filter: filters){
 			
-			String field = filterVO.getField();
-			String data = filterVO.getData();
-			String op = filterVO.getOp();
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 			
 			if("designerUserId".equals(field)){
 				query.alias("designer", "designer");

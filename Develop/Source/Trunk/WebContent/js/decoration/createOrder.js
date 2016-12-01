@@ -1,6 +1,4 @@
 var orderEntry = {
-	listGrid: null,
-	gridPager: null,
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,

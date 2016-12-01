@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.RegionDao;
 import com.fanglin.system.po.RegionPO;
 import com.fanglin.system.service.RegionService;
@@ -32,7 +32,7 @@ public class RegionServiceImpl implements RegionService {
 	private RegionDao regionDao;
 	
 	@Override
-	public void pageRegion(Paging paging, List<FilterVO> filters){
+	public void pageRegion(Paging paging, List<Filter> filters){
 
 		List<RegionPO> regionPOs = regionDao.pageRegion(paging, filters);
 		List<RegionVO> regionVOs = new ArrayList<RegionVO>();

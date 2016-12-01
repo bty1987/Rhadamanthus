@@ -15,14 +15,14 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.po.CityCountDetailPO;
 import com.fanglin.utils.Paging;
 
 public interface CityCountDetailDao extends Dao<CityCountDetailPO> {
 	
-	public List<CityCountDetailPO> pageCityCountDetail(Paging paging, List<FilterVO> filters) throws ParseException;
+	public List<CityCountDetailPO> pageCityCountDetail(Paging paging, List<Filter> filters) throws ParseException;
 	
-	public List<CityCountDetailPO> queryCityCountDetail(List<FilterVO> filters) throws ParseException;
+	public List<CityCountDetailPO> queryCityCountDetail(List<Filter> filters) throws ParseException;
 
 }

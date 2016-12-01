@@ -14,13 +14,13 @@ package com.fanglin.data.quotation.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.utils.Paging;
 
 public interface FunctionAreaService {
 	
-	public void pageFunctionArea(Paging paging, List<FilterVO> filters);
+	public void pageFunctionArea(Paging paging, List<Filter> filters);
 	
 	public FunctionAreaVO queryFunctionAreaByIdAVersionId(FunctionAreaVO functionAreaVO) throws FLException;
 	

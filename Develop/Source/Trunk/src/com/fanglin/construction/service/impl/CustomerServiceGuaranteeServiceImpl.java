@@ -22,7 +22,7 @@ import com.fanglin.construction.dao.CustomerServiceGuaranteeDao;
 import com.fanglin.construction.po.CustomerServiceGuaranteePO;
 import com.fanglin.construction.service.CustomerServiceGuaranteeService;
 import com.fanglin.construction.vo.CustomerServiceGuaranteeVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +34,7 @@ public class CustomerServiceGuaranteeServiceImpl implements CustomerServiceGuara
 	private CustomerServiceGuaranteeDao customerServiceGuaranteeDao;
 
 	@Override
-	public void pageCustomerServiceGuarantee(Paging paging, List<FilterVO> filters){
+	public void pageCustomerServiceGuarantee(Paging paging, List<Filter> filters){
 		
 		List<CustomerServiceGuaranteePO> customerServiceGuaranteePOs = customerServiceGuaranteeDao.pageCustomerServiceGuarantee(paging, filters);
 		List<CustomerServiceGuaranteeVO> customerServiceGuaranteeVOs = new ArrayList<CustomerServiceGuaranteeVO>();
@@ -49,7 +49,7 @@ public class CustomerServiceGuaranteeServiceImpl implements CustomerServiceGuara
 	}
 
 	@Override
-	public void pageCustomerServiceGuaranteeByOrderId(Paging paging, List<FilterVO> filters, CustomerServiceGuaranteeVO customerServiceGuaranteeVO){
+	public void pageCustomerServiceGuaranteeByOrderId(Paging paging, List<Filter> filters, CustomerServiceGuaranteeVO customerServiceGuaranteeVO){
 
 		List<CustomerServiceGuaranteePO> customerServiceGuaranteePOs = customerServiceGuaranteeDao.pageCustomerServiceGuaranteeByOrderId(paging, filters, customerServiceGuaranteeVO.getOrderId());
 		List<CustomerServiceGuaranteeVO> customerServiceGuaranteeVOs = new ArrayList<CustomerServiceGuaranteeVO>();

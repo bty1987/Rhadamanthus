@@ -23,7 +23,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.EventsDao;
 import com.fanglin.information.po.EventsPO;
 import com.fanglin.utils.DateUtil;
@@ -37,7 +37,7 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 	}
 
 	@Override
-	public List<EventsPO> queryEvents(List<FilterVO> filters) throws ParseException {
+	public List<EventsPO> queryEvents(List<Filter> filters) throws ParseException {
 		
 		PagingQuery<EventsPO> query = pagingQuery(new Paging(), EventsPO.class);
 		
@@ -65,13 +65,13 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 		return count.intValue();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<FilterVO> filters) throws ParseException{
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws ParseException{
 		
-		for(FilterVO filterVO: filters){
+		for(Filter filter: filters){
 			
-			String field = filterVO.getField();
-			String data = filterVO.getData();
-			String op = filterVO.getOp();
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 			
 			if("showDate".equals(field)){
 				query.add(query.getCriterion(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(data), op));

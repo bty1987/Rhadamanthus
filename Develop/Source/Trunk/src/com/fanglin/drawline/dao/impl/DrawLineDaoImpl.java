@@ -22,7 +22,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.drawline.dao.DrawLineDao;
 import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.utils.DateUtil;
@@ -36,7 +36,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 	
 	@Override
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<FilterVO> filters){
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters){
 		
 		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
 		
@@ -48,7 +48,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 	
 	@Override
-	public List<DrawLinePO> queryDrawLine(List<FilterVO> filters) {
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters) {
 		
 		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
 		
@@ -97,7 +97,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 				.list();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		if(filters != null){
 
 			query.alias("decorationOrderPO", "decorationOrderPO");
@@ -108,7 +108,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 			query.alias("designerPO.dept", "designerDept");
 			query.alias("salesmanPO.dept", "salesmanDept");
 			
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
 						query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));

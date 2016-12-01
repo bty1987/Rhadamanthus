@@ -21,7 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.report.dao.ZaterialDesignerCountDao;
 import com.fanglin.report.po.ZaterialDesignerCountPO;
 
@@ -42,14 +42,14 @@ public class ZaterialDesignerCountDaoImpl extends DaoImpl<ZaterialDesignerCountP
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ZaterialDesignerCountPO> queryZaterialDesignerCount(List<FilterVO> filters) {
+	public List<ZaterialDesignerCountPO> queryZaterialDesignerCount(List<Filter> filters) {
 		
 		Criteria query = session().createCriteria(ZaterialDesignerCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(ZaterialDesignerCountPO.COLUMN_DESIGNERID_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					if(criterion == null){
 						criterion = Restrictions.ge(ZaterialDesignerCountPO.COLUMN_CREATETIME_STR, filter.getData());
@@ -83,14 +83,14 @@ public class ZaterialDesignerCountDaoImpl extends DaoImpl<ZaterialDesignerCountP
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Object> countZaterialDesignerCount(List<FilterVO> filters) {
+	public List<Object> countZaterialDesignerCount(List<Filter> filters) {
 
 		Criteria query = session().createCriteria(ZaterialDesignerCountPO.class);
 		
 		Criterion criterion = Restrictions.ne(ZaterialDesignerCountPO.COLUMN_DESIGNERID_STR, "");
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if("startTime".equals(filter.getField())){
 					criterion = Restrictions.and(criterion, Restrictions.ge(ZaterialDesignerCountPO.COLUMN_CREATETIME_STR, filter.getData()));
 				}else if("endTime".equals(filter.getField())){

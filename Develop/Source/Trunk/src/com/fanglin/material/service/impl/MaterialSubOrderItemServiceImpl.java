@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
@@ -46,7 +46,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 	private MaterialSubOrderItemDao materialSubOrderItemDao;
 	
 	@Override
-	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<FilterVO> filters, long msoId){
+	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId){
 		
 		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.pageMaterialSubOrderItemByMsoId(paging, filters, msoId);
 		List<MaterialSubOrderItemVO> materialSubOrderItemVOs = new ArrayList<MaterialSubOrderItemVO>();

@@ -14,26 +14,26 @@ package com.fanglin.material.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderService {
 	
-	public void pageMaterialSubOrder(Paging paging, List<FilterVO> filters);
+	public void pageMaterialSubOrder(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialSubOrderByUserId(Paging paging, List<FilterVO> filters, String orderId, String userId);
+	public void pageMaterialSubOrderByUserId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
-	public void pageMaterialSubOrderByOrderId(Paging paging, List<FilterVO> filters, String orderId);
+	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId);
 	
-	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<FilterVO> filters, String orderId, String userId);
+	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
-	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<FilterVO> filters, String orderId, String userId);
+	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
-	public void pageMaterialSubOrderForPreBalance(Paging paging, List<FilterVO> filters, String userId);
+	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId);
 	
-	public void pageMaterialSubOrderForPostBalance(Paging paging, List<FilterVO> filters);
+	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters);
 	
 	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(long msoId);
 	

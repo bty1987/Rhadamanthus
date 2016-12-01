@@ -12,14 +12,14 @@ package com.fanglin.personel.service.impl;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserApproveVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
 public interface UserApproveService {
 	
-	public void pageUserApprove(Paging paging, List<FilterVO> filters);
+	public void pageUserApprove(Paging paging, List<Filter> filters);
 	
 	public List<UserApproveVO> queryApproveUserForNameByType(UserVO userVO, UserApproveVO userApproveVO);
 

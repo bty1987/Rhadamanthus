@@ -12,15 +12,15 @@ package com.fanglin.payment.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentService {
 
-	public void pagePaymentForHistory(Paging paging, List<FilterVO> filters);
+	public void pagePaymentForHistory(Paging paging, List<Filter> filters);
 	
-	public List<PaymentVO> queryPayment(List<FilterVO> filters);
+	public List<PaymentVO> queryPayment(List<Filter> filters);
 	
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 	

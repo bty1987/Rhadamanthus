@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.common.dao.LoginLogDao;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.log.po.LoginLogPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -21,12 +21,12 @@ import com.fanglin.utils.Paging;
 public class LoginLogDaoImpl  extends DaoImpl<LoginLogPO> implements LoginLogDao  {
 
 	@Override
-	public List<LoginLogPO> getPageLoginLog(Paging paging, List<FilterVO> filters){
+	public List<LoginLogPO> getPageLoginLog(Paging paging, List<Filter> filters){
 		
 		PagingQuery<LoginLogPO> query = pagingQuery(paging, LoginLogPO.class);
 		
 		if(filters != null){
-			for(FilterVO fv: filters){
+			for(Filter fv: filters){
 				if("loginTime".equals(fv.getField())){
 					if(StringUtils.isNotEmpty(fv.getData())){
 						if("between".equals(fv.getOp())){

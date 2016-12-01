@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
-	public List<VillagePO> pageVillages(Paging paging, List<FilterVO> filters){
+	public List<VillagePO> pageVillages(Paging paging, List<Filter> filters){
 
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 
@@ -40,7 +40,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
-	public List<VillagePO> queryVillage(List<FilterVO> filters){
+	public List<VillagePO> queryVillage(List<Filter> filters){
 		
 		PagingQuery<VillagePO> query = pagingQuery(new Paging(), VillagePO.class);
 		
@@ -71,17 +71,17 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	@Override
 	public int countVillageByCityProperId(String cityProperId){
 		
-		String sql = "select count(villageId) from communion.village where cityProperId = :cityProperId";
+		String sql = "select count(*) from communion.village where cityProperId = :cityProperId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("cityProperId", cityProperId).uniqueResult();
 		
 		return count.intValue();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<FilterVO> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
 			query.alias("cityProper", "cityProper");
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("villageName".equals(filter.getField()))
 						query.add(query.getCriterion("villageName", filter));

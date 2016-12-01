@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.utils.Paging;
@@ -30,7 +30,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	}
 
 	@Override
-	public List<MessagePO> pageMessages(Paging paging, List<FilterVO> filters, String userId){
+	public List<MessagePO> pageMessages(Paging paging, List<Filter> filters, String userId){
 
 		PagingQuery<MessagePO> query = pagingQuery(paging, MessagePO.class);
 		
@@ -38,7 +38,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 		query.add(Restrictions.eq("receiver.userId", userId));
 		
 		if(filters != null){
-			for(FilterVO filter: filters){
+			for(Filter filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("status".equals(filter.getField())){
 						query.add(query.getCriterion("status", filter));
@@ -74,7 +74,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 
 	@Override
 	public int queryMessageCount(String userId){
-		String sql = "select count(messageId) from platform.message where receiverId = :receiverId and status = :status";
+		String sql = "select count(*) from platform.message where receiverId = :receiverId and status = :status";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setString("receiverId", userId).uniqueResult();
 		
 		return count.intValue();

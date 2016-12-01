@@ -11,13 +11,13 @@ package com.fanglin.information.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.information.vo.MessageVO;
 import com.fanglin.utils.Paging;
 
 public interface MessageService {
 
-	public void pageMessage(Paging paging, List<FilterVO> filters, String userId);
+	public void pageMessage(Paging paging, List<Filter> filters, String userId);
 
 	public List<MessageVO> queryMessageForUnRead(String userId);
 	

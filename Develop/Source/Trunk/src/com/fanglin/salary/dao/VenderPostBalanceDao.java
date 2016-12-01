@@ -14,15 +14,15 @@ package com.fanglin.salary.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.VenderPostBalancePO;
 import com.fanglin.utils.Paging;
 
 public interface VenderPostBalanceDao extends Dao<VenderPostBalancePO> {
 	
-	public List<VenderPostBalancePO> pageVenderPostBalance(Paging paging, List<FilterVO> filters);
+	public List<VenderPostBalancePO> pageVenderPostBalance(Paging paging, List<Filter> filters);
 	
-	public List<VenderPostBalancePO> pageVenderPostBalanceByMsoId(Paging paging, List<FilterVO> filters, long msoId);
+	public List<VenderPostBalancePO> pageVenderPostBalanceByMsoId(Paging paging, List<Filter> filters, long msoId);
 	
 	public List<VenderPostBalancePO> queryVenderPostBalanceByVbId(int vbId);
 

@@ -14,14 +14,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.InspectionRecordVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface InspectionRecordService {
 	
-	public void pageInspectionRecord(Paging paging, List<FilterVO> filters);
+	public void pageInspectionRecord(Paging paging, List<Filter> filters);
 	
-	public void pageInspectionRecordByOrderId(Paging paging, List<FilterVO> filters, InspectionRecordVO inspectionRecordVO);
+	public void pageInspectionRecordByOrderId(Paging paging, List<Filter> filters, InspectionRecordVO inspectionRecordVO);
 	
 	public void saveOrUpdateInspectionRecord(InspectionRecordVO inspectionRecordVO);
 	

@@ -24,7 +24,7 @@ import com.fanglin.construction.po.ReworkDrawingPO;
 import com.fanglin.construction.po.ReworkPO;
 import com.fanglin.construction.service.ReworkService;
 import com.fanglin.construction.vo.ReworkVO;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -38,7 +38,7 @@ public class ReworkServiceImpl implements ReworkService{
 	private ReworkDrawingDao reworkDrawingDao;
 
 	@Override
-	public void pageRework(Paging paging, List<FilterVO> filters){
+	public void pageRework(Paging paging, List<Filter> filters){
 		
 		List<ReworkPO> reworkPOs = reworkDao.pageRework(paging, filters);
 		List<ReworkVO> reworkVOs = new ArrayList<ReworkVO>();
@@ -53,7 +53,7 @@ public class ReworkServiceImpl implements ReworkService{
 	}
 
 	@Override
-	public void pageReworkByOrderId(Paging paging, List<FilterVO> filters, ReworkVO reworkVO){
+	public void pageReworkByOrderId(Paging paging, List<Filter> filters, ReworkVO reworkVO){
 		
 		List<ReworkPO> reworkPOs = reworkDao.pageReworkByOrderId(paging, filters, reworkVO.getOrderId());
 		List<ReworkVO> reworkVOs = new ArrayList<ReworkVO>();

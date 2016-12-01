@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.FilterVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.dao.AddReduceItemDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -60,9 +60,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	private DecorationOrderDao decorationOrderDao;
 	
 	@Override
-	public void pageAddReduceByOrderId(Paging paging, List<FilterVO> filters, AddReduceVO addReduceVO) {
+	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
 		
-		filters.add(new FilterVO(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
+		filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
 		
 		List<AddReducePO> addReducePOs = addReduceDao.pageAddReduceByOrderId(paging, filters, addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
