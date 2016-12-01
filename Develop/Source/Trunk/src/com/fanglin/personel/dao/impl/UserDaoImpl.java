@@ -235,6 +235,22 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
+	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType) {
+		
+		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
+		if(StringUtils.isNotEmpty(pinyinName)){
+			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
+		}
+		
+		query.add(Restrictions.ilike("deptType", deptType, MatchMode.ANYWHERE));
+		query.add(Restrictions.eq("status", "在职"));
+		query.add(Restrictions.ne("role.roleId", UserPO.SUPER_USERID_STR));
+		
+		return query.list();
+	}
+	
+	@Override
 	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters){
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);

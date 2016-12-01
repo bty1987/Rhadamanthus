@@ -1,4 +1,4 @@
-package com.fanglin.common.dao.impl;
+package com.fanglin.log.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -10,9 +10,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.common.dao.LoginLogDao;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.log.dao.LoginLogDao;
 import com.fanglin.log.po.LoginLogPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;

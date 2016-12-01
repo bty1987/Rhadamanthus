@@ -135,7 +135,9 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public boolean checkOperationByUserId(String userId, String operation) throws FLException {
+	public boolean checkOperationByUserId(String userId, String operation, short rollcall) throws FLException {
+		
+		boolean result = false;
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -149,12 +151,12 @@ public class OperationServiceImpl implements OperationService {
 			
 			RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperationByRIdAOId(userPO.getRole().getrId(), operationPO.getOid());
 			
-			if(roleOperationPO == null){
-				return false;
-			}
+			result = roleOperationPO != null;
+		}else{
+			result = true;
 		}
 		
-		return true;
+		return rollcall == 0 ? result : !result;
 	}
 
 	@Override

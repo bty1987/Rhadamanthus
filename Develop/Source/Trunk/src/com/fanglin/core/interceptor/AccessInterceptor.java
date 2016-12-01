@@ -44,7 +44,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
-		List<String> passLogNames = Arrays.asList(new String[]{"doLogin", "login"});
+		List<String> passLogNames = Arrays.asList(new String[]{});
 		List<String> passActionNames = Arrays.asList(new String[]{});
 		
 		String userId = "";
@@ -53,7 +53,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
 		HttpServletResponse response = (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE);
 		
-		String authentication = request.getParameter("authentication");
+		String $authentication = request.getParameter("authentication");
 		
 		String actionName = invocation.getProxy().getActionName();
 		
@@ -63,44 +63,44 @@ public class AccessInterceptor extends AbstractInterceptor {
 				invocation.invoke();
 			}else{
 				
-				if(authentication == null){
-					authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+				if($authentication == null){
+					$authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 				}
 				
-				if(authentication == null){
+				if($authentication == null){
 					throw new FLException(110005, "登陆超时");
 				}
 				
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				String decryptString = AESHelper.decryptString($authentication, encryptKey);
 				
-				Authentication authenticationUtil = new Authentication(decryptString);
+				Authentication authentication = new Authentication(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
 				
-				if(authenticationUtil.getUserId() != null){
+				if(authentication.getUserId() != null){
 					
 					if(!actionName.startsWith("page") && !actionName.startsWith("query")){
-						logger.error(String.format("%s - %s - %s - %s", "AI", "I", authenticationUtil.getUserId(), actionName));
+						logger.error(String.format("%s - %s - %s - %s", "AI", "I", authentication.getUserId(), actionName));
 					}
 					
-					if(authenticationUtil.getUpdateTime() == -1){
+					if(authentication.getUpdateTime() == -1){
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
 						throw new FLException(110005, "登陆超时");
 					}
 					
-//					if(authenticationUtil.isOverTime(SystemConfig.getInt("cookieOvertime", 30)) && !authenticationUtil.isMobile()){
-//						throw new FLException(110005, "登陆超时");
-//					}
+					if(authentication.getTimout() != Authentication.TIMEOUT_INT && authentication.isOverTime(SystemConfig.getInt("cookieOvertime", 30))){
+						throw new FLException(110005, "登陆超时");
+					}
 					
-					authenticationUtil.setUpdateTime((new Date()).getTime());
-					String authenticationString = authenticationUtil.getAuthenticationStr();
+					authentication.setUpdateTime((new Date()).getTime());
+					String authenticationString = authentication.getAuthenticationStr();
 					String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
 					
 					CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
 					
-					userId = authenticationUtil.getUserId();
+					userId = authentication.getUserId();
 					
-					if(operationService.checkOperationByUserId(authenticationUtil.getUserId(), actionName)){
+					if(operationService.checkOperationByUserId(authentication.getUserId(), actionName, authentication.getRollcall())){
 						invocation.invoke();
 					}else{
 						throw new FLException(-2, "无操作权限");

@@ -1,4 +1,4 @@
-package com.fanglin.common.dao;
+package com.fanglin.log.dao;
 
 import java.sql.Timestamp;
 import java.util.List;

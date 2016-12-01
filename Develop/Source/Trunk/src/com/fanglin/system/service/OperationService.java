@@ -30,7 +30,7 @@ public interface OperationService {
 	
 	public List<OperationVO> queryOperationByRoleId(OperationVO operationVO, RoleVO roleVO) throws FLException;
 	
-	public boolean checkOperationByUserId(String userId, String operation) throws FLException;
+	public boolean checkOperationByUserId(String userId, String operation, short rollcall) throws FLException;
 	
 	public int updateRoleOperationByRoleId(List<Integer> oIds, OperationVO operationVO, RoleVO roleVO) throws FLException;
 	

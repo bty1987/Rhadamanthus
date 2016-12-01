@@ -286,6 +286,22 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public List<UserVO> queryUserForNameByDeptType(String pinyinName, String deptType) {
+		
+		List<UserVO> userVOs = new ArrayList<UserVO>();
+		
+		Paging paging = new Paging(0, 50);
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADeptType(paging, pinyinName, deptType);
+		
+		for(UserPO _userPO : userPOs){
+			userVOs.add(convertBean(_userPO));
+		}
+		
+		return userVOs;
+	}
+	
+	@Override
 	public UserVO validateUser(String loginId, String password){
 		
 		UserPO userPO = userDao.queryUserByLoginId(loginId);
