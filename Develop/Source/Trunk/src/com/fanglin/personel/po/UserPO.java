@@ -39,6 +39,12 @@ public class UserPO implements Serializable {
 	
 	public static final short ISLOGIN_FS_INT = 2;
 	
+	public static final short FREEDOM_TIMEOUT_INT = 1;
+	
+	public static final short FREEDOM_ROLLCALL_INT = 2;
+	
+	public static final short FREEDOM_REQUEST_AUTH_INT = 4;
+	
 	private int uid;
 
 	private String userId;
@@ -154,6 +160,8 @@ public class UserPO implements Serializable {
 	private short isLogin;
 	
 	private short extranet;
+	
+	private short freedom;
 
 	public UserPO(){
 		super();
@@ -691,6 +699,14 @@ public class UserPO implements Serializable {
 
 	public void setExtranet(short extranet) {
 		this.extranet = extranet;
+	}
+
+	public short getFreedom() {
+		return freedom;
+	}
+
+	public void setFreedom(short freedom) {
+		this.freedom = freedom;
 	}
 
 }

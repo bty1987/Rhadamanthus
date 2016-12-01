@@ -137,6 +137,8 @@ public class UserVO implements Serializable {
 	private Short isLogin;
 	
 	private Short extranet;
+	
+	private Short freedom;
 
 	public UserVO(){
 		super();
@@ -616,6 +618,14 @@ public class UserVO implements Serializable {
 
 	public void setExtranet(Short extranet) {
 		this.extranet = extranet;
+	}
+
+	public Short getFreedom() {
+		return freedom;
+	}
+
+	public void setFreedom(Short freedom) {
+		this.freedom = freedom;
 	}
 
 	public int getCompany() {

@@ -46,6 +46,8 @@ public interface UserService {
 	
 	public List<UserVO> queryUserForNameByDutysAODept(String pinyinName, List<String> dutysA, List<String> dutysO, String curUserId);
 	
+	public List<UserVO> queryUserForNameByDeptType(String pinyinName, String deptType);
+	
 	public UserVO validateUser(String loginId, String password);
 	
 }

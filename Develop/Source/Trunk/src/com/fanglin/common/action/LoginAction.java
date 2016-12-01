@@ -29,7 +29,6 @@ import com.fanglin.log.vo.LoginLogVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
@@ -101,61 +100,13 @@ public class LoginAction extends BaseListAction {
 				    
 				    this.user = user;
 				    
-				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany());
+				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany(), user.getFreedom());
 				    
 					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					
 					loginLogVO.setSuccessFlag(1);
 					loginLogService.addLoginLog(loginLogVO);
 				}
-			}
-		} catch (FLException e) {
-			setErrorCode(e.getCode());
-			setErrorMsg(e.getErrorMessage());
-		} catch (Exception e) {
-			setErrorCode(110000);
-			setErrorMsg("系统处理问题");
-		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "requestAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String requestAuthCode(){
-		
-		String userId = request.getParameter("userId");
-		
-		try {
-			
-			int $company = 0;
-			
-			UserVO user = null;
-			Authentication authenticationUtil = null;
-			
-			if("hades".equals(userId)){
-				user = new UserVO(userId, userId, userId, new RoleVO(userId));
-			}else{
-				
-				user = userService.queryUserByUserId(userId.toUpperCase());
-				
-				if(user == null){
-					throw new FLException(110004, "该用户不能登陆系统");
-				}else{
-				    if((user.getIsLogin() & UserPO.ISLOGIN_FIP_INT) != UserPO.ISLOGIN_FIP_INT){
-			            throw new FLException(110004, "该用户不能登陆系统");
-				    }
-				}
-				
-				$company = user.getCompany();
-			}
-			
-			authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), true, $company);
-		    authenticationUtil.setIsMobile(true);
-			
-			try {
-				authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
-			} catch (Exception e) {
-				throw new FLException(110000, "系统处理问题");
 			}
 		} catch (FLException e) {
 			setErrorCode(e.getCode());

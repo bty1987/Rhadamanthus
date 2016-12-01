@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.dao.LoginLogDao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.log.dao.LoginLogDao;
 import com.fanglin.log.po.LoginLogPO;
 import com.fanglin.log.service.LoginLogService;
 import com.fanglin.log.vo.LoginLogVO;

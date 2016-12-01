@@ -7,7 +7,7 @@
  *
  */
 
-package com.fanglin.system.service.impl;
+package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserApproveDao;
 import com.fanglin.personel.po.UserApprovePO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.service.impl.UserApproveService;
 import com.fanglin.personel.vo.UserApproveVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;

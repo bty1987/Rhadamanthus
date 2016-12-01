@@ -33,6 +33,8 @@ public interface UserDao extends Dao<UserPO> {
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO);
 
 	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId);
+	
+	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType);
 
 	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters);
 	
