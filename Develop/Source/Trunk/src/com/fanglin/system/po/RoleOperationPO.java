@@ -19,7 +19,7 @@ public class RoleOperationPO implements java.io.Serializable {
 
 	private int roId;
 	
-	private RolePO role;
+	private int rid;
 	
 	private OperationPO operation;
 	
@@ -27,10 +27,10 @@ public class RoleOperationPO implements java.io.Serializable {
 		super();
 	}
 
-	public RoleOperationPO(RolePO role, OperationPO operation) {
+	public RoleOperationPO(OperationPO operation, int rid) {
 		super();
-		this.role = role;
 		this.operation = operation;
+		this.rid = rid;
 	}
 
 	@Id
@@ -44,14 +44,12 @@ public class RoleOperationPO implements java.io.Serializable {
 		this.roId = roId;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rId", referencedColumnName = "rId")
-	public RolePO getRole() {
-		return role;
+	public int getRid() {
+		return rid;
 	}
 
-	public void setRole(RolePO role) {
-		this.role = role;
+	public void setRid(int rid) {
+		this.rid = rid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

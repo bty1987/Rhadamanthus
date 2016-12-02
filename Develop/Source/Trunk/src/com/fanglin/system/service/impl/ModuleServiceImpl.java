@@ -194,7 +194,7 @@ public class ModuleServiceImpl implements ModuleService {
 		
 		if(mIds != null && mIds.size() > 0){
 			for(Integer mId: mIds){
-				RoleModulePO userModulePO = new RoleModulePO(rolePO, new ModulePO(mId));
+				RoleModulePO userModulePO = new RoleModulePO(new ModulePO(mId), rolePO.getrId());
 				
 				roleModuleDao.save(userModulePO);
 			}
@@ -217,7 +217,7 @@ public class ModuleServiceImpl implements ModuleService {
 		
 		if(mIds != null && mIds.size() > 0){
 			for(Integer mId: mIds){
-				RoleModulePO roleModulePO = new RoleModulePO(userPO.getRole(), new ModulePO(mId));
+				RoleModulePO roleModulePO = new RoleModulePO(new ModulePO(mId), userPO.getRole().getrId());
 				
 				roleModuleDao.save(roleModulePO);
 			}
