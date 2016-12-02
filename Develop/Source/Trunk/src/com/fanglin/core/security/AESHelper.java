@@ -17,6 +17,8 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import com.fanglin.core.interceptor.FLException;
+
 public class AESHelper {
 	
 	/**
@@ -127,21 +129,26 @@ public class AESHelper {
 		Cipher c;
 		byte[] cByte;
 
-		SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");  
-	    secureRandom.setSeed(strKey.getBytes()); 
+		try {
+			SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");  
+			secureRandom.setSeed(strKey.getBytes()); 
 
-		keygen = KeyGenerator.getInstance("AES");
-		keygen.init(128, secureRandom);
+			keygen = KeyGenerator.getInstance("AES");
+			keygen.init(128, secureRandom);
 
-		desKey = keygen.generateKey();
-		c = Cipher.getInstance("AES");
+			desKey = keygen.generateKey();
+			c = Cipher.getInstance("AES");
 
-		c.init(Cipher.DECRYPT_MODE, desKey);
+			c.init(Cipher.DECRYPT_MODE, desKey);
 
-		cByte = c.doFinal(parseHexStr2Byte(src));
-
+			cByte = c.doFinal(parseHexStr2Byte(src));
+			
+			return new String(cByte, "UTF-8");
+		} catch (Exception e) {
+			new FLException(110005, "登陆超时");
+		}
 		
-		return new String(cByte, "UTF-8");
+		return null;
 	}
 
 	/**
