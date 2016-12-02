@@ -5,7 +5,7 @@
 $(function(){
 
     var order = {
-        oid : '1611050003',
+        oid : params.decorationOrderId,
         $pic : {
             $picList : $('#orderpics')
         }
@@ -273,75 +273,201 @@ $(function(){
 
     order.oid ='1510220003';
 
-    //获取水力电
-    com.post(api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId, {"waterwayCircuitPowerConstructionSchedule.orderId": order.oid}, function(res){
-    	
-    	var wcps = res.waterwayCircuitPowerConstructionSchedule, wokerDfd, picDfd;
-    	
-        //工人
-        com.post(api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker, {"waterwayCircuitPowerConstructionSchedule.wcpcsId": wcps.wcpcsId}, function(res){
-        	wokerDfd = res;
-        }, null, false);
-        
-        //图片
-        com.post(api.construction.queryWaterwayCircuitPowerDrawingByCsId, {"waterwayCircuitPowerDrawing.csId": wcps.csId}, function(res){
-        	picDfd = res;
-        }, null, false);
-        
-        $.when(wokerDfd, picDfd).done(function(data1, data2){
 
-            $('.widget-box', '#project').removeClass('flloading');
+    //铲大白
+    getProjectInfo(
+        api.construction.queryChanConstructionScheduleByOrderId,
+        "chanConstructionSchedule.orderId",
+        'chanConstructionSchedule',
+        null, null, null,null,
+        api.construction.queryChanDrawingByCsId, 'chanDrawing.csId', 'csId','chanDrawings',
+        'cdb'
+    );
 
-            setTimeout(function(){
-                //工人
-                var workers = data1.constructionScheduleWorkers;
-                if(workers && workers.length){
+    //放线
+    getProjectInfo(
+        api.construction.queryPutlineConstructionScheduleByOrderId,
+        "putlineConstructionSchedule.orderId",
+        'putlineConstructionSchedule',
+        null, null, null,null,
+        api.construction.queryPutlineDrawingByCsId, 'putlineDrawing.csId', 'csId','putlineDrawings',
+        'fx'
+    );
 
-                    $.each(workers, function(i, v){
-                        var $worker = createWoker(v);
-                        $('[name="workers"]','#project').append($worker);
-                    });
-                }
-            }, 25);
+    //水力电
+    getProjectInfo(
+        api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
+        "waterwayCircuitPowerConstructionSchedule.orderId",
+        'waterwayCircuitPowerConstructionSchedule',
+        api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
+        api.construction.queryWaterwayCircuitPowerDrawingByCsId, 'waterwayCircuitPowerDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
+        'project'
+    );
 
-            setTimeout(function(){
+    //瓦工
+    getProjectInfo(
+        api.construction.queryBricklayConstructionScheduleByOrderId,
+        "bricklayConstructionSchedule.orderId",
+        'bricklayConstructionSchedule',
+        api.construction.queryBricklayConstructionScheduleWorker, 'bricklayConstructionSchedule.bcsId', 'bcsId','constructionScheduleWorkers',
+        api.construction.queryBricklayDrawingByCsId, 'bricklayDrawing.csId', 'csId','bricklayDrawings',
+        'wg'
+    );
 
-                //图片
-                var pics = data2.waterwayCircuitPowerDrawings;
+    //地面找平
+    getProjectInfo(
+        api.construction.queryGroundLevelingConstructionScheduleByOrderId,
+        "groundLevelingConstructionSchedule.orderId",
+        'groundLevelingConstructionSchedule',
+        api.construction.queryGroundLevelingConstructionScheduleWorker, 'groundLevelingConstructionSchedule.glcsId', 'glcsId','constructionScheduleWorkers',
+        api.construction.queryGroundLevelingDrawingByCsId, 'groundLevelingDrawing.csId', 'csId','groundLevelingDrawings',
+        'dmzp'
+    );
 
-                if(pics.length){
-                    $.each(pics, function(i, v){
+    // 木工
+    getProjectInfo(
+        api.construction.queryCarpentConstructionScheduleByOrderId,
+        "carpentConstructionSchedule.orderId",
+        'carpentConstructionSchedule',
+        api.construction.queryCarpentConstructionScheduleWorker, 'carpentConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
+        api.construction.queryCarpentDrawingByCsId, 'carpentDrawing.csId', 'csId','carpentDrawings',
+        'mg'
+    );
 
-                        var path = {};
-                        var _type = v.type;
-                        var _url = _url2 = v.drawingUrl;
+    // 油工
+    getProjectInfo(
+        api.construction.queryOilConstructionScheduleByOrderId,
+        "oilConstructionSchedule.orderId",
+        'oilConstructionSchedule',
+        api.construction.queryOilConstructionScheduleWorker, 'oilConstructionSchedule.ocsId', 'ocsId','constructionScheduleWorkers',
+        api.construction.queryOilDrawingByCsId, 'oilDrawing.csId', 'csId','oilDrawings',
+        'yg'
+    );
 
-                        if(_type == 0){
-                            path = {
-                                url1 : config.media + '/showImg.do' + '?imgBasePath='+ _url +'&divFlag=1&width=50&height=50&timestamp='+ new Date().getTime(),
-                                url2 : config.media + '/showImg.do' + '?imgBasePath='+ _url2 +'&divFlag=1&width=600&height=600&timestamp='+ new Date().getTime()
-                            };
+    // 水电安装
+    getProjectInfo(
+        api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
+        "waterwayCircuitCheckConstructionSchedule.orderId",
+        'waterwayCircuitCheckConstructionSchedule',
+        api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
+        api.construction.queryWaterwayCircuitCheckDrawingByCsId, 'waterwayCircuitCheckDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
+        'sdaz'
+    );
 
+    // 保洁
+    getProjectInfo(
+        api.construction.queryCleaningConstructionScheduleByOrderId,
+        "cleaningConstructionSchedule.orderId",
+        'cleaningConstructionSchedule',
+        api.construction.queryCleaningConstructionScheduleWorker, 'cleaningConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
+        api.construction.queryCleaningDrawingByCsId, 'cleaningDrawing.csId', 'csId','cleaningDrawings',
+        'bj'
+    );
+
+
+    //
+    /**
+     *获取施工信息的方法
+     * @orderApi 根据订单编号获取信息的接口
+     * @orderParamName 根据订单编号获取信息的接口的参数名
+     * @orderRes 根据订单编号获取信息的接口返回值取值
+     *
+     * @workerApi 获取工人信息接口
+     * @workerParamName 工人接口参数名
+     * @workerParamValueName 工人接口参数值
+     * @workerRes 工人接口返回值
+     *
+     * @workerApi 获取图片信息接口
+     * @workerParamName 图片接口参数名
+     * @workerParamValueName 图片接口参数值
+     * @workerRes 图片接口返回值
+     *
+     * @domid html页面上的标签id
+     */
+    function getProjectInfo(orderApi, orderParamName, orderRes,
+                            workerApi, workerParamName, workerParamValueName,workerRes,
+                            picApi, picParamName, picParamValueName,picRes,
+                            domid
+    ){
+        var params = {};
+        params[orderParamName] = order.oid;
+
+        com.post(orderApi, params, function(res){
+
+            var info = res[orderRes], wokerDfd, picDfd, params;
+
+            //工人 v.workerPhoto v.workerPhone v.workerName
+            if(workerApi){
+                if(info[workerParamValueName]){
+                    params = {};
+                    params[workerParamName] = info[workerParamValueName];
+                    com.post(workerApi, params, function(res){
+                        var workers = res[workerRes];
+                        if(workers && workers.length){
+
+                            $.each(workers, function(i, v){
+                                var $worker = createWoker(v);
+                                $('[name="workers"]','#'+domid).append($worker);
+                            });
+                        }else{
+                            $('[name="workers"]','#'+domid).append('<div class="alert alert-info">当前进度没有分配工人!</div>');
                         }
-                        if(_type == 1){
-                            path = {
-                                url1 : config.dmedia + _url + '_50x50.jpg',
-                                url2 : config.dmedia + _url2 + '_600x600.jpg'
-                            };
-
-                        }
-
-                        var $pic = createPic(path, null,'700x700');
-
-                        $('[name="project"]','#project').append($pic);
-                    });
-
-                    initPhotoSwipeFromDOM('#project [name="project"]');
-
+                    }, null, false);
                 }
-            }, 25);
-        });
-    }, null, false)
+
+            }else{
+                var $worker = createWoker(info);
+                $('[name="workers"]','#'+domid).append($worker);
+            }
+
+            //图片
+            if(info[picParamValueName]){
+                params = {};
+                params[picParamName] = info[picParamValueName];
+                com.post(picApi, params, function(res){
+                    //图片
+                    var pics = res[picRes];
+
+                    if(pics.length){
+                        $.each(pics, function(i, v){
+
+                            var path = {};
+                            var _type = v.type;
+                            var _url = _url2 = v.drawingUrl;
+
+                            if(_type == 0){
+                                path = {
+                                    url1 : config.media + '/showImg.do' + '?imgBasePath='+ _url +'&divFlag=1&width=50&height=50&timestamp='+ new Date().getTime(),
+                                    url2 : config.media + '/showImg.do' + '?imgBasePath='+ _url2 +'&divFlag=1&width=600&height=600&timestamp='+ new Date().getTime()
+                                };
+                            }
+                            if(_type == 1){
+                                path = {
+                                    url1 : config.dmedia + _url + '_50x50.jpg',
+                                    url2 : config.dmedia + _url2 + '_600x600.jpg'
+                                };
+                            }
+
+                            var $pic = createPic(path, null,'700x700');
+
+                            $('[name="project"]','#'+domid).append($pic);
+                        });
+
+                        initPhotoSwipeFromDOM('#'+domid +' [name="project"]');
+
+                    }else{
+                        $('[name="project"]','#'+domid).append('<div class="alert alert-info">当前进度没有施工进度图片!</div>');
+                    }
+                }, null, false);
+            }
+
+            if(!info[workerParamValueName] && !info[picParamValueName]){
+                $('.widget-main', '#'+domid).empty().append('<div class="alert alert-info">当前没有施工信息!</div>');
+            }
+
+            $('.widget-box', '#'+domid ).removeClass('flloading');
+        }, null, false);
+    }
 
     function createPic(path, des, size){
 

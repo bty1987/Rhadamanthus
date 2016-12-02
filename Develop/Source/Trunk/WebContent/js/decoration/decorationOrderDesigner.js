@@ -123,6 +123,7 @@ $(function(){
 					var $btnContract = $('<a></a>').addClass('btn btn-minier btn-danger').html('合同');
 					var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
+					var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary').html('信息轴');
 					
 					var propertyArr = [
 						["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
@@ -150,12 +151,15 @@ $(function(){
 					$btnView.click(function(){
 						viewDecorationOrderDetail(v.orderId);
 					});
+					
 					$btnPrice.click(function(){
 						viewDecorationQuotateIndex(v.orderId, v.type);
 					});
+					
 					$btnRevie.click(function(){
 						viewDecorationOrderBackVisitIndex(v.orderId);
 					});
+					
 					$btnLine.click(function(){
 						modalDrawLineModal(v.orderId);
 					});
@@ -163,9 +167,14 @@ $(function(){
 					$btnContract.click(function(){
 						modalAgreementModal(v.orderId);
 					});
+					
 					$btnAddMinus.click(function(){
 						viewDecorationOrderInDecreaseIndex(v.orderId, v.type);
 					});
+					
+					$btnInfo.click(function(){
+						viewDecorationOrderTimelineIndex(v.orderId);
+					})
 
 					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
 					
@@ -180,6 +189,8 @@ $(function(){
 					if(["已签约", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnAddMinus);
 					}
+					
+					$divBtnWrap.append($btnInfo);
 
 					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
 				});
@@ -233,11 +244,15 @@ $(function(){
 		}
 		//增减项
 		var viewDecorationOrderInDecreaseIndex = function (decorationOrderId, type){
-			console.log(type);
 			params.decorationOrderId = decorationOrderId;
 			params.decorationOrderType = type;
 			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.addReduceIndex.url);
+		}
+		
+		var viewDecorationOrderTimelineIndex = function(orderId){
+			params.decorationOrderId = orderId;
+			com.switchPage(api.index.decorationOrderTimelineIndex.url);
 		}
 
 		return {

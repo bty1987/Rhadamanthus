@@ -1,9 +1,7 @@
 package com.fanglin.core.interceptor;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,9 +42,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
-		List<String> passLogNames = Arrays.asList(new String[]{});
-		List<String> passActionNames = Arrays.asList(new String[]{});
-		
 		String userId = "";
 		
 		ActionContext ctx = invocation.getInvocationContext();
@@ -59,7 +54,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 		
 		try {
 			
-			if(passActionNames.contains(actionName) || actionName.startsWith("report")){
+			if(actionName.startsWith("via") || actionName.startsWith("report")){
 				invocation.invoke();
 			}else{
 				
@@ -114,7 +109,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				// 获得值栈
 				ValueStack valueStack = invocation.getStack();
 				Integer errorCode = (Integer) valueStack.findValue("errorCode");
-				if(errorCode != null || !passLogNames.contains(actionName)){
+				if(errorCode != null){
 					
 					ActionLogPO actionLogPO = new ActionLogPO(actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
 					
