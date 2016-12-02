@@ -1,140 +1,8 @@
 <link rel="stylesheet" href="assets/css/photoswipe.css">
-<link rel="stylesheet" href="assets/default-skin/default-skin.css">
+<link rel="stylesheet" href="assets/css/default-skin.css">
 
 <div class="page-content">
     <div class="row">
-
-        <style>
-
-            @media only screen and (min-width: 991px){
-
-                .timeline-center.timeline-container:before {
-                    left: 50%;
-                    margin-left: -2px;
-                }
-
-                .timeline-center .timeline-label{
-                    margin-left: 50%;
-                }
-
-                .timeline-center .timeline-item{
-                    width: 50%;
-                }
-
-                .timeline-center .timeline-info{
-                    position: absolute;
-                }
-
-                .timeline-center .timeline-item:nth-of-type(2n){
-                    margin-left: 50%;
-                }
-
-                .timeline-center .timeline-item:nth-of-type(2n) .timeline-info{
-                    left: -30px;
-                }
-
-                .timeline-center .timeline-item:nth-of-type(2n) .widget-box{
-                    margin-left: 30px;
-                }
-
-                /*.timeline-center .timeline-item :nth-of-type(2n){
-                    width: 50%;
-                }*/
-
-                .timeline-center .timeline-item:nth-of-type(2n+1) .timeline-info{
-                    right: -30px;
-                }
-
-                .timeline-center .timeline-item:nth-of-type(2n+1) .widget-box{
-                    margin-left: 0;
-                    margin-right: 30px;
-                }
-
-            }
-
-            .flloading:after {
-                content: "";
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                /*background-image: url("assets/img/loading.gif");*/
-                background-position: center;
-                background-repeat: no-repeat;
-                z-index: 999;
-            }
-
-            .flloading:before {
-                font-family: FontAwesome;
-                content: "\f110";
-                position: absolute;
-                width: 30px;
-                height: 30px;
-                margin-left: -15px;
-                margin-top: -15px;
-                top: 50%;
-                left: 50%;
-                z-index: 1000;
-                font-size: 30px;
-                color: #FFF;
-                -moz-animation: spin 2s infinite linear;
-                -o-animation: spin 2s infinite linear;
-                -webkit-animation: spin 2s infinite linear;
-                animation: spin 2s infinite linear;
-                text-align: center;
-                line-height: 30px;
-            }
-
-            .timeline-item .imglist{
-                min-height: 60px;
-            }
-
-            .timeline-item .imglist .img-item{
-                background-color: #fff;
-                border: 1px solid #aaa;
-                padding: 2px;
-                display: inline-block;
-                width: 50px;
-                height: 50px;
-                margin-right: 10px;
-            }
-
-            .timeline-item .imglist img{
-                display: block;
-                width: 100% !important;
-                height: 100% !important;
-                background-color: transparent;
-                border: none;
-                padding: 0;
-            }
-
-            .my-gallery img {
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-            
-            .my-gallery figure {
-                background-color: #fff;
-                border: 1px solid #aaa;
-                padding: 2px;
-                display: inline-block;
-                width: 50px;
-                height: 50px;
-                margin-right: 10px;
-            }
-
-            .my-gallery figure .wrap{
-                height: 100%;
-            }
-            
-            .my-gallery figcaption {
-                display: none;
-            }
-        </style>
-
         <div class="col-xs-12 ">
             <div class="timeline-container timeline-center">
 
@@ -265,6 +133,50 @@
                         </div>
                     </div>
 
+                    <!--铲大白-->
+                    <div class="timeline-item clearfix" id="cdb">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-success no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-green widget-header-small">
+                                <h5 class="smaller">铲大白</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--放线-->
+                    <div class="timeline-item clearfix" id="fx">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-info no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-blue widget-header-small">
+                                <h5 class="smaller">放线</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!--水力电-->
                     <div class="timeline-item clearfix" id="project">
                         <div class="timeline-info">
@@ -273,7 +185,139 @@
 
                         <div class="widget-box">
                             <div class="widget-header header-color-green widget-header-small">
-                                <h5 class="smaller">施工信息</h5>
+                                <h5 class="smaller">水力电</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--瓦工-->
+                    <div class="timeline-item clearfix" id="wg">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-info no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-blue widget-header-small">
+                                <h5 class="smaller">瓦工</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--地面找平-->
+                    <div class="timeline-item clearfix" id="dmzp">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-success no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-green widget-header-small">
+                                <h5 class="smaller">地面找平</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--木工-->
+                    <div class="timeline-item clearfix" id="mg">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-info no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-blue widget-header-small">
+                                <h5 class="smaller">木工</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--油工-->
+                    <div class="timeline-item clearfix" id="yg">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-success no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-green widget-header-small">
+                                <h5 class="smaller">油工</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--水电安装-->
+                    <div class="timeline-item clearfix" id="sdaz">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-info no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-blue widget-header-small">
+                                <h5 class="smaller">水电安装</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <p class="orange">工人信息</p>
+                                    <div class="dialogs" name="workers"></div>
+                                    <p class="orange">施工图片</p>
+                                    <div name="project" class="my-gallery"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--保洁-->
+                    <div class="timeline-item clearfix" id="bj">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-success no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-green widget-header-small">
+                                <h5 class="smaller">保洁</h5>
                             </div>
 
                             <div class="widget-body">

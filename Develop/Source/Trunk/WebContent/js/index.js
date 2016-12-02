@@ -90,7 +90,7 @@ $(function(){
 		 if(config){
 			 $('#navbar').fadeIn();
 			 $('#main-container').fadeIn();
-			 com.switchPage('views/home.html');
+			 com.switchPage('home.html');
 
 		 }
 	 });

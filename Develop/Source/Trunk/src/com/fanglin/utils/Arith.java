@@ -102,6 +102,7 @@ public class Arith{
         BigDecimal one = new BigDecimal("1");
         return b.divide(one,scale,BigDecimal.ROUND_HALF_UP).floatValue();
     }
+    
     public static void main(String[] args){
     	float a = (float) 1.534455;
     	System.out.println("--"+round(a, 0));

@@ -1,5 +1,5 @@
 var config = {
-	versionCode: "1.5.001",
+	versionCode: "1.5.004",
 	system: 1,
 	uploadTimeout: 30,
 	quotationLimitDiscount: 8.8,

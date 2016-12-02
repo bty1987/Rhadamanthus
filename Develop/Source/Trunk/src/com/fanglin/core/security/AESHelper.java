@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: AESHelper.java
  * @Package		：com.fanglin.commons.security 
  * @Version		: 1.0
@@ -81,7 +81,6 @@ public class AESHelper {
 		cByte = c.doFinal(str.getBytes("UTF-8"));
 
 		return parseByte2HexStr(cByte);
-		//return content;
 	}
 	
 	/**
@@ -148,7 +147,7 @@ public class AESHelper {
 			new FLException(110005, "登陆超时");
 		}
 		
-		return null;
+		return "";
 	}
 
 	/**

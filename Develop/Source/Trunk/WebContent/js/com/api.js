@@ -99,6 +99,7 @@ var api = {
 		decorationOrderBelongDetailIndex: {url: "/views/decoration/decorationOrderBelongDetail.html"},
 		decorationOrderBelongInfoIndex: {url: "/views/decoration/decorationOrderBelongInfo.html"},
 
+		decorationOrderTimelineIndex: {url: "/views/decoration/decorationOrderTimeline.html"},
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
 		backVisitIndex: {url: "/views/decoration/backVisit.html"},
 		createOrderIndex: {url: "/views/decoration/createOrder.html"},

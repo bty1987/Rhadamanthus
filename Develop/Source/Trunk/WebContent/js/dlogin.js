@@ -35,7 +35,7 @@ jQuery(function(a){
             	setCookie("authentication" , data.loginInfo.authentication , config.timeout);
             	setCookie("loginTime" , new Date().getTime() , config.timeout);
             	
-            	window.location.href = "main.html?timestamp=" + new Date().getTime();
+            	window.location.href = "index.html?timestamp=" + new Date().getTime();
             }else{
             	$('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide')
             }
@@ -108,7 +108,7 @@ jQuery(function(a){
     	
     	if(config.demo){
     		setCookie("loginTime" , new Date().getTime() , config.timeout);
-    		window.location.href = "main.html?timestamp=" + new Date().getTime();
+    		window.location.href = "index.html?timestamp=" + new Date().getTime();
     		return false;
     	}
     	
@@ -135,7 +135,7 @@ jQuery(function(a){
                 	setCookie("authentication" , data.authenticationEncode , config.timeout);
                 	setCookie("loginTime" , new Date().getTime() , config.timeout);
                 	setCookie("versionCode", config.versionCode, config.timeout);
-                    document.location.href = "main.html?timestamp="+ new Date().getTime();
+                    document.location.href = "index.html?timestamp="+ new Date().getTime();
                 }else{
                     $("#passwordIcon").attr("class", "icon-remove red");
                     $("#passwordIcon").attr("data-content", data.errorMsg);

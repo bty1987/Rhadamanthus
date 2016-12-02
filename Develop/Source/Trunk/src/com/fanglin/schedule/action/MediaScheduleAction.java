@@ -31,8 +31,8 @@ public class MediaScheduleAction extends BaseListAction {
 	@Autowired
 	private MediaScheduleService mediaScheduleService;
 	
-	@Action(value = "switchMediaForDing", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String switchMediaForDing(){
+	@Action(value = "viaSwitchMediaForDing", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String viaSwitchMediaForDing(){
 		
 		mediaScheduleService.switchMediaForDing();
 		
