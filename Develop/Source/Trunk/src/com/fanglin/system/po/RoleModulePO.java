@@ -19,7 +19,7 @@ public class RoleModulePO implements java.io.Serializable {
 
 	private int rmId;
 	
-	private RolePO role;
+	private int rid;
 	
 	private ModulePO module;
 	
@@ -27,10 +27,10 @@ public class RoleModulePO implements java.io.Serializable {
 		super();
 	}
 	
-	public RoleModulePO(RolePO role, ModulePO module) {
+	public RoleModulePO(ModulePO module, int rid) {
 		super();
-		this.role = role;
 		this.module = module;
+		this.rid = rid;
 	}
 
 	@Id
@@ -44,14 +44,13 @@ public class RoleModulePO implements java.io.Serializable {
 		this.rmId = rmId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rId", referencedColumnName = "rId")
-	public RolePO getRole() {
-		return role;
+	@Column(name = "rId")
+	public int getRid() {
+		return rid;
 	}
 
-	public void setRole(RolePO role) {
-		this.role = role;
+	public void setRid(int rid) {
+		this.rid = rid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

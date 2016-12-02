@@ -30,13 +30,13 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModuleByRId(int rId, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("role", "role").createAlias("module", "module").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("module.system", system)).list();
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModuleByRIdALevel(int rId, int level, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("role", "role").createAlias("module", "module").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override

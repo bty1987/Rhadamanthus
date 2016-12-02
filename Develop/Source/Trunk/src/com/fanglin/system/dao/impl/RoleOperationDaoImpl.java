@@ -30,7 +30,7 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleOperationPO> queryRoleOperationByRId(int rId, short system) {
-		return session().createCriteria(RoleOperationPO.class).createAlias("role", "role").createAlias("operation", "operation").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("operation.system", system)).list();
+		return session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.system", system)).list();
 	}
 
 	@Override
@@ -40,12 +40,12 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 
 	@Override
 	public RoleOperationPO queryRoleOperationByOperationARId(String operation, int rId, short system) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").createAlias("role", "role").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.system", system)).uniqueResult();
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.system", system)).uniqueResult();
 	}
 
 	@Override
 	public RoleOperationPO queryRoleOperationByRIdAOId(int rId, int oId) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").createAlias("role", "role").add(Restrictions.eq("role.rId", rId)).add(Restrictions.eq("operation.oid", oId)).uniqueResult();
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.oid", oId)).uniqueResult();
 	}
 
 	@Override

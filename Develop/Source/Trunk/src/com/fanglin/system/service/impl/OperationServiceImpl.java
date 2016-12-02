@@ -173,7 +173,7 @@ public class OperationServiceImpl implements OperationService {
 		
 		if(oIds != null && oIds.size() > 0){
 			for(Integer oId: oIds){
-				RoleOperationPO roleOperationPO = new RoleOperationPO(rolePO, new OperationPO(oId));
+				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oId), rolePO.getrId());
 				
 				roleOperationDao.save(roleOperationPO);
 			}
@@ -196,7 +196,7 @@ public class OperationServiceImpl implements OperationService {
 		
 		if(oIds != null && oIds.size() > 0){
 			for(Integer oId: oIds){
-				RoleOperationPO roleOperationPO = new RoleOperationPO(userPO.getRole(), new OperationPO(oId));
+				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oId), userPO.getRole().getrId());
 				
 				roleOperationDao.save(roleOperationPO);
 			}
