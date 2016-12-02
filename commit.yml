@@ -3,69 +3,33 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '1c0d824b06191690707d12e81db1523db584da85'
-    oldFile: !uuid '4f259f9edbf13cc016dc4a528d219a4380e90db7'
+    newFile: !uuid '4770f05415fd9d86a3abaf6d1eaebbe5127216ca'
+    oldFile: !uuid '1c0d824b06191690707d12e81db1523db584da85'
   /Develop/Source:
-    newFile: !uuid 'ff45fb1c7b28b7db1ab35869c1b9cb4d9d902e1d'
-    oldFile: !uuid '93eba1217e8c6ffe654dd0c9497e0dd927a8ecae'
+    newFile: !uuid '29293cd0ad794de2bb7266012ac234166ef6ea09'
+    oldFile: !uuid 'ff45fb1c7b28b7db1ab35869c1b9cb4d9d902e1d'
   /Develop/Source/Trunk:
-    newFile: !uuid 'd8b0dd0ea09b549ed972d9a9ecc18558b1ae3195'
-    oldFile: !uuid '1188098dce3bfaa9a21607cbfbe188c9314a75c8'
+    newFile: !uuid '1638c5ffb5045c09255aec885230bf6c178da80e'
+    oldFile: !uuid 'd8b0dd0ea09b549ed972d9a9ecc18558b1ae3195'
   /Develop/Source/Trunk/src:
-    newFile: !uuid '35a94a0495626ffc67d267b811769746392623bd'
-    oldFile: !uuid '066d649716337fc362d04260e4749aaf08de179a'
+    newFile: !uuid 'd32fb8f1875b79ea4d752b8316fc36b1fcb1ffdf'
+    oldFile: !uuid '35a94a0495626ffc67d267b811769746392623bd'
   /Develop/Source/Trunk/src/com:
-    newFile: !uuid 'cb2dea0fe94350e2c1760984240c4ac0730a918f'
-    oldFile: !uuid '2798b241ba71dde6a5eba1a24e9e3bfce7134380'
+    newFile: !uuid '4513f3cb41dfc14a9b53e012cf32b514036031f4'
+    oldFile: !uuid 'cb2dea0fe94350e2c1760984240c4ac0730a918f'
   /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid '40957a3926ca7af2c58ed1a278d6d50a3ae3e957'
-    oldFile: !uuid '7ef7453badb5131006e23efc8a424a712a1e80bf'
+    newFile: !uuid '8040b9ca1ab37770e0feac57456b93e04ae93e2d'
+    oldFile: !uuid '40957a3926ca7af2c58ed1a278d6d50a3ae3e957'
   /Develop/Source/Trunk/src/com/fanglin/core:
-    newFile: !uuid '6d0c5b708ab5c9ab5c4186988912657146ac6f85'
-    oldFile: !uuid '0b42855145ee79455b146a079711d052a903c6f8'
+    newFile: !uuid '8317db5d1b46ce5cf2b72b4b15ecdd8440c0165a'
+    oldFile: !uuid '6d0c5b708ab5c9ab5c4186988912657146ac6f85'
   /Develop/Source/Trunk/src/com/fanglin/core/security:
-    newFile: !uuid 'f714eb115e07c675664c59ba33130167ea0ea302'
-    oldFile: !uuid '9a91d942c701e14c0686c6902d355f32984c5f79'
+    newFile: !uuid '0b70cd56cfc99d5bded00f51698e9035d31a7ccc'
+    oldFile: !uuid 'f714eb115e07c675664c59ba33130167ea0ea302'
   /Develop/Source/Trunk/src/com/fanglin/core/security/AESHelper.java:
-    newFile: !uuid '1c2f57a4efe766824d1eff96b56493dc43106c13'
-    oldFile: !uuid 'c9f565e26ac6c912b9ff4ea3d40bdc63f50f5e2f'
-  /Develop/Source/Trunk/src/com/fanglin/system:
-    newFile: !uuid '4c1be55a407ce6560b07719986143c51beffa8e6'
-    oldFile: !uuid 'f78f032c5602016a5e4fba152f6e0579a0b29360'
-  /Develop/Source/Trunk/src/com/fanglin/system/dao:
-    newFile: !uuid 'ab924087de2b7f57255eecc85f299dd88b38b1f0'
-    oldFile: !uuid '5eeb65123e919e02dd258fa6c51125327864b085'
-  /Develop/Source/Trunk/src/com/fanglin/system/dao/impl:
-    newFile: !uuid 'ccedbeeb41d274ec886e224f04d839882b51352e'
-    oldFile: !uuid '21d93dcff3945491e46418aa16418394b5fc1242'
-  /Develop/Source/Trunk/src/com/fanglin/system/dao/impl/RoleModuleDaoImpl.java:
-    newFile: !uuid '619234519b007b10a73aab6a7dcda1ba7a39b627'
-    oldFile: !uuid 'f5e19168a24a133e6d5ba69eccce5956ff0e11cf'
-  /Develop/Source/Trunk/src/com/fanglin/system/dao/impl/RoleOperationDaoImpl.java:
-    newFile: !uuid 'ec72ce7eb13badcc94ec08c35b5da9b65a4c7719'
-    oldFile: !uuid '8feae8275513a43a4cf6a45e250bedc77c94d75e'
-  /Develop/Source/Trunk/src/com/fanglin/system/po:
-    newFile: !uuid 'e46edf7dd1ead12ada98c5f0630723bb8fda09a3'
-    oldFile: !uuid '4c1a834a439800c1ae1292fc4a6eb0c82a3351c7'
-  /Develop/Source/Trunk/src/com/fanglin/system/po/RoleModulePO.java:
-    newFile: !uuid 'dbdb39dddbb6718beaa96adb0c8dddbe34a470bb'
-    oldFile: !uuid '70fc2aea12c38712c81e1b7f41a14017f263fbbd'
-  /Develop/Source/Trunk/src/com/fanglin/system/po/RoleOperationPO.java:
-    newFile: !uuid 'a0768063f1f8bf551ed6d43dd2870baa453f7d47'
-    oldFile: !uuid '497d45230a158692413d52a2ef97da7c0b2070cc'
-  /Develop/Source/Trunk/src/com/fanglin/system/service:
-    newFile: !uuid '6c7e1de5b46d367f2d8f22a692a125467d0a295e'
-    oldFile: !uuid '41864f247d95e93d074cc1fd4aa8e1f8824a87f6'
-  /Develop/Source/Trunk/src/com/fanglin/system/service/impl:
-    newFile: !uuid '038da8fc5e0e1ad5ee53fe1b5e6e5804dc798b19'
-    oldFile: !uuid 'd924bc8086f51e0bb8b0317b75d55881c9c9f145'
-  /Develop/Source/Trunk/src/com/fanglin/system/service/impl/ModuleServiceImpl.java:
-    newFile: !uuid '9a8ce95fcb308ac97fa206769f47454253599367'
-    oldFile: !uuid '99ee9241a0d76d761c8cefc7b6deacf5fa18e8e1'
-  /Develop/Source/Trunk/src/com/fanglin/system/service/impl/OperationServiceImpl.java:
-    newFile: !uuid '8857be42b3297ca66ff401898b621ac0b037680f'
-    oldFile: !uuid 'd3fcd16e411a5835cd8a4aef7c3b5e7178ceb457'
-gitCommitId: !uuid '615781149c959c951431a6ad3b6c81032509a5ea'
+    newFile: !uuid '555efd1d90cd11878ccc5c57cea208580375c997'
+    oldFile: !uuid '1c2f57a4efe766824d1eff96b56493dc43106c13'
+gitCommitId: !uuid '08f3a4bb89395c62a2aecc0712f8a5073eac8889'
 renames: {
   }
-revisionId: 107
+revisionId: 108
