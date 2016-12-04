@@ -635,13 +635,13 @@ input[type=checkbox].ace.checked+.lbl::before {
     padding: 0;
 }
 
-.my-gallery img {
+.timeline-gallery img {
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.my-gallery figure {
+.timeline-gallery figure {
     background-color: #fff;
     border: 1px solid #aaa;
     padding: 2px;
@@ -651,10 +651,10 @@ input[type=checkbox].ace.checked+.lbl::before {
     margin-right: 10px;
 }
 
-.my-gallery figure .wrap{
+.timeline-gallery figure .wrap{
     height: 100%;
 }
 
-.my-gallery figcaption {
+.timeline-gallery figcaption {
     display: none;
 }

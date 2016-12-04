@@ -97,7 +97,7 @@ $(function(){
 });
 
 function reloadPage(){
-	com.switchPage('views/home.html');
+	com.switchPage('home.html');
 }
 
 function createMenu(data){

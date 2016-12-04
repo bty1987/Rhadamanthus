@@ -84,20 +84,22 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		
 		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByOrderId(putlineConstructionScheduleVO.getOrderId());
 		
-		BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
-		putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
-		
-		String workerId = putlineConstructionSchedulePO.getWorkerId();
-		
-		if(workerId != null && !"".equals(workerId)){
-			UserPO userPO = userDao.get(workerId);
+		if(putlineConstructionSchedulePO != null){
+			BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
+			putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
 			
-			if(userPO != null){
-				putlineConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
-				putlineConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
-				putlineConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
-				putlineConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
-				putlineConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
+			String workerId = putlineConstructionSchedulePO.getWorkerId();
+			
+			if(workerId != null && !"".equals(workerId)){
+				UserPO userPO = userDao.get(workerId);
+				
+				if(userPO != null){
+					putlineConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
+					putlineConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
+					putlineConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
+					putlineConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
+					putlineConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
+				}
 			}
 		}
 		

@@ -71,19 +71,21 @@ public class ChanConstructionScheduleServiceImpl implements ChanConstructionSche
 		
 		ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByOrderId(chanConstructionScheduleVO.getOrderId());
 		
-		BeanUtil.copyProperties(chanConstructionSchedulePO, chanConstructionScheduleVO);
-		
-		String workerId = chanConstructionSchedulePO.getWorkerId();
-		
-		if(workerId != null && !"".equals(workerId)){
-			UserPO userPO = userDao.get(workerId);
+		if(chanConstructionSchedulePO != null){
+			BeanUtil.copyProperties(chanConstructionSchedulePO, chanConstructionScheduleVO);
 			
-			if(userPO != null){
-				chanConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
-				chanConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
-				chanConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
-				chanConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
-				chanConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
+			String workerId = chanConstructionSchedulePO.getWorkerId();
+			
+			if(workerId != null && !"".equals(workerId)){
+				UserPO userPO = userDao.get(workerId);
+				
+				if(userPO != null){
+					chanConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
+					chanConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
+					chanConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
+					chanConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
+					chanConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
+				}
 			}
 		}
 		

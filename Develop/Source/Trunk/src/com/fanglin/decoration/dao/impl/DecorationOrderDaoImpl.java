@@ -42,7 +42,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
 			query.alias("designerPO", "designer");
 			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.dId", designDepartmentIds));
+			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
 		}
 		
 		if(statuses != null && statuses.size() > 0){
@@ -79,7 +79,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
 			query.alias("designerPO", "designer");
 			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.dId", designDepartmentIds));
+			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
 		}
 		
 		if(statuses != null && statuses.size() > 0){
@@ -101,7 +101,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		if(salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0){
 			query.alias("salesmanPO", "salesman");
 			query.alias("salesman.dept", "salesmanDept");
-			query.add(Restrictions.in("salesmanDept.dId", salesmanDepartmentIds));
+			query.add(Restrictions.in("salesmanDept.did", salesmanDepartmentIds));
 		}
 		
 		if(statuses != null && statuses.size() > 0){
