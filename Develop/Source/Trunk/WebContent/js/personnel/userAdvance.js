@@ -98,7 +98,7 @@ jQuery(function($) {
 			//设计权限配置
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list = [{dId: -1, deptName: "全部"}], userList;
+				var list = [{did: -1, deptName: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.department.queryDepartment, { "dept.type" : "设计部"}, function(data){
@@ -114,7 +114,7 @@ jQuery(function($) {
 						"type" : "checkbox",
 						"name" : "advance",
 						"class" : "ace",
-					}).val(v.dId);
+					}).val(v.did);
 					var $span = $('<span></span>').addClass('lbl').html(v.deptName);
 					$label.append($input).append($span).appendTo($list);
 				});
@@ -132,7 +132,7 @@ jQuery(function($) {
 			//业务权限配置
 			openSalesDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list = [{dId: -1, deptName: "全部"}], userList;
+				var list = [{did: -1, deptName: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.department.queryDepartment, { "dept.type" : "业务部"}, function(data){
@@ -149,7 +149,7 @@ jQuery(function($) {
 						"type" : "checkbox",
 						"name" : "advance",
 						"class" : "ace",
-					}).val(v.dId);
+					}).val(v.did);
 					var $span = $('<span></span>').addClass('lbl').html(v.deptName);
 					$label.append($input).append($span).appendTo($list);
 				});

@@ -252,9 +252,7 @@ $(function(){
             initPhotoSwipeFromDOM('#orderpics [name="effect"]');
             initPhotoSwipeFromDOM('#orderpics [name="project"]');
             order.$pic.$picList.find('.widget-box').removeClass('flloading');
-
         }
-
     });
 
     //获取款项信息
@@ -268,11 +266,7 @@ $(function(){
             });
             $('.widget-box', '#payment').removeClass('flloading');
         }
-
     }, null, false);
-
-    order.oid ='1510220003';
-
 
     //铲大白
     getProjectInfo(
@@ -522,7 +516,7 @@ $(function(){
         var $worker = $('<div></div>').addClass('itemdiv dialogdiv'),
             $user = $('<div></div>').addClass('user'),
             url = config.media + api.common.showImg.url + '?imgBasePath=' + v.workerPhoto + '&divFlag=1&width=48&height=48',
-            $userImg  = $('<img onerror="javascript:this.src=\'./images/Pictures.png\';">').attr('src', url),
+            $userImg  = $('<img onerror="javascript:this.src=\'./assets/images/avatar2.png\';">').attr('src', url),
 
             $body = $('<div></div>').addClass('body').css('background', '#fff'),
             $name = $('<div class="name"><span class="blue">' + v.workerName + '</span></span></div>'),

@@ -123,7 +123,7 @@ $(function(){
 					var $btnContract = $('<a></a>').addClass('btn btn-minier btn-danger').html('合同');
 					var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
-					var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary').html('信息轴');
+					var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary hide').html('信息轴');
 					
 					var propertyArr = [
 						["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],

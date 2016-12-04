@@ -44,7 +44,7 @@ public class DepartmentPO implements Serializable {
 	
 	public static final short STATUS_ENABLE_INT = 1;
 	
-	private int dId;
+	private int did;
 
 	private String deptId;
 	
@@ -74,9 +74,9 @@ public class DepartmentPO implements Serializable {
 		super();
 	}
 	
-	public DepartmentPO(int dId) {
+	public DepartmentPO(int did) {
 		super();
-		this.dId = dId;
+		this.did = did;
 	}
 	
 	public DepartmentPO(String deptId) {
@@ -86,12 +86,12 @@ public class DepartmentPO implements Serializable {
 	
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "dId") 
-	public int getdId() {
-		return dId;
+	public int getDid() {
+		return did;
 	}
 
-	public void setdId(int dId) {
-		this.dId = dId;
+	public void setDid(int did) {
+		this.did = did;
 	}
 
 	@Id
