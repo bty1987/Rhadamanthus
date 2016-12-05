@@ -294,9 +294,10 @@ jQuery(function($) {
 		
 		if(i > 0){
 			com.post(api.material.addMaterialSubOrderItem, options, function(){
-				materialOrderPostData["materialOrder.orderId"] = orderId;
-				materialOrderPostData["materialOrder.customerId"] = customerId;
-				materialOrderPostData["materialOrder.customerName"] = customerName;
+				params.orderId = orderId;
+				params.customerId = customerId;
+				params.customerName = customerName;
+				
 				com.switchPage(api.index.materialSubOrderIndex.url);
 				
 				btn.button('reset');
@@ -310,9 +311,9 @@ jQuery(function($) {
 	});
 	
 	$("#backBtn").on("click", function(){
-		materialOrderPostData["materialOrder.orderId"] = materialSubOrderAddPostData.materialSubOrder.orderId;
-		materialOrderPostData["materialOrder.customerId"] = materialSubOrderAddPostData.materialSubOrder.customerId;
-		materialOrderPostData["materialOrder.customerName"] = materialSubOrderAddPostData.materialSubOrder.customerName;
+		params.orderId = materialSubOrderAddPostData.materialSubOrder.orderId;
+		params.customerId = materialSubOrderAddPostData.materialSubOrder.customerId;
+		params.customerName = materialSubOrderAddPostData.materialSubOrder.customerName;
 		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 	

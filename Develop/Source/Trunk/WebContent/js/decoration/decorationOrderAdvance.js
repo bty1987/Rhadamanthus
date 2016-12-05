@@ -1,10 +1,11 @@
-var decorationOrderPostData = {};//页面跳转保存参数  跳转页面后  之前页面$(function()中定义的东西就没有了
 
 $(function(){
 	
 	var decorationOrderAdvance = {
 		items: {},
 	};
+	
+	var decorationOrderPostData = {};
 	
 	decorationOrderAdvance.items.customerName = $('#customerName');
 	decorationOrderAdvance.items.phone = $('#phone');
@@ -314,7 +315,7 @@ $(function(){
 	    }
     
 	    function viewDecorationOrderDetail(decorationOrderId){
-	    	decorationOrderPostData.decorationOrderId = decorationOrderId;
+	    	params.decorationOrderId = decorationOrderId;
 	    	com.switchPage(api.index.decorationOrderAdvanceDetailIndex.url);
 	    }
 	    

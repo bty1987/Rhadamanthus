@@ -1,7 +1,7 @@
 
 
 jQuery(function($) {
-	$('#fl-statement').statement("巡检控制", "保修信息列表");
+	$('#fl-statement').statement("客服控制", "回访信息列表");
 
 	var backVisit = {
 		saveBtn: null,
@@ -78,13 +78,14 @@ jQuery(function($) {
 				backVisit.editFlag = true;
 				var row = v;
 
-				backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
-				backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
-				backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
+				backVisit.backVisitItems.orderId.val(params.orderId);
+				backVisit.backVisitItems.orderAddr.val(params.orderAddr);
+				backVisit.backVisitItems.customerName.val(params.customerName);
 				backVisit.backVisitItems.backVisitTime.val(row.backVisitTime);
 				backVisit.backVisitItems.backVisitType.val(row.backVisitType);
 				backVisit.backVisitItems.backVisitDes.val(row.backVisitDes);
-				customerServicePostData["customerServiceBackVisit.csbvId"] = row.csbvId;
+				
+				backVisit["customerServiceBackVisit.csbvId"] = row.csbvId;
 
 				backVisit.backVisitItems.orderId.attr('disabled', true);
 				backVisit.backVisitItems.orderAddr.attr("disabled", true);
@@ -114,7 +115,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	searcher.init( [], "condList", api.construction.pageCustomerServiceBackVisit, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "customerServiceBackVisitPostData", customerServicePostData, false, null,  function(){
+	}, "pagenation", "customerServiceBackVisitPostData", {
+		"customerServiceBackVisit.orderId": params.orderId
+	}, false, null,  function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -132,9 +135,9 @@ jQuery(function($) {
 		
 		com.cleanItems(backVisit.backVisitItems);
 
-		backVisit.backVisitItems.orderId.val(customerServicePostData["customerServiceBackVisit.orderId"]);
-		backVisit.backVisitItems.orderAddr.val(customerServicePostData["customerServiceBackVisit.orderAddr"]);
-		backVisit.backVisitItems.customerName.val(customerServicePostData["customerServiceBackVisit.customerName"]);
+		backVisit.backVisitItems.orderId.val(params.orderId);
+		backVisit.backVisitItems.orderAddr.val(params.orderAddr);
+		backVisit.backVisitItems.customerName.val(params.customerName);
 
 		backVisit.backVisitItems.orderId.attr("disabled", true);
 		backVisit.backVisitItems.orderAddr.attr("disabled", true);
@@ -176,7 +179,7 @@ jQuery(function($) {
 
 		if(backVisit.editFlag){
 			url = api.construction.updateCustomerServiceBackVisit;
-			options["customerServiceBackVisit.csbvId"] = customerServicePostData["customerServiceBackVisit.csbvId"];
+			options["customerServiceBackVisit.csbvId"] = backVisit["customerServiceBackVisit.csbvId"];
 		}else{
 			url = api.construction.addCustomerServiceBackVisit;
 		}

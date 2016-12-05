@@ -1,27 +1,29 @@
-var drawLineDeployment = {
-	saveBtn: null,
-	cancellBtn: null,
-	deployedBtn: null,
-	modal: null,
-	drawLineDeploymentItems: {},
-	
-	drawLineGroup:[],
-	
-	postData:{},
-	editFlag: false,
-	
-	deployedFlag: false,
-	
-	drawLineDateCount:null
-};
-
-var drawLineDeploymentPostData = {};
-
-var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
-var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
 
 jQuery(function($) {
+	
+	var drawLineDeployment = {
+		saveBtn: null,
+		cancellBtn: null,
+		deployedBtn: null,
+		modal: null,
+		drawLineDeploymentItems: {},
+		
+		drawLineGroup:[],
+		
+		postData:{},
+		editFlag: false,
+		
+		deployedFlag: false,
+		
+		drawLineDateCount:null
+	};
+	
+	var drawLineDeploymentPostData = {};
+
+	var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
+	var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
+	var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
+	
 //	$('#fl-statement').statement("放线申请管理", "放线申请信息列表");
 	
 	drawLineDeployment.saveBtn = $("#saveBtn").on("click", saveData);

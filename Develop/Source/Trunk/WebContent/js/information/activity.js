@@ -1,5 +1,4 @@
 
-activityPostData = {};
 $(function(){
 
     var statusDict = { "0" : ["\u6709\u6548", "green"], "1" : ["\u65e0\u6548", "red"]};
@@ -123,8 +122,8 @@ $(function(){
 
 
     function viewActivityItemIndex(v) {
-        activityPostData.aid = v.aid;
-        activityPostData.activityName = v.activityName;
+    	params.aid = v.aid;
+    	params.activityName = v.activityName;
         $("#activityPageContent").load(api.index.activityItemIndex.url)
     }
     function saveData() {

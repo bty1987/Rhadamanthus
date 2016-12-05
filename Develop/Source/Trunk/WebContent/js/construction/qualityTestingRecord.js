@@ -95,7 +95,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	searcher.init( [], "condList", api.construction.pageQualityTestingRecordByOrderId, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "qualityTestingRecordPostData", qualityTestingPostData, false, null,  function(){
+	}, "pagenation", "qualityTestingRecordPostData", {
+		"qualityTestingRecord.orderId": params.orderId
+	}, false, null,  function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px").css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -113,8 +115,8 @@ jQuery(function($) {
 		
 		com.cleanItems(record.recordItems);
 		
-		record.recordItems.orderId.val(qualityTestingPostData["qualityTestingRecord.orderId"]);
-		record.recordItems.orderAddr.val(qualityTestingPostData["qualityTestingRecord.orderAddr"]);
+		record.recordItems.orderId.val(params.orderId);
+		record.recordItems.orderAddr.val(params.orderAddr);
 		
 		record.recordItems.orderId.attr('disabled', true);
 		record.recordItems.orderAddr.attr('disabled', true);
@@ -133,7 +135,8 @@ jQuery(function($) {
 		record.recordItems.orderAddr.val(v.orderAddr);
 		record.recordItems.recordTime.val(v.recordTime);
 		record.recordItems.recordDes.val(v.recordDes);
-		qualityTestingPostData["qualityTestingRecord.qtrId"] = v.qtrId;
+		
+		record["qualityTestingRecord.qtrId"] = v.qtrId;
 		
 		record.recordItems.orderId.attr('disabled', true);
 		record.recordItems.orderAddr.attr('disabled', true);
@@ -160,7 +163,7 @@ jQuery(function($) {
 		
 		if(record.editFlag){
 			url = api.construction.updateQualityTestingRecord;
-			options["qualityTestingRecord.qtrId"] = qualityTestingPostData["qualityTestingRecord.qtrId"];
+			options["qualityTestingRecord.qtrId"] = record["qualityTestingRecord.qtrId"];
 		}else{
 			url = api.construction.addQualityTestingRecord;
 		}

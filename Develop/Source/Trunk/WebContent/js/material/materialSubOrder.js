@@ -58,11 +58,11 @@ jQuery(function($) {
 	materialSubOrder.materialSubOrderItems.couponInfo = $("#couponInfo");
 	materialSubOrder.materialSubOrderItems.malingInfo = $("#malingInfo");
 	
-	materialSubOrderPostData["materialSubOrder.orderId"] = materialOrderPostData["materialOrder.orderId"];
-	materialSubOrderPostData["materialSubOrder.customerId"] = materialOrderPostData["materialOrder.customerId"];
-	materialSubOrderPostData["materialSubOrder.customerName"] = materialOrderPostData["materialOrder.customerName"];
-	materialSubOrderPostData["materialSubOrder.designerId"] = materialOrderPostData["materialOrder.designerId"];
-	materialSubOrderPostData["materialSubOrder.designerName"] = materialOrderPostData["materialOrder.designerName"];
+	materialSubOrderPostData["materialSubOrder.orderId"] = params.orderId;
+	materialSubOrderPostData["materialSubOrder.customerId"] = params.customerId;
+	materialSubOrderPostData["materialSubOrder.customerName"] = params.customerName;
+	materialSubOrderPostData["materialSubOrder.designerId"] = params.designerId;
+	materialSubOrderPostData["materialSubOrder.designerName"] = params.designerName;
 	
 	com.post(api.ds.couponType, {}, function(res){
 		materialSubOrder.couponType = res.materialCouponTypes;
@@ -206,7 +206,7 @@ jQuery(function($) {
 	
 	searcher.init([], "condList", api.material.pageMaterialSubOrderByUserId, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "materialSubOrderPostData", {"materialSubOrder.orderId":materialOrderPostData["materialOrder.orderId"]}, false, null, function(){
+	}, "pagenation", "materialSubOrderPostData", {"materialSubOrder.orderId":params.orderId}, false, null, function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($adda);
@@ -389,12 +389,12 @@ jQuery(function($) {
 		
 		materialSubOrderPostData["materialSubOrder.customerId"] = v.customerId;
 		materialSubOrderPostData["materialSubOrder.customerName"] = v.customerName;
-		materialSubOrderPostData["materialSubOrder.orderId"] = materialOrderPostData["materialOrder.orderId"];
-		materialSubOrderPostData["materialSubOrder.designerId"] = materialOrderPostData["materialOrder.designerId"];
-		materialSubOrderPostData["materialSubOrder.designerName"] = materialOrderPostData["materialOrder.designerName"];
+		materialSubOrderPostData["materialSubOrder.orderId"] = params.orderId;
+		materialSubOrderPostData["materialSubOrder.designerId"] = params.designerId;
+		materialSubOrderPostData["materialSubOrder.designerName"] = params.designerName;
 		
-		materialOrder.msoId = v.msoId;
-		materialOrder.saleType = "mend";
+		params.msoId = v.msoId;
+		params.saleType = "mend";
 		
 		params.historyOrderPage = api.index.materialSubOrderIndex.url;
 		

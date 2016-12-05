@@ -1,18 +1,19 @@
-var materialBrandRight = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	
-	editFlg: false,
-	
-	postParam: {
-		"user.duty": "驻店导购"
-	},
-	
-	userId: "",
-};
 
 jQuery(function($) {
+	
+	var materialBrandRight = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		
+		editFlg: false,
+		
+		postParam: {
+			"user.duty": "驻店导购"
+		},
+		
+		userId: "",
+	};
 	
 	materialBrandRight.saveBtn = $("#saveBtn").on("click", saveData);
 	materialBrandRight.cancelBtn = $("#cancelBtn");

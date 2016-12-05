@@ -116,11 +116,10 @@
 																</h3>
 																<div id="chanWorkerInfo">
 																	<div class="profile-picture col-sm-6 col-sm-offset-3">
-																		<img id="chanWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px">
+																	    <div class="workerImg">
+																		    <img id="chanWorkerImg" src="" alt="">
+																		</div>
 																		<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-																			<a href="#" class="blue pull-left" id="chanWorkSalary">
-																				<i class="icon-money bigger-130"></i>
-																			</a>
 																			<span id="chanWorkerNameSpan" class="pull-right"></span>
 																		</div>
 																	</div>
@@ -203,11 +202,10 @@
 																</h3>
 																<div id="fangWorkerInfo">
 																	<div class="profile-picture col-sm-6 col-sm-offset-3">
-																		<img id="fangWorkerImg" src="" alt="" class="editable img-responsive" style="height: 150px;">
+																	    <div class="workerImg">
+																		    <img id="fangWorkerImg" src="" alt="">
+																		</div>
 																		<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-																			<a href="#" class="blue pull-left" id="fangWorkSalary">
-																				<i class="icon-money bigger-130"></i>
-																			</a>
 																			<span id="fangWorkerNameSpan" class="pull-right"></span>
 																		</div>
 																	</div>
@@ -830,42 +828,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="workerSalaryModal" tabindex="-1"	>
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span>&times;</span><span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title" id="customerDialog">工人工资</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form-horizontal">
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="workerName">姓名</label>
-						<div class="col-sm-9">
-							<input type="text" id="workerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="workerSalary">工资</label>
-						<div class="col-sm-9">
-							<input type="text" id="workerSalary" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
-						</div>
-					</div>
-					<div class="space-4"></div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <script type="text/javascript">
-	$.getScript('js/construction/supervisionDetail.js?version=' + versionCode);
+	//$.getScript('js/construction/supervisionDetail.js?version=' + versionCode);
 </script>
+<script src="js/construction/supervisionDetail.js"></script>

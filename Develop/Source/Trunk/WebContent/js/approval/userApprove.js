@@ -1,14 +1,15 @@
-var approve = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	postParam: {},
-};
 
 jQuery(function($) {
+	
+	var approve = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		postParam: {},
+	};
 	
 	approve.saveBtn = $("#saveBtn").on("click", saveData);
 	approve.cancelBtn = $("#cancelBtn");

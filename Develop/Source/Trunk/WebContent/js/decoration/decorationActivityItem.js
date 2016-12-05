@@ -6,7 +6,7 @@ var decorationActivityItemPostData = {};
 
 jQuery(function($) {
 	
-	decorationActivityItemPostData.decorationOrderId = decorationActivityPostData.decorationOrderId;
+	decorationActivityItemPostData.decorationOrderId = params.decorationOrderId;
 	
 	decorationActivityItem.items.decorationActivityItems = $("#decorationActivityItems");
 	decorationActivityItem.items.backBtn = $("#backBtn").on("click", function(){

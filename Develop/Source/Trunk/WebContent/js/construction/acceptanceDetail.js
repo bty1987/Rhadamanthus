@@ -25,7 +25,9 @@ var acceptanceDetail = {
 
 jQuery(function($) {
 	
-	com.post(api.construction.queryAcceptance, acceptancePostData, function(res){
+	com.post(api.construction.queryAcceptance, {
+		"acceptance.orderId": params.orderId
+	}, function(res){
 		
 		var acceptanceInfo = res.acceptance;
 		

@@ -926,7 +926,8 @@ CREATE TABLE `events` (
   `regionId` varchar(10),
   `showDate` date NOT NULL, 
   `type` tinyint NOT NULL,
-  PRIMARY KEY (`eId`)
+  PRIMARY KEY (`eId`),
+  KEY `indexone` (`holderId`, `showDate`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件表';
 
 DROP TABLE IF EXISTS `functionarea`;

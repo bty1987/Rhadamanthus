@@ -1,15 +1,16 @@
-var management = {
-		
-	items: [],
-		
-	decorationOrderTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, ],
-	decorationOrderStatusMap: [{"key":"咨询", "value":"咨询"}, {"key":"量房", "value":"量房"}, {"key":"已报价", "value":"已报价"}, {"key":"定金", "value":"定金"}, {"key":"已签约", "value":"已签约"}, {"key":"废单", "value":"废单"}, {"key":"已完工", "value":"已完工"}, {"key":"合同终止", "value":"合同终止"}, ],
-	decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
-	decorationPaymentRefundMap: [{"key":"设计费", "value":"设计费"}, {"key":"定金", "value":"定金"}, ],
-	materialPaymentTypeMap: [{"key":"2", "value":"定金"}, {"key":"3", "value":"补款"},{"key":"4", "value":"退款"}, {"key":"5", "value":"补款退款"},{"key":"6", "value":"券退款"},],
-};
 
 jQuery(function($) {
+	
+	var management = {
+		
+		items: [],
+			
+		decorationOrderTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, ],
+		decorationOrderStatusMap: [{"key":"咨询", "value":"咨询"}, {"key":"量房", "value":"量房"}, {"key":"已报价", "value":"已报价"}, {"key":"定金", "value":"定金"}, {"key":"已签约", "value":"已签约"}, {"key":"废单", "value":"废单"}, {"key":"已完工", "value":"已完工"}, {"key":"合同终止", "value":"合同终止"}, ],
+		decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
+		decorationPaymentRefundMap: [{"key":"设计费", "value":"设计费"}, {"key":"定金", "value":"定金"}, ],
+		materialPaymentTypeMap: [{"key":"2", "value":"定金"}, {"key":"3", "value":"补款"},{"key":"4", "value":"退款"}, {"key":"5", "value":"补款退款"},{"key":"6", "value":"券退款"},],
+	};
 	
 	management.items.oldOrderId = $("#oldOrderId");
 	management.items.newOrderId = $("#newOrderId");

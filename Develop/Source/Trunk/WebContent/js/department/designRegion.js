@@ -1,26 +1,26 @@
-var dRegion = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	
-	items:{},
-	
-	editFlg: false,
-	postParam: {
-		'dept.type': '设计大区',
-	},
-	
-	validator: {
-		designRegion: {
-			type: "v_designRegion", 
-			regex: /^FL_DR_\d{2}$/g, 
-			errorMsg: "请以FL_DR_作为前缀 , 之后以两位数字组成(如FL_DR_01)."
-		}
-	},
-	
-};
 
 jQuery(function($) {
+	
+	var dRegion = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		
+		items:{},
+		
+		editFlg: false,
+		postParam: {
+			'dept.type': '设计大区',
+		},
+		
+		validator: {
+			designRegion: {
+				type: "v_designRegion", 
+				regex: /^FL_DR_\d{2}$/g, 
+				errorMsg: "请以FL_DR_作为前缀 , 之后以两位数字组成(如FL_DR_01)."
+			}
+		},
+	};
 
 	dRegion.saveBtn = $("#saveBtn").on("click", saveData);
 	dRegion.cancelBtn = $("#cancelBtn");

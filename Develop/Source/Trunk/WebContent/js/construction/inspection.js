@@ -1,6 +1,4 @@
 
-var inspectionPostData = {};
-
 $(function(){
 
 	var displayFunc  = (function(){
@@ -73,9 +71,9 @@ $(function(){
 	}, "pagenation", "inspectionSeacherSeacherPostData", params["inspectionPostData"]);
 
 	function viewRecord(orderId, orderAddr){
-		inspectionPostData["inspectionRecord.orderId"] = orderId;
-		inspectionPostData["inspectionRecord.orderAddr"] = orderAddr;
-		$("#inspectionPageContent").load(api.index.inspectionRecordIndex.url);
+		params.orderId = orderId;
+		params.orderAddr = orderAddr;
+		com.switchPage(api.index.inspectionRecordIndex.url);
 	}
 
 });

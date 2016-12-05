@@ -1,3 +1,4 @@
+
 var decorationOrderDetail = {
 	decorationOrderId:null,
 	
@@ -23,18 +24,16 @@ var decorationOrderDetail = {
 	cRepeatFlg: false
 };
 
-var decorationPayment = {
-	postParam:{},
-	
-	items:{},
-	
-	editFlag:0,
-};
-
-var materialSubOrderItemData = {};
-
 jQuery(function($) {
 	
+	var decorationPayment = {
+		postParam:{},
+		
+		items:{},
+		
+		editFlag:0,
+	};
+
 	decorationOrderDetail.items.orderId = $("#orderId");
 	decorationOrderDetail.items.customer = $("#customer");
 	decorationOrderDetail.items.houseAddr = $("#houseAddr");
@@ -65,7 +64,7 @@ jQuery(function($) {
 	
 	decorationUtils.init();
 	
-	decorationOrderDetail.decorationOrderId = decorationOrderPostData.decorationOrderId;
+	decorationOrderDetail.decorationOrderId = params.decorationOrderId;
 	
 	decorationPayment.postParam.decorationOrderId = decorationOrderDetail.decorationOrderId;
 	decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;

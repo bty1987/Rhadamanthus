@@ -1,4 +1,3 @@
-var customerServicePostData = {};
 
 jQuery(function($) {
 
@@ -88,27 +87,27 @@ jQuery(function($) {
 	}, "pagenation", "customerServiceSeacherPostData");
 
 	function viewCustomerServiceDetailIndex(orderId){
-		customerServicePostData["constructionSchedule.orderId"] = orderId;
-		$("#customerServicePageContent").load(api.index.customerServiceDetailIndex.url);
+		params.orderId = orderId;
+		com.switchPage(api.index.customerServiceDetailIndex.url);
 	}
 
 	function viewCustomerServiceComplaintIndex(orderId, customerName){
-		customerServicePostData["customerServiceComplaint.orderId"] = orderId;
-		customerServicePostData["customerServiceComplaint.customerName"] = customerName;
-		$("#customerServicePageContent").load(api.index.customerServiceComplaintIndex.url);
+		params.orderId = orderId;
+		params.customerName = customerName;
+		com.switchPage(api.index.customerServiceComplaintIndex.url);
 	}
 
 	function viewCustomerServiceGuaranteeIndex(orderId, customerName){
-		customerServicePostData["customerServiceGuarantee.orderId"] = orderId;
-		customerServicePostData["customerServiceGuarantee.customerName"] = customerName;
-		$("#customerServicePageContent").load(api.index.customerServiceGuaranteeIndex.url);
+		params.orderId = orderId;
+		params.customerName = customerName;
+		com.switchPage(api.index.customerServiceGuaranteeIndex.url);
 	}
 
 	function viewCustomerServiceBackVisitIndex(orderId, orderAddr, customerName){
-		customerServicePostData["customerServiceBackVisit.orderId"] = orderId;
-		customerServicePostData["customerServiceBackVisit.orderAddr"] = orderAddr;
-		customerServicePostData["customerServiceBackVisit.customerName"] = customerName;
-		$("#customerServicePageContent").load(api.index.customerServiceBackVisitIndex.url);
+		params.orderId = orderId;
+		params.orderAddr = orderAddr;
+		params.customerName = customerName;
+		com.switchPage(api.index.customerServiceBackVisitIndex.url);
 	}
 
 });

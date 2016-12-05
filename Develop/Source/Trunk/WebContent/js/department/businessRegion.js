@@ -1,24 +1,25 @@
-var bRegion = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	postParam: {
-		'dept.type': '业务大区',
-	},
-	
-	validator: {
-		businessRegion: {
-			type: "v_businessRegion", 
-			regex: /^FL_BR_\d{2}$/g, 
-			errorMsg: "请以FL_BR_作为前缀 , 之后以两位数字组成(如FL_BR_01)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var bRegion = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		postParam: {
+			'dept.type': '业务大区',
+		},
+		
+		validator: {
+			businessRegion: {
+				type: "v_businessRegion", 
+				regex: /^FL_BR_\d{2}$/g, 
+				errorMsg: "请以FL_BR_作为前缀 , 之后以两位数字组成(如FL_BR_01)."
+			}
+		},
+	};
 	
 	bRegion.saveBtn = $("#saveBtn").on("click", saveData);
 	bRegion.cancelBtn = $("#cancelBtn");

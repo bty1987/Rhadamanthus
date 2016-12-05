@@ -1,25 +1,26 @@
-var engineering = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	repeatFlg: false,
-	postParam: {
-		'dept.type': '工程部',
-	},
-	
-	validator: {
-		engineeringDept: {
-			type: "v_engineeringDept", 
-			regex: /^FL_ED_\d{2}$/g, 
-			errorMsg: "请以FL_ED_作为前缀 , 之后以两位数字组成(如FL_ED_01)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var engineering = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		repeatFlg: false,
+		postParam: {
+			'dept.type': '工程部',
+		},
+		
+		validator: {
+			engineeringDept: {
+				type: "v_engineeringDept", 
+				regex: /^FL_ED_\d{2}$/g, 
+				errorMsg: "请以FL_ED_作为前缀 , 之后以两位数字组成(如FL_ED_01)."
+			}
+		},
+	};
 
 	engineering.saveBtn = $("#saveBtn").on("click", saveData);
 	engineering.cancelBtn = $("#cancelBtn");

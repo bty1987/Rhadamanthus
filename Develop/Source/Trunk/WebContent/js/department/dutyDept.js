@@ -1,26 +1,27 @@
-var duty = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	
-	deptType: ["行政部", "财务部"],
-	postParam: {
-		'dept.type': '职能部',
-	},
-	
-	validator: {
-		dutyDept: {
-			type: "v_dutyDept", 
-			regex: /^FL_ZD_\d{2}$/g, 
-			errorMsg: "请以FL_ZD_作为前缀 , 之后以两位数字组成(如FL_ZD_01)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var duty = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		
+		deptType: ["行政部", "财务部"],
+		postParam: {
+			'dept.type': '职能部',
+		},
+		
+		validator: {
+			dutyDept: {
+				type: "v_dutyDept", 
+				regex: /^FL_ZD_\d{2}$/g, 
+				errorMsg: "请以FL_ZD_作为前缀 , 之后以两位数字组成(如FL_ZD_01)."
+			}
+		},
+	};
 
 	duty.saveBtn = $("#saveBtn").on("click", saveData);
 	duty.cancelBtn = $("#cancelBtn");

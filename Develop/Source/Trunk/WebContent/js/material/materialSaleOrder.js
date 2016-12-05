@@ -4,20 +4,20 @@ var materialSaleOrderPostData = {}
 
 jQuery(function($) {
 
-	materialSaleOrderPostData["materialSubOrder.customerId"] = materialOrderPostData["materialOrder.customerId"].indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.customerId"];
-	materialSaleOrderPostData["materialSubOrder.designerId"] = materialOrderPostData["materialOrder.designerId"].indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerId"];
-	materialSaleOrderPostData["materialSubOrder.designerName"] = materialOrderPostData["materialOrder.designerName"].indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerName"];
+	materialSaleOrderPostData["materialSubOrder.customerId"] = params.customerId.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.customerId"];
+	materialSaleOrderPostData["materialSubOrder.designerId"] = params.designerId.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerId"];
+	materialSaleOrderPostData["materialSubOrder.designerName"] = params.designerName.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerName"];
 
 	var materialSaleOrder = {
 		saveBtn:  $("#saveBtn"),
 		cancellBtn: $("#cancelBtn"),
 		modal: null,
 		materialSaleOrderItems: {
-			orderId : $("#orderId").val(materialOrderPostData["materialOrder.orderId"]),
-			customerName : $("#customerName").val(materialOrderPostData["materialOrder.customerName"]),
-			salesmanName : $("#salesmanName").val(materialOrderPostData["materialOrder.designerName"]),
+			orderId : $("#orderId").val(params.orderId),
+			customerName : $("#customerName").val(params.customerName),
+			salesmanName : $("#salesmanName").val(params.designerName),
 			materialerName : $("#materialerName"),
-			orderAddr : $("#orderAddr").val(materialOrderPostData["materialOrder.orderAddr"]),
+			orderAddr : $("#orderAddr").val(params.orderAddr),
 			msoType : $("#msoType"),
 			des : $("#des"),
 		},
@@ -47,7 +47,7 @@ jQuery(function($) {
 	var autoFillList = [];
 	var autoFillNameList = [];
 
-	if(materialOrder.saleType == "mend"){
+	if(params.saleType == "mend"){
 		materialSaleOrder.typeahead.queryByNameUrl = api.material.queryMaterialSubOrderItemForNameByName;
 		materialSaleOrder.typeahead.queryByNoUrl = api.material.queryMaterialSubOrderItemForNameByNo;
 		materialSaleOrder.typeahead.queryItemUrl = api.material.queryMaterialSubOrderItemForSaleByMsoiId;
@@ -62,7 +62,7 @@ jQuery(function($) {
 		materialSaleOrder.typeahead.optionItemId = "materialSubOrderItem.msoiId";
 	}
 	
-	if(materialOrder.saleType == "add"){
+	if(params.saleType == "add"){
 		
 	}else{
 		com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":""}, "autoFillKeyValue", "key", "value");
@@ -207,9 +207,9 @@ jQuery(function($) {
 		btn.button('loading');
 
 		com.post(api.material.addMaterialSubOrder, options, function(){
-			materialOrderPostData["materialOrder.orderId"] = orderId;
-			materialOrderPostData["materialOrder.customerId"] = customerId;
-			materialOrderPostData["materialOrder.customerName"] = customerName;
+			params.orderId = orderId;
+			params.customerId = customerId;
+			params.customerName = customerName;
 
 			btn.button('reset');
 			com.switchPage(api.index.materialSubOrderIndex.url);
@@ -266,8 +266,8 @@ jQuery(function($) {
 					source: function (query, process) {
 						var options = {};
 
-						if(materialOrder.saleType == "mend"){
-							options[materialSaleOrder.typeahead.optionMsoId] = materialOrder.msoId;
+						if(params.saleType == "mend"){
+							options[materialSaleOrder.typeahead.optionMsoId] = params.msoId;
 						}
 						
 						options[materialSaleOrder.typeahead.optionName] = query;

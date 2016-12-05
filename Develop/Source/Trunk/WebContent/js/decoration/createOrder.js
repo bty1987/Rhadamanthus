@@ -1,26 +1,28 @@
-var orderEntry = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	backVisitItems: {},
-	orderItems:{},
-	relationshipType: ["普通客户", "企业高端客户", "企业关系客户", "领导关系客户", "员工关系"],
-	validator: {
-		houseNumber: {
-			type: "v_houseNumber", 
-			regex: /^D_\d{3}$/g,
-			errorMsg: "楼盘名称规则"
-		}
-	},
-	
-	repeatFlg:false,
-	repeatCustomerFlg:false,
-	editFlag: false,
-	customerRepeatFlg: false,
-	items: {}
-};
 
 jQuery(function($) {
+	
+	var orderEntry = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		backVisitItems: {},
+		orderItems:{},
+		relationshipType: ["普通客户", "企业高端客户", "企业关系客户", "领导关系客户", "员工关系"],
+		validator: {
+			houseNumber: {
+				type: "v_houseNumber", 
+				regex: /^D_\d{3}$/g,
+				errorMsg: "楼盘名称规则"
+			}
+		},
+		
+		repeatFlg:false,
+		repeatCustomerFlg:false,
+		editFlag: false,
+		customerRepeatFlg: false,
+		items: {}
+	};
+	
 	orderEntry.orderItems.decorationOrderFlag = $("#decorationOrderFlag");
 	orderEntry.orderItems.materialOrderFlag = $("#materialOrderFlag");
 	orderEntry.orderItems.customerId = $("#customerId");
@@ -189,122 +191,123 @@ jQuery(function($) {
 			$(".material").removeClass("hide");
 		}
 	});
-});
-
-function createOrder(){
 	
-	var btn = $(this);
-	
-	var options = {
-		"decorationOrder.customer.id": orderEntry.orderItems.customerId.val(),
-		"decorationOrder.village.villageId": orderEntry.orderItems.villageId.val(),
-		"decorationOrder.houseNumber": orderEntry.orderItems.houseNumber.val(),
-		"decorationOrder.houseType": orderEntry.orderItems.houseType.val(),
-		"decorationOrder.houseClass": orderEntry.orderItems.houseClass.val(),
-		"decorationOrder.apartmentType": orderEntry.orderItems.apartmentType.val(),
-		"decorationOrder.houseArea": orderEntry.orderItems.houseArea.val(),
-		"decorationOrder.designerId": orderEntry.orderItems.designerId.val(),
-		"decorationOrder.salesmanId": orderEntry.orderItems.salesmanId.val(),
-		"decorationOrder.salesmanType": orderEntry.orderItems.salesmanType.val(),
-		"decorationOrder.notSalesmanName": orderEntry.orderItems.notSalesmanName.val(),
-		"decorationOrder.notSalesmanRate": orderEntry.orderItems.notSalesmanRate.val(),
-		"decorationOrder.notSalesmanPhone": orderEntry.orderItems.notSalesmanPhone.val(),
-		"decorationOrder.notSalesmanContent": orderEntry.orderItems.notSalesmanContent.val(),
-		"decorationOrder.backOrderName": orderEntry.orderItems.backOrderName.val(),
-		"decorationOrder.backOrderPhone": orderEntry.orderItems.backOrderPhone.val(),
-		"decorationOrder.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
-		"decorationOrder.status": orderEntry.orderItems.status.val(),
-		"decorationOrder.approveStatus": 0,
-	};
-	
-	if(com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)
-		return;
-	
-	if((1 - parseFloat($("#notSalesmanRate").val()) < 0.0000001) && parseFloat($("#notSalesmanRate").val()) > -0.0000001){
-		bootbox.alert("非业务提点必须大于0小于1");
-		return;
+	function createOrder(){
+		
+		var btn = $(this);
+		
+		var options = {
+			"decorationOrder.customer.id": orderEntry.orderItems.customerId.val(),
+			"decorationOrder.village.villageId": orderEntry.orderItems.villageId.val(),
+			"decorationOrder.houseNumber": orderEntry.orderItems.houseNumber.val(),
+			"decorationOrder.houseType": orderEntry.orderItems.houseType.val(),
+			"decorationOrder.houseClass": orderEntry.orderItems.houseClass.val(),
+			"decorationOrder.apartmentType": orderEntry.orderItems.apartmentType.val(),
+			"decorationOrder.houseArea": orderEntry.orderItems.houseArea.val(),
+			"decorationOrder.designerId": orderEntry.orderItems.designerId.val(),
+			"decorationOrder.salesmanId": orderEntry.orderItems.salesmanId.val(),
+			"decorationOrder.salesmanType": orderEntry.orderItems.salesmanType.val(),
+			"decorationOrder.notSalesmanName": orderEntry.orderItems.notSalesmanName.val(),
+			"decorationOrder.notSalesmanRate": orderEntry.orderItems.notSalesmanRate.val(),
+			"decorationOrder.notSalesmanPhone": orderEntry.orderItems.notSalesmanPhone.val(),
+			"decorationOrder.notSalesmanContent": orderEntry.orderItems.notSalesmanContent.val(),
+			"decorationOrder.backOrderName": orderEntry.orderItems.backOrderName.val(),
+			"decorationOrder.backOrderPhone": orderEntry.orderItems.backOrderPhone.val(),
+			"decorationOrder.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
+			"decorationOrder.status": orderEntry.orderItems.status.val(),
+			"decorationOrder.approveStatus": 0,
+		};
+		
+		if(com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)
+			return;
+		
+		if((1 - parseFloat($("#notSalesmanRate").val()) < 0.0000001) && parseFloat($("#notSalesmanRate").val()) > -0.0000001){
+			bootbox.alert("非业务提点必须大于0小于1");
+			return;
+		}
+		
+		btn.button('loading');
+		
+		com.post(api.decoration.createDecorationOrder, options, function(){
+			com.showAlert(com.info, "操作成功");
+			initCreate();
+			
+			btn.button('reset');
+		}, function(){
+			btn.button('reset');
+		});
 	}
-	
-	btn.button('loading');
-	
-	com.post(api.decoration.createDecorationOrder, options, function(){
+
+	function createOrderSuccess(){
 		com.showAlert(com.info, "操作成功");
 		initCreate();
-		
-		btn.button('reset');
-	}, function(){
-		btn.button('reset');
-	});
-}
-
-function createOrderSuccess(){
-	com.showAlert(com.info, "操作成功");
-	initCreate();
-}
-
-function initCreate(){
-	orderEntry.orderItems.decorationOrderFlag.attr("checked","checked");
-	orderEntry.orderItems.materialOrderFlag.removeAttr("checked");
-	orderEntry.orderItems.customerId.get(0).selectedIndex = 0;
-	orderEntry.orderItems.villageId.get(0).selectedIndex = 0;
-	orderEntry.orderItems.houseNumber.val("");
-	orderEntry.orderItems.houseType.get(0).selectedIndex = 0;
-	orderEntry.orderItems.houseClass.get(0).selectedIndex = 0;
-	orderEntry.orderItems.apartmentType.get(0).selectedIndex = 0;
-	orderEntry.orderItems.houseArea.val("");
-	orderEntry.orderItems.designerId.get(0).selectedIndex = 0;
-	orderEntry.orderItems.salesmanId.get(0).selectedIndex = 0;
-	orderEntry.orderItems.salesmanType.get(0).selectedIndex = 0;
-	orderEntry.orderItems.notSalesmanName.val("");
-	orderEntry.orderItems.notSalesmanRate.val("0");
-	orderEntry.orderItems.notSalesmanPhone.val("");
-	orderEntry.orderItems.notSalesmanContent.val("");
-	orderEntry.orderItems.backOrderName.val("");
-	orderEntry.orderItems.backOrderPhone.val("");
-	orderEntry.orderItems.backOrderContent.val("");
-	orderEntry.orderItems.status.val("");
-	
-	com.updateChosen("customerId", '', '');
-	com.updateChosen("villageId", '', '');
-	com.updateChosen("designerId", '', '');
-	com.updateChosen("salesmanId", '', '');
-	
-	$(".chosen-single span").html("");
-	
-	com.clearValidator("#houseNumber", true);
-	com.clearValidator("#customerId", true);
-	com.clearValidator();
-	
-	orderEntry.repeatFlg = false;
-	orderEntry.repeatCustomerFlg = false;
-}
-
-function createCustomer(){
-	
-	if(com.validate("customerModal") || orderEntry.customerRepeatFlg){
-		return;
 	}
-	
-	var options = {
-		"customer.customerName": orderEntry.items.customerName.val(),
-		"customer.gender": com.genderType[orderEntry.items.gender.prop("checked")],
-		"customer.phone": orderEntry.items.phone.val(),
-		"customer.qq": orderEntry.items.qq.val(),
-		"customer.wechat": orderEntry.items.wechat.val(),
-		"customer.email": orderEntry.items.email.val(),
-		"customer.relationshipType": orderEntry.items.relationshipType.val(),
-		"customer.address": orderEntry.items.address.val(),
-		"customer.approveStatus": 0
-	};
-	
-	com.post(api.data.addCustomer, options, function(res){
-		com.showAlert(com.info, "创建用户成功");
+
+	function initCreate(){
+		orderEntry.orderItems.decorationOrderFlag.attr("checked","checked");
+		orderEntry.orderItems.materialOrderFlag.removeAttr("checked");
+		orderEntry.orderItems.customerId.get(0).selectedIndex = 0;
+		orderEntry.orderItems.villageId.get(0).selectedIndex = 0;
+		orderEntry.orderItems.houseNumber.val("");
+		orderEntry.orderItems.houseType.get(0).selectedIndex = 0;
+		orderEntry.orderItems.houseClass.get(0).selectedIndex = 0;
+		orderEntry.orderItems.apartmentType.get(0).selectedIndex = 0;
+		orderEntry.orderItems.houseArea.val("");
+		orderEntry.orderItems.designerId.get(0).selectedIndex = 0;
+		orderEntry.orderItems.salesmanId.get(0).selectedIndex = 0;
+		orderEntry.orderItems.salesmanType.get(0).selectedIndex = 0;
+		orderEntry.orderItems.notSalesmanName.val("");
+		orderEntry.orderItems.notSalesmanRate.val("0");
+		orderEntry.orderItems.notSalesmanPhone.val("");
+		orderEntry.orderItems.notSalesmanContent.val("");
+		orderEntry.orderItems.backOrderName.val("");
+		orderEntry.orderItems.backOrderPhone.val("");
+		orderEntry.orderItems.backOrderContent.val("");
+		orderEntry.orderItems.status.val("");
 		
-		$("#customerId").html('<option value="'+res.customer.id+'">'+res.customer.customerName+'-'+res.customer.phone+'</option>');
-		$("#customerId").trigger("chosen:updated");
+		com.updateChosen("customerId", '', '');
+		com.updateChosen("villageId", '', '');
+		com.updateChosen("designerId", '', '');
+		com.updateChosen("salesmanId", '', '');
 		
-		$("#customerModal").modal("hide");
-	}, function(res){
-		com.showAlert(com.error, res);
-	}, false);
-}
+		$(".chosen-single span").html("");
+		
+		com.clearValidator("#houseNumber", true);
+		com.clearValidator("#customerId", true);
+		com.clearValidator();
+		
+		orderEntry.repeatFlg = false;
+		orderEntry.repeatCustomerFlg = false;
+	}
+
+	function createCustomer(){
+		
+		if(com.validate("customerModal") || orderEntry.customerRepeatFlg){
+			return;
+		}
+		
+		var options = {
+			"customer.customerName": orderEntry.items.customerName.val(),
+			"customer.gender": com.genderType[orderEntry.items.gender.prop("checked")],
+			"customer.phone": orderEntry.items.phone.val(),
+			"customer.qq": orderEntry.items.qq.val(),
+			"customer.wechat": orderEntry.items.wechat.val(),
+			"customer.email": orderEntry.items.email.val(),
+			"customer.relationshipType": orderEntry.items.relationshipType.val(),
+			"customer.address": orderEntry.items.address.val(),
+			"customer.approveStatus": 0
+		};
+		
+		com.post(api.data.addCustomer, options, function(res){
+			com.showAlert(com.info, "创建用户成功");
+			
+			$("#customerId").html('<option value="'+res.customer.id+'">'+res.customer.customerName+'-'+res.customer.phone+'</option>');
+			$("#customerId").trigger("chosen:updated");
+			
+			$("#customerModal").modal("hide");
+		}, function(res){
+			com.showAlert(com.error, res);
+		}, false);
+	}
+
+});
