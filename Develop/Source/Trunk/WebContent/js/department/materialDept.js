@@ -1,25 +1,26 @@
-var material = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	postParam: {
-		'dept.type': '主材部',
-	},
-	
-	validator: {
-		materialDept: {
-			type: "v_materialDept", 
-			regex: /^FL_MD_\d{2}$/g, 
-			errorMsg: "请以FL_MD_作为前缀 , 之后以两位数字组成(如FL_MD_01)."
-		}
-	},
-	repeatFlg: false,
-};
 
 jQuery(function($) {
+	
+	var material = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		postParam: {
+			'dept.type': '主材部',
+		},
+		
+		validator: {
+			materialDept: {
+				type: "v_materialDept", 
+				regex: /^FL_MD_\d{2}$/g, 
+				errorMsg: "请以FL_MD_作为前缀 , 之后以两位数字组成(如FL_MD_01)."
+			}
+		},
+		repeatFlg: false,
+	};
 
 	material.saveBtn = $("#saveBtn").on("click", saveData);
 	material.cancelBtn = $("#cancelBtn");

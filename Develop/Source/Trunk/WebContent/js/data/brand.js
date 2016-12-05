@@ -1,29 +1,29 @@
-var brand = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	brandItems:{},
-	data:{
-		categoryData: {},
-	},
-	
-	editFlg: false,
-	repeatFlg: false,
-	
-	validator: {
-		brandId: {
-			type: "v_brandId", 
-			regex: /^B_\d{3}$/g,
-			errorMsg: "请以B_作为前缀 , 之后以三位数字组成(如B_001)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var brand = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		brandItems:{},
+		data:{
+			categoryData: {},
+		},
+		
+		editFlg: false,
+		repeatFlg: false,
+		
+		validator: {
+			brandId: {
+				type: "v_brandId", 
+				regex: /^B_\d{3}$/g,
+				errorMsg: "请以B_作为前缀 , 之后以三位数字组成(如B_001)."
+			}
+		},
+	};
+	
 	$('#fl-statement').statement("主材品牌", "主材品牌信息列表");
 	
-	brand.listGrid = $("#listGrid");
-	brand.gridPager = "#gridPager";
 	brand.saveBtn = $("#saveBtn").on("click", saveData);
 	brand.cancelBtn = $("#cancelBtn");
 	brand.modal = $("#brandModal");

@@ -1,15 +1,17 @@
-var qualityTesting = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	qualityTestingItems: {},
-	
-	editFlag: false
-};
 
 var qualityTestingPostData = {};
 
 jQuery(function($) {
+	
+	var qualityTesting = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		qualityTestingItems: {},
+		
+		editFlag: false
+	};
+	
 	$('#fl-statement').statement("质检控制", "订单信息列表");
 	
 	qualityTesting.saveBtn = $("#saveBtn");
@@ -94,14 +96,14 @@ jQuery(function($) {
 	}, "pagenation", "qualityTestingSeacherSeacherPostData");
 
 	function viewQualityTestingDetailIndex(orderId){
-		qualityTestingPostData["constructionSchedule.orderId"] = orderId;
-		$("#qualityTestingPageContent").load(api.index.qualityTestingDetailIndex.url);
+		params.orderId = orderId;
+		com.switchPage(api.index.qualityTestingDetailIndex.url);
 	}
 
 	function viewQualityTestingRecord(orderId, orderAddr){
-		qualityTestingPostData["qualityTestingRecord.orderId"] = orderId;
-		qualityTestingPostData["qualityTestingRecord.orderAddr"] = orderAddr;
-		$("#qualityTestingPageContent").load(api.index.qualityTestingRecordIndex.url);
+		params.orderId = orderId;
+		params.orderAddr = orderAddr;
+		com.switchPage(api.index.qualityTestingRecordIndex.url);
 	}
 
 });

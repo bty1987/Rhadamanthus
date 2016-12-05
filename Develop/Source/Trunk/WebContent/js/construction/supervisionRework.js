@@ -1,8 +1,4 @@
 
-var reworkData = [
-	{"reworkTime":"2014-09-02", "reworkComment":"针对我是吊顶部分进行后期补充工作."}
-];
-
 jQuery(function($) {
 	$('#fl-statement').statement("监理控制", "返工信息列表");
 
@@ -73,7 +69,9 @@ jQuery(function($) {
 				rework.editFlag = true;
 				rework.reworkItems.createTime.val(v.createTime);
 				rework.reworkItems.reworkDes.val(v.reworkDes);
-				supervisionPostData["rework.rwId"] = v.rwId;
+				
+				rework["rework.rwId"] = v.rwId;
+				
 				rework.modal.modal("show");
 			});
 			$btnDel.click(function(){
@@ -97,7 +95,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	searcher.init( [], "condList", api.construction.pageReworkByOrderId, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "supervisionReworkPostData", supervisionPostData, false, null,  function(){
+	}, "pagenation", "supervisionReworkPostData", {
+		"rework.orderId": params.orderId
+	}, false, null,  function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -131,12 +131,12 @@ jQuery(function($) {
 		var options = {
 			"rework.createTime": rework.reworkItems.createTime.val(),
 			"rework.reworkDes": rework.reworkItems.reworkDes.val(),
-			"rework.orderId": supervisionPostData["rework.orderId"]
+			"rework.orderId": params.orderId
 		};
 
 		if(rework.editFlag){
 			url = api.construction.updateRework;
-			options["rework.rwId"] = supervisionPostData["rework.rwId"];
+			options["rework.rwId"] = rework["rework.rwId"];
 		}else{
 			url = api.construction.addRework;
 		}
@@ -159,8 +159,8 @@ jQuery(function($) {
 	}
 
 	function viewSupervisionReworkDrawingIndex(rwId){
-		supervisionPostData["reworkDrawing.rwId"] = rwId;
-		$("#supervisionPageContent").load(api.index.supervisionReworkDrawingIndex.url);
+		params.rwId = rwId;
+		com.switchPage(api.index.supervisionReworkDrawingIndex.url);
 	}
 
 });

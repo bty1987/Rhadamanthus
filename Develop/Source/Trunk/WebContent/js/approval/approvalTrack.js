@@ -1,8 +1,9 @@
-var approvalTrack = {
-	postParam: {},
-};
 
 jQuery(function($) {
+	
+	var approvalTrack = {
+		postParam: {},
+	};
 	
 	com.post(api.ds.approvalType, {"timestamp": new Date().getTime()}, function(res){
 		approvalTrack.approvalType = res.approvalType;

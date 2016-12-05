@@ -1,14 +1,15 @@
-var customer = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	items: {},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
 
 jQuery(function($) {
+	
+	var customer = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		items: {},
+		
+		editFlag: false,
+		repeatFlg: false,
+	};
 	
 	customer.saveBtn = $("#saveBtn").on("click", saveData);
 	customer.cancelBtn = $("#cancelBtn");

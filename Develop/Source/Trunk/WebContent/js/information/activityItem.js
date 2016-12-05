@@ -1,14 +1,15 @@
-var activityItem = {
-	activityType: null,
-	items:{},
-}
-
-var activityItemPostData = {};
 
 jQuery(function($) {
 	
-	activityItemPostData.aid = activityPostData.aid;
-	activityItemPostData.activityName = activityPostData.activityName;
+	var activityItem = {
+		activityType: null,
+		items:{},
+	}
+	
+	var activityItemPostData = {};
+	
+	activityItemPostData.aid = params.aid;
+	activityItemPostData.activityName = params.activityName;
 	
 	com.post(api.ds.activityInfo, {"timestamp": new Date().getTime()}, function(res){
 		activityItem.activityItemType = res.activityItemType;

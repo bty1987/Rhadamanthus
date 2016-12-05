@@ -1,20 +1,18 @@
-var deduction = {
-	listGrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	deductionItems: {},
-	
-	editFlag: false,
-	repeatFlg: false,
-};
 
 jQuery(function($) {
+	
+	var deduction = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		deductionItems: {},
+		
+		editFlag: false,
+		repeatFlg: false,
+	};
+	
 	$('#fl-statement').statement("巡检控制", "扣款信息列表");
 	
-	deduction.deductionListGrid = $("#deductionListGrid");
-	deduction.deductionGridPager = "#deductionGridPager";
 	deduction.saveBtn = $("#saveBtn").on("click", saveData);
 	deduction.cancelBtn = $("#cancelBtn");
 	deduction.modal = $("#deductionModal");
@@ -104,51 +102,47 @@ jQuery(function($) {
 	
 	$('.date-picker').datepicker({autoclose:true});
 	
+	function saveData(){
+		if(com.validate()|| deduction.repeatFlg)
+			return;
+		
+		var url;
+		var options = {
+			"inspectionDeduction.orderId": deduction.deductionItems.orderId.val(),
+			"inspectionDeduction.orderAddr": deduction.deductionItems.orderAddr.val(),
+			"inspectionDeduction.deductionMoney": deduction.deductionItems.deductionMoney.val(),
+			"inspectionDeduction.deductionTime": deduction.deductionItems.deductionTime.val(),
+			"inspectionDeduction.deductionDes": deduction.deductionItems.deductionDes.val(),
+		};
+		
+		if(deduction.editFlag){
+			
+			url = api.construction.updateInspectionDeduction;
+			options["inspectionDeduction.idId"] = inspectionPostData["inspectionDeduction.idId"];
+			
+		}else{
+			url = api.construction.addInspectionDeduction;
+		}
+		
+		com.post(url, options, successCallback, failCallback);
+		deduction.modal.modal("hide");
+	}
+
+	function removeRow(params, rowNums){
+		var nums = rowNums.split(",");
+		var options = {};
+		for(var i=0;i<nums.length;i++){
+			var row = $(this).jqGrid("getRowData", nums[i]);
+			options["idIds[" + i + "]"] = row.idId;
+		}
+		
+		com.post(api.construction.deleteInspectionDeduction, options, successCallback);
+		
+		$("#eData").trigger("click");
+	}
+
+	function successCallback(result){
+		deduction.deductionListGrid.jqGrid().trigger("reloadGrid");
+	}
+
 });
-
-function saveData(){
-	if(com.validate()|| deduction.repeatFlg)
-		return;
-	
-	var url;
-	var options = {
-		"inspectionDeduction.orderId": deduction.deductionItems.orderId.val(),
-		"inspectionDeduction.orderAddr": deduction.deductionItems.orderAddr.val(),
-		"inspectionDeduction.deductionMoney": deduction.deductionItems.deductionMoney.val(),
-		"inspectionDeduction.deductionTime": deduction.deductionItems.deductionTime.val(),
-		"inspectionDeduction.deductionDes": deduction.deductionItems.deductionDes.val(),
-	};
-	
-	if(deduction.editFlag){
-		
-		url = api.construction.updateInspectionDeduction;
-		options["inspectionDeduction.idId"] = inspectionPostData["inspectionDeduction.idId"];
-		
-	}else{
-		url = api.construction.addInspectionDeduction;
-	}
-	
-	com.post(url, options, successCallback, failCallback);
-	deduction.modal.modal("hide");
-}
-
-function removeRow(params, rowNums){
-	var nums = rowNums.split(",");
-	var options = {};
-	for(var i=0;i<nums.length;i++){
-		var row = $(this).jqGrid("getRowData", nums[i]);
-		options["idIds[" + i + "]"] = row.idId;
-	}
-	
-	com.post(api.construction.deleteInspectionDeduction, options, successCallback, failCallback);
-	
-	$("#eData").trigger("click");
-}
-
-function successCallback(result){
-	deduction.deductionListGrid.jqGrid().trigger("reloadGrid");
-}
-
-function failCallback(){
-	
-}

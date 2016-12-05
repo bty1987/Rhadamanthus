@@ -1,18 +1,19 @@
-var personInfo = {
-	cancellBtn: null,
-	modal: null,
-	personInfoItems: {},
-	
-	editFlag: false
-};
-
-var personInfoPostData = {};
-
-var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
-var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
 
 jQuery(function($) {
+	
+	var personInfo = {
+		cancellBtn: null,
+		modal: null,
+		personInfoItems: {},
+		
+		editFlag: false
+	};
+
+	var personInfoPostData = {};
+
+	var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
+	var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
+	var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
 	
 	personInfo.cancelBtn = $("#cancelBtn");
 	personInfo.deployedBtn = $("#deployedBtn").on("click", drawLineDeployed);

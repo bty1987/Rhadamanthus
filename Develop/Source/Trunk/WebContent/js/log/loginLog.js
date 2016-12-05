@@ -1,15 +1,16 @@
-var loginLog = {
-	modal: null,
-	loginLogItems:{},
-	
-	postParam: {},
-	
-	regionList: [],
-	regionKey: "regionId",
-	regionValue: "regionName"
-};
 
 jQuery(function($) {
+	
+	var loginLog = {
+		modal: null,
+		loginLogItems:{},
+		
+		postParam: {},
+		
+		regionList: [],
+		regionKey: "regionId",
+		regionValue: "regionName"
+	};
 	
 	var displayFunc  = (function(){
 

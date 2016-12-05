@@ -623,16 +623,7 @@ var decorationUtils = {
 				close:'&times;',
 				current:'{current} of {total}',
 				maxWidth:'100%',
-				maxHeight:'100%',
-				onOpen:function(){
-					document.body.style.overflow = 'hidden';
-				},
-				onClosed:function(){
-					document.body.style.overflow = 'auto';
-				},
-				onComplete:function(){
-					$.colorbox.resize();
-				}
+				maxHeight:'100%'
 			});
 		});
 	},addPicture:function(e, i){

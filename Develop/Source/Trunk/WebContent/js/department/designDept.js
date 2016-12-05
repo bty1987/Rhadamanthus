@@ -1,25 +1,26 @@
-var designDept = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	
-	postParam: {
-		'dept.type': '设计部',
-	},
-	
-	validator: {
-		designDept: {
-			type: "v_designDept", 
-			regex: /^FL_DD_\d{2}$/g, 
-			errorMsg: "请以FL_DD_作为前缀 , 之后以两位数字组成(如FL_DD_01)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var designDept = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		
+		postParam: {
+			'dept.type': '设计部',
+		},
+		
+		validator: {
+			designDept: {
+				type: "v_designDept", 
+				regex: /^FL_DD_\d{2}$/g, 
+				errorMsg: "请以FL_DD_作为前缀 , 之后以两位数字组成(如FL_DD_01)."
+			}
+		},
+	};
 	
 	designDept.saveBtn = $("#saveBtn").on("click", saveData);
 	designDept.cancelBtn = $("#cancelBtn");

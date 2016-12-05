@@ -1,8 +1,8 @@
-var decorationActivity = {};
-
-var decorationActivityPostData = {};
 
 jQuery(function($) {
+	
+	var decorationActivity = {};
+	var decorationActivityPostData = {};
 	
 	var displayFunc  = (function(){
 
@@ -107,9 +107,11 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationActivityPostData");
 	
+	function viewDecorationActivityItem(decorationOrderId){
+		params.decorationOrderId = decorationOrderId;
+		com.switchPage(api.index.decorationActivityItemIndex.url);
+	}
+	
 });
 
-function viewDecorationActivityItem(decorationOrderId){
-	decorationActivityPostData["decorationOrderId"] = decorationOrderId;
-	com.switchPage(api.index.decorationActivityItemIndex.url);
-}
+

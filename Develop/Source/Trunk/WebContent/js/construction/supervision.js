@@ -85,8 +85,8 @@ $(function(){
 	}, "pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
 	
 	function viewSupervisionDetail(orderId){
-		supervisionPostData["constructionSchedule.orderId"] = orderId;
-		$("#supervisionPageContent").load(api.index.supervisionDetailIndex.url);
+		params.orderId = orderId;
+		com.switchPage(api.index.supervisionDetailIndex.url);
 	}
 
 	function viewAddReduceIndex(orderId){
@@ -96,8 +96,9 @@ $(function(){
 	}
 
 	function viewReworkIndex(orderId){
-		supervisionPostData["rework.orderId"] = orderId;
-		$("#supervisionPageContent").load(api.index.supervisionReworkIndex.url);
+		params.orderId = orderId;
+		params.historyOrderPage = api.index.supervisionIndex.url;
+		com.switchPage(api.index.supervisionReworkIndex.url);
 	}
 
 });

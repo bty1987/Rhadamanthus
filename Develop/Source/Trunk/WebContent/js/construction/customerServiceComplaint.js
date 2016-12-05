@@ -1,5 +1,4 @@
 
-
 jQuery(function($) {
 	$('#fl-statement').statement("客服控制", "投诉信息列表");
 
@@ -108,10 +107,12 @@ jQuery(function($) {
 		}
 	})();
 
-	var CustomerServiceComplaintSeacher = new Searcher();
-	CustomerServiceComplaintSeacher.init( [], "condList", api.construction.pageCustomerServiceComplaint, function(list){
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.construction.pageCustomerServiceComplaint, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "customerServiceComplaintSeacherPostData", customerServicePostData, false, null,  function(){
+	}, "pagenation", "searcherPostData", {
+		"customerServiceComplaint.orderId": params.orderId
+	}, false, null,  function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -129,8 +130,8 @@ jQuery(function($) {
 		
 		com.cleanItems(complaint.complaintItems);
 
-		complaint.complaintItems.orderId.val(customerServicePostData["customerServiceComplaint.orderId"]);
-		complaint.complaintItems.customerName.val(customerServicePostData["customerServiceComplaint.customerName"]);
+		complaint.complaintItems.orderId.val(params.orderId);
+		complaint.complaintItems.customerName.val(params.customerName);
 
 		complaint.complaintItems.orderId.attr("disabled", true);
 		complaint.complaintItems.customerName.attr("disabled", true);
@@ -174,13 +175,14 @@ jQuery(function($) {
 		if(complaint.editFlag){
 
 			url = api.construction.updateCustomerServiceComplaint;
-			options["customerServiceComplaint.cscId"] = customerServicePostData["customerServiceComplaint.cscId"];
+			options["customerServiceComplaint.cscId"] = complaint["customerServiceComplaint.cscId"];
 
 		}else{
 			url = api.construction.addCustomerServiceComplaint;
 		}
 
-		com.post(url, options, successCallback, failCallback);
+		com.post(url, options, successCallback);
+		
 		complaint.modal.modal("hide");
 	}
 
@@ -188,18 +190,17 @@ jQuery(function($) {
 		if(com.validate())
 			return;
 
-		if(customerServicePostData["customerServiceComplaint.complaintStatus"] == "1"){
+		if(complaint["customerServiceComplaint.complaintStatus"] == "1"){
 			complaint.handleModal.modal("hide");
 			return false;
 		}
 
-		var url = api.construction.handleCustomerServiceComplaint.url;
 		var options = {
-			"customerServiceComplaint.cscId": customerServicePostData["customerServiceComplaint.cscId"],
+			"customerServiceComplaint.cscId": complaint["customerServiceComplaint.cscId"],
 			"customerServiceComplaint.handle": complaint.complaintItems.complaintHandleDes.val(),
 		};
 
-		com.post(url, options, successCallback);
+		com.post(api.construction.handleCustomerServiceComplaint, options, successCallback);
 		
 		complaint.handleModal.modal("hide");
 	}
@@ -209,7 +210,7 @@ jQuery(function($) {
 
 		bootbox.confirm("确认删除投诉吗？", function(res){
 			if(res){
-				com.post(api.construction.deleteCustomerServiceComplaint, {"cscIds[0]"  : id}, successCallback, failCallback);
+				com.post(api.construction.deleteCustomerServiceComplaint, {"cscIds[0]"  : id}, successCallback);
 			}
 		});
 	}
@@ -219,8 +220,8 @@ jQuery(function($) {
 
 		var row = v;
 
-		customerServicePostData["customerServiceComplaint.cscId"] = row.cscId;
-		customerServicePostData["customerServiceComplaint.complaintStatus"] = row.complaintStatus;
+		complaint["customerServiceComplaint.cscId"] = row.cscId;
+		complaint["customerServiceComplaint.complaintStatus"] = row.complaintStatus;
 
 		complaint.complaintItems.handleOrderId.val(row.orderId).attr('disabled', true);
 		complaint.complaintItems.handleCustomerName.val(row.customerName).attr('disabled', true);
@@ -238,7 +239,7 @@ jQuery(function($) {
 	}
 
 	function successCallback(result){
-		CustomerServiceComplaintSeacher.doSearch();
+		searcher.doSearch();
 	}
 
 });

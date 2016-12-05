@@ -658,3 +658,8 @@ input[type=checkbox].ace.checked+.lbl::before {
 .timeline-gallery figcaption {
     display: none;
 }
+
+.workerImg {
+	height: 180px;
+	border:1px solid #ccc;
+}

@@ -1,16 +1,18 @@
-var drawLineApply = {
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	drawLineApplyItems: {},
-	
-	drawLineGroup:null,
-	drawLineDateCount:null,
-	
-	editFlag: false
-};
 	
 jQuery(function($) {
+	
+	var drawLineApply = {
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		drawLineApplyItems: {},
+		
+		drawLineGroup:null,
+		drawLineDateCount:null,
+		
+		editFlag: false
+	};
+	
 	drawLineApply.saveBtn = $("#saveBtn").on("click", saveData);
 	drawLineApply.cancelBtn = $("#cancelBtn");
 	drawLineApply.drawLineApplyModal = $("#drawLineApplyModal");

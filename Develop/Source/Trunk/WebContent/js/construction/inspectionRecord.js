@@ -101,7 +101,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	searcher.init( [], "condList", api.construction.pageInspectionRecordByOrderId, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "inspectionRecordPostData", inspectionPostData, false, null,  function(){
+	}, "pagenation", "inspectionRecordPostData", {
+		"inspectionRecord.orderId": params.orderId
+	}, false, null,  function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -119,8 +121,8 @@ jQuery(function($) {
 		
 		com.cleanItems(record.recordItems);
 		
-		record.recordItems.orderId.val(inspectionPostData["inspectionRecord.orderId"]);
-		record.recordItems.orderAddr.val(inspectionPostData["inspectionRecord.orderAddr"]);
+		record.recordItems.orderId.val(params.orderId);
+		record.recordItems.orderAddr.val(params.orderAddr);
 		
 		record.recordItems.orderId.attr('disabled', true);
 		record.recordItems.orderAddr.attr('disabled', true);
@@ -142,7 +144,8 @@ jQuery(function($) {
 		record.recordItems.endDate.val(v.endTime.split(' ')[0]);
 		record.recordItems.endTime.val(v.endTime.split(' ')[1]);
 		record.recordItems.recordDes.val(v.recordDes);
-		inspectionPostData["inspectionRecord.irId"] = v.irId;
+		
+		record["inspectionRecord.irId"] = v.irId;
 		
 		record.recordItems.orderId.attr('disabled', true);
 		record.recordItems.orderAddr.attr('disabled', true);
@@ -177,7 +180,7 @@ jQuery(function($) {
 		
 		if(record.editFlag){
 			url = api.construction.updateInspectionRecord;
-			options["inspectionRecord.irId"] = inspectionPostData["inspectionRecord.irId"];
+			options["inspectionRecord.irId"] = record["inspectionRecord.irId"];
 		}else{
 			url = api.construction.addInspectionRecord;
 		}

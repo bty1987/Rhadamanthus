@@ -1,4 +1,3 @@
-var acceptancePostData = {};
 
 jQuery(function($) {
 	$('#fl-statement').statement("工程验收", "订单信息列表");
@@ -73,8 +72,8 @@ jQuery(function($) {
 	}, "pagenation", "acceptanceSeacherSeacherPostData");
 
 	function viewAcceptanceDetailIndex(orderId){
-		acceptancePostData["acceptance.orderId"] = orderId;
-		$("#acceptancePageContent").load(api.index.acceptanceDetailIndex.url);
+		params.orderId = orderId;
+		com.switchPage(api.index.acceptanceDetailIndex.url);
 	}
 
 });

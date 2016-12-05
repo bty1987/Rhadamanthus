@@ -1,19 +1,20 @@
-var actionLog = {
-	listgrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	actionLogItems:{},
-	
-	postParam: {},
-	
-	regionList: [],
-	regionKey: "regionId",
-	regionValue: "regionName"
-};
 
 jQuery(function($) {
+	
+	var actionLog = {
+			listgrid: null,
+			gridPager: null,
+			saveBtn: null,
+			cancelBtn: null,
+			modal: null,
+			actionLogItems:{},
+			
+			postParam: {},
+			
+			regionList: [],
+			regionKey: "regionId",
+			regionValue: "regionName"
+		};
 	
 	actionLog.listgrid = $("#listgrid");
 	actionLog.gridPager = "#gridPager";
@@ -30,27 +31,28 @@ jQuery(function($) {
 	};
 	$("#searchDiv").flSearch(searchOpts);
 	
+	function initializeListgrid(){
+		actionLog.listgrid.jqGrid({		
+			url: api.log.pageActionLog.url,
+			postData: actionLog.postParam,
+			colNames:['编号', '操作人编号', '操作人', '操作名称', '创建时间', '运行时间'],
+			colModel:[
+				{name:'uuid', hidden: true},
+				{name:'createUserId', hidden: true},
+				{name:'createUserName'},
+				{name:'actionName'},
+				{name:'createTime'},
+				{name:'runTime'},
+			], 
+			rowList:[50,100,200,300],
+			rowNum:100,
+			pager : actionLog.gridPager,
+			caption: "日志列表"
+		});
+
+		actionLog.listgrid.navGrid(actionLog.gridPager, {edit:false,add:false,del:false,search:false,searchicon : 'icon-search orange', refresh: false,view: false}, {}, {}, {}, {});
+	}
+	
 	initializeListgrid();
 });
 
-function initializeListgrid(){
-	actionLog.listgrid.jqGrid({		
-		url: api.log.pageActionLog.url,
-		postData: actionLog.postParam,
-		colNames:['编号', '操作人编号', '操作人', '操作名称', '创建时间', '运行时间'],
-		colModel:[
-			{name:'uuid', hidden: true},
-			{name:'createUserId', hidden: true},
-			{name:'createUserName'},
-			{name:'actionName'},
-			{name:'createTime'},
-			{name:'runTime'},
-		], 
-		rowList:[50,100,200,300],
-		rowNum:100,
-		pager : actionLog.gridPager,
-		caption: "日志列表"
-	});
-
-	actionLog.listgrid.navGrid(actionLog.gridPager, {edit:false,add:false,del:false,search:false,searchicon : 'icon-search orange', refresh: false,view: false}, {}, {}, {}, {});
-}

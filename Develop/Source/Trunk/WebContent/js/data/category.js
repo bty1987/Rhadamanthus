@@ -1,22 +1,24 @@
-var category = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	categoryItems:{},
-	
-	editFlg: false,
-	repeatFlg: false,
-	
-	validator: {
-		categoryId: {
-			type: "v_categoryId", 
-			regex: /^C_\d{3}$/g,
-			errorMsg: "请以C_作为前缀 , 之后以三位数字组成(如C_001)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var category = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		categoryItems:{},
+		
+		editFlg: false,
+		repeatFlg: false,
+		
+		validator: {
+			categoryId: {
+				type: "v_categoryId", 
+				regex: /^C_\d{3}$/g,
+				errorMsg: "请以C_作为前缀 , 之后以三位数字组成(如C_001)."
+			}
+		},
+	};
+	
 //	$('#fl-statement').statement("主材品类", "主材品类信息列表");
 	
 	category.saveBtn = $("#saveBtn").on("click", saveData);

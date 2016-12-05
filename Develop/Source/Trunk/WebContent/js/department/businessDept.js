@@ -1,24 +1,25 @@
-var businessDept = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	editFlg: false,
-	postParam: {
-		'dept.type': '业务部',
-	},
-	
-	validator: {
-		businessDept: {
-			type: "v_businessDept", 
-			regex: /^FL_BD_\d{2}$/g, 
-			errorMsg: "请以FL_BD_作为前缀 , 之后以两位数字组成(如FL_BD_01)."
-		}
-	},
-};
 
 jQuery(function($) {
+	
+	var businessDept = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		editFlg: false,
+		postParam: {
+			'dept.type': '业务部',
+		},
+		
+		validator: {
+			businessDept: {
+				type: "v_businessDept", 
+				regex: /^FL_BD_\d{2}$/g, 
+				errorMsg: "请以FL_BD_作为前缀 , 之后以两位数字组成(如FL_BD_01)."
+			}
+		},
+	};
 	
 	businessDept.saveBtn = $("#saveBtn").on("click", saveData);
 	businessDept.cancelBtn = $("#cancelBtn");

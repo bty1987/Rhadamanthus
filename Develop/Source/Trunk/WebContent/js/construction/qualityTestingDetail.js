@@ -1,225 +1,236 @@
-var qualityTestingDetail = {
-		
-	construstionSchedule: {},
-	
-	qualityGalleryId: "qualityGallery",
-	qualityUpload: "qualityUpload",
-	
-	operateDict: {
-		"1": {
-			queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
-			updateInfoUrl: api.construction.updateChanConstructionSchedule,
-//			setInfoUrl: api.construction.setChanConstructionScheduleForInfo,
-			setInfoUrl: api.construction.updateChanConstructionSchedule,
-			setWorkerUrl: api.construction.setChanConstructionScheduleWorker,
-			setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
-			
-			queryDrawingUrl: api.construction.queryChanDrawingByCsId,
-			addDrawingUrl: api.construction.addChanDrawing,
-			deleteDrawingUrl: api.construction.deleteChanDrawing,
-			
-			elementId: "ccsId",
-			elementName: "chanConstructionSchedule",
-			drawingId: "cdId",
-			drawingName: "chanDrawing",
-			drawings: "chanDrawings",
-			
-			duty: "铲大白",
-			
-			drawingType: 6,
-		}, "2": {
-			queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
-			updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-			setInfoUrl: api.construction.setPutlineConstructionScheduleForInfo,
-			setWorkerUrl: api.construction.setPutlineConstructionScheduleWorker,
-			setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
-			
-			queryDrawingUrl: api.construction.queryPutlineDrawingByCsId,
-			addDrawingUrl: api.construction.addPutlineDrawing,
-			deleteDrawingUrl: api.construction.deletePutlineDrawing,
-			
-			elementId: "plcsId",
-			elementName: "putlineConstructionSchedule",
-			drawingId: "pldId",
-			drawingName: "putlineDrawing",
-			drawings: "putlineDrawings",
-			
-			duty: "放线",
-			
-			drawingType: 7,
-		}, "3": {
-			queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addWaterwayCircuitPowerConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
-			setInfoUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForInfo,
-			setWorkerUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorker,
-			
-			queryDrawingUrl: api.construction.queryWaterwayCircuitPowerDrawingByCsId,
-			addDrawingUrl: api.construction.addWaterwayCircuitPowerDrawing,
-			deleteDrawingUrl: api.construction.deleteWaterwayCircuitPowerDrawing,
-			
-			elementId: "wcpcsId",
-			elementName: "waterwayCircuitPowerConstructionSchedule",
-			workerId: "wcpcswId",
-			workerName: "waterwayCircuitPowerConstructionScheduleWorker",
-			drawingId: "wcpdId",
-			drawingName: "waterwayCircuitPowerDrawing",
-			drawings: "waterwayCircuitPowerDrawings",
-			
-			waterwayDuty: "水暖工",
-			circuitDuty:"电工",
-			powerDuty:"力工",
-			waterwayCircuitDuty: "水电工",
-			
-			drawingType: 8,
-		}, "4": {
-			queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryBricklayConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addBricklayConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
-			setInfoUrl: api.construction.setBricklayConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryBricklayDrawingByCsId,
-			addDrawingUrl: api.construction.addBricklayDrawing,
-			deleteDrawingUrl: api.construction.deleteBricklayDrawing,
-			
-			elementId: "bcsId",
-			elementName: "bricklayConstructionSchedule",
-			workerId: "bcswId",
-			workerName: "bricklayConstructionScheduleWorker",
-			drawingId: "bdId",
-			drawingName: "bricklayDrawing",
-			drawings: "bricklayDrawings",
-			
-			duty: "瓦工",
-			
-			drawingType: 9,
-		}, "5": {
-			queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryGroundLevelingConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addGroundLevelingConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
-			setInfoUrl: api.construction.setGroundLevelingConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryGroundLevelingDrawingByCsId,
-			addDrawingUrl: api.construction.addGroundLevelingDrawing,
-			deleteDrawingUrl: api.construction.deleteGroundLevelingDrawing,
-			
-			elementId: "glcsId",
-			elementName: "groundLevelingConstructionSchedule",
-			workerId: "glcswId",
-			workerName: "groundLevelingConstructionScheduleWorker",
-			drawingId: "gldId",
-			drawingName: "groundLevelingDrawing",
-			drawings: "groundLevelingDrawings",
-			
-			duty: "地面找平",
-			
-			drawingType: 10,
-		}, "6": {
-			queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryCarpentConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addCarpentConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
-			setInfoUrl: api.construction.setCarpentConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryCarpentDrawingByCsId,
-			addDrawingUrl: api.construction.addCarpentDrawing,
-			deleteDrawingUrl: api.construction.deleteCarpentDrawing,
-			
-			elementId: "ccsId",
-			elementName: "carpentConstructionSchedule",
-			workerId: "ccswId",
-			workerName: "carpentConstructionScheduleWorker",
-			drawingId: "cdId",
-			drawingName: "carpentDrawing",
-			drawings: "carpentDrawings",
-			
-			duty: "木工",
-			
-			drawingType: 11,
-		}, "7": {
-			queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryOilConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addOilConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateOilConstructionSchedule,
-			setInfoUrl: api.construction.setOilConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryOilDrawingByCsId,
-			addDrawingUrl: api.construction.addOilDrawing,
-			deleteDrawingUrl: api.construction.deleteOilDrawing,
-			
-			elementId: "ocsId",
-			elementName: "oilConstructionSchedule",
-			workerId: "ocswId",
-			workerName: "oilConstructionScheduleWorker",
-			drawingId: "odId",
-			drawingName: "oilDrawing",
-			drawings: "oilDrawings",
-			
-			duty: "油工",
-			
-			drawingType: 12,
-		}, "8": {
-			queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addWaterwayCircuitCheckConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
-			setInfoUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryWaterwayCircuitCheckDrawingByCsId,
-			addDrawingUrl: api.construction.addWaterwayCircuitCheckDrawing,
-			deleteDrawingUrl: api.construction.deleteWaterwayCircuitCheckDrawing,
-			
-			elementId: "wcccsId",
-			elementName: "waterwayCircuitCheckConstructionSchedule",
-			workerId: "wcccswId",
-			workerName: "waterwayCircuitCheckConstructionScheduleWorker",
-			drawingId: "wccdId",
-			drawingName: "waterwayCircuitCheckDrawing",
-			drawings: "waterwayCircuitCheckDrawings",
-			
-			waterwayDuty: "水暖工",
-			circuitDuty:"电工",
-			powerDuty:"力工",
-			waterwayCircuitDuty: "水电工",
-			
-			drawingType: 13,
-		}, "9": {
-			queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
-			queryWorkerUrl: api.construction.queryCleaningConstructionScheduleWorker,
-			addWorkerUrl: api.construction.addCleaningConstructionScheduleWorker,
-			updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
-			setInfoUrl: api.construction.setCleaningConstructionScheduleForInfo,
-			
-			queryDrawingUrl: api.construction.queryCleaningDrawingByCsId,
-			addDrawingUrl: api.construction.addCleaningDrawing,
-			deleteDrawingUrl: api.construction.deleteCleaningDrawing,
-			
-			elementId: "ccsId",
-			elementName: "cleaningConstructionSchedule",
-			workerId: "ccswId",
-			workerName: "cleaningConstructionScheduleWorker",
-			drawingId: "cdId",
-			drawingName: "cleaningDrawing",
-			drawings: "cleaningDrawings",
-			
-			duty: "保洁工",
-			
-			drawingType: 14,
-		},
-	},
-	
-	operateInfo: {},
-	workerUserId: {},
-};
-
-var workerSalaryData = {};
 
 jQuery(function($) {
+	
+	var qualityTestingDetail = {
+			
+		construstionSchedule: {},
+		
+		qualityGalleryId: "qualityGallery",
+		qualityUpload: "qualityUpload",
+		
+		operateDict: {
+			"1": {
+				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
+				updateInfoUrl: api.construction.updateChanConstructionSchedule,
+//					setInfoUrl: api.construction.setChanConstructionScheduleForInfo,
+				setInfoUrl: api.construction.updateChanConstructionSchedule,
+				setWorkerUrl: api.construction.setChanConstructionScheduleWorker,
+				setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
+				
+				queryDrawingUrl: api.construction.queryChanDrawingByCsId,
+				addDrawingUrl: api.construction.addChanDrawing,
+				deleteDrawingUrl: api.construction.deleteChanDrawing,
+				
+				elementId: "ccsId",
+				elementName: "chanConstructionSchedule",
+				drawingId: "cdId",
+				drawingName: "chanDrawing",
+				drawings: "chanDrawings",
+				
+				duty: "铲大白",
+				
+				drawingType: 6,
+			}, "2": {
+				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
+				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
+				setInfoUrl: api.construction.setPutlineConstructionScheduleForInfo,
+				setWorkerUrl: api.construction.setPutlineConstructionScheduleWorker,
+				setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
+				
+				queryDrawingUrl: api.construction.queryPutlineDrawingByCsId,
+				addDrawingUrl: api.construction.addPutlineDrawing,
+				deleteDrawingUrl: api.construction.deletePutlineDrawing,
+				
+				elementId: "plcsId",
+				elementName: "putlineConstructionSchedule",
+				drawingId: "pldId",
+				drawingName: "putlineDrawing",
+				drawings: "putlineDrawings",
+				
+				duty: "放线",
+				
+				drawingType: 7,
+			}, "3": {
+				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addWaterwayCircuitPowerConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
+				setInfoUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForInfo,
+				setWorkerUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorker,
+				
+				queryDrawingUrl: api.construction.queryWaterwayCircuitPowerDrawingByCsId,
+				addDrawingUrl: api.construction.addWaterwayCircuitPowerDrawing,
+				deleteDrawingUrl: api.construction.deleteWaterwayCircuitPowerDrawing,
+				
+				elementId: "wcpcsId",
+				elementName: "waterwayCircuitPowerConstructionSchedule",
+				workerId: "wcpcswId",
+				workerName: "waterwayCircuitPowerConstructionScheduleWorker",
+				drawingId: "wcpdId",
+				drawingName: "waterwayCircuitPowerDrawing",
+				drawings: "waterwayCircuitPowerDrawings",
+				
+				waterwayDuty: "水暖工",
+				circuitDuty:"电工",
+				powerDuty:"力工",
+				waterwayCircuitDuty: "水电工",
+				
+				drawingType: 8,
+			}, "4": {
+				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryBricklayConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addBricklayConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
+				setInfoUrl: api.construction.setBricklayConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryBricklayDrawingByCsId,
+				addDrawingUrl: api.construction.addBricklayDrawing,
+				deleteDrawingUrl: api.construction.deleteBricklayDrawing,
+				
+				elementId: "bcsId",
+				elementName: "bricklayConstructionSchedule",
+				workerId: "bcswId",
+				workerName: "bricklayConstructionScheduleWorker",
+				drawingId: "bdId",
+				drawingName: "bricklayDrawing",
+				drawings: "bricklayDrawings",
+				
+				duty: "瓦工",
+				
+				drawingType: 9,
+			}, "5": {
+				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryGroundLevelingConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addGroundLevelingConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
+				setInfoUrl: api.construction.setGroundLevelingConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryGroundLevelingDrawingByCsId,
+				addDrawingUrl: api.construction.addGroundLevelingDrawing,
+				deleteDrawingUrl: api.construction.deleteGroundLevelingDrawing,
+				
+				elementId: "glcsId",
+				elementName: "groundLevelingConstructionSchedule",
+				workerId: "glcswId",
+				workerName: "groundLevelingConstructionScheduleWorker",
+				drawingId: "gldId",
+				drawingName: "groundLevelingDrawing",
+				drawings: "groundLevelingDrawings",
+				
+				duty: "地面找平",
+				
+				drawingType: 10,
+			}, "6": {
+				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryCarpentConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addCarpentConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
+				setInfoUrl: api.construction.setCarpentConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryCarpentDrawingByCsId,
+				addDrawingUrl: api.construction.addCarpentDrawing,
+				deleteDrawingUrl: api.construction.deleteCarpentDrawing,
+				
+				elementId: "ccsId",
+				elementName: "carpentConstructionSchedule",
+				workerId: "ccswId",
+				workerName: "carpentConstructionScheduleWorker",
+				drawingId: "cdId",
+				drawingName: "carpentDrawing",
+				drawings: "carpentDrawings",
+				
+				duty: "木工",
+				
+				drawingType: 11,
+			}, "7": {
+				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryOilConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addOilConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateOilConstructionSchedule,
+				setInfoUrl: api.construction.setOilConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryOilDrawingByCsId,
+				addDrawingUrl: api.construction.addOilDrawing,
+				deleteDrawingUrl: api.construction.deleteOilDrawing,
+				
+				elementId: "ocsId",
+				elementName: "oilConstructionSchedule",
+				workerId: "ocswId",
+				workerName: "oilConstructionScheduleWorker",
+				drawingId: "odId",
+				drawingName: "oilDrawing",
+				drawings: "oilDrawings",
+				
+				duty: "油工",
+				
+				drawingType: 12,
+			}, "8": {
+				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addWaterwayCircuitCheckConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
+				setInfoUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryWaterwayCircuitCheckDrawingByCsId,
+				addDrawingUrl: api.construction.addWaterwayCircuitCheckDrawing,
+				deleteDrawingUrl: api.construction.deleteWaterwayCircuitCheckDrawing,
+				
+				elementId: "wcccsId",
+				elementName: "waterwayCircuitCheckConstructionSchedule",
+				workerId: "wcccswId",
+				workerName: "waterwayCircuitCheckConstructionScheduleWorker",
+				drawingId: "wccdId",
+				drawingName: "waterwayCircuitCheckDrawing",
+				drawings: "waterwayCircuitCheckDrawings",
+				
+				waterwayDuty: "水暖工",
+				circuitDuty:"电工",
+				powerDuty:"力工",
+				waterwayCircuitDuty: "水电工",
+				
+				drawingType: 13,
+			}, "9": {
+				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryCleaningConstructionScheduleWorker,
+				addWorkerUrl: api.construction.addCleaningConstructionScheduleWorker,
+				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
+				setInfoUrl: api.construction.setCleaningConstructionScheduleForInfo,
+				
+				queryDrawingUrl: api.construction.queryCleaningDrawingByCsId,
+				addDrawingUrl: api.construction.addCleaningDrawing,
+				deleteDrawingUrl: api.construction.deleteCleaningDrawing,
+				
+				elementId: "ccsId",
+				elementName: "cleaningConstructionSchedule",
+				workerId: "ccswId",
+				workerName: "cleaningConstructionScheduleWorker",
+				drawingId: "cdId",
+				drawingName: "cleaningDrawing",
+				drawings: "cleaningDrawings",
+				
+				duty: "保洁工",
+				
+				drawingType: 14,
+			},
+		},
+		
+		operateInfo: {},
+		workerUserId: {},
+	};
+	
+	var colorboxArgs = {
+		reposition:true,
+		scalePhotos:true,
+		scrolling:false,
+		previous:'<i class="icon-arrow-left"></i>',
+		next:'<i class="icon-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%'
+	}
 
-	var orderId = qualityTestingPostData["constructionSchedule.orderId"];
+	var orderId = params.orderId;
 	
 	qualityTestingDetail.saveBtn = $("#saveBtn");
 	qualityTestingDetail.cancelBtn = $("#cancelBtn");
@@ -227,7 +238,9 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	com.post(api.construction.queryConstructionScheduleByOrderId, qualityTestingPostData, function(res){
+	com.post(api.construction.queryConstructionScheduleByOrderId, {
+		"constructionSchedule.orderId": params.orderId
+	}, function(res){
 		qualityTestingDetail.construstionSchedule = res.constructionSchedule;
 		
 		var operate = qualityTestingDetail.operateDict[qualityTestingDetail.construstionSchedule.schedule];
@@ -237,8 +250,8 @@ jQuery(function($) {
 		
 		com.post(operate.queryInfoUrl, elementPostData, function(res){
 			var element = res[operate.elementName];
-			qualityTestingPostData[operate.elementName+".csId"] = element["csId"];
-			qualityTestingPostData[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+			qualityTestingDetail[operate.elementName+".csId"] = element["csId"];
+			qualityTestingDetail[operate.elementName+"."+operate.elementId] = element[operate.elementId];
 			var schedule = qualityTestingDetail.construstionSchedule.schedule;
 			
 			if(schedule == 1){
@@ -255,7 +268,7 @@ jQuery(function($) {
 				chanSuccessBtn.click(function(){
 					var options = {};
 					
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".status"] = 1;
 					
@@ -274,7 +287,7 @@ jQuery(function($) {
 				chanFailBtn.click(function(){
 					var options = {};
 					
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".status"] = 2;
 					
@@ -292,7 +305,7 @@ jQuery(function($) {
 				
 				chanDelayBtn.click(function(){
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".status"] = 3;
 					
@@ -308,7 +321,7 @@ jQuery(function($) {
 				
 				chanPassBtn.click(function(){
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".status"] = 4;
 					
@@ -358,7 +371,7 @@ jQuery(function($) {
 					$("#chanWorkerSubmit").on("click", function(){
 						
 						var options = {};
-						options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+						options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 						options[operate.elementName+".orderId"] = orderId;
 						options[operate.elementName+".workerId"] = $('#chanWorkerName').val();
 						
@@ -368,7 +381,7 @@ jQuery(function($) {
 						}
 						
 						com.post(operate.setWorkerUrl, options, function(res){
-							qualityTestingPostData[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
+							qualityTestingDetail[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
 							
 							var workerInfo = res[operate.elementName];
 							
@@ -387,7 +400,7 @@ jQuery(function($) {
 				
 				$("#btnSubmit").click(function(){
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					
 					var _startTime = $("#chanStartTime").val();
@@ -407,7 +420,7 @@ jQuery(function($) {
 					options[operate.elementName+".endTime"] = _endTime;
 					
 					com.post(api.construction.setChanConstructionScheduleForInfo, options, function(res){
-						qualityTestingPostData[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
+						qualityTestingDetail[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
 						
 						com.showAlert(com.info, "当前施工进度信息提交成功!");
 					});
@@ -435,7 +448,7 @@ jQuery(function($) {
 						
 						var options = {};
 						
-						options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+						options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 						options[operate.elementName+".orderId"] = orderId;
 						options[operate.elementName+".workerId"] = qualityTestingDetail.workerUserId["#fangWorkerName"];
 						
@@ -445,7 +458,7 @@ jQuery(function($) {
 						}
 						
 						com.post(operate.setWorkerUrl, options, function(res){
-							qualityTestingPostData[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
+							qualityTestingDetail[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
 							
 							var workerInfo = res[operate.elementName];
 							
@@ -465,7 +478,7 @@ jQuery(function($) {
 				$("#btnSubmit").click(function(){
 					
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".putlineTime"] = $("#putlineTime").val();
 					options[operate.elementName+".status"] = "";
@@ -476,7 +489,7 @@ jQuery(function($) {
 					}
 					
 					com.post(operate.setInfoUrl, options, function(res){
-						qualityTestingPostData[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
+						qualityTestingDetail[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
 						com.showAlert(com.info, "设置成功!");
 					});
 				});
@@ -495,7 +508,7 @@ jQuery(function($) {
 				putlineSuccessBtn.click(function(){
 					
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".putlineStatus"] = 1;
 					
@@ -513,7 +526,7 @@ jQuery(function($) {
 				putlineFailBtn.click(function(){
 					
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					options[operate.elementName+".putlineStatus"] = 2;
 					
@@ -555,8 +568,8 @@ jQuery(function($) {
 				}
 				
 				var options = {};
-				options[operate.elementName+".csId"] = qualityTestingPostData[operate.elementName+".csId"];
-				options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+				options[operate.elementName+".csId"] = qualityTestingDetail[operate.elementName+".csId"];
+				options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 				
 				com.post(operate.queryWorkerUrl, options, function(res){
 					constructionScheduleWorkers = res.constructionScheduleWorkers;
@@ -567,7 +580,8 @@ jQuery(function($) {
 							var workerInfo = constructionScheduleWorkers[i];
 							
 							var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
-							var profileImg = $('<img id="workerImg" src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(profileDiv);
+							var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
+							var profileImg = $('<img></img>').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(imgDiv);
 							
 							if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
 								com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
@@ -588,9 +602,9 @@ jQuery(function($) {
 					}
 					
 					var args = {};
-					args[operate.workerName+".csId"] = qualityTestingPostData[operate.elementName+".csId"];
-					args[operate.workerName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
-					args[operate.workerName+".orderId"] = qualityTestingPostData["constructionSchedule.orderId"];
+					args[operate.workerName+".csId"] = qualityTestingDetail[operate.elementName+".csId"];
+					args[operate.workerName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
+					args[operate.workerName+".orderId"] = params.orderId;
 					args[operate.workerName+".workerId"] = $('#workerName').val();
 					args[operate.workerName+".workerName"] = $("#workerName_chosen span")[0].textContent.split("-")[0];
 					
@@ -599,7 +613,8 @@ jQuery(function($) {
 						var workerInfo = res[operate.workerName];
 						
 						var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
-						var profileImg = $('<img src="" alt="" class="editable img-responsive" style="height: 150px;"></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(profileDiv);
+						var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
+						var profileImg = $('<img></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(imgDiv);
 						
 						if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
 							com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
@@ -617,7 +632,7 @@ jQuery(function($) {
 				$("#btnSubmit").click(function(){
 					
 					var options = {};
-					options[operate.elementName+"."+operate.elementId] = qualityTestingPostData[operate.elementName+"."+operate.elementId];
+					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
 					
 					var _startTime = $("#startTime").val();
@@ -637,7 +652,7 @@ jQuery(function($) {
 					options[operate.elementName+".endTime"] = _endTime;
 					
 					com.post(operate.setInfoUrl, options, function(res){
-						qualityTestingPostData[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
+						qualityTestingDetail[operate.elementName+"."+operate.elementId] = res[operate.elementName][operate.elementId];
 						com.showAlert(com.info, "当前施工进度信息提交成功!");
 					});
 				});
@@ -678,90 +693,93 @@ jQuery(function($) {
 	$('#drawing').removeClass("active");
 	
 	$('.date-picker').datepicker({autoclose:true});
+	
+	function changeChanStatus(chanStatus){
+		var statusDiv = $("#chanStatus").html("");
+		
+		if(chanStatus == 1){
+			$("<span></span>").addClass("label label-success col-sm-4").text("成功").appendTo(statusDiv);
+		}else if(chanStatus == 2){
+			$("<span></span>").addClass("label label-danger col-sm-4").text("失败").appendTo(statusDiv);
+		}else if(chanStatus == 3){
+			$("<span></span>").addClass("label label-warning col-sm-4").text("延迟").appendTo(statusDiv);
+		}else if(chanStatus == 4){
+			$("<span></span>").addClass("label label-info col-sm-4").text("通过").appendTo(statusDiv);
+		}else{
+			$("<span></span>").addClass("label col-sm-4").text("待处理").appendTo(statusDiv);
+		}
+	}
+
+	function changeFangStatus(fangStatus){
+		var putlineStatusDiv = $("#fangStatus").html("");
+		
+		if(fangStatus == 1){
+			$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
+		}else if(fangStatus == 2){
+			$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
+		}else{
+			$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
+		}
+	}
+
+	function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, deleteUrl, drawingId){
+		$("#"+btnId).Huploadify({
+	        'debug' : false, // 开启调试
+	        'auto':true, // 是否自动上传
+	        'successTimeout':150, // 超时时间
+	        'formData':{ // 附带值
+	            'uploadType':uploadType,
+	            'username':'用户名',
+	            'rnd':'加密密文'
+	        },
+	        'buttonClass': 'btn btn-success',
+	        'buttonText': '上传',
+	        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+	        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+	        'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
+	        'height':'45', // 浏览按钮的高度
+	        'fileTypeDesc':'支持的格式：', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+	        'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
+	        'fileSizeLimit':'5MB', // 上传文件的大小限制
+	        'queueSizeLimit' : 25, // 上传数量
+	        'onUploadSuccess':function(file, data, response){ // 上传到服务器, 服务器返回相应信息到data里
+	        	var dateObj=eval("("+data+")");
+	        	if(dateObj.errorCode == 0){
+					var options = {};
+					options[name+"."+id] = fId;
+					options[name+".csId"] = qualityTestingDetail.construstionSchedule.csId;
+					options[name+".drawingName"] = "";
+					options[name+".drawingUrl"] = dateObj.resUrl;
+					options[name+".drawingAddUrl"] = "";
+					
+					com.post(addUrl, options, function(res){
+						var drawing = res[name];
+						var args = {};
+						args[name+"."+drawingId] = res[name][drawingId];
+						appendGalleryElement(galleryId, drawing[id], dateObj.resUrl, 0, "", deleteUrl, args);
+					});
+				}else{
+					console.log(data);
+				}
+	        }
+	    });
+	}
+
+	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, options){
+		
+		var gallery = $("#"+galleryId);
+		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
+		var img = $('<img></img>');
+		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
+			com.post(deleteUrl, options, function(res){
+				$("#gallery_li"+imgId).remove();
+			});
+		}).appendTo(toolsDiv);
+		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+		
+		imgA.colorbox(colorboxArgs);
+	};
+	
 });
-
-function changeChanStatus(chanStatus){
-	var statusDiv = $("#chanStatus").html("");
-	
-	if(chanStatus == 1){
-		$("<span></span>").addClass("label label-success col-sm-4").text("成功").appendTo(statusDiv);
-	}else if(chanStatus == 2){
-		$("<span></span>").addClass("label label-danger col-sm-4").text("失败").appendTo(statusDiv);
-	}else if(chanStatus == 3){
-		$("<span></span>").addClass("label label-warning col-sm-4").text("延迟").appendTo(statusDiv);
-	}else if(chanStatus == 4){
-		$("<span></span>").addClass("label label-info col-sm-4").text("通过").appendTo(statusDiv);
-	}else{
-		$("<span></span>").addClass("label col-sm-4").text("待处理").appendTo(statusDiv);
-	}
-}
-
-function changeFangStatus(fangStatus){
-	var putlineStatusDiv = $("#fangStatus").html("");
-	
-	if(fangStatus == 1){
-		$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
-	}else if(fangStatus == 2){
-		$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
-	}else{
-		$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
-	}
-}
-
-function initUploadBtn(galleryId, btnId, uploadType, name, id, fId, addUrl, deleteUrl, drawingId){
-	$("#"+btnId).Huploadify({
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':150, // 超时时间
-        'formData':{ // 附带值
-            'uploadType':uploadType,
-            'username':'用户名',
-            'rnd':'加密密文'
-        },
-        'buttonClass': 'btn btn-success',
-        'buttonText': '上传',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
-        'height':'45', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式：', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit':'5MB', // 上传文件的大小限制
-        'queueSizeLimit' : 25, // 上传数量
-        'onUploadSuccess':function(file, data, response){ // 上传到服务器, 服务器返回相应信息到data里
-        	var dateObj=eval("("+data+")");
-        	if(dateObj.errorCode == 0){
-				var options = {};
-				options[name+"."+id] = fId;
-				options[name+".csId"] = qualityTestingDetail.construstionSchedule.csId;
-				options[name+".drawingName"] = "";
-				options[name+".drawingUrl"] = dateObj.resUrl;
-				options[name+".drawingAddUrl"] = "";
-				
-				com.post(addUrl, options, function(res){
-					var drawing = res[name];
-					var args = {};
-					args[name+"."+drawingId] = res[name][drawingId];
-					appendGalleryElement(galleryId, drawing[id], dateObj.resUrl, 0, "", deleteUrl, args);
-				});
-			}else{
-				console.log(data);
-			}
-        }
-    });
-}
-
-function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, options){
-	
-	var gallery = $("#"+galleryId);
-	var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-	var img = $('<img></img>');
-	var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
-	var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-	var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
-		com.post(deleteUrl, options, function(res){
-			$("#gallery_li"+imgId).remove();
-		});
-	}).appendTo(toolsDiv);
-	$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-};

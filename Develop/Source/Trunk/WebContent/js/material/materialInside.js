@@ -1,25 +1,27 @@
-var materialInside = {
-	listgrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancellBtn: null,
-	modal: null,
-	items: {},
-	data:{
-		materialTypeData: {},
-		materialBrandData: {},
-	},
-	
-	statusData: [{"id":"0", "name":"初始"}, {"id":"1", "name":"已确认"}],
-	
-	editFlag: false,
-	repeatFlg:false,
-	commitFlag: false,
-};
 
 var materialInsidePostData = {};
 
 jQuery(function($) {
+	
+	var materialInside = {
+		listgrid: null,
+		gridPager: null,
+		saveBtn: null,
+		cancellBtn: null,
+		modal: null,
+		items: {},
+		data:{
+			materialTypeData: {},
+			materialBrandData: {},
+		},
+		
+		statusData: [{"id":"0", "name":"初始"}, {"id":"1", "name":"已确认"}],
+		
+		editFlag: false,
+		repeatFlg:false,
+		commitFlag: false,
+	};
+	
 	materialInside.listgrid = $("#listgrid");
 	materialInside.gridPager = "#gridPager";
 	materialInside.saveBtn = $("#saveBtn").on("click", saveData);

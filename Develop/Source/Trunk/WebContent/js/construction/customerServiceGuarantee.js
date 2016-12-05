@@ -12,6 +12,8 @@ jQuery(function($) {
 		editFlag: false,
 		repeatFlg: false,
 	};
+	
+	$('#fl-statement').statement("客服控制", "保修信息列表");
 
 	guarantee.saveBtn = $("#saveBtn").on("click", saveData);
 	guarantee.cancelBtn = $("#cancelBtn");
@@ -75,7 +77,8 @@ jQuery(function($) {
 				guarantee.guaranteeItems.customerName.val(row.customerName);
 				guarantee.guaranteeItems.guaranteeTime.val(row.guaranteeTime);
 				guarantee.guaranteeItems.guaranteeDes.val(row.guaranteeDes);
-				customerServicePostData["customerServiceGuarantee.csgId"] = row.csgId;
+				
+				guarantee["customerServiceGuarantee.csgId"] = row.csgId;
 
 				guarantee.guaranteeItems.orderId.attr('disabled', true);
 				guarantee.guaranteeItems.customerName.attr('disabled', true);
@@ -101,10 +104,12 @@ jQuery(function($) {
 		}
 	})();
 
-	var CustomerServiceGuaranteeSeacher = new Searcher();
-	CustomerServiceGuaranteeSeacher.init( [], "condList", api.construction.pageCustomerServiceGuarantee, function(list){
+	var searcher = new Searcher();
+	searcher.init( [], "condList", api.construction.pageCustomerServiceGuarantee, function(list){
 		displayFunc.init('resultList', list);
-	}, "pagenation", "customerServiceGuaranteeSeacherPostData", customerServicePostData, false, null,  function(){
+	}, "pagenation", "searcherPostData", {
+		"customerServiceGuarantee.orderId": params.orderId
+	}, false, null,  function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -122,8 +127,8 @@ jQuery(function($) {
 		
 		com.cleanItems(guarantee.guaranteeItems);
 
-		guarantee.guaranteeItems.orderId.val(customerServicePostData["customerServiceGuarantee.orderId"]);
-		guarantee.guaranteeItems.customerName.val(customerServicePostData["customerServiceGuarantee.customerName"]);
+		guarantee.guaranteeItems.orderId.val(params.orderId);
+		guarantee.guaranteeItems.customerName.val(params.customerName);
 
 		guarantee.guaranteeItems.orderId.attr("disabled", true);
 		guarantee.guaranteeItems.customerName.attr("disabled", true);
@@ -168,12 +173,12 @@ jQuery(function($) {
 
 		if(guarantee.editFlag){
 			url = api.construction.updateCustomerServiceGuarantee;
-			options["customerServiceGuarantee.csgId"] = customerServicePostData["customerServiceGuarantee.csgId"];
+			options["customerServiceGuarantee.csgId"] = guarantee["customerServiceGuarantee.csgId"];
 		}else{
 			url = api.construction.addCustomerServiceGuarantee;
 		}
 
-		com.post(url, options, successCallback, failCallback);
+		com.post(url, options, successCallback);
 		guarantee.modal.modal("hide");
 	}
 
@@ -181,19 +186,15 @@ jQuery(function($) {
 
 		bootbox.confirm("确认删除吗？", function(res){
 			if(res){
-				com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]"  : id}, successCallback, failCallback);
+				com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]"  : id}, successCallback);
 			}
 		});
 
 	}
 
 	function successCallback(result){
-		CustomerServiceGuaranteeSeacher.doSearch();
+		searcher.doSearch();
 	}
 
-	function failCallback(){
-
-	}
-	
 });
 

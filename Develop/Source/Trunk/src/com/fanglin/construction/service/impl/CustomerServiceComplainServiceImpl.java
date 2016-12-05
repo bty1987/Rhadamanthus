@@ -57,9 +57,12 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 		List<CustomerServiceComplaintVO> customerServiceComplaintVOs = new ArrayList<CustomerServiceComplaintVO>();
 		
 		for(CustomerServiceComplaintPO customerServiceComplaintPO: customerServiceComplaintPOs){
-			CustomerServiceComplaintVO _customerServiceComplaintVO = new CustomerServiceComplaintVO();
-			BeanUtil.copyProperties(customerServiceComplaintPO, _customerServiceComplaintVO);
-			customerServiceComplaintVOs.add(_customerServiceComplaintVO);
+			
+			customerServiceComplaintVO = new CustomerServiceComplaintVO();
+			
+			BeanUtil.copyProperties(customerServiceComplaintPO, customerServiceComplaintVO);
+			
+			customerServiceComplaintVOs.add(customerServiceComplaintVO);
 		}
 		
 		paging.setData(customerServiceComplaintVOs);

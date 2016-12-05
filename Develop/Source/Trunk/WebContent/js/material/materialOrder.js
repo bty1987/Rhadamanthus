@@ -1,17 +1,16 @@
 
-var materialOrder = {
-	modal: null,
-	materialOrderItems: {},
-	
-	msoId: null,
-	saleType: null,
-	
-	editFlag: false
-};
-
-var materialOrderPostData = {};
-
 jQuery(function($) {
+	
+	var materialOrder = {
+		modal: null,
+		materialOrderItems: {},
+		
+		msoId: null,
+		saleType: null,
+		
+		editFlag: false
+	};
+	
 	$('#fl-statement').statement("主材订单", "订单信息列表");
 	
 	var displayFunc  = (function(){
@@ -80,29 +79,29 @@ jQuery(function($) {
 	}, "pagenation", "materialOrderPostData");
 	
 	function viewMaterialSubOrderIndex(v){
-		materialOrderPostData["materialOrder.orderId"] = v.orderId;
-		materialOrderPostData["materialOrder.customerId"] = v.customer.customerId;
-		materialOrderPostData["materialOrder.customerName"] = v.customer.customerName;
-		materialOrderPostData["materialOrder.orderAddr"] = v.village.villageName + " " + v.houseNumber;
-		materialOrderPostData["materialOrder.designerId"] = v.designerId;
-		materialOrderPostData["materialOrder.designerName"] = v.designer;
+		params.orderId = v.orderId;
+		params.customerId = v.customer.customerId;
+		params.customerName = v.customer.customerName;
+		params.orderAddr = v.village.villageName + " " + v.houseNumber;
+		params.designerId = v.designerId;
+		params.designerName = v.designer;
 		
-		$("#materialOrderPageContent").load(api.index.materialSubOrderIndex.url);
+		com.switchPage(api.index.materialSubOrderIndex.url);
 	}
 
 	function viewMaterialSaleOrderIndex(v){
-		materialOrderPostData["materialOrder.orderId"] = v.orderId;
-		materialOrderPostData["materialOrder.customerId"] = v.customer.customerId;
-		materialOrderPostData["materialOrder.customerName"] = v.customer.customerName;
-		materialOrderPostData["materialOrder.orderAddr"] = v.village.villageName + " " + v.houseNumber;
-		materialOrderPostData["materialOrder.designerId"] = v.designerId;
-		materialOrderPostData["materialOrder.designerName"] = v.designer;
+		params.orderId = v.orderId;
+		params.customerId = v.customer.customerId;
+		params.customerName = v.customer.customerName;
+		params.orderAddr = v.village.villageName + " " + v.houseNumber;
+		params.designerId = v.designerId;
+		params.designerName = v.designer;
 		
-		materialOrder.saleType = "sale";
+		params.saleType = "sale";
 		
 		params.historyOrderPage = api.index.materialOrderIndex.url;
 		
-		$("#materialOrderPageContent").load(api.index.materialSaleOrderIndex.url);
+		com.switchPage(api.index.materialSaleOrderIndex.url);
 	}
 	
 });

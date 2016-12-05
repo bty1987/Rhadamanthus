@@ -1,4 +1,3 @@
-messagePostData = {};
 
 $(function(){
 
