@@ -144,3 +144,19 @@ CREATE TABLE `dregioncountdetail` (
   KEY `indextwo` (`sdId`, `createDate`),
   UNIQUE INDEX `uniqueone` (`ddId`, `sdId`, `createDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='尺源分区统计详细';
+
+DROP TABLE IF EXISTS `checkwork`;
+CREATE TABLE `checkwork` (
+  `cwId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(15) NOT NULL,
+  `workDate` date NOT NULL,
+  `checkType` tinyint NOT NULL COMMENT '1: OnDuty 上班 , 2: OffDuty 下班',
+  `sourceType` tinyint NOT NULL COMMENT '1: ATM 考勤机 , 2: USER 用户打卡 , 3: BOSS 老板改签 , 4: APPROVE 审批 , 5: RECHECK 重新计算 , 6: SYSTEM 考勤系统',
+  `result` tinyint NOT NULL COMMENT '1: Normal 正常 , 2: Early 早退 , 3: Late 迟到 , 4: SeriousLate 严重迟到 , 5: NotSigned 未打卡',
+  `location` tinyint NOT NULL COMMENT '1: Normal 范围内 , 2: Outside 范围外, 3: NotSigned 未打卡',
+  `baseTime` timestamp NULL DEFAULT NULL COMMENT '基准时间 , 计算迟到和早退',
+  `checkTime` timestamp NULL DEFAULT NULL COMMENT '打卡时间',
+  PRIMARY KEY (`cwId`),
+  KEY `indexone` (`userId`, `workDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='考勤记录';
+

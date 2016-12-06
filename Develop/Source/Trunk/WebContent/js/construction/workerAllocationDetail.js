@@ -447,9 +447,11 @@ jQuery(function($) {
 		workerUserId: {},
 	};
 	
-	var orderId = workerAllocationPostData["constructionSchedule.orderId"];
+	var orderId = params.orderId;
 	
-	com.post(api.construction.queryConstructionScheduleByOrderId, workerAllocationPostData, function(res){
+	com.post(api.construction.queryConstructionScheduleByOrderId, {
+		"constructionSchedule.orderId": params.orderId
+	}, function(res){
 		
 		workerAllocationDetail.construstionSchedule = res.constructionSchedule;
 		
@@ -520,8 +522,8 @@ jQuery(function($) {
 		var elementPostData = {};
 		var workerInfoCondition = false;
 		
-		var orderId = workerAllocationPostData["constructionSchedule.orderId"];
-		elementPostData[operate.elementName+".orderId"] = workerAllocationPostData["constructionSchedule.orderId"];
+		var orderId = params.orderId;
+		elementPostData[operate.elementName+".orderId"] = params.orderId;
 		
 		workerAllocationDetail.controlCondition = false;
 		
@@ -941,7 +943,7 @@ jQuery(function($) {
 						var args = {};
 						args[operate.workerName+".csId"] = workerAllocationDetailPostData[operate.elementName+".csId"];
 						args[operate.workerName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						args[operate.workerName+".orderId"] = workerAllocationPostData["constructionSchedule.orderId"];
+						args[operate.workerName+".orderId"] = params.orderId;
 						args[operate.workerName+".workerId"] = $('#' + operate.name + "WorkerName").val();
 						args[operate.workerName+".workerName"] = $("#" + operate.name + "WorkerName_chosen span")[0].textContent.split("-")[0];
 						

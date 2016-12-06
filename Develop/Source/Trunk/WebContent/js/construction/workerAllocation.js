@@ -1,6 +1,4 @@
 
-var workerAllocationPostData = {};
-
 jQuery(function($) {
 	
 	var workerAllocation = {
@@ -84,8 +82,8 @@ jQuery(function($) {
 	}, "pagenation", "workerAllocationSeacherPostData");
 	
 	function viewworkerAllocationDetail(orderId){
-		workerAllocationPostData["constructionSchedule.orderId"] = orderId;
-		$("#workerAllocationPageContent").load(api.index.workerAllocationDetailIndex.url);
+		params.orderId = orderId;
+		com.switchPage(api.index.workerAllocationDetailIndex.url);
 	}
 	
 });
