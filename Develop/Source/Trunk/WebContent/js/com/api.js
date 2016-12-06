@@ -28,12 +28,6 @@ var api = {
 		approvalTrackIndex: {url: "/views/approval/approvalTrack.html"},
 		userApproveIndex: {url: "/views/approval/userApprove.html"},
 		
-		decorationOrderAuditIndex: {url: "/views/audit/decorationOrder.html"},
-		decorationOrderDetailAuditIndex: {url: "/views/audit/decorationOrderDetail.html"},
-		auditIndex: {url: "/views/audit/audit.html"},
-		budgetAddOrReduceItemIndex: {url: "/views/audit/addOrReduceItems.html"},
-		chargebackIndex: {url: "/views/audit/chargeback.html"},
-		
 		supervisionIndex: {url: "/views/construction/supervision.html"},
 		supervisionDetailIndex: {url: "/views/construction/supervisionDetail.html"},
 		supervisionInDecreaseIndex: {url: "/views/construction/supervisionInDecrease.html"},

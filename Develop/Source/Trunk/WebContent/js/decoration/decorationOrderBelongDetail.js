@@ -1,14 +1,15 @@
-var decorationBelong = {
-	belongType:null,
-	decorationOrderId:null,
-	belongStatus:null,
-	
-	decorationBelongs:null,
-	
-	lastEditId:-1,
-};
 
 jQuery(function($) {
+	
+	var decorationBelong = {
+		belongType:null,
+		decorationOrderId:null,
+		belongStatus:null,
+		
+		decorationBelongs:null,
+		
+		lastEditId:-1,
+	};
 	
 	$('#fl-statement').statement("订单归属", "归属详细信息");
 	

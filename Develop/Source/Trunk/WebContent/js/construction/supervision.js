@@ -97,7 +97,6 @@ $(function(){
 
 	function viewReworkIndex(orderId){
 		params.orderId = orderId;
-		params.historyOrderPage = api.index.supervisionIndex.url;
 		com.switchPage(api.index.supervisionReworkIndex.url);
 	}
 
