@@ -304,6 +304,12 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
+		return session().createCriteria(UserPO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("identity", ident)).list();
+	}
+	
+	@Override
 	public UserPO queryUserByOldUserId(String oldUserId){
 	    return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("oldUserId", oldUserId)).uniqueResult();
 	}

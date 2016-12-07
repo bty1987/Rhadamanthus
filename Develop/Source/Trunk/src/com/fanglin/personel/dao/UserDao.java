@@ -48,6 +48,8 @@ public interface UserDao extends Dao<UserPO> {
 	
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
 	
+	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident);
+	
 	public UserPO queryUserByOldUserId(String oldUserId);
 	
 	public void resetPassword(String userId, String password);
