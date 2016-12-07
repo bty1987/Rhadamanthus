@@ -26,5 +26,9 @@ public interface DDApi {
 	public static final String DDAPI_GET_USER_INFO_STR = "%s/user/getuserinfo?access_token=%s&code=%s";
 	
 	public static final String DDAPI_GET_USER_STR = "%s/user/get?access_token=%s&userid=%s";
+	
+	public static final String DDAPI_ADD_USER_STR = "%s/user/create?access_token=%s";
+	
+	public static final String DDAPI_LIST_DEPARTMENT_STR = "%s/department/list?access_token=%s&id=%s";
 
 }

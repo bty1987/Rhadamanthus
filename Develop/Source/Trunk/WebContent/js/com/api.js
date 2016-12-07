@@ -204,6 +204,12 @@ var api = {
 		versionIndex: {url: "/version.html"},
 		faqIndex: {url: "/faq.html"},
 		
+	}, dd: {
+		
+		queryDDUserInfo: {url: "queryDDUserInfo.do", demo: true},
+		queryDDUser: {url: "queryDDUser.do", demo: true},
+		queryDDDepartment: {url: "queryDDDepartment.do", demo: true},
+		
 	}, common: {
 		
 		QRCode: {url: "QRCode.do", demo: true},

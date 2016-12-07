@@ -11,7 +11,9 @@ package com.fanglin.department.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("departmentService")
@@ -59,7 +62,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 	
 	@Override
-	public List<DepartmentVO> queryDepartment(String type, int company) throws FLException{
+	public List<DepartmentVO> queryDepartment(String type, Integer company) throws FLException{
 		
 		Integer _company = null;
 		
@@ -70,8 +73,23 @@ public class DepartmentServiceImpl implements DepartmentService {
 		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, _company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
+		Map<Integer, Integer> companys = new HashMap<Integer, Integer>();
+		
+		DepartmentVO departmentVO;
+		
 		for(DepartmentPO departmentPO: departmentPOs){
-			departmentVOs.add(convertBean(departmentPO));
+			
+			company = companys.get(departmentPO.getCompany());
+			
+			if(company == null){
+				company = FormatUtil.encodeCompanu(departmentPO.getCompany());
+				companys.put(departmentPO.getCompany(), company);
+			}
+			
+			departmentVO = convertBean(departmentPO);
+			departmentVO.setCompany(company);
+			
+			departmentVOs.add(departmentVO);
 		}
 		
 		return departmentVOs;

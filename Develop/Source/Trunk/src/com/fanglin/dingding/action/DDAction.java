@@ -11,6 +11,8 @@
 
 package com.fanglin.dingding.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -18,7 +20,9 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.dingding.po.Department;
 import com.fanglin.dingding.po.User;
+import com.fanglin.dingding.service.DepartmentService;
 import com.fanglin.dingding.service.UserService;
 import com.fanglin.dingding.utils.AuthHelper;
 
@@ -38,6 +42,10 @@ public class DDAction extends BaseListAction {
 	private String userInfo;
 	
 	private String code;
+	
+	private List<Department> departments;
+	
+	private Department department;
 	
 	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String requestDDConfig(){
@@ -59,6 +67,14 @@ public class DDAction extends BaseListAction {
 	public String queryUser(){
 		
 		user = UserService.getUser(user.getUserid());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String queryDDDepartment(){
+		
+		departments = DepartmentService.queryDepartment(department);
 		
 		return SUCCESS;
 	}
@@ -101,6 +117,22 @@ public class DDAction extends BaseListAction {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

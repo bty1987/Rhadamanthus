@@ -18,6 +18,7 @@ import com.fanglin.dingding.utils.AuthHelper;
 import com.fanglin.dingding.utils.Constant;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.SystemConfig;
 
 public class UserService {
@@ -42,6 +43,15 @@ public class UserService {
 		JSONObject json = HttpHelper.httpGet(url);
 		
 		return JSON.parseObject(json.toJSONString(), User.class);
+	}
+	
+	public static int addUser(UserPO userPO){
+		
+		User user = new User();
+		
+		user.setUserid(userPO.getUserId());
+		
+		return 0;
 	}
 	
 }

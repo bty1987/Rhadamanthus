@@ -176,10 +176,10 @@ jQuery(function(){
             var $g2 = $('<div></div>').addClass('form-group');
             $g2.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 内容 </label>');
             $g2.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.content + '</span></div>');
-
+            
             var $g3 = $('<div></div>').addClass('form-group');
             $g3.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建人 </label>');
-            $g3.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.creater.currentName + '</span></div>');
+            $g3.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + (calEvent.creater.currentName != null ? calEvent.creater.currentName : '无') + '</span></div>');
 
             var $g4 = $('<div></div>').addClass('form-group');
             $g4.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建时间 </label>');
@@ -250,7 +250,7 @@ jQuery(function(){
                         title: term.title,
                         start: start,
 
-                        className: term.type == 1? 'label-info' : 'label-success',
+                        className: term.type == 1? 'label-info' : term.type == 3 ? 'label-danger' : 'label-success',
                         creater : term.creater,
                         createTime : term.createTime,
                         content : term.content,
@@ -258,7 +258,6 @@ jQuery(function(){
                     });
                 });
 
-                console.log(events);
                 callback(events);
 
             }, null);//把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
