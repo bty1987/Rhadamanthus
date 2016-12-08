@@ -4,10 +4,10 @@ var materialSaleOrderPostData = {}
 
 jQuery(function($) {
 
-	materialSaleOrderPostData["materialSubOrder.customerId"] = params.customerId.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.customerId"];
-	materialSaleOrderPostData["materialSubOrder.designerId"] = params.designerId.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerId"];
-	materialSaleOrderPostData["materialSubOrder.designerName"] = params.designerName.indexOf('--') != -1 ? "" : materialOrderPostData["materialOrder.designerName"];
-
+	materialSaleOrderPostData["materialSubOrder.customerId"] = params.customerId.indexOf('--') != -1 ? "" : params.customerId;
+	materialSaleOrderPostData["materialSubOrder.designerId"] = params.designerId.indexOf('--') != -1 ? "" : params.designerId;
+	materialSaleOrderPostData["materialSubOrder.designerName"] = params.designerName.indexOf('--') != -1 ? "" : params.designerName;
+	
 	var materialSaleOrder = {
 		saveBtn:  $("#saveBtn"),
 		cancellBtn: $("#cancelBtn"),

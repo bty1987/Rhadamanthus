@@ -516,8 +516,12 @@ jQuery(function($) {
 						com.showAlert(com.warning, operate.errorMsg);
 						return false;
 					}else{
-						supervisionDetail["constructionSchedule."+operate.schedule] = step;
-						supervisionDetail["constructionSchedule.csId"] = res.constructionSchedule["csId"];
+						
+						var options = {};
+						
+						options["constructionSchedule.orderId"] = params.orderId;
+						options["constructionSchedule."+operate.schedule] = step;
+						options["constructionSchedule.csId"] = res.constructionSchedule["csId"];
 						
 						/**
 						 * 施工进度针对订单款项收取情况进行判断以及相应控制
@@ -525,7 +529,7 @@ jQuery(function($) {
 //						var nextFlag = true;
 //						if(step == 3){
 //							
-//							com.post(api.construction.checkConstructionScheduleForChanStatus, supervisionPostData, null, function(res){
+//							com.post(api.construction.checkConstructionScheduleForChanStatus, options, null, function(res){
 //								if(res.errorCode != 0){
 //									nextFlag = false;
 //									return false;
@@ -536,21 +540,21 @@ jQuery(function($) {
 //								return false;
 //							}
 //							
-//							com.post(api.construction.checkFirstPayment, supervisionPostData, null, function(res){
+//							com.post(api.construction.checkFirstPayment, options, null, function(res){
 //								if(res.errorCode != 0){
 //									nextFlag = false;
 //									return false;
 //								}
 //							}, false);
 //						}else if(step == 6){
-//							com.post(api.construction.checkSecondPayment, supervisionPostData, null, function(res){
+//							com.post(api.construction.checkSecondPayment, options, null, function(res){
 //								if(res.errorCode != 0){
 //									nextFlag = false;
 //									return false;
 //								}
 //							}, false);
 //						}else if(step == 9){
-//							com.post(api.construction.checkFinalyPayment, supervisionPostData, null, function(res){
+//							com.post(api.construction.checkFinalyPayment, options, null, function(res){
 //								if(res.errorCode != 0){
 //									nextFlag = false;
 //									return false;
@@ -558,14 +562,7 @@ jQuery(function($) {
 //							}, false);
 //						}
 						
-						com.post(api.construction.nextConstructionScheduleByOrderId, {
-							"constructionSchedule.orderId": params.orderId
-						}, function(res){
-							
-							var options = {};
-							
-							options[operate.nextElementName + ".orderId"] = params.orderId;
-							
+						com.post(api.construction.nextConstructionScheduleByOrderId, options, function(res){
 							operate = supervisionDetail.operateDict[step];
 							initWizardSept(operate, step);
 							supervisionDetail.wizardSept[step] = true;
