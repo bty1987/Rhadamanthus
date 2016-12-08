@@ -3,117 +3,54 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'b8e990bad8f38f657db0418e7fe453c687c0c06e'
-    oldFile: !uuid '08013a66f2cbb2df17e4ac2b5a154634789cfb1c'
+    newFile: !uuid '7debfc5ff53744b2c9305c0119c44738b68f09eb'
+    oldFile: !uuid 'b8e990bad8f38f657db0418e7fe453c687c0c06e'
   /Develop/Source:
-    newFile: !uuid 'b721b8d6db85cf74bdd9a6b1ecab1fb16bf0666a'
-    oldFile: !uuid 'caa743ee22e83d640d877d0babab2d6f3d622518'
+    newFile: !uuid 'daf658eff7525717b50e28d3aa8e256199732a28'
+    oldFile: !uuid 'b721b8d6db85cf74bdd9a6b1ecab1fb16bf0666a'
   /Develop/Source/Trunk:
-    newFile: !uuid '0726bfeab8d9d3d77ae284e490e5ff5aead4da73'
-    oldFile: !uuid 'b7f44ded702e63232e5e14265447b3fbc849f130'
+    newFile: !uuid '56dc437f644a4d83c854503c176fdc3f63db2414'
+    oldFile: !uuid '0726bfeab8d9d3d77ae284e490e5ff5aead4da73'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '65dc2af4c6cabee1839d0e6f51a8c8fdc6a16130'
-    oldFile: !uuid '0eae2af811540731a125fb8853bdfafae63986a6'
+    newFile: !uuid '6ab378364b2d48a2f3085972f776ffd7d2b04144'
+    oldFile: !uuid '65dc2af4c6cabee1839d0e6f51a8c8fdc6a16130'
   /Develop/Source/Trunk/WebContent/assets:
-    newFile: !uuid '73910fa09d499aaa29ae9363a15682b1a55658fc'
-    oldFile: !uuid 'ca9d7175ba1b1f06cf6991409ad654d47152b7ab'
-  /Develop/Source/Trunk/WebContent/assets/css:
-    newFile: !uuid 'f485cf9e1b6056b3a1b06b75caf8f33e5da72f99'
-    oldFile: !uuid '1b6198ac670a5d452d54b8b5647a5040c1a64ef3'
-  /Develop/Source/Trunk/WebContent/assets/css/ace.css:
-    newFile: !uuid '148405fc272e1aee47efd1a6407695441d6415aa'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/assets/css/ace.min.css:
-    newFile: null
-    oldFile: !uuid '984c8b61845c0675b93533210c0cae7e70f242bf'
+    newFile: !uuid 'd7ea0463e93b82e5ad6d0b8f0ab896d8f9f94837'
+    oldFile: !uuid '73910fa09d499aaa29ae9363a15682b1a55658fc'
   /Develop/Source/Trunk/WebContent/assets/js:
-    newFile: !uuid '9f253a895e1aa51db6cfcc5b3bc6fd8994434688'
-    oldFile: !uuid '287a0ac28371b94dd2a0126ca1fd941209a3eb1a'
-  /Develop/Source/Trunk/WebContent/assets/js/ace-elements.js:
-    newFile: !uuid 'a342dade9824847a56e8e5c617600df48c7f61d9'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/assets/js/ace-elements.min.js:
-    newFile: null
-    oldFile: !uuid 'b466d9adda54f0fff97aac5f6bb8f4fecaf14fd4'
+    newFile: !uuid '493282e0ab48f0234c647e68a7c49c3fcc734b32'
+    oldFile: !uuid '9f253a895e1aa51db6cfcc5b3bc6fd8994434688'
   /Develop/Source/Trunk/WebContent/assets/js/fuelux:
-    newFile: !uuid 'ec3c74399e7020917238e30ce8efab9eb9e60e74'
-    oldFile: !uuid '4433529699cae59d51c0389a32c6e1576004e757'
+    newFile: !uuid '883e00be39649093bc25fc41c23dd33624b18bd5'
+    oldFile: !uuid 'ec3c74399e7020917238e30ce8efab9eb9e60e74'
   /Develop/Source/Trunk/WebContent/assets/js/fuelux/fuelux.tree.js:
-    newFile: !uuid 'e9dcd9e44459f2c5959de74a5c52e37d38d9ddaa'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/assets/js/fuelux/fuelux.tree.min.js:
-    newFile: null
-    oldFile: !uuid '4558e4fb7b25f166a6c4f3b7798e3729c007bb5a'
-  /Develop/Source/Trunk/WebContent/dlogin.html:
-    newFile: !uuid '132ddac3243075c4ea51df9b924c0f551a6c1afc'
-    oldFile: !uuid '269fad49596f51c35eea42823291263596f4f92f'
-  /Develop/Source/Trunk/WebContent/error.html:
-    newFile: !uuid '841b79a3394955ba0e3a0f42a1b6e5ae8ce46201'
-    oldFile: !uuid 'd213d826c116df71c3295d88e57d9eafa6f31a19'
+    newFile: !uuid '0eeca97894b37ab522065f6efb60dc53ea1a03c5'
+    oldFile: !uuid 'e9dcd9e44459f2c5959de74a5c52e37d38d9ddaa'
+  /Develop/Source/Trunk/WebContent/db:
+    newFile: !uuid 'e10462c465b55795f6b354d82645dae6db4d7857'
+    oldFile: !uuid '359b449f2a18c07df1318b87a6af7e2359a36179'
+  /Develop/Source/Trunk/WebContent/db/report.sql:
+    newFile: !uuid 'f891b4ac12bcf9523f645fecb34e89f1958bc52d'
+    oldFile: !uuid '1d33158c4f873d2aad4f0ab6c337e95b38568bfb'
   /Develop/Source/Trunk/WebContent/index.html:
-    newFile: !uuid 'a04a486eda6f10564e08e631e3d313c7f0d646d4'
-    oldFile: !uuid 'ea9b3dec31f11a5851087b59c8d3168b71f938c9'
-  /Develop/Source/Trunk/WebContent/login.html:
-    newFile: !uuid 'aa8db55b5eb9925afb2742e7d6413ef95a442a07'
-    oldFile: !uuid '8e13cc510fead686ed8e58e31eda9a8619ca5a48'
-  /Develop/Source/Trunk/WebContent/main.html:
-    newFile: !uuid '8a1c9a6928476f731610389f44853a05ed33342b'
-    oldFile: !uuid '86ea4dee782eaa0d9aa6a76cf51369d66e523d27'
-  /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '39ec85f9fed37c58fbae19357dab316aa4669911'
-    oldFile: !uuid '2c69694c8f67589fd6d687f119ca0841e27121bc'
-  /Develop/Source/Trunk/WebContent/views/contract:
-    newFile: !uuid '8211e4e4968b86252cc99f0e29c767003faf2331'
-    oldFile: !uuid 'fd88a94e0e7d4483da218c007e28b071cc210fff'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContract.html:
-    newFile: !uuid 'a6aee0bbc23addb091a4556ba31e351d53e1fb7b'
-    oldFile: !uuid '5c55921293601180635bbe50deeae82574d3bdda'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContract1.html:
-    newFile: !uuid '5d34445e4e41efa5961a49b737bfbc01313c190c'
-    oldFile: !uuid '6a04e2b076042e5ba0cafbf78c49c9d27808289c'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContractEHome.html:
-    newFile: !uuid 'e7f2036446691ee0fe8bd53e6339380c7c3bfd7e'
-    oldFile: !uuid 'eb76375d684819f35531a6d591cc9ebfe9752738'
-  /Develop/Source/Trunk/WebContent/views/decoration:
-    newFile: !uuid 'f9cf2b00466a59c1d8f3c4be76c3050466fc59d7'
-    oldFile: !uuid '1a6d23819541af68be1051687bb041da51d45481'
-  /Develop/Source/Trunk/WebContent/views/decoration/addReduceOutput.html:
-    newFile: !uuid 'af07f3383eced07f3e8384b19c5c3529b4c43014'
-    oldFile: !uuid 'f9b17a8215639a9b3d6548552bf2a117656f2a3a'
-  /Develop/Source/Trunk/WebContent/views/map:
-    newFile: !uuid 'f0ea949e1e43cf6cda6c50dbadd4dded60e66f54'
-    oldFile: !uuid 'de77b3a59ffaab8d5e6de5357c065b6bbd82012d'
-  /Develop/Source/Trunk/WebContent/views/map/index.html:
-    newFile: !uuid 'eea6f5ce8d49906df936714c6bf7dea0972604b3'
-    oldFile: !uuid 'c9d218f67b69510b54b85caab4016b377a919ab8'
-  /Develop/Source/Trunk/WebContent/views/map/track.html:
-    newFile: !uuid '6ae3ec135ecf61f65b827de1b522f0163b2407de'
-    oldFile: !uuid '8b326c1815cfb7cf5dad07f4c4b60195d5a1acbf'
-  /Develop/Source/Trunk/WebContent/views/material:
-    newFile: !uuid '9d59473d1d7cc61a65751e577070efcc47749517'
-    oldFile: !uuid '4821d43a0b79ba8f4e17f0c747c30debd5013877'
-  /Develop/Source/Trunk/WebContent/views/material/materialSubOrderReceipt.html:
-    newFile: !uuid 'abcb0ff66689180d3192a27501ff6fd35dd6662f'
-    oldFile: !uuid '515d8408a6cf902538ef33c51100d75d95a0e9c5'
-  /Develop/Source/Trunk/WebContent/views/payment:
-    newFile: !uuid 'e11fcefc7e408d02c4dda527a384e3c7e7dd004c'
-    oldFile: !uuid '39469db28853498b2f9807fd8d7b222527a98c3e'
-  /Develop/Source/Trunk/WebContent/views/payment/decorationPaymentReceipt.html:
-    newFile: !uuid '5acba294bfe1f9f69fe59d6eaa26538e3e20dd37'
-    oldFile: !uuid '5fb08938530fd43c92c7070e81e62f4251bc6081'
-  /Develop/Source/Trunk/WebContent/views/payment/materialPaymentReceipt.html:
-    newFile: !uuid '956b5725f0eec4e0e3a062520142a9f6cead1bd8'
-    oldFile: !uuid 'd8462ecf195c115221833db6c45ac8e7b009b9ff'
-  /Develop/Source/Trunk/WebContent/views/payment/paymentReceipt.html:
-    newFile: !uuid '766e4296a9d73674c43817f8324447713060bad1'
-    oldFile: !uuid '6d2b4f723c4216bc82ef8ec2c19c8ae1e012ed9f'
-  /Develop/Source/Trunk/WebContent/views/quotation:
-    newFile: !uuid '7aabc54892f57f8611fbdb8690f20d9993e5e7b1'
-    oldFile: !uuid 'ed8e62722716de65ab1f2a98501f69be2c8028b2'
-  /Develop/Source/Trunk/WebContent/views/quotation/quotationOutput.html:
-    newFile: !uuid 'ffd2711eef8918624367bf8d0e1d5af6f601907c'
-    oldFile: !uuid '2ef6d4147c608793d5bde057c509dd20132bd05c'
-gitCommitId: !uuid 'b937358c973931a92ba10109e8fdd5b1128adafa'
-renames:
-  /Develop/Source/Trunk/WebContent/assets/css/ace.css: /Develop/Source/Trunk/WebContent/assets/css/ace.min.css
-revisionId: 114
+    newFile: !uuid '961a4aeadc7353a0a53e03ad3eca5ca2adbfc7f3'
+    oldFile: !uuid 'a04a486eda6f10564e08e631e3d313c7f0d646d4'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid '55412a183fcfeae136dfa8298e4be6c29d027fc0'
+    oldFile: !uuid 'd6a421a227a0ab013e5f2137113978b43fda2a18'
+  /Develop/Source/Trunk/WebContent/js/construction:
+    newFile: !uuid 'd45fb200e03d25636413b3b83945a7f3777cd786'
+    oldFile: !uuid '65bce43f3458b22b4a623ef750614ab352bbc394'
+  /Develop/Source/Trunk/WebContent/js/construction/supervisionDetail.js:
+    newFile: !uuid '9f2c6b05b90ae7e7660c0ee6676dcdd575d43283'
+    oldFile: !uuid 'c62f549c3f8303637358fccc01c6dae4334a6270'
+  /Develop/Source/Trunk/WebContent/js/material:
+    newFile: !uuid '85f08d1d4a03839f87e3e80cee335d5bbe06a63e'
+    oldFile: !uuid 'dbfba1f2452c9eda0474b818f83d428befd4240e'
+  /Develop/Source/Trunk/WebContent/js/material/materialSaleOrder.js:
+    newFile: !uuid '857d9fdff7da19021796653ece729ded98dbbc34'
+    oldFile: !uuid '57a89a35ce9f57d278024999a606432e82a2afff'
+gitCommitId: !uuid 'e422f93de0b5df1e221bef0d6d02d07ab9e7b99c'
+renames: {
+  }
+revisionId: 115
