@@ -9948,7 +9948,7 @@ ul.attachment-list>li {
 	z-index:1
 }
 .tree .tree-selected {
-	background-color:rgba(98,168,209,0.1);
+	background-color:rgba(98,168,209,0.3);
 	color:#6398b0
 }
 .tree .tree-selected:hover {
@@ -9986,7 +9986,7 @@ ul.attachment-list>li {
 .tree .tree-selected>[class*="icon-"]:first-child {
 	background-color:#f9a021;
 	border-color:#f9a021;
-	color:#FFF
+	/*color:#FFF*/
 }
 .tree .icon-plus[class*="icon-"]:first-child,.tree .icon-minus[class*="icon-"]:first-child {
 	border:1px solid #DDD;
