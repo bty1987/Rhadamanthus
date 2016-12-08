@@ -105,12 +105,10 @@
 			if(this.options.folderSelect){
 				var _d = a(e);
 				var _ps = _d.parent().parents('.tree-folder');
-				var _fs = a(_ps[_ps.length-1]).find('.tree-folder-header');
-				var _l = _d.hasClass("tree-folder-header") ? _fs.length-1 : _fs.length;
+				var _l = _d.hasClass("tree-folder-header") ? _ps.length-1 : _ps.length;
 				
 				for(var i=0;i<_l;i++){
-					console.log(_fs[i]);
-					if(a(_fs[i]).hasClass("tree-selected")){
+					if(a(_ps[i]).children(".tree-folder-header").hasClass("tree-selected")){
 						_d.removeClass("tree-selected");
 						break;
 					}
@@ -120,8 +118,6 @@
 					_d.parent().find(".tree-selected").removeClass("tree-selected");
 					_d.addClass("tree-selected");
 				}
-				
-				_d.removeAttr("bty");
 			}
 		},
 		selectFolder: function(e) {
