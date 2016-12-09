@@ -64,12 +64,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartment(String type, Integer company) throws FLException{
 		
-		Integer _company = null;
+		Integer _company = company != CompanyPO.TYPE_HEADQUARTER_INT ? company : null;
 		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			_company = company;
-		}
-
 		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, _company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
