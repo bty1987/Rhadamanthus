@@ -310,6 +310,7 @@ public class UserServiceImpl implements UserService {
 		if(userPO != null){
 			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getStatus().equals("离职")){
 				userVO = convertBean(userPO);
+				userVO.setCompany(userPO.getCompany());
 			}
 		}
 		
@@ -317,11 +318,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private UserVO convertBean(UserPO userPO){
-		UserVO userVO = new UserVO();
+		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO());
 		
 		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept"));
-		userVO.setRole(new RoleVO());
-		userVO.setDept(new DepartmentVO());
 
 		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
 		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "cityProper"));
@@ -331,6 +330,7 @@ public class UserServiceImpl implements UserService {
 			
 			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "cityProper"));
 		}
+		
 		return userVO;
 	}
 
