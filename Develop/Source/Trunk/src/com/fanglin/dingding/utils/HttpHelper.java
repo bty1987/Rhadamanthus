@@ -83,6 +83,7 @@ public class HttpHelper {
                     return result;
                 } else {
                     logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
+                    return result;
                 }
             }
         } catch (IOException e) {
@@ -135,6 +136,7 @@ public class HttpHelper {
                     return result;
                 } else {
                 	logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
+                	return result;
                 }
             }
         } catch (IOException e) {

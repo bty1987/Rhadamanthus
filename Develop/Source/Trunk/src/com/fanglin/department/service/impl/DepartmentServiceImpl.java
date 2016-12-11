@@ -78,7 +78,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			company = companys.get(departmentPO.getCompany());
 			
 			if(company == null){
-				company = FormatUtil.encodeCompanu(departmentPO.getCompany());
+				company = FormatUtil.encodeCompany(departmentPO.getCompany());
 				companys.put(departmentPO.getCompany(), company);
 			}
 			

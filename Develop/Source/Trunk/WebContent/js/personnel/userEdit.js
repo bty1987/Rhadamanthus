@@ -237,86 +237,299 @@ jQuery(function(a) {
     }).next().on(ace.click_event,function() {
         a(this).prev().focus()
     });
-});
 
-function saveData() {
-    if (!com.validate() && !user.repeatFlg) {
-        var a, b = {
-            "user.userId": user.items.userId.val(),
-            "user.oldUserId": user.items.oldUserId.val(),
-            "user.userName": user.items.userName.val(),
-            "user.currentName": user.items.currentName.val(),
-            "user.gender": com.genderType[user.items.gender.prop("checked")],
-            "user.age": user.items.age.val(),
-            "user.birthday": user.items.birthday.val(),
-            "user.political": user.items.politicalSel.val(),
-            "user.jobYears": user.items.jobYears.val(),
-            "user.identity": user.items.identity.val(),
-            "user.phone": user.items.phone.val(),
-            "user.address": user.items.address.val(),
-            "user.hometownAddress": user.items.hometownAddress.val(),
-            "user.householdType": user.items.householdSel.val(),
-            "user.emergencyMan": user.items.emergencyMan.val(),
-            "user.emergencyPhone": user.items.emergencyPhone.val(),
-            "user.isPresentGraduate": com.isOrNotType[user.items.isPresentGraduate.prop("checked")],
-            "user.graduateTime": "" == user.items.graduateTime.val() ? void 0 : user.items.graduateTime.val(),
-            "user.school": user.items.school.val(),
-            "user.education": user.items.educationSel.val(),
-            "user.specialty": user.items.specialty.val(),
-            "user.isMarried": com.isOrNotType[user.items.isMarried.prop("checked")],
-            "user.isBirth": com.isOrNotType[user.items.isBirth.prop("checked")],
-            "user.isHouseLoan": com.isOrNotType[user.items.isHouseLoan.prop("checked")],
-            "user.isCarLoan": com.isOrNotType[user.items.isCarLoan.prop("checked")],
-            "user.houseType": user.items.houseTypeSel.val(),
-            "user.lover": user.items.lover.val(),
-            "user.loginId": user.items.loginId.val(),
-            "user.deptType": user.items.deptTypeSel.val(),
-            "user.dept.deptId": user.items.deptSel.val(),
-            "user.duty": user.items.dutySel.val().toString(),
-            "user.status": user.items.statusSel.val(),
-            "user.employWay": user.items.employWaySel.val(),
-            "user.employType": user.items.employTypeSel.val(),
-            "user.recommendMan": user.items.recommendMan.val(),
-            "user.entryTime": "" == user.items.entryTime.val() ? void 0 : user.items.entryTime.val(),
-            "user.employTime": "" == user.items.employTime.val() ? void 0 : user.items.employTime.val(),
-            "user.serviceYears": user.items.serviceYears.val(),
-            "user.isContract": com.isOrNotType[user.items.isContract.prop("checked")],
-            "user.isInsurance": com.isOrNotType[user.items.isInsurance.prop("checked")],
-            "user.insuranceTime": "" == user.items.insuranceTime.val() ? void 0 : user.items.insuranceTime.val(),
-            "user.pensionNum": user.items.pensionNum.val(),
-            "user.medicalNum": user.items.medicalNum.val(),
-            "user.salary": user.items.salary.val(),
-            "user.bank": user.items.bank.val(),
-            "user.bankCardNum": user.items.bankCardNum.val()
-        };
-        for (a = 0; a < user.experienceList.length; a++) b["user.experiences[" + a + "].userId"] = b["user.userId"],
-            b["user.experiences[" + a + "].id"] = user.experienceList[a].experienceId,
-            b["user.experiences[" + a + "].type"] = user.experienceList[a].type,
-            b["user.experiences[" + a + "].company"] = user.experienceList[a].company,
-            b["user.experiences[" + a + "].position"] = user.experienceList[a].position,
-            b["user.experiences[" + a + "].startTime"] = user.experienceList[a].startTime,
-            b["user.experiences[" + a + "].endTime"] = user.experienceList[a].endTime,
-            b["user.experiences[" + a + "].des"] = user.experienceList[a].des,
-            b["user.experiences[" + a + "].flag"] = user.experienceList[a].flag;
-        for (a = 0; a < user.contractList.length; a++) b["user.contracts[" + a + "].userId"] = b["user.userId"],
-            b["user.contracts[" + a + "].contractId"] = user.contractList[a].contractId,
-            b["user.contracts[" + a + "].startTime"] = user.contractList[a].startTime,
-            b["user.contracts[" + a + "].endTime"] = user.contractList[a].endTime,
-            b["user.contracts[" + a + "].des"] = user.contractList[a].des,
-            b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
-        user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
-        
-        com.post(a, b, successCallback, failCallback);
+
+    /*获取钉钉部门*/
+
+//    user.items.userId.val()
+
+    var deptList = null;
+    var selectedDepts = null;
+
+    com.post(api.dd.queryDDDepartment, {"department.parentid": 1}, function(res){
+        deptList = res.departments;
+    }, null, false);
+
+    if(user.items.userId.val()){
+
+        com.post(api.dd.queryDDUser, {"user.userid": user.items.userId.val()}, function(res){
+            selectedDepts = res.user.department;
+
+
+            var depts = [];
+
+            var length = selectedDepts.length;
+            if(length){
+                for(var i = 0; i<length; i++){
+                    depts.push(getSelectedDeptTree(selectedDepts[i]));
+                }
+            }
+
+            $('#dddept').val(depts.length ? depts.join(',') : null);
+        }, null, false);
 
     }
-}
 
-function successCallback() {
-    com.showAlert(com.info, "操作成功");
-    com.switchPage(api.index.userIndex.url);
-}
+    if(!deptList.length) return;
 
-function failCallback() {
-    user.contractList = [];
-    user.experienceList = []
-};
+    var deptObj = {
+        '1' : {
+            name: '1',
+            type : 'folder',
+            //children : {}
+            id : 1
+        }
+    }, didList = [];
+
+    //获取所有叶子节点
+    $.each(deptList, function(i, v){
+        didList.push(v.id);
+    });
+
+    $.each(deptList, function(i,v){
+        if(v.parentid && didList.indexOf(v.parentid) != -1){
+            didList.splice(didList.indexOf(v.parentid),1);
+        }
+    });
+
+    /*//获取根节点
+    $.each(deptList, function(i, v){
+        if(v.parentid != 1) return true;
+
+
+        deptObj['1']['children'][v.id] = {
+            name: v.name,
+            type : didList.indexOf(v.id) == -1 ? 'folder' : 'item',
+            id : v.id,
+
+        };
+
+        if(selectedDepts && selectedDepts.length && selectedDepts.indexOf(v.id) != -1){
+
+            deptObj['1']['children'][v.id]["additionalParameters"] = {"item-selected" : true};
+        }
+
+    });*/
+
+
+
+
+    var getDeptByDid = function(did){
+        var depts = {};
+
+        $.each(deptList, function(i, v){
+
+            if(v.parentid == did){
+                depts[v.id] = {
+                    name: v.name,
+                    type : didList.indexOf(v.id) == -1 ? 'folder' : 'item',
+                    id : v.id,
+                }
+
+
+                if(selectedDepts && selectedDepts.length && selectedDepts.indexOf(v.id) != -1){
+
+                    depts[v.id]["additionalParameters"] = {"item-selected" : true};
+                }
+
+            }
+        });
+
+        return depts;
+    };
+
+
+    $('#tree3').ace_tree({
+        dataSource: {
+            data : function(options, callback) {
+
+                console.log(options);
+
+                var $data = null;
+
+                if(!("name" in options) && !("type" in options)){
+                    $data = deptObj;//the root tree
+                    callback({ data: $data });
+                    return;
+                }
+                else if("type" in options && options.type == "folder") {
+                    if("children" in options)
+                        $data = options.children;
+                    else {
+                        $data = getDeptByDid(options.id);
+                    }
+                }
+
+                if($data != null)
+                    setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+            }
+        },
+        loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+        'open-icon' : 'icon-minus',
+        'close-icon' : 'icon-plus',
+        'selectable' : true,
+        'multiSelect' : true,
+        'selected-icon' : null,
+        'unselected-icon' : null,
+        folderSelect : true,
+        cacheItems : false
+
+    }).on('selected', function (evt, opt) {
+        //console.log(opt.info)
+    });
+
+
+    $("#dddeptModal").on('hidden.bs.modal', function(e){
+
+        $('#tree3').find('.tree-folder').each(function(){
+            if($(this).css('display') != 'block')return true;
+            $(this).find('.tree-folder-header i').eq(0).trigger('click');
+        });
+
+
+    });
+
+
+
+
+
+    $('#dddeptbtn').click(function(){
+
+        $('#dddeptModal').modal('show');
+    });
+
+    $('#save').click(function(){
+
+        var items = $('#tree3' ).tree('selectedItems' );
+
+        var length = items.length;
+        var depts = [];
+        if(length){
+            selectedDepts = [];
+            for(var i =0; i<length; i++){
+                selectedDepts.push(items[i].id);
+                depts.push(getSelectedDeptTree(items[i].id));
+            }
+
+            $('#dddept').val(depts.join(','));
+
+        }
+
+
+        $('#dddeptModal').modal("hide");
+    });
+
+    function getSelectedDeptTree(id){
+        var flag = true;
+        var chain = '';
+        while(flag){
+
+            $.each(deptList, function(i, v){
+                if(v.id == id){
+                    chain = chain ? v.name + '-' + chain : v.name + chain;
+
+                    if(v.parentid != 1){
+                        id = v.parentid
+                    }else{
+                        flag = false;
+                    }
+                    return false;
+                }else return true;
+            });
+        }
+
+        return chain;
+    }
+
+
+
+    function saveData() {
+        if (!com.validate() && !user.repeatFlg) {
+            var a, b = {
+                "user.userId": user.items.userId.val(),
+                "user.oldUserId": user.items.oldUserId.val(),
+                "user.userName": user.items.userName.val(),
+                "user.currentName": user.items.currentName.val(),
+                "user.gender": com.genderType[user.items.gender.prop("checked")],
+                "user.age": user.items.age.val(),
+                "user.birthday": user.items.birthday.val(),
+                "user.political": user.items.politicalSel.val(),
+                "user.jobYears": user.items.jobYears.val(),
+                "user.identity": user.items.identity.val(),
+                "user.phone": user.items.phone.val(),
+                "user.address": user.items.address.val(),
+                "user.hometownAddress": user.items.hometownAddress.val(),
+                "user.householdType": user.items.householdSel.val(),
+                "user.emergencyMan": user.items.emergencyMan.val(),
+                "user.emergencyPhone": user.items.emergencyPhone.val(),
+                "user.isPresentGraduate": com.isOrNotType[user.items.isPresentGraduate.prop("checked")],
+                "user.graduateTime": "" == user.items.graduateTime.val() ? void 0 : user.items.graduateTime.val(),
+                "user.school": user.items.school.val(),
+                "user.education": user.items.educationSel.val(),
+                "user.specialty": user.items.specialty.val(),
+                "user.isMarried": com.isOrNotType[user.items.isMarried.prop("checked")],
+                "user.isBirth": com.isOrNotType[user.items.isBirth.prop("checked")],
+                "user.isHouseLoan": com.isOrNotType[user.items.isHouseLoan.prop("checked")],
+                "user.isCarLoan": com.isOrNotType[user.items.isCarLoan.prop("checked")],
+                "user.houseType": user.items.houseTypeSel.val(),
+                "user.lover": user.items.lover.val(),
+                "user.loginId": user.items.loginId.val(),
+                "user.deptType": user.items.deptTypeSel.val(),
+                "user.dept.deptId": user.items.deptSel.val(),
+                "user.duty": user.items.dutySel.val().toString(),
+                "user.status": user.items.statusSel.val(),
+                "user.employWay": user.items.employWaySel.val(),
+                "user.employType": user.items.employTypeSel.val(),
+                "user.recommendMan": user.items.recommendMan.val(),
+                "user.entryTime": "" == user.items.entryTime.val() ? void 0 : user.items.entryTime.val(),
+                "user.employTime": "" == user.items.employTime.val() ? void 0 : user.items.employTime.val(),
+                "user.serviceYears": user.items.serviceYears.val(),
+                "user.isContract": com.isOrNotType[user.items.isContract.prop("checked")],
+                "user.isInsurance": com.isOrNotType[user.items.isInsurance.prop("checked")],
+                "user.insuranceTime": "" == user.items.insuranceTime.val() ? void 0 : user.items.insuranceTime.val(),
+                "user.pensionNum": user.items.pensionNum.val(),
+                "user.medicalNum": user.items.medicalNum.val(),
+                "user.salary": user.items.salary.val(),
+                "user.bank": user.items.bank.val(),
+                "user.bankCardNum": user.items.bankCardNum.val()
+            };
+            for (a = 0; a < user.experienceList.length; a++) b["user.experiences[" + a + "].userId"] = b["user.userId"],
+                b["user.experiences[" + a + "].id"] = user.experienceList[a].experienceId,
+                b["user.experiences[" + a + "].type"] = user.experienceList[a].type,
+                b["user.experiences[" + a + "].company"] = user.experienceList[a].company,
+                b["user.experiences[" + a + "].position"] = user.experienceList[a].position,
+                b["user.experiences[" + a + "].startTime"] = user.experienceList[a].startTime,
+                b["user.experiences[" + a + "].endTime"] = user.experienceList[a].endTime,
+                b["user.experiences[" + a + "].des"] = user.experienceList[a].des,
+                b["user.experiences[" + a + "].flag"] = user.experienceList[a].flag;
+            for (a = 0; a < user.contractList.length; a++) b["user.contracts[" + a + "].userId"] = b["user.userId"],
+                b["user.contracts[" + a + "].contractId"] = user.contractList[a].contractId,
+                b["user.contracts[" + a + "].startTime"] = user.contractList[a].startTime,
+                b["user.contracts[" + a + "].endTime"] = user.contractList[a].endTime,
+                b["user.contracts[" + a + "].des"] = user.contractList[a].des,
+                b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
+
+            for(a=0; a<selectedDepts.length; a++){
+                b['ddeptIds[' + a + ']'] = selectedDepts[a];
+            }
+            user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
+
+            com.post(a, b, successCallback, failCallback);
+
+        }
+    }
+
+    function successCallback() {
+        com.showAlert(com.info, "操作成功");
+        com.switchPage(api.index.userIndex.url);
+    }
+
+    function failCallback(res) {
+        com.showAlert(com.error, res.errorMsg);
+        user.contractList = [];
+        user.experienceList = []
+    };
+
+
+});
+

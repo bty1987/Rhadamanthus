@@ -1,40 +1,42 @@
-var role = {
-	saveBtn: null,
-	operationSaveBtn: null,
-	moduleSaveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	operationModal : null,
-	moduleModal : null,
-	roleItems: {},
-	
-	validator: {
-		roleId: {
-			type: "v_roleId", 
-			regex: /^[\w-_]+$/, 
-			errorMsg: "请输入数字字母或下划线中划线."
-		}
-	},
-	
-	postParam: {},
-	
-	editFlg: false,
-	repeatFlg: false
-};
-
-var setting = {
-	check: {
-		enable: true,
-		chkDisabledInherit: true,
-		chkboxType: { "Y": "s", "N": "ps" }
-	}, data: {
-		simpleData: {
-			enable: true
-		}
-	}
-};
 
 jQuery(function($) {
+	
+	var role = {
+		saveBtn: null,
+		operationSaveBtn: null,
+		moduleSaveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		operationModal : null,
+		moduleModal : null,
+		roleItems: {},
+		
+		validator: {
+			roleId: {
+				type: "v_roleId", 
+				regex: /^[\w-_]+$/, 
+				errorMsg: "请输入数字字母或下划线中划线."
+			}
+		},
+		
+		postParam: {},
+		
+		editFlg: false,
+		repeatFlg: false
+	};
+
+	var setting = {
+		check: {
+			enable: true,
+			chkDisabledInherit: true,
+			chkboxType: { "Y": "s", "N": "ps" }
+		}, data: {
+			simpleData: {
+				enable: true
+			}
+		}
+	};
+	
 	role.saveBtn = $("#saveBtn").on("click", saveData);
 	role.operationSaveBtn = $('#operationModal').find(' button[name="saveBtn"]').on("click", saveOperation);
 	role.moduleSaveBtn = $('#moduleModal').find(' button[name="saveBtn"]').on("click", saveModule);
@@ -215,7 +217,6 @@ jQuery(function($) {
 			});
 
 		}, null, false);
-
 
 		//获取角色的模块
 		com.post(api.system.queryModuleByRoleId, {'module.system' : 1, "role.roleId": roleId}, function(data){

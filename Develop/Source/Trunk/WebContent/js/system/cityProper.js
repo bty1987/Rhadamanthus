@@ -1,30 +1,31 @@
-var cityProper = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	items:{},
-	
-	postParam: {},
-	
-	validator: {
-		cityProper: {
-			type: "v_cityProper", 
-			regex: /^R_\d{2}$/g, 
-			errorMsg: "请以R_作为前缀 , 之后以两位数字组成(如R_01)."
-		}
-	},
-	
-	editFlg: false,
-	repeatFlg: false,
-	
-	regionList: [],
-	regionKey: "regionId",
-	regionValue: "regionName",
-	
-	cityList:[],
-};
 
 jQuery(function($) {
+	
+	var cityProper = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		items:{},
+		
+		postParam: {},
+		
+		validator: {
+			cityProper: {
+				type: "v_cityProper", 
+				regex: /^R_\d{2}$/g, 
+				errorMsg: "请以R_作为前缀 , 之后以两位数字组成(如R_01)."
+			}
+		},
+		
+		editFlg: false,
+		repeatFlg: false,
+		
+		regionList: [],
+		regionKey: "regionId",
+		regionValue: "regionName",
+		
+		cityList:[],
+	};
 	
 	cityProper.saveBtn = $("#saveBtn").on("click", saveData);
 	cityProper.cancelBtn = $("#cancelBtn");

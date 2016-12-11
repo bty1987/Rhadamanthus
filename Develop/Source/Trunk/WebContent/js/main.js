@@ -1,6 +1,3 @@
-var main = {
-	top: [],
-};
 
 $(function(){
 	

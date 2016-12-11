@@ -1,245 +1,180 @@
 
 
-<div class="page-content">
-    <div class="row">
-        <div class="col-sm-4">
-           <div id="container" ></div>
-        </div>
-        
-        <div class="col-sm-4">
-           <div id="deposit" ></div>
-        </div>
-        
-        <div class="col-sm-4">
-           <div id="signed" ></div>
-        </div>
-    </div>
-    
-    <hr />
-    
-    <div class="row">
-        <div class="col-sm-6">
-           <div id="quotation" ></div>
-        </div>
-        
-        <div class="col-sm-6">
-           <div id="amount" ></div>
-        </div>
-    </div>
-    
-    <hr />
-    
-    <div class="row">
-        <div class="col-sm-6">
-           <div id="termination" ></div>
-        </div>
-    </div>
-</div>
+<div class="page-content" id="wrap"></div>
 
 <script type="text/javascript">
     $.ajax({
-        url: "http://192.168.5.21/reportCityCount.do",
+        url: "http://192.168.5.13/reportCityCount.do?filters[0].field=createDateRange&filters[0].data=2016/11/20-2016/12/10&filters[0].op=between",
+		//url: "http://192.168.5.21/reportCityCount.do?filters[0].field=createDateRange&filters[0].data=2016/12/01-2016/12/10&filters[0].op=between",
         data: {},
         type: "post",
         dataType: "json",
         async: true, //设为false就是同步请求
         success: function (res) {
-            var shenyangConsult= [];
-            var fushunConsult= [];
-            var fuxinConsult= [];
-            var dandongConsult= [];  
-            var shenyangDeposit= [];
-            var fushunDeposit= [];
-            var fuxinDeposit= [];
-            var dandongDeposit= [];
-            var shenyangSigned= [];
-            var fushunSigned= [];
-            var fuxinSigned= [];
-            var dandongSigned= [];
-            var shenyangQuotation= [];
-            var fushunQuotation= [];
-            var fuxinQuotation= [];
-            var dandongQuotation= [];
-            var shenyangAmount= [];
-            var fushunAmount= [];
-            var fuxinAmount= [];
-            var dandongAmount= [];
-            var shenyangTermination= [];
-            var fushunTermination= [];
-            var fuxinTermination= [];
-            var dandongTermination= [];
-            var createDate= [];
-            
-            $.each(res.cityCounts, function (i, v) {
-            
-                createDate.push(v.createDate.split('-')[1] + "." + v.createDate.split('-')[2]);
-            
-                if(v.city.cityName=="沈阳") {
-                    shenyangConsult.push(v.consult);
-                    shenyangDeposit.push(v.deposit)
-                    shenyangSigned.push(v.signed)
-                    shenyangQuotation.push(v.quotation)
-                    shenyangAmount.push(v.amount)
-                    shenyangTermination.push(v.termination)
-                }else if(v.city.cityName=="抚顺"){
-                    fushunConsult.push(v.consult);
-                    fushunDeposit.push(v.deposit)
-                    fushunSigned.push(v.signed)
-                    fushunQuotation.push(v.quotation)
-                    fushunAmount.push(v.amount)
-                    fushunTermination.push(v.termination)
-                }else if(v.city.cityName=="阜新"){
-                    fuxinConsult.push(v.consult);
-                    fuxinDeposit.push(v.deposit)
-                    fuxinSigned.push(v.signed)
-                    fuxinQuotation.push(v.quotation)
-                    fuxinAmount.push(v.amount)
-                    fuxinTermination.push(v.termination)
-                }else if(v.city.cityName=="丹东"){
-                    dandongConsult.push(v.consult);
-                    dandongDeposit.push(v.deposit)
-                    dandongSigned.push(v.signed)
-                    dandongQuotation.push(v.quotation)
-                    dandongAmount.push(v.amount)
-                    dandongTermination.push(v.termination)
+
+            var arr = res.cityCounts;
+
+            if(!arr.length) return;
+
+            var categories = getCategories(arr);
+
+            var chatsSet = [
+                {
+                    class : 'col-sm-6',
+                    names : [
+                        {id : 'consult', name : '咨询'},
+                        {id : 'deposit', name : '定金'},
+                        {id : 'signed', name : '签单'},
+                    ]
+                },
+                {
+                    class : 'col-sm-6',
+                    names : [
+                        {id : 'quotation', name : '报价'},
+                        {id : 'amount', name : '量房'},
+                        {id : 'termination', name : '合同终止'},
+                    ]
+                },
+                {
+                    class : 'col-sm-6',
+                    names : [
+                        {id : 'completed', name : 'completed'},
+                        {id : 'resigned', name : 'resigned'},
+                        {id : 'waste', name : 'waste'},
+                    ]
                 }
+            ];
+
+
+            $.each(chatsSet, function(i,v){
+                var $row = $('<div class="row"></div>').appendTo('#wrap');
+
+                $.each(v.names, function(index, value){
+                    var $container =  $('<div></div>').addClass(v.class).appendTo($row);
+                    var $chart = $('<div></div>').attr('id', value.id).appendTo($container);
+
+                    var series = getSeries(arr, value.id, categories);
+                    Charts(value.id, value.name, categories, series);
+
+                });
+
             });
-            
-            function Charts(chartId, title, categories, series){
-                $('#' + chartId).highcharts({
-	                credits:{
-	                     enabled: false // 禁用版权信息
-	                },
-	                title: {
-	                    text: title,
-	                    x: -20
-	                },
-	                subtitle: {
-	                    text: '',
-	                    x: -20
-	                },
-	                xAxis: {
-	                    labels:{
-	                        step: 3,
-	                    },
-	                    categories: categories,
-	                },
-	                yAxis: { 
-	                    min: 0,
-	                    tickInterval:2,
-	                    title: {
-	                        text: '订单数量'
-	                    },
-	                    plotLines: [{
-	                        value: 0,
-	                        width: 1,
-	                        color: '#808080'
-	                    }]
-	                },
-	                tooltip: {
-	                    valueSuffix: '单'
-	                },
-	                legend: {
-	                    layout: 'horizontal',
-	                    align: 'center',
-	                    verticalAlign: 'bottom',
-	                    borderWidth: 0
-	                },
-	                series: series
-	            });
-            }
-            
-            Charts('container', '咨询', createDate, [{
-                    name: '沈阳',
-                    data: shenyangConsult
-                }, {
-                    name: '抚顺',
-                    data: fushunConsult
-                }, {
-                    name: '阜新',
-                    data: fuxinConsult
-                }, {
-                    name: '丹东',
-                    data: dandongConsult
-                }]
-            );
-            
-            Charts('deposit', '定金', createDate, [{
-                    name: '沈阳',
-                    data: shenyangDeposit
-                }, {
-                    name: '抚顺',
-                    data: fushunDeposit
-                }, {
-                    name: '阜新',
-                    data: fuxinDeposit
-                }, {
-                    name: '丹东',
-                    data: dandongDeposit
-                }]
-            );
-            
-            Charts('signed', '签单', createDate, [{
-                    name: '沈阳',
-                    data: shenyangSigned
-                }, {
-                    name: '抚顺',
-                    data: fushunSigned
-                }, {
-                    name: '阜新',
-                    data: fuxinSigned
-                }, {
-                    name: '丹东',
-                    data: dandongSigned
-                }]
-            );
-            
-            Charts('quotation', '报价', createDate, [{
-                    name: '沈阳',
-                    data: shenyangQuotation
-                }, {
-                    name: '抚顺',
-                    data: fushunQuotation
-                }, {
-                    name: '阜新',
-                    data: fuxinQuotation
-                }, {
-                    name: '丹东',
-                    data: dandongQuotation
-                }]
-            );
-            
-            Charts('amount', '量房', createDate, [{
-                    name: '沈阳',
-                    data: shenyangAmount
-                }, {
-                    name: '抚顺',
-                    data: fushunAmount
-                }, {
-                    name: '阜新',
-                    data: fuxinAmount
-                }, {
-                    name: '丹东',
-                    data: dandongAmount
-                }]
-            );
-            
-            Charts('termination', '合同终止', createDate, [{
-                    name: '沈阳',
-                    data: shenyangTermination
-                }, {
-                    name: '抚顺',
-                    data: fushunTermination
-                }, {
-                    name: '阜新',
-                    data: fuxinTermination
-                }, {
-                    name: '丹东',
-                    data: dandongTermination
-                }]
-            );
+
+
+
+
+
         }
     });
+
+    //获取横轴数据
+    function getCategories(arr){
+
+        var categiries = [];
+        $.each(arr, function(i,v){
+			var date = v.createDate.split('-')[1] + "-" + v.createDate.split('-')[2];
+            if(categiries.indexOf(date) != -1) return true;
+            categiries.push(date);
+        });
+
+        categiries.sort(function(a, b){
+            return a.split('-').join('') - b.split('-').join('');
+        });
+
+        return categiries;
+
+    };
+
+    function getSeries(arr, statusName, categories){
+        var series = [];
+
+        var seriesObj = {};
+        var length = categories.length;
+
+        /*
+        * [{
+         name: '沈阳',
+         data: shenyangTermination
+         }, {
+         name: '抚顺',
+         data: fushunTermination
+         }, {
+         name: '阜新',
+         data: fuxinTermination
+         }, {
+         name: '丹东',
+         data: dandongTermination
+         }]
+        * */
+        $.each(arr, function(i,v){
+            if(!seriesObj[v.city.cId]){
+                seriesObj[v.city.cId] = {
+                    name : v.city.cityName,
+                    data : (new Array(length))
+                };
+            }
+
+			var date = v.createDate.split('-')[1] + "-" + v.createDate.split('-')[2];
+            var index = categories.indexOf(date);
+
+            seriesObj[v.city.cId].data[index] = v[statusName];
+
+        });
+
+
+        $.each(seriesObj, function(i, v){
+            series.push(v);
+        });
+
+
+        return series;
+
+    }
+
+
+    function Charts(chartId, title, categories, series){
+        $('#' + chartId).highcharts({
+            credits:{
+                enabled: false // 禁用版权信息
+            },
+            title: {
+                text: title,
+                x: -20
+            },
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            xAxis: {
+                labels:{
+                    step: 3,
+                },
+                categories: categories,
+            },
+            yAxis: {
+                min: 0,
+                //tickInterval:2,
+                title: {
+                    text: '订单数量'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '单'
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom',
+                borderWidth: 0
+            },
+            series: series
+        });
+    };
 
 </script>
 
