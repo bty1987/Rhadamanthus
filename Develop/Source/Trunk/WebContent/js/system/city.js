@@ -1,22 +1,23 @@
-var city = {
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	cityItems:{},
-	
-	editFlg: false,
-	
-	validator: {
-		city: {
-			type: "v_city", 
-			regex: /^C_\d{2}$/g, 
-			errorMsg: "请以C_作为前缀 , 之后以两位数字组成(如C_01)."
-		}
-	},
-	repeatFlg: false,
-};
 
 jQuery(function($) {
+	
+	var city = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		cityItems:{},
+		
+		editFlg: false,
+		
+		validator: {
+			city: {
+				type: "v_city", 
+				regex: /^C_\d{2}$/g, 
+				errorMsg: "请以C_作为前缀 , 之后以两位数字组成(如C_01)."
+			}
+		},
+		repeatFlg: false,
+	};
 	
 	city.saveBtn = $("#saveBtn").on("click", saveData);
 	city.cancelBtn = $("#cancelBtn");

@@ -1,26 +1,25 @@
-var region = {
-	listgrid: null,
-	gridPager: null,
-	saveBtn: null,
-	cancelBtn: null,
-	modal: null,
-	regionItems:{},
-	
-	postParam: {'template.templateDeleteFlag': 0},
-	
-	validator: {
-		region: {
-			type: "v_region", 
-			regex: /^A_\d{2}$/g, 
-			errorMsg: "请以A_作为前缀 , 之后以两位数字组成(如A_01)."
-		}
-	},
-	
-	editFlg: false,
-	repeatFlg: false
-};
 
 jQuery(function($) {
+	
+	var region = {
+		saveBtn: null,
+		cancelBtn: null,
+		modal: null,
+		regionItems:{},
+		
+		postParam: {'template.templateDeleteFlag': 0},
+		
+		validator: {
+			region: {
+				type: "v_region", 
+				regex: /^A_\d{2}$/g, 
+				errorMsg: "请以A_作为前缀 , 之后以两位数字组成(如A_01)."
+			}
+		},
+		
+		editFlg: false,
+		repeatFlg: false
+	};
 	
 	region.saveBtn = $("#saveBtn").on("click", saveData);
 	region.cancelBtn = $("#cancelBtn");

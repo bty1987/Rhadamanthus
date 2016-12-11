@@ -1,36 +1,39 @@
-var password={
-	password:"",
-	rePassword:"",
-	sameFalg:true,
-};
 
-$("#rePassword").on("blur",function(){
-	$this = $(this);
-	if($("#password").val()==$this.val()){
-		com.clearValidator("#rePassword", true);
-		password.sameFalg=true;
-	}else{
-		com.showTips($this, "两次密码不匹配", true);
-		password.sameFalg=false;
-	}
-});
-
-$("#save").on("click", function(e){
-	if(com.validate()||!password.sameFalg){
-		return;
-	}
-	
-	var param = {
-		"password":$("#oldPassword").val(),
-		"rePassword":$("#password").val()
+jQuery(function($) {
+	var password={
+		password:"",
+		rePassword:"",
+		sameFalg:true,
 	};
-	
-	com.post(api.personel.changePassword, param, function(res){
-		window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
-	});
-});
 
-$("#reset").on("click", function(e){
-	$("#password").val("");
-	$("#rePassword").val("");
+	$("#rePassword").on("blur",function(){
+		$this = $(this);
+		if($("#password").val()==$this.val()){
+			com.clearValidator("#rePassword", true);
+			password.sameFalg=true;
+		}else{
+			com.showTips($this, "两次密码不匹配", true);
+			password.sameFalg=false;
+		}
+	});
+
+	$("#save").on("click", function(e){
+		if(com.validate()||!password.sameFalg){
+			return;
+		}
+		
+		var param = {
+			"password":$("#oldPassword").val(),
+			"rePassword":$("#password").val()
+		};
+		
+		com.post(api.personel.changePassword, param, function(res){
+			window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
+		});
+	});
+
+	$("#reset").on("click", function(e){
+		$("#password").val("");
+		$("#rePassword").val("");
+	});
 });

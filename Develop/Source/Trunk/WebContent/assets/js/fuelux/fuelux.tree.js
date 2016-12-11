@@ -45,6 +45,9 @@
 						if ("icon-class" in j) {
 							k.find('[class*="icon-"]').addClass(j["icon-class"])
 						}
+						if ("additionalParameters" in j && "item-selected" in j.additionalParameters && j.additionalParameters["item-selected"] == true) {
+							i.children(".tree-folder-header").addClass("tree-selected")
+						}
 					} else {
 						if (j.type === "item") {
 							i = e.$element.find(".tree-item:eq(0)").clone().show();
@@ -105,9 +108,8 @@
 			if(this.options.folderSelect){
 				var _d = a(e);
 				var _ps = _d.parent().parents('.tree-folder');
-				var _l = _d.hasClass("tree-folder-header") ? _ps.length-1 : _ps.length;
 				
-				for(var i=0;i<_l;i++){
+				for(var i=0;i<_ps.length;i++){
 					if(a(_ps[i]).children(".tree-folder-header").hasClass("tree-selected")){
 						_d.removeClass("tree-selected");
 						break;

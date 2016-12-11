@@ -33,13 +33,13 @@ public class FormatUtil {
 		return Short.parseShort(company.substring($index, $index+1));
 	}
 	
-	public static int encodeCompanu(int company){
+	public static int encodeCompany(int company){
 		return Integer.parseInt(String.format("%d%d%d%d", (int)((Math.random()*9+1)*100), company, (int)((Math.random()*9+1)*10), 3));
 	}
 	
 	public static void main(String[] args){
 		System.out.println(fillZero(offset(3), "0000"));
-		System.out.println(encodeCompanu(1));
-		System.out.println(decodeCompany(String.valueOf(encodeCompanu(1))));
+		System.out.println(encodeCompany(1));
+		System.out.println(decodeCompany(String.valueOf(encodeCompany(1))));
 	}
 }

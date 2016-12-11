@@ -278,6 +278,19 @@
                                     </div>
 
                                     <div class="form-group col-sm-5">
+                                        <label class="col-sm-3 control-label no-padding-right">钉钉部门
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <button class="btn btn-xs " type="button" id="dddeptbtn">
+                                                <i class="icon-pencil align-top bigger-125"></i>
+                                                选择
+                                            </button>
+                                            <input id="dddept" class="v_required" data-toggle="popover" data-trigger="manual" type="text">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-sm-5">
                                         <label class="col-sm-3 control-label no-padding-right" for="duty">职位</label>
                                         <div class="col-sm-9">
                                             <select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="dutySel" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
@@ -435,6 +448,26 @@
         </div>
     </div>
 
+    <div class="modal fade" id="dddeptModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="functionAreaDialog">部门</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="tree3" class="tree"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="save" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/personnel/userEdit.js"></script>

@@ -1,4 +1,3 @@
-var resetpw = {};
 
 jQuery(function($) {
 

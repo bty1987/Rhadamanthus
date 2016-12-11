@@ -100,7 +100,6 @@ $(function(){
                 }, matcher: function (item) {
                     return true;
                 }, callback: function(data){
-                    //this.options.list = data;
                     this.flprocess(data ,'mId', 'name');
                 },
                 isResultTypeMap : true //必填值为true，获取key，value的标识，
