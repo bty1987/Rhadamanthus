@@ -1,29 +1,30 @@
-var acceptanceDetail = {
-	
-	ratyLength: 22,
-	
-	baseInfos: [
-        "orderId", "customer", "orderAddr", "designer", "supervisName", "contractCode", 
-        "waterwayQualityName", "circuitQualityName", "bricklayQualityName", "carpentQualityName", "oilQualityName",
-        "waterwayWorkerName", "circuitWorkerName", "bricklayWorkerName", "carpentWorkerName", "oilWorkerName"
-	], ratyIds: [
-		"waterwayQuality", "waterwayServer", "waterwayHygiene", 
-		"circuitQuality", "circuitServer", "circuitHygiene",
-		"bricklayQuality", "bricklayServer", "bricklayHygiene",
-		"carpentQuality", "carpentServer", "carpentHygiene",
-		"oilQuality", "oilServer", "oilHygiene",
-		"supervisQuality", "supervisServer", "supervisHygiene",
-		"materialQuality", "materialServer",
-		"multiple", "internal",
-	], desIds: [
-		"waterwayDes", "circuitDes", "bricklayDes", "carpentDes", "oilDes", "supervisDes", "materialDes", 
-		"question", "propose", "acceptanceTime",
-	],
-	         
-	options: {},
-};
 
 jQuery(function($) {
+	
+	var acceptanceDetail = {
+			
+		ratyLength: 22,
+		
+		baseInfos: [
+	        "orderId", "customer", "orderAddr", "designer", "supervisName", "contractCode", 
+	        "waterwayQualityName", "circuitQualityName", "bricklayQualityName", "carpentQualityName", "oilQualityName",
+	        "waterwayWorkerName", "circuitWorkerName", "bricklayWorkerName", "carpentWorkerName", "oilWorkerName"
+		], ratyIds: [
+			"waterwayQuality", "waterwayServer", "waterwayHygiene", 
+			"circuitQuality", "circuitServer", "circuitHygiene",
+			"bricklayQuality", "bricklayServer", "bricklayHygiene",
+			"carpentQuality", "carpentServer", "carpentHygiene",
+			"oilQuality", "oilServer", "oilHygiene",
+			"supervisQuality", "supervisServer", "supervisHygiene",
+			"materialQuality", "materialServer",
+			"multiple", "internal",
+		], desIds: [
+			"waterwayDes", "circuitDes", "bricklayDes", "carpentDes", "oilDes", "supervisDes", "materialDes", 
+			"question", "propose", "acceptanceTime",
+		],
+		         
+		options: {},
+	};
 	
 	com.post(api.construction.queryAcceptance, {
 		"acceptance.orderId": params.orderId
@@ -73,7 +74,7 @@ jQuery(function($) {
 			}
 		}
 		
-		acceptanceDetail.options["acceptance.orderId"] = acceptancePostData["acceptance.orderId"];
+		acceptanceDetail.options["acceptance.orderId"] = params.orderId;
 		
 		com.post(api.construction.updateAcceptance, acceptanceDetail.options, function(res){
 			com.showAlert(com.info, "提交成功!");

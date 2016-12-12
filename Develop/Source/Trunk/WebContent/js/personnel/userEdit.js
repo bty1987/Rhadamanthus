@@ -1,44 +1,45 @@
-var user = {
-    politicalType: [],
-    householdType: [],
-    educationType: [],
-    houseType: [],
-    statusType: [],
-    employWayType: [],
-    employType: [],
-    experienceType: [],
-    deptType: [],
-    dutyTypeMap: {},
-    saveBtn: null,
-    cancelBtn: null,
-    items: {},
-    editFlg: !1,
-    postParam: {},
-    editUserId: null,
-    editLoginId: null,
-    roleList: {},
-    roleKey: "roleId",
-    roleValue: "roleName",
-    deptList: {},
-    deptKey: "deptId",
-    deptValue: "deptName",
-    eSaveBtn: null,
-    eCancelBtn: null,
-    eModal: null,
-    eItems: {},
-    eEditFlg: !1,
-    eEditNum: null,
-    experienceList: [],
-    cSaveBtn: null,
-    cCancelBtn: null,
-    cModal: null,
-    cItems: {},
-    cEditFlg: !1,
-    cEditNum: null,
-    contractList: []
-};
 
 jQuery(function(a) {
+	
+	var user = {
+	    politicalType: [],
+	    householdType: [],
+	    educationType: [],
+	    houseType: [],
+	    statusType: [],
+	    employWayType: [],
+	    employType: [],
+	    experienceType: [],
+	    deptType: [],
+	    dutyTypeMap: {},
+	    saveBtn: null,
+	    cancelBtn: null,
+	    items: {},
+	    editFlg: !1,
+	    postParam: {},
+	    editUserId: null,
+	    editLoginId: null,
+	    roleList: {},
+	    roleKey: "roleId",
+	    roleValue: "roleName",
+	    deptList: {},
+	    deptKey: "deptId",
+	    deptValue: "deptName",
+	    eSaveBtn: null,
+	    eCancelBtn: null,
+	    eModal: null,
+	    eItems: {},
+	    eEditFlg: !1,
+	    eEditNum: null,
+	    experienceList: [],
+	    cSaveBtn: null,
+	    cCancelBtn: null,
+	    cModal: null,
+	    cItems: {},
+	    cEditFlg: !1,
+	    cEditNum: null,
+	    contractList: []
+	};
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
@@ -225,9 +226,7 @@ jQuery(function(a) {
                 com.clearValidator("#userId", !0),
                 com.clearValidator()
             )
-
         });
-
     }
 
     a(".date-picker").datepicker({autoclose: !0}).on("show",function() {
@@ -238,11 +237,8 @@ jQuery(function(a) {
         a(this).prev().focus()
     });
 
-
     /*获取钉钉部门*/
-
 //    user.items.userId.val()
-
     var deptList = null;
     var selectedDepts = null;
 
@@ -292,28 +288,6 @@ jQuery(function(a) {
         }
     });
 
-    /*//获取根节点
-    $.each(deptList, function(i, v){
-        if(v.parentid != 1) return true;
-
-
-        deptObj['1']['children'][v.id] = {
-            name: v.name,
-            type : didList.indexOf(v.id) == -1 ? 'folder' : 'item',
-            id : v.id,
-
-        };
-
-        if(selectedDepts && selectedDepts.length && selectedDepts.indexOf(v.id) != -1){
-
-            deptObj['1']['children'][v.id]["additionalParameters"] = {"item-selected" : true};
-        }
-
-    });*/
-
-
-
-
     var getDeptByDid = function(did){
         var depts = {};
 
@@ -326,18 +300,14 @@ jQuery(function(a) {
                     id : v.id,
                 }
 
-
                 if(selectedDepts && selectedDepts.length && selectedDepts.indexOf(v.id) != -1){
-
                     depts[v.id]["additionalParameters"] = {"item-selected" : true};
                 }
-
             }
         });
 
         return depts;
     };
-
 
     $('#tree3').ace_tree({
         dataSource: {
@@ -378,20 +348,13 @@ jQuery(function(a) {
         //console.log(opt.info)
     });
 
-
     $("#dddeptModal").on('hidden.bs.modal', function(e){
 
         $('#tree3').find('.tree-folder').each(function(){
             if($(this).css('display') != 'block')return true;
             $(this).find('.tree-folder-header i').eq(0).trigger('click');
         });
-
-
     });
-
-
-
-
 
     $('#dddeptbtn').click(function(){
 
@@ -412,9 +375,7 @@ jQuery(function(a) {
             }
 
             $('#dddept').val(depts.join(','));
-
         }
-
 
         $('#dddeptModal').modal("hide");
     });
@@ -440,8 +401,6 @@ jQuery(function(a) {
 
         return chain;
     }
-
-
 
     function saveData() {
         if (!com.validate() && !user.repeatFlg) {
