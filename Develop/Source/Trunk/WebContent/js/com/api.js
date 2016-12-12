@@ -951,6 +951,8 @@ var api = {
 		countDesignerDepartment: {url: "countDesignerDepartment.do", demo: true},
 		countDesignerRegion: {url: "countDesignerRegion.do", demo: true},
 		
+		reportCityCount: {url: "reportCityCount.do", demo: true},
+		
 	}, right: {
 		queryDecorationOrderDesignDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do", demo: true},
 		queryDecorationOrderSalesmanDepartmentRightByUserId: {url: "queryDecorationOrderSalesmanDepartmentRightByUserId.do", demo: true},
