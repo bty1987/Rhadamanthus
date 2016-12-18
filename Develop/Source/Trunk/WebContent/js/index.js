@@ -87,12 +87,15 @@ $(function(){
 //	setInterval(function(){
 //		loadMessageCount();
 //	}, 1800000);
-
+	
+	params.homeLoader = false;
+	
 	Pace.on('hide', function(){
-		 if(config){
+		 if(config && !params.homeLoader){
 			 $('#navbar').fadeIn();
 			 $('#main-container').fadeIn();
 			 com.switchPage('home.html');
+			 params.homeLoader = true;
 		 }
 	 });
 	

@@ -202,7 +202,7 @@ public class AESHelper {
 		// encrytByte = parseHexStr2Byte(encrytStr);
 		System.out.println("解密后：" + decryptByte(parseHexStr2Byte(encrytStr), key));
 		
-		System.out.println("加密后：" + encryptToString(str, key));
+		System.out.println("加密后：" + encryptToString("userId=FL-00479,roleId=R_50,userName=白添宇,updateTime=1481262867035,company=0,timeout=1,rollcall=0", "FanglinTest"));
 		System.out.println("解密后：" + decryptString("EBDFF478D52A471E70D23224CF62B3758203255389649C15F9F0403FCEB892203947CE7B57636B7D130E79BECC603913B7403BA459E2E49EB0F7A5AECF8059945B802C32C8012B28A0086A1CF6BAE4FB58BBBC438583B7E05E351A9AA06E83F79653E1D5F2207B597B92E4629A212698", "FanglinTest"));
 		
 	}
