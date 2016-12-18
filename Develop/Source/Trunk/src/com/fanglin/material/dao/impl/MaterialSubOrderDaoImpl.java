@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -136,6 +137,19 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 				query.add(Restrictions.ilike(MaterialSubOrderPO.COLUMN_SALESMANNAME_STR, data, MatchMode.ANYWHERE));
 			}else if(MaterialSubOrderPO.COLUMN_SALESMANID_STR.equals(field)){
 				query.add(Restrictions.ilike(field, data, MatchMode.ANYWHERE));
+			}else if("fullStatusRange".equals(field)){
+				String[] status = data.split(",");
+				
+				if(status.length > 0){
+					
+					Criterion criterion = Restrictions.eq(MaterialSubOrderPO.COLUMN_FULLSTATUS_STR, Integer.valueOf(status[0]));
+					
+					for(int i = 1;i<status.length;i++){
+						criterion = Restrictions.or(Restrictions.eq(MaterialSubOrderPO.COLUMN_FULLSTATUS_STR, Integer.valueOf(status[i])), criterion);
+					}
+					
+					query.add(criterion);
+				}
 			}else if(MaterialSubOrderPO.COLUMN_FULLCOLLECTTIME_RANGE_STR.equals(field)){
 				
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
