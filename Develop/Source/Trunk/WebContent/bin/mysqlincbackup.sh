@@ -25,7 +25,7 @@ filename=`cat /home/mysql/mysql-bin.index |awk -F "/" '{print $2}'`
 
 for i in $filename
 do
-	mysqlbinlog -u$user -p$userPWD -d $database --start-datetime="$startTime" /home/mysql/$i >> $dumpFile
+	mysqlbinlog -u$user -p$passwd -d $database --start-datetime="$startTime" /home/mysql/$i >> $dumpFile
 done
 
 if [[ $? == 0 ]]; then
