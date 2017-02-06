@@ -3,48 +3,42 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'ebb523712011e6571e9f01fafd5cc9df8e3ca4de'
-    oldFile: !uuid '67fec9c7e9341b72705150dd79b5679306784fbb'
+    newFile: !uuid '0c4b46bb18b12220ceb0c4234e17cc1e856b3838'
+    oldFile: !uuid 'ebb523712011e6571e9f01fafd5cc9df8e3ca4de'
   /Develop/Source:
-    newFile: !uuid '03af23b11002f557842c3547b3ea05cdd84cd556'
-    oldFile: !uuid 'c6b62c807b85d2655abe69cb07a96f56f601d139'
+    newFile: !uuid 'a8b0d3306ff0b712536714cfdcd155e769e1ba7b'
+    oldFile: !uuid '03af23b11002f557842c3547b3ea05cdd84cd556'
   /Develop/Source/Trunk:
-    newFile: !uuid '5a22f5892880f64d95068cf4045995a2ed1846d4'
-    oldFile: !uuid 'd9824f73076f0e59bb6641145e521ebb00264e47'
+    newFile: !uuid 'b221c32cfa4cc3f3630ac6e47858f1670ef5b160'
+    oldFile: !uuid '5a22f5892880f64d95068cf4045995a2ed1846d4'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid 'f7cd9c09ea74a25eb014ac1b23350512d4ce1fe9'
-    oldFile: !uuid '89221b2a3fd209088739d86de839964dbf4c1a6f'
-  /Develop/Source/Trunk/WebContent/bin:
-    newFile: !uuid 'f4046b662ba08208f3ec99f2cffc1a227106ee0d'
-    oldFile: !uuid '3f8abe6e745d16654c4b71ec097a2222ac86067f'
-  /Develop/Source/Trunk/WebContent/bin/mysqlincbackup.sh:
-    newFile: !uuid '0f54f0da5206fef4e2e156b9869b32722872cb78'
-    oldFile: !uuid '54e431e318068ab7647acc374f6ec193b0851f07'
-  /Develop/Source/Trunk/WebContent/ds:
-    newFile: !uuid '40cdf979c2cf2689109573aa58d06240e4afc166'
-    oldFile: !uuid '4b1ca67586e6b3846f178ff5d4549ac08dbbef6c'
-  /Develop/Source/Trunk/WebContent/ds/bankType.json:
-    newFile: !uuid '506f3b3e931316ad4cbe4f8beee06e7422abc646'
-    oldFile: !uuid '7251a88ee352c89694258da54392068ccefca906'
-  /Develop/Source/Trunk/src:
-    newFile: !uuid 'e8cb033cd66543dc24f6d0c2a31ae405669d77cb'
-    oldFile: !uuid '43b1cd4fe962820037a52f5a0844fe40bee53f56'
-  /Develop/Source/Trunk/src/com:
-    newFile: !uuid '9629a384c704e379d43795c206dd11d80f18241e'
-    oldFile: !uuid '5611051ba8b063daf19cc1adb16bc094e604fa00'
-  /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid '5b96db0e14336a5a145605f6eb13f605e135e0de'
-    oldFile: !uuid '397f370739e7387e032bc1314bb99652abc11e7b'
-  /Develop/Source/Trunk/src/com/fanglin/core:
-    newFile: !uuid '392c20c3654967f1f60a4d6b1db62a0aaddf5628'
-    oldFile: !uuid '3927b2eb74866ae48a04b597218c8dd13a0590a2'
-  /Develop/Source/Trunk/src/com/fanglin/core/security:
-    newFile: !uuid 'a8608b63241f427bd0993b8128bb0f28d7b54e23'
-    oldFile: !uuid 'ef6022a49ff5d575f8e7acb7b9a9c2d7d9a5d1ff'
-  /Develop/Source/Trunk/src/com/fanglin/core/security/AESHelper.java:
-    newFile: !uuid 'f194403d2de981c07c13ce8f0fe8730ab957332d'
-    oldFile: !uuid 'b330e31590b430eb467782a17ad778672d0a5f5c'
-gitCommitId: !uuid 'a7347a678da293e5ff3d6c64d0a204e49f96017a'
+    newFile: !uuid 'c05fb42c3af8bfcaf0eb0fa148a214ac7b1816cb'
+    oldFile: !uuid 'f7cd9c09ea74a25eb014ac1b23350512d4ce1fe9'
+  /Develop/Source/Trunk/WebContent/db:
+    newFile: !uuid '73a7a4f4a3534d15235ab82dd843517b0a8168df'
+    oldFile: !uuid 'e10462c465b55795f6b354d82645dae6db4d7857'
+  /Develop/Source/Trunk/WebContent/db/report.sql:
+    newFile: !uuid '89df041e662c2bd8531277b0f29ab712dcb58519'
+    oldFile: !uuid 'f891b4ac12bcf9523f645fecb34e89f1958bc52d'
+  /Develop/Source/Trunk/WebContent/db/update.sql:
+    newFile: !uuid 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
+    oldFile: !uuid '424b90084ddfe3812eb7f07a2fc945e1cdd08b32'
+  /Develop/Source/Trunk/WebContent/home.html:
+    newFile: !uuid '8357a8e7b4bc136060bb5b9b49b6de6a4492a67c'
+    oldFile: !uuid '096c3bbd23268d9e0fc5cc3098968a404634be4b'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid '019f55669739bc40f88499943ac54a906209ce39'
+    oldFile: !uuid '7b605abe5baa932a57dd33013abf1841fbedb194'
+  /Develop/Source/Trunk/WebContent/js/information:
+    newFile: !uuid 'c61927bb0b145d644ac3634dcb7855805c93f1bb'
+    oldFile: !uuid '7c7431ae324d5c4251c1472a9cc1f13862667882'
+  /Develop/Source/Trunk/WebContent/js/information/activityItem.js:
+    newFile: !uuid '879ad19c95dee404cee28fe10ede0b2eceb51bec'
+    oldFile: !uuid '392abebaaa3acd44ff7a11d188ac85ab33a9262d'
+  /Develop/Source/Trunk/WebContent/version.html:
+    newFile: !uuid 'b5aa75231f8982d20c2d924d3d7b7672d31747ba'
+    oldFile: !uuid 'f52e079122cc973f5564ca2bbb5c47a0d1f766db'
+gitCommitId: !uuid '23b5ff6b9228e38123c90f70f06e2d8a8745dc83'
 renames: {
   }
-revisionId: 120
+revisionId: 121
