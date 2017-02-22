@@ -67,7 +67,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				}
 				
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString($authentication, encryptKey);
+				String decryptString = AESHelper.decrypt($authentication, encryptKey);
 				
 				Authentication authentication = new Authentication(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
@@ -89,7 +89,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					
 					authentication.setUpdateTime((new Date()).getTime());
 					String authenticationString = authentication.getAuthenticationStr();
-					String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
+					String authenticationEncodeString = AESHelper.encrypt(authenticationString, SystemConfig.getString("encryptKey"));
 					
 					CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
 					
