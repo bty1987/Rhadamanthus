@@ -51,7 +51,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	private MaterialBrandRightDao materialBrandRightDao;
 	
 	@Override
-	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId){
+	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId) throws FLException{
 		
 		UserPO userPO = userDao.get(userId);
 		List<MaterialModelPO> materialModelPOs = null;
@@ -60,11 +60,13 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			
 			MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(userPO.getUserId());
 			
+			if(materialBrandRightPO == null){
+				throw new FLException(180020, "无主材型号操作权限");
+			}
+			
 			if(!"".equals(materialBrandRightPO.getBrandId())){
 				materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
 			}
-			
-			
 		}else{
 			materialModelPOs = materialModelDao.pageMaterialModel(paging, filters);
 		}

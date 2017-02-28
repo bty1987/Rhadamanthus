@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialModelService {
 	
-	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId);
+	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId) throws FLException;
 	
 	public List<MaterialModelVO> queryMaterialModel();
 	
