@@ -3,42 +3,36 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'bf960bdc42c73da39d17f710c787342cdd1d5f1b'
-    oldFile: !uuid 'a8d1428b247af7a4f17841727fdca9c9f59c5510'
+    newFile: !uuid '1ad03455a1f73c34dc6181c8748cb681a6c89f2b'
+    oldFile: !uuid 'bf960bdc42c73da39d17f710c787342cdd1d5f1b'
   /Develop/Source:
-    newFile: !uuid 'a597e5fe075bfd6ca29bf1e095e06fdb0db4de04'
-    oldFile: !uuid '01a1b7b8e65453176f13db52b4ead78af56f7e3b'
+    newFile: !uuid '85606f3b58acf74d947ca702f380951b9c4839b5'
+    oldFile: !uuid 'a597e5fe075bfd6ca29bf1e095e06fdb0db4de04'
   /Develop/Source/Trunk:
-    newFile: !uuid '85d91e16e5f017c3c698361df8b86ed6524cd58c'
-    oldFile: !uuid '9edd68fa90b521c6f702014dda576d97a537c2c2'
-  /Develop/Source/Trunk/src:
-    newFile: !uuid '2ab1eaf341983f8704d07c43248296a9635f128f'
-    oldFile: !uuid 'e56fedcbb53d2460e9c0ae2bed59c8536494281f'
-  /Develop/Source/Trunk/src/com:
-    newFile: !uuid '5a2b165c664adfeff6afa052c2443365ec3e18f3'
-    oldFile: !uuid '461123143a0a417755faf751d413c9d8bb4e8d06'
-  /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid 'c928500b8de283ec709029734eb735bb320e6e0a'
-    oldFile: !uuid '7dc3217b5f34eb1fd9cefcd5fea9e8c7e54cf800'
-  /Develop/Source/Trunk/src/com/fanglin/data:
-    newFile: !uuid '60da47426b9cfbe0959e228657306b41908763ba'
-    oldFile: !uuid '13c668c992e862ecfe45c3b8ea4b08e8f3f6bc13'
-  /Develop/Source/Trunk/src/com/fanglin/data/material:
-    newFile: !uuid '902872c8d5c0dec4198490d42ac221d5b37f3f67'
-    oldFile: !uuid '8ccf71d6c95069e0c976113ee36748f9bebb12c3'
-  /Develop/Source/Trunk/src/com/fanglin/data/material/service:
-    newFile: !uuid 'f5dc74e8e365f6fa518a824e0205f36c5fa8299f'
-    oldFile: !uuid '37bce8635d322191141fa76b69bc3d7331693d86'
-  /Develop/Source/Trunk/src/com/fanglin/data/material/service/MaterialModelService.java:
-    newFile: !uuid 'c720e240f2e9b5b3446157a034e877a997fc5340'
-    oldFile: !uuid '873e0c81c911976e17d34433904214da84f1854f'
-  /Develop/Source/Trunk/src/com/fanglin/data/material/service/impl:
-    newFile: !uuid '59a74f6bb945d3237fde42370f517aa6b0f50e68'
-    oldFile: !uuid 'ecb81a232e5a38e74472ad8ec47e93d7d8ebf283'
-  /Develop/Source/Trunk/src/com/fanglin/data/material/service/impl/MaterialModelServiceImpl.java:
-    newFile: !uuid 'fa60e5113214a849042306fe8fdfb7b4463f57d3'
-    oldFile: !uuid 'e950bab0ca321b6b1f4008d92caf9fc70242f470'
-gitCommitId: !uuid '0f2c910282be069ce3dd60399da43c901339c499'
+    newFile: !uuid '9b2ced52c1b3cca3690ffa93340e45495f681892'
+    oldFile: !uuid '85d91e16e5f017c3c698361df8b86ed6524cd58c'
+  /Develop/Source/Trunk/WebContent:
+    newFile: !uuid '0bfd8e9f3e5843bffe9a0a22aaaabc8a34ea978c'
+    oldFile: !uuid 'c05fb42c3af8bfcaf0eb0fa148a214ac7b1816cb'
+  /Develop/Source/Trunk/WebContent/js:
+    newFile: !uuid '897d7b4b301d3103697f0142d39e6681aa2c175b'
+    oldFile: !uuid '019f55669739bc40f88499943ac54a906209ce39'
+  /Develop/Source/Trunk/WebContent/js/contract:
+    newFile: !uuid 'a1be0430e6002579afb25d6e2507e5bf67bc5bfc'
+    oldFile: !uuid 'cd056fb19a2897e9be061915461a390f98f41730'
+  /Develop/Source/Trunk/WebContent/js/contract/decorationContract1.js:
+    newFile: !uuid 'd2b061b46eec2dcd1cb8f97d4613c4ce2321b3ff'
+    oldFile: !uuid '31f8596aba7b8ca418ae1651a4769fa4c2a15898'
+  /Develop/Source/Trunk/WebContent/views:
+    newFile: !uuid 'b893415b93ef6abe59668b748fb572430128194f'
+    oldFile: !uuid '40510c5f77743971b23794188247c593f183049d'
+  /Develop/Source/Trunk/WebContent/views/contract:
+    newFile: !uuid 'e840704cf85b99339db8ea67bd527f4169c296c3'
+    oldFile: !uuid '8211e4e4968b86252cc99f0e29c767003faf2331'
+  /Develop/Source/Trunk/WebContent/views/contract/decorationContract2.html:
+    newFile: !uuid '3a34873677077b92815d0346d0ac2ad3856cea1b'
+    oldFile: null
+gitCommitId: !uuid 'd27390e0922860c68404deae4fa86c386a2ddf3c'
 renames: {
   }
-revisionId: 123
+revisionId: 124
