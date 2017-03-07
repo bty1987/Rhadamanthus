@@ -129,7 +129,7 @@ jQuery(function($) {
 	if (decorationOrder.houseType == '现房') {
 		$("#threePayment").css("display", "block");
 		$("#fourPayment").css("display", "none");
-
+		
 		$("#firstRate1").html(parseFloat(firstRate) + parseFloat(firstSecondRate));
 		$("#secondRate1").html(secondRate);
 		$("#lastRate1").html(lastRate);
