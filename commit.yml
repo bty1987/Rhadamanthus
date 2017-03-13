@@ -3,36 +3,39 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '1ad03455a1f73c34dc6181c8748cb681a6c89f2b'
-    oldFile: !uuid 'bf960bdc42c73da39d17f710c787342cdd1d5f1b'
+    newFile: !uuid 'd9fd417cbdbb43a2eca166fbdf0e10502dcb70fc'
+    oldFile: !uuid '1ad03455a1f73c34dc6181c8748cb681a6c89f2b'
   /Develop/Source:
-    newFile: !uuid '85606f3b58acf74d947ca702f380951b9c4839b5'
-    oldFile: !uuid 'a597e5fe075bfd6ca29bf1e095e06fdb0db4de04'
+    newFile: !uuid 'b0789e1bbcad8c1d283670c2bd76507118d40acc'
+    oldFile: !uuid '85606f3b58acf74d947ca702f380951b9c4839b5'
   /Develop/Source/Trunk:
-    newFile: !uuid '9b2ced52c1b3cca3690ffa93340e45495f681892'
-    oldFile: !uuid '85d91e16e5f017c3c698361df8b86ed6524cd58c'
-  /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '0bfd8e9f3e5843bffe9a0a22aaaabc8a34ea978c'
-    oldFile: !uuid 'c05fb42c3af8bfcaf0eb0fa148a214ac7b1816cb'
-  /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '897d7b4b301d3103697f0142d39e6681aa2c175b'
-    oldFile: !uuid '019f55669739bc40f88499943ac54a906209ce39'
-  /Develop/Source/Trunk/WebContent/js/contract:
-    newFile: !uuid 'a1be0430e6002579afb25d6e2507e5bf67bc5bfc'
-    oldFile: !uuid 'cd056fb19a2897e9be061915461a390f98f41730'
-  /Develop/Source/Trunk/WebContent/js/contract/decorationContract1.js:
-    newFile: !uuid 'd2b061b46eec2dcd1cb8f97d4613c4ce2321b3ff'
-    oldFile: !uuid '31f8596aba7b8ca418ae1651a4769fa4c2a15898'
-  /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid 'b893415b93ef6abe59668b748fb572430128194f'
-    oldFile: !uuid '40510c5f77743971b23794188247c593f183049d'
-  /Develop/Source/Trunk/WebContent/views/contract:
-    newFile: !uuid 'e840704cf85b99339db8ea67bd527f4169c296c3'
-    oldFile: !uuid '8211e4e4968b86252cc99f0e29c767003faf2331'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContract2.html:
-    newFile: !uuid '3a34873677077b92815d0346d0ac2ad3856cea1b'
+    newFile: !uuid 'fd26c6d05ccc3b93f8d588e6b07bdbcca1fdce28'
+    oldFile: !uuid '9b2ced52c1b3cca3690ffa93340e45495f681892'
+  /Develop/Source/Trunk/src:
+    newFile: !uuid '96b2d74aaf5d25efa44869ac5711704ee0ba34dd'
+    oldFile: !uuid '2ab1eaf341983f8704d07c43248296a9635f128f'
+  /Develop/Source/Trunk/src/com:
+    newFile: !uuid '9b2817fa2cfb04a735ddacae97634bcb52db7575'
+    oldFile: !uuid '5a2b165c664adfeff6afa052c2443365ec3e18f3'
+  /Develop/Source/Trunk/src/com/fanglin:
+    newFile: !uuid 'fba64158ad252c053d9ec7622662ae3237f4f1c2'
+    oldFile: !uuid 'c928500b8de283ec709029734eb735bb320e6e0a'
+  /Develop/Source/Trunk/src/com/fanglin/personel:
+    newFile: !uuid '66feb256813596eae52ff48ea7d7d63d1a585e29'
+    oldFile: !uuid '8ced2da24af38adef784fec9c4b8a0f092784298'
+  /Develop/Source/Trunk/src/com/fanglin/personel/po:
+    newFile: !uuid '02c357aeab01879c90ec552376b2b676b0f35c2b'
+    oldFile: !uuid 'd0814ef659758915bdeb9289409abc15fd5002ae'
+  /Develop/Source/Trunk/src/com/fanglin/personel/po/UserInfoPO.java:
+    newFile: !uuid '8169e66dafc83255f7fc44e44614bce12035a17a'
     oldFile: null
-gitCommitId: !uuid 'd27390e0922860c68404deae4fa86c386a2ddf3c'
+  /Develop/Source/Trunk/src/com/fanglin/personel/vo:
+    newFile: !uuid '9fb94d076ed108200aee4730fb854c992bca4fc8'
+    oldFile: !uuid '104985a92b7d9b913b1ae47ebe54a72ea0603ee3'
+  /Develop/Source/Trunk/src/com/fanglin/personel/vo/UserInfoVO.java:
+    newFile: !uuid 'db537701d7331729c5b33f163c2504e29daab68c'
+    oldFile: null
+gitCommitId: !uuid 'eecd0ade6c8199370af4634d519f8c0df57a5175'
 renames: {
   }
-revisionId: 124
+revisionId: 125
