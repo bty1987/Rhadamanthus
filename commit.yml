@@ -3,39 +3,33 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'd9fd417cbdbb43a2eca166fbdf0e10502dcb70fc'
-    oldFile: !uuid '1ad03455a1f73c34dc6181c8748cb681a6c89f2b'
+    newFile: !uuid '97bec636acbd7857b0000511bb1b6fff880e0fd6'
+    oldFile: !uuid 'd9fd417cbdbb43a2eca166fbdf0e10502dcb70fc'
   /Develop/Source:
-    newFile: !uuid 'b0789e1bbcad8c1d283670c2bd76507118d40acc'
-    oldFile: !uuid '85606f3b58acf74d947ca702f380951b9c4839b5'
+    newFile: !uuid 'ae619557d0d55dd31ba496e9404218bb329baebc'
+    oldFile: !uuid 'b0789e1bbcad8c1d283670c2bd76507118d40acc'
   /Develop/Source/Trunk:
-    newFile: !uuid 'fd26c6d05ccc3b93f8d588e6b07bdbcca1fdce28'
-    oldFile: !uuid '9b2ced52c1b3cca3690ffa93340e45495f681892'
+    newFile: !uuid '3c86a087a007df5cb4b49f5f17b307ffd0560edd'
+    oldFile: !uuid 'fd26c6d05ccc3b93f8d588e6b07bdbcca1fdce28'
   /Develop/Source/Trunk/src:
-    newFile: !uuid '96b2d74aaf5d25efa44869ac5711704ee0ba34dd'
-    oldFile: !uuid '2ab1eaf341983f8704d07c43248296a9635f128f'
+    newFile: !uuid '46f98187ea376246c485edec14b721d7feacf894'
+    oldFile: !uuid '96b2d74aaf5d25efa44869ac5711704ee0ba34dd'
   /Develop/Source/Trunk/src/com:
-    newFile: !uuid '9b2817fa2cfb04a735ddacae97634bcb52db7575'
-    oldFile: !uuid '5a2b165c664adfeff6afa052c2443365ec3e18f3'
+    newFile: !uuid 'c7f378b657a99a53a3da8d027eecd399f9c3c2d6'
+    oldFile: !uuid '9b2817fa2cfb04a735ddacae97634bcb52db7575'
   /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid 'fba64158ad252c053d9ec7622662ae3237f4f1c2'
-    oldFile: !uuid 'c928500b8de283ec709029734eb735bb320e6e0a'
-  /Develop/Source/Trunk/src/com/fanglin/personel:
-    newFile: !uuid '66feb256813596eae52ff48ea7d7d63d1a585e29'
-    oldFile: !uuid '8ced2da24af38adef784fec9c4b8a0f092784298'
-  /Develop/Source/Trunk/src/com/fanglin/personel/po:
-    newFile: !uuid '02c357aeab01879c90ec552376b2b676b0f35c2b'
-    oldFile: !uuid 'd0814ef659758915bdeb9289409abc15fd5002ae'
-  /Develop/Source/Trunk/src/com/fanglin/personel/po/UserInfoPO.java:
-    newFile: !uuid '8169e66dafc83255f7fc44e44614bce12035a17a'
-    oldFile: null
-  /Develop/Source/Trunk/src/com/fanglin/personel/vo:
-    newFile: !uuid '9fb94d076ed108200aee4730fb854c992bca4fc8'
-    oldFile: !uuid '104985a92b7d9b913b1ae47ebe54a72ea0603ee3'
-  /Develop/Source/Trunk/src/com/fanglin/personel/vo/UserInfoVO.java:
-    newFile: !uuid 'db537701d7331729c5b33f163c2504e29daab68c'
-    oldFile: null
-gitCommitId: !uuid 'eecd0ade6c8199370af4634d519f8c0df57a5175'
+    newFile: !uuid 'dab3e1799cbebfc891a56b69e4d19207f5d3d8c9'
+    oldFile: !uuid 'fba64158ad252c053d9ec7622662ae3237f4f1c2'
+  /Develop/Source/Trunk/src/com/fanglin/core:
+    newFile: !uuid 'fe1d624df6c52ac02142d6d1ce422f762658e642'
+    oldFile: !uuid '56426e5d4d68396b48ffab1973da10722bf5d931'
+  /Develop/Source/Trunk/src/com/fanglin/core/security:
+    newFile: !uuid '1ae0125c859b0c63b24c40a5949b33c71377511c'
+    oldFile: !uuid '293752491f7fb76ca84457b9c1cb82b6f63abcea'
+  /Develop/Source/Trunk/src/com/fanglin/core/security/AESHelper.java:
+    newFile: !uuid 'fb338a1a908c41a5bee50540f39fdf7c123f072e'
+    oldFile: !uuid 'd5995dc3e8f63062ea9964ea6d261d03fd5ac904'
+gitCommitId: !uuid 'cc6e6779e1474971598f2a38ca0f5c96d405e928'
 renames: {
   }
-revisionId: 125
+revisionId: 126
