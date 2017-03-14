@@ -227,6 +227,32 @@ public class AESHelper {
     }  
 	
 	public static void main(String[] args) throws Exception {
+		
+		System.out.println(encryptToString("fanglinGNFNG32!", "fanglin")); // 192.168.1.4
+		
+		System.out.println(encryptToString("fanglin5PFNG32!", "fanglin")); // 192.168.5.10
+		
+		System.out.println(encryptToString("fanglin1LCJS72!", "fanglin")); // 192.168.5.11
+//		System.out.println(encryptToString("mysql1LCJS72!", "fanglin"));
+		
+		System.out.println(encryptToString("fanglin1L8GS72!", "fanglin")); // 192.168.5.12
+//		System.out.println(encryptToString("mysql1L8GS72!", "fanglin"));
+		
+		System.out.println(encryptToString("fanglinG2DNG32!", "fanglin")); // 192.168.5.13
+//		System.out.println(encryptToString("mysqlG2DNG32!", "fanglin"));
+		
+		System.out.println(encryptToString("fanglin8BCNG32!", "fanglin")); // 192.168.5.14
+//		System.out.println(encryptToString("mysql8BCNG32!", "fanglin"));
+		
+		System.out.println(encryptToString("fanglinDQFNG32!", "fanglin")); // 192.168.5.15
+//		System.out.println(encryptToString("mysqlDQFNG32!", "fanglin"));
+		
+//		System.out.println(encryptToString("FanglinH7C9772!", "fanglin")); // 61.161.149.154:3001
+		
+//		System.out.println(encryptToString("FanglinDCVG772!", "fanglin")); // 61.161.149.154:3003
+		
+		System.out.println();
+		
 		String str = "12345" + 3;
 		String key = "FanglinServer";
 		String encrytStr;
