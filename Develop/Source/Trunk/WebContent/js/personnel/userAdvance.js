@@ -276,7 +276,11 @@ function saveData(){
 		"user.company": userAdvance.userAdvanceItems.company.val(),
 	}
 	
-	com.post(api.personel.updateUserForAdvance, options);
+	com.post(api.personel.updateUserForAdvance, options, function(res){
+		com.showAlert(com.info, "提交成功");
+	});
 	
 	userAdvance.userAdvanceModal.modal("hide");
+	
+	return false;
 }
