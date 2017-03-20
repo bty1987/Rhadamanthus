@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: VerifyCodeAction.java
  * @Package		：com.fanglin.action 
  * @Version		: 1.0
@@ -39,7 +39,13 @@ public class VerifyCodeAction extends BaseAction {
 	@Action(value = "queryVode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryVode() throws Exception{
 		
-		securityCode = AESHelper.encrypt(SecurityCodeHelper.getSecurityCode(), SystemConfig.getString("encryptKey"));
+		String tmp = SecurityCodeHelper.getSecurityCode();
+		String key = SystemConfig.getString("encryptKey");
+		
+		System.out.println(tmp);
+		System.out.println(key);
+		
+		securityCode = AESHelper.encryptToString(tmp, key);
 		
 		return SUCCESS;
 	}
@@ -48,7 +54,7 @@ public class VerifyCodeAction extends BaseAction {
 	public String verifyCode() throws FLException{
 		
 		try {
-			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey")));
+			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
 		} catch (Exception e) {
 			new FLException(110000, "系统处理问题");
 		}

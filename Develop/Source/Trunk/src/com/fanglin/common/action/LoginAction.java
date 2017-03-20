@@ -66,7 +66,7 @@ public class LoginAction extends BaseListAction {
 		String ip = IPUtil.getIpAddr(request);
 
 		try {
-			String verifyCode = AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"));
+			String verifyCode = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
 
 			if(verifyCode == null || !verifyCode.equals(inputCode)){
 				throw new FLException(110001, "验证码错误");
@@ -102,7 +102,7 @@ public class LoginAction extends BaseListAction {
 				    
 				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany(), user.getFreedom());
 				    
-					authenticationEncode = AESHelper.encrypt(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					
 					loginLogVO.setSuccessFlag(1);
 					loginLogService.addLoginLog(loginLogVO);
