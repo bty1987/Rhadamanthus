@@ -75,7 +75,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 			if(authentication != null){
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decrypt(authentication, encryptKey);
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
 				Authentication authenticationUtil = new Authentication(decryptString);
 				if(authenticationUtil.getUpdateTime() != -1){
@@ -97,7 +97,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 			if(authentication != null){
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decrypt(authentication, encryptKey);
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
@@ -119,7 +119,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		
 			if(authentication != null){
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decrypt(authentication, encryptKey);
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
@@ -142,7 +142,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			
 			if(authentication != null){
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decrypt(authentication, encryptKey);
+				String decryptString = AESHelper.decryptString(authentication, encryptKey);
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){

@@ -11,13 +11,11 @@
 
 package com.fanglin.core.security;
 
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import com.fanglin.core.interceptor.FLException;
 
@@ -83,23 +81,6 @@ public class AESHelper {
 		cByte = c.doFinal(str.getBytes("UTF-8"));
 
 		return parseByte2HexStr(cByte);
-	}
-	
-	public static String encrypt(String content, String key) throws Exception{
-		
-		byte[] input = content.getBytes("UTF-8");  
-        
-        MessageDigest md = MessageDigest.getInstance("MD5");  
-        byte[] thedigest = md.digest(key.getBytes("UTF-8"));  
-        SecretKeySpec skc = new SecretKeySpec(thedigest, "AES");  
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");  
-        cipher.init(Cipher.ENCRYPT_MODE, skc);  
-          
-        byte[] cipherText = new byte[cipher.getOutputSize(input.length)];  
-        int ctLength = cipher.update(input, 0, input.length, cipherText, 0);  
-        ctLength += cipher.doFinal(cipherText, ctLength);  
-              
-        return parseByte2HexStr(cipherText);  
 	}
 	
 	/**
@@ -168,18 +149,6 @@ public class AESHelper {
 		
 		return "";
 	}
-	
-	public static String decrypt(String encrypted, String seed) throws Exception {  
-        byte[] keyb = seed.getBytes("UTF-8");  
-        MessageDigest md = MessageDigest.getInstance("MD5");  
-        byte[] thedigest = md.digest(keyb);  
-        SecretKeySpec skey = new SecretKeySpec(thedigest, "AES");  
-        Cipher dcipher = Cipher.getInstance("AES");  
-        dcipher.init(Cipher.DECRYPT_MODE, skey);  
-  
-        byte[] clearbyte = dcipher.doFinal(toByte(encrypted));  
-        return new String(clearbyte);  
-    }
 
 	/**
 	 * 2进制转化成16进制
@@ -217,42 +186,7 @@ public class AESHelper {
 		return result;
 	}
 	
-	private static byte[] toByte(String hexString) {  
-        int len = hexString.length() / 2;  
-        byte[] result = new byte[len];  
-        for (int i = 0; i < len; i++) {  
-            result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();  
-        }  
-        return result;  
-    }  
-	
 	public static void main(String[] args) throws Exception {
-		
-		System.out.println(encryptToString("fanglinGNFNG32!", "fanglin")); // 192.168.1.4
-		
-		System.out.println(encryptToString("fanglin5PFNG32!", "fanglin")); // 192.168.5.10
-		
-		System.out.println(encryptToString("fanglin1LCJS72!", "fanglin")); // 192.168.5.11
-//		System.out.println(encryptToString("mysql1LCJS72!", "fanglin"));
-		
-		System.out.println(encryptToString("fanglin1L8GS72!", "fanglin")); // 192.168.5.12
-//		System.out.println(encryptToString("mysql1L8GS72!", "fanglin"));
-		
-		System.out.println(encryptToString("fanglinG2DNG32!", "fanglin")); // 192.168.5.13
-//		System.out.println(encryptToString("mysqlG2DNG32!", "fanglin"));
-		
-		System.out.println(encryptToString("fanglin8BCNG32!", "fanglin")); // 192.168.5.14
-//		System.out.println(encryptToString("mysql8BCNG32!", "fanglin"));
-		
-		System.out.println(encryptToString("fanglinDQFNG32!", "fanglin")); // 192.168.5.15
-//		System.out.println(encryptToString("mysqlDQFNG32!", "fanglin"));
-		
-//		System.out.println(encryptToString("FanglinH7C9772!", "fanglin")); // 61.161.149.154:3001
-		
-//		System.out.println(encryptToString("FanglinDCVG772!", "fanglin")); // 61.161.149.154:3003
-		
-		System.out.println();
-		
 		String str = "12345" + 3;
 		String key = "FanglinServer";
 		String encrytStr;
@@ -269,10 +203,7 @@ public class AESHelper {
 		System.out.println("解密后：" + decryptByte(parseHexStr2Byte(encrytStr), key));
 		
 		System.out.println("加密后：" + encryptToString("userId=FL-00479,roleId=R_50,userName=白添宇,updateTime=1481262867035,company=0,timeout=1,rollcall=0", "FanglinTest"));
-		System.out.println("解密后：" + decryptString("F04218BED2B227860CBFBDA49F1136998950DA40D5698253A92A302530F6ADD33E0E05637C15E1B643A11C99489EAB43AE080943F1FBD3B54C53B101F2440386995522550596CB3F6EBA4FA60C786F8185A2084EDFFE54B5B421F50F4AC21BA7C91D9C9148BF49D8C326344DDAA84AD8", "fanglinserver"));
-		
-		System.out.println(encrypt("{\"userId\":\"U001\",\"userName\":\"测试\",\"timeout\":1}", "test"));
-		System.out.println(decrypt("C2F854020B3CEC2B7F2F7B7BB7DD640510FA225DEC4CC06817C3806D9A80AEE654B78DE91BDE9510C0299EC634628D8BE6CA93D9829576A935FB4A6E3ABDF238", "test"));
+		System.out.println("解密后：" + decryptString("8E1BD9078DB393A947FB51697AE9FC97F97A8F2D15F4D224D309B161E6B1CC8E117F762457031BD020786A6D548DECCD4C247B393805A3CDFF4462A28D7C095D2F16E8BE2F3E96C55126D4049955E593A527F6C55541434830A7C2E3A2BCF07A", "test"));
 		
 	}
 

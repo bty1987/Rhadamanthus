@@ -28,7 +28,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "actionLog", catalog = "platform")
+@Table(name = "actionLog", catalog = "log")
 public class ActionLogPO implements Serializable {
 
 	private static final long serialVersionUID = -1714740524313501162L;

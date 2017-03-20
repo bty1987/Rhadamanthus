@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "loginLog", catalog = "platform")
+@Table(name = "loginLog", catalog = "log")
 public class LoginLogPO implements Serializable {
 	
 	private static final long serialVersionUID = -8993777631048468332L;
