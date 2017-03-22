@@ -3,45 +3,33 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '830329170c5d6e30668cb06ec564fee8ca07ca31'
-    oldFile: !uuid '29a8f44fbad3ca9b2d504fd030510828b549cc55'
+    newFile: !uuid 'c79e776280ee62571a6c113e642cf17c5a0dc58e'
+    oldFile: !uuid '830329170c5d6e30668cb06ec564fee8ca07ca31'
   /Develop/Source:
-    newFile: !uuid 'ff18500be3b9974d052df1579a239f19d92d249d'
-    oldFile: !uuid 'b1a6094852a2c8d86582c636a133745fd5b1edef'
+    newFile: !uuid '1c5659de25f6113b3c56aac8d5c2938b594d0182'
+    oldFile: !uuid 'ff18500be3b9974d052df1579a239f19d92d249d'
   /Develop/Source/Trunk:
-    newFile: !uuid '572a3be3901dcd0947c6c6b6e82e92285e752ff6'
-    oldFile: !uuid '39a3e95659c856e44dab4b4a8d90d7e26cc0e324'
-  /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '32ae4eeb0c21d1023968fb6d720bc7384d07b552'
-    oldFile: !uuid '0bfd8e9f3e5843bffe9a0a22aaaabc8a34ea978c'
-  /Develop/Source/Trunk/WebContent/db:
-    newFile: !uuid '3688a73b17b2d163d448736fb05d2253c6a011a6'
-    oldFile: !uuid '73a7a4f4a3534d15235ab82dd843517b0a8168df'
-  /Develop/Source/Trunk/WebContent/db/log.sql:
-    newFile: !uuid '03d2a9dade1614a37a66945046edeff9da0f21f5'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/db/platform.sql:
-    newFile: !uuid '525ed99931d32796937b41f66e10ea85ce8173ce'
-    oldFile: !uuid '129f8d9ba68ad031d3bb17e489e8ec369d826cb1'
-  /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '214a7213089eaf1fcfbcc869bcea7e1057e0f3b5'
-    oldFile: !uuid '897d7b4b301d3103697f0142d39e6681aa2c175b'
-  /Develop/Source/Trunk/WebContent/js/personnel:
-    newFile: !uuid '51c514955d4c5d7ce8550059a22ea6aa78c42118'
-    oldFile: !uuid '803d5626d58e4b707a3058d6b4306496457bd30f'
-  /Develop/Source/Trunk/WebContent/js/personnel/userAdvance.js:
-    newFile: !uuid 'f2812295d0a6723ca211cab609185fd361132ce2'
-    oldFile: !uuid '4b2e594c7eb336cedf7f3b174311fddf6c83af77'
-  /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '28fae46d65865088f04206eb4bba10914ab0e937'
-    oldFile: !uuid 'b893415b93ef6abe59668b748fb572430128194f'
-  /Develop/Source/Trunk/WebContent/views/contract:
-    newFile: !uuid '9d1e7b24db92d8a8fcafdd68a90415192541e6bf'
-    oldFile: !uuid 'e840704cf85b99339db8ea67bd527f4169c296c3'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContract2.html:
-    newFile: !uuid 'fcfb49b418cc9b8472e139040e1ff4321dbdec81'
-    oldFile: !uuid '3a34873677077b92815d0346d0ac2ad3856cea1b'
-gitCommitId: !uuid 'c943fc1f3518366608e033408d1689d58f6a4727'
+    newFile: !uuid '74672de3d9f285587d92f77f45c7de9b4558019d'
+    oldFile: !uuid '572a3be3901dcd0947c6c6b6e82e92285e752ff6'
+  /Develop/Source/Trunk/src:
+    newFile: !uuid '0845ae401c83dfce8bd826e8dd6db433d211dff9'
+    oldFile: !uuid '903e59621e437bf4ec4c3cb8e80f87e614fbca32'
+  /Develop/Source/Trunk/src/com:
+    newFile: !uuid 'c344be3b1cf4df639cc198adad88f447c674f552'
+    oldFile: !uuid '8b5e8f254e0c8afe9c2e0270c7c0d004791a543d'
+  /Develop/Source/Trunk/src/com/fanglin:
+    newFile: !uuid '3ce1e5dd634fa9210c68f6e444adebac7450427e'
+    oldFile: !uuid 'd2ace14074048af6447dc5a0d8817293fa11deaf'
+  /Develop/Source/Trunk/src/com/fanglin/common:
+    newFile: !uuid '3eab3717dbed6ab2de2cce589df762be711b662b'
+    oldFile: !uuid 'c2ca2157ca2f868af6eb0b8e5adc389a5cc510f3'
+  /Develop/Source/Trunk/src/com/fanglin/common/action:
+    newFile: !uuid 'eec542f7325e651e03e373efcda0a926dbb2460b'
+    oldFile: !uuid '5a1ccf1b3a7bb1163a412052433fad35444c6335'
+  /Develop/Source/Trunk/src/com/fanglin/common/action/LoginAction.java:
+    newFile: !uuid 'a2f9e54f94a0843ecf0f6ad9a12d6465ff23bb9b'
+    oldFile: !uuid 'dd4551f1b0742d744021ee87efd4ca47ead36e16'
+gitCommitId: !uuid 'eb849fe88d6ab0c967515b607be2ab5158ba1097'
 renames: {
   }
-revisionId: 128
+revisionId: 129
