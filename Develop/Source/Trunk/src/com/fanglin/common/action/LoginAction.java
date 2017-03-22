@@ -17,6 +17,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -41,6 +43,8 @@ import com.fanglin.utils.SystemConfig;
 public class LoginAction extends BaseListAction {
 	
 	private static final long serialVersionUID = 597878314944213650L;
+	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private UserService userService;
@@ -112,8 +116,13 @@ public class LoginAction extends BaseListAction {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
+			
+			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), ""));
+			
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
+			
+			e.printStackTrace();
 		}
 		
 		return SUCCESS;
