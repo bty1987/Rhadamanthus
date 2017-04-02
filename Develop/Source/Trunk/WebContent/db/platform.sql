@@ -2134,21 +2134,18 @@ CREATE TABLE `workerdeductsalary` (
 
 DROP TABLE IF EXISTS `workersalary`;
 CREATE TABLE `workersalary` (
-  `wsId` int(11) NOT NULL AUTO_INCREMENT,
-  `pwsId` int(11) NOT NULL,
+  `wsid` int(11) NOT NULL AUTO_INCREMENT,
+  `csid` int(11) DEFAULT NULL,
   `userId` varchar(15) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `workTypeId` tinyint(4) NOT NULL,
-  `workType` varchar(16) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `base` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `deduct` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `wtid` tinyint(4) DEFAULT NULL COMMENT '工种',
+  `createTime` timestamp NULL NOT NULL,
+  `balanceTime` timestamp NULL NOT NULL,
+  `salary` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `type` tinyint(4) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`wsId`),
-  KEY `indexone` (`userId`,`status`),
-  KEY `indextwo` (`pwsId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工资';
+  PRIMARY KEY (`wsid`),
+  KEY `indexone` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费';
 
 DROP TABLE IF EXISTS `zaterialdesignercount`;
 CREATE TABLE `zaterialdesignercount` (

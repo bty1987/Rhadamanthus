@@ -2,13 +2,10 @@ package com.fanglin.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,10 +23,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.util.Assert;
 
 import com.fanglin.common.vo.ExcelWorkSheet;
-import com.fanglin.salary.vo.UserSalaryVO;
 
 public class PoiExcelUtil {
 
@@ -266,52 +261,52 @@ public class PoiExcelUtil {
 	}
 
 	public static void main(String[] args) throws IOException {
-		try {
-			List<List<String>> e = readExcel("D:\\Decoration报价.xls");
-			for(List<String> list : e){
-				for(String object : list){
-					System.out.print(object + "\t");
-				}
-				System.out.println();
-			}
-
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-
-		List<List<String>> content = readExcel("D:\\员工工资信息模板.xlsx");
-
-		Assert.isTrue(content.size() > 1);
-		ExcelWorkSheet<UserSalaryVO> sheet = new ExcelWorkSheet<UserSalaryVO>();
-		List<UserSalaryVO> l = new ArrayList<UserSalaryVO>();
-		for(int i = 1; i < content.size(); ++i){// 第一行是表头
-			UserSalaryVO tem = new UserSalaryVO();
-
-			tem.setComments(content.get(i).get(4));
-			tem.setUserId(content.get(i).get(0));
-			tem.setUserName(content.get(i).get(1));
-			tem.setMoney(Float.valueOf(content.get(i).get(3)));
-			tem.setCreateUserId("tesllslsl");
-			tem.setType(content.get(i).get(2));
-
-			l.add(tem);
-		}
-
-		sheet.setData(l);
-		sheet.setSheetName("ceshi");
-		sheet.setColumns(Arrays.asList("员工编号", "员工姓名", "类型", "金额 ", "备注"));
-		sheet.setPropertyNames(Arrays.asList("userId", "userName", "type", "money", "comments"));
-		
-		OutputStream out = null;
-		try {
-			out = new FileOutputStream("D:\\员工工资信息模板1.xls");  
-			exportExcel(sheet, out);
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		}finally{
-			if(out!=null)
-				out.close();
-		}
+//		try {
+//			List<List<String>> e = readExcel("D:\\Decoration报价.xls");
+//			for(List<String> list : e){
+//				for(String object : list){
+//					System.out.print(object + "\t");
+//				}
+//				System.out.println();
+//			}
+//
+//		} catch (IOException e){
+//			e.printStackTrace();
+//		}
+//
+//		List<List<String>> content = readExcel("D:\\员工工资信息模板.xlsx");
+//
+//		Assert.isTrue(content.size() > 1);
+//		ExcelWorkSheet<UserSalaryVO> sheet = new ExcelWorkSheet<UserSalaryVO>();
+//		List<UserSalaryVO> l = new ArrayList<UserSalaryVO>();
+//		for(int i = 1; i < content.size(); ++i){// 第一行是表头
+//			UserSalaryVO tem = new UserSalaryVO();
+//
+//			tem.setComments(content.get(i).get(4));
+//			tem.setUserId(content.get(i).get(0));
+//			tem.setUserName(content.get(i).get(1));
+//			tem.setMoney(Float.valueOf(content.get(i).get(3)));
+//			tem.setCreateUserId("tesllslsl");
+//			tem.setType(content.get(i).get(2));
+//
+//			l.add(tem);
+//		}
+//
+//		sheet.setData(l);
+//		sheet.setSheetName("ceshi");
+//		sheet.setColumns(Arrays.asList("员工编号", "员工姓名", "类型", "金额 ", "备注"));
+//		sheet.setPropertyNames(Arrays.asList("userId", "userName", "type", "money", "comments"));
+//		
+//		OutputStream out = null;
+//		try {
+//			out = new FileOutputStream("D:\\员工工资信息模板1.xls");  
+//			exportExcel(sheet, out);
+//			
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}finally{
+//			if(out!=null)
+//				out.close();
+//		}
 	}
 }
