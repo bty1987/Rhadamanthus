@@ -3,54 +3,27 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '9088c105dd9a02e5137de0b5cb97f7f4f1c7b1b9'
-    oldFile: !uuid '6a7670240a172f4f9790f11c36a3285a3b78e33e'
+    newFile: !uuid '20aa500335eb640d81c3c59c14d36a827d466085'
+    oldFile: !uuid '9088c105dd9a02e5137de0b5cb97f7f4f1c7b1b9'
   /Develop/Source:
-    newFile: !uuid 'fcf69cc4ec7609395fad00e6cc49eee6aecad593'
-    oldFile: !uuid 'd85013e142f9112f2e50ab83d7e15a85bf0b8d30'
+    newFile: !uuid '0c761be7fba8779c075068db29a10db73cd3bac7'
+    oldFile: !uuid 'fcf69cc4ec7609395fad00e6cc49eee6aecad593'
   /Develop/Source/Trunk:
-    newFile: !uuid '875c2738299cb1a0b934e9f365118f911126552f'
-    oldFile: !uuid 'aa739f5d63a7db7803e2c9ad57b1f78e4dd7f284'
+    newFile: !uuid 'df90a63eb0d12dec04854a4b1a3787d76bc6e942'
+    oldFile: !uuid '875c2738299cb1a0b934e9f365118f911126552f'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '8960b6da698073ebb568dfa5cd1015acaa83055e'
-    oldFile: !uuid '5c3fda9c4a8237eefdeb603f2e4a5a614a318b59'
+    newFile: !uuid '93fdc98506544bfd47ea3d30421487e708041a98'
+    oldFile: !uuid '8960b6da698073ebb568dfa5cd1015acaa83055e'
   /Develop/Source/Trunk/WebContent/db:
-    newFile: !uuid '3b353a46c63e055f7c0b89af6c00cdd91913e5db'
-    oldFile: !uuid '976e13b8450f73117df855c62c713a1686355ba2'
+    newFile: !uuid 'ad4cf4e769742d1b61dbaabe1ea574e40301ee82'
+    oldFile: !uuid '3b353a46c63e055f7c0b89af6c00cdd91913e5db'
   /Develop/Source/Trunk/WebContent/db/platform.sql:
-    newFile: !uuid '4a0e762daf7ebc9d26e7e843986a3d9b06d8cc8c'
-    oldFile: !uuid '4f8d0414f2d5b041f78d176c26ebe0289d9f04f5'
+    newFile: !uuid '90efe9d22a7e62f4d46727dac1c8c96c6e2bf379'
+    oldFile: !uuid '4a0e762daf7ebc9d26e7e843986a3d9b06d8cc8c'
   /Develop/Source/Trunk/WebContent/db/update.sql:
-    newFile: !uuid '4de6923462f45d231228da65e9f406ef01783601'
-    oldFile: !uuid 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
-  /Develop/Source/Trunk/WebContent/images:
-    newFile: !uuid '2e85d23a34581ed56b8fb8648888f39fd5f7c157'
-    oldFile: !uuid 'e8c6170f1f4becf3b41e6c4676809e245ecd3d9e'
-  /Develop/Source/Trunk/WebContent/images/faq:
-    newFile: !uuid '4c9ff52bff010cd6360b07781b9f45266a17a5a5'
-    oldFile: !uuid 'adcbabe2eef93effcbcf8e71f37ce082826a3ca0'
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖1.png:
-    newFile: null
-    oldFile: !uuid '113431d79819e74705c6372b472d254e07b991d8'
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖2.png:
-    newFile: null
-    oldFile: !uuid '3fd6a86b342d210aa8a7719fbcd7209d4a9a6686'
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖3.png:
-    newFile: null
-    oldFile: !uuid '6d20070110c8aa905c42ec272db0d8a21a5d6357'
-  /Develop/Source/Trunk/WebContent/images/faq/鍥剧墖4.png:
-    newFile: null
-    oldFile: !uuid 'fa52c76e18a74ad320219fe8dd34eceaccdc84a3'
-  /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid 'fcb62559f25d7a70a6bd5be8725e3ced042cd675'
-    oldFile: !uuid '3ce4f0197028975838cda8cd29156cc6574b136d'
-  /Develop/Source/Trunk/WebContent/views/contract:
-    newFile: !uuid '260acfeccd8e482ee234ca4c1b4d1fdb93bfd23e'
-    oldFile: !uuid 'cd923231b25c1d300ccf525e115d19e494524cfe'
-  /Develop/Source/Trunk/WebContent/views/contract/decorationContract2.html:
-    newFile: !uuid '5f214974d0edf376a638fa57099bf870cf3115c2'
-    oldFile: !uuid '35bc74e84d63f0b51c0a41ee985750148c23b7bd'
-gitCommitId: !uuid '90608e1fda00e1f921e7b0186fa25e32bddf16e0'
+    newFile: !uuid '2766b9f34a765cf4620a866ba14b13af6239fbe0'
+    oldFile: !uuid '4de6923462f45d231228da65e9f406ef01783601'
+gitCommitId: !uuid '647ce46f6ff0da29d16cae8a60fe44c2784398bc'
 renames: {
   }
-revisionId: 131
+revisionId: 132
