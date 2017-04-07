@@ -2137,7 +2137,6 @@ CREATE TABLE `workersalary` (
   `wsid` int(11) NOT NULL AUTO_INCREMENT,
   `csid` int(11) DEFAULT NULL,
   `userId` varchar(15) NOT NULL,
-  `wtid` tinyint(4) DEFAULT NULL COMMENT '工种',
   `createTime` timestamp NULL NOT NULL,
   `balanceTime` timestamp NULL NOT NULL,
   `salary` decimal(10,3) NOT NULL DEFAULT '0.000',
