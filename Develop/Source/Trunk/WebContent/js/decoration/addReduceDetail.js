@@ -131,15 +131,16 @@ var AddReduceDetail = (function(){
 					com.post( api.addReduce.submitAddReduce, {'addReduce.arId' : addReduceDetail.arid}, function(){
 						com.showAlert(com.info, '提交成功');
 					}, null, false);
+					
 				}),//提交
-				saveAddReduceDetailBtn : $('#saveAddReduceDetailBtn').on(ace.click_event, function(event){
-					com.post( api.addReduce.updateAddReduceForAdvance, {'addReduce.arId' : addReduceDetail.arid, 'addReduce.total' : addReduceDetail.basicParams['addReduce.total']}, function(){
-						com.showAlert(com.info, '保存成功');
-					}, null, false);
-				}),//保存
+//				saveAddReduceDetailBtn : $('#saveAddReduceDetailBtn').on(ace.click_event, function(event){
+//					//com.post( api.addReduce.updateAddReduceForAdvance, {'addReduce.arId' : addReduceDetail.arid, 'addReduce.total' : addReduceDetail.basicParams['addReduce.total']}, function(){
+//					com.post( api.addReduce.updateAddReduceItem, {'addReduce.arId' : addReduceDetail.arid, 'addReduce.total' : addReduceDetail.basicParams['addReduce.total']}, function(){
+//						com.showAlert(com.info, '保存成功');
+//					}, null, false);
+//				}),//保存
 				detailBckBtn : $('#detailBckBtn').on(ace.click_event, function(){//返回
 					$("#fl-container").load(api.index.addReduceIndex.url);
-					
 				}),
 			};
 		},
@@ -172,13 +173,13 @@ var AddReduceDetail = (function(){
 				totalprice : _totalprice
 			};
 		},
-		changeQuoFee :function($quote, discountprice, totalpriced, totalprice){
+		changeQuoFee : function($quote, discountprice, totalpriced, totalprice){
 			$quote.find('.discountprice .cell-wrap').text(discountprice);
 			$quote.find('.totalprice-discount .cell-wrap').text(totalpriced);
 			$quote.attr('data-totalprice', totalprice);
 		},
 		//计算增减项各种值
-		calculateArFees :function(func){
+		calculateArFees : function(func){
 			var $arr = $('.fl-quo-item:not([data-del-flag="1"])', '#addReduceItemDiv');
 			var sum = 0, sumd = 0;
 

@@ -663,3 +663,6 @@ input[type=checkbox].ace.checked+.lbl::before {
 	height: 180px;
 	border:1px solid #ccc;
 }
+
+.icon-money{color: cornflowerblue;}
+.icon-5x{ font-size: 1.8em }

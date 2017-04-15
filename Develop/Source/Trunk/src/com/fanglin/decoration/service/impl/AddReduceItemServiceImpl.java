@@ -31,6 +31,8 @@ import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.service.AddReduceItemService;
 import com.fanglin.decoration.vo.AddReduceItemVO;
 import com.fanglin.decoration.vo.AddReduceVO;
+import com.fanglin.payment.dao.DecorationPaymentDao;
+import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -55,7 +57,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
-
+	
+	@Autowired
+	private DecorationPaymentDao decorationPaymentDao;
+	
 	@Override
 	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) {
 		
@@ -159,7 +164,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		
 		return addReduceItemVOs;
 	}
-
+ 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
@@ -171,11 +176,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		if(addReducePO == null){
 			throw new FLException(140018, "增减项不存在");
 		}
-		
+
 		if(!statuses.contains(addReducePO.getStatus())){
 			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
+
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
 		
 		AddReduceItemPO addReduceItemPO = null;
@@ -215,6 +221,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					throw new FLException(140036, "增减项目不存在");
 				}
 				
+
 				float _addReduceItemNum = _addReduceItemPO.getNum();
 				float addReduceItemNum = addReduceItemPO.getNum();
 				
@@ -273,6 +280,15 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			}
 			
 			addReduceItemPO.setNum(addReduceItemVO.getNum());
+		}
+		
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId() == null ? -1 : addReducePO.getDpId());
+
+		if(decorationPaymentPO != null){
+			
+			decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
+
+			decorationPaymentDao.update(decorationPaymentPO);			
 		}
 		
 		addReduceItemDao.saveOrUpdate(addReduceItemPO);

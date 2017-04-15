@@ -166,6 +166,15 @@ var Condition = function(){
                 validate:null
             }
         },
+        departmentName: {
+            label:"归属部门",
+            type:"text",
+            submitConfig : {
+                name : "departmentName",
+                op : "cn",
+                validate:null
+            }
+        },
         cityName: {
             label:"城市名称",
             type:"text",
@@ -255,12 +264,12 @@ var Condition = function(){
         },
         //-------信息-公告查询条件
         theme : {
-            label:"主题",
-            type:"text",
-            submitConfig : {
-                name : "theme",
-                op : "cn",
-                validate:null
+            label:"主题", //中文名
+            type:"text", // 类型
+            submitConfig : { // 向后台提交的配置
+                name : "theme", // 接口中的参数名
+                op : "cn", // 查询方式
+                validate:null // 校验规则
             }
         },
         dateRange : {
@@ -274,28 +283,28 @@ var Condition = function(){
         },
         //-------信息-活动查询条件
         activityName : {
-            label:"名称",
-            type:"text",
-            submitConfig : {
-                name : "activityName",
-                op : "cn",
-                validate:null
+            label:"名称", //中文名
+            type:"text", // 类型
+            submitConfig : { // 向后台提交的配置
+                name : "activityName", // 接口中的参数名
+                op : "cn", // 查询方式
+                validate:null // 校验规则
             }
         },
         activityStatus : {
-            label:"类型",
-            type:"select",
-            submitConfig : {
-                name : "status",
-                op : "eq",
-                validate:null
+            label:"类型", //中文名
+            type:"select", // 类型
+            submitConfig : { // 向后台提交的配置
+                name : "status", // 接口中的参数名
+                op : "eq", // 查询方式
+                validate:null // 校验规则
             },
-            dataSource : {//从后台取数据的各种配置
-                url : null,
-                postData:null,
-                listPath: [{key : "0", value : "\u6709\u6548"}, {key : "1", value: "\u65e0\u6548"}],
-                keyPath:"key",
-                valuePath:"value"
+            dataSource : { // 从后台取数据的各种配置
+                url : null, // 获取数据要调用的接口
+                postData:null, // 获取数据时的请求参数
+                listPath: [{key : "0", value : "\u6709\u6548"}, {key : "1", value: "\u65e0\u6548"}], // 响应list的json路径
+                keyPath:"key", // 用来向后台提交的字段的json路径
+                valuePath:"value" // 用来在页面显示的字段的json路径
             }
         },
         //-------增减项查询条件
@@ -955,7 +964,31 @@ var Condition = function(){
                 op : "between",
                 validate:null
             }
-        }, msalesman: {
+        }, preBalanceTimeRange: {
+            label:"预结算时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "preBalanceTimeRange",
+                op : "between",
+                validate:null
+            }
+        },vbalanceTimeRange: {
+            label:"厂商结算时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "vbalanceTimeRange",
+                op : "between",
+                validate:null
+            }
+        },postBalanceTimeRange: {
+            label:"结算时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "postBalanceTimeRange",
+                op : "between",
+                validate:null
+            }
+        },msalesman: {
             label:"业务员",
             type : "autofill",
             submitConfig : {//向后台提交的配置
@@ -1006,11 +1039,17 @@ var Condition = function(){
             }
         }, materialBrand : {
             label:"品牌",
-            type:"text",
+            type:"autofill",
             submitConfig : {
                 name : "materialBrand",
                 op : "cn",
                 validate:null
+            },dataSource : {//从后台取数据的各种配置
+                url : api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                postData:{},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath:"key",//用来向后台提交的字段的json路径
+                valuePath:"value"//用来在页面显示的字段的json路径
             }
         },
         // 放线

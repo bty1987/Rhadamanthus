@@ -11,6 +11,7 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -102,6 +103,15 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
 		
 		return session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.in(AddReducePO.COLUMN_STATUS_STR, statuses)).list();
+	}
+	
+	@Override
+	public int countAddReduceByOrderId(String orderId) {
+		
+		String sql = "select count(*) from platform.addreduce where orderId = :orderId";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+		
+		return count.intValue();
 	}
 
 }

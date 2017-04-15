@@ -68,9 +68,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				String encryptKey = SystemConfig.getString("encryptKey");
 				
-				System.out.println(encryptKey);
-				System.out.println($authentication);
-				
 				String decryptString = AESHelper.decryptString($authentication, encryptKey);
 				
 				Authentication authentication = new Authentication(decryptString);

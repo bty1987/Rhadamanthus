@@ -110,6 +110,9 @@ var api = {
 		changeItemIndex: {url: "/views/payment/changePaymentItem.html"},
 		decorationPaymentCheckIndex: {url: "/views/payment/decorationPaymentCheck.html"},
 		decorationPaymentReceiptIndex: {url: "/views/payment/decorationPaymentReceipt.html"},
+
+        decorationOrderStageIndex: {url: "/views/decoration/decorationOrderStage.html"},
+        decorationOrderStageDetailIndex: {url: "/views/decoration/decorationOrderStageDetail.html"},
 		
 		materialPaymentIndex: {url: "/views/payment/materialPayment.html"},
 		materialPaymentReceiptIndex: {url: "/views/payment/materialPaymentReceipt.html"},
@@ -272,6 +275,8 @@ var api = {
 		
 		pageApprovalByReceiveId: {url: "pageApprovalByReceiveId.do", demo: true},
 		queryApprovalByAId: {url: "queryApprovalByAId.do"},
+		queryApprovalForMaterialRefundItem: {url: "queryApprovalForMaterialRefundItem.do"},
+		
 		submitApprovalForCustomer: {url: "submitApprovalForCustomer.do"},
 		submitApprovalForVillage: {url: "submitApprovalForVillage.do"},
 		submitApprovalForOrderBelong: {url: "submitApprovalForOrderBelong.do"},
@@ -480,7 +485,11 @@ var api = {
 		addWaterwayCircuitPowerConstructionScheduleWorker: {url: "addWaterwayCircuitPowerConstructionScheduleWorker.do"},
 		setWaterwayCircuitPowerConstructionScheduleWorkerForSalary: {url: "setWaterwayCircuitPowerConstructionScheduleWorkerForSalary.do"},
 		setWaterwayCircuitPowerConstructionScheduleWorkerForRaty: {url: "setWaterwayCircuitPowerConstructionScheduleWorkerForRaty.do"},
-		deleteWaterwayCircuitPowerConstructionScheduleWorker: {url: "deleteWaterwayCircuitPowerConstructionScheduleWorker.do"}
+		deleteWaterwayCircuitPowerConstructionScheduleWorker: {url: "deleteWaterwayCircuitPowerConstructionScheduleWorker.do"},
+		
+		queryWorkerSalary:{url:"queryWorkerSalary.do"},
+		addWorkerSalary:{url:"addWorkerSalary.do"}
+
 		
 	}, data: {
 		
