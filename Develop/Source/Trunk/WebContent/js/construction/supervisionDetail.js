@@ -1,6 +1,15 @@
 
 jQuery(function($) {
+
+	var chan_work_id;
+	var fang_work_id;
+	var gcsId;
+
+	//从服务器查询出来的所有工人
+	var constructionScheduleWorkers;
 	
+	var saveBtn = $("#saveBtn").on("click", saveData);
+
 	var supervisionDetail = {
 			
 		construstionSchedule: {},
@@ -489,9 +498,9 @@ jQuery(function($) {
 		
 		var schedule = res.constructionSchedule.schedule;
 		var operate = supervisionDetail.operateDict[schedule];
-		
+
 		supervisionDetail.schedule = schedule;
-		
+
 		if(!supervisionDetail.wizardSept[schedule]){
 			initWizardSept(operate, schedule);
 			supervisionDetail.wizardSept[schedule] = true;
@@ -500,7 +509,7 @@ jQuery(function($) {
 		$('#fuelux-wizard').ace_wizard({status:true, currentStep: schedule}).on('change' , function(e, info){
 			var step = 0;
 			var direction = info.direction;
-			
+
 			if(direction == "previous"){
 				step = info.step - 1;
 				
@@ -617,6 +626,9 @@ jQuery(function($) {
 		com.post(operate.queryInfoUrl, elementPostData, function(res){
 			
 			var element = res[operate.elementName];
+			gcsId = element["csId"];
+			$('#csId').val(gcsId);
+
 			
 			if(element[operate.elementId] != 0){
 				
@@ -639,7 +651,10 @@ jQuery(function($) {
 					}else{
 						$("<span></span>").addClass("label").text("待处理").appendTo(statusDiv);
 					}
-					
+
+					chan_work_id = element.workerId;
+
+
 					if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
 						com.showImg($("#chanWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 						$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
@@ -727,7 +742,9 @@ jQuery(function($) {
 					$("#"+operate.putlineTimeId).val(element.startTime).attr("disabled", "disabled");
 					
 					var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
-					
+
+					fang_work_id = element.workerId;
+
 					if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
 						com.showImg($("#fangWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
 						$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
@@ -762,21 +779,38 @@ jQuery(function($) {
 						$("#"+operate.workerInfos).html("");
 						
 						if(constructionScheduleWorkers.length != 0){
+							//迭代所有的工人
 							for(var i=0;i<constructionScheduleWorkers.length;i++){
-								
+
 								var workerInfo = constructionScheduleWorkers[i];
-								
+
 								var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
 								var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
 								var profileImg = $('<img></img>').attr("alt", workerInfo.workerId + "'s Photo").appendTo(imgDiv);
-								
+
+
+
 								if(workerInfo["workerPhoto"] != null && workerInfo.workerPhoto != ""){
 									com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, '');
 								}
 								
+
 								var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
-								var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty).appendTo(buttonsDiv);
+                                //buttonSpan工人工费按钮
+                                var buttonSpan = $('<div id="workerNameSpan"></div>').html('<a style="float: left; margin-left: -5px;" class="icon-money icon-5x" href="#"></a>').appendTo(buttonsDiv);
+                                //工人编号、名称、职务
+                                var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty).appendTo(buttonsDiv);
+
 								
+								//循环一个人，将当前这个人的下标绑定到原始对象上，因为jquery对象是原始对象的封装，每次获取都不一样，所以没法用jquery对象存
+								//这个就是存储到原始dom对象上,简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
+								buttonSpan[0]._index = i;
+								buttonSpan.click(function (){  //点击事件
+									_show_WorkerSalary(this._index);//点击按钮的时候会调用上面写好的方法，这里之前存储的下标位置发送到方法中
+								});
+
+
+
 								profileDiv.appendTo($("#"+operate.workerInfos));
 							}
 							
@@ -949,5 +983,67 @@ jQuery(function($) {
 		
 		imgA.colorbox(colorboxArgs);
 	};
+
+	function _show_WorkerSalary(_index){
+		//获得对应位置的工人
+		var workerInfo = constructionScheduleWorkers[_index];
+		//获得工程ID与工人ID
+		var url = api.construction.queryWorkerSalary;
+		var options = {
+				"workerSalary.csId": $('#csId').val(),
+				"workerSalary.user.userId": workerInfo.workerId,
+			};
+		//查询该笔工费是否存在，如果存在显示已有工费，否则0
+		com.post(url,options,function(res){
+			$('#userId').val(workerInfo.workerId);
+			$('#salary','.modal-body').val(res.workerSalary.salary!=null ? res.workerSalary.salary:0);
+		});
+		//显示弹窗
+		$('#guaranteeModal').modal('show');
+	}
+	
+	function saveData(){
+		var url = api.construction.addWorkerSalary;
+		var options = {
+			"workerSalary.csId": $('#csId').val(),
+			"workerSalary.user.userId": $('#userId').val(),
+			"workerSalary.salary": $('#salary').val(),
+		};
+
+		com.post(url,options);
+		$('#guaranteeModal').modal('hide');
+	}
+
+	var $ChanWorkers_wages = $("[title=chanWorkers_wages]");
+	$ChanWorkers_wages.click(function(){
+		//获得工程ID与工人ID
+		var url = api.construction.queryWorkerSalary;
+		var options = {
+				"workerSalary.csId": $('#csId').val(),
+				"workerSalary.user.userId":chan_work_id,
+			};
+		//查询该笔工费是否存在，如果存在显示已有工费，否则0
+		com.post(url,options,function(res){
+			$('#userId').val(chan_work_id);
+			$('#salary','.modal-body').val(res.workerSalary.salary!=null ? res.workerSalary.salary:0);
+		});
+		$('#guaranteeModal').modal('show');
+	});
+
+	var $FangWorkers_wages = $("[title=fangWorkers_wages]");
+	$FangWorkers_wages.click(function(){
+		//获得工程ID与工人ID
+		var url = api.construction.queryWorkerSalary;
+		var options = {
+				"workerSalary.csId": $('#csId').val(),
+				"workerSalary.user.userId":fang_work_id,
+			};
+		//查询该笔工费是否存在，如果存在显示已有工费，否则0
+		com.post(url,options,function(res){
+			$('#userId').val(fang_work_id);
+			$('#salary','.modal-body').val(res.workerSalary.salary!=null ? res.workerSalary.salary:0);
+		});
+		$('#guaranteeModal').modal('show');
+	});
 
 });

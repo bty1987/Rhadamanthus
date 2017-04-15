@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.dao.AddReduceDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
@@ -72,6 +73,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
+	
+	@Autowired
+	private AddReduceDao addReduceDao;
 	
 	@Override
 	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException{
@@ -298,7 +302,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		String orderId = decorationContractVO.getOrderId();
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
-		
+
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
@@ -309,6 +313,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
 			throw new FLException(140037, "订单存在未处理审批项");
+		}
+		
+		if(addReduceDao.countAddReduceByOrderId(orderId)>0){
+			throw new FLException(140041, "订单存在增减项,不能重新签单");
 		}
 		
 		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_RESIGNED_STR);

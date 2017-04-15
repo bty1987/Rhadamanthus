@@ -120,7 +120,8 @@
 																		    <div class="workerImg">
 																			    <img id="chanWorkerImg" src="" alt="">
 																			</div>
-																			<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+																			<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px; margin-left: -152px">
+																				<a class="icon-money icon-5x" href="#" title="chanWorkers_wages"></a>
 																				<span id="chanWorkerNameSpan" class="pull-right"></span>
 																			</div>
 																		</div>
@@ -154,7 +155,6 @@
 											</div>
 										</div>
 									</div>
-	
 									<div class="step-pane" id="step2">
 										<div class="row">
 											<div class="tabbable">
@@ -206,7 +206,8 @@
 																		    <div class="workerImg">
 																			    <img id="fangWorkerImg" src="" alt="">
 																			</div>
-																			<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
+																			<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px; margin-left: -174px">
+																				<a class="icon-money icon-5x" href="#" title="fangWorkers_wages"></a>
 																				<span id="fangWorkerNameSpan" class="pull-right"></span>
 																			</div>
 																		</div>
@@ -452,7 +453,7 @@
 																</h3>
 															</div>
 															<div class="form-group">
-																<div id="groundLevelingWorkerInfos">
+																<div id="groundLevelingWorkerInfos" title="Workers_wages">
 																</div>
 															</div>
 															<div class="space-4"></div>
@@ -825,6 +826,50 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="guaranteeModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="guaranteeDialog">工人工费</h4>
+			</div>
+
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="userId">员工编号</label>
+						<div class="col-sm-9">
+							<input id="userId" readonly="readonly" type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="salary">工费</label>
+						<div class="col-sm-9">
+							<input id="salary" type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+
+					<div class="form-group" style="display: none">
+						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="csId">工程ID</label>
+						<div class="col-sm-9">
+							<input id="csId" type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
 	</div>

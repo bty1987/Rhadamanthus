@@ -26,7 +26,13 @@ import com.fanglin.approval.vo.ApprovalMaterialRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.material.vo.MaterialSubOrderItemVO;
 
+/**
+ * 审批材料退款(用于主材退货审批)
+ * @author lenovo
+ *
+ */
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -43,6 +49,9 @@ public class ApprovalMaterialRefundAction extends BaseListAction {
 	
 	private List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItems;
 	
+	private List<MaterialSubOrderItemVO> materialSubOrderItems;
+	
+	// 获取主材退货审批项信息
 	@Action(value = "queryApprovalForMaterialRefundItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalForMaterialRefundItem() throws FLException{
 		
@@ -51,6 +60,7 @@ public class ApprovalMaterialRefundAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	// 提交主材退货审批
 	@Action(value = "submitApprovalForMaterialRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForMaterialRefund() throws FLException{
 		
@@ -84,5 +94,16 @@ public class ApprovalMaterialRefundAction extends BaseListAction {
 			List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItems) {
 		this.approvalMaterialRefundItems = approvalMaterialRefundItems;
 	}
+
+	public List<MaterialSubOrderItemVO> getMaterialSubOrderItems() {
+		return materialSubOrderItems;
+	}
+
+	public void setMaterialSubOrderItems(
+			List<MaterialSubOrderItemVO> materialSubOrderItems) {
+		this.materialSubOrderItems = materialSubOrderItems;
+	}
+
+	
 
 }

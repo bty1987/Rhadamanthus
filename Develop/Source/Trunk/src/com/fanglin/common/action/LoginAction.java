@@ -84,6 +84,7 @@ public class LoginAction extends BaseListAction {
 				}
 				
 				UserVO user = userService.validateUser(loginId, password);
+				
 				if(user == null){
 					
 					String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times - 1)));
@@ -98,7 +99,7 @@ public class LoginAction extends BaseListAction {
 			            throw new FLException(110004, "该用户不能登陆系统");
 				    }
 				    
-				    if(user.getExtranet() == 0 && !(ip.startsWith("192.168") || ip.startsWith("127") || SystemConfig.getString("hostServer").contains(ip))){
+				    if(user.getExtranet() == 0 && !(ip.startsWith("192.168") || ip.startsWith("127") || SystemConfig.getString("localHost").contains(ip))){
 				    	throw new FLException(110007, "网络问题");
 				    }
 				    

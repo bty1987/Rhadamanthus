@@ -42,9 +42,6 @@ public class VerifyCodeAction extends BaseAction {
 		String tmp = SecurityCodeHelper.getSecurityCode();
 		String key = SystemConfig.getString("encryptKey");
 		
-		System.out.println(tmp);
-		System.out.println(key);
-		
 		securityCode = AESHelper.encryptToString(tmp, key);
 		
 		return SUCCESS;

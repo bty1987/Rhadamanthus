@@ -2,8 +2,8 @@ var materialOrderPreBalance = {
 	saveBtn: null,
 	cancellBtn: null,
 	modal: null,
+	//页面表单里的数据
 	materialOrderPreBalanceItems: {},
-	
 	caclTypeData: [{"id":"0", "name":"底价"}, {"id":"1", "name":"点位"}],
 	
 	editFlag: false,
@@ -55,19 +55,28 @@ jQuery(function($) {
 					var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
 					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
 					var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-danger').html('抹零');
-					
 					var propertyArr = [
+						//侯骅峰于2017.4.7添加品牌 总价 券值 券信息 备注五个显示字段
 						["楼盘地址:", v.orderAddr, "grey"],
+						//添加品牌字段
+						["品牌：",v.materialBrand,"grey"],
 						["客户名:", v.customerName, "grey"],
 						["业务员:", v.salesmanName, "grey"],
 						["点位:", v.point, "blue"],
 						["底价:", v.base, "blue"],
+						//添加总价字段
+						["总价：",v.total,"blue"],
 						["抹零:", v.maling, "green"],
 						["厂商抹零:", v.venderMaling, "green"],
+						//添加券值
+						["券值: ",v.coupon,"grey"],
+						//添加券信息
+						["券信息: ",v.couponInfo ? v.couponInfo : '---',"grey"],
 						["创建时间:", v.createTime, "grey"],
-						["补款时间:", v.fullCollectTime, "grey"],
+						["补款时间:", v.fullCollectTime , "grey"],
+						//添加备注
+						["备注：",v.des ? v.des : '---',"grey"],
 					];
-					
 					var $label = $('<label></label>');
 					var $input = $('<input>').attr({
 						"type": "checkbox",
@@ -77,7 +86,7 @@ jQuery(function($) {
 						"packageFlag": v.packageFlag,
 					}).val(v.arId);
 					var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.msoNo);
-
+					//固定的写法？
 					$.each(propertyArr, function (index,value) {
 						var $liProperty = $('<li></li>');
 						$('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -86,15 +95,15 @@ jQuery(function($) {
 					});
 					
 					$label.append($input).append($span).appendTo($h3);
-
+					//子项
 					$btnItem.click(function(){
 						viewMaterialOrderBalanceDetailIndex(v.msoId);
 					});
-					
+					//结算值
 					$btnValue.click(function(){
 						dialogMaterialOrderPreBalanceBacl(v);
 					});
-					
+					//抹零
 					$btnMaling.click(function(){
 						dialogMaterialOrderMaling(v);
 					});
@@ -117,24 +126,22 @@ jQuery(function($) {
 	})();
 	
 	var searcher = new Searcher();
-	
-	searcher.init(["orderId", "msoNo", "orderAddr", "msalesman", "fullCollectTimeRange"], "condList", api.material.pageMaterialSubOrderForPreBalance, function(data){
+//2017.4.7 hhf添加品牌查询条件
+	searcher.init(["materialBrand","orderId", "msoNo", "orderAddr", "msalesman", "fullCollectTimeRange"], "condList", api.material.pageMaterialSubOrderForPreBalance, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialOrderPreBalancePostData", null, false, null, function(){
 		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
-    	
     	var $passa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'passbalances').css("margin", "0px 3px");
     	var $passi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($passa);
     	var $passspan = $('<span></span>').text('完结').appendTo($passa);
-    	
     	return [$adda, $passa];
 	});
-	
+	//点预结算
 	$('a[name="prebalances"]', '#pagenation').click(function(){
-		
+		//复选框选中的对象
 		var $inputs = $('input[name="msoIds"]:checked');
 		
 		var options = {};
@@ -160,7 +167,7 @@ jQuery(function($) {
 			}
 		});
 	});
-	
+	//点完结  后台将订单状态更改为完结
 	$('a[name="passbalances"]', '#pagenation').click(function(){
 		
 		var $inputs = $('input[name="msoIds"]:checked');
@@ -175,24 +182,27 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 	});
-	
+	//点子项按钮
 	function viewMaterialOrderBalanceDetailIndex(msoId){
 		materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = msoId;
+		//ajax
 		$("#materialOrderPreBalancePageContent").load(api.index.materialOrderPreBalanceDetailIndex.url);
 	}
-
+	//点结算值按钮
 	function dialogMaterialOrderPreBalanceBacl(v){
 		
 		materialOrderPreBalancePostData.msoId = v.msoId;
 		
 		materialOrderPreBalance.materialOrderPreBalanceItems.value.val("");
 		materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
+		//赋值到弹出框中的  原点数
 		materialOrderPreBalance.materialOrderPreBalanceItems.oldPoint.val(v.point);
+		//赋值到弹出框中的  原底价
 		materialOrderPreBalance.materialOrderPreBalanceItems.oldBase.val(v.base);
 		
 		materialOrderPreBalance.modal.modal("show");
 	}
-
+	//点抹零按钮
 	function dialogMaterialOrderMaling(v){
 		
 		materialOrderPreBalancePostData.msoId = v.msoId;
@@ -207,27 +217,26 @@ jQuery(function($) {
 		
 		materialOrderPreBalance.malingModal.modal("show");
 	}
-	
+	//点击弹出框的保存按钮
 	function saveData(){
-		
-		var options = {};
+
+        var options = {};
 		
 		options["materialSubOrder.msoId"] = materialOrderPreBalancePostData.msoId;
 		options["caclType"] = materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val();
-		
+		//计算方式是底价
 		if(materialOrderPreBalance.materialOrderPreBalanceItems.caclType.val() == 0){
 			
 			var base = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
 			var priceRex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
+			//不符合正则表达式要求
 			if(!(priceRex.test(base) && parseFloat(base) > 0)){
 				materialOrderPreBalance.materialOrderPreBalanceItems.value.focus().select();
 				com.showTips(materialOrderPreBalance.materialOrderPreBalanceItems.value, "底价输入内容格式错误!", true);
 				return false;
 			}
-			
 			options["materialSubOrder.base"] = base;
 		}else{
-			
 			var point = materialOrderPreBalance.materialOrderPreBalanceItems.value.val();
 			var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
 			if(!postDiscountRex.test(point)){
@@ -268,6 +277,7 @@ jQuery(function($) {
 		var options = {};
 		
 		options["materialSubOrder.msoId"] = materialOrderPreBalancePostData.msoId;
+		//抹零总数减去厂商抹零
 		options["materialSubOrder.maling"] = utils.accSub(malingTotal, venderMaling);
 		options["materialSubOrder.venderMaling"] = venderMaling;
 		
