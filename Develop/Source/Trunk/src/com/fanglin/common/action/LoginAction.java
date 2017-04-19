@@ -35,6 +35,7 @@ import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.IPUtil;
+import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("login")
@@ -118,12 +119,10 @@ public class LoginAction extends BaseListAction {
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
 			
-			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), ""));
-			
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 			
-			e.printStackTrace();
+			LogUtils.logging(logger, e, "doLogin");
 		}
 		
 		return SUCCESS;

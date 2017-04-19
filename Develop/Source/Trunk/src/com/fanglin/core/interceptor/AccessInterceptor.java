@@ -21,6 +21,7 @@ import com.fanglin.system.service.OperationService;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
@@ -129,11 +130,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
-			if(SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
-				e.printStackTrace();
-			}else{
-				logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
-			}
+			LogUtils.logging(logger, e, actionName);
 		}
 		
 		return Action.SUCCESS;
