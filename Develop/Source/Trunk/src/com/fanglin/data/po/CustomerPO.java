@@ -6,10 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fanglin.payment.po.AdvancePaymentPO;
 
 @Entity
 @Table(name="customer", catalog = "communion")
@@ -50,8 +47,6 @@ public class CustomerPO implements Serializable{
 	private String relationshipType;
 	
 	private Integer approveStatus;
-	
-	private AdvancePaymentPO advancePaymentPO;
 	
 	public CustomerPO(){
 		super();
@@ -178,15 +173,6 @@ public class CustomerPO implements Serializable{
 
 	public void setApproveStatus(Integer approveStatus){
 		this.approveStatus = approveStatus;
-	}
-
-	@OneToOne(mappedBy="customer")
-	public AdvancePaymentPO getAdvancePaymentPO() {
-		return advancePaymentPO;
-	}
-
-	public void setAdvancePaymentPO(AdvancePaymentPO advancePaymentPO) {
-		this.advancePaymentPO = advancePaymentPO;
 	}
 	
 }

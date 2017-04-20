@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.service.impl.CustomerServiceImpl;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -243,10 +242,6 @@ public class PaymentServiceImpl implements PaymentService {
 			advancePaymentPO.setCustomer(new CustomerPO(customerId));
 			
 			advancePaymentDao.save(advancePaymentPO);
-			
-			customerPO.setAdvancePaymentPO(advancePaymentPO);
-			
-			customerDao.update(customerPO);
 		}
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentVO.getOrderId());
@@ -262,7 +257,7 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		List<String> paymentTypes = Arrays.asList(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR, PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR);
 		
-		balance = CustomerServiceImpl.getCustomerBalanceByType(customerPO, paymentType);
+		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
 		float overBalance = 0;
 		
@@ -283,7 +278,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		CustomerServiceImpl.setCustomerBalanceByType(customerPO, paymentType, overBalance);
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
 		
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
@@ -427,10 +422,18 @@ public class PaymentServiceImpl implements PaymentService {
 	@Transactional(rollbackFor=Exception.class)
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
 		
-		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getId());
+		int customerId = paymentVO.getCustomer().getId();
+		
+		CustomerPO customerPO = customerDao.get(customerId);
 		
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
+		}
+		
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerId);
+		
+		if(advancePaymentPO == null){
+			throw new FLException(150010, "预付款余额不足");
 		}
 		
 		float balance = 0;
@@ -438,7 +441,7 @@ public class PaymentServiceImpl implements PaymentService {
 		String type = paymentVO.getType();
 		String paymentType = paymentVO.getPaymentType();
 		
-		balance = CustomerServiceImpl.getCustomerBalanceByType(customerPO, paymentType);
+		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 		
 		float overBalance = 0;
 		if(PaymentPO.PAYMENT_TYPE_EXTRACT_STR.equals(type)){
@@ -452,7 +455,7 @@ public class PaymentServiceImpl implements PaymentService {
 			paymentVO.setRecharge(Math.abs(recharge));
 			paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
-			CustomerServiceImpl.setCustomerBalanceByType(customerPO, paymentType, overBalance);
+			AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
 			
 			AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 			BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
@@ -470,6 +473,7 @@ public class PaymentServiceImpl implements PaymentService {
 			paymentPO.setAdvanceReceipt(advanceReceiptPO);
 			
 			paymentDao.save(paymentPO);
+			advancePaymentDao.update(advancePaymentPO);
 			
 			paymentVO.setPaymentId(paymentPO.getPaymentId());
 		}else{
@@ -484,11 +488,22 @@ public class PaymentServiceImpl implements PaymentService {
 	public int convertPayment(PaymentVO paymentVO, String convertLeftType, String convertRightType, float convertCash, String operatorId) throws FLException{
 		
 		String orderId = paymentVO.getOrderId();
+		int customerId = paymentVO.getCustomer().getId();
 		
-		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getId());
+		CustomerPO customerPO = customerDao.get(customerId);
 		
-		float nowLeftBalance = CustomerServiceImpl.getCustomerBalanceByType(customerPO, convertLeftType);
-		float nowRightBalance = CustomerServiceImpl.getCustomerBalanceByType(customerPO, convertRightType);
+		if(customerPO == null){
+			throw new FLException(230001, "客户信息不存在");
+		}
+		
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerId);
+		
+		if(advancePaymentPO == null){
+			throw new FLException(150010, "预付款余额不足");
+		}
+		
+		float nowLeftBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, convertLeftType);
+		float nowRightBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, convertRightType);
 		
 		if(nowLeftBalance < convertCash){
 			throw new FLException(150018, "预付款转换余额不足");
@@ -497,8 +512,11 @@ public class PaymentServiceImpl implements PaymentService {
 		float convertLeftVal = Arith.sub(nowLeftBalance, convertCash);
 		float convertRightVal = Arith.add(nowRightBalance, convertCash);
 		
-		CustomerServiceImpl.setCustomerBalanceByType(customerPO, convertLeftType, convertLeftVal);
-		CustomerServiceImpl.setCustomerBalanceByType(customerPO, convertRightType, convertRightVal);
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertLeftType, convertLeftVal);
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertRightType, convertRightVal);
+		
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertLeftType, convertLeftVal);
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertRightType, convertRightVal);
 		
 		PaymentPO leftPaymentPO = new PaymentPO();
 		AdvanceReceiptPO leftReceiptPO = new AdvanceReceiptPO();
@@ -539,6 +557,7 @@ public class PaymentServiceImpl implements PaymentService {
 		rightPaymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		rightPaymentPO.setAdvanceReceipt(rightReceiptPO);
 		
+		advancePaymentDao.update(advancePaymentPO);
 		paymentDao.save(rightPaymentPO);
 		Integer rightPaymentId = rightPaymentPO.getPaymentId();
 		

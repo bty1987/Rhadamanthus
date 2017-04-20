@@ -527,7 +527,6 @@ var api = {
 		pageCustomer: {url: "pageCustomer.do", demo: true},
 		queryCustomerById: {url: "queryCustomerById.do"},
 		queryCustomerForName: {url: "queryCustomerForName.do"},
-		queryCustomerForAdvanceByCustomerId: {url: "queryCustomerForAdvanceByCustomerId.do"},
 		checkCustomerForPhone: {url: "checkCustomerForPhone.do"},
 		addCustomer: {url: "addCustomer.do", server: "communionServer"},
 		updateCustomer: {url: "updateCustomer.do", server: "communionServer"},
@@ -623,7 +622,6 @@ var api = {
 		confirmPayment: {url: "confirmPayment.do"},
 		updatePayment: {url: "updatePayment.do"},
 		withdrawPayment: {url: "withdrawPayment.do"},
-		convertPayment: {url: "convertPayment.do"},
 		
 		pageDecorationPaymentForBaseByOrderId: {url: "pageDecorationPaymentForBaseByOrderId.do", demo: true},
 		pageDecorationPaymentForOtherByOrderId: {url: "pageDecorationPaymentForOtherByOrderId.do", demo: true},

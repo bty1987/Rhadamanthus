@@ -25,7 +25,6 @@ import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.VillagePO;
@@ -39,11 +38,14 @@ import com.fanglin.finance.service.FinanceService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
+import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
+import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
@@ -73,6 +75,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
 	
+	@Autowired
+	private AdvancePaymentDao advancePaymentDao;
+	
+	@Autowired
+	private AdvancePaymentService advancePaymentService;
+	
 //	@Autowired
 //	private QuotationDao quotationDao;
 	
@@ -81,9 +89,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 //	@Autowired
 //	private DecorationActivityItemDao decorationActivityItemDao;
-	
-	@Autowired
-	private CustomerService customerService;
 	
 	@Autowired
 	private AddReduceDao addReduceDao;
@@ -560,34 +565,33 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 			
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+			
+			if(advancePaymentPO == null){
+				throw new FLException(150010, "预付款余额不足");
+			}
+			
 			if(advanceType == DecorationPaymentPO.ADVANCETYPE_TYPE_BALANCE_INT){
-				customerAdvance = customerPO.getAdvancePaymentPO().getBalance();
+				customerAdvance = advancePaymentPO.getBalance();
 				_paymentType = CustomerPO.BALANCE_TYPE_BALANCE_STR;
 			}else if(advanceType == DecorationPaymentPO.ADVANCETYPE_TYPE_PROJECT_INT){
-				customerAdvance = customerPO.getAdvancePaymentPO().getProjectBalance();
+				customerAdvance = advancePaymentPO.getProjectBalance();
 				_paymentType = CustomerPO.BALANCE_TYPE_PROJECT_STR;
 			}
 			
 			if(decorationPaymentVO.getAdvance() > customerAdvance){
 				throw new FLException(150010, "预付款余额不足");
 			}else{
-				
-				StringBuffer des = new StringBuffer();
-				des.append("付款装修订单号:");
-				des.append(decorationOrderPO.getOrderId());
-				des.append(",付款类型:");
-				des.append(decorationPaymentVO.getPaymentType());
-				
 				PaymentVO paymentVO = new PaymentVO();
 				paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
 				paymentVO.setCash(decorationPaymentVO.getAdvance());
-				paymentVO.setDes(des.toString());
+				paymentVO.setDes(String.format("付款装修订单号:%s,付款类型:%s", decorationOrderPO.getOrderId(), decorationPaymentVO.getPaymentType()));
 				paymentVO.setCollectUser(new UserVO(decorationPaymentVO.getCollectUserId()));
 				paymentVO.setCustomer(new CustomerVO(decorationPaymentPO.getDecorationOrderPO().getCustomerPO().getId()));
 				paymentVO.setPaymentType(_paymentType);
 				paymentVO.setOrderId(decorationOrderPO.getOrderId());
 				
-				customerService.updateCustomerForBalance(paymentVO);
+				advancePaymentService.updateAdvancePayment(paymentVO);
 			}
 			
 			decorationReceiptPO.setAdvance(decorationPaymentVO.getAdvance());
@@ -840,18 +844,10 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		// 假数据 操作人是谁转入金额 备注 （orderId,paymentId,转换类型)
 		// 需要将转换记录填写到预付款流水账中
 		
-		StringBuffer des = new StringBuffer();
-		des.append("转换款项 装修订单号:");
-		des.append(decorationOrderPO.getOrderId());
-		des.append(",付款编号:");
-		des.append(decorationPaymentPO.getAutoId());
-		des.append(",付款类型:");
-		des.append(decorationPaymentPO.getPaymentType());
-		
 		PaymentVO perPayment = new PaymentVO();
 		perPayment.setType(PaymentPO.PAYMENT_TYPE_CONVERT_STR);
 		perPayment.setCash(decorationPaymentVO.getCash());
-		perPayment.setDes(des.toString());
+		perPayment.setDes(String.format("转换款项 装修订单号:%s,付款编号:%s,付款类型:%s", decorationOrderPO.getOrderId(), decorationPaymentPO.getAutoId(), decorationPaymentPO.getPaymentType()));
 		perPayment.setRecharge(decorationPaymentVO.getCash());
 
 		perPayment.setCollectUser(new UserVO(decorationReceiptPO.getCollectUserPO().getUserId()));
@@ -860,7 +856,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		perPayment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR);
 		perPayment.setOrderId(decorationOrderPO.getOrderId());
 		
-		customerService.updateCustomerForBalance(perPayment);
+		advancePaymentService.updateAdvancePayment(perPayment);
 		
 		return 0;
 	}
@@ -963,7 +959,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 					paymentVO.setDes("定金转合同预付款,装修订单号:" + decorationOrderPO.getOrderId());
 					paymentVO.setOrderId(decorationOrderPO.getOrderId());
 					
-					customerService.updateCustomerForBalance(paymentVO);
+					advancePaymentService.updateAdvancePayment(paymentVO);
 					decorationPaymentDao.update(decorationPaymentPO);
 				}else if(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(paymentType)){
 					decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR + DecorationPaymentPO.PAYMENTTYPE_HISTORY_STR);

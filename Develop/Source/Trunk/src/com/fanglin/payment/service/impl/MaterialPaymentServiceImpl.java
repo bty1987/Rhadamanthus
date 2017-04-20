@@ -27,7 +27,6 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -39,11 +38,14 @@ import com.fanglin.material.dao.MaterialSubOrderRefundDao;
 import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.material.po.MaterialSubOrderRefundPO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
+import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.dao.MaterialReceiptDao;
+import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.payment.po.MaterialReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.MaterialPaymentService;
 import com.fanglin.payment.vo.MaterialPaymentVO;
 import com.fanglin.payment.vo.MaterialReceiptVO;
@@ -70,6 +72,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	private MaterialReceiptDao materialReceiptDao;
 	
 	@Autowired
+	private AdvancePaymentDao advancePaymentDao;
+	
+	@Autowired
+	private AdvancePaymentService advancePaymentService;
+	
+	@Autowired
 	private MaterialSubOrderDao materialSubOrderDao;
 	
 	@Autowired
@@ -83,9 +91,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private CustomerDao customerDao;
-	
-	@Autowired
-	private CustomerService customerService;
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
@@ -701,11 +706,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				
 				CustomerPO customerPO = customerDao.queryCustomerByCustomerId(materialPaymentPO.getCustomerId());
 				
+				if(customerPO == null){
+					throw new FLException(230001, "客户信息不存在");
+				}
+				
+				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+				
+				if(advancePaymentPO == null){
+					throw new FLException(150010, "预付款余额不足");
+				}
+				
 				if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
-					customerAdvance = customerPO.getAdvancePaymentPO().getMaterialBalance();
+					customerAdvance = advancePaymentPO.getMaterialBalance();
 					_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_STR;
 				}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
-					customerAdvance = customerPO.getAdvancePaymentPO().getZhenglinBalance();
+					customerAdvance = advancePaymentPO.getZhenglinBalance();
 					_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
 				}
 				
@@ -713,16 +728,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					throw new FLException(150010, "预付款余额不足");
 				}else{
 					
-					StringBuffer des = new StringBuffer();
-					des.append("主材订单号:");
-					des.append(materialPaymentPO.getMsoNo());
-					des.append(",付款类型:");
-					des.append(paymentType);
-					
 					PaymentVO perPayment = new PaymentVO();
 					perPayment.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
 					perPayment.setCash(materialPaymentVO.getAdvance());
-					perPayment.setDes(des.toString());
+					perPayment.setDes(String.format("主材订单号:%s,付款类型:%s", materialPaymentPO.getMsoNo(), paymentType));
 					perPayment.setCollectUser(new UserVO(userId));
 					perPayment.setCustomer(new CustomerVO(customerPO.getId()));
 					perPayment.setPaymentType(_paymentType);
@@ -733,7 +742,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 						perPayment.setOrderId(materialSubOrderPO.getOrderId());
 					}
 					
-					customerService.updateCustomerForBalance(perPayment);
+					advancePaymentService.updateAdvancePayment(perPayment);
 					
 					materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
 					materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
@@ -926,11 +935,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			CustomerPO customerPO = decorationOrderPO.getCustomerPO();
 			
+			if(customerPO == null){
+				throw new FLException(230001, "客户信息不存在");
+			}
+			
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+			
+			if(advancePaymentPO == null){
+				throw new FLException(150010, "预付款余额不足");
+			}
+			
 			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
-				customerAdvance = customerPO.getAdvancePaymentPO().getMaterialBalance();
+				customerAdvance = advancePaymentPO.getMaterialBalance();
 				_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_STR;
 			}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
-				customerAdvance = customerPO.getAdvancePaymentPO().getZhenglinBalance();
+				customerAdvance = advancePaymentPO.getZhenglinBalance();
 				_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
 			}
 			
@@ -950,7 +969,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
 				materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
 				
-				customerService.updateCustomerForBalance(paymentVO);
+				advancePaymentService.updateAdvancePayment(paymentVO);
 			}
 		}
 		

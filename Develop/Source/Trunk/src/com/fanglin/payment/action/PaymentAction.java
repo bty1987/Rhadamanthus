@@ -33,22 +33,12 @@ public class PaymentAction extends BaseListAction {
 	@Autowired
 	private PaymentService paymentService;
 	
+	private PaymentVO payment;
+	
 	private List<PaymentVO> payments;
 
-	private PaymentVO payment;
-
 	private List<Integer> paymentIds;
-
-	private String status;
 	
-	private Integer customerAutoId;
-	
-	private String convertLeftType;
-	
-	private String convertRightType;
-	
-	private float convertCash;
-
 	@Action(value = "pagePaymentForHistory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pagePaymentForHistory(){
 		
@@ -105,14 +95,6 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "convertPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String convertPayment() throws FLException{
-		
-		paymentService.convertPayment(payment, convertLeftType, convertRightType, convertCash, queryUserId());
-		
-		return SUCCESS;
-	}
-	
 	public List<PaymentVO> getPayments() {
 		return payments;
 	}
@@ -135,46 +117,6 @@ public class PaymentAction extends BaseListAction {
 
 	public void setPaymentIds(List<Integer> paymentIds){
 		this.paymentIds = paymentIds;
-	}
-
-	public String getStatus(){
-		return status;
-	}
-
-	public void setStatus(String status){
-		this.status = status;
-	}
-
-	public Integer getCustomerAutoId(){
-		return customerAutoId;
-	}
-
-	public void setCustomerAutoId(Integer customerAutoId){
-		this.customerAutoId = customerAutoId;
-	}
-
-	public String getConvertLeftType(){
-		return convertLeftType;
-	}
-
-	public void setConvertLeftType(String convertLeftType){
-		this.convertLeftType = convertLeftType;
-	}
-
-	public String getConvertRightType(){
-		return convertRightType;
-	}
-
-	public void setConvertRightType(String convertRightType){
-		this.convertRightType = convertRightType;
-	}
-
-	public float getConvertCash(){
-		return convertCash;
-	}
-
-	public void setConvertCash(float convertCash){
-		this.convertCash = convertCash;
 	}
 
 }
