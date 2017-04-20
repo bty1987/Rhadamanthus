@@ -24,7 +24,6 @@ import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.payment.vo.PaymentVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -38,8 +37,6 @@ public class CustomerAction extends BaseListAction {
 
 	private CustomerVO customer;
 	
-	private PaymentVO payment;
-
 	private Set<Integer> customerIds;
 
 	private List<KeyValueVO> autoFillCustomer;
@@ -48,14 +45,6 @@ public class CustomerAction extends BaseListAction {
 
 	private String pinyinName;
 	
-	private float balanceAdvance;
-	
-	private float projectAdvance;
-	
-	private float materialAdvance;
-	
-	private float zaterialAdvance;
-
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomer(){
 		
@@ -88,19 +77,6 @@ public class CustomerAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="queryCustomerForAdvanceByCustomerId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCustomerForAdvanceByCustomerId(){
-		
-		List<Float> advances = customerService.queryCustomerForAdvanceByCustomerId(customer);
-		
-		balanceAdvance = advances.get(0);
-		projectAdvance = advances.get(1);
-		materialAdvance = advances.get(2);
-		zaterialAdvance = advances.get(3);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkCustomerForPhone(){
 		
@@ -115,14 +91,6 @@ public class CustomerAction extends BaseListAction {
 
 	public void setCustomer(CustomerVO customer){
 		this.customer = customer;
-	}
-
-	public PaymentVO getPayment(){
-		return payment;
-	}
-
-	public void setPayment(PaymentVO payment){
-		this.payment = payment;
 	}
 
 	public Set<Integer> getCustomerIds(){
@@ -161,38 +129,6 @@ public class CustomerAction extends BaseListAction {
 
 	public void setPinyinName(String pinyinName){
 		this.pinyinName = pinyinName;
-	}
-
-	public float getBalanceAdvance() {
-		return balanceAdvance;
-	}
-
-	public void setBalanceAdvance(float balanceAdvance) {
-		this.balanceAdvance = balanceAdvance;
-	}
-
-	public float getProjectAdvance() {
-		return projectAdvance;
-	}
-
-	public void setProjectAdvance(float projectAdvance) {
-		this.projectAdvance = projectAdvance;
-	}
-
-	public float getMaterialAdvance() {
-		return materialAdvance;
-	}
-
-	public void setMaterialAdvance(float materialAdvance) {
-		this.materialAdvance = materialAdvance;
-	}
-
-	public float getZaterialAdvance() {
-		return zaterialAdvance;
-	}
-
-	public void setZaterialAdvance(float zaterialAdvance) {
-		this.zaterialAdvance = zaterialAdvance;
 	}
 
 }

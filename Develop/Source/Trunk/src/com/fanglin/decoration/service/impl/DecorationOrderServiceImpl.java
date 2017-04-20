@@ -29,7 +29,6 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.service.impl.CustomerServiceImpl;
 import com.fanglin.data.common.vo.BuildingNameRuleVO;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.common.vo.VillageVO;
@@ -47,10 +46,12 @@ import com.fanglin.decoration.service.DecorationOrderService;
 import com.fanglin.decoration.vo.DecorationOrderExportVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
+import com.fanglin.payment.service.impl.AdvancePaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -89,6 +90,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
+	
+	@Autowired
+	private AdvancePaymentDao advancePaymentDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -152,7 +156,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			CustomerVO customerVO = new CustomerVO();
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-			CustomerServiceImpl.setCustomerBalance(decorationOrderPO.getCustomerPO(), customerVO);
+			AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId()), customerVO);
 			customerVO.setConfidentialInfo();
 			decorationOrderVO.setCustomer(customerVO);
 			
@@ -254,7 +258,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			
-			AdvancePaymentPO advancePaymentPO = decorationOrderPO.getCustomerPO().getAdvancePaymentPO();
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId());
 			if(advancePaymentPO != null){
 				customerVO.setBalance(advancePaymentPO.getBalance());
 			}else{
@@ -506,7 +510,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			
-			AdvancePaymentPO advancePaymentPO = decorationOrderPO.getCustomerPO().getAdvancePaymentPO();
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId());
 			if(advancePaymentPO != null){
 				customerVO.setBalance(advancePaymentPO.getBalance());
 			}else{
@@ -727,7 +731,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderExportVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
 			}
 			
-			AdvancePaymentPO advancePaymentPO = decorationOrderPO.getCustomerPO().getAdvancePaymentPO();
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getId());
 			if(advancePaymentPO != null){
 				decorationOrderExportVO.setAdvancePayment(advancePaymentPO.getBalance());
 			}else{
