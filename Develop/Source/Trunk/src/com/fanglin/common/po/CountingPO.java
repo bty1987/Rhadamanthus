@@ -24,6 +24,41 @@ public class CountingPO implements Serializable{
 
 	private static final long serialVersionUID = 149702824362133350L;
 	
+	private String date;
+	
+	private int type;
+	
+	private int count;
+
+	@Id
+	@Column(name = "date")
+	public String getDate(){
+		return date;
+	}
+
+	public void setDate(String date){
+		this.date = date;
+	}
+
+	@Id
+	@Column(name = "type")
+	public Integer getType(){
+		return type;
+	}
+
+	public void setType(Integer type){
+		this.type = type;
+	}
+
+	@Column(name = "count")
+	public Integer getCount(){
+		return count;
+	}
+
+	public void setCount(Integer count){
+		this.count = count;
+	}
+	
 	public static int TYPE_CUSTOMER_INT = 1;
 	
 	public static int TYPE_DECORATION_ORDER_INT = 2;
@@ -76,45 +111,30 @@ public class CountingPO implements Serializable{
 	
 	public static int TYPE_FINANCE_CR_INT = 26;
 	
+	public static int TYPE_INVENTORY_CG_INT = 27; // 进货
+	
+	public static int TYPE_INVENTORY_CR_INT = 28; // 进退
+	
+	public static int TYPE_INVENTORY_XG_INT = 29; // 出货
+	
+	public static int TYPE_INVENTORY_XB_INT = 30; // 出返
+	
+	public static int TYPE_INVENTORY_DB_INT = 31; // 调拨
+	
+	public static int TYPE_INVENTORY_PU_INT = 32; // 采购
+	
+	public static int TYPE_INVENTORY_AS_INT = 33; // 辅料
+	
+	public static int TYPE_INVENTORY_SO_INT = 34; // 销售单
+	
+	public static int TYPE_INVENTORY_AO_INT = 35; // 辅料单
+	
+	public static int TYPE_INVENTORY_PO_INT = 36; // 采购单
+	
 	public static String COLUMN_DATE_STR = "date";
 	
 	public static String COLUMN_TYPE_STR = "type";
 	
 	public static String COUNTING_DATE_SILNLE_STR = "single";
-
-	private String date;
-	
-	private int type;
-	
-	private int count;
-
-	@Id
-	@Column(name = "date")
-	public String getDate(){
-		return date;
-	}
-
-	public void setDate(String date){
-		this.date = date;
-	}
-
-	@Id
-	@Column(name = "type")
-	public Integer getType(){
-		return type;
-	}
-
-	public void setType(Integer type){
-		this.type = type;
-	}
-
-	@Column(name = "count")
-	public Integer getCount(){
-		return count;
-	}
-
-	public void setCount(Integer count){
-		this.count = count;
-	}
 	
 }
