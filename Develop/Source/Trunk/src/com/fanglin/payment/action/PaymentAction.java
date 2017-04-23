@@ -79,14 +79,6 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updatePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePayment(){
-		
-		paymentService.updatePayment(payment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "withdrawPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String withdrawPayment() throws FLException{
 		

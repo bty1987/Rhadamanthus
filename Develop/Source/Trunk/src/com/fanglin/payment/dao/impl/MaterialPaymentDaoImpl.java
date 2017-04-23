@@ -46,22 +46,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 	
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, long msoId, Integer paymentStatus){
-		
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		query.add(query.getCriterion(MaterialPaymentPO.COLUMN_MSOID_STR, msoId, "eq"));
-		
-		if(paymentStatus != null){
-			query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus, "eq"));
-		}
-		
-		queryFilterExcute(query, filters);
-		
-		return query.list();
-	}
-	
-	@Override
 	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op) {
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
@@ -155,12 +139,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				.add(Restrictions.eq("materialSubOrder.msoId", msoId))
 				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
 				.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMpIds(List<Long> mpIds){
-		return session().createCriteria(MaterialPaymentPO.class).add(Restrictions.in(MaterialPaymentPO.COLUMN_MPID_STR, mpIds)).list();
 	}
 
 	@Override

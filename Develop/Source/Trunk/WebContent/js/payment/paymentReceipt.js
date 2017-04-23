@@ -15,8 +15,15 @@ jQuery(function($) {
 	}
 	
 	var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;
-	
 	queryPaymentByPaymentId.url = queryPaymentByPaymentId.url + "?" + args;
+	
+	var queryDecorationOrderByCustomerId = api.decoration.queryDecorationOrderByCustomerId;
+	
+	var orderInfo = null;
+	var commonInfo = {};
+	var paymentInfo = [];
+	
+	var customerId = "";
 	
 	com.post(queryPaymentByPaymentId, {}, function(res){
 		
@@ -26,15 +33,11 @@ jQuery(function($) {
 			return;
 		}
 		
-		var commonInfo = {};
-		
 		commonInfo["customerName"] = payment.customer.customerName;
 		commonInfo["collectUserName"] = payment.collectUserName;
 		commonInfo["collectTime"] = payment.collectTime;
 		
-		var orderInfo = res.payment.orders;
-		
-		var paymentInfo = [];
+		orderInfo = res.payment.orders;
 		var paymentItems = [];
 		
 		if(parseFloat(payment.cash) != 0){
@@ -100,8 +103,12 @@ jQuery(function($) {
 			paymentInfo.push(_items);
 		}
 		
-		createReceiptTable(commonInfo, paymentInfo, orderInfo);
-	});
+		queryDecorationOrderByCustomerId.url = queryDecorationOrderByCustomerId.url + "?decorationOrder.customer.customerId=" + res.payment.customer.customerId;
+		
+		com.post(queryDecorationOrderByCustomerId, {}, function(res){
+			createReceiptTable(commonInfo, paymentInfo, res.decorationOrders);
+		}, null, false);
+	}, null, false);
 });
 
 function createReceiptTable(commonInfo, paymentInfo, orderInfo){
@@ -130,13 +137,18 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 		var timeReceiptTd = $('<td colspan="2"></td>').text('收款日期: ' + commonInfo["collectTime"]).appendTo(presonReceiptTr);
 		
 		for(var k=0;k<orderInfo.length;k++){
+			
+			var $order = orderInfo[k];
+			
+			console.log($order.supervisor);
+			
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-			var noReceiptTd = $('<td style="width: 33%"></td>').text('订单编号: ' + orderInfo[k].orderId).appendTo(orderReceiptTr);
-			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + orderInfo[k].orderAddr).appendTo(orderReceiptTr);
+			var noReceiptTd = $('<td style="width: 33%"></td>').text('订单编号: ' + $order.orderId).appendTo(orderReceiptTr);
+			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + $order.village.villageName + ' ' + $order.houseNumber).appendTo(orderReceiptTr);
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + orderInfo[k].designer + "-" + orderInfo[k].designerDepartment + " " + orderInfo[k].designerPhone).appendTo(orderReceiptTr);
+			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + $order.designer + "-" + $order.designerDepartment + " " + $order.designerPhone).appendTo(orderReceiptTr);
 			var salesmanNameTd = $('<td style="width: 33%"></td>').html('').appendTo(orderReceiptTr);
-			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + orderInfo[k].supervisor + " " + orderInfo[k].supervisorPhone).appendTo(orderReceiptTr);
+			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + ($order.supervisor == null ? "" : $order.supervisor) + " " + ($order.supervisorPhone == null ? "" : $order.supervisorPhone)).appendTo(orderReceiptTr);
 		}
 		
 //		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);

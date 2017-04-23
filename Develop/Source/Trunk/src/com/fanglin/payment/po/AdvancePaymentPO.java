@@ -38,7 +38,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "apId", unique = true, nullable = false)
+	@Column(name = "apId")
 	public int getApId() {
 		return this.apId;
 	}

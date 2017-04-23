@@ -35,37 +35,25 @@ public interface MaterialPaymentService {
 	
 	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters);
 	
-	public void pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
-	
-	public void pageMaterialPaymentForInitByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
-	
-	public void pageMaterialPaymentByMsoIdAll(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
-	
 	public void pageMaterialPaymentByOrderId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
 	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
 	
-	public List<MaterialPaymentVO> queryMaterialPaymentForInitByMsoId(MaterialPaymentVO materialPaymentVO);
-	
 	public List<MaterialPaymentVO> queryMaterialPaymentByMsoId(MaterialPaymentVO materialPaymentVO);
 	
 	public float queryMaterialPaymentForCouponByMsoId(MaterialPaymentVO materialPaymentVO);
-	
-	public Map<String, Object> queryMaterialPaymentByMpIds(List<Long> mpIds, String userId);
 	
 	public Map<String, Object> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
 	
 	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
-	public void receMaterialPayment(MaterialPaymentVO materialPaymentVO);
-	
 	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;
 	
 	public int collectMaterialPayments(MaterialSubOrderVO materialSubOrderVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId) throws FLException;
 	
-	public int collectMaterialRefundPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
 	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	

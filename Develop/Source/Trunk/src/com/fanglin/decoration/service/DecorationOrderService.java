@@ -40,11 +40,11 @@ public interface DecorationOrderService {
 	
 	public DecorationOrderVO queryDecorationOrderForCommonByOrderId(DecorationOrderVO decorationOrderVO, String userId) throws FLException;
 
-	public DecorationOrderVO queryDecorationOrderForSignedByCustomerId(DecorationOrderVO decorationOrderVO) throws FLException;
-	
 	public DecorationOrderVO queryDecorationOrderForDesignerByOrderId(DecorationOrderVO decorationOrderVO, String userId) throws FLException;
 
 	public DecorationOrderVO queryDecorationOrderById(String decorationOrderId) throws FLException;
+	
+	public List<DecorationOrderVO> queryDecorationOrderByCustomerId(DecorationOrderVO decorationOrderVO) throws FLException;
 	
 	public List<DecorationOrderExportVO> queryDecorationOrderForComplete(List<Filter> filters);
 	

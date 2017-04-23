@@ -171,7 +171,7 @@ jQuery(function($) {
 	$("#btnRebackPayment").on('click', function(res){
 		decorationPayment.editFlag = 0;
 		com.clearValidator();
-		com.post(api.payment.queryDecorationPaymentForBaseAConfirmByOrderId, decorationPayment.postParam, function(res){
+		com.post(api.payment.queryDecorationPaymentForBaseByOrderId, decorationPayment.postParam, function(res){
 			decorationPayment.refundType = [{"key":"", "value":"", "money":0}];
 			decorationPayments = res.decorationPayments;
 			
@@ -180,6 +180,9 @@ jQuery(function($) {
 			for(var i=0;i<decorationPayments.length;++i){
 				
 				var _decorationPayment = decorationPayments[i];
+				
+				if(_decorationPayment.paymentStatus != "已确认") continue;
+				
 				var option = {"key":_decorationPayment.paymentType + "退款", "value":_decorationPayment.paymentType + "退款", "money":_decorationPayment.paymentBlance, "paymentId":_decorationPayment.autoId};
 				
 				options[_decorationPayment.paymentType] = option;

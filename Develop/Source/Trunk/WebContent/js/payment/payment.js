@@ -1,6 +1,4 @@
 
-var paymentPostData = {};
-
 jQuery(function($) {
 	
 	var payment = {
@@ -12,7 +10,6 @@ jQuery(function($) {
 		
 		temp: [],
 		
-		updateFlag: false,
 	};
 	
 	payment.saveBtn = $("#collectBtn").on("click", saveData);
@@ -293,9 +290,7 @@ jQuery(function($) {
 	
 	function showPaymentModal(v){
 		
-		paymentPostData["orderId"] = v.orderId;
-		
-		payment.updateFlag = false;
+		params.orderId = v.orderId;
 		
 		$("#bankDivGroup").html("");
 		$("#bankAdd").attr("num", 0);
@@ -311,7 +306,7 @@ jQuery(function($) {
 	
 	function showCashOutModal(v){
 		
-		paymentPostData["orderId"] = v.orderId;
+		params.orderId = v.orderId;
 		
 		$("#outPaymentInfo").text("");
 		$("#refund").val("");
@@ -337,8 +332,8 @@ jQuery(function($) {
 	
 	function showConvertPaymentModal(v){
 		
-		paymentPostData["orderId"] = v.orderId;
-		paymentPostData["convertCustomerAutoId"] = v.id;
+		params.orderId = v.orderId;
+		params.convertCustomerAutoId = v.id;
 		
 		com.clearValidator();
 		
@@ -380,7 +375,7 @@ jQuery(function($) {
 		
 		var options = {
 			"payment.customer.id": payment.temp.customer.id,
-			"payment.orderId": paymentPostData["orderId"],
+			"payment.orderId": params.orderId,
 			"payment.balance": payment.temp.balance,
 			"payment.paymentType": $("#refundPaymentTypeSel").val(),
 			"payment.des":$("#outDes").val(),
@@ -426,8 +421,8 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"payment.orderId": paymentPostData["orderId"],
-			"payment.customer.id": paymentPostData["convertCustomerAutoId"],
+			"payment.orderId": params.orderId,
+			"payment.customer.id": params.convertCustomerAutoId,
 			"convertLeftType": convertLeftType,
 			"convertRightType": convertRightType,
 			"convertCash": convertCash
@@ -462,20 +457,13 @@ jQuery(function($) {
 		var total = 0;
 		var options = {};
 		
-		if(!payment.updateFlag){
-			url = api.payment.collectPayment;
-			
-			options["payment.customer.id"] = payment.temp.customer.id;
-			options["payment.balance"] = payment.temp.balance;
-			options["payment.type"] = "收款";
-			options["payment.paymentType"] = $("#paymentTypeSel").val();
-		}else{
-			url = api.payment.updatePayment;
-			
-			options["payment.paymentId"] = payment.temp.paymentId;
-		}
+		url = api.payment.collectPayment;
 		
-		options["payment.orderId"] = paymentPostData["orderId"];
+		options["payment.customer.id"] = payment.temp.customer.id;
+		options["payment.balance"] = payment.temp.balance;
+		options["payment.type"] = "收款";
+		options["payment.paymentType"] = $("#paymentTypeSel").val();
+		options["payment.orderId"] = params.orderId;
 		options["payment.des"] = $("#des").val().trim();
 		
 		if($("#cashCheckbox").prop("checked")){
@@ -527,11 +515,6 @@ jQuery(function($) {
 			total = utils.accAdd(parseFloat($("#accounts").val()), total);
 		}
 		
-		if(payment.updateFlag && total != payment.temp.total){
-			$("#paymentInfo").text("修改金额不等于原金额"+payment.temp.total+"!");
-			return false;
-		}
-		
 		if(parseFloat(total) <= 0){
 			com.showAlert(com.warning, "收款金额需要大于零!");
 			return false;
@@ -541,16 +524,12 @@ jQuery(function($) {
 			
 			searcher.doSearch();
 			
-			if(!payment.updateFlag){
-				searcher.doSearch();
-				
-				bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-					if(result){
-						var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + params.loginTime;
-						window.open(url);
-					}
-				});
-			}
+			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
+				if(result){
+					var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + params.loginTime;
+					window.open(url);
+				}
+			});
 		});
 		
 		payment.modal.modal("hide");

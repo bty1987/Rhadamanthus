@@ -42,19 +42,9 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String orderStatus;
 	
-	private Integer orderActivityId;
-	
-	private String orderActivity;
-	
-	private Float orderActivityDiscount;
-	
 	private Float orderTotalPrice;
 	
 	private Timestamp contractTime;
-	
-	private String versionId;
-	
-	private Float discount;
 	
 	private String paymentType;
 	
@@ -63,10 +53,6 @@ public class DecorationPaymentVO implements Serializable {
 	private String createUser;
 	
 	private String createUserId;
-	
-	private String receiverId;
-	
-	private String receiver;
 	
 	private Timestamp createTime;
 	
@@ -118,12 +104,6 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String des;
 
-	private Float paymentBlance;
-	
-	private Float other;
-	
-	private String cityProper;
-	
 	private long drId;
 	
 	public Long getAutoId(){
@@ -150,52 +130,12 @@ public class DecorationPaymentVO implements Serializable {
 		this.orderStatus = orderStatus;
 	}
 
-	public Integer getOrderActivityId(){
-		return orderActivityId;
-	}
-
-	public void setOrderActivityId(Integer orderActivityId){
-		this.orderActivityId = orderActivityId;
-	}
-
-	public String getOrderActivity(){
-		return orderActivity;
-	}
-
-	public void setOrderActivity(String orderActivity){
-		this.orderActivity = orderActivity;
-	}
-
-	public Float getOrderActivityDiscount(){
-		return orderActivityDiscount;
-	}
-
-	public void setOrderActivityDiscount(Float orderActivityDiscount){
-		this.orderActivityDiscount = orderActivityDiscount;
-	}
-
 	public Float getOrderTotalPrice(){
 		return orderTotalPrice;
 	}
 
 	public void setOrderTotalPrice(Float orderTotalPrice){
 		this.orderTotalPrice = orderTotalPrice;
-	}
-
-	public String getVersionId(){
-		return versionId;
-	}
-
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
-	}
-
-	public Float getDiscount(){
-		return discount;
-	}
-
-	public void setDiscount(Float discount){
-		this.discount = discount;
 	}
 
 	public String getPaymentType(){
@@ -410,36 +350,12 @@ public class DecorationPaymentVO implements Serializable {
 		return des;
 	}
 
-	public void setPaymentBlance(Float paymentBlance){
-		this.paymentBlance = paymentBlance;
-	}
-
-	public Float getPaymentBlance(){
-		return paymentBlance;
-	}
-
-	public void setOther(Float other){
-		this.other = other;
-	}
-
-	public Float getOther(){
-		return other;
-	}
-
 	public void setCreateDes(String createDes){
 		this.createDes = createDes;
 	}
 
 	public String getCreateDes(){
 		return createDes;
-	}
-
-	public void setCityProper(String cityProper){
-		this.cityProper = cityProper;
-	}
-
-	public String getCityProper(){
-		return cityProper;
 	}
 
 	public Float getBank(){
@@ -520,22 +436,6 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
-	}
-
-	public String getReceiverId() {
-		return receiverId;
-	}
-
-	public void setReceiverId(String receiverId) {
-		this.receiverId = receiverId;
-	}
-
-	public String getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(String receiver) {
-		this.receiver = receiver;
 	}
 
 	public long getDrId() {

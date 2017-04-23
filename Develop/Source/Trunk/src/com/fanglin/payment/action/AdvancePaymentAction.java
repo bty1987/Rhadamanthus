@@ -47,8 +47,6 @@ public class AdvancePaymentAction extends BaseListAction {
 	@Action(value="queryAdvancePaymentByCustomerId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryAdvancePaymentByCustomerId(){
 		
-		//queryCustomerForAdvanceByCustomerId
-		
 		List<Float> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer);
 		
 		balanceAdvance = advances.get(0);

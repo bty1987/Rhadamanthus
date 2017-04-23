@@ -65,7 +65,7 @@ jQuery(function($) {
 	
 });
 function initPaySalaryList(){
-	workerSalaryCalculation.listGrid.jqGrid({		
+	workerSalaryCalculation.listGrid.jqGrid({
 		url: "ds/workerSalary.json",
 		colNames:['编号','员工编号', '姓名', '工资月份', '应发工资',  '操作'],
 		colModel:[

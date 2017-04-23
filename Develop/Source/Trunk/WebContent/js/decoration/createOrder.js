@@ -71,9 +71,12 @@ jQuery(function($) {
 			orderEntry.repeatCustomerFlg = false;
 			return;
 		}
-		com.post(api.decoration.queryDecorationOrderForSignedByCustomerId, {"decorationOrder.customer.id":$("#customerId").val()}, function(res){
-			if(res.decorationOrder&&res.decorationOrder.orderId){
-				com.showTips($("#customerId"), "订单已存在：订单号："+res.decorationOrder.orderId+" 订单所属设计师:"+res.decorationOrder.designer, true);
+		com.post(api.decoration.queryDecorationOrderByCustomerId, {"decorationOrder.customer.id":$("#customerId").val()}, function(res){
+			if(res.decorationOrders && res.decorationOrders.length > 0){
+				
+				var decorationOrder = res.decorationOrders[0];
+				
+				com.showTips($("#customerId"), "订单已存在.订单号:" + decorationOrder.orderId + ",订单所属设计师:" + decorationOrder.designer, true);
 				orderEntry.repeatCustomerFlg = true;
 			}else{
 				com.clearValidator("#customerId", true);

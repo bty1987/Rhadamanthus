@@ -222,22 +222,19 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public DecorationOrderPO queryDecorationOrderByCustomer(Integer customerAutoId){
+	public List<DecorationOrderPO> queryDecorationOrderByCustomer(Integer cid, String customerId){
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_TERMINATION_STR});
+		
+		Criteria criteria = session().createCriteria(DecorationOrderPO.class).createAlias("customerPO", "customer").add(Restrictions.not(Restrictions.in("status", status)));
+		
+		if(cid != null){
+			criteria.add(Restrictions.eq("customer.id", cid));
+		}else{
+			criteria.add(Restrictions.eq("customer.customerId", customerId));
+		}
 		 
-		List<DecorationOrderPO> decorationOrderPOs = session().createCriteria(DecorationOrderPO.class)
-				 .createAlias("customerPO", "customer")
-				 .add(Restrictions.eq("customer.id", customerAutoId))
-				 .add(Restrictions.not(Restrictions.in("status", status)))
-				 .addOrder(Order.desc("autoId"))
-				 .list();
-		 
-		 if(decorationOrderPOs != null && decorationOrderPOs.size() > 0){
-			 return decorationOrderPOs.get(0);
-		 }else{
-			 return null;
-		 }
+		return criteria.list();
 	}
 	
 	@Override

@@ -297,7 +297,7 @@ jQuery(function($) {
 			"decorationPayment.paymentType": $("#refundOrderPaymentType").val(),
 		};
 		
-		com.post(api.common.refundDecorationPaymentForManage, options, function(res){
+		com.post(api.payment.refundDecorationPayment, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		

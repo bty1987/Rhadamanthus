@@ -22,10 +22,6 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters);
 	
-	public List<DecorationPaymentPO> pageDecorationPaymentForBaseByOrderId(Paging paging, String orderId);
-	
-	public List<DecorationPaymentPO> pageDecorationPaymentForOtherByOrderId(Paging paging, String orderId);
-
 	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	
 	public List<DecorationPaymentPO> queryDecorationPayment(List<Filter> filters);
@@ -35,8 +31,6 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentForBaseByOrderId(String orderId);
-	
-	public List<DecorationPaymentPO> queryDecorationPaymentForBaseAConfirmByOrderId(String orderId);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	

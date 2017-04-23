@@ -26,12 +26,8 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
-import com.fanglin.payment.service.MaterialInsidePaymentService;
-import com.fanglin.payment.service.MaterialOutsidePaymentService;
 import com.fanglin.payment.service.MaterialPaymentService;
 import com.fanglin.payment.service.MaterialReceiptService;
-import com.fanglin.payment.vo.MaterialInsidePaymentVO;
-import com.fanglin.payment.vo.MaterialOutsidePaymentVO;
 import com.fanglin.payment.vo.MaterialPaymentVO;
 import com.fanglin.payment.vo.MaterialReceiptVO;
 
@@ -48,12 +44,6 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
 	
-	@Autowired
-	private MaterialInsidePaymentService materialInsidePaymentService;
-	
-	@Autowired
-	private MaterialOutsidePaymentService materialOutsidePaymentService;
-	
 	private MaterialSubOrderVO materialSubOrder;
 	
 	private MaterialPaymentVO materialPayment;
@@ -64,15 +54,9 @@ public class MaterialPaymentAction extends BaseListAction{
 	
 	private List<MaterialReceiptVO> materialReceipts;
 	
-	private MaterialInsidePaymentVO materialInsidePayment;
-	
-	private MaterialOutsidePaymentVO materialOutsidePayment;
-	
 	private List<DecorationActivityItemVO> decorationActivityItems;
 	
 	private List<Long> mpIds;
-	
-	private List<Long> mipIds;
 	
 	private List<Long> mrIds;
 	
@@ -118,22 +102,6 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialPaymentByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentByMsoId(){
-		
-		materialPaymentService.pageMaterialPaymentByMsoId(getPaging(), getFilters(), materialPayment);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForInitByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForInitByMsoId(){
-		
-		materialPaymentService.pageMaterialPaymentForInitByMsoId(getPaging(), getFilters(), materialPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="pageMaterialPaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialPaymentByOrderId(){
 		
@@ -142,50 +110,10 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialInsidePaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialInsidePaymentByInit(){
-		
-		materialInsidePaymentService.pageMaterialInsidePaymentForInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialInsidePaymentForNotInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialInsidePaymentForNotInit(){
-		
-		materialInsidePaymentService.pageMaterialInsidePaymentForNotInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialOutsidePaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialOutsidePaymentForInit(){
-		
-		materialOutsidePaymentService.pageMaterialOutsidePaymentForInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialOutsidePaymentForNotInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialOutsidePaymentForNotInit(){
-		
-		materialOutsidePaymentService.pageMaterialOutsidePaymentForNotInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryMaterialPaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentByOrderId(){
 		
 		materialPayments = materialPaymentService.queryMaterialPaymentByOrderId(materialPayment);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMaterialPaymentForInitByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPaymentForInitByMsoId(){
-		
-		materialPayments = materialPaymentService.queryMaterialPaymentForInitByMsoId(materialPayment);
 		
 		return SUCCESS;
 	}
@@ -202,18 +130,6 @@ public class MaterialPaymentAction extends BaseListAction{
 	public String queryMaterialPaymentCouponByMsoId(){
 		
 		materialPaymentService.queryMaterialPaymentForCouponByMsoId(materialPayment);
-		
-		return SUCCESS;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Action(value="queryMaterialPaymentByMpIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPaymentByMpIds() throws FLException{
-		
-		Map<String, Object> result = materialPaymentService.queryMaterialPaymentByMpIds(mpIds, queryUserId());
-		
-		materialSubOrder = (MaterialSubOrderVO) result.get("materialSubOrder");
-		materialPayments = (List<MaterialPaymentVO>) result.get("materialPayments");
 		
 		return SUCCESS;
 	}
@@ -246,14 +162,6 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="receMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String receMaterialPayment(){
-		
-		materialPaymentService.receMaterialPayment(materialPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="changeMaterialPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String changeMaterialPaymentForTime() throws FLException{
 		
@@ -270,22 +178,6 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="collectMaterialInsidePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String collectMaterialInsidePayment() throws FLException{
-		
-		materialInsidePaymentService.collectMaterialInsidePayment(materialInsidePayment, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="collectMaterialOutsidePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String collectMaterialOutsidePayment() throws FLException{
-		
-		materialOutsidePaymentService.collectMaterialOutsidePayment(materialOutsidePayment, queryUserId(), queryUserName());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="collectMaterialPayments", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayments() throws FLException{
 		
@@ -294,18 +186,10 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="collectMaterialRefundPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String collectMaterialRefundPayment() throws FLException{
+	@Action(value="collectMaterialPaymentForRefund", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String collectMaterialPaymentForRefund() throws FLException{
 		
-		materialPaymentService.collectMaterialRefundPayment(materialPayment, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialPayment() throws FLException{
-		
-		materialPaymentService.updateMaterialPayment(materialPayment, queryUserId());
+		materialPaymentService.collectMaterialPaymentForRefund(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -314,14 +198,6 @@ public class MaterialPaymentAction extends BaseListAction{
 	public String confirmMaterialPayment() throws FLException{
 		
 		materialPaymentService.confirmMaterialPayment(mpIds, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="confirmMaterialInsidePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String confirmMaterialInsidePayment(){
-		
-		materialInsidePaymentService.confirmMaterialInsidePayment(mipIds);
 		
 		return SUCCESS;
 	}
@@ -382,38 +258,12 @@ public class MaterialPaymentAction extends BaseListAction{
 		this.mpIds = mpIds;
 	}
 
-	public MaterialInsidePaymentVO getMaterialInsidePayment(){
-		return materialInsidePayment;
-	}
-
-	public void setMaterialInsidePayment(
-			MaterialInsidePaymentVO materialInsidePayment){
-		this.materialInsidePayment = materialInsidePayment;
-	}
-
-	public List<Long> getMipIds(){
-		return mipIds;
-	}
-
-	public void setMipIds(List<Long> mipIds){
-		this.mipIds = mipIds;
-	}
-
 	public Timestamp getDateTime() {
 		return dateTime;
 	}
 
 	public void setDateTime(Timestamp dateTime) {
 		this.dateTime = dateTime;
-	}
-
-	public MaterialOutsidePaymentVO getMaterialOutsidePayment() {
-		return materialOutsidePayment;
-	}
-
-	public void setMaterialOutsidePayment(
-			MaterialOutsidePaymentVO materialOutsidePayment) {
-		this.materialOutsidePayment = materialOutsidePayment;
 	}
 
 	public List<DecorationActivityItemVO> getDecorationActivityItems() {

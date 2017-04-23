@@ -22,8 +22,6 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
 	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, long msoId, Integer paymentStatus);
-	
 	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op);
 	
 	public List<MaterialPaymentPO> queryMaterialPayment(List<Filter> filters);
@@ -42,8 +40,6 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdATypeAStatus(long msoId, Integer paymentType, Integer paymentStatus);
 
-	public List<MaterialPaymentPO> queryMaterialPaymentByMpIds(List<Long> mpIds);
-	
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMrId(long mrId);
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId);

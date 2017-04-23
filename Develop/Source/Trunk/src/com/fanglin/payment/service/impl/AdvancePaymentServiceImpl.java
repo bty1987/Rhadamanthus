@@ -58,10 +58,9 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		
 		List<Float> advances = new ArrayList<Float>();
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCustomerId());
 		
 		if(advancePaymentPO != null){
-			
 			advances.add(advancePaymentPO.getBalance());
 			advances.add(advancePaymentPO.getProjectBalance());
 			advances.add(advancePaymentPO.getMaterialBalance());
@@ -82,9 +81,11 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		
 		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getId());
 		
-		int customerId = paymentVO.getCustomer().getId();
+		if(customerPO == null){
+			throw new FLException(230001, "客户信息不存在");
+		}
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerId);
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
 		
 		if(advancePaymentPO == null){
 			

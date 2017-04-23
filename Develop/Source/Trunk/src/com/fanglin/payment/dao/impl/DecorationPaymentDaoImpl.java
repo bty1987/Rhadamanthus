@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -54,20 +53,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> pageDecorationPaymentForBaseByOrderId(Paging paging, String orderId){
-		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
-		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-
-		query.add(query.getCriterion("decorationOrderPO.orderId", orderId, "eq"));
-		query.add(Restrictions.in("paymentType", paymentTypes));
-		query.add(Restrictions.not(Restrictions.ilike("paymentType", DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, MatchMode.ANYWHERE)));
-		query.asc("autoId");
-		
-		return query.list();
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentForBaseByOrderId(String orderId){
 		
@@ -87,38 +72,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds) {
 		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("decorationOrderPO.orderId", orderIds)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentForBaseAConfirmByOrderId(String orderId){
-		
-		Criteria query = createCriteria(DecorationPaymentPO.class);
-		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-		
-		query.add(Restrictions.eq("decorationOrderPO.orderId", orderId));
-		query.add(Restrictions.in("paymentType", paymentTypes));
-		query.add(Restrictions.not(Restrictions.ilike("paymentType", DecorationPaymentPO.PAYMENTTYPE_REFUND_STR,MatchMode.ANYWHERE)));
-		query.add(Restrictions.eq("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR));
-		query.addOrder(Order.asc("autoId"));
-		
-		return query.list();
-	}
-
-	@Override
-	public List<DecorationPaymentPO> pageDecorationPaymentForOtherByOrderId(Paging paging, String orderId){
-		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
-		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_ADD_STR, DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR, DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR});
-		
-		Criterion criterion = Restrictions.or(Restrictions.or(Restrictions.in("paymentType", paymentTypes), Restrictions.ilike("paymentType", DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, MatchMode.ANYWHERE)), Restrictions.ilike("paymentType", DecorationPaymentPO.PAYMENTTYPE_HISTORY_STR, MatchMode.ANYWHERE));
-		
-		query.add(query.getCriterion("decorationOrderPO.orderId", orderId, "eq"));
-		query.add(criterion);
-		query.asc("autoId");
-		
-		return query.list();
 	}
 
 	@Override

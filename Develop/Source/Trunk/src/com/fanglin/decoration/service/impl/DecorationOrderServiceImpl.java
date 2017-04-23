@@ -156,7 +156,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			CustomerVO customerVO = new CustomerVO();
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-			AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId()), customerVO);
+			AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId()), customerVO);
 			customerVO.setConfidentialInfo();
 			decorationOrderVO.setCustomer(customerVO);
 			
@@ -258,7 +258,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId());
 			if(advancePaymentPO != null){
 				customerVO.setBalance(advancePaymentPO.getBalance());
 			}else{
@@ -510,7 +510,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId());
 			if(advancePaymentPO != null){
 				customerVO.setBalance(advancePaymentPO.getBalance());
 			}else{
@@ -731,7 +731,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderExportVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
 			}
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(decorationOrderPO.getCustomerPO().getId());
 			if(advancePaymentPO != null){
 				decorationOrderExportVO.setAdvancePayment(advancePaymentPO.getBalance());
 			}else{
@@ -952,35 +952,54 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
-	public DecorationOrderVO queryDecorationOrderForSignedByCustomerId(DecorationOrderVO decorationOrderVO){
+	public List<DecorationOrderVO> queryDecorationOrderByCustomerId(DecorationOrderVO decorationOrderVO){
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByCustomer(decorationOrderVO.getCustomer().getId());
+		VillageVO villageVO = null;
+		CustomerVO customerVO = decorationOrderVO.getCustomer();
 		
-		if(decorationOrderPO == null){
-			return null;
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.queryDecorationOrderByCustomer(customerVO.getId(), customerVO.getCustomerId());
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			
+			villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			decorationOrderVO.setCustomer(customerVO);
+			
+			UserPO designer = decorationOrderPO.getDesignerPO();
+			UserPO salesman = decorationOrderPO.getSalesmanPO();
+			
+			decorationOrderVO.setDesigner(designer.getCurrentName());
+			decorationOrderVO.setDesignerId(designer.getUserId());
+			decorationOrderVO.setDesignerPhone(designer.getPhone());
+			decorationOrderVO.setDesignDepartment(designer.getDept().getDeptName());
+			
+			decorationOrderVO.setSalesman(salesman.getCurrentName());
+			decorationOrderVO.setSalesmanId(salesman.getUserId());
+			decorationOrderVO.setSalesmanPhone(salesman.getPhone());
+			decorationOrderVO.setBusinessDepartment(salesman.getDept().getDeptName());
+			
+			if(decorationOrderPO.getSupervisorPO() != null){
+				UserPO supervisor = decorationOrderPO.getSupervisorPO();
+				
+				decorationOrderVO.setSupervisorId(supervisor.getUserId());
+				decorationOrderVO.setSupervisor(supervisor.getCurrentName());
+				decorationOrderVO.setSupervisorPhone(supervisor.getPhone());
+			}
+			
+			decorationOrderVOs.add(decorationOrderVO);
 		}
 		
-		BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
-		
-		VillageVO villageVO = new VillageVO();
-		CityProperVO cityProperVO = new CityProperVO();
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
-		villageVO.setCityProper(cityProperVO);
-		decorationOrderVO.setVillage(villageVO);
-		
-		CustomerVO customerVO = new CustomerVO();
-		BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-		customerVO.setConfidentialInfo();
-		decorationOrderVO.setCustomer(customerVO);
-		
-		decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
-		decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
-		
-		decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
-		decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
-		
-		return decorationOrderVO;
+		return decorationOrderVOs;
 	}
 	
 	@Override

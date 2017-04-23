@@ -35,9 +35,6 @@ import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.finance.service.FinanceService;
-import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -94,70 +91,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	private AddReduceDao addReduceDao;
 	
 	@Autowired
-	private MessageService messageService;
-	
-	@Autowired
 	private ServiceRecordDao serviceRecordDao;
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void pageDecorationPaymentsForBaseByOrderId(Paging paging, DecorationPaymentVO decorationPaymentVO){
-		
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-
-		List<DecorationPaymentPO> baseps = decorationPaymentDao.pageDecorationPaymentForBaseByOrderId(paging, decorationPaymentVO.getOrderId());
-
-		for(DecorationPaymentPO decorationPaymentPO: baseps){
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO);
-			
-			DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-			BeanUtil.copyProperties(decorationReceiptPO, _decorationPaymentVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-			
-			_decorationPaymentVO.setOrderId(decorationOrderPO.getOrderId());
-			_decorationPaymentVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
-			_decorationPaymentVO.setVillage(decorationOrderPO.getVillagePO().getVillageName());
-			_decorationPaymentVO.setHouseNumber(decorationOrderPO.getHouseNumber());
-			
-			_decorationPaymentVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			_decorationPaymentVO.setOrderStatus(decorationOrderPO.getStatus());
-
-			decorationPaymentVOs.add(_decorationPaymentVO);
-		}
-
-		paging.setData(decorationPaymentVOs);
-	}
-	
-	@Override
-	public void pageDecorationPaymentForOtherByOrderId(Paging paging, DecorationPaymentVO decorationPaymentVO){
-		
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForOtherByOrderId(paging, decorationPaymentVO.getOrderId());
-
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO);
-			
-			DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-			BeanUtil.copyProperties(decorationReceiptPO, _decorationPaymentVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-
-			_decorationPaymentVO.setOrderId(decorationOrderPO.getOrderId());
-			_decorationPaymentVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
-			_decorationPaymentVO.setVillage(decorationOrderPO.getVillagePO().getVillageName());
-			_decorationPaymentVO.setHouseNumber(decorationOrderPO.getHouseNumber());
-
-			_decorationPaymentVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			_decorationPaymentVO.setOrderStatus(decorationOrderPO.getStatus());
-
-			decorationPaymentVOs.add(_decorationPaymentVO);
-		}
-		
-		paging.setData(decorationPaymentVOs);
-	}
 	
 	@Override
 	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters){
@@ -233,8 +167,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 		decorationPaymentVO.setContractTime(decorationOrderPO.getContractTime());
 
-		decorationPaymentVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
-
 		return decorationPaymentVO;
 	}
 	
@@ -280,77 +212,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 	
 	@Override
-	public List<DecorationPaymentVO> queryDecorationPaymentByOrderIdAIds(List<Long> paymentIds, DecorationPaymentVO decorationPaymentVO, String userId){
-		
-		List<String> unstatus = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR});
-		
-		List<DecorationPaymentVO> payments = new ArrayList<DecorationPaymentVO>();
-		
-		if(paymentIds == null || paymentIds.size() == 0){
-			return null;
-		}
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByIds(paymentIds);
-		
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-			
-			DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-			BeanUtil.copyProperties(decorationReceiptPO, _decorationPaymentVO);
-			
-			if(!userId.equals(decorationReceiptPO.getCollectUserPO().getUserId())){
-				continue;
-			}
-
-			if(!decorationOrderPO.getOrderId().equals(decorationPaymentVO.getOrderId())){
-				continue;
-			}
-			
-			if(!unstatus.contains(decorationPaymentPO.getPaymentStatus())){
-				continue;
-			}
-			
-			_decorationPaymentVO.setOrderId(decorationOrderPO.getOrderId());
-			_decorationPaymentVO.setCollectUser(decorationReceiptPO.getCollectUserPO().getCurrentName());
-			_decorationPaymentVO.setCreateUser(decorationPaymentPO.getCreateUserPO().getCurrentName());
-			
-			payments.add(_decorationPaymentVO);
-		}
-		
-		return payments;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public List<DecorationPaymentVO> queryDecorationPaymentForBaseAConfirmByOrderId(DecorationPaymentVO decorationPaymentVO){
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForBaseAConfirmByOrderId(decorationPaymentVO.getOrderId());
-
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-
-			_decorationPaymentVO.setOrderId(decorationOrderPO.getOrderId());
-			_decorationPaymentVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
-			_decorationPaymentVO.setVillage(decorationOrderPO.getVillagePO().getVillageName());
-			_decorationPaymentVO.setHouseNumber(decorationOrderPO.getHouseNumber());
-			
-			_decorationPaymentVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			_decorationPaymentVO.setOrderStatus(decorationOrderPO.getStatus());
-
-			decorationPaymentVOs.add(_decorationPaymentVO);
-		}
-
-		return decorationPaymentVOs;
-	}
-	
-	@Override
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO) {
 		
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
@@ -376,125 +237,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		return decorationPaymentVOs;
 	}
 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addDecorationPaymentForOther(DecorationPaymentVO decorationPaymentVO) throws FLException{
-		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, DecorationPaymentPO.PAYMENTTYPE_ADD_STR, DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR});
-		
-		String paymentType = decorationPaymentVO.getPaymentType();
-		
-		MessageVO messageVO = new MessageVO();
-		
-		messageVO.setReceiver(new UserVO(decorationPaymentVO.getReceiverId()));
-
-		if(paymentTypes.contains(paymentType) || paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR)){
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationPaymentVO.getOrderId());
-			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
-
-			if(decorationPaymentVO.getPaymentType().contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR)){
-				decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR);
-				decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationPaymentPO.setCreateUserPO(new UserPO(decorationPaymentVO.getCreateUserId()));
-				decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
-				decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-				decorationPaymentPO.setCreateDes(decorationPaymentVO.getCreateDes());
-				decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
-				
-				
-				if(DecorationPaymentPO.PAYMENTTYPE_OTHER_STR.equals(paymentType)){
-				
-					decorationPaymentDao.save(decorationPaymentPO);
-					
-					/**
-					 * 订单退款审批 refundPaymentId:-1时是其他退款 
-					 * type:orderRefundApprove;orderIds:1;paymentId:01;refundPaymentId:-1;msgSerial:
-					 */
-					
-					StringBuffer args = new StringBuffer();
-					args.append("type:orderRefundApprove;");
-					args.append("orderIds:");
-					args.append(decorationPaymentVO.getOrderId());
-					args.append(";paymentId:");
-					args.append(decorationPaymentPO.getAutoId());
-					args.append(";refundPaymentId:-1;msgSerial:");
-					args.append("orderRefundApprove-paymentAutoId-");
-					args.append(decorationPaymentPO.getAutoId());
-					
-					messageVO.setSender(new UserVO(decorationPaymentVO.getCreateUserId()));
-					messageVO.setType("审批消息");
-					messageVO.setArgs(args.toString());
-					messageVO.setContents(String.format("%s,订单编号:%s,退款类型:%s,款项编号:%s,退款金额:", decorationPaymentVO.getCreateDes(), decorationOrderPO.getOrderId(), decorationPaymentVO.getPaymentType(), decorationPaymentPO.getAutoId(), decorationPaymentPO.getReferMoney()));
-					messageService.sendMessage(messageVO);
-				}else{
-					String refundType = decorationPaymentVO.getPaymentType().substring(0, decorationPaymentVO.getPaymentType().indexOf("退款"));
-					DecorationPaymentPO _decorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAType(decorationPaymentVO.getOrderId(), refundType);
-					
-					if(_decorationPaymentPO == null){
-						throw new FLException(150003, "款项不存在");
-					}
-					if(!(Math.abs(Arith.sub(_decorationPaymentPO.getPaymentBlance(), decorationPaymentPO.getReferMoney())) < 0.00000001)){
-						throw new FLException(150004, "款项金额不等于余额");
-					}
-					if(!_decorationPaymentPO.getPaymentStatus().equals("已确认")){
-						throw new FLException(150005, "款项状态非已确认,不能退款");
-					}
-					decorationPaymentDao.save(decorationPaymentPO);
-					/**
-					 * 订单退款审批
-					 * type:orderRefundApprove;orderIds:1;paymentId:01;refundPaymentId:02
-					 */
-					
-					StringBuffer args = new StringBuffer();
-					args.append("type:orderRefundApprove;");
-					args.append("orderIds:");
-					args.append(decorationPaymentVO.getOrderId());
-					args.append(";paymentId:");
-					args.append(decorationPaymentPO.getAutoId());
-					args.append(";refundPaymentId:");
-					args.append(_decorationPaymentPO.getAutoId());
-					args.append(";msgSerial:");
-					args.append("orderRefundApprove-paymentAutoId-");
-					args.append(decorationPaymentPO.getAutoId());
-					
-					StringBuffer contents = new StringBuffer();
-					contents.append(decorationPaymentVO.getCreateDes());
-					contents.append(",订单编号:");
-					contents.append(decorationPaymentVO.getOrderId());
-					contents.append(",退款类型:");
-					contents.append(decorationPaymentVO.getPaymentType());
-					contents.append(",款项编号:");
-					contents.append(decorationPaymentPO.getAutoId());
-					contents.append(",退款金额:");
-					contents.append(decorationPaymentPO.getReferMoney());
-					contents.append(",所退款项编号:");
-					contents.append(_decorationPaymentPO.getAutoId());
-					
-					messageVO.setSender(new UserVO(decorationPaymentVO.getCreateUserId()));
-					messageVO.setType(MessagePO.MESSAGE_TYPE_APPROVAL_STR);
-					messageVO.setArgs(args.toString());
-					messageVO.setContents(contents.toString());
-					messageService.sendMessage(messageVO);
-					
-					_decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_REFUND_STR);
-					decorationPaymentDao.saveOrUpdate(_decorationPaymentPO);
-				}
-				
-			} else {
-				decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
-				decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationPaymentPO.setCreateUserPO(new UserPO(decorationPaymentVO.getCreateUserId()));
-				decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
-				decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-				decorationPaymentPO.setCreateDes(decorationPaymentVO.getCreateDes());
-
-				decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
-				decorationPaymentDao.save(decorationPaymentPO);
-			}
-		}
-		return 0;
-	}
-	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs) throws FLException{
@@ -565,7 +307,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
 			
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
@@ -720,6 +462,78 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int collectDecorationPaymentForRefund(DecorationPaymentVO decorationPaymentVO) throws FLException{
+		
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getAutoId());
+		
+		if(decorationPaymentPO == null){
+			throw new FLException(150003, "款项不存在");
+		}
+		
+		DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
+		
+		if(!DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
+			throw new FLException(150012, "款项不能进行退款");
+		}
+		
+		float real = 0f;
+		
+		Float cash = decorationPaymentVO.getCash();
+		Float bank = decorationPaymentVO.getBank();
+		Float coupon = decorationPaymentVO.getCoupon();
+		
+		if(cash != null && cash.floatValue() != 0f){
+			decorationReceiptPO.setCash(cash);
+			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
+			
+			real = Arith.add(real, cash);
+		}
+		
+		if(bank != null && bank.floatValue() != 0f){
+			decorationReceiptPO.setBank(bank);
+			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
+			
+			real = Arith.add(real, bank);
+		}
+		
+		if(coupon != null && coupon.floatValue() != 0f){
+			decorationReceiptPO.setCoupon(coupon);
+			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
+			
+			real = Arith.add(real, coupon);
+		}
+		
+		if(!(Math.abs(Arith.sub(decorationPaymentPO.getReferMoney(), real)) < 0.00000001)){
+			throw new FLException(150013, "款项实收金额不等于应收金额");
+			
+		}
+		
+		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationReceiptPO.setCollectUserPO(new UserPO(decorationPaymentVO.getCollectUserId()));
+		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
+
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
+		decorationPaymentPO.setPaymentBlance(real);
+		
+		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
+
+		decorationReceiptDao.save(decorationReceiptPO);
+		decorationPaymentDao.update(decorationPaymentPO);
+		
+		if(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())){
+			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getAutoId());
+			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
+			
+			addReduceDao.update(addReducePO);
+		}
+		
+		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
 		
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getAutoId());
@@ -819,122 +633,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int convertDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
-		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getAutoId());
-		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-		
-		DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-		
-		if(!DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR.equals(decorationPaymentPO.getPaymentStatus())){
-			throw new FLException(150006, "该款项不能进行转换");
-		}
-		
-		if(!DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR.equals(decorationPaymentPO.getPaymentType()) && !DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(decorationPaymentPO.getPaymentType())){
-			throw new FLException(150006, "该款项不能进行转换");
-		}
-		
-		Float real = decorationPaymentVO.getCash();
-		if(Arith.round(decorationPaymentPO.getPaymentBlance(), 2) < Arith.round((real), 2)){
-			throw new FLException(150007, "款项转换失败,余额不足");
-		}
-		
-		decorationPaymentPO.setPaymentBlance(decorationPaymentPO.getPaymentBlance()-decorationPaymentVO.getCash());
-		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
-		
-		// 假数据 操作人是谁转入金额 备注 （orderId,paymentId,转换类型)
-		// 需要将转换记录填写到预付款流水账中
-		
-		PaymentVO perPayment = new PaymentVO();
-		perPayment.setType(PaymentPO.PAYMENT_TYPE_CONVERT_STR);
-		perPayment.setCash(decorationPaymentVO.getCash());
-		perPayment.setDes(String.format("转换款项 装修订单号:%s,付款编号:%s,付款类型:%s", decorationOrderPO.getOrderId(), decorationPaymentPO.getAutoId(), decorationPaymentPO.getPaymentType()));
-		perPayment.setRecharge(decorationPaymentVO.getCash());
-
-		perPayment.setCollectUser(new UserVO(decorationReceiptPO.getCollectUserPO().getUserId()));
-		perPayment.setCustomer(new CustomerVO(decorationOrderPO.getCustomerPO().getId()));
-		perPayment.setConvertPaymentId(decorationPaymentPO.getAutoId());
-		perPayment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR);
-		perPayment.setOrderId(decorationOrderPO.getOrderId());
-		
-		advancePaymentService.updateAdvancePayment(perPayment);
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
-		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getAutoId());
-		
-		if(decorationPaymentPO == null){
-			throw new FLException(150003, "款项不存在");
-		}
-		
-		DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
-		
-		if(!DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
-			throw new FLException(150012, "款项不能进行退款");
-		}
-		
-		float real = 0f;
-		
-		Float cash = decorationPaymentVO.getCash();
-		Float bank = decorationPaymentVO.getBank();
-		Float coupon = decorationPaymentVO.getCoupon();
-		
-		if(cash != null && cash.floatValue() != 0f){
-			decorationReceiptPO.setCash(cash);
-			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
-			
-			real = Arith.add(real, cash);
-		}
-		
-		if(bank != null && bank.floatValue() != 0f){
-			decorationReceiptPO.setBank(bank);
-			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
-			
-			real = Arith.add(real, bank);
-		}
-		
-		if(coupon != null && coupon.floatValue() != 0f){
-			decorationReceiptPO.setCoupon(coupon);
-			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
-			
-			real = Arith.add(real, coupon);
-		}
-		
-		if(!(Math.abs(Arith.sub(decorationPaymentPO.getReferMoney(), real)) < 0.00000001)){
-			throw new FLException(150013, "款项实收金额不等于应收金额");
-			
-		}
-		
-		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationReceiptPO.setCollectUserPO(new UserPO(decorationPaymentVO.getCollectUserId()));
-		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
-
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
-		decorationPaymentPO.setPaymentBlance(real);
-		
-		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
-
-		decorationReceiptDao.save(decorationReceiptPO);
-		decorationPaymentDao.update(decorationPaymentPO);
-		
-		if(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())){
-			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getAutoId());
-			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
-			
-			addReduceDao.update(addReducePO);
-		}
-		
-		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int refundDecorationPaymentForManage(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException{
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException{
 		
 		String orderId = decorationPaymentVO.getOrderId();
 		String paymentType = decorationPaymentVO.getPaymentType();
@@ -982,17 +681,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 					decorationPaymentDao.saveOrUpdate(refundDecorationPaymentPO);
 				}
 				
-				StringBuffer serviceRecoraInfo = new StringBuffer();
-				serviceRecoraInfo.append("订单编号:");
-				serviceRecoraInfo.append(orderId);
-				serviceRecoraInfo.append(",时间为:");
-				serviceRecoraInfo.append(DateUtil.getDateToTimestamp(new Date()).toString());
-				
 				ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 				serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_REFUND_DECORATIONPAYMENT_INT);
 				serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 				serviceRecordPO.setOperateUserId(userId);
-				serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+				serviceRecordPO.setInfo(String.format("订单编号:%s,时间为:%s", orderId, DateUtil.getDateToTimestamp(new Date()).toString()));
 				
 				serviceRecordDao.saveOrUpdate(serviceRecordPO);
 			}
@@ -1177,19 +870,20 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int changeDecorationPaymentForStatus(DecorationPaymentVO payment) throws FLException{
-		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(payment.getAutoId());
+	public int changeDecorationPaymentForStatus(DecorationPaymentVO decorationPaymentVO) throws FLException{
+		
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getAutoId());
 
 		if(decorationPaymentPO == null){
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(150003, "款项不存在");
 		}
 		
 		String paymentStatus = decorationPaymentPO.getPaymentStatus();
 		String paymentType = decorationPaymentPO.getPaymentType();
 		
-		if(paymentStatus.equals(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR) && payment.getPaymentStatus().equals(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR)){
+		if(paymentStatus.equals(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR) && decorationPaymentVO.getPaymentStatus().equals(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR)){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
-			decorationPaymentPO.setCreateUserPO(new UserPO(payment.getCreateUserId()));
+			decorationPaymentPO.setCreateUserPO(new UserPO(decorationPaymentVO.getCreateUserId()));
 			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			if(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(paymentType)){ // 对于首付款 提交时需要将应收款项减去已付款的定金的余额
@@ -1204,13 +898,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 					decorationPaymentDao.saveOrUpdate(_decorationPaymentPO);
 				}
 			}
-		} else if(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(payment.getPaymentStatus())){
+		} else if(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentVO.getPaymentStatus())){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
-		} else if(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(payment.getPaymentStatus())){
+		} else if(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentVO.getPaymentStatus())){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR);
-		} else if(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_UNPASS_STR.equals(payment.getPaymentStatus())){
+		} else if(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_UNPASS_STR.equals(decorationPaymentVO.getPaymentStatus())){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPASS_STR);
-		} else if(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR.equals(payment.getPaymentStatus())){
+		} else if(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR.equals(paymentStatus) && DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR.equals(decorationPaymentVO.getPaymentStatus())){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
 		}
 		
@@ -1265,8 +959,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDesignerRegion(designer.getDept().getFatherDept().getDeptName());
 		decorationPaymentVO.setSalesman(salesman.getCurrentName());
 		
-		decorationPaymentVO.setCityProper(villagePO.getCityProper().getCityProperName());
-		
 		decorationPaymentVO.setOrderTotalPrice(decorationPaymentPO.getDecorationOrderPO().getOrderTotalPrice());
 		decorationPaymentVO.setOrderStatus(decorationPaymentPO.getDecorationOrderPO().getStatus());
 
@@ -1305,28 +997,19 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationReceiptDao.update(decorationReceiptPO);
 			decorationPaymentDao.update(decorationPaymentPO);
 			
-			StringBuffer serviceRecoraInfo = new StringBuffer();
-			serviceRecoraInfo.append("订单编号:");
-			serviceRecoraInfo.append(orderId);
-			serviceRecoraInfo.append(",修改款项类型:");
-			serviceRecoraInfo.append(paymentType);
-			serviceRecoraInfo.append(",原收款时间:");
-			serviceRecoraInfo.append(oldDateTime.toString());
-			serviceRecoraInfo.append(",修改时间为:");
-			serviceRecoraInfo.append(dateTime);
+			String info = String.format("订单编号:%s,修改款项类型:%s,原收款时间:%s,修改时间为:%s", orderId, paymentType, oldDateTime.toString(), dateTime);
 			
 			if(oldConfirmTime != null){
-				serviceRecoraInfo.append(",原确认时间:");
-				serviceRecoraInfo.append(oldConfirmTime.toString());
+				info = String.format("%s,原确认时间:%s", info, oldConfirmTime.toString());
 			}
 			
 			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONPAYMENT_TIME_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(serviceRecoraInfo.toString());
+			serviceRecordPO.setInfo(info);
 			
-			serviceRecordDao.saveOrUpdate(serviceRecordPO);
+			serviceRecordDao.save(serviceRecordPO);
 		}
 		
 		return 0;
