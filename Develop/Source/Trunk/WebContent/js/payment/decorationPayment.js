@@ -24,9 +24,7 @@ jQuery(function($) {
 		items: {},
 		
 		editFlg:false,
-		historyFlag: false,
 		batchFlag: true,
-		historyFlag: false,
 		
 		bankList:null,
 		accountsList: [],
@@ -77,7 +75,7 @@ jQuery(function($) {
 				$(_checkboxId).attr("checked","checked");
 				
 				if(_name == "advance"){
-					com.post(api.data.queryCustomerForAdvanceByCustomerId, {"customer.customerId": decorationPaymentPostData.customerId},function(res){
+					com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": decorationPaymentPostData.customerId},function(res){
 						$("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
 						$("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
 					});
@@ -266,7 +264,6 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             
             var propertyArr = [
                ["订单号:", v.orderId, "grey"],
@@ -320,10 +317,6 @@ jQuery(function($) {
             
             $btnPrint.click(function(){
             	printPayment(v.drId, v.orderId);
-            });
-            
-            $btnEdit.click(function(){
-            	editPayment(v);
             });
             
             return $liLine;
@@ -403,7 +396,6 @@ jQuery(function($) {
 		}
 		
 		decorationPayment.editFlg =  false;
-		decorationPayment.historyFlag = false;
 	}
 	
 	function initBaseModal(){
@@ -452,160 +444,6 @@ jQuery(function($) {
 		$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
 		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'name');
 		$("#refundCouponType").trigger("chosen:updated");
-	}
-	
-	function editPayment(row){
-		
-		if(row.paymentStatus == '已确认'){
-			bootbox.alert("不可修改已确认的收款项");
-			return;
-		}
-		decorationPayment.orderId = row.orderId;
-		$("#referMoney").val(row.referMoney);
-		
-		decorationPayment.editFlg = true;
-		
-		var paymentType = row.paymentType;
-		
-		if(paymentType.search('退款') == -1 && paymentType != "减项款"){
-			initBaseModal();
-			
-			if(row.cash != 0){
-				$("#cashDiv").removeClass("hide");
-				$("#cashCheckbox").prop("checked", "checked");
-				$("#cash").val(row.cash);
-				$("#cashInfo").val(row.cashInfo);
-			}
-			if(row.bank != 0){
-				$("#bankDiv").removeClass("hide");
-				$("#bankCheckbox").prop("checked","checked");
-				$("#bank").val(row.bank);
-				
-				var bankInfo = row.bankInfo;
-				var bankInfos = bankInfo.split('#');
-				
-				var index = 1;
-				var bankDivNum = 0;
-				
-				for(var i=0;i<bankInfos.length;i++){
-					var _info = bankInfos[i];
-					if(_info){
-						var _infos = _info.split('|');
-						if(_infos.length == 3){
-							var bankName = _infos[0];
-							var bankMoney = _infos[1];
-							var bankDate = _infos[2].split(' ')[0];
-							var bankTime = _infos[2].split(' ')[1];
-							
-							addBankDiv(index);
-							$('#bankName_'+index).val(bankName);
-							$('#bank_'+index).val(bankMoney);
-							$('#bankDate_'+index).val(bankDate);
-							$('#bankTime_'+index).val(bankTime);
-							
-							index ++;
-							bankDivNum++;
-						}
-					}
-				}
-				
-				$("#bankAdd").attr("num", bankDivNum);
-			}
-			if(row.installment!=0){
-				$("#installmentDiv").removeClass("hide");
-				$("#installmentCheckbox").prop("checked","checked");
-				$("#installment").val(row.installment);
-				$("#installmentBankName").val(row.installmentBankName);
-			}
-			if(row.checkv != 0){
-				$("#checkvDiv").removeClass("hide");
-				$("#checkvCheckbox").prop("checked","checked");
-				$("#checkv").val(row.checkv);
-				$("#checkvBankName").val(row.checkvBankName);
-			}
-			if(row.accounts != 0){
-				$("#accountsDiv").removeClass("hide");
-				$("#accountsCheckbox").prop("checked","checked");
-				$("#accounts").val(row.accounts);
-				$("#accountsBankName").val(row.accountsBankName);
-			}
-			if(row.coupon != 0){
-				
-				$("#couponDiv").removeClass("hide");
-				$("#couponCheckbox").prop("checked","checked");
-				
-				$("#couponType").chosen("destroy");
-				$("#couponType").chosen({width: "216px", multi_type: "input"});
-				$("#couponType").bindData(decorationPayment.couponType, 'key', 'value');
-				$("#couponType").trigger("chosen:updated");
-				
-				var couponInfo = row.couponInfo;
-				var couponInfos = couponInfo.split("#");
-				
-				for(var i=0;i<couponInfos.length;i++){
-					var _info = couponInfos[i].split(":");
-					if(_info.length == 2){
-						var key = _info[0];
-						var value = _info[1];
-						
-						$("[value='"+decorationPayment.couponTypeData[key][0]+"']", $("#couponType")).attr("multikey", value).attr("selected", "selected");
-						$("#couponType").trigger("chosen:updated");
-					}
-				}
-			}
-			if(row.advance != 0){
-				$("#advanceDiv").removeClass("hide");
-				$("#advance").val(row.advance).attr("readonly", "readonly");
-				
-				com.post(api.data.queryCustomerForAdvanceByCustomerId, {"customer.customerId": row.customerId},function(res){
-					$("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
-					$("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
-				});
-			}
-			
-			$("#advanceCheckbox").prop("checked", "checked").attr("disabled", "disabled");
-			
-			decorationPayment.baseModal.modal("show");
-		}else{
-			$("#refundId").val(row.autoId);
-			if(row.cash!='0'){
-				$("#refundCash").trigger("click");
-				$("#refundSum").val(row.cash);
-			}else if(row.bank != '0'){
-				$("#refundBankCard").trigger("click");
-				$("#refundBankName").val(row.bankInfo);
-				$("#refundSum").val(row.bank);
-			}
-			
-			if(row.coupon != 0){
-				
-				$("#refundCouponType").chosen("destroy");
-				$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
-				$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'value');
-				$("#refundCouponType").trigger("chosen:updated");
-				
-				var couponInfo = row.couponInfo;
-				var couponInfos = couponInfo.split("#");
-				
-				for(var i=0;i<couponInfos.length;i++){
-					var _info = couponInfos[i].split(":");
-					if(_info.length == 2){
-						var key = _info[0];
-						var value = _info[1];
-						
-						$("[value='"+decorationPayment.couponTypeData[key][0]+"']", $("#refundCouponType")).attr("multikey", value).attr("selected", "selected");
-						$("#refundCouponType").trigger("chosen:updated");
-					}
-				}
-			}
-			
-			$("#refundReferMoney").val(row.referMoney);
-			$("#refundContent").val(row.des);
-			
-			decorationPayment.historyFlag = true;
-			
-			$("#refundModal").modal("show");
-		}
 	}
 	
 	function printPayment(drId, orderId){
@@ -852,11 +690,7 @@ jQuery(function($) {
     	
     	var _info = decorationPaymentPostData.paymentInfo;
     	
-		if(decorationPayment.historyFlag){
-			url = api.payment.updateDecorationPayment;
-		}else{
-			url = api.payment.collectDecorationPayment;
-		}
+		url = api.payment.collectDecorationPayment;
 		
 		for(var arg in args){
 			options["decorationPayment."+arg] = args[arg];
@@ -868,8 +702,6 @@ jQuery(function($) {
 		options["decorationPayment.des"] = $("#collectDes").val();
     	
     	com.post(url, options, function(result){
-    		
-    		decorationPayment.historyFlag = false;
     		
     		searcher.doSearch();
     		
@@ -894,7 +726,7 @@ jQuery(function($) {
     		return;
     	}
     	
-    	var url = api.payment.refundDecorationPayment;
+    	var url = api.payment.collectDecorationPaymentForRefund;
     	var options = {};
     	var type = "";
     	var referPayment = $("#sumMoneyShow").text();

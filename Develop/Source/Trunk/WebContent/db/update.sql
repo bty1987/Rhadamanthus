@@ -12,6 +12,3 @@ CREATE TABLE `workersalary` (
   KEY `indexone` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费';
 
-ALTER TABLE `platform`.`materialsuborderbalance` ADD COLUMN `post` DECIMAL(10,3) NOT NULL DEFAULT 0.000 AFTER `vbalanceTime`;
-
-ALTER TABLE `log`.`actionlog` DROP COLUMN `uuid`;

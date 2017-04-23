@@ -11,8 +11,6 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -74,10 +72,6 @@ public class PaymentVO implements Serializable {
 	private Timestamp confirmTime;
 	
 	private String status;
-	
-	private Long convertPaymentId; // 对应转换款项关联表的id
-	
-	private List<Map<String, String>> orders;
 	
 	public PaymentVO(){
 	}
@@ -260,14 +254,6 @@ public class PaymentVO implements Serializable {
 		this.status = status;
 	}
 
-	public Long getConvertPaymentId(){
-		return convertPaymentId;
-	}
-
-	public void setConvertPaymentId(Long convertPaymentId){
-		this.convertPaymentId = convertPaymentId;
-	}
-
 	public Float getBank(){
 		return bank;
 	}
@@ -298,14 +284,6 @@ public class PaymentVO implements Serializable {
 
 	public void setBankInfo(String bankInfo){
 		this.bankInfo = bankInfo;
-	}
-
-	public List<Map<String, String>> getOrders(){
-		return orders;
-	}
-
-	public void setOrders(List<Map<String, String>> orders){
-		this.orders = orders;
 	}
 
 }

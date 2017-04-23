@@ -1,6 +1,7 @@
 package com.fanglin.decoration.action;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -23,6 +24,8 @@ public class DecorationOrderAction extends BaseListAction {
 	
 	@Autowired
 	private DecorationOrderService decorationOrderService;
+	
+	private List<DecorationOrderVO> decorationOrders;
 
 	private DecorationOrderVO decorationOrder;
 
@@ -96,10 +99,10 @@ public class DecorationOrderAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryDecorationOrderForSignedByCustomerId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationOrderForSignedByCustomerId() throws FLException{
+	@Action(value = "queryDecorationOrderByCustomerId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationOrderByCustomerId() throws FLException{
 
-		decorationOrder = decorationOrderService.queryDecorationOrderForSignedByCustomerId(decorationOrder);
+		decorationOrders = decorationOrderService.queryDecorationOrderByCustomerId(decorationOrder);
 
 		return SUCCESS;
 	}
@@ -220,6 +223,14 @@ public class DecorationOrderAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	public List<DecorationOrderVO> getDecorationOrders() {
+		return decorationOrders;
+	}
+
+	public void setDecorationOrders(List<DecorationOrderVO> decorationOrders) {
+		this.decorationOrders = decorationOrders;
+	}
+
 	public DecorationOrderVO getDecorationOrder(){
 		return decorationOrder;
 	}

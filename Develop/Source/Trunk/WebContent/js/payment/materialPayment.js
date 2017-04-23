@@ -136,7 +136,7 @@ jQuery(function($) {
 				$(_checkboxId).attr("checked","checked");
 				
 				if(_name == "advance"){
-					com.post(api.data.queryCustomerForAdvanceByCustomerId, {"customer.customerId": materialPaymentPostData.customerId},function(res){
+					com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": materialPaymentPostData.customerId},function(res){
 						$("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
 						$("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
 					});
@@ -927,7 +927,7 @@ jQuery(function($) {
 			type = "bank";
 		}
 		
-		url = api.payment.collectMaterialRefundPayment;
+		url = api.payment.collectMaterialPaymentForRefund;
 		
 		var _info = materialPaymentPostData.paymentInfo[0];
 		

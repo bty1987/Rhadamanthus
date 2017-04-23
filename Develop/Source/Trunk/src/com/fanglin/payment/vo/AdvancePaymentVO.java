@@ -1,6 +1,6 @@
 package com.fanglin.payment.vo;
 
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.data.common.vo.CustomerVO;
 
 public class AdvancePaymentVO implements java.io.Serializable {
 
@@ -8,7 +8,7 @@ public class AdvancePaymentVO implements java.io.Serializable {
 
 	private Integer apId;
 	
-	private UserPO userPO;
+	private CustomerVO customer;
 	
 	private Double balance;
 	
@@ -26,12 +26,12 @@ public class AdvancePaymentVO implements java.io.Serializable {
 		this.apId = apId;
 	}
 	
-	public UserPO getUserPO() {
-		return userPO;
+	public CustomerVO getCustomer() {
+		return customer;
 	}
 
-	public void setUserPO(UserPO userPO) {
-		this.userPO = userPO;
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
 	}
 
 	public Double getBalance() {

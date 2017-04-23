@@ -268,66 +268,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	}
 
 	@Override
-	public void pageMaterialPaymentByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO){
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentByMsoId(paging, filters, materialPaymentVO.getMsoId(), null);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO();
-			BeanUtil.copyProperties(materialPaymentPO, _materialPaymentVO);
-			
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO);
-			}
-			
-			materialPaymentVOs.add(_materialPaymentVO);
-		}
-		
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentForInitByMsoId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO){
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentByMsoId(paging, filters, materialPaymentVO.getMsoId(), MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO();
-			BeanUtil.copyProperties(materialPaymentPO, _materialPaymentVO);
-			
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO);
-			}
-			
-			materialPaymentVOs.add(_materialPaymentVO);
-		}
-		
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentByMsoIdAll(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO){
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentByMsoId(paging, filters, materialPaymentVO.getMsoId(), null);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO();
-			BeanUtil.copyProperties(materialPaymentPO, _materialPaymentVO);
-			
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO);
-			}
-			
-			materialPaymentVOs.add(_materialPaymentVO);
-		}
-		
-		paging.setData(materialPaymentVOs);
-	}
-	
-	@Override
 	public void pageMaterialPaymentByOrderId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO) {
 		
 		
@@ -428,26 +368,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	}
 
 	@Override
-	public List<MaterialPaymentVO> queryMaterialPaymentForInitByMsoId(MaterialPaymentVO materialPaymentVO){
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoId(materialPaymentVO.getMsoId(), MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO();
-			BeanUtil.copyProperties(materialPaymentPO, _materialPaymentVO);
-			
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO);
-			}
-			
-			materialPaymentVOs.add(_materialPaymentVO);
-		}
-		
-		return materialPaymentVOs;
-	}
-
-	@Override
 	public List<MaterialPaymentVO> queryMaterialPaymentByMsoId(MaterialPaymentVO materialPaymentVO){
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoId(materialPaymentVO.getMsoId(), null);
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
@@ -487,57 +407,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 		
 		return coupon;
-	}
-
-	@Override
-	public Map<String, Object> queryMaterialPaymentByMpIds(List<Long> mpIds, String userId){
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		MaterialSubOrderVO materialSubOrderVO = new MaterialSubOrderVO();
-		MaterialSubOrderPO materialSubOrderPO = null;
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMpIds(mpIds);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			
-			MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
-			
-			if(!userId.equals(materialReceiptPO.getCollectUserId())){
-				continue;
-			}
-			
-			MaterialPaymentVO materialPaymentVO = new MaterialPaymentVO();
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO);
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO);
-			}
-			
-			materialPaymentVOs.add(materialPaymentVO);
-			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-		}
-		
-		
-		if(materialSubOrderPO != null){
-			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
-			
-			materialSubOrderVO.setSupervisorName("");
-			materialSubOrderVO.setSupervisorPhone("");
-			
-			if(decorationOrderPO != null && decorationOrderPO.getSupervisorPO() != null){
-				materialSubOrderVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getUserName());
-				materialSubOrderVO.setSupervisorPhone(decorationOrderPO.getSupervisorPO().getPhone());
-			}
-		}
-		
-		result.put("materialSubOrder", materialSubOrderVO);
-		result.put("materialPayments", materialPaymentVOs);
-		
-		return result;
 	}
 
 	@Override
@@ -666,18 +535,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void receMaterialPayment(MaterialPaymentVO materialPaymentVO){
-		
-		MaterialPaymentPO materialPaymentPO = materialPaymentDao.get(materialPaymentVO.getMpId());
-		
-		if(materialPaymentPO != null){
-			BeanUtil.copyProperties(materialPaymentVO, materialPaymentPO);
-			materialPaymentDao.update(materialPaymentPO);
-		}
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
 	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException{
 		
 		MaterialPaymentPO materialPaymentPO = materialPaymentDao.get(materialPaymentVO.getMpId());
@@ -710,7 +567,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					throw new FLException(230001, "客户信息不存在");
 				}
 				
-				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
 				
 				if(advancePaymentPO == null){
 					throw new FLException(150010, "预付款余额不足");
@@ -939,7 +796,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
 			
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
@@ -1120,7 +977,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialRefundPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
 		
 		float real = 0;
 		float count = 0;
@@ -1457,7 +1314,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
 		
 		if(materialSubOrderPO == null){
-			throw new FLException(140013, "订单不存在");
+			throw new FLException(180001, "主材订单不存在");
 		}
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();

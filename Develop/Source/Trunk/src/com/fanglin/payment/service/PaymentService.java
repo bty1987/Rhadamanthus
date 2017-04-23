@@ -24,13 +24,13 @@ public interface PaymentService {
 	
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 	
-	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId);
+	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId) throws FLException;
 	
 	public int collectPayment(PaymentVO paymentVO, String userId) throws FLException;
 
 	public int confirmPayment(List<Integer> paymentIds, String userId)  throws FLException;
 	
-	public void updatePayment(PaymentVO paymentVO);
+	public int updatePayment(PaymentVO paymentVO);
 	
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException;
 	
