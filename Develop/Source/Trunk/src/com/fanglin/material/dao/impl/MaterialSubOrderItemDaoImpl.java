@@ -11,7 +11,6 @@
 
 package com.fanglin.material.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.MatchMode;
@@ -19,32 +18,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
-import com.fanglin.utils.Paging;
 
 @Repository("materialSubOrderItemDao")
 public class MaterialSubOrderItemDaoImpl extends DaoImpl<MaterialSubOrderItemPO> implements MaterialSubOrderItemDao {
 	
 	public MaterialSubOrderItemDaoImpl(){
 		super(MaterialSubOrderItemPO.class);
-	}
-
-	@Override
-	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId){
-		
-		PagingQuery<MaterialSubOrderItemPO> query = pagingQuery(paging, MaterialSubOrderItemPO.class);
-		
-		query.add(query.getCriterion(MaterialSubOrderItemPO.COLUMN_MSOID_STR, msoId, "eq"));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
-		return query.list();
 	}
 
 	@Override
@@ -77,16 +58,6 @@ public class MaterialSubOrderItemDaoImpl extends DaoImpl<MaterialSubOrderItemPO>
 	@SuppressWarnings("unchecked")
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMpId(long mpId){
 		return session().createCriteria(MaterialSubOrderItemPO.class).add(Restrictions.eq(MaterialSubOrderItemPO.COLUMN_MPID_STR, mpId)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoiIds(List<Long> msoiIds){
-		if(msoiIds.size() == 0){
-			return new ArrayList<MaterialSubOrderItemPO>();
-		}else{
-			return session().createCriteria(MaterialSubOrderItemPO.class).add(Restrictions.in(MaterialSubOrderItemPO.COLUMN_MSOIID_STR, msoiIds)).list();
-		}
 	}
 
 	@Override

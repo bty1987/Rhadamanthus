@@ -680,6 +680,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 		decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 		
+		if(decorationOrderPO.getSupervisorPO() != null){
+			UserPO supervisor = decorationOrderPO.getSupervisorPO();
+			
+			decorationOrderVO.setSupervisor(supervisor.getUserName());
+			decorationOrderVO.setSupervisorId(supervisor.getUserId());
+			decorationOrderVO.setSupervisorPhone(supervisor.getPhone());
+		}
+		
 		if(decorationOrderVO.getContractCode() == null){
 			String startWith = SystemConfig.getString("contractStartWith", "FLJ-");
 			decorationOrderVO.setContractCode(startWith + decorationOrderVO.getOrderId() + "-" + decorationOrderPO.getDesignerPO().getDept().getContractPrefix());

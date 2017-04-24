@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.material.service.MaterialSubOrderRefundService;
-import com.fanglin.material.service.MaterialSubOrderService;
 import com.fanglin.material.vo.MaterialSubOrderRefundVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 
@@ -32,9 +31,6 @@ import com.fanglin.material.vo.MaterialSubOrderVO;
 public class MaterialSubOrderRefundAction extends BaseListAction{
 	
 	private static final long serialVersionUID = -9013915161875932989L;
-	
-	@Autowired
-	private MaterialSubOrderService materialSubOrderService;
 	
 	@Autowired
 	private MaterialSubOrderRefundService materialSubOrderRefundService;
@@ -53,21 +49,10 @@ public class MaterialSubOrderRefundAction extends BaseListAction{
 	
 	private long msorId;
 	
-	@Action(value="queryMaterialSubOrderRefund", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialSubOrderRefund(){
+	@Action(value="queryMaterialSubOrderRefundByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialSubOrderRefundByMsoId(){
 		
-		materialSubOrderRefunds = materialSubOrderRefundService.queryMaterialSubOrderRefundByMsoIdAIdents(materialSubOrder.getMsoId(), idents);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMaterialSubOrderRefundByMsoIdAIdent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialSubOrderRefundByMsoIdAIdent(){
-		
-		long msoId = materialSubOrder.getMsoId();
-		
-		materialSubOrder = materialSubOrderService.queryMaterialSubOrderByMsoId(msoId);
-		materialSubOrderRefunds = materialSubOrderRefundService.queryMaterialSubOrderRefundByMsoIdAIdents(msoId, idents);
+		materialSubOrderRefunds = materialSubOrderRefundService.queryMaterialSubOrderRefundByMsoIdAIdents(materialSubOrderRefund.getMsoId(), idents);
 		
 		return SUCCESS;
 	}

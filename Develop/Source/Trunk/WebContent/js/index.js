@@ -132,7 +132,8 @@ $(function(){
 
 		$.each(menuArr, function(key, val){
 			menuArr[key] = val.sort(function(a,b){
-				return a.mid-b.mid});
+				return a.order-b.order
+			});
 		});
 
 		if(menuArr.level1.length){

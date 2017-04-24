@@ -185,10 +185,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(long msoId){
+	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(MaterialSubOrderVO materialSubOrderVO){
 		
-		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
-		MaterialSubOrderVO materialSubOrderVO = new MaterialSubOrderVO();
+		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(materialSubOrderVO.getMsoId());
 		
 		BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
 		

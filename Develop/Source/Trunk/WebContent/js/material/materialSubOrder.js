@@ -242,6 +242,8 @@ jQuery(function($) {
 		materialSubOrderPostData["materialSubOrder.maling"] = v.maling;
 		materialSubOrderPostData["materialSubOrder.venderMaling"] = v.venderMaling;
 		
+		materialSubOrderPostData["materialSubOrderItem.msoId"] = v.msoId;
+		
 		com.switchPage(api.index.materialSubOrderDetailIndex.url);
 	}
 	

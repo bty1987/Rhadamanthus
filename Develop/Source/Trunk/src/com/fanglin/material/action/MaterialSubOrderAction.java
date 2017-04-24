@@ -42,6 +42,8 @@ public class MaterialSubOrderAction extends BaseListAction{
 	
 	private MaterialSubOrderVO materialSubOrder;
 	
+	private MaterialSubOrderItemVO materialSubOrderItem;
+	
 	private List<MaterialSubOrderItemVO> materialSubOrderItems;
 	
 	@Action(value="pageMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
@@ -79,10 +81,15 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="queryMaterialSubOrderByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialSubOrderByMsoId(){
 		
-		long msoId = materialSubOrder.getMsoId();
+		materialSubOrder = materialSubOrderService.queryMaterialSubOrderByMsoId(materialSubOrder);
 		
-		materialSubOrder = materialSubOrderService.queryMaterialSubOrderByMsoId(msoId);
-		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemByMsoId(msoId);
+		return SUCCESS;
+	}
+	
+	@Action(value="queryMaterialSubOrderItemByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialSubOrderItemByMsoId(){
+		
+		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemByMsoId(materialSubOrderItem);
 		
 		return SUCCESS;
 	}
@@ -141,6 +148,14 @@ public class MaterialSubOrderAction extends BaseListAction{
 
 	public void setMaterialSubOrder(MaterialSubOrderVO materialSubOrder){
 		this.materialSubOrder = materialSubOrder;
+	}
+
+	public MaterialSubOrderItemVO getMaterialSubOrderItem() {
+		return materialSubOrderItem;
+	}
+
+	public void setMaterialSubOrderItem(MaterialSubOrderItemVO materialSubOrderItem) {
+		this.materialSubOrderItem = materialSubOrderItem;
 	}
 
 	public List<MaterialSubOrderItemVO> getMaterialSubOrderItems(){

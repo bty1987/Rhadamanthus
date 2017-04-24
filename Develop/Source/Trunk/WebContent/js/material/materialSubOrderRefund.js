@@ -19,8 +19,8 @@ jQuery(function($) {
 	materialSubOrderRefund.saveBtn = $("#saveBtn");
 	materialSubOrderRefund.cancelBtn = $("#cancelBtn");
 	
-	materialSubOrderRefundPostData["materialSubOrder.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
-	materialSubOrderRefundPostData["materialSubOrder.customerName"] = materialSubOrderPostData["materialSubOrder.customerName"];
+	materialSubOrderRefundPostData["materialSubOrderRefund.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
+	materialSubOrderRefundPostData["materialSubOrderRefund.customerName"] = materialSubOrderPostData["materialSubOrder.customerName"];
 	
 	var displayFunc  = (function(){
 
@@ -115,16 +115,16 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init([], "condList", api.material.queryMaterialSubOrderRefund, function(data){
+	searcher.init([], "condList", api.material.queryMaterialSubOrderRefundByMsoId, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", null, materialSubOrderPostData, true, "materialSubOrderRefunds");
+	}, "pagenation", null, materialSubOrderRefundPostData, true, "materialSubOrderRefunds");
 	
 	$("#back").on("click", function(){
 		com.switchPage(api.index.materialSubOrderIndex.url);
 	});
 	
 	$("#import").on("click", function(){
-		com.post(api.material.queryMaterialSubOrderRefund, materialSubOrderPostData, function(res){
+		com.post(api.material.queryMaterialSubOrderRefundByMsoId, materialSubOrderRefundPostData, function(res){
 			
 			$.exceler({
 				column : [
@@ -145,7 +145,7 @@ jQuery(function($) {
 	
 	$("#print").on("click", function(){
 		
-		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrder.msoId"] + "&time=" + params.loginTime;
+		var url = api.index.materialSubOrderReceipt.url + "?type=2&materialSubOrder.msoId=" + materialSubOrderRefundPostData["materialSubOrderRefund.msoId"] + "&time=" + params.loginTime;
 		
 		var $inputs = $('input[name="idents"]:checked');
 		

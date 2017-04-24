@@ -21,6 +21,8 @@ public class ModuleVO implements Serializable {
 	
 	private Short system;
 	
+	private Short order;
+	
 	private Set<OperationVO> operations;
 	
 	public Integer getMid() {
@@ -85,6 +87,14 @@ public class ModuleVO implements Serializable {
 
 	public void setOperations(Set<OperationVO> operations) {
 		this.operations = operations;
+	}
+
+	public Short getOrder() {
+		return order;
+	}
+
+	public void setOrder(Short order) {
+		this.order = order;
 	}
 	
 }

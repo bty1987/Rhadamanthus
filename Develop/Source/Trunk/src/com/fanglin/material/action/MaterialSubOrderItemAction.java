@@ -50,14 +50,6 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	
 	private int redirect;
 	
-	@Action(value="pageMaterialSubOrderItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialSubOrderItem(){
-		
-		materialSubOrderItemService.pageMaterialSubOrderItemByMsoId(getPaging(), getFilters(), materialSubOrder.getMsoId());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryMaterialSubOrderItemByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialSubOrderItemByOrderId(){
 		
@@ -69,15 +61,7 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	@Action(value="queryMaterialSubOrderItemByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialSubOrderItemByMsoId(){
 		
-		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemByMsoId(materialSubOrder.getMsoId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMaterialSubOrderItemByMsoiIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialSubOrderItemByMsoiIds(){
-		
-		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemByMsoiIds(msoiIds);
+		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemByMsoId(materialSubOrderItem);
 		
 		return SUCCESS;
 	}
@@ -86,14 +70,6 @@ public class MaterialSubOrderItemAction extends BaseListAction{
 	public String queryMaterialSubOrderItemForSaleByMsoiId(){
 		
 		materialSubOrderItem = materialSubOrderItemService.queryMaterialSubOrderItemForSaleByMsoiId(materialSubOrderItem);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMaterialSubOrderItemForNoPackageByMsoiId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialSubOrderItemForNoPackageByMsoiId(){
-		
-		materialSubOrderItems = materialSubOrderItemService.queryMaterialSubOrderItemForNoPackageByMsoiId(msoiIds);
 		
 		return SUCCESS;
 	}

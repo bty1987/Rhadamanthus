@@ -21,6 +21,9 @@ jQuery(function($) {
 		params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
 	}
 	
+	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
+	queryDecorationOrderForCommonByOrderId.url = queryDecorationOrderForCommonByOrderId.url + "?" + args;
+	
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
 	queryMaterialPaymentForNotInitByMrId.url = queryMaterialPaymentForNotInitByMrId.url + "?" + args;
 	
@@ -38,19 +41,24 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	com.post(queryMaterialPaymentForNotInitByMrId, {}, function(res){
-		var materialSubOrder = res.materialSubOrder;
-		var materialPayments = res.materialPayments;
+	com.post(queryDecorationOrderForCommonByOrderId, {}, function(res){
 		
+		var decorationOrder = res.decorationOrder;
 		var commonInfo = {};
 		
-		commonInfo["orderId"] = materialSubOrder["orderId"];
-		commonInfo["orderAddr"] = materialSubOrder["orderAddr"];
-		commonInfo["customerName"] = materialSubOrder["customerName"];
-		commonInfo["salesmanName"] = materialSubOrder["salesmanName"];
-		commonInfo["supervisorName"] = materialSubOrder["supervisorName"];
-		commonInfo["supervisorPhone"] = materialSubOrder["supervisorPhone"];
-		commonInfo["departmentName"] = materialSubOrder["departmentName"];
+		commonInfo["orderId"] = decorationOrder.orderId;
+		commonInfo["orderAddr"] = decorationOrder.village.villageName + " " + decorationOrder.houseNumber;
+		commonInfo["customerName"] = decorationOrder.customer.customerName;
+		commonInfo["salesmanName"] = decorationOrder.designer;
+		commonInfo["supervisorName"] = decorationOrder.supervisor == null ? "" : $order.supervisor;
+		commonInfo["supervisorPhone"] = decorationOrder.supervisorPhone == null ? "" : $order.supervisorPhone;
+		commonInfo["departmentName"] = decorationOrder.designDepartment;
+		
+		receipt.commonInfo = commonInfo;
+	}, null, false);
+	
+	com.post(queryMaterialPaymentForNotInitByMrId, {}, function(res){
+		var materialPayments = res.materialPayments;
 		
 		var paymentItems = [];
 		var materialBrand = "";
@@ -62,8 +70,8 @@ jQuery(function($) {
 			
 			materialBrand = materialPayment.materialBrand;
 			
-			commonInfo["collectUserName"] = materialPayment.collectUserName;
-			commonInfo["collectTime"] = materialPayment.collectTime;
+			receipt.commonInfo["collectUserName"] = materialPayment.collectUserName;
+			receipt.commonInfo["collectTime"] = materialPayment.collectTime;
 			
 			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialPayment.materialBrand});
 			
@@ -72,9 +80,7 @@ jQuery(function($) {
 			}
 		}
 		
-		commonInfo["materialPaymentDes"] = materialPaymentDes;
-		
-		receipt.commonInfo = commonInfo;
+		receipt.commonInfo["materialPaymentDes"] = materialPaymentDes;
 	}, null ,false);
 	
 	var queryMaterialReceiptByMrId = api.payment.queryMaterialReceiptByMrId;

@@ -13,17 +13,18 @@ jQuery(function($) {
 	
 	var args = window.location.search.substr(1);
 	
-	var url = '';
+	var url = api.material.queryMaterialSubOrderByMsoId;
+	var itemUrl = '';
 	var ename = '';
 	var type = '';
 	
 	if(args.indexOf('type=1') != -1){
-		url = api.material.queryMaterialSubOrderByMsoId;
-		ename = 'materialSubOrderItems';
+		itemUrl = api.material.queryMaterialSubOrderItemByMsoId;
+		ename = 'materialSubOrderItem';
 		type = 1;
 	}else if(args.indexOf('type=2') != -1){
-		url = api.material.queryMaterialSubOrderRefundByMsoIdAIdent;
-		ename = 'materialSubOrderRefunds';
+		itemUrl = api.material.queryMaterialSubOrderRefundByMsoId;
+		ename = 'materialSubOrderRefund';
 		type = 2;
 	}
 	
@@ -38,7 +39,6 @@ jQuery(function($) {
 	
 	com.post(url, {}, function(res){
 		var materialSubOrder = res.materialSubOrder;
-		var materialSubOrderItems = res[ename];
 		
 		var commonInfo = {};
 		
@@ -48,11 +48,15 @@ jQuery(function($) {
 		commonInfo["salesmanName"] = materialSubOrder["salesmanName"];
 		commonInfo["materialerName"] = materialSubOrder["materialerName"];
 		commonInfo["depositPayment"] = materialSubOrder["depositPayment"];
-		commonInfo["fullPayment"] =materialSubOrder["fullPayment"];
+		commonInfo["fullPayment"] = materialSubOrder["fullPayment"];
 		commonInfo["maling"] =  utils.accAdd(parseFloat(materialSubOrder["maling"]), parseFloat(materialSubOrder["venderMaling"]));
 		commonInfo["total"] = materialSubOrder["total"];
 		
-		createReceiptTable(commonInfo, materialSubOrderItems, type);
+		itemUrl.url = itemUrl.url + "?" + ename + ".msoId=" + materialSubOrder.msoId;
+		
+		com.post(itemUrl, {}, function(res){
+			createReceiptTable(commonInfo, res[ename + 's'], type);
+		}, null, false);
 	});
 	
 	function createReceiptTable(commonInfo, itemInfo, type){

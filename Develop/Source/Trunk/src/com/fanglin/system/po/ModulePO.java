@@ -33,6 +33,8 @@ public class ModulePO implements Serializable {
 	
 	private short system;
 	
+	private short order;
+	
 	public ModulePO() {
 		super();
 	}
@@ -106,6 +108,15 @@ public class ModulePO implements Serializable {
 
 	public void setSystem(short system) {
 		this.system = system;
+	}
+
+	@Column(name = "order")
+	public short getOrder() {
+		return order;
+	}
+
+	public void setOrder(short order) {
+		this.order = order;
 	}
 	
 }

@@ -4,13 +4,13 @@ jQuery(function($) {
 	$('#fl-statement').statement("主材订单", "型号信息");
 	
 	var options = {};
-	options["materialSubOrder.msoId"] = params['materialSubOrder.msoId'];
+	options["materialSubOrderItem.msoId"] = params['materialSubOrder.msoId'];
 
 	if(params['materialOrderPostBalance.type'] == 1){
 		options['idents[0]'] = params['idents[0]'];
 	}
 
-	var url = params['materialOrderPostBalance.type'] == 1 ? api.material.queryMaterialSubOrderRefundByMsoIdAIdent :api.material.queryMaterialSubOrderItemByMsoId;
+	var url = params['materialOrderPostBalance.type'] == 1 ? api.material.queryMaterialSubOrderRefundByMsoId :api.material.queryMaterialSubOrderItemByMsoId;
 	
 	var displayFunc  = (function(){
 
