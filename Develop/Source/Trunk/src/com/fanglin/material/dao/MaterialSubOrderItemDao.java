@@ -14,13 +14,9 @@ package com.fanglin.material.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
-import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderItemDao extends Dao<MaterialSubOrderItemPO> {
-	
-	public List<MaterialSubOrderItemPO> pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId);
 	
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoIds(List<Long> msoIds);
 	
@@ -29,8 +25,6 @@ public interface MaterialSubOrderItemDao extends Dao<MaterialSubOrderItemPO> {
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoIdNotRefund(long msoId);
 	
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMpId(long mpId);
-	
-	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoiIds(List<Long> msoiIds);
 	
 	public MaterialSubOrderItemPO queryMaterialSubOrderItemByMsoiId(long msoiId);
 	

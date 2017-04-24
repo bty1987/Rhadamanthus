@@ -108,39 +108,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	private MaterialRankService materialRankService;
 	
 	@Override
-	public void pageMaterialPayment(Paging paging, List<Filter> filters){
-		
-		if(filters.size() == 0) return;
-		
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPayment(paging, filters);
-		
-		MaterialSubOrderPO materialSubOrderPO;
-		MaterialPaymentVO materialPaymentVO;
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			
-			materialPaymentVO = new MaterialPaymentVO();
-			
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO);
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO);
-			}
-			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-			
-			materialPaymentVO.setOrderId(materialSubOrderPO.getOrderId());
-			materialPaymentVO.setOrderAddr(materialSubOrderPO.getOrderAddr());
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-		
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
 	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters) {
 		
 		if(filters.size() == 0) return;
@@ -268,38 +235,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	}
 
 	@Override
-	public void pageMaterialPaymentByOrderId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO) {
-		
-		
-		filters.add(new Filter(MaterialPaymentPO.COLUMN_ORDERID_STR, materialPaymentVO.getOrderId(), "eq"));
-		
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "ne");
-		
-		MaterialSubOrderPO materialSubOrderPO;
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			
-			materialPaymentVO = new MaterialPaymentVO();
-			
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO);
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO);
-			}
-			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-			
-			materialPaymentVO.setOrderId(materialSubOrderPO.getOrderId());
-			materialPaymentVO.setOrderAddr(materialSubOrderPO.getOrderAddr());
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-		
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
 	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters){
 		
 		Map<Integer, String> types = new HashMap<Integer, String>();
@@ -400,21 +335,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				
 				if(materialReceiptPO != null){
 					coupon = Arith.add(coupon, materialReceiptPO.getCoupon());
-					
-					materialPaymentVO.setCoupon(coupon);
 				}
 			}
 		}
+		
+		materialPaymentVO.setCoupon(coupon);
 		
 		return coupon;
 	}
 
 	@Override
-	public Map<String, Object> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId) {
-		
-		Map<String, Object> result = new HashMap<String, Object>();
-		MaterialSubOrderVO materialSubOrderVO = new MaterialSubOrderVO();
-		MaterialSubOrderPO materialSubOrderPO = null;
+	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId) {
 		
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentForNotInitByMrId(materialReceiptVO.getMrId());
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
@@ -435,28 +366,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			}
 			
 			materialPaymentVOs.add(materialPaymentVO);
-			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
 		}
 		
-		if(materialSubOrderPO != null){
-			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
-			
-			DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
-			
-			materialSubOrderVO.setSupervisorName("");
-			materialSubOrderVO.setSupervisorPhone("");
-			
-			if(decorationOrderPO != null && decorationOrderPO.getSupervisorPO() != null){
-				materialSubOrderVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getUserName());
-				materialSubOrderVO.setSupervisorPhone(decorationOrderPO.getSupervisorPO().getPhone());
-			}
-		}
-		
-		result.put("materialSubOrder", materialSubOrderVO);
-		result.put("materialPayments", materialPaymentVOs);
-		
-		return result;
+		return materialPaymentVOs;
 	}
 
 	@Override

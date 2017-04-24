@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
@@ -31,7 +30,6 @@ import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.Paging;
 
 @Service("materialSubOrderItemService")
 @Transactional(readOnly=true)
@@ -44,21 +42,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 	
 	@Autowired
 	private MaterialSubOrderItemDao materialSubOrderItemDao;
-	
-	@Override
-	public void pageMaterialSubOrderItemByMsoId(Paging paging, List<Filter> filters, long msoId){
-		
-		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.pageMaterialSubOrderItemByMsoId(paging, filters, msoId);
-		List<MaterialSubOrderItemVO> materialSubOrderItemVOs = new ArrayList<MaterialSubOrderItemVO>();
-		
-		for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-			MaterialSubOrderItemVO materialSubOrderItemVO = new MaterialSubOrderItemVO();
-			BeanUtil.copyProperties(materialSubOrderItemPO, materialSubOrderItemVO);
-			materialSubOrderItemVOs.add(materialSubOrderItemVO);
-		}
-		
-		paging.setData(materialSubOrderItemVOs);
-	}
 	
 	@Override
 	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemByOrderId(String orderId){
@@ -81,18 +64,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 	}
 
 	@Override
-	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemByMsoId(long msoId){
+	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemByMsoId(MaterialSubOrderItemVO materialSubOrderItemVO){
 		
-		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(msoId);
-		List<MaterialSubOrderItemVO> materialSubOrderItemVOs = packageMaterialSubOrderItems(materialSubOrderItemPOs);
-		
-		return materialSubOrderItemVOs;
-	}
-	
-	@Override
-	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemByMsoiIds(List<Long> msoiIds){
-
-		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoiIds(msoiIds);
+		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(materialSubOrderItemVO.getMsoId());
 		List<MaterialSubOrderItemVO> materialSubOrderItemVOs = packageMaterialSubOrderItems(materialSubOrderItemPOs);
 		
 		return materialSubOrderItemVOs;
@@ -117,22 +91,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		return materialSubOrderItemVO;
 	}
 
-	@Override
-	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemForNoPackageByMsoiId(List<Long> msoiIds){
-
-		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoiIds(msoiIds);
-		List<MaterialSubOrderItemVO> materialSubOrderItemVOs = new ArrayList<MaterialSubOrderItemVO>();
-		
-		for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-			MaterialSubOrderItemVO materialSubOrderItemVO = new MaterialSubOrderItemVO();
-			BeanUtil.copyProperties(materialSubOrderItemPO, materialSubOrderItemVO);
-			
-			materialSubOrderItemVOs.add(materialSubOrderItemVO);
-		}
-		
-		return materialSubOrderItemVOs;
-	}
-	
 	@Override
 	public List<MaterialSubOrderItemVO> queryMaterialSubOrderItemForNameByName(MaterialSubOrderItemVO materialSubOrderItemVO) {
 		

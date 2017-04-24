@@ -35,7 +35,7 @@ public interface MaterialSubOrderService {
 	
 	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters);
 	
-	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(long msoId);
+	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(MaterialSubOrderVO materialSubOrderVO);
 	
 	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId) throws FLException;
 	

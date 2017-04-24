@@ -37,7 +37,7 @@ $(function(){
                     $.each(propertyArr, function (index,value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).css(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 

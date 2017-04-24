@@ -13,7 +13,6 @@ package com.fanglin.payment.action;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -62,14 +61,6 @@ public class MaterialPaymentAction extends BaseListAction{
 	
 	private Timestamp dateTime;
 	
-	@Action(value="pageMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPayment(){
-		
-		materialPaymentService.pageMaterialPayment(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="pageMaterialPaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialPaymentForInit(){
 		
@@ -102,14 +93,6 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="pageMaterialPaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentByOrderId(){
-		
-		materialPaymentService.pageMaterialPaymentByOrderId(getPaging(), getFilters(), materialPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryMaterialPaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentByOrderId(){
 		
@@ -134,14 +117,10 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Action(value="queryMaterialPaymentForNotInitByMrId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentForNotInitByMrId() throws FLException{
 		
-		Map<String, Object> result = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt, queryUserId());
-		
-		materialSubOrder = (MaterialSubOrderVO) result.get("materialSubOrder");
-		materialPayments = (List<MaterialPaymentVO>) result.get("materialPayments");
+		materialPayments = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt, queryUserId());
 		
 		return SUCCESS;
 	}

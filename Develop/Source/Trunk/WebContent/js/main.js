@@ -286,8 +286,11 @@ function createMenu(data){
 
 	$.each(menuArr, function(key, val){
 		menuArr[key] = val.sort(function(a,b){
-			return a.mid-b.mid});
+			return a.order-b.order
+		});
 	});
+	
+	console.log(menuArr);
 
 	if(menuArr.level1.length){
 		$.each(menuArr.level1, function(i, v){

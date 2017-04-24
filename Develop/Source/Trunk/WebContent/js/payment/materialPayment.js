@@ -638,7 +638,7 @@ jQuery(function($) {
 	}
 	
 	function printPayment(mrId, orderId){
-		var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + orderId + "&materialReceipt.mrId=" + mrId + "&time=" + params.loginTime;
+		var url = api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + mrId + "&decorationOrder.orderId=" + orderId + "&time=" + params.loginTime;
 		window.open(url);
     }
 	
@@ -893,11 +893,11 @@ jQuery(function($) {
 			
 			materialPayment.historyFlag = false;
 			
-			var mrId = "&materialReceipt.mrId=" + result.materialReceipt.mrId;
+			var mrId = "?materialReceipt.mrId=" + result.materialReceipt.mrId;
 			
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + mrId + "&time=" + params.loginTime;
+					var url = api.index.materialPaymentReceiptIndex.url + mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime;
 					window.open(url);
 				}
 			});
@@ -978,7 +978,7 @@ jQuery(function($) {
 			
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.materialPaymentReceiptIndex.url + "?orderId=" + "&materialReceipt.mrId=" + res.materialPayment.mrId + "&time=" + params.loginTime;;
+					var url = api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + res.materialPayment.mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime;;
 					window.open(url);
 				}
 			});

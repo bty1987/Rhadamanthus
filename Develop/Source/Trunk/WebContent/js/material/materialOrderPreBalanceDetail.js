@@ -26,7 +26,7 @@ jQuery(function($) {
 	materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.value = $("#value");
 	
 	var options = {};
-	options["materialSubOrder.msoId"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
+	options["materialSubOrderItem.msoId"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
 	
 	var displayFunc  = (function(){
 

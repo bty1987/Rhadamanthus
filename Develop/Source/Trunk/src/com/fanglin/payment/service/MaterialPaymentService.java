@@ -13,7 +13,6 @@ package com.fanglin.payment.service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -25,8 +24,6 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
 	
-	public void pageMaterialPayment(Paging paging, List<Filter> filters);
-	
 	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters);
 	
 	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters);
@@ -34,8 +31,6 @@ public interface MaterialPaymentService {
 	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters);
 	
 	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters);
-	
-	public void pageMaterialPaymentByOrderId(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
 	
 	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters);
 	
@@ -45,7 +40,7 @@ public interface MaterialPaymentService {
 	
 	public float queryMaterialPaymentForCouponByMsoId(MaterialPaymentVO materialPaymentVO);
 	
-	public Map<String, Object> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
+	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
 	
 	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	

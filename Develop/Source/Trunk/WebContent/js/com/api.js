@@ -639,12 +639,10 @@ var api = {
 		refundDecorationPayment: {url: "refundDecorationPayment.do"},
 		confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
 		
-		pageMaterialPayment: {url: "pageMaterialPayment.do"},
 		pageMaterialPaymentForInit: {url: "pageMaterialPaymentForInit.do", demo: true},
 		pageMaterialPaymentForCollect: {url: "pageMaterialPaymentForCollect.do", demo: true},
 		pageMaterialPaymentForConfirm: {url: "pageMaterialPaymentForConfirm.do", demo: true},
 		pageMaterialPaymentForNotInit: {url: "pageMaterialPaymentForNotInit.do", demo: true},
-		pageMaterialPaymentByOrderId: {url: "pageMaterialPaymentByOrderId.do"},
 		pageMaterialInsidePaymentForInit: {url: "pageMaterialInsidePaymentForInit.do"},
 		pageMaterialInsidePaymentForNotInit: {url: "pageMaterialInsidePaymentForNotInit.do"},
 		pageMaterialOutsidePaymentForInit: {url: "pageMaterialOutsidePaymentForInit.do", demo: true},
@@ -768,12 +766,9 @@ var api = {
 		deliverMaterialSubOrder: {url: "deliverMaterialSubOrder.do"},
 		deleteMaterialSubOrder: {url: "deleteMaterialSubOrder.do"},
 		
-		pageMaterialSubOrderItem: {url: "pageMaterialSubOrderItem.do"},
 		queryMaterialSubOrderItemByOrderId: {url: "queryMaterialSubOrderItemByOrderId.do"},
 		queryMaterialSubOrderItemByMsoId: {url: "queryMaterialSubOrderItemByMsoId.do", demo: true},
-		queryMaterialSubOrderItemByMsoiIds: {url: "queryMaterialSubOrderItemByMsoiIds.do"},
 		queryMaterialSubOrderItemForSaleByMsoiId: {url: "queryMaterialSubOrderItemForSaleByMsoiId.do", demo: true},
-		queryMaterialSubOrderItemForNoPackageByMsoiId: {url: "queryMaterialSubOrderItemForNoPackageByMsoiId.do"},
 		queryMaterialSubOrderItemForNameByName: {url: "queryMaterialSubOrderItemForNameByName.do", demo: true},
 		queryMaterialSubOrderItemForNameByNo: {url: "queryMaterialSubOrderItemForNameByNo.do"},
 		addMaterialSubOrderItem: {url: "addMaterialSubOrderItem.do"},
@@ -784,8 +779,7 @@ var api = {
 		changeMaterialSubOrderItemForCaclType: {url: "changeMaterialSubOrderItemForCaclType.do"},
 		deleteMaterialSubOrderItem: {url: "deleteMaterialSubOrderItem.do"},
 		
-		queryMaterialSubOrderRefund: {url: "queryMaterialSubOrderRefund.do", demo: true},
-		queryMaterialSubOrderRefundByMsoIdAIdent: {url: "queryMaterialSubOrderRefundByMsoIdAIdent.do"},
+		queryMaterialSubOrderRefundByMsoId: {url: "queryMaterialSubOrderRefundByMsoId.do", demo: true},
 		cancelMaterialSubOrderRefundForModel: {url: "cancelMaterialSubOrderRefundForModel.do"},
 		cancelMaterialSubOrderRefundForPackage: {url: "cancelMaterialSubOrderRefundForPackage.do"},
 		
