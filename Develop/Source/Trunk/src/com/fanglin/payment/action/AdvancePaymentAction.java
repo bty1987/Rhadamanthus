@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.payment.service.AdvancePaymentService;
 
 @ParentPackage("base")
@@ -35,6 +37,8 @@ public class AdvancePaymentAction extends BaseListAction {
 	private AdvancePaymentService advancePaymentService;
 	
 	private CustomerVO customer;
+	
+	private DecorationOrderVO decorationOrder;
 	
 	private float balanceAdvance;
 	
@@ -56,6 +60,19 @@ public class AdvancePaymentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value="queryAdvancePaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryAdvancePaymentByOrderId() throws FLException{
+		
+		List<Float> advances = advancePaymentService.queryAdvancePaymentByOrderId(decorationOrder);
+		
+		balanceAdvance = advances.get(0);
+		projectAdvance = advances.get(1);
+		materialAdvance = advances.get(2);
+		zaterialAdvance = advances.get(3);
+		
+		return SUCCESS;
+	}
 
 	public CustomerVO getCustomer() {
 		return customer;
@@ -63,6 +80,14 @@ public class AdvancePaymentAction extends BaseListAction {
 
 	public void setCustomer(CustomerVO customer) {
 		this.customer = customer;
+	}
+
+	public DecorationOrderVO getDecorationOrder() {
+		return decorationOrder;
+	}
+
+	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
+		this.decorationOrder = decorationOrder;
 	}
 
 	public float getBalanceAdvance() {

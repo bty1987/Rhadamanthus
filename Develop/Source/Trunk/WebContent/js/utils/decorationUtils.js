@@ -237,10 +237,13 @@ var decorationUtils = {
 		$dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + decorationOrderDetail.quotation.totalPrice)).appendTo($dhead);
 	}, initMaterial: function(orderId){
 		
-		var $material = $('#materialPaymentDiv').html("");
+		var $material = $('#materialPayment').html("");
+		var $brand = $('#materialPaymentBrand').html("");
 		
 		var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($material);
+		var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
 		
+		var $total = 0;
 		var materialPayments = null;
 		
 		com.post(api.payment.queryMaterialPaymentByOrderId, {"materialPayment.orderId": orderId}, function(res){
@@ -249,6 +252,9 @@ var decorationUtils = {
 		
 		if(materialPayments && materialPayments.length){
 			$.each(materialPayments, function(i, v){
+				
+				if(v.paymentStatus == 0) return false;
+				
 				var $liLine = $('<li></li>').addClass('item-orange clearfix');
 				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.msoNo + " " + materialUtils.materialPaymentTypeData[v.paymentType]));
 				var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -299,13 +305,57 @@ var decorationUtils = {
 				});
 				
 				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ul);
+				
+				var $materialBrands = $("[name='" + v.materialBrand + "']");
+				
+				if($materialBrands.length > 0){
+					
+					var $materialBrand = $($materialBrands[0]);
+					var $brandTotal = $($materialBrand.find("[name='total']")[0]);
+					
+					var _value = parseFloat($brandTotal.attr('value'));
+					var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+					var _total = utils.changeThrDecimal(_value + _refer);
+			
+					$brandTotal.attr("value", _total);
+					$brandTotal.html(_total);
+					
+					$total = utils.changeThrDecimal($total + _refer);
+				}else{
+					var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.materialBrand);
+					var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.materialBrand));
+					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+					
+					$('<b></b>').html(v.materialType).addClass("grey").appendTo($('<strong></strong>').html("品类").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').html(v.materialBrand).addClass("grey").appendTo($('<strong></strong>').html("品牌").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').attr("name", "total").attr("value", v.referMoney).html(v.referMoney).addClass("grey").appendTo($('<strong></strong>').html("品类").appendTo($('<li></li>').appendTo($ulProperty)));
+					
+					$liLine.append($h4).append($ulProperty).appendTo($ulbrand);
+					
+					var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+					
+					$total = utils.changeThrDecimal($total + _refer);
+				}
 			});
-		}else{
-			var $resultList = $('#materialPaymentDiv').html('');
+		}
+		
+		if($ul.children("li").length == 0){
+			var $resultList = $('#materialPayment').html('');
 	    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
 	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
 	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+	    	
+	    	var $resultList = $('#materialPaymentBrand').html('');
+	    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+		}else{
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
+			
+			$liLine.append($h4).appendTo($ulbrand);
 		}
+		
 	}, decorationActivityInfo: function(activitys, uiBtnMethod, orderId){
 		
 		var options = {
@@ -409,6 +459,13 @@ var decorationUtils = {
 		var $otherul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($other);
 		
 		var decorationPayments = null;
+		
+		com.post(api.payment.queryAdvancePaymentByOrderId, {"decorationOrder.orderId": orderId}, function(res){
+			$("#balanceAdvance").text(res.balanceAdvance);
+			$("#projectAdvance").text(res.projectAdvance);
+			$("#materialAdvance").text(res.materialAdvance);
+			$("#zaterialAdvance").text(res.zaterialAdvance);
+		});
 		
 		com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.orderId": orderId}, function(res){
 			decorationPayments = res.decorationPayments;
@@ -592,7 +649,7 @@ var decorationUtils = {
 		}else{
 			com.showAlert(com.error, dateObj.errorMsg);
 		}
-	}, initDecorationPicture: function(designId, pictureId, cadId, orderId) {
+	}, initDecorationPicture: function(designId, pictureId, cadId, orderId, dFlag) {
 		
 		var $desgin = $("#" + designId).html("");
 		var $picture = $("#" + pictureId).html("");
@@ -608,9 +665,9 @@ var decorationUtils = {
 				if(decorationPicture.type == 0){
 					decorationUtils.addCAD($cad, decorationPicture);
 				}else if(decorationPicture.type == 1){
-					decorationUtils.addPicture($desgin, decorationPicture);
+					decorationUtils.addPicture($desgin, decorationPicture, dFlag);
 				}else if(decorationPicture.type == 2){
-					decorationUtils.addPicture($picture, decorationPicture);
+					decorationUtils.addPicture($picture, decorationPicture, dFlag);
 				}
 			}
 			
@@ -626,10 +683,10 @@ var decorationUtils = {
 				maxHeight:'100%'
 			});
 		});
-	},addPicture:function(e, i){
-		var $li = $('<li></li>').appendTo(e);
+	},addPicture:function(e, i, dFlag){
+		var $li = $('<li></li>').attr("id", "imgLi_" + i.dpId).appendTo(e);
 		var $img = $('<img></img>').attr('width', 200).attr('height', 200);
-		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li); 
+		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
 		
 		var $tags = $('<div></div>').addClass('tags').appendTo($li);
 		var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -640,6 +697,17 @@ var decorationUtils = {
 		var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
 		var $toolLabel = $('<label></label>').appendTo($tools);
 		var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
+		
+		if(dFlag){
+			var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
+			
+			$delA.click(function(){
+				com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function(res){
+					console.log(res);
+					$("#imgLi_" + res.decorationPicture.dpId).remove();
+				})
+			});
+		}
 		
 		com.downloadFile($downA, i.path, i.name);
 		

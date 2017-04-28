@@ -244,8 +244,8 @@ public class QuotationServiceImpl implements QuotationService {
 			
 			quotationFunctionAreaDao.save(autogeneration);
 			
-			QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", quotationVersionPO.getTrafficRate(), 1f, (short) 2, autogeneration, "");
-			QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", quotationVersionPO.getManageRate(), 1f, (short) 3, autogeneration, "");
+			QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", quotationVersionPO.getTrafficRate(), 0f, (short) 2, quotationVersionPO.getTrafficDiscount(), autogeneration, "");
+			QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", quotationVersionPO.getManageRate(), .0f, (short) 3, quotationVersionPO.getManageDiscount(), autogeneration, "");
 			
 			quotationFunctionAreaItemDao.save(trafficPrice);
 			quotationFunctionAreaItemDao.save(managePrice);

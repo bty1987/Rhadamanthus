@@ -50,8 +50,8 @@ jQuery(function($) {
 		commonInfo["orderAddr"] = decorationOrder.village.villageName + " " + decorationOrder.houseNumber;
 		commonInfo["customerName"] = decorationOrder.customer.customerName;
 		commonInfo["salesmanName"] = decorationOrder.designer;
-		commonInfo["supervisorName"] = decorationOrder.supervisor == null ? "" : $order.supervisor;
-		commonInfo["supervisorPhone"] = decorationOrder.supervisorPhone == null ? "" : $order.supervisorPhone;
+		commonInfo["supervisorName"] = decorationOrder.supervisor == null ? "" : decorationOrder.supervisor;
+		commonInfo["supervisorPhone"] = decorationOrder.supervisorPhone == null ? "" : decorationOrder.supervisorPhone;
 		commonInfo["departmentName"] = decorationOrder.designDepartment;
 		
 		receipt.commonInfo = commonInfo;

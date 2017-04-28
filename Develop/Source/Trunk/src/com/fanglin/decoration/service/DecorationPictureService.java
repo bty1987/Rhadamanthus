@@ -22,4 +22,6 @@ public interface DecorationPictureService {
 
 	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId) throws FLException;
 	
+	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO);
+	
 }

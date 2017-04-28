@@ -34,7 +34,9 @@ $(function(){
             var propertyArr = [
                 ["编号:", v.versionId, "grey"],
                 ["车运费比例:", v.trafficRate, "blue"],
+                ["车运费折扣:", v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ?  '打折' : '-', "red"],
                 ["管理费比例:", v.manageRate, "blue"],
+                ["管理费比例:", v.manageDiscount == 0 ? '不打折' : v.manageDiscount == 1 ?  '打折' : '-', "red"],
                 ["信息:", v.versionDes ? v.versionDes : '-', "grey"],
                 ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '-', "red"],
             ];
@@ -124,7 +126,13 @@ $(function(){
             }),
             versionName: $("#versionName"),
             trafficRate: $("#trafficRate"),
+            trafficDiscount : $("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                quotationVersion.quotationVersionItems.trafficDiscount.value = 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 : 0
+            }),
             manageRate: $("#manageRate"),
+            manageDiscount : $("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                quotationVersion.quotationVersionItems.manageDiscount.value = 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 : 0
+            }),
             versionDes: $("#versionDes"),
             defaultFlag : $("#defaultFlag").switchBtn().on("click", function(a) {
                 quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0
@@ -160,8 +168,16 @@ $(function(){
         quotationVersion.quotationVersionItems.versionName.val(b.versionName);
         quotationVersion.quotationVersionItems.versionDes.val(b.versionDes);
         quotationVersion.quotationVersionItems.versionId.prop("disabled", !0).css("display", "block");
+        
+        void 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 == b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click() : quotationVersion.quotationVersionItems.trafficDiscount.value != b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click();
+        quotationVersion.quotationVersionItems.trafficDiscount.value = b.trafficDiscount;
+        
+        void 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 == b.manageDiscount && quotationVersion.quotationVersionItems.manageDiscount.click() : quotationVersion.quotationVersionItems.manageDiscount.value != b.manageDiscount && quotationVersion.quotationVersionItems.manageDiscount.click();
+        quotationVersion.quotationVersionItems.manageDiscount.value = b.manageDiscount;
+        
         void 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 == b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click() : quotationVersion.quotationVersionItems.defaultFlag.value != b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click();
         quotationVersion.quotationVersionItems.defaultFlag.value = b.defaultFlag;
+        
         quotationVersion.modal.modal("show");
     }
 
@@ -178,7 +194,9 @@ $(function(){
                 "quotationVersion.versionId": quotationVersion.quotationVersionItems.versionId.val(),
                 "quotationVersion.versionName": quotationVersion.quotationVersionItems.versionName.val(),
                 "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.trafficRate.val(),
+                "quotationVersion.trafficDiscount": quotationVersion.quotationVersionItems.trafficDiscount.prop("checked") ? 1 : 0,
                 "quotationVersion.manageRate": quotationVersion.quotationVersionItems.manageRate.val(),
+                "quotationVersion.manageDiscount": quotationVersion.quotationVersionItems.manageDiscount.prop("checked") ? 1 : 0,
                 "quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
                 "quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
             };

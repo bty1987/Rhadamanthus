@@ -12,3 +12,9 @@ CREATE TABLE `workersalary` (
   KEY `indexone` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费';
 
+ALTER TABLE `platform`.`quotationversion` 
+ADD COLUMN `trafficDiscount` TINYINT(1) NOT NULL DEFAULT 0 AFTER `trafficRate`,
+ADD COLUMN `manageDiscount` TINYINT(1) NOT NULL DEFAULT 0 AFTER `manageRate`;
+
+ALTER TABLE `platform`.`decorationpicture` 
+ADD COLUMN `status` TINYINT(1) NOT NULL DEFAULT 0 AFTER `type`;

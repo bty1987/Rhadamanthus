@@ -38,7 +38,11 @@ public class QuotationVersionPO implements Serializable{
 	
 	private float trafficRate;
 	
+	private short trafficDiscount;
+	
 	private float manageRate;
+	
+	private short manageDiscount;
 	
 	public QuotationVersionPO(){}
 	
@@ -101,6 +105,15 @@ public class QuotationVersionPO implements Serializable{
 	public void setTrafficRate(float trafficRate) {
 		this.trafficRate = trafficRate;
 	}
+	
+	@Column(name="trafficDiscount")
+	public short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
 
 	@Column(name="manageRate")
 	public float getManageRate() {
@@ -109,6 +122,15 @@ public class QuotationVersionPO implements Serializable{
 
 	public void setManageRate(float manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name="manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 	
 }

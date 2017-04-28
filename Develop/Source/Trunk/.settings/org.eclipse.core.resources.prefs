@@ -1,4 +1,4 @@
-#Wed Dec 07 11:16:14 CST 2016
+#Fri Apr 28 15:13:38 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -46,6 +46,8 @@ encoding//WebContent/views/decoration/decorationActivity.html=UTF-8
 encoding//WebContent/views/decoration/decorationActivityItem.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderAdvance.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderAdvanceDetail.html=UTF-8
+encoding//WebContent/views/decoration/decorationOrderApprove.html=UTF-8
+encoding//WebContent/views/decoration/decorationOrderApproveDetail.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderBackVisit.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderBelongDetail.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderBelongInfo.html=UTF-8
@@ -55,6 +57,8 @@ encoding//WebContent/views/decoration/decorationOrderDesigner.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderDesignerDetail.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderMap.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderSalesman.html=UTF-8
+encoding//WebContent/views/decoration/decorationOrderStage.html=UTF-8
+encoding//WebContent/views/decoration/decorationOrderStageDetail.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderTimeline.html=UTF-8
 encoding//WebContent/views/department/businessDept.html=UTF-8
 encoding//WebContent/views/department/businessRegion.html=UTF-8

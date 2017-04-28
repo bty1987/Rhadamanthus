@@ -33,12 +33,12 @@ import com.fanglin.utils.DateUtil;
 public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 	@Autowired
-	private DecorationPictureDao orderDesignPictureDao;
+	private DecorationPictureDao decorationPictureDao;
 	
 	@Override
 	public List<DecorationPictureVO> queryDecorationPictureByOrderId(DecorationPictureVO decorationPictureVO){
 		
-		List<DecorationPicturePO> decorationPicturePOs = orderDesignPictureDao.queryDecorationPictureByOrderId(decorationPictureVO.getOrderId());
+		List<DecorationPicturePO> decorationPicturePOs = decorationPictureDao.queryDecorationPictureByOrderId(decorationPictureVO.getOrderId());
 		List<DecorationPictureVO> decorationPictureVOs = new ArrayList<DecorationPictureVO>();
 		
 		for(DecorationPicturePO decorationPicturePO: decorationPicturePOs){
@@ -69,11 +69,25 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		decorationPicturePO.setUserPO(new UserPO(userId));
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPicturePO.setName(String.format("%s.%s", _name.substring(0, _name.length() > 8 ? 8 : _name.length()), _suffix));
+		decorationPicturePO.setStatus(DecorationPicturePO.STATUS_ENABLE_INT);
 		
-		orderDesignPictureDao.save(decorationPicturePO);
+		decorationPictureDao.save(decorationPicturePO);
 		
 		decorationPictureVO.setDpId(decorationPicturePO.getDpId());
 		decorationPictureVO.setUploadTime(decorationPicturePO.getUploadTime());
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO) {
+		
+		DecorationPicturePO decorationPicturePO = decorationPictureDao.get(decorationPictureVO.getDpId());
+		
+		if(decorationPicturePO != null){
+			decorationPicturePO.setStatus(DecorationPicturePO.STATUS_DISABLE_INT);
+		}
 		
 		return 0;
 	}

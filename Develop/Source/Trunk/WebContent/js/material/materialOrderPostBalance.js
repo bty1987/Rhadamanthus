@@ -250,27 +250,27 @@ $(function(){
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-        com.post(api.material.pageMaterialSubOrderBalance, $.extend({},params.materialSubOrderPostData,{"paging.noPage": 1}), function (res){
+        com.post(api.material.pageMaterialSubOrderBalance, $.extend({},params.materialOrderPostBalancePostData,{"paging.noPage": 1}), function (res){
             $.exceler({
                 column:[
-                      ["楼盘地址:","materialSubOrder.orderAddr"],
-                    ["品牌:","materialSubOrder.materialBrand"],
-                    ["业务员：","materialSubOrder.salesmanName"],
-                    ["总价：","materialSubOrder.total"],
-                    ["券值：","materialSubOrder.coupon"],
-                    ["券信息：","materialSubOrder.couponInfo"],
-                    ["主材驻店:", "instorer.currentName"],
-                    ["预结算值：","balance"],
-                   ["预结算时间 :","balanceTime"],
-                   ["创建人:", "creater.currentName"],
-                    ["厂商结算:","vbalance"],
-                   ["厂商结算时间:","vbalanceTime"],
-                   ["结算值：","post"],
-                    ["结算时间：","postTime"],
-                    ["结算人  :","poster.currentName"],
-                    // ["状态:", status== 0 ? '预结算': status== 1 ? '厂商结算' : status== 2 ? '结算' : '---' , "blue"],
-                     //["类型:", type == 0 ? '购货' : type == 1 ? '退货' : '---' , "blue"],
-                 ["差值 :", "difference"]
+					["楼盘地址:","materialSubOrder.orderAddr"],
+					["品牌:","materialSubOrder.materialBrand"],
+					["业务员：","materialSubOrder.salesmanName"],
+					["总价：","materialSubOrder.total"],
+					["券值：","materialSubOrder.coupon"],
+					["券信息：","materialSubOrder.couponInfo"],
+					["主材驻店:", "instorer.currentName"],
+					["预结算值：","balance"],
+					["预结算时间 :","balanceTime"],
+					["创建人:", "creater.currentName"],
+					["厂商结算:","vbalance"],
+					["厂商结算时间:","vbalanceTime"],
+					["结算值：","post"],
+					["结算时间：","postTime"],
+					["结算人  :","poster.currentName"],
+					//["状态:", status== 0 ? '预结算': status== 1 ? '厂商结算' : status== 2 ? '结算' : '---' , "blue"],
+					//["类型:", type == 0 ? '购货' : type == 1 ? '退货' : '---' , "blue"],
+					["差值 :", "difference"]
                 ],
                 list: res.paging.data,
             });
