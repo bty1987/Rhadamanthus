@@ -20,7 +20,6 @@ $(function(){
                     var propertyArr = [
                         ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
                         ["客户名:", v.customer.customerName, "grey"],
-                        ["余额:", v.customer.balance, "blue"],
                         ["设计部:", v.designDepartment, "grey"],
                         ["设计师:", v.designer, "grey"],
                         ["业务部:", v.businessDepartment, "grey"],
@@ -37,7 +36,7 @@ $(function(){
                     $.each(propertyArr, function (index,value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css(value[2]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 

@@ -92,6 +92,12 @@ var api = {
 		decorationOrderBelongIndex: {url: "/views/decoration/decorationOrderBelong.html"},
 		decorationOrderBelongDetailIndex: {url: "/views/decoration/decorationOrderBelongDetail.html"},
 		decorationOrderBelongInfoIndex: {url: "/views/decoration/decorationOrderBelongInfo.html"},
+		
+		decorationOrderStageIndex: {url: "/views/decoration/decorationOrderStage.html"},
+        decorationOrderStageDetailIndex: {url: "/views/decoration/decorationOrderStageDetail.html"},
+        
+        decorationOrderApproveIndex: {url: "/views/decoration/decorationOrderApprove.html"},
+        decorationOrderApproveDetailIndex: {url: "/views/decoration/decorationOrderApproveDetail.html"},
 
 		decorationOrderTimelineIndex: {url: "/views/decoration/decorationOrderTimeline.html"},
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
@@ -111,9 +117,6 @@ var api = {
 		decorationPaymentCheckIndex: {url: "/views/payment/decorationPaymentCheck.html"},
 		decorationPaymentReceiptIndex: {url: "/views/payment/decorationPaymentReceipt.html"},
 
-        decorationOrderStageIndex: {url: "/views/decoration/decorationOrderStage.html"},
-        decorationOrderStageDetailIndex: {url: "/views/decoration/decorationOrderStageDetail.html"},
-		
 		materialPaymentIndex: {url: "/views/payment/materialPayment.html"},
 		materialPaymentReceiptIndex: {url: "/views/payment/materialPaymentReceipt.html"},
 		materialPaymentCheckIndex: {url: "/views/payment/materialPaymentCheck.html"},
@@ -601,6 +604,7 @@ var api = {
 		
 		queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do", demo: true},
 		addDecorationPicture: {url: "addDecorationPicture.do"},
+		deleteDecorationPicture: {url: "deleteDecorationPicture.do"},
 		
 	}, drawline:{
 		
@@ -616,6 +620,7 @@ var api = {
 	}, payment: {
 		
 		queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
+		queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
 		
 		pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
 		queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},

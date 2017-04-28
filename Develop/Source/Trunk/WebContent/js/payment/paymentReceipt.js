@@ -146,7 +146,7 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 			var noReceiptTd = $('<td style="width: 33%"></td>').text('订单编号: ' + $order.orderId).appendTo(orderReceiptTr);
 			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + $order.village.villageName + ' ' + $order.houseNumber).appendTo(orderReceiptTr);
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + $order.designer + "-" + $order.designerDepartment + " " + $order.designerPhone).appendTo(orderReceiptTr);
+			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + $order.designer + "-" + $order.designDepartment + " " + $order.designerPhone).appendTo(orderReceiptTr);
 			var salesmanNameTd = $('<td style="width: 33%"></td>').html('').appendTo(orderReceiptTr);
 			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + ($order.supervisor == null ? "" : $order.supervisor) + " " + ($order.supervisorPhone == null ? "" : $order.supervisorPhone)).appendTo(orderReceiptTr);
 		}

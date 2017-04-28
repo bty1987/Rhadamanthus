@@ -125,7 +125,6 @@ $(function(){
 			var propertyArr = [
 				["楼盘地址:", v.village.villageName, "grey"],
 				["客户名:", v.customer.customerName, "grey"],
-				["余额:", v.customer.balance, "blue"],
 				["设计师:", v.designer, "grey"],
 				["业务员:", v.salesman, "grey"],
 				["面积:", v.houseArea, "blue"],

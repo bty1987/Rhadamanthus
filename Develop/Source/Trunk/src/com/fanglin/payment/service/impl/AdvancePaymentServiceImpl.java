@@ -24,6 +24,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
+import com.fanglin.decoration.dao.DecorationOrderDao;
+import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -53,12 +56,39 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	@Autowired
 	private CustomerDao customerDao;
 	
+	@Autowired
+	private DecorationOrderDao decorationOrderDao;
+	
 	@Override
 	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO) {
 		
 		List<Float> advances = new ArrayList<Float>();
 		
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCustomerId());
+		
+		if(advancePaymentPO != null){
+			advances.add(advancePaymentPO.getBalance());
+			advances.add(advancePaymentPO.getProjectBalance());
+			advances.add(advancePaymentPO.getMaterialBalance());
+			advances.add(advancePaymentPO.getZhenglinBalance());
+		}else{
+			advances = Arrays.asList(new Float[]{0f, 0f, 0f, 0f});
+		}
+		
+		return advances;
+	}
+
+	@Override
+	public List<Float> queryAdvancePaymentByOrderId(DecorationOrderVO decorationOrderVO) throws FLException {
+		
+		List<Float> advances = new ArrayList<Float>();	
+		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
+		
+		if(decorationOrderPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getCustomerId());
 		
 		if(advancePaymentPO != null){
 			advances.add(advancePaymentPO.getBalance());

@@ -55,6 +55,14 @@ public class DecorationPictureAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "deleteDecorationPicture", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationPicture(){
+		
+		decorationPictureService.deleteDecorationPicture(decorationPicture);
+		
+		return SUCCESS;
+	}
+	
 	public DecorationPictureVO getDecorationPicture() {
 		return decorationPicture;
 	}

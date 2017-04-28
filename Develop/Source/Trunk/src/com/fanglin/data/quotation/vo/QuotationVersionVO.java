@@ -29,7 +29,11 @@ public class QuotationVersionVO implements Serializable {
 	
 	private Float trafficRate;
 	
+	private Short trafficDiscount;
+	
 	private Float manageRate;
+	
+	private Short manageDiscount;
 
 	public Integer getQvId() {
 		return qvId;
@@ -79,12 +83,28 @@ public class QuotationVersionVO implements Serializable {
 		this.trafficRate = trafficRate;
 	}
 
+	public Short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(Short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
 	public Float getManageRate() {
 		return manageRate;
 	}
 
 	public void setManageRate(Float manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 	
 }

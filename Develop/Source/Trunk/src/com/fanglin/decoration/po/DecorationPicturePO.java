@@ -30,6 +30,14 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationPicturePO implements Serializable {
 
 	private static final long serialVersionUID = 8022061676288156331L;
+	
+	public static final String COLUMN_ORDERID_STR = "orderId";
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short STATUS_ENABLE_INT = 1;
+	
+	public static final short STATUS_DISABLE_INT = 0;
 
 	private long dpId;
 	
@@ -46,6 +54,8 @@ public class DecorationPicturePO implements Serializable {
 	private UserPO userPO;
 	
 	private int type;
+	
+	private short status;
 
 	@Id
 	@GeneratedValue
@@ -58,6 +68,7 @@ public class DecorationPicturePO implements Serializable {
 		this.dpId = dpId;
 	}
 
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
@@ -66,6 +77,7 @@ public class DecorationPicturePO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	@Column(name = "uploadTime")
 	public Timestamp getUploadTime(){
 		return uploadTime;
 	}
@@ -84,6 +96,7 @@ public class DecorationPicturePO implements Serializable {
 		this.userPO = userPO;
 	}
 
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -92,6 +105,7 @@ public class DecorationPicturePO implements Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "path")
 	public String getPath() {
 		return path;
 	}
@@ -100,6 +114,7 @@ public class DecorationPicturePO implements Serializable {
 		this.path = path;
 	}
 
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -108,6 +123,7 @@ public class DecorationPicturePO implements Serializable {
 		this.content = content;
 	}
 
+	@Column(name = "type")
 	public int getType() {
 		return type;
 	}
@@ -116,4 +132,13 @@ public class DecorationPicturePO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+	
 }

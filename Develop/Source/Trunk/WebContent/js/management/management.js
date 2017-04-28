@@ -148,7 +148,7 @@ jQuery(function($) {
 	$("#changeDecorationOrderForVersionId").click(function(){
 		
 		com.post(api.quotation.queryQuotationVersion, {}, function(res){
-			$("#versionId").bindData(res.quotationVersions, 'versionId', 'versionId');
+			$("#versionId").bindData(res.quotationVersions, 'versionId', 'versionName');
 		});
 		
 		management.decorationOrderForVersionIdModal.modal("show");

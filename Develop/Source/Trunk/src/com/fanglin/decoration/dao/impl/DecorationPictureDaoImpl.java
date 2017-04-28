@@ -13,7 +13,6 @@ package com.fanglin.decoration.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +30,7 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId) {
-		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq("orderId", orderId)).addOrder(Order.desc("uploadTime")).list();
+		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, DecorationPicturePO.STATUS_ENABLE_INT)).list();
 	}
 	
 }

@@ -51,7 +51,6 @@ import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
-import com.fanglin.payment.service.impl.AdvancePaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -156,7 +155,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			CustomerVO customerVO = new CustomerVO();
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-			AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId()), customerVO);
 			customerVO.setConfidentialInfo();
 			decorationOrderVO.setCustomer(customerVO);
 			

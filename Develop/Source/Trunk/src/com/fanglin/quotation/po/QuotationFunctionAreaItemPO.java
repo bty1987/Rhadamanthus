@@ -67,13 +67,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		super();
 	}
 
-	public QuotationFunctionAreaItemPO(String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, QuotationFunctionAreaPO quotationFunctionArea, String content) {
+	public QuotationFunctionAreaItemPO(String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content) {
 		this.itemName = itemName;
 		this.measurementUnit = measurementUnit;
 		this.workType = workType;
 		this.unitPrice = unitPrice;
 		this.num = num;
 		this.type = type;
+		this.discount = discount;
 		this.quotationFunctionArea = quotationFunctionArea;
 		this.content = content;
 	}

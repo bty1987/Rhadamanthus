@@ -1,6 +1,6 @@
 var materialUtils = {
-	materialPaymentTypeData: {"1":"预付款", "2":"定金", "3":"补款", "4":"退款", "5":"补款退款", "6":"券退款"},
-	materialPaymentRevTypeData: {"预付款":"1", "定金":"2", "补款":"3", "退款":"4", "补款退款":"5", "券退款":"6"},
+	materialPaymentTypeData: {"1":"预付款", "2":"定金", "3":"补款", "4":"退款", "5":"补款退款", "6":"券退款", "7": "定金退款"},
+	materialPaymentRevTypeData: {"预付款":"1", "定金":"2", "补款":"3", "退款":"4", "补款退款":"5", "券退款":"6", "定金退款": "7"},
 	paymentTypeInit: function(cellvalue, options, rowdata){
 		return '<span class="label label-info">' + materialUtils.materialPaymentTypeData[rowdata.paymentType];
 	}, paymentStatusInit: function(paymentStatus){
