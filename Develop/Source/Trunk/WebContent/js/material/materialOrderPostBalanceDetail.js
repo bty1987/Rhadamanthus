@@ -5,6 +5,7 @@ jQuery(function($) {
 	
 	var options = {};
 	options["materialSubOrderItem.msoId"] = params['materialSubOrder.msoId'];
+	options["materialSubOrderRefund.msoId"] = params['materialSubOrder.msoId'];
 
 	if(params['materialOrderPostBalance.type'] == 1){
 		options['idents[0]'] = params['idents[0]'];
