@@ -35,6 +35,22 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	public static final String COLUMN_TYPE_STR = "type";
 	
 	public static final String COLUMN_STATUS_STR = "status";
+	//增加品牌名称
+	//public static final String COLUMN_MATERIALBRAND_STR="materialSubOrder.materialBrand";
+	public static final String COLUMN_MATERIALBRAND_STR="materialSubOrder.materialBrand";
+	//增加厂商结算时间
+	public static final String COLUMN_VBALANCETIME_STR="vbalanceTime";
+	//public static final String COLUMN_VBALANCETIME_RANGE_STR="vbalanceTimeRange";
+	//增加预结算时间
+	public static final String COLUMN_PREBALANCETIME_STR="materialSubOrder.preBalanceTime";
+	//增加结算时间
+	public static final String COLUMN_POSTBALANCETIME_STR="materialSubOrder.postBalanceTime";
+	//增加楼盘地址
+	public static final String COLUMN_ORDERADDR_STR="materialSubOrder.orderAddr";
+	//增加归属大区名
+	public static final String COLUMN_REGIONNAME_STR="materialSubOrder.regionName";
+	//增加归属部门名
+	public static final String COLUMN_DEPARTMENTNAME_STR="materialSubOrder.departmentName";
 	
 	public static final short STATUS_PRE_BALANCE_INT = 0;
 	
@@ -61,6 +77,8 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	private Timestamp balanceTime;
 	
 	private float balance;
+	//2017.4.9侯骅峰增加post结算值
+	private float post;
 	
 	private float difference;
 	
@@ -170,6 +188,15 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 
 	public void setVbalanceTime(Timestamp vbalanceTime) {
 		this.vbalanceTime = vbalanceTime;
+	}
+    //4.9 侯骅峰增加post结算值get set方法
+	@Column(name="post")
+	public float getPost() {
+		return post;
+	}
+
+	public void setPost(float post) {
+		this.post = post;
 	}
 
 	@Column(name = "postTime")
