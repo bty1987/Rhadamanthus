@@ -37,6 +37,8 @@
     ], "type": [
         {"key":"0", "value":"半包"},
         {"key":"1", "value":"全包"}
+    ], "paymentType": [
+        {"key":"主材款","value":"主材款"}
     ],
     "errorCode": 0,
     "errorMsg": null

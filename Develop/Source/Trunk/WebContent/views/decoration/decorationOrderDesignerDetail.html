@@ -348,13 +348,14 @@
 										<div class="row">
 											<div class='col-md-6'>
 												<button class="btn btn-info" type="button" id="btnSetDecorationPaymentInfo">
-													<i class="icon-cog bigger-110"></i>
-													生成款项
+													<i class="icon-cog bigger-110"></i>生成款项
 												</button>
 												<button class="btn btn-info" type="button" id="btnRebackPayment">
-													<i class="icon-cog bigger-110"></i>
-													退款
+													<i class="icon-cog bigger-110"></i>退款
 												</button>
+                                                <button class="btn btn-info" type="button" id="btnOtherPayment">
+                                                    <i class="icon-cog bigger-110"></i>其他款项
+                                                </button>
 											</div>
                                             <div class='col-md-6'>
                                                 <div class="clearfix">
@@ -618,6 +619,43 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="otherPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">款项信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="otherPaymentType">款项类型</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='otherPaymentType' data-toggle="popover" data-trigger='manual' ></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="otherPayment">金额</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength='6'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveOtherPaymentBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 	<!-- customer approve modal -->
 	<div class="modal fade" id="customerApproveModal" tabindex="-1">

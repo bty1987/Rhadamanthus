@@ -636,6 +636,7 @@ var api = {
 		queryDecorationPaymentForBaseByOrderId: {url: "queryDecorationPaymentForBaseByOrderId.do", demo: true},
 		queryDecorationPaymentForNotInitByDrId: {url: "queryDecorationPaymentForNotInitByDrId.do"},
 		queryDecoraionReceiptByDrId: {url: "queryDecoraionReceiptByDrId.do"},
+		addDecorationPayment: {url: "addDecorationPayment.do"},
 		makeDecorationPayment: {url: "makeDecorationPayment.do"},
 		submitDecorationPayment: {url: "submitDecorationPayment.do"},
 		collectDecorationPayment: {url: "collectDecorationPayment.do"},

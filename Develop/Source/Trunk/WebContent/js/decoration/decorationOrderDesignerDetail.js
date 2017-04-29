@@ -36,9 +36,6 @@ var decorationPayment = {
 	postParam: {},
 
 	items: {},
-	basePaymentGrid: null,
-	otherPaymentGrid: null,
-	otherPaymentPager: null,
 
 	editFlag: 0,
 };
@@ -115,11 +112,9 @@ jQuery(function($) {
 	
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
-
-	decorationPayment.decorationPayment = $("#decorationPayment");
-	decorationPayment.otherPaymentGrid = $("#otherPaymentTable");
-	decorationPayment.otherPaymentPager = "#otherPaymentGridPager";
-	decorationPayment.basePaymentGrid = $("#basePaymentTable");
+	
+	decorationOrderDetail.otherPaymentType = $("#otherPaymentType");
+	decorationOrderDetail.otherPayment = $("#otherPayment");
 
 	decorationOrderDetail.printQuotationModal = $("#printQuotationModal");
 	decorationOrderDetail.quotationTotalPriceModal = $("#quotationTotalPriceModal");
@@ -137,6 +132,7 @@ jQuery(function($) {
 	});
 	decorationOrderDetail.decorationPaymentModal = $("#decorationPaymentModal");
 	decorationOrderDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
+	decorationOrderDetail.otherPaymentModal = $("#otherPaymentModal");
 	
 	com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 5}, "autoFillKeyValue", "key", "value");
 	com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 8}, "autoFillKeyValue", "key", "value");
@@ -216,6 +212,16 @@ jQuery(function($) {
 		});
 	});
 	
+	$("#btnOtherPayment").on('click', function(res){
+		com.clearValidator();
+		
+		com.post(api.ds.decorationInfo, {}, function(res){
+			decorationOrderDetail.otherPaymentType.bindData(res.paymentType, "key", "value", false);
+		});
+		
+		decorationOrderDetail.otherPaymentModal.modal("show");
+	});
+	
 	$("#saveGenerateDecorationPaymentBtn").on('click',function(res){
 		
 		if(com.validate("quotationTotalPriceModal")){
@@ -281,6 +287,25 @@ jQuery(function($) {
 				decorationOrderDetail.refundDecorationPaymentModal.modal("hide");
 			});
 		}
+	});
+	
+	$("#saveOtherPaymentBtn").on("click", function(res){
+		if(com.validate("otherPaymentModal")){
+			return;
+		}
+		
+		var options = {
+			"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
+			"decorationPayment.paymentType": decorationOrderDetail.otherPaymentType.val(),
+			"decorationPayment.referMoney": decorationOrderDetail.otherPayment.val()
+		}
+		
+		com.post(api.payment.addDecorationPayment, options, function(res){
+			
+			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			
+			decorationOrderDetail.otherPaymentModal.modal("hide");
+		})
 	});
 
 	$('#customerInfosBtn').on(ace.click_event, function() {

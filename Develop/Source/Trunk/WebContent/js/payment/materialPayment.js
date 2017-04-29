@@ -581,12 +581,13 @@ jQuery(function($) {
 	
 	function dialogPayment(payment){
 		
+		materialPaymentPostData.orderId = payment.orderId;
+		materialPaymentPostData.customerId = payment.customerId;
+		
 		if([1, 2, 3].indexOf(payment.paymentType) != -1){ // 预付款、订金、全款
+			
 			initBaseModal();
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-			
-			materialPaymentPostData.orderId = payment.orderId;
-			materialPaymentPostData.customerId = payment.customerId;
 			
 //			var options = {
 //				"decorationOrder.orderId": payment.orderId,

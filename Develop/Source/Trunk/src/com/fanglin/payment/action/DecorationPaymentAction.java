@@ -122,10 +122,10 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="changeDecorationPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String changeDecorationPaymentForTime() throws FLException{
+	@Action(value="addDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addDecorationPayment() throws FLException{
 		
-		decorationPaymentService.changeDecorationPaymentForTime(decorationPayment, dateTime, queryUserId());
+		decorationPaymentService.addDecorationPayment(decorationPayment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -170,6 +170,14 @@ public class DecorationPaymentAction extends BaseListAction {
 	public String updateDecorationPaymentForReferMoney() throws FLException{
 		
 		decorationPaymentService.updateDecorationPaymentForReferMoney(decorationPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="changeDecorationPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String changeDecorationPaymentForTime() throws FLException{
+		
+		decorationPaymentService.changeDecorationPaymentForTime(decorationPayment, dateTime, queryUserId());
 		
 		return SUCCESS;
 	}
