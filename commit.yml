@@ -3,255 +3,90 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '5c0081ef32c00bf77f5c083fa352bcbaf90faa2d'
-    oldFile: !uuid '3f4ffb05c27de74c3ff508e0d9e12a7d056be374'
+    newFile: !uuid '692ef0d89e531100c59555df9a0a378ab6458f8b'
+    oldFile: !uuid '5c0081ef32c00bf77f5c083fa352bcbaf90faa2d'
   /Develop/Source:
-    newFile: !uuid 'dfb8f26840f23d9b557b038d41b7f75d13e05751'
-    oldFile: !uuid '1d4d632bf601608d98426d2dd99e7524899440f7'
+    newFile: !uuid 'c784590ce2584e04393ecbf0bfa0f6dd607d959e'
+    oldFile: !uuid 'dfb8f26840f23d9b557b038d41b7f75d13e05751'
   /Develop/Source/Trunk:
-    newFile: !uuid '036c87f02f8acd7c7ec55030303a8b5d503b5ca7'
-    oldFile: !uuid '2b97c38b43c6189ae85ab6cae54b6353bf76a539'
-  /Develop/Source/Trunk/.settings:
-    newFile: !uuid 'd698e04ed75b31a2261ae2965bd804b762c54f4c'
-    oldFile: !uuid '3657c58ffec0d3390db865adaf4d87e44d21c2d7'
-  /Develop/Source/Trunk/.settings/org.eclipse.core.resources.prefs:
-    newFile: !uuid '7bad4a916ad320fc9530bbdc944f57a643307267'
-    oldFile: !uuid '8ffd6cd3ba719289dd1fe35b581bf83e0e30df94'
+    newFile: !uuid 'd1bf9ae7c0d2e222eb6aee5d9e0c93667f376eb3'
+    oldFile: !uuid '036c87f02f8acd7c7ec55030303a8b5d503b5ca7'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '67eb0d7930cd6d4266a83b2eb381990497b09e22'
-    oldFile: !uuid 'a063e9a92646433ace10031e983713c10338c74a'
-  /Develop/Source/Trunk/WebContent/db:
-    newFile: !uuid '1f3f8c34ad0f3a28c712b3a7145a3fc8e0baee83'
-    oldFile: !uuid 'db142d34f554d18b96cda9c43571058ffa5dc07b'
-  /Develop/Source/Trunk/WebContent/db/update.sql:
-    newFile: !uuid '9c6f6e3dc9efe0f80fcfb547240e709c9f7888a4'
-    oldFile: !uuid '10df3236762ed4d5563c09b0ac317398104fb811'
+    newFile: !uuid '5662bdcbdf9dd0bc71a91f1645ec4769ad7dbfd8'
+    oldFile: !uuid '67eb0d7930cd6d4266a83b2eb381990497b09e22'
+  /Develop/Source/Trunk/WebContent/ds:
+    newFile: !uuid '55e930dcfd41600835b9f062df19d1307edf7180'
+    oldFile: !uuid '40cdf979c2cf2689109573aa58d06240e4afc166'
+  /Develop/Source/Trunk/WebContent/ds/decorationInfo.json:
+    newFile: !uuid '4be45dfd8f4743c4311982d66b25b06ae1265efa'
+    oldFile: !uuid 'a80923bb3d23a419b2fca0128936417ffaed9454'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '2b8d8c24769d281e37ddce8e6349a64bd29e8b2f'
-    oldFile: !uuid '758ee64093a6ff3c50a44cff3c4ea64074aaa6b3'
+    newFile: !uuid '6d05aa5c8a802ed19a870424a41b58c25ed9bfeb'
+    oldFile: !uuid '2b8d8c24769d281e37ddce8e6349a64bd29e8b2f'
   /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid 'bc57841da4ba4caf69fc70b92e5e8bedbf0931b7'
-    oldFile: !uuid '0880aa7c274c3496acde6c80b0bb127286709526'
+    newFile: !uuid '68785065d682f8ac08c1e2e0dac051b0f4ccb13f'
+    oldFile: !uuid 'bc57841da4ba4caf69fc70b92e5e8bedbf0931b7'
   /Develop/Source/Trunk/WebContent/js/com/api.js:
-    newFile: !uuid '76ac963f301bd8b9519333668c1b054ac5e35103'
-    oldFile: !uuid '901a47333f2bc5d5d456e2693a90512ffd8de447'
+    newFile: !uuid '01f7c845ea26c8313cee4e5c5fa82d88a3cdde63'
+    oldFile: !uuid '76ac963f301bd8b9519333668c1b054ac5e35103'
   /Develop/Source/Trunk/WebContent/js/decoration:
-    newFile: !uuid 'af244d5cd0b5a4b3ba1bcf4a68940630140f8600'
-    oldFile: !uuid 'd8fffeb73cb0f587e09253d328c19d5f5ec9fdce'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderAdvance.js:
-    newFile: !uuid '0b8aee9f808a672449cc885d54d8499fb744175f'
-    oldFile: !uuid '21fce368032939ba8f25a19de9229a94311ef8e9'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderApprove.js:
-    newFile: !uuid '1f78e032d7c87eb9ef6d4da1a6488587d04311ab'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderApproveDetail.js:
-    newFile: !uuid '02b5fea1363625903539c71cce04daa060689a42'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderCommon.js:
-    newFile: !uuid 'a853b3f8dec7fd1162eeaf1df7287d0f2b8aebf9'
-    oldFile: !uuid 'cfec6610ac2c6a7a2bcaa42e14a42eb637e3b9ea'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderDesigner.js:
-    newFile: !uuid 'b6b04e3f0f4d5b36bbe2d34e5ab2409e5b850a4d'
-    oldFile: !uuid 'a44c22c286d06667fdada32384c28bd2f820b14c'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderMap.js:
-    newFile: !uuid '4913b78601e22a79f494791342fa4f3d060fadd8'
-    oldFile: !uuid '1650f072e4ba87136ed824b64e92233d4681664d'
-  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderStage.js:
-    newFile: !uuid '911a7346f0e8d3cec3208ac6938f44781004cea5'
-    oldFile: !uuid '0679586751947299a394308bfc93cf85a5bda392'
-  /Develop/Source/Trunk/WebContent/js/management:
-    newFile: !uuid '0ff2f86d164ba98b8745ae7e20df67b25a987cb6'
-    oldFile: !uuid '3a57dfec74ece6ad7fb09751ca57cb38fac318b6'
-  /Develop/Source/Trunk/WebContent/js/management/management.js:
-    newFile: !uuid 'aa003a339d5a2b792a99a915e439295c4945f6c4'
-    oldFile: !uuid '40d8ff2cd41cdf66b65f3920a983f97252302625'
+    newFile: !uuid '478876119324ae4ac701d2331031038b1a9a7b31'
+    oldFile: !uuid 'af244d5cd0b5a4b3ba1bcf4a68940630140f8600'
+  /Develop/Source/Trunk/WebContent/js/decoration/decorationOrderDesignerDetail.js:
+    newFile: !uuid 'a259a69e0bc2285028f8faa6d5bd6f275e6ab9cd'
+    oldFile: !uuid '1ddbe8b7bf3df4035ae433fc4ddc12ead1ac9d76'
   /Develop/Source/Trunk/WebContent/js/material:
-    newFile: !uuid '8fc585e7d3d003866985b3f26d095b985ffc1bc9'
-    oldFile: !uuid '886b751c121c7f1f39b37a8e459ef1a3669d3d35'
-  /Develop/Source/Trunk/WebContent/js/material/materialOrderPostBalance.js:
-    newFile: !uuid '713d46f7af9258bbf8ef86b28155dd4486c427ce'
-    oldFile: !uuid 'ac55aceb31741970ffab1c972b4c90cad78e2571'
+    newFile: !uuid '2c433d2bfdfe212f464de0282dd43f46eef3ad36'
+    oldFile: !uuid '8fc585e7d3d003866985b3f26d095b985ffc1bc9'
+  /Develop/Source/Trunk/WebContent/js/material/materialOrderPostBalanceDetail.js:
+    newFile: !uuid 'eb416056b58156f0cc01e4208e4909d761874f47'
+    oldFile: !uuid '528850d2fa59cda8a150f0dc9023ed3e98c7f86b'
   /Develop/Source/Trunk/WebContent/js/payment:
-    newFile: !uuid '0f768370a42a15b8f704fc0bc576fb4c580f91ad'
-    oldFile: !uuid 'ff37ebd3f367008013eda6b0f6587ec271e87343'
-  /Develop/Source/Trunk/WebContent/js/payment/materialPaymentReceipt.js:
-    newFile: !uuid '6da9ba53dfeb1919ca30c0d0432397f45abdac34'
-    oldFile: !uuid '87466bb907f24b5d5c579afc3150fc3bb533c9cc'
-  /Develop/Source/Trunk/WebContent/js/payment/paymentReceipt.js:
-    newFile: !uuid '7729705714f4b91c922c8ea2a3431d672576e17a'
-    oldFile: !uuid '34144f992f79f62516c906b28e223b49d096c94b'
-  /Develop/Source/Trunk/WebContent/js/quotation:
-    newFile: !uuid '4cac6444f6d72f481d2be1b983b6090f976eaa34'
-    oldFile: !uuid '0faf0786aae66d0f0f30544e665ecf9b59db2d06'
-  /Develop/Source/Trunk/WebContent/js/quotation/quotationPart.js:
-    newFile: !uuid 'cfb56c0f275c8cc05a94d2cb9460b18774f7f63d'
-    oldFile: !uuid '64ad631dc561b5698c18dd8ebf347d95d854c4ab'
-  /Develop/Source/Trunk/WebContent/js/quotation/quotationVersion.js:
-    newFile: !uuid 'e840c7a8e6086e6b6368811b20a1435090b76e6e'
-    oldFile: !uuid 'cced82ea8320bfd8213ce6bceee1d1b46492e167'
-  /Develop/Source/Trunk/WebContent/js/utils:
-    newFile: !uuid '12d22dd907f965637e581e92423555355852625d'
-    oldFile: !uuid '7035e3018038583d0ecb25ea1058109239351921'
-  /Develop/Source/Trunk/WebContent/js/utils/decorationUtils.js:
-    newFile: !uuid '0c7c6e73172b19a199b1babac06cfdb1d38d3d2c'
-    oldFile: !uuid 'a9bf6dc15b9788443cd1435c5f08ed8760b04ffd'
-  /Develop/Source/Trunk/WebContent/js/utils/materialUtils.js:
-    newFile: !uuid 'ffaf3030f9318e1ab05612e5470259b11d878c70'
-    oldFile: !uuid '60bbb416345593658457d83ee34c7533cf812624'
-  /Develop/Source/Trunk/WebContent/version.html:
-    newFile: !uuid '515df1b4280212ee8acbccc41f04a401af68dd10'
-    oldFile: !uuid '3d85b711d1ce715ed3ad97856b2635ff9f0802d7'
+    newFile: !uuid '6f5520c369daa7e9564c71200e7d621adc8640d7'
+    oldFile: !uuid '0f768370a42a15b8f704fc0bc576fb4c580f91ad'
+  /Develop/Source/Trunk/WebContent/js/payment/materialPayment.js:
+    newFile: !uuid '4845cccb3f96517bcdef00dddfb4d71e0f803d1a'
+    oldFile: !uuid '45333c55b784eea339a3190f3dcf10062659a7b2'
   /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '2074e95802549eee8e5cc99925817ecca40e6499'
-    oldFile: !uuid 'aaf08520f78cc51c944e5cc7bda14524469a2850'
+    newFile: !uuid 'e537991f1cb61ff4df33eef29779845f50053e36'
+    oldFile: !uuid '2074e95802549eee8e5cc99925817ecca40e6499'
   /Develop/Source/Trunk/WebContent/views/decoration:
-    newFile: !uuid '11217e3062e2434d93191eac1249245b7e2ca164'
-    oldFile: !uuid '201a9110a6f3d5c42a1e0fe5454d5df679f1f270'
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderAdvanceDetail.html:
-    newFile: !uuid '0952630a5e29aee04026ec228b77db6c6ca65d52'
-    oldFile: !uuid 'c5b66164d55de55e8c0549b5d35e94c5931b7e5e'
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderApprove.html:
-    newFile: !uuid '2f1521adbdb5bc3c22da5649aa59af15e2c62795'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderApproveDetail.html:
-    newFile: !uuid 'edef17ae07ac4a10442bad7aafa5564bc2d4ce3e'
-    oldFile: null
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderCommon.html:
-    newFile: !uuid 'fb2d89ff7f81e777e925f412757f336aeb0faffc'
-    oldFile: !uuid '552ee5c23d5f0ada468b3b0537ac2df9b43d8de6'
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderCommonDetail.html:
-    newFile: !uuid '7cdbb51edb59431059d9bd2a73b45a835d1583ec'
-    oldFile: !uuid '4647c5deabe274b40575148881d7d142aa11c84a'
+    newFile: !uuid '181cc8d8ab4dbdab3bc37a4ab757929911bace12'
+    oldFile: !uuid '11217e3062e2434d93191eac1249245b7e2ca164'
   /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderDesignerDetail.html:
-    newFile: !uuid '6ec09adadd4d570d3f2694016743d3e76a776ebd'
-    oldFile: !uuid '62292d535def367529adfb442d5c67e852bb257b'
-  /Develop/Source/Trunk/WebContent/views/decoration/decorationOrderStageDetail.html:
-    newFile: !uuid '478880728df1f3faef23c0a2e294c91c9b47676c'
-    oldFile: !uuid '17f3653090fdfb32f99f26d00b402c2b7a603edb'
-  /Develop/Source/Trunk/WebContent/views/payment:
-    newFile: !uuid '06253e6318d856b24302fc9e2f1fd6f6f298a80f'
-    oldFile: !uuid 'e11fcefc7e408d02c4dda527a384e3c7e7dd004c'
-  /Develop/Source/Trunk/WebContent/views/payment/decorationPayment.html:
-    newFile: !uuid '7f21ed7c4c1b47a4d7e3003f668214c7529cc55c'
-    oldFile: !uuid 'ad34485a38192d1ceb6250263fa62faf75265610'
-  /Develop/Source/Trunk/WebContent/views/payment/materialPayment.html:
-    newFile: !uuid 'e56e85b0729cfaed2b8cdbeaca3f886826b92b7d'
-    oldFile: !uuid '4055fe1aa75a0ac93b00138d494dfba171a5c530'
-  /Develop/Source/Trunk/WebContent/views/payment/payment.html:
-    newFile: !uuid '6c34d268e51b55415d7b31451e902a104f140aa4'
-    oldFile: !uuid '6d32c6035bf6496aa694e94699b0815abf845020'
-  /Develop/Source/Trunk/WebContent/views/quotation:
-    newFile: !uuid '247252abc25d52c7063af18146423dae99113202'
-    oldFile: !uuid '7aabc54892f57f8611fbdb8690f20d9993e5e7b1'
-  /Develop/Source/Trunk/WebContent/views/quotation/quotationVersion.html:
-    newFile: !uuid '112fd76fd756e28c68256fad2b192cc8d5dec2c7'
-    oldFile: !uuid 'e2a27dc690ebde91c176f1c4d163837b09ae0f04'
+    newFile: !uuid '5c8de67f2dfea6fae1f54753c9344e0ff344beb4'
+    oldFile: !uuid '6ec09adadd4d570d3f2694016743d3e76a776ebd'
   /Develop/Source/Trunk/src:
-    newFile: !uuid 'a1bf3bddc7c53e867518e05ab1d71dcd113fac95'
-    oldFile: !uuid '9d87c43343b109914bb05108e5070dfc1c0fbcbe'
+    newFile: !uuid 'a1d44aa5536beea86d26c621f7c87f6e1c366ab0'
+    oldFile: !uuid 'a1bf3bddc7c53e867518e05ab1d71dcd113fac95'
   /Develop/Source/Trunk/src/com:
-    newFile: !uuid '137956bbb10d6501daa4946d1e40ba05d5b1e8c0'
-    oldFile: !uuid 'b0b37650ed5ec59489ace95d457a60945a0c4045'
+    newFile: !uuid '74898f2b1dd1ad9942679ee6020d2fabdb9fd91d'
+    oldFile: !uuid '137956bbb10d6501daa4946d1e40ba05d5b1e8c0'
   /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid 'f62878919348ddffa49156255cbe788842527cfd'
-    oldFile: !uuid '54c27fe86bfad8a93672b7c7a3df5c01837698f4'
-  /Develop/Source/Trunk/src/com/fanglin/data:
-    newFile: !uuid 'b5ab74f69f9ac6c9634900141d8affa43fc2bdd1'
-    oldFile: !uuid '7c215fab9e190e311662c551b26c692ea5e28315'
-  /Develop/Source/Trunk/src/com/fanglin/data/po:
-    newFile: !uuid '10e671972dced2d1db02ef19be10999d228cf494'
-    oldFile: !uuid 'c5c191984a385919c12ab740fb01c24abe8c248a'
-  /Develop/Source/Trunk/src/com/fanglin/data/po/QuotationVersionPO.java:
-    newFile: !uuid 'c0c6c11ecf55995217e0556ac9931b35131e1978'
-    oldFile: !uuid '6cfe46dd0db596ac9b6e9a0f6ed16eb55b0b7a61'
-  /Develop/Source/Trunk/src/com/fanglin/data/quotation:
-    newFile: !uuid 'b8763f0ca44a16742f30ee7745dd4cf2b5ff8277'
-    oldFile: !uuid '63642ca4c9e490ff114d50314c4a3e0b2fb2662e'
-  /Develop/Source/Trunk/src/com/fanglin/data/quotation/vo:
-    newFile: !uuid '74570afcc3af554618d4f624d8ba306c9f6c1c2a'
-    oldFile: !uuid '8768df05413d9225645b7f70ed9d906ca3b79ee7'
-  /Develop/Source/Trunk/src/com/fanglin/data/quotation/vo/QuotationVersionVO.java:
-    newFile: !uuid '288f6d6bb7fbb86ea6bf3e24f1f4e1a8163dd553'
-    oldFile: !uuid '7bf672c9c1a7d35140391527e0199340561e746d'
-  /Develop/Source/Trunk/src/com/fanglin/decoration:
-    newFile: !uuid 'af64f69549b8d40f425c4be8b5bc47fd3f5a051a'
-    oldFile: !uuid '28abbbaf60d90fea9aefb641af6f2a88ced3eee7'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/action:
-    newFile: !uuid '2bbca64f8a349aff0cca9b1e4cf423ff48d46547'
-    oldFile: !uuid 'a00538a06f9d9cdeb2da8b23f89a40ba5a84554e'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/action/DecorationPictureAction.java:
-    newFile: !uuid '8560c8364ad1fc477a39ab773614bcc9fc6ae352'
-    oldFile: !uuid 'd04d6a08620d92a068e1e89b3e3a3775a77cb812'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/dao:
-    newFile: !uuid 'cc60c14f670e7e85be97d36e63164f8934328aba'
-    oldFile: !uuid '43039705a9d861574464f8d8b2459cae62503682'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/dao/impl:
-    newFile: !uuid '2321ef52da58b59b84bbff44014b9b95947492e4'
-    oldFile: !uuid '153ddb80f83be1f325aaea2c1b459c49a54020f2'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/dao/impl/DecorationPictureDaoImpl.java:
-    newFile: !uuid 'cf677e9ad130a9449a0e2298ab4577db82a2b18b'
-    oldFile: !uuid '070772b0aa466d1b4e53fdeceed37f51a59e8bca'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/po:
-    newFile: !uuid '0eb5da2d87fe34a895a9a0ae86dc83d4aa827406'
-    oldFile: !uuid 'dace5b42678313874eb863f8d1181743738ef61b'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/po/DecorationPicturePO.java:
-    newFile: !uuid '9ddd170d5f884360ab1b7f8bc6d9707be9d8405a'
-    oldFile: !uuid '1e4ad37f900b072a63336b381755821b5fb04964'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/service:
-    newFile: !uuid '6750943a8c563159c5913e98982dd160595e8f25'
-    oldFile: !uuid '8db0f03402e9cb960c999c8952a07bc69f0a482d'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/service/DecorationPictureService.java:
-    newFile: !uuid 'ecb105cc6bfac6962f628b817c9264e8e53f57fe'
-    oldFile: !uuid '2452ea82f98debd640625ff2b02fe21e30ecf7ab'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/service/impl:
-    newFile: !uuid '3f6893266dacee818b2910f6b89f36afb3de905f'
-    oldFile: !uuid 'a90eceb5d26fe11ad9215ee7254fd59cb264ce14'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/service/impl/DecorationOrderServiceImpl.java:
-    newFile: !uuid 'bf95d32694c14970f0cabb8c842c2c56ae097226'
-    oldFile: !uuid '83f68d26283c131fe73f47f11a1147dc088e9925'
-  /Develop/Source/Trunk/src/com/fanglin/decoration/service/impl/DecorationPictureServiceImpl.java:
-    newFile: !uuid '1aee9509e28eae4ee65906119b5e108097b0f752'
-    oldFile: !uuid '333dd63966f60e01d681b2ccda8656a20849bc8b'
+    newFile: !uuid 'f22d6c4896f51559c6c9ddc50b0d2ec93a28ffc8'
+    oldFile: !uuid 'f62878919348ddffa49156255cbe788842527cfd'
   /Develop/Source/Trunk/src/com/fanglin/payment:
-    newFile: !uuid '4ff071355ba56494990e5eb1d2eb6d259a5ce549'
-    oldFile: !uuid 'a2acb1b3d09122789ee067ffa13c5e29ccd0d360'
+    newFile: !uuid '84950088868968c6c0702ebd6d0c45d097fa46a8'
+    oldFile: !uuid '4ff071355ba56494990e5eb1d2eb6d259a5ce549'
   /Develop/Source/Trunk/src/com/fanglin/payment/action:
-    newFile: !uuid '8876fa4b14572bcb3cc2c9a9907a317a0e5a4cf9'
-    oldFile: !uuid '75db8cb56e87fffa1a306783e619b4857b918233'
-  /Develop/Source/Trunk/src/com/fanglin/payment/action/AdvancePaymentAction.java:
-    newFile: !uuid '3d34af229ec58afea61795b5d1d717a396525561'
-    oldFile: !uuid '792f8ba5c9b308106a10dc7ab7f72cd217038fdc'
+    newFile: !uuid 'a27eb6a69a34d513c08e2d8ceadbeb25f89df534'
+    oldFile: !uuid '8876fa4b14572bcb3cc2c9a9907a317a0e5a4cf9'
+  /Develop/Source/Trunk/src/com/fanglin/payment/action/DecorationPaymentAction.java:
+    newFile: !uuid '6494a653f053d20631d158e91e0f00661aa8e3f3'
+    oldFile: !uuid '9d0a5db94e1d98ac0104401a8f43935343ebd43f'
   /Develop/Source/Trunk/src/com/fanglin/payment/service:
-    newFile: !uuid 'e49caa7430cfeb9c16cb499befd0b1e97f313244'
-    oldFile: !uuid '6169c74b8931b1fcfdbcfb82d733c909f6dc41fb'
-  /Develop/Source/Trunk/src/com/fanglin/payment/service/AdvancePaymentService.java:
-    newFile: !uuid 'cb02e64c2ceefb09ed94ddc6d4685e8d7efa4838'
-    oldFile: !uuid 'aa9d8a81198281fc9c3d8a394c4b89ab0ad91c28'
+    newFile: !uuid 'a7010b2709494c3fbbec649cb436951a51e7041c'
+    oldFile: !uuid 'e49caa7430cfeb9c16cb499befd0b1e97f313244'
+  /Develop/Source/Trunk/src/com/fanglin/payment/service/DecorationPaymentService.java:
+    newFile: !uuid 'c540272c737abe731f7e60553dadedbce0e2fd19'
+    oldFile: !uuid 'dda5b931a90b79a29d1b1dc720a62ae5c5c02aa6'
   /Develop/Source/Trunk/src/com/fanglin/payment/service/impl:
-    newFile: !uuid '36ba090f36158c50ad24e5d98119ad2991938896'
-    oldFile: !uuid '0c6fa90fea0f7dbadaec0ad548dbc5452b78c477'
-  /Develop/Source/Trunk/src/com/fanglin/payment/service/impl/AdvancePaymentServiceImpl.java:
-    newFile: !uuid '1dc683b26999e9c8efb994171b54b00dcb089401'
-    oldFile: !uuid '4ec0b86df81a858533e06b9e2aa15d749782c810'
-  /Develop/Source/Trunk/src/com/fanglin/quotation:
-    newFile: !uuid 'df942a282986573da7a85a21d6a946071bd6c64f'
-    oldFile: !uuid '7f2adab748e3a0eab4efb7408d9b6f6aab606fc2'
-  /Develop/Source/Trunk/src/com/fanglin/quotation/po:
-    newFile: !uuid 'b34b20a34a254bb82e2a48737976fa8b30896b80'
-    oldFile: !uuid 'a30b2350f4e34d8f4825c4f9264d16f6ec18ccb2'
-  /Develop/Source/Trunk/src/com/fanglin/quotation/po/QuotationFunctionAreaItemPO.java:
-    newFile: !uuid '7eeae86a0840abbdf08b5758c9b08609ef05d367'
-    oldFile: !uuid '73dcd10fe919282f7e81a863ffc313a3b17e7338'
-  /Develop/Source/Trunk/src/com/fanglin/quotation/service:
-    newFile: !uuid '1abd2cd6229d3d7ca679ae42a68b9e05386242c6'
-    oldFile: !uuid 'f710fe77340f4e648fad1a08126b9af5474961ca'
-  /Develop/Source/Trunk/src/com/fanglin/quotation/service/impl:
-    newFile: !uuid '8dfbefaa0b7213e99ada2d70ebce338b9187a4a6'
-    oldFile: !uuid '686fbbb8742f0a8643343507e109be3463fae24e'
-  /Develop/Source/Trunk/src/com/fanglin/quotation/service/impl/QuotationServiceImpl.java:
-    newFile: !uuid 'cae9e39112fb6bf2d1a26293b4225dde73762906'
-    oldFile: !uuid '0b922a9f9a4021735196eee1dea1983159393ddb'
-gitCommitId: !uuid '9db8773a7c58f7414a1ca2f7879fb9c805663e2c'
+    newFile: !uuid '04795da0f82ce21ac306db1025d7a6ce88d564c6'
+    oldFile: !uuid '36ba090f36158c50ad24e5d98119ad2991938896'
+  /Develop/Source/Trunk/src/com/fanglin/payment/service/impl/DecorationPaymentServiceImpl.java:
+    newFile: !uuid '82d0b618e44c236bbe677b966653dcf4f743b9de'
+    oldFile: !uuid 'a4248cf91990806dd46c168fc3fd2b944b983d06'
+gitCommitId: !uuid '73109926e80857990707d1b2e890c8355f40d320'
 renames: {
   }
-revisionId: 139
+revisionId: 140
