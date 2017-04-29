@@ -49,50 +49,66 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	public static final String COLUMN_FULLCOLLECTTIME_STR = "fullCollectTime";
 	
 	public static final String COLUMN_FULLCOLLECTTIME_RANGE_STR = "fullCollectTimeRange";
+	//静态加载品牌名称
+	public static final String COLUMN_MATERIALBRAND_STR="materialBrand";
+	//public static final String COLUMN_MATERIALBRAND_STR="materialBrand";
+	//增加预结算时间
+	public static final String COLUMN_PREBALANCETIME_STR="preBalanceTime";
+	public static final String COLUMN_PREBALANCETIME_RANGE_STR="preBalanceTimeRange";
+	//增加结算时间
+	public static final String COLUMN_POSTBALANCETIME_RANGE_STR="postBalanceTimeRange";
+	public static final String COLUMN_POSTBALANCETIME_STR="postBalanceTime";
+	//增加厂商结算时间
+	public static final String COLUMN_VBALANCETIME_RANGE_STR="vbalanceTimeRange";
+	public static final String COLUMN_VBALANCETIME_STR="vbBalanceTime";
+	//增加归属大区名
+	public static final String COLUMN_REGIONNAME_STR="regionName";
+	//增加归属部门名
+	public static final String COLUMN_DEPARTMENTNAME_STR="departmentName";
 	
 	public static final int MSO_TYPE_GIVE_INT = 4;
 	
 	public static final int MSO_TYPE_INSIDE_INT = 5;
 	
-	public static final int STATUS_TYPE_INIT_INT = 0;
+	public static final int STATUS_TYPE_INIT_INT = 0;//初始
 	
-	public static final int STATUS_TYPE_DELETE_INT = 1;
+	public static final int STATUS_TYPE_DELETE_INT = 1;//删除
 	
-	public static final int STATUS_TYPE_REFUND_INT = 2;
+	public static final int STATUS_TYPE_REFUND_INT = 2;//退货
 	
-	public static final int STATUS_TYPE_PREBALANCE_INT = 3;
+	public static final int STATUS_TYPE_PREBALANCE_INT = 3;//预结算
 	
-	public static final int STATUS_TYPE_ARRIVAL_INT = 4;
+	public static final int STATUS_TYPE_ARRIVAL_INT = 4;//？购货
 	
-	public static final int STATUS_TYPE_POSTBALANCE_INT = 5;
+	public static final int STATUS_TYPE_POSTBALANCE_INT = 5;//结算
 	
-	public static final int STATUS_TYPE_FULLREFUND_INT = 6;
+	public static final int STATUS_TYPE_FULLREFUND_INT = 6;//全退（退货的一种）
 	
-	public static final int STATUS_TYPE_DAODAN_INT = 7;
+	public static final int STATUS_TYPE_DAODAN_INT = 7;//倒单（退货的一部分）
 	
-	public static final int STATUS_TYPE_WASTE_INT = 8;
+	public static final int STATUS_TYPE_WASTE_INT = 8;//作废
 	
-	public static final int STATUS_TYPE_FINISH_INT = 9;
+	public static final int STATUS_TYPE_FINISH_INT = 9;//完结（订单的状态）
 	
-	public static final int FINANCE_STATUS_TYPE_INIT_INT = 0;
+	public static final int FINANCE_STATUS_TYPE_INIT_INT = 0;//初始（交款状态）
 	
-	public static final int FINANCE_STATUS_TYPE_COMMIT_INT = 1;
+	public static final int FINANCE_STATUS_TYPE_COMMIT_INT = 1;//提交
 	
-	public static final int FINANCE_STATUS_TYPE_COLLECT_INT = 2;
+	public static final int FINANCE_STATUS_TYPE_COLLECT_INT = 2;//?
 	
-	public static final int FINANCE_STATUS_TYPE_CONFIRM_INT = 3;
+	public static final int FINANCE_STATUS_TYPE_CONFIRM_INT = 3;//确认
 	
 	public static final int FINANCE_STATUS_TYPE_APPROVAL_INT = 4;
 	
-	public static final int BALANCE_STATUS_TYPE_INIT_INT = 0;
+	public static final int BALANCE_STATUS_TYPE_INIT_INT = 0;//初始（结算状态）
 	
-	public static final int BALANCE_STATUS_TYPE_PRE_INT = 1;
+	public static final int BALANCE_STATUS_TYPE_PRE_INT = 1;//预结算
 	
-	public static final int BALANCE_STATUS_TYPE_POST_INT = 2;
+	public static final int BALANCE_STATUS_TYPE_POST_INT = 2;//结算
 	
-	public static final int DELIVERY_STATUS_TYPE_INIT_INT = 0;
+	public static final int DELIVERY_STATUS_TYPE_INIT_INT = 0;//未送货(送货状态)
 	
-	public static final int DELIVERY_STATUS_TYPE_DELIVE_INT = 1;
+	public static final int DELIVERY_STATUS_TYPE_DELIVE_INT = 1;//已送货
 	
 	public static final int DESIGNERFLAG_TYPE_OTHER_INT = 0;
 	
@@ -102,7 +118,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	public static final int OTHER_STATUS_FULL_PAYMENT_INT = 1;
 	
-	public static final int OTHER_STATUS_MEND_INT = 2;
+	public static final int OTHER_STATUS_MEND_INT = 2;//修理(其他状态...)我也不知道这是什么鬼 T T 
 	
 	private long msoId;
 	

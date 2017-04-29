@@ -31,6 +31,8 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 	private Timestamp vbalanceTime;
 	
 	private Timestamp postTime;
+	//2017.4.9 侯骅峰增加post结算值
+	private Float post;
 	
 	private Short status;
 	
@@ -105,6 +107,14 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 
 	public void setBalance(Float balance) {
 		this.balance = balance;
+	}
+//2017.4.9 侯骅峰增加post的get set方法
+	public Float getPost() {
+		return post;
+	}
+
+	public void setPost(Float post) {
+		this.post = post;
 	}
 
 	public Float getDifference() {

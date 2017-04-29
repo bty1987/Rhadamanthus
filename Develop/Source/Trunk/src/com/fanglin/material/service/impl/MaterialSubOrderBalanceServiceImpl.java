@@ -106,7 +106,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		for(MaterialSubOrderBalancePO materialSubOrderBalancePO: materialSubOrderBalancePOs){
 			
 			materialSubOrderBalanceVO = new MaterialSubOrderBalanceVO(new MaterialSubOrderVO(), new UserVO(), new UserVO(), new UserVO());
-			
+			//将materialSubOrderBalanceVO的值赋值给materialSubOrderBalancePO，排除"materialSubOrder", "creater", "instorer", "poster"四个引用类型
 			BeanUtil.copyProperties(materialSubOrderBalancePO, materialSubOrderBalanceVO, "materialSubOrder", "creater", "instorer", "poster");
 			BeanUtil.copyProperties(materialSubOrderBalancePO.getMaterialSubOrder(), materialSubOrderBalanceVO.getMaterialSubOrder());
 			
@@ -174,9 +174,9 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		if(materialSubOrderBalancePO.getStatus() == MaterialSubOrderBalancePO.STATUS_FINISH_INT){
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
-		
-		materialSubOrderBalancePO.setBalance(materialSubOrderBalanceVO.getBalance());
-		
+		//materialSubOrderBalancePO.setBalance(materialSubOrderBalanceVO.getBalance());
+		//将balance的值赋值到post
+		materialSubOrderBalancePO.setPost(materialSubOrderBalanceVO.getBalance());
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
 	}
 
