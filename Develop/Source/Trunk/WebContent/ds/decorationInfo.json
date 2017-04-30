@@ -38,7 +38,7 @@
         {"key":"0", "value":"半包"},
         {"key":"1", "value":"全包"}
     ], "paymentType": [
-        {"key":"主材款","value":"主材款"}
+        {"key":"主材代购费","value":"主材代购费"}
     ],
     "errorCode": 0,
     "errorMsg": null
