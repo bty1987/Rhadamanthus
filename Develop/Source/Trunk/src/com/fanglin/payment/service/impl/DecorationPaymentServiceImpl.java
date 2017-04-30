@@ -645,7 +645,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
 			}else if((DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR);
-			}else if(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR.equals(paymentType) && (DecorationOrderPO.HOUSETYPE_OFFPLAN_STR.equals(houseType) && DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR.equals(orderPaymentStatus)) || (DecorationOrderPO.HOUSETYPE_COMPLETE_STR.equals(houseType) && DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(orderPaymentStatus))){
+			}else if(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR.equals(paymentType) && (DecorationOrderPO.HOUSETYPE_OFFPLAN_STR.equals(houseType) && DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR.equals(orderPaymentStatus) || DecorationOrderPO.HOUSETYPE_COMPLETE_STR.equals(houseType) && DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(orderPaymentStatus))){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR);
 			}else if((DecorationPaymentPO.PAYMENTTYPE_SECOND_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_FINAL_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_FINAL_STR);
@@ -861,7 +861,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		if(!(Math.abs(Arith.sub(decorationPaymentPO.getReferMoney(), real)) < 0.00000001)){
 			throw new FLException(150013, "款项实收金额不等于应收金额");
-			
 		}
 		
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
