@@ -51,8 +51,8 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 	public List<EventsPO> queryEvents(String userId, String beginDate, String endDate) throws HibernateException, ParseException {
 		return session().createCriteria(EventsPO.class).createAlias("holder", "holder")
 				.add(Restrictions.eq(EventsPO.COLUMN_HODERID_STR, userId))
-				.add(Restrictions.gt(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(beginDate)))
-				.add(Restrictions.lt(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(endDate)))
+				.add(Restrictions.ge(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(beginDate)))
+				.add(Restrictions.le(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(endDate)))
 				.list();
 	}
 
