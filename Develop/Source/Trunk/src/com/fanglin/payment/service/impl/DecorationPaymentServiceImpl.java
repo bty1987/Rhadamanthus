@@ -261,7 +261,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentPO.setCreateUserPO(new UserPO(userId));
 		decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
 		decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
 		decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
 		
 		decorationPaymentDao.save(decorationPaymentPO);

@@ -230,9 +230,10 @@ var QuotationDetail = (function(){
 		},
 		// 计算报价总金额
 		calculateTotalFee: function(discount){
-			var  _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0;
+			var  _manageDiscount, _transDiscount, _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0;
 			
 			var $arr = $('.fl-quo-item');
+			var _discount = utils.accDiv(discount, 10);
 			
 			$arr.length && $arr.each(function(i, v){
 				
@@ -243,7 +244,7 @@ var QuotationDetail = (function(){
 				var _num = parseFloat($quote.find('.num .cell-wrap').text());
 				var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
 				var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
-				var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(discount, 10) : 1)));
+				var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? _discount : 1)));
 				
 				var _totalprice = utils.accMul(_num,  _unitprice);
 				var _totalpriced =  utils.accMul(_num,  _discountprice);
@@ -253,9 +254,12 @@ var QuotationDetail = (function(){
 				
 			});
 			
+			_manageDiscount = $('#manageCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+			_transDiscount = $('#conveyanceCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
 			_manageRate = parseFloat($('#manageCost').find('.discountprice .cell-wrap').text());
-			_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text())));
-			_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), parseFloat($('#manageCost').find('.discountprice .cell-wrap').text())));
+			_tranRate = parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text());
+			_transfee =  utils.changeThrDecimal(utils.accMul(utils.accMul(_totalfee, _tranRate), _transDiscount));
+			_managefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
 			_total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));
 			
 			$('#calTrafficPrice').val(_transfee);

@@ -39,7 +39,7 @@ CREATE TABLE `acceptance` (
   `internal` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`actId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服回访表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客服回访表';
 
 DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
@@ -53,7 +53,7 @@ CREATE TABLE `activity` (
   `endTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `content` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`aId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动表';
 
 DROP TABLE IF EXISTS `activityitem`;
 CREATE TABLE `activityitem` (
@@ -65,7 +65,7 @@ CREATE TABLE `activityitem` (
   `type` tinyint(4) NOT NULL,
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`aiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动物品表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动物品表';
 
 DROP TABLE IF EXISTS `addorreducedetail`;
 CREATE TABLE `addorreducedetail` (
@@ -85,7 +85,7 @@ CREATE TABLE `addorreducedetail` (
   `quotationFunctionAreaId` bigint(20) NOT NULL COMMENT '所属报价功能区编号',
   PRIMARY KEY (`autoId`),
   KEY `indexone` (`arId`,`itemId`,`itemType`,`customerItemId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='增减项明细表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项明细表';
 
 DROP TABLE IF EXISTS `addreduce`;
 CREATE TABLE `addreduce` (
@@ -99,7 +99,7 @@ CREATE TABLE `addreduce` (
   `dpId` bigint(20) DEFAULT NULL COMMENT '对应收款编号',
   PRIMARY KEY (`arId`),
   KEY `indexone` (`orderId`,`type`,`status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='增减项表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项表';
 
 DROP TABLE IF EXISTS `addreduceitem`;
 CREATE TABLE `addreduceitem` (
@@ -117,7 +117,7 @@ CREATE TABLE `addreduceitem` (
   `discount` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ariId`),
   KEY `indexone` (`arId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='增减项目';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项目';
 
 DROP TABLE IF EXISTS `advancepayment`;
 CREATE TABLE `advancepayment` (
@@ -129,7 +129,7 @@ CREATE TABLE `advancepayment` (
   `projectBalance` decimal(10,3) DEFAULT '0.000',
   PRIMARY KEY (`apId`),
   UNIQUE KEY `uniqueone` (`customerId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='客户预付款';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户预付款';
 
 DROP TABLE IF EXISTS `advancereceipt`;
 CREATE TABLE `advancereceipt` (
@@ -156,7 +156,7 @@ CREATE TABLE `advancereceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `apId` int(11) DEFAULT NULL,
   PRIMARY KEY (`arId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='预付款项收据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款项收据表';
 
 DROP TABLE IF EXISTS `approval`;
 CREATE TABLE `approval` (
@@ -171,7 +171,7 @@ CREATE TABLE `approval` (
   `contents` varchar(256) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`aId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批表';
 
 DROP TABLE IF EXISTS `approvalactivity`;
 CREATE TABLE `approvalactivity` (
@@ -181,7 +181,7 @@ CREATE TABLE `approvalactivity` (
   `orderId` varchar(15) NOT NULL,
   `activityName` varchar(32) NOT NULL,
   PRIMARY KEY (`aaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动审批表';
 
 DROP TABLE IF EXISTS `approvalactivityitem`;
 CREATE TABLE `approvalactivityitem` (
@@ -195,7 +195,7 @@ CREATE TABLE `approvalactivityitem` (
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
   `content` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`aaiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动审批表';
 
 DROP TABLE IF EXISTS `approvalcustomer`;
 CREATE TABLE `approvalcustomer` (
@@ -207,7 +207,7 @@ CREATE TABLE `approvalcustomer` (
   `newCustomerName` varchar(32) NOT NULL,
   `newCustomerPhone` varchar(64) NOT NULL,
   PRIMARY KEY (`acId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户信息修改审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户信息修改审批表';
 
 DROP TABLE IF EXISTS `approvaldecorationrefund`;
 CREATE TABLE `approvaldecorationrefund` (
@@ -215,7 +215,7 @@ CREATE TABLE `approvaldecorationrefund` (
   `aId` int(11) NOT NULL,
   `paymentId` int(11) NOT NULL,
   PRIMARY KEY (`adrId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单退款审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单退款审批表';
 
 DROP TABLE IF EXISTS `approvalmaterialfullpayment`;
 CREATE TABLE `approvalmaterialfullpayment` (
@@ -224,7 +224,7 @@ CREATE TABLE `approvalmaterialfullpayment` (
   `msoId` int(11) NOT NULL,
   `referMoney` decimal(10,3) NOT NULL,
   PRIMARY KEY (`amfpId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材补款审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材补款审批表';
 
 DROP TABLE IF EXISTS `approvalmaterialoutsiderefund`;
 CREATE TABLE `approvalmaterialoutsiderefund` (
@@ -232,7 +232,7 @@ CREATE TABLE `approvalmaterialoutsiderefund` (
   `aId` int(11) NOT NULL,
   `moId` int(11) NOT NULL,
   PRIMARY KEY (`amorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场外退款审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外退款审批表';
 
 DROP TABLE IF EXISTS `approvalmaterialrefund`;
 CREATE TABLE `approvalmaterialrefund` (
@@ -242,7 +242,7 @@ CREATE TABLE `approvalmaterialrefund` (
   `refund` decimal(10,3) NOT NULL,
   `type` tinyint(4) NOT NULL,
   PRIMARY KEY (`amrId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材退货审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材退货审批表';
 
 DROP TABLE IF EXISTS `approvalmaterialrefunditem`;
 CREATE TABLE `approvalmaterialrefunditem` (
@@ -254,7 +254,7 @@ CREATE TABLE `approvalmaterialrefunditem` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `packageName` varchar(10) NOT NULL DEFAULT '',
   PRIMARY KEY (`amriId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材退货项审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材退货项审批表';
 
 DROP TABLE IF EXISTS `approvalorderbelong`;
 CREATE TABLE `approvalorderbelong` (
@@ -263,7 +263,7 @@ CREATE TABLE `approvalorderbelong` (
   `orderId` varchar(15) NOT NULL,
   `belongType` varchar(10) NOT NULL,
   PRIMARY KEY (`aobId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单归属信息修改审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息修改审批表';
 
 DROP TABLE IF EXISTS `approvalorderbelongitem`;
 CREATE TABLE `approvalorderbelongitem` (
@@ -274,7 +274,7 @@ CREATE TABLE `approvalorderbelongitem` (
   `belongRate` decimal(10,3) NOT NULL,
   `defaultFlag` varchar(5) NOT NULL,
   PRIMARY KEY (`aobiId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
 
 DROP TABLE IF EXISTS `approvalquotationdiscount`;
 CREATE TABLE `approvalquotationdiscount` (
@@ -286,7 +286,7 @@ CREATE TABLE `approvalquotationdiscount` (
   `newDiscount` decimal(10,3) NOT NULL,
   `level` tinyint(4) NOT NULL,
   PRIMARY KEY (`aqdId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单报价折扣修改审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单报价折扣修改审批表';
 
 DROP TABLE IF EXISTS `approvalvillage`;
 CREATE TABLE `approvalvillage` (
@@ -298,7 +298,7 @@ CREATE TABLE `approvalvillage` (
   `newVillageId` varchar(10) NOT NULL,
   `newHouseNumber` varchar(30) NOT NULL,
   PRIMARY KEY (`avId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单楼盘信息修改审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单楼盘信息修改审批表';
 
 DROP TABLE IF EXISTS `backvisit`;
 CREATE TABLE `backvisit` (
@@ -310,7 +310,7 @@ CREATE TABLE `backvisit` (
   `receiverIds` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`bvId`),
   KEY `indexone` (`orderId`,`createTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师回访记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师回访记录表';
 
 DROP TABLE IF EXISTS `bricklayconstructionschedule`;
 CREATE TABLE `bricklayconstructionschedule` (
@@ -325,23 +325,7 @@ CREATE TABLE `bricklayconstructionschedule` (
   PRIMARY KEY (`bcsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='瓦工工程进度表';
-
-DROP TABLE IF EXISTS `bricklayconstructionscheduleworker`;
-CREATE TABLE `bricklayconstructionscheduleworker` (
-  `bcswId` int(11) NOT NULL AUTO_INCREMENT,
-  `bcsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) NOT NULL,
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`bcswId`),
-  KEY `indexone` (`bcsId`,`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='瓦工工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='瓦工工程进度表';
 
 DROP TABLE IF EXISTS `bricklaydrawing`;
 CREATE TABLE `bricklaydrawing` (
@@ -354,7 +338,7 @@ CREATE TABLE `bricklaydrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`bdId`),
   KEY `indexone` (`bcsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='瓦工图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='瓦工图纸表';
 
 DROP TABLE IF EXISTS `carpentconstructionschedule`;
 CREATE TABLE `carpentconstructionschedule` (
@@ -369,24 +353,7 @@ CREATE TABLE `carpentconstructionschedule` (
   PRIMARY KEY (`ccsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='木工工程进度表';
-
-DROP TABLE IF EXISTS `carpentconstructionscheduleworker`;
-CREATE TABLE `carpentconstructionscheduleworker` (
-  `ccswId` int(11) NOT NULL AUTO_INCREMENT,
-  `ccsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) DEFAULT '',
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`ccswId`),
-  KEY `indexone` (`csId`),
-  KEY `indextwo` (`ccsId`,`workerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='木工工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='木工工程进度表';
 
 DROP TABLE IF EXISTS `carpentdrawing`;
 CREATE TABLE `carpentdrawing` (
@@ -399,7 +366,7 @@ CREATE TABLE `carpentdrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='木工图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='木工图纸表';
 
 DROP TABLE IF EXISTS `chanconstructionschedule`;
 CREATE TABLE `chanconstructionschedule` (
@@ -419,7 +386,7 @@ CREATE TABLE `chanconstructionschedule` (
   PRIMARY KEY (`ccsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='铲大白工程进度表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='铲大白工程进度表';
 
 DROP TABLE IF EXISTS `chandrawing`;
 CREATE TABLE `chandrawing` (
@@ -432,7 +399,7 @@ CREATE TABLE `chandrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='铲大白图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='铲大白图纸表';
 
 DROP TABLE IF EXISTS `cleaningconstructionschedule`;
 CREATE TABLE `cleaningconstructionschedule` (
@@ -447,24 +414,7 @@ CREATE TABLE `cleaningconstructionschedule` (
   PRIMARY KEY (`ccsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保洁工程进度表';
-
-DROP TABLE IF EXISTS `cleaningconstructionscheduleworker`;
-CREATE TABLE `cleaningconstructionscheduleworker` (
-  `ccswId` int(11) NOT NULL AUTO_INCREMENT,
-  `ccsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) DEFAULT '',
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`ccswId`),
-  KEY `indexone` (`csId`),
-  KEY `indextwo` (`ccsId`,`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保洁工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='保洁工程进度表';
 
 DROP TABLE IF EXISTS `cleaningdrawing`;
 CREATE TABLE `cleaningdrawing` (
@@ -477,7 +427,7 @@ CREATE TABLE `cleaningdrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保洁工图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='保洁工图纸表';
 
 DROP TABLE IF EXISTS `constructionschedule`;
 CREATE TABLE `constructionschedule` (
@@ -499,7 +449,23 @@ CREATE TABLE `constructionschedule` (
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`supervisorQualityId`),
   KEY `indexthr` (`schedule`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='工程进度表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程进度表';
+
+DROP TABLE IF EXISTS `constructer`;
+CREATE TABLE `constructer` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `csId` int(11) NOT NULL,
+  `orderId` varchar(15),
+  `userId` varchar(15) NOT NULL COMMENT '施工人员编号',
+  `schedule` int(11) NOT NULL COMMENT '施工进度',
+  `salary` decimal(10,3) DEFAULT '0.000' COMMENT '工费',
+  `rate` tinyint(1) DEFAULT '0' COMMENT '评分',
+  `assessment` varchar(128) COMMENT '评价',
+  `createrId` varchar(15) COMMENT '创建人编号',
+  `createTime` timestamp NULL NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='施工人员表';
 
 DROP TABLE IF EXISTS `customerservicebackvisit`;
 CREATE TABLE `customerservicebackvisit` (
@@ -512,7 +478,7 @@ CREATE TABLE `customerservicebackvisit` (
   `backVisitDes` varchar(256) NOT NULL,
   PRIMARY KEY (`csbvId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服回访表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客服回访表';
 
 DROP TABLE IF EXISTS `customerservicecomplaint`;
 CREATE TABLE `customerservicecomplaint` (
@@ -532,7 +498,7 @@ CREATE TABLE `customerservicecomplaint` (
   `des` varchar(256) NOT NULL,
   PRIMARY KEY (`cscId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服投诉表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客服投诉表';
 
 DROP TABLE IF EXISTS `customerserviceguarantee`;
 CREATE TABLE `customerserviceguarantee` (
@@ -543,7 +509,7 @@ CREATE TABLE `customerserviceguarantee` (
   `guaranteeDes` varchar(256) NOT NULL,
   PRIMARY KEY (`csgId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客服保修表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客服保修表';
 
 DROP TABLE IF EXISTS `decorationactivity`;
 CREATE TABLE `decorationactivity` (
@@ -551,7 +517,7 @@ CREATE TABLE `decorationactivity` (
   `orderId` varchar(15) NOT NULL,
   `aId` int(11) NOT NULL,
   PRIMARY KEY (`daId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单活动表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单活动表';
 
 DROP TABLE IF EXISTS `decorationactivityitem`;
 CREATE TABLE `decorationactivityitem` (
@@ -570,7 +536,7 @@ CREATE TABLE `decorationactivityitem` (
   `receiveUserName` varchar(15) NOT NULL DEFAULT '',
   `receiveTime` timestamp NULL NOT NULL,
   PRIMARY KEY (`daiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单活动物品表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单活动物品表';
 
 DROP TABLE IF EXISTS `decorationcontract`;
 CREATE TABLE `decorationcontract` (
@@ -586,7 +552,7 @@ CREATE TABLE `decorationcontract` (
   `orderTotalPrice` decimal(10,3) DEFAULT '0.000',
   PRIMARY KEY (`autoId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修合同表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同表';
 
 DROP TABLE IF EXISTS `decorationdesignerdepartmentrank`;
 CREATE TABLE `decorationdesignerdepartmentrank` (
@@ -599,7 +565,7 @@ CREATE TABLE `decorationdesignerdepartmentrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
 
 DROP TABLE IF EXISTS `decorationdesignerrank`;
 CREATE TABLE `decorationdesignerrank` (
@@ -612,7 +578,7 @@ CREATE TABLE `decorationdesignerrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
 
 DROP TABLE IF EXISTS `decorationdesignerregionrank`;
 CREATE TABLE `decorationdesignerregionrank` (
@@ -625,7 +591,7 @@ CREATE TABLE `decorationdesignerregionrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
 
 DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
@@ -642,7 +608,7 @@ CREATE TABLE `decorationoperate` (
   PRIMARY KEY (`doId`),
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`operateTime`, `type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
 
 DROP TABLE IF EXISTS `decorationorder`;
 CREATE TABLE `decorationorder` (
@@ -695,7 +661,7 @@ CREATE TABLE `decorationorder` (
   KEY `indexsev` (`salesmanId`),
   KEY `indexeig` (`status`),
   KEY `indexnig` (`company`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单表';
 
 DROP TABLE IF EXISTS `decorationorderdesigndepartmentright`;
 CREATE TABLE `decorationorderdesigndepartmentright` (
@@ -704,7 +670,7 @@ CREATE TABLE `decorationorderdesigndepartmentright` (
   `dId` int(11) NOT NULL,
   PRIMARY KEY (`doddrId`),
   KEY indexone (`uId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单设计部权限';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单设计部权限';
 
 DROP TABLE IF EXISTS `decorationorderdrawline`;
 CREATE TABLE `decorationorderdrawline` (
@@ -723,7 +689,7 @@ CREATE TABLE `decorationorderdrawline` (
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`drawLineGroup`,`status`,`applayTime`),
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单放线表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
 DROP TABLE IF EXISTS `decorationordersalesmandepartmentright`;
 CREATE TABLE `decorationordersalesmandepartmentright` (
@@ -732,7 +698,7 @@ CREATE TABLE `decorationordersalesmandepartmentright` (
   `dId` int(11) NOT NULL,
   PRIMARY KEY (`dosdrId`),
   KEY indexone (`uId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单业务部权限';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单业务部权限';
 
 DROP TABLE IF EXISTS `decorationorderstatusright`;
 CREATE TABLE `decorationorderstatusright` (
@@ -741,7 +707,7 @@ CREATE TABLE `decorationorderstatusright` (
   `status` varchar(10) NOT NULL,
   PRIMARY KEY (`dosrId`),
   KEY indexone (`uId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
 
 DROP TABLE IF EXISTS `decorationpayment`;
 CREATE TABLE `decorationpayment` (
@@ -762,7 +728,7 @@ CREATE TABLE `decorationpayment` (
   KEY `indextwo` (`createUserId`),
   KEY `indexthr` (`collectUserId`),
   KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=375 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 AUTO_INCREMENT=375 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `decorationpicture`;
 CREATE TABLE `decorationpicture` (
@@ -774,9 +740,10 @@ CREATE TABLE `decorationpicture` (
   `content` varchar(45) DEFAULT NULL,
   `userId` varchar(15) NOT NULL,
   `type` int(11) NOT NULL COMMENT '1 设计效果图 2,工程制图CAD',
+  `status` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`dpId`),
   KEY `indexone` (`orderId`,`uploadTime`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计图纸';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计图纸';
 
 DROP TABLE IF EXISTS `decorationreceipt`;
 CREATE TABLE `decorationreceipt` (
@@ -804,7 +771,7 @@ CREATE TABLE `decorationreceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `dpId` int(11) DEFAULT NULL,
   PRIMARY KEY (`drId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='装修款项收据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款项收据表';
 
 DROP TABLE IF EXISTS `designerdeductsalary`;
 CREATE TABLE `designerdeductsalary` (
@@ -819,7 +786,7 @@ CREATE TABLE `designerdeductsalary` (
   `des` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`ddsId`),
   KEY `indexone` (`dsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师扣款';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师扣款';
 
 DROP TABLE IF EXISTS `designeroutsidesalary`;
 CREATE TABLE `designeroutsidesalary` (
@@ -832,7 +799,7 @@ CREATE TABLE `designeroutsidesalary` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dosId`),
   KEY `indextwo` (`dsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师场外工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师场外工资';
 
 DROP TABLE IF EXISTS `designerpostbalancesalary`;
 CREATE TABLE `designerpostbalancesalary` (
@@ -849,7 +816,7 @@ CREATE TABLE `designerpostbalancesalary` (
   PRIMARY KEY (`dpobsId`),
   KEY `indexone` (`msoId`,`status`),
   KEY `indextwo` (`dsId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师结算工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师结算工资';
 
 DROP TABLE IF EXISTS `designerprebalancesalary`;
 CREATE TABLE `designerprebalancesalary` (
@@ -866,7 +833,7 @@ CREATE TABLE `designerprebalancesalary` (
   PRIMARY KEY (`dprbsId`),
   KEY `indexone` (`dsId`,`status`),
   KEY `indextwo` (`msoId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师预结算工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师预结算工资';
 
 DROP TABLE IF EXISTS `designersalary`;
 CREATE TABLE `designersalary` (
@@ -882,7 +849,7 @@ CREATE TABLE `designersalary` (
   PRIMARY KEY (`dsId`),
   KEY `indexone` (`userId`,`status`),
   KEY `indextwo` (`pdsId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='设计师工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师工资';
 
 DROP TABLE IF EXISTS `drawline`;
 CREATE TABLE `drawline` (
@@ -901,7 +868,7 @@ CREATE TABLE `drawline` (
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`drawLineGroup`,`status`,`applayTime`),
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
@@ -917,7 +884,7 @@ CREATE TABLE `events` (
   `type` tinyint NOT NULL,
   PRIMARY KEY (`eId`),
   KEY `indexone` (`holderId`, `showDate`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事件表';
 
 DROP TABLE IF EXISTS `functionarea`;
 CREATE TABLE `functionarea` (
@@ -932,7 +899,7 @@ CREATE TABLE `functionarea` (
   PRIMARY KEY (`faId`),
   KEY `indexone` (`functionAreaId`,`versionId`,`functionAreaType`,`functionAreaOrder`),
   KEY `indextwo` (`versionId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能区表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区表';
 
 DROP TABLE IF EXISTS `functionareaquoteitem`;
 CREATE TABLE `functionareaquoteitem` (
@@ -942,7 +909,7 @@ CREATE TABLE `functionareaquoteitem` (
   PRIMARY KEY (`faiId`),
   KEY `indexone` (`functionAreaId`,`quoteItemId`),
   KEY `indextwo` (`quoteItemId`,`functionAreaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
 
 DROP TABLE IF EXISTS `groundlevelingconstructionschedule`;
 CREATE TABLE `groundlevelingconstructionschedule` (
@@ -957,23 +924,7 @@ CREATE TABLE `groundlevelingconstructionschedule` (
   PRIMARY KEY (`glcsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='地面找平工程进度表';
-
-DROP TABLE IF EXISTS `groundlevelingconstructionscheduleworker`;
-CREATE TABLE `groundlevelingconstructionscheduleworker` (
-  `glcswId` int(11) NOT NULL AUTO_INCREMENT,
-  `glcsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) NOT NULL,
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`glcswId`),
-  KEY `indexone` (`glcsId`,`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='地面找平工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='地面找平工程进度表';
 
 DROP TABLE IF EXISTS `groundlevelingdrawing`;
 CREATE TABLE `groundlevelingdrawing` (
@@ -986,7 +937,7 @@ CREATE TABLE `groundlevelingdrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`gldId`),
   KEY `indexone` (`glcsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='地面找平图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='地面找平图纸表';
 
 DROP TABLE IF EXISTS `inspectiondeduction`;
 CREATE TABLE `inspectiondeduction` (
@@ -998,7 +949,7 @@ CREATE TABLE `inspectiondeduction` (
   `deductionDes` varchar(256) NOT NULL,
   PRIMARY KEY (`idId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='巡检扣款表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='巡检扣款表';
 
 DROP TABLE IF EXISTS `inspectionrecord`;
 CREATE TABLE `inspectionrecord` (
@@ -1012,7 +963,7 @@ CREATE TABLE `inspectionrecord` (
   `endTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`irId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='巡检记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='巡检记录表';
 
 DROP TABLE IF EXISTS `materialbrand`;
 CREATE TABLE `materialbrand` (
@@ -1024,7 +975,7 @@ CREATE TABLE `materialbrand` (
   PRIMARY KEY (`mbId`),
   KEY `indexone` (`materialTypeId`),
   KEY `indextwo` (`materialBrandName`,`materialBrandNamePinyin`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌表';
 
 DROP TABLE IF EXISTS `materialbrandcount`;
 CREATE TABLE `materialbrandcount` (
@@ -1034,7 +985,7 @@ CREATE TABLE `materialbrandcount` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mbcId`),
   KEY `indexone` (`materialBrand`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材品牌业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材品牌业绩统计';
 
 DROP TABLE IF EXISTS `materialbrandright`;
 CREATE TABLE `materialbrandright` (
@@ -1043,7 +994,7 @@ CREATE TABLE `materialbrandright` (
   `brandId` varchar(128) NOT NULL,
   PRIMARY KEY (`mbrId`),
   KEY `indexone` (`userId`,`brandId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌权限表';
 
 DROP TABLE IF EXISTS `materialdepartmentcount`;
 CREATE TABLE `materialdepartmentcount` (
@@ -1054,7 +1005,7 @@ CREATE TABLE `materialdepartmentcount` (
   PRIMARY KEY (`mdcId`),
   UNIQUE KEY `uniqueone` (`materialDeptId`,`createTime`),
   KEY `indexone` (`materialDeptId`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignercount`;
 CREATE TABLE `materialdesignercount` (
@@ -1070,7 +1021,7 @@ CREATE TABLE `materialdesignercount` (
   PRIMARY KEY (`mdcId`),
   UNIQUE KEY `uniqueone` (`designerId`,`createTime`),
   KEY `indexone` (`designerId`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerdepartmentcount`;
 CREATE TABLE `materialdesignerdepartmentcount` (
@@ -1084,7 +1035,7 @@ CREATE TABLE `materialdesignerdepartmentcount` (
   PRIMARY KEY (`mddcId`),
   UNIQUE KEY `uniqueone` (`designerDeptId`,`designerRegionId`,`createTime`),
   KEY `indexone` (`designerDeptId`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerdepartmentrank`;
 CREATE TABLE `materialdesignerdepartmentrank` (
@@ -1097,7 +1048,7 @@ CREATE TABLE `materialdesignerdepartmentrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
 
 DROP TABLE IF EXISTS `materialdesignerrank`;
 CREATE TABLE `materialdesignerrank` (
@@ -1110,7 +1061,7 @@ CREATE TABLE `materialdesignerrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mdrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
 
 DROP TABLE IF EXISTS `materialdesignerregioncount`;
 CREATE TABLE `materialdesignerregioncount` (
@@ -1122,7 +1073,7 @@ CREATE TABLE `materialdesignerregioncount` (
   PRIMARY KEY (`mdrcId`),
   UNIQUE KEY `uniqueone` (`designerRegionId`,`createTime`),
   KEY `indexone` (`designerRegionId`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerregionrank`;
 CREATE TABLE `materialdesignerregionrank` (
@@ -1135,7 +1086,7 @@ CREATE TABLE `materialdesignerregionrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
 
 DROP TABLE IF EXISTS `materialinside`;
 CREATE TABLE `materialinside` (
@@ -1158,7 +1109,7 @@ CREATE TABLE `materialinside` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `orderId` varchar(15) NOT NULL,
   PRIMARY KEY (`miId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场内信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内信息';
 
 DROP TABLE IF EXISTS `materialinsidepayment`;
 CREATE TABLE `materialinsidepayment` (
@@ -1193,7 +1144,7 @@ CREATE TABLE `materialinsidepayment` (
   PRIMARY KEY (`mipId`),
   KEY `indexone` (`miId`),
   KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场内收款表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内收款表';
 
 DROP TABLE IF EXISTS `materialmodel`;
 CREATE TABLE `materialmodel` (
@@ -1215,7 +1166,7 @@ CREATE TABLE `materialmodel` (
   PRIMARY KEY (`mmId`),
   KEY `indexone` (`materialModelName`),
   KEY `indextwo` (`brandId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='型号表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='型号表';
 
 DROP TABLE IF EXISTS `materialoutside`;
 CREATE TABLE `materialoutside` (
@@ -1239,7 +1190,7 @@ CREATE TABLE `materialoutside` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `des` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`moId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场外信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外信息';
 
 DROP TABLE IF EXISTS `materialoutsidepayment`;
 CREATE TABLE `materialoutsidepayment` (
@@ -1264,7 +1215,7 @@ CREATE TABLE `materialoutsidepayment` (
   PRIMARY KEY (`mopId`),
   KEY `indexone` (`moId`),
   KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场外收款表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外收款表';
 
 DROP TABLE IF EXISTS `materialoutsidereceipt`;
 CREATE TABLE `materialoutsidereceipt` (
@@ -1290,7 +1241,7 @@ CREATE TABLE `materialoutsidereceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `mopId` int(11) DEFAULT NULL,
   PRIMARY KEY (`morId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材场外款项收据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外款项收据表';
 
 DROP TABLE IF EXISTS `materialpayment`;
 CREATE TABLE `materialpayment` (
@@ -1309,7 +1260,7 @@ CREATE TABLE `materialpayment` (
   `mrId` int(11) DEFAULT NULL,
   PRIMARY KEY (`mpId`),
   KEY `indexone` (`msoId`,`paymentStatus`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材子订单款项表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单款项表';
 
 DROP TABLE IF EXISTS `materialreceipt`;
 CREATE TABLE `materialreceipt` (
@@ -1341,7 +1292,7 @@ CREATE TABLE `materialreceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `mpId` int(11) DEFAULT NULL,
   PRIMARY KEY (`mrId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材款项收据表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材款项收据表';
 
 DROP TABLE IF EXISTS `materialsuborder`;
 CREATE TABLE `materialsuborder` (
@@ -1400,7 +1351,7 @@ CREATE TABLE `materialsuborder` (
   KEY `indexfor` (`orderAddr`),
   KEY `indexfiv` (`salesmanName`),
   KEY `indexsix` (`status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
 
 DROP TABLE IF EXISTS `materialsuborderbalance`;
 CREATE TABLE `materialsuborderbalance` (
@@ -1422,7 +1373,7 @@ CREATE TABLE `materialsuborderbalance` (
   PRIMARY KEY (`msobId`),
   KEY `indexone` (`msoId`),
   KEY `indextwo` (`instorerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
 DROP TABLE IF EXISTS `materialsuborderitem`;
 CREATE TABLE `materialsuborderitem` (
@@ -1455,7 +1406,7 @@ CREATE TABLE `materialsuborderitem` (
   PRIMARY KEY (`msoiId`),
   KEY `indexone` (`mpId`),
   KEY `indextwo` (`msoId`,`status`,`refundStatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
 
 DROP TABLE IF EXISTS `materialsuborderrefund`;
 CREATE TABLE `materialsuborderrefund` (
@@ -1489,7 +1440,7 @@ CREATE TABLE `materialsuborderrefund` (
   PRIMARY KEY (`msorId`),
   KEY `indexone` (`msoId`,`status`),
   KEY `indextwo` (`mpId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主材子订单退款信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单退款信息表';
 
 DROP TABLE IF EXISTS `materialtype`;
 CREATE TABLE `materialtype` (
@@ -1497,7 +1448,7 @@ CREATE TABLE `materialtype` (
   `materialTypeId` varchar(10) NOT NULL,
   `materialTypeName` varchar(32) NOT NULL,
   PRIMARY KEY (`mtId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='品类表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品类表';
 
 DROP TABLE IF EXISTS `materialtypecount`;
 CREATE TABLE `materialtypecount` (
@@ -1507,7 +1458,7 @@ CREATE TABLE `materialtypecount` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mtcId`),
   KEY `indexone` (`materialType`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='主材品类业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材品类业绩统计';
 
 DROP TABLE IF EXISTS `measurementunit`;
 CREATE TABLE `measurementunit` (
@@ -1515,7 +1466,7 @@ CREATE TABLE `measurementunit` (
   `name` varchar(10) NOT NULL,
   `unitDes` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='计量单位表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计量单位表';
 
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
@@ -1529,7 +1480,7 @@ CREATE TABLE `message` (
   `args` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`messageId`),
   KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
@@ -1548,7 +1499,7 @@ CREATE TABLE `notice` (
   `filePath` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`noticeId`),
   KEY `indexone` (`type`,`deptId`,`isPublic`,`startTime`,`endTime`,`publishTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公告';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
 
 DROP TABLE IF EXISTS `oilconstructionschedule`;
 CREATE TABLE `oilconstructionschedule` (
@@ -1563,24 +1514,7 @@ CREATE TABLE `oilconstructionschedule` (
   PRIMARY KEY (`ocsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='油工工程进度表';
-
-DROP TABLE IF EXISTS `oilconstructionscheduleworker`;
-CREATE TABLE `oilconstructionscheduleworker` (
-  `ocswId` int(11) NOT NULL AUTO_INCREMENT,
-  `ocsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) DEFAULT '',
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`ocswId`),
-  KEY `indexone` (`csId`),
-  KEY `indextwo` (`ocsId`,`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='油工工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='油工工程进度表';
 
 DROP TABLE IF EXISTS `oildrawing`;
 CREATE TABLE `oildrawing` (
@@ -1593,7 +1527,7 @@ CREATE TABLE `oildrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`odId`),
   KEY `indexone` (`ocsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='油工工图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='油工工图纸表';
 
 DROP TABLE IF EXISTS `orderbelonginfo`;
 CREATE TABLE `orderbelonginfo` (
@@ -1613,7 +1547,7 @@ CREATE TABLE `orderbelonginfo` (
   `defaultFlag` varchar(5) NOT NULL DEFAULT '否' COMMENT '是 否',
   PRIMARY KEY (`autoId`),
   KEY `indexone` (`orderId`,`belongType`,`belongUserId`,`status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
 
 DROP TABLE IF EXISTS `payment`;
 CREATE TABLE `payment` (
@@ -1629,7 +1563,7 @@ CREATE TABLE `payment` (
   `orderId` varchar(15) DEFAULT NULL,
   `arId` int(11) DEFAULT NULL,
   PRIMARY KEY (`paymentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `putlineconstructionschedule`;
 CREATE TABLE `putlineconstructionschedule` (
@@ -1650,7 +1584,7 @@ CREATE TABLE `putlineconstructionschedule` (
   PRIMARY KEY (`plcsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='放线工程进度表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线工程进度表';
 
 DROP TABLE IF EXISTS `putlinedrawing`;
 CREATE TABLE `putlinedrawing` (
@@ -1663,7 +1597,7 @@ CREATE TABLE `putlinedrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pldId`),
   KEY `indexone` (`plcsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='放线工图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线工图纸表';
 
 DROP TABLE IF EXISTS `qualitytestingrecord`;
 CREATE TABLE `qualitytestingrecord` (
@@ -1676,7 +1610,7 @@ CREATE TABLE `qualitytestingrecord` (
   `recordDes` varchar(256) NOT NULL,
   PRIMARY KEY (`qtrId`),
   KEY `indexone` (`operaterId`,`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='质检记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='质检记录表';
 
 DROP TABLE IF EXISTS `quotation`;
 CREATE TABLE `quotation` (
@@ -1703,7 +1637,7 @@ CREATE TABLE `quotation` (
   `mdiff` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`qId`),
   KEY `indexone` (`orderId`,`createTime`,`status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价表';
 
 DROP TABLE IF EXISTS `quotationfunctionarea`;
 CREATE TABLE `quotationfunctionarea` (
@@ -1716,7 +1650,7 @@ CREATE TABLE `quotationfunctionarea` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`qfaId`),
   KEY `indexone` (`quotationId`,`functionAreaOrder`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价功能区';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区';
 
 DROP TABLE IF EXISTS `quotationfunctionareaitem`;
 CREATE TABLE `quotationfunctionareaitem` (
@@ -1734,7 +1668,7 @@ CREATE TABLE `quotationfunctionareaitem` (
   PRIMARY KEY (`qfaiId`),
   KEY `indexone` (`quotationFunctionAreaId`),
   KEY `indextwo` (`quotationItemId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
 
 DROP TABLE IF EXISTS `quotationitem`;
 CREATE TABLE `quotationitem` (
@@ -1754,7 +1688,7 @@ CREATE TABLE `quotationitem` (
   `discount` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`qiId`),
   KEY `indexone` (`itemId`,`versionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价项目表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项目表';
 
 DROP TABLE IF EXISTS `quotationmaterialitem`;
 CREATE TABLE `quotationmaterialitem` (
@@ -1771,20 +1705,22 @@ CREATE TABLE `quotationmaterialitem` (
   `des` varchar(128),
   PRIMARY KEY (`qmiId`),
   KEY `indexone` (`qid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价主材项';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
 DROP TABLE IF EXISTS `quotationversion`;
 CREATE TABLE `quotationversion` (
+  `qvId` int(11) NOT NULL AUTO_INCREMENT,
   `versionId` varchar(11) NOT NULL,
   `versionName` varchar(32) NOT NULL,
   `defaultFlag` int(11) NOT NULL DEFAULT '0',
   `versionDes` varchar(100) DEFAULT NULL,
-  `qvId` int(11) NOT NULL AUTO_INCREMENT,
   `trafficRate` float NOT NULL,
+  `trafficDiscount` tinyint(1) NOT NULL DEFAULT 0,
   `manageRate` float NOT NULL,
+  `manageDiscount` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`qvId`),
   UNIQUE KEY `uniqueone` (`versionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='报价版本表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
 
 DROP TABLE IF EXISTS `reportbusinessdept`;
 CREATE TABLE `reportbusinessdept` (
@@ -1796,7 +1732,7 @@ CREATE TABLE `reportbusinessdept` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportbusinessregion`;
 CREATE TABLE `reportbusinessregion` (
@@ -1808,7 +1744,7 @@ CREATE TABLE `reportbusinessregion` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportdesigndept`;
 CREATE TABLE `reportdesigndept` (
@@ -1820,7 +1756,7 @@ CREATE TABLE `reportdesigndept` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportdesignregion`;
 CREATE TABLE `reportdesignregion` (
@@ -1832,7 +1768,7 @@ CREATE TABLE `reportdesignregion` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportdesignsdept`;
 CREATE TABLE `reportdesignsdept` (
@@ -1844,7 +1780,7 @@ CREATE TABLE `reportdesignsdept` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportdesignsregion`;
 CREATE TABLE `reportdesignsregion` (
@@ -1856,7 +1792,7 @@ CREATE TABLE `reportdesignsregion` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '天' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `reportuserranking`;
 CREATE TABLE `reportuserranking` (
@@ -1868,7 +1804,7 @@ CREATE TABLE `reportuserranking` (
   `createTime` timestamp NULL NOT NULL,
   `kind` varchar(10) NOT NULL DEFAULT '月' COMMENT '天/月/季度/半年/一年',
   PRIMARY KEY (`reportId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `rework`;
 CREATE TABLE `rework` (
@@ -1880,7 +1816,7 @@ CREATE TABLE `rework` (
   `reworkDes` varchar(256) NOT NULL,
   PRIMARY KEY (`rwId`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='返工表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='返工表';
 
 DROP TABLE IF EXISTS `reworkdrawing`;
 CREATE TABLE `reworkdrawing` (
@@ -1893,7 +1829,7 @@ CREATE TABLE `reworkdrawing` (
   `operateTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`rwdId`),
   KEY `indexone` (`rwId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='返工图片表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='返工图片表';
 
 DROP TABLE IF EXISTS `servicerecord`;
 CREATE TABLE `servicerecord` (
@@ -1904,7 +1840,7 @@ CREATE TABLE `servicerecord` (
   `info` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srId`),
   KEY `indexone` (`operateUserId`,`type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='服务记录';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='服务记录';
 
 DROP TABLE IF EXISTS `systemdefineitem`;
 CREATE TABLE `systemdefineitem` (
@@ -1919,7 +1855,7 @@ CREATE TABLE `systemdefineitem` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `discount` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sdiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
 
 DROP TABLE IF EXISTS `userapprove`;
 CREATE TABLE `userapprove` (
@@ -1927,7 +1863,7 @@ CREATE TABLE `userapprove` (
   `userId` varchar(15) NOT NULL,
   `type` varchar(32) NOT NULL COMMENT '楼号审批,客户信息审批,折扣审批,退款审批,预算审批,归属设计审批,归属业务审批',
   PRIMARY KEY (`approveId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `usercheck`;
 CREATE TABLE `usercheck` (
@@ -1937,7 +1873,7 @@ CREATE TABLE `usercheck` (
   `x` double NOT NULL,
   `y` double NOT NULL,
   PRIMARY KEY (`ucId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户考勤表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户考勤表';
 
 DROP TABLE IF EXISTS `usersalary`;
 CREATE TABLE `usersalary` (
@@ -1952,7 +1888,7 @@ CREATE TABLE `usersalary` (
   `dealUserId` varchar(15) DEFAULT NULL,
   `dealTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`autoId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户工资表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户工资表';
 
 DROP TABLE IF EXISTS `venderbalance`;
 CREATE TABLE `venderbalance` (
@@ -1966,7 +1902,7 @@ CREATE TABLE `venderbalance` (
   PRIMARY KEY (`vbId`),
   KEY `indexone` (`materialBrandId`,`status`),
   KEY `indextwo` (`materialBrandName`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂商结算';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='厂商结算';
 
 DROP TABLE IF EXISTS `venderpostbalance`;
 CREATE TABLE `venderpostbalance` (
@@ -1983,7 +1919,7 @@ CREATE TABLE `venderpostbalance` (
   PRIMARY KEY (`vpbId`),
   KEY `indexone` (`vbId`,`status`),
   KEY `indextwo` (`msoId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂商结算';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='厂商结算';
 
 DROP TABLE IF EXISTS `venderprebalance`;
 CREATE TABLE `venderprebalance` (
@@ -2000,7 +1936,7 @@ CREATE TABLE `venderprebalance` (
   PRIMARY KEY (`vpbId`),
   KEY `indexone` (`vbId`,`status`),
   KEY `indextwo` (`msoId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂商预结算';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='厂商预结算';
 
 DROP TABLE IF EXISTS `waterwaycircuitcheckconstructionschedule`;
 CREATE TABLE `waterwaycircuitcheckconstructionschedule` (
@@ -2017,24 +1953,7 @@ CREATE TABLE `waterwaycircuitcheckconstructionschedule` (
   PRIMARY KEY (`wcccsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电工程进度表';
-
-DROP TABLE IF EXISTS `waterwaycircuitcheckconstructionscheduleworker`;
-CREATE TABLE `waterwaycircuitcheckconstructionscheduleworker` (
-  `wcccswId` int(11) NOT NULL AUTO_INCREMENT,
-  `wcccsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) DEFAULT '',
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`wcccswId`),
-  KEY `indexone` (`csId`),
-  KEY `indextwo` (`wcccsId`,`workerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电工程进度表';
 
 DROP TABLE IF EXISTS `waterwaycircuitcheckdrawing`;
 CREATE TABLE `waterwaycircuitcheckdrawing` (
@@ -2047,7 +1966,7 @@ CREATE TABLE `waterwaycircuitcheckdrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`wccdId`),
   KEY `indexone` (`wcccsId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';
 
 DROP TABLE IF EXISTS `waterwaycircuitpowerconstructionschedule`;
 CREATE TABLE `waterwaycircuitpowerconstructionschedule` (
@@ -2064,24 +1983,7 @@ CREATE TABLE `waterwaycircuitpowerconstructionschedule` (
   PRIMARY KEY (`wcpcsId`),
   KEY `indexone` (`csId`),
   KEY `indextwo` (`orderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电工程进度表';
-
-DROP TABLE IF EXISTS `waterwaycircuitpowerconstructionscheduleworker`;
-CREATE TABLE `waterwaycircuitpowerconstructionscheduleworker` (
-  `wcpcswId` int(11) NOT NULL AUTO_INCREMENT,
-  `wcpcsId` int(11) NOT NULL,
-  `csId` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `workerId` varchar(15) DEFAULT '',
-  `workerName` varchar(32) NOT NULL,
-  `workerSalary` decimal(10,3) DEFAULT '0.000',
-  `workerRaty` tinyint(4) DEFAULT '0',
-  `workerRatyDes` varchar(256) DEFAULT '',
-  `allocateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`wcpcswId`),
-  KEY `indexone` (`csId`),
-  KEY `indextwo` (`wcpcsId`,`workerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电工程工人表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电工程进度表';
 
 DROP TABLE IF EXISTS `waterwaycircuitpowerdrawing`;
 CREATE TABLE `waterwaycircuitpowerdrawing` (
@@ -2094,7 +1996,7 @@ CREATE TABLE `waterwaycircuitpowerdrawing` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`wcpdId`),
   KEY `indexone` (`wcpcsid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';
 
 DROP TABLE IF EXISTS `workerbasesalary`;
 CREATE TABLE `workerbasesalary` (
@@ -2113,7 +2015,7 @@ CREATE TABLE `workerbasesalary` (
   KEY `indexone` (`orderId`,`workTypeId`,`status`),
   KEY `indextwo` (`wsId`,`status`),
   KEY `indexthr` (`cswId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人基本工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人基本工资';
 
 DROP TABLE IF EXISTS `workerdeductsalary`;
 CREATE TABLE `workerdeductsalary` (
@@ -2131,7 +2033,7 @@ CREATE TABLE `workerdeductsalary` (
   `des` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`wdsId`),
   KEY `indexone` (`orderId`,`workTypeId`,`wsId`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人扣款工资';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人扣款工资';
 
 DROP TABLE IF EXISTS `workersalary`;
 CREATE TABLE `workersalary` (
@@ -2145,7 +2047,7 @@ CREATE TABLE `workersalary` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`wsid`),
   KEY `indexone` (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工人工费';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人工费';
 
 DROP TABLE IF EXISTS `zaterialdesignercount`;
 CREATE TABLE `zaterialdesignercount` (
@@ -2162,7 +2064,7 @@ CREATE TABLE `zaterialdesignercount` (
   PRIMARY KEY (`zdcId`),
   UNIQUE KEY `uniqueone` (`designerId`,`materialBrand`,`createTime`),
   KEY `indexone` (`designerId`,`createTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计师业绩统计';
 
 DROP TABLE IF EXISTS `zaterialdesignerdepartmentcount`;
 CREATE TABLE `zaterialdesignerdepartmentcount` (
@@ -2177,7 +2079,7 @@ CREATE TABLE `zaterialdesignerdepartmentcount` (
   PRIMARY KEY (`zddcId`),
   UNIQUE KEY `uniqueone` (`designerDeptId`,`materialBrand`,`createTime`),
   KEY `indexone` (`designerDeptId`,`createTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计部门业绩统计';
 
 DROP TABLE IF EXISTS `zaterialdesignerdepartmentrank`;
 CREATE TABLE `zaterialdesignerdepartmentrank` (
@@ -2190,7 +2092,7 @@ CREATE TABLE `zaterialdesignerdepartmentrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`zddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
 
 DROP TABLE IF EXISTS `zaterialdesignerrank`;
 CREATE TABLE `zaterialdesignerrank` (
@@ -2203,7 +2105,7 @@ CREATE TABLE `zaterialdesignerrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`zdrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
 
 DROP TABLE IF EXISTS `zaterialdesignerregioncount`;
 CREATE TABLE `zaterialdesignerregioncount` (
@@ -2216,7 +2118,7 @@ CREATE TABLE `zaterialdesignerregioncount` (
   PRIMARY KEY (`zdrcId`),
   UNIQUE KEY `uniqueone` (`designerRegionId`,`materialBrand`,`createTime`),
   KEY `indexone` (`designerRegionId`,`createTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计分区业绩统计';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计分区业绩统计';
 
 DROP TABLE IF EXISTS `zaterialdesignerregionrank`;
 CREATE TABLE `zaterialdesignerregionrank` (
@@ -2229,4 +2131,4 @@ CREATE TABLE `zaterialdesignerregionrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`zdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';

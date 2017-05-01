@@ -326,9 +326,9 @@ var decorationUtils = {
 					var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.materialBrand));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 					
-					$('<b></b>').html(v.materialType).addClass("grey").appendTo($('<strong></strong>').html("品类").appendTo($('<li></li>').appendTo($ulProperty)));
-					$('<b></b>').html(v.materialBrand).addClass("grey").appendTo($('<strong></strong>').html("品牌").appendTo($('<li></li>').appendTo($ulProperty)));
-					$('<b></b>').attr("name", "total").attr("value", v.referMoney).html(v.referMoney).addClass("grey").appendTo($('<strong></strong>').html("品类").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').html(v.materialType).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').html(v.materialBrand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').attr("name", "total").attr("value", v.referMoney).html(v.referMoney).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 					
 					$liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 					
