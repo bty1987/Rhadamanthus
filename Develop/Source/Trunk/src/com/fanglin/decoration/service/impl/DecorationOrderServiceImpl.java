@@ -51,6 +51,7 @@ import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
+import com.fanglin.payment.service.impl.AdvancePaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -256,13 +257,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId());
-			if(advancePaymentPO != null){
-				customerVO.setBalance(advancePaymentPO.getBalance());
-			}else{
-				customerVO.setBalance(0f);
-			}
-			
 			decorationOrderVO.setCustomer(customerVO);
 			
 			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
@@ -435,6 +429,67 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	}
 	
 	@Override
+	public void pageDecorationOrderForAdvance(Paging paging, List<Filter> filters, String userId) {
+		
+		if(filters.size() == 0) return ;
+		
+		UserPO userPO = userDao.get(userId);
+		
+		if(userPO == null) return;
+		
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters);
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			
+			if(decorationOrderVO.getOrderTotalPrice() == null){
+				decorationOrderVO.setOrderTotalPrice(new Float(0));
+			}
+			
+			VillageVO villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			CustomerVO customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			decorationOrderVO.setCustomer(customerVO);
+			
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId());
+			if(advancePaymentPO != null){
+				AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentPO, customerVO);
+			}
+			
+			UserPO designer = decorationOrderPO.getDesignerPO();
+			
+			decorationOrderVO.setDesigner(designer.getCurrentName());
+			decorationOrderVO.setDesignerId(designer.getUserId());
+			decorationOrderVO.setDesignerPhone(designer.getPhone());
+			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			
+			if(decorationOrderPO.getDesignerPO().getDept().getFatherDept() != null){
+				decorationOrderVO.setDesignRegion(decorationOrderPO.getDesignerPO().getDept().getFatherDept().getDeptName());
+			}
+			
+			UserPO salesman = decorationOrderPO.getSalesmanPO();
+			
+			decorationOrderVO.setSalesman(salesman.getCurrentName());
+			decorationOrderVO.setSalesmanId(salesman.getUserId());
+			decorationOrderVO.setSalesmanPhone(salesman.getPhone());
+			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			decorationOrderVOs.add(decorationOrderVO);
+		}
+		
+		paging.setData(decorationOrderVOs);
+	}
+
+	@Override
 	public void pageDecorationOrderForDesigner(Paging paging, List<Filter> filters, String userId){
 		
 		UserPO userPO = userDao.get(userId);
@@ -507,13 +562,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			CustomerVO customerVO = new CustomerVO();
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
-			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerVO.getId());
-			if(advancePaymentPO != null){
-				customerVO.setBalance(advancePaymentPO.getBalance());
-			}else{
-				customerVO.setBalance(0f);
-			}
 			
 			decorationOrderVO.setCustomer(customerVO);
 			

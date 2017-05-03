@@ -132,10 +132,10 @@ jQuery(function($) {
                ["客户:", v.customer.customerName, "grey"],
                ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
                ["设计师:", v.designer, "grey"],
-               ["合同余额:", v.customer.balance, "blue"],
-               ["工程余额:", v.customer.projectBalance, "blue"],
-               ["主材余额:", v.customer.materialBalance, "blue"],
-               ["正林余额:", v.customer.zhenglinBalance, "blue"],
+               ["合同余额:", v.customer.balance == null ? '0' : v.customer.balance, "blue"],
+               ["工程余额:", v.customer.projectBalance == null ? '0' : v.customer.projectBalance, "blue"],
+               ["主材余额:", v.customer.materialBalance == null ? '0' : v.customer.materialBalance, "blue"],
+               ["正林余额:", v.customer.zhenglinBalance == null ? '0' : v.customer.zhenglinBalance, "blue"]
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -177,7 +177,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "customerId", "customerPhone", "village", "houseNumber", "designer"], "condList", api.decoration.pageDecorationOrderForGeneral, function(data){
+	searcher.init(["orderId", "customerId", "customerPhone", "village", "houseNumber", "designer"], "condList", api.decoration.pageDecorationOrderForAdvance, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentPostData");
 	

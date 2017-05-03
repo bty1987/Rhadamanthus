@@ -31,7 +31,7 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 	private Timestamp vbalanceTime;
 	
 	private Timestamp postTime;
-	//2017.4.9 侯骅峰增加post结算值
+	
 	private Float post;
 	
 	private Short status;

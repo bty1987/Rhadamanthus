@@ -580,6 +580,7 @@ var api = {
 		pageDecorationOrderForSalesman: {url: "pageDecorationOrderForSalesman.do", demo: true},
 		pageDecorationOrderForMaterial: {url: "pageDecorationOrderForMaterial.do", demo: true},
 		pageDecorationOrderForBelong: {url: "pageDecorationOrderForBelong.do", demo: true},
+		pageDecorationOrderForAdvance: {url: "pageDecorationOrderForAdvance.do", demo: true},
 		queryDecorationOrderByVillageIdAHouseNumber: {url: "queryDecorationOrderByVillageIdAHouseNumber.do"},
 		queryDecorationOrderByCustomerId: {url: "queryDecorationOrderByCustomerId.do"},
 		queryDecorationOrderForCondition: {url: "queryDecorationOrderForCondition.do", demo: true},

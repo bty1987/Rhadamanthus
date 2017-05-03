@@ -34,6 +34,8 @@ public interface DecorationOrderService {
 	
 	public void pageDecorationOrderForBelong(Paging paging, List<Filter> filters, String userId);
 	
+	public void pageDecorationOrderForAdvance(Paging paging, List<Filter> filters, String userId);
+	
 	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO);
 	
 	public int queryDecorationOrderForCondition(String userId);
