@@ -253,27 +253,34 @@ $(function(){
         com.post(api.material.pageMaterialSubOrderBalance, $.extend({},params.materialOrderPostBalancePostData,{"paging.noPage": 1}), function (res){
             $.exceler({
                 column:[
-					["楼盘地址:","materialSubOrder.orderAddr"],
-					["品牌:","materialSubOrder.materialBrand"],
-					["业务员：","materialSubOrder.salesmanName"],
-					["总价：","materialSubOrder.total"],
-					["券值：","materialSubOrder.coupon"],
-					["券信息：","materialSubOrder.couponInfo"],
-					["主材驻店:", "instorer.currentName"],
-					["预结算值：","balance"],
-					["预结算时间 :","balanceTime"],
-					["创建人:", "creater.currentName"],
-					["厂商结算:","vbalance"],
-					["厂商结算时间:","vbalanceTime"],
-					["结算值：","post"],
-					["结算时间：","postTime"],
-					["结算人  :","poster.currentName"],
-					//["状态:", status== 0 ? '预结算': status== 1 ? '厂商结算' : status== 2 ? '结算' : '---' , "blue"],
-					//["类型:", type == 0 ? '购货' : type == 1 ? '退货' : '---' , "blue"],
-					["差值 :", "difference"]
+					["订单编号","materialSubOrder.orderId"],
+					["楼盘地址","materialSubOrder.orderAddr"],
+					["品牌","materialSubOrder.materialBrand"],
+					["业务员","materialSubOrder.salesmanName"],
+					["大区","materialSubOrder.regionName"],
+					["部门","materialSubOrder.departmentName"],
+					["总价","materialSubOrder.total"],
+					["券值","materialSubOrder.coupon"],
+					["券信息","materialSubOrder.couponInfo"],
+					["主材驻店", "instorer.currentName"],
+					["预结算值","balance"],
+					["预结算时间 ","balanceTime"],
+					["创建人", "creater.currentName"],
+					["厂商结算","vbalance"],
+					["厂商结算时间","vbalanceTime"],
+					["结算值","post"],
+					["结算时间","postTime"],
+					["结算人","poster.currentName"],
+					["抹零 ", "materialSubOrder.maling"],
+					["厂商抹零 ", "materialSubOrder.venderMaling"],
+					["状态", "status"],
+					["类型", "type"]
                 ],
                 list: res.paging.data,
-            });
+            }, function(v){
+				v.status = v.status== 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---';
+				v.type = v.type == 0 ? '购货' : v.type == 1 ? '退货' : '---'
+			});
         });
     }
 });

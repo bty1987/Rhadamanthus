@@ -85,7 +85,6 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 			}
 			//增加预结算时间查询条件
 			else if(MaterialSubOrderPO.COLUMN_PREBALANCETIME_RANGE_STR.equals(filter.getField())){
-				System.out.println(filter.getData());
 				String data = filter.getData();
 				
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
@@ -103,7 +102,6 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 			//增加结算时间查询条件
 			else if(MaterialSubOrderPO.COLUMN_POSTBALANCETIME_RANGE_STR.equals(filter.getField())){
 				String data = filter.getData();
-				//System.out.println(filter.getData());
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 				

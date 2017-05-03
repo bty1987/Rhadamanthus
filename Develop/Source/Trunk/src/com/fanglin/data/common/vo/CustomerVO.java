@@ -32,11 +32,11 @@ public class CustomerVO implements Serializable {
 	
 	private Float balance;
 	
-	private float materialBalance;
+	private Float materialBalance;
 	
-	private float zhenglinBalance;
+	private Float zhenglinBalance;
 	
-	private float projectBalance;
+	private Float projectBalance;
 	
 	private Integer approveStatus;
 
@@ -160,27 +160,27 @@ public class CustomerVO implements Serializable {
 		this.balance = balance;
 	}
 	
-	public float getMaterialBalance(){
+	public Float getMaterialBalance(){
 		return materialBalance;
 	}
 
-	public void setMaterialBalance(float materialBalance){
+	public void setMaterialBalance(Float materialBalance){
 		this.materialBalance = materialBalance;
 	}
 
-	public float getZhenglinBalance(){
+	public Float getZhenglinBalance(){
 		return zhenglinBalance;
 	}
 
-	public void setZhenglinBalance(float zhenglinBalance){
+	public void setZhenglinBalance(Float zhenglinBalance){
 		this.zhenglinBalance = zhenglinBalance;
 	}
 
-	public float getProjectBalance(){
+	public Float getProjectBalance(){
 		return projectBalance;
 	}
 
-	public void setProjectBalance(float projectBalance){
+	public void setProjectBalance(Float projectBalance){
 		this.projectBalance = projectBalance;
 	}
 

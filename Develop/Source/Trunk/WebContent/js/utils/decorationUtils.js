@@ -253,7 +253,7 @@ var decorationUtils = {
 		if(materialPayments && materialPayments.length){
 			$.each(materialPayments, function(i, v){
 				
-				if(v.paymentStatus == 0) return false;
+				if(v.paymentStatus == 0) return true;
 				
 				var $liLine = $('<li></li>').addClass('item-orange clearfix');
 				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.msoNo + " " + materialUtils.materialPaymentTypeData[v.paymentType]));

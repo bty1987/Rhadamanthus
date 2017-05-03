@@ -90,6 +90,14 @@ public class DecorationOrderAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "pageDecorationOrderForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationOrderForAdvance() throws FLException{
+
+		decorationOrderService.pageDecorationOrderForAdvance(getPaging(), getFilters(), queryUserId());
+
+		return SUCCESS;
+	}
 
 	@Action(value = "queryDecorationOrderByVillageIdAHouseNumber", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderByVillageIdAHouseNumber(){
