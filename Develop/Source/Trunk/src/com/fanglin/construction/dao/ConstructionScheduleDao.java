@@ -33,5 +33,7 @@ public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO> {
 	public List<ConstructionSchedulePO> queryConstructionScheduleForSupervisionByUserId(List<Filter> filters, String supervisionUserId);
 	
 	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId);
+
+	public ConstructionSchedulePO queryConstructionScheduleByCsId(Integer csId);
 	
 }

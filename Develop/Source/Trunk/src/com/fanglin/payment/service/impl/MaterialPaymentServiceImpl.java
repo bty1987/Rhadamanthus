@@ -409,21 +409,14 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
 			
-			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
-			
-			if(materialPaymentPOs.size() > 0){
-				throw new FLException(150027, "主材定金已存在,不能多次收取定金");
-			}
-			
 			materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setDepositPayment(materialPaymentPO.getReferMoney());
+			
 		}else if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
 			
 			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
 			
-			if(materialPaymentPOs.size() > 1){
-				throw new FLException(150027, "主材定金已存在,不能多次收取定金");
-			}else if(materialPaymentPOs.size() == 1){
+			if(materialPaymentPOs.size() == 1){
 				MaterialPaymentPO depositPayment = materialPaymentPOs.get(0);
 				
 				if(depositPayment.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
@@ -433,16 +426,41 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setFullPayment(materialPaymentPO.getReferMoney());
+			
 		}else if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
+			
 			materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setFullPayment(-materialPaymentPO.getReferMoney());
+			
 		}
 		
 		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
 		
-		materialSubOrderDao.update(materialSubOrderPO);
+		MaterialPaymentPO materialPayment = materialPaymentDao.queryMaterialPaymentByMsoIdAndType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType());
 		
-		materialPaymentDao.save(materialPaymentPO);
+		if(materialPayment==null){
+			
+			materialSubOrderDao.update(materialSubOrderPO);
+			
+			materialPaymentDao.save(materialPaymentPO);
+			
+		}else{
+			if(materialPayment.getMaterialSubOrder().getMsoId()==materialPaymentVO.getMsoId() && materialPayment.getPaymentType()==materialPaymentVO.getPaymentType()){
+				
+				throw new FLException(150033, "款项类型已存在");
+				
+			}else{
+				
+				materialSubOrderDao.update(materialSubOrderPO);
+				
+				materialPaymentDao.save(materialPaymentPO);
+				
+			}
+		}
+		
+		
+		
+		
 	}
 
 	@Override

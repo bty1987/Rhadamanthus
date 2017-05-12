@@ -78,6 +78,8 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
 	
+	public static final String COLUMN_CSID_STR = "csId";
+	
 	private int csId;
 	
 	private DecorationOrderPO decorationOrderPO;

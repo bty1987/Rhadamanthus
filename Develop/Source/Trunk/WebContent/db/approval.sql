@@ -163,3 +163,11 @@ CREATE TABLE `approvalsalesrefunditem` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`asriid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售退货项审批表';
+
+DROP TABLE IF EXISTS `approveuser`;
+CREATE TABLE `approveuser` (
+  `aid` bigint(32) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(15) NOT NULL,
+  `type` tinyint(2) NOT NULL,
+  PRIMARY KEY (`aid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

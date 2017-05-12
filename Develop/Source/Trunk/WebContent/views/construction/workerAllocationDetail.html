@@ -59,10 +59,10 @@
 								<div class="step-content row-fluid position-relative" id="step-container">
 									<div class="step-pane active" id="step1">
 										<div class="row">
-											<div class="col-sm-6">
-												<form class="form-horizontal">
-													<div class="form-group text-center">
-														<h3 class="header smaller lighter blue col-sm-10">
+											<form class="form-horizontal">
+												<div class="form-group">
+													<div class="col-sm-12">
+														<h3 class="header smaller lighter blue">
 															<i class="icon-edit"></i>
 															铲大白信息
 														</h3>
@@ -94,59 +94,47 @@
 															<button id="chanPass" class="btn btn-xs btn-info">通过</button>
 														</div>
 													</div>
-												</form>
-											</div>
-											<div class="col-sm-6 text-center">
-												<div class="text-center">
-													<div id="chanWorkerEnter" style="display: none;">
-														<form class="form-horizontal">
-															<div class="form-group text-center">
-																<h3 class="header smaller lighter green">
-																	<i class="icon-group"></i>
-																	工人信息录入
-																</h3>
-															</div>
-															<div class="form-group ">
-																<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
-																<select id="chanWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
-																	<option value="">&nbsp;</option>
-																</select> 
-															</div>
-															<div class="form-group ">
-																<div class="col-sm-offset-2">
-																	<button id="chanWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
-																</div>
-															</div>
-														</form>
-													</div>
-													<div id="chanWorkerInfo">
-														<h3 class="header smaller lighter green">
-															<i class="icon-group"></i>
+												</div>
+
+												<div class="form-group">
+												    <div class="col-sm-12">
+														<h3 class="header smaller lighter blue">
+															<i class="icon-edit"></i>
 															工人信息
 														</h3>
-														<div class="profile-picture col-sm-6 col-sm-offset-3">
-														    <div class="workerImg">
-															    <img id="chanWorkerImg" src="" alt="" >
-															</div>
-															<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-																<a href="#" class="red pull-left" id="removeChanWork">
-																	<i class="icon-remove bigger-130"></i>
-																</a>
-																<span id="chanWorkerNameSpan" class="pull-right"></span>
-															</div>
-														</div>
 													</div>
 												</div>
-											</div>
+												
+												<div class="form-group">
+													<div id="chanWorkerEnter">
+														<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+														<select id="chanWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+															<option value="">&nbsp;</option>
+														</select> 
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-offset-1">
+														<button id="chanWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+												    <div class="col-sm-12">
+													    <div id="chanWorkerInfos"></div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+											</form>
 										</div>
 									</div>
-	
+
 									<div class="step-pane" id="step2">
 										<div class="row">
-											<div class="col-sm-6">
-												<form class="form-horizontal">
-													<div class="form-group text-center">
-														<h3 class="header smaller lighter blue col-sm-10">
+											<form class="form-horizontal">
+												<div class="form-group">
+												    <div class="col-sm-12">
+														<h3 class="header smaller lighter blue">
 															<i class="icon-edit"></i>
 															放线信息
 														</h3>
@@ -158,7 +146,6 @@
 														</div>
 													</div>
 													<div class="space-4"></div>
-											
 													<div class="form-group">
 														<label class="col-sm-2 control-label no-padding-right" for="putlineStatus">放线状态</label>
 														<div id="putlineStatus" class="col-sm-4">	</div>
@@ -170,50 +157,38 @@
 															<button id="putlineFail" class="btn btn-xs btn-danger">放线失败</button>
 														</div>
 													</div>
-												</form>
-											</div>
-											<div class="col-sm-6 text-center">
-												<div class="text-center">
-													<div id="fangWorkerEnter" style="display: none;">
-														<form class="form-horizontal">
-															<div class="form-group text-center">
-																<h3 class="header smaller lighter green">
-																	<i class="icon-group"></i>
-																	工人信息录入
-																</h3>
-															</div>
-															<div class="form-group ">
-																<label class="col-sm-2 control-label" for="endTime">工人姓名</label>
-																<select id="fangWorkerName" class="chosen-select col-sm-5 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
-																	<option value="">&nbsp;</option>
-																</select> 
-															</div>
-															<div class="form-group ">
-																<div class="col-sm-offset-2">
-																	<button id="fangWorkerSubmit" class="btn btn-xs col-sm-3">确认</button>
-																</div>
-															</div>
-														</form>
-													</div>
-													<div id="fangWorkerInfo">
-														<h3 class="header smaller lighter green">
-															<i class="icon-group"></i>
+												</div>
+												
+												<div class="form-group">
+												    <div class="col-sm-12">
+														<h3 class="header smaller lighter blue">
+															<i class="icon-edit"></i>
 															工人信息
 														</h3>
-														<div class="profile-picture col-sm-6 col-sm-offset-3">
-														    <div class="workerImg">
-															    <img id="fangWorkerImg" src="" alt="">
-															</div>
-															<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;">
-																<a href="#" class="red pull-left" id="removeFangWork">
-																	<i class="icon-remove bigger-130"></i>
-																</a>
-																<span id="fangWorkerNameSpan" class="pull-right"></span>
-															</div>
-														</div>
 													</div>
 												</div>
-											</div>
+												
+												<div class="form-group">
+													<div id="fangWorkerEnter">
+														<label class="col-sm-1 control-label" for="endTime">工人姓名</label>
+														<select id="fangWorkerName" class="chosen-select col-sm-2 v_required" data-placeholder="请输入工人名称" data-toggle="popover" data-trigger='manual'>
+															<option value="">&nbsp;</option>
+														</select> 
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-offset-1">
+														<button id="fangWorkerSubmit" class="btn btn-xs col-sm-2 workerSubmit">确认</button>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+												    <div class="col-sm-12">
+													    <div id="fangWorkerInfos"></div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+											</form>
 										</div>
 									</div>
 	

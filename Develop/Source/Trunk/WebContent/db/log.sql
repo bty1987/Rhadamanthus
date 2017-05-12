@@ -4,7 +4,6 @@ USE `log`;
 DROP TABLE IF EXISTS `actionlog`;
 CREATE TABLE `actionlog` (
   `alId` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(32) NOT NULL COMMENT '主键',
   `actionName` varchar(128) NOT NULL,
   `createUserId` varchar(15) DEFAULT NULL COMMENT '操作人',
   `createTime` timestamp NULL DEFAULT NULL COMMENT '创建时间',

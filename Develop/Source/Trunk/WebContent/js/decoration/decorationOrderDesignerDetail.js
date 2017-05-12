@@ -113,6 +113,8 @@ jQuery(function($) {
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
 	
+	decorationPayment.decorationPayment = $("#decorationPayment");
+	
 	decorationOrderDetail.otherPaymentType = $("#otherPaymentType");
 	decorationOrderDetail.otherPayment = $("#otherPayment");
 
