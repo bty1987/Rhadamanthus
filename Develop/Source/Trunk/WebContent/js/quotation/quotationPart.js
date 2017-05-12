@@ -171,22 +171,31 @@ var QuotationDetail = (function(){
 				}
 			});
 			
-			_manageRate = parseFloat($('#manageCost').find('.discountprice .cell-wrap').text());
-			_manageDiscount = $('#manageCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
-			_transRate = parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text());
-			_transDiscount = $('#conveyanceCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
-			_transfee =  utils.changeThrDecimal(utils.accMul(utils.accMul(_totalfee, _transRate), _transDiscount));
-			_managefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
+			var manageCost = $('#manageCost');
+			var converyanceCost = $('#conveyanceCost');
 			
-			$('#conveyanceCost').find('.num .cell-wrap').text(_transfee);
-			$('#manageCost').find('.num .cell-wrap').text(_managefee);
+			_transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+			_manageDiscount = manageCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+			
+			_transRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text());
+			_manageRate = parseFloat(manageCost.find('.discountprice .cell-wrap').text());
+			
+			_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, _transRate));
+			_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transRate), _manageRate));
+			
+			_dtransfee =  utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount));
+			_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
+			
+			converyanceCost.find('.num .cell-wrap').text(_dtransfee);
+			manageCost.find('.num .cell-wrap').text(_dmanagefee);
+			
 			$('#sumLabSumMoney').text(utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee)));
-			$('#sumLabDiscountMoney').text(utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee)));
+			$('#sumLabDiscountMoney').text(utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee)));
 
 			quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));//报价总额
 			quo.basicParams["quotation.manageRate"] = utils.accSub(_manageRate, quo.notSalesmanRate);
-			quo.basicParams["quotation.managePrice"] = _managefee;//管理费
-			quo.basicParams["quotation.trafficPrice"] = _transfee;//车运费
+			quo.basicParams["quotation.managePrice"] = _dmanagefee;//管理费
+			quo.basicParams["quotation.trafficPrice"] = _dtransfee;//车运费
 			quo.basicParams["quotation.latexCut"] = _totallcs;//乳胶漆提点
 		},
 		//计算功能区总价和折扣总价
@@ -251,19 +260,24 @@ var QuotationDetail = (function(){
 				
 				_totalfee = utils.accAdd(_totalfee, _totalprice);
 				_dtotalfee = utils.accAdd(_dtotalfee, _totalpriced);
-				
 			});
 			
-			_manageDiscount = $('#manageCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
-			_transDiscount = $('#conveyanceCost').find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
-			_manageRate = parseFloat($('#manageCost').find('.discountprice .cell-wrap').text());
-			_tranRate = parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text());
-			_transfee =  utils.changeThrDecimal(utils.accMul(utils.accMul(_totalfee, _tranRate), _transDiscount));
-			_managefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
-			_total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));
+			var manageCost = $('#manageCost');
+			var converyanceCost = $('#conveyanceCost');
 			
-			$('#calTrafficPrice').val(_transfee);
-			$('#calManagePrice').val(_managefee);
+			_manageDiscount = manageCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+			_transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+			
+			_manageRate = parseFloat(manageCost.find('.discountprice .cell-wrap').text());
+			_tranRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text());
+			
+			_dtransfee =  utils.changeThrDecimal(utils.accMul(utils.accMul(_totalfee, _tranRate), _transDiscount));
+			_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
+			
+			_total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
+			
+			$('#calTrafficPrice').val(_dtransfee);
+			$('#calManagePrice').val(_dmanagefee);
 			$('#calTotalPrice').val(_total);
 		},
 		init : function () {
@@ -1214,6 +1228,7 @@ var QuotationDetail = (function(){
 			},null, false);
 			
 			com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid" : quo.quotationid}, function(data){
+				var _discount = utils.accDiv(quo.basicParams['quotation.discount'], 10);
 				var _totalfee = 0,  _dtotalfee = 0, _transfee = 0, _managefee = 0, _totallcs = 0;
 				if(data.quotationFunctionAreas.length){
 
@@ -1234,21 +1249,33 @@ var QuotationDetail = (function(){
 						}
 					});
 					
+					var manageCost = $('#manageCost');
+					var converyanceCost = $('#conveyanceCost');
+					
+					_manageDiscount = manageCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+					_transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1;
+					
+					_manageRate = parseFloat(manageCost.find('.discountprice .cell-wrap').text());
+					_tranRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text());
+					
+					_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, _tranRate));
+					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, utils.accMul(_totalfee, _tranRate)), _manageRate));
+					
+					_dtransfee =  utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount));
+					_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
+					
 //					_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, parseFloat($('#conveyanceCost').find('.unitprice .cell-wrap').text())));
 //					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), parseFloat($('#manageCost').find('.discountprice .cell-wrap').text())));
 					
-					_transfee =  parseFloat(quo.basicParams["quotation.trafficPrice"]);
-					_managefee = parseFloat(quo.basicParams["quotation.managePrice"]);
-
-					$('#conveyanceCost').find('.num .cell-wrap').text(_transfee);
-					$('#manageCost').find('.num .cell-wrap').text(_managefee);
+					converyanceCost.find('.num .cell-wrap').text(_transfee);
+					manageCost.find('.num .cell-wrap').text(_managefee);
 					
 					$('#sumLabSumMoney').text(utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee)));
-					$('#sumLabDiscountMoney').text( utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee)));
+					$('#sumLabDiscountMoney').text( utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee)));
 
 					quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal( utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));//报价总额
-					quo.basicParams["quotation.managePrice"] = _managefee;//管理费
-					quo.basicParams["quotation.trafficPrice"] = _transfee;//车运费
+					quo.basicParams["quotation.managePrice"] = _dmanagefee;//管理费
+					quo.basicParams["quotation.trafficPrice"] = _dtransfee;//车运费
 					quo.basicParams["quotation.latexCut"] = _totallcs;//车运费
 				}
 

@@ -14,12 +14,10 @@ package com.fanglin.payment.dao.impl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialSubOrderPO;
@@ -33,6 +31,11 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	
 	public MaterialPaymentDaoImpl(){
 		super(MaterialPaymentPO.class);
+	}
+	
+	@Override
+	public MaterialPaymentPO queryMaterialPaymentByMsoIdAndType(long msoId, Integer paymentType) {
+		return (MaterialPaymentPO)session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", Long.valueOf(msoId))).add(Restrictions.eq("paymentType",paymentType)).uniqueResult();
 	}
 	
 	@Override

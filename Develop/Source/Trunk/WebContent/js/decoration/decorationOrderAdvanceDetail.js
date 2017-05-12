@@ -80,7 +80,7 @@ jQuery(function($) {
 		decorationOrderDetail.items.orderType.bindData(res.type, 'key', 'value');
 		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
 		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
-	});
+	}, null, false);
 	
 	$("#btnPrintDefaultQuotationInfo").on('click',function(res){
 		decorationOrderDetail.printQuotationModal.modal("show");

@@ -1,0 +1,22 @@
+package com.fanglin.inventory.service;
+
+import java.util.List;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.vo.PurchaseItemVO;
+import com.fanglin.inventory.vo.PurchaseVO;
+import com.fanglin.utils.Paging;
+
+public interface PurchaseService {
+	
+	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException;
+
+	public int updatePurchase(PurchaseVO purchaseVO) throws FLException;
+	
+	public int updatePurchaseStatus(PurchaseVO purchaseVO) throws FLException;
+	
+	public void pagePurchase(Paging paging, List<Filter> filters);
+	
+	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
+	
+}

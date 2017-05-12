@@ -1,6 +1,6 @@
 var api = {
 	ds: {
-		
+
 		approvalType: {url: "ds/approvalType.json", demo: true},
 		activityInfo: {url: "ds/activityInfo.json", demo: true},
 		accountType: {url: "ds/accountType.json", demo: true},
@@ -22,47 +22,47 @@ var api = {
 		quotationInfo: {url: "ds/quotationInfo.json", demo: true},
 		salaryType: {url: "ds/salaryType.json", demo: true},
 		workType: {url: "ds/workType.json", demo: true},
-		
+
 	}, index: {
-		
+
 		approvalTrackIndex: {url: "/views/approval/approvalTrack.html"},
 		userApproveIndex: {url: "/views/approval/userApprove.html"},
-		
+
 		supervisionIndex: {url: "/views/construction/supervision.html"},
 		supervisionDetailIndex: {url: "/views/construction/supervisionDetail.html"},
 		supervisionInDecreaseIndex: {url: "/views/construction/supervisionInDecrease.html"},
-		
+
 		reworkIndex: {url: "/views/construction/rework.html"},
-		
+
 		onsiteInspectionRecordIndex: {url: "/views/construction/onsiteInspectionRecord.html"},
 		onsiteInspectionDeductionIndex: {url: "/views/construction/onsiteInspectionDeduction.html"},
-		
+
 		qualityTestingIndex: {url: "/views/construction/qualityTesting.html"},
 		qualityTestingDetailIndex: {url: "/views/construction/qualityTestingDetail.html"},
 		qualityTestingRecordIndex: {url: "/views/construction/qualityTestingRecord.html"},
-		
+
 		customerServiceIndex: {url: "/views/construction/customerService.html"},
 		customerServiceDetailIndex: {url: "/views/construction/customerServiceDetail.html"},
-		
+
 		drawLineApplyIndex: {url: "/views/drawLine/drawLineApply.html"},
 		drawLineDeploymentIndex: {url: "/views/drawLine/drawLineDeployment.html"},
 		drawLinePersonInfoIndex: {url: "/views/drawLine/drawLinePersonInfo.html"},
-		
+
 		inspectionIndex: {url: "/views/construction/inspection.html"},
 		inspectionDeductionIndex: {url: "/views/construction/inspectionDeduction.html"},
 		inspectionRecordIndex: {url: "/views/construction/inspectionRecord.html"},
-		
+
 		acceptanceIndex: {url: "/views/construction/acceptance.html"},
 		acceptanceDetailIndex: {url: "/views/construction/acceptanceDetail.html"},
-		
+
 		customerServiceBackVisitIndex: {url: "/views/construction/customerServiceBackVisit.html"},
 		customerServiceComplaintIndex: {url: "/views/construction/customerServiceComplaint.html"},
 		customerServiceGuaranteeIndex: {url: "/views/construction/customerServiceGuarantee.html"},
-		
+
 		supervisionReworkIndex: {url: "/views/construction/supervisionRework.html"},
 		supervisionAddReduceIndex: {url: "/views/construction/supervisionAddReduce.html"},
 		supervisionReworkDrawingIndex: {url: "/views/construction/supervisionReworkDrawing.html"},
-		
+
 		workerAllocationIndex: {url: "/views/construction/workerAllocation.html"},
 		workerAllocationDetailIndex: {url: "/views/construction/workerAllocationDetail.html"},
 
@@ -70,40 +70,40 @@ var api = {
 		brandIndex: {url: "/views/data/brand.html"},
 		customerIndex: {url: "/views/data/customer.html"},
 		villageIndex: {url: "/views/data/village.html"},
-		
+
 		addReduceIndex: {url: "/views/decoration/addReduce.html"},
 		addReduceDetailIndex: {url: "/views/decoration/addReduceDetail.html"},
 		addReduceOutputIndex: {url: "/views/decoration/addReduceOutput.html"},
-		
+
 		decorationOrderDesignerIndex: {url: "/views/decoration/decorationOrderDesigner.html"},
 		decorationOrderDesignerDetailIndex: {url: "/views/decoration/decorationOrderDesignerDetail.html"},
-		
+
 		decorationOrderSalesmanIndex: {url: "/views/decoration/decorationOrderSalesman.html"},
-		
+
 		decorationOrderCommonIndex: {url: "/views/decoration/decorationOrderCommon.html"},
 		decorationOrderCommonDetailIndex: {url: "/views/decoration/decorationOrderCommonDetail.html"},
-		
+
 		decorationOrderAdvanceIndex: {url: "/views/decoration/decorationOrderAdvance.html"},
 		decorationOrderAdvanceDetailIndex: {url: "/views/decoration/decorationOrderAdvanceDetail.html"},
-		
+
 		decorationActivityIndex: {url: "/views/decoration/decorationActivity.html"},
 		decorationActivityItemIndex: {url: "/views/decoration/decorationActivityItem.html"},
-		
+
 		decorationOrderBelongIndex: {url: "/views/decoration/decorationOrderBelong.html"},
 		decorationOrderBelongDetailIndex: {url: "/views/decoration/decorationOrderBelongDetail.html"},
 		decorationOrderBelongInfoIndex: {url: "/views/decoration/decorationOrderBelongInfo.html"},
-		
+
 		decorationOrderStageIndex: {url: "/views/decoration/decorationOrderStage.html"},
-        decorationOrderStageDetailIndex: {url: "/views/decoration/decorationOrderStageDetail.html"},
-        
-        decorationOrderApproveIndex: {url: "/views/decoration/decorationOrderApprove.html"},
-        decorationOrderApproveDetailIndex: {url: "/views/decoration/decorationOrderApproveDetail.html"},
+		decorationOrderStageDetailIndex: {url: "/views/decoration/decorationOrderStageDetail.html"},
+
+		decorationOrderApproveIndex: {url: "/views/decoration/decorationOrderApprove.html"},
+		decorationOrderApproveDetailIndex: {url: "/views/decoration/decorationOrderApproveDetail.html"},
 
 		decorationOrderTimelineIndex: {url: "/views/decoration/decorationOrderTimeline.html"},
 		decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
 		backVisitIndex: {url: "/views/decoration/backVisit.html"},
 		createOrderIndex: {url: "/views/decoration/createOrder.html"},
-		
+
 		designRegionIndex: {url: "/views/department/designRegion.html"},
 		businessRegionIndex: {url: "/views/department/businessRegion.html"},
 		designDeptIndex: {url: "/views/department/designDept.html"},
@@ -111,7 +111,7 @@ var api = {
 		materialDeptIndex: {url: "/views/department/materialDept.html"},
 		engineeringDeptIndex: {url: "/views/department/engineeringDept.html"},
 		dutyDeptIndex: {url: "/views/department/dutyDept.html"},
-		
+
 		decorationPaymentIndex: {url: "/views/payment/decorationPayment.html"},
 		changeItemIndex: {url: "/views/payment/changePaymentItem.html"},
 		decorationPaymentCheckIndex: {url: "/views/payment/decorationPaymentCheck.html"},
@@ -120,26 +120,26 @@ var api = {
 		materialPaymentIndex: {url: "/views/payment/materialPayment.html"},
 		materialPaymentReceiptIndex: {url: "/views/payment/materialPaymentReceipt.html"},
 		materialPaymentCheckIndex: {url: "/views/payment/materialPaymentCheck.html"},
-		
+
 		materialOutsideCheckIndex: {url: "/views/payment/materialOutsideCheck.html"},
-		
+
 		paymentIndex: {url: "/views/payment/payment.html"},
 		paymentCheckIndex: {url: "/views/payment/paymentCheck.html"},
 		paymentReceiptIndex: {url: "/views/payment/paymentReceipt.html"},
-		
+
 		messageIndex: {url: "/views/information/messageMng.html"},
 		moreNoticesIndex: {url: "/views/information/moreNotices.html"},
 		noticeIndex: {url: "/views/information/noticeMng.html"},
 		activityIndex: {url: "/views/information/activity.html"},
 		activityItemIndex: {url: "/views/information/activityItem.html"},
-		
+
 		actionLogIndex: {url: "/views/log/actionLog.html"},
 		loginLogIndex: {url: "/views/log/loginLog.html"},
-		
+
 		mapIndex: {url: "/views/map/index.html"},
-		
+
 		materialModelIndex: {url: "/views/material/materialModel.html"},
-		
+
 		materialBrandRightIndex: {url: "/views/material/materialBrandRight.html"},
 		materialBalanceValueIndex: {url: "/views/material/materialBalanceValue.html"},
 		materialSaleOrderIndex: {url: "/views/material/materialSaleOrder.html"},
@@ -155,28 +155,28 @@ var api = {
 		materialOrderPostBalanceIndex: {url: "/views/material/materialOrderPostBalance.html"},
 		materialOrderPostBalanceDetailIndex: {url: "/views/material/materialOrderPostBalanceDetail.html"},
 		materialOutsideIndex: {url: "/views/material/materialOutside.html"},
-		
+
 		materialInsideIndex: {url: "/views/material/materialInside.html"},
 		materialInsidePaymentIndex: {url: "/views/payment/materialInsidePayment.html"},
 		materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
-		
+
 		userIndex: {url: "/views/personnel/user.html"},
 		userEditIndex: {url: '/views/personnel/userEdit.html'},
 		userContractIndex: {url: "/views/personnel/userContract.html"},
 		userExperienceIndex: {url: "/views/personnel/userExperience.html"},
 		userSalaryIndex: {url: "/views/payment/userSalary.html"},
-		
+
 		functionAreaIndex: {url: "/views/quotation/functionArea.html"},
 		quotationItemIndex: {url: "/views/quotation/quotationItem.html"},
 		quotationVersionIndex: {url: "/views/quotation/quotationVersion.html"},
 		systemDefineItemIndex: {url: "/views/quotation/systemDefineItem.html"},
-		
+
 		quotationIndex: {url: "/views/quotation/quotationIndex.html"},
 		quotationDetailIndex: {url: "/views/quotation/quotationDetail.html"},
 		quotationPartIndex: {url: "/views/quotation/quotationPart.html"},
 		quotationWholeIndex: {url: "/views/quotation/quotationWhole.html"},
 		quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"},
-		
+
 		reportBizDeptIndex: {url: "/views/report/reportBizDept.html"},
 		reportDesignDeptIndex: {url: "/views/report/reportDesignDept.html"},
 		reportBizRegionIndex: {url: "/views/report/reportBizRegion.html"},
@@ -185,7 +185,7 @@ var api = {
 		materialDesignReportIndex: {url: "/views/report/materialDesignReport.html"},
 		materialMerchantReportIndex: {url: "/views/report/materialMerchantReport.html"},
 		rankIndex: {url: "/views/report/rank.html"},
-		
+
 		designerSalaryIndex: {url: "/views/salary/designerSalary.html"},
 		designerBalanceSalaryIndex: {url: "/views/salary/designerBalanceSalary.html"},
 		designerOutsideSalaryIndex: {url: "/views/salary/designerOutsideSalary.html"},
@@ -197,7 +197,7 @@ var api = {
 		workerDeductSalaryScheduleDetailIndex: {url: "/views/salary/workerDeductSalaryScheduleDetail.html"},
 		workerBaseSalaryIndex: {url: "/views/salary/workerBaseSalary.html"},
 		workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"},
-		
+
 		cityIndex: {url: "/views/system/city.html"},
 		cityProperIndex: {url: "/views/system/cityProper.html"},
 		regionIndex: {url: "/views/system/region.html"},
@@ -209,34 +209,34 @@ var api = {
 		resetPasswordIndex: {url: "/views/system/resetPassword.html"},
 		versionIndex: {url: "/version.html"},
 		faqIndex: {url: "/faq.html"},
-		
+
 	}, dd: {
-		
+
 		queryDDUserInfo: {url: "queryDDUserInfo.do", demo: true},
 		queryDDUser: {url: "queryDDUser.do", demo: true},
 		queryDDDepartment: {url: "queryDDDepartment.do", demo: true},
-		
+
 	}, common: {
-		
+
 		QRCode: {url: "QRCode.do", demo: true},
 		wmCode: {url: "wmCode.do", demo: true},
-		
+
 		createTree: {url: "createTree.do", demo: true},
-		
+
 		logout: {url: "logout.do"},
-		
+
 		pageBuildingNameRule: {url: "pageBuildingNameRule.do"},
 		queryBuildingNameRule: {url: "queryBuildingNameRule.do", demo: true},
-		
+
 		queryMeasurementUnit: {url: "queryMeasurementUnit.do", demo: true},
-		
+
 		queryWorkType: {url: "queryWorkType.do", demo: true},
-		
+
 		pageReceiptType: {url: "pageReceiptType.do"},
 		queryReceiptType: {url: "queryReceiptType.do", demo: true},
 		queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
 		addReceiptType: {url: "addReceiptType.do", server: "communionServer"},
-		
+
 		changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
 		changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
 		changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},
@@ -247,16 +247,16 @@ var api = {
 		changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},
 		subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"},
 		updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
-		
+
 		exportMaterialPayment: {url: "exportMaterialPayment.do"},
-		
+
 		showImg: {url: "showImg.do"},
 		downloadFile: {url: "downloadFile.do"},
 		uploadImg: {url: "uploadImg.do"},
 		uploadOther: {url: "uploadOther.do"}
-		
+
 	}, addReduce: {
-		
+
 		pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
 		queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do", demo: true},
 		queryAddReduceForPayedByOrderId: {url: "queryAddReduceForPayedByOrderId.do", demo: true},
@@ -265,20 +265,20 @@ var api = {
 		updateAddReduce: {url: "updateAddReduce.do"},
 		updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do"},
 		deleteAddReduce: {url: "deleteAddReduce.do"},
-		
+
 		submitAddReduce: {url: "submitAddReduce.do"},
-		
+
 		queryAddReduceItemByAddReduceId: {url: "queryAddReduceItemByAddReduceId.do", demo: true},
 		queryAddReduceItemByAddReduceIds: {url: "queryAddReduceItemByAddReduceIds.do", demo: true},
 		updateAddReduceItem: {url: "updateAddReduceItem.do"},
 		deleteAddReduceItem: {url: "deleteAddReduceItem.do"},
-		
+
 	}, approval: {
-		
+
 		pageApprovalByReceiveId: {url: "pageApprovalByReceiveId.do", demo: true},
 		queryApprovalByAId: {url: "queryApprovalByAId.do"},
 		queryApprovalForMaterialRefundItem: {url: "queryApprovalForMaterialRefundItem.do"},
-		
+
 		submitApprovalForCustomer: {url: "submitApprovalForCustomer.do"},
 		submitApprovalForVillage: {url: "submitApprovalForVillage.do"},
 		submitApprovalForOrderBelong: {url: "submitApprovalForOrderBelong.do"},
@@ -288,14 +288,14 @@ var api = {
 		submitApprovalForMaterialRefund: {url: "submitApprovalForMaterialRefund.do"},
 		submitApprovalForMaterialOutsideRefund: {url: "submitApprovalForMaterialOutsideRefund.do"},
 		submitApprovalForDecorationActivity: {url: "submitApprovalForDecorationActivity.do"},
-		
+
 		approveApproval: {url: "approveApproval.do"},
 		refuseApproval: {url: "refuseApproval.do"},
-		
+
 	}, construction: {
 		queryAcceptance: {url: "queryAcceptance.do", demo: true},
 		updateAcceptance: {url: "updateAcceptance.do"},
-		
+
 		pageDecorationOrderForConstructionSchedule: {url: "pageDecorationOrderForConstructionSchedule.do", demo: true},
 		pageDecorationOrderForConstructionScheduleByPlace: {url: "pageDecorationOrderForConstructionScheduleByPlace.do", demo: true},
 		pageDecorationOrderForSupervisionByUserId: {url: "pageDecorationOrderForSupervisionByUserId.do", demo: true},
@@ -309,40 +309,40 @@ var api = {
 		checkFirstPayment: {url: "checkFirstPayment.do"},
 		checkSecondPayment: {url: "checkSecondPayment.do"},
 		checkFinalyPayment: {url: "checkFinalyPayment.do"},
-		
+
 		queryBricklayConstructionScheduleByOrderId: {url: "queryBricklayConstructionScheduleByOrderId.do", demo: true},
 		updateBricklayConstructionSchedule: {url: "updateBricklayConstructionSchedule.do"},
 		setBricklayConstructionScheduleForTimeFlag: {url: "setBricklayConstructionScheduleForTimeFlag.do"},
 		setBricklayConstructionScheduleForInfo: {url: "setBricklayConstructionScheduleForInfo.do"},
 		setBricklayConstructionScheduleForService: {url: "setBricklayConstructionScheduleForService.do"},
-		
+
 		queryBricklayDrawingByCsId: {url: "queryBricklayDrawingByCsId.do", demo: true},
 		queryBricklayDrawingByBcsId: {url: "queryBricklayDrawingByBcsId.do"},
 		addBricklayDrawing: {url: "addBricklayDrawing.do"},
 		deleteBricklayDrawing: {url: "deleteBricklayDrawing.do"},
-		
+
 		queryBricklayConstructionScheduleWorker: {url: "queryBricklayConstructionScheduleWorker.do", demo: true},
 		addBricklayConstructionScheduleWorker: {url: "addBricklayConstructionScheduleWorker.do"},
 		setBricklayConstructionScheduleWorkerForSalary: {url: "setBricklayConstructionScheduleWorkerForSalary.do"},
 		setBricklayConstructionScheduleWorkerForRaty: {url: "setBricklayConstructionScheduleWorkerForRaty.do"},
 		deleteBricklayConstructionScheduleWorker: {url: "deleteBricklayConstructionScheduleWorker.do"},
-		
+
 		queryCarpentConstructionScheduleByOrderId: {url: "queryCarpentConstructionScheduleByOrderId.do"},
 		updateCarpentConstructionSchedule: {url: "updateCarpentConstructionSchedule.do"},
 		setCarpentConstructionScheduleForTimeFlag: {url: "setCarpentConstructionScheduleForTimeFlag.do"},
 		setCarpentConstructionScheduleForInfo: {url: "setCarpentConstructionScheduleForInfo.do"},
-		
+
 		queryCarpentDrawingByCsId: {url: "queryCarpentDrawingByCsId.do"},
 		queryCarpentDrawingByCcsId: {url: "queryCarpentDrawingByCcsId.do"},
 		addCarpentDrawing: {url: "addCarpentDrawing.do"},
 		deleteCarpentDrawing: {url: "deleteCarpentDrawing.do"},
-		
+
 		queryCarpentConstructionScheduleWorker: {url: "queryCarpentConstructionScheduleWorker.do"},
 		addCarpentConstructionScheduleWorker: {url: "addCarpentConstructionScheduleWorker.do"},
 		setCarpentConstructionScheduleWorkerForSalary: {url: "setCarpentConstructionScheduleWorkerForSalary.do"},
 		setCarpentConstructionScheduleWorkerForRaty: {url: "setCarpentConstructionScheduleWorkerForRaty.do"},
 		deleteCarpentConstructionScheduleWorker: {url: "deleteCarpentConstructionScheduleWorker.do"},
-		
+
 		queryChanConstructionScheduleByOrderId: {url: "queryChanConstructionScheduleByOrderId.do", demo: true},
 		updateChanConstructionSchedule: {url: "updateChanConstructionSchedule.do"},
 		setChanConstructionScheduleForTimeFlag: {url: "setChanConstructionScheduleForTimeFlag.do"},
@@ -351,85 +351,85 @@ var api = {
 		setChanConstructionScheduleWorker: {url: "setChanConstructionScheduleWorker.do"},
 		setChanConstructionScheduleForService: {url: "setChanConstructionScheduleForService.do"},
 		setChanConstructionScheduleForSalary: {url: "setChanConstructionScheduleForSalary.do"},
-		
+
 		queryChanDrawingByCsId: {url: "queryChanDrawingByCsId.do", demo: true},
 		queryChanDrawingByCcsId: {url: "queryChanDrawingByCcsId.do"},
 		addChanDrawing: {url: "addChanDrawing.do"},
 		deleteChanDrawing: {url: "deleteChanDrawing.do"},
-		
+
 		queryCleaningConstructionScheduleByOrderId: {url: "queryCleaningConstructionScheduleByOrderId.do", demo: true},
 		updateCleaningConstructionSchedule: {url: "updateCleaningConstructionSchedule.do"},
 		setCleaningConstructionScheduleForTimeFlag: {url: "setCleaningConstructionScheduleForTimeFlag.do"},
 		setCleaningConstructionScheduleForInfo: {url: "setCleaningConstructionScheduleForInfo.do"},
-		
+
 		queryCleaningDrawingByCsId: {url: "queryCleaningDrawingByCsId.do", demo: true},
 		queryCleaningDrawingByCcsId: {url: "queryCleaningDrawingByCcsId.do"},
 		addCleaningDrawing: {url: "addCleaningDrawing.do"},
 		deleteCleaningDrawing: {url: "deleteCleaningDrawing.do"},
-		
+
 		queryCleaningConstructionScheduleWorker: {url: "queryCleaningConstructionScheduleWorker.do", demo: true},
 		addCleaningConstructionScheduleWorker: {url: "addCleaningConstructionScheduleWorker.do"},
 		setCleaningConstructionScheduleWorkerForSalary: {url: "setCleaningConstructionScheduleWorkerForSalary.do"},
 		setCleaningConstructionScheduleWorkerForRaty: {url: "setCleaningConstructionScheduleWorkerForRaty.do"},
 		deleteCleaningConstructionScheduleWorker: {url: "deleteCleaningConstructionScheduleWorker.do"},
-		
+
 		queryGroundLevelingConstructionScheduleByOrderId: {url: "queryGroundLevelingConstructionScheduleByOrderId.do", demo: true},
 		updateGroundLevelingConstructionSchedule: {url: "updateGroundLevelingConstructionSchedule.do"},
 		setGroundLevelingConstructionScheduleForTimeFlag: {url: "setGroundLevelingConstructionScheduleForTimeFlag.do"},
 		setGroundLevelingConstructionScheduleForInfo: {url: "setGroundLevelingConstructionScheduleForInfo.do"},
-		
+
 		queryGroundLevelingDrawingByCsId: {url: "queryGroundLevelingDrawingByCsId.do", demo: true},
 		queryGroundLevelingDrawingByGlcsId: {url: "queryGroundLevelingDrawingByGlcsId.do"},
 		addGroundLevelingDrawing: {url: "addGroundLevelingDrawing.do"},
 		deleteGroundLevelingDrawing: {url: "deleteGroundLevelingDrawing.do"},
-		
+
 		queryGroundLevelingConstructionScheduleWorker: {url: "queryGroundLevelingConstructionScheduleWorker.do", demo: true},
 		addGroundLevelingConstructionScheduleWorker: {url: "addGroundLevelingConstructionScheduleWorker.do"},
 		setGroundLevelingConstructionScheduleWorkerForSalary: {url: "setGroundLevelingConstructionScheduleWorkerForSalary.do"},
 		setGroundLevelingConstructionScheduleWorkerForRaty: {url: "setGroundLevelingConstructionScheduleWorkerForRaty.do"},
 		deleteGroundLevelingConstructionScheduleWorker: {url: "deleteGroundLevelingConstructionScheduleWorker.do"},
-		
+
 		pageCustomerServiceBackVisit: {url: "pageCustomerServiceBackVisit.do", demo: true},
 		addCustomerServiceBackVisit: {url: "addCustomerServiceBackVisit.do"},
 		updateCustomerServiceBackVisit: {url: "updateCustomerServiceBackVisit.do"},
 		deleteCustomerServiceBackVisit: {url: "deleteCustomerServiceBackVisit.do"},
-		
+
 		pageCustomerServiceComplaint: {url: "pageCustomerServiceComplaint.do", demo: true},
 		addCustomerServiceComplaint: {url: "addCustomerServiceComplaint.do"},
 		updateCustomerServiceComplaint: {url: "updateCustomerServiceComplaint.do"},
 		handleCustomerServiceComplaint: {url: "handleCustomerServiceComplaint.do"},
 		deleteCustomerServiceComplaint: {url: "deleteCustomerServiceComplaint.do"},
-		
+
 		pageCustomerServiceGuarantee: {url: "pageCustomerServiceGuarantee.do", demo: true},
 		addCustomerServiceGuarantee: {url: "addCustomerServiceGuarantee.do"},
 		updateCustomerServiceGuarantee: {url: "updateCustomerServiceGuarantee.do"},
 		deleteCustomerServiceGuarantee: {url: "deleteCustomerServiceGuarantee.do"},
-		
+
 		pageInspectionDeductionByOrderId: {url: "pageInspectionDeductionByOrderId.do", demo: true},
 		addInspectionDeduction: {url: "addInspectionDeduction.do"},
 		deleteInspectionDeduction: {url: "deleteInspectionDeduction.do"},
-		
+
 		pageInspectionRecordByOrderId: {url: "pageInspectionRecordByOrderId.do", demo: true},
 		addInspectionRecord: {url: "addInspectionRecord.do"},
 		updateInspectionRecord: {url: "updateInspectionRecord.do"},
 		deleteInspectionRecord: {url: "deleteInspectionRecord.do"},
-		
+
 		queryOilConstructionScheduleByOrderId: {url: "queryOilConstructionScheduleByOrderId.do", demo: true},
 		updateOilConstructionSchedule: {url: "updateOilConstructionSchedule.do"},
 		setOilConstructionScheduleForTimeFlag: {url: "setOilConstructionScheduleForTimeFlag.do"},
 		setOilConstructionScheduleForInfo: {url: "setOilConstructionScheduleForInfo.do"},
-		
+
 		queryOilDrawingByCsId: {url: "queryOilDrawingByCsId.do", demo: true},
 		queryOilDrawingByOcsId: {url: "queryOilDrawingByOcsId.do"},
 		addOilDrawing: {url: "addOilDrawing.do"},
 		deleteOilDrawing: {url: "deleteOilDrawing.do"},
-		
+
 		queryOilConstructionScheduleWorker: {url: "queryOilConstructionScheduleWorker.do", demo: true},
 		addOilConstructionScheduleWorker: {url: "addOilConstructionScheduleWorker.do"},
 		setOilConstructionScheduleWorkerForSalary: {url: "setOilConstructionScheduleWorkerForSalary.do"},
 		setOilConstructionScheduleWorkerForRaty: {url: "setOilConstructionScheduleWorkerForRaty.do"},
 		deleteOilConstructionScheduleWorker: {url: "deleteOilConstructionScheduleWorker.do"},
-		
+
 		queryPutlineConstructionScheduleByOrderId: {url: "queryPutlineConstructionScheduleByOrderId.do", demo: true},
 		updatePutlineConstructionSchedule: {url: "updatePutlineConstructionSchedule.do"},
 		setPutlineConstructionScheduleForStatus: {url: "setPutlineConstructionScheduleForStatus.do"},
@@ -437,73 +437,77 @@ var api = {
 		setPutlineConstructionScheduleWorker: {url: "setPutlineConstructionScheduleWorker.do"},
 		setPutlineConstructionScheduleForService: {url: "setPutlineConstructionScheduleForService.do"},
 		setPutlineConstructionScheduleForSalary: {url: "setPutlineConstructionScheduleForSalary.do"},
-		
+
 		queryPutlineDrawingByCsId: {url: "queryPutlineDrawingByCsId.do", demo: true},
 		addPutlineDrawing: {url: "addPutlineDrawing.do"},
 		deletePutlineDrawing: {url: "deletePutlineDrawing.do"},
-		
+
 		pageQualityTestingRecordByOrderId: {url: "pageQualityTestingRecordByOrderId.do"},
 		addQualityTestingRecord: {url: "addQualityTestingRecord.do"},
 		updateQualityTestingRecord: {url: "updateQualityTestingRecord.do"},
 		deleteQualityTestingRecord: {url: "deleteQualityTestingRecord.do"},
-		
+
 		pageReworkByOrderId: {url: "pageReworkByOrderId.do", demo: true},
 		addRework: {url: "addRework.do"},
 		updateRework: {url: "updateRework.do"},
 		deleteRework: {url: "deleteRework.do"},
-		
+
 		queryReworkDrawingByReworkId: {url: "queryReworkDrawingByReworkId.do"},
 		addReworkDrawing: {url: "addReworkDrawing.do"},
 		deleteReworkDrawingById: {url: "deleteReworkDrawingById.do"},
-		
+
 		queryWaterwayCircuitCheckConstructionScheduleByOrderId: {url: "queryWaterwayCircuitCheckConstructionScheduleByOrderId.do", demo: true},
 		updateWaterwayCircuitCheckConstructionSchedule: {url: "updateWaterwayCircuitCheckConstructionSchedule.do"},
 		setWaterwayCircuitCheckConstructionScheduleForTimeFlag: {url: "setWaterwayCircuitCheckConstructionScheduleForTimeFlag.do"},
 		setWaterwayCircuitCheckConstructionScheduleForInfo: {url: "setWaterwayCircuitCheckConstructionScheduleForInfo.do"},
-		
+
 		queryWaterwayCircuitCheckDrawingByCsId: {url: "queryWaterwayCircuitCheckDrawingByCsId.do", demo: true},
 		queryWaterwayCircuitCheckDrawingByWcpcsId: {url: "queryWaterwayCircuitCheckDrawingByWcpcsId.do"},
 		addWaterwayCircuitCheckDrawing: {url: "addWaterwayCircuitCheckDrawing.do"},
 		deleteWaterwayCircuitCheckDrawing: {url: "deleteWaterwayCircuitCheckDrawing.do"},
-		
+
 		queryWaterwayCircuitCheckConstructionScheduleWorker: {url: "queryWaterwayCircuitCheckConstructionScheduleWorker.do", demo: true},
 		addWaterwayCircuitCheckConstructionScheduleWorker: {url: "addWaterwayCircuitCheckConstructionScheduleWorker.do"},
 		setWaterwayCircuitCheckConstructionScheduleWorkerForSalary: {url: "setWaterwayCircuitCheckConstructionScheduleWorkerForSalary.do"},
 		setWaterwayCircuitCheckConstructionScheduleWorkerForRaty: {url: "setWaterwayCircuitCheckConstructionScheduleWorkerForRaty.do"},
 		deleteWaterwayCircuitCheckConstructionScheduleWorker: {url: "deleteWaterwayCircuitCheckConstructionScheduleWorker.do"},
-		
+
 		queryWaterwayCircuitPowerConstructionScheduleByOrderId: {url: "queryWaterwayCircuitPowerConstructionScheduleByOrderId.do", demo: true},
 		updateWaterwayCircuitPowerConstructionSchedule: {url: "updateWaterwayCircuitPowerConstructionSchedule.do"},
 		setWaterwayCircuitPowerConstructionScheduleForTimeFlag: {url: "setWaterwayCircuitPowerConstructionScheduleForTimeFlag.do"},
 		setWaterwayCircuitPowerConstructionScheduleForInfo: {url: "setWaterwayCircuitPowerConstructionScheduleForInfo.do"},
 		setWaterwayCircuitPowerConstructionScheduleWorker: {url: "setWaterwayCircuitPowerConstructionScheduleWorker.do"},
-		
+
 		queryWaterwayCircuitPowerDrawingByCsId: {url: "queryWaterwayCircuitPowerDrawingByCsId.do", demo: true},
 		queryWaterwayCircuitPowerDrawingByWcpcsId: {url: "queryWaterwayCircuitPowerDrawingByWcpcsId.do"},
 		addWaterwayCircuitPowerDrawing: {url: "addWaterwayCircuitPowerDrawing.do"},
 		deleteWaterwayCircuitPowerDrawing: {url: "deleteWaterwayCircuitPowerDrawing.do"},
-		
+
 		queryWaterwayCircuitPowerConstructionScheduleWorker: {url: "queryWaterwayCircuitPowerConstructionScheduleWorker.do", demo: true},
 		addWaterwayCircuitPowerConstructionScheduleWorker: {url: "addWaterwayCircuitPowerConstructionScheduleWorker.do"},
 		setWaterwayCircuitPowerConstructionScheduleWorkerForSalary: {url: "setWaterwayCircuitPowerConstructionScheduleWorkerForSalary.do"},
 		setWaterwayCircuitPowerConstructionScheduleWorkerForRaty: {url: "setWaterwayCircuitPowerConstructionScheduleWorkerForRaty.do"},
 		deleteWaterwayCircuitPowerConstructionScheduleWorker: {url: "deleteWaterwayCircuitPowerConstructionScheduleWorker.do"},
-		
-		queryWorkerSalary:{url:"queryWorkerSalary.do"},
-		addWorkerSalary:{url:"addWorkerSalary.do"}
 
-		
+		queryWorkerSalary:{url:"queryWorkerSalary.do"},
+		addWorkerSalary:{url:"addWorkerSalary.do"},
+
+		queryConstructerByOrderId:{url:"queryConstructerByOrderId.do"},
+		queryConstructerByCsId:{url: "queryConstructerByCsId.do"},
+		addConstructer:{url: "addConstructer.do"},
+		deleteConstructer:{url: "deleteConstructer.do"},
+		queryConstructerCidByUserId:{url: "queryConstructerCidByUserId.do"}
 	}, data: {
-		
+
 		pageSupplier: {url: "pageSupplier.do", demo: true},
 		addSupplier: {url: "addSupplier.do", server: "communionServer"},
 		updateSupplier: {url: "updateSupplier.do", server: "communionServer"},
 		updateSupplierForLogin: {url: "updateSupplierForLogin.do", server: "communionServer"},
 		updateSupplierForPassword: {url: "updateSupplierForPassword.do", server: "communionServer"},
-		
+
 		querySupplierUserRightBySId: {url: "querySupplierUserRightBySId.do", demo: true},
 		updateSupplierUserRight: {url: "updateSupplierUserRight.do", server: "communionServer"},
-		
+
 		pageBrand: {url: "pageBrand.do", demo: true},
 		queryBrand: {url: "queryBrand.do", demo: true},
 		queryBrandByBId: {url: "queryBrandByBId.do"},
@@ -514,18 +518,18 @@ var api = {
 		addBrand: {url: "addBrand.do", server: "communionServer"},
 		updateBrand: {url: "updateBrand.do", server: "communionServer"},
 		deleteBrandByBIds: {url: "deleteBrandByBIds.do", server: "communionServer"},
-		
+
 		queryBrandUserRightForUserId: {url: "queryBrandUserRightForUserId.do"},
 		queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do"},
 		updateBrandUserRight: {url: "updateBrandUserRight.do", server: "communionServer"},
-		
+
 		pageCategory: {url: "pageCategory.do", demo: true},
 		queryCategory: {url: "queryCategory.do", demo: true},
 		queryCategoryByCId: {url: "queryCategoryByCId.do"},
 		addCategory: {url: "addCategory.do", server: "communionServer"},
 		updateCategory: {url: "updateCategory.do", server: "communionServer"},
 		deleteCategoryByCIds: {url: "deleteCategoryByCIds.do", server: "communionServer"},
-		
+
 		pageCustomer: {url: "pageCustomer.do", demo: true},
 		queryCustomerById: {url: "queryCustomerById.do"},
 		queryCustomerForName: {url: "queryCustomerForName.do"},
@@ -533,7 +537,7 @@ var api = {
 		addCustomer: {url: "addCustomer.do", server: "communionServer"},
 		updateCustomer: {url: "updateCustomer.do", server: "communionServer"},
 		updateCustomerForBalance: {url: "updateCustomerForBalance.do", server: "communionServer"},
-		
+
 		pageVillage: {url: "pageVillage.do", demo: true},
 		queryVillage: {url: "queryVillage.do"},
 		queryVillageById: {url: "queryVillageById.do"},
@@ -542,9 +546,9 @@ var api = {
 		updateVillage: {url: "updateVillage.do", server: "communionServer"},
 		updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communionServer"},
 		updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communionServer"},
-		
+
 	}, department: {
-		
+
 		pageDepartment: {url: "pageDepartment.do", demo: true},
 		queryDepartment: {url: "queryDepartment.do", demo: true},
 		queryDepartmentById: {url: "queryDepartmentById.do"},
@@ -552,13 +556,13 @@ var api = {
 		addDepartment: {url: "addDepartment.do", server: "communionServer"},
 		updateDepartment: {url: "updateDepartment.do", server: "communionServer"},
 		deleteDepartment: {url: "deleteDepartment.do", server: "communionServer"},
-		
+
 	}, decoration: {
-		
+
 		pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
 		queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do", demo: true},
 		addBackVisit: {url: "addBackVisit.do"},
-		
+
 		queryDecorationActivityByOrderId: {url: "queryDecorationActivityByOrderId.do", demo: true},
 		queryDecorationActivityItem: {url: "queryDecorationActivityItem.do", demo: true},
 		queryDecorationActivityItemForCouponAVaildByOrderId: {url: "queryDecorationActivityItemForCouponAVaildByOrderId.do"},
@@ -567,13 +571,13 @@ var api = {
 		convertDecorationActivityItem: {url: "convertDecorationActivityItem.do"},
 		abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
 		receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
-		
+
 		queryDecorationContractByOrderId: {url: "queryDecorationContractByOrderId.do", demo: true},
 		saveDecorationContract: {url: "saveDecorationContract.do"},
 		generateDecorationContract: {url: "../../generateDecorationContract.do"},
 		signDecorationContract: {url: "signDecorationContract.do"},
 		resignDecorationContract: {url: "resignDecorationContract.do"},
-		
+
 		pageDecorationOrderForGeneral: {url: "pageDecorationOrderForGeneral.do", demo: true},
 		pageDecorationOrderForCommon: {url: "pageDecorationOrderForCommon.do", demo: true},
 		pageDecorationOrderForDesigner: {url: "pageDecorationOrderForDesigner.do", demo: true},
@@ -591,24 +595,24 @@ var api = {
 		obsoleteDecorationOrder: {url: "obsoleteDecorationOrder.do"},
 		terminalDecorationOrder: {url: "terminalDecorationOrder.do"},
 		changeDecorationOrderForAdvance: {url: "changeDecorationOrderForAdvance.do"},
-		
+
 		exportDecorationorderByContractTime: {url: "exportDecorationorderByContractTime.do"},
-		
+
 		queryDecorationBelongByOrderId: {url: "queryDecorationBelongByOrderId.do", demo: true},
 		queryDecorationBelongForDesignAChangeByOrderId: {url: "queryDecorationBelongForDesignAChangeByOrderId.do", demo: true},
 		queryDecorationBelongForDesignByOrderId: {url: "queryDecorationBelongForDesignByOrderId.do"},
 		queryDecorationBelongForBusinessnAChangeByOrderId: {url: "queryDecorationBelongForBusinessnAChangeByOrderId.do", demo: true},
 		queryDecorationBelongForBusinessnByOrderId: {url: "queryDecorationBelongForBusinessnByOrderId.do"},
-		
+
 		queryOrderDesignPictureByOrderId: {url: "queryOrderDesignPictureByOrderId.do"},
 		addOrderDesignPicture: {url: "addOrderDesignPicture.do"},
-		
+
 		queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do", demo: true},
 		addDecorationPicture: {url: "addDecorationPicture.do"},
 		deleteDecorationPicture: {url: "deleteDecorationPicture.do"},
-		
+
 	}, drawline:{
-		
+
 		pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true},
 		pageDrawLineForAssign: {url: "pageDrawLineForAssign.do"},
 		queryDrawLine: {url: "queryDrawLine.do", demo: true},
@@ -617,18 +621,18 @@ var api = {
 		applayDrawLine: {url: "applayDrawLine.do"},
 		setDrawLineForSuccess: {url: "setDrawLineForSuccess.do"},
 		setDrawLineForFailure: {url: "setDrawLineForFailure.do"},
-		
+
 	}, payment: {
-		
+
 		queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
 		queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
-		
+
 		pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
 		queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
 		collectPayment: {url: "collectPayment.do"},
 		confirmPayment: {url: "confirmPayment.do"},
 		withdrawPayment: {url: "withdrawPayment.do"},
-		
+
 		pageDecorationPaymentForCommit: {url: "pageDecorationPaymentForCommit.do", demo: true},
 		pageDecorationPaymentForCollect: {url: "pageDecorationPaymentForCollect.do", demo: true},
 		pageDecorationPaymentForConfirm: {url: "pageDecorationPaymentForConfirm.do", demo: true},
@@ -645,7 +649,7 @@ var api = {
 		updateDecorationPaymentForReferMoney: {url: "updateDecorationPaymentForReferMoney.do"},
 		refundDecorationPayment: {url: "refundDecorationPayment.do"},
 		confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
-		
+
 		pageMaterialPaymentForInit: {url: "pageMaterialPaymentForInit.do", demo: true},
 		pageMaterialPaymentForCollect: {url: "pageMaterialPaymentForCollect.do", demo: true},
 		pageMaterialPaymentForConfirm: {url: "pageMaterialPaymentForConfirm.do", demo: true},
@@ -672,11 +676,11 @@ var api = {
 		cancelMaterialPayment: {url: "cancelMaterialPayment.do"},
 		refundMaterialPayment: {url: "refundMaterialPayment.do"},
 		refundMaterialPaymentForCoupon: {url: "refundMaterialPaymentForCoupon.do"},
-		
+
 		exportDecorationPayment: {url: "exportDecorationPayment.do"},
-		
+
 	}, information: {
-		
+
 		pageMessage: {url: "pageMessage.do", demo: true},
 		queryMessageForUnRead: {url: "queryMessageForUnRead.do"},
 		countMessage: {url: "countMessage.do", demo: true},
@@ -684,7 +688,7 @@ var api = {
 		updateMessageForRead: {url: "updateMessageForRead.do"},
 		deleteMessageById: {url: "deleteMessageById.do"},
 		deleteMessageByIds: {url: "deleteMessageByIds.do"},
-		
+
 		pageNotice: {url: "pageNotice.do", demo: true},
 		pageNoticeForDeptAValid: {url: "pageNoticeForDeptAValid.do", demo: true},
 		queryNoticeForValid: {url: "queryNoticeForValid.do"},
@@ -692,7 +696,7 @@ var api = {
 		addNotice: {url: "addNotice.do"},
 		updateNotice: {url: "updateNotice.do"},
 		deleteNotice: {url: "deleteNotice.do"},
-		
+
 		pageActivity: {url: "pageActivity.do", demo: true},
 		queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
 		queryActivityItemByAId: {url: "queryActivityItemByAId.do", demo: true},
@@ -701,18 +705,18 @@ var api = {
 		updateActivity: {url: "updateActivity.do"},
 		updateActivityItem: {url: "updateActivityItem.do"},
 		deleteActivityItemByAiId: {url: "deleteActivityItemByAiId.do"},
-		
+
 		queryEvent: {url: "queryEvent.do", demo:true},
 		addEvent: {url: "addEvent.do"},
 		deleteEvent: {url: "deleteEvent.do"},
-		
+
 	}, log: {
-		
+
 		pageActionLog: {url: "pageActionLog.do"},
 		pageLoginLog: {url: "pageLoginLog.do", demo: true},
-		
+
 	}, material: {
-		
+
 		queryMaterialBrand: {url: "queryMaterialBrand.do"},
 		queryMaterialBrandById: {url: "queryMaterialBrandById.do"},
 		queryMaterialBrandForName: {url: "queryMaterialBrandForName.do"},
@@ -720,18 +724,18 @@ var api = {
 		addMaterialBrand: {url: "addMaterialBrand.do"},
 		updateMaterialBrand: {url: "updateMaterialBrand.do"},
 		deleteMaterialBrandByIds: {url: "deleteMaterialBrandByIds.do"},
-		
+
 		queryMaterialBrandRight: {url: "queryMaterialBrandRight.do", demo: true},
 		queryMaterialBrandRightForLogin: {url: "queryMaterialBrandRightForLogin.do", demo: true},
 		queryMaterialBrandRightForBrand: {url: "queryMaterialBrandRightForLogin.do", demo: true},
 		saveMaterialBrandRight: {url: "saveMaterialBrandRight.do"},
-		
+
 		pageMaterialInside: {url: "pageMaterialInside.do"},
 		pageMaterialInsideByUserId: {url: "pageMaterialInsideByUserId.do"},
 		addMaterialInside: {url: "addMaterialInside.do"},
 		updateMaterialInside: {url: "updateMaterialInside.do"},
 		deleteMaterialInsideByMiIds: {url: "deleteMaterialInsideByMiIds.do"},
-		
+
 		pageMaterialModel: {url: "pageMaterialModel.do", demo: true},
 		queryMaterialModel: {url: "queryMaterialModel.do"},
 		queryMaterialModelById: {url: "queryMaterialModelById.do", demo: true},
@@ -743,7 +747,7 @@ var api = {
 		updateMaterialModelForStatus: {url: "updateMaterialModelForStatus.do"},
 		updateMaterialModelForAdvance: {url: "updateMaterialModelForAdvance.do"},
 		deleteMaterialModelByIds: {url: "deleteMaterialModelByIds.do"},
-		
+
 		pageMaterialSubOrderBalance: {url: "pageMaterialSubOrderBalance.do", demo: true},
 		pageMaterialSubOrderBalanceForVender: {url: "pageMaterialSubOrderBalanceForVender.do", demo: true},
 		pageMaterialSubOrderForPreBalance: {url: "pageMaterialSubOrderForPreBalance.do", demo: true},
@@ -754,14 +758,14 @@ var api = {
 		preBalanceMaterialSubOrder: {url: "preBalanceMaterialSubOrder.do"},
 		vpostMaterialSubOrderBalance: {url: "vpostMaterialSubOrderBalance.do"},
 		postMaterialSubOrderBalance: {url: "postMaterialSubOrderBalance.do"},
-		
+
 		pageMaterialOutside: {url: "pageMaterialOutside.do", demo: true},
 		pageMaterialOutsideByUserId: {url: "pageMaterialOutsideByUserId.do", demo: true},
 		addMaterialOutside: {url: "addMaterialOutside.do"},
 		updateMaterialOutside: {url: "updateMaterialOutside.do"},
 		confirmMaterialOutsideByIds: {url: "confirmMaterialOutsideByIds.do"},
 		deleteMaterialOutsideByIds: {url: "deleteMaterialOutsideByIds.do"},
-		
+
 		pageMaterialSubOrder: {url: "pageMaterialSubOrder.do"},
 		pageMaterialSubOrderByUserId: {url: "pageMaterialSubOrderByUserId.do", demo: true},
 		pageMaterialSubOrderByOrderId: {url: "pageMaterialSubOrderByOrderId.do"},
@@ -772,7 +776,7 @@ var api = {
 		updateMaterialSubOrderForMaling: {url: "updateMaterialSubOrderForMaling.do"},
 		deliverMaterialSubOrder: {url: "deliverMaterialSubOrder.do"},
 		deleteMaterialSubOrder: {url: "deleteMaterialSubOrder.do"},
-		
+
 		queryMaterialSubOrderItemByOrderId: {url: "queryMaterialSubOrderItemByOrderId.do"},
 		queryMaterialSubOrderItemByMsoId: {url: "queryMaterialSubOrderItemByMsoId.do", demo: true},
 		queryMaterialSubOrderItemForSaleByMsoiId: {url: "queryMaterialSubOrderItemForSaleByMsoiId.do", demo: true},
@@ -785,20 +789,20 @@ var api = {
 		updateMaterialSubOrderItemForPostPT: {url: "updateMaterialSubOrderItemForPostPT.do"},
 		changeMaterialSubOrderItemForCaclType: {url: "changeMaterialSubOrderItemForCaclType.do"},
 		deleteMaterialSubOrderItem: {url: "deleteMaterialSubOrderItem.do"},
-		
+
 		queryMaterialSubOrderRefundByMsoId: {url: "queryMaterialSubOrderRefundByMsoId.do", demo: true},
 		cancelMaterialSubOrderRefundForModel: {url: "cancelMaterialSubOrderRefundForModel.do"},
 		cancelMaterialSubOrderRefundForPackage: {url: "cancelMaterialSubOrderRefundForPackage.do"},
-		
+
 		pageMaterialType: {url: "pageMaterialType.do"},
 		queryMaterialType: {url: "queryMaterialType.do"},
 		queryMaterialTypeById: {url: "queryMaterialTypeById.do"},
 		addMaterialType: {url: "addMaterialType.do"},
 		updateMaterialType: {url: "updateMaterialType.do"},
 		deleteMaterialTypeByIds: {url: "deleteMaterialTypeByIds.do"}
-		
+
 	},personel: {
-		
+
 		pageUser: {url: "pageUser.do", demo: true},
 		pageUserForResetPassword: {url: "pageUserForResetPassword.do", demo: true},
 		queryUserByLoginId: {url: "queryUserByLoginId.do"},
@@ -819,44 +823,44 @@ var api = {
 		resetPassword: {url: "resetPassword.do", server: "communionServer"},
 		changePassword: {url: "changePassword.do", server: "communionServer"},
 		deleteUserByIds: {url: "deleteUserByIds.do", server: "communionServer"},
-		
+
 		pageUserContractByUserId: {url: "pageUserContractByUserId.do"},
 		addUserContract: {url: "addUserContract.do", server: "communionServer"},
 		updateUserContract: {url: "updateUserContract.do", server: "communionServer"},
 		deleteUserContract: {url: "deleteUserContract.do", server: "communionServer"},
-		
+
 		pageUserExperienceByUserId: {url: "pageUserExperienceByUserId.do"},
 		addUserExperience: {url: "addUserExperience.do", server: "communionServer"},
 		updateUserExperience: {url: "updateUserExperience.do", server: "communionServer"},
 		deleteUserExperience: {url: "deleteUserExperience.do", server: "communionServer"},
-		
+
 		pageUserSalary: {url: "pageUserSalary.do"},
 		pageUserSalaryByUserId: {url: "pageUserSalaryByUserId.do"},
 		addUserSalary: {url: "addUserSalary.do"},
 		updateUserSalary: {url: "updateUserSalary.do"},
 		deleteUserSalary: {url: "deleteUserSalary.do"},
-		
+
 	}, quotation: {
-		
+
 		queryQuotationClassification: {url: "queryQuotationClassification.do", demo: true},
 		queryQuotationBigCategory: {url: "queryQuotationBigCategory.do", demo: true},
 		queryQuotationSmallCategory: {url: "queryQuotationSmallCategory.do", demo: true},
 		queryQuotationType: {url: "queryQuotationType.do", demo: true},
-		
+
 		pageQuotationVersion: {url: "pageQuotationVersion.do", demo: true},
 		queryQuotationVersion: {url: "queryQuotationVersion.do", demo: true},
 		queryQuotationVersionByVersionId: {url: "queryQuotationVersionByVersionId.do"},
 		addQuotationVersion: {url: "addQuotationVersion.do"},
 		updateQuotationVersion: {url: "updateQuotationVersion.do"},
 		copyQuotationVersion: {url: "copyQuotationVersion.do"},
-		
+
 		pageFunctionArea: {url: "pageFunctionArea.do", demo: true},
 		queryFunctionAreaByIdAVersionId: {url: "queryFunctionAreaByIdAVersionId.do"},
 		queryFunctionAreaByVersionId: {url: "queryFunctionAreaByVersionId.do", demo: true},
 		addFunctionArea: {url: "addFunctionArea.do"},
 		updateFunctionArea: {url: "updateFunctionArea.do"},
 		deleteFunctionArea: {url: "deleteFunctionArea.do"},
-		
+
 		pageQuotationItem: {url: "pageQuotationItem.do", demo: true},
 		pageQuotationItemByVersionId: {url: "pageQuotationItemByVersionId.do", demo: true},
 		queryQuotationItemByItemIdAVersionId: {url: "queryQuotationItemByItemIdAVersionId.do"},
@@ -864,11 +868,11 @@ var api = {
 		updateQuotationItem: {url: "updateQuotationItem.do"},
 		updateQuotationItemForStatus: {url: "updateQuotationItemForStatus.do"},
 		updateQuotationItemForDiscount: {url: "updateQuotationItemForDiscount.do"},
-		
+
 		queryFunctionAreaItemByFunctionAreaId: {url: "queryFunctionAreaItemByFunctionAreaId.do", demo: true},
 		addFunctionAreaItem: {url: "addFunctionAreaItem.do"},
 		deleteFunctionAreaItemByIds: {url: "deleteFunctionAreaItemByIds.do"},
-		
+
 		pageSystemDefineItem: {url: "pageSystemDefineItem.do", demo: true},
 		pageSystemDefineItemForEnable: {url: "pageSystemDefineItemForEnable.do", demo: true},
 		querySystemDefineItemByItemId: {url: "querySystemDefineItemByItemId.do"},
@@ -877,7 +881,7 @@ var api = {
 		updateSystemDefineItemForStatus: {url: "updateSystemDefineItemForStatus.do"},
 		updateSystemDefineItemForDiscount: {url: "updateSystemDefineItemForDiscount.do"},
 		deleteSystemDefineItemByIds: {url: "deleteSystemDefineItemByIds.do"},
-		
+
 		queryQuotationByOrderId: {url: "queryQuotationByOrderId.do", demo: true},
 		queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do", demo: true},
 		queryQuotationById: {url: "queryQuotationById.do", demo: true},
@@ -891,49 +895,49 @@ var api = {
 		replicaQuotation: {url: "replicaQuotation.do"},
 		copyQuotation: {url: "copyQuotation.do"},
 		changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
-		
+
 		queryQuotationFunctionAreaForCommonByQuotationId: {url: "queryQuotationFunctionAreaForCommonByQuotationId.do", demo: true},
 		queryQuotationFunctionAreaByQuotationId: {url: "queryQuotationFunctionAreaByQuotationId.do", demo: true},
 		addQuotationFuctionAreaByFunctionAreaIds: {url: "addQuotationFuctionAreaByFunctionAreaIds.do"},
 		updateQuotationFunctionArea: {url: "updateQuotationFunctionArea.do"},
 		deleteQuotationFunctionArea: {url: "deleteQuotationFunctionArea.do"},
-		
+
 		queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
 		updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
 		updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
 		deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
-		
+
 		queryQuotationMaterialItemByQId: {url:"queryQuotationMaterialItemByQId.do"},
 		addQuotationMaterialItem: {url:"addQuotationMaterialItem.do"},
 		upgradeQuotationMaterialItem: {url:"upgradeQuotationMaterialItem.do"},
 		discountQuotationMaterialItem: {url:"discountQuotationMaterialItem.do"},
 		deleteQuotationMaterialItem: {url:"deleteQuotationMaterialItem.do"},
-		
+
 	}, report: {
-		
+
 		queryRankForPlace: {url: "queryRankForPlace.do", demo: true},
-		
+
 		queryDecorationDesignerRank: {url: "queryDecorationDesignerRank.do"},
 		queryDecorationDesignerDepartmentRank: {url: "queryDecorationDesignerDepartmentRank.do"},
 		queryDecorationDesignerRegionRank: {url: "queryDecorationDesignerRegionRank.do"},
 		decorationDesignerRank: {url: "decorationDesignerRank.do", demo: true},
 		decorationDesignerDepartmentRank: {url: "decorationDesignerDepartmentRank.do", demo: true},
 		decorationDesignerRegionRank: {url: "decorationDesignerRegionRank.do", demo: true},
-		
+
 		queryMaterialDesignerRank: {url: "queryMaterialDesignerRank.do"},
 		queryMaterialDesignerDepartmentRank: {url: "queryMaterialDesignerDepartmentRank.do"},
 		queryMaterialDesignerRegionRank: {url: "queryMaterialDesignerRegionRank.do"},
 		materialDesignerRank: {url: "materialDesignerRank.do", demo: true},
 		materialDesignerDepartmentRank: {url: "materialDesignerDepartmentRank.do", demo: true},
 		materialDesignerRegionRank: {url: "materialDesignerRegionRank.do", demo: true},
-		
+
 		queryZaterialDesignerRank: {url: "queryZaterialDesignerRank.do"},
 		queryZaterialDesignerDepartmentRank: {url: "queryZaterialDesignerDepartmentRank.do"},
 		queryZaterialDesignerRegionRank: {url: "queryZaterialDesignerRegionRank.do"},
 		zaterialDesignerRank: {url: "zaterialDesignerRank.do", demo: true},
 		zaterialDesignerDepartmentRank: {url: "zaterialDesignerDepartmentRank.do", demo: true},
 		zaterialDesignerRegionRank: {url: "zaterialDesignerRegionRank.do", demo: true},
-		
+
 		materialTypeReport: {url: "materialTypeReport.do", demo: true},
 		materialBrandReport: {url: "materialBrandReport.do", demo: true},
 		materialDepartmentReport: {url: "materialDepartmentReport.do", demo: true},
@@ -945,18 +949,18 @@ var api = {
 		countDesigner: {url: "countDesigner.do", demo: true},
 		countDesignerDepartment: {url: "countDesignerDepartment.do", demo: true},
 		countDesignerRegion: {url: "countDesignerRegion.do", demo: true},
-		
+
 		reportCityCount: {url: "reportCityCount.do", demo: true},
-		
+
 	}, right: {
 		queryDecorationOrderDesignDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do", demo: true},
 		queryDecorationOrderSalesmanDepartmentRightByUserId: {url: "queryDecorationOrderSalesmanDepartmentRightByUserId.do", demo: true},
 		queryDecorationOrderStatusRightByUserId: {url: "queryDecorationOrderStatusRightByUserId.do", demo: true},
-		
+
 		updateDecorationOrderDesignDepartmentRight: {url: "updateDecorationOrderDesignDepartmentRight.do"},
 		updateDecorationOrderSalesmanDepartmentRight: {url: "updateDecorationOrderSalesmanDepartmentRight.do"},
 		updateDecorationOrderStatusRight: {url: "updateDecorationOrderStatusRight.do"},
-		
+
 	}, salary: {
 		pageDesignerSalary: {url: "pageDesignerSalary.do"},
 		pageDesignerSalaryForInit: {url: "pageDesignerSalaryForInit.do"},
@@ -969,12 +973,12 @@ var api = {
 		payDesignerSalary: {url: "payDesignerSalary.do"},
 		payoffDesignerSalary: {url: "payoffDesignerSalary.do"},
 		unpayoffDesignerSalary: {url: "unpayoffDesignerSalary.do"},
-		
+
 		pageVenderBalance: {url: "pageVenderBalance.do"},
 		pageVenderBalanceForInit: {url: "pageVenderBalanceForInit.do"},
 		pageVenderBalanceForPayOff: {url: "pageVenderBalanceForPayOff.do"},
 		payVenderBalance: {url: "payVenderBalance.do"},
-		
+
 		pageWorkerSalaryForInit: {url: "pageWorkerSalaryForInit.do"},
 		pageWorkerSalaryForPayOff: {url: "pageWorkerSalaryForPayOff.do"},
 		pageWorkerSalaryForUnPayOff: {url: "pageWorkerSalaryForUnPayOff.do"},
@@ -1001,7 +1005,7 @@ var api = {
 		cancelWorkerDeductSalaryToConfirm: {url: "cancelWorkerDeductSalaryToConfirm.do"},
 		deleteWorkerBaseSalary: {url: "deleteWorkerBaseSalary.do"},
 		deleteWorkerDeductSalary: {url: "deleteWorkerDeductSalary.do"},
-		
+
 	}, system: {
 		pageCity: {url: "pageCity.do", demo: true},
 		queryCity: {url: "queryCity.do", demo: true},
@@ -1010,7 +1014,7 @@ var api = {
 		addCity: {url: "addCity.do", server: "communionServer"},
 		updateCity: {url: "updateCity.do", server: "communionServer"},
 		deleteCityByIds: {url: "deleteCityByIds.do", server: "communionServer"},
-		
+
 		pageCityProper: {url: "pageCityProper.do", demo: true},
 		queryCityProper: {url: "queryCityProper.do"},
 		queryCityProperById: {url: "queryCityProperById.do"},
@@ -1018,14 +1022,14 @@ var api = {
 		addCityProper: {url: "addCityProper.do", server: "communionServer"},
 		updateCityProper: {url: "updateCityProper.do", server: "communionServer"},
 		deleteCityProper: {url: "deleteCityProper.do", server: "communionServer"},
-		
+
 		pageRegion: {url: "pageRegion.do", demo: true},
 		queryRegion: {url: "queryRegion.do", demo: true},
 		queryRegionById: {url: "queryRegionById.do"},
 		addRegion: {url: "addRegion.do", server: "communionServer"},
 		updateRegion: {url: "updateRegion.do", server: "communionServer"},
 		deleteRegion: {url: "deleteRegion.do", server: "communionServer"},
-		
+
 		pageRole: {url: "pageRole.do", demo: true},
 		queryRole: {url: "queryRole.do", demo: true},
 		queryRoleById: {url: "queryRoleById.do"},
@@ -1033,7 +1037,7 @@ var api = {
 		addRole: {url: "addRole.do", server: "communionServer"},
 		updateRole: {url: "updateRole.do", server: "communionServer"},
 		deleteRoleByIds: {url: "deleteRoleByIds.do", server: "communionServer"},
-		
+
 		queryModule: {url: "queryModule.do", demo: true},
 		queryModuleForLogin: {url: "queryModuleForLogin.do", demo: true},
 		queryModuleByUserId: {url: "queryModuleByUserId.do", demo: true},
@@ -1041,7 +1045,7 @@ var api = {
 		addModule: {url: "addModule.do", server: "communionServer"},
 		updateRoleModuleByRoleId: {url: "updateRoleModuleByRoleId.do", server: "communionServer"},
 		deleteModule: {url: "deleteModule.do", server: "communionServer"},
-		
+
 		queryOperation: {url: "queryOperation.do", demo: true},
 		queryOperationForLogin: {url: "queryOperationForLogin.do", demo: true},
 		queryOperationByUserId: {url: "queryOperationByUserId.do", demo: true},
@@ -1052,24 +1056,24 @@ var api = {
 		deleteOperation: {url: "deleteOperation.do", server: "communionServer"},
 
 		queryFunctionByModuleId: {url: "queryFunctionByModuleId.do", demo: true},
-		
+
 		queryRoleRight: {url: "queryRoleRight.do", demo: true},
 		updateRoleRight: {url: "updateRoleRight.do", server: "communionServer"},
-		
+
 		querySubFunctionByFunctionId: {url: "querySubFunctionByFunctionId.do", demo: true},
 		querySubFunctionLikeName: {url: "querySubFunctionLikeName.do"},
-		
+
 		pageSubFunctionAction: {url: "pageSubFunctionAction.do", demo: true},
 		querySubFunctionActionByName: {url: "querySubFunctionActionByName.do"},
 		addSubFunctionAction: {url: "addSubFunctionAction.do", server: "communionServer"},
 		updateSubFunctionAction: {url: "updateSubFunctionAction.do", server: "communionServer"},
 		deleteSubFunctionAction: {url: "deleteSubFunctionAction.do", server: "communionServer"},
-		
+
 		pageUserApprove: {url: "pageUserApprove.do", demo: true},
 		queryApproveUserForNameByType: {url: "queryApproveUserForNameByType.do"},
 		addUserApprove: {url: "addUserApprove.do"},
 		updateUserApprove: {url: "updateUserApprove.do"},
 		deleteUserApprove: {url: "deleteUserApprove.do"},
-		
+
 	}
 }
