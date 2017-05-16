@@ -373,8 +373,6 @@ jQuery(function(a) {
                 selectedDepts.push(items[i].id);
                 depts.push(getSelectedDeptTree(items[i].id));
             }
-
-            $('#dddept').val(depts.join(','));
         }
 
         $('#dddeptModal').modal("hide");
@@ -468,9 +466,6 @@ jQuery(function(a) {
                 b["user.contracts[" + a + "].des"] = user.contractList[a].des,
                 b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
 
-            for(a=0; a<selectedDepts.length; a++){
-                b['ddeptIds[' + a + ']'] = selectedDepts[a];
-            }
             user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
 
             com.post(a, b, successCallback, failCallback);
