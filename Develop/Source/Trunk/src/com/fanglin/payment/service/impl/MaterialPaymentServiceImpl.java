@@ -383,12 +383,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		if(materialSubOrderPO.getFullStatus() != MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
-			throw new FLException(180017, "主材订单当前状态不能提交补款");
-		}
-		
 		if(materialPaymentVO.getReferMoney() < 0){
 			throw new FLException(150025, "款项金额不正确");
+		}
+		
+		if(materialPaymentDao.countMaterialPaymentByMsoIdAType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType()) > 0){
+			throw new FLException(150033, "款项类型已存在");
 		}
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
@@ -436,13 +436,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
 		
-		if(materialPaymentDao.countMaterialPaymentByMsoIdAType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType()) > 0){
-			throw new FLException(150033, "款项类型已存在");
-		}else{
-			materialSubOrderDao.update(materialSubOrderPO);
-			
-			materialPaymentDao.save(materialPaymentPO); 
-		}
+		materialSubOrderDao.update(materialSubOrderPO);
+		
+		materialPaymentDao.save(materialPaymentPO); 
 		
 	}
 

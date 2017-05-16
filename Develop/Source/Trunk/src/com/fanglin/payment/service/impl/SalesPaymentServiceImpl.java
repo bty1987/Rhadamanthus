@@ -55,11 +55,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		SalesPO sales = salesDao.querySalesBySid(salesPaymentVO.getSid());
 
-		if(sales == null){
+		if (sales == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
-		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+
+		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
 			throw new FLException(260021, "收款款项不存在");
 		}
 
@@ -67,86 +67,88 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 		UserPO user = userDao.get(userId);
-		salesReceiptPO.setCollecter(user); //收款人ID赋值
-		salesReceiptPO.setCollecterName(user.getUserName());//收款人姓名赋值
-		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));//收款时间赋值
-		if(salesReceiptVO.getCash() != null){
+		salesReceiptPO.setCollecter(user);
+		salesReceiptPO.setCollecterName(user.getUserName());
+		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
+		if (salesReceiptVO.getCash() != null) {
 			salesReceiptPO.setCash(salesReceiptVO.getCash());
 			salesReceiptPO.setCashInfo(salesReceiptVO.getCashInfo());
-		}else{
+		} else {
 			salesReceiptPO.setCash(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCashInfo("");
 		}
 
-		if(salesReceiptVO.getBank() != null){
+		if (salesReceiptVO.getBank() != null) {
 			salesReceiptPO.setBank(salesReceiptVO.getBank());
 			salesReceiptPO.setBankInfo(salesReceiptVO.getBankInfo());
-		}else{
+		} else {
 			salesReceiptPO.setBank(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setBankInfo("");
 		}
 
-		if(salesReceiptVO.getCheckv() != null){
+		if (salesReceiptVO.getCheckv() != null) {
 			salesReceiptPO.setCheckv(salesReceiptVO.getCheckv());
 			salesReceiptPO.setCheckvBank(salesReceiptVO.getCheckvBank());
-		}else{
+		} else {
 			salesReceiptPO.setCheckv(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCheckvBank("");
 		}
 
-		if(salesReceiptVO.getInstallment() != null){
+		if (salesReceiptVO.getInstallment() != null) {
 			salesReceiptPO.setInstallment(salesReceiptVO.getInstallment());
 			salesReceiptPO.setInstallBank(salesReceiptVO.getInstallBank());
-		}else{
+		} else {
 			salesReceiptPO.setInstallment(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setInstallBank("");
 		}
 
-		if(salesReceiptVO.getAccounts() != null){
+		if (salesReceiptVO.getAccounts() != null) {
 			salesReceiptPO.setAccounts(salesReceiptVO.getAccounts());
 			salesReceiptPO.setAccountsBank(salesReceiptVO.getAccountsBank());
-		}else{
+		} else {
 			salesReceiptPO.setAccounts(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAccountsBank("");
 		}
 
-		if(salesReceiptVO.getAdvance() != null){
+		if (salesReceiptVO.getAdvance() != null) {
 			salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
 			salesReceiptPO.setAdvanceType(salesReceiptVO.getAdvanceType());
-		}else{
+		} else {
 			salesReceiptPO.setAdvance(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_STR);
-		} 
+		}
 
-		if(salesReceiptVO.getDes() != null){
+		if (salesReceiptVO.getDes() != null)
 			salesReceiptPO.setDes(salesReceiptVO.getDes());
-		}else{
+		else {
 			salesReceiptPO.setDes("");
 		}
 		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
-		//卷值、卷信息赋值0、""
-		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
-		salesReceiptPO.setCouponInfo(SalesReceiptPO.COLUMN_COUPONINFO_STR);
 
-		//叠加=现金、刷卡、转账、分期、对公、劵值收款总额
-		Float referMoneySR = salesReceiptPO.getCash()+salesReceiptPO.getBank()+salesReceiptPO.getCheckv()+salesReceiptPO.getInstallment()+salesReceiptPO.getAccounts();
-		Float referMoneyDB =salesPayment.getReferMoney();
-		//调用Arith方法比较float类型、与应收金额referMoney对比
-		if(Arith.sub(referMoneySR, referMoneyDB)!=SalesReceiptPO.COLUMN_MONEY_STR){
+		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
+		salesReceiptPO.setCouponInfo("");
+
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts();
+		Float referMoneyDB = salesPayment.getReferMoney();
+
+		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_STR) {
 			throw new FLException(150025, "款项金额不正确");
-		}else{
-			salesReceiptDao.save(salesReceiptPO);
 		}
+		salesReceiptDao.save(salesReceiptPO);
 
 		salesPayment.setSalesReceipt(salesReceiptPO);
 
-		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);     //状态1
+		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
 		salesPaymentDao.update(salesPayment);
 
-		if(salesPayment.getType() == 5){
-			//更新销售单中补款时间
+		if (salesPayment.getType() == SalesPaymentPO.COLUMN_BTYPE_INT){
+			
 			sales.setFullpayTime(new Timestamp(System.currentTimeMillis()));
+			
+			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
+			
 			salesDao.update(sales);
+			
 		}
 
 		return 0;
@@ -158,18 +160,22 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		SalesPO sales = salesDao.querySalesBySid(salesPaymentVO.getSid());
 
-		if(sales == null){
+		if (sales == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if(sales.getStatus()!=SalesPO.STATUS_INIT_SHORT){
+		if (sales.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType()) > 0) {
+			throw new FLException(150033, "款项类型已存在");
 		}
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
-		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales","collecter","confirmer"));
-		BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village","customer","salesman","dept","region","guider","instorer","guideDept"));
+		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales", "collecter", "confirmer"));
+		BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept" ));
 		UserPO userPO = userDao.get(cuid);
 		salesPaymentPO.setCreater(userPO);
 		salesPaymentPO.setCreaterName(userPO.getUserName());
@@ -177,12 +183,22 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		salesPaymentPO.setType(salesPaymentVO.getType());
 		salesPaymentPO.setBrand(sales.getBrand());
 		salesPaymentPO.setCategory(sales.getCategory());
-		if(salesPaymentVO.getType()==SalesPaymentPO.COLUMN_DTYPE_INT){
-			//更新销售单status状态为4废单
+		
+		if(salesPaymentVO.getType() == SalesPaymentPO.COLUMN_DTYPE_INT){
+			
 			salesService.updateSalesStatusWaste(sales);
+			
+		}else if (salesPaymentVO.getType() == SalesPaymentPO.COLUMN_BTYPE_INT){
+			
+			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
+			
+			salesDao.update(sales);
 		}
+
 		salesPaymentDao.save(salesPaymentPO);
 
+		salesPaymentVO.setSpid(salesPaymentPO.getSpid());
+		
 		return 0;
 	}
 
@@ -192,18 +208,30 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 
-		if(salesPayment.getStatus()!=0){
+		if(salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
 			throw new FLException(150019, "款项不能撤销");
 		}
 
 		SalesPO salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
 
-		if(salesPayment.getType() == SalesPO.TYPE_DEPOSIT_SHORT){
+		if(salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
+			
 			salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
+			
 			salesDao.update(salesPO);
-		}else if(salesPayment.getType() == SalesPO.TYPE_FULLAMOUNT_SHORT){
+			
+		}else if(salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
+			
 			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+			
 			salesDao.update(salesPO);
+			
+		}else if(salesPayment.getType() == SalesPO.STATUS_END_SHORT) {
+			
+			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+			
+			salesDao.update(salesPO);
+			
 		}
 
 		salesPaymentDao.delete(salesPayment);
@@ -215,28 +243,40 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public int confirmSalesPayment(List<Long> spids,String userId)  throws FLException{
 
-		//循环批量更新销售款状态
-		for(Long spid :spids){
+		for (Long spid : spids) {
+			
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
-			//COLUMN_SALES_CONFIRMEDSTATUS_INT为销售款已确认状态
+
 			salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_CONFIRMEDSTATUS_INT);
 			salesPaymentDao.update(salesPayment);
 
 			SalesReceiptPO salesReceiptPO = salesReceiptDao.get(salesPayment.getSalesReceipt().getSrId());
 			salesReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
 			UserPO user = userDao.get(userId);
-			salesReceiptPO.setCollecter(user); //确认人ID赋值
+			salesReceiptPO.setConfirmer(user);
 			salesReceiptPO.setConfirmerName(user.getUserName());
 			salesReceiptDao.update(salesReceiptPO);
 
 			SalesPO salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
 
-			if(salesPayment.getType() == SalesPO.TYPE_DEPOSIT_SHORT){
+			if(salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT){
+				
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_CONFIRM_SHORT);
+				
 				salesDao.update(salesPO);
-			}else if(salesPayment.getType() == SalesPO.TYPE_FULLAMOUNT_SHORT){
+				
+			}else if(salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT){
+				
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
+				
 				salesDao.update(salesPO);
+				
+			}else if(salesPayment.getType() == SalesPO.STATUS_END_SHORT) {
+				
+				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
+				
+				salesDao.update(salesPO);
+				
 			}
 
 		}
@@ -248,108 +288,107 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
 
-		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
 			throw new FLException(260021, "收款款项不存在");
 		}
 
-		SalesPaymentPO salesPayment;
-
-		SalesPO  salesPO;
-
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 		UserPO user = userDao.get(userId);
-		salesReceiptPO.setCollecter(user); //收款人ID赋值
-		salesReceiptPO.setCollecterName(user.getUserName());//收款人姓名赋值
-		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));//收款时间赋值
-		if(salesReceiptVO.getCash() != null){
+		salesReceiptPO.setCollecter(user);
+		salesReceiptPO.setCollecterName(user.getUserName());
+		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
+		if (salesReceiptVO.getCash() != null) {
 			salesReceiptPO.setCash(salesReceiptVO.getCash());
 			salesReceiptPO.setCashInfo(salesReceiptVO.getCashInfo());
-		}else{
+		} else {
 			salesReceiptPO.setCash(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCashInfo("");
 		}
 
-		if(salesReceiptVO.getBank() != null){
+		if (salesReceiptVO.getBank() != null) {
 			salesReceiptPO.setBank(salesReceiptVO.getBank());
 			salesReceiptPO.setBankInfo(salesReceiptVO.getBankInfo());
-		}else{
+		} else {
 			salesReceiptPO.setBank(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setBankInfo("");
 		}
 
-		if(salesReceiptVO.getCheckv() != null){
+		if (salesReceiptVO.getCheckv() != null) {
 			salesReceiptPO.setCheckv(salesReceiptVO.getCheckv());
 			salesReceiptPO.setCheckvBank(salesReceiptVO.getCheckvBank());
-		}else{
+		} else {
 			salesReceiptPO.setCheckv(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCheckvBank("");
 		}
 
-		if(salesReceiptVO.getInstallment() != null){
+		if (salesReceiptVO.getInstallment() != null) {
 			salesReceiptPO.setInstallment(salesReceiptVO.getInstallment());
 			salesReceiptPO.setInstallBank(salesReceiptVO.getInstallBank());
-		}else{
+		} else {
 			salesReceiptPO.setInstallment(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setInstallBank("");
 		}
 
-		if(salesReceiptVO.getAccounts() != null){
+		if (salesReceiptVO.getAccounts() != null) {
 			salesReceiptPO.setAccounts(salesReceiptVO.getAccounts());
 			salesReceiptPO.setAccountsBank(salesReceiptVO.getAccountsBank());
-		}else{
+		} else {
 			salesReceiptPO.setAccounts(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAccountsBank("");
 		}
 
-		if(salesReceiptVO.getAdvance() != null){
+		if (salesReceiptVO.getAdvance() != null) {
 			salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
 			salesReceiptPO.setAdvanceType(salesReceiptVO.getAdvanceType());
-		}else{
+		} else {
 			salesReceiptPO.setAdvance(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_STR);
-		} 
+		}
 
-		if(salesReceiptVO.getDes() != null){
+		if (salesReceiptVO.getDes() != null)
 			salesReceiptPO.setDes(salesReceiptVO.getDes());
-		}else{
+		else {
 			salesReceiptPO.setDes("");
 		}
 		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
-		//卷值、卷信息赋值0、""
+
 		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
-		salesReceiptPO.setCouponInfo(SalesReceiptPO.COLUMN_COUPONINFO_STR);
+		salesReceiptPO.setCouponInfo("");
 
-		//叠加=现金、刷卡、转账、分期、对公收款总额
-		Float referMoneySR = salesReceiptPO.getCash()+salesReceiptPO.getBank()+salesReceiptPO.getCheckv()+salesReceiptPO.getInstallment()+salesReceiptPO.getAccounts();
-		//循环获取应收金额进行叠加
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts();
+
 		Float referMoneyPY = 0f;
-		for(Long spid :spids){
-			salesPayment = salesPaymentDao.get(spid);
-			referMoneyPY += salesPayment.getReferMoney();
+		for (Long spid : spids) {
+			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
+			referMoneyPY = referMoneyPY + salesPayment.getReferMoney();
 		}
-		//与应收金额referMoney对比
-		if(Arith.sub(referMoneySR, referMoneyPY)!=SalesReceiptPO.COLUMN_MONEY_STR){
-			throw new FLException(260021, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-		}else{
-			salesReceiptDao.save(salesReceiptPO);
-		}
-		//循环批量更新销售款状态、srId；判断销售单type更新销售单状态
-		for(Long spid :spids){
 
-			salesPayment = salesPaymentDao.get(spid);
+		if (Arith.sub(referMoneySR, referMoneyPY) != SalesReceiptPO.COLUMN_MONEY_STR) {
+			throw new FLException(260021, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+		}
+		salesReceiptDao.save(salesReceiptPO);
+
+		for (Long spid : spids){
+			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
 			salesPayment.setSalesReceipt(salesReceiptPO);
 			salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
 			salesPaymentDao.update(salesPayment);
 
-			salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
+			SalesPO salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
 
-			if(salesPayment.getType() == SalesPO.TYPE_DEPOSIT_SHORT){
+			if(salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT){
+				
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
+				
 				salesDao.update(salesPO);
-			}else if(salesPayment.getType() == SalesPO.TYPE_FULLAMOUNT_SHORT){
+				
+			}else if(salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT){
+				
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
+				
 				salesDao.update(salesPO);
-			}
+				
+			} 
 		}
 		return 0;
 	}
@@ -358,7 +397,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
 
-		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
 			throw new FLException(260021, "收款款项不存在");
 		}
 
@@ -366,94 +405,91 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 		UserPO user = userDao.get(userId);
-		salesReceiptPO.setCollecter(user); //收款人ID赋值
-		salesReceiptPO.setCollecterName(user.getUserName());//收款人姓名赋值
-		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));//收款时间赋值
+		salesReceiptPO.setCollecter(user);
+		salesReceiptPO.setCollecterName(user.getUserName());
+		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
 		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
 
-		if(salesReceiptVO.getCash() != null){
+		if (salesReceiptVO.getCash() != null) {
 			salesReceiptPO.setCash(salesReceiptVO.getCash());
 			salesReceiptPO.setCashInfo(salesReceiptVO.getCashInfo());
-		}else{
+		} else {
 			salesReceiptPO.setCash(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCashInfo("");
 		}
 
-		if(salesReceiptVO.getBank() != null){
+		if (salesReceiptVO.getBank() != null) {
 			salesReceiptPO.setBank(salesReceiptVO.getBank());
 			salesReceiptPO.setBankInfo(salesReceiptVO.getBankInfo());
-		}else{
+		} else {
 			salesReceiptPO.setBank(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setBankInfo("");
 		}
 
-		if(salesReceiptVO.getCheckv() != null){
+		if (salesReceiptVO.getCheckv() != null) {
 			salesReceiptPO.setCheckv(salesReceiptVO.getCheckv());
 			salesReceiptPO.setCheckvBank(salesReceiptVO.getCheckvBank());
-		}else{
+		} else {
 			salesReceiptPO.setCheckv(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCheckvBank("");
 		}
 
-		if(salesReceiptVO.getInstallment() != null){
+		if (salesReceiptVO.getInstallment() != null) {
 			salesReceiptPO.setInstallment(salesReceiptVO.getInstallment());
 			salesReceiptPO.setInstallBank(salesReceiptVO.getInstallBank());
-		}else{
+		} else {
 			salesReceiptPO.setInstallment(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setInstallBank("");
 		}
 
-		if(salesReceiptVO.getAccounts() != null){
+		if (salesReceiptVO.getAccounts() != null) {
 			salesReceiptPO.setAccounts(salesReceiptVO.getAccounts());
 			salesReceiptPO.setAccountsBank(salesReceiptVO.getAccountsBank());
-		}else{
+		} else {
 			salesReceiptPO.setAccounts(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAccountsBank("");
 		}
 
-		if(salesReceiptVO.getCoupon() != null){
+		if (salesReceiptVO.getCoupon() != null) {
 			salesReceiptPO.setCoupon(salesReceiptVO.getCoupon());
 			salesReceiptPO.setCouponInfo(salesReceiptVO.getCouponInfo());
-		}else{
+		} else {
 			salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setCouponInfo("");
 		}
 
-		if(salesReceiptVO.getAdvance() != null){
+		if (salesReceiptVO.getAdvance() != null) {
 			salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
 			salesReceiptPO.setAdvanceType(salesReceiptVO.getAdvanceType());
-		}else{
+		} else {
 			salesReceiptPO.setAdvance(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_STR);
-		} 
+		}
 
-		if(salesReceiptVO.getDes() != null){
+		if (salesReceiptVO.getDes() != null)
 			salesReceiptPO.setDes(salesReceiptVO.getDes());
-		}else{
+		else {
 			salesReceiptPO.setDes("");
 		}
 
-		//叠加=现金、刷卡、转账、分期、对公、劵值收款总额
-		Float referMoneySR = salesReceiptPO.getCash()+salesReceiptPO.getBank()+salesReceiptPO.getCheckv()+salesReceiptPO.getInstallment()+salesReceiptPO.getAccounts()+salesReceiptPO.getCoupon();
-		Float referMoneyDB =salesPayment.getReferMoney();
-		//调用Arith方法比较float类型、与应收金额referMoney对比
-		if(Arith.sub(referMoneySR, referMoneyDB)!=SalesReceiptPO.COLUMN_MONEY_STR){
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts() + salesReceiptPO.getCoupon();
+		Float referMoneyDB = salesPayment.getReferMoney();
+
+		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_STR) {
 			throw new FLException(260021, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-		}else{
-			salesReceiptDao.save(salesReceiptPO);
 		}
+		salesReceiptDao.save(salesReceiptPO);
 
 		salesPayment.setSalesReceipt(salesReceiptPO);
 
 		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
 		salesPaymentDao.update(salesPayment);
 
-
 		SalesPO sales = salesDao.querySalesBySid(salesPayment.getSales().getSid());
-		if(salesPayment.getType() == SalesPO.TYPE_DEPOSIT_SHORT){
+		if (salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
 			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
 			salesDao.update(sales);
-		}else if(salesPayment.getType() == SalesPO.TYPE_FULLAMOUNT_SHORT){
+		} else if (salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
 			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 			salesDao.update(sales);
 		}
@@ -463,49 +499,48 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public SalesPaymentVO addSalesPayment(SalesPaymentVO salesPaymentVO,String cuid) throws FLException {
+	public int addSalesPayment(SalesPaymentVO salesPaymentVO,String cuid) throws FLException {
 
 		SalesPO sales = salesDao.querySalesBySid(salesPaymentVO.getSid());
 
-		if(sales == null){
-			throw new FLException(260021, "销售单不存在");
-		}
+	    if (sales == null) {
+	      throw new FLException(260021, "销售单不存在");
+	    }
 
-		if(sales.getStatus() != SalesPO.STATUS_INIT_SHORT){
-			throw new FLException(260022, "销售单状态不可操作");
-		}
+	    if (sales.getStatus() != 0) {
+	      throw new FLException(260022, "销售单状态不可操作");
+	    }
 
-		if(salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType())>0){
-			throw new FLException(150033 , "款项类型已存在");
-		}
+	    if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType()) > 0) {
+	      throw new FLException(150033, "款项类型已存在");
+	    }
 
-		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
+	    SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
-		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales","collecter","confirmer"));
-		BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village","customer","salesman","dept","region","guider","instorer","guideDept"));
-		UserPO userPO = userDao.get(cuid);
-		salesPaymentPO.setCreater(userPO);
-		salesPaymentPO.setCreaterName(userPO.getUserName());
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
-		salesPaymentPO.setType(salesPaymentVO.getType());
+	    BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList( "sales", "collecter", "confirmer" ));
+	    BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept"));
+	    UserPO userPO = userDao.get(cuid);
+	    salesPaymentPO.setCreater(userPO);
+	    salesPaymentPO.setCreaterName(userPO.getUserName());
+	    salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
+	    salesPaymentPO.setType(salesPaymentVO.getType());
 
-		salesPaymentDao.save(salesPaymentPO);
+	    salesPaymentDao.save(salesPaymentPO);
 
-		salesPaymentVO.setSpid(salesPaymentPO.getSpid());
+	    salesPaymentVO.setSpid(salesPaymentPO.getSpid());
 
-		if(salesPaymentPO.getType() == SalesPO.TYPE_DEPOSIT_SHORT){
-			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
-			salesDao.update(sales);
-		}else if(salesPaymentPO.getType() == SalesPO.TYPE_FULLAMOUNT_SHORT){
-			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
-			salesDao.update(sales);
-		}
+	    if (salesPaymentPO.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
+	      sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
+	      salesDao.update(sales);
+	    } else if (salesPaymentPO.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
+	      sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
+	      salesDao.update(sales);
+	    }
 
-
-		return salesPaymentVO;
+	    return 0;
 	}
 
-	@Override
+	@Override                  
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt) {
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentForNotInitBySrid(salesReceipt.getSrId());
@@ -623,7 +658,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		for(SalesPaymentPO salesPaymentPO: salesPaymentPOs){
 
-			salesPaymentVO = new SalesPaymentVO(new UserVO() , new SalesVO(new VillageVO(), new CustomerVO(), new UserVO(), new DepartmentVO(), new DepartmentVO(), new UserVO(), new DepartmentVO(), new UserVO()) ,new SalesReceiptVO(new UserVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserVO() , new SalesVO(new VillageVO(), new CustomerVO(), new UserVO(), new DepartmentVO(), new DepartmentVO(), new UserVO(), new DepartmentVO(), new UserVO()) ,new SalesReceiptVO(new UserVO(),new UserVO()));
 			BeanUtil.copyProperties(salesPaymentPO, salesPaymentVO, Arrays.asList("creater","sales","salesReceipt"));
 			salesPaymentVO.getCreater().setBaseInfo(salesPaymentPO.getCreater());
 			BeanUtil.copyProperties(salesPaymentPO.getSales(), salesPaymentVO.getSales(), Arrays.asList("village","customer","salesman","dept","region","guider","instorer","guideDept"));

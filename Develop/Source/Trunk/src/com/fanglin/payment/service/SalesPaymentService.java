@@ -22,7 +22,7 @@ public interface SalesPaymentService {
 	
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 	
-	public SalesPaymentVO addSalesPayment(SalesPaymentVO salesPaymentVO,String cuid) throws FLException;
+	public int addSalesPayment(SalesPaymentVO salesPaymentVO,String cuid) throws FLException;
 	
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
 	

@@ -30,6 +30,8 @@ public class SubjectPO implements java.io.Serializable {
 	
 	public static final String COLUMN_LIMITS_STR = "limits";
 	
+	public static final String COLUMN_DIRECTION_STR = "direction";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;
@@ -75,6 +77,15 @@ public class SubjectPO implements java.io.Serializable {
 	public SubjectPO(long sid) {
 		super();
 		this.sid = sid;
+	}
+
+	public SubjectPO(String oneCode, String twoCode, String thrCode, String name, short direction) {
+		super();
+		this.oneCode = oneCode;
+		this.twoCode = twoCode;
+		this.thrCode = thrCode;
+		this.name = name;
+		this.direction = direction;
 	}
 
 	@Id
