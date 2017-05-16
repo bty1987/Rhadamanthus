@@ -33,7 +33,7 @@ public class  RefundsPO  implements  java.io.Serializable{
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final int STATUS_TYPE_REFUNDS_INT = 0;
+	public static final short STATUS_TYPE_REFUNDS_INT = 0;
 	
 	public static final String COLUMN_CUID_STR = "user.uid";
 	
@@ -50,6 +50,8 @@ public class  RefundsPO  implements  java.io.Serializable{
 	private float total; //合计
 	
 	private short status; //状态
+	
+	private String comment; //说明
 	
 	private UserPO creater; //创建人
 	
@@ -140,6 +142,15 @@ public class  RefundsPO  implements  java.io.Serializable{
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@Column(name="comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	

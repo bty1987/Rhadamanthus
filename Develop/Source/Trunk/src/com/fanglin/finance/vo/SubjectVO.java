@@ -17,6 +17,12 @@ public class SubjectVO implements java.io.Serializable {
 	private String name;
 	
 	private Short status;
+	
+	private String code;
+	
+	private Short direction;
+	
+	private String assistant;
 
 	public Long getSid() {
 		return sid;
@@ -72,6 +78,30 @@ public class SubjectVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Short getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Short direction) {
+		this.direction = direction;
+	}
+
+	public String getAssistant() {
+		return assistant;
+	}
+
+	public void setAssistant(String assistant) {
+		this.assistant = assistant;
 	}
 
 }

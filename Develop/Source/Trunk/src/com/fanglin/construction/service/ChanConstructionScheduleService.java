@@ -12,8 +12,6 @@
 package com.fanglin.construction.service;
 
 import com.fanglin.construction.vo.ChanConstructionScheduleVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
-import com.fanglin.core.interceptor.FLException;
 
 public interface ChanConstructionScheduleService {
 	
@@ -28,11 +26,4 @@ public interface ChanConstructionScheduleService {
 	public void setChanConstructionScheduleForStatus(ChanConstructionScheduleVO chanConstructionScheduleVO);
 	
 	public void setChanConstructionScheduleForInfo(ChanConstructionScheduleVO chanConstructionScheduleVO);
-	
-	public void setChanConstructionScheduleWorker(ChanConstructionScheduleVO chanConstructionScheduleVO) throws FLException;
-	
-	public void setChanConstructionScheduleForService(ChanConstructionScheduleVO chanConstructionScheduleVO);
-	
-	public int setChanConstructionScheduleForSalary(ConstructionScheduleWorkerVO constructionScheduleWorkerVO) throws FLException;
-	
 }

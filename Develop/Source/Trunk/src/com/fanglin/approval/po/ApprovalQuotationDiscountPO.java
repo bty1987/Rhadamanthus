@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "approvalquotationdiscount", catalog = "platform")
+@Table(name = "approvalquotationdiscount", catalog = "approval")
 public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7234919961337358956L;

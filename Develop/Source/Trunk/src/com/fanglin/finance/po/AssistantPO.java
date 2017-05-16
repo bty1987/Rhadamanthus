@@ -2,6 +2,8 @@ package com.fanglin.finance.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.finance.vo.AssistantVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "assistant", catalog = "finance")
@@ -289,7 +295,7 @@ public class AssistantPO implements java.io.Serializable {
 	public void setCompany(short company) {
 		this.company = company;
 	}
-
+	
 	public void setDesignInfo(UserPO desinger, DepartmentPO designDepartment, DepartmentPO designRegion){
 		this.designer = desinger;
 		this.designDepartment = designDepartment;
@@ -301,4 +307,173 @@ public class AssistantPO implements java.io.Serializable {
 		this.businessDepartment = businessDepartment;
 		this.businessRegion = businessRegion;
 	}
+
+	public AssistantTmpPO packageFromPOToTmp(){
+		AssistantTmpPO assistantTmpPO = new AssistantTmpPO();
+		
+		assistantTmpPO.setOrderId(getOrderId());
+		assistantTmpPO.setOrderAddr(getOrderAddr());
+		assistantTmpPO.setMsoNo(getMsoNo());
+		assistantTmpPO.setBrandName(getBrandName());
+		assistantTmpPO.setCompany(getCompany());
+		
+		if(getDepartment() != null){
+			assistantTmpPO.setDepartment(getDepartment());
+		}
+		
+		if(getUser() != null){
+			assistantTmpPO.setUser(getUser());
+		}
+		
+		if(getDesigner() != null){
+			assistantTmpPO.setDesigner(getDesigner());
+		}
+		
+		if(getDesignDepartment() != null){
+			assistantTmpPO.setDesignDepartment(getDesignDepartment());
+		}
+		
+		if(getDesignRegion() != null){
+			assistantTmpPO.setDesignRegion(getDesignRegion());
+		}
+		
+		if(getSalesman() != null){
+			assistantTmpPO.setSalesman(getSalesman());
+		}
+		
+		if(getBusinessDepartment() != null){
+			assistantTmpPO.setBusinessDepartment(getBusinessDepartment());
+		}
+		
+		if(getBusinessRegion() != null){
+			assistantTmpPO.setBusinessRegion(getBusinessRegion());
+		}
+		
+		if(getSupervisor() != null){
+			assistantTmpPO.setSupervisor(getSupervisor());
+		}
+		
+		if(getSupervisDepartment() != null){
+			assistantTmpPO.setSupervisDepartment(getSupervisDepartment());
+		}
+		
+		if(getWorker() != null){
+			assistantTmpPO.setWorker(getWorker());
+		}
+		
+		if(getWorkDepartment() != null){
+			assistantTmpPO.setWorkDepartment(getWorkDepartment());
+		}
+		
+		if(getOfficer() != null){
+			assistantTmpPO.setOfficer(getOfficer());
+		}
+		
+		if(getOfficeDepartment() != null){
+			assistantTmpPO.setOfficeDepartment(getOfficeDepartment());
+		}
+		
+		if(getMaterialer() != null){
+			assistantTmpPO.setMaterialer(getMaterialer());
+		}
+		
+		if(getMaterialDepartment() != null){
+			assistantTmpPO.setMaterialDepartment(getMaterialDepartment());
+		}
+		
+		return assistantTmpPO;
+	}
+
+	public AssistantVO packageFromPOToVO(){
+		AssistantVO assistantVO = new AssistantVO();
+		
+		assistantVO.setOrderId(getOrderId());
+		assistantVO.setOrderAddr(getOrderAddr());
+		assistantVO.setMsoNo(getMsoNo());
+		assistantVO.setBrandName(getBrandName());
+		assistantVO.setCompany(getCompany());
+		
+		if(getDepartment() != null){
+			assistantVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getDepartment(), assistantVO.getDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getUser() != null){
+			assistantVO.setUser(new UserVO());
+			BeanUtil.copyProperties(getUser(), assistantVO.getUser(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getDesigner() != null){
+			assistantVO.setDesigner(new UserVO());
+			BeanUtil.copyProperties(getDesigner(), assistantVO.getDesigner(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getDesignDepartment() != null){
+			assistantVO.setDesignDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getDesignDepartment(), assistantVO.getDesignDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getDesignRegion() != null){
+			assistantVO.setDesignRegion(new DepartmentVO());
+			BeanUtil.copyProperties(getDesignRegion(), assistantVO.getDesignRegion(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getSalesman() != null){
+			assistantVO.setSalesman(new UserVO());
+			BeanUtil.copyProperties(getSalesman(), assistantVO.getSalesman(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getBusinessDepartment() != null){
+			assistantVO.setBusinessDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getBusinessDepartment(), assistantVO.getBusinessDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getBusinessRegion() != null){
+			assistantVO.setBusinessRegion(new DepartmentVO());
+			BeanUtil.copyProperties(getBusinessRegion(), assistantVO.getBusinessRegion(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getSupervisor() != null){
+			assistantVO.setSupervisor(new UserVO());
+			BeanUtil.copyProperties(getSupervisor(), assistantVO.getSupervisor(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getSupervisDepartment() != null){
+			assistantVO.setSupervisDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getSupervisDepartment(), assistantVO.getSupervisDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getWorker() != null){
+			assistantVO.setWorker(new UserVO());
+			BeanUtil.copyProperties(getWorker(), assistantVO.getWorker(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getWorkDepartment() != null){
+			assistantVO.setWorkDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getWorkDepartment(), assistantVO.getWorkDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getOfficer() != null){
+			assistantVO.setOfficer(new UserVO());
+			BeanUtil.copyProperties(getOfficer(), assistantVO.getOfficer(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getOfficeDepartment() != null){
+			assistantVO.setOfficeDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getOfficeDepartment(), assistantVO.getOfficeDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		if(getMaterialer() != null){
+			assistantVO.setMaterialer(new UserVO());
+			BeanUtil.copyProperties(getMaterialer(), assistantVO.getMaterialer(), Arrays.asList("role", "dept", "password"));
+		}
+		
+		if(getMaterialDepartment() != null){
+			assistantVO.setMaterialDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(getMaterialDepartment(), assistantVO.getMaterialDepartment(), Arrays.asList("deptId", "fatherDept", "cityProper"));
+		}
+		
+		return assistantVO;
+	}
+	
 }

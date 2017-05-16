@@ -3,6 +3,8 @@ package com.fanglin.finance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,14 +17,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fanglin.finance.vo.AccountVO;
+import com.fanglin.finance.vo.VoucherVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "voucher", catalog = "finance")
 public class VoucherPO implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1803548908884856979L;
-
+	private static final long serialVersionUID = 5783085370591192385L;
+	
 	public static final String PERIOD_CC_STR = "CC";
 	
 	public static final String PERIOD_CR_STR = "CR";
@@ -34,6 +40,12 @@ public class VoucherPO implements java.io.Serializable {
 	public static final short STATUS_TYPE_PRECUT_INT = 0;
 	
 	public static final short STATUS_TYPE_FORMAL_INT = 1;
+	
+	public static final short STATUS_TYPE_CLOSED_INT = 2;
+	
+	public static final short STATUS_TYPE_INFORMAL_INT = 3;
+	
+	public static final String COLUMN_VID_STR = "vid";
 
 	private long vid;
 	
@@ -49,7 +61,11 @@ public class VoucherPO implements java.io.Serializable {
 	
 	private UserPO auditor; // 审计
 	
+	private Timestamp auditTime;
+	
 	private UserPO postor; // 过账
+	
+	private Timestamp postTime;
 	
 	private UserPO authorizer; // 批准
 	
@@ -200,6 +216,24 @@ public class VoucherPO implements java.io.Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "auditTime")
+	public Timestamp getAuditTime() {
+		return auditTime;
+	}
+
+	public void setAuditTime(Timestamp auditTime) {
+		this.auditTime = auditTime;
+	}
+
+	@Column(name = "postTime")
+	public Timestamp getPostTime() {
+		return postTime;
+	}
+
+	public void setPostTime(Timestamp postTime) {
+		this.postTime = postTime;
+	}
+	
 	@OneToMany(mappedBy="voucher")
 	public Set<AccountPO> getAccounts() {
 		return accounts;
@@ -215,6 +249,56 @@ public class VoucherPO implements java.io.Serializable {
 
 	public void setLockvalue(long lockvalue) {
 		this.lockvalue = lockvalue;
+	}
+
+	public VoucherVO packagePOToVO(boolean accountFlag){
+		
+		VoucherVO voucherVO = new VoucherVO();
+		
+		BeanUtil.copyProperties(this, voucherVO, Arrays.asList("originator", "auditor", "postor", "authorizer", "cashier", "accounts"));
+		
+		if(getOriginator() != null){
+			voucherVO.setOriginator(new UserVO().setBaseInfo(getOriginator()));
+		}
+		
+		if(getAuditor() != null){
+			voucherVO.setAuditor(new UserVO().setBaseInfo(getAuditor()));
+		}
+		
+		if(getPostor() != null){
+			voucherVO.setPostor(new UserVO().setBaseInfo(getPostor()));
+		}
+		
+		if(getAuthorizer() != null){
+			voucherVO.setAuthorizer(new UserVO().setBaseInfo(getAuthorizer()));
+		}
+		
+		if(getCashier() != null){
+			voucherVO.setCashier(new UserVO().setBaseInfo(getCashier()));
+		}
+		
+		if(accountFlag){
+			Set<AccountVO> accountVOs = new HashSet<AccountVO>();
+			
+			for(AccountPO accountPO: accounts){
+				
+				AccountVO accountVO = new AccountVO();
+				
+				BeanUtil.copyProperties(accountPO, accountVO, Arrays.asList("voucher", "assistant"));
+				
+				if(accountPO.getAssistant() != null){
+					accountVO.setAssistant(accountPO.getAssistant().packageFromPOToVO());
+				}
+				
+				accountVOs.add(accountVO);
+			}
+			
+			voucherVO.setAccounts(accountVOs);
+		}else{
+			voucherVO.setAccounts(null);
+		}
+		
+		return voucherVO;
 	}
 
 }

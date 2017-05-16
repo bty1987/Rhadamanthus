@@ -73,42 +73,82 @@
 												
 												<div class="tab-content ">
 													<div class="tab-pane in active" id="chanInfo">
-														<div class="row">
-															<div class="col-sm-6">
-																<form class="form-horizontal">
-																	<div class="form-group text-center">
-																		<h3 class="header smaller lighter blue col-sm-10">
-																			<i class="icon-edit"></i>
-																			铲大白信息
-																		</h3>
-																	</div>
-																	<div class="form-group">
-																		<label class="col-sm-2 control-label no-padding-right" for="chanStartTime">开工时间</label>
-																		<div class="col-sm-4">
-																			<input id="chanStartTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
-																		</div>
-																		<div class="col-sm-4">
-																			<button id="chanStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
-																		</div>
-																	</div>
-																	<div class="space-4"></div>
-																	<div class="form-group">
-																		<label class="col-sm-2 control-label no-padding-right" for="chanEndTime">完工时间</label>
-																		<div class="col-sm-4">
-																			<input id="chanEndTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
-																		</div>
-																		<div class="col-sm-4">
-																			<button id="chanEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
-																		</div>
-																	</div>
-																	<div class="space-4"></div>
-																	<div class="form-group">
-																		<label class="col-sm-2 control-label no-padding-right" for="status">铲大白状态</label>
-																		<div id="status" class="col-sm-6">	</div>
-																	</div>
-																	<div class="space-4"></div>
-																</form>
+														<form class="form-horizontal">
+															<div class="form-group">
+																<h3 class="header smaller lighter blue">
+																	<i class="icon-edit"></i>
+																	铲大白信息
+																</h3>
 															</div>
+
+															<div class="form-group">
+																<div class="col-sm-12">
+																	<label class="col-sm-1 control-label no-padding-right" for="chanStartTime">开工时间</label>
+																	<div class="col-sm-2">
+																		<input id="chanStartTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
+																	</div>
+																	<div class="col-sm-2">
+																		<button id="chanStartTimeFlag" class="btn btn-xs col-sm-9">开工时间确认</button>
+																	</div>
+																	<label class="col-sm-1 control-label no-padding-right" for="chanEndTime">完工时间</label>
+																	<div class="col-sm-2">
+																		<input id="chanEndTime" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'>
+																	</div>
+																	<div class="col-sm-2">
+																		<button id="chanEndTimeFlag" class="btn btn-xs col-sm-9">完工时间确认</button>
+																	</div>
+																</div>
+															</div>
+															<div class="space-4"></div>
+															<div class="form-group">
+																<div class="col-sm-12">
+																	<label class="col-sm-1 control-label no-padding-right" for="status">铲大白状态</label>
+																	<div id="status" class="col-sm-6">	</div>
+																</div>
+															</div>
+															<div class="space-4"></div>
+
+															<!-- 这里是新添加的-->
+															<div class="form-group">
+																<h3 class="header smaller lighter blue">
+																	<i class="icon-edit"></i>
+																	工人信息
+																</h3>
+															</div>
+															<div class="form-group">
+																<div id="chanWorkerInfos"></div>	<!--这里需要注意下 原本这里用的是chanWorkerImg来放置图片--><!-- 原本有一个chanWorkerNameSpan来存放信息 -->
+															</div>
+															<div class="space-4"></div>
+														</form>
+													</div>
+
+													<div class="tab-pane in active" id="chanDrawing">
+														<div class="row">
+															<div class="col-xs-12">
+																<div class="row-fluid">
+																	<ul class="ace-thumbnails" id="chanGallery"></ul>
+																</div>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="hr hr32 hr-dotted"></div>
+															<div class="col-xs-12">
+																<div class="pull-left inline">
+																	<!-- <input id="waterwayCircuitPowerUpload" type="file" /> -->
+																	<div id="chanUpload"></div>
+																	<input type="text" class="hidden" id="picture" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+															<!-- 这里是原来的 -->
+															<!--
 															<div class="col-sm-6 text-center">
 																<div class="text-center">
 																	<h3 class="header smaller lighter green">
@@ -144,17 +184,16 @@
 															<div class="hr hr32 hr-dotted"></div>
 															<div class="col-xs-12">
 																<div class="pull-left inline">
-																	<!-- <input id="chanUpload" type="file" />  -->
+																	//<input id="chanUpload" type="file" />
 																	<div id="chanUpload"></div>
 																	<input type="text" class="hidden" id="picture" />
 																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+													-->
+
+
 									<div class="step-pane" id="step2">
 										<div class="row">
 											<div class="tabbable">
@@ -170,70 +209,61 @@
 												
 												<div class="tab-content ">
 													<div class="tab-pane in active" id="putlineInfo">
-														<div class="row">
-															<div class="col-sm-6">
-																<form class="form-horizontal">
-																	<div class="form-group text-center">
-																		<h3 class="header smaller lighter blue col-sm-10">
-																			<i class="icon-edit"></i>
-																			放线信息
-																		</h3>
-																	</div>
-																	<div class="form-group">
-																		<label class="col-sm-2 control-label no-padding-right" for="putlineTime">放线时间</label>
-																		<div class="col-sm-4">
-																			<input id="putlineTime" type="text" class="col-sm-12" >
-																		</div>
-																	</div>
-																	<div class="space-4"></div>
-															
-																	<div class="form-group">
-																		<label class="col-sm-2 control-label no-padding-right" for="putlineStatus">放线状态</label>
-																		<div id="putlineStatus" class="col-sm-4">	</div>
-																	</div>
-																	<div class="space-4"></div>
-																	
-																</form>
+														<form class="form-horizontal">
+															<div class="form-group">
+																<h3 class="header smaller lighter blue">
+																	<i class="icon-edit"></i>
+																	放线信息
+																</h3>
 															</div>
-															<div class="col-sm-6 text-center">
-																<div class="text-center">
-																	<h3 class="header smaller lighter green">
-																			<i class="icon-group"></i>
-																			工人信息
-																	</h3>
-																	<div id="fangWorkerInfo">
-																		<div class="profile-picture col-sm-6 col-sm-offset-3">
-																		    <div class="workerImg">
-																			    <img id="fangWorkerImg" src="" alt="">
-																			</div>
-																			<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px; margin-left: -174px">
-																				<a class="icon-money icon-5x" href="#" title="fangWorkers_wages"></a>
-																				<span id="fangWorkerNameSpan" class="pull-right"></span>
-																			</div>
-																		</div>
+
+															<div class="form-group">
+																<div class="col-sm-12">
+																	<label class="col-sm-1 control-label no-padding-right" for="putlineTime">放线时间</label>
+																	<div class="col-sm-2">
+																		<input id="putlineTime" type="text" class="col-sm-12" readonly="readonly">
 																	</div>
 																</div>
 															</div>
-														</div>
+															<div class="space-4"></div>
+
+															<div class="form-group">
+																<div class="col-sm-12">
+																	<label class="col-sm-1 control-label no-padding-right" for="putlineStatus">放线状态</label>
+																	<div id="putlineStatus" class="col-sm-4">	</div>
+																</div>
+															</div>
+															<div class="space-4"></div>
+															<!-- 这里是新添加的 -->
+															<div class="form-group">
+																<h3 class="header smaller lighter blue">
+																	<i class="icon-edit"></i>
+																	工人信息
+																</h3>
+															</div>
+															<div class="form-group">
+																<div id="fangWorkerInfos"></div>
+															</div>
+															<div class="space-4"></div>
+														</form>
 													</div>
-													
+
 													<div class="tab-pane in active" id="putlineDrawing">
 														<div class="row">
 															<div class="col-xs-12">
 																<div class="row-fluid">
-																	<ul class="ace-thumbnails" id="putlineGallery"></ul>
-																</div>
+																<ul class="ace-thumbnails" id="putlineGallery"></ul>
 															</div>
 														</div>
-														
-														<div class="row">
-															<div class="hr hr32 hr-dotted"></div>
-															<div class="col-xs-12">
-																<div class="pull-left inline">
-																	<!-- <input id="putlineUpload" type="file" /> -->
-																	<div id="putlineUpload"></div>
-																	<input type="text" class="hidden" id="picture" />
-																</div>
+													</div>
+
+													<div class="row">
+														<div class="hr hr32 hr-dotted"></div>
+														<div class="col-xs-12">
+															<div class="pull-left inline">
+																<!-- <input id="waterwayCircuitPowerUpload" type="file" /> -->
+																<div id="putlineUpload"></div>
+																<input type="text" class="hidden" id="picture" />
 															</div>
 														</div>
 													</div>
@@ -241,6 +271,56 @@
 											</div>
 										</div>
 									</div>
+								</div>
+																<!--</form>-->
+															<!--</div>-->
+															<!--<div class="col-sm-6 text-center">-->
+																<!--<div class="text-center">-->
+																	<!--<h3 class="header smaller lighter green">-->
+																			<!--<i class="icon-group"></i>-->
+																			<!--工人信息-->
+																	<!--</h3>-->
+																	<!--<div id="fangWorkerInfo">-->
+																		<!--<div class="profile-picture col-sm-6 col-sm-offset-3">-->
+																		    <!--<div class="workerImg">-->
+																			    <!--<img id="fangWorkerImg" src="" alt="">-->
+																			<!--</div>-->
+																			<!--<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px; margin-left: -174px">-->
+																				<!--<a class="icon-money icon-5x" href="#" title="fangWorkers_wages"></a>-->
+																				<!--<span id="fangWorkerNameSpan" class="pull-right"></span>-->
+																			<!--</div>-->
+																		<!--</div>-->
+																	<!--</div>-->
+																<!--</div>-->
+															<!--</div>-->
+														<!--</div>-->
+													<!--</div>-->
+													<!---->
+													<!--<div class="tab-pane in active" id="putlineDrawing">-->
+														<!--<div class="row">-->
+															<!--<div class="col-xs-12">-->
+																<!--<div class="row-fluid">-->
+																	<!--<ul class="ace-thumbnails" id="putlineGallery"></ul>-->
+																<!--</div>-->
+															<!--</div>-->
+														<!--</div>-->
+														<!---->
+														<!--<div class="row">-->
+															<!--<div class="hr hr32 hr-dotted"></div>-->
+															<!--<div class="col-xs-12">-->
+																<!--<div class="pull-left inline">-->
+																	<!--&lt;!&ndash; <input id="putlineUpload" type="file" /> &ndash;&gt;-->
+																	<!--<div id="putlineUpload"></div>-->
+																	<!--<input type="text" class="hidden" id="picture" />-->
+																<!--</div>-->
+															<!--</div>-->
+														<!--</div>-->
+														<!---->
+													<!--</div>-->
+												<!--</div>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
 	
 									<div class="step-pane" id="step3">
 										<div class="row">

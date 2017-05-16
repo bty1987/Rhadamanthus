@@ -53,6 +53,7 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 				query.alias("goods", "goods");
 				query.alias("color", "color");
 				query.alias("format", "format");
+				query.alias("storehouse", "storehouse");
 				
 				if(GoodsStorehouseStockPO.COLUMN_GID_STR.equals(field)){
 					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_GID_STR, data, op));
@@ -62,6 +63,12 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_FID_STR, data, op));
 				}else if(GoodsStorehouseStockPO.COLUMN_SHID_STR.equals(field)){
 					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_SHID_STR, data, op));
+				}else if(GoodsStorehouseStockPO.COLUMN_SNAME_STR.equals(field)){
+					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_STOREHOUSNAME_STR, data, op));
+				}else if(GoodsStorehouseStockPO.COLUMN_NAME_STR.equals(field)){
+					query.add(query.getCriterion(field, data, op));
+				}else if(GoodsStorehouseStockPO.COLUMN_BARCODE_STR.equals(field)){
+					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_CODE_STR, data, op));
 				}
 			}
 		}

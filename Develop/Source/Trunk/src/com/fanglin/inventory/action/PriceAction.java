@@ -34,6 +34,12 @@ public class PriceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryPurchaseByGidASelling", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseByGidASelling(){
+		price = priceService.queryPurchaseByGidASelling(price);
+		return SUCCESS;
+	}
+	
 	@Action(value = "addPrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPrice() throws FLException{
 		priceService.addPrice(price);

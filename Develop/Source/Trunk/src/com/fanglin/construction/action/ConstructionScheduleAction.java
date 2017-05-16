@@ -11,9 +11,6 @@
 
 package com.fanglin.construction.action;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -38,8 +34,6 @@ public class ConstructionScheduleAction extends BaseListAction{
 	private ConstructionScheduleService constructionScheduleService;
 	
 	private ConstructionScheduleVO constructionSchedule;
-	
-	public Map<String, List<ConstructionScheduleWorkerVO>> constructionScheduleWorkers;
 	
 	@Action(value = "pageDecorationOrderForConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForConstructionSchedule(){
@@ -152,14 +146,4 @@ public class ConstructionScheduleAction extends BaseListAction{
 	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule){
 		this.constructionSchedule = constructionSchedule;
 	}
-
-	public Map<String, List<ConstructionScheduleWorkerVO>> getConstructionScheduleWorkers() {
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			Map<String, List<ConstructionScheduleWorkerVO>> constructionScheduleWorkers) {
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
 }

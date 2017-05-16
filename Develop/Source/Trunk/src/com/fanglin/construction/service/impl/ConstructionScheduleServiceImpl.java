@@ -52,8 +52,6 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
-import com.fanglin.drawline.dao.DrawLineDao;
-import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -83,9 +81,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
-	
-	@Autowired
-	private DrawLineDao drawLineDao;
 	
 	@Autowired
 	private QuotationDao quotationDao;
@@ -672,7 +667,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByCsId(csId);
 			if(chanConstructionSchedulePO == null){
 				chanConstructionSchedulePO = new ChanConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-				
 				chanConstructionScheduleDao.save(chanConstructionSchedulePO);
 			}
 			
@@ -682,15 +676,16 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			if(putlineConstructionSchedulePO == null){
 				putlineConstructionSchedulePO = new PutlineConstructionSchedulePO(csId, decorationOrderPO, currentTime, currentTime);
 				
-				List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(orderId);
-				if(drawLinePOs != null && drawLinePOs.size() > 0){
-					String drawLineGroup = drawLinePOs.get(0).getDrawLineGroup();
-					List<UserPO> userPOs = userDao.queryUserByUserName(drawLineGroup);
-					
-					if(userPOs.size() > 0){
-						putlineConstructionSchedulePO.setWorkerId(userPOs.get(0).getUserId());
-					}
-				}
+				//根据订单id查询放线实体
+//				List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(orderId);
+//				if(drawLinePOs != null && drawLinePOs.size() > 0){
+//					String drawLineGroup = drawLinePOs.get(0).getDrawLineGroup();
+//					List<UserPO> userPOs = userDao.queryUserByUserName(drawLineGroup);
+//					
+//					if(userPOs.size() > 0){
+//						putlineConstructionSchedulePO.setWorkerId(userPOs.get(0).getUserId());
+//					}
+//				}
 				
 				putlineConstructionScheduleDao.save(putlineConstructionSchedulePO);
 			}

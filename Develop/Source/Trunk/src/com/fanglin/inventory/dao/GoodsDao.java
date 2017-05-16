@@ -24,7 +24,7 @@ public interface GoodsDao extends Dao<GoodsPO>{
 	
 	public List<GoodsPO> queryGoods(List<Filter> filters);
 	
-	public List<GoodsPO> queryGoodsByName(String name,String pinyin, int limit);
+	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit);
 	
 	public List<GoodsPO> queryGoodsByNo(String no, int limit);
 	

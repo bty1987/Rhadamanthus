@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.vo.WorkTypeVO;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
@@ -19,7 +18,6 @@ import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AssisOrderItemService;
 import com.fanglin.inventory.vo.AssisOrderItemVO;
 import com.fanglin.inventory.vo.AssisOrderVO;
-import com.fanglin.inventory.vo.AssisTypeVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -43,12 +41,12 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 		for (AssisOrderItemPO assisOrderItemPO : assisOrderItemPOs) {
 
-			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(new AssisTypeVO(new WorkTypeVO())));
+			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO());
 
-			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,Arrays.asList("goods"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType(),assisOrderItemVO.getGoods().getAssisType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType().getWorkType(),assisOrderItemVO.getGoods().getAssisType().getWorkType());
+			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,
+					Arrays.asList("goods"));
+			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),
+					assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
 
 			assisOrderItemVOs.add(assisOrderItemVO);
 		}
@@ -64,12 +62,10 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 		
 		for (AssisOrderItemPO assisOrderItemPO : assisOrderItemPOs) {
 
-			AssisOrderItemVO assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(new AssisTypeVO(new WorkTypeVO())));
+			AssisOrderItemVO assisOrderItemVO = new AssisOrderItemVO(new GoodsVO());
 
 			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,Arrays.asList("goods"));
 			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType(),assisOrderItemVO.getGoods().getAssisType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType().getWorkType(),assisOrderItemVO.getGoods().getAssisType().getWorkType());
 
 			assisOrderItemVOs.add(assisOrderItemVO);
 		}

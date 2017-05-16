@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.inventory.dao.RefundsItemDao;
 import com.fanglin.inventory.po.RefundsItemPO;
 import com.fanglin.inventory.service.RefundsItemService;
+import com.fanglin.inventory.vo.ColorVO;
+import com.fanglin.inventory.vo.FormatVO;
+import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.RefundsItemVO;
 import com.fanglin.inventory.vo.RefundsVO;
 import com.fanglin.inventory.vo.SalesItemVO;
@@ -33,10 +36,14 @@ public class RefundsItemServiceImpl  implements RefundsItemService {
 		
 		for(RefundsItemPO refundsItemPO:RefundsItemPOs){
 			
-			RefundsItemVO refundItemVO = new RefundsItemVO(new SalesItemVO());
+			RefundsItemVO refundItemVO = new RefundsItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
 			
 			BeanUtil.copyProperties(refundsItemPO, refundItemVO,Arrays.asList("salesItem"));
 			BeanUtil.copyProperties(refundsItemPO.getSalesItem(), refundItemVO.getSalesItem(), Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getGoods(), refundItemVO.getSalesItem().getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getColor(), refundItemVO.getSalesItem().getColor());
+			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getFormat(), refundItemVO.getSalesItem().getFormat());
+			
 
 			RefundsItemVOs.add(refundItemVO);
 		}

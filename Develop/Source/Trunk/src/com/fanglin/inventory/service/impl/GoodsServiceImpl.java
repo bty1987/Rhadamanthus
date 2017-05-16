@@ -106,7 +106,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO) {
 
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(),goodsVO.getPinyin(), 10);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(),goodsVO.getPinyin(),goodsVO.getNo(), 10);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){

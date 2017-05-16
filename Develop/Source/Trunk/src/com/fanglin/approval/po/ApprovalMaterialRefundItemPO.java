@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fanglin.material.po.MaterialSubOrderItemPO;
 
 @Entity
-@Table(name = "approvalmaterialrefunditem", catalog = "platform")
+@Table(name = "approvalmaterialrefunditem", catalog = "approval")
 public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7616304742054234800L;

@@ -11,9 +11,7 @@
 
 package com.fanglin.construction.service;
 
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
-import com.fanglin.core.interceptor.FLException;
 
 public interface PutlineConstructionScheduleService {
 	
@@ -26,11 +24,5 @@ public interface PutlineConstructionScheduleService {
 	public void setPutlineConstructionScheduleForStatus(PutlineConstructionScheduleVO putlineConstructionScheduleVO, String userId);
 	
 	public void setPutlineConstructionScheduleForInfo(PutlineConstructionScheduleVO putlineConstructionScheduleVO);
-	
-	public void setPutlineConstructionScheduleWorker(PutlineConstructionScheduleVO putlineConstructionScheduleVO) throws FLException;
-	
-	public void setPutlineConstructionScheduleForService(PutlineConstructionScheduleVO putlineConstructionScheduleVO);
-	
-	public int setPutlineConstructionScheduleForSalary(ConstructionScheduleWorkerVO constructionScheduleWorkerVO) throws FLException;
 	
 }

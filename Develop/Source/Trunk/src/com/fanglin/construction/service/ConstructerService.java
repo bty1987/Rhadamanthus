@@ -11,7 +11,7 @@ public interface ConstructerService {
 
 	public List<ConstructerVO> queryConstructerByCsId(ConstructerVO constructer);
 
-	public void addConstructer(ConstructerVO constructer) throws FLException;
+	public void addConstructer(ConstructerVO constructer, String createrId) throws FLException;
 
 	public void updateConstructerForSalary(ConstructerVO constructer) throws FLException;
 

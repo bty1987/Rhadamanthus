@@ -22,9 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.OilConstructionScheduleService;
 import com.fanglin.construction.service.OilDrawingService;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.OilConstructionScheduleVO;
-import com.fanglin.construction.vo.OilConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.OilDrawingVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -49,12 +47,6 @@ public class OilConstructionScheduleAction extends BaseListAction{
 	private List<OilDrawingVO> oilDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<OilConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private OilConstructionScheduleWorkerVO oilConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryOilConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOilConstructionScheduleByOrderId(){
@@ -127,46 +119,6 @@ public class OilConstructionScheduleAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryOilConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOilConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = oilConstructionScheduleService.queryOilConstructionScheduleWorkerByOcsId(oilConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addOilConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addOilConstructionScheduleWorker() throws FLException{
-		
-		oilConstructionScheduleService.addOilConstructionScheduleWorker(oilConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setOilConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setOilConstructionScheduleWorkerForSalary() throws FLException{
-		
-		oilConstructionScheduleService.setOilConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setOilConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setOilConstructionScheduleWorkerForRaty(){
-		
-		oilConstructionScheduleService.setOilConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteOilConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteOilConstructionScheduleWorker() throws FLException{
-		
-		oilConstructionScheduleService.deleteOilConstructionScheduleWorker(oilConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
 
 	public OilConstructionScheduleVO getOilConstructionSchedule(){
 		return oilConstructionSchedule;
@@ -190,33 +142,6 @@ public class OilConstructionScheduleAction extends BaseListAction{
 
 	public void setOilDrawings(List<OilDrawingVO> oilDrawings){
 		this.oilDrawings = oilDrawings;
-	}
-
-	public List<OilConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<OilConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public OilConstructionScheduleWorkerVO getOilConstructionScheduleWorker(){
-		return oilConstructionScheduleWorker;
-	}
-
-	public void setOilConstructionScheduleWorker(
-			OilConstructionScheduleWorkerVO oilConstructionScheduleWorker){
-		this.oilConstructionScheduleWorker = oilConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

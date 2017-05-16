@@ -32,6 +32,12 @@ public class ConstructerVO implements java.io.Serializable {
 		this.user = user;
 	}
 
+	public ConstructerVO(UserPO user, UserPO creater) {
+		super();
+		this.user = user;
+		this.creater = creater;
+	}
+
 	public Integer getCid() {
 		return this.cid;
 	}

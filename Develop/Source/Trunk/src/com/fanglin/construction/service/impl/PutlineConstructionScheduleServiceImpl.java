@@ -22,13 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
-import com.fanglin.construction.po.ChanConstructionSchedulePO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.service.PutlineConstructionScheduleService;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.drawline.dao.DrawLineDao;
 import com.fanglin.drawline.po.DrawLinePO;
@@ -36,8 +33,6 @@ import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.salary.dao.WorkerBaseSalaryDao;
-import com.fanglin.salary.po.WorkerBaseSalaryPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -53,9 +48,6 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 	
 	@Autowired
 	private DrawLineDao drawLineDao;
-	
-	@Autowired
-	private WorkerBaseSalaryDao workerBaseSalaryDao;
 	
 	@Autowired
 	private MessageDao messageDao;
@@ -81,28 +73,13 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		if(putlineConstructionScheduleVO == null){
 			return null;
 		}
-		
+		System.out.println("orderId:    " + putlineConstructionScheduleVO.getOrderId());
 		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByOrderId(putlineConstructionScheduleVO.getOrderId());
-		
 		if(putlineConstructionSchedulePO != null){
 			BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
 			putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
-			
-			String workerId = putlineConstructionSchedulePO.getWorkerId();
-			
-			if(workerId != null && !"".equals(workerId)){
-				UserPO userPO = userDao.get(workerId);
-				
-				if(userPO != null){
-					putlineConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
-					putlineConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
-					putlineConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
-					putlineConstructionScheduleVO.setWorkerPhone(userPO.getPhone());
-					putlineConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
-				}
-			}
 		}
-		
+
 		return putlineConstructionScheduleVO;
 	}
 	
@@ -200,110 +177,6 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 			
 			putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);
 		}
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void setPutlineConstructionScheduleWorker(PutlineConstructionScheduleVO putlineConstructionScheduleVO) throws FLException{
-		
-		int plcsId = putlineConstructionScheduleVO.getPlcsId();
-		
-		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.get(plcsId);
-		
-		if(putlineConstructionSchedulePO != null){
-			
-			String workerId = putlineConstructionScheduleVO.getWorkerId();
-			
-			if("".equals(workerId)){
-				WorkerBaseSalaryPO workerBaseSalaryPO = workerBaseSalaryDao.queryWorkerBaseSalaryByCswIdWorkTypeId(plcsId, ChanConstructionSchedulePO.CHAN_CONSTRUCTION_SCHEDULE_TYPE_ID_INT);
-				
-				List<Integer> status = Arrays.asList(new Integer[]{WorkerBaseSalaryPO.STATUS_TYPE_INIT_INT, WorkerBaseSalaryPO.STATUS_TYPE_DELETE_INT});
-				
-				if(workerBaseSalaryPO != null){
-					if(!status.contains(workerBaseSalaryPO.getStatus())){
-						throw new FLException(120003, "当前工人工资已经处理,不能进行删除");
-					}else{
-						workerBaseSalaryDao.delete(workerBaseSalaryPO);
-					}
-				}
-				
-				putlineConstructionSchedulePO.setWorkerId("");
-				putlineConstructionSchedulePO.setAllocateTime(null);
-			}else{
-				putlineConstructionSchedulePO.setWorkerId(workerId);
-				putlineConstructionSchedulePO.setAllocateTime(DateUtil.getDateToTimestamp(new Date()));
-				
-				ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(putlineConstructionSchedulePO.getCsId());
-				if(constructionSchedulePO != null && (constructionSchedulePO.getAllocationWorkerFlag() & PutlineConstructionSchedulePO.PUBLINE_ALLOCATION_WORKER_FLAG_INT) != 0){
-					constructionSchedulePO.setAllocationWorkerFlag(constructionSchedulePO.getAllocationWorkerFlag() + PutlineConstructionSchedulePO.PUBLINE_ALLOCATION_WORKER_FLAG_INT);
-					
-					constructionScheduleDao.update(constructionSchedulePO);
-				}
-				
-				UserPO userPO = userDao.get(workerId);
-				if(userPO != null){
-					putlineConstructionScheduleVO.setWorkerOldId(userPO.getOldUserId());
-					putlineConstructionScheduleVO.setWorkerName(userPO.getCurrentName());
-					putlineConstructionScheduleVO.setWorkerDuty(userPO.getDuty());
-					putlineConstructionScheduleVO.setWorkerPhoto(userPO.getUserPhoto());
-				}
-			}
-			
-			putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);
-		}
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void setPutlineConstructionScheduleForService(PutlineConstructionScheduleVO putlineConstructionScheduleVO){
-		
-		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.get(putlineConstructionScheduleVO.getPlcsId());
-		
-		putlineConstructionSchedulePO.setWorkerRaty(putlineConstructionScheduleVO.getWorkerRaty());
-		putlineConstructionSchedulePO.setWorkerRatyDes(putlineConstructionScheduleVO.getWorkerRatyDes());
-		
-		putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int setPutlineConstructionScheduleForSalary(ConstructionScheduleWorkerVO constructionScheduleWorkerVO) throws FLException{
-		
-		int plcsId = constructionScheduleWorkerVO.getPcsId();
-		float workerSalary = constructionScheduleWorkerVO.getWorkerSalary();
-		
-		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.get(plcsId);
-		
-		if(putlineConstructionSchedulePO != null){
-			
-			putlineConstructionSchedulePO.setWorkerSalary(workerSalary);
-			
-			WorkerBaseSalaryPO workerBaseSalaryPO = workerBaseSalaryDao.queryWorkerBaseSalaryByCswIdWorkTypeId(plcsId, PutlineConstructionSchedulePO.PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_ID_INT);
-			
-			if(workerBaseSalaryPO == null){
-				workerBaseSalaryPO = new WorkerBaseSalaryPO();
-				
-				BeanUtil.copyProperties(putlineConstructionSchedulePO, workerBaseSalaryPO, Arrays.asList("decorationOrder"));
-				workerBaseSalaryPO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
-				workerBaseSalaryPO.setCswId(plcsId);
-				workerBaseSalaryPO.setUserId(constructionScheduleWorkerVO.getWorkerId());
-				workerBaseSalaryPO.setUserName(constructionScheduleWorkerVO.getWorkerName());
-				workerBaseSalaryPO.setBase(constructionScheduleWorkerVO.getWorkerSalary());
-				workerBaseSalaryPO.setWorkTypeId(PutlineConstructionSchedulePO.PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_ID_INT);
-				workerBaseSalaryPO.setWorkType(PutlineConstructionSchedulePO.PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-				workerBaseSalaryPO.setCreateTime(DateUtil.current(WorkerBaseSalaryPO.CURRENT_TIME_FORMAT_STR));
-			}else if(workerBaseSalaryPO.getStatus() != WorkerBaseSalaryPO.STATUS_TYPE_INIT_INT){
-				throw new FLException(120002, "当前工人工资已经完成确认,不能进行修改");
-			}else if(workerBaseSalaryPO.getStatus() == WorkerBaseSalaryPO.STATUS_TYPE_INIT_INT){
-				workerBaseSalaryPO.setBase(constructionScheduleWorkerVO.getWorkerSalary());
-			}
-			
-			workerBaseSalaryDao.saveOrUpdate(workerBaseSalaryPO);
-			
-			putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);
-		}
-		
-		return 0;
 	}
 
 }

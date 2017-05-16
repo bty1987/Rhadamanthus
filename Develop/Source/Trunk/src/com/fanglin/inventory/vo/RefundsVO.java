@@ -20,6 +20,8 @@ public class RefundsVO  implements Serializable{
 	
 	private UserPO creater;
 	
+	private String comment;
+	
 	private Timestamp createTime;
 	 
 	private Timestamp balanceTime;
@@ -86,6 +88,14 @@ public class RefundsVO  implements Serializable{
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	

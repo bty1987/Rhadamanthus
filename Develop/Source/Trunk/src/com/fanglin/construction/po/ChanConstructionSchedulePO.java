@@ -66,10 +66,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 	
 	private String orderId;
 	
-	private String workerId;
-	
-	private float workerSalary;
-	
 	private String startTime;
 	
 	private int startTimeFlag;
@@ -77,10 +73,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 	private String endTime;
 	
 	private int endTimeFlag;
-	
-	private int workerRaty;
-	
-	private String workerRatyDes;
 	
 	private int status;
 	
@@ -118,24 +110,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "workerId")
-	public String getWorkerId(){
-		return this.workerId;
-	}
-
-	public void setWorkerId(String workerId){
-		this.workerId = workerId;
-	}
-
-	@Column(name = "workerSalary")
-	public Float getWorkerSalary(){
-		return this.workerSalary;
-	}
-
-	public void setWorkerSalary(Float workerSalary){
-		this.workerSalary = workerSalary;
-	}
-
 	@Column(name = "startTime")
 	public String getStartTime(){
 		return this.startTime;
@@ -170,24 +144,6 @@ public class ChanConstructionSchedulePO implements Serializable {
 
 	public void setEndTimeFlag(int endTimeFlag){
 		this.endTimeFlag = endTimeFlag;
-	}
-
-	@Column(name = "workerRaty")
-	public int getWorkerRaty(){
-		return this.workerRaty;
-	}
-
-	public void setWorkerRaty(int workerRaty){
-		this.workerRaty = workerRaty;
-	}
-
-	@Column(name = "workerRatyDes")
-	public String getWorkerRatyDes(){
-		return this.workerRatyDes;
-	}
-
-	public void setWorkerRatyDes(String workerRatyDes){
-		this.workerRatyDes = workerRatyDes;
 	}
 
 	@Column(name = "status")

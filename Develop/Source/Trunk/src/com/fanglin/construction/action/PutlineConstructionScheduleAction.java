@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.PutlineConstructionScheduleService;
 import com.fanglin.construction.service.PutlineDrawingService;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.construction.vo.PutlineDrawingVO;
 import com.fanglin.core.action.BaseListAction;
@@ -48,8 +47,6 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 	private List<PutlineDrawingVO> putlineDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryPutlineConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPutlineConstructionScheduleByOrderId(){
@@ -79,30 +76,6 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 	public String setPutlineConstructionScheduleForInfo(){
 		
 		putlineConstructionScheduleService.setPutlineConstructionScheduleForInfo(putlineConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setPutlineConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setPutlineConstructionScheduleWorker() throws FLException{
-		
-		putlineConstructionScheduleService.setPutlineConstructionScheduleWorker(putlineConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setPutlineConstructionScheduleForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setPutlineConstructionScheduleForService(){
-		
-		putlineConstructionScheduleService.setPutlineConstructionScheduleForService(putlineConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setPutlineConstructionScheduleForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setPutlineConstructionScheduleForSalary() throws FLException{
-		
-		putlineConstructionScheduleService.setPutlineConstructionScheduleForSalary(constructionScheduleWorker);
 		
 		return SUCCESS;
 	}
@@ -170,15 +143,6 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 
 	public void setPutlineDrawings(List<PutlineDrawingVO> putlineDrawings){
 		this.putlineDrawings = putlineDrawings;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

@@ -21,4 +21,12 @@ public class PriceDaoImpl extends DaoImpl<PricePO> implements PriceDao{
 		return session().createCriteria(PricePO.class).add(Restrictions.eq(PricePO.COLUMN_GID_STR, gid)).list();
 	}
 
+	@Override
+	public PricePO queryPurchaseByGidASelling(long pid) {
+		// TODO Auto-generated method stub
+		return (PricePO) session().createCriteria(PricePO.class).
+				add(Restrictions.eq(PricePO.COLUMN_PID_STR, pid)).uniqueResult();
+				
+	}
+
 }
