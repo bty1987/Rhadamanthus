@@ -85,7 +85,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "addSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesPayment() throws FLException{
 		
-		salesPayment = salesPaymentService.addSalesPayment(salesPayment, queryUserId());
+		salesPaymentService.addSalesPayment(salesPayment, queryUserId());
 		
 		return SUCCESS;
 	}
