@@ -3,105 +3,36 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid '7e5aa5632c292a8913890a67d45077c1c3ebd811'
-    oldFile: !uuid '42fc5a509dfc096cb35b6f958ff231ae6ec08459'
+    newFile: !uuid 'b9c92839c2e29c94413b72a9bf4bdac7378044ad'
+    oldFile: !uuid '7e5aa5632c292a8913890a67d45077c1c3ebd811'
   /Develop/Source:
-    newFile: !uuid 'f8be5e3c04ae23be1e772d48f333bdc820e839a0'
-    oldFile: !uuid '356aaeddc587db9197fca19f5f687331a1a7b143'
+    newFile: !uuid '3617b372c71de99d03bd257cb1adb3f0407c24bc'
+    oldFile: !uuid 'f8be5e3c04ae23be1e772d48f333bdc820e839a0'
   /Develop/Source/Trunk:
-    newFile: !uuid 'd59827f0a9fe4e3fec98034ea9cc2f665d11311d'
-    oldFile: !uuid '4416f8b2360b1a02d11425bfbc1f61cde5e2712b'
+    newFile: !uuid '6d06407597930faae71c5c59afacc4be856f3b29'
+    oldFile: !uuid 'd59827f0a9fe4e3fec98034ea9cc2f665d11311d'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '209f10b5e435cf66d306991c402073c40896fa6d'
-    oldFile: !uuid 'd0c746ca284497ad87b21e5862c7b59e5c3b01e8'
+    newFile: !uuid '00038df9d652f57f1a80e97d9426bea09a95388f'
+    oldFile: !uuid '209f10b5e435cf66d306991c402073c40896fa6d'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid '7525fdbb4bd359454d22f063851bddfb26b2a636'
-    oldFile: !uuid '433be965ddce528744c662db7610ba1540588de7'
-  /Develop/Source/Trunk/WebContent/js/payment:
-    newFile: !uuid 'd4896a484e51413e15483aaca366b677277363e1'
-    oldFile: !uuid 'b03b383759927a16caab6c0837189eb3c7bad79d'
-  /Develop/Source/Trunk/WebContent/js/payment/userSalary.js:
-    newFile: null
-    oldFile: !uuid '45f0803ccfe883000b3019db848861b08c1df19f'
-  /Develop/Source/Trunk/WebContent/js/payment/workerSalaryCalculationIndex.js:
-    newFile: null
-    oldFile: !uuid 'c88c56dd44a5c2a506e92290ffeb4458e3fe674e'
+    newFile: !uuid '1c5d98d0bdf2167eca9f8da822ba90fe3b34befc'
+    oldFile: !uuid '7525fdbb4bd359454d22f063851bddfb26b2a636'
+  /Develop/Source/Trunk/WebContent/js/personnel:
+    newFile: !uuid 'c5229c00d7129f495d89d2a4d0979b6952965a83'
+    oldFile: !uuid '51c514955d4c5d7ce8550059a22ea6aa78c42118'
+  /Develop/Source/Trunk/WebContent/js/personnel/userEdit.js:
+    newFile: !uuid 'cf5dfe3e3a8517e0b95688f06b53ed43adb7a99c'
+    oldFile: !uuid 'ae9fcd5a89c3dcbd4b4a1a251a7e8641fcb7e9b7'
   /Develop/Source/Trunk/WebContent/views:
-    newFile: !uuid '81d761957e4930c9ff27820a774a72ca76732904'
-    oldFile: !uuid '55666876fbd30455c7bcc9ed770256ca7b9d06aa'
-  /Develop/Source/Trunk/WebContent/views/payment:
-    newFile: !uuid 'b0d309ddbe8e8cbfd00832e9cf192a461d961779'
-    oldFile: !uuid '06253e6318d856b24302fc9e2f1fd6f6f298a80f'
-  /Develop/Source/Trunk/WebContent/views/payment/userSalary.html:
-    newFile: null
-    oldFile: !uuid 'b646b67db50a7966f326265e1e2865e21ed6e631'
-  /Develop/Source/Trunk/src:
-    newFile: !uuid '9ef772e86409bf4c5d74c92ae3a97f02905b3191'
-    oldFile: !uuid '178eb4c23a71a6ed8d8617c9fa17026a5af922ad'
-  /Develop/Source/Trunk/src/com:
-    newFile: !uuid '8b8ba20a518a5459b7cacf42953637ec1828dfda'
-    oldFile: !uuid 'd75d4a5ee174b00750093e6dc241aa2c9a8582bf'
-  /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid 'a953a2d988972a71ef75c30d96be1256a2be4a6b'
-    oldFile: !uuid '2c9c09d21b3b5724c947ae4f3ac68df61bba1f85'
-  /Develop/Source/Trunk/src/com/fanglin/inventory:
-    newFile: !uuid '81b681ee45d035d1d3ee7a4018317cd25d0b8ad9'
-    oldFile: !uuid '5fc5e6c88dfac0fcca149b4beb7462d980b84518'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/action:
-    newFile: !uuid 'e3db6a0304635c4d0c5d89f16264e4030e871aec'
-    oldFile: !uuid 'f907ca822248080ee7d14718d4a294e97f900d8c'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/action/ApprovalSalesRefundAction.java:
-    newFile: null
-    oldFile: !uuid '806730e4a6879e73fee2efebeabc11345e9bff8e'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao:
-    newFile: !uuid 'd295603276f8c4a68dc1ac713b4f6215b62ff00c'
-    oldFile: !uuid 'b9176806883097262de1ebba8654564be07237aa'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao/ApprovalSalesRefundDao.java:
-    newFile: null
-    oldFile: !uuid 'e72f0e0a5a3e23cd082616285851de9abf5433b4'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao/ApprovalSalesRefundItemDao.java:
-    newFile: null
-    oldFile: !uuid 'd1ddf5ff0d4f98aea51d7e49ed2afb0e95750f35'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao/impl:
-    newFile: !uuid '28e6d71e709ca6abef756ac2123cc93ab01f144b'
-    oldFile: !uuid 'f89dd4e3a239c3ae275db5a4a8679236a35abe2f'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao/impl/ApprovalSalesRefundDaoImpl.java:
-    newFile: null
-    oldFile: !uuid '9bbf56628ed55e71b7358551977ac133759001a1'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/dao/impl/ApprovalSalesRefundItemDaoImpl.java:
-    newFile: null
-    oldFile: !uuid '980bc2f04acb8108552f5c62e273ca7580aeb057'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/po:
-    newFile: !uuid 'c1d889570ee3da744e4b51b5eaf0af454dcc556d'
-    oldFile: !uuid 'c300f13204f3dbf58456d0840e0c92a5f063e576'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/po/ApprovalSalesRefundItemPO.java:
-    newFile: null
-    oldFile: !uuid '26e9480463cf4aced33d368d7db767f69f79b514'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/po/ApprovalSalesRefundPO.java:
-    newFile: null
-    oldFile: !uuid '995f59a1682b55b6adacfe60aab12faba402e31d'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/service:
-    newFile: !uuid 'e44776d8b713ee738763026e9d5dd5e9473c7ecb'
-    oldFile: !uuid 'ea0638f89a43b1ded5a2917ec78f44be1471e43b'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/service/ApprovalSalesRefundService.java:
-    newFile: null
-    oldFile: !uuid '95c8494e0f42ed7260374458f12e20336e9c6875'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/service/impl:
-    newFile: !uuid '29c68796b51978334a6c6572a6eed8db4c60fef2'
-    oldFile: !uuid 'f4e3c3c71e1ffcbdcdd620c1ddb04c4de9609021'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/service/impl/ApprovalSalesRefundServiceImpl.java:
-    newFile: null
-    oldFile: !uuid '6f227aa7ba73dea41a983fdb78b2d38982429bc3'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/vo:
-    newFile: !uuid '0e81802751aad5006416b723015fde4d1795b63d'
-    oldFile: !uuid '408f17f1c4154d166bf4a5aa220a01f3927900ce'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/vo/ApprovalSalesRefundItemVO.java:
-    newFile: null
-    oldFile: !uuid '1f587d738b31c36522740dfe25c9dda5c99141a9'
-  /Develop/Source/Trunk/src/com/fanglin/inventory/vo/ApprovalSalesRefundVO.java:
-    newFile: null
-    oldFile: !uuid '59d7802d877a842e1efd92beae7331613642e7c1'
-gitCommitId: !uuid '4f0135413a57f85feb8c481a9e6adb269cc471d9'
+    newFile: !uuid 'e94f71d3e12270598f2bbb6b95e1dbc7aac96648'
+    oldFile: !uuid '81d761957e4930c9ff27820a774a72ca76732904'
+  /Develop/Source/Trunk/WebContent/views/personnel:
+    newFile: !uuid '5e400b2c96d7c13647fc35699286064b0bcfc1e7'
+    oldFile: !uuid '6cc9fac6135ff4125b4b0a54d544d97cc82dbd44'
+  /Develop/Source/Trunk/WebContent/views/personnel/userEdit.html:
+    newFile: !uuid 'e51e5e4351dab6b11f309c1a0a8216d5ec76db1e'
+    oldFile: !uuid '77cbcfad82d2fe7174f6b649a8fb409cdc17ddf5'
+gitCommitId: !uuid 'c43db1412e4f88827a73d3b3d09ee3252f1265d1'
 renames: {
   }
-revisionId: 149
+revisionId: 150
