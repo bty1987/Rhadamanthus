@@ -58,12 +58,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		if(sales == null){
 			throw new FLException(260021, "销售单不存在");
 		}
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySid(salesPaymentVO.getSid());
-		for(SalesPaymentPO salesPaymentPO : salesPaymentPOs){
-			if(salesPaymentPO == null){
-				throw new FLException(150003, "收款款项不存在");
-			}
+		
+		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+			throw new FLException(260021, "收款款项不存在");
 		}
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
@@ -216,7 +213,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int confirmSalesPayment(List<Long> spids)  throws FLException{
+	public int confirmSalesPayment(List<Long> spids,String userId)  throws FLException{
 
 		//循环批量更新销售款状态
 		for(Long spid :spids){
@@ -227,6 +224,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 			SalesReceiptPO salesReceiptPO = salesReceiptDao.get(salesPayment.getSalesReceipt().getSrId());
 			salesReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
+			UserPO user = userDao.get(userId);
+			salesReceiptPO.setCollecter(user); //确认人ID赋值
+			salesReceiptPO.setConfirmerName(user.getUserName());
 			salesReceiptDao.update(salesReceiptPO);
 
 			SalesPO salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
@@ -248,11 +248,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySid(salesPaymentVO.getSid());
-		for(SalesPaymentPO salesPaymentPO : salesPaymentPOs){
-			if(salesPaymentPO == null){
-				throw new FLException(260021, "收款款项不存在");
-			}
+		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+			throw new FLException(260021, "收款款项不存在");
 		}
 
 		SalesPaymentPO salesPayment;
@@ -361,11 +358,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySid(salesPaymentVO.getSid());
-		for(SalesPaymentPO salesPaymentPO : salesPaymentPOs){
-			if(salesPaymentPO == null){
-				throw new FLException(260021, "收款款项不存在");
-			}
+		if(salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0){
+			throw new FLException(260021, "收款款项不存在");
 		}
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
@@ -481,7 +475,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
-		if(salesPaymentDao.querySalesBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType())>0){
+		if(salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType())>0){
 			throw new FLException(150033 , "款项类型已存在");
 		}
 
@@ -549,7 +543,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Override
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO) {
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySid(salesPaymentVO.getSales().getSid());
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentsBySid(salesPaymentVO.getSales().getSid());
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 

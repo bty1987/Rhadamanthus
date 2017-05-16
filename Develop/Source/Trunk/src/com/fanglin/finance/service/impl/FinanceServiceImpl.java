@@ -103,7 +103,7 @@ public class FinanceServiceImpl implements FinanceService {
 		String currentPeriod = DateUtil.current("yyyyMM");
 		
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
-		Map<String, List<Double>> subjectBalances = new HashMap<String, List<Double>>();
+		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -244,7 +244,7 @@ public class FinanceServiceImpl implements FinanceService {
 		String currentPeriod = DateUtil.current("yyyyMM");
 		
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
-		Map<String, List<Double>> subjectBalances = new HashMap<String, List<Double>>();
+		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -426,7 +426,7 @@ public class FinanceServiceImpl implements FinanceService {
 		String currentPeriod = DateUtil.current("yyyyMM");
 		
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
-		Map<String, List<Double>> subjectBalances = new HashMap<String, List<Double>>();
+		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
 		if(materialSubOrderPO == null){
 			throw new FLException(180001, "主材订单不存在");
@@ -618,7 +618,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertPaymentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float payment){
+	private void convertPaymentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float payment){
 		
 		SubjectPO subjectPO = subjectPOs.get(sId);
 		
@@ -631,7 +631,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCashToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float cash){
+	private void convertCashToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float cash){
 		
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
@@ -644,7 +644,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertBankToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float bank){
+	private void convertBankToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float bank){
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
 		if(subjectPO != null){
@@ -656,7 +656,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCheckvToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float checkv){
+	private void convertCheckvToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float checkv){
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
 		if(subjectPO != null){
@@ -668,7 +668,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertInstallmentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float installment){
+	private void convertInstallmentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float installment){
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
 		if(subjectPO != null){
@@ -680,7 +680,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertAccountsToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float accounts){
+	private void convertAccountsToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float accounts){
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
 		if(subjectPO != null){
@@ -692,7 +692,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertAdvanceToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, int advanceType, float advance){
+	private void convertAdvanceToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, int advanceType, float advance){
 		
 		SubjectPO subjectPO = null;
 		
@@ -713,7 +713,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCouponToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Double>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float coupon){
+	private void convertCouponToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float coupon){
 		
 		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
 		
@@ -726,7 +726,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private AccountPO saveAccount(VoucherPO voucherPO, AccountVO accountVO, SubjectPO subjectPO, AssistantPO assistantPO, boolean relat, double money){
+	private AccountPO saveAccount(VoucherPO voucherPO, AccountVO accountVO, SubjectPO subjectPO, AssistantPO assistantPO, boolean relat, float money){
 		
 		AccountPO accountPO = new AccountPO();
 		
@@ -760,20 +760,20 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private int collectSubjectBalanceMap(Map<String, List<Double>> subjectBalances, AccountPO accountPO, String period, short direction){
+	private int collectSubjectBalanceMap(Map<String, List<Float>> subjectBalances, AccountPO accountPO, String period, short direction){
 		
-		double debit = accountPO.getDebit();
-		double crebit = accountPO.getCredit();
+		float debit = accountPO.getDebit();
+		float crebit = accountPO.getCredit();
 		
 		String key = String.format("%s%s%s-%s", accountPO.getOneCode(), accountPO.getTwoCode(), accountPO.getThrCode(), period);
 		
 		if(subjectBalances.get(key) != null){
-			List<Double> balances = subjectBalances.get(key);
+			List<Float> balances = subjectBalances.get(key);
 			
 			balances.set(0, Arith.add(balances.get(0), Arith.mul(debit, direction)));
 			balances.set(1, Arith.add(balances.get(1), Arith.mul(crebit, direction)));
 		}else{
-			List<Double> balances = new ArrayList<Double>();
+			List<Float> balances = new ArrayList<Float>();
 			
 			balances.add(Arith.mul(debit, direction));
 			balances.add(Arith.mul(crebit, direction));
@@ -784,12 +784,12 @@ public class FinanceServiceImpl implements FinanceService {
 		return 0;
 	}
 	
-	private int handleSubjectBalance(Map<String, List<Double>> subjectBalances){
+	private int handleSubjectBalance(Map<String, List<Float>> subjectBalances){
 		
 		SubjectBalanceUpinfoPO subjectBalanceUpinfoPO = null;
 		
 		for(String key: subjectBalances.keySet()){
-			List<Double> balances = subjectBalances.get(key);
+			List<Float> balances = subjectBalances.get(key);
 			
 			String code = key.split("-")[0];
 			String period = key.split("-")[1];

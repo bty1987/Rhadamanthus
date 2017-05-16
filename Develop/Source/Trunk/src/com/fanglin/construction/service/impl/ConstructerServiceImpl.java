@@ -43,12 +43,11 @@ public class ConstructerServiceImpl implements ConstructerService {
 		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserPO());
-			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user"));
+			ConstructerVO constructerV = new ConstructerVO(new UserPO(),new UserPO());
+			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
 			constructerVOs.add(constructerV);
 		}
-		
 		return constructerVOs;
 	}
 
@@ -60,7 +59,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
 			ConstructerVO constructerV = new ConstructerVO(new UserPO());
-			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user"));
+			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
 			constructerVOs.add(constructerV);
 		}
@@ -69,7 +68,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addConstructer(ConstructerVO constructerVO) throws FLException {
+	public void addConstructer(ConstructerVO constructerVO, String createrId) throws FLException {
 		//判断工程是否存在
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCsId(constructerVO.getCsId());
 		//根据工程id查询工程下的施工人员
@@ -77,10 +76,13 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 		if(constructionSchedulePO != null){
 			if(constructerPOs.size() == 0){
-				ConstructerPO constructerP = new ConstructerPO(new UserPO());
+				ConstructerPO constructerP = new ConstructerPO(new UserPO(),new UserPO());
 				BeanUtil.copyProperties(constructerVO, constructerP, Arrays.asList("user"));
 				BeanUtil.copyProperties(constructerVO.getUser(), constructerP.getUser(), Arrays.asList("dept","role"));
+				UserPO u = userDao.get(createrId);
+				BeanUtil.copyProperties(u, constructerP.getCreater(), Arrays.asList("dept","role"));
 				constructerP.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				constructerP.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
 				constructerDao.save(constructerP);
 			}else{
 				List<String> slist = null;
@@ -90,10 +92,13 @@ public class ConstructerServiceImpl implements ConstructerService {
 					slist.add(userId);
 				}
 				if(!slist.contains(constructerVO.getUser().getUserId())){
-					ConstructerPO constructerP = new ConstructerPO(new UserPO());
+					ConstructerPO constructerP = new ConstructerPO(new UserPO(),new UserPO());
 					BeanUtil.copyProperties(constructerVO, constructerP, Arrays.asList("user"));
 					BeanUtil.copyProperties(constructerVO.getUser(), constructerP.getUser(), Arrays.asList("dept","role"));
+					UserPO u = userDao.get(createrId);
+					BeanUtil.copyProperties(u, constructerP.getCreater(), Arrays.asList("dept","role"));
 					constructerP.setCreateTime(new Timestamp(System.currentTimeMillis()));
+					constructerP.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
 					constructerDao.save(constructerP);
 				}else{
 					throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");

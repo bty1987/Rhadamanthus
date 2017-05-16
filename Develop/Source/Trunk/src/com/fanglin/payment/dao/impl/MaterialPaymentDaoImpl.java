@@ -11,6 +11,7 @@
 
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +32,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	
 	public MaterialPaymentDaoImpl(){
 		super(MaterialPaymentPO.class);
-	}
-	
-	@Override
-	public MaterialPaymentPO queryMaterialPaymentByMsoIdAndType(long msoId, Integer paymentType) {
-		return (MaterialPaymentPO)session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", Long.valueOf(msoId))).add(Restrictions.eq("paymentType",paymentType)).uniqueResult();
 	}
 	
 	@Override
@@ -145,11 +141,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 
 	@Override
-	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Integer paymentType){
-		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSONO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).uniqueResult();
-	}
-	
-	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMrId(long mrId) {
 		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialReceipt", "materialReceipt").add(Restrictions.eq("materialReceipt.mrId", mrId)).add(Restrictions.ne(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT)).list();
@@ -159,6 +150,19 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId) {
 		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialReceipt", "materialReceipt").add(Restrictions.eq("materialReceipt.mrId", mrId)).list();
+	}
+	
+	@Override
+	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Integer paymentType){
+		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSONO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).uniqueResult();
+	}
+	
+	@Override
+	public int countMaterialPaymentByMsoIdAType(long msoId, Integer paymentType) {
+
+		String sql = "select count(*) from platform.materialpayment where msoId =:msoId";
+		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("msoId", msoId).uniqueResult();
+		return num.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

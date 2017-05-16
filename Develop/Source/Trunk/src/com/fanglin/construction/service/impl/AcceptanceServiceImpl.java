@@ -18,31 +18,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.AcceptanceDao;
-import com.fanglin.construction.dao.BricklayConstructionScheduleDao;
-import com.fanglin.construction.dao.BricklayConstructionScheduleWorkerDao;
-import com.fanglin.construction.dao.CarpentConstructionScheduleDao;
-import com.fanglin.construction.dao.CarpentConstructionScheduleWorkerDao;
+import com.fanglin.construction.dao.ConstructerDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.dao.OilConstructionScheduleDao;
-import com.fanglin.construction.dao.OilConstructionScheduleWorkerDao;
-import com.fanglin.construction.dao.WaterwayCircuitPowerConstructionScheduleDao;
-import com.fanglin.construction.dao.WaterwayCircuitPowerConstructionScheduleWorkerDao;
 import com.fanglin.construction.po.AcceptancePO;
-import com.fanglin.construction.po.BricklayConstructionSchedulePO;
-import com.fanglin.construction.po.BricklayConstructionScheduleWorkerPO;
-import com.fanglin.construction.po.CarpentConstructionSchedulePO;
-import com.fanglin.construction.po.CarpentConstructionScheduleWorkerPO;
+import com.fanglin.construction.po.ConstructerPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.po.OilConstructionSchedulePO;
-import com.fanglin.construction.po.OilConstructionScheduleWorkerPO;
-import com.fanglin.construction.po.WaterwayCircuitPowerConstructionSchedulePO;
-import com.fanglin.construction.po.WaterwayCircuitPowerConstructionScheduleWorkerPO;
 import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -63,28 +48,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	private ConstructionScheduleDao constructionScheduleDao;
 	
 	@Autowired
-	private WaterwayCircuitPowerConstructionScheduleDao waterwayCircuitPowerConstructionScheduleDao;
-	
-	@Autowired
-	private WaterwayCircuitPowerConstructionScheduleWorkerDao waterwayCircuitPowerConstructionScheduleWorkerDao;
-	
-	@Autowired
-	private BricklayConstructionScheduleDao bricklayConstructionScheduleDao;
-	
-	@Autowired
-	private BricklayConstructionScheduleWorkerDao bricklayConstructionScheduleWorkerDao;
-	
-	@Autowired
-	private CarpentConstructionScheduleDao carpentConstructionScheduleDao;
-	
-	@Autowired
-	private CarpentConstructionScheduleWorkerDao carpentConstructionScheduleWorkerDao;
-	
-	@Autowired
-	private OilConstructionScheduleDao oilConstructionScheduleDao;
-	
-	@Autowired
-	private OilConstructionScheduleWorkerDao oilConstructionScheduleWorkerDao;
+	private ConstructerDao constructerDao;
 	
 	@Override
 	public AcceptanceVO queryAcceptanceById(int actId){
@@ -125,44 +89,23 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptanceVO.setOilQualityName(userDao.get(constructionSchedulePO.getOilQualityId()).getCurrentName());
 		}
 		
-		WaterwayCircuitPowerConstructionSchedulePO waterwayCircuitPowerConstructionSchedulePO = waterwayCircuitPowerConstructionScheduleDao.queryCircuitPowerConstructionScheduleByOrderId(acceptanceVO.getOrderId());
-		if(waterwayCircuitPowerConstructionSchedulePO != null){
-			List<WaterwayCircuitPowerConstructionScheduleWorkerPO> waterwayCircuitPowerConstructionScheduleWorkerPOs = waterwayCircuitPowerConstructionScheduleWorkerDao.queryWaterwayCircuitPowerConstructionScheduleWorkerByWcpcsId(waterwayCircuitPowerConstructionSchedulePO.getWcpcsId());
-			
-			for(WaterwayCircuitPowerConstructionScheduleWorkerPO waterwayCircuitPowerConstructionScheduleWorkerPO: waterwayCircuitPowerConstructionScheduleWorkerPOs){
-				UserPO userPO = userDao.get(waterwayCircuitPowerConstructionScheduleWorkerPO.getWorkerId());
-				if(userPO.getDuty().contains("水暖工")){
-					acceptanceVO.setWaterwayWorkerName(userDao.get(waterwayCircuitPowerConstructionScheduleWorkerPO.getWorkerId()).getCurrentName());
-				}else if(userPO.getDuty().contains("电工")){
-					acceptanceVO.setCircuitWorkerName(userDao.get(waterwayCircuitPowerConstructionScheduleWorkerPO.getWorkerId()).getCurrentName());
+		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId, null);
+		
+		if(constructerPOs != null && constructerPOs.size() > 0){
+			 for (ConstructerPO constructerPO : constructerPOs) {
+				if(constructerPO.getUser().getDuty().contains("水暖工")){
+					acceptanceVO.setWaterwayWorkerName(constructerPO.getUser().getUserName());
+				}else if(constructerPO.getUser().getDuty().contains("电工")){
+					acceptanceVO.setCircuitWorkerName(constructerPO.getUser().getUserName());
+				}else if(constructerPO.getUser().getDuty().contains("瓦工")){
+					acceptanceVO.setBricklayWorkerName(constructerPO.getUser().getUserName());
+				}else if(constructerPO.getUser().getDuty().contains("木工")){
+					acceptanceVO.setCarpentWorkerName(constructerPO.getUser().getUserName());
+				}else if(constructerPO.getUser().getDuty().contains("油工")){
+					acceptanceVO.setOilWorkerName(constructerPO.getUser().getUserName());
 				}
 			}
 		}
-		
-		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.queryBricklayConstructionScheduleByOrderId(orderId);
-		if(bricklayConstructionSchedulePO != null){
-			List<BricklayConstructionScheduleWorkerPO> bricklayConstructionScheduleWorkerPOs = bricklayConstructionScheduleWorkerDao.queryBricklayConstructionScheduleWorkerByBcsId(bricklayConstructionSchedulePO.getBcsId());
-			if(bricklayConstructionScheduleWorkerPOs.size() > 0){
-				acceptanceVO.setBricklayWorkerName(userDao.get(bricklayConstructionScheduleWorkerPOs.get(0).getWorkerId()).getCurrentName());
-			}
-		}
-		
-		CarpentConstructionSchedulePO carpentConstructionSchedulePO = carpentConstructionScheduleDao.queryCarpentConstructionScheduleByOrderId(orderId);
-		if(carpentConstructionSchedulePO != null){
-			List<CarpentConstructionScheduleWorkerPO> carpentConstructionScheduleWorkerPOs = carpentConstructionScheduleWorkerDao.queryCarpentConstructionScheduleWorkerByCcsId(carpentConstructionSchedulePO.getCcsId());
-			if(carpentConstructionScheduleWorkerPOs.size() > 0){
-				acceptanceVO.setCarpentWorkerName(userDao.get(carpentConstructionScheduleWorkerPOs.get(0).getWorkerId()).getCurrentName());
-			}
-		}
-		
-		OilConstructionSchedulePO oilConstructionSchedulePO = oilConstructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
-		if(oilConstructionSchedulePO != null){
-			List<OilConstructionScheduleWorkerPO> oilConstructionScheduleWorkerPOs = oilConstructionScheduleWorkerDao.queryOilConstructionScheduleWorkerByOcsId(oilConstructionSchedulePO.getOcsId());
-			if(oilConstructionScheduleWorkerPOs.size() > 0){
-				acceptanceVO.setOilWorkerName(userDao.get(oilConstructionScheduleWorkerPOs.get(0).getWorkerId()).getCurrentName());
-			}
-		}
-		
 		return acceptanceVO;
 	}
 	

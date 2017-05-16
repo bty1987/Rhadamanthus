@@ -22,9 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.GroundLevelingConstructionScheduleService;
 import com.fanglin.construction.service.GroundLevelingDrawingService;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.GroundLevelingConstructionScheduleVO;
-import com.fanglin.construction.vo.GroundLevelingConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.GroundLevelingDrawingVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -49,12 +47,6 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 	private List<GroundLevelingDrawingVO> groundLevelingDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<GroundLevelingConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private GroundLevelingConstructionScheduleWorkerVO groundLevelingConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryGroundLevelingConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGroundLevelingConstructionScheduleByOrderId(){
@@ -127,48 +119,6 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryGroundLevelingConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGroundLevelingConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = groundLevelingConstructionScheduleService.queryGroundLevelingConstructionScheduleWorkerByOcsId(groundLevelingConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addGroundLevelingConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addGroundLevelingConstructionScheduleWorker() throws FLException{
-		
-		groundLevelingConstructionScheduleService.addGroundLevelingConstructionScheduleWorker(groundLevelingConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setGroundLevelingConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setGroundLevelingConstructionScheduleWorkerForSalary() throws FLException{
-		
-		groundLevelingConstructionScheduleService.setGroundLevelingConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setGroundLevelingConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setGroundLevelingConstructionScheduleWorkerForRaty(){
-		
-		groundLevelingConstructionScheduleService.setGroundLevelingConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteGroundLevelingConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteGroundLevelingConstructionScheduleWorker() throws FLException{
-		
-		int code = groundLevelingConstructionScheduleService.deleteGroundLevelingConstructionScheduleWorker(groundLevelingConstructionScheduleWorker);
-		
-		setErrorCode(code);
-		
-		return SUCCESS;
-	}
 
 	public GroundLevelingConstructionScheduleVO getGroundLevelingConstructionSchedule(){
 		return groundLevelingConstructionSchedule;
@@ -193,34 +143,7 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 	public void setGroundLevelingDrawings(List<GroundLevelingDrawingVO> groundLevelingDrawings){
 		this.groundLevelingDrawings = groundLevelingDrawings;
 	}
-
-	public List<GroundLevelingConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<GroundLevelingConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public GroundLevelingConstructionScheduleWorkerVO getGroundLevelingConstructionScheduleWorker(){
-		return groundLevelingConstructionScheduleWorker;
-	}
-
-	public void setGroundLevelingConstructionScheduleWorker(
-			GroundLevelingConstructionScheduleWorkerVO groundLevelingConstructionScheduleWorker){
-		this.groundLevelingConstructionScheduleWorker = groundLevelingConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
-	}
-
+	
 	public List<String> getDrawingUrls() {
 		return drawingUrls;
 	}

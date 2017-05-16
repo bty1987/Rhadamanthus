@@ -24,7 +24,6 @@ import com.fanglin.construction.service.ChanConstructionScheduleService;
 import com.fanglin.construction.service.ChanDrawingService;
 import com.fanglin.construction.vo.ChanConstructionScheduleVO;
 import com.fanglin.construction.vo.ChanDrawingVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -42,8 +41,6 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 	private ChanDrawingService chanDrawingService;
 	
 	private ChanConstructionScheduleVO chanConstructionSchedule;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	private ChanDrawingVO chanDrawing;
 	
@@ -87,30 +84,6 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 	public String setChanConstructionScheduleForInfo(){
 		
 		chanConstructionScheduleService.setChanConstructionScheduleForInfo(chanConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setChanConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setChanConstructionScheduleWorker() throws FLException{
-		
-		chanConstructionScheduleService.setChanConstructionScheduleWorker(chanConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setChanConstructionScheduleForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setChanConstructionScheduleForService(){
-		
-		chanConstructionScheduleService.setChanConstructionScheduleForService(chanConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setChanConstructionScheduleForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setChanConstructionScheduleForSalary() throws FLException{
-		
-		chanConstructionScheduleService.setChanConstructionScheduleForSalary(constructionScheduleWorker);
 		
 		return SUCCESS;
 	}
@@ -178,15 +151,6 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 
 	public void setChanDrawings(List<ChanDrawingVO> chanDrawings){
 		this.chanDrawings = chanDrawings;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

@@ -32,9 +32,9 @@ public class AccountVO implements java.io.Serializable {
 	
 	private String subjectName;
 	
-	private Double debit;
+	private Float debit;
 	
-	private Double credit;
+	private Float credit;
 	
 	private Timestamp businessTime;
 	
@@ -150,19 +150,19 @@ public class AccountVO implements java.io.Serializable {
 		this.subjectName = subjectName;
 	}
 
-	public Double getDebit() {
+	public Float getDebit() {
 		return debit;
 	}
 
-	public void setDebit(Double debit) {
+	public void setDebit(Float debit) {
 		this.debit = debit;
 	}
 
-	public Double getCredit() {
+	public Float getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Double credit) {
+	public void setCredit(Float credit) {
 		this.credit = credit;
 	}
 

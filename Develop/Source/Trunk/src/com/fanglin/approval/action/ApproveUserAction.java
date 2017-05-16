@@ -1,0 +1,130 @@
+package com.fanglin.approval.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import com.fanglin.approval.service.ApproveUserService;
+import com.fanglin.approval.vo.ApproveUserVO;
+import com.fanglin.common.vo.KeyValueVO;
+import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.vo.UserVO;
+
+
+@ParentPackage("base")
+@Namespace("/")
+@Controller
+public class ApproveUserAction extends BaseListAction {
+
+	private static final long serialVersionUID = 4493385608040589247L;
+
+	@Autowired
+	private ApproveUserService approveUserService;
+	
+	private UserVO user;
+
+	private ApproveUserVO approveUser;
+
+	private List<ApproveUserVO> approveUserList;
+
+	private List<Integer> approveUserIds;
+	
+	private List<KeyValueVO> autoFillKeyValue;
+	
+	@Action(value = "pageApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPageapproveUser(){
+		
+		approveUserService.pageApproveUser(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryApproveUserForNameByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApproveUserForNameByType(){
+		
+		List<ApproveUserVO> approveUserVOs = approveUserService.queryApproveUserForNameByType(user, approveUser);
+		
+		for(ApproveUserVO approveUserVO : approveUserVOs){
+			KeyValueVO keyValueVO = new KeyValueVO();
+			keyValueVO.setKey(approveUserVO.getUser().getUserId());
+			keyValueVO.setValue(approveUserVO.getUser().getCurrentName() + "-" + approveUserVO.getUser().getUserId());
+			
+			getAutoFillKeyValue().add(keyValueVO);
+		}
+		
+		return SUCCESS;
+	}
+
+	@Action(value = "addApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addApproveUser() throws FLException{
+		
+		approveUserService.addApproveUser(approveUser);
+		
+		return SUCCESS;
+	}
+
+	@Action(value = "updateApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateApproveUser() throws FLException{
+		
+		approveUserService.updateApproveUser(approveUser);
+		
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteApproveUser(){
+		
+		approveUserService.deleteApproveUser(approveUserIds);
+		
+		return SUCCESS;
+	}
+
+	public UserVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserVO user) {
+		this.user = user;
+	}
+
+	public ApproveUserVO getApproveUser() {
+		return approveUser;
+	}
+
+	public void setApproveUser(ApproveUserVO approveUser) {
+		this.approveUser = approveUser;
+	}
+
+	public List<ApproveUserVO> getApproveUserList() {
+		return approveUserList;
+	}
+
+	public void setApproveUserList(List<ApproveUserVO> approveUserList) {
+		this.approveUserList = approveUserList;
+	}
+
+	public List<Integer> getApproveUserIds() {
+		return approveUserIds;
+	}
+
+	public void setApproveUserIds(List<Integer> approveUserIds) {
+		this.approveUserIds = approveUserIds;
+	}
+
+	public List<KeyValueVO> getAutoFillKeyValue() {
+		return autoFillKeyValue;
+	}
+
+	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
+		this.autoFillKeyValue = autoFillKeyValue;
+	}
+
+
+
+}

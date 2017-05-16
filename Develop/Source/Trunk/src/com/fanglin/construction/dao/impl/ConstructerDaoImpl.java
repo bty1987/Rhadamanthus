@@ -24,7 +24,8 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.createAlias("user","u",Criteria.LEFT_JOIN)
-				.add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId));
+				.add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId))
+				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, (short)0));
 		if (schedule != null && schedule > 0) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
@@ -50,5 +51,4 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 	public ConstructerPO queryConstructerByCid(Integer cid) {
 		return (ConstructerPO)session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR,cid)).uniqueResult();
 	}
-
 }

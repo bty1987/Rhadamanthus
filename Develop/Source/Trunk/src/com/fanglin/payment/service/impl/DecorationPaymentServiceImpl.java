@@ -628,21 +628,20 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		String paymentType = decorationPaymentPO.getPaymentType();
 		String houseType = decorationOrderPO.getHouseType();
 		
-		if(Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR).contains(paymentType)){
-			
-			List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
-			
-			if(status.contains(decorationOrderPO.getStatus())){
-				decorationOrderPO.setStatus(DecorationOrderPO.STATUS_DEPOSIT_STR);
-				decorationOrderPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
-			}
-			
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
+		if(status.contains(decorationOrderPO.getStatus())){
+			decorationOrderPO.setStatus(DecorationOrderPO.STATUS_DEPOSIT_STR);
+			decorationOrderPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+		//判断定金（首付款）、设计费
+		if(Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR).contains(paymentType)){
 			if((orderPaymentStatus == null || "".equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
-			}
-			if((orderPaymentStatus == null || "".equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR.equals(paymentType)){
+			}else if((orderPaymentStatus == null || "".equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR);
-			}else if((orderPaymentStatus == null || "".equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(paymentType)){
+			} 
+		}else if(Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR).contains(paymentType)){
+			if((orderPaymentStatus == null || "".equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(orderPaymentStatus) || DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
 			}else if((DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(orderPaymentStatus)) && DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR.equals(paymentType)){
 				decorationOrderPO.setPaymentStatus(DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR);

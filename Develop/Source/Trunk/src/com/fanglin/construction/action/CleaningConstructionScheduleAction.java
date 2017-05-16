@@ -23,9 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.construction.service.CleaningConstructionScheduleService;
 import com.fanglin.construction.service.CleaningDrawingService;
 import com.fanglin.construction.vo.CleaningConstructionScheduleVO;
-import com.fanglin.construction.vo.CleaningConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.CleaningDrawingVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -49,12 +47,6 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 	private List<CleaningDrawingVO> cleaningDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<CleaningConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private CleaningConstructionScheduleWorkerVO cleaningConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryCleaningConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCleaningConstructionScheduleByOrderId(){
@@ -127,46 +119,6 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryCleaningConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCleaningConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = cleaningConstructionScheduleService.queryCleaningConstructionScheduleWorkerByCcsId(cleaningConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addCleaningConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCleaningConstructionScheduleWorker() throws FLException{
-		
-		cleaningConstructionScheduleService.addCleaningConstructionScheduleWorker(cleaningConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setCleaningConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setCleaningConstructionScheduleWorkerForSalary() throws FLException{
-		
-		cleaningConstructionScheduleService.setCleaningConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setCleaningConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setCleaningConstructionScheduleWorkerForRaty(){
-		
-		cleaningConstructionScheduleService.setCleaningConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteCleaningConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCleaningConstructionScheduleWorker() throws FLException{
-		
-		cleaningConstructionScheduleService.deleteCleaningConstructionScheduleWorker(cleaningConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
 
 	public CleaningConstructionScheduleVO getCleaningConstructionSchedule(){
 		return cleaningConstructionSchedule;
@@ -190,33 +142,6 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 
 	public void setCleaningDrawings(List<CleaningDrawingVO> cleaningDrawings){
 		this.cleaningDrawings = cleaningDrawings;
-	}
-
-	public List<CleaningConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<CleaningConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public CleaningConstructionScheduleWorkerVO getCleaningConstructionScheduleWorker(){
-		return cleaningConstructionScheduleWorker;
-	}
-
-	public void setCleaningConstructionScheduleWorker(
-			CleaningConstructionScheduleWorkerVO cleaningConstructionScheduleWorker){
-		this.cleaningConstructionScheduleWorker = cleaningConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

@@ -23,9 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.construction.service.BricklayConstructionScheduleService;
 import com.fanglin.construction.service.BricklayDrawingService;
 import com.fanglin.construction.vo.BricklayConstructionScheduleVO;
-import com.fanglin.construction.vo.BricklayConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.BricklayDrawingVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -49,12 +47,6 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 	private List<BricklayDrawingVO> bricklayDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<BricklayConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private BricklayConstructionScheduleWorkerVO bricklayConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryBricklayConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBricklayConstructionScheduleByOrderId(){
@@ -127,46 +119,6 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryBricklayConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBricklayConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = bricklayConstructionScheduleService.queryBricklayConstructionScheduleWorkerByBcsId(bricklayConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addBricklayConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addBricklayConstructionScheduleWorker() throws FLException{
-		
-		bricklayConstructionScheduleService.addBricklayConstructionScheduleWorker(bricklayConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setBricklayConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setBricklayConstructionScheduleWorkerForSalary() throws FLException{
-		
-		bricklayConstructionScheduleService.setBricklayConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setBricklayConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setBricklayConstructionScheduleWorkerForRaty(){
-		
-		bricklayConstructionScheduleService.setBricklayConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteBricklayConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteBricklayConstructionScheduleWorker() throws FLException{
-		
-		bricklayConstructionScheduleService.deleteBricklayConstructionScheduleWorker(bricklayConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
 
 	public BricklayConstructionScheduleVO getBricklayConstructionSchedule(){
 		return bricklayConstructionSchedule;
@@ -190,33 +142,6 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 
 	public void setBricklayDrawings(List<BricklayDrawingVO> bricklayDrawings){
 		this.bricklayDrawings = bricklayDrawings;
-	}
-
-	public List<BricklayConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<BricklayConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public BricklayConstructionScheduleWorkerVO getBricklayConstructionScheduleWorker(){
-		return bricklayConstructionScheduleWorker;
-	}
-
-	public void setBricklayConstructionScheduleWorker(
-			BricklayConstructionScheduleWorkerVO bricklayConstructionScheduleWorker){
-		this.bricklayConstructionScheduleWorker = bricklayConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

@@ -49,6 +49,13 @@ public class ConstructerPO implements java.io.Serializable {
 		this.user = user;
 	}
 
+	
+	public ConstructerPO(UserPO user, UserPO creater) {
+		super();
+		this.user = user;
+		this.creater = creater;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")

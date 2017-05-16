@@ -29,19 +29,19 @@ public class SubjectBalanceUpinfoPO implements java.io.Serializable {
 	
 	private String period;
 	
-	private double debit;
+	private float debit;
 	
-	private double credit;
+	private float credit;
 	
 	private short direction;
 	
 	private short status;
-
+	
 	public SubjectBalanceUpinfoPO() {
 		super();
 	}
 
-	public SubjectBalanceUpinfoPO(String code, String period, double debit, double credit, short direction, short status) {
+	public SubjectBalanceUpinfoPO(String code, String period, float debit, float credit, short direction, short status) {
 		super();
 		this.code = code;
 		this.period = period;
@@ -81,20 +81,20 @@ public class SubjectBalanceUpinfoPO implements java.io.Serializable {
 	}
 
 	@Column(name = "debit")
-	public double getDebit() {
+	public float getDebit() {
 		return this.debit;
 	}
 
-	public void setDebit(double debit) {
+	public void setDebit(float debit) {
 		this.debit = debit;
 	}
 
 	@Column(name = "credit")
-	public double getCredit() {
+	public float getCredit() {
 		return this.credit;
 	}
 
-	public void setCredit(double credit) {
+	public void setCredit(float credit) {
 		this.credit = credit;
 	}
 

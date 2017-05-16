@@ -19,11 +19,21 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	public static final String COLUMN_GID_STR = "goods.gid";
 	
+	public static final String COLUMN_NAME_STR = "goods.name";
+	
+	public static final String COLUMN_CODE_STR = "goods.barcode";
+	
 	public static final String COLUMN_FID_STR = "format.cid";
 	
 	public static final String COLUMN_CID_STR = "color.cid";
 	
 	public static final String COLUMN_SHID_STR = "storehouse.shId";
+	
+	public static final String COLUMN_SNAME_STR = "name";
+	
+	public static final String COLUMN_BARCODE_STR = "barcode";
+	
+	public static final String COLUMN_STOREHOUSNAME_STR = "storehouse.name";
 	
 	private Long gshsId;
 	

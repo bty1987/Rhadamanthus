@@ -15,7 +15,11 @@ public class PricePO implements Serializable{
 
 	private static final long serialVersionUID = -3508364908423803950L;
 	
+	public static final String COLUMN_PID_STR ="pid";
+	
 	public static final String COLUMN_GID_STR = "gid";
+	
+	public static final String COLUMN_SELLING_STR = "selling";
 	
 	public static final String COLUMN_CTYPE_STR = "ctype";
 	

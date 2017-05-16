@@ -23,9 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.construction.service.CarpentConstructionScheduleService;
 import com.fanglin.construction.service.CarpentDrawingService;
 import com.fanglin.construction.vo.CarpentConstructionScheduleVO;
-import com.fanglin.construction.vo.CarpentConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.CarpentDrawingVO;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -49,12 +47,6 @@ public class CarpentConstructionScheduleAction extends BaseListAction{
 	private List<CarpentDrawingVO> carpentDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<CarpentConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private CarpentConstructionScheduleWorkerVO carpentConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryCarpentConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCarpentConstructionScheduleByOrderId(){
@@ -127,46 +119,6 @@ public class CarpentConstructionScheduleAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryCarpentConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCarpentConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = carpentConstructionScheduleService.queryCarpentConstructionScheduleWorkerByCcsId(carpentConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addCarpentConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCarpentConstructionScheduleWorker() throws FLException{
-		
-		carpentConstructionScheduleService.addCarpentConstructionScheduleWorker(carpentConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setCarpentConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setCarpentConstructionScheduleWorkerForSalary() throws FLException{
-		
-		carpentConstructionScheduleService.setCarpentConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setCarpentConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setCarpentConstructionScheduleWorkerForRaty(){
-		
-		carpentConstructionScheduleService.setCarpentConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteCarpentConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCarpentConstructionScheduleWorker() throws FLException{
-		
-		carpentConstructionScheduleService.deleteCarpentConstructionScheduleWorker(carpentConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
 
 	public CarpentConstructionScheduleVO getCarpentConstructionSchedule(){
 		return carpentConstructionSchedule;
@@ -190,33 +142,6 @@ public class CarpentConstructionScheduleAction extends BaseListAction{
 
 	public void setCarpentDrawings(List<CarpentDrawingVO> carpentDrawings){
 		this.carpentDrawings = carpentDrawings;
-	}
-
-	public List<CarpentConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<CarpentConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public CarpentConstructionScheduleWorkerVO getCarpentConstructionScheduleWorker(){
-		return carpentConstructionScheduleWorker;
-	}
-
-	public void setCarpentConstructionScheduleWorker(
-			CarpentConstructionScheduleWorkerVO carpentConstructionScheduleWorker){
-		this.carpentConstructionScheduleWorker = carpentConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

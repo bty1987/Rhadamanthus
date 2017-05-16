@@ -36,8 +36,6 @@ public class AccountPO implements java.io.Serializable {
 	
 	private Timestamp createTime;
 	
-	private Timestamp businessTime;
-	
 	private String period;
 	
 	private int saId;
@@ -52,11 +50,11 @@ public class AccountPO implements java.io.Serializable {
 	
 	private String subjectName;
 	
-	private double debit;
+	private float debit;
 	
-	private double credit;
+	private float credit;
 	
-	private short direction;
+	private Timestamp businessTime;
 	
 	private short status;
 	
@@ -175,20 +173,20 @@ public class AccountPO implements java.io.Serializable {
 	}
 
 	@Column(name = "debit")
-	public double getDebit() {
+	public float getDebit() {
 		return this.debit;
 	}
 
-	public void setDebit(double debit) {
+	public void setDebit(float debit) {
 		this.debit = debit;
 	}
 
 	@Column(name = "credit")
-	public double getCredit() {
+	public float getCredit() {
 		return this.credit;
 	}
 
-	public void setCredit(double credit) {
+	public void setCredit(float credit) {
 		this.credit = credit;
 	}
 
@@ -199,15 +197,6 @@ public class AccountPO implements java.io.Serializable {
 
 	public void setBusinessTime(Timestamp businessTime) {
 		this.businessTime = businessTime;
-	}
-
-	@Column(name = "direction")
-	public short getDirection() {
-		return direction;
-	}
-
-	public void setDirection(short direction) {
-		this.direction = direction;
 	}
 
 	@Column(name = "status")

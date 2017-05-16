@@ -31,6 +31,7 @@ jQuery(function($) {
 				endTimeId: "chanEndTime",
 				endTimeFlagId: "chanEndTimeFlag",
 				statusId: "status",
+				workerInfos: "chanWorkerInfos",
 				
 				worker: "workerId",
 				startTime: "startTime",
@@ -41,10 +42,11 @@ jQuery(function($) {
 				status: "status",
 				
 				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateChanConstructionSchedule,
 				setTimeFlagUrl: api.construction.setChanConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setChanConstructionScheduleForSalary,
-				confirmStartTimeUrl: api.construction.setChanConstructionScheduleForSalary,
+				//setWorkerSalaryUrl: api.construction.setChanConstructionScheduleForSalary,
+				//confirmStartTimeUrl: api.construction.setChanConstructionScheduleForSalary,
 				confirmEndTimeUrl: "",
 				
 				nextAddInfoUrl: api.construction.updatePutlineConstructionSchedule,
@@ -58,6 +60,9 @@ jQuery(function($) {
 				drawingId: "cdId",
 				drawingName: "chanDrawing",
 				drawings: "chanDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "putlineConstructionSchedule",
 				
@@ -87,10 +92,12 @@ jQuery(function($) {
 				schedule: "schedule",
 				putlineTime: "putlineTime",
 				putlineStatus: "putlineStatus",
+				workerInfos: "fangWorkerInfos",
 				
 				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-				setWorkerSalaryUrl: api.construction.setPutlineConstructionScheduleForSalary,
+				//setWorkerSalaryUrl: api.construction.setPutlineConstructionScheduleForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -105,6 +112,9 @@ jQuery(function($) {
 				drawingId: "pldId",
 				drawingName: "putlineDrawing",
 				drawings: "putlineDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "waterwayCircuitPowerConstructionSchedule",
 				
@@ -138,10 +148,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -157,6 +167,9 @@ jQuery(function($) {
 				drawingId: "wcpdId",
 				drawingName: "waterwayCircuitPowerDrawing",
 				drawings: "waterwayCircuitPowerDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "bricklayConstructionSchedule",
 				
@@ -189,10 +202,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryBricklayConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setTimeFlagUrl: api.construction.setBricklayConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setBricklayConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setBricklayConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -208,6 +221,9 @@ jQuery(function($) {
 				drawingId: "bdId",
 				drawingName: "bricklayDrawing",
 				drawings: "bricklayDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "groundLevelingConstructionSchedule",
 				
@@ -238,10 +254,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryGroundLevelingConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setTimeFlagUrl: api.construction.setGroundLevelingConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setGroundLevelingConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setGroundLevelingConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -257,7 +273,10 @@ jQuery(function($) {
 				drawingId: "gldId",
 				drawingName: "groundLevelingDrawing",
 				drawings: "groundLevelingDrawings",
-				
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
+
 				nextElementName: "carpentConstructionSchedule",
 				
 				duty: "地面找平",
@@ -286,10 +305,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryCarpentConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCarpentConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setCarpentConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setCarpentConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -305,6 +324,9 @@ jQuery(function($) {
 				drawingId: "cdId",
 				drawingName: "carpentDrawing",
 				drawings: "carpentDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "oilConstructionSchedule",
 				
@@ -334,10 +356,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryOilConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setTimeFlagUrl: api.construction.setOilConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setOilConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setOilConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -353,6 +375,9 @@ jQuery(function($) {
 				drawingId: "odId",
 				drawingName: "oilDrawing",
 				drawings: "oilDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "waterwayCircuitCheckConstructionSchedule",
 				
@@ -386,10 +411,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -405,6 +430,9 @@ jQuery(function($) {
 				drawingId: "wccdId",
 				drawingName: "waterwayCircuitCheckDrawing",
 				drawings: "waterwayCircuitCheckDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				nextElementName: "cleaningConstructionSchedule",
 				
@@ -437,10 +465,10 @@ jQuery(function($) {
 				schedule: "schedule",
 				
 				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryCleaningConstructionScheduleWorker,
+				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCleaningConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setCleaningConstructionScheduleWorkerForSalary,
+				//setWorkerSalaryUrl: api.construction.setCleaningConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 				
@@ -454,6 +482,9 @@ jQuery(function($) {
 				drawingId: "cdId",
 				drawingName: "cleaningDrawing",
 				drawings: "cleaningDrawings",
+				elementConstructerId: "cid",
+				elementConstructerName: "constructer",
+				elementConstructers: "constructers",
 				
 				duty: "保洁工",
 				
@@ -489,7 +520,7 @@ jQuery(function($) {
 	}
 	
 	var orderId = params.orderId;
-	
+
 	com.post(api.construction.queryConstructionScheduleByOrderId, {
 		"constructionSchedule.orderId": params.orderId
 	}, function(res){
@@ -505,14 +536,13 @@ jQuery(function($) {
 			initWizardSept(operate, schedule);
 			supervisionDetail.wizardSept[schedule] = true;
 		}
-		
+
 		$('#fuelux-wizard').ace_wizard({status:true, currentStep: schedule}).on('change' , function(e, info){
 			var step = 0;
 			var direction = info.direction;
-
 			if(direction == "previous"){
 				step = info.step - 1;
-				
+
 				if(!supervisionDetail.wizardSept[step.toString()]){
 					initWizardSept(supervisionDetail.operateDict[step.toString()], step.toString());
 					supervisionDetail.wizardSept[step.toString()] = true;
@@ -617,19 +647,16 @@ jQuery(function($) {
 	function initWizardSept(operate, schedule){
 		
 		var elementPostData = {};
-		
 		elementPostData[operate.elementName+".orderId"] = params.orderId;
-		
 		supervisionDetail.controlCondition = false;
 		var workerInfoCondition = false;
-		
+
 		com.post(operate.queryInfoUrl, elementPostData, function(res){
-			
 			var element = res[operate.elementName];
 			gcsId = element["csId"];
 			$('#csId').val(gcsId);
 
-			
+
 			if(element[operate.elementId] != 0){
 				
 				supervisionDetail[operate.elementName+"."+operate.elementId] = element[operate.elementId];
@@ -652,19 +679,13 @@ jQuery(function($) {
 						$("<span></span>").addClass("label").text("待处理").appendTo(statusDiv);
 					}
 
-					chan_work_id = element.workerId;
+					var options = {};
+					options[operate.elementConstructerName + ".csId"] = element.csId;
+					options[operate.elementConstructerName + ".schedule"] = schedule;
+					com.post(operate.queryWorkerUrl,options, function(res){
+						queryWorkerUrl(operate, res);
+					});
 
-
-					if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-						com.showImg($("#chanWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
-						$("#chanWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
-						
-						workerInfoCondition = true;
-					}else{
-						var chanWorkerInfo = $("#chanWorkerInfo").html("").removeClass("");
-						$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(chanWorkerInfo);
-					}
-					
 					if(element.startTimeFlag == 0){
 						$("#"+operate.startTimeFlagId).click(function(){
 							var options = {};
@@ -688,7 +709,6 @@ jQuery(function($) {
 									supervisionDetail.controlCondition = true;
 								}
 							}
-							
 							return false;
 						});
 					}else{
@@ -718,7 +738,6 @@ jQuery(function($) {
 									supervisionDetail.controlCondition = true;
 								}
 							}
-							
 							return false;
 						});
 					}else{
@@ -743,18 +762,16 @@ jQuery(function($) {
 					
 					var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
 
-					fang_work_id = element.workerId;
+					var options = {};
+					options[operate.elementConstructerName+".csId"] = element["csId"];
+					options[operate.elementConstructerName + ".schedule"] = schedule;
 
-					if(element.workerId != "" && element.workerId != null && element.workerId != undefined){
-						com.showImg($("#fangWorkerImg"), element.workerPhoto, 150, 150, element.workerId+"'s Photo");
-						$("#fangWorkerNameSpan").html(element.workerOldId + "" + element.workerName + "<br/>" + element.workerDuty);
-						
-						workerInfoCondition = true;
-					}else{
-						var fangWorkerInfo = $("#fangWorkerInfo").html("").removeClass("");
-						$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(fangWorkerInfo);
-					}
-					
+					//查询施工人员
+					com.post(operate.queryWorkerUrl, options, function(res){
+						queryWorkerUrl(operate, res);
+
+					}, null, false);
+
 					if(element.putlineStatus == 1){
 						if(workerInfoCondition){
 							supervisionDetail.controlCondition = true;
@@ -770,55 +787,12 @@ jQuery(function($) {
 					$("#"+operate.endTimeId).val(element.endTime);
 					
 					var options = {};
-					options[operate.elementName+".csId"] = element["csId"];
-					options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-					
+					options[operate.elementConstructerName+".csId"] = element["csId"];
+					options[operate.elementConstructerName + ".schedule"] = schedule;
+
+					//查询施工人员
 					com.post(operate.queryWorkerUrl, options, function(res){
-						constructionScheduleWorkers = res.constructionScheduleWorkers;
-						
-						$("#"+operate.workerInfos).html("");
-						
-						if(constructionScheduleWorkers.length != 0){
-							//迭代所有的工人
-							for(var i=0;i<constructionScheduleWorkers.length;i++){
-
-								var workerInfo = constructionScheduleWorkers[i];
-
-								var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
-								var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
-								var profileImg = $('<img></img>').attr("alt", workerInfo.workerId + "'s Photo").appendTo(imgDiv);
-
-
-
-								if(workerInfo["workerPhoto"] != null && workerInfo.workerPhoto != ""){
-									com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, '');
-								}
-								
-
-								var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
-                                //buttonSpan工人工费按钮
-                                var buttonSpan = $('<div id="workerNameSpan"></div>').html('<a style="float: left; margin-left: -5px;" class="icon-money icon-5x" href="#"></a>').appendTo(buttonsDiv);
-                                //工人编号、名称、职务
-                                var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.workerOldId + "" + workerInfo.workerName + "<br/>" + workerInfo.workerDuty).appendTo(buttonsDiv);
-
-								
-								//循环一个人，将当前这个人的下标绑定到原始对象上，因为jquery对象是原始对象的封装，每次获取都不一样，所以没法用jquery对象存
-								//这个就是存储到原始dom对象上,简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
-								buttonSpan[0]._index = i;
-								buttonSpan.click(function (){  //点击事件
-									_show_WorkerSalary(this._index);//点击按钮的时候会调用上面写好的方法，这里之前存储的下标位置发送到方法中
-								});
-
-
-
-								profileDiv.appendTo($("#"+operate.workerInfos));
-							}
-							
-							workerInfoCondition = true;
-						}else{
-							$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#"+operate.workerInfos));
-						}
-						
+						queryWorkerUrl(operate, res);
 					}, null, false);
 					
 					if(element.startTimeFlag == 0){
@@ -840,7 +814,6 @@ jQuery(function($) {
 									supervisionDetail.controlCondition = true;
 								}
 							}
-							
 							return false;
 						});
 					}else{
@@ -866,7 +839,6 @@ jQuery(function($) {
 									supervisionDetail.controlCondition = true;
 								}
 							}
-							
 							return false;
 						});
 					}else{
@@ -882,8 +854,9 @@ jQuery(function($) {
 							supervisionDetail.controlCondition = true;
 						}
 					}
-				}
-				
+				}   //这里是3-9结束
+
+
 				var options = {};
 				options[operate.drawingName+".csId"] = supervisionDetail.construstionSchedule.csId;
 				
@@ -894,21 +867,15 @@ jQuery(function($) {
 					
 					for(var i=0;i<drawings.length;i++){
 						var drawing = drawings[i];
-						
 						var imgAddUrl = null;
 						var imgUrl = null;
-						
 						options[operate.drawingName+"."+operate.drawingId] = drawing[operate.drawingId];
-						
 						appendGalleryElement(operate.galleryId, drawing[operate.drawingId], drawing.drawingUrl, drawing.type, "", operate.deleteDrawingUrl, operate);
 					}
 				});
-				
 				initUploadBtn(operate, element);
 				$('#'+operate.tabbable).removeClass("active");
-				
 				return false;
-				
 			}else{
 				supervisionDetail[operate.elementName+"."+operate.elementId] = 0;
 			}
@@ -938,9 +905,7 @@ jQuery(function($) {
 	        'fileSizeLimit': '5MB', // 上传文件的大小限制
 	        'queueSizeLimit' : 10, // 上传数量
 	        'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
-	        	
 	        	var dateObj=eval("("+data+")");
-	        	
 	        	if(dateObj.errorCode == 0){
 					var options = {};
 					
@@ -967,20 +932,17 @@ jQuery(function($) {
 		var gallery = $("#"+galleryId);
 		
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-		var img = $('<img></img>');
+		var img = $('<img />');
 		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
 		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
 			var options = {};
-			
 			options[operate.drawingName+"."+operate.drawingId] = imgId;
-			
 			com.post(deleteUrl, options, function(res){
 				$("#gallery_li"+imgId).remove();
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-		
 		imgA.colorbox(colorboxArgs);
 	};
 
@@ -990,12 +952,13 @@ jQuery(function($) {
 		//获得工程ID与工人ID
 		var url = api.construction.queryWorkerSalary;
 		var options = {
-				"workerSalary.csId": $('#csId').val(),
-				"workerSalary.user.userId": workerInfo.workerId,
-			};
+			"workerSalary.csId": $('#csId').val(),
+			"workerSalary.user.userId": workerInfo.user.userId,
+		};
 		//查询该笔工费是否存在，如果存在显示已有工费，否则0
 		com.post(url,options,function(res){
-			$('#userId').val(workerInfo.workerId);
+			$('#userId').val(workerInfo.user.userId);
+			//这里的参数需要修改   工人工费 res.workerSalary.salary这个参数应该是不对了
 			$('#salary','.modal-body').val(res.workerSalary.salary!=null ? res.workerSalary.salary:0);
 		});
 		//显示弹窗
@@ -1009,7 +972,6 @@ jQuery(function($) {
 			"workerSalary.user.userId": $('#userId').val(),
 			"workerSalary.salary": $('#salary').val(),
 		};
-
 		com.post(url,options);
 		$('#guaranteeModal').modal('hide');
 	}
@@ -1019,9 +981,9 @@ jQuery(function($) {
 		//获得工程ID与工人ID
 		var url = api.construction.queryWorkerSalary;
 		var options = {
-				"workerSalary.csId": $('#csId').val(),
-				"workerSalary.user.userId":chan_work_id,
-			};
+			"workerSalary.csId": $('#csId').val(),
+			"workerSalary.user.userId":chan_work_id,
+		};
 		//查询该笔工费是否存在，如果存在显示已有工费，否则0
 		com.post(url,options,function(res){
 			$('#userId').val(chan_work_id);
@@ -1035,9 +997,9 @@ jQuery(function($) {
 		//获得工程ID与工人ID
 		var url = api.construction.queryWorkerSalary;
 		var options = {
-				"workerSalary.csId": $('#csId').val(),
-				"workerSalary.user.userId":fang_work_id,
-			};
+			"workerSalary.csId": $('#csId').val(),
+			"workerSalary.user.userId":fang_work_id,
+		};
 		//查询该笔工费是否存在，如果存在显示已有工费，否则0
 		com.post(url,options,function(res){
 			$('#userId').val(fang_work_id);
@@ -1046,4 +1008,38 @@ jQuery(function($) {
 		$('#guaranteeModal').modal('show');
 	});
 
+	//查询
+	function queryWorkerUrl(operate, res) {
+		constructionScheduleWorkers = res.constructers;
+		$("#" + operate.workerInfos).html("");
+		if (constructionScheduleWorkers.length != 0) {
+			//迭代所有的工人
+			for (var i = 0; i < constructionScheduleWorkers.length; i++) {
+				var workerInfo = constructionScheduleWorkers[i];
+				var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
+				var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
+				var profileImg = $('<img />').attr("alt", workerInfo.user.userId + "'s Photo").appendTo(imgDiv);
+				if (workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != "") {
+					com.showImg(profileImg, workerInfo.user.userPhoto, 150, 150, '');
+				}
+				var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
+				//buttonSpan工人工费按钮
+				var buttonSpan = $('<div id="workerNameSpan"></div>').html('<a style="float: left; margin-left: -5px;" class="icon-money icon-2x" href="#"></a>').appendTo(buttonsDiv);
+				//工人编号、名称、职务
+				var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.user.oldUserId + "" + workerInfo.user.userName + "<br/>" + workerInfo.user.duty).appendTo(buttonsDiv);
+
+				//循环一个人，将当前这个人的下标绑定到原始对象上，因为jquery对象是原始对象的封装，每次获取都不一样，所以没法用jquery对象存
+				//这个就是存储到原始dom对象上,简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
+				buttonSpan[0]._index = i;
+				buttonSpan.click(function () {  //点击事件
+					//这里后台调整好打开
+					//_show_WorkerSalary(this._index);//点击按钮的时候会调用上面写好的方法，这里之前存储的下标位置发送到方法中
+				});
+				profileDiv.appendTo($("#" + operate.workerInfos));
+			}
+			workerInfoCondition = true;
+		} else {
+			$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate.workerInfos));
+		}
+	}
 });

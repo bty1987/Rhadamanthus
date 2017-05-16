@@ -38,8 +38,6 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdAType(long msoId, Integer paymentType);
 	
-	public MaterialPaymentPO queryMaterialPaymentByMsoIdAndType(long msoId, Integer paymentType);
-	
 	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdATypeAStatus(long msoId, Integer paymentType, Integer paymentStatus);
 
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMrId(long mrId);
@@ -47,5 +45,7 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId);
 	
 	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Integer paymentType);
-
+	
+	public int countMaterialPaymentByMsoIdAType(long msoId, Integer paymentType);
+	
 }

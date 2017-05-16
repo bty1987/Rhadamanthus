@@ -1,9 +1,10 @@
 package com.fanglin.finance.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -23,7 +24,27 @@ public class SubjectPO implements java.io.Serializable {
 	
 	public static final String COLUMN_THRCODE_STR = "thrCode";
 	
-	public static final String COLUMN_DIRECTION_STR = "direction";
+	public static final String COLUMN_CODE_STR = "code";
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final String COLUMN_LIMITS_STR = "limits";
+	
+	public static final short STATUS_ENABLE_INT = 0;
+	
+	public static final short STATUS_DISABLE_INT = 1;
+	
+	public static final short LIMITS_ENABLE_INT = 1;
+	
+	public static final short LIMITS_DISABLED_INT = 0;
+	
+	public static final short CODE_LENGTH_LEVEL_ONE_INT = 4;
+	
+	public static final short CODE_LENGTH_LEVEL_TWO_INT = 3;
+	
+	public static final short CODE_LENGTH_LEVEL_THR_INT = 3;
+	
+	public static final short CODE_LENGTH_INT = 10;
 
 	private long sid;
 	
@@ -37,21 +58,23 @@ public class SubjectPO implements java.io.Serializable {
 	
 	private String name;
 	
-	private short direction;
-	
 	private short status;
 	
+	private short limits;
+	
+	private String code;
+	
+	private short direction;
+	
+	private String assistant;
+
 	public SubjectPO() {
 		super();
 	}
 
-	public SubjectPO(String oneCode, String twoCode, String thrCode, String name, short direction) {
+	public SubjectPO(long sid) {
 		super();
-		this.oneCode = oneCode;
-		this.twoCode = twoCode;
-		this.thrCode = thrCode;
-		this.name = name;
-		this.direction = direction;
+		this.sid = sid;
 	}
 
 	@Id
@@ -110,6 +133,34 @@ public class SubjectPO implements java.io.Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "status")
+	public short getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name = "limits")
+	public short getLimits() {
+		return limits;
+	}
+
+	public void setLimits(short limits) {
+		this.limits = limits;
+	}
+
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@Column(name = "direction")
 	public short getDirection() {
 		return direction;
 	}
@@ -118,13 +169,13 @@ public class SubjectPO implements java.io.Serializable {
 		this.direction = direction;
 	}
 
-	@Column(name = "status")
-	public short getStatus() {
-		return this.status;
+	@Column(name = "assistant")
+	public String getAssistant() {
+		return assistant;
 	}
 
-	public void setStatus(short status) {
-		this.status = status;
+	public void setAssistant(String assistant) {
+		this.assistant = assistant;
 	}
 
 }

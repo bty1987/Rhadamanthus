@@ -41,6 +41,8 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final Short COLUMN_JTYPE_INT = 6;                          //券退款
 	
+	public static final Short COLUMN_RTYPE_INT = 4;                          //退款
+	
 	public static final String COLUMN_SALES_STATUS_STR = "status";        
 	
 	public static final String COLUMN_SID_STR ="sid";

@@ -436,30 +436,13 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
 		
-		MaterialPaymentPO materialPayment = materialPaymentDao.queryMaterialPaymentByMsoIdAndType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType());
-		
-		if(materialPayment==null){
-			
+		if(materialPaymentDao.countMaterialPaymentByMsoIdAType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType()) > 0){
+			throw new FLException(150033, "款项类型已存在");
+		}else{
 			materialSubOrderDao.update(materialSubOrderPO);
 			
-			materialPaymentDao.save(materialPaymentPO);
-			
-		}else{
-			if(materialPayment.getMaterialSubOrder().getMsoId()==materialPaymentVO.getMsoId() && materialPayment.getPaymentType()==materialPaymentVO.getPaymentType()){
-				
-				throw new FLException(150033, "款项类型已存在");
-				
-			}else{
-				
-				materialSubOrderDao.update(materialSubOrderPO);
-				
-				materialPaymentDao.save(materialPaymentPO);
-				
-			}
+			materialPaymentDao.save(materialPaymentPO); 
 		}
-		
-		
-		
 		
 	}
 

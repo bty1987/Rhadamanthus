@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "approval", catalog = "platform")
+@Table(name = "approval", catalog = "approval")
 public class ApprovalPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4085644657170990542L;
@@ -37,6 +37,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_TYPE_DECORATION_ACTIVITY_INT = 8;
 	
 	public static final short APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT = 9; 
+	
+	public static final short APPROVAL_TYPE_SALESREFUND_PAYMENT_INT = 10; 
 	
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 	

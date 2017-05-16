@@ -22,9 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.WaterwayCircuitPowerConstructionScheduleService;
 import com.fanglin.construction.service.WaterwayCircuitPowerDrawingService;
-import com.fanglin.construction.vo.ConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.WaterwayCircuitPowerConstructionScheduleVO;
-import com.fanglin.construction.vo.WaterwayCircuitPowerConstructionScheduleWorkerVO;
 import com.fanglin.construction.vo.WaterwayCircuitPowerDrawingVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -49,12 +47,6 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 	private List<WaterwayCircuitPowerDrawingVO> waterwayCircuitPowerDrawings;
 	
 	private List<String> drawingUrls;
-	
-	private List<WaterwayCircuitPowerConstructionScheduleWorkerVO> constructionScheduleWorkers;
-	
-	private WaterwayCircuitPowerConstructionScheduleWorkerVO waterwayCircuitPowerConstructionScheduleWorker;
-	
-	private ConstructionScheduleWorkerVO constructionScheduleWorker;
 	
 	@Action(value = "queryWaterwayCircuitPowerConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryWaterwayCircuitPowerConstructionScheduleByOrderId(){
@@ -127,46 +119,6 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryWaterwayCircuitPowerConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryWaterwayCircuitPowerConstructionScheduleWorker(){
-		
-		constructionScheduleWorkers = waterwayCircuitPowerConstructionScheduleService.queryWaterwayCircuitPowerConstructionScheduleWorkerByWcpcsId(waterwayCircuitPowerConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addWaterwayCircuitPowerConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addWaterwayCircuitPowerConstructionScheduleWorker() throws FLException{
-		
-		waterwayCircuitPowerConstructionScheduleService.addWaterwayCircuitPowerConstructionScheduleWorker(waterwayCircuitPowerConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setWaterwayCircuitPowerConstructionScheduleWorkerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setWaterwayCircuitPowerConstructionScheduleWorkerForSalary() throws FLException{
-		
-		waterwayCircuitPowerConstructionScheduleService.setWaterwayCircuitPowerConstructionScheduleWorkerForSalary(constructionScheduleWorker);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "setWaterwayCircuitPowerConstructionScheduleWorkerForRaty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setWaterwayCircuitPowerConstructionScheduleWorkerForRaty(){
-		
-		waterwayCircuitPowerConstructionScheduleService.setWaterwayCircuitPowerConstructionScheduleWorkerForRaty(constructionScheduleWorkers);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteWaterwayCircuitPowerConstructionScheduleWorker", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteWaterwayCircuitPowerConstructionScheduleWorker() throws FLException{
-		
-		waterwayCircuitPowerConstructionScheduleService.deleteWaterwayCircuitPowerConstructionScheduleWorker(waterwayCircuitPowerConstructionScheduleWorker);
-		
-		return SUCCESS;
-	}
 
 	public WaterwayCircuitPowerConstructionScheduleVO getWaterwayCircuitPowerConstructionSchedule(){
 		return waterwayCircuitPowerConstructionSchedule;
@@ -193,33 +145,6 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 	public void setWaterwayCircuitPowerDrawings(
 			List<WaterwayCircuitPowerDrawingVO> waterwayCircuitPowerDrawings){
 		this.waterwayCircuitPowerDrawings = waterwayCircuitPowerDrawings;
-	}
-
-	public List<WaterwayCircuitPowerConstructionScheduleWorkerVO> getConstructionScheduleWorkers(){
-		return constructionScheduleWorkers;
-	}
-
-	public void setConstructionScheduleWorkers(
-			List<WaterwayCircuitPowerConstructionScheduleWorkerVO> constructionScheduleWorkers){
-		this.constructionScheduleWorkers = constructionScheduleWorkers;
-	}
-
-	public WaterwayCircuitPowerConstructionScheduleWorkerVO getWaterwayCircuitPowerConstructionScheduleWorker(){
-		return waterwayCircuitPowerConstructionScheduleWorker;
-	}
-
-	public void setWaterwayCircuitPowerConstructionScheduleWorker(
-			WaterwayCircuitPowerConstructionScheduleWorkerVO waterwayCircuitPowerConstructionScheduleWorker){
-		this.waterwayCircuitPowerConstructionScheduleWorker = waterwayCircuitPowerConstructionScheduleWorker;
-	}
-
-	public ConstructionScheduleWorkerVO getConstructionScheduleWorker(){
-		return constructionScheduleWorker;
-	}
-
-	public void setConstructionScheduleWorker(
-			ConstructionScheduleWorkerVO constructionScheduleWorker){
-		this.constructionScheduleWorker = constructionScheduleWorker;
 	}
 
 	public List<String> getDrawingUrls() {

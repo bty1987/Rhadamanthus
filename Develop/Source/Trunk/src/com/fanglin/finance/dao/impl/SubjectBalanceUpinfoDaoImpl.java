@@ -11,6 +11,9 @@
 
 package com.fanglin.finance.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -23,10 +26,11 @@ public class SubjectBalanceUpinfoDaoImpl extends DaoImpl<SubjectBalanceUpinfoPO>
 	public SubjectBalanceUpinfoDaoImpl(){
 		super(SubjectBalanceUpinfoPO.class);
 	}
-	
-	@Override
-	public SubjectBalanceUpinfoPO merge(SubjectBalanceUpinfoPO subjectBalanceUpinfoPO) {
-		return (SubjectBalanceUpinfoPO) financeSession().merge(subjectBalanceUpinfoPO);
-	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SubjectBalanceUpinfoPO> querySubjectBalanceUpinfoForInit() {
+		return session().createCriteria(SubjectBalanceUpinfoPO.class).add(Restrictions.eq(SubjectBalanceUpinfoPO.COLUMN_STATUS_STR, SubjectBalanceUpinfoPO.STATUS_INIT_INT)).list();
+	}
+	
 }

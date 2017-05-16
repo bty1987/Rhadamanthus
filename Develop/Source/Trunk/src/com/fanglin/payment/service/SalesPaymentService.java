@@ -28,7 +28,7 @@ public interface SalesPaymentService {
 	
 	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
 
-	public int confirmSalesPayment(List<Long> spids) throws FLException;
+	public int confirmSalesPayment(List<Long> spids,String userId) throws FLException;
 	
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException;
 	

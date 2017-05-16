@@ -13,5 +13,5 @@ public interface SalesDao extends Dao<SalesPO> {
 	public List<SalesPO> pageSales(Paging paging, List<Filter> filter);
 	
 	public SalesPO querySalesBySid(Long sid);
-
+	
 }

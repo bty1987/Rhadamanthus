@@ -165,12 +165,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 		
-		float num = purchaseItemPO.getNum();
-		
-		if(purchaseItemVO.getNum() > num ){
-			throw new FLException(260028, "采购项剩余数量不足");
-		}
-		
 		purchaseItemPO.setNum(purchaseItemVO.getNum());
 		purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 		purchaseItemDao.update(purchaseItemPO);

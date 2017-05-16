@@ -1,4 +1,4 @@
-#Fri Apr 28 15:13:38 CST 2017
+#Mon May 15 15:39:22 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -103,7 +103,6 @@ encoding//WebContent/views/payment/materialPayment.html=UTF-8
 encoding//WebContent/views/payment/materialPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/payment.html=UTF-8
 encoding//WebContent/views/payment/paymentCheck.html=UTF-8
-encoding//WebContent/views/payment/userSalary.html=UTF-8
 encoding//WebContent/views/personnel/organization.html=UTF-8
 encoding//WebContent/views/personnel/user.html=UTF-8
 encoding//WebContent/views/personnel/userAdvance.html=UTF-8

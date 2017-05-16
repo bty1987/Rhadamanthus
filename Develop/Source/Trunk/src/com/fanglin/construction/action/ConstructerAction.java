@@ -37,7 +37,6 @@ public class ConstructerAction extends BaseListAction{
 	
 	private UserVO findUser;
 
-
 	@Action(value = "queryConstructerByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructerByOrderId() throws FLException{
 		
@@ -58,7 +57,7 @@ public class ConstructerAction extends BaseListAction{
 	public String addConstructer() throws FLException{
 		
 		this.findUser = userService.queryUserByUserId(constructer.getUser().getUserId());
-		constructerService.addConstructer(constructer);
+		constructerService.addConstructer(constructer, queryUserId());
 		
 		 return SUCCESS;
 	}
@@ -113,4 +112,5 @@ public class ConstructerAction extends BaseListAction{
 	public void setFindUser(UserVO findUser) {
 		this.findUser = findUser;
 	}
+	
 }

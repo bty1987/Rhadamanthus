@@ -1,5 +1,7 @@
 package com.fanglin.inventory.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.inventory.service.RefundsItemService;
+import com.fanglin.inventory.vo.RefundsItemVO;
 import com.fanglin.inventory.vo.RefundsVO;
 
 @ParentPackage("base")
@@ -23,9 +26,11 @@ public class RefundsAction extends BaseListAction {
 	
 	private RefundsVO  refunds;
 	
+	private List<RefundsItemVO>  refundsItems;
+	
 	@Action(value = "queryRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 		public String queryRefundsItemBySid(){
-			refundsItemService.queryRefundsItemBySid(refunds);
+			refundsItems = refundsItemService.queryRefundsItemBySid(refunds);
 			return SUCCESS;
 	}
 
@@ -36,6 +41,16 @@ public class RefundsAction extends BaseListAction {
 	public void setRefunds(RefundsVO refunds) {
 		this.refunds = refunds;
 	}
+
+	public List<RefundsItemVO> getRefundsItems() {
+		return refundsItems;
+	}
+
+	public void setRefundsItems(List<RefundsItemVO> refundsItems) {
+		this.refundsItems = refundsItems;
+	}
+
+
 
 
 }

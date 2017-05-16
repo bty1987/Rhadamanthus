@@ -11,11 +11,13 @@
 
 package com.fanglin.finance.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
 import com.fanglin.finance.po.SubjectBalanceUpinfoPO;
 
 public interface SubjectBalanceUpinfoDao extends Dao<SubjectBalanceUpinfoPO> {
-
-	public SubjectBalanceUpinfoPO merge(SubjectBalanceUpinfoPO subjectBalanceUpinfoPO);
 	
+	public List<SubjectBalanceUpinfoPO> querySubjectBalanceUpinfoForInit();
+
 }

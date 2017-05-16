@@ -66,4 +66,16 @@ public class PriceServiceImpl implements PriceService{
 		return 0;
 	}
 
+	@Override
+	public PriceVO queryPurchaseByGidASelling(PriceVO priceVO) {
+		
+		PricePO pricePO = priceDao.queryPurchaseByGidASelling(priceVO.getPid());
+		
+		PriceVO priceVOs = new PriceVO();
+		BeanUtil.copyProperties(pricePO, priceVOs);
+		
+		return priceVOs;
+		
+	}
+
 }
