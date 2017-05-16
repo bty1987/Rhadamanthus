@@ -16,6 +16,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
+			console.log(listData);
 			var $tableWrap = $('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -56,7 +57,7 @@ jQuery(function($) {
 							["结算值:", v.postPoint, "grey"],
 						];
 					}else{
-						materialOrderPostBalanceDetail.packages[v.packageName] ? materialOrderPostBalanceDetail.packages[v.packageName].push(v) : (materialOrderPostBalanceDetail.packages[v.packageName] = [v]);
+						/*materialOrderPostBalanceDetail.packages[v.packageName] ? materialOrderPostBalanceDetail.packages[v.packageName].push(v) : (materialOrderPostBalanceDetail.packages[v.packageName] = [v]);*/
 
 						propertyArr = [
 						    ["名称:", v.materialModelName, "grey"],

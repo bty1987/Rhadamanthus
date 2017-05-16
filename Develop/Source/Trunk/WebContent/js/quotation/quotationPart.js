@@ -192,7 +192,7 @@ var QuotationDetail = (function(){
 			$('#sumLabSumMoney').text(utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee)));
 			$('#sumLabDiscountMoney').text(utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee)));
 
-			quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));//报价总额
+			quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));//报价总额
 			quo.basicParams["quotation.manageRate"] = utils.accSub(_manageRate, quo.notSalesmanRate);
 			quo.basicParams["quotation.managePrice"] = _dmanagefee;//管理费
 			quo.basicParams["quotation.trafficPrice"] = _dtransfee;//车运费
@@ -1259,7 +1259,7 @@ var QuotationDetail = (function(){
 					_tranRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text());
 					
 					_transfee =  utils.changeThrDecimal(utils.accMul(_totalfee, _tranRate));
-					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, utils.accMul(_totalfee, _tranRate)), _manageRate));
+					_managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate));
 					
 					_dtransfee =  utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount));
 					_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
@@ -1273,7 +1273,7 @@ var QuotationDetail = (function(){
 					$('#sumLabSumMoney').text(utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee)));
 					$('#sumLabDiscountMoney').text( utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee)));
 
-					quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal( utils.accAdd(utils.accAdd(_dtotalfee, _transfee), _managefee));//报价总额
+					quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal( utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));//报价总额
 					quo.basicParams["quotation.managePrice"] = _dmanagefee;//管理费
 					quo.basicParams["quotation.trafficPrice"] = _dtransfee;//车运费
 					quo.basicParams["quotation.latexCut"] = _totallcs;//车运费

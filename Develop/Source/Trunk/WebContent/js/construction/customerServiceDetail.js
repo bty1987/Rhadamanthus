@@ -333,7 +333,7 @@ jQuery(function($) {
 						options["constructer.cid"] = workerIdsData[i];
 						options["constructer.rate"] = $("#"+workerIdsData[i] + "workerRaty-score").val();
 						options["constructer.assessment"] = $("#"+workerIdsData[i] + "workerRatyDes").val();
-						console.log(options);
+						
 						if(commitFlag){
 							com.post(operate.setWorkerRaty, options, function(res){
 								com.showAlert(com.info, "保存成功!");

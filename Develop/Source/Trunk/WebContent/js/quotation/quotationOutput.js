@@ -191,6 +191,9 @@ function printFinanceTable(){
 		var sum = 0.0;
 		var preSum = 0.0;
 		
+		var _manageRate = 0;
+		var _tranRate = 0;
+		
 		contentHtml += '<tr bgcolor="#CCCCCC">';
 		contentHtml += '<td><div align="center">' + utils.getBigNumber(i+1) + '</div></td>';
 		contentHtml += '<td colspan="8">';
@@ -218,7 +221,9 @@ function printFinanceTable(){
 				
 				_discountUnitPrice = $value;
 				_sum = $value;
-				_preSum = $value;
+				_preSum = 0;
+				
+				_tranRate = quotationFunctionAreaItem.unitPrice;
 				
 				quotationFunctionAreaItem.unitPrice = $value;
 			}else if(quotationFunctionAreaItem.type == 3){
@@ -226,7 +231,9 @@ function printFinanceTable(){
 				
 				_discountUnitPrice = $value;
 				_sum = $value;
-				_preSum = $value;
+				_preSum = 0;
+				
+				_manageRate = quotationFunctionAreaItem.unitPrice;
 				
 				quotationFunctionAreaItem.unitPrice = $value;
 			}
@@ -269,6 +276,11 @@ function printFinanceTable(){
 		contentHtml += '</tr>';
 		contentHtml += '';
 	}
+	
+	var _transfee =  utils.changeThrDecimal(utils.accMul(preDiscountPrice, _tranRate));
+	var _managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(preDiscountPrice, _transfee), _manageRate));
+	
+	preDiscountPrice = utils.changeThrDecimal(utils.accAdd(preDiscountPrice, utils.accAdd(_transfee, _managefee)));
 	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
 	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + preDiscountPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + totalPrice + '</strong></td>';

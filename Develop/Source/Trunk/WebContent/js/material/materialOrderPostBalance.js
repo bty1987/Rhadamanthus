@@ -89,7 +89,7 @@ $(function(){
                 ["抹零：",v.materialSubOrder.maling,"grey"],
                 ["厂商抹零：",v.materialSubOrder.venderMaling,"grey"],
                 ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "blue"],
-                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '退货' : '---' , "blue"],
+                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货' , "blue"],
                 //订单号
                 //["差值 :", v.difference , "grey"],
                 //业务员 业务大区 业务部门？
@@ -255,6 +255,7 @@ $(function(){
                 column:[
 					["订单编号","materialSubOrder.orderId"],
 					["楼盘地址","materialSubOrder.orderAddr"],
+					["主材订单编号","materialSubOrder.msoNo"],
 					["品牌","materialSubOrder.materialBrand"],
 					["业务员","materialSubOrder.salesmanName"],
 					["大区","materialSubOrder.regionName"],
