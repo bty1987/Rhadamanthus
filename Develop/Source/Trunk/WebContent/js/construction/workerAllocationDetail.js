@@ -880,7 +880,6 @@ jQuery(function($) {
 						options[operate.elementName+".orderId"] = orderId;
 						options[operate.elementName+".putlineStatus"] = 1;
 
-						console.log(options);
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.info, "成功放线!");
 							putlineSuccessBtn.attr("disabled", "disabled");
