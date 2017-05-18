@@ -203,10 +203,6 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 			storehouseStockService.updateStorehouseStock(shId, month, -num);
 		}
 
-//		System.out.println(manifestItemPO.getPurchasePrice());
-//		System.out.println(manifestItemVO.getPurchasePrice());
-//		System.out.println(manifestPO.getTotal());
-
 		manifestPO.setTotal(Arith.sub(manifestPO.getTotal(),Arith.sub(manifestItemPO.getPurchasePrice(),manifestItemVO.getPurchasePrice())));
 
 		BeanUtil.copyProperties(manifestItemVO, manifestItemPO,Arrays.asList("instorehouse", "outstorehouse"));

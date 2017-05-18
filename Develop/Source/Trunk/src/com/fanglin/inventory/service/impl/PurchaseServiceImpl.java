@@ -78,6 +78,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	}
 	
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException{
 		//PO作为编号前缀 , 之后由8位数字组成
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");

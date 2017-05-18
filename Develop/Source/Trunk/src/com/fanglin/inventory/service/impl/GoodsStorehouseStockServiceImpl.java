@@ -131,11 +131,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 
 	public StorehousePO instorehouse(long gid,long cid,long fid, long shId, float num) throws FLException{
-		System.out.println("gid:"+gid);
-		System.out.println("cid:"+cid);
-		System.out.println("fid:"+fid);
-		System.out.println("shId:"+shId);
-		System.out.println("num:"+num);
+		
 		if(goodsDao.get(gid) == null){
 			throw new FLException(260004, "商品不存在");
 		}
@@ -185,13 +181,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			throw new FLException(260008, "商品库存不足");
 		}
 		
-		System.out.println(outGoodsStorehouseStockPO.getNum());
-		System.out.println(num);
-		System.out.println(outGoodsStorehouseStockPO.getNum() < num);
-		
 		outGoodsStorehouseStockPO.setNum(Arith.sub(outGoodsStorehouseStockPO.getNum(), num));
-		
-		System.out.println(outGoodsStorehouseStockPO.getNum());
 		
 		goodsStorehouseStockDao.update(outGoodsStorehouseStockPO);
 		
