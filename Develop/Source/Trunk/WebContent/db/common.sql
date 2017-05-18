@@ -28,7 +28,7 @@ select * from materialreceipt where mrId in (select mrId from materialpayment wh
 
 stop slave;set global sql_slave_skip_counter=1;start slave;
 
-
+show slave status;
 
 
 

@@ -17,7 +17,7 @@ jQuery(function($) {
 	decorationBelong.belongStatus = params.orderBelongStatus;
 	decorationBelong.belongType = params.orderBelongType;
 	
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": 3}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 3}, "autoFillKeyValue", "key", "value");
 	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : decorationBelong.belongType == "设计" ? "设计师" : ""}, "autoFillKeyValue", "key", "value").on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;

@@ -136,11 +136,11 @@ jQuery(function($) {
 	decorationOrderDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
 	decorationOrderDetail.otherPaymentModal = $("#otherPaymentModal");
 	
-	com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 5}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 8}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 8}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 1}, "autoFillKeyValue", "key", "value");
-	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 2}, "autoFillKeyValue", "key", "value");
+	com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 5}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 1}, "autoFillKeyValue", "key", "value");
+	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
 	com.initChosen('villageSel', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", 'key', 'value').on('change', function(e){
 		if ($("#villageSel").val() == null || $("#villageSel").val() == ""){
 			return;

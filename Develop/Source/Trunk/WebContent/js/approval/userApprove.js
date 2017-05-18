@@ -49,7 +49,7 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	
+        	console.log(v)
         	var user = v.user;
         	
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
@@ -78,11 +78,11 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
-            	editApprovalUser(v.approveId, user.userId, user.currentName, v.type);
+            	editApprovalUser(v.auid, user.userId, user.currentName, v.type);
             });
             
             $btnDel.click(function(){
-            	deleteApprovalUser(v.approveId);
+            	deleteApprovalUser(v.auid);
             });
             
             return $liLine;
@@ -101,7 +101,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 
-	searcher.init(["userName", "approvalType"], "condList", api.system.pageUserApprove, function(data){
+	searcher.init(["userName", "approvalType"], "condList", api.system.pageApproveUser, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "approvalUserPostData", null, false, null, function(){
 		
@@ -136,10 +136,10 @@ jQuery(function($) {
 	function deleteApprovalUser(approveId){
 		
 		var options = {
-			"userApproveIds[0]": approveId
+			"approveUserIds[0]": approveId
 		}
 		
-		com.post(api.system.deleteUserApprove, options, function(){
+		com.post(api.system.deleteApproveUser, options, function(){
 			searcher.doSearch();
 		});
 	}
@@ -148,15 +148,15 @@ jQuery(function($) {
 		
 		var url;
 		var options = {
-			'userApprove.user.userId': approve.items.userSel.val(),
-			'userApprove.type': approve.items.type.val(),
+			'approveUser.user.userId': approve.items.userSel.val(),
+			'approveUser.type': approve.items.type.val(),
 		};
-		
+
 		if(editFlg){
-			url = api.system.updateUserApprove;
-			options['userApprove.approveId'] = approve.items.approveId;
+			url = api.system.updateApproveUser;
+			options['approveUser.auid'] = approve.items.approveId;
 		}else{
-			url = api.system.addUserApprove;
+			url = api.system.addApproveUser;
 		}
 		
 		com.post(url, options, function(res){

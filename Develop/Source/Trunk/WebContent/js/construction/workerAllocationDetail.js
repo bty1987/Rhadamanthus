@@ -43,14 +43,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateChanConstructionSchedule,
 				setTimeFlagUrl: api.construction.setChanConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setChanConstructionScheduleForSalary,
 				setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
-				confirmStartTimeUrl: api.construction.setChanConstructionScheduleForSalary,
 				confirmEndTimeUrl: "",
 
-				/*setWorkerUrl: api.construction.setChanConstructionScheduleWorker,*/
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updatePutlineConstructionSchedule,
@@ -96,13 +93,12 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-				setWorkerSalaryUrl: api.construction.setPutlineConstructionScheduleForSalary,
 				setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 
@@ -153,13 +149,12 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateBricklayConstructionSchedule,
@@ -208,12 +203,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setTimeFlagUrl: api.construction.setBricklayConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setBricklayConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
@@ -260,12 +254,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setTimeFlagUrl: api.construction.setGroundLevelingConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setGroundLevelingConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateCarpentConstructionSchedule,
@@ -311,13 +304,12 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCarpentConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setCarpentConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateOilConstructionSchedule,
@@ -363,12 +355,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setTimeFlagUrl: api.construction.setOilConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setOilConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
@@ -419,12 +410,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				nextAddInfoUrl: api.construction.updateCleaningConstructionSchedule,
@@ -473,12 +463,11 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCleaningConstructionScheduleForTimeFlag,
-				setWorkerSalaryUrl: api.construction.setCleaningConstructionScheduleWorkerForSalary,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
+				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
 				elementId: "ccsId",
@@ -552,10 +541,6 @@ jQuery(function($) {
 					com.showAlert(com.warning, "当前功能不能进行施工阶段操作.");
 
 					return false;
-				}else if(step == workerAllocationDetail.schedule){
-					if(!(step == 8 && workerAllocationDetail.wizardSept[step])){
-						initWizardSept(workerAllocationDetail.operateDict[step], step);
-					}
 				}else{
 					if(!workerAllocationDetail.wizardSept[step]){
 						initWizardSept(workerAllocationDetail.operateDict[step], step);
@@ -700,7 +685,7 @@ jQuery(function($) {
 					}
 
 					var options = {};
-					options[operate.elementConstructerName + ".csId"] = element.csId;
+					options[operate.elementConstructerName + ".orderId"] = params.orderId;
 					options[operate.elementConstructerName + ".schedule"] = schedule;
 
 					com.post(operate.queryWorkerUrl, options, function (res) {
@@ -818,7 +803,7 @@ jQuery(function($) {
 
 					$("#"+operate.putlineTimeId).val(element.startTime).attr("disabled", "disabled");
 					var options = {};
-					options[operate.elementConstructerName + ".csId"] = workerAllocationDetail.construstionSchedule.csId;
+					options[operate.elementConstructerName + ".orderId"] = params.orderId;
 					options[operate.elementConstructerName + ".schedule"] = schedule;
 
 					com.post(operate.queryWorkerUrl, options, function (res) {
@@ -923,7 +908,7 @@ jQuery(function($) {
 					$("#"+operate.endTimeId).val(element.endTime);
 
 					var options = {};
-					options[operate.elementConstructerName+".csId"] = element["csId"];
+					options[operate.elementConstructerName+".orderId"] = params.orderId;
 					options[operate.elementConstructerName+".schedule"] = schedule;
 
 					com.post(operate.queryWorkerUrl, options, function(res){
@@ -953,7 +938,6 @@ jQuery(function($) {
 								}
 							}
 						}
-
 
 						com.post(operate.setWorkerUrl, args,
 							function(res) {
@@ -1162,6 +1146,5 @@ jQuery(function($) {
 				}
 				profileDiv.appendTo(workerInfos);
 				com.showAlert(com.info, "工人信息提交成功!");
-
 	}
 });
