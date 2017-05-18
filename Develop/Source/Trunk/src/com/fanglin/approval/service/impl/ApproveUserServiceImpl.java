@@ -114,7 +114,7 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 			throws FLException {
 
 		ApproveUserPO approveUserPO = approveUserDao.get(approveUserVO
-				.getAid());
+				.getAuid());
 
 		if (!approveUserPO.getType().equals(approveUserVO.getType())) {
 			List<ApproveUserPO> approveUsers = approveUserDao
