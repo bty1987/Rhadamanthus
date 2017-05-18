@@ -60,7 +60,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		}
 
 		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
-			throw new FLException(260021, "收款款项不存在");
+			throw new FLException(150003, "款项不存在");
 		}
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
@@ -287,9 +287,15 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
+		
+		SalesPO sales = salesDao.querySalesBySid(salesPaymentVO.getSid());
+
+	    if (sales == null) {
+	      throw new FLException(260021, "销售单不存在");
+	    }
 
 		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
-			throw new FLException(260021, "收款款项不存在");
+			throw new FLException(150003, "款项不存在");
 		}
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
@@ -364,7 +370,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		}
 
 		if (Arith.sub(referMoneySR, referMoneyPY) != SalesReceiptPO.COLUMN_MONEY_STR) {
-			throw new FLException(260021, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+			throw new FLException(150025, "款项金额不正确");
 		}
 		salesReceiptDao.save(salesReceiptPO);
 
@@ -396,9 +402,15 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException {
+		
+		SalesPO sales = salesDao.querySalesBySid(salesPaymentVO.getSid());
+
+	    if (sales == null) {
+	      throw new FLException(260021, "销售单不存在");
+	    }
 
 		if (salesPaymentDao.countSalesPaymentBySid(salesPaymentVO.getSid()) < 0) {
-			throw new FLException(260021, "收款款项不存在");
+			throw new FLException(150003, "款项不存在");
 		}
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
@@ -476,7 +488,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		Float referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_STR) {
-			throw new FLException(260021, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+			throw new FLException(150025, "款项金额不正确");
 		}
 		salesReceiptDao.save(salesReceiptPO);
 
@@ -485,13 +497,13 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
 		salesPaymentDao.update(salesPayment);
 
-		SalesPO sales = salesDao.querySalesBySid(salesPayment.getSales().getSid());
+		SalesPO salesPO = salesDao.querySalesBySid(salesPayment.getSales().getSid());
 		if (salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
-			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
-			salesDao.update(sales);
+			salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
+			salesDao.update(salesPO);
 		} else if (salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
-			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
-			salesDao.update(sales);
+			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
+			salesDao.update(salesPO);
 		}
 
 		return 0;

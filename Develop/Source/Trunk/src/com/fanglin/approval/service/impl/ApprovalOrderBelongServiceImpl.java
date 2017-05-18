@@ -139,11 +139,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			newBelongRate.append(approvalOrderBelongItemVO.getBelongRate());
 			newBelongRate.append(",");
-			
-			System.out.println("rateCount："+rateCount);
-			System.out.println("getBelongRate："+approvalOrderBelongItemVO.getBelongRate());
-			System.out.println("Arith："+Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate()));
-			
+
 			rateCount = Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate());
 			
 			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
