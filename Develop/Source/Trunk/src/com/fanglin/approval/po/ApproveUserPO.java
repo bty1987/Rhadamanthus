@@ -26,7 +26,7 @@ public class ApproveUserPO implements Serializable{
 
     private static final long serialVersionUID = 950904568941125216L;
 
-    private Integer aid;
+    private Integer auid;
     
     private UserPO  user;
    
@@ -43,13 +43,13 @@ public class ApproveUserPO implements Serializable{
 
     @Id
     @GeneratedValue
-    @Column(name = "aid")
-    public Integer getAid(){
-        return aid;
+    @Column(name = "auid")
+    public Integer getAuid(){
+        return auid;
     }
 
-    public void setAid(Integer aid){
-        this.aid = aid;
+    public void setAuid(Integer auid){
+        this.auid = auid;
     }
 
     @javax.persistence.ManyToOne(fetch=FetchType.LAZY)
