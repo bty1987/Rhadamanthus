@@ -23,7 +23,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	public static final String COLUMN_CODE_STR = "goods.barcode";
 	
-	public static final String COLUMN_FID_STR = "format.cid";
+	public static final String COLUMN_FID_STR = "format.fid";
 	
 	public static final String COLUMN_CID_STR = "color.cid";
 	

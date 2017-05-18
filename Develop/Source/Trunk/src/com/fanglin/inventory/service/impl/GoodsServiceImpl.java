@@ -184,10 +184,16 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260003, "商品条形码已存在");
 		}
 		
-		goodsPO = new GoodsPO(new AssisTypePO());
+		goodsPO = new GoodsPO();
+		if(goodsVO.getAssisType().getAtid()!=null){
+			new AssisTypePO();
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
+			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+		}else{
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
+		}
 		
-		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
-		BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+		
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
 	    
@@ -212,9 +218,14 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
 		
-		AssisTypePO assisTypePO = assisTypeDao.get(goodsVO.getAssisType().getAtid());
-		
-		goodsPO.setAssisType(assisTypePO);
+		if(goodsVO.getAssisType().getAtid()!=null){
+			
+			AssisTypePO assisTypePO = assisTypeDao.get(goodsVO.getAssisType().getAtid());
+			
+			goodsPO.setAssisType(assisTypePO);
+		}else{
+			goodsPO.setAssisType(null);
+		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
 	    

@@ -18,6 +18,7 @@ import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("constructerService")
@@ -43,7 +44,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserPO(),new UserPO());
+			ConstructerVO constructerV = new ConstructerVO(new UserVO(),new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
 			constructerVOs.add(constructerV);
@@ -58,7 +59,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCsId(csId,schedule);
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserPO());
+			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
 			constructerVOs.add(constructerV);

@@ -96,7 +96,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		
 		// type 0: 盘盈 , 1: 盘亏
 		
-		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(checkListVO.getGoods().getGid(), checkListVO.getStorehouse().getShId());
+		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), checkListVO.getStorehouse().getShId());
 		
 		if(goodsStorehouseStockPO == null){
 			throw new FLException(260011, "商品库存信息不存在");
@@ -144,7 +144,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			throw new FLException(260005, "仓库不存在");
 		}
 		
-		GoodsStorehouseStockPO inGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, shId);
+		GoodsStorehouseStockPO inGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid , shId);
 		
 		if(inGoodsStorehouseStockPO == null){
 			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
@@ -156,9 +156,6 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			
 			inGoodsStorehouseStockPO.setNum(0f);
 		}
-		
-		System.out.println(inGoodsStorehouseStockPO.getNum());
-		System.out.println(num);
 		
 		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));
 		
@@ -178,7 +175,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			throw new FLException(260005, "仓库不存在");
 		}
 		
-		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, shId);
+		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
 		
 		if(outGoodsStorehouseStockPO == null){
 			throw new FLException(260008, "商品库存不足");

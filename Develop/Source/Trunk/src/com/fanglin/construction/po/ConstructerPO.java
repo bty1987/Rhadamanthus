@@ -21,12 +21,12 @@ import com.fanglin.personel.po.UserPO;
 public class ConstructerPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7434364138129555697L;
-	public static final String COLUMN_ORDERID_STR = "orderId";
+	public static final String  COLUMN_ORDERID_STR = "orderId";
 	public static final String  COLUMN_CSID_STR  = "csId";
 	public static final String  COLUMN_CID_STR  = "cid";
 	public static final String  COLUMN_STATUS_STR  = "status";
 	public static final String  COLUMN_USERID_STR = "user.userId";
-	private Integer cid;
+	private Long cid;
 	private Integer csId;
 	private String orderId;
 	private UserPO	user;
@@ -59,11 +59,11 @@ public class ConstructerPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
-	public Integer getCid() {
+	public Long getCid() {
 		return this.cid;
 	}
 
-	public void setCid(Integer cid) {
+	public void setCid(Long cid) {
 		this.cid = cid;
 	}
 

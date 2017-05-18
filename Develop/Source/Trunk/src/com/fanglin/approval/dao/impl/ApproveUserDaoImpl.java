@@ -43,7 +43,7 @@ public class ApproveUserDaoImpl extends DaoImpl<ApproveUserPO> implements Approv
                 } else if("userName".equals(filter.getField())){
                     query.add(query.getCriterion("user.currentName", filter));
                 } else if("type".equals(filter.getField())){
-                    query.add(query.getCriterion("type", filter));
+                    query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
                 }
             }
         }

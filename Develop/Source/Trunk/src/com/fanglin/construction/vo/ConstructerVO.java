@@ -2,23 +2,21 @@ package com.fanglin.construction.vo;
 
 import java.sql.Timestamp;
 
-import com.fanglin.construction.vo.ConstructionScheduleVO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
 
 public class ConstructerVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5071168089649592674L;
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	private Integer cid;
+	private Long cid;
 	private Integer csId;	//工程id
-	private ConstructionScheduleVO	constructionVO;
 	private String orderId;
-	private UserPO	user;
+	private UserVO	user;
 	private Integer schedule;
 	private float salary;
 	private short rate;
 	private String assessment;
-	private UserPO creater;
+	private UserVO creater;
 	private Timestamp createTime;
 	private short status;
 
@@ -27,22 +25,22 @@ public class ConstructerVO implements java.io.Serializable {
 		super();
 	}
 
-	public ConstructerVO(UserPO user) {
+	public ConstructerVO(UserVO user) {
 		super();
 		this.user = user;
 	}
 
-	public ConstructerVO(UserPO user, UserPO creater) {
+	public ConstructerVO(UserVO user, UserVO creater) {
 		super();
 		this.user = user;
 		this.creater = creater;
 	}
 
-	public Integer getCid() {
+	public Long getCid() {
 		return this.cid;
 	}
 
-	public void setCid(Integer cid) {
+	public void setCid(Long cid) {
 		this.cid = cid;
 	}
 
@@ -109,31 +107,20 @@ public class ConstructerVO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-
-	public ConstructionScheduleVO getConstructionVO() {
-		return constructionVO;
-	}
-
-	public void setConstructionVO(ConstructionScheduleVO constructionVO) {
-		this.constructionVO = constructionVO;
-	}
-
-	public UserPO getUser() {
+	
+	public UserVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserPO user) {
+	public void setUser(UserVO user) {
 		this.user = user;
 	}
 
-	public UserPO getCreater() {
+	public UserVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserPO creater) {
+	public void setCreater(UserVO creater) {
 		this.creater = creater;
 	}
-	
-	
-
 }

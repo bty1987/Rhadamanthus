@@ -71,6 +71,8 @@ public class AssisOrderDaoImpl extends DaoImpl<AssisOrderPO> implements AssisOrd
 					
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_APPROVERTIME_STR, stimestamp, "ge"));
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_APPROVERTIME_STR, etimestamp, "le"));
+				}else if("status".equals(field)){
+					query.add(query.getCriterion(AssisOrderPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
 				}
 			}
 		}
