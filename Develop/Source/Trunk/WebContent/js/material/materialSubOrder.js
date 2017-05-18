@@ -76,7 +76,7 @@ jQuery(function($) {
 	
 	console.log(materialSubOrder.materialStatus);
 	
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 9}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value");
 	
 	materialSubOrder.approveSaveBtn = $("#approveSaveBtn").on("click", function(){
 		

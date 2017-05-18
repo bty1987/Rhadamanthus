@@ -14,7 +14,7 @@ CREATE TABLE `approval` (
   `contents` varchar(256) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`aId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalactivity`;
 CREATE TABLE `approvalactivity` (
@@ -24,7 +24,7 @@ CREATE TABLE `approvalactivity` (
   `orderId` varchar(15) NOT NULL,
   `activityName` varchar(32) NOT NULL,
   PRIMARY KEY (`aaId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ªÓ∂Ø…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ê¥ªÂä®ÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalactivityitem`;
 CREATE TABLE `approvalactivityitem` (
@@ -38,7 +38,7 @@ CREATE TABLE `approvalactivityitem` (
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
   `content` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`aaiId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ªÓ∂Ø…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ê¥ªÂä®ÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalcustomer`;
 CREATE TABLE `approvalcustomer` (
@@ -50,7 +50,7 @@ CREATE TABLE `approvalcustomer` (
   `newCustomerName` varchar(32) NOT NULL,
   `newCustomerPhone` varchar(64) NOT NULL,
   PRIMARY KEY (`acId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='øÕªß–≈œ¢–ﬁ∏ƒ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÂÆ¢Êà∑‰ø°ÊÅØ‰øÆÊîπÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvaldecorationrefund`;
 CREATE TABLE `approvaldecorationrefund` (
@@ -58,7 +58,7 @@ CREATE TABLE `approvaldecorationrefund` (
   `aId` int(11) NOT NULL,
   `paymentId` int(11) NOT NULL,
   PRIMARY KEY (`adrId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='∂©µ•ÕÀøÓ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ËÆ¢ÂçïÈÄÄÊ¨æÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalmaterialfullpayment`;
 CREATE TABLE `approvalmaterialfullpayment` (
@@ -67,7 +67,7 @@ CREATE TABLE `approvalmaterialfullpayment` (
   `msoId` int(11) NOT NULL,
   `referMoney` decimal(10,3) NOT NULL,
   PRIMARY KEY (`amfpId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ≤πøÓ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêË°•Ê¨æÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalmaterialoutsiderefund`;
 CREATE TABLE `approvalmaterialoutsiderefund` (
@@ -75,7 +75,7 @@ CREATE TABLE `approvalmaterialoutsiderefund` (
   `aId` int(11) NOT NULL,
   `moId` int(11) NOT NULL,
   PRIMARY KEY (`amorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ≥°Õ‚ÕÀøÓ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂú∫Â§ñÈÄÄÊ¨æÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalmaterialrefund`;
 CREATE TABLE `approvalmaterialrefund` (
@@ -85,7 +85,7 @@ CREATE TABLE `approvalmaterialrefund` (
   `refund` decimal(10,3) NOT NULL,
   `type` tinyint(4) NOT NULL,
   PRIMARY KEY (`amrId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒÕÀªı…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÈÄÄË¥ßÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalmaterialrefunditem`;
 CREATE TABLE `approvalmaterialrefunditem` (
@@ -97,7 +97,7 @@ CREATE TABLE `approvalmaterialrefunditem` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `packageName` varchar(10) NOT NULL DEFAULT '',
   PRIMARY KEY (`amriId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒÕÀªıœÓ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÈÄÄË¥ßÈ°πÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalorderbelong`;
 CREATE TABLE `approvalorderbelong` (
@@ -106,7 +106,7 @@ CREATE TABLE `approvalorderbelong` (
   `orderId` varchar(15) NOT NULL,
   `belongType` varchar(10) NOT NULL,
   PRIMARY KEY (`aobId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='∂©µ•πÈ Ù–≈œ¢–ﬁ∏ƒ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ËÆ¢ÂçïÂΩíÂ±û‰ø°ÊÅØ‰øÆÊîπÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalorderbelongitem`;
 CREATE TABLE `approvalorderbelongitem` (
@@ -117,7 +117,7 @@ CREATE TABLE `approvalorderbelongitem` (
   `belongRate` decimal(10,3) NOT NULL,
   `defaultFlag` varchar(5) NOT NULL,
   PRIMARY KEY (`aobiId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='∂©µ•πÈ Ù–≈œ¢…Û≈˙œÓ±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ËÆ¢ÂçïÂΩíÂ±û‰ø°ÊÅØÂÆ°ÊâπÈ°πË°®';
 
 DROP TABLE IF EXISTS `approvalquotationdiscount`;
 CREATE TABLE `approvalquotationdiscount` (
@@ -129,7 +129,7 @@ CREATE TABLE `approvalquotationdiscount` (
   `newDiscount` decimal(10,3) NOT NULL,
   `level` tinyint(4) NOT NULL,
   PRIMARY KEY (`aqdId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='∂©µ•±®º€’€ø€–ﬁ∏ƒ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ËÆ¢ÂçïÊä•‰ª∑ÊäòÊâ£‰øÆÊîπÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalvillage`;
 CREATE TABLE `approvalvillage` (
@@ -141,7 +141,7 @@ CREATE TABLE `approvalvillage` (
   `newVillageId` varchar(10) NOT NULL,
   `newHouseNumber` varchar(30) NOT NULL,
   PRIMARY KEY (`avId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='∂©µ•¬•≈Ã–≈œ¢–ﬁ∏ƒ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ËÆ¢ÂçïÊ•ºÁõò‰ø°ÊÅØ‰øÆÊîπÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalsalesrefund`;
 CREATE TABLE `approvalsalesrefund` (
@@ -151,7 +151,7 @@ CREATE TABLE `approvalsalesrefund` (
   `refund` decimal(10,3) NOT NULL,
   `type` tinyint(4) NOT NULL,
   PRIMARY KEY (`asrid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='œ˙ €ÕÀªı…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÈîÄÂîÆÈÄÄË¥ßÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approvalsalesrefunditem`;
 CREATE TABLE `approvalsalesrefunditem` (
@@ -162,11 +162,11 @@ CREATE TABLE `approvalsalesrefunditem` (
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`asriid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='œ˙ €ÕÀªıœÓ…Û≈˙±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÈîÄÂîÆÈÄÄË¥ßÈ°πÂÆ°ÊâπË°®';
 
 DROP TABLE IF EXISTS `approveuser`;
 CREATE TABLE `approveuser` (
-  `aid` bigint(32) NOT NULL AUTO_INCREMENT,
+  `auid` bigint(32) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL,
   `type` tinyint(2) NOT NULL,
   PRIMARY KEY (`aid`)

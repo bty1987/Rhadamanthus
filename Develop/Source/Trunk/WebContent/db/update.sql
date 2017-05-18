@@ -38,7 +38,7 @@ CREATE TABLE `noticedepartment` (
   PRIMARY KEY (`ndid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告部门表';
 
-ALTER TABLE `platform`.`quotationversion` 
+ALTER TABLE `platform`.`quotationversion`
 ADD COLUMN `trafficDiscount` TINYINT(1) NOT NULL DEFAULT 0 AFTER `trafficRate`,
 ADD COLUMN `manageDiscount` TINYINT(1) NOT NULL DEFAULT 0 AFTER `manageRate`;
 

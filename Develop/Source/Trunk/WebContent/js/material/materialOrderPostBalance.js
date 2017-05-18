@@ -35,7 +35,9 @@ $(function(){
 
             if(listData && listData.length){
                 //遍历listData
+            	
                 $.each(listData,function(i, v){
+                
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -121,7 +123,7 @@ $(function(){
             });
 //结算
             $btnPost.click(function(){
-                postMaterialSubOrderBalance(v.msobId);
+                postMaterialSubOrderBalance(v.msobId);M1705136478
             });
 //子项
             $btnSub.click(function(){
@@ -136,11 +138,11 @@ $(function(){
                 com.switchPage(api.index.materialSubOrderCollectionIndex.url);
             });
 //订单是退货状态的时候 才显示退货按钮  显示退货信息
-            if(v.type == 1){
+            if(v.type == 1 || v.type == 2){
                 var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
                 $divBtnWrap.append($btnReject);
                 $btnReject.click(function(){
-                    params['materialOrderPostBalance.type'] = 1;
+                	v.type == 1 ? params['materialOrderPostBalance.type'] = 1 : params['materialOrderPostBalance.type'] = 2;
                     params['materialSubOrder.msoId'] = v.materialSubOrder.msoId;
                     params['idents[0]'] = v.ident;
                     com.switchPage('views/material/materialOrderPostBalanceDetail.html');
@@ -280,7 +282,7 @@ $(function(){
                 list: res.paging.data,
             }, function(v){
 				v.status = v.status== 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---';
-				v.type = v.type == 0 ? '购货' : v.type == 1 ? '退货' : '---'
+				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货'
 			});
         });
     }

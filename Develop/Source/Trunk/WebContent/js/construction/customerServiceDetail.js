@@ -19,7 +19,6 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
 				updateInfoUrl: api.construction.updateChanConstructionSchedule,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "ccsId",
@@ -38,7 +37,6 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
 				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "plcsId",
@@ -72,7 +70,6 @@ jQuery(function($) {
 				powerWorkerRatyDes: "powerWorkerRatyDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -93,7 +90,6 @@ jQuery(function($) {
 				workerDesId: "bricklayWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -111,7 +107,6 @@ jQuery(function($) {
 				workerDesId: "groundLevelingWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -130,7 +125,6 @@ jQuery(function($) {
 				workerDesId: "carpentWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -149,7 +143,6 @@ jQuery(function($) {
 				workerDesId: "oilWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -168,7 +161,6 @@ jQuery(function($) {
 				workerDesId: "waterwayCircuitCheckWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
@@ -185,7 +177,6 @@ jQuery(function($) {
 				workerInfos: "cleaningWorkerInfos",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByCsId,
 				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 

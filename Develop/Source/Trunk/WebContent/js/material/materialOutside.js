@@ -42,7 +42,7 @@ jQuery(function($) {
 	});
 	
 	com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type" : 7}, "autoFillKeyValue", "key", "value");
+	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 7}, "autoFillKeyValue", "key", "value");
 	
 	materialOutside.items.materialType.change(function(){
 		var _materialTypeId = materialOutside.items.materialType.val();

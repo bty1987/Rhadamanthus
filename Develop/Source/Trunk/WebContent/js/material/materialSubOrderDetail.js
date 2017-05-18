@@ -274,7 +274,7 @@ jQuery(function($) {
 	materialSubOrderItemPostData["materialSubOrder.maling"] = materialSubOrderPostData["materialSubOrder.maling"];
 	materialSubOrderItemPostData["materialSubOrder.venderMaling"] = materialSubOrderPostData["materialSubOrder.venderMaling"];
 
-	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"userApprove.type": 6}, "autoFillKeyValue", "key", "value");
+	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 6}, "autoFillKeyValue", "key", "value");
 	
 	function initList(){
 		com.post(api.material.queryMaterialSubOrderItemByMsoId, materialSubOrderPostData, function(result){
