@@ -38,8 +38,8 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 	}
 
 	@Override
-	public GoodsStorehouseStockPO queryGoodsStorehouseStockByShIdAGId(long gid, long shId) {
-		return (GoodsStorehouseStockPO) session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").createAlias("storehouse", "storehouse").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_SHID_STR, shId)).uniqueResult();
+	public GoodsStorehouseStockPO queryGoodsStorehouseStockByShIdAGId(long gid, long cid, long fid, long shId) {
+		return (GoodsStorehouseStockPO) session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").createAlias("storehouse", "storehouse").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_FID_STR, fid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_SHID_STR, shId)).uniqueResult();
 	}
 	
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){

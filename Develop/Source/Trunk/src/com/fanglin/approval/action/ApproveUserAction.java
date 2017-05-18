@@ -1,5 +1,6 @@
 package com.fanglin.approval.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -118,6 +119,9 @@ public class ApproveUserAction extends BaseListAction {
 	}
 
 	public List<KeyValueVO> getAutoFillKeyValue() {
+		if (autoFillKeyValue == null) {
+		     autoFillKeyValue = new ArrayList<KeyValueVO>();
+		    }
 		return autoFillKeyValue;
 	}
 

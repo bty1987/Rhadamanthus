@@ -48,7 +48,7 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 	}
 
 	@Override
-	public ConstructerPO queryConstructerByCid(Integer cid) {
+	public ConstructerPO queryConstructerByCid(Long cid) {
 		return (ConstructerPO)session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR,cid)).uniqueResult();
 	}
 }

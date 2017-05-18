@@ -11,6 +11,6 @@ public interface ConstructerDao extends Dao<ConstructerPO>{
 
 	public List<ConstructerPO> queryConstructerByCsId(Integer csId, Integer schedule);
 
-	public ConstructerPO queryConstructerByCid(Integer cid);
+	public ConstructerPO queryConstructerByCid(Long cid);
 
 }

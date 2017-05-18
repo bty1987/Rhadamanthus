@@ -13,7 +13,6 @@ import com.fanglin.construction.service.ConstructerService;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
 
@@ -32,8 +31,6 @@ public class ConstructerAction extends BaseListAction{
 	private ConstructerVO constructer;
 	
 	private List<ConstructerVO> constructers;
-	
-	private UserPO user;
 	
 	private UserVO findUser;
 
@@ -95,14 +92,6 @@ public class ConstructerAction extends BaseListAction{
 
 	public void setConstructers(List<ConstructerVO> constructers) {
 		this.constructers = constructers;
-	}
-
-	public UserPO getUser() {
-		return user;
-	}
-
-	public void setUser(UserPO user) {
-		this.user = user;
 	}
 	
 	public UserVO getFindUser() {

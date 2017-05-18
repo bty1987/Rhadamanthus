@@ -52,6 +52,9 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 					String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
 					query.add(query.getCriterion("createTime", eTime, "le"));
 					query.add(query.getCriterion("createTime", sTime, "ge"));
+				}else if("userName".equals(filter.getField())){
+					query.alias("sender", "sender");
+					query.add(query.getCriterion("sender.userName",filter.getData(),filter.getOp()));
 				}
 			}
 		}

@@ -57,7 +57,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 
 	@Override
 	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
-		
+		if(filters.size() == 0) return;
 		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters);
 		List<MaterialSubOrderBalanceVO> materialSubOrderBalanceVOs = new ArrayList<MaterialSubOrderBalanceVO>();
 		
@@ -201,7 +201,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderBalancePO.getMaterialSubOrder();
 		
 		materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_POSTBALANCE_INT);
-		
+		materialSubOrderPO.setBalanceStatus(MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT);
 		materialSubOrderDao.update(materialSubOrderPO);
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
 	}
