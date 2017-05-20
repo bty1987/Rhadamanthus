@@ -3,102 +3,36 @@ branches: {
   }
 fileChange:
   /Develop:
-    newFile: !uuid 'e6d477235c18cf4e023d4a2480f67214bc9078d7'
-    oldFile: !uuid '3924c8743aa2d8b3ddfa63eafd119613087bfdb8'
+    newFile: !uuid '17d8f8143a22e7a91f1623e58257562ca24ebb75'
+    oldFile: !uuid 'e6d477235c18cf4e023d4a2480f67214bc9078d7'
   /Develop/Source:
-    newFile: !uuid '109da69c3b2802f09dc36213800d0bf62b2d9430'
-    oldFile: !uuid '9623ed4571e121c94ca41ff48ec2f06867d7801f'
+    newFile: !uuid '40c030543798c2d5e5a164cb46c05785ed56c673'
+    oldFile: !uuid '109da69c3b2802f09dc36213800d0bf62b2d9430'
   /Develop/Source/Trunk:
-    newFile: !uuid '79ab9e0779058c8fd9e150c20e3beba3958fcafb'
-    oldFile: !uuid '5ed4098770eed711bb3aa505a4079e6aae746519'
+    newFile: !uuid '270bd8650dc01f29dbe28a363b0abf50a09418e3'
+    oldFile: !uuid '79ab9e0779058c8fd9e150c20e3beba3958fcafb'
   /Develop/Source/Trunk/WebContent:
-    newFile: !uuid '3130c333335691b79c2b0dff4849485a21216f2b'
-    oldFile: !uuid '4e34674f2a5a6d32f248cbee44590caec9855253'
-  /Develop/Source/Trunk/WebContent/ds:
-    newFile: !uuid '266d65f7a915a5cda8cc5f6d69a139a9e084761f'
-    oldFile: !uuid 'bc24771da036ef76c60a7f8765e743b6d728bff2'
-  /Develop/Source/Trunk/WebContent/ds/bankType.json:
-    newFile: !uuid '4159cc96e23cfa44d986878956cb5627fb01b84f'
-    oldFile: !uuid '506f3b3e931316ad4cbe4f8beee06e7422abc646'
+    newFile: !uuid '5c524027ba42b3017732219858d8d9adff1e08e8'
+    oldFile: !uuid '3130c333335691b79c2b0dff4849485a21216f2b'
   /Develop/Source/Trunk/WebContent/js:
-    newFile: !uuid 'a85428e5709b263a46cc9565086c63eb3e57fd25'
-    oldFile: !uuid 'ff93f48794071d39cf85d699ff9fd18f8e22974d'
-  /Develop/Source/Trunk/WebContent/js/com:
-    newFile: !uuid 'd61d67463f2bc64373f8d0aac51c70105472bd0f'
-    oldFile: !uuid '0ce9597116249d0b8184b367599956222d15c809'
-  /Develop/Source/Trunk/WebContent/js/com/api.js:
-    newFile: !uuid 'f825fac6a43c025599d5001c1a2139933160b800'
-    oldFile: !uuid '2be6b95314a14f67e23ca0bda31035ed929d5286'
-  /Develop/Source/Trunk/WebContent/js/com/condition.js:
-    newFile: !uuid 'fe4c5081fd7499b5cadc56d435b75a3fc2ab0596'
-    oldFile: !uuid '001bf23a5b9eb27435e2b8fd8240420ba151afeb'
-  /Develop/Source/Trunk/WebContent/js/construction:
-    newFile: !uuid '506b2c62c8c5b6efa71797a46d152b807b7b875a'
-    oldFile: !uuid '07ed765d7bed465688b2f8aa40eb541f41653ee2'
-  /Develop/Source/Trunk/WebContent/js/construction/supervisionDetail.js:
-    newFile: !uuid 'b320adcffb87edcee0020aac2764f32b7b4f1b6d'
-    oldFile: !uuid 'c240c8fd39c29ac995486e14b363d5aaa6416e76'
-  /Develop/Source/Trunk/WebContent/js/quotation:
-    newFile: !uuid 'f5c487dc79f3b685936853470fc662987ffd0a6b'
-    oldFile: !uuid '55475d3198cd5e8bb967a43e3569b3ef3d131fdc'
-  /Develop/Source/Trunk/WebContent/js/quotation/quotationPart.js:
-    newFile: !uuid '0c721297b212390870aabb0824203c019bd16b7a'
-    oldFile: !uuid 'd799b66a61ddea6d934c8d915042451a5d80e282'
-  /Develop/Source/Trunk/src:
-    newFile: !uuid '89359ea84a4cb4369c0371069e49a7260b77b44d'
-    oldFile: !uuid '1996b1d1ebe57ff160ef2ece827bfdbc48d1e7be'
-  /Develop/Source/Trunk/src/com:
-    newFile: !uuid '3b7757a42fcf91dd9c3ee44548d91ec6bb10bf11'
-    oldFile: !uuid 'de65c2ab9bc5d258c9b9b7609f251c3fb1f401a6'
-  /Develop/Source/Trunk/src/com/fanglin:
-    newFile: !uuid '3cb9ba297aa172463ac745683a4ebd9a3d2121f1'
-    oldFile: !uuid '2f0a94033f54f7ae619087e1cc97e8c93786fae1'
-  /Develop/Source/Trunk/src/com/fanglin/salary:
-    newFile: !uuid 'bd2436618616fbfac0e65e8d0a45ba9ca686bbca'
-    oldFile: !uuid '0a80eb6ba57c0b5f3a70767e3410a66a933e927c'
-  /Develop/Source/Trunk/src/com/fanglin/salary/action:
-    newFile: !uuid '92c28dad4f4e65a8ce282adaef80353bcd1eea43'
-    oldFile: !uuid '3164687afcfd2e204e4a2345d6fa25461707ce01'
-  /Develop/Source/Trunk/src/com/fanglin/salary/action/WorkerSalaryAction.java:
-    newFile: !uuid '5f1877040f7ce68eabfd6fe154d03eb463c0d14b'
-    oldFile: !uuid '705fdd6d80c722c3c8f14d25d9bc93d7ddea5cfa'
-  /Develop/Source/Trunk/src/com/fanglin/salary/dao:
-    newFile: !uuid 'dc019f9630729dacce57988f9cfea97a24e1d35e'
-    oldFile: !uuid '65f989e6c165e1045e70c0cd7e951ada93d53b78'
-  /Develop/Source/Trunk/src/com/fanglin/salary/dao/WorkerSalaryDao.java:
-    newFile: !uuid 'bbcc539cdd583db2e3b9b3a1fc877b4e4926d148'
-    oldFile: !uuid '2f59708de038a298ad4eab01296e59c567306e00'
-  /Develop/Source/Trunk/src/com/fanglin/salary/dao/impl:
-    newFile: !uuid '56a837483f09f23f980235febdf9ac72bbb727dc'
-    oldFile: !uuid 'e51d722d53ae80205331fc547f86e49e684d37d9'
-  /Develop/Source/Trunk/src/com/fanglin/salary/dao/impl/WorkerSalaryDaoImpl.java:
-    newFile: !uuid '9a5f53e72d6f3a708d3cad271405696e3f4ca752'
-    oldFile: !uuid '6a5cbfeb1c616495f7feb35de4eea5617dea8107'
-  /Develop/Source/Trunk/src/com/fanglin/salary/po:
-    newFile: !uuid '0560c229acbff1bfe53500fd22cff2f6567799cc'
-    oldFile: !uuid '0d27300b46d59744af2b4da159e7b9928ba4a481'
-  /Develop/Source/Trunk/src/com/fanglin/salary/po/WorkerSalaryPO.java:
-    newFile: !uuid '3f6ad2b42c882a1c35483b426f1021c1f9ea5022'
-    oldFile: !uuid '6748ab8a097ac57203b52de4d945e4cc9ee134ff'
-  /Develop/Source/Trunk/src/com/fanglin/salary/service:
-    newFile: !uuid 'c561736cc36aa8599a1f2393cbf65fbe90fb8c78'
-    oldFile: !uuid 'd53704b9eb48846f7662272d03ad04fa8487f403'
-  /Develop/Source/Trunk/src/com/fanglin/salary/service/WorkerSalaryService.java:
-    newFile: !uuid '455853833a96825567f29277edc076b22fb84f23'
-    oldFile: !uuid '85262e9fb77d3bb0c8401f0f8ad088c0041710dc'
-  /Develop/Source/Trunk/src/com/fanglin/salary/service/impl:
-    newFile: !uuid '88ab2ceece306daca80dc90a67b41c21f065d264'
-    oldFile: !uuid '04c565db3c320b8cf150c26cd7d056b14aea7b87'
-  /Develop/Source/Trunk/src/com/fanglin/salary/service/impl/WorkerSalaryServiceImpl.java:
-    newFile: !uuid '86e13cca1211b612dc73f8a8c4f1ccb9925cb074'
-    oldFile: !uuid 'd8ffc545769f8de21e3426abfdd388babf6c8f15'
-  /Develop/Source/Trunk/src/com/fanglin/salary/vo:
-    newFile: !uuid 'b49c0c3dbded6edf320b6bbc5bb0d5e17340ff3c'
-    oldFile: !uuid 'fca8a7cb04d40734f1853544c5d9f582e9ab8d2a'
-  /Develop/Source/Trunk/src/com/fanglin/salary/vo/WorkerSalaryVO.java:
-    newFile: !uuid '705f6a86decefcd65ce637a9e8a992d6fc45f1f4'
-    oldFile: !uuid '649fe6a5e97fcd564199741f62e99f057ec2a1cd'
-gitCommitId: !uuid '3ff4f4a7f8ec08954bde93f5a804b0f795594558'
+    newFile: !uuid '35197e8e775eb005cecae4dfa665acfcdeeb7e49'
+    oldFile: !uuid 'a85428e5709b263a46cc9565086c63eb3e57fd25'
+  /Develop/Source/Trunk/WebContent/js/approval:
+    newFile: !uuid '0125e3f88c8711fa7f6fd44cf2c4b1e5007df936'
+    oldFile: !uuid '07bb175e832476ffce3b507aab866a61a4666cef'
+  /Develop/Source/Trunk/WebContent/js/approval/approvalTrackSender.js:
+    newFile: !uuid '835af8149d31c7cd16a277d57f1a7f6324dce8dc'
+    oldFile: null
+  /Develop/Source/Trunk/WebContent/views:
+    newFile: !uuid 'ba43ca961310af198f8402fd42ab4eb9f2f94f6f'
+    oldFile: !uuid 'cf99e5aeca9fffbb96aebb003252bdadbd12e36c'
+  /Develop/Source/Trunk/WebContent/views/approval:
+    newFile: !uuid '83fc50fd9a53802467171b9b9b070446b7a1fe20'
+    oldFile: !uuid '5479904e0452381abc0c21497d1a6144ef40f160'
+  /Develop/Source/Trunk/WebContent/views/approval/approvalTrackSender.html:
+    newFile: !uuid 'fdc8ec076b986dbd47a3d42075159eb15441c308'
+    oldFile: null
+gitCommitId: !uuid '416c133a5fc4820c433ee8e7dcac3fdb31c80600'
 renames: {
   }
-revisionId: 156
+revisionId: 157
