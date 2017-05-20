@@ -25,6 +25,15 @@ public class WorkerSalaryVO  implements Serializable{
 	
 	private Short status;
 
+	public WorkerSalaryVO() {
+		super();
+	}
+
+	public WorkerSalaryVO(UserVO user) {
+		super();
+		this.user = user;
+	}
+
 	public Long getWsId() {
 		return wsId;
 	}

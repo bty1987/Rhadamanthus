@@ -584,6 +584,38 @@ var Condition = function(){
                 validate:null
             }
         },
+        receiverName : {
+            label : "姓名",
+            type : "autofill",
+            submitConfig : {
+                name : "receiverName",
+                op : "cn",
+                validate: null
+            },
+            dataSource : {
+                url : api.personel.queryUserForNameByPinyinName,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        senderName : {
+            label : "姓名",
+            type : "autofill",
+            submitConfig : {
+                name : "senderName",
+                op : "cn",
+                validate: null
+            },
+            dataSource : {
+                url : api.personel.queryUserForNameByPinyinName,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
         userName : {
             label : "姓名",
             type : "autofill",
@@ -867,6 +899,24 @@ var Condition = function(){
                 listPath: "approvalType",
                 keyPath:"key",
                 valuePath:"value"
+            }
+        },
+        createTime: {
+            label:"提交时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "createTime",
+                op : "between",
+                validate:null
+            }
+        },
+        approvalTime: {
+            label:"审批时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "approvalTime",
+                op : "between",
+                validate:null
             }
         },
         // 收款
