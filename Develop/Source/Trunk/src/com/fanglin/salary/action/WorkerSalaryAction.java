@@ -28,9 +28,9 @@ public class WorkerSalaryAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "addWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addWorkerSalary(){
-		workerSalaryService.addWorkerSalary(workerSalary);
+	@Action(value = "updateWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateWorkerSalary(){
+		workerSalaryService.updateWorkerSalary(workerSalary);
 		return SUCCESS;
 	}
 	

@@ -6,6 +6,6 @@ public interface WorkerSalaryService {
 	
 	public WorkerSalaryVO queryWorkerSalaryByCsIdAndUserId(WorkerSalaryVO workerSalaryVO);
 	
-	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO);
+	public void updateWorkerSalary(WorkerSalaryVO workerSalaryVO);
 	
 }

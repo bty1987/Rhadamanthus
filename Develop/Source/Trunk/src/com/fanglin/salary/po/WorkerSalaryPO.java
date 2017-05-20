@@ -51,6 +51,15 @@ public class WorkerSalaryPO  implements Serializable{
 
 	private Short status;
 
+	public WorkerSalaryPO() {
+		super();
+	}
+
+	public WorkerSalaryPO(UserPO user) {
+		super();
+		this.user = user;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="wsid")

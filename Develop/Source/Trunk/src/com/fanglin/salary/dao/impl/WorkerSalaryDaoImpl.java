@@ -15,16 +15,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	
 	@Override
 	public WorkerSalaryPO queryWorkerSalaryByCsIdAndUserId(String userId,Long csId) {
-		return (WorkerSalaryPO)session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, csId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).uniqueResult();
+		return (WorkerSalaryPO)session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, csId))
+				.add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).uniqueResult();
 	}
 	
-	@Override
-	public void addWorkerSalary(WorkerSalaryPO workerSalaryPO) {
-		 this.save(workerSalaryPO);
-	}
-	
-	@Override
-	public void updateWorkerSalary(WorkerSalaryPO workerSalaryPO) {
-		this.update(workerSalaryPO);
-	}
 }

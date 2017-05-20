@@ -2,14 +2,17 @@ package com.fanglin.salary.service.impl;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
 import com.fanglin.salary.service.WorkerSalaryService;
 import com.fanglin.salary.vo.WorkerSalaryVO;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("workerSalaryService")
@@ -19,32 +22,34 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService{
 	@Autowired
 	private WorkerSalaryDao workerSalaryDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public WorkerSalaryVO queryWorkerSalaryByCsIdAndUserId(WorkerSalaryVO workerSalaryVO){
 		WorkerSalaryPO workerSalaryPO = workerSalaryDao.queryWorkerSalaryByCsIdAndUserId(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCsId());
 		BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO,Arrays.asList("user"));
+		BeanUtil.copyProperties(userDao.get(workerSalaryVO.getUser().getUserId()), workerSalaryVO.getUser(), Arrays.asList("dept","role"));
 		return workerSalaryVO;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO){
-		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO();
-		BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
-		workerSalaryPO.setUser(new UserPO(workerSalaryVO.getUser().getUserId()));
-		WorkerSalaryPO findWorkerSalaryPO = workerSalaryDao.queryWorkerSalaryByCsIdAndUserId(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCsId());
-		if (findWorkerSalaryPO == null) {
+	public void updateWorkerSalary(WorkerSalaryVO workerSalaryVO){
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.queryWorkerSalaryByCsIdAndUserId(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCsId());
+		if (workerSalaryPO == null) {
+			workerSalaryPO = new WorkerSalaryPO(new UserPO());
 			BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
-			workerSalaryPO.setUser(new UserPO(workerSalaryVO.getUser().getUserId()));
+			BeanUtil.copyProperties(userDao.get(workerSalaryVO.getUser().getUserId()), workerSalaryPO.getUser(), Arrays.asList("dept","role"));
 			workerSalaryPO.setType(WorkerSalaryPO.TYPE_SALARY_STR);
 			workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_INIT_STR);
 			workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
-			workerSalaryDao.addWorkerSalary(workerSalaryPO);
+			workerSalaryDao.save(workerSalaryPO);
 		} else {
-			findWorkerSalaryPO.setSalary(workerSalaryPO.getSalary());
-			workerSalaryDao.updateWorkerSalary(findWorkerSalaryPO);
+			workerSalaryPO.setSalary(workerSalaryVO.getSalary());
+			workerSalaryDao.update(workerSalaryPO);
 		}
 	}
 	

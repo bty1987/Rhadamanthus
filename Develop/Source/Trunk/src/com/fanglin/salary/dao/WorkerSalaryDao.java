@@ -1,13 +1,10 @@
 package com.fanglin.salary.dao;
 
+import com.fanglin.core.dao.Dao;
 import com.fanglin.salary.po.WorkerSalaryPO;
 
-public interface WorkerSalaryDao {
+public interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 	
 	public WorkerSalaryPO queryWorkerSalaryByCsIdAndUserId(String userId,Long csId);
-
-	public void addWorkerSalary(WorkerSalaryPO workerSalaryPO);
-
-	public void updateWorkerSalary(WorkerSalaryPO workerSalaryPO);
-
+	
 }
