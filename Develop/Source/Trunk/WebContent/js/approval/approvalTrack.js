@@ -42,11 +42,11 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+
 			// 查看主材退款,主材详细信息按钮
 			var $btnDetails = $('<a></a>').addClass('btn btn-minier btn-primary').html('详情');
-
-			var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过');
-			var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝');
+			var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过').prepend($('<i></i>'));
+			var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
 
 			var propertyArr = [
 				[ "申请人:", v.senderName, "grey" ],
@@ -76,13 +76,17 @@ jQuery(function($) {
 			}
 
 			$liLine.append($h3).append($ulProperty).append($content);
-
+			var $sign=$('<i></i>').addClass("icon-spinner icon-spin white bigger-125");
 			$btnPass.click(function() {
-				approveApproval(v.aid);
+				var $this = $(this);
+				$this.prepend($sign);
+				approveApproval(v.aid,$this);
 			});
 
 			$btnRefuse.click(function() {
-				refuseApproval(v.aid);
+				var $this = $(this);
+				$this.prepend($sign);
+				refuseApproval(v.aid,$this);
 			});
 
 			// 主材详细信息按钮
@@ -110,35 +114,40 @@ jQuery(function($) {
 				displayFunc.init('resultList', data);
 			}, "pagenation", "approvalTrackPostData");
 
-	function approveApproval(aId) {
+	function approveApproval(aId,$this) {
 
 		var options = {
 			"approval.aid" : aId,
 		}
 
 		com.post(api.approval.approveApproval, options, function(res) {
+			$this.find('i').remove();
 			searcher.doSearch();
 		});
 	}
 
-	function refuseApproval(aId) {
+	function refuseApproval(aId,$this) {
 
 		var options = {
 			"approval.aid" : aId,
 		}
 
 		com.post(api.approval.refuseApproval, options, function(res) {
+			$this.find('i').remove();
 			searcher.doSearch();
 		});
 	}
 
-	function queryMaterialSubOrder(aId) {
+	function queryMaterialSubOrder(aId,$this) {
+
 		if ($('#materialInfoList').children()) {
 			$('#materialInfoList').empty();
 		}
 
 		com.post(api.approval.queryApprovalForMaterialRefundItem,{"approval.aid" : aId}, function(res) {
+
 			$.each(res.approvalMaterialRefundItems, function(i, v) {
+
 				$('#materialInfoList')
 					.append(addspan('10', '型号  : ', v.materialSubOrderItem.materialModelName))
 					.append(addspan('40', '品类  : ', v.materialSubOrderItem.materialTypeName))

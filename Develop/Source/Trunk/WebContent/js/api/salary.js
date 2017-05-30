@@ -1,0 +1,70 @@
+
+$.extend(api.index, {
+    designerSalaryIndex: {url: "/views/salary/designerSalary.html"},
+    designerBalanceSalaryIndex: {url: "/views/salary/designerBalanceSalary.html"},
+    designerOutsideSalaryIndex: {url: "/views/salary/designerOutsideSalary.html"},
+    designerDeductSalaryIndex: {url: "/views/salary/designerDeductSalary.html"},
+    venderBalanceIndex: {url: "/views/salary/venderBalance.html"},
+    workerSalaryIndex: {url: "/views/salary/workerSalary.html"},
+    workerBaseSalaryScheduleIndex: {url: "/views/salary/workerBaseSalarySchedule.html"},
+    workerBaseSalaryScheduleDetailIndex: {url: "/views/salary/workerBaseSalaryScheduleDetail.html"},
+    workerDeductSalaryScheduleDetailIndex: {url: "/views/salary/workerDeductSalaryScheduleDetail.html"},
+    workerBaseSalaryIndex: {url: "/views/salary/workerBaseSalary.html"},
+    workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"}
+});
+
+$.extend(api.ds, {
+    salaryType: {url: "ds/salaryType.json", demo: true}
+});
+
+$.extend(api, {salary: {
+    pageDesignerSalary: {url: "pageDesignerSalary.do"},
+    pageDesignerSalaryForInit: {url: "pageDesignerSalaryForInit.do"},
+    pageDesignerSalaryForPayOff: {url: "pageDesignerSalaryForPayOff.do"},
+    pageDesignerSalaryForUnPayOff: {url: "pageDesignerSalaryForUnPayOff.do"},
+    pageDesignerPreBalanceSalary: {url: "pageDesignerPreBalanceSalary.do"},
+    pageDesignerPostBalanceSalary: {url: "pageDesignerPostBalanceSalary.do"},
+    pageDesignerOutsideSalary: {url: "pageDesignerOutsideSalary.do"},
+    pageDesignerDeductSalary: {url: "pageDesignerDeductSalary.do"},
+    payDesignerSalary: {url: "payDesignerSalary.do"},
+    payoffDesignerSalary: {url: "payoffDesignerSalary.do"},
+    unpayoffDesignerSalary: {url: "unpayoffDesignerSalary.do"},
+
+    pageVenderBalance: {url: "pageVenderBalance.do"},
+    pageVenderBalanceForInit: {url: "pageVenderBalanceForInit.do"},
+    pageVenderBalanceForPayOff: {url: "pageVenderBalanceForPayOff.do"},
+    payVenderBalance: {url: "payVenderBalance.do"},
+
+    pageWorkerSalaryForInit: {url: "pageWorkerSalaryForInit.do"},
+    pageWorkerSalaryForPayOff: {url: "pageWorkerSalaryForPayOff.do"},
+    pageWorkerSalaryForUnPayOff: {url: "pageWorkerSalaryForUnPayOff.do"},
+    pageWorkerBaseSalary: {url: "pageWorkerBaseSalary.do"},
+    pageWorkerBaseSalaryByOrderIdAUserId: {url: "pageWorkerBaseSalaryByOrderIdAUserId.do"},
+    pageWorkerBaseSalaryForPass: {url: "pageWorkerBaseSalaryForPass.do"},
+    pageWorkerDeductSalaryByOrderIdAUserId: {url: "pageWorkerDeductSalaryByOrderIdAUserId.do"},
+    pageWorkerDeductSalaryForPersonal: {url: "pageWorkerDeductSalaryForPersonal.do"},
+    queryWorkerBaseSalary: {url: "queryWorkerBaseSalary.do"},
+    payWorkerSalary: {url: "payWorkerSalary.do"},
+    payoffWorkerSalary: {url: "payoffWorkerSalary.do"},
+    unPayoffWorkerSalary: {url: "unPayoffWorkerSalary.do"},
+    addWorkerBaseSalary: {url: "addWorkerBaseSalary.do"},
+    addWorkerDeductSalary: {url: "addWorkerDeductSalary.do"},
+    updateWorkerBaseSalary: {url: "updateWorkerBaseSalary.do"},
+    updateWorkerDeductSalary: {url: "updateWorkerDeductSalary.do"},
+    passWorkerBaseSalary: {url: "passWorkerBaseSalary.do"},
+    passWorkerDeductSalary: {url: "passWorkerDeductSalary.do"},
+    confirmWorkerBaseSalary: {url: "confirmWorkerBaseSalary.do"},
+    confirmWorkerDeductSalary: {url: "confirmWorkerDeductSalary.do"},
+    cancelWorkerBaseSalaryToInit: {url: "cancelWorkerBaseSalaryToInit.do"},
+    cancelWorkerDeductSalaryToInit: {url: "cancelWorkerDeductSalaryToInit.do"},
+    cancelWorkerBaseSalaryToConfirm: {url: "cancelWorkerBaseSalaryToConfirm.do"},
+    cancelWorkerDeductSalaryToConfirm: {url: "cancelWorkerDeductSalaryToConfirm.do"},
+    deleteWorkerBaseSalary: {url: "deleteWorkerBaseSalary.do"},
+    deleteWorkerDeductSalary: {url: "deleteWorkerDeductSalary.do"},
+    
+    queryWorkerSalary: {url: "queryWorkerSalary.do"},
+    pageWorkerSalary: {url: "pageWorkerSalary.do"},
+    addWorkerSalary:{url:"addWorkerSalary.do"},
+    deleteWorkerSalary:{url:"deleteWorkerSalary.do"},
+    updateWorkerSalary: {url: "updateWorkerSalary.do"}
+}});

@@ -13,47 +13,31 @@ package com.fanglin.construction.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
-import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.service.PutlineConstructionScheduleService;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.drawline.dao.DrawLineDao;
 import com.fanglin.drawline.po.DrawLinePO;
-import com.fanglin.information.dao.MessageDao;
-import com.fanglin.information.po.MessagePO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("putlineConstructionScheduleService")
 @Transactional(readOnly=true)
 public class PutlineConstructionScheduleServiceImpl implements PutlineConstructionScheduleService {
-	
-	@Autowired
-	private ConstructionScheduleDao constructionScheduleDao;
-	
+
 	@Autowired
 	private PutlineConstructionScheduleDao putlineConstructionScheduleDao;
 	
 	@Autowired
 	private DrawLineDao drawLineDao;
-	
-	@Autowired
-	private MessageDao messageDao;
-	
-	@Autowired
-	private UserDao userDao;
 	
 	@Override
 	public PutlineConstructionScheduleVO queryPutlineConstructionScheduleById(int pcsId){
@@ -73,7 +57,6 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		if(putlineConstructionScheduleVO == null){
 			return null;
 		}
-		System.out.println("orderId:    " + putlineConstructionScheduleVO.getOrderId());
 		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByOrderId(putlineConstructionScheduleVO.getOrderId());
 		if(putlineConstructionSchedulePO != null){
 			BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
@@ -120,7 +103,6 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 				
 			if(drawLinePOs != null && drawLinePOs.size() > 0){
 				
-				DecorationOrderPO decorationOrderPO = putlineConstructionSchedulePO.getDecorationOrder();
 				DrawLinePO drawLinePO = drawLinePOs.get(0);
 				
 				if(putlineConstructionScheduleVO.getPutlineStatus() == PutlineConstructionSchedulePO.PUTLINESTATUS_TYPE_SUCCESS_INT){
@@ -128,35 +110,8 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 					
 					List<String> dutys = new ArrayList<String>();
 					dutys.add("前台咨询师");
-					List<UserPO> userPOs = userDao.queryUserByDutys(dutys);
-					
-					for(UserPO userPO: userPOs){
-						
-						MessagePO messagePO = new MessagePO();
-						messagePO.setSender(new UserPO(userId));
-						messagePO.setReceiver(userPO);
-						messagePO.setType("施工进度消息");
-						messagePO.setContents(String.format("装修订单编号:%s,放线进度已经结束,请尽快回访客户!", decorationOrderPO.getOrderId()));
-						messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-						messagePO.setStatus("未读");
-						messagePO.setArgs("");
-						messageDao.saveOrUpdate(messagePO);
-					}
 				}else if(putlineConstructionScheduleVO.getPutlineStatus() == PutlineConstructionSchedulePO.PUTLINESTATUS_TYPE_FAIL_INT){
 					drawLinePO.setStatus("放线失败");
-					
-					ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(decorationOrderPO.getOrderId());
-					
-					MessagePO messagePO = new MessagePO();
-					messagePO.setSender(new UserPO(constructionSchedulePO.getPutlineQualityId()));
-					messagePO.setReceiver(decorationOrderPO.getDesignerPO());
-					messagePO.setType("放线消息");
-					messagePO.setContents(String.format("装修订单编号:%s,放线失败!", decorationOrderPO.getOrderId()));
-					messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					messagePO.setStatus("未读");
-					messagePO.setArgs("");
-					
-					messageDao.saveOrUpdate(messagePO);
 				}
 				
 				drawLineDao.update(drawLinePO);

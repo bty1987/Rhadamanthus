@@ -41,6 +41,17 @@ com = {
 		}else{
 			server = config.server;
 		}
+        
+        var server = "";
+        if(url.server && url.server == "communion"){
+            server = config.communion;
+        }else if(url.server && url.server == "platform"){
+        	server = config.platform;
+        }else if(url.server && url.server == "inventory"){
+            server = config.inventory;
+        }else{
+            server = config.server;
+        }
 		
 		if(config.demo){
 			if(!url.demo){
@@ -485,6 +496,26 @@ $.extend($, {
 			$this.addClass('ace ace-switch ace-switch-5').after("<span class='lbl "+_c+"'></span>");
 		});
 	};
+    
+    $.fn.bindClick = function(callback){
+        
+        var dfd = $.Deferred(); 
+        
+        var that = this;
+        
+        that.click(function(){
+            
+            that.button('loading');
+            
+            callback();
+            
+            setTimeout(function () {
+                that.button('reset')
+            }, 1000)
+        });
+        
+        return dfd.promise();
+    }
 	
 	bootbox.setDefaults({
 		locale: "zh_CN",

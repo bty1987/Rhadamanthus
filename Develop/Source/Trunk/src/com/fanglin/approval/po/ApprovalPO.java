@@ -19,81 +19,91 @@ import com.fanglin.personel.po.UserPO;
 public class ApprovalPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4085644657170990542L;
-	
+
 	public static final short APPROVAL_TYPE_CUSTOMER_INT = 1;
-	
+
 	public static final short APPROVAL_TYPE_VILLAGE_INT = 2;
-	
+
 	public static final short APPROVAL_TYPE_ORDER_BELONG_INT = 3;
-	
+
 	public static final short APPROVAL_TYPE_QUOTATION_DISCOUNT_INT = 4;
-	
+
 	public static final short APPROVAL_TYPE_DECORATION_REFUND_INT = 5;
-	
+
 	public static final short APPROVAL_TYPE_MATERIAL_REFUND_INT = 6;
-	
+
 	public static final short APPROVAL_TYPE_MATERIAL_OUTSIDE_REFUND_INT = 7;
-	
+
 	public static final short APPROVAL_TYPE_DECORATION_ACTIVITY_INT = 8;
-	
-	public static final short APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT = 9; 
-	
-	public static final short APPROVAL_TYPE_SALESREFUND_PAYMENT_INT = 10; 
+
+	public static final short APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT = 9;
+
+	public static final short APPROVAL_TYPE_SALESREFUND_PAYMENT_INT = 10;
+
+	public static final short APPROVAL_TYPE_MANIFESTDB_INT = 11;
 	
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
-	
+
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
-	
+
 	public static final short APPROVAL_STATUS_REFUSE_INT = 2;
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_IDENT_STR = "ident";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_RECEIVER_STR = "receiver";
-	
+	// 提交时间
+	public static final String COLUMN_CREATETIME_STR = "createTime";
+	// 审批时间
+	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
+
 	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,电话:%s,修改为客户名:%s,电话:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_VILLAGE_STR = "订单号:%s,楼盘:%s,楼号:%s,修改为楼盘:%s,楼号:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_ORDER_BELONG_STR = "订单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR = "订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s,等级:";
-	
+
 	public static final String APPROVAL_CONTENTS_DECORATION_REFUND_STR = "订单号:%s,退款类型:%s,金额:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_MATERIAL_REFUND_STR = "订单号:%s,主材订单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_MATERIAL_OUTSIDE_REFUND_STR = "订单号:%s,楼盘地址:%s,客户名:%s,金额:%s,利润:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR = "订单号:%s,参与活动:%s";
-	
+
 	public static final String APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR = "订单号:%s,子订单号:%s,金额:%s,补款审批";
 	
-	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT = 1;
+	public static final String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s";
 	
+	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "颜色:%s,规格:%s";
+	
+	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT = 1;
+
 	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT = 2;
 
 	private int aid;
-	
+
 	private UserPO receiver;
-	
+
 	private UserPO sender;
-	
+
 	private short type;
-	
+
 	private String ident;
-	
+
 	private short status;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp approvalTime;
-	
+
 	private String contents;
-	
+
 	private String comment;
 
 	@Id
@@ -108,7 +118,7 @@ public class ApprovalPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "receiverId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "receiverId", referencedColumnName = "userId")
 	public UserPO getReceiver() {
 		return receiver;
 	}
@@ -118,7 +128,7 @@ public class ApprovalPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "senderId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "senderId", referencedColumnName = "userId")
 	public UserPO getSender() {
 		return sender;
 	}

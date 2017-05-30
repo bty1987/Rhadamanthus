@@ -2,7 +2,7 @@
  * 存放查询条件的js，定义全项目的查询条件
  */
 
-var Condition = function(){
+var Condition = function(api){
 
     var _condRules = {
 
@@ -1174,11 +1174,19 @@ var Condition = function(){
                 keyPath:"key",
                 valuePath:"value"
             }
-        }
+        },jober : {
+            label:"工人姓名",
+            type:"text",
+            submitConfig : {
+                name : "userName",
+                op : "eq",
+                validate:null
+            }
+		}
     };
     return {
         getRuleByCondName:function(condName){
             return _condRules[condName];
         }
     }
-}();
+};

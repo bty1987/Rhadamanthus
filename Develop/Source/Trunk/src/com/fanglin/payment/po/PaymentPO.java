@@ -80,6 +80,12 @@ public class PaymentPO implements Serializable {
 	public PaymentPO(){
 		super();
 	}
+	
+	public PaymentPO(CustomerPO customer,AdvanceReceiptPO advanceReceipt){
+		super();
+		this.customer = customer;
+		this.advanceReceipt = advanceReceipt;
+	}
 
 	@Id
 	@GeneratedValue

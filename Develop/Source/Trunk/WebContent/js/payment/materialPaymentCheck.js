@@ -223,6 +223,8 @@ jQuery(function($) {
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collectUserName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
+		       ["确认人:", v.confirmUserName, "grey"],
+		       ["确认时间:", v.confirmTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
                ["备注:", v.des, "grey"],
             ];

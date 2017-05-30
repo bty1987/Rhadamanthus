@@ -4,14 +4,20 @@ jQuery(function($) {
 	$('#fl-statement').statement("主材订单", "型号信息");
 	
 	var options = {};
+	var url;
 	options["materialSubOrderItem.msoId"] = params['materialSubOrder.msoId'];
 	options["materialSubOrderRefund.msoId"] = params['materialSubOrder.msoId'];
 
-	if(params['materialOrderPostBalance.type'] == 1){
+	if(params['materialOrderPostBalance.type'] == 1 || params['materialOrderPostBalance.type'] == 2){
 		options['idents[0]'] = params['idents[0]'];
 	}
 
-	var url = params['materialOrderPostBalance.type'] == 1 ? api.material.queryMaterialSubOrderRefundByMsoId :api.material.queryMaterialSubOrderItemByMsoId;
+	/*var url = params['materialOrderPostBalance.type'] == 1 ? api.material.queryMaterialSubOrderRefundByMsoId :api.material.queryMaterialSubOrderItemByMsoId;*/
+	if(params['materialOrderPostBalance.type'] == 1 || params['materialOrderPostBalance.type'] == 2){
+		url = api.material.queryMaterialSubOrderRefundByMsoId
+	}else{
+        url = api.material.queryMaterialSubOrderItemByMsoId
+	}
 	
 	var displayFunc  = (function(){
 
@@ -98,7 +104,7 @@ jQuery(function($) {
 
 	com.post(url, options, function(data){
 
-		displayFunc.init('resultList', params['materialOrderPostBalance.type'] != 1 ? data.materialSubOrderItems : data.materialSubOrderRefunds);
+		displayFunc.init('resultList', params['materialOrderPostBalance.type'] == 0 ? data.materialSubOrderItems : data.materialSubOrderRefunds);
 	});
 
 	$('#back').click(function(){

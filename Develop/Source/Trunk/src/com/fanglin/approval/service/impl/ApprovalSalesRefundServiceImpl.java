@@ -148,14 +148,14 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-		String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s";
+		
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);//销售退货
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);//初始
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		//过滤条件     订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
-		approvalPO.setContents(String.format(APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),refundType));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),refundType));
 		approvalPO.setReceiver(userDao.get(approvalVO.getReceiverId()));
 		approvalPO.setSender(userDao.get(userId));
 		

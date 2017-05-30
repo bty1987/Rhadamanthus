@@ -267,6 +267,19 @@ $(function(){
             $('.widget-box', '#payment').removeClass('flloading');
         }
     }, null, false);
+    
+    com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": order.oid}, function(res){
+    	
+    	var constructers = res.constructers;
+    	var length = constructers.length;
+    	
+    	for(var i=0;i<length;i++){
+    		var constructer = constructers[i];
+    		$('.alert-info', '#cs' + constructer.schedule).addClass("hide");
+            $('[name="workers"]', '#cs' + constructer.schedule).append(createWoker(constructer));
+    	}
+    	
+    }, null, false);
 
     //铲大白
     getProjectInfo(
@@ -275,7 +288,7 @@ $(function(){
         'chanConstructionSchedule',
         null, null, null,null,
         api.construction.queryChanDrawingByCsId, 'chanDrawing.csId', 'csId','chanDrawings',
-        'cdb'
+        'cs1'
     );
 
     //放线
@@ -285,7 +298,7 @@ $(function(){
         'putlineConstructionSchedule',
         null, null, null,null,
         api.construction.queryPutlineDrawingByCsId, 'putlineDrawing.csId', 'csId','putlineDrawings',
-        'fx'
+        'cs2'
     );
 
     //水力电
@@ -295,7 +308,7 @@ $(function(){
         'waterwayCircuitPowerConstructionSchedule',
         api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
         api.construction.queryWaterwayCircuitPowerDrawingByCsId, 'waterwayCircuitPowerDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
-        'project'
+        'cs3'
     );
 
     //瓦工
@@ -305,7 +318,7 @@ $(function(){
         'bricklayConstructionSchedule',
         api.construction.queryBricklayConstructionScheduleWorker, 'bricklayConstructionSchedule.bcsId', 'bcsId','constructionScheduleWorkers',
         api.construction.queryBricklayDrawingByCsId, 'bricklayDrawing.csId', 'csId','bricklayDrawings',
-        'wg'
+        'cs4'
     );
 
     //地面找平
@@ -315,7 +328,7 @@ $(function(){
         'groundLevelingConstructionSchedule',
         api.construction.queryGroundLevelingConstructionScheduleWorker, 'groundLevelingConstructionSchedule.glcsId', 'glcsId','constructionScheduleWorkers',
         api.construction.queryGroundLevelingDrawingByCsId, 'groundLevelingDrawing.csId', 'csId','groundLevelingDrawings',
-        'dmzp'
+        'cs5'
     );
 
     // 木工
@@ -325,7 +338,7 @@ $(function(){
         'carpentConstructionSchedule',
         api.construction.queryCarpentConstructionScheduleWorker, 'carpentConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
         api.construction.queryCarpentDrawingByCsId, 'carpentDrawing.csId', 'csId','carpentDrawings',
-        'mg'
+        'cs6'
     );
 
     // 油工
@@ -335,7 +348,7 @@ $(function(){
         'oilConstructionSchedule',
         api.construction.queryOilConstructionScheduleWorker, 'oilConstructionSchedule.ocsId', 'ocsId','constructionScheduleWorkers',
         api.construction.queryOilDrawingByCsId, 'oilDrawing.csId', 'csId','oilDrawings',
-        'yg'
+        'cs7'
     );
 
     // 水电安装
@@ -345,7 +358,7 @@ $(function(){
         'waterwayCircuitCheckConstructionSchedule',
         api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
         api.construction.queryWaterwayCircuitCheckDrawingByCsId, 'waterwayCircuitCheckDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
-        'sdaz'
+        'cs8'
     );
 
     // 保洁
@@ -355,9 +368,8 @@ $(function(){
         'cleaningConstructionSchedule',
         api.construction.queryCleaningConstructionScheduleWorker, 'cleaningConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
         api.construction.queryCleaningDrawingByCsId, 'cleaningDrawing.csId', 'csId','cleaningDrawings',
-        'bj'
+        'cs9'
     );
-
 
     //
     /**
@@ -391,28 +403,28 @@ $(function(){
             var info = res[orderRes], wokerDfd, picDfd, params;
 
             //工人 v.workerPhoto v.workerPhone v.workerName
-            if(workerApi){
-                if(info[workerParamValueName]){
-                    params = {};
-                    params[workerParamName] = info[workerParamValueName];
-                    com.post(workerApi, params, function(res){
-                        var workers = res[workerRes];
-                        if(workers && workers.length){
-
-                            $.each(workers, function(i, v){
-                                var $worker = createWoker(v);
-                                $('[name="workers"]','#'+domid).append($worker);
-                            });
-                        }else{
-                            $('[name="workers"]','#'+domid).append('<div class="alert alert-info">当前进度没有分配工人!</div>');
-                        }
-                    }, null, false);
-                }
-
-            }else{
-                var $worker = createWoker(info);
-                $('[name="workers"]','#'+domid).append($worker);
-            }
+//            if(workerApi){
+//                if(info[workerParamValueName]){
+//                    params = {};
+//                    params[workerParamName] = info[workerParamValueName];
+//                    com.post(workerApi, params, function(res){
+//                        var workers = res[workerRes];
+//                        if(workers && workers.length){
+//
+//                            $.each(workers, function(i, v){
+//                                var $worker = createWoker(v);
+//                                $('[name="workers"]','#'+domid).append($worker);
+//                            });
+//                        }else{
+//                            $('[name="workers"]','#'+domid).append('<div class="alert alert-info">当前进度没有分配工人!</div>');
+//                        }
+//                    }, null, false);
+//                }
+//
+//            }else{
+//                var $worker = createWoker(info);
+//                $('[name="workers"]','#'+domid).append($worker);
+//            }
 
             //图片
             if(info[picParamValueName]){
@@ -512,15 +524,15 @@ $(function(){
     }
 
     function createWoker(v){
-
+    	
         var $worker = $('<div></div>').addClass('itemdiv dialogdiv'),
             $user = $('<div></div>').addClass('user'),
-            url = config.media + api.common.showImg.url + '?imgBasePath=' + v.workerPhoto + '&divFlag=1&width=48&height=48',
+            url = config.media + api.common.showImg.url + '?imgBasePath=' + v.user.userPhoto + '&divFlag=1&width=48&height=48',
             $userImg  = $('<img onerror="javascript:this.src=\'./assets/images/avatar2.png\';">').attr('src', url),
 
             $body = $('<div></div>').addClass('body').css('background', '#fff'),
-            $name = $('<div class="name"><span class="blue">' + v.workerName + '</span></span></div>'),
-            $text = $('<div>'+ v.workerDuty+',<a href="tel:'+ v.workerPhone +'">'+ v.workerPhone +'</a></div>');
+            $name = $('<div class="name"><span class="blue">' + v.user.userName + '</span></span></div>'),
+            $text = $('<div>'+ v.user.duty+',<a href="tel:'+ v.user.phone +'">'+ v.user.phone +'</a></div>');
 
         $user.append($userImg);
         $body.append($name).append($text);

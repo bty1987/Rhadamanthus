@@ -722,7 +722,9 @@ jQuery(function($) {
 							function(res){
 								workerAllocationDetailPostData[operate.elementConstructerName + ".csId"] = res[operate.elementConstructerName][operate.elementConstructerCsId];
 								setWorkerUrl(operate,res,options,ly_userId);
-						});
+						},function(data){
+								com.showAlert(com.error, "工程信息不存在，不能添加工人");
+							});
 						return false;
 					});
 
@@ -942,7 +944,9 @@ jQuery(function($) {
 						com.post(operate.setWorkerUrl, args,
 							function(res) {
 								setWorkerUrl(operate,res,options,ly_userId);
-						});
+						},function(data){
+								com.showAlert(com.error, "工程信息不存在，不能添加工人");
+							});
 						return false;
 					});
 
@@ -1076,6 +1080,8 @@ jQuery(function($) {
 
 						var args = {};
 						args[operate.elementConstructerName + "." + operate.elementConstructerId] = worker.cid;
+						args[operate.elementConstructerName + ".csId"] = workerIf.csId;
+						args[operate.elementConstructerName + ".user.userId" ] = workerId;
 						if(worker){
 							com.post(operate.deleteWorkerUrl, args, function(res){
 								com.post(operate.queryWorkerUrl,options,function(data){
@@ -1083,6 +1089,8 @@ jQuery(function($) {
 									ly_copyworkers(ly_constructer);
 								})
 								$("#worker-" + id).remove();
+							},function(data){
+								com.showAlert(com.error," 施工人员存在工费,不可删除");
 							});
 						}
 					}).appendTo(buttonsDiv);
@@ -1125,6 +1133,8 @@ jQuery(function($) {
 
 						var args = {};
 						args[operate.elementConstructerName + "." + operate.elementConstructerId] = workers[ly_userId].cid;
+						args[operate.elementConstructerName + ".csId"] = workers[ly_userId].csId;
+						args[operate.elementConstructerName + ".user.userId" ] = workerId;
 
 						if (worker) {
 							com.post(operate.deleteWorkerUrl, args, function (res) {
@@ -1133,6 +1143,8 @@ jQuery(function($) {
 									ly_copyworkers(ly_constructer);
 								})
 								$("#worker-" + id).remove();
+							},function(data){
+								com.showAlert(com.error," 施工人员存在工费,不可删除");
 							});
 						}
 					}).appendTo(buttonsDiv);

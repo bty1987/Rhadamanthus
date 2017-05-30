@@ -31,7 +31,6 @@ public class ConstructerPO implements java.io.Serializable {
 	private String orderId;
 	private UserPO	user;
 	private Integer schedule;
-	private float salary;
 	private short rate;
 	private String assessment;
 	private UserPO creater;
@@ -92,15 +91,6 @@ public class ConstructerPO implements java.io.Serializable {
 
 	public void setSchedule(Integer schedule) {
 		this.schedule = schedule;
-	}
-
-	@Column(name = "salary")
-	public float getSalary() {
-		return this.salary;
-	}
-
-	public void setSalary(float salary) {
-		this.salary = salary;
 	}
 
 	@Column(name = "rate")

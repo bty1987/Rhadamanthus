@@ -42,7 +42,7 @@ public class ApprovalActivityAction extends BaseListAction {
 	private ApprovalActivityVO approvalActivity;
 	
 	private List<ApprovalActivityItemVO> approvalActivityItems;
-	
+//	提交装修活动以及活动物品审批
 	@Action(value = "submitApprovalForDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForDecorationActivity() throws FLException{
 		

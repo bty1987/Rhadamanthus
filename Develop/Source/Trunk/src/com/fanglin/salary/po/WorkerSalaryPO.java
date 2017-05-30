@@ -21,7 +21,11 @@ public class WorkerSalaryPO  implements Serializable{
 
 	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	public static final String COLUMN_CSID_STR = "csId";                //工程编号      
+	public static final String COLUMN_WSID_STR = "wsId";  
+	
+	public static final String COLUMN_CSID_STR = "csId";   
+	
+	public static final String COLUMN_STATUS_STR = "status"; 
 	
 	public static final String COLUMN_USER_USERID_STR = "user.userId";  //员工编号
 	
@@ -33,9 +37,15 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final Short STATUS_INIT_STR = 0;                      //状态  初始为0
 	
-	public static final Float COLUMN_SALARY_STR = 0F;                 	//如果该工人未设置过工费  初始为0
+	public static final String COLUMN_SALARY_STR = "salary";                 	//如果该工人未设置过工费  初始为0
+	
+	public static final String ORDERID_STR="orderId";
+	
+	public static final String COLUMN_USER_USERNAME="user.userName";
 	
 	private Long wsId;
+	
+	private String orderId;
 
 	private Long csId;
 
@@ -69,6 +79,15 @@ public class WorkerSalaryPO  implements Serializable{
 
 	public void setWsId(Long wsId) {
 		this.wsId = wsId;
+	}
+
+	@Column(name="orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Column(name="csid")

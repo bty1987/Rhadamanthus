@@ -6,7 +6,7 @@ jQuery(function($) {
 	//从服务器查询出来的所有工人
 	var constructionScheduleWorkers;
 
-	var saveBtn = $("#saveBtn").on("click", saveData);
+	//var saveBtn = $("#saveBtn").on("click", saveData);
 
 	var supervisionDetail = {
 
@@ -541,7 +541,6 @@ jQuery(function($) {
 						com.showAlert(com.warning, operate.errorMsg);
 						return false;
 					}else{
-
 						var options = {};
 
 						options["constructionSchedule.orderId"] = params.orderId;
@@ -635,8 +634,6 @@ jQuery(function($) {
 
 		com.post(operate.queryInfoUrl, elementPostData, function(res){
 			var element = res[operate.elementName];
-			gcsId = element["csId"];
-			$('#csId').val(gcsId);
 
 			if(element[operate.elementId] != 0){
 
@@ -644,6 +641,7 @@ jQuery(function($) {
 
 				if(schedule == 1){
 
+					var workerLength = 0;
 					$("#"+operate.startTimeId).val(element.startTime);
 					$("#"+operate.endTimeId).val(element.endTime);
 
@@ -665,6 +663,21 @@ jQuery(function($) {
 					options[operate.elementConstructerName + ".schedule"] = schedule;
 					com.post(operate.queryWorkerUrl,options, function(res){
 						workerInfoCondition = queryConstructer(operate, res);
+
+						if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && workerInfoCondition){
+
+							if(element.status != undefined && (element.status == 0 || element.status == 2)){
+								supervisionDetail.controlCondition = false;
+							}else if(element.status != undefined && element.status == 1){
+								supervisionDetail.controlCondition = true;
+							}else{
+								supervisionDetail.controlCondition = true;
+							}
+						}else if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && !workerInfoCondition){
+							if(element.status != undefined && element.status == 4){
+								supervisionDetail.controlCondition = true;
+							}
+						}
 					});
 
 					if(element.startTimeFlag == 0){
@@ -679,11 +692,14 @@ jQuery(function($) {
 								$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 							});
 
+							//如果完工时间不可编辑并且有工人的情况下
 							if(element.endTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+								// 134
+								if(element.status != undefined && (element.status != 0 && element.status != 2)){
 									supervisionDetail.controlCondition = true;
 								}else{
-									supervisionDetail.controlCondition = true;
+									//supervisionDetail.controlCondition = true;
+									supervisionDetail.controlCondition = false;
 								}
 							}else if(element.endTimeFlag != 0 && !workerInfoCondition){
 								if(element.status != undefined && element.status == 4){
@@ -709,10 +725,11 @@ jQuery(function($) {
 							});
 
 							if(element.startTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+								if(element.status != undefined && (element.status != 0 && element.status != 2)){
 									supervisionDetail.controlCondition = true;
 								}else{
-									supervisionDetail.controlCondition = true;
+									//supervisionDetail.controlCondition = true;
+									supervisionDetail.controlCondition = false;
 								}
 							}else if(element.startTimeFlag != 0 && !workerInfoCondition){
 								if(element.status != undefined && element.status == 4){
@@ -726,6 +743,7 @@ jQuery(function($) {
 					}
 
 					if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && workerInfoCondition){
+
 						if(element.status != undefined && (element.status == 0 || element.status == 2)){
 							supervisionDetail.controlCondition = false;
 						}else if(element.status != undefined && element.status == 1){
@@ -763,6 +781,7 @@ jQuery(function($) {
 						$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
 					}
 				}else{
+					//这里是3-9
 					$("#"+operate.startTimeId).val(element.startTime);
 					$("#"+operate.endTimeId).val(element.endTime);
 
@@ -788,11 +807,7 @@ jQuery(function($) {
 							});
 
 							if(element.endTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
-									supervisionDetail.controlCondition = true;
-								}else{
-									supervisionDetail.controlCondition = true;
-								}
+								supervisionDetail.controlCondition = false;
 							}
 							return false;
 						});
@@ -813,11 +828,7 @@ jQuery(function($) {
 							});
 
 							if(element.startTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
-									supervisionDetail.controlCondition = true;
-								}else{
-									supervisionDetail.controlCondition = true;
-								}
+								supervisionDetail.controlCondition = true;
 							}
 							return false;
 						});
@@ -928,41 +939,14 @@ jQuery(function($) {
 	function _show_WorkerSalary(_index){
 		//获得对应位置的工人
 		var workerInfo = constructionScheduleWorkers[_index];
-		//获得工程ID与工人ID
-		var url = api.salary.queryWorkerSalary;
 		var options = {
-			"workerSalary.csId": $('#csId').val(),
+			"workerSalary.csId": workerInfo.csId,
 			"workerSalary.user.userId": workerInfo.user.userId,
 		};
-		//查询该笔工费是否存在，如果存在显示已有工费，否则0
-		com.post(url,options,function(res){
-			$('#userId').val(workerInfo.user.userId);
-			$('#salary','.modal-body').val(res.workerSalary.salary!=null ? res.workerSalary.salary:0);
-		});
-		//显示弹窗
-		$('#guaranteeModal').modal('show');
+		queryConstructerSalary(options);
 	}
 
-	function saveData(){
-		var url = api.salary.updateWorkerSalary;
-		if($('#salary').val() == ""){
-			$('#salary').val("0.000");
-		}
-		
-		if((/^\d*\.+(\d{3})$/).test($('#salary').val())){
-			var options = {
-				"workerSalary.csId": $('#csId').val(),
-				"workerSalary.user.userId": $('#userId').val(),
-				"workerSalary.salary": $('#salary').val(),
-			};
-			com.post(url,options);
-			$('#guaranteeModal').modal('hide');
-		}else{
-			com.showAlert(com.error,"请正确输入工人工费!工资正确格式:123.000");
-		}
-	}
-
-	//查询
+	//查询施工人员
 	function queryConstructer(operate, res) {
 		constructionScheduleWorkers = res.constructers;
 		$("#" + operate.workerInfos).html("");
@@ -970,7 +954,7 @@ jQuery(function($) {
 			//迭代所有的工人
 			for (var i = 0; i < constructionScheduleWorkers.length; i++) {
 				var workerInfo = constructionScheduleWorkers[i];
-				var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
+				var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>').attr("wd","worker");
 				var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
 				var profileImg = $('<img />').attr("alt", workerInfo.user.userId + "'s Photo").appendTo(imgDiv);
 				if (workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != "") {
@@ -993,8 +977,79 @@ jQuery(function($) {
 			return true;
 		} else {
 			$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate.workerInfos));
-			
 			return false;
+		}
+	}
+
+	//查询工人工费
+	function queryConstructerSalary(options) {
+		if ($('#workerSalaryList').children()) {
+			$('#workerSalaryList').empty();
+		}
+		com.post(api.salary.queryWorkerSalary, options, function(res) {
+			$.each(res.workerSalarys, function(i, v) {
+				var workerSalary = $('<div></div>').prop("id","salary" + i);
+				workerSalary.append(addspan('10', '姓名  : ', v.user.userName))
+					.append(addspan('40', '创建时间  : ', v.createTime))
+					.append(addspan('40', '薪资  : ', v.salary))
+					.append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left","35px").attr("id","deleteBtn" + i)
+						.click(function(){
+							var data = {
+								"workerSalary.wsId" : v.wsId,
+							};
+							com.post(api.salary.deleteWorkerSalary, data);
+							//$('#guaranteeModal').modal('hide');
+							$("#salary" + i).remove();
+						}))
+					.append('<hr/>');
+				workerSalary.appendTo($("#workerSalaryList"))
+			})
+			var salaryDiv = $('<div></div>').addClass("form-group");
+			var salaryLabelT = $('<label><b>添加工人工资</b></label>').addClass('col-sm-3 control-label no-padding-right').attr("for","form-field-1").attr("for","salary").appendTo(salaryDiv);
+			var salaryDivT = $('<div></div>').addClass("col-sm-9").css("padding-right","0px").appendTo(salaryDiv);
+			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9").attr("id","salary").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(salaryDivT);
+			var salaryBtn = $('<button>保存</button>').addClass("btn btn-xs  btn-primary pull-right").attr("id","saveBtn").appendTo(salaryDivT)
+				.click(function(){
+					saveData(options)
+				});
+			salaryDiv.appendTo($("#workerSalaryList"));
+			$('#guaranteeModal').modal('show');
+		}, null, false)
+	}
+
+	function addspan(px, name, value) {
+		var $10pxdiv = $('<div></div>').css({
+			'display' : 'inline-block',
+			'margin-left' : '10px'
+		});
+		var $40pxdiv = $('<div></div>').css({
+			'display' : 'inline-block',
+			'margin-left' : '40px'
+		});
+		var $nameSpan = $('<b></b>').html(name);
+		var $valueSpan = $('<span></span>').text(value);
+
+		if (px == '40') {
+			return $40pxdiv.append($nameSpan).append($valueSpan);
+		} else if (px == '10') {
+			return $10pxdiv.append($nameSpan).append($valueSpan);
+		}
+	}
+
+	//添加工人工费
+	function saveData(options){
+		var url = api.salary.addWorkerSalary;
+		if(($('#salary').val()) == ""){
+			com.showAlert(com.error,"请输入工人工费！");
+		}else{
+			if(/^(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/.test($('#salary').val()) ){
+				options["workerSalary.salary"] = $('#salary').val();
+				options["workerSalary.type"] = 0;
+				com.post(url,options);
+				$('#guaranteeModal').modal('hide');
+			}else{
+				com.showAlert(com.error,"请正确输入工人工费，小数点后最多保留3位！");
+			}
 		}
 	}
 });

@@ -37,7 +37,7 @@ public class ApprovalCustomerAction extends BaseListAction {
 	private ApprovalVO approval;
 	
 	private ApprovalCustomerVO approvalCustomer;
-	
+//	提交客户信息修改审批
 	@Action(value = "submitApprovalForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForCustomer() throws FLException{
 		

@@ -19,7 +19,13 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	public static final int STATUS_INIT_INT = 0;
 	
+	public static final short STATUS_COLLRCT_INT = 1;
+	
+	public static final short STATUS_RECEIPTTYPE_INT = 0;
+	
 	public static final int STATUS_CONFIRM_INT = 2;
+	
+	public static final Float COLUMN_MONEY_STR = 0f;
 	
 	private long arId;
 	
@@ -27,9 +33,13 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	private UserPO collectUser;
 	
+	private String collectUserName;
+	
 	private Timestamp collectTime;
 	
 	private UserPO confirmUser;
+	
+	private String confirmUserName;
 	
 	private Timestamp confirmTime;
 	
@@ -97,6 +107,24 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 
 	public void setCollectUser(UserPO collectUser){
 		this.collectUser = collectUser;
+	}
+	
+	@Column(name = "collectUserName")
+	public String getCollectUserName() {
+		return collectUserName;
+	}
+
+	public void setCollectUserName(String collectUserName) {
+		this.collectUserName = collectUserName;
+	}
+
+	@Column(name = "confirmUserName")
+	public String getConfirmUserName() {
+		return confirmUserName;
+	}
+
+	public void setConfirmUserName(String confirmUserName) {
+		this.confirmUserName = confirmUserName;
 	}
 
 	public Timestamp getCollectTime(){

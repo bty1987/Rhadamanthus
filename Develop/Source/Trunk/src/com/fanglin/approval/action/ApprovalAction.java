@@ -29,41 +29,56 @@ import com.fanglin.core.interceptor.FLException;
 public class ApprovalAction extends BaseListAction {
 
 	private static final long serialVersionUID = -549271005174823538L;
-	
+
 	@Autowired
 	private ApprovalService approvalService;
-	
+
 	private ApprovalVO approval;
-	
-	@Action(value = "pageApprovalByReceiveId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageApprovalByReceiveId() throws FLException{
-		
-		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(), queryUserId());
-		
+
+	// 分页方式获取指定接收人的审批信息
+	@Action(value = "pageApprovalByReceiveId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String pageApprovalByReceiveId() throws FLException {
+
+		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(),
+				queryUserId());
+
 		return SUCCESS;
 	}
+
+	// 分页方式获取指定接收人的审批信息
+		@Action(value = "pageApprovalBySenderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+		public String pageApprovalBySenderId() throws FLException {
+
+			approvalService.pageApprovalBySenderId(getPaging(), getFilters(),
+					queryUserId());
+
+			return SUCCESS;
+		}
 	
-	@Action(value = "queryApprovalByAId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryApprovalByAId() throws FLException{
-		
+	// 通过审批ID获取审批信息
+	@Action(value = "queryApprovalByAId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String queryApprovalByAId() throws FLException {
+
 		approval = approvalService.queryApprovalByAId(approval);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "approveApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String approve() throws FLException{
-		
+
+	// 通过审批
+	@Action(value = "approveApproval", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String approve() throws FLException {
+
 		approvalService.approve(approval);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "refuseApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String refuseApproval() throws FLException{
-		
+
+	// 拒绝审批
+	@Action(value = "refuseApproval", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String refuseApproval() throws FLException {
+
 		approvalService.refuse(approval);
-		
+
 		return SUCCESS;
 	}
 

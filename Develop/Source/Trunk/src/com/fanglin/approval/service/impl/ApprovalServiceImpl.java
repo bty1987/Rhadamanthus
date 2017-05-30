@@ -72,6 +72,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Autowired
 	private ApprovalVillageService approvalVillageService;
 	
+
 	@Override
 	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
 		
@@ -92,7 +93,28 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		paging.setData(approvalVOs);
 	}
-
+	
+	@Override
+	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId) {
+		
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalBySenderId(paging, filters, userId);
+		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
+		
+		for(ApprovalPO approvalPO: approvalPOs){
+			ApprovalVO approvalVO = new ApprovalVO();
+			BeanUtil.copyProperties(approvalPO, approvalVO);
+			
+			approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
+			approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());
+			approvalVO.setSenderId(approvalPO.getSender().getUserId());
+			approvalVO.setSenderName(approvalPO.getSender().getCurrentName());
+			
+			approvalVOs.add(approvalVO);
+		}
+		
+		paging.setData(approvalVOs);
+	}
+	
 	@Override
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException {
 		
@@ -157,6 +179,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
+			
+			
 		}
 		
 		approvalDao.update(approvalPO);
@@ -190,6 +214,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
 				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
 				break;
+			
 			default:
 				break;
 		}

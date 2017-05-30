@@ -21,6 +21,7 @@ import com.fanglin.utils.Paging;
 public interface ApprovalDao extends Dao<ApprovalPO> {
 	
 	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId);
+	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId);
 	
 	public ApprovalPO queryApprovalForInitByTypeAIdent(short type, String ident);
 	

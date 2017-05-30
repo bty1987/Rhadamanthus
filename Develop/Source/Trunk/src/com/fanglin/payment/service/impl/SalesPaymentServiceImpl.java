@@ -541,10 +541,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 	    salesPaymentVO.setSpid(salesPaymentPO.getSpid());
 
-	    if (salesPaymentPO.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
+	    if(salesPaymentPO.getType() == SalesPO.STATUS_ALLBACK_SHORT){
 	      sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
 	      salesDao.update(sales);
-	    } else if (salesPaymentPO.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
+	    }else if(salesPaymentPO.getType() == SalesPO.STATUS_DBACKORDER_SHORT){
 	      sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
 	      salesDao.update(sales);
 	    }
