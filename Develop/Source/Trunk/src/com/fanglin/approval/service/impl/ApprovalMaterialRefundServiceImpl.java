@@ -273,8 +273,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		int balanceStatus = materialSubOrderPO.getBalanceStatus();//结算状态
 		int ident = new Random().nextInt(9999);
 		List<String> materialSubOrderItemPackageNameList = new ArrayList<String>();
-		
-		for(ApprovalMaterialRefundItemPO approvalMaterialRefundItemPO: approvalMaterialRefundItemPOs){
+		for(ApprovalMaterialRefundItemPO approvalMaterialRefundItemPO: approvalMaterialRefundItemPOs){	
 			// 主材订单型号信息
 			MaterialSubOrderItemPO materialSubOrderItemPO = approvalMaterialRefundItemPO.getMaterialSubOrderItem();
 			// 主材分批次退款类(用于主材订单型号信息管理)
@@ -286,7 +285,6 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			float salePrice = materialSubOrderItemPO.getSalePrice(); // 折扣价
 			float price = materialSubOrderItemPO.getPrice();//价位
 			String packageName = materialSubOrderItemPO.getPackageName();//套餐名
-			
 			BeanUtil.copyProperties(materialSubOrderItemPO, materialSubOrderRefundPO);
 			materialSubOrderRefundPO.setMpId(materialPaymentPO.getMpId());
 			materialSubOrderRefundPO.setIdent(ident);
@@ -352,7 +350,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			materialSubOrderBalancePO.setType(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT ? MaterialSubOrderBalancePO.TYPE_SUB_INT : MaterialSubOrderBalancePO.TYPE_SUBED_INT);//类型
 			materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT);//状态(0 -预结算)
 			materialSubOrderBalancePO.setIdent(ident);//退货识别
-			
+			materialSubOrderBalancePO.setTotal(Arith.sub(0, approvalMaterialRefundPO.getRefund()));
+			materialSubOrderBalancePO.setMpId(materialPaymentPO.getMpId());
 			materialSubOrderBalanceDao.save(materialSubOrderBalancePO);
 		}
 		

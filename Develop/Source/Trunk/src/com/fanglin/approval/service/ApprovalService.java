@@ -22,6 +22,8 @@ public interface ApprovalService {
 	
 	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId);
 	
+	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId);
+	
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException;
 	
 	public int approve(ApprovalVO approvalVO) throws FLException;

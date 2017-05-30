@@ -92,6 +92,7 @@ CREATE TABLE `addreduce` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `type` tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
+  `managePrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '管理费',
   `total` decimal(10,3) NOT NULL,
   `status` tinyint(4) NOT NULL COMMENT '0 未提交 1,已提交/未付款 2,已付款 3,已确认  ',
   `createTime` timestamp NULL NOT NULL,
@@ -450,6 +451,25 @@ CREATE TABLE `decorationdesignerregionrank` (
   PRIMARY KEY (`ddrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
+
+DROP TABLE IF EXISTS `decorationholonomy`;
+CREATE TABLE `decorationholonomy` (
+  `dhid` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
+  `orderId` varchar(15) NOT NULL COMMENT '订单编号',
+  `name` varchar(32) DEFAULT NULL COMMENT '名称',
+  `maching` decimal(10,3) NOT NULL COMMENT '主材配比',
+  `discount` decimal(10,3) NOT NULL COMMENT '订单折扣',
+  `projectPrice` decimal(10,3) NOT NULL COMMENT '工程总额',
+  `managePrice` decimal(10,3) NOT NULL COMMENT '管理费',
+  `manageRate` decimal(10,3) NOT NULL COMMENT '管理费比例',
+  `materialPrice` decimal(10,3) NOT NULL COMMENT '主材总额',
+  `servicePrice` decimal(10,3) NOT NULL COMMENT '服务费',
+  `serviceRate` decimal(10,3) NOT NULL COMMENT '服务费比例',
+  `materialPaidup` decimal(10,3) DEFAULT '0.000' COMMENT '实收主材额',
+  `servicePaidup` decimal(10,3) DEFAULT '0.000' COMMENT '实收服务费',
+  `status` tinyint(1) NOT NULL,
+  PRIMARY KEY (`dhid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单半价信息';
 
 DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
@@ -1225,9 +1245,11 @@ CREATE TABLE `materialsuborderbalance` (
   `vbalanceTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
   `post` decimal(10,3) NOT NULL DEFAULT '0.000',
   `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL DEFAULT '0',
   `ident` int(11) NOT NULL DEFAULT '0',
+  `mpid` int(11),
   PRIMARY KEY (`msobId`),
   KEY `indexone` (`msoId`),
   KEY `indextwo` (`instorerId`)
@@ -1689,6 +1711,53 @@ CREATE TABLE `reworkdrawing` (
   KEY `indexone` (`rwId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='返工图片表';
 
+DROP TABLE IF EXISTS `servicepayment`;
+CREATE TABLE `servicepayment` (
+  `spid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `pid` int(11) NOT NULL COMMENT '预付款款项ID',
+  `type` tinyint(1) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
+  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
+  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
+  `createrName` varchar(32) NOT NULL COMMENT '创建人姓名',
+  `collecterName` varchar(32) DEFAULT NULL COMMENT '收款人姓名',
+  `confirmerName` varchar(32) DEFAULT NULL COMMENT '确认人姓名',
+  `createTime` timestamp NULL DEFAULT NULL,
+  `collectTime` timestamp NULL DEFAULT NULL,
+  `confirmTime` timestamp NULL DEFAULT NULL,
+  `serviceMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `advanceMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `des` varchar(256) DEFAULT '',
+  `srid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`spid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务款项';
+
+DROP TABLE IF EXISTS `servicereceipt`;
+CREATE TABLE `servicereceipt` (
+  `srid` int(11) NOT NULL AUTO_INCREMENT,
+  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
+  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
+  `collecterName` varchar(32) DEFAULT NULL COMMENT '收款人姓名',
+  `confirmerName` varchar(32) DEFAULT NULL COMMENT '确认人姓名',
+  `collectTime` timestamp NULL DEFAULT NULL,
+  `confirmTime` timestamp NULL DEFAULT NULL,
+  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `cashInfo` varchar(20) DEFAULT NULL,
+  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `bankInfo` varchar(512) NOT NULL DEFAULT '',
+  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `checkvBank` varchar(20) NOT NULL DEFAULT '',
+  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `installmentBank` varchar(20) NOT NULL DEFAULT '',
+  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `accountsBank` varchar(20) NOT NULL DEFAULT '',
+  `des` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`srid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务收据';
+
 DROP TABLE IF EXISTS `servicerecord`;
 CREATE TABLE `servicerecord` (
   `srId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1888,6 +1957,7 @@ CREATE TABLE `workerdeductsalary` (
 DROP TABLE IF EXISTS `workersalary`;
 CREATE TABLE `workersalary` (
   `wsid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
   `csid` int(11) DEFAULT NULL,
   `userId` varchar(15) NOT NULL,
   `createTime` timestamp NULL NOT NULL,

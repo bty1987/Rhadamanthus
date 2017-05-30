@@ -80,13 +80,24 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		}
 		
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
+		
 		if(constructionSchedulePO != null){
-			acceptanceVO.setSupervisName(userDao.get(constructionSchedulePO.getSupervisorQualityId()).getCurrentName());
-			acceptanceVO.setWaterwayQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-			acceptanceVO.setCircuitQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-			acceptanceVO.setBricklayQualityName(userDao.get(constructionSchedulePO.getBricklayQualityId()).getCurrentName());
-			acceptanceVO.setCarpentQualityName(userDao.get(constructionSchedulePO.getCarpentQualityId()).getCurrentName());
-			acceptanceVO.setOilQualityName(userDao.get(constructionSchedulePO.getOilQualityId()).getCurrentName());
+			if(constructionSchedulePO.getSupervisorQualityId() != null){
+				acceptanceVO.setSupervisName(userDao.get(constructionSchedulePO.getSupervisorQualityId()).getCurrentName());
+			}
+			if(constructionSchedulePO.getWaterwayCircuitPowerQualityId() != null){
+				acceptanceVO.setWaterwayQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+				acceptanceVO.setCircuitQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+			}
+			if(constructionSchedulePO.getBricklayQualityId() != null){
+				acceptanceVO.setBricklayQualityName(userDao.get(constructionSchedulePO.getBricklayQualityId()).getCurrentName());
+			}
+			if(constructionSchedulePO.getCarpentQualityId() != null){
+				acceptanceVO.setCarpentQualityName(userDao.get(constructionSchedulePO.getCarpentQualityId()).getCurrentName());
+			}
+			if(constructionSchedulePO.getOilQualityId() != null){
+				acceptanceVO.setOilQualityName(userDao.get(constructionSchedulePO.getOilQualityId()).getCurrentName());
+			}
 		}
 		
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId, null);

@@ -36,15 +36,13 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	//增加品牌名称
-	//public static final String COLUMN_MATERIALBRAND_STR="materialSubOrder.materialBrand";
 	public static final String COLUMN_MATERIALBRAND_STR="materialSubOrder.materialBrand";
 	//增加厂商结算时间
 	public static final String COLUMN_VBALANCETIME_STR="vbalanceTime";
-	//public static final String COLUMN_VBALANCETIME_RANGE_STR="vbalanceTimeRange";
 	//增加预结算时间
-	public static final String COLUMN_PREBALANCETIME_STR="materialSubOrder.preBalanceTime";
+	public static final String COLUMN_PREBALANCETIME_STR = "balanceTime";
 	//增加结算时间
-	public static final String COLUMN_POSTBALANCETIME_STR="materialSubOrder.postBalanceTime";
+	public static final String COLUMN_POSTBALANCETIME_STR = "postTime";
 	//增加楼盘地址
 	public static final String COLUMN_ORDERADDR_STR="materialSubOrder.orderAddr";
 	//增加归属大区名
@@ -93,7 +91,10 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	private short type;
 	
 	private int ident;
-
+	
+	private Long mpId;
+	
+	private float total;
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "msobId")
@@ -235,4 +236,28 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 		this.ident = ident;
 	}
 
+	@Column(name = "total")
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
+	}
+	
+	@Column(name = "mpId",nullable=true)
+	public Long getMpId() {
+		return mpId;
+	}
+
+	public void setMpId(Long mpId) {
+		this.mpId = mpId;
+	}
+
+	
+	
+	
+
+	
+	
 }

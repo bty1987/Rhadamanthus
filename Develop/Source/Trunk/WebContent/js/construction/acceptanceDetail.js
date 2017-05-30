@@ -25,36 +25,42 @@ jQuery(function($) {
 		         
 		options: {},
 	};
-	
-	com.post(api.construction.queryAcceptance, {
-		"acceptance.orderId": params.orderId
-	}, function(res){
-		
-		var acceptanceInfo = res.acceptance;
-		
-		acceptanceDetail.options["acceptance.actId"] = acceptanceInfo.actId;
-		
-		for(var i=0;i<acceptanceDetail.baseInfos.length;i++){
-			infoName = acceptanceDetail.baseInfos[i]
-			$("#"+infoName).val(acceptanceInfo[infoName]);
-		}
-		
-		for(var i=1;i<=acceptanceDetail.ratyLength;i++){
-			$('#raty' + i).raty({
-				path: './assets/images/',
-				number: 4,
-				start: acceptanceInfo[acceptanceDetail.ratyIds[i-1]],
-			});
-		};
-		
-		for(var i=0;i<acceptanceDetail.desIds.length;i++){
-			var desId = acceptanceDetail.desIds[i];
-			if(acceptanceInfo[desId]){
-				$("#"+desId).val(acceptanceInfo[desId]);
+
+	com.post(api.construction.queryCleaningConstructionScheduleByOrderId, {"cleaningConstructionSchedule.orderId":params.orderId},
+		function(data){
+			cleaningConstructionSchedule = data.cleaningConstructionSchedule;
+			if(cleaningConstructionSchedule.startTimeFlag == 0 || cleaningConstructionSchedule.endTimeFlag == 0){
+				com.showAlert(com.error, "请确认此订单保洁开工时间和完工时间是否确认！");
+				return;
 			}
-		}
-	});
-	
+			com.post(api.construction.queryAcceptance, {
+				"acceptance.orderId": params.orderId
+			}, function(res){
+				var acceptanceInfo = res.acceptance;
+				acceptanceDetail.options["acceptance.actId"] = acceptanceInfo.actId;
+
+				for(var i=0;i<acceptanceDetail.baseInfos.length;i++){
+					infoName = acceptanceDetail.baseInfos[i]
+					$("#"+infoName).val(acceptanceInfo[infoName]);
+				}
+
+				for(var i=1;i<=acceptanceDetail.ratyLength;i++){
+					$('#raty' + i).raty({
+						path: './assets/images/',
+						number: 4,
+						start: acceptanceInfo[acceptanceDetail.ratyIds[i-1]],
+					});
+				};
+
+				for(var i=0;i<acceptanceDetail.desIds.length;i++){
+					var desId = acceptanceDetail.desIds[i];
+					if(acceptanceInfo[desId]){
+						$("#"+desId).val(acceptanceInfo[desId]);
+					}
+				}
+			});
+		});
+
 	$("#saveBtn").click(function(){
 		
 		if(com.validate()){

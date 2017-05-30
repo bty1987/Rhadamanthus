@@ -1,0 +1,111 @@
+
+$.extend(api.index, {
+    salesPaymentReceiptIndex : {url : "/views/payment/salesPaymentReceipt.html"},
+		
+	decorationPaymentIndex: {url: "/views/payment/decorationPayment.html"},
+	changeItemIndex: {url: "/views/payment/changePaymentItem.html"},
+	decorationPaymentCheckIndex: {url: "/views/payment/decorationPaymentCheck.html"},
+	decorationPaymentReceiptIndex: {url: "/views/payment/decorationPaymentReceipt.html"},
+
+	materialPaymentIndex: {url: "/views/payment/materialPayment.html"},
+	materialPaymentReceiptIndex: {url: "/views/payment/materialPaymentReceipt.html"},
+	materialPaymentCheckIndex: {url: "/views/payment/materialPaymentCheck.html"},
+
+	materialOutsideCheckIndex: {url: "/views/payment/materialOutsideCheck.html"},
+		
+	materialInsidePaymentIndex: {url: "/views/payment/materialInsidePayment.html"},
+	materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
+
+	paymentIndex: {url: "/views/payment/payment.html"},
+	paymentCheckIndex: {url: "/views/payment/paymentCheck.html"},
+	paymentReceiptIndex: {url: "/views/payment/paymentReceipt.html"},
+		
+	userSalaryIndex: {url: "/views/payment/userSalary.html"},
+});
+
+$.extend(api.ds, {
+    
+});
+
+$.extend(api, {payment: {
+    queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
+	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
+
+	pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
+	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
+	collectPayment: {url: "collectPayment.do"},
+	confirmPayment: {url: "confirmPayment.do"},
+	withdrawPayment: {url: "withdrawPayment.do"},
+
+	pageDecorationPaymentForCommit: {url: "pageDecorationPaymentForCommit.do", demo: true},
+	pageDecorationPaymentForCollect: {url: "pageDecorationPaymentForCollect.do", demo: true},
+	pageDecorationPaymentForConfirm: {url: "pageDecorationPaymentForConfirm.do", demo: true},
+	pageDecorationPaymentForHistory: {url: "pageDecorationPaymentForHistory.do", demo: true},
+	queryDecorationPaymentByOrderId: {url: "queryDecorationPaymentByOrderId.do", demo: true},
+	queryDecorationPaymentForBaseByOrderId: {url: "queryDecorationPaymentForBaseByOrderId.do", demo: true},
+	queryDecorationPaymentForNotInitByDrId: {url: "queryDecorationPaymentForNotInitByDrId.do"},
+	queryDecoraionReceiptByDrId: {url: "queryDecoraionReceiptByDrId.do"},
+	addDecorationPayment: {url: "addDecorationPayment.do"},
+	makeDecorationPayment: {url: "makeDecorationPayment.do"},
+	submitDecorationPayment: {url: "submitDecorationPayment.do"},
+	collectDecorationPayment: {url: "collectDecorationPayment.do"},
+	collectDecorationPaymentForRefund: {url: "collectDecorationPaymentForRefund.do"},
+	updateDecorationPaymentForReferMoney: {url: "updateDecorationPaymentForReferMoney.do"},
+	refundDecorationPayment: {url: "refundDecorationPayment.do"},
+	confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
+	changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},	
+	exportDecorationPayment: {url: "exportDecorationPayment.do"},
+
+	pageMaterialPaymentForInit: {url: "pageMaterialPaymentForInit.do", demo: true},
+	pageMaterialPaymentForCollect: {url: "pageMaterialPaymentForCollect.do", demo: true},
+	pageMaterialPaymentForConfirm: {url: "pageMaterialPaymentForConfirm.do", demo: true},
+	pageMaterialPaymentForNotInit: {url: "pageMaterialPaymentForNotInit.do", demo: true},
+	pageMaterialInsidePaymentForInit: {url: "pageMaterialInsidePaymentForInit.do"},
+	pageMaterialInsidePaymentForNotInit: {url: "pageMaterialInsidePaymentForNotInit.do"},
+	pageMaterialOutsidePaymentForInit: {url: "pageMaterialOutsidePaymentForInit.do", demo: true},
+	pageMaterialOutsidePaymentForNotInit: {url: "pageMaterialOutsidePaymentForNotInit.do", demo: true},
+	queryMaterialPaymentByOrderId: {url: "queryMaterialPaymentByOrderId.do", demo: true},
+	queryMaterialPaymentByMsoId: {url: "queryMaterialPaymentByMsoId.do", demo: true},
+	queryMaterialPaymentForCouponByMsoId: {url: "queryMaterialPaymentForCouponByMsoId.do"},
+	queryMaterialPaymentForNotInitByMrId: {url: "queryMaterialPaymentForNotInitByMrId.do"},
+	queryMaterialReceiptByMrId: {url: "queryMaterialReceiptByMrId.do"},
+	addMaterialPayment: {url: "addMaterialPayment.do"},
+	collectMaterialPayment: {url: "collectMaterialPayment.do"},
+	collectMaterialInsidePayment: {url: "collectMaterialInsidePayment.do"},
+	collectMaterialOutsidePayment: {url: "collectMaterialOutsidePayment.do"},
+	updateMaterialInsidePayment: {url: "updateMaterialInsidePayment.do"},
+	collectMaterialPayments: {url: "collectMaterialPayments.do"},
+	collectMaterialPaymentForRefund: {url: "collectMaterialPaymentForRefund.do"},
+	collectMaterialInsidePayments: {url: "collectMaterialInsidePayments.do"},
+	confirmMaterialPayment: {url: "confirmMaterialPayment.do"},
+	confirmMaterialInsidePayment: {url: "confirmMaterialInsidePayment.do"},
+	cancelMaterialPayment: {url: "cancelMaterialPayment.do"},
+	refundMaterialPayment: {url: "refundMaterialPayment.do"},
+	refundMaterialPaymentForCoupon: {url: "refundMaterialPaymentForCoupon.do"},
+	changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},	
+	exportMaterialPayment: {url: "exportMaterialPayment.do"},		
+		
+	pageSalesPaymentForInit : {url : "pageSalesPaymentForInit.do"},
+	pageSalesPaymentForCollect : {url : "pageSalesPaymentForCollect.do"},
+	pageSalesPaymentForConfirm : {url : "pageSalesPaymentForConfirm.do"},
+	pageSalesPaymentForNotInit : {url : "pageSalesPaymentForNotInit.do"},
+	querySalesPaymentBySid : {url : "querySalesPaymentBySid.do"},
+	querySalesPaymentForNotInitBySrId : {url : "querySalesPaymentForNotInitBySrId.do"},
+	querySalesReceiptBySrId : {url : "querySalesReceiptBySrId.do"},
+	addSalesPayment : {url : "addSalesPayment.do"},
+	collectSalesPayment : {url : "collectSalesPayment.do"},
+	collectSalesPaymentForRefund : {url : "collectSalesPaymentForRefund.do"},
+	collectSalesPayments : {url : "collectSalesPayments.do"},
+	confirmSalesPayment : {url : "confirmSalesPayment.do"},
+	cancelSalesPayment : {url : "cancelSalesPayment.do"},
+	refundSalesPayment : {url : "refundSalesPayment.do"},
+	refundSalesPaymentForCoupon : {url : "refundSalesPaymentForCoupon.do"},
+		
+	collectServicePayment: {url: "collectServicePayment.do"},
+	collectServicePaymentForService: {url: "collectServicePaymentForService.do"},
+	pageServicePaymentForCollect: {url: "pageServicePaymentForCollect.do"},
+	pageServicePaymentForConfirm: {url: "pageServicePaymentForConfirm.do"},
+	pageServicePaymentForNotInit: {url: "pageServicePaymentForNotInit.do"},
+	confirmServicePayment: {url: "confirmServicePayment.do"},
+	refundServicePaymentForService: {url: "refundServicePaymentForService.do"},
+}});

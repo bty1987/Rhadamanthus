@@ -59,12 +59,6 @@ public class ConstructerAction extends BaseListAction{
 		 return SUCCESS;
 	}
 	
-	@Action(value = "updateConstructerForSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructerForSalary() throws FLException{
-		constructerService.updateConstructerForSalary(constructer);
-		return SUCCESS;
-	}
-	
 	@Action(value = "updateConstructerForRate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructerForRate() throws FLException{
 		constructerService.updateConstructerForRate(constructer);
@@ -72,7 +66,7 @@ public class ConstructerAction extends BaseListAction{
 	}
 	
 	@Action(value = "deleteConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteConstructer(){
+	public String deleteConstructer() throws FLException{
 		constructerService.deleteConstructer(constructer);
 		return SUCCESS;
 	}

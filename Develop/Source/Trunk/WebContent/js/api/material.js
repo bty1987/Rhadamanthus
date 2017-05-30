@@ -1,0 +1,118 @@
+
+$.extend(api.index, {
+    materialModelIndex: {url: "/views/material/materialModel.html"},
+
+    materialBrandRightIndex: {url: "/views/material/materialBrandRight.html"},
+    materialBalanceValueIndex: {url: "/views/material/materialBalanceValue.html"},
+    materialSaleOrderIndex: {url: "/views/material/materialSaleOrder.html"},
+    materialOrderIndex: {url: "/views/material/materialOrder.html"},
+    materialSubOrderIndex: {url: "/views/material/materialSubOrder.html"},
+    materialSubOrderAddIndex: {url: "/views/material/materialSubOrderAdd.html"},
+    materialSubOrderDetailIndex: {url: "/views/material/materialSubOrderDetail.html"},
+    materialSubOrderCollectionIndex: {url: "/views/material/materialSubOrderCollection.html"},
+    materialSubOrderRefundIndex: {url: "/views/material/materialSubOrderRefund.html"},
+    materialSubOrderReceipt: {url: "/views/material/materialSubOrderReceipt.html"},
+    materialOrderPreBalanceIndex: {url: "/views/material/materialOrderPreBalance.html"},
+    materialOrderPreBalanceDetailIndex: {url: "/views/material/materialOrderPreBalanceDetail.html"},
+    materialOrderPostBalanceIndex: {url: "/views/material/materialOrderPostBalance.html"},
+    materialOrderPostBalanceDetailIndex: {url: "/views/material/materialOrderPostBalanceDetail.html"},
+    materialOutsideIndex: {url: "/views/material/materialOutside.html"},
+
+    materialInsideIndex: {url: "/views/material/materialInside.html"},
+    materialInsidePaymentIndex: {url: "/views/payment/materialInsidePayment.html"},
+    materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
+});
+
+$.extend(api.ds, {
+    materialInfo: {url: "ds/materialInfo.json", demo: true},
+    bankType: {url: "ds/bankType.json", demo: true},
+    couponType: {url: "ds/couponType.json", demo: true},
+    approvalType: {url: "ds/approvalType.json", demo: true},
+});
+
+$.extend(api, {material: {
+    queryMaterialBrand: {url: "queryMaterialBrand.do"},
+    queryMaterialBrandById: {url: "queryMaterialBrandById.do"},
+    queryMaterialBrandForName: {url: "queryMaterialBrandForName.do"},
+    queryMaterialBrandForNameAType: {url: "queryMaterialBrandForNameAType.do"},
+    addMaterialBrand: {url: "addMaterialBrand.do"},
+    updateMaterialBrand: {url: "updateMaterialBrand.do"},
+    deleteMaterialBrandByIds: {url: "deleteMaterialBrandByIds.do"},
+
+    queryMaterialBrandRight: {url: "queryMaterialBrandRight.do", demo: true},
+    queryMaterialBrandRightForLogin: {url: "queryMaterialBrandRightForLogin.do", demo: true},
+    queryMaterialBrandRightForBrand: {url: "queryMaterialBrandRightForLogin.do", demo: true},
+    saveMaterialBrandRight: {url: "saveMaterialBrandRight.do"},
+
+    pageMaterialInside: {url: "pageMaterialInside.do"},
+    pageMaterialInsideByUserId: {url: "pageMaterialInsideByUserId.do"},
+    addMaterialInside: {url: "addMaterialInside.do"},
+    updateMaterialInside: {url: "updateMaterialInside.do"},
+    deleteMaterialInsideByMiIds: {url: "deleteMaterialInsideByMiIds.do"},
+
+    pageMaterialModel: {url: "pageMaterialModel.do", demo: true},
+    queryMaterialModel: {url: "queryMaterialModel.do"},
+    queryMaterialModelById: {url: "queryMaterialModelById.do", demo: true},
+    queryMaterialModelByNo: {url: "queryMaterialModelByNo.do"},
+    queryMaterialModelForAllByName: {url: "queryMaterialModelForAllByName.do", demo: true},
+    queryMaterialModelForAllByNo: {url: "queryMaterialModelForAllByNo.do"},
+    addMaterialModel: {url: "addMaterialModel.do"},
+    updateMaterialModel: {url: "updateMaterialModel.do"},
+    updateMaterialModelForStatus: {url: "updateMaterialModelForStatus.do"},
+    updateMaterialModelForAdvance: {url: "updateMaterialModelForAdvance.do"},
+    deleteMaterialModelByIds: {url: "deleteMaterialModelByIds.do"},
+
+    pageMaterialSubOrderBalance: {url: "pageMaterialSubOrderBalance.do", demo: true},
+    pageMaterialSubOrderBalanceForVender: {url: "pageMaterialSubOrderBalanceForVender.do", demo: true},
+    pageMaterialSubOrderForPreBalance: {url: "pageMaterialSubOrderForPreBalance.do", demo: true},
+    updateMaterialSubOrderForPreBalancePT: {url: "updateMaterialSubOrderForPreBalancePT.do"},
+    updateMaterialSubOrderBalanceForVBalance: {url: "updateMaterialSubOrderBalanceForVBalance.do"},
+    updateMaterialSubOrderBalanceForBalance: {url: "updateMaterialSubOrderBalanceForBalance.do"},
+    passBalanceMaterialSubOrder: {url: "passBalanceMaterialSubOrder.do"},
+    preBalanceMaterialSubOrder: {url: "preBalanceMaterialSubOrder.do"},
+    vpostMaterialSubOrderBalance: {url: "vpostMaterialSubOrderBalance.do"},
+    postMaterialSubOrderBalance: {url: "postMaterialSubOrderBalance.do"},
+
+    pageMaterialOutside: {url: "pageMaterialOutside.do", demo: true},
+    pageMaterialOutsideByUserId: {url: "pageMaterialOutsideByUserId.do", demo: true},
+    addMaterialOutside: {url: "addMaterialOutside.do"},
+    updateMaterialOutside: {url: "updateMaterialOutside.do"},
+    confirmMaterialOutsideByIds: {url: "confirmMaterialOutsideByIds.do"},
+    deleteMaterialOutsideByIds: {url: "deleteMaterialOutsideByIds.do"},
+
+    pageMaterialSubOrder: {url: "pageMaterialSubOrder.do"},
+    pageMaterialSubOrderByUserId: {url: "pageMaterialSubOrderByUserId.do", demo: true},
+    pageMaterialSubOrderByOrderId: {url: "pageMaterialSubOrderByOrderId.do"},
+    pageMaterialSubOrderByOrderIdADeptId: {url: "pageMaterialSubOrderByOrderIdADeptId.do"},
+    queryMaterialSubOrderByMsoId: {url: "queryMaterialSubOrderByMsoId.do", demo: true},
+    addMaterialSubOrder: {url: "addMaterialSubOrder.do"},
+    updateMaterialSubOrderForCoupon: {url: "updateMaterialSubOrderForCoupon.do"},
+    updateMaterialSubOrderForMaling: {url: "updateMaterialSubOrderForMaling.do"},
+    deliverMaterialSubOrder: {url: "deliverMaterialSubOrder.do"},
+    deleteMaterialSubOrder: {url: "deleteMaterialSubOrder.do"},
+
+    queryMaterialSubOrderItemByOrderId: {url: "queryMaterialSubOrderItemByOrderId.do"},
+    queryMaterialSubOrderItemByMsoId: {url: "queryMaterialSubOrderItemByMsoId.do", demo: true},
+    queryMaterialSubOrderItemForSaleByMsoiId: {url: "queryMaterialSubOrderItemForSaleByMsoiId.do", demo: true},
+    queryMaterialSubOrderItemForNameByName: {url: "queryMaterialSubOrderItemForNameByName.do", demo: true},
+    queryMaterialSubOrderItemForNameByNo: {url: "queryMaterialSubOrderItemForNameByNo.do"},
+    addMaterialSubOrderItem: {url: "addMaterialSubOrderItem.do"},
+    updateMaterialSubOrderItemForModel: {url: "updateMaterialSubOrderItemForModel.do"},
+    updateMaterialSubOrderItemForPackage: {url: "updateMaterialSubOrderItemForPackage.do"},
+    updateMaterialSubOrderItemForPrePT: {url: "updateMaterialSubOrderItemForPrePT.do"},
+    updateMaterialSubOrderItemForPostPT: {url: "updateMaterialSubOrderItemForPostPT.do"},
+    changeMaterialSubOrderItemForCaclType: {url: "changeMaterialSubOrderItemForCaclType.do"},
+    deleteMaterialSubOrderItem: {url: "deleteMaterialSubOrderItem.do"},
+
+    queryMaterialSubOrderRefundByMsoId: {url: "queryMaterialSubOrderRefundByMsoId.do", demo: true},
+    cancelMaterialSubOrderRefundForModel: {url: "cancelMaterialSubOrderRefundForModel.do"},
+    cancelMaterialSubOrderRefundForPackage: {url: "cancelMaterialSubOrderRefundForPackage.do"},
+
+    pageMaterialType: {url: "pageMaterialType.do"},
+    queryMaterialType: {url: "queryMaterialType.do"},
+    queryMaterialTypeById: {url: "queryMaterialTypeById.do"},
+    addMaterialType: {url: "addMaterialType.do"},
+    updateMaterialType: {url: "updateMaterialType.do"},
+    deleteMaterialTypeByIds: {url: "deleteMaterialTypeByIds.do"}
+}});
+

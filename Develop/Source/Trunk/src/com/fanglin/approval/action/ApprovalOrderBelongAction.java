@@ -42,7 +42,7 @@ public class ApprovalOrderBelongAction extends BaseListAction {
 	private ApprovalOrderBelongVO approvalOrderBelong;
 	
 	private List<ApprovalOrderBelongItemVO> approvalOrderBelongItems;
-	
+//	提交装修订单归属信息修改
 	@Action(value = "submitApprovalForOrderBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForOrderBelong() throws FLException{
 		

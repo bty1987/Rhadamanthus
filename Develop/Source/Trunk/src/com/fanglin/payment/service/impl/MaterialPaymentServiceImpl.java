@@ -1149,7 +1149,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				UserPO userPO = userDao.get(userId);
 				materialReceiptPO.setConfirmUserId(userId);
 				materialReceiptPO.setConfirmUserName(userPO.getUserName());
-				
+				materialReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 				materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
 				
 				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){

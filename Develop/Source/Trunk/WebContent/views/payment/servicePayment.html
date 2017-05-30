@@ -1,0 +1,252 @@
+<div id="decorationPaymentContent" class="page-content">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="tabbable">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active">
+						<a data-toggle="tab" href="#servicePaymentList" >服务收款</a>
+					</li>
+					<li class="">
+						<a data-toggle="tab" href="#history" id="historyReduceSalaryTab">历史收款</a>
+					</li>
+				</ul>
+				<div class="tab-content ">
+					<div id="servicePaymentList" class="tab-pane active">
+						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+					</div>
+					<div id="history" class="tab-pane">
+						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="baseItemModal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+		      			<div class="modal-header">
+		        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+		        			<h4 class="modal-title" id="myModalLabel">付款信息</h4>
+		      			</div>
+		      			<div class="modal-body">
+		      				<form class="form-horizontal">
+		      					<input type="text" id="decorationPaymentId" class="hide" />
+		      					<div class="block clearfix">
+									<label class="col-md-3 control-label" >付款方式</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="cashCheckbox" key="cash" select="0">
+										<span class="lbl"> 现金</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="1">
+										<span class="lbl"> 刷卡</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
+										<span class="lbl"> 转账</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="installmentCheckbox" key="installment" select="1">
+										<span class="lbl"> 分期</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="accountsCheckbox" key="accounts" select="1">
+										<span class="lbl"> 对公账户</span>
+									</label>
+								</div>
+		
+								<div id="infoDiv">
+									<h4 class="header blue bolder smaller">基本信息</h4>
+									<div class="form-group">
+										<label class="col-md-3 control-label" for="referMoney">应收款</label>
+										<div class="col-md-9">
+											<input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									<div class="form-group" >
+										<label class="col-md-3 control-label no-padding-right" for="collectDes" >说明</label>
+										<div class="col-md-9">
+											<textarea id="collectDes" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+								
+			      				<div id="cashDiv" class="hide">
+			      					<h4 class="header blue bolder smaller">现金</h4>
+			      					<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
+										<div class="col-sm-9">
+											<select id="cashInfo" class="col-xs-10 col-sm-5 v_required"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+						      		<div class="form-group">
+										<label for="roleId" class="col-md-3 control-label no-padding-right">现金金额</label>
+										<div class="col-md-9 block no-padding-right">
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+								
+								<div id="bankDiv" class="hide">
+									<h4 class="header blue bolder smaller">
+										银行卡
+										<button id="bankAdd" class="btn btn-minier btn-success pull-right inline" num="0">添加</button>
+									</h4>
+									<div id="bankDivGroup"></div>
+								</div>
+								
+								<div id="checkvDiv" class="hide">
+									<h4 class="header blue bolder smaller">转账</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="checkvBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="checkvBankName" class="col-xs-10 col-sm-5"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="checkv" >转账金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="checkv" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									
+								</div>
+								
+								<div id="installmentDiv" class="hide">
+									<h4 class="header blue bolder smaller">分期</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="installmentBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="installmentBankName" class="col-xs-10 col-sm-5"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="installment" >分期金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="installment" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+								
+								<div id="accountsDiv" class="hide">
+									<h4 class="header blue bolder smaller">对公账户</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="accountsBankName">银行</label>
+										<div class="col-sm-9">
+											<select id="accountsBankName" class="col-xs-10 col-sm-5"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="accounts" >对公金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="accounts" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									
+								</div>
+
+							</form>
+		      			</div>
+		      			
+						<div class="modal-footer ">
+							<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+							<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
+				        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				      	</div>
+		    		</div>
+		  		</div>
+		  	</div>
+
+		  	<div class="modal fade" id="refundModal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+		      			<div class="modal-header">
+		        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+		        			<h4 class="modal-title" id="myModalLabel">退款信息</h4>
+		      			</div>
+		      			<div class="modal-body">
+		      				<form class="form-horizontal">
+		      					<input type="text" id="refundId" class="hide" />
+	      						<div class="space-6"></div>
+	      						<div class="form-group">
+									<label for="refundType" class="col-md-3 control-label " >退款方式</label>
+									<div class="col-md-9 block no-padding-right  ">
+										<input name="form-field-radio" type="radio" class="ace" id="refundCash" checked>
+										<span class="lbl"> 现金</span>
+										<input name="form-field-radio" type="radio" class="ace" id="refundBankCard">
+										<span class="lbl"> 银行卡</span>
+										<input type="text" class="hide" id="decorationPaymentId">		
+									</div>
+								</div>
+								
+								<div class="form-group" id="refundCashInfoDiv">
+									<label class="col-md-3 control-label no-padding-right" for="refundBankName">银行</label>
+									<div class="col-md-9">
+										<select id="refundCashInfo" class="col-md-6"></select>
+									</div>
+								</div>
+								<div class="form-group hide" id="refundBankCardDiv">
+									<label class="col-md-3 control-label no-padding-right" for="refundBankName">银行</label>
+									<div class="col-md-9">
+										<select id="refundBankName" class="col-md-6"></select>
+									</div>
+								</div>
+					      		<div class="form-group" id="crashDiv">
+									<label for="refundSum" class="col-md-3 control-label" >退款金额</label>
+									<div class="col-md-9 block no-padding-right  ">
+										<input type="text" id="refundSum" class="col-md-46 v_float v_required"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+								<div class="space-4 "></div>
+								
+								<div class="form-group" >
+									<label for="coupon" class="col-md-3 control-label" >券退款</label>
+									<div class="col-sm-9">
+										<select id="refundCouponType" multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+									</div>
+								</div>
+								
+								<div class="form-group" >
+									<label class="col-md-3 control-label no-padding-right" for="refundContent" >说明</label>
+									<div class="col-md-9">
+										<textarea id="refundContent" class="col-md-6 v_required v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+									</div>
+								</div>
+								<div class="space-4 "></div>
+								
+							</form>
+		      			</div>
+		      			
+						<div class="modal-footer ">
+							<span id="refundInfo" class="alert-danger pull-left inline"></span>
+							<button type="button" id="saveRefundBtn" class="btn btn-primary">退款</button>
+				        	<button type="button" id="canceRefundlBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				      	</div>
+		    		</div>
+		  		</div>
+		  	</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.getScript('js/payment/servicePayment.js?version=' + versionCode);
+</script>

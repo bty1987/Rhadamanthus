@@ -19,6 +19,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.utils.BeanUtil;
 
 @Service("constructerService")
@@ -33,6 +34,9 @@ public class ConstructerServiceImpl implements ConstructerService {
 	
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
+	
+	@Autowired
+	private WorkerSalaryDao workerSalaryDao;
 
 	@Override
 	public List<ConstructerVO> queryConstructerByOrderId(ConstructerVO constructerVO) {
@@ -72,61 +76,33 @@ public class ConstructerServiceImpl implements ConstructerService {
 	public void addConstructer(ConstructerVO constructerVO, String createrId) throws FLException {
 		//判断工程是否存在
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCsId(constructerVO.getCsId());
-		//根据工程id查询工程下的施工人员
-		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCsId(constructerVO.getCsId(), constructerVO.getSchedule());
 
-		if(constructionSchedulePO != null){
-			if(constructerPOs.size() == 0){
-				ConstructerPO constructerP = new ConstructerPO(new UserPO(),new UserPO());
-				BeanUtil.copyProperties(constructerVO, constructerP, Arrays.asList("user"));
-				BeanUtil.copyProperties(constructerVO.getUser(), constructerP.getUser(), Arrays.asList("dept","role"));
-				UserPO u = userDao.get(createrId);
-				BeanUtil.copyProperties(u, constructerP.getCreater(), Arrays.asList("dept","role"));
-				constructerP.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				constructerP.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
-				constructerDao.save(constructerP);
-			}else{
-				List<String> slist = null;
-				for(ConstructerPO constructerPO : constructerPOs){
-					String userId = constructerPO.getUser().getUserId();
-					slist = new ArrayList<String>();
-					slist.add(userId);
-				}
-				if(!slist.contains(constructerVO.getUser().getUserId())){
-					ConstructerPO constructerP = new ConstructerPO(new UserPO(),new UserPO());
-					BeanUtil.copyProperties(constructerVO, constructerP, Arrays.asList("user"));
-					BeanUtil.copyProperties(constructerVO.getUser(), constructerP.getUser(), Arrays.asList("dept","role"));
-					UserPO u = userDao.get(createrId);
-					BeanUtil.copyProperties(u, constructerP.getCreater(), Arrays.asList("dept","role"));
-					constructerP.setCreateTime(new Timestamp(System.currentTimeMillis()));
-					constructerP.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
-					constructerDao.save(constructerP);
-				}else{
-					throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
-				}
-				
-			}
-		
-		}else{
+		if(constructionSchedulePO == null){
 			throw new FLException(120020, "工程信息不存在");
-		}	
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateConstructerForSalary(ConstructerVO constructerVO) throws FLException{
-		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(constructerVO.getCid());
-		if(constructerPO != null){
-			if(constructerPO.getStatus() == 0){
-				constructerPO.setSalary(constructerVO.getSalary());
-				constructerDao.update(constructerPO);
-			}else{
-				throw new FLException(120022, "施工人员状态不可操作");
-			}
-		}else{
-			throw new FLException(120021, "施工人员不存在");
 		}
 		
+		Integer csId = constructerVO.getCsId();
+		String userId = constructerVO.getUser().getUserId();
+		Integer schedule = constructerVO.getSchedule();
+		
+		if(constructerDao.countConstructer(csId, userId, schedule,(short) 0) > 0){
+			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
+		}
+		
+		UserPO userPO = userDao.get(constructerVO.getUser().getUserId());
+		
+		if(userPO == null){
+			throw new FLException(220005,"员工不存在");
+		}
+		
+		ConstructerPO constructerPO = new ConstructerPO(userPO, new UserPO(createrId));
+		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));
+		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept"));
+		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		constructerPO.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
+		constructerDao.save(constructerPO);
+		constructerVO.setUser(new UserVO().setBaseInfo(userPO));
+	
 	}
 
 	@Override
@@ -145,12 +121,20 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void deleteConstructer(ConstructerVO constructerVO) {
+	public void deleteConstructer(ConstructerVO constructerVO) throws FLException {
 		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(constructerVO.getCid());
-		if(constructerPO != null){
-			constructerPO.setStatus((short) 1);
-			constructerDao.update(constructerPO);
+		Long csId = Long.valueOf(constructerVO.getCsId());
+		String userId = constructerVO.getUser().getUserId();
+		Integer workerSalaryCount = workerSalaryDao.workerSalaryCount(csId,userId);
+		if(workerSalaryCount == 0){
+			if(constructerPO != null){
+				constructerPO.setStatus((short) 1);
+				constructerDao.update(constructerPO);
+			}
+		}else{
+			throw new FLException(120023, "施工人员存在工费,不可删除");
 		}
+		
 		
 	}
 

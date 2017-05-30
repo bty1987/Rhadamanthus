@@ -11,6 +11,8 @@ public class WorkerSalaryVO  implements Serializable{
 
 	private Long wsId;
 	
+	private String orderId;
+	
 	private Long csId;
 	
 	private UserVO user;
@@ -40,6 +42,14 @@ public class WorkerSalaryVO  implements Serializable{
 
 	public void setWsId(Long wsId) {
 		this.wsId = wsId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public Long getCsId() {

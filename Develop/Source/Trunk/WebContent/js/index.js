@@ -1,6 +1,9 @@
 
 $(function(){
-	
+    
+    Api().init('js/api/');
+    Condition = Condition(api);
+    
 	params.authentication = window.authentication;
 	params.loginTime = window.loginTime;
 	

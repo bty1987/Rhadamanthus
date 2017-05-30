@@ -12,6 +12,8 @@
 package com.fanglin.approval.dao.impl;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -21,6 +23,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("approvalDao")
@@ -39,24 +42,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		query.add(Restrictions.eq("receiver.userId", userId));
 		
 		if(filters != null){
-			for(Filter filter: filters){
-				if("status".equals(filter.getField())){
-					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
-				}else if("type".equals(filter.getField())){
-					query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
-				}else if("sender".equals(filter.getField())){
-					query.alias("sender", "sender");
-					query.add(query.getCriterion("sender.currentName", filter));
-				}else if("dateRange".equals(filter.getField())){
-					String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
-					String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
-					query.add(query.getCriterion("createTime", eTime, "le"));
-					query.add(query.getCriterion("createTime", sTime, "ge"));
-				}else if("userName".equals(filter.getField())){
-					query.alias("sender", "sender");
-					query.add(query.getCriterion("sender.userName",filter.getData(),filter.getOp()));
-				}
-			}
+			approvalQuery(filters, query);
 		}
 		
 		query.asc("status");
@@ -65,6 +51,82 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		return query.list();
 	}
 
+	@Override
+	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId) {
+		
+		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
+		
+		query.alias("sender", "sender");
+		query.add(Restrictions.eq("sender.userId", userId));
+		
+		if(filters != null){
+			approvalQuery(filters, query);
+		}
+		
+		query.asc("status");
+		query.desc("createTime");
+		
+		return query.list();
+	}	
+	
+
+	public void approvalQuery( List<Filter> filters,PagingQuery<ApprovalPO> query){
+
+		for(Filter filter: filters){
+			if("status".equals(filter.getField())){
+				query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
+			}else if("type".equals(filter.getField())){
+				query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
+			}else if("userName".equals(filter.getField())){
+				query.alias("sender", "sender");
+				query.add(query.getCriterion("sender.currentName", filter));
+			}else if("receiverName".equals(filter.getField())){
+				query.alias("receiver", "receiver");
+				query.add(query.getCriterion("receiver.currentName", filter));
+			}else if("dateRange".equals(filter.getField())){
+				String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
+				String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
+				query.add(query.getCriterion("createTime", eTime, "le"));
+				query.add(query.getCriterion("createTime", sTime, "ge"));
+			}else if("dateRange".equals(filter.getField())){
+				String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
+				String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
+				query.add(query.getCriterion("createTime", eTime, "le"));
+				query.add(query.getCriterion("createTime", sTime, "ge"));
+			}else if(ApprovalPO.COLUMN_CREATETIME_STR.equals(filter.getField())){
+				String data = filter.getData();
+				
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+				
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				
+				query.add(query.getCriterion(ApprovalPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(ApprovalPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
+			}else if(ApprovalPO.COLUMN_APPROVALTIME_STR.equals(filter.getField())){
+				String data = filter.getData();
+				
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+				
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				
+				query.add(query.getCriterion(ApprovalPO.COLUMN_APPROVALTIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(ApprovalPO.COLUMN_APPROVALTIME_STR, sTimestamp, "ge"));
+			}
+		}
+	
+	}
+	
+//	通过类型识别初始化查询审批
 	@Override
 	public ApprovalPO queryApprovalForInitByTypeAIdent(short type, String ident) {
 		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
@@ -76,7 +138,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	@Override
 	public int countApprovalForInitByIdent(String ident) {
 		
-		String sql = "select count(*) from platform.approval where ident = :ident and status = 0";
+		String sql = "select count(*) from approval.approval where ident = :ident and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
 		
 		return count.intValue();

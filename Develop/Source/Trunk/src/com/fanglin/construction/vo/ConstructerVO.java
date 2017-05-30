@@ -13,7 +13,6 @@ public class ConstructerVO implements java.io.Serializable {
 	private String orderId;
 	private UserVO	user;
 	private Integer schedule;
-	private float salary;
 	private short rate;
 	private String assessment;
 	private UserVO creater;
@@ -66,14 +65,6 @@ public class ConstructerVO implements java.io.Serializable {
 
 	public void setSchedule(Integer schedule) {
 		this.schedule = schedule;
-	}
-
-	public float getSalary() {
-		return this.salary;
-	}
-
-	public void setSalary(float salary) {
-		this.salary = salary;
 	}
 
 	public short getRate() {

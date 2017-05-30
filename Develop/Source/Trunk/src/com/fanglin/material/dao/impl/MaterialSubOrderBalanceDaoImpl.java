@@ -111,7 +111,7 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 				
-				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_POSTBALANCETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_POSTBALANCETIME_STR,eTimestamp, "le"));
 				query.add(query.getCriterion(MaterialSubOrderBalancePO.COLUMN_POSTBALANCETIME_STR, sTimestamp, "ge"));
 			}
 			//增加厂商结算时间查询条件

@@ -35,6 +35,11 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	public AdvancePaymentPO() {
 		super();
 	}
+	
+	public AdvancePaymentPO(CustomerPO customer) {
+		super();
+		this.customer = customer;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

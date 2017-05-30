@@ -164,6 +164,28 @@ CREATE TABLE `approvalsalesrefunditem` (
   PRIMARY KEY (`asriid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售退货项审批表';
 
+DROP TABLE IF EXISTS `approvalmanifestdb`;
+CREATE TABLE `approvalmanifestdb` (
+  `amdbid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL,
+  `manifestTime ` timestamp NULL NOT NULL,
+  `comment` varchar(128) NOT NULL DEFAULT '',
+  `attachment` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`amdbid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='调拨审批表';
+
+DROP TABLE IF EXISTS `approvalmanifestdbitem`;
+CREATE TABLE `approvalmanifestdbitem` (
+  `amdbiid` int(11) NOT NULL AUTO_INCREMENT,
+  `amdbid` int(11) NOT NULL,
+  `miid` int(11) NOT NULL COMMENT '货单项ID',
+  `ishid` int(11) NOT NULL COMMENT '入仓库ID',
+  `oshid` int(11) NOT NULL COMMENT '出仓库ID',
+  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `comment` varchar(256),
+  PRIMARY KEY (`amdbiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='调拨项审批表';
+
 DROP TABLE IF EXISTS `approveuser`;
 CREATE TABLE `approveuser` (
   `auid` bigint(32) NOT NULL AUTO_INCREMENT,

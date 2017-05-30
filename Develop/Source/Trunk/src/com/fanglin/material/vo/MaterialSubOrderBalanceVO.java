@@ -39,6 +39,10 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 	private Short type;
 	
 	private Integer ident;
+	
+	private Long mpId;
+	
+	private Float total;
 
 	public MaterialSubOrderBalanceVO() {
 		super();
@@ -175,4 +179,21 @@ public class MaterialSubOrderBalanceVO implements java.io.Serializable {
 		this.ident = ident;
 	}
 
+	public Long getMpId() {
+		return mpId;
+	}
+
+	public void setMpId(Long mpId) {
+		this.mpId = mpId;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
+	}
+
+	
 }

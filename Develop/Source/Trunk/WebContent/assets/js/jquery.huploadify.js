@@ -22,7 +22,6 @@ $.fn.Huploadify = function(opts){
 		showUploadedSize:false,//是否实时显示已上传的文件大小，如1M/2M
 		buttonText:'选择文件',//上传按钮上的文字
 		buttonClass:'',
-		removeTimeout: 1000,//上传完成后进度条的消失时间
 		itemTemplate:itemTemp,//上传队列显示的模板
 		breakPoints:false,//是否开启断点续传
 		fileSplitSize:1024*1024,//断点续传的文件块大小，单位Byte，默认1M
@@ -135,9 +134,6 @@ $.fn.Huploadify = function(opts){
 		inputStr += '</a>';
 		var uploadFileListStr = '<div id="file_upload_'+instanceNumber+'-queue" class="uploadify-queue" style="width: 300px;"></div>';
 		_this.append(inputStr+uploadFileListStr);
-		
-		console.log(option.buttonText);
-		console.log(option.buttonClass);
 		
 		//创建文件对象
 	  fileObj = {

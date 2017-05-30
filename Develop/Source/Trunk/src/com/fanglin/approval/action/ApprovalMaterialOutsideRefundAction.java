@@ -37,7 +37,7 @@ public class ApprovalMaterialOutsideRefundAction extends BaseListAction {
 	private ApprovalVO approval;
 	
 	private ApprovalMaterialOutsideRefundVO approvalMaterialOutsideRefund;
-	
+//	提交主材场外退款审批
 	@Action(value = "submitApprovalForMaterialOutsideRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForMaterialOutsideRefund() throws FLException{
 		

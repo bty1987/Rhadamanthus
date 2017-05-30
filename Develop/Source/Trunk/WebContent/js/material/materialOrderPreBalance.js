@@ -141,46 +141,84 @@ jQuery(function($) {
 	});
 	//点预结算
 	$('a[name="prebalances"]', '#pagenation').click(function(){
-		//复选框选中的对象
-		var $inputs = $('input[name="msoIds"]:checked');
-		
-		var options = {};
-		var _packageFlag = 0;
-		
-		$.each($inputs, function(i, v){
-			options["msoIds[" + i + "]"] = $(v).attr("msoId");
-			
-			$(v).attr("packageFlag") == 1 && (_packageFlag = 1);
-		});
-		
-		var message = "<p>确定需要提交当前子订单的预结算处理吗?</p>";
-		
-		if(_packageFlag == "1"){
-			message += "<p class='text-warning bigger-110 orange'><i class='icon-warning-sign'></i>当前存在套餐,是否已经设置完成计算点位?</p>";
+        //复选框选中的对象
+        var $inputs = $('input[name="msoIds"]:checked');
+        if($inputs.length>0){
+            var btn = $(this);
+            var span = btn.find('span');
+            btn.find('i').remove();
+            var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
+            span.prepend(loading);
+
+            var options = {};
+            var _packageFlag = 0;
+
+            $.each($inputs, function(i, v){
+                options["msoIds[" + i + "]"] = $(v).attr("msoId");
+
+                $(v).attr("packageFlag") == 1 && (_packageFlag = 1);
+            });
+
+            var message = "<p>确定需要提交当前子订单的预结算处理吗?</p>";
+
+            if(_packageFlag == "1"){
+                message += "<p class='text-warning bigger-110 orange'><i class='icon-warning-sign'></i>当前存在套餐,是否已经设置完成计算点位?</p>";
+            }
+
+            bootbox.confirm(message, function(result) {
+                if(result){
+                    com.post(api.material.preBalanceMaterialSubOrder, options, function(result){
+                        btn.find('i').remove();
+                        var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                        span.prepend(prepared);
+                        searcher.doSearch();
+                    },function () {
+                        btn.find('i').remove();
+                        var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                        span.prepend(prepared);
+                    });
+                }else{
+                    btn.find('i').remove();
+                    var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                    span.prepend(prepared);
+				}
+            });
+		}else{
+        	com.showAlert(com.warning,"请选择要进行预结算的订单");
 		}
-	
-		bootbox.confirm(message, function(result) {
-			if(result){
-				com.post(api.material.preBalanceMaterialSubOrder, options, function(result){
-					searcher.doSearch();
-				});
-			}
-		});
+
 	});
 	//点完结  后台将订单状态更改为完结
 	$('a[name="passbalances"]', '#pagenation').click(function(){
 		
 		var $inputs = $('input[name="msoIds"]:checked');
-		
-		var options = {};
-		
-		$.each($inputs, function(i, v){
-			options["msoIds[" + i + "]"] = $(v).attr("msoId");
-		});
-		
-		com.post(api.material.passBalanceMaterialSubOrder, options, function(result){
-			searcher.doSearch();
-		});
+		if($inputs.length>0){
+            var btn = $(this);
+            var span = btn.find('span');
+            btn.find('i').remove();
+            var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
+            span.prepend(loading);
+
+            var options = {};
+
+            $.each($inputs, function(i, v){
+                options["msoIds[" + i + "]"] = $(v).attr("msoId");
+            });
+
+            com.post(api.material.passBalanceMaterialSubOrder, options, function(result){
+                btn.find('i').remove();
+                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                span.prepend(prepared);
+                searcher.doSearch();
+            },function () {
+                btn.find('i').remove();
+                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                span.prepend(prepared);
+            });
+		}else{
+            com.showAlert(com.warning,"请选择要进行完结的订单");
+		}
+
 	});
 	//点子项按钮
 	function viewMaterialOrderBalanceDetailIndex(msoId){

@@ -82,7 +82,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		StringBuffer newBelongUserName = new StringBuffer();
 		StringBuffer newBelongRate = new StringBuffer();
 		
-		Float rateCount = 0f;
+		double rateCount = 0l;
 		int defaultCount = 0;
 		
 		String orderId = approvalOrderBelongVO.getOrderId();
@@ -139,7 +139,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			newBelongRate.append(approvalOrderBelongItemVO.getBelongRate());
 			newBelongRate.append(",");
-
+			
 			rateCount = Arith.add(rateCount, approvalOrderBelongItemVO.getBelongRate());
 			
 			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemVO.getDefaultFlag())){
