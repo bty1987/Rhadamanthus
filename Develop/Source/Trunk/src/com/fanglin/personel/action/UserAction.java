@@ -10,7 +10,6 @@
 package com.fanglin.personel.action;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -24,8 +23,8 @@ import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserService;
+import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.vo.RoleVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -34,13 +33,12 @@ public class UserAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5295311320323779589L;
 
-	@SuppressWarnings("unchecked")
-	private List<RoleVO> roleList = Collections.EMPTY_LIST;
-
 	@Autowired
 	private UserService userService;
 	
 	private UserVO user;
+	
+	private UserInfoVO userInfo;
 
 	private String pinyinName;
 	
@@ -74,26 +72,26 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "pageUserForResetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUserForResetPassword() throws FLException{
-		
-		userService.pageUserForResetPassword(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-
 	@Action(value = "queryUserByLoginId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByLoginId(){
+	public String queryUserByLoginId() throws FLException{
 		
-		user = userService.queryUserByLoginId(user.getLoginId());
+		user = userService.queryUserByLoginId(user);
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryUserByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByUserId(){
+	public String queryUserByUserId() throws FLException{
 		
-		user = userService.queryUserByUserId(user.getUserId());
+		user = userService.queryUserByUserId(user);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryUserInfoByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserInfoByUserId() throws FLException{
+		
+		userInfo = userService.queryUserInfoByUserId(userInfo);
 		
 		return SUCCESS;
 	}
@@ -101,15 +99,16 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForSelfByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForSelfByUserId() throws FLException{
 		
-		user = userService.queryUserByUserId(queryUserId());
+		user = new UserVO(queryUserId());
+		user = userService.queryUserByUserId(user);
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryUserByOldUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByOldUserId(){
+	public String queryUserByOldUserId() throws FLException{
 		
-	    user = userService.queryUserByOldUserId(user.getOldUserId());
+	    user = userService.queryUserByOldUserId(user);
 	    
 	    return SUCCESS;
 	}
@@ -209,12 +208,12 @@ public class UserAction extends BaseListAction {
 		this.user = user;
 	}
 
-	public List<RoleVO> getRoleList(){
-		return roleList;
+	public UserInfoVO getUserInfo() {
+		return userInfo;
 	}
 
-	public void setRoleList(List<RoleVO> roleList){
-		this.roleList = roleList;
+	public void setUserInfo(UserInfoVO userInfo) {
+		this.userInfo = userInfo;
 	}
 
 	public List<KeyValueVO> getAutoFillKeyValue(){
