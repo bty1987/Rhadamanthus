@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
@@ -22,13 +23,13 @@ public interface UserService {
 	
 	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException;
 	
-	public void pageUserForResetPassword(Paging paging, List<Filter> filters, int company) throws FLException;
+	public UserVO queryUserByLoginId(UserVO userVO) throws FLException;
 	
-	public UserVO queryUserByLoginId(String loginId);
+	public UserVO queryUserByUserId(UserVO userVO) throws FLException;
 	
-	public UserVO queryUserByUserId(String userId);
+	public UserInfoVO queryUserInfoByUserId(UserInfoVO userInfoVO) throws FLException;
 	
-	public UserVO queryUserByOldUserId(String oldUserId);
+	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
 	public List<UserVO> queryUserByDetpIdADuty(String deptId, String duty);
 	
