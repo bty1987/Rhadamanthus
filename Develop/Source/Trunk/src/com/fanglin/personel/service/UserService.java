@@ -21,8 +21,6 @@ public interface UserService {
 	
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException;
 	
-	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException;
-	
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException;
 	
 	public UserVO queryUserByUserId(UserVO userVO) throws FLException;
