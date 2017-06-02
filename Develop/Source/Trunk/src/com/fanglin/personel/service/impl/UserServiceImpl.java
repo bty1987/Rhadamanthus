@@ -66,25 +66,6 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void pageUserByNameOPinyinName(Paging paging, UserVO userVO, int company) throws FLException {
-		
-		Integer _company = null;
-		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			_company = company;
-		}
-		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, userVO.getUserNamePinYin(), _company);
-		List<UserVO> userVOs = new ArrayList<UserVO>();
-		
-		for(UserPO userPO: userPOs){
-			userVOs.add(convertBean(userPO));
-		}
-
-		paging.setData(userVOs);
-	}
-	
-	@Override
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
