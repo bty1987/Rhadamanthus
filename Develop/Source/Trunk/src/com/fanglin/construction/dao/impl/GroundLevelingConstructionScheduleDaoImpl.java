@@ -31,7 +31,7 @@ public class GroundLevelingConstructionScheduleDaoImpl extends DaoImpl<GroundLev
 	}
 
 	@Override
-	public GroundLevelingConstructionSchedulePO queryGroundLevelingConstructionScheduleByCsId(int csId){
+	public GroundLevelingConstructionSchedulePO queryGroundLevelingConstructionScheduleByCsId(long csId){
 		return (GroundLevelingConstructionSchedulePO) session().createCriteria(GroundLevelingConstructionSchedulePO.class).add(Restrictions.eq(GroundLevelingConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

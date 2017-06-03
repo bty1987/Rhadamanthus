@@ -45,7 +45,8 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 	@Override
 	public List<ChanDrawingVO> queryChanDrawingByCsId(ChanDrawingVO chanDrawingVO) {
 		
-		List<ChanDrawingPO> chanDrawingPOs = chanDrawingDao.queryChanDrawingByCsId(chanDrawingVO.getCsId());
+		long csId = chanDrawingVO.getCsId();
+		List<ChanDrawingPO> chanDrawingPOs = chanDrawingDao.queryChanDrawingByCsId(csId);
 		List<ChanDrawingVO> chanDrawingVOs = new ArrayList<ChanDrawingVO>();
 		
 		for(ChanDrawingPO chanDrawingPO: chanDrawingPOs){
@@ -61,7 +62,8 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 	@Override
 	public List<ChanDrawingVO> queryChanDrawingByCcsId(ChanDrawingVO chanDrawingVO){
 		
-		List<ChanDrawingPO> chanDrawingPOs = chanDrawingDao.queryChanDrawingByCcsId(chanDrawingVO.getCcsId());
+		int ccsId = chanDrawingVO.getCcsId();
+		List<ChanDrawingPO> chanDrawingPOs = chanDrawingDao.queryChanDrawingByCcsId(ccsId);
 		List<ChanDrawingVO> chanDrawingVOs = new ArrayList<ChanDrawingVO>(); 
 		
 		for(ChanDrawingPO chanDrawingPO: chanDrawingPOs){

@@ -18,6 +18,6 @@ public interface PutlineConstructionScheduleDao extends Dao<PutlineConstructionS
 	
 	public PutlineConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId);
 	
-	public PutlineConstructionSchedulePO queryConstructionScheduleByCsId(int csId); 
+	public PutlineConstructionSchedulePO queryConstructionScheduleByCsId(long csId); 
 
 }

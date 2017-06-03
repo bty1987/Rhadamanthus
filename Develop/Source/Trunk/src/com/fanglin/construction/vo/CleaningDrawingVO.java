@@ -24,7 +24,7 @@ public class CleaningDrawingVO implements Serializable{
     
     private Integer ccsId;
     
-    private Integer csId;
+    private Long csId;
     
     private String operatorName;
     
@@ -95,11 +95,11 @@ public class CleaningDrawingVO implements Serializable{
 		this.operateTime = operateTime;
 	}
 
-	public Integer getCsId() {
+	public Long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(Integer csId) {
+	public void setCsId(Long csId) {
 		this.csId = csId;
 	}
 

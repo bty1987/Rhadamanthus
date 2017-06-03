@@ -20,7 +20,6 @@ import com.fanglin.construction.po.CarpentConstructionSchedulePO;
 import com.fanglin.construction.service.CarpentConstructionScheduleService;
 import com.fanglin.construction.vo.CarpentConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("carpentConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -47,26 +46,6 @@ public class CarpentConstructionScheduleServiceImpl implements CarpentConstructi
 		BeanUtil.copyProperties(carpentConstructionSchedulePO, carpentConstructionScheduleVO);
 		
 		return carpentConstructionScheduleVO;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateCarpentConstructionSchedule(CarpentConstructionScheduleVO carpentConstructionScheduleVO){
-		
-		CarpentConstructionSchedulePO carpentConstructionSchedulePO = null;
-		
-		if(carpentConstructionScheduleVO.getCcsId() == 0){
-			carpentConstructionSchedulePO = new CarpentConstructionSchedulePO();
-			carpentConstructionSchedulePO.setStartTime(DateUtil.current(CarpentConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			carpentConstructionSchedulePO.setEndTime(DateUtil.current(CarpentConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}else{
-			carpentConstructionSchedulePO = carpentConstructionScheduleDao.queryCarpentConstructionScheduleByOrderId(carpentConstructionScheduleVO.getOrderId());
-		}
-		
-		BeanUtil.copyProperties(carpentConstructionScheduleVO, carpentConstructionSchedulePO);
-		carpentConstructionScheduleDao.saveOrUpdate(carpentConstructionSchedulePO);
-		
-		return carpentConstructionSchedulePO.getCcsId();
 	}
 
 	@Override

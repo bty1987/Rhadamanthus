@@ -17,7 +17,7 @@ public class ConstructionScheduleVO implements Serializable{
 
 	private static final long serialVersionUID = -6183413787236101280L;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -59,11 +59,11 @@ public class ConstructionScheduleVO implements Serializable{
 	
 	private Integer schedule;
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 

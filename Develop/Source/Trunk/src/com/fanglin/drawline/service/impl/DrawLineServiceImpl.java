@@ -123,12 +123,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			
 			DecorationOrderPO decorationOrderPO = drawLinePO.getDecorationOrderPO();
 
-			if(decorationOrderPO.getOrderTotalPrice() == null){
-				drawLineVO.setOrderTotalPrice((float) 0);
-			}else{
-				drawLineVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			}
-			
+			drawLineVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 			drawLineVO.setOrderId(decorationOrderPO.getOrderId());
 			drawLineVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
 			drawLineVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
@@ -192,11 +187,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			
 			DecorationOrderPO decorationOrderPO = drawLinePO.getDecorationOrderPO();
 
-			if(decorationOrderPO.getOrderTotalPrice() == null){
-				drawLineVO.setOrderTotalPrice((float) 0);
-			}else{
-				drawLineVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			}
+			drawLineVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
 			
 			drawLineVO.setOrderId(decorationOrderPO.getOrderId());
 			drawLineVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
@@ -320,7 +311,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			constructionScheduleDao.update(constructionSchedulePO);
 		}
 		
-		int csId = constructionSchedulePO.getCsId();
+		long csId = constructionSchedulePO.getCsId();
 		
 		ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByOrderId(orderId);
 		

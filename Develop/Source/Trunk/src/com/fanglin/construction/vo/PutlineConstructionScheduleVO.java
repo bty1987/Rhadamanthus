@@ -19,7 +19,7 @@ public class PutlineConstructionScheduleVO implements Serializable {
 	
 	private Integer plcsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -149,11 +149,11 @@ public class PutlineConstructionScheduleVO implements Serializable {
 		this.putlineTime = putlineTime;
 	}
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 

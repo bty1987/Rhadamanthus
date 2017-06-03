@@ -19,6 +19,8 @@ $.extend(api.index, {
 	paymentIndex: {url: "/views/payment/payment.html"},
 	paymentCheckIndex: {url: "/views/payment/paymentCheck.html"},
 	paymentReceiptIndex: {url: "/views/payment/paymentReceipt.html"},
+
+	servicePaymentReceiptIndex: {url: "/views/payment/servicePaymentReceipt.html"},
 		
 	userSalaryIndex: {url: "/views/payment/userSalary.html"},
 });
@@ -32,6 +34,7 @@ $.extend(api, {payment: {
 	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
 
 	pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
+	queryPaymentByOrderId: {url: "queryPaymentByOrderId.do"},
 	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
 	collectPayment: {url: "collectPayment.do"},
 	confirmPayment: {url: "confirmPayment.do"},
@@ -108,4 +111,6 @@ $.extend(api, {payment: {
 	pageServicePaymentForNotInit: {url: "pageServicePaymentForNotInit.do"},
 	confirmServicePayment: {url: "confirmServicePayment.do"},
 	refundServicePaymentForService: {url: "refundServicePaymentForService.do"},
+	queryServiceReceiptBySrId: {url: "queryServiceReceiptBySrId.do"},
+	queryServicePaymentForNotInitBySrId: {url: "queryServicePaymentForNotInitBySrId.do"},
 }});

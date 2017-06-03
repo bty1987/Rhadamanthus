@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface ChanDrawingDao extends Dao<ChanDrawingPO> {
 	
-	public List<ChanDrawingPO> queryChanDrawingByCsId(int csId);
+	public List<ChanDrawingPO> queryChanDrawingByCsId(long csId);
 	
 	public List<ChanDrawingPO> queryChanDrawingByCcsId(int ccsId);
 	

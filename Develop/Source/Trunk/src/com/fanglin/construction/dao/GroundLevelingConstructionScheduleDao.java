@@ -18,6 +18,6 @@ public interface GroundLevelingConstructionScheduleDao extends Dao<GroundLevelin
 	
 	public GroundLevelingConstructionSchedulePO queryGroundLevelingConstructionScheduleByOrderId(String orderId);
 	
-	public GroundLevelingConstructionSchedulePO queryGroundLevelingConstructionScheduleByCsId(int csId);
+	public GroundLevelingConstructionSchedulePO queryGroundLevelingConstructionScheduleByCsId(long csId);
 
 }

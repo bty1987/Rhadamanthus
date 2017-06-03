@@ -26,11 +26,13 @@ public class ConstructerPO implements java.io.Serializable {
 	public static final String  COLUMN_CID_STR  = "cid";
 	public static final String  COLUMN_STATUS_STR  = "status";
 	public static final String  COLUMN_USERID_STR = "user.userId";
-	private Long cid;
-	private Integer csId;
+	public static final short	STATUS_ENABLE_SHORT  = 0;
+	public static final short	STATUS_DISABLE_SHORT  = 1;
+	private long cid;
+	private long csId;
 	private String orderId;
 	private UserPO	user;
-	private Integer schedule;
+	private int schedule;
 	private short rate;
 	private String assessment;
 	private UserPO creater;
@@ -58,20 +60,20 @@ public class ConstructerPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
-	public Long getCid() {
+	public long getCid() {
 		return this.cid;
 	}
 
-	public void setCid(Long cid) {
+	public void setCid(long cid) {
 		this.cid = cid;
 	}
 
 	@Column(name = "csId")
-	public Integer getCsId() {
+	public long getCsId() {
 		return this.csId;
 	}
 
-	public void setCsId(Integer csId) {
+	public void setCsId(long csId) {
 		this.csId = csId;
 	}
 
@@ -85,11 +87,11 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@Column(name = "schedule")
-	public Integer getSchedule() {
+	public int getSchedule() {
 		return this.schedule;
 	}
 
-	public void setSchedule(Integer schedule) {
+	public void setSchedule(int schedule) {
 		this.schedule = schedule;
 	}
 

@@ -18,6 +18,6 @@ public interface ChanConstructionScheduleDao extends Dao<ChanConstructionSchedul
 	
 	public ChanConstructionSchedulePO queryChanConstructionScheduleByOrderId(String orderId);
 	
-	public ChanConstructionSchedulePO queryChanConstructionScheduleByCsId(int csId);
+	public ChanConstructionSchedulePO queryChanConstructionScheduleByCsId(long csId);
 	
 }

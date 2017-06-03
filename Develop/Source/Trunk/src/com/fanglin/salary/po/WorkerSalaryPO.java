@@ -33,21 +33,21 @@ public class WorkerSalaryPO  implements Serializable{
 
 	public static final String COLUMN_BALANCETIME_STR = "balanceTime";  //结算时间
 	
-	public static final Short TYPE_SALARY_STR = 0;                      //工费类型   0工费 1扣款
+	public static final short TYPE_SALARY_STR = 0;                      //工费类型   0工费 1扣款
 	
-	public static final Short STATUS_INIT_STR = 0;                      //状态  初始为0
+	public static final short STATUS_INIT_STR = 0;                      //状态  初始为0
 	
-	public static final String COLUMN_SALARY_STR = "salary";                 	//如果该工人未设置过工费  初始为0
+	public static final String COLUMN_SALARY_STR = "salary";       //如果该工人未设置过工费  初始为0
 	
-	public static final String ORDERID_STR="orderId";
+	public static final String ORDERID_STR="orderId";    //订单编号
 	
-	public static final String COLUMN_USER_USERNAME="user.userName";
+	public static final String COLUMN_USER_USERNAME="user.userName"; //工人 姓名
 	
-	private Long wsId;
+	private long wsId;
 	
 	private String orderId;
 
-	private Long csId;
+	private long csId;
 
 	private UserPO user;
 
@@ -55,11 +55,11 @@ public class WorkerSalaryPO  implements Serializable{
 
 	private Timestamp balanceTime;
 
-	private Float salary;
+	private float salary;
 
-	private Short type;
+	private short type;
 
-	private Short status;
+	private short status;
 
 	public WorkerSalaryPO() {
 		super();
@@ -73,11 +73,11 @@ public class WorkerSalaryPO  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="wsid")
-	public Long getWsId() {
+	public long getWsId() {
 		return wsId;
 	}
 
-	public void setWsId(Long wsId) {
+	public void setWsId(long wsId) {
 		this.wsId = wsId;
 	}
 
@@ -91,11 +91,11 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 
 	@Column(name="csid")
-	public Long getCsId() {
+	public long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(Long csId) {
+	public void setCsId(long csId) {
 		this.csId = csId;
 	}
 
@@ -128,29 +128,31 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 
 	@Column(name="salary")
-	public Float getSalary() {
+	public float getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Float salary) {
+	public void setSalary(float salary) {
 		this.salary = salary;
 	}
 
 	@Column(name="type")
-	public Short getType() {
+	public short getType() {
 		return type;
 	}
 
-	public void setType(Short type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name="status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
-	} 
+	}
+
+	
 }

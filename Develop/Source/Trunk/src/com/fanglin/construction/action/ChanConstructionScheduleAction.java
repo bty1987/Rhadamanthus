@@ -56,14 +56,6 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateChanConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateChanConstructionSchedule(){
-		
-		chanConstructionSchedule.setCcsId(chanConstructionScheduleService.saveOrUpdateChanConstructionSchedule(chanConstructionSchedule));
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setChanConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setChanConstructionScheduleForTimeFlag(){
 		

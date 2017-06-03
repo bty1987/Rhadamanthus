@@ -16,7 +16,7 @@ public class RegionVO implements Serializable {
 
 	private static final long serialVersionUID = -8574387881119439555L;
 	
-	private int rId;
+	private Integer rId;
 
 	private String regionId;
 	
@@ -26,11 +26,11 @@ public class RegionVO implements Serializable {
 	
 	private Double y;
 
-	public int getrId() {
+	public Integer getrId() {
 		return rId;
 	}
 
-	public void setrId(int rId) {
+	public void setrId(Integer rId) {
 		this.rId = rId;
 	}
 

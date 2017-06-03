@@ -115,7 +115,7 @@ public class ReworkServiceImpl implements ReworkService{
 			ReworkPO reworkPO = reworkDao.get(Integer.valueOf(rwId));
 			if(reworkPO != null){
 				reworkDao.delete(reworkPO);
-				List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(Integer.valueOf(rwId));
+				List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(Integer.parseInt(rwId));
 				for(ReworkDrawingPO reworkDrawingPO: reworkDrawingPOs){
 					reworkDrawingDao.delete(reworkDrawingPO);
 				}

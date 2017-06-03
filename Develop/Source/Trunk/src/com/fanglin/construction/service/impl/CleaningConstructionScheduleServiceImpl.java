@@ -20,7 +20,6 @@ import com.fanglin.construction.po.CleaningConstructionSchedulePO;
 import com.fanglin.construction.service.CleaningConstructionScheduleService;
 import com.fanglin.construction.vo.CleaningConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("cleaningConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -48,26 +47,6 @@ public class CleaningConstructionScheduleServiceImpl implements CleaningConstruc
 		BeanUtil.copyProperties(cleaningConstructionSchedulePO, cleaningConstructionScheduleVO);
 		
 		return cleaningConstructionScheduleVO;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateCleaningConstructionSchedule(CleaningConstructionScheduleVO cleaningConstructionScheduleVO){
-		
-		CleaningConstructionSchedulePO cleaningConstructionSchedulePO = null;
-		
-		if(cleaningConstructionScheduleVO.getCcsId() == 0){
-			cleaningConstructionSchedulePO = new CleaningConstructionSchedulePO();
-			cleaningConstructionSchedulePO.setEndTime(DateUtil.current(CleaningConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			cleaningConstructionSchedulePO.setStartTime(DateUtil.current(CleaningConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}else{
-			cleaningConstructionSchedulePO = cleaningConstructionScheduleDao.get(cleaningConstructionScheduleVO.getCcsId());
-		}
-		
-		BeanUtil.copyProperties(cleaningConstructionScheduleVO, cleaningConstructionSchedulePO);
-		cleaningConstructionScheduleDao.saveOrUpdate(cleaningConstructionSchedulePO);
-		
-		return cleaningConstructionSchedulePO.getCcsId();
 	}
 	
 	@Override

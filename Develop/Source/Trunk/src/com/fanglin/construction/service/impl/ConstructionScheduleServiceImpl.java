@@ -132,37 +132,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	}
 	
 	@Override
-	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<Filter> filters, String userId){
-		
-		UserPO user = userDao.get(userId);
-		
-		String workTypeQuality = "";
-		
-		if(user.getDuty().contains("质检")){
-			
-			if(user.getDuty().contains("质检") && user.getDuty().contains("铲大白")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_CHANQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && user.getDuty().contains("放线")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_PUTLINEQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && (user.getDuty().contains("水暖工") || user.getDuty().contains("电工") || user.getDuty().contains("力工"))){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_WATERWAYCIRCUITQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && user.getDuty().contains("瓦工")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_BRICKLAYQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && user.getDuty().contains("木工")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_CARPENTQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && user.getDuty().contains("油工")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_OILQUALITYID_STR;
-			}else if(user.getDuty().contains("质检") && user.getDuty().contains("保洁工")){
-				workTypeQuality = ConstructionSchedulePO.COLUMN_CLEANINGQUALITYID_STR;
-			}
-			
-			pageOrderByUserIdAWorkType(paging, filters, workTypeQuality, userId);
-		}else if(user.getDuty().contains("监理")){
-			pageDecorationOrderForSupervisionByUserId(paging, filters, userId, null);
-		}
-	}
-	
-	@Override
 	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO){
 		
 		if(userPO == null){
@@ -488,7 +457,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Transactional(rollbackFor=Exception.class)
 	public int checkConstructionScheduleForChanStatus(ConstructionScheduleVO constructionScheduleVO) throws FLException{
 		
-		ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByCsId(constructionScheduleVO.getCsId());
+		long csId = constructionScheduleVO.getCsId();
+		ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByCsId(csId);
 		
 		if(chanConstructionSchedulePO != null){
 			if(chanConstructionSchedulePO.getStatus() == ChanConstructionSchedulePO.STATUS_TYPE_DELAY_INT){
@@ -656,11 +626,12 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionSchedulePO.setDecorationOrderPO(new DecorationOrderPO(orderId));
 			constructionSchedulePO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
 		}else{
-			constructionSchedulePO.setSchedule(constructionScheduleVO.getSchedule());
+			int schedule = constructionScheduleVO.getSchedule();
+			constructionSchedulePO.setSchedule(schedule);
 		}
 		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
 		
-		int csId = constructionSchedulePO.getCsId();
+		long csId = constructionSchedulePO.getCsId();
 		int schedule = constructionSchedulePO.getSchedule();
 		
 		if(schedule == ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT){
@@ -765,17 +736,18 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		decorationOrderDao.update(decorationOrderPO);
 	}
 	
-	private void pageOrderByUserIdAWorkType(Paging paging, List<Filter> filters, String workTypeQuality, String userId){
-		
-		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.pageConstructionScheduleForSupervisionByUserId(paging, filters, workTypeQuality, userId);
-		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
-		
-		for(ConstructionSchedulePO constructionSchedulePO: constructionSchedulePOs){
-			decorationOrderVOs.add(decorationOrderPOToVO(constructionSchedulePO.getDecorationOrderPO()));
-		}
-		
-		paging.setData(decorationOrderVOs);
-	}
+	//之前pageDecorationOrderForConstructionScheduleByPlace用到这个方法，然后这个方法删除了 
+//	private void pageOrderByUserIdAWorkType(Paging paging, List<Filter> filters, String workTypeQuality, String userId){
+//		
+//		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.pageConstructionScheduleForSupervisionByUserId(paging, filters, workTypeQuality, userId);
+//		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+//		
+//		for(ConstructionSchedulePO constructionSchedulePO: constructionSchedulePOs){
+//			decorationOrderVOs.add(decorationOrderPOToVO(constructionSchedulePO.getDecorationOrderPO()));
+//		}
+//		
+//		paging.setData(decorationOrderVOs);
+//	}
 	
 	private DecorationOrderVO decorationOrderPOToVO(DecorationOrderPO decorationOrderPO){
 		

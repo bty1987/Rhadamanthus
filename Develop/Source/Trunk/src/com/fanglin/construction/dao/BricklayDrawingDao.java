@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface BricklayDrawingDao extends Dao<BricklayDrawingPO> {
 	
-	public List<BricklayDrawingPO> queryBricklayDrawingByCsId(int csId);
+	public List<BricklayDrawingPO> queryBricklayDrawingByCsId(long csId);
 	
 	public List<BricklayDrawingPO> queryBricklayDrawingByBcsId(int bcsId);
 	

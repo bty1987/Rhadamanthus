@@ -41,7 +41,7 @@ public class CleaningConstructionSchedulePO implements Serializable {
 	
     private int ccsId;
     
-    private int csId;
+    private long csId;
     
     private String orderId;
     
@@ -59,7 +59,7 @@ public class CleaningConstructionSchedulePO implements Serializable {
 		super();
 	}
 
-	public CleaningConstructionSchedulePO(int csId, String orderId, String startTime, String endTime) {
+	public CleaningConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.orderId = orderId;
@@ -133,11 +133,11 @@ public class CleaningConstructionSchedulePO implements Serializable {
     }
     
     @Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

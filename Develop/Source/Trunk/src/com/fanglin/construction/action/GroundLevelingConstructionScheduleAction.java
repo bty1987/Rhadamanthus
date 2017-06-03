@@ -56,14 +56,6 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateGroundLevelingConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateGroundLevelingConstructionSchedule(){
-		
-		groundLevelingConstructionScheduleService.saveOrUpdateGroundLevelingConstructionSchedule(groundLevelingConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setGroundLevelingConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setGroundLevelingConstructionScheduleForTimeFlag(){
 		

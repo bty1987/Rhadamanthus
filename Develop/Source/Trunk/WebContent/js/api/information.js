@@ -8,7 +8,7 @@ $.extend(api.index, {
 });
 
 $.extend(api.ds, {
-    
+    activityInfo: {url: "ds/activityInfo.json", demo: true}
 });
 
 $.extend(api, {information: {

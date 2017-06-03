@@ -43,7 +43,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 //		通过订单编号获取施工人员信息 , 同时可以利用schedule获取具体施工环节人员信息
 //		如果schedule没有传值将返回订单编号对应的所有施工人员信息
 		String orderId = constructerVO.getOrderId();
-		Integer schedule = constructerVO.getSchedule();
+		int schedule = constructerVO.getSchedule();
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId,schedule);
 		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
@@ -58,8 +58,8 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 	@Override
 	public List<ConstructerVO> queryConstructerByCsId(ConstructerVO constructerVO) {
-		Integer csId = constructerVO.getCsId();
-		Integer schedule = constructerVO.getSchedule();
+		long csId = constructerVO.getCsId();
+		int schedule = constructerVO.getSchedule();
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCsId(csId,schedule);
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
@@ -75,17 +75,18 @@ public class ConstructerServiceImpl implements ConstructerService {
 	@Transactional(rollbackFor=Exception.class)
 	public void addConstructer(ConstructerVO constructerVO, String createrId) throws FLException {
 		//判断工程是否存在
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCsId(constructerVO.getCsId());
+		long constructionScheduleId = constructerVO.getCsId();
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCsId(constructionScheduleId);
 
 		if(constructionSchedulePO == null){
 			throw new FLException(120020, "工程信息不存在");
 		}
 		
-		Integer csId = constructerVO.getCsId();
+		long csId = constructerVO.getCsId();
 		String userId = constructerVO.getUser().getUserId();
-		Integer schedule = constructerVO.getSchedule();
+		int schedule = constructerVO.getSchedule();
 		
-		if(constructerDao.countConstructer(csId, userId, schedule,(short) 0) > 0){
+		if(constructerDao.countConstructer(csId, userId, schedule,ConstructerPO.STATUS_ENABLE_SHORT) > 0){
 			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
 		}
 		
@@ -101,41 +102,50 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		constructerPO.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
 		constructerDao.save(constructerPO);
+		constructerVO.setCid(constructerPO.getCid());
 		constructerVO.setUser(new UserVO().setBaseInfo(userPO));
-	
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void updateConstructerForRate(ConstructerVO constructerVO) throws FLException{
+		
 		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(constructerVO.getCid());
-		if(constructerPO != null){
-			constructerPO.setRate(constructerVO.getRate());
-			constructerPO.setAssessment(constructerVO.getAssessment());
-			constructerDao.update(constructerPO);
-		}else{
+
+		if(constructerPO == null){
 			throw new FLException(120021, "施工人员不存在");
 		}
-		
+
+		short rate = constructerVO.getRate();
+		constructerPO.setRate(rate);
+		constructerPO.setAssessment(constructerVO.getAssessment());
+
+		constructerDao.update(constructerPO);
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteConstructer(ConstructerVO constructerVO) throws FLException {
-		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(constructerVO.getCid());
-		Long csId = Long.valueOf(constructerVO.getCsId());
-		String userId = constructerVO.getUser().getUserId();
-		Integer workerSalaryCount = workerSalaryDao.workerSalaryCount(csId,userId);
-		if(workerSalaryCount == 0){
-			if(constructerPO != null){
-				constructerPO.setStatus((short) 1);
-				constructerDao.update(constructerPO);
-			}
-		}else{
+		
+		long cid = constructerVO.getCid();
+		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(cid);
+
+		if(constructerPO == null){
+			throw new FLException(120021, "施工人员不存在");
+		}
+
+		Long csId = Long.valueOf(constructerPO.getCsId());
+		String userId = constructerPO.getUser().getUserId();
+
+		Integer workerSalaryCount = workerSalaryDao.countWorkerSalary(csId,userId);
+
+		if(workerSalaryCount > 0){
 			throw new FLException(120023, "施工人员存在工费,不可删除");
 		}
-		
-		
-	}
 
+		constructerPO.setStatus(ConstructerPO.STATUS_DISABLE_SHORT);
+	  
+		constructerDao.update(constructerPO);
+	}
+	
 }

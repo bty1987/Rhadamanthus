@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface WaterwayCircuitCheckDrawingDao extends Dao<WaterwayCircuitCheckDrawingPO> {
 	
-	public List<WaterwayCircuitCheckDrawingPO> queryWaterwayCircuitCheckDrawingByCsId(int csId);
+	public List<WaterwayCircuitCheckDrawingPO> queryWaterwayCircuitCheckDrawingByCsId(long csId);
 	
 	public List<WaterwayCircuitCheckDrawingPO> queryWaterwayCircuitCheckDrawingByWcccsId(int wcccsId);
 	

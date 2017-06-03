@@ -5,6 +5,9 @@ var config = {
 	quotationLimitDiscount: 8.8,
 	timeout: 30,
 	
+	manageRate: 0.16,
+	serviceRate: 0.1,
+	
 	name: '方林信息平台',
 	ename: 'Fanglin Information Platform',
 	company: 2952158214, // 1918: 8541268764 , ehome: 2153458453

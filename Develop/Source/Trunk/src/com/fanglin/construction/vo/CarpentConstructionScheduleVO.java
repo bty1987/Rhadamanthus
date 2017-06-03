@@ -19,7 +19,7 @@ public class CarpentConstructionScheduleVO implements Serializable{
 	
 	private Integer ccsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -119,11 +119,11 @@ public class CarpentConstructionScheduleVO implements Serializable{
 		this.workerRatyDes = workerRatyDes;
 	}
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 	

@@ -19,7 +19,7 @@ public class BricklayConstructionScheduleVO implements Serializable{
 	
 	private Integer bcsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -79,11 +79,11 @@ public class BricklayConstructionScheduleVO implements Serializable{
 		this.endTimeFlag = endTimeFlag;
 	}
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 	

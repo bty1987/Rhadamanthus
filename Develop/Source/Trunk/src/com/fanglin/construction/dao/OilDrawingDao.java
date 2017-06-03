@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface OilDrawingDao extends Dao<OilDrawingPO> {
 	
-	public List<OilDrawingPO> queryOilDrawingByCsId(int csId);
+	public List<OilDrawingPO> queryOilDrawingByCsId(long csId);
 	
 	public List<OilDrawingPO> queryOilDrawingByOcsId(int ocsId);
 	

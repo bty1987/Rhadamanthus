@@ -56,14 +56,6 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateBricklayConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateBricklayConstructionSchedule(){
-		
-		bricklayConstructionScheduleService.saveOrUpdateBricklayConstructionSchedule(bricklayConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setBricklayConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setBricklayConstructionScheduleForTimeFlag(){
 		

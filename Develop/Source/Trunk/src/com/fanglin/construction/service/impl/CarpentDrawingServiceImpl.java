@@ -45,7 +45,8 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 	@Override
 	public List<CarpentDrawingVO> queryCarpentDrawingByCsId(CarpentDrawingVO carpentDrawingVO) {
 		
-		List<CarpentDrawingPO> carpentDrawingPOs = carpentDrawingDao.queryCarpentDrawingByCsId(carpentDrawingVO.getCsId());
+		long csId = carpentDrawingVO.getCsId();
+		List<CarpentDrawingPO> carpentDrawingPOs = carpentDrawingDao.queryCarpentDrawingByCsId(csId);
 		List<CarpentDrawingVO> carpentDrawingVOs = new ArrayList<CarpentDrawingVO>();
 		
 		for(CarpentDrawingPO carpentDrawingPO: carpentDrawingPOs){
@@ -61,7 +62,8 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 	@Override
 	public List<CarpentDrawingVO> queryCarpentDrawingByCcsId(CarpentDrawingVO carpentDrawingVO){
 
-		List<CarpentDrawingPO> carpentDrawingPOs = carpentDrawingDao.queryCarpentDrawingByCcsId(carpentDrawingVO.getCcsId());
+		int ccsId = carpentDrawingVO.getCcsId();
+		List<CarpentDrawingPO> carpentDrawingPOs = carpentDrawingDao.queryCarpentDrawingByCcsId(ccsId);
 		List<CarpentDrawingVO> carpentDrawingVOs = new ArrayList<CarpentDrawingVO>();
 		
 		for(CarpentDrawingPO carpentDrawingPO: carpentDrawingPOs){

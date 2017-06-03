@@ -31,7 +31,7 @@ public class BricklayConstructionScheduleDaoImpl extends DaoImpl<BricklayConstru
 	}
 
 	@Override
-	public BricklayConstructionSchedulePO queryBricklayConstructionScheduleByCsId(int csId){
+	public BricklayConstructionSchedulePO queryBricklayConstructionScheduleByCsId(long csId){
 		return (BricklayConstructionSchedulePO) session().createCriteria(BricklayConstructionSchedulePO.class).add(Restrictions.eq(BricklayConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

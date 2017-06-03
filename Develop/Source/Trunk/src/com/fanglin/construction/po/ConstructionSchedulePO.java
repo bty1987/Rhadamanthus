@@ -80,7 +80,7 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final String COLUMN_CSID_STR = "csId";
 	
-	private int csId;
+	private long csId;
 	
 	private DecorationOrderPO decorationOrderPO;
 	
@@ -111,11 +111,11 @@ public class ConstructionSchedulePO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

@@ -9,14 +9,15 @@ import com.fanglin.utils.Paging;
 
 public interface WorkerSalaryService {
 	
+	public void pageWorkerSalary(Paging paging,List<Filter> filters);
+	
+	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
+	
 	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException;
 	
 	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException ;
 	
-	public void pageWorkerSalary(Paging paging,List<Filter> filters);	
-	
 	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException;
 
-	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
 	
 }

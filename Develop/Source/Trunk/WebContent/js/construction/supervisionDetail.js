@@ -22,6 +22,7 @@ jQuery(function($) {
 				galleryId: "chanGallery",
 				uploadId: "chanUpload",
 				tabbable: "chanDrawing",
+				navTabbable:"chanNavTab",
 
 				workerId: "chanWorker",
 				startTimeId: "chanStartTime",
@@ -41,7 +42,6 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateChanConstructionSchedule,
 				setTimeFlagUrl: api.construction.setChanConstructionScheduleForTimeFlag,
 				confirmEndTimeUrl: "",
 
@@ -71,6 +71,7 @@ jQuery(function($) {
 				galleryId: "putlineGallery",
 				uploadId: "putlineUpload",
 				tabbable: "putlineDrawing",
+				navTabbable:"putlineNavTab",
 
 				workerId: "putlineWorker",
 				startTimeId: "putlineStartTime",
@@ -95,8 +96,6 @@ jQuery(function($) {
 				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryPutlineDrawingByCsId,
 				addDrawingUrl: api.construction.addPutlineDrawing,
@@ -123,6 +122,7 @@ jQuery(function($) {
 				galleryId: "waterwayCircuitPowerGallery",
 				uploadId: "waterwayCircuitPowerUpload",
 				tabbable: "waterwayCircuitPowerDrawing",
+				navTabbable:"waterwayCircuitPowerNavTab",
 
 				waterwayWorkerId: "waterwayWorker",
 				circuitWorkerId: "circuitWorker",
@@ -144,12 +144,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateBricklayConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryWaterwayCircuitPowerDrawingByCsId,
 				addDrawingUrl: api.construction.addWaterwayCircuitPowerDrawing,
@@ -180,6 +177,7 @@ jQuery(function($) {
 				galleryId: "bricklayGallery",
 				uploadId: "bricklayUpload",
 				tabbable: "bricklayDrawing",
+				navTabbable:"bricklayNavTab",
 
 				workerId: "bricklayWorker",
 				startTimeId: "bricklayStartTime",
@@ -197,12 +195,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setTimeFlagUrl: api.construction.setBricklayConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryBricklayDrawingByCsId,
 				addDrawingUrl: api.construction.addBricklayDrawing,
@@ -231,6 +226,7 @@ jQuery(function($) {
 				galleryId: "groundLevelingGallery",
 				uploadId: "groundLevelingUpload",
 				tabbable: "groundLevelingDrawing",
+				navTabbable:"groundLevelingNavTab",
 
 				workerId: "groundLevelingWorker",
 				startTimeId: "groundLevelingStartTime",
@@ -248,12 +244,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setTimeFlagUrl: api.construction.setGroundLevelingConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateCarpentConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryGroundLevelingDrawingByCsId,
 				addDrawingUrl: api.construction.addGroundLevelingDrawing,
@@ -281,6 +274,7 @@ jQuery(function($) {
 				galleryId: "carpentGallery",
 				uploadId: "carpentUpload",
 				tabbable: "carpentDrawing",
+				navTabbable:"carpentNavTab",
 
 				workerId: "carpentWorker",
 				startTimeId: "carpentStartTime",
@@ -298,12 +292,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCarpentConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateOilConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryCarpentDrawingByCsId,
 				addDrawingUrl: api.construction.addCarpentDrawing,
@@ -331,6 +322,7 @@ jQuery(function($) {
 				galleryId: "oilGallery",
 				uploadId: "oilUpload",
 				tabbable: "oilDrawing",
+				navTabbable:"oilNavTab",
 
 				workerId: "oilWorker",
 				startTimeId: "oilStartTime",
@@ -348,12 +340,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setTimeFlagUrl: api.construction.setOilConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryOilDrawingByCsId,
 				addDrawingUrl: api.construction.addOilDrawing,
@@ -381,6 +370,7 @@ jQuery(function($) {
 				galleryId: "waterwayCircuitCheckGallery",
 				uploadId: "waterwayCircuitCheckUpload",
 				tabbable: "waterwayCircuitCheckDrawing",
+				navTabbable:"waterwayCircuitCheckNavTab",
 
 				waterwayWorkerId: "waterwayWorker",
 				circuitWorkerId: "circuitWorker",
@@ -402,12 +392,9 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setTimeFlagUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
-				nextAddInfoUrl: api.construction.updateCleaningConstructionSchedule,
 
 				queryDrawingUrl: api.construction.queryWaterwayCircuitCheckDrawingByCsId,
 				addDrawingUrl: api.construction.addWaterwayCircuitCheckDrawing,
@@ -438,6 +425,7 @@ jQuery(function($) {
 				galleryId: "cleaningGallery",
 				uploadId: "cleaningUpload",
 				tabbable: "cleaningDrawing",
+				navTabbable:"cleaningNavTab",
 
 				workerId: "cleaningWorker",
 				startTimeId: "cleaningStartTime",
@@ -455,7 +443,6 @@ jQuery(function($) {
 
 				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setTimeFlagUrl: api.construction.setCleaningConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
@@ -626,7 +613,6 @@ jQuery(function($) {
 	});
 
 	function initWizardSept(operate, schedule){
-
 		var elementPostData = {};
 		elementPostData[operate.elementName+".orderId"] = params.orderId;
 		supervisionDetail.controlCondition = false;
@@ -849,7 +835,7 @@ jQuery(function($) {
 
 				var options = {};
 				options[operate.drawingName+".csId"] = supervisionDetail.construstionSchedule.csId;
-
+				console.log(options);
 				com.post(operate.queryDrawingUrl, options, function(res){
 					var drawings = res[operate.drawings];
 
@@ -865,6 +851,10 @@ jQuery(function($) {
 				});
 				initUploadBtn(operate, element);
 				$('#'+operate.tabbable).removeClass("active");
+
+				if($('#'+operate.navTabbable+' li:last-of-type').hasClass("active")){
+					$('#'+operate.tabbable).addClass("active");
+				}
 				return false;
 			}else{
 				supervisionDetail[operate.elementName+"."+operate.elementId] = 0;
@@ -997,9 +987,11 @@ jQuery(function($) {
 							var data = {
 								"workerSalary.wsId" : v.wsId,
 							};
-							com.post(api.salary.deleteWorkerSalary, data);
-							//$('#guaranteeModal').modal('hide');
-							$("#salary" + i).remove();
+							com.post(api.salary.deleteWorkerSalary, data,function(){
+								$("#salary" + i).remove();
+							},function(res){
+								com.showAlert(com.error, "工费状态不可操作！");
+							});
 						}))
 					.append('<hr/>');
 				workerSalary.appendTo($("#workerSalaryList"))

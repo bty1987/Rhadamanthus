@@ -96,7 +96,10 @@ $.extend(api, {decoration: {
     changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
     changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
     changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},
-    changeDecorationOrderForStatus: {url: "changeDecorationOrderForStatus.do"},
-    changeDecorationOrderForType: {url: "cheangeDecorationOrderForType.do"},
-    subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"}
+
+    subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"},
+	
+	pageDecorationHolonomy: {url: "pageDecorationHolonomy.do"},
+	queryDecorationHolonomy: {url: "queryDecorationHolonomy.do"},
+	makeDecorationHolonomy: {url: "makeDecorationHolonomy.do"},
 }});

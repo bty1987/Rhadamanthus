@@ -7,7 +7,7 @@ public class WaterwayCircuitCheckConstructionScheduleVO implements java.io.Seria
 
 	private Integer wcccsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -51,11 +51,11 @@ public class WaterwayCircuitCheckConstructionScheduleVO implements java.io.Seria
 		this.wcccsId = wcccsId;
 	}
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 

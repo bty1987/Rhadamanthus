@@ -19,7 +19,7 @@ public class ChanConstructionScheduleVO implements Serializable {
 	
 	private Integer ccsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String orderId;
 	
@@ -139,11 +139,11 @@ public class ChanConstructionScheduleVO implements Serializable {
 		this.status = status;
 	}
 
-	public Integer getCsId(){
+	public Long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(Integer csId){
+	public void setCsId(Long csId){
 		this.csId = csId;
 	}
 

@@ -18,23 +18,23 @@ public class InspectionDeductionVO implements Serializable {
 
 	private static final long serialVersionUID = 2762456827187851607L;
 	
-	private int idId;
+	private Integer idId;
 	
 	private String orderId;
 	
 	private String orderAddr;
 	
-	private float deductionMoney;
+	private Float deductionMoney;
 	
 	private Timestamp deductionTime;
 	
 	private String deductionDes;
 
-	public int getIdId(){
+	public Integer getIdId(){
 		return idId;
 	}
 
-	public void setIdId(int idId){
+	public void setIdId(Integer idId){
 		this.idId = idId;
 	}
 
@@ -54,11 +54,11 @@ public class InspectionDeductionVO implements Serializable {
 		this.orderAddr = orderAddr;
 	}
 
-	public float getDeductionMoney(){
+	public Float getDeductionMoney(){
 		return deductionMoney;
 	}
 
-	public void setDeductionMoney(float deductionMoney){
+	public void setDeductionMoney(Float deductionMoney){
 		this.deductionMoney = deductionMoney;
 	}
 

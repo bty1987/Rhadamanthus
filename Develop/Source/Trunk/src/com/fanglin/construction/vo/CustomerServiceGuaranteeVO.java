@@ -17,7 +17,7 @@ public class CustomerServiceGuaranteeVO implements Serializable{
 
 	private static final long serialVersionUID = 8026794284060513279L;
 	
-	private int csgId;
+	private Integer csgId;
 	
 	private String orderId;
 	
@@ -27,11 +27,11 @@ public class CustomerServiceGuaranteeVO implements Serializable{
 	
 	private String guaranteeDes;
 
-	public int getCsgId(){
+	public Integer getCsgId(){
 		return csgId;
 	}
 
-	public void setCsgId(int csgId){
+	public void setCsgId(Integer csgId){
 		this.csgId = csgId;
 	}
 

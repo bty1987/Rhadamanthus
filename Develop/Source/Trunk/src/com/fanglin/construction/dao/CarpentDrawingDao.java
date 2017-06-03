@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface CarpentDrawingDao extends Dao<CarpentDrawingPO> {
 	
-	public List<CarpentDrawingPO> queryCarpentDrawingByCsId(int csId);
+	public List<CarpentDrawingPO> queryCarpentDrawingByCsId(long csId);
 	
 	public List<CarpentDrawingPO> queryCarpentDrawingByCcsId(int ccsId);
 	

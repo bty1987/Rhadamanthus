@@ -18,6 +18,6 @@ public interface WaterwayCircuitPowerConstructionScheduleDao extends Dao<Waterwa
 	
 	public WaterwayCircuitPowerConstructionSchedulePO queryCircuitPowerConstructionScheduleByOrderId(String orderId);
 	
-	public WaterwayCircuitPowerConstructionSchedulePO queryCircuitPowerConstructionScheduleByCsId(int csId);
+	public WaterwayCircuitPowerConstructionSchedulePO queryCircuitPowerConstructionScheduleByCsId(long csId);
 
 }

@@ -36,7 +36,8 @@ public class ReworkDrawingServiceImpl implements ReworkDrawingService {
 	@Override
 	public List<ReworkDrawingVO> queryDrawingByReworkId(ReworkDrawingVO reworkDrawingVO){
 		
-		List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(reworkDrawingVO.getRwId());
+		int rwId = reworkDrawingVO.getRwId();
+		List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(rwId);
 		List<ReworkDrawingVO> reworkDrawingVOs = new ArrayList<ReworkDrawingVO>();
 		
 		for(ReworkDrawingPO reworkDrawingPO: reworkDrawingPOs){
@@ -74,7 +75,7 @@ public class ReworkDrawingServiceImpl implements ReworkDrawingService {
 	public void deleteReworkDrawingByReworkId(List<String> rwIds){
 		
 		for(String rwId: rwIds){
-			List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(Integer.valueOf(rwId));
+			List<ReworkDrawingPO> reworkDrawingPOs = reworkDrawingDao.queryDrawingByReworkId(Integer.parseInt(rwId));
 			for(ReworkDrawingPO reworkDrawingPO: reworkDrawingPOs){
 				reworkDrawingDao.delete(reworkDrawingPO);
 			}

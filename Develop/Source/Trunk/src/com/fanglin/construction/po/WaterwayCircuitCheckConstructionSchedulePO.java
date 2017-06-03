@@ -26,7 +26,7 @@ public class WaterwayCircuitCheckConstructionSchedulePO implements java.io.Seria
 
 	private int wcccsId;
 	
-	private int csId;
+	private long csId;
 	
 	private String orderId;
 	
@@ -48,7 +48,7 @@ public class WaterwayCircuitCheckConstructionSchedulePO implements java.io.Seria
 		super();
 	}
 
-	public WaterwayCircuitCheckConstructionSchedulePO(int csId, String orderId, String startTime, String endTime) {
+	public WaterwayCircuitCheckConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.orderId = orderId;
@@ -68,11 +68,11 @@ public class WaterwayCircuitCheckConstructionSchedulePO implements java.io.Seria
 	}
 
 	@Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return this.csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

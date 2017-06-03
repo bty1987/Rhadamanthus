@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface CleaningDrawingDao extends Dao<CleaningDrawingPO> {
 	
-	public List<CleaningDrawingPO> queryCleaningDrawingByCsId(int csId);
+	public List<CleaningDrawingPO> queryCleaningDrawingByCsId(long csId);
 	
 	public List<CleaningDrawingPO> queryCleaningDrawingByCcsId(int ccsId);
 	

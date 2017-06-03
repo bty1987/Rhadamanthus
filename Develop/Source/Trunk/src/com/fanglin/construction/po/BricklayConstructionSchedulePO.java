@@ -41,7 +41,7 @@ public class BricklayConstructionSchedulePO implements Serializable{
 	
 	private int bcsId;
 	
-	private int csId;
+	private long csId;
 	
 	private String orderId;
 	
@@ -59,7 +59,7 @@ public class BricklayConstructionSchedulePO implements Serializable{
 		super();
 	}
 
-	public BricklayConstructionSchedulePO(int csId, String orderId, String startTime, String endTime) {
+	public BricklayConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.orderId = orderId;
@@ -124,11 +124,11 @@ public class BricklayConstructionSchedulePO implements Serializable{
 	}
 
 	@Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

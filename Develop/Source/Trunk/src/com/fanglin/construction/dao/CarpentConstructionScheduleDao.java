@@ -18,6 +18,6 @@ public interface CarpentConstructionScheduleDao extends Dao<CarpentConstructionS
 	
 	public CarpentConstructionSchedulePO queryCarpentConstructionScheduleByOrderId(String orderId);
 	
-	public CarpentConstructionSchedulePO queryCarpentConstructionScheduleByCsId(int csId);
+	public CarpentConstructionSchedulePO queryCarpentConstructionScheduleByCsId(long csId);
 
 }

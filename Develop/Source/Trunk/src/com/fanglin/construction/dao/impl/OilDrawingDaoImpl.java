@@ -29,7 +29,7 @@ public class OilDrawingDaoImpl extends DaoImpl<OilDrawingPO> implements OilDrawi
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<OilDrawingPO> queryOilDrawingByCsId(int csId) {
+	public List<OilDrawingPO> queryOilDrawingByCsId(long csId) {
 		return session().createCriteria(OilDrawingPO.class).add(Restrictions.eq(OilDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

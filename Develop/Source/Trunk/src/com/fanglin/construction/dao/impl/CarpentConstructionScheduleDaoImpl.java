@@ -31,7 +31,7 @@ public class CarpentConstructionScheduleDaoImpl extends DaoImpl<CarpentConstruct
 	}
 
 	@Override
-	public CarpentConstructionSchedulePO queryCarpentConstructionScheduleByCsId(int csId){
+	public CarpentConstructionSchedulePO queryCarpentConstructionScheduleByCsId(long csId){
 		return (CarpentConstructionSchedulePO) session().createCriteria(CarpentConstructionSchedulePO.class).add(Restrictions.eq(CarpentConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

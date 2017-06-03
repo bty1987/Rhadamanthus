@@ -37,7 +37,7 @@ public class ChanDrawingPO implements Serializable{
 	
 	private int ccsId;
 	
-	private int csId;
+	private long csId;
 	
 	private String drawingName;
 	
@@ -95,11 +95,11 @@ public class ChanDrawingPO implements Serializable{
 	}
 
 	@Column(name="csId")
-	public int getCsId() {
+	public long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(int csId) {
+	public void setCsId(long csId) {
 		this.csId = csId;
 	}
 

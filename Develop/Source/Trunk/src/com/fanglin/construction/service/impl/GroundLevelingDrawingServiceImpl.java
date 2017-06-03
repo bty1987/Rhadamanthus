@@ -45,7 +45,8 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 	@Override
 	public List<GroundLevelingDrawingVO> queryGroundLevelingDrawingByCsId(GroundLevelingDrawingVO groundLevelingDrawingVO) {
 		
-		List<GroundLevelingDrawingPO> groundLevelingDrawingPOs = groundLevelingDrawingDao.queryGroundLevelingDrawingByCsId(groundLevelingDrawingVO.getCsId());
+		long csId = groundLevelingDrawingVO.getCsId();
+		List<GroundLevelingDrawingPO> groundLevelingDrawingPOs = groundLevelingDrawingDao.queryGroundLevelingDrawingByCsId(csId);
 		List<GroundLevelingDrawingVO> groundLevelingDrawingVOs = new ArrayList<GroundLevelingDrawingVO>();
 		
 		for(GroundLevelingDrawingPO groundLevelingDrawingPO: groundLevelingDrawingPOs){
@@ -61,7 +62,8 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 	@Override
 	public List<GroundLevelingDrawingVO> queryGroundLevelingDrawingByGlcsId(GroundLevelingDrawingVO groundLevelingDrawingVO){
 		
-		List<GroundLevelingDrawingPO> groundLevelingDrawingPOs = groundLevelingDrawingDao.queryGroundLevelingDrawingByGlcsId(groundLevelingDrawingVO.getGlcsId());
+		int glcsId = groundLevelingDrawingVO.getGlcsId();
+		List<GroundLevelingDrawingPO> groundLevelingDrawingPOs = groundLevelingDrawingDao.queryGroundLevelingDrawingByGlcsId(glcsId);
 		List<GroundLevelingDrawingVO> groundLevelingDrawingVOs = new ArrayList<GroundLevelingDrawingVO>();
 		
 		for(GroundLevelingDrawingPO groundLevelingDrawingPO: groundLevelingDrawingPOs){
@@ -87,7 +89,8 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 		
 		groundLevelingDrawingDao.saveOrUpdate(groundLevelingDrawingPO);
 		
-		groundLevelingDrawingVO.setGldId(groundLevelingDrawingPO.getGldId());
+		Integer gldId = groundLevelingDrawingPO.getGldId();
+		groundLevelingDrawingVO.setGldId(gldId);
 		
 		return 0;
 	}

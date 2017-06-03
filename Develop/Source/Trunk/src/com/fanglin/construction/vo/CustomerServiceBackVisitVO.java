@@ -17,7 +17,7 @@ public class CustomerServiceBackVisitVO implements Serializable {
 
 	private static final long serialVersionUID = 5152110275519942956L;
 	
-	private int csbvId;
+	private Integer csbvId;
 	
 	private String orderId;
 	
@@ -27,15 +27,15 @@ public class CustomerServiceBackVisitVO implements Serializable {
 	
 	private String backVisitTime;
 	
-	private int backVisitType;
+	private Integer backVisitType;
 	
 	private String backVisitDes;
 
-	public int getCsbvId(){
+	public Integer getCsbvId(){
 		return csbvId;
 	}
 
-	public void setCsbvId(int csbvId){
+	public void setCsbvId(Integer csbvId){
 		this.csbvId = csbvId;
 	}
 
@@ -79,11 +79,11 @@ public class CustomerServiceBackVisitVO implements Serializable {
 		this.backVisitDes = backVisitDes;
 	}
 
-	public int getBackVisitType(){
+	public Integer getBackVisitType(){
 		return backVisitType;
 	}
 
-	public void setBackVisitType(int backVisitType){
+	public void setBackVisitType(Integer backVisitType){
 		this.backVisitType = backVisitType;
 	}
 	

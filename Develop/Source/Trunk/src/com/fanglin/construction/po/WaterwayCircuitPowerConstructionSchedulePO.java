@@ -39,7 +39,7 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 	
 	private int wcpcsId;
 	
-	private int csId;
+	private long csId;
 	
 	private String orderId;
 	
@@ -61,7 +61,7 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 		super();
 	}
 
-	public WaterwayCircuitPowerConstructionSchedulePO(int csId, String orderId, String startTime, String endTime) {
+	public WaterwayCircuitPowerConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.orderId = orderId;
@@ -153,11 +153,11 @@ public class WaterwayCircuitPowerConstructionSchedulePO implements Serializable 
 	}
 
 	@Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 	

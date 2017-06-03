@@ -37,10 +37,16 @@
 		{"key":"非业务人员","value":"非业务人员"}
     ], "type": [
         {"key":"0", "value":"半包"},
-        {"key":"1", "value":"全包"}
+        {"key":"1", "value":"全包"},
+        {"key":"2", "value":"半价"}
     ], "paymentType": [
         {"key":"主材代购费","value":"主材代购费"}
-    ],
+    ], "machingType": [
+		{"key":"1.2", "value":"7.2"},
+		{"key":"1.5", "value":"6.5"},
+		{"key":"1.8", "value":"5.6"},
+		{"key":"2", "value":"5"}
+	],
     "errorCode": 0,
     "errorMsg": null
 }

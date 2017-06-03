@@ -18,8 +18,6 @@ public interface OilConstructionScheduleService {
 	public OilConstructionScheduleVO queryOilConstructionScheduleById(int ocsId);
 	
 	public OilConstructionScheduleVO queryOilConstructionScheduleByOrderId(OilConstructionScheduleVO oilConstructionScheduleVO);
-
-	public int saveOrUpdateOilConstructionSchedule(OilConstructionScheduleVO oilConstructionScheduleVO);
 	
 	public void setOilConstructionScheduleForTimeFlag(OilConstructionScheduleVO oilConstructionScheduleVO);
 	

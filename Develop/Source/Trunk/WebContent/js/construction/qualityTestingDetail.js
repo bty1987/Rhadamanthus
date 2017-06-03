@@ -11,10 +11,7 @@ jQuery(function($) {
 		operateDict: {
 			"1": {
 				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
-				updateInfoUrl: api.construction.updateChanConstructionSchedule,
-//					setInfoUrl: api.construction.setChanConstructionScheduleForInfo,
-				setInfoUrl: api.construction.updateChanConstructionSchedule,
-				setWorkerUrl: api.construction.setChanConstructionScheduleWorker,
+				//setInfoUrl: api.construction.setChanConstructionScheduleForInfo,
 				setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
 				
 				queryDrawingUrl: api.construction.queryChanDrawingByCsId,
@@ -34,7 +31,6 @@ jQuery(function($) {
 				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
 				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
 				setInfoUrl: api.construction.setPutlineConstructionScheduleForInfo,
-				setWorkerUrl: api.construction.setPutlineConstructionScheduleWorker,
 				setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
 				
 				queryDrawingUrl: api.construction.queryPutlineDrawingByCsId,
@@ -52,11 +48,7 @@ jQuery(function($) {
 				drawingType: 7,
 			}, "3": {
 				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addWaterwayCircuitPowerConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setInfoUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForInfo,
-				setWorkerUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleWorker,
 				
 				queryDrawingUrl: api.construction.queryWaterwayCircuitPowerDrawingByCsId,
 				addDrawingUrl: api.construction.addWaterwayCircuitPowerDrawing,
@@ -78,9 +70,6 @@ jQuery(function($) {
 				drawingType: 8,
 			}, "4": {
 				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryBricklayConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addBricklayConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setInfoUrl: api.construction.setBricklayConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryBricklayDrawingByCsId,
@@ -100,9 +89,6 @@ jQuery(function($) {
 				drawingType: 9,
 			}, "5": {
 				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryGroundLevelingConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addGroundLevelingConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setInfoUrl: api.construction.setGroundLevelingConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryGroundLevelingDrawingByCsId,
@@ -122,9 +108,6 @@ jQuery(function($) {
 				drawingType: 10,
 			}, "6": {
 				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryCarpentConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addCarpentConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setInfoUrl: api.construction.setCarpentConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryCarpentDrawingByCsId,
@@ -144,9 +127,6 @@ jQuery(function($) {
 				drawingType: 11,
 			}, "7": {
 				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryOilConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addOilConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setInfoUrl: api.construction.setOilConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryOilDrawingByCsId,
@@ -166,9 +146,6 @@ jQuery(function($) {
 				drawingType: 12,
 			}, "8": {
 				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addWaterwayCircuitCheckConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setInfoUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryWaterwayCircuitCheckDrawingByCsId,
@@ -191,9 +168,6 @@ jQuery(function($) {
 				drawingType: 13,
 			}, "9": {
 				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryCleaningConstructionScheduleWorker,
-				addWorkerUrl: api.construction.addCleaningConstructionScheduleWorker,
-				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setInfoUrl: api.construction.setCleaningConstructionScheduleForInfo,
 				
 				queryDrawingUrl: api.construction.queryCleaningDrawingByCsId,

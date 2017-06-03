@@ -29,7 +29,7 @@ public class GroundLevelingDrawingDaoImpl extends DaoImpl<GroundLevelingDrawingP
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GroundLevelingDrawingPO> queryGroundLevelingDrawingByCsId(int csId) {
+	public List<GroundLevelingDrawingPO> queryGroundLevelingDrawingByCsId(long csId) {
 		return session().createCriteria(GroundLevelingDrawingPO.class).add(Restrictions.eq(GroundLevelingDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

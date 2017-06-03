@@ -56,14 +56,6 @@ public class OilConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateOilConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateOilConstructionSchedule(){
-		
-		oilConstructionScheduleService.saveOrUpdateOilConstructionSchedule(oilConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setOilConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setOilConstructionScheduleForTimeFlag(){
 		

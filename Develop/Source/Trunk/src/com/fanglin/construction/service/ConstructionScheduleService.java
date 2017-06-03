@@ -23,8 +23,6 @@ public interface ConstructionScheduleService {
 	
 	public void pageDecorationOrderForConstructionSchedule(Paging paging, List<Filter> filters);
 	
-	public void pageDecorationOrderForConstructionScheduleByPlace(Paging paging, List<Filter> filters, String userId);
-	
 	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
 
 	public void pageDecorationOrderForQualityByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);

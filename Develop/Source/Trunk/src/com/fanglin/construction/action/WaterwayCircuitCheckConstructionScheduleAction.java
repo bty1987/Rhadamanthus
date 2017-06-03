@@ -56,14 +56,6 @@ public class WaterwayCircuitCheckConstructionScheduleAction extends BaseListActi
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateWaterwayCircuitCheckConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateWaterwayCircuitCheckConstructionSchedule(){
-		
-		waterwayCircuitCheckConstructionScheduleService.saveOrUpdateWaterwayCircuitCheckConstructionSchedule(waterwayCircuitCheckConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setWaterwayCircuitCheckConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setWaterwayCircuitCheckConstructionScheduleForTimeFlag(){
 		
