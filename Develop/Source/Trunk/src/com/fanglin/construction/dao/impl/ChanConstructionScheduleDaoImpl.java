@@ -31,7 +31,7 @@ public class ChanConstructionScheduleDaoImpl extends DaoImpl<ChanConstructionSch
 	}
 
 	@Override
-	public ChanConstructionSchedulePO queryChanConstructionScheduleByCsId(int csId){
+	public ChanConstructionSchedulePO queryChanConstructionScheduleByCsId(long csId){
 		return (ChanConstructionSchedulePO) session().createCriteria(ChanConstructionSchedulePO.class).add(Restrictions.eq(ChanConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

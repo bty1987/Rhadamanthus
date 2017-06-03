@@ -29,7 +29,7 @@ public class BricklayDrawingDaoImpl extends DaoImpl<BricklayDrawingPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<BricklayDrawingPO> queryBricklayDrawingByCsId(int csId) {
+	public List<BricklayDrawingPO> queryBricklayDrawingByCsId(long csId) {
 		return session().createCriteria(BricklayDrawingPO.class).add(Restrictions.eq(BricklayDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

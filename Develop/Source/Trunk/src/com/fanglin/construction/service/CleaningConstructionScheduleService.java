@@ -19,8 +19,6 @@ public interface CleaningConstructionScheduleService {
 	
 	public CleaningConstructionScheduleVO queryCleaningConstructionScheduleByOrderId(CleaningConstructionScheduleVO cleaningConstructionScheduleVO);
 	
-	public int saveOrUpdateCleaningConstructionSchedule(CleaningConstructionScheduleVO cleaningConstructionScheduleVO);
-	
 	public void setCleaningConstructionScheduleForTimeFlag(CleaningConstructionScheduleVO cleaningConstructionScheduleVO);
 	
 	public void setCleaningConstructionScheduleForInfo(CleaningConstructionScheduleVO cleaningConstructionScheduleVO);

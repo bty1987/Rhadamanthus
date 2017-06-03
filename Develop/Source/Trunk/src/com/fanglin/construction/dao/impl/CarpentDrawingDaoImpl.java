@@ -30,7 +30,7 @@ public class CarpentDrawingDaoImpl extends DaoImpl<CarpentDrawingPO> implements 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CarpentDrawingPO> queryCarpentDrawingByCsId(int csId) {
+	public List<CarpentDrawingPO> queryCarpentDrawingByCsId(long csId) {
 		return session().createCriteria(CarpentDrawingPO.class).add(Restrictions.eq(CarpentDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

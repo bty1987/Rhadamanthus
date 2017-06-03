@@ -45,7 +45,8 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 	@Override
 	public List<OilDrawingVO> queryOilDrawingByCsId(OilDrawingVO oilDrawingVO) {
 		
-		List<OilDrawingPO> oilDrawingPOs = oilDrawingDao.queryOilDrawingByCsId(oilDrawingVO.getCsId());
+		long csId = oilDrawingVO.getCsId();
+		List<OilDrawingPO> oilDrawingPOs = oilDrawingDao.queryOilDrawingByCsId(csId);
 		List<OilDrawingVO> oilDrawingVOs = new ArrayList<OilDrawingVO>();
 		
 		for(OilDrawingPO oilDrawingPO: oilDrawingPOs){
@@ -61,7 +62,8 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 	@Override
 	public List<OilDrawingVO> queryOilDrawingByOcsId(OilDrawingVO oilDrawingVO){
 		
-		List<OilDrawingPO> oilDrawingPOs = oilDrawingDao.queryOilDrawingByOcsId(oilDrawingVO.getOcsId());
+		int ocsId = oilDrawingVO.getOcsId();
+		List<OilDrawingPO> oilDrawingPOs = oilDrawingDao.queryOilDrawingByOcsId(ocsId);
 		List<OilDrawingVO> oilDrawingVOs = new ArrayList<OilDrawingVO>();
 		
 		for(OilDrawingPO oilDrawingPO: oilDrawingPOs){

@@ -19,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 
@@ -46,6 +47,11 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 
 	@Override
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId, short type){
+		
+		if(type == DecorationOrderPO.TYPE_HOLONOMY_INT){
+			type = DecorationOrderPO.TYPE_PART_INT;
+		};
+		
 		return (QuotationPO) createCriteria(QuotationPO.class)
 				.add(Restrictions.eq("decorationOrder.orderId", orderId))
 				.add(Restrictions.eq("type", type))

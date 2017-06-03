@@ -20,7 +20,7 @@ public class InspectionRecordVO implements Serializable {
 
 	private static final long serialVersionUID = 5205280061692505927L;
 	
-	private int irId;
+	private Integer irId;
 	
 	private String orderId;
 	
@@ -36,11 +36,11 @@ public class InspectionRecordVO implements Serializable {
 	
 	private String recordDes;
 
-	public int getIrId(){
+	public Integer getIrId(){
 		return irId;
 	}
 
-	public void setIrId(int irId){
+	public void setIrId(Integer irId){
 		this.irId = irId;
 	}
 

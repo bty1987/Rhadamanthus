@@ -56,14 +56,6 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateWaterwayCircuitPowerConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateWaterwayCircuitPowerConstructionSchedule(){
-		
-		waterwayCircuitPowerConstructionScheduleService.saveOrUpdateWaterwayCircuitPowerConstructionSchedule(waterwayCircuitPowerConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setWaterwayCircuitPowerConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setWaterwayCircuitPowerConstructionScheduleForTimeFlag(){
 		

@@ -18,7 +18,7 @@ $.extend(api, {department: {
     queryDepartment: {url: "queryDepartment.do", demo: true},
     queryDepartmentById: {url: "queryDepartmentById.do"},
     queryDepartmentByName: {url: "queryDepartmentByName.do"},
-    addDepartment: {url: "addDepartment.do", server: "communionServer"},
-    updateDepartment: {url: "updateDepartment.do", server: "communionServer"},
-    deleteDepartment: {url: "deleteDepartment.do", server: "communionServer"},
+    addDepartment: {url: "addDepartment.do", server: "communion"},
+    updateDepartment: {url: "updateDepartment.do", server: "communion"},
+    deleteDepartment: {url: "deleteDepartment.do", server: "communion"},
 }});

@@ -19,8 +19,6 @@ public interface CarpentConstructionScheduleService {
 	
 	public CarpentConstructionScheduleVO queryCarpentConstructionScheduleByOrderId(CarpentConstructionScheduleVO carpentConstructionScheduleVO);
 	
-	public int saveOrUpdateCarpentConstructionSchedule(CarpentConstructionScheduleVO carpentConstructionScheduleVO);
-	
 	public void setCarpentConstructionScheduleForTimeFlag(CarpentConstructionScheduleVO carpentConstructionScheduleVO);
 	
 	public void setCarpentConstructionScheduleForInfo(CarpentConstructionScheduleVO carpentConstructionScheduleVO);

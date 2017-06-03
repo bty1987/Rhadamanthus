@@ -29,7 +29,7 @@ public class CleaningDrawingDaoImpl extends DaoImpl<CleaningDrawingPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CleaningDrawingPO> queryCleaningDrawingByCsId(int csId) {
+	public List<CleaningDrawingPO> queryCleaningDrawingByCsId(long csId) {
 		return session().createCriteria(CleaningDrawingPO.class).add(Restrictions.eq(CleaningDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

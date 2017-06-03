@@ -45,7 +45,8 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 	@Override
 	public List<CleaningDrawingVO> queryCleaningDrawingByCsId(CleaningDrawingVO cleaningDrawingVO) {
 		
-		List<CleaningDrawingPO> cleaningDrawingPOs = cleaningDrawingDao.queryCleaningDrawingByCsId(cleaningDrawingVO.getCsId());
+		long csId = cleaningDrawingVO.getCsId();
+		List<CleaningDrawingPO> cleaningDrawingPOs = cleaningDrawingDao.queryCleaningDrawingByCsId(csId);
 		List<CleaningDrawingVO> cleaningDrawingVOs = new ArrayList<CleaningDrawingVO>();
 		
 		for(CleaningDrawingPO cleaningDrawingPO: cleaningDrawingPOs){
@@ -61,7 +62,8 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 	@Override
 	public List<CleaningDrawingVO> queryCleaningDrawingByCcsId(CleaningDrawingVO cleaningDrawingVO){
 		
-		List<CleaningDrawingPO> cleaningDrawingPOs = cleaningDrawingDao.queryCleaningDrawingByCcsId(cleaningDrawingVO.getCcsId());
+		int ccsId = cleaningDrawingVO.getCcsId();
+		List<CleaningDrawingPO> cleaningDrawingPOs = cleaningDrawingDao.queryCleaningDrawingByCcsId(ccsId);
 		List<CleaningDrawingVO> cleaningDrawingVOs = new ArrayList<CleaningDrawingVO>();
 		
 		for(CleaningDrawingPO cleaningDrawingPO: cleaningDrawingPOs){

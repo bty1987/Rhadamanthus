@@ -1,4 +1,5 @@
 package com.fanglin.salary.service.impl;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,27 +29,46 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
-	
 
 	@Override
 	public void pageWorkerSalary(Paging paging, List<Filter> filters) {
-		List<WorkerSalaryPO> polist = workerSalaryDao.pageWorkerSalary(paging,filters);
-		List<WorkerSalaryVO> volist = new ArrayList<WorkerSalaryVO>();
-		for (WorkerSalaryPO po : polist) {
+		
+		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters);
+		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
+		
+		for (WorkerSalaryPO po : WorkerSalaryPOs) {
 			WorkerSalaryVO vo = new WorkerSalaryVO(new UserVO());
 			BeanUtil.copyProperties(po, vo, Arrays.asList("user"));
-			BeanUtil.copyProperties(po.getUser(), vo.getUser(),Arrays.asList("dept","role"));
-			volist.add(vo);
+			BeanUtil.copyProperties(po.getUser(), vo.getUser(),Arrays.asList("dept", "role"));
+			WorkerSalaryVOs.add(vo);
 		}
-		paging.setData(volist);
+		
+		paging.setData(WorkerSalaryVOs);
 	}
-
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void   addWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException {
-		Integer incsid=	 new  Integer(workerSalaryVO.getCsId().toString());
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(incsid);
+	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
+		
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCsId());
+		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
+		
+		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
+			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new UserVO());
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role"));
+			workerSalarys.add(workerSalaryvo);
+		}
+		return workerSalarys;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+		
+		long csId = workerSalaryVO.getCsId();
+		ConstructionSchedulePO  constructionSchedulePO=	constructionScheduleDao.queryConstructionScheduleByCsId(csId);
+		
 		if (constructionSchedulePO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
@@ -59,50 +79,43 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
 		workerSalaryPO.setCsId(workerSalaryVO.getCsId());
-		workerSalaryPO.setStatus((short)0);
-		workerSalaryDao.save(workerSalaryPO);
-		
 		BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO,Arrays.asList("user"));
+		workerSalaryDao.save(workerSalaryPO);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException {
+	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+		
 		WorkerSalaryPO workerSalaryPO = workerSalaryDao.queryWorkSalaryByWsId(workerSalaryVO.getWsId());
-		BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
-		BeanUtil.copyProperties(workerSalaryVO.getUser(), workerSalaryPO.getUser(),Arrays.asList("dept","role"));
-		if(workerSalaryPO.getStatus()==0){
-			workerSalaryDao.update(workerSalaryPO);
-		}else{
+		
+		if (workerSalaryPO == null) {
+			throw new FLException(280001, "薪资信息不存在");
+		}
+		if (workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_STR) {
 			throw new FLException(280002, "工费状态不可操作");
 		}
+		BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
+		BeanUtil.copyProperties(workerSalaryVO.getUser(),workerSalaryPO.getUser(), Arrays.asList("dept", "role"));
+		workerSalaryDao.update(workerSalaryPO);
+		
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException {
+	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+		
 		WorkerSalaryPO worksalarypo = workerSalaryDao.queryWorkSalaryByWsId(workerSalaryVO.getWsId());
-		if (worksalarypo != null) {
-			if (worksalarypo.getStatus() == 1) {
-				throw new FLException(280002, "工费状态不可操作");
-			} else {
-				workerSalaryDao.delete(worksalarypo);
-			}
+		
+		if (worksalarypo == null) {
+			throw new FLException(280001, "薪资信息不存在");
 		}
+		if (worksalarypo.getStatus() != WorkerSalaryPO.STATUS_INIT_STR) {
+			throw new FLException(280002, "工费状态不可操作");
+		}
+		
+		workerSalaryDao.delete(worksalarypo);
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), workerSalaryVO.getCsId());
-		List<WorkerSalaryVO> workerSalarys =new ArrayList<WorkerSalaryVO>();
-		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
-			WorkerSalaryVO workerSalaryvo=  new WorkerSalaryVO(new UserVO());
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo, Arrays.asList("user"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryvo.getUser(), Arrays.asList("dept","role"));
-			workerSalarys.add(workerSalaryvo);
-		}
-		return workerSalarys ;
-	}
 }

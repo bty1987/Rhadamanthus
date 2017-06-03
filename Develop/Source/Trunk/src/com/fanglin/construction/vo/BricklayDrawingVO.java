@@ -21,7 +21,7 @@ public class BricklayDrawingVO implements Serializable{
 	
 	private Integer bcsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String drawingName;
 	
@@ -71,11 +71,11 @@ public class BricklayDrawingVO implements Serializable{
 		this.drawingAddUrl = drawingAddUrl;
 	}
 
-	public Integer getCsId() {
+	public Long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(Integer csId) {
+	public void setCsId(Long csId) {
 		this.csId = csId;
 	}
 

@@ -20,7 +20,6 @@ import com.fanglin.construction.po.WaterwayCircuitPowerConstructionSchedulePO;
 import com.fanglin.construction.service.WaterwayCircuitPowerConstructionScheduleService;
 import com.fanglin.construction.vo.WaterwayCircuitPowerConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("waterwayCircuitPowerConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -49,22 +48,6 @@ public class WaterwayCircuitPowerConstructionScheduleServiceImpl implements Wate
 		BeanUtil.copyProperties(waterwayCircuitPowerConstructionSchedulePO, waterwayCircuitPowerConstructionScheduleVO);
 		
 		return waterwayCircuitPowerConstructionScheduleVO;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void saveOrUpdateWaterwayCircuitPowerConstructionSchedule(WaterwayCircuitPowerConstructionScheduleVO waterwayCircuitPowerConstructionScheduleVO){
-		
-		WaterwayCircuitPowerConstructionSchedulePO waterwayCircuitPowerConstructionSchedulePO = waterwayCircuitPowerConstructionScheduleDao.queryCircuitPowerConstructionScheduleByOrderId(waterwayCircuitPowerConstructionScheduleVO.getOrderId());
-		
-		if(waterwayCircuitPowerConstructionScheduleVO.getWcpcsId() == null){
-			waterwayCircuitPowerConstructionSchedulePO = new WaterwayCircuitPowerConstructionSchedulePO();
-			waterwayCircuitPowerConstructionSchedulePO.setEndTime(DateUtil.current(WaterwayCircuitPowerConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			waterwayCircuitPowerConstructionSchedulePO.setStartTime(DateUtil.current(WaterwayCircuitPowerConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}
-		
-		BeanUtil.copyProperties(waterwayCircuitPowerConstructionScheduleVO, waterwayCircuitPowerConstructionSchedulePO);
-		waterwayCircuitPowerConstructionScheduleDao.saveOrUpdate(waterwayCircuitPowerConstructionSchedulePO);
 	}
 	
 	@Override

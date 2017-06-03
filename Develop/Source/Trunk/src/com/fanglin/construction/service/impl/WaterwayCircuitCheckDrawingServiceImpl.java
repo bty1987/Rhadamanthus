@@ -45,7 +45,8 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 	@Override
 	public List<WaterwayCircuitCheckDrawingVO> queryWaterwayCircuitCheckDrawingByCsId(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO) {
 		
-		List<WaterwayCircuitCheckDrawingPO> waterwayCircuitCheckDrawingPOs = waterwayCircuitCheckDrawingDao.queryWaterwayCircuitCheckDrawingByCsId(waterwayCircuitCheckDrawingVO.getCsId());
+		long csId = waterwayCircuitCheckDrawingVO.getCsId();
+		List<WaterwayCircuitCheckDrawingPO> waterwayCircuitCheckDrawingPOs = waterwayCircuitCheckDrawingDao.queryWaterwayCircuitCheckDrawingByCsId(csId);
 		List<WaterwayCircuitCheckDrawingVO> waterwayCircuitCheckDrawingVOs = new ArrayList<WaterwayCircuitCheckDrawingVO>();
 		
 		for(WaterwayCircuitCheckDrawingPO waterwayCircuitCheckDrawingPO: waterwayCircuitCheckDrawingPOs){
@@ -61,7 +62,8 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 	@Override
 	public List<WaterwayCircuitCheckDrawingVO> queryWaterwayCircuitCheckDrawingByWcccsId(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO){
 		
-		List<WaterwayCircuitCheckDrawingPO> waterwayCircuitCheckDrawingPOs = waterwayCircuitCheckDrawingDao.queryWaterwayCircuitCheckDrawingByWcccsId(waterwayCircuitCheckDrawingVO.getWcccsId());
+		int cccsId = waterwayCircuitCheckDrawingVO.getWcccsId();
+		List<WaterwayCircuitCheckDrawingPO> waterwayCircuitCheckDrawingPOs = waterwayCircuitCheckDrawingDao.queryWaterwayCircuitCheckDrawingByWcccsId(cccsId);
 		List<WaterwayCircuitCheckDrawingVO> waterwayCircuitCheckDrawingVOs = new ArrayList<WaterwayCircuitCheckDrawingVO>();
 		
 		for(WaterwayCircuitCheckDrawingPO waterwayCircuitCheckDrawingPO: waterwayCircuitCheckDrawingPOs){

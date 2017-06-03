@@ -21,7 +21,7 @@ public class ChanDrawingVO implements Serializable{
 	
 	private Integer ccsId;
 	
-	private Integer csId;
+	private Long csId;
 	
 	private String drawingName;
 	
@@ -71,11 +71,11 @@ public class ChanDrawingVO implements Serializable{
 		this.drawingAddUrl = drawingAddUrl;
 	}
 
-	public Integer getCsId() {
+	public Long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(Integer csId) {
+	public void setCsId(Long csId) {
 		this.csId = csId;
 	}
 

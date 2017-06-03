@@ -31,7 +31,7 @@ public class WaterwayCircuitPowerConstructionScheduleDaoImpl extends DaoImpl<Wat
 	}
 
 	@Override
-	public WaterwayCircuitPowerConstructionSchedulePO queryCircuitPowerConstructionScheduleByCsId(int csId){
+	public WaterwayCircuitPowerConstructionSchedulePO queryCircuitPowerConstructionScheduleByCsId(long csId){
 		return (WaterwayCircuitPowerConstructionSchedulePO) session().createCriteria(WaterwayCircuitPowerConstructionSchedulePO.class).add(Restrictions.eq(WaterwayCircuitPowerConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

@@ -45,7 +45,8 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 	@Override
 	public List<PutlineDrawingVO> queryPutlineDrawingByCsId(PutlineDrawingVO putlineDrawingVO) {
 		
-		List<PutlineDrawingPO> putlineDrawingPOs = putlineDrawingDao.queryPutlineDrawingByCsId(putlineDrawingVO.getCsId());
+		long csId = putlineDrawingVO.getCsId();
+		List<PutlineDrawingPO> putlineDrawingPOs = putlineDrawingDao.queryPutlineDrawingByCsId(csId);
 		List<PutlineDrawingVO> putlineDrawingVOs = new ArrayList<PutlineDrawingVO>();
 		
 		for(PutlineDrawingPO putlineDrawingPO: putlineDrawingPOs){
@@ -65,7 +66,8 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 			return null;
 		}
 		
-		List<PutlineDrawingPO> putlineDrawingPOs = putlineDrawingDao.queryPutlineDrawingByPlcsId(putlineDrawingVO.getPlcsId());
+		int plcsId = putlineDrawingVO.getPlcsId();
+		List<PutlineDrawingPO> putlineDrawingPOs = putlineDrawingDao.queryPutlineDrawingByPlcsId(plcsId);
 		List<PutlineDrawingVO> putlineDrawingVOs = new ArrayList<PutlineDrawingVO>();
 		
 		for(PutlineDrawingPO putlineDrawingPO: putlineDrawingPOs){

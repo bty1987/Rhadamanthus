@@ -13,13 +13,13 @@ $.extend(api.ds, {
 $.extend(api, {data: {
     
     pageSupplier: {url: "pageSupplier.do", demo: true},
-    addSupplier: {url: "addSupplier.do", server: "communionServer"},
-    updateSupplier: {url: "updateSupplier.do", server: "communionServer"},
-    updateSupplierForLogin: {url: "updateSupplierForLogin.do", server: "communionServer"},
-    updateSupplierForPassword: {url: "updateSupplierForPassword.do", server: "communionServer"},
+    addSupplier: {url: "addSupplier.do", server: "communion"},
+    updateSupplier: {url: "updateSupplier.do", server: "communion"},
+    updateSupplierForLogin: {url: "updateSupplierForLogin.do", server: "communion"},
+    updateSupplierForPassword: {url: "updateSupplierForPassword.do", server: "communion"},
 
     querySupplierUserRightBySId: {url: "querySupplierUserRightBySId.do", demo: true},
-    updateSupplierUserRight: {url: "updateSupplierUserRight.do", server: "communionServer"},
+    updateSupplierUserRight: {url: "updateSupplierUserRight.do", server: "communion"},
 
     pageBrand: {url: "pageBrand.do", demo: true},
     queryBrand: {url: "queryBrand.do", demo: true},
@@ -28,36 +28,36 @@ $.extend(api, {data: {
     queryBrandByCategoryId: {url: "queryBrandByCategoryId.do", demo: true},
     queryBrandForPinYinName: {url: "queryBrandForPinYinName.do"},
     queryBrandForPinYinNameACategoryName: {url: "queryBrandForPinYinNameACategoryName.do"},
-    addBrand: {url: "addBrand.do", server: "communionServer"},
-    updateBrand: {url: "updateBrand.do", server: "communionServer"},
-    deleteBrandByBIds: {url: "deleteBrandByBIds.do", server: "communionServer"},
+    addBrand: {url: "addBrand.do", server: "communion"},
+    updateBrand: {url: "updateBrand.do", server: "communion"},
+    deleteBrandByBIds: {url: "deleteBrandByBIds.do", server: "communion"},
 
     queryBrandUserRightForUserId: {url: "queryBrandUserRightForUserId.do"},
     queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do"},
-    updateBrandUserRight: {url: "updateBrandUserRight.do", server: "communionServer"},
+    updateBrandUserRight: {url: "updateBrandUserRight.do", server: "communion"},
 
     pageCategory: {url: "pageCategory.do", demo: true},
     queryCategory: {url: "queryCategory.do", demo: true},
     queryCategoryByCId: {url: "queryCategoryByCId.do"},
-    addCategory: {url: "addCategory.do", server: "communionServer"},
-    updateCategory: {url: "updateCategory.do", server: "communionServer"},
-    deleteCategoryByCIds: {url: "deleteCategoryByCIds.do", server: "communionServer"},
+    addCategory: {url: "addCategory.do", server: "communion"},
+    updateCategory: {url: "updateCategory.do", server: "communion"},
+    deleteCategoryByCIds: {url: "deleteCategoryByCIds.do", server: "communion"},
 
     pageCustomer: {url: "pageCustomer.do", demo: true},
     queryCustomerById: {url: "queryCustomerById.do"},
     queryCustomerForName: {url: "queryCustomerForName.do"},
     checkCustomerForPhone: {url: "checkCustomerForPhone.do"},
-    addCustomer: {url: "addCustomer.do", server: "communionServer"},
-    updateCustomer: {url: "updateCustomer.do", server: "communionServer"},
-    updateCustomerForBalance: {url: "updateCustomerForBalance.do", server: "communionServer"},
+    addCustomer: {url: "addCustomer.do", server: "communion"},
+    updateCustomer: {url: "updateCustomer.do", server: "communion"},
+    updateCustomerForBalance: {url: "updateCustomerForBalance.do", server: "communion"},
 
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
     queryVillageById: {url: "queryVillageById.do"},
     queryVillageForNameByPinyin: {url: "queryVillageForNameByPinyin.do", demo: true},
-    addVillage: {url: "addVillage.do", server: "communionServer"},
-    updateVillage: {url: "updateVillage.do", server: "communionServer"},
-    updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communionServer"},
-    updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communionServer"}
+    addVillage: {url: "addVillage.do", server: "communion"},
+    updateVillage: {url: "updateVillage.do", server: "communion"},
+    updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communion"},
+    updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"}
     
 }});

@@ -9,15 +9,15 @@ public class ConstructerVO implements java.io.Serializable {
 	private static final long serialVersionUID = 5071168089649592674L;
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	private Long cid;
-	private Integer csId;	//工程id
+	private Long csId;	//工程id
 	private String orderId;
 	private UserVO	user;
 	private Integer schedule;
-	private short rate;
+	private Short rate;
 	private String assessment;
 	private UserVO creater;
 	private Timestamp createTime;
-	private short status;
+	private Short status;
 
 	
 	public ConstructerVO() {
@@ -43,11 +43,11 @@ public class ConstructerVO implements java.io.Serializable {
 		this.cid = cid;
 	}
 
-	public Integer getCsId() {
+	public Long getCsId() {
 		return this.csId;
 	}
 
-	public void setCsId(Integer csId) {
+	public void setCsId(Long csId) {
 		this.csId = csId;
 	}
 
@@ -67,11 +67,11 @@ public class ConstructerVO implements java.io.Serializable {
 		this.schedule = schedule;
 	}
 
-	public short getRate() {
+	public Short getRate() {
 		return this.rate;
 	}
 
-	public void setRate(short rate) {
+	public void setRate(Short rate) {
 		this.rate = rate;
 	}
 
@@ -91,11 +91,11 @@ public class ConstructerVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 	

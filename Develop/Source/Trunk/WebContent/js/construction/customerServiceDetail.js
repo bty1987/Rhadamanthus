@@ -18,7 +18,6 @@ jQuery(function($) {
 				workerDesId: "chanWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateChanConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "ccsId",
@@ -70,7 +69,6 @@ jQuery(function($) {
 				powerWorkerRatyDes: "powerWorkerRatyDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateWaterwayCircuitPowerConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "wcpcsId",
@@ -90,7 +88,6 @@ jQuery(function($) {
 				workerDesId: "bricklayWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateBricklayConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "bcsId",
@@ -107,7 +104,6 @@ jQuery(function($) {
 				workerDesId: "groundLevelingWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateGroundLevelingConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "glcsId",
@@ -125,7 +121,6 @@ jQuery(function($) {
 				workerDesId: "carpentWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateCarpentConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "ccsId",
@@ -143,7 +138,6 @@ jQuery(function($) {
 				workerDesId: "oilWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateOilConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "ocsId",
@@ -161,7 +155,6 @@ jQuery(function($) {
 				workerDesId: "waterwayCircuitCheckWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateWaterwayCircuitCheckConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "wcccsId",
@@ -177,7 +170,6 @@ jQuery(function($) {
 				workerInfos: "cleaningWorkerInfos",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updateCleaningConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "ccsId",

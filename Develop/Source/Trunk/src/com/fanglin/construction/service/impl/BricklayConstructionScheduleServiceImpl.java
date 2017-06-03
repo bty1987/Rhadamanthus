@@ -20,7 +20,6 @@ import com.fanglin.construction.po.BricklayConstructionSchedulePO;
 import com.fanglin.construction.service.BricklayConstructionScheduleService;
 import com.fanglin.construction.vo.BricklayConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("bricklayConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -52,28 +51,10 @@ public class BricklayConstructionScheduleServiceImpl implements BricklayConstruc
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void saveOrUpdateBricklayConstructionSchedule(BricklayConstructionScheduleVO bricklayConstructionScheduleVO){
-		
-		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = null;
-		
-		if(bricklayConstructionScheduleVO.getBcsId() == 0){
-			bricklayConstructionSchedulePO = new BricklayConstructionSchedulePO();
-			bricklayConstructionSchedulePO.setEndTime(DateUtil.current(BricklayConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			bricklayConstructionSchedulePO.setStartTime(DateUtil.current(BricklayConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}else{
-			bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.queryBricklayConstructionScheduleByOrderId(bricklayConstructionScheduleVO.getOrderId());
-		}
-		
-		BeanUtil.copyProperties(bricklayConstructionScheduleVO, bricklayConstructionSchedulePO);
-		bricklayConstructionScheduleDao.saveOrUpdate(bricklayConstructionSchedulePO);
-
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
 	public void setBricklayConstructionScheduleForTimeFlag(BricklayConstructionScheduleVO bricklayConstructionScheduleVO){
 		
-		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.get(bricklayConstructionScheduleVO.getBcsId());
+		Integer bcsId = bricklayConstructionScheduleVO.getBcsId();
+		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.get(bcsId);
 		
 		bricklayConstructionSchedulePO.setEndTimeFlag(bricklayConstructionScheduleVO.getEndTimeFlag());
 		bricklayConstructionSchedulePO.setStartTimeFlag(bricklayConstructionScheduleVO.getStartTimeFlag());
@@ -86,7 +67,8 @@ public class BricklayConstructionScheduleServiceImpl implements BricklayConstruc
 	@Transactional(rollbackFor=Exception.class)
 	public void setBricklayConstructionScheduleForInfo(BricklayConstructionScheduleVO bricklayConstructionScheduleVO){
 		
-		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.get(bricklayConstructionScheduleVO.getBcsId());
+		Integer bcsId = bricklayConstructionScheduleVO.getBcsId();
+		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.get(bcsId);
 		
 		bricklayConstructionSchedulePO.setStartTime(bricklayConstructionScheduleVO.getStartTime());
 		bricklayConstructionSchedulePO.setEndTime(bricklayConstructionScheduleVO.getEndTime());

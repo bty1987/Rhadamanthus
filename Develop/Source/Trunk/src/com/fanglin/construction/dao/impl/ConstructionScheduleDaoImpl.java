@@ -292,7 +292,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 
 	@Override
-	public ConstructionSchedulePO queryConstructionScheduleByCsId(Integer csId) {
+	public ConstructionSchedulePO queryConstructionScheduleByCsId(long csId) {
 		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 	

@@ -29,7 +29,7 @@ public class ChanDrawingDaoImpl extends DaoImpl<ChanDrawingPO> implements ChanDr
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ChanDrawingPO> queryChanDrawingByCsId(int csId) {
+	public List<ChanDrawingPO> queryChanDrawingByCsId(long csId) {
 		return session().createCriteria(ChanDrawingPO.class).add(Restrictions.eq(ChanDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

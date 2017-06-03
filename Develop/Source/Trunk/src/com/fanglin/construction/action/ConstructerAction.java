@@ -25,6 +25,7 @@ public class ConstructerAction extends BaseListAction{
 	
 	@Autowired
 	private ConstructerService constructerService;
+	
 	@Autowired
 	private UserService userService;
 	
@@ -53,7 +54,7 @@ public class ConstructerAction extends BaseListAction{
 	@Action(value = "addConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructer() throws FLException{
 		
-		this.findUser = userService.queryUserByUserId(constructer.getUser().getUserId());
+		this.findUser = userService.queryUserByUserId(new UserVO(constructer.getUser().getUserId()));
 		constructerService.addConstructer(constructer, queryUserId());
 		
 		 return SUCCESS;

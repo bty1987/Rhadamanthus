@@ -32,7 +32,7 @@ public class PutlineConstructionScheduleDaoImpl extends DaoImpl<PutlineConstruct
 	}
 
 	@Override
-	public PutlineConstructionSchedulePO queryConstructionScheduleByCsId(int csId){
+	public PutlineConstructionSchedulePO queryConstructionScheduleByCsId(long csId){
 		return (PutlineConstructionSchedulePO) session().createCriteria(PutlineConstructionSchedulePO.class).add(Restrictions.eq(PutlineConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

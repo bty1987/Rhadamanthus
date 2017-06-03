@@ -19,8 +19,6 @@ public interface BricklayConstructionScheduleService {
 	
 	public BricklayConstructionScheduleVO queryBricklayConstructionScheduleByOrderId(BricklayConstructionScheduleVO bricklayConstructionScheduleVO);
 	
-	public void saveOrUpdateBricklayConstructionSchedule(BricklayConstructionScheduleVO bricklayConstructionScheduleVO);
-	
 	public void setBricklayConstructionScheduleForTimeFlag(BricklayConstructionScheduleVO bricklayConstructionScheduleVO);
 	
 	public void setBricklayConstructionScheduleForInfo(BricklayConstructionScheduleVO bricklayConstructionScheduleVO);

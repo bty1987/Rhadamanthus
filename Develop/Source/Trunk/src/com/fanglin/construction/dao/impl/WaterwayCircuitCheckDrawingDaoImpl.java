@@ -29,7 +29,7 @@ public class WaterwayCircuitCheckDrawingDaoImpl extends DaoImpl<WaterwayCircuitC
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<WaterwayCircuitCheckDrawingPO> queryWaterwayCircuitCheckDrawingByCsId(int csId) {
+	public List<WaterwayCircuitCheckDrawingPO> queryWaterwayCircuitCheckDrawingByCsId(long csId) {
 		return session().createCriteria(WaterwayCircuitCheckDrawingPO.class).add(Restrictions.eq(WaterwayCircuitCheckDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

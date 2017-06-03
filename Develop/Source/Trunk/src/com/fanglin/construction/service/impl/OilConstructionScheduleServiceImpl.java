@@ -20,7 +20,6 @@ import com.fanglin.construction.po.OilConstructionSchedulePO;
 import com.fanglin.construction.service.OilConstructionScheduleService;
 import com.fanglin.construction.vo.OilConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("oilConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -52,26 +51,6 @@ public class OilConstructionScheduleServiceImpl implements OilConstructionSchedu
 		BeanUtil.copyProperties(oilConstructionSchedulePO, oilConstructionScheduleVO);
 		
 		return oilConstructionScheduleVO;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateOilConstructionSchedule(OilConstructionScheduleVO oilConstructionScheduleVO){
-		
-		OilConstructionSchedulePO oilConstructionSchedulePO = null;
-		
-		if(oilConstructionScheduleVO.getOcsId() == 0){
-			oilConstructionSchedulePO = new OilConstructionSchedulePO();
-			oilConstructionSchedulePO.setEndTime(DateUtil.current(OilConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			oilConstructionSchedulePO.setStartTime(DateUtil.current(OilConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}else{
-			oilConstructionSchedulePO = oilConstructionScheduleDao.get(oilConstructionScheduleVO.getOcsId());
-		}
-		
-		BeanUtil.copyProperties(oilConstructionScheduleVO, oilConstructionSchedulePO);
-		oilConstructionScheduleDao.saveOrUpdate(oilConstructionSchedulePO);
-
-		return oilConstructionSchedulePO.getOcsId();
 	}
 
 	@Override

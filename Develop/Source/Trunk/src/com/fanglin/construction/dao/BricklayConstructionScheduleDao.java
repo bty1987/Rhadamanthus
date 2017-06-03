@@ -18,6 +18,6 @@ public interface BricklayConstructionScheduleDao extends Dao<BricklayConstructio
 	
 	public BricklayConstructionSchedulePO queryBricklayConstructionScheduleByOrderId(String orderId);
 	
-	public BricklayConstructionSchedulePO queryBricklayConstructionScheduleByCsId(int csId);
+	public BricklayConstructionSchedulePO queryBricklayConstructionScheduleByCsId(long csId);
 
 }

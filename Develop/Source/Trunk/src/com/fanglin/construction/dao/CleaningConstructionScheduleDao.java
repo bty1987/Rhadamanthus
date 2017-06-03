@@ -18,6 +18,6 @@ public interface CleaningConstructionScheduleDao extends Dao<CleaningConstructio
 	
 	public CleaningConstructionSchedulePO queryCleaningConstructionScheduleByOrderId(String orderId);
 	
-	public CleaningConstructionSchedulePO queryCleaningConstructionScheduleByCsId(int csId);
+	public CleaningConstructionSchedulePO queryCleaningConstructionScheduleByCsId(long csId);
 	
 }

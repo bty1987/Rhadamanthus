@@ -55,7 +55,7 @@ public class PutlineConstructionSchedulePO implements Serializable {
 	
 	private int plcsId;
 	
-	private int csId;
+	private long csId;
 	
 	private DecorationOrderPO decorationOrder;
 	
@@ -77,8 +77,7 @@ public class PutlineConstructionSchedulePO implements Serializable {
 		super();
 	}
 
-	public PutlineConstructionSchedulePO(int csId,
-			DecorationOrderPO decorationOrder, String startTime, String endTime) {
+	public PutlineConstructionSchedulePO(long csId, DecorationOrderPO decorationOrder, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.decorationOrder = decorationOrder;
@@ -152,11 +151,11 @@ public class PutlineConstructionSchedulePO implements Serializable {
 	}
 
 	@Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

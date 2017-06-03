@@ -43,14 +43,6 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDecorationOrderForConstructionScheduleByPlace", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForConstructionScheduleByPlace() throws FLException{
-		
-		constructionScheduleService.pageDecorationOrderForConstructionScheduleByPlace(getPaging(), getFilters(), queryUserId());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
 		

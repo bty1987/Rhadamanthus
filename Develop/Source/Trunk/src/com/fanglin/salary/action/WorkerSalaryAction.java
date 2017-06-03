@@ -29,46 +29,60 @@ public class WorkerSalaryAction extends BaseListAction{
 	
 	@Action(value = "pageWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String pageWorkerSalary (){
+		
 		workerSalaryService.pageWorkerSalary(getPaging(), getFilters());
+		
 		return  SUCCESS;
 	}
 
 	@Action(value = "queryWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryWorkerSalary(){
+		
 		workerSalarys = workerSalaryService.queryWorkerSalary(workerSalary);
+	
 		return SUCCESS;
 	}
 	@Action(value = "addWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addWorkerSalary() throws FLException{
+		
 		workerSalaryService.addWorkerSalary(workerSalary);
+		
 		return SUCCESS;
 	}
 	
 	@Action(value = "updateWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateWorkerSalary() throws FLException{
+		
 		workerSalaryService.updateWorkerSalary(workerSalary);
+		
 		return SUCCESS;
 	}
 	
 	@Action(value = "deleteWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String deleteWorkerSalary() throws FLException{
+		
 		workerSalaryService.deleteWorkerSalary(workerSalary);
+		
 		return  SUCCESS;
 	}
 	
 	public WorkerSalaryVO getWorkerSalary() {
+		
 		return workerSalary;
 	}
 	
 	public void setWorkerSalary(WorkerSalaryVO workerSalary) {
+		
 		this.workerSalary = workerSalary;
 	}
 	
 	public List<WorkerSalaryVO> getWorkerSalarys() {
+		
 		return workerSalarys;
 	}
 
 	public void setWorkerSalarys(List<WorkerSalaryVO> workerSalarys) {
+		
 		this.workerSalarys = workerSalarys;
 	}
 	

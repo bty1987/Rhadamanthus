@@ -20,7 +20,6 @@ import com.fanglin.construction.po.GroundLevelingConstructionSchedulePO;
 import com.fanglin.construction.service.GroundLevelingConstructionScheduleService; 
 import com.fanglin.construction.vo.GroundLevelingConstructionScheduleVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("groundLevelingConstructionScheduleService")
 @Transactional(readOnly=true)
@@ -47,26 +46,6 @@ public class GroundLevelingConstructionScheduleServiceImpl implements GroundLeve
 		BeanUtil.copyProperties(groundLevelingConstructionSchedulePO, groundLevelingConstructionScheduleVO);
 		
 		return groundLevelingConstructionScheduleVO;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateGroundLevelingConstructionSchedule(GroundLevelingConstructionScheduleVO groundLevelingConstructionScheduleVO){
-
-		GroundLevelingConstructionSchedulePO groundLevelingConstructionSchedulePO = null;
-		
-		if(groundLevelingConstructionScheduleVO.getGlcsId() == 0){
-			groundLevelingConstructionSchedulePO = new GroundLevelingConstructionSchedulePO();
-			groundLevelingConstructionSchedulePO.setEndTime(DateUtil.current(GroundLevelingConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-			groundLevelingConstructionSchedulePO.setStartTime(DateUtil.current(GroundLevelingConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
-		}else{
-			groundLevelingConstructionSchedulePO = groundLevelingConstructionScheduleDao.get(groundLevelingConstructionScheduleVO.getGlcsId());
-		}
-		
-		BeanUtil.copyProperties(groundLevelingConstructionScheduleVO, groundLevelingConstructionSchedulePO);
-		groundLevelingConstructionScheduleDao.saveOrUpdate(groundLevelingConstructionSchedulePO);
-
-		return groundLevelingConstructionSchedulePO.getGlcsId();
 	}
 
 	@Override

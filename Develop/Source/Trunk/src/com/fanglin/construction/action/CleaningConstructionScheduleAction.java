@@ -56,14 +56,6 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateCleaningConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCleaningConstructionSchedule(){
-		
-		cleaningConstructionScheduleService.saveOrUpdateCleaningConstructionSchedule(cleaningConstructionSchedule);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "setCleaningConstructionScheduleForTimeFlag", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setCleaningConstructionScheduleForTimeFlag(){
 		

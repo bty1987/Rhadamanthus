@@ -31,7 +31,7 @@ public class OilConstructionScheduleDaoImpl extends DaoImpl<OilConstructionSched
 	}
 
 	@Override
-	public OilConstructionSchedulePO queryConstructionScheduleByCsId(int csId){
+	public OilConstructionSchedulePO queryConstructionScheduleByCsId(long csId){
 		return (OilConstructionSchedulePO) session().createCriteria(OilConstructionSchedulePO.class).add(Restrictions.eq(OilConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

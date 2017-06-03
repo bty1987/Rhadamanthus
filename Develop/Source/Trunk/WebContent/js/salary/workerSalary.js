@@ -73,7 +73,7 @@ jQuery(function($) {
         com.post(api.salary.deleteWorkerSalary,{
 
             "workerSalary.wsId": wsId
-        
+
         }, function(res){
             searcher.doSearch();
         },function(data){
@@ -81,6 +81,6 @@ jQuery(function($) {
         });
     }
 
-  
+
 
 });

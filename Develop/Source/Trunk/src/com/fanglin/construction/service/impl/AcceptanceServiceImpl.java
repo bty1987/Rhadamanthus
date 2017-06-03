@@ -100,7 +100,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			}
 		}
 		
-		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId, null);
+		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId, 0);
 		
 		if(constructerPOs != null && constructerPOs.size() > 0){
 			 for (ConstructerPO constructerPO : constructerPOs) {

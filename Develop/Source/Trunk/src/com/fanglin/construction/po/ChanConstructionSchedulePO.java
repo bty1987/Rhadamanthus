@@ -62,7 +62,7 @@ public class ChanConstructionSchedulePO implements Serializable {
 	
 	private int ccsId;
 	
-	private int csId;
+	private long csId;
 	
 	private String orderId;
 	
@@ -82,7 +82,7 @@ public class ChanConstructionSchedulePO implements Serializable {
 		super();
 	}
 
-	public ChanConstructionSchedulePO(int csId, String orderId, String startTime, String endTime) {
+	public ChanConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
 		this.orderId = orderId;
@@ -93,11 +93,11 @@ public class ChanConstructionSchedulePO implements Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ccsId")
-	public Integer getCcsId(){
+	public int getCcsId(){
 		return this.ccsId;
 	}
 
-	public void setCcsId(Integer ccsId){
+	public void setCcsId(int ccsId){
 		this.ccsId = ccsId;
 	}
 
@@ -156,11 +156,11 @@ public class ChanConstructionSchedulePO implements Serializable {
 	}
 
 	@Column(name = "csId")
-	public int getCsId(){
+	public long getCsId(){
 		return csId;
 	}
 
-	public void setCsId(int csId){
+	public void setCsId(long csId){
 		this.csId = csId;
 	}
 

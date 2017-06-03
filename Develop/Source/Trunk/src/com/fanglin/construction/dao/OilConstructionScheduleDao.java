@@ -18,6 +18,6 @@ public interface OilConstructionScheduleDao extends Dao<OilConstructionScheduleP
 	
 	public OilConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId);
 	
-	public OilConstructionSchedulePO queryConstructionScheduleByCsId(int csId);
+	public OilConstructionSchedulePO queryConstructionScheduleByCsId(long csId);
 
 }

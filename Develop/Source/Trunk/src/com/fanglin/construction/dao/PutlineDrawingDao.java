@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface PutlineDrawingDao extends Dao<PutlineDrawingPO> {
 	
-	public List<PutlineDrawingPO> queryPutlineDrawingByCsId(int csId);
+	public List<PutlineDrawingPO> queryPutlineDrawingByCsId(long csId);
 	
 	public List<PutlineDrawingPO> queryPutlineDrawingByPlcsId(int plcsId);
 	

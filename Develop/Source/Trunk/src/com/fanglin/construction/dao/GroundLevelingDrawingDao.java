@@ -18,7 +18,7 @@ import com.fanglin.core.dao.Dao;
 
 public interface GroundLevelingDrawingDao extends Dao<GroundLevelingDrawingPO> {
 	
-	public List<GroundLevelingDrawingPO> queryGroundLevelingDrawingByCsId(int csId);
+	public List<GroundLevelingDrawingPO> queryGroundLevelingDrawingByCsId(long csId);
 	
 	public List<GroundLevelingDrawingPO> queryGroundLevelingDrawingByGlcsId(int glcsId);
 	

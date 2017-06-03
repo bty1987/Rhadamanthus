@@ -44,7 +44,8 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 	@Override
 	public List<BricklayDrawingVO> queryBricklayDrawingByCsId(BricklayDrawingVO bricklayDrawingVO) {
 		
-		List<BricklayDrawingPO> bricklayDrawingPOs = bricklayDrawingDao.queryBricklayDrawingByCsId(bricklayDrawingVO.getCsId());
+		long csId = bricklayDrawingVO.getCsId();
+		List<BricklayDrawingPO> bricklayDrawingPOs = bricklayDrawingDao.queryBricklayDrawingByCsId(csId);
 		List<BricklayDrawingVO> bricklayDrawingVOs = new ArrayList<BricklayDrawingVO>();
 		
 		for(BricklayDrawingPO bricklayDrawingPO: bricklayDrawingPOs){
@@ -60,7 +61,8 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 	@Override
 	public List<BricklayDrawingVO> queryBricklayDrawingByBcsdId(BricklayDrawingVO bricklayDrawingVO){
 		
-		List<BricklayDrawingPO> bricklayDrawingPOs = bricklayDrawingDao.queryBricklayDrawingByBcsId(bricklayDrawingVO.getBcsId());
+		int bcsId = bricklayDrawingVO.getBcsId();
+		List<BricklayDrawingPO> bricklayDrawingPOs = bricklayDrawingDao.queryBricklayDrawingByBcsId(bcsId);
 		List<BricklayDrawingVO> bricklayDrawingVOs = new ArrayList<BricklayDrawingVO>();
 		
 		for(BricklayDrawingPO bricklayDrawingPO: bricklayDrawingPOs){

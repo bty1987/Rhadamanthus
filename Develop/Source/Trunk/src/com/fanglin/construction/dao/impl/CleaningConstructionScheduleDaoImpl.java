@@ -31,7 +31,7 @@ public class CleaningConstructionScheduleDaoImpl extends DaoImpl<CleaningConstru
 	}
 
 	@Override
-	public CleaningConstructionSchedulePO queryCleaningConstructionScheduleByCsId(int csId){
+	public CleaningConstructionSchedulePO queryCleaningConstructionScheduleByCsId(long csId){
 		return (CleaningConstructionSchedulePO) session().createCriteria(CleaningConstructionSchedulePO.class).add(Restrictions.eq(CleaningConstructionSchedulePO.COLUMN_CSID_STR, csId)).uniqueResult();
 	}
 

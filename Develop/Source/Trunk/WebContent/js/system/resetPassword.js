@@ -67,7 +67,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["userId", "userName"], "condList", api.personel.pageUserForResetPassword, function(data){
+	searcher.init(["userId", "userName"], "condList", api.personel.pageUser, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "resetPwdPostData", null, false, null, function(){
 		

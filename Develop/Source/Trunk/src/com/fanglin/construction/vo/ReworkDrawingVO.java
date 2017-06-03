@@ -20,9 +20,9 @@ public class ReworkDrawingVO implements Serializable {
 
 	private static final long serialVersionUID = 5424178580915462699L;
 	
-	private int rwdId;
+	private Integer rwdId;
 	
-	private int rwId;
+	private Integer rwId;
 	
 	private String operatorName;
 	
@@ -34,19 +34,19 @@ public class ReworkDrawingVO implements Serializable {
 	
 	private String rwdAddUrl;
 
-	public int getRwdId(){
+	public Integer getRwdId(){
 		return rwdId;
 	}
 
-	public void setRwdId(int rwdId){
+	public void setRwdId(Integer rwdId){
 		this.rwdId = rwdId;
 	}
 
-	public int getRwId(){
+	public Integer getRwId(){
 		return rwId;
 	}
 
-	public void setRwId(int rwId){
+	public void setRwId(Integer rwId){
 		this.rwId = rwId;
 	}
 

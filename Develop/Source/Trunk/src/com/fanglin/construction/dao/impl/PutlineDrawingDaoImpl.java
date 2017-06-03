@@ -29,7 +29,7 @@ public class PutlineDrawingDaoImpl extends DaoImpl<PutlineDrawingPO> implements 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<PutlineDrawingPO> queryPutlineDrawingByCsId(int csId) {
+	public List<PutlineDrawingPO> queryPutlineDrawingByCsId(long csId) {
 		return session().createCriteria(PutlineDrawingPO.class).add(Restrictions.eq(PutlineDrawingPO.COLUMN_CSID_STR, csId)).list();
 	}
 

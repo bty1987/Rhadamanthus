@@ -21,12 +21,12 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConstructerPO> queryConstructerByOrderId(String orderId,Integer schedule) {
+	public List<ConstructerPO> queryConstructerByOrderId(String orderId,int schedule) {
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId))
-				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, (short)0));
-		if (schedule != null && schedule > 0) {
+				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		if (schedule > 0) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
 		return c.list();
@@ -34,26 +34,26 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConstructerPO> queryConstructerByCsId(Integer csId, Integer schedule) {
+	public List<ConstructerPO> queryConstructerByCsId(long csId, int schedule) {
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_CSID_STR, csId))
-				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, (short)0));
-		if (schedule != null && schedule > 0) {
+				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		if (schedule > 0) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
 		return c.list();
 	}
 
 	@Override
-	public ConstructerPO queryConstructerByCid(Long cid) {
+	public ConstructerPO queryConstructerByCid(long cid) {
 		return (ConstructerPO)session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR,cid)).uniqueResult();
 	}
 
 	@Override
-	public int countConstructer(Integer csId, String userId, Integer schedule, short status) {
+	public int countConstructer(long csId, String userId, int schedule, short status) {
 		String sql = "select count(*) from platform.constructer where csId = :csId and userId = :userId and schedule = :schedule and status = :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("csId", csId ).setString("userId", userId).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("csId", csId).setString("userId", userId).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
 		return count.intValue();
 	}
 }
