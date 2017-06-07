@@ -41,7 +41,7 @@ public class PurchasePO implements Serializable{
 	
 	public static final String COLUMN_COMMENT_STR = "comment";          //说明
 	
-	private Long pid;
+	private long pid;
 	
 	private String no;
 	
@@ -51,9 +51,11 @@ public class PurchasePO implements Serializable{
 	
 	private Timestamp balanceTime;
 	
-	private Short status;
+	private Timestamp deliveryTime;
 	
-	private Short balanceStatus;
+	private short status;
+	
+	private short balanceStatus;
 	
 	private String comment;
 	
@@ -74,11 +76,11 @@ public class PurchasePO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="pid")
-	public Long getPid() {
+	public long getPid() {
 		return pid;
 	}
 
-	public void setPid(Long pid) {
+	public void setPid(long pid) {
 		this.pid = pid;
 	}
 
@@ -118,22 +120,31 @@ public class PurchasePO implements Serializable{
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
+	
+	@Column(name="deliveryTime")
+	public Timestamp getDeliveryTime() {
+		return deliveryTime;
+	}
+
+	public void setDeliveryTime(Timestamp deliveryTime) {
+		this.deliveryTime = deliveryTime;
+	}
 
 	@Column(name="status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
 	@Column(name="balanceStatus")
-	public Short getBalanceStatus() {
+	public short getBalanceStatus() {
 		return balanceStatus;
 	}
 
-	public void setBalanceStatus(Short balanceStatus) {
+	public void setBalanceStatus(short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
 

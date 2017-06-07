@@ -1,12 +1,13 @@
 var config = {
-	versionCode: "1.5.004",
+	versionCode: "1.5.012",
 	system: 1,
 	uploadTimeout: 30,
 	quotationLimitDiscount: 8.8,
 	timeout: 30,
 	
-	manageRate: 0.16,
 	serviceRate: 0.1,
+	addreduceManagerPrice:true,
+	addreduceDiscount: 8.8,
 	
 	name: '方林信息平台',
 	ename: 'Fanglin Information Platform',
@@ -20,21 +21,9 @@ var config = {
 	backgroundImg: './images/bg_fanglin.jpg',
 	shakingColor: '#197bb5', // 1918: #892f89 , ehome: #3d677c
 	
-	host: 'http://192.168.5.21/',
-	server: 'http://192.168.5.21/',
-    media: 'http://192.168.5.21/Demeter/',
-    dmedia: 'http://static.dingtalk.com/media/',
-    communion: 'http://192.168.5.23/',
+	host: '',
+	server: '',
+    media: '',
+    dmedia: '',
+    communion: '',
 };
-
-$(function(){
-	
-	if(!location.hostname.startsWith('192.168')){
-		config.host = 'http://61.161.185.22/';
-		config.server = 'http://61.161.185.22/';
-		config.media = 'http://61.161.185.22/';
-		config.dmedia = 'http://static.dingtalk.com/media/';
-		config.communion = 'http://61.161.185.22:30001/';
-	}
-	
-});

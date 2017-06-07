@@ -60,7 +60,7 @@ public class DecorationBelongInfoPO implements Serializable {
 	
 	private DepartmentPO belongRegionPO;
 	
-	private Float belongRate = (float) 1;
+	private float belongRate = (float) 1;
 	
 	private UserPO operateUserPO;
 	
@@ -125,11 +125,11 @@ public class DecorationBelongInfoPO implements Serializable {
 		this.belongDeptPO = belongDeptPO;
 	}
 
-	public Float getBelongRate(){
+	public float getBelongRate(){
 		return belongRate;
 	}
 
-	public void setBelongRate(Float belongRate){
+	public void setBelongRate(float belongRate){
 		this.belongRate = belongRate;
 	}
 

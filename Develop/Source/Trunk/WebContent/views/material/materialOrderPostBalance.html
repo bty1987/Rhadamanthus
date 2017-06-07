@@ -17,9 +17,13 @@
       			<div class="modal-body">
 		      		<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="vbalance">厂商结算值</label>
+							<label class="col-sm-3 control-label no-padding-right" for="vbalance" style="display: inline-block">厂商结算值</label>
 							<div class="col-sm-9">
 								<input type="text" id="vbalance" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'/>
+							</div>
+							<label class="col-sm-3 control-label no-padding-right" for="vbalancets_total" style="display: inline-block;margin-top: 10px">总价</label>
+							<div class="col-sm-9" style="margin-top: 10px">
+								<input type="text" id="vbalancets_total" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -43,9 +47,17 @@
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="balance">厂商结算值</label>
+							<label class="col-sm-3 control-label no-padding-right" for="balance">结算值</label>
 							<div class="col-sm-9">
 								<input type="text" id="balance" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'/>
+							</div>
+							<label class="col-sm-3 control-label no-padding-right" for="balance_prebalance" style="display: inline-block;margin-top: 10px">预结算成本额</label>
+							<div class="col-sm-9" style="margin-top: 10px">
+								<input type="text" id="balance_prebalance" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly/>
+							</div>
+							<label class="col-sm-3 control-label no-padding-right" for="balance_vbalance" style="display: inline-block;margin-top: 10px">厂商结算额</label>
+							<div class="col-sm-9" style="margin-top: 10px">
+								<input type="text" id="balance_vbalance" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly/>
 							</div>
 						</div>
 						<div class="space-4"></div>

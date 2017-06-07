@@ -1,6 +1,8 @@
 package com.fanglin.payment.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
@@ -16,6 +18,24 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 		super(ServicePaymentPO.class);
 	}
 	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId)
+	{
+		return session().createCriteria(ServicePaymentPO.class).createAlias("decorationOrder", "decorationOrder").add(Restrictions.eq("decorationOrder.orderId", orderId)).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long srId) {
+		
+		List<Short> status = Arrays.asList(ServicePaymentPO.COLUMN_INITIALSTATUS_INT, ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
+		
+		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.not(Restrictions.in("status", status))).list();
+	}
+	
+	
 	@Override
 	public List<ServicePaymentPO> pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
 
@@ -28,16 +48,6 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 	
 	@Override
 	public List<ServicePaymentPO> pageServicePaymentForConfirm(Paging paging, List<Filter> filters) {
-
-		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-	
-	@Override
-	public List<ServicePaymentPO> pageServicePaymentForNotInit(Paging paging, List<Filter> filters) {
 
 		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
 

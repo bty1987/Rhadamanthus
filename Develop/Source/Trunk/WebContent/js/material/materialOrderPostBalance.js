@@ -11,15 +11,21 @@ $(function(){
         smodal: $('#smodal').on("show.bs.modal", function(a) {
             com.clearValidator();
             $('#vbalance').val(null);
+            $('#vbalancets_total').val(materialOrderPostBalance.total);
         }).on("hide.bs.modal", function(a) {
             materialOrderPostBalance.msobId = null;
             $('#balance').val(null);
         }),
         modal: $('#modal').on("show.bs.modal", function(a) {
             com.clearValidator();
+            $('#balance_prebalance').val(materialOrderPostBalance.preTotal);
+            $('#balance_vbalance').val(materialOrderPostBalance.vbalance);
         }).on("hide.bs.modal", function(a) {
             materialOrderPostBalance.msobId = null;
         }),
+        total:null,
+        vbalance :null,
+        preTotal:null,
     };
 
     /**
@@ -56,8 +62,9 @@ $(function(){
             var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-purple').html('厂商结算');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算值');
             var $btnPost = $('<a></a>').addClass('btn btn-minier btn-danger').html('结算');
-            var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
-            var $btnCharge = $('<a></a>').addClass('btn btn-minier').html('收款');
+            //var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+            var lable = v.type == 0 ? '收款' : '退款';
+            var $btnCharge = $('<a></a>').addClass('btn btn-minier').html(lable);
             //侯骅峰于4.7日增加楼盘地址、业务员、品牌、总价、券值、券信息显示字段
             var propertyArr = [
                 //增加订单号
@@ -72,7 +79,9 @@ $(function(){
                 ["归属大区: ",v.materialSubOrder.regionName ? v.materialSubOrder.regionName : '---',"grey"],
                 ["归属部门：",v.materialSubOrder.departmentName ? v.materialSubOrder.departmentName :'---',"grey"],
                 //增加总价字段
-                ["总价：",v.materialSubOrder.total,"blue"],
+                ["总价：",v.total,"blue"],
+                //过度数据
+                ["子订单总价：",v.materialSubOrder.total,"grey"],
                 //增加券值
                 ["券值：",v.materialSubOrder.coupon,"grey"],
                 //增加券信息
@@ -109,37 +118,66 @@ $(function(){
             $liLine.append($h3).append($ulProperty);
 //点击厂商结算值
             $btnSupBalance.click(function(){
-                materialOrderPostBalance.msobId = v.msobId;
-                materialOrderPostBalance.smodal.modal("show");
+                if(v.status==0){
+                    materialOrderPostBalance.total = v.total;
+                    materialOrderPostBalance.msobId = v.msobId;
+                    materialOrderPostBalance.smodal.modal("show");
+                }else{
+                    com.showAlert(com.warning,"非预结算状态下不允许进行厂商结算");
+                }
+
             });
 //点击结算值
             $btnBalance.click(function(){
-                materialOrderPostBalance.msobId = v.msobId;
-                materialOrderPostBalance.modal.modal("show");
+                if(v.status==1){
+                    materialOrderPostBalance.preTotal = utils.accSub(v.total,v.balance);
+                    materialOrderPostBalance.vbalance = v.vbalance;
+                    materialOrderPostBalance.msobId = v.msobId;
+                    materialOrderPostBalance.modal.modal("show");
+                }else{
+                    com.showAlert(com.warning,"非厂商结算状态下不允许进行结算");
+                }
+
             });
 //厂商结算
             $btnSupPost.click(function(){
-                vpostMaterialSubOrderBalance(v.msobId);
+                if(v.status==0 && v.vbalance!=0){
+                    vpostMaterialSubOrderBalance(v.msobId);
+                }else if(v.status==0 && v.vbalance==0){
+                    com.showAlert(com.warning,"厂商结算值未填写，请检查");
+                }else if(v.status!=0){
+                    com.showAlert(com.warning,"非预结算状态下不允许进行厂商结算");
+                }
+
             });
 //结算
             $btnPost.click(function(){
-                postMaterialSubOrderBalance(v.msobId);M1705136478
+                if(v.status==1 && v.post!=0){
+                    postMaterialSubOrderBalance(v.msobId);
+                }else if(v.status==1 && v.post==0){
+                    com.showAlert(com.warning,"结算值未填写，请检查");
+                }else if(v.status!=1){
+                    com.showAlert(com.warning,"非厂商结算状态下不允许进行结算");
+                }
+
             });
-//子项
-            $btnSub.click(function(){
-                params['materialOrderPostBalance.type'] = 0;
-                params['materialSubOrder.msoId'] = v.materialSubOrder.msoId;
-                com.switchPage('views/material/materialOrderPostBalanceDetail.html');
-            });
-//收款
+
             $btnCharge.click(function(){
-            	params.historyPage = api.index.materialOrderPostBalanceIndex.url;
+                params.historyPage = api.index.materialOrderPostBalanceIndex.url;
                 materialSubOrderPostData["materialSubOrder.msoId"] = v.materialSubOrder.msoId;
+                materialSubOrderPostData["materialSubOrderPostBalance.mpId"] = v.mpId;
+                materialSubOrderPostData["materialSubOrderPostBalance.type"] = v.type;
                 com.switchPage(api.index.materialSubOrderCollectionIndex.url);
             });
-//订单是退货状态的时候 才显示退货按钮  显示退货信息
+
+
+//收款
+
+//订单是退货状态的时候 才显示退货按钮  显示退货信息 隐藏子项按钮
             if(v.type == 1 || v.type == 2){
+
                 var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
+
                 $divBtnWrap.append($btnReject);
                 $btnReject.click(function(){
                 	v.type == 1 ? params['materialOrderPostBalance.type'] = 1 : params['materialOrderPostBalance.type'] = 2;
@@ -147,11 +185,21 @@ $(function(){
                     params['idents[0]'] = v.ident;
                     com.switchPage('views/material/materialOrderPostBalanceDetail.html');
                 });
+            }else{
+                var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+                $divBtnWrap.append($btnSub);
+                $btnSub.click(function(){
+                    params['materialOrderPostBalance.type'] = 0;
+                    params['materialSubOrder.msoId'] = v.materialSubOrder.msoId;
+                    com.switchPage('views/material/materialOrderPostBalanceDetail.html');
+                });
             }
+
+
 
             return $liLine;
         };
-//提
+
         return {
             init : function(tableId,listData){
                 $('#' + tableId).html(null);
@@ -185,6 +233,7 @@ $(function(){
     //厂商结算值 点保存
     function updateMaterialSubOrderBalanceForVBalance(){
         if (!com.validate('smodal')) {
+
             var _params = {
                 //ID用于后台获得该订单实体
                 "materialSubOrderBalance.msobId": materialOrderPostBalance.msobId,
@@ -262,7 +311,8 @@ $(function(){
 					["业务员","materialSubOrder.salesmanName"],
 					["大区","materialSubOrder.regionName"],
 					["部门","materialSubOrder.departmentName"],
-					["总价","materialSubOrder.total"],
+					["总价","total"],
+                    ["子订单总价","materialSubOrder.total"],
 					["券值","materialSubOrder.coupon"],
 					["券信息","materialSubOrder.couponInfo"],
 					["主材驻店", "instorer.currentName"],

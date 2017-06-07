@@ -11,7 +11,7 @@ jQuery(function($) {
 		postParam: {},
 	};
 	
-	approve.saveBtn = $("#saveBtn").on("click", saveData);
+	approve.saveBtn = $("#saveBtn").bindClick(saveData);
 	approve.cancelBtn = $("#cancelBtn");
 	approve.modal = $("#approveModal");
 	approve.items.userSel = $("#userSel");
@@ -49,7 +49,7 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	console.log(v)
+        	console.log(v);
         	var user = v.user;
         	
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
@@ -57,7 +57,6 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
             var propertyArr = [
@@ -73,15 +72,12 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($btnDel).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
-            
-            $btnEdit.click(function(){
-            	editApprovalUser(v.auid, user.userId, user.currentName, v.type);
-            });
-            
-            $btnDel.click(function(){
+
+
+            $btnDel.bindClick(function(){
             	deleteApprovalUser(v.auid);
             });
             
@@ -111,27 +107,15 @@ jQuery(function($) {
     	
     	return [$adda];
 	});
-	
+
 	$('a[name="addApprovalUser"]', '#pagenation').click(function(){
 		editFlg = false;
-		
+
 		com.updateChosen('userSel', '', '');
 		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
 		
 		approve.modal.modal("show");
     });
-	
-	function editApprovalUser(approveId, userId, userName, type){
-		
-		editFlg = true;
-		
-		approve.items.approveId = approveId;
-		
-		com.updateChosen('userSel', userId, userName);
-		approve.items.type.val(type);
-		
-		approve.modal.modal("show");
-	}
 
 	function deleteApprovalUser(approveId){
 		
@@ -139,7 +123,7 @@ jQuery(function($) {
 			"approveUserIds[0]": approveId
 		}
 		
-		com.post(api.system.deleteApproveUser, options, function(){
+		com.post(api.approval.deleteApproveUser, options, function(){
 			searcher.doSearch();
 		});
 	}
@@ -152,18 +136,16 @@ jQuery(function($) {
 			'approveUser.type': approve.items.type.val(),
 		};
 
-		if(editFlg){
-			url = api.system.updateApproveUser;
-			options['approveUser.auid'] = approve.items.approveId;
-		}else{
-			url = api.system.addApproveUser;
-		}
-		
+
+			url = api.approval.addApproveUser;
+
+
 		com.post(url, options, function(res){
+
 			searcher.doSearch();
 		});
-		
-		approve.modal.modal("hide");   
+
+		approve.modal.modal("hide");
 	}
-	
+
 });

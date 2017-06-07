@@ -188,6 +188,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		}
 		
 		addReducePO.setTotal(addReduceVO.getTotal());
+		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		
 		addReduceDao.update(addReducePO);
 		
@@ -245,9 +246,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 			addReduceItemDao.delete(addReduceItemPO);
 		}
 		
-		if(addReducePO.getDpId() != null){
-			decorationPaymentDao.deleteById(addReducePO.getDpId());
-		}
+		decorationPaymentDao.deleteById(addReducePO.getDpId());
 		
 		addReduceDao.delete(addReducePO);
 		
@@ -279,7 +278,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		DecorationPaymentPO decorationPaymentPO = null;
 		
-		if(addReducePO.getDpId() != null){
+		if(addReducePO.getDpId() != 0){
 			decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
 			
 			if(decorationPaymentPO != null && !paymentStatus.contains(decorationPaymentPO.getPaymentStatus())){
@@ -302,6 +301,8 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		addReducePO.setStatus(1);
 		addReducePO.setDpId(decorationPaymentPO.getAutoId());
+		addReducePO.setTotal(addReduceVO.getTotal());
+		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		
 		addReduceDao.update(addReducePO);
 		

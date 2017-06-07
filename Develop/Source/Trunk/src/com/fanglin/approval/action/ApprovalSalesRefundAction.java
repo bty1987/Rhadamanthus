@@ -18,7 +18,6 @@ import com.fanglin.core.interceptor.FLException;
 
 import com.fanglin.inventory.vo.SalesItemVO;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -30,46 +29,34 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 	private ApprovalSalesRefundService approvalSalesRefundService;
 
 	private ApprovalVO approval;
-	
+
 	private ApprovalSalesRefundVO approvalSalesRefund;
 
 	private List<ApprovalSalesRefundItemVO> approvalSalesRefundItem;
-	
+
 	private List<SalesItemVO> salesItems;
 
-	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = {
+			"ignoreHierarchy", "false" }) }, params = { "contentType",
+			"text/html" })
 	public String queryApprovalSalesRefundItem() throws FLException {
 
-		approvalSalesRefundItem = approvalSalesRefundService.queryApprovalSalesRefundItem(approval);
+		approvalSalesRefundItem = approvalSalesRefundService
+				.queryApprovalSalesRefundItem(approval);
 
 		return SUCCESS;
 	};
 
-	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {
+			"ignoreHierarchy", "false" }) }, params = { "contentType",
+			"text/html" })
 	public String submitApprovalForSalesRefund() throws FLException {
 
-		approvalSalesRefundService.submitApprovalForSalesRefund(approval,approvalSalesRefund, approvalSalesRefundItem, queryUserId());
+		approvalSalesRefundService.submitApprovalForSalesRefund(approval,
+				approvalSalesRefund, approvalSalesRefundItem, queryUserId());
 
 		return SUCCESS;
 
-	}
-	
-	@Action(value = "approvalForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String approvalForSalesRefund() throws FLException{
-		
-		approvalSalesRefundService.approvalForSalesRefund(approval,queryUserId());
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value = "refuseForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String refuseForSalesRefund() throws FLException{
-		
-		approvalSalesRefundService.refuseForSalesRefund(approval);
-		
-		return SUCCESS;
-		
 	}
 
 	public ApprovalSalesRefundVO getApprovalSalesRefund() {
@@ -96,7 +83,7 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 	public void setSalesItems(List<SalesItemVO> salesItems) {
 		this.salesItems = salesItems;
 	}
-	
+
 	public ApprovalVO getApproval() {
 		return approval;
 	}

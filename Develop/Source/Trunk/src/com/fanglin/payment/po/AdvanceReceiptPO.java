@@ -25,7 +25,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	public static final int STATUS_CONFIRM_INT = 2;
 	
-	public static final Float COLUMN_MONEY_STR = 0f;
+	public static final float COLUMN_MONEY_STR = 0f;
 	
 	private long arId;
 	

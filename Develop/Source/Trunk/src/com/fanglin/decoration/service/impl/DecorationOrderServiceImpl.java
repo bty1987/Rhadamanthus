@@ -232,18 +232,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
-			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
-				if(quotationPO == null){
-					decorationOrderVO.setOrderTotalPrice(0f);
-				}else{
-					decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-				}
-			}
-			
-			if(quotationPO == null){
-				decorationOrderVO.setDiscount(0f);
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
 			}else{
-				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			    decorationOrderVO.setOrderTotalPrice(0f);
 			}
 			
 			VillageVO villageVO = new VillageVO();
@@ -544,12 +538,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
-			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
-				if(quotationPO == null){
-					decorationOrderVO.setOrderTotalPrice(0f);
-				}else{
-					decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-				}
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else{
+			    decorationOrderVO.setOrderTotalPrice(0f);
 			}
 			
 			VillageVO villageVO = new VillageVO();
@@ -572,6 +566,8 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			decorationOrderVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
@@ -649,18 +645,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
 			
-			if(decorationOrderPO.getOrderTotalPrice() == null || decorationOrderPO.getOrderTotalPrice() == 0){
-				if(quotationPO == null){
-					decorationOrderVO.setOrderTotalPrice(0f);
-				}else{
-					decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-				}
-			}
-			
-			if(quotationPO == null){
-				decorationOrderVO.setDiscount(0f);
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
 			}else{
-				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			    decorationOrderVO.setOrderTotalPrice(0f);
 			}
 			
 			VillageVO villageVO = new VillageVO();
@@ -818,8 +808,8 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
 			
 			if(quotationPO.getManageRate() == 0){
-				decorationOrderExportVO.setNotSalesmanCut(0);
-				decorationOrderExportVO.setAchievement(0);
+				decorationOrderExportVO.setNotSalesmanCut(0f);
+				decorationOrderExportVO.setAchievement(0f);
 			}else{
 				decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
 				decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
@@ -1374,6 +1364,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setProjectStatus(DecorationOrderPO.PROJECTSTATUS_WAITING_STR);
 		
 		decorationOrderPO.setOtherStatus(0);
+		decorationOrderPO.setType(decorationOrderVO.getType());
 		
 		decorationOrderDao.save(decorationOrderPO);
 		

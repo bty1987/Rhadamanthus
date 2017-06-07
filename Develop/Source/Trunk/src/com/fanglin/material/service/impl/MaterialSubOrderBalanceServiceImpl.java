@@ -54,6 +54,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	
 	@Autowired
 	private SupplierUserRightDao supplierUserRightDao;
+	
 
 	@Override
 	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {

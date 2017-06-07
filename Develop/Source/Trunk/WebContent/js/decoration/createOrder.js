@@ -219,6 +219,7 @@ jQuery(function($) {
 			"decorationOrder.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
 			"decorationOrder.status": orderEntry.orderItems.status.val(),
 			"decorationOrder.approveStatus": 0,
+			"decorationOrder.type": orderEntry.orderItems.orderType.val(),
 		};
 		
 		if(com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)

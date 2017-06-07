@@ -128,6 +128,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			materialPaymentVO.setOrderId(materialSubOrderPO.getOrderId());
 			materialPaymentVO.setOrderAddr(materialSubOrderPO.getOrderAddr());
+			materialPaymentVO.setMsoId(materialSubOrderPO.getMsoId());
 			
 			materialPaymentVOs.add(materialPaymentVO);
 		}
@@ -389,6 +390,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		if(materialPaymentDao.countMaterialPaymentByMsoIdAType(materialPaymentVO.getMsoId(),materialPaymentVO.getPaymentType()) > 0){
 			throw new FLException(150033, "款项类型已存在");
+		}
+		
+		if(materialSubOrderPO.getTotal() == 0 && materialPaymentVO.getPaymentType() == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
+			throw new FLException(180021, "主材单总金额为0");
 		}
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
@@ -905,9 +910,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		float cash = materialPaymentVO.getCash();
-		float bank = materialPaymentVO.getBank();
-		float coupon = materialPaymentVO.getCoupon();
+		Float cash = materialPaymentVO.getCash();
+		Float bank = materialPaymentVO.getBank();
+		Float coupon = materialPaymentVO.getCoupon();
 		
 		int msoType = materialSubOrderPO.getMsoType();
 		
@@ -915,19 +920,19 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		int paymentType = materialPaymentPO.getPaymentType() ;
 		
-		if(cash != 0f){
+		if(cash != null && cash != 0f){
 			materialReceiptPO.setCash(materialPaymentVO.getCash());
 			materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
 			
 			real = Arith.add(real, cash);
 		}
-		if(bank != 0f){
+		if(bank != null && bank != 0f){
 			materialReceiptPO.setBank(bank);
 			materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
 			
 			real = Arith.add(real, bank);
 		}
-		if(coupon != 0f){
+		if(coupon != null && coupon != 0f){
 			materialReceiptPO.setCoupon(coupon);
 			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
 			
@@ -1234,6 +1239,13 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentPO.setCustomerName(materialSubOrderPO.getCustomerName());
 		
 		if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
+			
+			MaterialPaymentPO materialPayment = materialPaymentDao.queryMaterialPaymentByMsoNoAType(materialSubOrderPO.getMsoNo(), paymentType);
+			
+			if( materialPayment.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
+				throw new FLException(150005 , "款项状态非已确认,不能退款");
+			}
+			
 			materialPaymentPO.setReferMoney(materialSubOrderPO.getDepositPayment());
 			
 			materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_INIT_INT);

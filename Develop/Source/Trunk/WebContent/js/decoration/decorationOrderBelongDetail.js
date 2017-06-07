@@ -191,7 +191,6 @@ jQuery(function($) {
 		});
 		
 		$btnUpdate.click(function(){
-			console.log("update");
 			dialogUpdate(v.belongUserId);
 		});
 		

@@ -19,9 +19,13 @@ public class ManifestItemPO implements java.io.Serializable {
 	
 	public static final String COLUMN_MID_STR = "mid";
 	
+	public static final String COLUMN_SIID_STR = "siid";
+	
 	private long miId;
 	
 	private long mid;
+	
+	private long siid;
 	
 	private GoodsPO goods;
 	
@@ -35,7 +39,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	
 	private float num;
 	
-	private float purchasePrice;
+	private float unitPrice;
 	
 	private String comment;
 
@@ -75,6 +79,15 @@ public class ManifestItemPO implements java.io.Serializable {
 		this.mid = mid;
 	}
 	
+	@Column(name = "siid")
+	public long getSiid() {
+		return siid;
+	}
+
+	public void setSiid(long siid) {
+		this.siid = siid;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
@@ -134,13 +147,13 @@ public class ManifestItemPO implements java.io.Serializable {
 		this.num = num;
 	}
 
-	@Column(name = "purchasePrice")
-	public float getPurchasePrice() {
-		return this.purchasePrice;
+	@Column(name = "unitPrice")
+	public void setUnitPrice(float unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
-	public void setPurchasePrice(float purchasePrice) {
-		this.purchasePrice = purchasePrice;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name = "comment")
@@ -148,8 +161,8 @@ public class ManifestItemPO implements java.io.Serializable {
 		return this.comment;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public float getUnitPrice() {
+		return unitPrice;
 	}
 
 }

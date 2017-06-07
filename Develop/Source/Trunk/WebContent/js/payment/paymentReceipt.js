@@ -4,7 +4,7 @@ var receipt = {
 };
 
 jQuery(function($) {
-	
+	Api().init('../../js/api/');
 	params.server = window.server;
 	params.authentication = window.authentication;
 	

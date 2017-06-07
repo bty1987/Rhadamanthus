@@ -80,7 +80,9 @@ public class DecorationOrderPO implements Serializable {
 	
 	public static final short TYPE_WHOLE_INT = 1;
 	
-	private Long autoId;
+	public static final short TYPE_HOLONOMY_INT = 2;
+	
+	private long autoId;
 	
 	private String orderId;
 	
@@ -96,9 +98,9 @@ public class DecorationOrderPO implements Serializable {
 	
 	private String apartmentType;
 	
-	private Float houseArea;
+	private float houseArea;
 	
-	private Float freeArea;
+	private float freeArea;
 	
 	private UserPO designerPO;
 	
@@ -140,15 +142,15 @@ public class DecorationOrderPO implements Serializable {
 	
 	private String paymentStatus;
 	
-	private Integer otherStatus;
+	private int otherStatus;
 	
 	private QuotationVersionPO versionPO;
 	
 	private UserPO createUserPO;
 	
-	private Float orderTotalPrice;
+	private float orderTotalPrice;
 
-	private Float notSalesmanRate = 0f;
+	private float notSalesmanRate = 0f;
 	
 	private String salesmanType = "守园";
 	
@@ -166,11 +168,11 @@ public class DecorationOrderPO implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name="autoId")
-	public Long getAutoId(){
+	public long getAutoId(){
 		return autoId;
 	}
 
-	public void setAutoId(Long autoId){
+	public void setAutoId(long autoId){
 		this.autoId = autoId;
 	}
 
@@ -235,11 +237,11 @@ public class DecorationOrderPO implements Serializable {
 		this.apartmentType = apartmentType;
 	}
 
-	public Float getHouseArea(){
+	public float getHouseArea(){
 		return houseArea;
 	}
 
-	public void setHouseArea(Float houseArea){
+	public void setHouseArea(float houseArea){
 		this.houseArea = houseArea;
 	}
 
@@ -431,27 +433,27 @@ public class DecorationOrderPO implements Serializable {
 		this.versionPO = versionPO;
 	}
 
-	public void setOrderTotalPrice(Float orderTotalPrice){
+	public void setOrderTotalPrice(float orderTotalPrice){
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
-	public Float getOrderTotalPrice(){
+	public float getOrderTotalPrice(){
 		return orderTotalPrice;
 	}
 	
-	public void setFreeArea(Float freeArea){
+	public void setFreeArea(float freeArea){
 		this.freeArea = freeArea;
 	}
 	
-	public Float getFreeArea(){
+	public float getFreeArea(){
 		return freeArea;
 	}
 	
-	public void setNotSalesmanRate(Float notSalesmanRate){
+	public void setNotSalesmanRate(float notSalesmanRate){
 		this.notSalesmanRate = notSalesmanRate;
 	}
 	
-	public Float getNotSalesmanRate(){
+	public float getNotSalesmanRate(){
 		return notSalesmanRate;
 	}
 	
@@ -463,11 +465,11 @@ public class DecorationOrderPO implements Serializable {
 		return salesmanType;
 	}
 	
-	public Integer getOtherStatus(){
+	public int getOtherStatus(){
 		return otherStatus;
 	}
 
-	public void setOtherStatus(Integer otherStatus){
+	public void setOtherStatus(int otherStatus){
 		this.otherStatus = otherStatus;
 	}
 

@@ -187,19 +187,18 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO = new GoodsPO();
 		if(goodsVO.getAssisType().getAtid()!=null){
 			new AssisTypePO();
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
 			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
 		}else{
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
 		}
-		
-		
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
 	    
 		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
 		
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
+		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
 		
 		goodsDao.save(goodsPO);
 		
@@ -216,8 +215,6 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260004, "商品不存在");
 		}
 		
-		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "status"));
-		
 		if(goodsVO.getAssisType().getAtid()!=null){
 			
 			AssisTypePO assisTypePO = assisTypeDao.get(goodsVO.getAssisType().getAtid());
@@ -226,10 +223,6 @@ public class GoodsServiceImpl implements GoodsService {
 		}else{
 			goodsPO.setAssisType(null);
 		}
-		
-		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
-	    
-		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
 		
 		goodsDao.update(goodsPO);
 		

@@ -69,6 +69,27 @@ public class SalesItemServiceImpl implements SalesItemService {
  	
 		return salesItemVOs;
 	}
+	
+	@Override
+	public List<SalesItemVO> querySalesItemBySids(List<Long> sids) {
+		
+		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySids(sids);
+		List<SalesItemVO> salesItemVOs = new ArrayList<SalesItemVO>();
+		
+		for(SalesItemPO salesItemPO : salesItemPOs){
+			
+			SalesItemVO salesItemVO = new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO());
+			
+			BeanUtil.copyProperties(salesItemPO, salesItemVO, Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(salesItemPO.getGoods(), salesItemVO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(salesItemPO.getColor(), salesItemVO.getColor());
+			BeanUtil.copyProperties(salesItemPO.getFormat(), salesItemVO.getFormat());
+			
+			salesItemVOs.add(salesItemVO);
+		}
+		
+		return salesItemVOs;
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

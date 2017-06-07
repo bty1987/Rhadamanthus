@@ -75,7 +75,7 @@ jQuery(function($) {
 			
 
 			// 主材详细信息按钮
-			$btnDetails.click(function() {
+			$btnDetails.bindClick(function() {
 				queryMaterialSubOrder(v.aid);
 			});
 			return $liLine;
@@ -106,7 +106,7 @@ jQuery(function($) {
 			$('#materialInfoList').empty();
 		}
 
-		com.post(api.approval.queryApprovalForMaterialRefundItem,{"approval.aid" : aId}, function(res) {
+		com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
 			$.each(res.approvalMaterialRefundItems, function(i, v) {
 				$('#materialInfoList')
 					.append(addspan('10', '型号  : ', v.materialSubOrderItem.materialModelName))

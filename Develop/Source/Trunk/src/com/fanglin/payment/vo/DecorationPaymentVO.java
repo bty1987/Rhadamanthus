@@ -104,7 +104,7 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String des;
 
-	private long drId;
+	private Long drId;
 	
 	public Long getAutoId(){
 		return autoId;
@@ -438,11 +438,11 @@ public class DecorationPaymentVO implements Serializable {
 		this.customerId = customerId;
 	}
 
-	public long getDrId() {
+	public Long getDrId() {
 		return drId;
 	}
 
-	public void setDrId(long drId) {
+	public void setDrId(Long drId) {
 		this.drId = drId;
 	}
 

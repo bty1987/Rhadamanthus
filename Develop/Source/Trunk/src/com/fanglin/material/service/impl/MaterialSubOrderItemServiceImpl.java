@@ -130,6 +130,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(materialSubOrderVO.getMsoId());
 		
 		float total = 0;
+		float discountTotal = 0;
 		Map<String, List<MaterialSubOrderItemPO>> packageItems = new HashMap<String, List<MaterialSubOrderItemPO>>();
 		Map<String, List<MaterialSubOrderItemPO>> originalPackageItems = new HashMap<String, List<MaterialSubOrderItemPO>>();
 		
@@ -148,6 +149,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		materialSubOrderPO.setCouponInfo("");
 		
 		total = Arith.add(materialSubOrderPO.getTotal(), total);
+		discountTotal = Arith.add(materialSubOrderPO.getDistotal(),discountTotal);
 		
 		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoIdNotRefund(materialSubOrderVO.getMsoId());
 		
@@ -169,9 +171,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		if(materialSubOrderItemVOs != null){
 			
 			float _total = packageMaterialSubOrderItem(materialSubOrderPO, materialSubOrderItemVOs, packageItems);
-			
+			float _discountTotal = setDisCountTotal(materialSubOrderPO, materialSubOrderItemVOs);
 			total = Arith.add(total, _total);
-			
+			discountTotal = Arith.add(_discountTotal,discountTotal);
 			for(String packageName: packageItems.keySet()){
 				
 				float tmpTotal = 0;
@@ -200,7 +202,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 				}
 			}
 		}
-		
+		materialSubOrderPO.setDistotal(discountTotal);
 		materialSubOrderPO.setTotal(Arith.round(total, 2));
 		materialSubOrderDao.save(materialSubOrderPO);
 			
@@ -259,9 +261,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 					materialSubOrderItemPackage.setPostPoint(materialSubOrderItemPO.getPostPoint());
 					
 					materialSubOrderItemVO.setLevel(1);
-					materialSubOrderItemVO.setTotal(0);
-					materialSubOrderItemVO.setPrePoint(0);
-					materialSubOrderItemVO.setPostPoint(0);
+					materialSubOrderItemVO.setTotal((float) 0);
+					materialSubOrderItemVO.setPrePoint((float) 0);
+					materialSubOrderItemVO.setPostPoint((float) 0);
 					
 					packageFlagMap.put(packageName, materialSubOrderItemPackage);
 					
@@ -275,9 +277,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 					
 					materialSubOrderItemPackage = packageFlagMap.get(packageName);
 					materialSubOrderItemVO.setLevel(1);
-					materialSubOrderItemVO.setTotal(0);
-					materialSubOrderItemVO.setPrePoint(0);
-					materialSubOrderItemVO.setPostPoint(0);
+					materialSubOrderItemVO.setTotal((float) 0);
+					materialSubOrderItemVO.setPrePoint((float) 0);
+					materialSubOrderItemVO.setPostPoint((float) 0);
 					
 					packageItemsList.add(materialSubOrderItemVO);
 				}
@@ -329,22 +331,20 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderItemVO.getMsoiId());
 		
 		float originalTotal = 0;
-		
+		float discountTotal = 0;
 		if(materialSubOrderItemPO != null && materialSubOrderItemPO.getStatus() == MaterialSubOrderItemPO.STATUS_TYPE_INIT_INT && materialSubOrderItemPO.getBalanceStatus() == MaterialSubOrderItemPO.BALANCESTATUS_TYPE_INIT_INT){
 			originalTotal = materialSubOrderItemPO.getTotal();
-			
 			materialSubOrderItemPO.setMaterialModelNo(materialSubOrderItemVO.getMaterialModelNo());
 			materialSubOrderItemPO.setMaterialBrandName(materialSubOrderItemVO.getMaterialBrandName());
 			materialSubOrderItemPO.setMaterialModelName(materialSubOrderItemVO.getMaterialModelName());
 			materialSubOrderItemPO.setMaterialTypeName(materialSubOrderItemVO.getMaterialTypeName());
 			materialSubOrderItemPO.setMeasurementUnitName(materialSubOrderItemVO.getMeasurementUnitName());
-			
+			discountTotal = Arith.mul(Arith.sub(materialSubOrderItemVO.getNum(), materialSubOrderItemPO.getNum()), materialSubOrderItemPO.getSalePrice());
 			materialSubOrderItemPO.setNum(materialSubOrderItemVO.getNum());
 			materialSubOrderItemPO.setTotal(materialSubOrderItemVO.getTotal());
-			
 			materialSubOrderItemDao.update(materialSubOrderItemPO);
-			
 			materialSubOrderPO.setTotal(Arith.add(Arith.sub(materialSubOrderItemVO.getTotal(), originalTotal), materialSubOrderPO.getTotal()));
+			materialSubOrderPO.setDistotal(Arith.add(materialSubOrderPO.getDistotal(),discountTotal));
 			materialSubOrderDao.update(materialSubOrderPO);
 		}
 	}
@@ -365,29 +365,30 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		
 		float originalTotal = 0;
 		float total = 0;
-		
+		float originalDiscountTotal = 0;
+		float discountTotal = 0;
 		for(MaterialSubOrderItemVO materialSubOrderItemVO: materialSubOrderItemVOs){
 			MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderItemVO.getMsoiId());
 			
 			if(materialSubOrderItemPO != null && materialSubOrderItemPO.getStatus() == MaterialSubOrderItemPO.STATUS_TYPE_INIT_INT && materialSubOrderItemPO.getBalanceStatus() == MaterialSubOrderItemPO.BALANCESTATUS_TYPE_INIT_INT){
 				originalTotal = materialSubOrderItemPO.getTotal();
 				total = materialSubOrderItemVO.getTotal();
-				
+				originalDiscountTotal = materialSubOrderPO.getDistotal();
 				materialSubOrderItemPO.setMaterialModelNo(materialSubOrderItemVO.getMaterialModelNo());
 				materialSubOrderItemPO.setMaterialBrandName(materialSubOrderItemVO.getMaterialBrandName());
 				materialSubOrderItemPO.setMaterialModelName(materialSubOrderItemVO.getMaterialModelName());
 				materialSubOrderItemPO.setMaterialTypeName(materialSubOrderItemVO.getMaterialTypeName());
 				materialSubOrderItemPO.setMeasurementUnitName(materialSubOrderItemVO.getMeasurementUnitName());
-				
 				materialSubOrderItemPO.setPackageName(materialSubOrderItemVO.getPackageName());
-				materialSubOrderItemPO.setNum(materialSubOrderItemVO.getNum());
 				materialSubOrderItemPO.setTotal(materialSubOrderItemVO.getTotal());
 				materialSubOrderItemPO.setDes(materialSubOrderItemVO.getDes());
-				
 				materialSubOrderItemDao.update(materialSubOrderItemPO);
+				discountTotal = Arith.mul(materialSubOrderItemPO.getSalePrice(),Arith.sub(materialSubOrderItemVO.getNum(), materialSubOrderItemPO.getNum()));
+				materialSubOrderPO.setDistotal(Arith.add(originalDiscountTotal,discountTotal));
+				materialSubOrderItemPO.setNum(materialSubOrderItemVO.getNum());
 			}
 		}
-		
+	
 		materialSubOrderPO.setTotal(Arith.add(Arith.sub(total, originalTotal), materialSubOrderPO.getTotal()));
 		materialSubOrderDao.update(materialSubOrderPO);
 	}
@@ -458,7 +459,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		
 		int redirect = 0;
 		float _deleteTotal = 0;
-		
+		float _deleteDiscountTotal = 0;
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
 		MaterialSubOrderItemPO materialSubOrderItemPO = null;
 		List<String> materialSubOrderItemPackageNames = new ArrayList<String>();
@@ -483,10 +484,15 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 					if(!"".equals(packageName)){
 						if(!materialSubOrderItemPackageNames.contains(packageName)){
 							_deleteTotal = Arith.add(_deleteTotal, materialSubOrderItemPO.getTotal());
+							_deleteDiscountTotal = Arith.add(_deleteDiscountTotal, Arith.mul(materialSubOrderItemPO.getNum(), materialSubOrderItemPO.getSalePrice()));
 							materialSubOrderItemPackageNames.add(packageName);
+						}else{
+							_deleteDiscountTotal = Arith.add(_deleteDiscountTotal, Arith.mul(materialSubOrderItemPO.getNum(), materialSubOrderItemPO.getSalePrice()));
 						}
 					}else{
 						_deleteTotal = Arith.add(_deleteTotal, materialSubOrderItemPO.getTotal());
+						_deleteDiscountTotal = Arith.add(_deleteDiscountTotal, Arith.mul(materialSubOrderItemPO.getNum(), materialSubOrderItemPO.getSalePrice()));
+						
 					}
 					
 					materialSubOrderItemPO.setStatus(MaterialSubOrderItemPO.STATUS_TYPE_DELETE_INT);
@@ -496,8 +502,10 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 			}
 			
 			float total = Arith.sub(materialSubOrderPO.getTotal(), _deleteTotal);
+			float discountTotal = Arith.sub(materialSubOrderPO.getDistotal(), _deleteDiscountTotal);
 			
 			materialSubOrderPO.setTotal(total > 0 ? total : 0);
+			materialSubOrderPO.setDistotal(discountTotal > 0 ? discountTotal : 0);
 			
 			materialSubOrderDao.update(materialSubOrderPO);
 		}
@@ -509,7 +517,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		
 		float total = 0;
 		int fullFlag = 0;
-		
 		long msoId = materialSubOrderPO.getMsoId();
 		int msoType = materialSubOrderPO.getMsoType();
 		
@@ -527,6 +534,7 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 			materialSubOrderItemPO.setMsoId(msoId);
 			
 			total = Arith.add(total, materialSubOrderItemPO.getTotal());
+			
 			
 			if(!"".equals(materialSubOrderItemVO.getPackageName())){
 				
@@ -551,7 +559,6 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 				
 				materialSubOrderPO.setPackageFlag(1);
 			}else{
-				
 				if(msoType == MaterialSubOrderPO.MSO_TYPE_INSIDE_INT){
 					materialSubOrderItemPO.setCalcType(MaterialSubOrderItemPO.CALCTYPE_TYPE_POINT_INT);
 					materialSubOrderItemPO.setPrePoint(0);
@@ -573,6 +580,14 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 		}
 		
 		return total;
+	}
+	
+	public static float setDisCountTotal(MaterialSubOrderPO materialSubOrderPO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs){
+		float discountTotal = 0;
+		for(MaterialSubOrderItemVO materialSubOrderItemVO: materialSubOrderItemVOs){
+			discountTotal = Arith.add(discountTotal,Arith.mul(materialSubOrderItemVO.getNum(), materialSubOrderItemVO.getSalePrice()));
+		}
+		return discountTotal;
 	}
 	
 }

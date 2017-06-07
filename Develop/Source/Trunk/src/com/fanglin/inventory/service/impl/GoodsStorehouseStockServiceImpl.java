@@ -170,13 +170,17 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		if(storehouseDao.get(shId) == null){
 			throw new FLException(260005, "仓库不存在");
 		}
-		
+		System.out.println("gid:"+gid);
+		System.out.println("cid:"+cid);
+		System.out.println("fid:"+fid);
+		System.out.println("shId:"+shId);
+		System.out.println("num:"+num);
 		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
 		
 		if(outGoodsStorehouseStockPO == null){
 			throw new FLException(260008, "商品库存不足");
 		}
-		
+		System.out.println("getNum:"+outGoodsStorehouseStockPO.getNum());
 		if(outGoodsStorehouseStockPO.getNum() < num){
 			throw new FLException(260008, "商品库存不足");
 		}

@@ -8,5 +8,8 @@ import com.fanglin.inventory.po.RefundsPO;
 
 @Repository("refundsDao")
 public class RefundsDaoImpl extends DaoImpl<RefundsPO> implements RefundsDao{
-
+	
+	public RefundsDaoImpl(){
+		super(RefundsPO.class);
+	}
 }

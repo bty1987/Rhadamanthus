@@ -79,7 +79,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException{
+	public int addPurchase(PurchaseVO purchaseVO,List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException{
 		//PO作为编号前缀 , 之后由8位数字组成
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
 		String manifestId = String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
@@ -114,7 +114,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 			purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 			//插入采购单下的采购项信息
 			purchaseItemDao.save(purchaseItemPO);			
-		}		
+		}
 		
 		return 0;
 		

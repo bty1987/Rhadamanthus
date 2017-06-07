@@ -33,6 +33,8 @@ public class SalesAction extends BaseListAction {
 	
 	private SalesVO sales;
 	
+	private List<Long> sids;
+	
 	private List<SalesItemVO> salesItems;
 
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -84,6 +86,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "querySalesItemBySids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesItemBySids(){
+		
+		salesItems = salesItemService.querySalesItemBySids(sids);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesItem() throws FLException{
 		
@@ -130,6 +140,14 @@ public class SalesAction extends BaseListAction {
 
 	public void setSalesItems(List<SalesItemVO> salesItems) {
 		this.salesItems = salesItems;
+	}
+
+	public List<Long> getSids() {
+		return sids;
+	}
+
+	public void setSids(List<Long> sids) {
+		this.sids = sids;
 	}
 
 }

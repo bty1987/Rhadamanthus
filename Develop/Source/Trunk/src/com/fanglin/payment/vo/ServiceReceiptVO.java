@@ -49,6 +49,10 @@ public class ServiceReceiptVO  implements Serializable{
 	
 	private ServiceReceiptVO serviceReceipt;  //收据ID
 	
+	private String collecterId;
+	
+	private String confirmerId;
+	
 	public ServiceReceiptVO() {
 		super();
 	}
@@ -224,6 +228,22 @@ public class ServiceReceiptVO  implements Serializable{
 
 	public void setServiceReceipt(ServiceReceiptVO serviceReceipt) {
 		this.serviceReceipt = serviceReceipt;
+	}
+	
+	public String getCollecterId() {
+		return collecterId;
+	}
+
+	public void setCollecterId(String collecterId) {
+		this.collecterId = collecterId;
+	}
+
+	public String getConfirmerId() {
+		return confirmerId;
+	}
+
+	public void setConfirmerId(String confirmerId) {
+		this.confirmerId = confirmerId;
 	}
 	
 }

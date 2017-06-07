@@ -33,6 +33,10 @@ public class ManifestPO implements java.io.Serializable {
 	
 	public static final Float COLUMN_TOTAL_STR = 0F;
 	
+	public static final Short TYPE_CR_INT = 2;
+	
+	public static final Short TYPE_XB_INT = 4;
+	
 	public static final Short COLUMN_TYPE_STR = 6;
 	
 	public static final int COLUMN_CUSTOMERID_STR = 0;

@@ -1,7 +1,14 @@
 
 var decorationOrderDetail = {
 	decorationOrderId:null,
-	
+	orderType:"",
+
+	type:{
+		"半包":0,
+		"全包":1,
+		"半价":2,
+	},
+
 	decorationOrder: {},
 	customer:{},
 	village:{},
@@ -65,7 +72,8 @@ jQuery(function($) {
 	decorationUtils.init();
 	
 	decorationOrderDetail.decorationOrderId = params.decorationOrderId;
-	
+	decorationOrderDetail.orderType = params.type;
+
 	decorationPayment.postParam.decorationOrderId = decorationOrderDetail.decorationOrderId;
 	decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;
 	
@@ -98,7 +106,11 @@ jQuery(function($) {
 			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
 		});
 	});
-	
+
+	if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+		decorationUtils.initDecorationHolonomy('step5',decorationOrderDetail.decorationOrderId);
+	}
+
 	$('#customerInfosBtn').on(ace.click_event, function(){
 		if(decorationOrderDetail.showCustomerInfoFlag==undefined || decorationOrderDetail.showCustomerInfoFlag==0 ){
 			$.gritter.add({

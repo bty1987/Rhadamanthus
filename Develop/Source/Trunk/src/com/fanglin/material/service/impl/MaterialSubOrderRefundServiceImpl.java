@@ -71,7 +71,6 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 		for(MaterialSubOrderRefundPO materialSubOrderRefundPO: materialSubOrderRefundPOs){
 			MaterialSubOrderRefundVO materialSubOrderRefundVO = new MaterialSubOrderRefundVO();
 			BeanUtil.copyProperties(materialSubOrderRefundPO, materialSubOrderRefundVO);
-			
 			materialSubOrderRefundVO.setIsLeaf(true);
 			materialSubOrderRefundVO.setExpanded(false);
 			
@@ -107,7 +106,7 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 					materialSubOrderRefundPackage.setExpanded(true);
 					
 					materialSubOrderRefundVO.setLevel(1);
-					materialSubOrderRefundVO.setTotal(0);
+					materialSubOrderRefundVO.setTotal((float) 0);
 					
 					packageFlagMap.put(packageNameIdent, materialSubOrderRefundPackage);
 					
@@ -121,7 +120,7 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 					
 					materialSubOrderRefundPackage = packageFlagMap.get(packageNameIdent);
 					materialSubOrderRefundVO.setLevel(1);
-					materialSubOrderRefundVO.setTotal(0);
+					materialSubOrderRefundVO.setTotal((float) 0);
 					
 					packageItemsList.add(materialSubOrderRefundVO);
 				}

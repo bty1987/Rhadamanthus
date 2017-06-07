@@ -46,6 +46,8 @@ public class ServicePaymentVO   implements Serializable{
 	
 	private Float referMoney;
 	
+	private ServiceReceiptVO serviceReceipt;
+	
 	public ServicePaymentVO() {
 		super();
 	}
@@ -56,12 +58,13 @@ public class ServicePaymentVO   implements Serializable{
 		this.decorationOrder = decorationOrder;
 	}
 	
-	public ServicePaymentVO(UserVO creater,UserVO collecter,UserVO confirmer,DecorationOrderVO decorationOrder) {
+	public ServicePaymentVO(UserVO creater,UserVO collecter,UserVO confirmer,DecorationOrderVO decorationOrder,ServiceReceiptVO serviceReceipt) {
 		super();
 		this.creater = creater;
 		this.collecter = collecter;
 		this.confirmer = confirmer;
 		this.decorationOrder = decorationOrder;
+		this.serviceReceipt = serviceReceipt;
 	}
 	
 	public Long getSpid() {
@@ -209,6 +212,14 @@ public class ServicePaymentVO   implements Serializable{
 
 	public void setReferMoney(Float referMoney) {
 		this.referMoney = referMoney;
+	}
+	
+	public ServiceReceiptVO getServiceReceipt() {
+		return serviceReceipt;
+	}
+
+	public void setServiceReceipt(ServiceReceiptVO serviceReceipt) {
+		this.serviceReceipt = serviceReceipt;
 	}
 	
 }

@@ -70,14 +70,6 @@ public class ApproveUserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateApproveUser() throws FLException{
-		
-		approveUserService.updateApproveUser(approveUser);
-		
-		return SUCCESS;
-	}
-
 	@Action(value = "deleteApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteApproveUser(){
 		

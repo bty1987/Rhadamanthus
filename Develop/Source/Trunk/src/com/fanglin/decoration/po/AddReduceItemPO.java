@@ -56,11 +56,11 @@ public class AddReduceItemPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ariId")
-	public Long getAriId() {
+	public long getAriId() {
 		return this.ariId;
 	}
 
-	public void setAriId(Long ariId) {
+	public void setAriId(long ariId) {
 		this.ariId = ariId;
 	}
 

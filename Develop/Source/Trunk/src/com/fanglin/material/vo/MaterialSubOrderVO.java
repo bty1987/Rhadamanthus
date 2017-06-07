@@ -88,7 +88,7 @@ public class MaterialSubOrderVO implements Serializable {
 	
 	private Timestamp fullCollectTime;
 	
-	private int deliveryStatus;
+	private Integer deliveryStatus;
 	
 	private Timestamp deliveryTime;
 	
@@ -103,6 +103,8 @@ public class MaterialSubOrderVO implements Serializable {
 	private Float point;
 	
 	private Float total;
+	
+	private Float distotal;
 	
 	private Float maling;
 	
@@ -548,5 +550,15 @@ public class MaterialSubOrderVO implements Serializable {
 	public void setCustProfit(Float custProfit) {
 		this.custProfit = custProfit;
 	}
+
+	public Float getDistotal() {
+		return distotal;
+	}
+
+	public void setDistotal(Float distotal) {
+		this.distotal = distotal;
+	}
+
+	
 
 }

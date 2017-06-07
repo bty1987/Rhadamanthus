@@ -34,6 +34,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, csId)).list();
 	}
 
+
+	
 	@Override
 	public int countWorkerSalary(Long csId, String userId) {
 		
@@ -71,4 +73,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	public WorkerSalaryDaoImpl() {
 		super(WorkerSalaryPO.class);
 	}
+
+	
 }

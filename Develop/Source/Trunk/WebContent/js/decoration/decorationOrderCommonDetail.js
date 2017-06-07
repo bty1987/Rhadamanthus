@@ -1,6 +1,13 @@
 var decorationOrderDetail = {
 	decorationOrderId:null,
-	
+	orderType:"",
+
+	type:{
+		"半包":0,
+		"全包":1,
+		"半价":2,
+	},
+
 	decorationOrder: {},
 	customer:{},
 	village:{},
@@ -30,7 +37,8 @@ jQuery(function($) {
 	decorationUtils.init();
 	
 	decorationOrderDetail.decorationOrderId = decorationOrderPostData.decorationOrderId;
-	
+	decorationOrderDetail.orderType = decorationOrderPostData.type;
+
 	decorationPayment.postParam.decorationOrderId = decorationOrderDetail.decorationOrderId;
 	decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;
 
@@ -40,7 +48,8 @@ jQuery(function($) {
 	decorationPayment.otherPaymentGrid=$("#otherPaymentTable");
 	decorationPayment.otherPaymentPager="#otherPaymentGridPager";
 	decorationPayment.basePaymentGrid = $("#basePaymentTable");
-	
+
+	decorationOrderDetail.printQuotationModal = $("#printQuotationModal");
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
 	
@@ -57,9 +66,17 @@ jQuery(function($) {
 	$('#btnBack').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationOrderCommonIndex.url);
 	});
-	
+
 	initWizard();
-	
+
+	if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+		decorationUtils.initDecorationHolonomy('step6',decorationOrderDetail.decorationOrderId);
+	}
+
+	$("#btnPrintDefaultQuotationInfo").on('click', function(res) {
+		decorationOrderDetail.printQuotationModal.modal("show");
+	});
+
 	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 		
 		var statuses = ["咨询", "量房", "已报价", "定金"];

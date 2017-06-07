@@ -8,6 +8,8 @@ public class ManifestItemVO implements java.io.Serializable {
 	
 	private Long mid;
 	
+	private Long siid;
+	
 	private GoodsVO goods;
 	
 	private ColorVO color;
@@ -20,7 +22,7 @@ public class ManifestItemVO implements java.io.Serializable {
 	
 	private Float num;
 	
-	private Float purchasePrice;
+	private Float unitPrice;
 	
 	private String comment;
 
@@ -58,6 +60,14 @@ public class ManifestItemVO implements java.io.Serializable {
 
 	public void setMid(Long mid) {
 		this.mid = mid;
+	}
+
+	public Long getSiid() {
+		return siid;
+	}
+
+	public void setSiid(Long siid) {
+		this.siid = siid;
 	}
 
 	public GoodsVO getGoods() {
@@ -108,12 +118,12 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.num = num;
 	}
 
-	public Float getPurchasePrice() {
-		return this.purchasePrice;
+	public Float getUnitPrice() {
+		return unitPrice;
 	}
 
-	public void setPurchasePrice(Float purchasePrice) {
-		this.purchasePrice = purchasePrice;
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
 	public String getComment() {

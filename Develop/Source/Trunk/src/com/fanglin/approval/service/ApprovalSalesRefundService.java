@@ -14,7 +14,7 @@ public interface ApprovalSalesRefundService {
 
 	public int submitApprovalForSalesRefund(ApprovalVO approvalVO,ApprovalSalesRefundVO approvalSalesRefundVO,List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs,String userId) throws FLException;
 	
-	public int approvalForSalesRefund(ApprovalVO approvalVO,String userId) throws FLException;
+	public int approvalForSalesRefund(ApprovalVO approvalVO) throws FLException;
 	
 	public int refuseForSalesRefund(ApprovalVO approvalVO) throws FLException;
 

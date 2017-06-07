@@ -27,14 +27,14 @@ $.extend(api, {common: {
     queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
     addReceiptType: {url: "addReceiptType.do", server: "communion"},
     
-    changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
-    changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
-    changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},
+    
+    
+   
 
     changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},
     changeMaterialSubOrderForOrderId: {url: "changeMaterialSubOrderForOrderId.do"},
     changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},
-    subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"},
+    
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 
     exportMaterialPayment: {url: "exportMaterialPayment.do"},

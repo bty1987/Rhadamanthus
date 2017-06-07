@@ -1,5 +1,6 @@
 package com.fanglin.inventory.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -11,6 +12,10 @@ import com.fanglin.inventory.po.SalesItemPO;
 
 @Repository("salesItemDao")
 public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemDao {
+	
+	public SalesItemDaoImpl(){
+		super(SalesItemPO.class);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -23,7 +28,16 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 		return (SalesItemPO) createCriteria(SalesItemPO.class).add(Restrictions.eq(SalesItemPO.COLUMN_SIID_STR, siid)).uniqueResult();
 	}
 
-	
-	
+	@Override
+	public List<SalesItemPO> querySalesItemBySids(List<Long> sids) {
+		
+		List<SalesItemPO> SalesItemPOs = new ArrayList<SalesItemPO>();
+		
+		for(Long sid : sids){
+			SalesItemPOs.addAll(querySalesItemBySid(sid));
+		}
+		
+		return SalesItemPOs;
+	}
 
 }

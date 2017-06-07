@@ -30,13 +30,13 @@ public class AssisTypePO implements Serializable{
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
-	private Long atid;
+	private long atid;
 	
 	private String name;
 	
 	private WorkTypePO workType;
 	
-	private Short status;
+	private short status;
 	
 	private String comment;
 	
@@ -52,11 +52,11 @@ public class AssisTypePO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
 	@Column(name = "atid")
-	public Long getAtid() {
+	public long getAtid() {
 		return atid;
 	}
 
-	public void setAtid(Long atid) {
+	public void setAtid(long atid) {
 		this.atid = atid;
 	}
 	
@@ -80,11 +80,11 @@ public class AssisTypePO implements Serializable{
 	}
 	
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 	

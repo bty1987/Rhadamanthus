@@ -128,7 +128,7 @@ var AddReduceDetail = (function(){
 				}),
 
 				submitAddReduceDetailOKBtn : $('#submitAddReduceDetailOKBtn').on(ace.click_event, function(event){
-					com.post( api.addReduce.submitAddReduce, {'addReduce.arId' : addReduceDetail.arid}, function(){
+					com.post( api.addReduce.submitAddReduce, {'addReduce.arId' : addReduceDetail.arid,'addReduce.total' : addReduceDetail.basicParams['addReduce.total'],"addReduce.managePrice" : 0}, function(){
 						com.showAlert(com.info, '提交成功');
 					}, null, false);
 					
@@ -162,6 +162,11 @@ var AddReduceDetail = (function(){
 			if(addReduceDetail.artype == 1){
 				_discountprice = utils.accMul( _discountprice, (_discountFlag == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
 			}
+
+			if(addReduceDetail.artype == 0){
+				params.decorationOrderType  == 2? _discountprice = utils.accMul(_discountprice,utils.accDiv(config.addreduceDiscount,10)):_discountprice;
+			}
+
 			_discountprice = utils.changeTwoDecimal(_discountprice);
 
 			var _totalprice,_totalpriced;
@@ -663,6 +668,11 @@ var AddReduceDetail = (function(){
 			if(addReduceDetail.artype == 1){
 				_dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
 			}
+
+			if(addReduceDetail.artype == 0){
+				params.decorationOrderType  == 2 ? _dcp = utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount,10)):_dcp;
+			}
+
 			_dcp = utils.changeTwoDecimal(_dcp);
 
 			var _lineSet = [
@@ -674,7 +684,7 @@ var AddReduceDetail = (function(){
 				["type quotationFunctionArea", qv.quotationFunctionAreaName ? qv.quotationFunctionAreaName : "---", ["data-quotationFunctionAreaId", qv.quotationFunctionAreaId]],//功能区
 				["unit", qv.measurementUnit],//单位
 				["price unitprice", qv.unitPrice],//单价
-				["price discountprice", _dcp, ["data-discount", addReduceDetail.artype == 0 ? "0" : qv.discount]],//折后单价
+				["price discountprice", _dcp, ["data-discount", addReduceDetail.artype == 0 ?  "0" : qv.discount]],//折后单价
 				["price totalprice-discount",  utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp))],//总价
 			];
 
@@ -747,7 +757,7 @@ var AddReduceDetail = (function(){
 			}
 
 			if(_type == "1"){
-				$('#sumLabType').text('减项')
+				$('#sumLabType').text('减项');
 				$('#addQuotaionItemBtn').removeClass('hide');
 				$('#addSystemDefineItemBtn').removeClass('hide');
 				$('#addItemBtn').removeClass('hide');

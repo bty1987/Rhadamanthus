@@ -16,51 +16,51 @@ public class ApprovalSalesRefundPO implements java.io.Serializable {
 
 	public static final String COLUMN_AID_STR = "aid";
 
-	private Long asrid;
+	private long asrid;
 
-	private Integer aid;
+	private int aid;
 
-	private Long sid;
+	private long sid;
 
-	private Float refund;
+	private float refund;
 
 	private short type;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "asrid")
-	public Long getAsrid() {
+	public long getAsrid() {
 		return this.asrid;
 	}
 
-	public void setAsrid(Long asrid) {
+	public void setAsrid(long asrid) {
 		this.asrid = asrid;
 	}
 
 	@Column(name = "aid")
-	public Integer getAid() {
+	public int getAid() {
 		return this.aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(int aid) {
 		this.aid = aid;
 	}
 
 	@Column(name = "sid")
-	public Long getSid() {
+	public long getSid() {
 		return this.sid;
 	}
 
-	public void setSid(Long sid) {
+	public void setSid(long sid) {
 		this.sid = sid;
 	}
 
 	@Column(name = "refund")
-	public Float getRefund() {
+	public float getRefund() {
 		return this.refund;
 	}
 
-	public void setRefund(Float refund) {
+	public void setRefund(float refund) {
 		this.refund = refund;
 	}
 

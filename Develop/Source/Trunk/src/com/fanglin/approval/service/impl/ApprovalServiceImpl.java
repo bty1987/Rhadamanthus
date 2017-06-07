@@ -24,11 +24,13 @@ import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalActivityService;
 import com.fanglin.approval.service.ApprovalCustomerService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
+import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialOutsideRefundService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
 import com.fanglin.approval.service.ApprovalOrderBelongService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
+import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.service.ApprovalVillageService;
 import com.fanglin.approval.vo.ApprovalVO;
@@ -72,7 +74,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Autowired
 	private ApprovalVillageService approvalVillageService;
 	
-
+	@Autowired
+	private ApprovalManifestDBService approvalManifestDBService;
+	
+	@Autowired
+	private ApprovalSalesRefundService approvalSalesRefundService;
+	
 	@Override
 	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
 		
@@ -179,7 +186,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
-			
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+				approvalSalesRefundService.approvalForSalesRefund(approvalVO);
+				break;	
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+				approvalManifestDBService.approvalManifestDB(approvalVO);
+				break;
 			
 		}
 		
@@ -214,7 +226,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
 				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
 				break;
-			
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+				approvalSalesRefundService.refuseForSalesRefund(approvalVO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+				approvalManifestDBService.refuseManifestDB(approvalVO);
+				break;
 			default:
 				break;
 		}

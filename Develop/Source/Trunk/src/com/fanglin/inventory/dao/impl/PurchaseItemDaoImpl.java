@@ -1,6 +1,7 @@
 package com.fanglin.inventory.dao.impl;
 
 import java.util.*;
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -27,6 +28,24 @@ public class PurchaseItemDaoImpl extends DaoImpl<PurchaseItemPO> implements Purc
 
 		for(Long pid : pids){
 			purchaseItemPOs.addAll(queryPurchaseItemByPid(pid));
+		}
+
+		return purchaseItemPOs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PurchaseItemPO> queryPurchaseItemBySiid(long siid) {
+		return  session().createCriteria(PurchaseItemPO.class).add(Restrictions.eq(PurchaseItemPO.COLUMN_SIID_STR, siid)).list();
+	}
+
+	@Override
+	public List<PurchaseItemPO> queryPurchaseItemBySiids(List<Long> siids) {
+		
+		List<PurchaseItemPO> purchaseItemPOs = new ArrayList<PurchaseItemPO>();
+
+		for(Long siid : siids){
+			purchaseItemPOs.addAll(queryPurchaseItemBySiid(siid));
 		}
 
 		return purchaseItemPOs;

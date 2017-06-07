@@ -39,7 +39,7 @@ jQuery(function($) {
                 ["面积:", v.houseArea, "blue"],
                 ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.createTime, "grey"],
-                ["类型:", v.type == 0 ? '半包' : '全包', "red"],
+                ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
                 ["状态:", v.status, "red"]
             ];
 

@@ -6,7 +6,7 @@ var receipt = {
 };
 
 jQuery(function($) {
-	
+	Api().init('../../js/api/');
 	params.server = window.server;
 	params.authentication = window.authentication;
 	
@@ -41,7 +41,7 @@ jQuery(function($) {
 	}, null, false);
 	
 	var queryDecoraionReceiptByDrId = api.payment.queryDecoraionReceiptByDrId;
-	
+
 	queryDecoraionReceiptByDrId.url = queryDecoraionReceiptByDrId.url + "?" + p;
 	
 	com.post(queryDecoraionReceiptByDrId, {}, function(res){

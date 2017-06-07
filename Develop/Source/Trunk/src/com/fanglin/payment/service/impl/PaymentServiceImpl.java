@@ -33,6 +33,7 @@ import com.fanglin.payment.po.AdvanceReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.service.PaymentService;
 import com.fanglin.payment.vo.PaymentVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Arith;
@@ -62,6 +63,9 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public void pagePaymentForHistory(Paging paging, List<Filter> filters){
@@ -259,6 +263,9 @@ public class PaymentServiceImpl implements PaymentService {
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
 		
 		advanceReceiptPO.setCollectUser(new UserPO(userId));
+		UserPO user = userDao.get(userId);
+		advanceReceiptPO.setCollectUserName(user.getUserName());
+		advanceReceiptPO.setConfirmUserName("");
 		
 		PaymentPO paymentPO = new PaymentPO();
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
@@ -438,6 +445,9 @@ public class PaymentServiceImpl implements PaymentService {
 			BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
 			
 			advanceReceiptPO.setCollectUser(new UserPO(userId));
+			UserPO user = userDao.get(userId);
+			advanceReceiptPO.setCollectUserName(user.getUserName());
+			advanceReceiptPO.setConfirmUserName("");
 			
 			advanceReceiptDao.save(advanceReceiptPO);
 			

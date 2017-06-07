@@ -79,8 +79,10 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
 		workerSalaryPO.setCsId(workerSalaryVO.getCsId());
-		BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO,Arrays.asList("user"));
 		workerSalaryDao.save(workerSalaryPO);
+		
+		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
+
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public interface ApprovalMaterialRefundService {
 	 * @return
 	 * @throws FLException
 	 */
-	public List<ApprovalMaterialRefundItemVO> queryApprovalForMaterialRefundItem(ApprovalVO approvalVO) throws FLException;
+	public List<ApprovalMaterialRefundItemVO> queryApprovalMaterialRefundItem(ApprovalVO approvalVO) throws FLException;
 	
 	/**
 	 * 提交主材退货审批

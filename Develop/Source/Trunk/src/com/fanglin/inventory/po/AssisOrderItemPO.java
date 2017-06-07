@@ -22,13 +22,13 @@ public class AssisOrderItemPO implements Serializable{
 	
 	public static final String COLUMN_AOIDS_STR = "aoids";
 	
-	private Long aoiid;
+	private long aoiid;
 	
-	private Long aoid;
+	private long aoid;
 	
 	private GoodsPO goods;
 	
-	private Float num;
+	private float num;
 	
 	public AssisOrderItemPO() {
 		super();
@@ -42,20 +42,20 @@ public class AssisOrderItemPO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
 	@Column(name = "aoiid")
-	public Long getAoiid() {
+	public long getAoiid() {
 		return aoiid;
 	}
 
-	public void setAoiid(Long aoiid) {
+	public void setAoiid(long aoiid) {
 		this.aoiid = aoiid;
 	}
 	
 	@Column(name = "aoid")
-	public Long getAoid() {
+	public long getAoid() {
 		return aoid;
 	}
 
-	public void setAoid(Long aoid) {
+	public void setAoid(long aoid) {
 		this.aoid = aoid;
 	}
 	
@@ -68,13 +68,13 @@ public class AssisOrderItemPO implements Serializable{
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-
+	
 	@Column(name = "num")
-	public Float getNum() {
+	public float getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(float num) {
 		this.num = num;
 	}
 

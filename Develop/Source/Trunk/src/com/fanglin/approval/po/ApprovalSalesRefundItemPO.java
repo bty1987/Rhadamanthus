@@ -21,62 +21,62 @@ public class ApprovalSalesRefundItemPO implements java.io.Serializable {
 
 	public static final String COLUMN_ASRID_STR = "asrid";
 
-	private Long asriid;
+	private long asriid;
 
-	private Long asrid;
+	private long asrid;
 
-	private Long sid;
+	private long sid;
 
-	private Float num;
+	private float num;
 
-	private Float total;
+	private float total;
 
 	private SalesItemPO salesItem;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "asriid")
-	public Long getAsriid() {
+	public long getAsriid() {
 		return this.asriid;
 	}
 
-	public void setAsriid(Long asriid) {
+	public void setAsriid(long asriid) {
 		this.asriid = asriid;
 	}
 
 	@Column(name = "asrid")
-	public Long getAsrid() {
+	public long getAsrid() {
 		return this.asrid;
 	}
 
-	public void setAsrid(Long asrid) {
+	public void setAsrid(long asrid) {
 		this.asrid = asrid;
 	}
 
 	@Column(name = "sid")
-	public Long getSid() {
+	public long getSid() {
 		return this.sid;
 	}
 
-	public void setSid(Long sid) {
+	public void setSid(long sid) {
 		this.sid = sid;
 	}
 
 	@Column(name = "num")
-	public Float getNum() {
+	public float getNum() {
 		return this.num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(float num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public Float getTotal() {
+	public float getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(float total) {
 		this.total = total;
 	}
 

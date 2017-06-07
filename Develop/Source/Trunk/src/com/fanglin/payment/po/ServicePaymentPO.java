@@ -28,29 +28,29 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final Short COLUMN_INITIALSTATUS_INT = 0;
+	public static final short COLUMN_INITIALSTATUS_INT = 0;
 	
-	public static final Short COLUMN_STYPE_INT = 0;
+	public static final short COLUMN_STYPE_INT = 0;
 	
-	public static final Short COLUMN_TTYPE_INT = 1;
+	public static final short COLUMN_TTYPE_INT = 1;
 	
-	public static final Short COLUMN_PAIDFORSTATUS_INT = 1; 
+	public static final short COLUMN_PAIDFORSTATUS_INT = 1; 
 	
-	public static final Short COLUMN_CONFIRMEDSTATUS_INT = 2; 
+	public static final short COLUMN_CONFIRMEDSTATUS_INT = 2; 
 	
-	public static final Float COLUMN_RATIO_STR = 1.1f; 
+	public static final float COLUMN_RATIO_STR = 1.1f; 
 	
-	public static final Float COLUMN_MONEY_STR = 0f; 
+	public static final float COLUMN_MONEY_STR = 0f; 
 	
-	private Long spid;                    //款项ID
+	private long spid;                    //款项ID
 	
 	private DecorationOrderPO decorationOrder;    //订单编号
 	
-	private Short type;                   //类型 , 0: 收款 , 1: 退款
+	private short type;                   //类型 , 0: 收款 , 1: 退款
 	
-	private Integer pid;                  //预付款款项ID
+	private int pid;                  //预付款款项ID
 	
-	private Short status;                 //状态, 0: 初始, 1: 已收款, 2: 已确认
+	private short status;                 //状态, 0: 初始, 1: 已收款, 2: 已确认
 	
 	private UserPO creater;               //创建人ID
 	
@@ -70,9 +70,9 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	private Timestamp confirmTime;        //确认时间
 	
-	private Float serviceMoney;           //服务费金额
+	private float serviceMoney;           //服务费金额
 	
-	private Float advanceMoney;           //预付款金额
+	private float advanceMoney;           //预付款金额
 	
 	private String des;                   //说明
 	
@@ -82,9 +82,8 @@ public class ServicePaymentPO  implements java.io.Serializable {
 		super();
 	}
 	
-	public ServicePaymentPO(Integer pid,DecorationOrderPO decorationOrder) {
+	public ServicePaymentPO(DecorationOrderPO decorationOrder) {
 		super();
-		this.pid = pid;
 		this.decorationOrder = decorationOrder;
 	}
 	
@@ -97,11 +96,11 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY) 
 	@Column(name = "spid")
-	public Long getSpid() {
+	public long getSpid() {
 		return spid;
 	}
 
-	public void setSpid(Long spid) {
+	public void setSpid(long spid) {
 		this.spid = spid;
 	}
 
@@ -116,29 +115,29 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	}
 	
 	@Column(name = "type")
-	public Short getType() {
+	public short getType() {
 		return type;
 	}
 
-	public void setType(Short type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name = "pid")
-	public Integer getPid() {
+	public int getPid() {
 		return pid;
 	}
 
-	public void setPid(Integer pid) {
+	public void setPid(int pid) {
 		this.pid = pid;
 	}
 
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -227,20 +226,20 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	}
 
 	@Column(name = "serviceMoney")
-	public Float getServiceMoney() {
+	public float getServiceMoney() {
 		return serviceMoney;
 	}
 
-	public void setServiceMoney(Float serviceMoney) {
+	public void setServiceMoney(float serviceMoney) {
 		this.serviceMoney = serviceMoney;
 	}
 
 	@Column(name = "advanceMoney")
-	public Float getAdvanceMoney() {
+	public float getAdvanceMoney() {
 		return advanceMoney;
 	}
 
-	public void setAdvanceMoney(Float advanceMoney) {
+	public void setAdvanceMoney(float advanceMoney) {
 		this.advanceMoney = advanceMoney;
 	}
 

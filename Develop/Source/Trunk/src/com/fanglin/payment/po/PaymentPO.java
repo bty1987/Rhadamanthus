@@ -55,7 +55,7 @@ public class PaymentPO implements Serializable {
 	
 	public static final String PAYMENT_STATUS_CANCELED_STR = "已撤销";
 	
-	private Integer paymentId;
+	private int paymentId;
 	
 	private CustomerPO customer;
 	
@@ -75,7 +75,7 @@ public class PaymentPO implements Serializable {
 	
 	private String des;
 	
-	private Long convertPaymentId; // 对应转换款项关联表的id, 致远表对应
+	private long convertPaymentId; // 对应转换款项关联表的id, 致远表对应
 	
 	public PaymentPO(){
 		super();
@@ -89,11 +89,12 @@ public class PaymentPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	public Integer getPaymentId(){
+	@Column(name = "paymentId")
+	public int getPaymentId(){
 		return paymentId;
 	}
 
-	public void setPaymentId(Integer paymentId){
+	public void setPaymentId(int paymentId){
 		this.paymentId = paymentId;
 	}
 
@@ -107,6 +108,7 @@ public class PaymentPO implements Serializable {
 		this.customer = customer;
 	}
 
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
@@ -125,7 +127,7 @@ public class PaymentPO implements Serializable {
 		this.advanceReceipt = advanceReceipt;
 	}
 
-	@Column(nullable = false)
+	@Column(nullable = false, name="balance")
 	public float getBalance(){
 		return balance;
 	}
@@ -134,7 +136,7 @@ public class PaymentPO implements Serializable {
 		this.balance = balance;
 	}
 
-	@Column(nullable = false)
+	@Column(nullable = false, name="recharge")
 	public float getRecharge(){
 		return recharge;
 	}
@@ -143,7 +145,7 @@ public class PaymentPO implements Serializable {
 		this.recharge = recharge;
 	}
 
-	@Column(nullable = false)
+	@Column(nullable = false, name="type")
 	public String getType(){
 		return type;
 	}
@@ -152,6 +154,7 @@ public class PaymentPO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name="paymentType")
 	public String getPaymentType(){
 		return paymentType;
 	}
@@ -160,6 +163,7 @@ public class PaymentPO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
+	@Column(name="des")
 	public String getDes(){
 		return des;
 	}
@@ -168,6 +172,7 @@ public class PaymentPO implements Serializable {
 		this.des = des;
 	}
 
+	@Column(name="status")
 	public String getStatus(){
 		return status;
 	}
@@ -176,11 +181,12 @@ public class PaymentPO implements Serializable {
 		this.status = status;
 	}
 
-	public Long getConvertPaymentId(){
+	@Column(name="convertPaymentId")
+	public long getConvertPaymentId(){
 		return convertPaymentId;
 	}
 
-	public void setConvertPaymentId(Long convertPaymentId){
+	public void setConvertPaymentId(long convertPaymentId){
 		this.convertPaymentId = convertPaymentId;
 	}
 

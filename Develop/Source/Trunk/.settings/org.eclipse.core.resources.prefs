@@ -1,4 +1,4 @@
-#Thu May 18 08:58:43 CST 2017
+#Wed May 31 14:53:41 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -122,13 +122,6 @@ encoding//WebContent/views/report/materialDesignReport.html=UTF-8
 encoding//WebContent/views/report/materialMerchantReport.html=UTF-8
 encoding//WebContent/views/report/orderCount.html=UTF-8
 encoding//WebContent/views/report/rank.html=UTF-8
-encoding//WebContent/views/salary/designerBalanceSalary.html=UTF-8
-encoding//WebContent/views/salary/designerSalary.html=UTF-8
-encoding//WebContent/views/salary/venderBalance.html=UTF-8
-encoding//WebContent/views/salary/workerBaseSalarySchedule.html=UTF-8
-encoding//WebContent/views/salary/workerBaseSalaryScheduleDetail.html=UTF-8
-encoding//WebContent/views/salary/workerDeductSalary.html=UTF-8
-encoding//WebContent/views/salary/workerDeductSalaryScheduleDetail.html=UTF-8
 encoding//WebContent/views/salary/workerSalary.html=UTF-8
 encoding//WebContent/views/system/changePassword.html=UTF-8
 encoding//WebContent/views/system/city.html=UTF-8

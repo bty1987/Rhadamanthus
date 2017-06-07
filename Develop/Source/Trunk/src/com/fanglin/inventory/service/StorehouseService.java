@@ -27,11 +27,7 @@ public interface StorehouseService {
 	
 	public List<StorehouseVO> queryStorehouseByUserId(UserVO userVO);
 	
-	public StorehouseVO queryStorehouseByCode(StorehouseVO storehouseVO);
-	
 	public int addStorehouse(StorehouseVO storehouseVO) throws FLException;
-	
-	public int updateStorehouse(StorehouseVO storehouseVO) throws FLException;
 	
 	public int updateStorehouseForStatus(StorehouseVO storehouseVO) throws FLException;
 

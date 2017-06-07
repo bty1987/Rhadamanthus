@@ -37,6 +37,8 @@ public class PurchaseAction extends BaseListAction {
 	
 	private List<Long> pids;
 	
+	private List<Long> siids;
+	
 	@Action(value = "queryPurchaseItemByPids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPurchaseItemByPids(){
 		
@@ -53,6 +55,13 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryPurchaseItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseItemBySiids(){
+		
+		purchaseItems = purchaseItemService.queryPurchaseItemBySiids(siids);
+		
+		return SUCCESS;
+	}
 	
 	@Action(value = "addPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPurchase() throws FLException{
@@ -78,6 +87,14 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryPurchaseItemBySiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseItemBySiid(){
+		
+		purchaseItems = purchaseItemService.queryPurchaseItemBySiid(purchaseItem);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryPurchaseByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPurchaseByPid(){
 		
@@ -90,14 +107,6 @@ public class PurchaseAction extends BaseListAction {
 	public String updatePurchase() throws FLException{
 		
 		purchaseService.updatePurchase(purchase);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updatePurchaseItemSurplus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePurchaseItemSurplus() throws FLException{
-		
-		purchaseItemService.updatePurchaseItemSurplus(purchase,purchaseItems);
 		
 		return SUCCESS;
 	}
@@ -157,4 +166,13 @@ public class PurchaseAction extends BaseListAction {
 	public void setPids(List<Long> pids) {
 		this.pids = pids;
 	}
+
+	public List<Long> getSiids() {
+		return siids;
+	}
+
+	public void setSiids(List<Long> siids) {
+		this.siids = siids;
+	}
+	
 }

@@ -24,16 +24,22 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.dao.AssisManifestDao;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.ManifestDao;
 import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.dao.PurchaseDao;
+import com.fanglin.inventory.dao.PurchaseItemDao;
+import com.fanglin.inventory.dao.PurchaseManifestDao;
+import com.fanglin.inventory.po.AssisManifestPO;
 import com.fanglin.inventory.po.AssisOrderPO;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.ManifestPO;
+import com.fanglin.inventory.po.PurchaseItemPO;
+import com.fanglin.inventory.po.PurchaseManifestPO;
 import com.fanglin.inventory.po.PurchasePO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
@@ -41,6 +47,7 @@ import com.fanglin.inventory.service.PurchaseAmountService;
 import com.fanglin.inventory.service.StorehouseStockService;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
+import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -64,10 +71,19 @@ public class ManifestServiceImpl implements ManifestService {
 	private PurchaseDao purchaseDao;
 	
 	@Autowired
+	private PurchaseItemDao purchaseItemDao;
+	
+	@Autowired
 	private AssisOrderDao assisOrderDao;
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private AssisManifestDao assisManifestDao;
+	
+	@Autowired
+	private PurchaseManifestDao purchaseManifestDao;
 	
 	@Autowired
 	private GoodsStorehouseStockService goodsStorehouseStockService;
@@ -123,10 +139,10 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "CG";
-		String comment = "";
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -151,7 +167,6 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
 			
 			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
 			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
@@ -165,7 +180,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItemPO.getPurchasePrice());
+				total = Arith.add(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -173,10 +189,10 @@ public class ManifestServiceImpl implements ManifestService {
 			manifestItemDao.save(manifestItemPO);
 		}
 		
-		manifestPO.setTotal(total);
-		manifestPO.setComment(comment);
+		manifestPO.setTotal(totals);
+		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		return 0;
 	}
@@ -189,10 +205,10 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "XG";
-		String comment = "";
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -217,7 +233,6 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
 			
 			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
 			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
@@ -231,7 +246,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItemPO.getPurchasePrice());
+				total = Arith.sub(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -239,10 +255,10 @@ public class ManifestServiceImpl implements ManifestService {
 			manifestItemDao.save(manifestItemPO);
 		}
 		
-		manifestPO.setTotal(total);
-		manifestPO.setComment(comment);
+		manifestPO.setTotal(totals);
+		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		return 0;
 	}
@@ -254,7 +270,6 @@ public class ManifestServiceImpl implements ManifestService {
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
-		
 		short status = manifestVO.getStatus();
 		
 		if(status != 1){
@@ -274,10 +289,11 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "CR";
-		String comment = "";
+		String attachment = "";
 		
 		UserPO userPO = userDao.get(userId);
 		
@@ -289,6 +305,8 @@ public class ManifestServiceImpl implements ManifestService {
 		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser","quoteManifest"));
 		BeanUtil.copyProperties(manifestVO.getQuoteManifest(), manifestPO.getQuoteManifest(), Arrays.asList("createUser"));
 		
+		manifestPO.setType(ManifestPO.TYPE_CR_INT);
+		manifestPO.setAttachment(attachment);
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
@@ -298,38 +316,40 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.save(manifestPO);
 		
 		for(ManifestItemVO manifestItemVO: manifestItemVOs){
-			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
-			long gid = manifestItemVO.getGoods().getGid();
-			long cid = manifestItemVO.getColor().getCid();
-			long fid = manifestItemVO.getFormat().getFid();
+			manifestItemPO = manifestItemDao.get(manifestItemVO.getMiId());
+			ManifestItemPO manifestItem = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+			long gid = manifestItemPO.getGoods().getGid();
+			long cid = manifestItemPO.getColor().getCid();
+			long fid = manifestItemPO.getFormat().getFid();
 			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
 			
-			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
-			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
-			BeanUtil.copyProperties(manifestItemVO.getColor(), manifestItemPO.getColor());
-			BeanUtil.copyProperties(manifestItemVO.getFormat(), manifestItemPO.getFormat());
+			BeanUtil.copyProperties(manifestItemPO,manifestItem, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(), manifestItem.getGoods());
+			BeanUtil.copyProperties(manifestItemPO.getColor(), manifestItem.getColor());
+			BeanUtil.copyProperties(manifestItemPO.getFormat(), manifestItem.getFormat());
 			
-			if(manifestItemVO.getOutstorehouse() != null){
+			if(manifestItemPO.getInstorehouse() != null){
 				
-				long oshId = manifestItemVO.getOutstorehouse().getShId();
+				long oshId = manifestItemPO.getInstorehouse().getShId();
 				
-				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
+				manifestItem.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItemPO.getPurchasePrice());
+				total = Arith.sub(total, manifestItem.getUnitPrice());
+				totals = Arith.add(totals, Arith.mul(total, num));
 			}
 			
-			manifestItemPO.setMid(manifestPO.getMid());
+			manifestItem.setNum(num);
+			manifestItem.setMid(manifestPO.getMid());
 			
-			manifestItemDao.save(manifestItemPO);
+			manifestItemDao.save(manifestItem);
 		}
 		
-		manifestPO.setTotal(total);
-		manifestPO.setComment(comment);
+		manifestPO.setTotal(totals);
+		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		return 0;
 	}
@@ -341,7 +361,6 @@ public class ManifestServiceImpl implements ManifestService {
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
-		
 		short status = manifestVO.getStatus();
 		
 		if(status != 1){
@@ -361,9 +380,11 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "XB";
+		String attachment ="";
 		String comment = "";
 		
 		UserPO userPO = userDao.get(userId);
@@ -376,6 +397,8 @@ public class ManifestServiceImpl implements ManifestService {
 		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser","quoteManifest"));
 		BeanUtil.copyProperties(manifestVO.getQuoteManifest(), manifestPO.getQuoteManifest(), Arrays.asList("createUser"));
 		
+		manifestPO.setType(ManifestPO.TYPE_XB_INT);
+		manifestPO.setAttachment(attachment);
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
@@ -385,132 +408,58 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.save(manifestPO);
 		
 		for(ManifestItemVO manifestItemVO: manifestItemVOs){
-			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
-			long gid = manifestItemVO.getGoods().getGid();
-			long cid = manifestItemVO.getColor().getCid();
-			long fid = manifestItemVO.getFormat().getFid();
+			manifestItemPO = manifestItemDao.get(manifestItemVO.getMiId());
+			
+			ManifestItemPO manifestItem = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+			
+			long gid = manifestItemPO.getGoods().getGid();
+			long cid = manifestItemPO.getColor().getCid();
+			long fid = manifestItemPO.getFormat().getFid();
 			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
+			comment = manifestVO.getComment();
 			
-			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
-			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
-			BeanUtil.copyProperties(manifestItemVO.getColor(), manifestItemPO.getColor());
-			BeanUtil.copyProperties(manifestItemVO.getFormat(), manifestItemPO.getFormat());
+			BeanUtil.copyProperties(manifestItemPO, manifestItem, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(), manifestItem.getGoods());
+			BeanUtil.copyProperties(manifestItemPO.getColor(), manifestItem.getColor());
+			BeanUtil.copyProperties(manifestItemPO.getFormat(), manifestItem.getFormat());
 			
-			if(manifestItemVO.getInstorehouse() != null){
+			if(manifestItemPO.getOutstorehouse() != null){
 				
-				long ishId = manifestItemVO.getInstorehouse().getShId();
-				
-				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
+				long ishId = manifestItemPO.getOutstorehouse().getShId();
+				manifestItem.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItemPO.getPurchasePrice());
+				total = Arith.add(total, manifestItem.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(total, num));
 			}
 			
-			manifestItemPO.setMid(manifestPO.getMid());
+			manifestItem.setNum(num);
+			manifestItem.setMid(manifestPO.getMid());
 			
-			manifestItemDao.save(manifestItemPO);
+			manifestItemDao.save(manifestItem);
 		}
 		
-		manifestPO.setTotal(total);
+		manifestPO.setTotal(totals);
 		manifestPO.setComment(comment);
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForDB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId) throws FLException {
-		
-		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
-			throw new FLException(260007, "货单无商品信息");
-		}
-		
-		float total = 0f;
-		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
-		
-		String word = "DB";
-		String comment = "";
-		
-		UserPO userPO = userDao.get(userId);
-		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_DB_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
-		
-		ManifestPO manifestPO = new ManifestPO(manifestId);
-		
-		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser"));
-		
-		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
-		manifestPO.setCreateUser(userPO);
-		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
-		
-		manifestDao.save(manifestPO);
-		
-		ManifestItemPO manifestItemPO;
-		
-		for(ManifestItemVO manifestItemVO: manifestItemVOs){
-			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
-			
-			long gid = manifestItemVO.getGoods().getGid();
-			long cid = manifestItemVO.getColor().getCid();
-			long fid = manifestItemVO.getFormat().getFid();
-			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
-			
-			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
-			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
-			BeanUtil.copyProperties(manifestItemVO.getColor(), manifestItemPO.getColor());
-			BeanUtil.copyProperties(manifestItemVO.getFormat(), manifestItemPO.getFormat());
-			
-			
-			if(manifestItemVO.getInstorehouse() != null){
-				
-				long ishId = manifestItemVO.getInstorehouse().getShId();
-				
-				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
-				storehouseStockService.updateStorehouseStock(ishId, month, num);
-				
-				total = Arith.add(total, manifestItemPO.getPurchasePrice());
-			}
-			
-			if(manifestItemVO.getOutstorehouse() != null){
-				
-				long oshId = manifestItemVO.getOutstorehouse().getShId();
-				
-				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
-				storehouseStockService.updateStorehouseStock(oshId, month, -num);
-				
-				total = Arith.sub(total, manifestItemPO.getPurchasePrice());
-			}
-			
-			manifestItemPO.setMid(manifestPO.getMid());
-			
-			manifestItemDao.save(manifestItemPO);
-		}
-		
-		manifestPO.setTotal(total);
-		manifestPO.setComment(comment);
-		
-		purchaseAmountService.updatePurchaseAmount(month, total);
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids, List<ManifestItemVO> manifestItemVOs, String uid) throws FLException{
+	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs, List<ManifestItemVO> manifestItemVOs, String uid) throws FLException{
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
 		if(pids == null || pids.size() <= 0){
 			throw new FLException(260017, "采购单不存在");
 		}
+		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "PU";
@@ -537,7 +486,19 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.save(manifestPO);
 		
 		ManifestItemPO manifestItemPO;
+		
+		for(PurchaseItemVO purchaseItemVO : purchaseItemVOs){
+			
+			PurchaseItemPO purchaseItemPO = purchaseItemDao.get(purchaseItemVO.getPiId());
+			
+			purchaseItemPO.setSurplus(purchaseItemVO.getSurplus());
+			
+			purchaseItemDao.save(purchaseItemPO);
+			
+		}
+		
 		for(ManifestItemVO manifestItemVO: manifestItemVOs){
+			
 			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
 			long gid = manifestItemVO.getGoods().getGid();
@@ -559,7 +520,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItemPO.getPurchasePrice());
+				total = Arith.add(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(total, num));
 			}			
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -569,15 +531,25 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		manifestPO.setComment(comment);
-		manifestPO.setTotal(total);
+		manifestPO.setTotal(totals);
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		PurchasePO purchasePO;
+		PurchaseManifestPO purchaseManifestPO;
+		
 		for(Long pid :pids){
+			
 			purchasePO = purchaseDao.get(pid);
+			
 			purchasePO.setStatus(PurchasePO.COLUMN_SECTIONSTATUS_STR);
+			
 			purchaseDao.save(purchasePO);
+			
+			purchaseManifestPO = new PurchaseManifestPO(purchasePO,manifestPO);
+			
+			purchaseManifestDao.save(purchaseManifestPO);
+			
 		}
 		
 		return 0;
@@ -595,6 +567,7 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		float total = 0f;
+		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
 		String word = "AS";
@@ -638,21 +611,25 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItemPO.getPurchasePrice());
+				total = Arith.sub(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
 			
 			manifestItemDao.save(manifestItemPO);
+			
+			
 		}
 		
 		
-		manifestPO.setTotal(total);
+		manifestPO.setTotal(totals);
 		manifestPO.setComment(comment);
 		
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		purchaseAmountService.updatePurchaseAmount(month, totals);
 		
 		AssisOrderPO assisOrderPO;
+		AssisManifestPO assisManifestPO;
 		for(Long aoid : aoids){
 			
 			assisOrderPO = assisOrderDao.get(aoid);
@@ -662,6 +639,10 @@ public class ManifestServiceImpl implements ManifestService {
 			assisOrderPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			assisOrderDao.save(assisOrderPO);
+			
+			assisManifestPO = new AssisManifestPO(assisOrderPO,manifestPO);
+			
+			assisManifestDao.save(assisManifestPO);
 		}
 		
 		return 0;
@@ -688,23 +669,6 @@ public class ManifestServiceImpl implements ManifestService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateManifestForStatus(ManifestVO manifestVO) throws FLException {
-		
-		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
-		
-		if(manifestPO == null){
-			throw new FLException(260009, "货单不存在");
-		}
-		
-		manifestPO.setStatus(manifestVO.getStatus());
-		
-		manifestDao.update(manifestPO);
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
 	public int confirmManifest(ManifestVO manifestVO) throws FLException {
 		
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
@@ -720,38 +684,6 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteManifest(ManifestVO manifestVO) throws FLException {
-		
-		long mid = manifestVO.getMid();
-		
-		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
-		
-		if(manifestPO == null){
-			throw new FLException(260009, "货单不存在");
-		}
-		
-		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemByMId(mid);
-		
-		for(ManifestItemPO manifestItemPO: manifestItemPOs){
-			
-			if(manifestItemPO.getInstorehouse() != null){
-				goodsStorehouseStockService.outstorehouse(manifestItemPO.getGoods().getGid(),manifestItemPO.getColor().getCid(),manifestItemPO.getFormat().getFid(), manifestItemPO.getInstorehouse().getShId(), manifestItemPO.getNum());
-			}
-			
-			if(manifestItemPO.getOutstorehouse() != null){
-				goodsStorehouseStockService.instorehouse(manifestItemPO.getGoods().getGid(),manifestItemPO.getColor().getCid(),manifestItemPO.getFormat().getFid(), manifestItemPO.getOutstorehouse().getShId(), manifestItemPO.getNum());
-			}
-			
-			manifestItemDao.delete(manifestItemPO);
-		}
-		
-		manifestDao.delete(manifestPO);
 		
 		return 0;
 	}

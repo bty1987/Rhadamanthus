@@ -77,20 +77,18 @@ jQuery(function($) {
 
 			$liLine.append($h3).append($ulProperty).append($content);
 			var $sign=$('<i></i>').addClass("icon-spinner icon-spin white bigger-125");
-			$btnPass.click(function() {
-				var $this = $(this);
-				$this.prepend($sign);
-				approveApproval(v.aid,$this);
+			$btnPass.bindClick(function() {
+
+				approveApproval(v.aid);
 			});
 
-			$btnRefuse.click(function() {
-				var $this = $(this);
-				$this.prepend($sign);
-				refuseApproval(v.aid,$this);
+			$btnRefuse.bindClick(function() {
+
+				refuseApproval(v.aid);
 			});
 
 			// 主材详细信息按钮
-			$btnDetails.click(function() {
+			$btnDetails.bindClick(function() {
 				queryMaterialSubOrder(v.aid);
 			});
 			return $liLine;
@@ -118,22 +116,28 @@ jQuery(function($) {
 
 		var options = {
 			"approval.aid" : aId,
-		}
+		};
 
 		com.post(api.approval.approveApproval, options, function(res) {
-			$this.find('i').remove();
+
+			searcher.doSearch();
+		},function(e){
+
 			searcher.doSearch();
 		});
 	}
 
-	function refuseApproval(aId,$this) {
+	function refuseApproval(aId) {
 
 		var options = {
 			"approval.aid" : aId,
 		}
 
 		com.post(api.approval.refuseApproval, options, function(res) {
-			$this.find('i').remove();
+
+			searcher.doSearch();
+		},function(e){
+
 			searcher.doSearch();
 		});
 	}
@@ -144,7 +148,7 @@ jQuery(function($) {
 			$('#materialInfoList').empty();
 		}
 
-		com.post(api.approval.queryApprovalForMaterialRefundItem,{"approval.aid" : aId}, function(res) {
+		com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
 
 			$.each(res.approvalMaterialRefundItems, function(i, v) {
 

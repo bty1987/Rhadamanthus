@@ -8,9 +8,15 @@ public class AssisManifestVO implements Serializable{
 
 	private Long amid;
 	
-	private AssisOrderVO purchase;
+	private AssisOrderVO assisOrder;
 	
 	private ManifestVO manifest;
+	
+	public AssisManifestVO(AssisOrderVO assisOrder, ManifestVO manifest) {
+		super();
+		this.assisOrder = assisOrder;
+		this.manifest = manifest;
+	}
 
 	public Long getAmid() {
 		return amid;
@@ -20,12 +26,12 @@ public class AssisManifestVO implements Serializable{
 		this.amid = amid;
 	}
 
-	public AssisOrderVO getPurchase() {
-		return purchase;
+	public AssisOrderVO getAssisOrder() {
+		return assisOrder;
 	}
 
-	public void setPurchase(AssisOrderVO purchase) {
-		this.purchase = purchase;
+	public void setAssisOrder(AssisOrderVO assisOrder) {
+		this.assisOrder = assisOrder;
 	}
 
 	public ManifestVO getManifest() {

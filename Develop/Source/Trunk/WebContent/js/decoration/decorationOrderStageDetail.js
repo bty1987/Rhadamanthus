@@ -1,5 +1,12 @@
 var decorationOrderDetail = {
     decorationOrderId:null,
+    orderType:"",
+
+    type:{
+        "半包":0,
+        "全包":1,
+        "半价":2,
+    },
 
     decorationOrder: {},
     customer:{},
@@ -32,6 +39,7 @@ jQuery(function ($) {
     decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;
 
     decorationOrderDetail.decorationOrderId = decorationOrderPostData.decorationOrderId;
+    decorationOrderDetail.orderType = decorationOrderPostData.type;
     decorationOrderDetail.activitys = $("#activitys");
     decorationOrderDetail.activityItems = $("#activityItems");
 
@@ -49,6 +57,11 @@ jQuery(function ($) {
         return false;
     });
     initWizard();
+
+    if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+        decorationUtils.initDecorationHolonomy('step3',decorationOrderDetail.decorationOrderId);
+    }
+
     decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 
         var statuses = ["咨询", "量房", "已报价", "定金"];

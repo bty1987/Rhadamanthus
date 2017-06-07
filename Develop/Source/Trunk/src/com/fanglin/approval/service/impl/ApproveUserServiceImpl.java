@@ -38,17 +38,14 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 	@Override
 	public void pageApproveUser(Paging paging, List<Filter> filters) {
 
-		List<ApproveUserPO> approveUserPOs = approveUserDao.pageApproveUser(
-				paging, filters);
+		List<ApproveUserPO> approveUserPOs = approveUserDao.pageApproveUser(paging, filters);
 		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
 
 		for (ApproveUserPO approveUserPO : approveUserPOs) {
 			ApproveUserVO approveUserVO = new ApproveUserVO(new UserVO());
-			BeanUtil.copyProperties(approveUserPO, approveUserVO,
-					Arrays.asList("user"));
+			BeanUtil.copyProperties(approveUserPO, approveUserVO,Arrays.asList("user"));
 
-			BeanUtil.copyProperties(approveUserPO.getUser(),
-					approveUserVO.getUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept"));
 
 			approveUserVOs.add(approveUserVO);
 		}
@@ -56,25 +53,20 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 		paging.setData(approveUserVOs);
 	}
 
-	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,
-			ApproveUserVO approveUserVO) {
+	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,	ApproveUserVO approveUserVO) {
 		Paging paging = new Paging();
 		paging.setPage(0);
 		paging.setRows(50);
 
-		List<ApproveUserPO> approveUserPOs = approveUserDao
-				.queryApproveUserForNameByType(paging,
-						userVO.getUserNamePinYin(), approveUserVO.getType());
+		List<ApproveUserPO> approveUserPOs = approveUserDao.queryApproveUserForNameByType(paging,userVO.getUserNamePinYin(), approveUserVO.getType());
 		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
 
 		for (ApproveUserPO approveUserPO : approveUserPOs) {
 			ApproveUserVO _approveUserVO = new ApproveUserVO();
-			BeanUtil.copyProperties(approveUserPO, _approveUserVO,
-					Arrays.asList("user"));
-
+			BeanUtil.copyProperties(approveUserPO, _approveUserVO,Arrays.asList("user"));
+			
 			_approveUserVO.setUser(new UserVO());
-			BeanUtil.copyProperties(approveUserPO.getUser(),
-					_approveUserVO.getUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(approveUserPO.getUser(),_approveUserVO.getUser(), Arrays.asList("role", "dept"));
 
 			approveUserVOs.add(_approveUserVO);
 		}
@@ -90,55 +82,22 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 				.queryApproveUserByUserId(approveUserVO.getUser().getUserId());
 
 		for (ApproveUserPO approveUser : approveUsers) {
-			if (approveUser.getType().equals(approveUserVO.getType())) {
+			if (approveUser.getType()==approveUserVO.getType()) {
 				throw new FLException(230008, "审批人员已有该审批权限");
 			}
 		}
 
 		ApproveUserPO approveUserPO = new ApproveUserPO();
-		BeanUtil.copyProperties(approveUserVO, approveUserPO,
-				Arrays.asList("user"));
+		BeanUtil.copyProperties(approveUserVO, approveUserPO,Arrays.asList("user"));
 
 		approveUserPO.setUser(new UserPO());
-		BeanUtil.copyProperties(approveUserVO.getUser(),
-				approveUserPO.getUser());
+		BeanUtil.copyProperties(approveUserVO.getUser(),approveUserPO.getUser());
 
 		approveUserDao.saveOrUpdate(approveUserPO);
 
 		return 0;
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updateApproveUser(ApproveUserVO approveUserVO)
-			throws FLException {
-
-		ApproveUserPO approveUserPO = approveUserDao.get(approveUserVO
-				.getAuid());
-
-		if (!approveUserPO.getType().equals(approveUserVO.getType())) {
-			List<ApproveUserPO> approveUsers = approveUserDao
-					.queryApproveUserByUserId(approveUserVO.getUser()
-							.getUserId());
-
-			for (ApproveUserPO approveUser : approveUsers) {
-				if (approveUser.getType().equals(approveUserVO.getType())) {
-					throw new FLException(230008, "审批人员已有该审批权限");
-				}
-			}
-		}
-
-		BeanUtil.copyProperties(approveUserVO, approveUserPO,
-				Arrays.asList("user"));
-
-		approveUserPO.setUser(new UserPO());
-		BeanUtil.copyProperties(approveUserVO.getUser(),
-				approveUserPO.getUser());
-
-		approveUserDao.saveOrUpdate(approveUserPO);
-
-		return 0;
-	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

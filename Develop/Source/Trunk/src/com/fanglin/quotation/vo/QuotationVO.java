@@ -68,15 +68,19 @@ public class QuotationVO implements Serializable {
 	
 	private Float trafficPrice;
 	
-	private float setpackage;
+	private Float setpackage;
 	
-	private float basicPrice;
+	private Float basicPrice;
 	
-	private float qdiff;
+	private Float qdiff;
 	
-	private float mdiff;
+	private Float mdiff;
 	
 	private String content;
+	
+	private Float undisPrice;
+	
+	private Float trafficRate;
 	
 	public QuotationVO() {
 		super();
@@ -288,36 +292,52 @@ public class QuotationVO implements Serializable {
 		this.type = type;
 	}
 
-	public float getSetpackage() {
+	public Float getSetpackage() {
 		return setpackage;
 	}
 
-	public void setSetpackage(float setpackage) {
+	public void setSetpackage(Float setpackage) {
 		this.setpackage = setpackage;
 	}
 
-	public float getBasicPrice() {
+	public Float getBasicPrice() {
 		return basicPrice;
 	}
 
-	public void setBasicPrice(float basicPrice) {
+	public void setBasicPrice(Float basicPrice) {
 		this.basicPrice = basicPrice;
 	}
 
-	public float getQdiff() {
+	public Float getQdiff() {
 		return qdiff;
 	}
 
-	public void setQdiff(float qdiff) {
+	public void setQdiff(Float qdiff) {
 		this.qdiff = qdiff;
 	}
 
-	public float getMdiff() {
+	public Float getMdiff() {
 		return mdiff;
 	}
 
-	public void setMdiff(float mdiff) {
+	public void setMdiff(Float mdiff) {
 		this.mdiff = mdiff;
+	}
+
+	public Float getUndisPrice() {
+		return undisPrice;
+	}
+
+	public void setUndisPrice(Float undisPrice) {
+		this.undisPrice = undisPrice;
+	}
+
+	public Float getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(Float trafficRate) {
+		this.trafficRate = trafficRate;
 	}
 
 }

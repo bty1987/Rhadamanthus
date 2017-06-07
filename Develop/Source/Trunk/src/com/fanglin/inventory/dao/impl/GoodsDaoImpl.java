@@ -73,7 +73,7 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<GoodsPO> queryGoodsByAtid(long atid) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_ATID_STR, atid)).list();
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_ATID_STR, atid)).list();
 	}
 	
 	@Override
@@ -99,8 +99,6 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				query.alias("assisType","assisType");
 				
 				if(GoodsPO.COLUMN_NAME_STR.equals(field)){
 					query.add(query.getCriterion(GoodsPO.COLUMN_NAME_STR, data, op));

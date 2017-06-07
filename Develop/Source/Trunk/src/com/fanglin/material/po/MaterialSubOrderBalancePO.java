@@ -92,7 +92,7 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	
 	private int ident;
 	
-	private Long mpId;
+	private long mpId;
 	
 	private float total;
 	@Id
@@ -245,12 +245,12 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 		this.total = total;
 	}
 	
-	@Column(name = "mpId",nullable=true)
-	public Long getMpId() {
+	@Column(name = "mpId")
+	public long getMpId() {
 		return mpId;
 	}
 
-	public void setMpId(Long mpId) {
+	public void setMpId(long mpId) {
 		this.mpId = mpId;
 	}
 

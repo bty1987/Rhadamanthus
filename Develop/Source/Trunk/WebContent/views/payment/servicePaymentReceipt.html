@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<style type="text/css">
+	.PageNext{page-break-after: always;}
+</style>
+
+</head>
+<body>
+	<div id="decorationPaymentReceipt"></div>
+	
+	<script type="text/javascript">
+	
+		var server = "http://" + document.location.host + "/";
+		var versionCode = "";
+		var cookies = document.cookie.split(";");
+		
+		for(var i=0;i<cookies.length;i++){
+			var cookie = cookies[i];
+			
+			if(cookie.indexOf("versionCode") != -1){
+				versionCode = cookie.split("=")[1];
+			}else if(cookie.indexOf("authentication") != -1){
+				window.authentication = cookie.split("=")[1];
+			}
+		}
+		
+		var jses = "";
+		
+		if(!window.jQuery){
+			jses += '<script src="' + server + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+		}
+	
+		if("ontouchend" in document){
+			jses += '<script src="' + server + 'assets/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
+		}
+		
+		jses += '<script src="' + server + 'assets/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'assets/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
+		
+		jses += '<script src="' + server + 'assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
+		
+		jses += '<script src="' + server + 'assets/js/ace-elements.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'assets/js/ace.min.js?version=' + versionCode + '"><\/script>';
+		
+		jses += '<script src="' + server + 'js/com/api.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'js/com/config.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'js/com/utils.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'js/com/core.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'js/com/params.js?version=' + versionCode + '"><\/script>';
+		
+		jses += '<script src="' + server + 'js/payment/servicePaymentReceipt.js?version=' + versionCode + '"><\/script>';
+		
+		document.write(jses);
+	</script>
+	
+</body>
+</html>

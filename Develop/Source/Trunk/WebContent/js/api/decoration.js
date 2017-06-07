@@ -70,7 +70,6 @@ $.extend(api, {decoration: {
     queryDecorationOrderForCondition: {url: "queryDecorationOrderForCondition.do", demo: true},
     queryDecorationOrderForDesignerByOrderId: {url: "queryDecorationOrderForDesignerByOrderId.do", demo: true},
     queryDecorationOrderForCommonByOrderId: {url: "queryDecorationOrderForCommonByOrderId.do", demo: true},
-    checkDecorationOrderForExist: {url: "checkDecorationOrderForExist.do"},
     createDecorationOrder: {url: "createDecorationOrder.do"},
     obsoleteDecorationOrder: {url: "obsoleteDecorationOrder.do"},
     terminalDecorationOrder: {url: "terminalDecorationOrder.do"},
@@ -96,7 +95,7 @@ $.extend(api, {decoration: {
     changeDecorationOrderForOrderId: {url: "changeDecorationOrderForOrderId.do"},
     changeDecorationOrderForTime: {url: "changeDecorationOrderForTime.do"},
     changeDecorationOrderForVersionId: {url: "changeDecorationOrderForVersionId.do"},
-
+    changeDecorationOrderForStatus: {url: "changeDecorationOrderForStatus.do"},
     subDecorationOrderForQuotationTime: {url: "subDecorationOrderForQuotationTime.do"},
 	
 	pageDecorationHolonomy: {url: "pageDecorationHolonomy.do"},

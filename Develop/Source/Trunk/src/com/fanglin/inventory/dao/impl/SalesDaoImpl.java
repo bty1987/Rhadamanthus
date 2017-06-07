@@ -16,6 +16,10 @@ import com.fanglin.utils.Paging;
 
 @Repository("salesDao")
 public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
+	
+	public SalesDaoImpl(){
+		super(SalesPO.class);
+	}
 
 	@Override
 	public List<SalesPO> pageSales(Paging paging, List<Filter> filters) {

@@ -160,19 +160,17 @@ jQuery(function($) {
 				$numNew.popover('destroy');
 				
 				if($line.attr('level') == 0 && $line.attr('isleaf') == 'true'){
+
 					linetotal= utils.changeTwoDecimal(utils.accMul(_numNew, _price));
 					totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, linetotal));
-					
 					options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = linetotal;
 					
 					index++;
 				}else if($line.attr('level') == 1 && $line.attr('isleaf') == 'true'){
-					
 					_numNew = utils.changeTwoDecimal(parseFloat($line.find('input').val()));
 					_totalNew = utils.changeTwoDecimal(parseFloat($('[packageName=' + $line.attr('packageName') + '][level=0]').find('input[name="refundnum"]').val()));
-					
 					options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = _totalNew;
@@ -180,12 +178,15 @@ jQuery(function($) {
 					index++;
 				}else{
 					linetotal = utils.changeTwoDecimal(parseFloat($line.find('input[name="refundnum"]').val()));
-					totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, linetotal));
+					totalPrice = utils.changeTwoDecimal(parseFloat(utils.accAdd(totalPrice, linetotal)));
+
 				}
 				
 				$numNew.attr({
 					"data-resnum" : utils.accSub(_numOld,_numNew),
-					"data-restotal" : utils.changeTwoDecimal(utils.accMul(utils.accSub(_numOld,_numNew), _price))
+					//"data-restotal" : utils.changeTwoDecimal(utils.accMul(utils.accSub(_numOld,_numNew), _price))
+                    "data-restotal" : utils.accMul(utils.accSub(_numOld,_numNew), _price)
+
 				});
 			});
 			
@@ -199,7 +200,6 @@ jQuery(function($) {
 			materialSubOrderDetail.refundType = 0;
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
 
-			console.log(refundMaterialSubOrderItemData);
 		}),
 		//退货取消按钮
 		refundCancelBtn : $("#refundCancelBtn").click(function(){
@@ -301,9 +301,9 @@ jQuery(function($) {
 			["type", v.materialTypeName],//品类
 			["brand", v.materialBrandName],//品牌
 			["unit", v.measurementUnitName],//单位
-			["money", v.salePrice],//折扣价
-			["money price", v.price],//售价
-			["num", v.num],//数量
+			["money", v.salePrice == null ? "-" : v.salePrice],//折扣价
+			["money price", v.price == null ? "-" : v.price],//售价
+			["num", v.num == null ? "-" : v.num],//数量
 			["money total", v.total],//总价
 			["money", v.prePoint],//预结算值
 			["seat", v.des ? v.des : "--"],//备注
