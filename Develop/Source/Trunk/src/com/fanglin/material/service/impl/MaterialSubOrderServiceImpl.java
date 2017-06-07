@@ -199,6 +199,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId) throws FLException{
 
 		float total = 0;
+		float discountTotal = 0;
 		StringBuffer msoNo = null;
 		Map<String, List<MaterialSubOrderItemPO>> packageItems = new HashMap<String, List<MaterialSubOrderItemPO>>();
 		
@@ -288,9 +289,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 		if(materialSubOrderItemVOs != null){
 			
 			float _total = MaterialSubOrderItemServiceImpl.packageMaterialSubOrderItem(materialSubOrderPO, materialSubOrderItemVOs, packageItems);
-			
+			float _discountTotal = MaterialSubOrderItemServiceImpl.setDisCountTotal(materialSubOrderPO, materialSubOrderItemVOs);
 			total = Arith.add(total, _total);
-			
+			discountTotal = Arith.add(discountTotal, _discountTotal);
 			for(String packageName: packageItems.keySet()){
 				List<MaterialSubOrderItemPO> tmpItems = packageItems.get(packageName);
 				for(MaterialSubOrderItemPO materialSubOrderItemPO: tmpItems){
@@ -298,7 +299,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 				}
 			}
 		}
-		
+		materialSubOrderPO.setDistotal(discountTotal);
 		materialSubOrderPO.setTotal(total);
 		materialSubOrderDao.save(materialSubOrderPO);
 		
@@ -425,7 +426,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateMaterialSubOrderForCoupon(	MaterialSubOrderVO materialSubOrderVO){
+	public void updateMaterialSubOrderForCoupon(MaterialSubOrderVO materialSubOrderVO){
 		
 		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(materialSubOrderVO.getMsoId());
 		
@@ -458,14 +459,12 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	public void preBalanceMaterialSubOrder(List<Long> msoIds, String userId, String userName){
 		
 		float totalBalance;
-		float totals;
 		List<String> materialSubOrderItemPackageNameList = new ArrayList<String>();
 		
 		for(Long msoId: msoIds){
 			MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
 			
 			if(materialSubOrderPO != null && materialSubOrderPO.getStatus() == MaterialSubOrderPO.STATUS_TYPE_INIT_INT && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
-				totals = 0;
 				totalBalance = 0;
 				List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(msoId);
 				for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
@@ -477,8 +476,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 					float salePrice = materialSubOrderItemPO.getSalePrice(); // 折扣价
 					float price = materialSubOrderItemPO.getPrice(); // 售价
 					float total = materialSubOrderItemPO.getTotal(); // 总价
-					float num = materialSubOrderItemPO.getNum(); // 数量
-					totals = total+totals;
+					float num = materialSubOrderItemPO.getNum(); // 数量 
 					float prePoint = materialSubOrderItemPO.getPrePoint(); // 预结算点位;
 					
 					if(!"".equals(materialSubOrderItemPO.getPackageName())){
@@ -486,6 +484,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 							// 利润 : 总价 * 点位 , 成本 : 总价 * (1 - 点位)
 							balance = Arith.mul(total, prePoint);
 							materialSubOrderItemPackageNameList.add(msoId.toString() + materialSubOrderItemPO.getPackageName());
+							
 						}
 					}else{
 						if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_BASE_INT){
@@ -495,6 +494,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 							// 利润 : (售价 - 折扣价 * (1 - 点位)) * 数量 , 成本 : 折扣价 * (1 - 点位) * 数量
 							balance = Arith.mul(Arith.sub(price, Arith.mul(salePrice, Arith.sub(1f, prePoint))), num);
 						}
+						
 					}
 					
 					totalBalance = Arith.add(totalBalance, balance);
@@ -519,8 +519,8 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 				materialSubOrderBalancePO.setDifference(Arith.sub(materialSubOrderPO.getTotal(), totalBalance));
 				materialSubOrderBalancePO.setType(MaterialSubOrderBalancePO.TYPE_ADD_INT);
 				materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT);
-				materialSubOrderBalancePO.setTotal(totals);
-				
+				materialSubOrderBalancePO.setTotal(materialSubOrderPO.getTotal());
+				 
 				materialSubOrderBalanceDao.save(materialSubOrderBalancePO);
 			}
 		}

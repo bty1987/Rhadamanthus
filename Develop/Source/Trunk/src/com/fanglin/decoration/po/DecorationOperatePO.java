@@ -68,11 +68,11 @@ public class DecorationOperatePO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "doId")
-	public Long getDoId(){
+	public long getDoId(){
 		return this.doId;
 	}
 
-	public void setDoId(Long doId){
+	public void setDoId(long doId){
 		this.doId = doId;
 	}
 

@@ -26,8 +26,6 @@ public interface ApproveUserService {
 
 	public int addApproveUser(ApproveUserVO userApproveVO) throws FLException;
 
-	public int updateApproveUser(ApproveUserVO userApproveVO) throws FLException;
-
 	public void deleteApproveUser(List<Integer> ids);
 
 	public void deleteApproveUserById(Integer approveId);

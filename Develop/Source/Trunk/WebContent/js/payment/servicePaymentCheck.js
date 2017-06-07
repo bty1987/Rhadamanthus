@@ -1,5 +1,12 @@
 var servicePaymentCheck = {
 
+
+	paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts"],
+
+	moreMsg:{},
+
+	orderPaymentId:null,
+
 	saveBtn: null,
 	cancellBtn: null,
 
@@ -8,6 +15,9 @@ var servicePaymentCheck = {
 	decorationPaymentCheckItems: {},
 
 	editFlg:false,
+
+	bankList:null,
+	accountsList: [],
 
 	editFlag:0
 
@@ -38,7 +48,7 @@ jQuery(function($) {
 		var creatLine = function(v){
 
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			console.log(v.type)
+
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == "0" ? "收款" : (v.type == "1" ? "退款" : "")));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -90,12 +100,50 @@ jQuery(function($) {
 		};
 	})();
 
+	//查询付款银行信息
+	com.post(api.common.queryReceiptType, {}, function(res){
+
+		servicePaymentCheck.cash = [];
+		servicePaymentCheck.bank = [];
+		servicePaymentCheck.checkBank = [];
+		servicePaymentCheck.accounts = [];
+
+		servicePaymentCheck.cashInfo = {};
+		servicePaymentCheck.bankInfo = {};
+		servicePaymentCheck.checkBankInfo = {};
+		servicePaymentCheck.accountsInfo = {};
+
+		$.each(res.receiptTypes, function(i, v){
+			if(v.type == 1){
+				servicePaymentCheck.cash.push(v);
+				servicePaymentCheck.cashInfo[v.key] = v.name;
+			}else if(v.type == 2){
+				servicePaymentCheck.bank.push(v);
+				servicePaymentCheck.bankInfo[v.key] = v.name;
+			}else if(v.type == 3){
+				servicePaymentCheck.checkBank.push(v);
+				servicePaymentCheck.checkBankInfo[v.key] = v.name;
+			}else if(v.type == 4){
+				servicePaymentCheck.accounts.push(v);
+				servicePaymentCheck.accountsInfo[v.key] = v.name;
+			}
+		});
+
+		$("#cashInfo").bindData(servicePaymentCheck.cash, 'key', 'name');
+
+		$("#installmentBankName").bindData(servicePaymentCheck.bank, 'key', 'name');
+
+		$("#checkvBankName").bindData(servicePaymentCheck.checkBank, 'key', 'name');
+
+		$("#accountsBankName").bindData(servicePaymentCheck.accounts, 'key', 'name');
+	}, null, false);
+
 	//查询服务款未确认信息
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "designer", "village"], "condList", api.payment.pageServicePaymentForNotInit, function(data){
+	searcher.init(["orderId", "designer", "village"], "condList", api.payment.pageServicePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "servicePaymentForNotInitPostData", null, false, null, function(){
+	}, "pagenation", "pageServicePaymentForCollectData", null, false, null, function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -107,6 +155,58 @@ jQuery(function($) {
 
 		return [$adda, $impa];
 	},"resultList");
+
+	$('a[name="import"]', '#pagenation').click(function () {
+
+		if($('span[name="totalRecords"]').text() == 0){
+			com.showAlert(com.warning, "请通过条件进行查询");
+			return false;
+		}
+
+		if($('span[name="totalRecords"]').text() > 1000){
+			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+			return false;
+		}
+
+		com.post(api.payment.pageServicePaymentForCollect, $.extend({}, params.pageServicePaymentForCollectData, {"paging.noPage": 1}), function(res){
+
+			$.exceler({
+				column : [
+					["订单号","decorationOrder.orderId"],
+					['楼盘地址',['decorationOrder.village.villageName', 'decorationOrder.houseNumber']],
+					['客户','decorationOrder.customer.customerName'],
+					['设计师','decorationOrder.designer'],
+					['设计部','decorationOrder.designDepartment'],
+					['应收金额', 'advanceMoney'],
+					['服务费', 'serviceMoney'],
+					['收款人', 'collecter.currentName'],
+					['收款时间', 'collcetTime'],
+					['状态', 'status == "1" ? "已收款" : ""'],
+					['备注', 'des'],
+					['现金', 'serviceReceipt.cash'],
+					['银行', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
+					['转账', ['serviceReceipt.checkv', 'serviceReceipt.checkvBank']],
+					['分期', ['serviceReceipt.installment', 'serviceReceipt.installBank']],
+					['对公', ['serviceReceipt.accounts', 'serviceReceipt.accountsBank']],
+				],
+				list: res.paging.data,
+			}, function(v){
+				if(v.serviceReceipt.bank != null && v.serviceReceipt.bank != 0){
+					var $info = ' ';
+					var _s = v.serviceReceipt.bankInfo.split('#');
+					for(var i=1;i<_s.length-1;i++){
+						var _i = _s[i].split('|');
+						$info += servicePaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+					}
+
+					v.serviceReceipt.bankInfo = $info;
+				}
+				v.serviceReceipt.checkvBank = v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? servicePaymentCheck.checkBankInfo[v.serviceReceipt.checkvBank] : '';
+				v.serviceReceipt.installBank = v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? servicePaymentCheck.bankInfo[v.serviceReceipt.installBank] : '';
+				v.serviceReceipt.accountsBank = v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? servicePaymentCheck.accountsInfo[v.serviceReceipt.accountsBank] : '';
+			});
+		});
+	});
 
 	//服务款已确认信息查询
 	var hdisplayFunc  = (function(){

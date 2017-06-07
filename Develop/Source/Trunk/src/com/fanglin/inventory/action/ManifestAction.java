@@ -26,6 +26,7 @@ import com.fanglin.inventory.service.ManifestItemService;
 import com.fanglin.inventory.service.ManifestService;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
+import com.fanglin.inventory.vo.PurchaseItemVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -42,9 +43,13 @@ public class ManifestAction extends BaseListAction {
 	
 	private ManifestVO manifest;
 	
+	private List<Long> siids;
+	
 	private List<Long> aoids;
 	
 	private List<Long> pids;
+	
+	private List<PurchaseItemVO> purchaseItems;
 	
 	private List<ManifestItemVO> manifestItems;
 	
@@ -74,14 +79,22 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-/*	@Action(value = "addManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifest() throws FLException{
+	@Action(value = "queryManifestItemBySiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestItemBySiid(){
 		
-		manifestService.addManifest(manifest, manifestItems, queryUserId());
+		manifestItems = manifestItemService.queryManifestItemBySiid(manifestItem);
 		
 		return SUCCESS;
 	}
-*/	
+	
+	@Action(value = "queryManifestItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestItemBySiids(){
+		
+		manifestItems = manifestItemService.queryManifestItemBySiids(siids);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addManifestForCG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForCG() throws FLException{
 		
@@ -114,18 +127,10 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "addManifestForDB", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForDB() throws FLException{
-		
-		manifestService.addManifestForDB(manifest, manifestItems,queryUserId());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "addManifestForPU", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForPU() throws FLException{
 		
-		manifestService.addManifestForPU(manifest, pids, manifestItems, queryUserId());
+		manifestService.addManifestForPU(manifest, pids,purchaseItems, manifestItems, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -138,10 +143,10 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "addManifestItemForCGAndXG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestItemForCGAndXG() throws FLException{
+	@Action(value = "addManifestItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addManifestItem() throws FLException{
 		
-		manifestItemService.addManifestItemForCGAndXG(manifest, manifestItem);
+		manifestItemService.addManifestItem(manifest, manifestItem);
 		
 		return SUCCESS;
 	}
@@ -162,26 +167,10 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateManifestForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateManifestForStatus() throws FLException{
-		
-		manifestService.updateManifestForStatus(manifest);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "confirmManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmManifest() throws FLException{
 		
 		manifestService.confirmManifest(manifest);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteManifest() throws FLException{
-		
-		manifestService.deleteManifest(manifest);
 		
 		return SUCCESS;
 	}
@@ -232,6 +221,22 @@ public class ManifestAction extends BaseListAction {
 
 	public void setPids(List<Long> pids) {
 		this.pids = pids;
+	}
+
+	public List<PurchaseItemVO> getPurchaseItems() {
+		return purchaseItems;
+	}
+
+	public void setPurchaseItems(List<PurchaseItemVO> purchaseItems) {
+		this.purchaseItems = purchaseItems;
+	}
+
+	public List<Long> getSiids() {
+		return siids;
+	}
+
+	public void setSiids(List<Long> siids) {
+		this.siids = siids;
 	}
 
 }

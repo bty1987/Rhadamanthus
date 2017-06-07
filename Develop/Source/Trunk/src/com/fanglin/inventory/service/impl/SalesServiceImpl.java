@@ -165,7 +165,7 @@ public class SalesServiceImpl implements SalesService {
 		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "000000");
 		
 			
-		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
+		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer","maling","venderMaling"));
 		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
 		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","cityProper"));
 		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","cityProper"));
@@ -174,6 +174,8 @@ public class SalesServiceImpl implements SalesService {
 		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
 		BeanUtil.copyProperties(villageDao.get(salesVO.getVillage().getVillageId()), salesPO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 		BeanUtil.copyProperties(customerDao.queryCustomerByCustomerId(salesVO.getCustomer().getCustomerId()), salesPO.getCustomer());
+		salesPO.setMaling(0);
+		salesPO.setVenderMaling(salesVO.getMaling());
 		salesPO.setNo(no);
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));;
 			

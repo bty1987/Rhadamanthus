@@ -129,6 +129,8 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 				query.add(query.getCriterion(field, data, op));
 			}else if(MaterialSubOrderPO.COLUMN_INSTOREID_STR.equals(field)){
 				query.add(query.getCriterion(field, data, op));
+			}else if(MaterialSubOrderPO.COLUMN_MATERIALBRAND_STR.equals(field)){
+				query.add(Restrictions.ilike(MaterialSubOrderPO.COLUMN_MATERIALBRAND_STR, data, MatchMode.ANYWHERE));
 			}else if(MaterialSubOrderPO.COLUMN_ORDERADDR_STR.equals(field)){
 				query.add(Restrictions.ilike(field, data, MatchMode.ANYWHERE));
 			}else if(MaterialSubOrderPO.COLUMN_ORDERID_STR.equals(field)){

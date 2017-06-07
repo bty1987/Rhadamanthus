@@ -509,7 +509,6 @@ jQuery(function($) {
 
 		if(!supervisionDetail.wizardSept[schedule]){
 			initWizardSept(operate, schedule);
-			supervisionDetail.wizardSept[schedule] = true;
 		}
 
 		$('#fuelux-wizard').ace_wizard({status:true, currentStep: schedule}).on('change' , function(e, info){
@@ -700,27 +699,30 @@ jQuery(function($) {
 
 					if(element.endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
-							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-							options[operate.elementName+"."+operate.endTimeFlag] = 1;
-							options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
-							element[operate.endTimeFlag] = 1;
+							if(element.startTimeFlag == 1){
+								var options = {};
+								options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+								options[operate.elementName+"."+operate.endTimeFlag] = 1;
+								options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
+								element[operate.endTimeFlag] = 1;
 
-							com.post(operate.setTimeFlagUrl, options, function(res){
-								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
-							});
-
-							if(element.startTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 && element.status != 2)){
-									supervisionDetail.controlCondition = true;
-								}else{
-									//supervisionDetail.controlCondition = true;
-									supervisionDetail.controlCondition = false;
+								com.post(operate.setTimeFlagUrl, options, function(res){
+									$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
+								});
+								if(element.startTimeFlag != 0 && workerInfoCondition){
+									if(element.status != undefined && (element.status != 0 && element.status != 2)){
+										supervisionDetail.controlCondition = true;
+									}else{
+										//supervisionDetail.controlCondition = true;
+										supervisionDetail.controlCondition = false;
+									}
+								}else if(element.startTimeFlag != 0 && !workerInfoCondition){
+									if(element.status != undefined && element.status == 4){
+										supervisionDetail.controlCondition = true;
+									}
 								}
-							}else if(element.startTimeFlag != 0 && !workerInfoCondition){
-								if(element.status != undefined && element.status == 4){
-									supervisionDetail.controlCondition = true;
-								}
+							}else{
+								com.showAlert(com.warning,"请先确认开工时间！");
 							}
 							return false;
 						});
@@ -729,7 +731,6 @@ jQuery(function($) {
 					}
 
 					if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && workerInfoCondition){
-
 						if(element.status != undefined && (element.status == 0 || element.status == 2)){
 							supervisionDetail.controlCondition = false;
 						}else if(element.status != undefined && element.status == 1){
@@ -803,18 +804,22 @@ jQuery(function($) {
 
 					if(element.endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
-							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-							options[operate.elementName+"."+operate.endTimeFlag] = 1;
-							options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
-							element[operate.endTimeFlag] = 1;
+							if(element.startTimeFlag == 1){
+								var options = {};
+								options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+								options[operate.elementName+"."+operate.endTimeFlag] = 1;
+								options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
+								element[operate.endTimeFlag] = 1;
 
-							com.post(operate.setTimeFlagUrl, options, function(res){
-								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
-							});
+								com.post(operate.setTimeFlagUrl, options, function(res){
+									$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
+								});
 
-							if(element.startTimeFlag != 0 && workerInfoCondition){
-								supervisionDetail.controlCondition = true;
+								if(element.startTimeFlag != 0 && workerInfoCondition){
+									supervisionDetail.controlCondition = true;
+								}
+							}else{
+								com.showAlert(com.warning, "请先确认开工时间!");
 							}
 							return false;
 						});
@@ -835,7 +840,6 @@ jQuery(function($) {
 
 				var options = {};
 				options[operate.drawingName+".csId"] = supervisionDetail.construstionSchedule.csId;
-				console.log(options);
 				com.post(operate.queryDrawingUrl, options, function(res){
 					var drawings = res[operate.drawings];
 

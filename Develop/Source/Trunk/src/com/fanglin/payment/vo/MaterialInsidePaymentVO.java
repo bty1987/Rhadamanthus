@@ -5,13 +5,13 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2604452280849226587L;
 
-	private int mipId;
+	private Integer mipId;
 	
-	private int miId;
+	private Integer miId;
 	
-	private int paymentType;
+	private Integer paymentType;
 	
-	private int paymentStatus;
+	private Integer paymentStatus;
 	
 	private String orderAddr;
 	
@@ -39,53 +39,53 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 	
 	private String confirmTime;
 	
-	private float referMoney;
+	private Float referMoney;
 	
-	private float cash;
+	private Float cash;
 	
-	private float bank;
+	private Float bank;
 	
 	private String bankName;
 	
-	private float checkv;
+	private Float checkv;
 	
 	private String checkvBankName;
 	
-	private float installment;
+	private Float installment;
 	
 	private String installmentBankName;
 	
-	private float accounts;
+	private Float accounts;
 	
 	private String accountsBankName;
 	
 	private String des;
 
-	public int getMipId(){
+	public Integer getMipId(){
 		return this.mipId;
 	}
 
-	public void setMipId(int mipId){
+	public void setMipId(Integer mipId){
 		this.mipId = mipId;
 	}
 
-	public int getMiId(){
+	public Integer getMiId(){
 		return this.miId;
 	}
 
-	public void setMiId(int miId){
+	public void setMiId(Integer miId){
 		this.miId = miId;
 	}
 
-	public int getPaymentType(){
+	public Integer getPaymentType(){
 		return this.paymentType;
 	}
 
-	public void setPaymentType(int paymentType){
+	public void setPaymentType(Integer paymentType){
 		this.paymentType = paymentType;
 	}
 
-	public int getPaymentStatus(){
+	public Integer getPaymentStatus(){
 		return this.paymentStatus;
 	}
 
@@ -189,27 +189,27 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	public float getReferMoney(){
+	public Float getReferMoney(){
 		return this.referMoney;
 	}
 
-	public void setReferMoney(float referMoney){
+	public void setReferMoney(Float referMoney){
 		this.referMoney = referMoney;
 	}
 
-	public float getCash(){
+	public Float getCash(){
 		return this.cash;
 	}
 
-	public void setCash(float cash){
+	public void setCash(Float cash){
 		this.cash = cash;
 	}
 
-	public float getBank(){
+	public Float getBank(){
 		return this.bank;
 	}
 
-	public void setBank(float bank){
+	public void setBank(Float bank){
 		this.bank = bank;
 	}
 
@@ -221,11 +221,11 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.bankName = bankName;
 	}
 
-	public float getCheckv(){
+	public Float getCheckv(){
 		return this.checkv;
 	}
 
-	public void setCheckv(float checkv){
+	public void setCheckv(Float checkv){
 		this.checkv = checkv;
 	}
 
@@ -237,11 +237,11 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.checkvBankName = checkvBankName;
 	}
 
-	public float getInstallment(){
+	public Float getInstallment(){
 		return this.installment;
 	}
 
-	public void setInstallment(float installment){
+	public void setInstallment(Float installment){
 		this.installment = installment;
 	}
 
@@ -253,11 +253,11 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.installmentBankName = installmentBankName;
 	}
 
-	public float getAccounts(){
+	public Float getAccounts(){
 		return this.accounts;
 	}
 
-	public void setAccounts(float accounts){
+	public void setAccounts(Float accounts){
 		this.accounts = accounts;
 	}
 

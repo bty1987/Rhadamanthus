@@ -351,6 +351,7 @@ jQuery(function($) {
 		decorationPaymentPostData.paymentInfo = payment;
 		
 		$("#paymentInfo").text("");
+		$("#collectDes").val("");
 		
 		if(payment.paymentType.search('退款') != -1 || payment.paymentType == "减项款"){ // 退款
 			initRefundModal();

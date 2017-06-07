@@ -27,37 +27,37 @@ public class PricePO implements Serializable{
 	
 	public static final short CTYPE_DISABLE_INT = 1;
 
-	private Long pid;
+	private long pid;
 	
-	private Long gid;
+	private long gid;
 	
 	private String name;
 	
-	private Float purchase;
+	private float purchase;
 	
-	private Float selling;
+	private float selling;
 	
-	private Short ctype;
+	private short ctype;
 	
-	private Float cvalue;
+	private float cvalue;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "pid")
-	public Long getPid() {
+	public long getPid() {
 		return pid;
 	}
 
-	public void setPid(Long pid) {
+	public void setPid(long pid) {
 		this.pid = pid;
 	}
 	
 	@Column(name = "gid")
-	public Long getGid() {
+	public long getGid() {
 		return gid;
 	}
 
-	public void setGid(Long gid) {
+	public void setGid(long gid) {
 		this.gid = gid;
 	}
 	
@@ -71,38 +71,38 @@ public class PricePO implements Serializable{
 	}
 	
 	@Column(name = "purchase")
-	public Float getPurchase() {
+	public float getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(Float purchase) {
+	public void setPurchase(float purchase) {
 		this.purchase = purchase;
 	}
 	
 	@Column(name = "selling")
-	public Float getSelling() {
+	public float getSelling() {
 		return selling;
 	}
 
-	public void setSelling(Float selling) {
+	public void setSelling(float selling) {
 		this.selling = selling;
 	}
 	
 	@Column(name = "ctype")
-	public Short getCtype() {
+	public short getCtype() {
 		return ctype;
 	}
 
-	public void setCtype(Short ctype) {
+	public void setCtype(short ctype) {
 		this.ctype = ctype;
 	}
 	
 	@Column(name = "cvalue")
-	public Float getCvalue() {
+	public float getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(Float cvalue) {
+	public void setCvalue(float cvalue) {
 		this.cvalue = cvalue;
 	}
 	

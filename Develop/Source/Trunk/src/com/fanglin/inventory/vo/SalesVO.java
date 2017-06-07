@@ -16,7 +16,7 @@ public class SalesVO implements Serializable {
 
 	private static final long serialVersionUID = 711873433253802459L;
 	
-	private long sid;
+	private Long sid;
 	
 	private String no;
 	
@@ -28,7 +28,7 @@ public class SalesVO implements Serializable {
 	
 	private CustomerVO customer;
 	
-	private short company;
+	private Short company;
 	
 	private UserVO salesman;
 	
@@ -54,21 +54,21 @@ public class SalesVO implements Serializable {
 	
 	private Timestamp fullpayTime;
 	
-	private short status;
+	private Short status;
 	
-	private short depositpayStatus;
+	private Short depositpayStatus;
 	
-	private short fullpayStatus;
+	private Short fullpayStatus;
 	
-	private short balanceStatus;
+	private Short balanceStatus;
 	
-	private float total;
+	private Float total;
 	
-	private float maling;
+	private Float maling;
 	
-	private float venderMaling;
+	private Float venderMaling;
 	
-	private float coupon;
+	private Float coupon;
 	
 	private String couponInfo;
 
@@ -90,11 +90,11 @@ public class SalesVO implements Serializable {
 		this.instorer = instorer;
 	}
 
-	public long getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(long sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 
@@ -138,11 +138,11 @@ public class SalesVO implements Serializable {
 		this.customer = customer;
 	}
 
-	public short getCompany() {
+	public Short getCompany() {
 		return company;
 	}
 
-	public void setCompany(short company) {
+	public void setCompany(Short company) {
 		this.company = company;
 	}
 
@@ -217,7 +217,7 @@ public class SalesVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
+	
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -245,67 +245,67 @@ public class SalesVO implements Serializable {
 		this.fullpayTime = fullpayTime;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
-	public short getDepositpayStatus() {
+	public Short getDepositpayStatus() {
 		return depositpayStatus;
 	}
 
-	public void setDepositpayStatus(short depositpayStatus) {
+	public void setDepositpayStatus(Short depositpayStatus) {
 		this.depositpayStatus = depositpayStatus;
 	}
 
-	public short getFullpayStatus() {
+	public Short getFullpayStatus() {
 		return fullpayStatus;
 	}
 
-	public void setFullpayStatus(short fullpayStatus) {
+	public void setFullpayStatus(Short fullpayStatus) {
 		this.fullpayStatus = fullpayStatus;
 	}
 
-	public short getBalanceStatus() {
+	public Short getBalanceStatus() {
 		return balanceStatus;
 	}
 
-	public void setBalanceStatus(short balanceStatus) {
+	public void setBalanceStatus(Short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
 
-	public float getTotal() {
+	public Float getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(Float total) {
 		this.total = total;
 	}
 
-	public float getMaling() {
+	public Float getMaling() {
 		return maling;
 	}
 
-	public void setMaling(float maling) {
+	public void setMaling(Float maling) {
 		this.maling = maling;
 	}
 
-	public float getVenderMaling() {
+	public Float getVenderMaling() {
 		return venderMaling;
 	}
 
-	public void setVenderMaling(float venderMaling) {
+	public void setVenderMaling(Float venderMaling) {
 		this.venderMaling = venderMaling;
 	}
 
-	public float getCoupon() {
+	public Float getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(float coupon) {
+	public void setCoupon(Float coupon) {
 		this.coupon = coupon;
 	}
 

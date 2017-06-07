@@ -51,7 +51,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	public static final String COLUMN_FULLCOLLECTTIME_RANGE_STR = "fullCollectTimeRange";
 	//静态加载品牌名称
 	public static final String COLUMN_MATERIALBRAND_STR="materialBrand";
-	//public static final String COLUMN_MATERIALBRAND_STR="materialBrand";
+	
 	//增加预结算时间
 	public static final String COLUMN_PREBALANCETIME_STR="preBalanceTime";
 	public static final String COLUMN_PREBALANCETIME_RANGE_STR="preBalanceTimeRange";
@@ -118,7 +118,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	public static final int OTHER_STATUS_FULL_PAYMENT_INT = 1;
 	
-	public static final int OTHER_STATUS_MEND_INT = 2;//修理(其他状态...)我也不知道这是什么鬼 T T 
+	public static final int OTHER_STATUS_MEND_INT = 2;//修理
 	
 	private long msoId;
 	
@@ -199,6 +199,8 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	private float point;
 	
 	private float total;
+	
+	private float distotal;
 	
 	private float maling;
 	
@@ -325,6 +327,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	public void setTotal(float total){
 		this.total = total;
 	}
+	
 
 	@Column(name = "des")
 	public String getDes(){
@@ -649,5 +652,16 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	public void setCustProfit(float custProfit) {
 		this.custProfit = custProfit;
 	}
+	
+	@Column(name = "distotal")
+	public float getDistotal() {
+		return distotal;
+	}
+
+	public void setDistotal(float distotal) {
+		this.distotal = distotal;
+	}
+	
+	
 
 }

@@ -20,7 +20,11 @@ public class GoodsVO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
+	private Float pieceNum;
+	
 	private AssisTypeVO assisType;
+	
+	private Short type;
 	
 	private Short status;
 	
@@ -90,6 +94,14 @@ public class GoodsVO implements java.io.Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
+	public Float getPieceNum() {
+		return pieceNum;
+	}
+
+	public void setPieceNum(Float pieceNum) {
+		this.pieceNum = pieceNum;
+	}
+
 	public Short getStatus() {
 		return this.status;
 	}
@@ -112,6 +124,14 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }

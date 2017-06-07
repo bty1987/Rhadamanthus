@@ -35,7 +35,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	public static final String COLUMN_STOREHOUSNAME_STR = "storehouse.name";
 	
-	private Long gshsId;
+	private long gshsId;
 	
 	private GoodsPO goods;
 	
@@ -50,11 +50,11 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "gshsId")
-	public Long getGshsId() {
+	public long getGshsId() {
 		return gshsId;
 	}
 
-	public void setGshsId(Long gshsId) {
+	public void setGshsId(long gshsId) {
 		this.gshsId = gshsId;
 	}
 

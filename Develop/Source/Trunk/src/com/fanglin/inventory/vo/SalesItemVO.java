@@ -7,9 +7,9 @@ public class SalesItemVO implements Serializable {
 
 	private static final long serialVersionUID = -8723694814795039927L;
 
-	private long siid;
+	private Long siid;
 	
-	private long sid;
+	private Long sid;
 	
 	private GoodsVO goods;
 	
@@ -17,37 +17,35 @@ public class SalesItemVO implements Serializable {
 	
 	private FormatVO format;
 	
-	private float purchase;
+	private Float purchase;
 	
-	private float selling;
+	private Float selling;
 	
-	private	float discount;
+	private	Float discount;
 	
-	private	float disPrice;
+	private	Float disPrice;
 	
-	private	float postDis;
+	private	Float postDis;
 	
-	private	float price;
+	private	Float price;
 	
-	private	float num;
+	private	Float num;
 	
-	private	float total;
+	private	Float total;
 	
 	private	String comment;
 	
-	private	short rawCtype;
+	private	Short rawCtype;
 	
-	private	float rawCvalue;
+	private	Float rawCvalue;
 	
-	private	short ctype;
+	private	Short ctype;
 	
-	private	float cvalue;
+	private	Float cvalue;
 
 	public SalesItemVO() {
 		super();
 	}
-
-
 	
 	public SalesItemVO(GoodsVO goods, ColorVO color, FormatVO format) {
 		super();
@@ -56,21 +54,19 @@ public class SalesItemVO implements Serializable {
 		this.format = format;
 	}
 
-
-
-	public long getSiid() {
+	public Long getSiid() {
 		return siid;
 	}
 
-	public void setSiid(long siid) {
+	public void setSiid(Long siid) {
 		this.siid = siid;
 	}
 
-	public long getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(long sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 
@@ -98,67 +94,67 @@ public class SalesItemVO implements Serializable {
 		this.format = format;
 	}
 
-	public float getPurchase() {
+	public Float getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(float purchase) {
+	public void setPurchase(Float purchase) {
 		this.purchase = purchase;
 	}
 
-	public float getSelling() {
+	public Float getSelling() {
 		return selling;
 	}
 
-	public void setSelling(float selling) {
+	public void setSelling(Float selling) {
 		this.selling = selling;
 	}
 
-	public float getDiscount() {
+	public Float getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(Float discount) {
 		this.discount = discount;
 	}
 
-	public float getDisPrice() {
+	public Float getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(float disPrice) {
+	public void setDisPrice(Float disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public float getPostDis() {
+	public Float getPostDis() {
 		return postDis;
 	}
 
-	public void setPostDis(float postDis) {
+	public void setPostDis(Float postDis) {
 		this.postDis = postDis;
 	}
 
-	public float getPrice() {
+	public Float getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(Float price) {
 		this.price = price;
 	}
 
-	public float getNum() {
+	public Float getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(Float num) {
 		this.num = num;
 	}
 
-	public float getTotal() {
+	public Float getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(Float total) {
 		this.total = total;
 	}
 
@@ -170,35 +166,36 @@ public class SalesItemVO implements Serializable {
 		this.comment = comment;
 	}
 
-	public short getRawCtype() {
+	public Short getRawCtype() {
 		return rawCtype;
 	}
 
-	public void setRawCtype(short rawCtype) {
+	public void setRawCtype(Short rawCtype) {
 		this.rawCtype = rawCtype;
 	}
 
-	public float getRawCvalue() {
+	public Float getRawCvalue() {
 		return rawCvalue;
 	}
 
-	public void setRawCvalue(float rawCvalue) {
+	public void setRawCvalue(Float rawCvalue) {
 		this.rawCvalue = rawCvalue;
 	}
 
-	public short getCtype() {
+	public Short getCtype() {
 		return ctype;
 	}
 
-	public void setCtype(short ctype) {
+	public void setCtype(Short ctype) {
 		this.ctype = ctype;
 	}
 
-	public float getCvalue() {
+	public Float getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(float cvalue) {
+	public void setCvalue(Float cvalue) {
 		this.cvalue = cvalue;
 	}
+
 }

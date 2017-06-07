@@ -19,6 +19,8 @@ public class PurchaseItemPO  implements Serializable{
 
 	public static final String COLUMN_PID_STR = "pid";                //采购单ID
 	
+	public static final String COLUMN_SIID_STR ="siid";				  //销售单ID
+	
 	public static final String COLUMN_PIID_STR = "piId";              //采购项ID
 	
 	public static final String COLUMN_GOODS_STR = "goods.goods";      //商品类型
@@ -31,9 +33,11 @@ public class PurchaseItemPO  implements Serializable{
 	
 	public static final String COLUMN_SPRPLUS_STR = "surplus";        //剩余数量
 	
-	private Long piId;
+	private long piId;
 	
-	private Long pid;
+	private long pid;
+	
+	private long siid;
 	
 	private GoodsPO goods;
 
@@ -41,9 +45,11 @@ public class PurchaseItemPO  implements Serializable{
 	
 	private FormatPO format;
 	
-	private Float num; 
+	private float unitPrice;
 	
-	private Float surplus;
+	private float num; 
+	
+	private float surplus;
 	
 	public PurchaseItemPO() {
 		super();
@@ -64,23 +70,32 @@ public class PurchaseItemPO  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="piId")
-	public Long getPiId() {
+	public long getPiId() {
 		return piId;
 	}
 
-	public void setPiId(Long piId) {
+	public void setPiId(long piId) {
 		this.piId = piId;
 	}
 	
 	@Column(name="pid")
-	public Long getPid() {
+	public long getPid() {
 		return pid;
 	}
 
-	public void setPid(Long pid) {
+	public void setPid(long pid) {
 		this.pid = pid;
 	}
 	
+	@Column(name="siid")
+	public long getSiid() {
+		return siid;
+	}
+
+	public void setSiid(long siid) {
+		this.siid = siid;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
@@ -111,21 +126,30 @@ public class PurchaseItemPO  implements Serializable{
 		this.format = format;
 	}
 
+	@Column(name="unitPrice")
+	public float getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(float unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
 	@Column(name="num")
-	public Float getNum() {
+	public float getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(float num) {
 		this.num = num;
 	}
 
 	@Column(name="surplus")
-	public Float getSurplus() {
+	public float getSurplus() {
 		return surplus;
 	}
 
-	public void setSurplus(Float surplus) {
+	public void setSurplus(float surplus) {
 		this.surplus = surplus;
 	}
 

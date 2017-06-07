@@ -11,13 +11,15 @@ import com.fanglin.inventory.po.RefundsItemPO;
 
 @Repository("RefundsItemDao")
 public class RefundsItemDaoImpl  extends DaoImpl<RefundsItemPO> implements RefundsItemDao{
+	
+	public RefundsItemDaoImpl(){
+		super(RefundsItemPO.class);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RefundsItemPO> queryRefundsItemBySid(long sid) {
-		return session().createCriteria(RefundsItemPO.class)
-				.add(Restrictions.eq(RefundsItemPO.COLUMN_SID_STR, sid))
-				.list();
+		return session().createCriteria(RefundsItemPO.class).add(Restrictions.eq(RefundsItemPO.COLUMN_SID_STR, sid)).list();
 	}
 	
 }

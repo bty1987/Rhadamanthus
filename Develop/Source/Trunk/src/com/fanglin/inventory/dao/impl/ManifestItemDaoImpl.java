@@ -11,6 +11,7 @@
 
 package com.fanglin.inventory.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -31,6 +32,24 @@ public class ManifestItemDaoImpl extends DaoImpl<ManifestItemPO> implements Mani
 	@SuppressWarnings("unchecked")
 	public List<ManifestItemPO> queryManifestItemByMId(long mId) {
 		return session().createCriteria(ManifestItemPO.class).add(Restrictions.eq(ManifestItemPO.COLUMN_MID_STR, mId)).list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ManifestItemPO> queryManifestItemBySiid(long siid) {
+		return session().createCriteria(ManifestItemPO.class).add(Restrictions.eq(ManifestItemPO.COLUMN_SIID_STR, siid)).list();
+	}
+
+	@Override
+	public List<ManifestItemPO> queryManifestItemBySiids(List<Long> siids) {
+		
+		List<ManifestItemPO> purchaseItemPOs = new ArrayList<ManifestItemPO>();
+
+		for(Long siid : siids){
+			purchaseItemPOs.addAll(queryManifestItemBySiid(siid));
+		}
+
+		return purchaseItemPOs;
 	}
 
 }

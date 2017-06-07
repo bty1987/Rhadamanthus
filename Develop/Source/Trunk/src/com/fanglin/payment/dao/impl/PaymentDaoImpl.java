@@ -51,10 +51,10 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		return query.list();
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<PaymentPO> queryPaymentByOrderId(String orderId) {
-		return session().createCriteria(PaymentPO.class).add(Restrictions.eq("orderId", orderId)).list();
+		return session().createCriteria(PaymentPO.class).add(Restrictions.eq("orderId", String.valueOf(orderId))).list();
 	}
 
 	@Override

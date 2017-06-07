@@ -101,18 +101,6 @@ public class StorehouseServiceImpl implements StorehouseService{
 	}
 	
 	@Override
-	public StorehouseVO queryStorehouseByCode(StorehouseVO storehouseVO) {
-		
-		StorehousePO storehousePO = storehouseDao.queryStroehouseByCode(storehouseVO.getCode());
-		
-		storehouseVO = new StorehouseVO();
-		
-		BeanUtil.copyProperties(storehousePO, storehouseVO);
-		
-		return storehouseVO;
-	}
-	
-	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addStorehouse(StorehouseVO storehouseVO) throws FLException {
 		
@@ -127,23 +115,6 @@ public class StorehouseServiceImpl implements StorehouseService{
 		BeanUtil.copyProperties(storehouseVO, storehousePO, "shId", "status");
 		
 		storehouseDao.save(storehousePO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateStorehouse(StorehouseVO storehouseVO) throws FLException {
-		
-		StorehousePO storehousePO = storehouseDao.get(storehouseVO.getShId());
-		
-		if(storehousePO == null){
-			throw new FLException(260005, "仓库不存在");
-		}
-		
-		BeanUtil.copyProperties(storehouseVO, storehousePO, "shId", "status");
-		
-		storehouseDao.update(storehousePO);
 		
 		return 0;
 	}

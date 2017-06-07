@@ -17,15 +17,15 @@ public class MaterialSubOrderRefundVO implements Serializable {
 
 	private static final long serialVersionUID = 8997198619142688407L;
 	
-	private long msorId;
+	private Long msorId;
 	
-	private long msoId;
+	private Long msoId;
 	
-	private long msoiId;
+	private Long msoiId;
 	
-	private long mpId;
+	private Long mpId;
 	
-	private int ident;
+	private Integer ident;
 	
 	private String materialModelNo;
 	
@@ -39,33 +39,33 @@ public class MaterialSubOrderRefundVO implements Serializable {
 	
 	private String packageName;
 	
-	private float materialUnitPrice;
+	private Float materialUnitPrice;
 	
-	private float materialPurchasePrice;
+	private Float materialPurchasePrice;
 	
-	private float salePrice;
+	private Float salePrice;
 	
-	private float price;
+	private Float price;
 	
-	private float discount;
+	private Float discount;
 	
-	private float postDiscount;
+	private Float postDiscount;
 	
-	private float num;
+	private Float num;
 	
-	private float total;
+	private Float total;
 	
-	private int status;
+	private Integer status;
 	
-	private int balanceType;
+	private Integer balanceType;
 	
-	private int id;
+	private Integer id;
 	
-	private int level;
+	private Integer level;
 	
 	private boolean isLeaf;
 	
-	private int parent;
+	private Integer parent;
 	
 	private boolean expanded;
 	
@@ -73,35 +73,39 @@ public class MaterialSubOrderRefundVO implements Serializable {
 	
 	private String refundDes;
 	
-	public long getMsorId(){
+	private Float prePoint;
+	
+	private Float postPoint;
+	
+	public Long getMsorId(){
 		return msorId;
 	}
 
-	public void setMsorId(long msorId){
+	public void setMsorId(Long msorId){
 		this.msorId = msorId;
 	}
 
-	public long getMsoId(){
+	public Long getMsoId(){
 		return msoId;
 	}
 
-	public void setMsoId(long msoId){
+	public void setMsoId(Long msoId){
 		this.msoId = msoId;
 	}
 
-	public long getMsoiId(){
+	public Long getMsoiId(){
 		return msoiId;
 	}
 
-	public void setMsoiId(long msoiId){
+	public void setMsoiId(Long msoiId){
 		this.msoiId = msoiId;
 	}
 
-	public long getMpId(){
+	public Long getMpId(){
 		return mpId;
 	}
 
-	public void setMpId(long mpId){
+	public void setMpId(Long mpId){
 		this.mpId = mpId;
 	}
 
@@ -129,59 +133,59 @@ public class MaterialSubOrderRefundVO implements Serializable {
 		this.materialBrandName = materialBrandName;
 	}
 
-	public float getMaterialUnitPrice(){
+	public Float getMaterialUnitPrice(){
 		return materialUnitPrice;
 	}
 
-	public void setMaterialUnitPrice(float materialUnitPrice){
+	public void setMaterialUnitPrice(Float materialUnitPrice){
 		this.materialUnitPrice = materialUnitPrice;
 	}
 
-	public float getMaterialPurchasePrice(){
+	public Float getMaterialPurchasePrice(){
 		return materialPurchasePrice;
 	}
 
-	public void setMaterialPurchasePrice(float materialPurchasePrice){
+	public void setMaterialPurchasePrice(Float materialPurchasePrice){
 		this.materialPurchasePrice = materialPurchasePrice;
 	}
 
-	public float getSalePrice(){
+	public Float getSalePrice(){
 		return salePrice;
 	}
 
-	public void setSalePrice(float salePrice){
+	public void setSalePrice(Float salePrice){
 		this.salePrice = salePrice;
 	}
 
-	public float getPrice(){
+	public Float getPrice(){
 		return price;
 	}
 
-	public void setPrice(float price){
+	public void setPrice(Float price){
 		this.price = price;
 	}
 
-	public float getPostDiscount(){
+	public Float getPostDiscount(){
 		return postDiscount;
 	}
 
-	public void setPostDiscount(float postDiscount){
+	public void setPostDiscount(Float postDiscount){
 		this.postDiscount = postDiscount;
 	}
 
-	public float getNum(){
+	public Float getNum(){
 		return num;
 	}
 
-	public void setNum(float num){
+	public void setNum(Float num){
 		this.num = num;
 	}
 
-	public float getTotal(){
+	public Float getTotal(){
 		return total;
 	}
 
-	public void setTotal(float total){
+	public void setTotal(Float total){
 		this.total = total;
 	}
 
@@ -209,35 +213,35 @@ public class MaterialSubOrderRefundVO implements Serializable {
 		this.materialModelNo = materialModelNo;
 	}
 
-	public float getDiscount(){
+	public Float getDiscount(){
 		return discount;
 	}
 
-	public void setDiscount(float discount){
+	public void setDiscount(Float discount){
 		this.discount = discount;
 	}
 
-	public int getStatus(){
+	public Integer getStatus(){
 		return status;
 	}
 
-	public void setStatus(int status){
+	public void setStatus(Integer status){
 		this.status = status;
 	}
 
-	public int getId(){
+	public Integer getId(){
 		return id;
 	}
 
-	public void setId(int id){
+	public void setId(Integer id){
 		this.id = id;
 	}
 
-	public int getLevel(){
+	public Integer getLevel(){
 		return level;
 	}
 
-	public void setLevel(int level){
+	public void setLevel(Integer level){
 		this.level = level;
 	}
 
@@ -249,11 +253,11 @@ public class MaterialSubOrderRefundVO implements Serializable {
 		this.isLeaf = isLeaf;
 	}
 
-	public int getParent(){
+	public Integer getParent(){
 		return parent;
 	}
 
-	public void setParent(int parent){
+	public void setParent(Integer parent){
 		this.parent = parent;
 	}
 
@@ -265,19 +269,19 @@ public class MaterialSubOrderRefundVO implements Serializable {
 		this.expanded = expanded;
 	}
 
-	public int getIdent(){
+	public Integer getIdent(){
 		return ident;
 	}
 
-	public void setIdent(int ident){
+	public void setIdent(Integer ident){
 		this.ident = ident;
 	}
 
-	public int getBalanceType(){
+	public Integer getBalanceType(){
 		return balanceType;
 	}
 
-	public void setBalanceType(int balanceType){
+	public void setBalanceType(Integer balanceType){
 		this.balanceType = balanceType;
 	}
 
@@ -296,5 +300,26 @@ public class MaterialSubOrderRefundVO implements Serializable {
 	public void setRefundDes(String refundDes){
 		this.refundDes = refundDes;
 	}
+
+	public Float getPrePoint() {
+		return prePoint;
+	}
+
+	public void setPrePoint(Float prePoint) {
+		this.prePoint = prePoint;
+	}
+
+	public Float getPostPoint() {
+		return postPoint;
+	}
+
+	public void setPostPoint(Float postPoint) {
+		this.postPoint = postPoint;
+	}
+
+	public void setLeaf(boolean isLeaf) {
+		this.isLeaf = isLeaf;
+	}
+	
 	
 }

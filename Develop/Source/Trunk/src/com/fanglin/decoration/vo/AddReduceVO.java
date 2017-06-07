@@ -35,6 +35,8 @@ public class AddReduceVO implements Serializable{
 	private String content;
 	
 	private Long dpId;
+	
+	private Float managePrice;
 
 	public Integer getArId(){
 		return arId;
@@ -100,5 +102,14 @@ public class AddReduceVO implements Serializable{
 	public void setDpId(Long dpId) {
 		this.dpId = dpId;
 	}
+
+	public Float getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(Float managePrice) {
+		this.managePrice = managePrice;
+	}
+
 
 }

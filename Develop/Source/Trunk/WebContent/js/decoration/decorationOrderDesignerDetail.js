@@ -1,10 +1,19 @@
 
 var decorationOrderDetail = {
 	decorationOrderId : null,
+	orderType:"",
+
+	type:{
+		"半包":0,
+		"全包":1,
+		"半价":2,
+	},
 
 	decorationOrder: {},
 	customer: {},
 	village: {},
+	versionId: "",
+	notSalesmanRate: "",
 	materialPaymentListGrid: null,
 	materialPaymentGridPager: null,
 
@@ -45,11 +54,14 @@ var bootboxFlag = false;
 var approveData = {};
 
 jQuery(function($) {
-	
+
 	decorationUtils.init();
 	
 	decorationOrderDetail.decorationOrderId = decorationOrderPostData.decorationOrderId;
-	
+	decorationOrderDetail.orderType = decorationOrderPostData.orderType;
+	decorationOrderDetail.versionId = decorationOrderPostData.versionId;
+	decorationOrderDetail.notSalesmanRate = decorationOrderPostData.notSalesmanRate;
+
 	decorationPayment.postParam.decorationOrderId = decorationOrderDetail.decorationOrderId;
 	decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;
 	
@@ -153,6 +165,15 @@ jQuery(function($) {
 			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
 		});
 	});
+	com.post(api.ds.decorationInfo,{},function (res) {
+		$('#houseClass').bindData(res.houseClass,"key","value");
+
+	});
+
+	if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+		decorationUtils.initDecorationHolonomy('step6',decorationOrderDetail.decorationOrderId);
+	}
+
 
 	$("#btnPrintDefaultQuotationInfo").on('click', function(res) {
 		decorationOrderDetail.printQuotationModal.modal("show");
@@ -160,8 +181,18 @@ jQuery(function($) {
 
 	$("#btnSetDecorationPaymentInfo").on('click', function(res) {
 		com.clearValidator();
-		
+
+		com.post(api.ds.decorationInfo,{},function (res) {
+			$('#decorationOrderDiscount').bindData(res.machingType,"key","value");
+
+		});
+
 		$("#decorationOrderTotalMoney").val("");
+		
+		if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+			$('#forDiscount').removeClass('hide');
+		}
+
 		decorationOrderDetail.quotationTotalPriceModal.modal("show");
 		
 	});
@@ -172,7 +203,7 @@ jQuery(function($) {
 		com.post(api.payment.queryDecorationPaymentForBaseByOrderId, decorationPayment.postParam, function(res){
 			decorationPayment.refundType = [{"key":"", "value":"", "money":0}];
 			decorationPayments = res.decorationPayments;
-			
+
 			var options = {};
 			
 			for(var i=0;i<decorationPayments.length;++i){
@@ -185,7 +216,7 @@ jQuery(function($) {
 				
 				options[_decorationPayment.paymentType] = option;
 			}
-			
+
 			if(options["尾款"]){
 				decorationPayment.refundType.push(options["尾款"]);
 			}else if(options["二期款"]){
@@ -224,8 +255,8 @@ jQuery(function($) {
 		decorationOrderDetail.otherPaymentModal.modal("show");
 	});
 	
-	$("#saveGenerateDecorationPaymentBtn").on('click',function(res){
-		
+	$("#saveGenerateDecorationPaymentBtn").bindClick(function(res){
+
 		if(com.validate("quotationTotalPriceModal")){
 			return;
 		}
@@ -239,10 +270,51 @@ jQuery(function($) {
 			"decorationPayment.referMoney": $("#decorationOrderTotalMoney").val(),
 			"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
 		}
-		
-		com.post(api.payment.makeDecorationPayment, options, function(res){
-			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
-		});
+
+		if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
+
+			var manageRate = 0;
+
+			com.post(api.quotation.queryQuotationVersionByVersionId,{ "quotationVersion.versionId": decorationOrderDetail.versionId},function (res) {
+				manageRate = res.quotationVersion.manageRate;
+			},null,false);
+
+			var maching = $('#decorationOrderDiscount').val();
+			var discout = $('#decorationOrderDiscount').find("option:selected").text();
+			var projectPrice = Math.ceil(parseFloat($("#decorationOrderTotalMoney").val()));
+			var serviceRate = config.serviceRate;
+
+			options = {
+				"decorationHolonomy.decorationOrder.orderId": decorationOrderDetail.decorationOrderId,
+				"decorationHolonomy.maching": maching,
+				"decorationHolonomy.discount": discout,
+				"decorationHolonomy.projectPrice": projectPrice,
+				"decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationOrderDetail.notSalesmanRate),
+				"decorationHolonomy.serviceRate": serviceRate,
+				"decorationHolonomy.status": 0
+			};
+
+			com.post(api.decoration.makeDecorationHolonomy,options,function (res) {
+				com.showAlert(com.info,"保存成功");
+
+				res = res.decorationHolonomy;
+				$('#projectPrice').html(res.projectPrice + res.managePrice);
+				$('#managePrice').html(res.managePrice);
+				$('#materialPrice').html(res.materialPrice);
+				$('#servicePrice').html(res.servicePrice);
+
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+
+			},function (e) {
+				com.showAlert(com.error,e.errorMsg);
+			})
+
+		}else {
+			com.post(api.payment.makeDecorationPayment, options, function(res){
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			});
+		}
+
 		
 		decorationOrderDetail.quotationTotalPriceModal.modal("hide");
 	});
@@ -983,3 +1055,5 @@ function abateDecorationActivityItem(daiId, activityItemName){
 		}
 	});
 }
+
+

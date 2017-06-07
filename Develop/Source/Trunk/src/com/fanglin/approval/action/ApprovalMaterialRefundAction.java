@@ -52,10 +52,10 @@ public class ApprovalMaterialRefundAction extends BaseListAction {
 	private List<MaterialSubOrderItemVO> materialSubOrderItems;
 	
 	// 获取主材退货审批项信息
-	@Action(value = "queryApprovalForMaterialRefundItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryApprovalForMaterialRefundItem() throws FLException{
+	@Action(value = "queryApprovalMaterialRefundItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApprovalMaterialRefundItem() throws FLException{
 		
-		approvalMaterialRefundItems = approvalMaterialRefundService.queryApprovalForMaterialRefundItem(approval);
+		approvalMaterialRefundItems = approvalMaterialRefundService.queryApprovalMaterialRefundItem(approval);
 		
 		return SUCCESS;
 	}

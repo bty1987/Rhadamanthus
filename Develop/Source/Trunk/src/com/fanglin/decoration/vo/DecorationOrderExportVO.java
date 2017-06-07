@@ -30,11 +30,11 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 	
 	private String activity;
 	
-	private float notSalesmanCut;
+	private Float notSalesmanCut;
 	
-	private float notSalesmanRate;
+	private Float notSalesmanRate;
 	
-	private float contractPrice;
+	private Float contractPrice;
 	
 	private String userId;
 	
@@ -52,51 +52,51 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 	
 	private String region;
 	
-	private float rate;
+	private Float rate;
 	
-	private float discount;
+	private Float discount;
 	
-	private float latexCut;
+	private Float latexCut;
 	
-	private float managePrice;
+	private Float managePrice;
 	
-	private float manageRate;
+	private Float manageRate;
 	
-	private float trafficPrice;
+	private Float trafficPrice;
 	
-	private float designPayment;
+	private Float designPayment;
 	
 	private String designPaymentStatus;
 	
-	private float firstPayment;
+	private Float firstPayment;
 	
 	private Timestamp firstCollectTime;
 	
-	private float firstSecondPayment;
+	private Float firstSecondPayment;
 	
 	private Timestamp firstSecondCollectTime;
 	
-	private float secondPayment;
+	private Float secondPayment;
 	
 	private Timestamp secondCollectTime;
 	
-	private float thirdPayment;
+	private Float thirdPayment;
 	
 	private Timestamp thirdCollectTime;
 	
-	private float penalty;
+	private Float penalty;
 	
-	private float advancePayment;
+	private Float advancePayment;
 	
-	private float achievement; // 净业绩
+	private Float achievement; // 净业绩
 	
-	private float unpayPayment;
+	private Float unpayPayment;
 	
 	private String salesmanType;
 	
 	private String supervisor;
 	
-	private float houseArea;
+	private Float houseArea;
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -151,27 +151,27 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.activity = activity;
 	}
 
-	public float getNotSalesmanCut() {
+	public Float getNotSalesmanCut() {
 		return notSalesmanCut;
 	}
 
-	public void setNotSalesmanCut(float notSalesmanCut) {
+	public void setNotSalesmanCut(Float notSalesmanCut) {
 		this.notSalesmanCut = notSalesmanCut;
 	}
 
-	public float getNotSalesmanRate() {
+	public Float getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
 
-	public void setNotSalesmanRate(float notSalesmanRate) {
+	public void setNotSalesmanRate(Float notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
-	public float getContractPrice() {
+	public Float getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(float contractPrice) {
+	public void setContractPrice(Float contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 
@@ -207,67 +207,67 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.region = region;
 	}
 
-	public float getRate() {
+	public Float getRate() {
 		return rate;
 	}
 
-	public void setRate(float rate) {
+	public void setRate(Float rate) {
 		this.rate = rate;
 	}
 
-	public float getDiscount() {
+	public Float getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(Float discount) {
 		this.discount = discount;
 	}
 
-	public float getLatexCut() {
+	public Float getLatexCut() {
 		return latexCut;
 	}
 
-	public void setLatexCut(float latexCut) {
+	public void setLatexCut(Float latexCut) {
 		this.latexCut = latexCut;
 	}
 
-	public float getManagePrice() {
+	public Float getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(float managePrice) {
+	public void setManagePrice(Float managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public float getManageRate() {
+	public Float getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(Float manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public float getTrafficPrice() {
+	public Float getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(float trafficPrice) {
+	public void setTrafficPrice(Float trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
 
-	public float getDesignPayment() {
+	public Float getDesignPayment() {
 		return designPayment;
 	}
 
-	public void setDesignPayment(float designPayment) {
+	public void setDesignPayment(Float designPayment) {
 		this.designPayment = designPayment;
 	}
 
-	public float getFirstPayment() {
+	public Float getFirstPayment() {
 		return firstPayment;
 	}
 
-	public void setFirstPayment(float firstPayment) {
+	public void setFirstPayment(Float firstPayment) {
 		this.firstPayment = firstPayment;
 	}
 
@@ -279,11 +279,11 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.firstCollectTime = firstCollectTime;
 	}
 
-	public float getFirstSecondPayment() {
+	public Float getFirstSecondPayment() {
 		return firstSecondPayment;
 	}
 
-	public void setFirstSecondPayment(float firstSecondPayment) {
+	public void setFirstSecondPayment(Float firstSecondPayment) {
 		this.firstSecondPayment = firstSecondPayment;
 	}
 
@@ -295,11 +295,11 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.firstSecondCollectTime = firstSecondCollectTime;
 	}
 
-	public float getSecondPayment() {
+	public Float getSecondPayment() {
 		return secondPayment;
 	}
 
-	public void setSecondPayment(float secondPayment) {
+	public void setSecondPayment(Float secondPayment) {
 		this.secondPayment = secondPayment;
 	}
 
@@ -311,11 +311,11 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.secondCollectTime = secondCollectTime;
 	}
 
-	public float getThirdPayment() {
+	public Float getThirdPayment() {
 		return thirdPayment;
 	}
 
-	public void setThirdPayment(float thirdPayment) {
+	public void setThirdPayment(Float thirdPayment) {
 		this.thirdPayment = thirdPayment;
 	}
 
@@ -327,35 +327,35 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.thirdCollectTime = thirdCollectTime;
 	}
 
-	public float getPenalty() {
+	public Float getPenalty() {
 		return penalty;
 	}
 
-	public void setPenalty(float penalty) {
+	public void setPenalty(Float penalty) {
 		this.penalty = penalty;
 	}
 
-	public float getAdvancePayment() {
+	public Float getAdvancePayment() {
 		return advancePayment;
 	}
 
-	public void setAdvancePayment(float advancePayment) {
+	public void setAdvancePayment(Float advancePayment) {
 		this.advancePayment = advancePayment;
 	}
 
-	public float getAchievement() {
+	public Float getAchievement() {
 		return achievement;
 	}
 
-	public void setAchievement(float achievement) {
+	public void setAchievement(Float achievement) {
 		this.achievement = achievement;
 	}
 
-	public float getUnpayPayment() {
+	public Float getUnpayPayment() {
 		return unpayPayment;
 	}
 
-	public void setUnpayPayment(float unpayPayment) {
+	public void setUnpayPayment(Float unpayPayment) {
 		this.unpayPayment = unpayPayment;
 	}
 
@@ -407,11 +407,11 @@ public class DecorationOrderExportVO implements Serializable, Cloneable{
 		this.supervisor = supervisor;
 	}
 
-	public float getHouseArea() {
+	public Float getHouseArea() {
 		return houseArea;
 	}
 
-	public void setHouseArea(float houseArea) {
+	public void setHouseArea(Float houseArea) {
 		this.houseArea = houseArea;
 	}
 

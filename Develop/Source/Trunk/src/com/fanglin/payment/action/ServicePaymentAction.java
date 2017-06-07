@@ -13,6 +13,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.vo.AdvanceReceiptVO;
 import com.fanglin.payment.vo.ServiceReceiptVO;
 import com.fanglin.payment.service.ServicePaymentService;
+import com.fanglin.payment.service.ServiceReceiptService;
 import com.fanglin.payment.vo.ServicePaymentVO;
 
 @ParentPackage("base")
@@ -25,53 +26,18 @@ public class ServicePaymentAction extends BaseListAction {
 	@Autowired
 	private ServicePaymentService servicePaymentService;
 	
+	@Autowired
+	private ServiceReceiptService serviceReceiptService;
+	
 	private ServicePaymentVO servicePayment;
+	
+	private List<ServicePaymentVO> servicePayments;
 	
 	private ServiceReceiptVO serviceReceipt;
 	
 	private AdvanceReceiptVO advanceReceipt;
 	
 	private List<Long> spIds;
-	
-	@Action(value = "collectServicePaymentForRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String collectServicePaymentForRefund() throws FLException{
-		
-		servicePaymentService.collectServicePaymentForRefund(servicePayment, serviceReceipt, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addServiceCharge", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addServiceCharge() throws FLException{
-		
-		servicePaymentService.addServiceCharge(servicePayment, serviceReceipt, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "confirmServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmServicePayment() throws FLException{
-		
-		servicePaymentService.confirmServicePayment(spIds, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addServicePayment() throws FLException{
-		
-		servicePaymentService.addServicePayment(servicePayment, serviceReceipt, advanceReceipt, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageServicePaymentForNotInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForNotInit(){
-		
-		servicePaymentService.pageServicePaymentForNotInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
 	
 	@Action(value = "pageServicePaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageServicePaymentForCollect(){
@@ -85,6 +51,62 @@ public class ServicePaymentAction extends BaseListAction {
 	public String pageServicePaymentForConfirm(){
 		
 		servicePaymentService.pageServicePaymentForConfirm(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryServicePaymentForNotInitBySrId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryServicePaymentForNotInitBySrId() throws FLException{
+		
+		servicePayments = servicePaymentService.queryServicePaymentForNotInitBySrId(serviceReceipt);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryServicePaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryServicePaymentByOrderId() throws FLException{
+		
+		servicePayments = servicePaymentService.queryServicePaymentByOrderId(servicePayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "confirmServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmServicePayment() throws FLException{
+		
+		servicePaymentService.confirmServicePayment(spIds, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "collectServicePaymentForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collectServicePaymentForService() throws FLException{
+		
+		servicePaymentService.collectServicePaymentForService(servicePayment, serviceReceipt, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "refundServicePaymentForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundServicePaymentForService() throws FLException{
+		
+		servicePaymentService.refundServicePaymentForService(servicePayment, serviceReceipt, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "collectServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collectServicePayment() throws FLException{
+		
+		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, advanceReceipt, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryServiceReceiptBySrId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryServiceReceiptBySrId() throws FLException{
+		
+		serviceReceipt = serviceReceiptService.queryServiceReceiptBySrId(serviceReceipt);
 		
 		return SUCCESS;
 	}
@@ -119,6 +141,14 @@ public class ServicePaymentAction extends BaseListAction {
 
 	public void setSpIds(List<Long> spIds) {
 		this.spIds = spIds;
+	}
+	
+	public List<ServicePaymentVO> getServicePayments() {
+		return servicePayments;
+	}
+
+	public void setServicePayments(List<ServicePaymentVO> servicePayments) {
+		this.servicePayments = servicePayments;
 	}
 	
 }

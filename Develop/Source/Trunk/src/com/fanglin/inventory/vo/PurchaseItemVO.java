@@ -10,11 +10,15 @@ public class PurchaseItemVO  implements Serializable{
 	
 	private Long pid;
 	
+	private Long siid;
+	
 	private GoodsVO goods;
 
 	private ColorVO color;
 	
 	private FormatVO format;
+	
+	private Float unitPrice;
 	
 	private Float num; 
 	
@@ -47,6 +51,14 @@ public class PurchaseItemVO  implements Serializable{
 		this.pid = pid;
 	}
 
+	public Long getSiid() {
+		return siid;
+	}
+
+	public void setSiid(Long siid) {
+		this.siid = siid;
+	}
+
 	public GoodsVO getGoods() {
 		return goods;
 	}
@@ -69,6 +81,14 @@ public class PurchaseItemVO  implements Serializable{
 
 	public void setFormat(FormatVO format) {
 		this.format = format;
+	}
+
+	public Float getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Float unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
 	public Float getNum() {

@@ -20,9 +20,9 @@ public class MaterialPaymentVO implements Serializable{
 
 	private static final long serialVersionUID = 7379370514634255371L;
 	
-	private long mpId;
+	private Long mpId;
 	
-	private long msoId;
+	private Long msoId;
 	
 	private String msoNo;
 	
@@ -40,11 +40,11 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private String regionName;
 	
-	private int paymentType;
+	private Integer paymentType;
 	
 	private String paymentTypeName;
 	
-	private int paymentStatus;
+	private Integer paymentStatus;
 	
 	private String materialType;
 	
@@ -66,75 +66,75 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private float referMoney;
+	private Float referMoney;
 	
-	private float cash;
+	private Float cash;
 	
 	private String cashInfo;
 	
-	private float bank;
+	private Float bank;
 	
 	private String bankInfo;
 	
-	private float checkv;
+	private Float checkv;
 	
 	private String checkvBankName;
 	
-	private float installment;
+	private Float installment;
 	
 	private String installmentBankName;
 	
-	private float accounts;
+	private Float accounts;
 	
 	private String accountsBankName;
 	
-	private float advance;
+	private Float advance;
 	
-	private short advanceType;
+	private Short advanceType;
 	
-	private float coupon;
+	private Float coupon;
 	
-	private short couponType;
+	private Short couponType;
 	
 	private String couponInfo;
 	
-	private float msoCoupon;
+	private Float msoCoupon;
 	
 	private String msoCouponInfo;
 	
 	private String des;
 	
-	private long mrId;
+	private Long mrId;
 
-	public long getMpId(){
+	public Long getMpId(){
 		return mpId;
 	}
 
-	public void setMpId(long mpId){
+	public void setMpId(Long mpId){
 		this.mpId = mpId;
 	}
 
-	public long getMsoId(){
+	public Long getMsoId(){
 		return msoId;
 	}
 
-	public void setMsoId(long msoId){
+	public void setMsoId(Long msoId){
 		this.msoId = msoId;
 	}
 
-	public int getPaymentType(){
+	public Integer getPaymentType(){
 		return paymentType;
 	}
 
-	public void setPaymentType(int paymentType){
+	public void setPaymentType(Integer paymentType){
 		this.paymentType = paymentType;
 	}
 
-	public int getPaymentStatus(){
+	public Integer getPaymentStatus(){
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(int paymentStatus){
+	public void setPaymentStatus(Integer paymentStatus){
 		this.paymentStatus = paymentStatus;
 	}
 
@@ -180,19 +180,19 @@ public class MaterialPaymentVO implements Serializable{
 		this.confirmTime = confirmTime;
 	}
 
-	public float getReferMoney(){
+	public Float getReferMoney(){
 		return referMoney;
 	}
 
-	public void setReferMoney(float referMoney){
+	public void setReferMoney(Float referMoney){
 		this.referMoney = referMoney;
 	}
 
-	public float getCash(){
+	public Float getCash(){
 		return cash;
 	}
 
-	public void setCash(float cash){
+	public void setCash(Float cash){
 		this.cash = cash;
 	}
 
@@ -204,11 +204,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.cashInfo = cashInfo;
 	}
 
-	public float getBank(){
+	public Float getBank(){
 		return bank;
 	}
 
-	public void setBank(float bank){
+	public void setBank(Float bank){
 		this.bank = bank;
 	}
 
@@ -220,11 +220,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.checkvBankName = checkvBankName;
 	}
 
-	public float getInstallment(){
+	public Float getInstallment(){
 		return installment;
 	}
 
-	public void setInstallment(float installment){
+	public void setInstallment(Float installment){
 		this.installment = installment;
 	}
 
@@ -236,11 +236,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.installmentBankName = installmentBankName;
 	}
 
-	public float getAccounts(){
+	public Float getAccounts(){
 		return accounts;
 	}
 
-	public void setAccounts(float accounts){
+	public void setAccounts(Float accounts){
 		this.accounts = accounts;
 	}
 
@@ -252,11 +252,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.accountsBankName = accountsBankName;
 	}
 
-	public float getCoupon(){
+	public Float getCoupon(){
 		return coupon;
 	}
 
-	public void setCoupon(float coupon){
+	public void setCoupon(Float coupon){
 		this.coupon = coupon;
 	}
 
@@ -292,11 +292,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.orderId = orderId;
 	}
 
-	public float getCheckv(){
+	public Float getCheckv(){
 		return checkv;
 	}
 
-	public void setCheckv(float checkv){
+	public void setCheckv(Float checkv){
 		this.checkv = checkv;
 	}
 
@@ -340,27 +340,27 @@ public class MaterialPaymentVO implements Serializable{
 		this.customerId = customerId;
 	}
 
-	public short getCouponType(){
+	public Short getCouponType(){
 		return couponType;
 	}
 
-	public void setCouponType(short couponType){
+	public void setCouponType(Short couponType){
 		this.couponType = couponType;
 	}
 
-	public float getAdvance(){
+	public Float getAdvance(){
 		return advance;
 	}
 
-	public void setAdvance(float advance){
+	public void setAdvance(Float advance){
 		this.advance = advance;
 	}
 
-	public short getAdvanceType(){
+	public Short getAdvanceType(){
 		return advanceType;
 	}
 
-	public void setAdvanceType(short advanceType){
+	public void setAdvanceType(Short advanceType){
 		this.advanceType = advanceType;
 	}
 
@@ -436,19 +436,19 @@ public class MaterialPaymentVO implements Serializable{
 		this.msoCouponInfo = msoCouponInfo;
 	}
 
-	public float getMsoCoupon() {
+	public Float getMsoCoupon() {
 		return msoCoupon;
 	}
 
-	public void setMsoCoupon(float msoCoupon) {
+	public void setMsoCoupon(Float msoCoupon) {
 		this.msoCoupon = msoCoupon;
 	}
 
-	public long getMrId() {
+	public Long getMrId() {
 		return mrId;
 	}
 
-	public void setMrId(long mrId) {
+	public void setMrId(Long mrId) {
 		this.mrId = mrId;
 	}
 

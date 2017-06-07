@@ -113,4 +113,5 @@ $.extend(api, {payment: {
 	refundServicePaymentForService: {url: "refundServicePaymentForService.do"},
 	queryServiceReceiptBySrId: {url: "queryServiceReceiptBySrId.do"},
 	queryServicePaymentForNotInitBySrId: {url: "queryServicePaymentForNotInitBySrId.do"},
+	queryServicePaymentByOrderId: {url: "queryServicePaymentByOrderId.do"},
 }});

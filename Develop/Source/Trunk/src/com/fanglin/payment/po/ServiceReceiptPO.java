@@ -23,13 +23,13 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	public static final String COLUMN_INFO_STR = "";
 	
-	public static final Float COLUMN_MONEY_STR = 0f;
+	public static final float COLUMN_MONEY_STR = 0f;
 	
-	public static final Short COLUMN_ADVANCETYPE_STR = 0;
+	public static final short COLUMN_ADVANCETYPE_STR = 0;
 	
-	public static final Float COLUMN_RATIO_STR = 1.1f;
+	public static final float COLUMN_RATIO_STR = 1.1f;
 	
-	private Long srId;        			//收据ID
+	private long srId;        			//收据ID
 	
 	private UserPO collecter;
 	
@@ -43,25 +43,25 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private Float realMoney;
+	private float realMoney;
 	
-	private Float cash;                //现金
+	private float cash;                //现金
 	
 	private String cashInfo;           //现金信息
 	
-	private Float bank;                //刷卡
+	private float bank;                //刷卡
 	
 	private String bankInfo;           //刷卡信息;
 	
-	private Float checkv;              //转账
+	private float checkv;              //转账
 	
 	private String checkvBank;         //转账银行
 	
-	private Float installment;         //分期
+	private float installment;         //分期
 	
 	private String installBank;        //分期银行
 	
-	private Float accounts;            //对公
+	private float accounts;            //对公
 	
 	private String accountsBank;       //对公银行
 	
@@ -79,11 +79,11 @@ public class ServiceReceiptPO  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY) 
 	@Column(name = "srid")
-	public Long getSrId() {
+	public long getSrId() {
 		return srId;
 	}
 
-	public void setSrId(Long srId) {
+	public void setSrId(long srId) {
 		this.srId = srId;
 	}
 
@@ -146,20 +146,20 @@ public class ServiceReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "realMoney")
-	public Float getRealMoney() {
+	public float getRealMoney() {
 		return realMoney;
 	}
 
-	public void setRealMoney(Float realMoney) {
+	public void setRealMoney(float realMoney) {
 		this.realMoney = realMoney;
 	}
 
 	@Column(name = "cash")
-	public Float getCash() {
+	public float getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(float cash) {
 		this.cash = cash;
 	}
 
@@ -173,11 +173,11 @@ public class ServiceReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "bank")
-	public Float getBank() {
+	public float getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(float bank) {
 		this.bank = bank;
 	}
 
@@ -191,11 +191,11 @@ public class ServiceReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "checkv")
-	public Float getCheckv() {
+	public float getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(Float checkv) {
+	public void setCheckv(float checkv) {
 		this.checkv = checkv;
 	}
 
@@ -209,11 +209,11 @@ public class ServiceReceiptPO  implements Serializable{
 	}
 	
 	@Column(name = "installment")
-	public Float getInstallment() {
+	public float getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(Float installment) {
+	public void setInstallment(float installment) {
 		this.installment = installment;
 	}
 
@@ -227,11 +227,11 @@ public class ServiceReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "accounts")
-	public Float getAccounts() {
+	public float getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(Float accounts) {
+	public void setAccounts(float accounts) {
 		this.accounts = accounts;
 	}
 

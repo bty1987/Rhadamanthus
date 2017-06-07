@@ -41,7 +41,7 @@ public class AssisOrderPO implements Serializable{
 	
 	public static final short STATUS_REJECT_INT = 2;
 	
-	private Long aoid;
+	private long aoid;
 	
 	private String no;
 	
@@ -55,7 +55,7 @@ public class AssisOrderPO implements Serializable{
 	
 	private Timestamp approverTime;
 	
-	private Short status;
+	private short status;
 	
 	public AssisOrderPO() {
 		super();
@@ -69,11 +69,11 @@ public class AssisOrderPO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
 	@Column(name = "aoid")
-	public Long getAoid() {
+	public long getAoid() {
 		return aoid;
 	}
 
-	public void setAoid(Long aoid) {
+	public void setAoid(long aoid) {
 		this.aoid = aoid;
 	}
 	
@@ -134,11 +134,11 @@ public class AssisOrderPO implements Serializable{
 	}
 	
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

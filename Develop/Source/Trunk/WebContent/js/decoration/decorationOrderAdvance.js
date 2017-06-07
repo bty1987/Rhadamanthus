@@ -56,7 +56,7 @@ $(function(){
                 ["折扣:", v.discount, "blue"],
                 ["量房时间:", v.createTime, "grey"],
                 ["签单时间:", v.contractTime, "grey"],
-                ["类型:", v.type == 0 ? '半包' : '全包', "red"],
+				["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
                 ["状态:", v.status, "red"]
             ];
 
@@ -93,7 +93,7 @@ $(function(){
             
             //查看按钮点击事件
             $btnLook.click(function(){
-            	viewDecorationOrderDetail(v.orderId);
+            	viewDecorationOrderDetail(v.orderId, v.type);
             });
             
             //签订合同按钮点击事件
@@ -313,8 +313,9 @@ $(function(){
 	    	});
 	    }
     
-	    function viewDecorationOrderDetail(decorationOrderId){
+	    function viewDecorationOrderDetail(decorationOrderId,type){
 	    	params.decorationOrderId = decorationOrderId;
+			params.type = type;
 	    	com.switchPage(api.index.decorationOrderAdvanceDetailIndex.url);
 	    }
 	    

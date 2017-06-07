@@ -21,6 +21,8 @@ public class PurchaseVO implements Serializable{
 	
 	private Timestamp balanceTime;
 	
+	private Timestamp deliveryTime;
+	
 	private Short status;
 	
 	private Short balanceStatus;
@@ -76,6 +78,15 @@ public class PurchaseVO implements Serializable{
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+	
+	@JSON(format="yyyy-MM-dd")
+	public Timestamp getDeliveryTime() {
+		return deliveryTime;
+	}
+
+	public void setDeliveryTime(Timestamp deliveryTime) {
+		this.deliveryTime = deliveryTime;
 	}
 
 	public Short getStatus() {

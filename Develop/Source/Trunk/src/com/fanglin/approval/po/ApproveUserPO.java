@@ -26,11 +26,11 @@ public class ApproveUserPO implements Serializable{
 
     private static final long serialVersionUID = 950904568941125216L;
 
-    private Integer auid;
+    private int auid;
     
     private UserPO  user;
    
-    private Short  type;
+    private short  type;
     
     public ApproveUserPO(){
         super();
@@ -44,11 +44,11 @@ public class ApproveUserPO implements Serializable{
     @Id
     @GeneratedValue
     @Column(name = "auid")
-    public Integer getAuid(){
+    public int getAuid(){
         return auid;
     }
 
-    public void setAuid(Integer auid){
+    public void setAuid(int auid){
         this.auid = auid;
     }
 
@@ -63,11 +63,11 @@ public class ApproveUserPO implements Serializable{
     }
     
     @Column(name = "type")
-    public Short getType(){
+    public short getType(){
         return type;
     }
 
-    public void setType(Short type){
+    public void setType(short type){
         this.type = type;
     }
 

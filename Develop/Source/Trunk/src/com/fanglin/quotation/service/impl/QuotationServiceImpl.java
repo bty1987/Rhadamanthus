@@ -535,6 +535,8 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setManagePrice(quotationVO.getManagePrice());
 			quotationPO.setManageRate(quotationVO.getManageRate());
 			quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
+			quotationPO.setUndisPrice(quotationVO.getUndisPrice());
+			quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 		}else if(quotationPO.getType() == QuotationPO.TYPE_WHOLE_INT){
 			quotationPO.setQdiff(quotationVO.getQdiff());
 			quotationPO.setMdiff(quotationVO.getMdiff());

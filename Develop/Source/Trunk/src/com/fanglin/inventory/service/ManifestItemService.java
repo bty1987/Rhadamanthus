@@ -21,7 +21,11 @@ public interface ManifestItemService {
 	
 	public List<ManifestItemVO> queryManifestItemByMId(ManifestVO manifestVO);
 	
-	public int addManifestItemForCGAndXG(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException;
+	public List<ManifestItemVO> queryManifestItemBySiid(ManifestItemVO manifestItemVO);
+	
+	public List<ManifestItemVO> queryManifestItemBySiids(List<Long> siids);
+	
+	public int addManifestItem(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException;
 	
 	public int updateManifestItem(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException;
 	

@@ -80,7 +80,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTSTATUS_REFUND_STR = "申请退款";
 
-	private Long autoId;
+	private long autoId;
 	
 	private DecorationOrderPO decorationOrderPO;
 	
@@ -96,13 +96,13 @@ public class DecorationPaymentPO implements Serializable {
 	
 	private DecorationReceiptPO decorationReceipt;
 	
-	private Float referMoney =  0f;
+	private float referMoney =  0f;
 	
-	private Float realMoney = 0f;
+	private float realMoney = 0f;
 	
-	private Float paymentBlance =  0f;
+	private float paymentBlance =  0f;
 	
-	private Float other =  0f;
+	private float other =  0f;
 	
 	public DecorationPaymentPO() {
 		super();
@@ -111,11 +111,11 @@ public class DecorationPaymentPO implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "autoId")
-	public Long getAutoId(){
+	public long getAutoId(){
 		return autoId;
 	}
 	
-	public void setAutoId(Long autoId){
+	public void setAutoId(long autoId){
 		this.autoId = autoId;
 	}
 
@@ -145,11 +145,11 @@ public class DecorationPaymentPO implements Serializable {
 		this.paymentStatus = paymentStatus;
 	}
 
-	public Float getReferMoney(){
+	public float getReferMoney(){
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney){
+	public void setReferMoney(float referMoney){
 		this.referMoney = referMoney;
 	}
 
@@ -181,19 +181,19 @@ public class DecorationPaymentPO implements Serializable {
 		this.decorationReceipt = decorationReceipt;
 	}
 
-	public void setPaymentBlance(Float paymentBlance){
+	public void setPaymentBlance(float paymentBlance){
 		this.paymentBlance = paymentBlance;
 	}
 	
-	public Float getPaymentBlance(){
+	public float getPaymentBlance(){
 		return paymentBlance;
 	}
 	
-	public void setOther(Float other){
+	public void setOther(float other){
 		this.other = other;
 	}
 	
-	public Float getOther(){
+	public float getOther(){
 		return other;
 	}
 	
@@ -205,11 +205,11 @@ public class DecorationPaymentPO implements Serializable {
 		return createDes;
 	}
 	
-	public Float getRealMoney(){
+	public float getRealMoney(){
 		return realMoney;
 	}
 
-	public void setRealMoney(Float realMoney){
+	public void setRealMoney(float realMoney){
 		this.realMoney = realMoney;
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.WorkTypeVO;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
@@ -18,6 +19,7 @@ import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AssisOrderItemService;
 import com.fanglin.inventory.vo.AssisOrderItemVO;
 import com.fanglin.inventory.vo.AssisOrderVO;
+import com.fanglin.inventory.vo.AssisTypeVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -32,21 +34,25 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 	private AssisOrderDao assisOrderDao;
 
 	@Override
-	public List<AssisOrderItemVO> queryAssisOrderItemByAoid(
-			AssisOrderItemVO assisOrderItemVO) {
+	public List<AssisOrderItemVO> queryAssisOrderItemByAoid(AssisOrderItemVO assisOrderItemVO) {
 
-		List<AssisOrderItemPO> assisOrderItemPOs = assisOrderItemDao
-				.queryAssisOrderItemByAoid(assisOrderItemVO.getAoid());
+		List<AssisOrderItemPO> assisOrderItemPOs = assisOrderItemDao.queryAssisOrderItemByAoid(assisOrderItemVO.getAoid());
 		List<AssisOrderItemVO> assisOrderItemVOs = new ArrayList<AssisOrderItemVO>();
 
 		for (AssisOrderItemPO assisOrderItemPO : assisOrderItemPOs) {
 
-			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO());
+			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(new AssisTypeVO(new WorkTypeVO())));
 
-			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,
-					Arrays.asList("goods"));
-			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),
-					assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,Arrays.asList("goods"));
+			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
+			if(assisOrderItemPO.getGoods().getAssisType()!=null){
+				BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType(), assisOrderItemVO.getGoods().getAssisType(),Arrays.asList("workType"));
+				if(assisOrderItemPO.getGoods().getAssisType().getWorkType()!=null){
+					BeanUtil.copyProperties(assisOrderItemPO.getGoods().getAssisType().getWorkType(), assisOrderItemVO.getGoods().getAssisType().getWorkType());
+				}
+			}
+			
+			
 
 			assisOrderItemVOs.add(assisOrderItemVO);
 		}
@@ -75,8 +81,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addAssisOrderItem(AssisOrderVO assisOrderVO,
-			AssisOrderItemVO assisOrderItemVO) throws FLException {
+	public int addAssisOrderItem(AssisOrderVO assisOrderVO,AssisOrderItemVO assisOrderItemVO) throws FLException {
 
 		AssisOrderPO assisOrderPO = assisOrderDao.get(assisOrderVO.getAoid());
 
@@ -94,10 +99,8 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 		assisOrderItemPO = new AssisOrderItemPO(new GoodsPO());
 
-		BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,
-				Arrays.asList("goods"));
-		BeanUtil.copyProperties(assisOrderItemVO.getGoods(),
-				assisOrderItemPO.getGoods(), Arrays.asList("assisType"));
+		BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,Arrays.asList("goods"));
+		BeanUtil.copyProperties(assisOrderItemVO.getGoods(),assisOrderItemPO.getGoods(), Arrays.asList("assisType"));
 
 		assisOrderItemPO.setNum(assisOrderItemVO.getNum());
 		assisOrderItemPO.setAoid(assisOrderVO.getAoid());
@@ -111,8 +114,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAssisOrderItem(AssisOrderVO assisOrderVO,
-			AssisOrderItemVO assisOrderItemVO) throws FLException {
+	public int updateAssisOrderItem(AssisOrderVO assisOrderVO,AssisOrderItemVO assisOrderItemVO) throws FLException {
 
 		AssisOrderPO assisOrderPO = assisOrderDao.get(assisOrderVO.getAoid());
 
@@ -122,8 +124,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		AssisOrderItemPO assisOrderItemPO = assisOrderItemDao
-				.get(assisOrderItemVO.getAoiid());
+		AssisOrderItemPO assisOrderItemPO = assisOrderItemDao.get(assisOrderItemVO.getAoiid());
 
 		if (assisOrderItemPO == null) {
 			throw new FLException(260025, "辅料项不存在");
@@ -141,8 +142,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAssisOrderItem(AssisOrderVO assisOrderVO,
-			AssisOrderItemVO assisOrderItemVO) throws FLException {
+	public int deleteAssisOrderItem(AssisOrderVO assisOrderVO,AssisOrderItemVO assisOrderItemVO) throws FLException {
 
 		AssisOrderPO assisOrderPO = assisOrderDao.get(assisOrderVO.getAoid());
 
@@ -152,8 +152,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		AssisOrderItemPO assisOrderItemPO = assisOrderItemDao
-				.get(assisOrderItemVO.getAoiid());
+		AssisOrderItemPO assisOrderItemPO = assisOrderItemDao.get(assisOrderItemVO.getAoiid());
 
 		if (assisOrderItemPO == null) {
 			throw new FLException(260025, "辅料项不存在");

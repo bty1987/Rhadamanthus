@@ -94,7 +94,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	
 	// 获取主材退货审批项信息
 	@Override
-	public List<ApprovalMaterialRefundItemVO> queryApprovalForMaterialRefundItem(ApprovalVO approvalVO) throws FLException {
+	public List<ApprovalMaterialRefundItemVO> queryApprovalMaterialRefundItem(ApprovalVO approvalVO) throws FLException {
 		
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());//通过VO中的审批信息ID获取该审批内容
 		
@@ -134,6 +134,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId) throws FLException {
 		
 		long msoId = approvalMaterialRefundVO.getMsoId();
+		float dis = 0;
+		float disTotal = 0;
 		
 		List<String> packageNames = new ArrayList<String>();//新建套餐数组
 		
@@ -192,6 +194,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			if(materialSubOrderItemPO.getNum() >= approvalMaterialRefundItemVO.getNum() && materialSubOrderItemPO.getTotal() >= approvalMaterialRefundItemVO.getTotal()){
 				materialSubOrderItemPO.setNum(Arith.sub(materialSubOrderItemPO.getNum(), approvalMaterialRefundItemVO.getNum()));
 				materialSubOrderItemPO.setTotal(Arith.sub(materialSubOrderItemPO.getTotal(), approvalMaterialRefundItemVO.getTotal()));
+				dis = Arith.mul(materialSubOrderItemPO.getSalePrice(),approvalMaterialRefundItemVO.getNum());
+				disTotal = Arith.add(dis, disTotal);
 			}else{
 				throw new FLException(180008, "主材订单退货型号数量不足");
 			}
@@ -221,7 +225,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 				}
 			}
 		}
-		
+		materialSubOrderPO.setDistotal(Arith.sub(materialSubOrderPO.getDistotal(), disTotal));
 		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
 		
 		messageService.sendMessage(messageVO);
@@ -293,7 +297,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			materialSubOrderRefundPO.setStatus(MaterialSubOrderRefundPO.STATUS_TYPE_REFUND_INT);
 			materialSubOrderRefundPO.setBalanceType(materialSubOrderItemPO.getBalanceStatus());
 			materialSubOrderRefundPO.setRefundDes("");
-			
+			materialSubOrderRefundPO.setDes("");
 			materialSubOrderRefundPO.setDpbsId(-1);
 			
 			materialSubOrderRefundDao.save(materialSubOrderRefundPO);

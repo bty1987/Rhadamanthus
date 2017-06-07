@@ -66,34 +66,10 @@ public class StorehouseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryStorehouseByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseByUserId(){
-		
-		storehouses = storehouseService.queryStorehouseByUserId(user);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryStorehouseByCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseByCode(){
-		
-		storehouse = storehouseService.queryStorehouseByCode(storehouse);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "addStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addStorehouse() throws FLException{
 		
 		storehouseService.addStorehouse(storehouse);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updateStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateStorehouse() throws FLException{
-		
-		storehouseService.updateStorehouse(storehouse);
 		
 		return SUCCESS;
 	}

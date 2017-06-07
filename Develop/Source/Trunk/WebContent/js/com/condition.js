@@ -922,11 +922,18 @@ var Condition = function(api){
         // 收款
         orderAddr : {
             label:"楼盘",
-            type:"text",
+            type:"autofill",
             submitConfig : {
                 name : "orderAddr",
                 op : "cn",
                 validate:null
+            },
+            dataSource : {
+                url : api.data.queryVillageForNameByPinyin,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
             }
         },
         collectTimeDateRange : {

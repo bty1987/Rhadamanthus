@@ -10,9 +10,9 @@ public class SalesPaymentVO  implements Serializable{
 
 	private static final long serialVersionUID = 1075349217063354824L;
 
-	private long spid;                 //款项ID
+	private Long spid;                 //款项ID
 	
-	private long sid;                  //款项ID
+	private Long sid;                  //款项ID
 	
 	private Short type;                //款项类型
 	
@@ -97,19 +97,19 @@ public class SalesPaymentVO  implements Serializable{
 		this.salesReceipt = salesReceipt;
 	}
 
-	public long getSpid() {
+	public Long getSpid() {
 		return spid;
 	}
 
-	public void setSpid(long spid) {
+	public void setSpid(Long spid) {
 		this.spid = spid;
 	}
 	
-	public long getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(long sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 

@@ -164,6 +164,7 @@ jQuery(function($) {
 		url = api.addReduce.addAddReduce;
 		options["addReduce.status"] = 0;
 		options["addReduce.total"] = 0;
+		options["addReduce.managePrice"] = 0;
 
 		com.post(url, options, function(res){
 			com.showAlert(com.info, "操作成功");

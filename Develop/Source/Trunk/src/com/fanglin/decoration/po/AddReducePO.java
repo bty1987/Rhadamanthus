@@ -67,7 +67,9 @@ public class AddReducePO implements Serializable{
 	
 	private String content;
 	
-	private Long dpId;
+	private long dpId;
+	
+	private float managePrice;
 
 	@Id
 	@Column(name="arId")
@@ -134,12 +136,22 @@ public class AddReducePO implements Serializable{
 	}
 
 	@Column(name="dpId")
-	public Long getDpId() {
+	public long getDpId() {
 		return dpId;
 	}
 
-	public void setDpId(Long dpId) {
+	public void setDpId(long dpId) {
 		this.dpId = dpId;
 	}
+	
+	@Column(name="managePrice")
+	public float getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(float managePrice) {
+		this.managePrice = managePrice;
+	}
+
 
 }

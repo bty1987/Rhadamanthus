@@ -136,7 +136,7 @@ var decorationUtils = {
 			addReduceItem.dcp = _dcp;
 			addReduceItem.dcpt = _dcpt;
 			
-			console.log(addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName);
+			//console.log(addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName);
 			
 			if(quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName]){
 				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
@@ -159,9 +159,9 @@ var decorationUtils = {
 		decorationOrderDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
 		decorationOrderDetail.reduceNums = reduceNums;
 		
-		console.log(quotationFunctionAreaItemCs);
-		console.log(quotationFunctionAreaItemWs);
-		console.log(reduceNums);
+		//console.log(quotationFunctionAreaItemCs);
+		//console.log(quotationFunctionAreaItemWs);
+		//console.log(reduceNums);
 		
 	}, initQuotationDetail: function(){
 		
@@ -703,7 +703,7 @@ var decorationUtils = {
 			
 			$delA.click(function(){
 				com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function(res){
-					console.log(res);
+					//console.log(res);
 					$("#imgLi_" + res.decorationPicture.dpId).remove();
 				})
 			});
@@ -743,6 +743,120 @@ var decorationUtils = {
 			callback(res.decorationOrder);
 		}, null, false);
 		
+	}, initDecorationHolonomy:function (divid,orederId) {
+		var mainDiv = $('#'+ divid);
+		$('#preparePayment').remove();
+
+		var paymentDiv = $("<div></div>").addClass('row');
+		var paymentHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("预付款项信息")));
+		var paymentBody = $("<div></div>").addClass('widget-body');
+		var paymentTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px","margin-bottom": "15px"});
+
+		var holonomyDiv = $("<div></div>").addClass('row');
+		var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半价款项信息")));
+		var holonomyBody = $("<div></div>").addClass('widget-body');
+		var holonomyTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px","margin-bottom": "15px"});
+
+		var serviceMoneyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("服务款项信息")));
+		var serviceMoneyBody = $("<div></div>").addClass('widget-body');
+
+		paymentBody.append($("<div></div>").addClass('widget-body-inner').append(paymentTable.append(createDivForHolonomy("col-md-3","合同预付款","balanceAdvance",true)).append(createDivForHolonomy("col-md-3","工程预付款","projectAdvance",true)).append(createDivForHolonomy("col-md-3","主材预付款","materialAdvance",true)).append(createDivForHolonomy("col-md-3","正林预付款","zaterialAdvance",false))));
+		paymentDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(paymentHeader,paymentBody)));
+		$('<div></div>').addClass('hr col-md-12').appendTo(paymentDiv);
+		paymentDiv.prependTo(mainDiv);
+
+		holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(createDivForHolonomy("col-md-4","工程总额","projectPrice",true),createDivForHolonomy("col-md-4","管理费","managePrice",true),createDivForHolonomy("col-md-4","主材总额","materialPrice",false),createDivForHolonomy("col-md-4","服务费","servicePrice",true)
+			,createDivForHolonomy("col-md-4","实收主材额","materialPaidup",true),createDivForHolonomy("col-md-4","实收服务费","servicePaidup",false))));
+		serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id','hoServiceMoney'));
+		holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader,holonomyBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyHeader,serviceMoneyBody)));
+		$('<div></div>').addClass('hr col-md-12').appendTo(holonomyDiv);
+		$('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
+		holonomyDiv.appendTo(mainDiv);
+
+		com.post(api.decoration.queryDecorationHolonomy,{"decorationHolonomy.decorationOrder.orderId": orederId},function (res) {
+
+				res = res.decorationHolonomy;
+
+				$('#projectPrice').html(checkNull(res.projectPrice + res.managePrice));
+				$('#managePrice').html(checkNull(res.managePrice));
+				$('#materialPrice').html(checkNull(res.materialPrice));
+				$('#servicePrice').html(checkNull(res.servicePrice));
+				$('#materialPaidup').html(checkNull(res.materialPaidup));
+				$('#servicePaidup').html(checkNull(res.servicePaidup));
+
+		});
+
+		com.post(api.payment.queryServicePaymentByOrderId,{"servicePayment.decorationOrder.orderId":orederId},function (res) {
+			drawList(res.servicePayments);
+		})
+
+		function drawList(data){
+			var $tableWrap = $('#hoServiceMoney');
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+			$.each(data, function(i, v) {console.log(v)
+				var serviceReceipt = v.serviceReceipt;
+
+				var $liLine = $('<li></li>').addClass('item-orange clearfix');
+				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.type == 0 ? "收款":"退款"));
+				var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+				var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+
+				var propertyArr = [
+					["预付款金额:", v.advanceMoney, "grey"],
+					["服务费:", v.serviceMoney, "grey"],
+					["收款时间:", v.createTime, "grey"],
+					["状态:", v.status == 0 ? "初始": (v.status == 1 ? "已收款": "已确认"), "red"]
+				];
+
+				$.each(propertyArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulProperty);
+				});
+
+				var styleArr = [];
+
+				serviceReceipt.cash != null && serviceReceipt.cash != "0" ? styleArr.push(["现金:", serviceReceipt.cash, "grey"]) : true;
+				serviceReceipt.bank != null && serviceReceipt.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
+					var info = bank + ", ";
+					var _s = bankInfo.split('#');
+					for(var i=1;i<_s.length-1;i++){
+						var _i = _s[i].split('|');
+						info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					}
+
+					return info
+				})(serviceReceipt.bank, serviceReceipt.bankInfo), "grey"]) : true;
+				serviceReceipt.checkv != null && serviceReceipt.checkv != "0" ? styleArr.push(["转账:", serviceReceipt.checkv, "grey"]) : true;
+				serviceReceipt.installment != null && serviceReceipt.installment != "0" ? styleArr.push(["分期:", serviceReceipt.installment, "grey"]) : true;
+				serviceReceipt.accounts != null && serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", serviceReceipt.accounts, "grey"]) : true;
+				serviceReceipt.advance != null && serviceReceipt.advance != "0" ? styleArr.push(["预付款:", serviceReceipt.advance, "grey"]) : true;
+				serviceReceipt.coupon != null && serviceReceipt.coupon != "0" ? styleArr.push(["优惠券:", serviceReceipt.coupon + serviceReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
+
+				$.each(styleArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulStyle);
+				});
+
+				$liLine.append($h4).append($ulProperty).append($ulStyle);
+				$liLine.appendTo($ul);
+			});
+
+
+			$ul.appendTo($tableWrap);
+		}
+
+		function createDivForHolonomy(inclass,string,id,isleft) {
+			return $("<div></div>").addClass(inclass).css(isleft ? {"border-left":"solid 1px #e3e3e3"}:{"border-left":"solid 1px #e3e3e3","border-right":"solid 1px #e3e3e3"}).append($("<h5></h5>").addClass('bigger-110 center').html(string)).append($("<h2></h2>").addClass('oid bigger  center').append($('<b></b>').addClass('blue').attr('id',id).html(0)));
+		}
+
+		function checkNull(num) {
+			return num == null ? 0:num;
+		}
 	}, init: function(){
 		
 		com.post(api.common.queryReceiptType, {}, function(res){

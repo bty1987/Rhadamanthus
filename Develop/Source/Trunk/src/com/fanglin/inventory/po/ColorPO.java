@@ -23,13 +23,13 @@ public class ColorPO implements Serializable{
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
-	private Long cid;
+	private long cid;
 	
-	private Long gid;
+	private long gid;
 	
 	private String name;
 	
-	private Short status;
+	private short status;
 	
 	public ColorPO() {
 		super();
@@ -43,20 +43,20 @@ public class ColorPO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
-	public Long getCid() {
+	public long getCid() {
 		return cid;
 	}
 
-	public void setCid(Long cid) {
+	public void setCid(long cid) {
 		this.cid = cid;
 	}
 	
 	@Column(name = "gid")
-	public Long getGid() {
+	public long getGid() {
 		return gid;
 	}
 
-	public void setGid(Long gid) {
+	public void setGid(long gid) {
 		this.gid = gid;
 	}
 	
@@ -70,11 +70,11 @@ public class ColorPO implements Serializable{
 	}
 	
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

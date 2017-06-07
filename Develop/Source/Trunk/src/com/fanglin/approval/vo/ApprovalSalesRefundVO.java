@@ -12,7 +12,15 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 
 	private Float refund;
 
-	private short type;
+	private Short type;
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
 
 	public Long getAsrid() {
 		return asrid;
@@ -46,12 +54,6 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 		this.refund = refund;
 	}
 
-	public short getType() {
-		return type;
-	}
 
-	public void setType(short type) {
-		this.type = type;
-	}
 
 }

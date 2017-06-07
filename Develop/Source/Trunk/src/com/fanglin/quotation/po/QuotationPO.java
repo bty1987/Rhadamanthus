@@ -50,6 +50,10 @@ public class QuotationPO implements Serializable {
 	
 	private UserPO createUser;
 	
+	private String content;
+
+	private float undisPrice;
+	
 	private float discount;
 	
 	private float totalPrice;
@@ -57,6 +61,14 @@ public class QuotationPO implements Serializable {
 	private int status;
 	
 	private short type;
+	
+	private float basicPrice;
+	
+	private float setpackage;
+	
+	private float qdiff;
+	
+	private float mdiff;
 
 	private int saveStatus;
 	
@@ -70,16 +82,8 @@ public class QuotationPO implements Serializable {
 	
 	private float trafficPrice;
 	
-	private float setpackage;
-	
-	private float basicPrice;
-	
-	private float qdiff;
-	
-	private float mdiff;
-	
-	private String content;
-	
+	private float trafficRate;
+
 	public QuotationPO(long qid){
 		this.qid = qid;
 	}
@@ -117,7 +121,8 @@ public class QuotationPO implements Serializable {
 	public void setCreateUser(UserPO createUser){
 		this.createUser = createUser;
 	}
-
+	
+	@Column(name = "quotationName")
 	public String getQuotationName(){
 		return quotationName;
 	}
@@ -125,7 +130,8 @@ public class QuotationPO implements Serializable {
 	public void setQuotationName(String quotationName){
 		this.quotationName = quotationName;
 	}
-
+	
+	@Column(name = "decorationStyle")
 	public String getDecorationStyle(){
 		return decorationStyle;
 	}
@@ -133,7 +139,8 @@ public class QuotationPO implements Serializable {
 	public void setDecorationStyle(String decorationStyle){
 		this.decorationStyle = decorationStyle;
 	}
-
+	
+	@Column(name = "createTime")
 	public Timestamp getCreateTime(){
 		return createTime;
 	}
@@ -141,15 +148,17 @@ public class QuotationPO implements Serializable {
 	public void setCreateTime(Timestamp createTime){
 		this.createTime = createTime;
 	}
-
+	
+	@Column(name = "content")
 	public String getContent(){
 		return content;
 	}
-
+	
 	public void setContent(String content){
 		this.content = content;
 	}
-
+	
+	@Column(name = "discount")
 	public float getDiscount(){
 		return discount;
 	}
@@ -157,7 +166,8 @@ public class QuotationPO implements Serializable {
 	public void setDiscount(float discount){
 		this.discount = discount;
 	}
-
+	
+	@Column(name = "status")
 	public int getStatus(){
 		return status;
 	}
@@ -165,7 +175,8 @@ public class QuotationPO implements Serializable {
 	public void setStatus(int status){
 		this.status = status;
 	}
-
+	
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -173,31 +184,35 @@ public class QuotationPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-
-	public void setTotalPrice(float totalPrice){
-		this.totalPrice = totalPrice;
-	}
-
+	
+	@Column(name = "totalPrice")
 	public float getTotalPrice(){
 		return totalPrice;
 	}
 
+	public void setTotalPrice(float totalPrice){
+		this.totalPrice = totalPrice;
+	}
+	
+	@Column(name = "saveStatus")
+	public int getSaveStatus(){
+		return saveStatus;
+	}
+	
 	public void setSaveStatus(int saveStatus){
 		this.saveStatus = saveStatus;
 	}
-
-	public int getSaveStatus(){
-		return saveStatus;
+	
+	@Column(name = "calFlag")
+	public int getCalFlag(){
+		return calFlag;
 	}
 
 	public void setCalFlag(int calFlag){
 		this.calFlag = calFlag;
 	}
-
-	public int getCalFlag(){
-		return calFlag;
-	}
-
+	
+	@Column(name = "latexCut")
 	public float getLatexCut() {
 		return latexCut;
 	}
@@ -205,7 +220,8 @@ public class QuotationPO implements Serializable {
 	public void setLatexCut(float latexCut) {
 		this.latexCut = latexCut;
 	}
-
+	
+	@Column(name = "managePrice")
 	public float getManagePrice() {
 		return managePrice;
 	}
@@ -213,7 +229,8 @@ public class QuotationPO implements Serializable {
 	public void setManagePrice(float managePrice) {
 		this.managePrice = managePrice;
 	}
-
+	
+	@Column(name = "manageRate")
 	public float getManageRate() {
 		return manageRate;
 	}
@@ -221,7 +238,8 @@ public class QuotationPO implements Serializable {
 	public void setManageRate(float manageRate) {
 		this.manageRate = manageRate;
 	}
-
+	
+	@Column(name = "trafficPrice")
 	public float getTrafficPrice() {
 		return trafficPrice;
 	}
@@ -229,7 +247,8 @@ public class QuotationPO implements Serializable {
 	public void setTrafficPrice(float trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
-
+	
+	@Column(name = "setpackage")
 	public float getSetpackage() {
 		return setpackage;
 	}
@@ -237,7 +256,8 @@ public class QuotationPO implements Serializable {
 	public void setSetpackage(float setpackage) {
 		this.setpackage = setpackage;
 	}
-
+	
+	@Column(name = "basicPrice")
 	public float getBasicPrice() {
 		return basicPrice;
 	}
@@ -245,21 +265,41 @@ public class QuotationPO implements Serializable {
 	public void setBasicPrice(float basicPrice) {
 		this.basicPrice = basicPrice;
 	}
-
+	
+	@Column(name = "qdiff")
 	public float getQdiff() {
 		return qdiff;
 	}
 
 	public void setQdiff(float qdiff) {
 		this.qdiff = qdiff;
-	}
-
+	}	
+	
+	@Column(name = "mdiff")
 	public float getMdiff() {
 		return mdiff;
 	}
 
 	public void setMdiff(float mdiff) {
 		this.mdiff = mdiff;
+	}
+	
+	@Column(name = "undisPrice")
+	public float getUndisPrice() {
+		return undisPrice;
+	}
+
+	public void setUndisPrice(float undisPrice) {
+		this.undisPrice = undisPrice;
+	}
+	
+	@Column(name = "trafficRate")
+	public float getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(float trafficRate) {
+		this.trafficRate = trafficRate;
 	}
 
 }

@@ -92,7 +92,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		Map<String, String> payments = new HashMap<String, String>();
 		
 		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			payments.put(decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney().toString());
+			payments.put(decorationPaymentPO.getPaymentType(), Float.valueOf(decorationPaymentPO.getReferMoney()).toString());
 		}
 		
 		decorationContractVO.setPayments(payments);

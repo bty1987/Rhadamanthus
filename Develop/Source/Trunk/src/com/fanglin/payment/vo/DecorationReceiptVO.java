@@ -8,7 +8,7 @@ public class DecorationReceiptVO implements java.io.Serializable {
 
 	private Long drId;
 	
-	private short receiptType;
+	private Short receiptType;
 	
 	private String collectUserId;
 	
@@ -64,11 +64,11 @@ public class DecorationReceiptVO implements java.io.Serializable {
 		this.drId = drId;
 	}
 
-	public short getReceiptType() {
+	public Short getReceiptType() {
 		return receiptType;
 	}
 
-	public void setReceiptType(short receiptType) {
+	public void setReceiptType(Short receiptType) {
 		this.receiptType = receiptType;
 	}
 

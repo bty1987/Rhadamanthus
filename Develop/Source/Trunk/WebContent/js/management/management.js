@@ -223,7 +223,7 @@ jQuery(function($) {
 			"decorationOrderId": $("#newOrderId").val(),
 		};
 		
-		com.post(api.common.changeDecorationOrderForOrderId, options, function(res){
+		com.post(api.decoration.changeDecorationOrderForOrderId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -242,7 +242,7 @@ jQuery(function($) {
 			"dateTime": $("#orderDate").val() + " " + $("#orderTime").val(),
 		};
 		
-		com.post(api.common.changeDecorationOrderForTime, options, function(res){
+		com.post(api.decoration.changeDecorationOrderForTime, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -260,7 +260,7 @@ jQuery(function($) {
 			"decorationOrder.versionId": $("#versionId").val(),
 		};
 		
-		com.post(api.common.changeDecorationOrderForVersionId, options, function(res){
+		com.post(api.decoration.changeDecorationOrderForVersionId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -333,7 +333,7 @@ jQuery(function($) {
 			"decorationOrder.status": $("#orderStatus").val(),
 		};
 		
-		com.post(api.common.changeDecorationOrderForStatus, options, function(res){
+		com.post(api.decoration.changeDecorationOrderForStatus, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -369,7 +369,7 @@ jQuery(function($) {
 			"decorationOrder.orderId": $("#orderIdForQuotationTime").val(),
 		};
 		
-		com.post(api.common.subDecorationOrderForQuotationTime, options, function(res){
+		com.post(api.decoration.subDecorationOrderForQuotationTime, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		

@@ -28,7 +28,7 @@ public class DecorationContractPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433501162L;
 
-	private Long autoId;
+	private long autoId;
 	
 	private DecorationOrderPO decorationOrderPO;
 	
@@ -38,7 +38,7 @@ public class DecorationContractPO implements Serializable {
 	
 	private Timestamp signTime;
 	
-	private Integer workingDuration;
+	private int workingDuration;
 	
 	private Timestamp startTime;
 	
@@ -53,11 +53,11 @@ public class DecorationContractPO implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	public Long getAutoId(){
+	public long getAutoId(){
 		return autoId;
 	}
 
-	public void setAutoId(Long autoId){
+	public void setAutoId(long autoId){
 		this.autoId = autoId;
 	}
 	
@@ -118,11 +118,11 @@ public class DecorationContractPO implements Serializable {
 		return startTime;
 	}
 	
-	public void setWorkingDuration(Integer workingDuration){
+	public void setWorkingDuration(int workingDuration){
 		this.workingDuration = workingDuration;
 	}
 	
-	public Integer getWorkingDuration(){
+	public int getWorkingDuration(){
 		return workingDuration;
 	}
 

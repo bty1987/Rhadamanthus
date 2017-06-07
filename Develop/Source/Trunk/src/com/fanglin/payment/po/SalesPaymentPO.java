@@ -29,19 +29,19 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_SALES_VILLAGE_VILLAGENAME_STR = "village.villageName";
 	
-	public static final Short COLUMN_SALES_INITIALSTATUS_INT = 0;            //销售单初始状态
+	public static final short COLUMN_SALES_INITIALSTATUS_INT = 0;            //销售单初始状态
 	
-	public static final Short COLUMN_SALES_PAIDFORSTATUS_INT = 1;            //销售单已收款状态
+	public static final short COLUMN_SALES_PAIDFORSTATUS_INT = 1;            //销售单已收款状态
 	
-	public static final Short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;          //销售单已确认状态
+	public static final short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;          //销售单已确认状态
 	
-	public static final Short COLUMN_DTYPE_INT = 7;                          //定金退款
+	public static final short COLUMN_DTYPE_INT = 7;                          //定金退款
 	
-	public static final Short COLUMN_BTYPE_INT = 5;                          //补款退款
+	public static final short COLUMN_BTYPE_INT = 5;                          //补款退款
 	
-	public static final Short COLUMN_JTYPE_INT = 6;                          //券退款
+	public static final short COLUMN_JTYPE_INT = 6;                          //券退款
 	
-	public static final Short COLUMN_RTYPE_INT = 4;                          //退款
+	public static final short COLUMN_RTYPE_INT = 4;                          //退款
 	
 	public static final String COLUMN_SALES_STATUS_STR = "status";        
 	
@@ -53,13 +53,13 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_CONFIRMTIME_STR ="salesReceipt.confirmTime";
 	
-	private Long spid;                    //款项ID
+	private long spid;                    //款项ID
 
 	private SalesPO sales;                //销售单ID
 
-	private Short type;                   //款项类型
+	private short type;                   //款项类型
 
-	private Short status;                 //状态
+	private short status;                 //状态
 
 	private String category;              //品类
 
@@ -69,7 +69,7 @@ public class SalesPaymentPO  implements Serializable{
 	
 	private String createrName;           //创建人姓名
 
-	private Float referMoney;             //应收金额
+	private float referMoney;             //应收金额
 	
 	private SalesReceiptPO salesReceipt;  //收据ID
 
@@ -93,11 +93,11 @@ public class SalesPaymentPO  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY) 
 	@Column(name = "spid")
-	public Long getSpid() {
+	public long getSpid() {
 		return spid;
 	}
 
-	public void setSpid(Long spid) {
+	public void setSpid(long spid) {
 		this.spid = spid;
 	}
 
@@ -112,20 +112,20 @@ public class SalesPaymentPO  implements Serializable{
 	}
 
 	@Column(name = "type")
-	public Short getType() {
+	public short getType() {
 		return type;
 	}
 
-	public void setType(Short type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -167,11 +167,11 @@ public class SalesPaymentPO  implements Serializable{
 	}
 
 	@Column(name = "referMoney")
-	public Float getReferMoney() {
+	public float getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(float referMoney) {
 		this.referMoney = referMoney;
 	}
 

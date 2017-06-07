@@ -24,13 +24,13 @@ public class FormatPO implements Serializable{
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
-	private Long fid;
+	private long fid;
 	
-	private Long gid;
+	private long gid;
 	
 	private String info;
 	
-	private Short status;
+	private short status;
 	
 	public FormatPO() {
 		super();
@@ -44,20 +44,20 @@ public class FormatPO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "fid")
-	public Long getFid() {
+	public long getFid() {
 		return fid;
 	}
 
-	public void setFid(Long fid) {
+	public void setFid(long fid) {
 		this.fid = fid;
 	}
 	
 	@Column(name = "gid")
-	public Long getGid() {
+	public long getGid() {
 		return gid;
 	}
 
-	public void setGid(Long gid) {
+	public void setGid(long gid) {
 		this.gid = gid;
 	}
 	
@@ -71,11 +71,11 @@ public class FormatPO implements Serializable{
 	}
 	
 	@Column(name = "status")
-	public Short getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 	

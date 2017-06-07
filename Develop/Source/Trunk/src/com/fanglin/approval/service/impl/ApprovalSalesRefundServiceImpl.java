@@ -35,6 +35,7 @@ import com.fanglin.inventory.vo.SalesItemVO;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -130,18 +131,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(260021 , "销售单不存在");
 		}
 		
-		salesPO.setStatus(approvalSalesRefundVO.getType());
-		salesDao.update(salesPO);
-		
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentsBySid(sid);
-		
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			
-			if (salesPaymentPO.getStatus() != 2) {
-				throw new FLException(240004, "正在审批中,不能提交新审批");
-			}
-			
-		}
 		
 		approvalPO = new ApprovalPO();
 		
@@ -196,18 +185,12 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	// 批准销售退款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int approvalForSalesRefund(ApprovalVO approvalVO,String userId) throws FLException { 
+	public int approvalForSalesRefund(ApprovalVO approvalVO) throws FLException { 
 		
 		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalVO.getAid());
 		
 		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
-		}
-		
-		SalesPO salesPO = salesDao.querySalesBySid(approvalSalesRefundPO.getSid());
-
-		if (salesPO == null) {
-			throw new FLException(260021 , "销售单不存在");
 		}
 		
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
@@ -216,9 +199,11 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(240009 , "审批信息不存在");
 		}
 		
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
-		
-		approvalDao.update(approvalPO);
+		SalesPO salesPO = salesDao.querySalesBySid(approvalSalesRefundPO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021 , "销售单不存在");
+		}
 		
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 		
@@ -233,11 +218,12 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		
 		salesPaymentDao.save(salesPaymentPO);
 		
+		UserPO userPO = userDao.get(approvalPO.getSender().getUserId());
 		RefundsPO refundsPO = new RefundsPO();
 		
 		refundsPO.setSid(salesPO.getSid());
 		refundsPO.setSpid(salesPaymentPO.getSpid());
-		refundsPO.setCreater(userDao.get(userId));
+		refundsPO.setCreater(userPO);
 		refundsPO.setTotal(approvalSalesRefundPO.getRefund());
 		refundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		refundsPO.setStatus(RefundsPO.STATUS_TYPE_REFUNDS_INT);

@@ -18,4 +18,8 @@ public interface PurchaseItemService {
 	public List<PurchaseItemVO> queryPurchaseItemByPid(PurchaseVO purchaseVO);
 	
 	public List<PurchaseItemVO> queryPurchaseItemByPids(List<Long> pids);
+	
+	public List<PurchaseItemVO> queryPurchaseItemBySiid(PurchaseItemVO purchaseItemVO);
+	
+	public List<PurchaseItemVO> queryPurchaseItemBySiids(List<Long> siids);
 }

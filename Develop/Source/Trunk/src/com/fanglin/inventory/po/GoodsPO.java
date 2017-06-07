@@ -37,6 +37,10 @@ public class GoodsPO implements java.io.Serializable {
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
+	public static final short TYPE_GOODS_INT = 0;
+	
+	public static final short TYPE_SUIT_INT = 1;
+	
 	private long gid;
 	
 	private String no;
@@ -53,10 +57,14 @@ public class GoodsPO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
+	private float pieceNum;
+	
 	private AssisTypePO assisType;
 	
+	private short type;
+	
 	private short status;
-
+	
 	public GoodsPO() {
 		super();
 	}
@@ -135,6 +143,15 @@ public class GoodsPO implements java.io.Serializable {
 	public void setMeasurementUnit(String measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
+	
+	@Column(name = "pieceNum")
+	public float getPieceNum() {
+		return pieceNum;
+	}
+
+	public void setPieceNum(float pieceNum) {
+		this.pieceNum = pieceNum;
+	}
 
 	@Column(name = "status")
 	public short getStatus() {
@@ -162,6 +179,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
+	}
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }

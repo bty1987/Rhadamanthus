@@ -57,7 +57,7 @@ $(function(){
 			});
 
 			$btnAddReduce.click(function(){
-				viewAddReduceIndex(v.orderId);
+				viewAddReduceIndex(v.orderId,v.type);
 			});
 
 			$btnRe.click(function(){
@@ -89,10 +89,11 @@ $(function(){
 		com.switchPage(api.index.supervisionDetailIndex.url);
 	}
 
-	function viewAddReduceIndex(orderId){
+	function viewAddReduceIndex(orderId, type){
 		params.decorationOrderId = orderId;
-		params.historyOrderPage = api.index.supervisionIndex.url;
-		com.switchPage(api.index.addReduceIndex.url);
+	    params.decorationOrderType = type;
+	    params.historyOrderPage = api.index.supervisionIndex.url;
+	    com.switchPage(api.index.addReduceIndex.url);
 	}
 
 	function viewReworkIndex(orderId){
