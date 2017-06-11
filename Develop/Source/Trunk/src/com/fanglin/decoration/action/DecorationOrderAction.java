@@ -172,6 +172,14 @@ public class DecorationOrderAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "changeDecorationOrderForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationOrderForStatus() throws FLException{
+		
+		decorationOrderService.changeDecorationOrderForStatus(decorationOrder, queryUserId());
+		
+		return SUCCESS;
+	}
 
 	@Action(value = "obsoleteDecorationOrder", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String obsoleteDecorationOrder() throws FLException{
@@ -191,13 +199,6 @@ public class DecorationOrderAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkDecorationOrderForExist", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkDecorationOrderExist(){
-		
-		decorationOrderService.checkDecorationOrderExist(decorationOrder);
-		
-		return SUCCESS;
-	}
 	
 	@Action(value = "changeDecorationOrderForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changeDecorationOrderForAdvance() throws FLException{

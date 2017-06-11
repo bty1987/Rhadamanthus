@@ -286,7 +286,7 @@
 			</div>
 
 			<!--折扣设置弹窗-->
-			<div class="modal fade" id="discountModal" tabindex="-1" data-backdrop="static">
+			<div class="modal fade" id="discountModal" tabindex="-1" data-backdrop="static" >
 				<div class="modal-dialog">
 					<div class="modal-content col-md-12">
 						<div class="modal-header">
@@ -317,46 +317,27 @@
 			</div>
 			
 			<!-- 计算总价信息 -->
-			<div class="modal fade" id="calculateTotalFeeModal" tabindex="-1" data-backdrop="static">
+			<div class="modal fade " id="calculateTotalFeeModal" tabindex="-1" data-backdrop="static">
                 <div class="modal-dialog">
-                    <div class="modal-content col-md-12">
+                    <div class="modal-content col-md-12" style="position: absolute;width: 1100px;left: 50%;margin-left: -500px; ">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">
                                 <span>&times;</span><span class="sr-only">Close</span>
                             </button>
                             <h4 class="modal-title">总价计算</h4>
                         </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="discount">折扣</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="calDiscount" class="col-xs-10 col-md-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="discount">车运费</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="calTrafficPrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="discount">管理费</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="calManagePrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="discount">总价</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="calTotalPrice" class="col-xs-10 col-md-5" value="0.0" readonly="readonly">
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                            </form>
+                        <div class="modal-body" >
+							<div class="col-md-12" style="margin-bottom: 10px">
+								<label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
+								<div class="col-md-9">
+									<input type="text" id="calDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+								</div>
+							</div>
+							<div style="height: 40px;"></div>
+							<div class="fl-quo-cal">
+
+							</div>
+
                         </div>
 
                         <div class="modal-footer">

@@ -27,6 +27,8 @@ public class AssisOrderDaoImpl extends DaoImpl<AssisOrderPO> implements AssisOrd
 		
 		queryFilterExcute(query, filters);
 		
+		query.desc("aoid");
+		
 		return query.list();
 	}
 

@@ -7,7 +7,7 @@ jQuery(function($) {
 		reduceItems: [],
 	};
 	
-	params.server = window.server;
+	Api().init('../../js/api/');	params.server = window.server;
 	params.authentication = window.authentication;
 	
 	var p = window.location.search.substr(1);

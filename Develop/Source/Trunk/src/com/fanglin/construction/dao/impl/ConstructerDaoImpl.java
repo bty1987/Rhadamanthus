@@ -21,12 +21,12 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConstructerPO> queryConstructerByOrderId(String orderId,int schedule) {
+	public List<ConstructerPO> queryConstructerByOrderId(String orderId,Integer schedule) {
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId))
 				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
-		if (schedule > 0) {
+		if (schedule != null) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
 		return c.list();
@@ -34,12 +34,12 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConstructerPO> queryConstructerByCsId(long csId, int schedule) {
+	public List<ConstructerPO> queryConstructerByCsId(long csId, Integer schedule) {
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_CSID_STR, csId))
 				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
-		if (schedule > 0) {
+		if (schedule != null) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
 		return c.list();

@@ -1,4 +1,4 @@
-package com.fanglin.approval.service.impl;
+﻿package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,7 +158,21 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 			approvalManifestDBItemDao.save(approvalManifestDBItemPO);
 			
 		}
-
+		List<ApprovalManifestDBItemPO> approvalManifestDBItemPOs = approvalManifestDBItemDao.queryApprovalManifestDBItemByAmdbid(approvalManifestDBPO.getAmdbid());
+		if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
+			throw new FLException(260007, "货单无商品信息");
+		}
+		for(ApprovalManifestDBItemPO approvalManifestDBItemPO: approvalManifestDBItemPOs){
+			long gid = approvalManifestDBItemPO.getGoods().getGid();
+			long cid = approvalManifestDBItemPO.getColor().getCid();
+			long fid = approvalManifestDBItemPO.getFormat().getFid();
+		    float num = approvalManifestDBItemPO.getNum();
+		    
+		    if(approvalManifestDBItemPO.getOutstorehouse() != null){
+		    	long oshId = approvalManifestDBItemPO.getOutstorehouse().getShId();
+			    goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId,num);	
+		    }
+		}
 		return 0;
 	}
 
@@ -184,13 +198,10 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		List<ApprovalManifestDBItemPO> approvalManifestDBItemPOs = approvalManifestDBItemDao.queryApprovalManifestDBItemByAmdbid(approvalManifestDBPO.getAmdbid());
 
-		
 		if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
-		
-
-		
+	
 		float total = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
@@ -211,7 +222,6 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
 		manifestPO.setAttachment(approvalManifestDBPO.getAttachment());
-		
 		
 		manifestDao.save(manifestPO);
 		
@@ -247,7 +257,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 				
 				long oshId = approvalManifestDBItemPO.getOutstorehouse().getShId();
 				
-				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
+				manifestItemPO.setOutstorehouse(approvalManifestDBItemPO.getOutstorehouse());
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
 				total = Arith.sub(total, manifestItemPO.getUnitPrice());
@@ -261,8 +271,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		manifestPO.setTotal(total);
 		manifestPO.setComment(approvalManifestDBPO.getComment());
 		purchaseAmountService.updatePurchaseAmount(month, total);
-		
-		
+
 		return 0;
 	}
 
@@ -285,7 +294,22 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	        approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 	
 			approvalDao.update(approvalPO);
-			
+			List<ApprovalManifestDBItemPO> approvalManifestDBItemPOs = approvalManifestDBItemDao.queryApprovalManifestDBItemByAmdbid(approvalManifestDBPO.getAmdbid());
+			if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
+				throw new FLException(260007, "货单无商品信息");
+			}
+			for(ApprovalManifestDBItemPO approvalManifestDBItemPO: approvalManifestDBItemPOs){
+				long gid = approvalManifestDBItemPO.getGoods().getGid();
+				long cid = approvalManifestDBItemPO.getColor().getCid();
+				long fid = approvalManifestDBItemPO.getFormat().getFid();
+			    float num = approvalManifestDBItemPO.getNum();
+			    
+			    if(approvalManifestDBItemPO.getOutstorehouse() != null){
+			    	long oshId = approvalManifestDBItemPO.getOutstorehouse().getShId();
+				    goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, -num);	
+			    }
+			}
+	
 		return 0;
 	}
 

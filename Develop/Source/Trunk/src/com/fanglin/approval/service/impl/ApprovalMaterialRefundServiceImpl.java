@@ -318,7 +318,6 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 				}else if(!materialSubOrderItemPackageNameList.contains(packageName)){ // 套餐
 					// 利润 : 退款总价 * 预结算点位 , 成本 : 退款总价 * (1 - 预结算点位)
 					refundMoney = Arith.sub(refundMoney, Arith.mul(total, prePoint));
-					
 					materialSubOrderItemPackageNameList.add(packageName);
 				}
 			}else if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){ // 结算状态计算利润
@@ -375,6 +374,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	@Transactional(rollbackFor=Exception.class)
 	public int refuseForMaterialRefund(ApprovalPO approvalPO) throws FLException {
 		
+		float dis = 0;
+		float disTotal = 0;
+		
 		ApprovalMaterialRefundPO approvalMaterialRefundPO = approvalMaterialRefundDao.queryApprovalMaterialRefundByAId(approvalPO.getAid());
 		
 		if(approvalMaterialRefundPO == null){
@@ -399,6 +401,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			}
 			
 			String packageName = materialSubOrderItemPO.getPackageName();
+			dis = Arith.mul(materialSubOrderItemPO.getSalePrice(),approvalMaterialRefundItemPO.getNum());
+			disTotal = Arith.add(dis, disTotal);
 			
 			materialSubOrderItemPO.setNum(Arith.add(materialSubOrderItemPO.getNum(), approvalMaterialRefundItemPO.getNum()));
 			materialSubOrderItemPO.setTotal(Arith.add(materialSubOrderItemPO.getTotal(), approvalMaterialRefundItemPO.getTotal()));
@@ -415,7 +419,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 				}
 			}
 		}
-		
+		materialSubOrderPO.setDistotal(Arith.add(materialSubOrderPO.getDistotal(), disTotal));
 		return 0;
 	}
 

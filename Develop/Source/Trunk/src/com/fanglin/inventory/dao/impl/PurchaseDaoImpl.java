@@ -25,6 +25,8 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
 
 		queryFilterExecute(query, filters);
+		
+		query.desc("pid");
 
 		return query.list();
 	}

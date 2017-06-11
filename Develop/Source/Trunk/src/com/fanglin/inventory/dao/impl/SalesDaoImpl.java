@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		
 		queryFilterExcute(query, filters);
 		
+		query.desc("sid");
+		
 		return query.list();
 	}
 
@@ -46,18 +49,20 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				
 				query.alias("instorer", "instorer");
 				query.alias("salesman", "salesman");
+				query.alias("dept", "dept");
 				
 				if(SalesPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
+					
 				}else if(SalesPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
+					
 				}
 				else if("currentName".equals(field)){
 					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
 				}else if("userName".equals(field)){
 					query.add(query.getCriterion(SalesPO.COLUMN_SALESMANNAME_STR, data, op));
-				}
-					else if(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR.equals(field)){
+				}else if(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR.equals(field)){
 					
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
@@ -70,6 +75,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					
 					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, eTimestamp, "le"));
 					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, sTimestamp, "ge"));
+				}else if (SalesPO.COLIMN_DEPT_STR.equals(field)){
+					query.add(query.getCriterion(field, data, op));
 				}
 			}
 		}
