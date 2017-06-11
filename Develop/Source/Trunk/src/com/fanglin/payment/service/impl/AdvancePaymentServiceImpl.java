@@ -35,6 +35,7 @@ import com.fanglin.payment.po.AdvanceReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.vo.PaymentVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -55,6 +56,9 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	
 	@Autowired
 	private CustomerDao customerDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
@@ -157,6 +161,9 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		advanceReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_INIT_INT);
 		advanceReceiptPO.setCollectUser(new UserPO(paymentVO.getCollectUser().getUserId()));
+		UserPO userPO = userDao.get(paymentVO.getCollectUser().getUserId());
+		advanceReceiptPO.setCollectUserName(userPO.getUserName());
+		advanceReceiptPO.setConfirmUserName("");
 		
 		advanceReceiptDao.save(advanceReceiptPO);
 		

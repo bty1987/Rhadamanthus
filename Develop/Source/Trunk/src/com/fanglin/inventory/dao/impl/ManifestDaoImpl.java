@@ -38,6 +38,8 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 		
 		queryFilterExecute(query, filters);
 		
+		query.desc("mid");
+		
 		return query.list();
 	}
 

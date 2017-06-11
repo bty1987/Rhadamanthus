@@ -195,7 +195,12 @@ var QuotationDetail = (function(){
 			_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
 			
 			_total = utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee));
-			_dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
+			if(params.decorationOrderType == 2){
+				var dfee =  utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee,_transfee),_discount));
+				_dtotal = utils.changeThrDecimal(utils.accAdd(dfee, _dmanagefee));
+			}else{
+				_dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
+			}
 			
 			converyanceCost.find('.num .cell-wrap').text(_dtransfee);
 			manageCost.find('.num .cell-wrap').text(_dmanagefee);
@@ -1339,7 +1344,12 @@ var QuotationDetail = (function(){
 					_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(_totalfee, _transfee), _manageRate), _manageDiscount));
 					
 					_total = utils.changeThrDecimal(utils.accAdd( utils.accAdd(_totalfee , _transfee),  _managefee));
-					_dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
+					if(params.decorationOrderType == 2){
+						var dfee =  utils.changeThrDecimal(utils.accMul(utils.accAdd(_totalfee,_transfee),_discount));
+						_dtotal = utils.changeThrDecimal(utils.accAdd(dfee, _dmanagefee));
+					}else{
+						_dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
+					}
 					
 					converyanceCost.find('.num .cell-wrap').text(_transfee);
 					manageCost.find('.num .cell-wrap').text(_managefee);

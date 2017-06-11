@@ -51,7 +51,7 @@ $(function(){
 
 		com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
 			if(res.decorationContract == null || res.decorationContract.autoId == null){
-				$("#workingDuration").val("");
+				$("#workingDuration").val(0);
 				$("#startTime").val("");
 				$("#endTime").val("");
 				$("#additionalInfo").html("");
@@ -209,6 +209,7 @@ $(function(){
 		var viewDecorationQuotateIndex = function (decorationOrderId, type){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
 			decorationOrderPostData["decorationOrderType"] = type;
+			params.decorationOrderType = type;
 			com.switchPage(api.index.quotationIndex.url);
 		}
 		//回访
@@ -232,7 +233,7 @@ $(function(){
 			contract.decorationOrderId = decorationOrderId;
 			
 			com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId":contract.decorationOrderId}, function(res){
-				
+
 				var decorationContract = res.decorationContract;
 				
 	    		if(res.decorationContract == null || res.decorationContract.autoId == null){
@@ -240,7 +241,7 @@ $(function(){
 	    		}else{
 	    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId + "&time=" + params.loginTime);
 	    		}
-	    		
+
 	    		order.agreementModal.modal("show");
 	    	});
 		}

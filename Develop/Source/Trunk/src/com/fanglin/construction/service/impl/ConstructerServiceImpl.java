@@ -43,7 +43,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 //		通过订单编号获取施工人员信息 , 同时可以利用schedule获取具体施工环节人员信息
 //		如果schedule没有传值将返回订单编号对应的所有施工人员信息
 		String orderId = constructerVO.getOrderId();
-		int schedule = constructerVO.getSchedule();
+		Integer schedule = constructerVO.getSchedule();
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId,schedule);
 		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
@@ -59,7 +59,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 	@Override
 	public List<ConstructerVO> queryConstructerByCsId(ConstructerVO constructerVO) {
 		long csId = constructerVO.getCsId();
-		int schedule = constructerVO.getSchedule();
+		Integer schedule = constructerVO.getSchedule();
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCsId(csId,schedule);
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
@@ -126,7 +126,6 @@ public class ConstructerServiceImpl implements ConstructerService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteConstructer(ConstructerVO constructerVO) throws FLException {
-		
 		long cid = constructerVO.getCid();
 		ConstructerPO constructerPO = constructerDao.queryConstructerByCid(cid);
 

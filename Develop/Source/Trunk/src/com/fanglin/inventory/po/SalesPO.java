@@ -83,7 +83,9 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_FULLPAYTIME_RANGE_STR = "fullpayTimeRange";
 	
 	public static final String COLUMN_SID_STR ="sid";
-
+	
+	public static final String COLIMN_DEPT_STR ="dept.deptName";
+	
 	private long sid;
 	
 	private String no;

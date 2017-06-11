@@ -49,7 +49,6 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 
 	@Override
 	public List<MaterialSubOrderPO> pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId){
-		
 		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
 		
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_ORDERID_STR, orderId, "eq"));
@@ -65,7 +64,7 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 		
 		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
 		
-		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_BALANCESTATUS_STR, MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT, "eq"));
+		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_STATUS_STR, MaterialSubOrderPO.STATUS_TYPE_INIT_INT, "eq"));
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_FULLSTATUS_STR, MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT, "eq"));
 		
 		queryFilterExcute(query, filters);
