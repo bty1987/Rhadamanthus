@@ -308,7 +308,7 @@ jQuery(function($) {
     var hsearcher = new Searcher();
 
     hsearcher.init(["orderId", "designer", "village"], "hcondList", api.payment.pageServicePaymentForCollect, function(data){
-        hdisplayFunc.init('hresultList', data);
+    	hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "servicePaymentPostData", null, false, null, function(){
 		var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
 		var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
@@ -405,18 +405,24 @@ jQuery(function($) {
         if(servicePayment.baseModal.attr("ChargeType")==1){
 			$("#myModalLabel").text("付款信息");
 			$("#collectBtn").text("收款");
+			$("#serviceMoney").css("display","none");
             $("#referMoney").val("");
             $("#collectDes").val("");
         }else if(servicePayment.baseModal.attr("ChargeType")==2){
 			$("#myModalLabel").text("付款信息");
 			$("#collectBtn").text("收款");
-            $("#referMoney").val(v.servicePrice - v.servicePaidup);
-            $("#referMoney").attr("readonly","readonly");
+			$("#serviceMoney").css("display","block");
+			$("#sMoney").val(v.servicePrice - v.servicePaidup);
+			$("#sMoney").attr("readonly","readonly");
+			$("#referMoney").val("");
+			$("#collectDes").val("");
         }else if(servicePayment.baseModal.attr("ChargeType")==3){
             $("#myModalLabel").text("退款信息");
             $("#collectBtn").text("退款");
+			$("#serviceMoney").css("display","none");
             $("#referMoney").val(v.servicePaidup);
             $("#referMoney").attr("readonly","readonly");
+			$("#collectDes").val("");
         }
 
 
@@ -471,6 +477,14 @@ jQuery(function($) {
             com.showAlert(com.error, "当前实收款项总数与应收款项不等,请核实再进行提交!");
             return false;
         }
+
+		if(servicePayment.baseModal.attr("ChargeType")==2) {
+			var sMoney = $("#sMoney").val();
+			if (realMoney > sMoney) {
+				com.showAlert(com.error, "当前所收服务费多于剩余服务费，不能收款!");
+				return false;
+			}
+		}
 
 		var option = {
 

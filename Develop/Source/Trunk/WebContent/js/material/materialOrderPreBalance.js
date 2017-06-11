@@ -209,10 +209,16 @@ jQuery(function($) {
                 btn.find('i').remove();
                 var prepared = $('<i></i>').addClass('icon-ok bigger-110');
                 span.prepend(prepared);
+                //清楚数据显示
+				$.each($inputs,function (i,v) {
+					$(v).parent().parent().parent().remove();
+                });
+                com.showAlert(com.info,"完结成功");
                 searcher.doSearch();
             },function () {
                 btn.find('i').remove();
                 var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                com.showAlert(com.warning,"完结失败");
                 span.prepend(prepared);
             });
 		}else{

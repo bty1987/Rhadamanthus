@@ -159,37 +159,37 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
 		
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT://1
 				approvalCustomerService.approvalForCustomer(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
+			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT://2
 				approvalVillageService.approvalForVillage(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT://3
 				approvalOrderBelongService.approvalForOrderBelong(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT://4
 				approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT://5
 				approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT://6
 				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_OUTSIDE_REFUND_INT:
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_OUTSIDE_REFUND_INT://7
 				approvalMaterialOutsideRefundService.approvalForMaterialOutsideRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT://8
 				approvalActivityService.approvalForDecorationActivity(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT://9
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
 				approvalSalesRefundService.approvalForSalesRefund(approvalVO);
 				break;	
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
 				approvalManifestDBService.approvalManifestDB(approvalVO);
 				break;
 			
@@ -217,19 +217,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 		
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT://9
 				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT://6
 				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT://5
 				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
 				approvalSalesRefundService.refuseForSalesRefund(approvalVO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
 				approvalManifestDBService.refuseManifestDB(approvalVO);
 				break;
 			default:
