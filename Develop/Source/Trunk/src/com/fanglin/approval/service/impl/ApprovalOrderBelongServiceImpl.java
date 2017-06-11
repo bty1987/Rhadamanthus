@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @File Name		: ApprovalOrderBelongServiceImpl.java
  * @Package   	: com.fanglin.approval.service.impl
  * @Version		: 1.0
@@ -82,7 +82,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		StringBuffer newBelongUserName = new StringBuffer();
 		StringBuffer newBelongRate = new StringBuffer();
 		
-		double rateCount = 0l;
+		float rateCount = 0f;
 		int defaultCount = 0;
 		
 		String orderId = approvalOrderBelongVO.getOrderId();

@@ -117,10 +117,13 @@ jQuery(function(a) {
             $this = a(this);
             void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.clearValidator("#loginId", !0), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
                     "user.loginId": $this.val()
-                },
-                function(a) {
-                    a.user ? (com.showTips($this, "\u8be5\u7528\u6237\u540d\u5df2\u7ecf\u5b58\u5728", !0), user.repeatFlg = !0) : (com.clearValidator("#loginId", !0), user.repeatFlg = !1)
-                })
+                }, function(res) {
+                	user.repeatFlg = !0
+                	com.showTips($this, "\u8be5\u7528\u6237\u540d\u5df2\u7ecf\u5b58\u5728", !0);
+                }, function(res){
+                	user.repeatFlg = !1
+                	com.clearValidator("#loginId", !0);
+                });
         });
     user.items.deptSel = a("#deptSel");
     user.items.dutySel = a("#dutySel").chosen({

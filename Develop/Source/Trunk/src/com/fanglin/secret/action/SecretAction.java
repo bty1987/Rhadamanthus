@@ -11,6 +11,8 @@
 
 package com.fanglin.secret.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
+import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.secret.service.SecretService;
 
 @ParentPackage("base")
@@ -31,24 +34,44 @@ public class SecretAction extends BaseAction {
 	@Autowired
 	private SecretService secretService;
 	
-	private String orderId;
+	private String VZYKHFFK;
+	
+	private String FAKKGDAZ;
 	
 	private String OTCVCJSC;
+	
+	private List<DecorationOrderVO> AJIGRRVT;
 	
 	@Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String CVLIBHQMVWFSPQWU(){
 		
-		OTCVCJSC = secretService.CVLIBHQMVWFSPQWU(orderId);
+		OTCVCJSC = secretService.CVLIBHQMVWFSPQWU(VZYKHFFK);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String KGZPHFBAOKWVMWGW(){
+		
+		AJIGRRVT = secretService.KGZPHFBAOKWVMWGW(FAKKGDAZ);
 		
 		return SUCCESS;
 	}
 
-	public String getOrderId() {
-		return orderId;
+	public String getVZYKHFFK() {
+		return VZYKHFFK;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setVZYKHFFK(String vZYKHFFK) {
+		VZYKHFFK = vZYKHFFK;
+	}
+
+	public String getFAKKGDAZ() {
+		return FAKKGDAZ;
+	}
+
+	public void setFAKKGDAZ(String fAKKGDAZ) {
+		FAKKGDAZ = fAKKGDAZ;
 	}
 
 	public String getOTCVCJSC() {
@@ -57,6 +80,14 @@ public class SecretAction extends BaseAction {
 
 	public void setOTCVCJSC(String oTCVCJSC) {
 		OTCVCJSC = oTCVCJSC;
+	}
+
+	public List<DecorationOrderVO> getAJIGRRVT() {
+		return AJIGRRVT;
+	}
+
+	public void setAJIGRRVT(List<DecorationOrderVO> aJIGRRVT) {
+		AJIGRRVT = aJIGRRVT;
 	}
 	
 }

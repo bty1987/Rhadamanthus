@@ -3,10 +3,6 @@ var decorationOrderDetail = {
 	
 	customer:{},
 	village:{},
-	quotationItemListGrid: null,
-	quotationItemGridPager: null,
-	materialItemListGrid: null,
-	materialItemGridPager: null,
 	
 	quotationDetail:null,
 	decorationOrder:null,
@@ -233,7 +229,7 @@ function printFinanceTable(){
 				_sum = $value;
 				_preSum = 0;
 				
-				_manageRate = quotationFunctionAreaItem.unitPrice;
+				_manageRate = utils.accAdd(quotationFunctionAreaItem.unitPrice, decorationOrderDetail.quotation.notSalesmanRate);
 				
 				quotationFunctionAreaItem.unitPrice = $value;
 			}
