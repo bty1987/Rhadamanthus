@@ -3,37 +3,51 @@ package com.fanglin.salary.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
+import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.personel.vo.UserVO;
-
 public class WorkerSalaryVO  implements Serializable{
 	
 	private static final long serialVersionUID = -1896969348501581246L;
 
 	private Long wsId;
 	
-	private String orderId;
+	private DecorationOrderVO decorationOrder;
 	
 	private Long csId;
 	
 	private UserVO user;
 	
+	private  UserVO creater;
+	
 	private Timestamp createTime;
 	
-	private Timestamp balanceTime;
+	private  UserVO   approver;
+	
+	private Timestamp approveTime ;
 	
 	private Float salary;
 	
 	private Short type;
 	
+	private Short subtype ;
+	
 	private Short status;
+	
+	private Timestamp balanceTime;
+	
+	private String comment ;
 
 	public WorkerSalaryVO() {
 		super();
 	}
 
-	public WorkerSalaryVO(UserVO user) {
+
+	public WorkerSalaryVO(DecorationOrderVO decorationOrder, UserVO user,UserVO creater,UserVO approver) {
 		super();
+		this.decorationOrder = decorationOrder;
 		this.user = user;
+		this.creater = creater;
+		this.approver = approver;
 	}
 
 	public Long getWsId() {
@@ -44,14 +58,6 @@ public class WorkerSalaryVO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
 	public Long getCsId() {
 		return csId;
 	}
@@ -60,12 +66,38 @@ public class WorkerSalaryVO  implements Serializable{
 		this.csId = csId;
 	}
 
+
+	public DecorationOrderVO getDecorationOrder() {
+		return decorationOrder;
+	}
+
+	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
+		this.decorationOrder = decorationOrder;
+	}
+
 	public UserVO getUser() {
 		return user;
 	}
 
 	public void setUser(UserVO user) {
 		this.user = user;
+	}
+	
+
+	public UserVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserVO creater) {
+		this.creater = creater;
+	}
+
+	public UserVO getApprover() {
+		return approver;
+	}
+
+	public void setApprover(UserVO approver) {
+		this.approver = approver;
 	}
 
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
@@ -108,5 +140,30 @@ public class WorkerSalaryVO  implements Serializable{
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getApproveTime() {
+		return approveTime;
+	}
+
+	public void setApproveTime(Timestamp approveTime) {
+		this.approveTime = approveTime;
+	}
+
+	public Short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(Short subtype) {
+		this.subtype = subtype;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	} 
+	
 }

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.dao.SalesDao;
@@ -77,7 +76,21 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, sTimestamp, "ge"));
 				}else if (SalesPO.COLIMN_DEPT_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
+				}else if(SalesPO.COLIMN_FULLPAYTIME_STR.equals(field)){
+					
+					String sTime = data + " 00:00:00";
+					String eTime = data + " 23:59:59";
+					
+					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+					
+					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
+					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
+					
+					query.add(query.getCriterion(field, stimestamp, "ge"));
+					query.add(query.getCriterion(field, etimestamp, "le"));
 				}
+				
 			}
 		}
 	}

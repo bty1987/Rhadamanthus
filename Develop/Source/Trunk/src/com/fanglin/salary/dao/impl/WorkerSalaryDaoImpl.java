@@ -1,12 +1,15 @@
 package com.fanglin.salary.dao.impl;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
@@ -17,7 +20,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
 		queryFilterExcute(query, filters);
-		
+
+	
 		return query.list();
 	}
 
@@ -54,18 +58,56 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		
+	
+		
+		
+		
+		
 		if (filters != null) {
 			for (Filter filter : filters) {
+				
+				
 				String filet = filter.getField();
-				String data = filter.getData();
+				String data =filter.getData();
 				String op = filter.getOp();
-				query.alias("user", "user");
-				if (WorkerSalaryPO.ORDERID_STR.equals(filet)) {
-					query.add(query.getCriterion(WorkerSalaryPO.ORDERID_STR,data, op));
-				}  
+				
 				if ("userName".equals(filet)) {
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_USER_USERNAME, data, op));
+						query.alias("user", "user");
+						query.add(query.getCriterion("user.userName", data, op));
 				}
+				
+				if ("orderId".equals(filet)) {
+					query.alias("decorationOrder", "decorationOrder");
+					query.add(query.getCriterion("decorationOrder.orderId", data, op));
+				} 
+				
+				
+				if ("duty".equals(filet)) {
+					query.alias("user", "user");
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_USER_USERDUTY, data, op));
+				}
+				
+				if("status".equals(filet)){
+					query.add(query.getCriterion(WorkerSalaryPO.STATUS_INIT_STRA, Short.parseShort(data), op));
+				}
+				
+				
+				 if("approveTime".equals(filter.getField())){
+					
+					
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+					
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+					
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+					
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, eTimestamp, "le"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, sTimestamp, "ge"));
+				}
+			
 			}
 		}
 	}

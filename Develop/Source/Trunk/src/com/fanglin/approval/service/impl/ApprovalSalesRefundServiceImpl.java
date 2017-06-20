@@ -112,8 +112,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForSalesRefund(ApprovalVO approvalVO,ApprovalSalesRefundVO approvalSalesRefundVO,List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs,String userId) throws FLException {
-		
-		
+
 		long sid = approvalSalesRefundVO.getSid();
 		
 		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
@@ -123,22 +122,19 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				throw new FLException(240004, "正在审批中,不能提交新审批");
 			}
 		}
-		
-		
+
 		SalesPO salesPO = salesDao.querySalesBySid(sid);
 		
 		if (salesPO == null) {
 			throw new FLException(260021 , "销售单不存在");
 		}
-		
-		
+	
 		approvalPO = new ApprovalPO();
 		
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-		
-		
+	
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);//销售退货
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);//初始
 		approvalPO.setIdent(String.valueOf(sid));
@@ -159,10 +155,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		approvalSalesRefundDao.save(approvalSalesRefundPO);
 		
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
-			
+			if(approvalSalesRefundItemVO!=null){
 			SalesItemPO salesItemPO = salesItemDao.querySalesItemBySiid(approvalSalesRefundItemVO.getSalesItem().getSiid());
 			
-	
 			salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
 			salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
 			
@@ -177,7 +172,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			approvalSalesRefundItemPO.setSalesItem(salesItemPO);//销售单型号信息类
 			
 			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
-			
+		       }
 		}
 		return 0;
 	}
@@ -185,20 +180,14 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	// 批准销售退款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int approvalForSalesRefund(ApprovalVO approvalVO) throws FLException { 
+	public int approvalForSalesRefund(ApprovalPO approvalPO) throws FLException { 
 		
-		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalVO.getAid());
+		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
 		
 		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-		
-		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if (approvalPO == null) {
-			throw new FLException(240009 , "审批信息不存在");
-		}
-		
+
 		SalesPO salesPO = salesDao.querySalesBySid(approvalSalesRefundPO.getSid());
 
 		if (salesPO == null) {
@@ -242,7 +231,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			float num = approvalSalesRefundItemPO.getNum();//退货数量
 			float total = approvalSalesRefundItemPO.getTotal();//退货金额
 
-			
 			BeanUtil.copyProperties(salesItemPO, refundsItemPO);
 			refundsItemPO.setRid(refundsPO.getRid());
 			refundsItemPO.setTotal(total);
@@ -250,12 +238,10 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			refundsItemPO.setSid(approvalSalesRefundItemPO.getSid());
 			refundsItemPO.setSalesItem(approvalSalesRefundItemPO.getSalesItem());
 
-			
 			refundsItemDao.save(refundsItemPO);
 			
 		}
-	
-		
+
 		if (approvalSalesRefundPO.getType() != 0) {
 			salesPO.setStatus(approvalSalesRefundPO.getType());
 		}
@@ -268,9 +254,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	//拒绝销售退款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int refuseForSalesRefund(ApprovalVO approvalVO) throws FLException {
+	public int refuseForSalesRefund(ApprovalPO approvalPO) throws FLException {
 		
-		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalVO.getAid());
+		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
 		
 		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
@@ -285,15 +271,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 		salesDao.update(salesPO);
 		
-		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if (approvalPO == null) {
-			throw new FLException(240009 , "审批信息不存在");
-		}
-		
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-		
-		approvalDao.update(approvalPO);
 		
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
 		

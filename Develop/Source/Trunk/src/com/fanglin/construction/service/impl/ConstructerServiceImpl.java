@@ -48,7 +48,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserVO(),new UserVO());
+			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
 			constructerVOs.add(constructerV);

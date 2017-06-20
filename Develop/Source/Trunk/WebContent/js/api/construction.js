@@ -37,7 +37,8 @@ $.extend(api.index, {
 
 $.extend(api.ds, {
     constructionInfo: {url: "ds/constructionInfo.json", demo: true},
-    workType: {url: "ds/workType.json", demo: true}
+    workType: {url: "ds/workType.json", demo: true},
+    salaryType: {url: "ds/salaryType.json", demo: true}
 });
 
 $.extend(api, {construction: {

@@ -4,13 +4,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.vo.VillageVO;
+import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
@@ -29,20 +34,46 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
-
+	
+	
 	@Override
 	public void pageWorkerSalary(Paging paging, List<Filter> filters) {
+	
 		
 		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters);
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 		
-		for (WorkerSalaryPO po : WorkerSalaryPOs) {
-			WorkerSalaryVO vo = new WorkerSalaryVO(new UserVO());
-			BeanUtil.copyProperties(po, vo, Arrays.asList("user"));
-			BeanUtil.copyProperties(po.getUser(), vo.getUser(),Arrays.asList("dept", "role"));
-			WorkerSalaryVOs.add(vo);
+		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs) {
+			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO());
+			
+			if(workerSalaryPO.getApprover()!=null){
+				
+				workerSalaryVO.getApprover().setUserName(workerSalaryPO.getApprover().getUserName());
+			}
+			workerSalaryVO.getCreater().setUserName(workerSalaryPO.getCreater().getUserName());
+			
+			if(workerSalaryPO.getDecorationOrder() != null){
+				
+				workerSalaryVO.getDecorationOrder().setOrderId(workerSalaryPO.getDecorationOrder().getOrderId());
+				workerSalaryVO.getDecorationOrder().setHouseNumber(workerSalaryPO.getDecorationOrder().getHouseNumber());
+				if(workerSalaryPO.getDecorationOrder().getVillagePO() != null){
+					
+					VillageVO villageVO = new VillageVO();
+					villageVO.setVillageName(workerSalaryPO.getDecorationOrder().getVillagePO().getVillageName());
+					workerSalaryVO.getDecorationOrder().setVillage(villageVO);
+				}
+				if(workerSalaryPO.getDecorationOrder().getSupervisorPO() != null){
+					
+					workerSalaryVO.getDecorationOrder().setSupervisor(workerSalaryPO.getDecorationOrder().getSupervisorPO().getUserName());
+				}
+
+			}
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decorationOrder","user","creater","approver"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(),Arrays.asList("dept", "role"));
+			WorkerSalaryVOs.add(workerSalaryVO);
+			
+			
 		}
-		
 		paging.setData(WorkerSalaryVOs);
 	}
 
@@ -54,8 +85,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
-			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new UserVO());
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user"));
+			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO() );
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user","decorationOrder","creater","approver"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role"));
 			workerSalarys.add(workerSalaryvo);
 		}
@@ -64,27 +95,37 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId) throws FLException {
 		
-		long csId = workerSalaryVO.getCsId();
-		ConstructionSchedulePO  constructionSchedulePO=	constructionScheduleDao.queryConstructionScheduleByCsId(csId);
-		
-		if (constructionSchedulePO == null) {
-			throw new FLException(120020, "工程信息不存在");
+		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), new UserPO(workerSalaryVO.getUser().getUserId()),new UserPO(userId));
+		if(workerSalaryVO.getCsId() != null){
+			long csId = workerSalaryVO.getCsId();
+			ConstructionSchedulePO  constructionSchedulePO=  constructionScheduleDao.queryConstructionScheduleByCsId(csId);
+			
+		    if (constructionSchedulePO == null) {
+			      throw new FLException(120020, "工程信息不存在");
+			    }
+		   
+		 workerSalaryPO.getDecorationOrder().setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
+		    workerSalaryPO.setCsId(csId);
+		}else{
+			
+		    workerSalaryPO.setCsId(WorkerSalaryPO.CSID_INIT_STR);
 		}
-		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new UserPO(workerSalaryVO.getUser().getUserId()));
-		workerSalaryPO.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
-		workerSalaryPO.setType(workerSalaryVO.getType());
-		workerSalaryPO.setSalary(workerSalaryVO.getSalary());
-		workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
-		workerSalaryPO.setCsId(workerSalaryVO.getCsId());
-		workerSalaryDao.save(workerSalaryPO);
-		
+		workerSalaryPO.setSubtype(workerSalaryVO.getSubtype());
+		workerSalaryPO.setComment(workerSalaryVO.getComment());
+	    workerSalaryPO.setType(workerSalaryVO.getType());
+	    workerSalaryPO.setSalary(workerSalaryVO.getSalary());
+	    workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+	    workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
+	    workerSalaryDao.save(workerSalaryPO);
+	    
+	    workerSalaryVO.setCreateTime(workerSalaryPO.getCreateTime());
+	    workerSalaryVO.setStatus(workerSalaryPO.getStatus());
+		workerSalaryVO.setSubtype(workerSalaryPO.getSubtype());
 		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
-
-	}
-
+		
+}
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
@@ -97,6 +138,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		if (workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_STR) {
 			throw new FLException(280002, "工费状态不可操作");
 		}
+		
 		BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
 		BeanUtil.copyProperties(workerSalaryVO.getUser(),workerSalaryPO.getUser(), Arrays.asList("dept", "role"));
 		workerSalaryDao.update(workerSalaryPO);
@@ -104,6 +146,47 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		return 0;
 	}
 
+	
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId)  throws FLException{
+			
+		UserPO approval = new UserPO(userId);
+		for (WorkerSalaryVO workerSalaryVO : workerSalarys) {
+		
+		WorkerSalaryPO	workerSalaryPO=	workerSalaryDao.get(workerSalaryVO.getWsId());
+		if(workerSalaryPO.getStatus()!=WorkerSalaryPO.STATUS_INIT_STR){
+			throw new FLException(280002, "工费状态不可操作");
+		}
+		workerSalaryPO.setApproveTime(new Timestamp(System.currentTimeMillis()));
+		workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_INIT_STRONE);
+		workerSalaryPO.setApprover(approval);
+		}
+		
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int rejectWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId)  throws FLException{
+			
+		UserPO approval = new UserPO(userId);
+		for (WorkerSalaryVO workerSalaryVO : workerSalarys) {
+		
+		WorkerSalaryPO	workerSalaryPO=	workerSalaryDao.get(workerSalaryVO.getWsId());
+		if(workerSalaryPO.getStatus()!=WorkerSalaryPO.STATUS_INIT_STR){
+			throw new FLException(280002, "工费状态不可操作");
+		}
+		workerSalaryPO.setApproveTime(new Timestamp(System.currentTimeMillis()));
+		workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_INIT_STRTWO);
+		workerSalaryPO.setApprover(approval);
+		}
+		
+		
+		return 0;
+	}
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
@@ -119,5 +202,6 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		
 		workerSalaryDao.delete(worksalarypo);
 	}
+
 
 }

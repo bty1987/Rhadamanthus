@@ -86,6 +86,8 @@ public class SalesPO implements Serializable {
 	
 	public static final String COLIMN_DEPT_STR ="dept.deptName";
 	
+	public static final String COLIMN_FULLPAYTIME_STR = "fullpayTime";
+	
 	private long sid;
 	
 	private String no;

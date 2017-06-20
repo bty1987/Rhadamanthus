@@ -80,7 +80,7 @@ jQuery(function($) {
         }
     })();
 	
-	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman'];
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType'];
 	
 	var searcher = new Searcher();
 

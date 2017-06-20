@@ -13,8 +13,6 @@ import com.fanglin.construction.service.ConstructerService;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.personel.service.UserService;
-import com.fanglin.personel.vo.UserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -25,15 +23,10 @@ public class ConstructerAction extends BaseListAction{
 	
 	@Autowired
 	private ConstructerService constructerService;
-	
-	@Autowired
-	private UserService userService;
-	
+
 	private ConstructerVO constructer;
 	
 	private List<ConstructerVO> constructers;
-	
-	private UserVO findUser;
 
 	@Action(value = "queryConstructerByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructerByOrderId() throws FLException{
@@ -54,7 +47,6 @@ public class ConstructerAction extends BaseListAction{
 	@Action(value = "addConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructer() throws FLException{
 		
-		this.findUser = userService.queryUserByUserId(new UserVO(constructer.getUser().getUserId()));
 		constructerService.addConstructer(constructer, queryUserId());
 		
 		 return SUCCESS;
@@ -88,13 +80,4 @@ public class ConstructerAction extends BaseListAction{
 	public void setConstructers(List<ConstructerVO> constructers) {
 		this.constructers = constructers;
 	}
-	
-	public UserVO getFindUser() {
-		return findUser;
-	}
-
-	public void setFindUser(UserVO findUser) {
-		this.findUser = findUser;
-	}
-	
 }

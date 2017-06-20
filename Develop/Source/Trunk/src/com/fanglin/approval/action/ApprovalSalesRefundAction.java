@@ -36,24 +36,18 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 
 	private List<SalesItemVO> salesItems;
 
-	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = {
-			"ignoreHierarchy", "false" }) }, params = { "contentType",
-			"text/html" })
+	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String queryApprovalSalesRefundItem() throws FLException {
 
-		approvalSalesRefundItem = approvalSalesRefundService
-				.queryApprovalSalesRefundItem(approval);
+		approvalSalesRefundItem = approvalSalesRefundService.queryApprovalSalesRefundItem(approval);
 
 		return SUCCESS;
 	};
 
-	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {
-			"ignoreHierarchy", "false" }) }, params = { "contentType",
-			"text/html" })
+	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String submitApprovalForSalesRefund() throws FLException {
 
-		approvalSalesRefundService.submitApprovalForSalesRefund(approval,
-				approvalSalesRefund, approvalSalesRefundItem, queryUserId());
+		approvalSalesRefundService.submitApprovalForSalesRefund(approval,approvalSalesRefund, approvalSalesRefundItem, queryUserId());
 
 		return SUCCESS;
 
