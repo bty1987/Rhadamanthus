@@ -46,76 +46,75 @@ jQuery(function($) {
 
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
-					var $liLine = $('<li></li>').addClass('item-orange clearfix');
-					var $h3 = $('<h3></h3>').addClass('oid');
-					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                        var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                        var $h3 = $('<h3></h3>').addClass('oid');
+                        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                        var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+                        var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-					var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
-					var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
-					var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-danger').html('抹零');
-					var propertyArr = [
-						//侯骅峰于2017.4.7添加品牌 总价 券值 券信息 备注五个显示字段
-						["楼盘地址:", v.orderAddr, "grey"],
-						//添加品牌字段
-						["品牌：",v.materialBrand,"grey"],
-						["客户名:", v.customerName, "grey"],
-						["业务员:", v.salesmanName, "grey"],
-						["点位:", v.point, "blue"],
-						["底价:", v.base, "blue"],
-						//添加总价字段
-						["总价：",v.total,"blue"],
-						["抹零:", v.maling, "green"],
-						["厂商抹零:", v.venderMaling, "green"],
-						//添加券值
-						["券值: ",v.coupon,"grey"],
-						//添加券信息
-						["券信息: ",v.couponInfo ? v.couponInfo : '---',"grey"],
-						["创建时间:", v.createTime, "grey"],
-						["补款时间:", v.fullCollectTime , "grey"],
-						//添加备注
-						["备注：",v.des ? v.des : '---',"grey"],
-					];
-					var $label = $('<label></label>');
-					var $input = $('<input>').attr({
-						"type": "checkbox",
-						"name": "msoIds",
-						"class": "ace ace-checkbox-2",
-						"msoId": v.msoId,
-						"packageFlag": v.packageFlag,
-					}).val(v.arId);
-					var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.msoNo);
-					//固定的写法？
-					$.each(propertyArr, function (index,value) {
-						var $liProperty = $('<li></li>');
-						$('<strong></strong>').html(value[0]).appendTo($liProperty);
-						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-						$liProperty.appendTo($ulProperty);
-					});
-					
-					$label.append($input).append($span).appendTo($h3);
-					//子项
-					$btnItem.click(function(){
-						viewMaterialOrderBalanceDetailIndex(v.msoId);
-					});
-					//结算值
-					$btnValue.click(function(){
-						dialogMaterialOrderPreBalanceBacl(v);
-					});
-					//抹零
-					$btnMaling.click(function(){
-						dialogMaterialOrderMaling(v);
-					});
+                        var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
+                        var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
+                        var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-danger').html('抹零');
+                        var propertyArr = [
+                            //侯骅峰于2017.4.7添加品牌 总价 券值 券信息 备注五个显示字段
+                            ["楼盘地址:", v.orderAddr, "grey"],
+                            //添加品牌字段
+                            ["品牌：",v.materialBrand,"grey"],
+                            ["客户名:", v.customerName, "grey"],
+                            ["业务员:", v.salesmanName, "grey"],
+                            ["点位:", v.point, "blue"],
+                            ["底价:", v.base, "blue"],
+                            //添加总价字段
+                            ["总价：",v.total,"blue"],
+                            ["抹零:", v.maling, "green"],
+                            ["厂商抹零:", v.venderMaling, "green"],
+                            //添加券值
+                            ["券值: ",v.coupon,"grey"],
+                            //添加券信息
+                            ["券信息: ",v.couponInfo ? v.couponInfo : '---',"grey"],
+                            ["创建时间:", v.createTime, "grey"],
+                            ["补款时间:", v.fullCollectTime , "grey"],
+                            //添加备注
+                            ["备注：",v.des ? v.des : '---',"grey"],
+                        ];
+                        var $label = $('<label></label>');
+                        var $input = $('<input>').attr({
+                            "type": "checkbox",
+                            "name": "msoIds",
+                            "class": "ace ace-checkbox-2",
+                            "msoId": v.msoId,
+                            "packageFlag": v.packageFlag,
+                        }).val(v.arId);
+                        var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.msoNo);
+                        //固定的写法？
+                        $.each(propertyArr, function (index,value) {
+                            var $liProperty = $('<li></li>');
+                            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                            $liProperty.appendTo($ulProperty);
+                        });
 
-					$divBtnWrap.append($btnItem).append($btnValue).append($btnMaling).appendTo($h3);
-					
-					$liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
-				});
+                        $label.append($input).append($span).appendTo($h3);
+                        //子项
+                        $btnItem.click(function(){
+                            viewMaterialOrderBalanceDetailIndex(v.msoId);
+                        });
+                        //结算值
+                        $btnValue.click(function(){
+                            dialogMaterialOrderPreBalanceBacl(v);
+                        });
+                        //抹零
+                        $btnMaling.click(function(){
+                            dialogMaterialOrderMaling(v);
+                        });
 
+                        $divBtnWrap.append($btnItem).append($btnValue).append($btnMaling).appendTo($h3);
+
+                        $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
+					});
 				$ul.appendTo($tableWrap);
 			}
-		}
+		};
 		
 		return {
 			init : function(tableId,listData){
@@ -134,14 +133,21 @@ jQuery(function($) {
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
+    	$adda.click(function(){
+    		preBalance();
+    	});
     	var $passa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'passbalances').css("margin", "0px 3px");
     	var $passi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($passa);
     	var $passspan = $('<span></span>').text('完结').appendTo($passa);
+    	$passa.click(function(){
+    		passBalance();
+    	});
+    	
     	return [$adda, $passa];
 	});
 	//点预结算
-	$('a[name="prebalances"]', '#pagenation').click(function(){
-        //复选框选中的对象
+	function preBalance(){
+		//复选框选中的对象
         var $inputs = $('input[name="msoIds"]:checked');
         if($inputs.length>0){
             var btn = $(this);
@@ -186,11 +192,9 @@ jQuery(function($) {
 		}else{
         	com.showAlert(com.warning,"请选择要进行预结算的订单");
 		}
-
-	});
+	}
 	//点完结  后台将订单状态更改为完结
-	$('a[name="passbalances"]', '#pagenation').click(function(){
-		
+	function passBalance(){
 		var $inputs = $('input[name="msoIds"]:checked');
 		if($inputs.length>0){
             var btn = $(this);
@@ -224,8 +228,9 @@ jQuery(function($) {
 		}else{
             com.showAlert(com.warning,"请选择要进行完结的订单");
 		}
-
-	});
+	}
+	
+	
 	//点子项按钮
 	function viewMaterialOrderBalanceDetailIndex(msoId){
 		materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = msoId;

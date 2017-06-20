@@ -86,7 +86,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['orderId','village','houseNumber','houseArea','customerPhone','designer','salesman','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId', 'createTimeDateRange','signTimeDateRange','houseClass','status'];
+    var _condArr = ['orderId','village','houseNumber','houseArea','customerPhone','designer','salesman','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId', 'createTimeDateRange','signTimeDateRange','houseClass','status','orderType','salesmanType'];
 
     var searcher = new Searcher();
     searcher.init( _condArr, "condList", api.decoration.pageDecorationOrderForDesigner, function(data){

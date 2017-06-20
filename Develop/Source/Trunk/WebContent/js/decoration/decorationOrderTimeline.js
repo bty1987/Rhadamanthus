@@ -225,7 +225,9 @@ $(function(){
         $('[name="dname"]',$info).text(decorationOrder.designer);
         $('[name="dphone"]',$info).text(decorationOrder.designerPhone|| '');
         $('[name="sname"]',$info).text(decorationOrder.salesman);
-        $('[name="sphone"]',$info).text(decorationOrder.designerPhone|| '');
+        $('[name="sphone"]',$info).text(decorationOrder.salesmanPhone|| '');
+        $('[name="vname"]',$info).text(decorationOrder.supervisor);
+        $('[name="vphone"]',$info).text(decorationOrder.supervisorPhone|| '');
         $('[name="status"]',$info).text(decorationOrder.status);
 
         $('.widget-box', '#baseinfo').removeClass('flloading');

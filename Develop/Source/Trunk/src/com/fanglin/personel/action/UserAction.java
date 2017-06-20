@@ -91,8 +91,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForSelfByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForSelfByUserId() throws FLException{
 		
-		user = new UserVO(queryUserId());
-		user = userService.queryUserByUserId(user);
+		userInfo = new UserInfoVO(new UserVO(queryUserId()));
+		userInfo = userService.queryUserInfoByUserId(userInfo);
 		
 		return SUCCESS;
 	}

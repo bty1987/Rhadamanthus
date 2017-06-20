@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -37,38 +38,72 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final short STATUS_INIT_STR = 0;                      //状态  初始为0
 	
+	public static final short STATUS_INIT_STRONE = 1;                      //状态  初始为1
+	
+	public static final short STATUS_INIT_STRTWO = 2;                      //状态  初始为2
+	
+	public static final String STATUS_INIT_STRA = "status";                      //状态  初始为0
+	
+	public static final Long CSID_INIT_STR = 0L; 
+	
 	public static final String COLUMN_SALARY_STR = "salary";       //如果该工人未设置过工费  初始为0
 	
-	public static final String ORDERID_STR="orderId";    //订单编号
+	public static final String COLUMN_APPROVETIME = "approveTime"; 
+	
+	public static final String ORDERID_STR="decorationOrder.orderId"; //订单编号
 	
 	public static final String COLUMN_USER_USERNAME="user.userName"; //工人 姓名
 	
+	public static final String COLUMN_USER_USERDUTY="user.duty";  //工人职位
+	
+	
+	
 	private long wsId;
 	
-	private String orderId;
-
 	private long csId;
-
+	
+	private DecorationOrderPO decorationOrder;
+	
 	private UserPO user;
-
+	
+	private UserPO creater;
+	
 	private Timestamp createTime;
-
+	
+	private  UserPO   approver;
+	
+	private Timestamp approveTime ;
+	
 	private Timestamp balanceTime;
-
+	
 	private float salary;
-
+	
 	private short type;
-
+	
+	private short subtype ;
+	
 	private short status;
+	private String comment ;
 
 	public WorkerSalaryPO() {
 		super();
 	}
 
-	public WorkerSalaryPO(UserPO user) {
+
+	public WorkerSalaryPO(DecorationOrderPO decorationOrder, UserPO user, UserPO creater,UserPO   approver) {
 		super();
+		this.decorationOrder = decorationOrder;
 		this.user = user;
+		this.creater = creater;
+		this.approver = approver;
 	}
+
+	public WorkerSalaryPO( DecorationOrderPO decorationOrder ,UserPO user, UserPO creater) {
+	super();
+	this.decorationOrder = decorationOrder;
+	this.user = user;
+	this.creater = creater;
+}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -81,20 +116,11 @@ public class WorkerSalaryPO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-	@Column(name="orderId")
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
 	@Column(name="csid")
 	public long getCsId() {
 		return csId;
 	}
-
+	
 	public void setCsId(long csId) {
 		this.csId = csId;
 	}
@@ -153,6 +179,59 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
+	public DecorationOrderPO getDecorationOrder() {
+		return decorationOrder;
+	}
+
+	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
+		this.decorationOrder = decorationOrder;
+	}
+	@Column(name="approveTime")
+	public Timestamp getApproveTime() {
+		return approveTime;
+	}
+
+	public void setApproveTime(Timestamp approveTime) {
+		this.approveTime = approveTime;
+	}
+	@Column(name="subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
+	}
+	@Column(name="comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "approverId", referencedColumnName = "userId")
+	public UserPO getApprover() {
+		return approver;
+	}
+
+	public void setApprover(UserPO approver) {
+		this.approver = approver;
+	}
+	
 
 	
+
 }

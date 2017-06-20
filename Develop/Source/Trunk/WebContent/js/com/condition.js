@@ -862,7 +862,7 @@ var Condition = function(api){
                 validate:null
             },
             dataSource : {
-                url : api.ds.houseInfo,
+                url : api.ds.decorationInfo,
                 postData:{ "timestamp": new Date().getTime()},
                 listPath: "houseClass",
                 keyPath:"key",
@@ -881,6 +881,38 @@ var Condition = function(api){
                 url : api.ds.decorationInfo,
                 postData:{ "timestamp": new Date().getTime() },
                 listPath: "decorationOrderStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        orderType : {
+            label:"订单类型",
+            type:"select",
+            submitConfig : {
+                name : "orderType",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : api.ds.decorationInfo,
+                postData:{ "timestamp": new Date().getTime() },
+                listPath: "orderType",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        salesmanType : {
+            label:"业务员类型",
+            type:"select",
+            submitConfig : {
+                name : "salesmanType",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {
+                url : api.ds.decorationInfo,
+                postData:{ "timestamp": new Date().getTime() },
+                listPath: "salesmanType",
                 keyPath:"key",
                 valuePath:"value"
             }
@@ -1182,14 +1214,64 @@ var Condition = function(api){
                 valuePath:"value"
             }
         },jober : {
-            label:"工人姓名",
-            type:"text",
+            label : "工人姓名",
+            type : "autofill",
             submitConfig : {
                 name : "userName",
+                op : "cn",
+                validate: null
+            },
+            dataSource : {
+                url : api.personel.queryUserForNameByPinyinName,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
+            }
+		},salarystatus :{
+            label:"状态",
+            type:"select",
+            submitConfig : {
+                name : "status",
                 op : "eq",
                 validate:null
+            },
+            dataSource : {
+                url : null,
+                postData : null,
+                listPath: [
+                    {key: "1", value: "通过"},
+                    {key: "2", value: "驳回"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
             }
-		}
+        },
+        approveTime: {
+            label:"审批时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "approveTime",
+                op : "between",
+                validate:null
+            }
+        },
+        salaryWorkduty: {
+            label:"工种",
+            type:"select",
+            submitConfig : {
+                name : "duty",
+                op : "eq",
+                validate:null
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.ds.workType,
+                postData:{},
+                listPath: "workType",
+                keyPath:"value",
+                valuePath:"value"
+            }
+        }
     };
     return {
         getRuleByCondName:function(condName){

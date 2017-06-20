@@ -347,6 +347,10 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					query.add(query.getCriterion("designerRegion.deptId", data, op));
 				}else if("salesmanRegionId".equals(field)){
 					query.add(query.getCriterion("salesmanRegion.deptId", data, op));
+				}else if("orderType".equals(field)){
+					query.add(query.getCriterion("type", Short.valueOf(data), op));
+				}else if("salesmanType".equals(field)){
+					query.add(query.getCriterion("salesmanType", data, op));
 				}else if("houseArea".equals(field)){
 					Float dataF = Float.parseFloat(data);
 					query.add(query.getCriterion("houseArea", dataF, op));

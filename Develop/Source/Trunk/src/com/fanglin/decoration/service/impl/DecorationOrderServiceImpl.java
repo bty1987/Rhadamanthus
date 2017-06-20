@@ -240,6 +240,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			    decorationOrderVO.setOrderTotalPrice(0f);
 			}
 			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
 			VillageVO villageVO = new VillageVO();
 			CityProperVO cityProperVO = new CityProperVO();
 			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));
@@ -546,6 +552,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			    decorationOrderVO.setOrderTotalPrice(0f);
 			}
 			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
 			VillageVO villageVO = new VillageVO();
 			CityProperVO cityProperVO = new CityProperVO();
 			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
@@ -651,6 +663,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
 			}else{
 			    decorationOrderVO.setOrderTotalPrice(0f);
+			}
+			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
 			}
 			
 			VillageVO villageVO = new VillageVO();

@@ -129,6 +129,37 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		
 		goodsStorehouseStockDao.update(goodsStorehouseStockPO);
 	}
+	
+	@Override
+	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStockVO){
+		
+		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShId());
+		
+		goodsStorehouseStockVO = new GoodsStorehouseStockVO();
+		
+		BeanUtil.copyProperties(goodsStorehouseStockPO, goodsStorehouseStockVO, Arrays.asList("goods","color","format","storehouse"));
+		
+		return goodsStorehouseStockVO;
+	}
+	
+	@Override
+	public List<GoodsStorehouseStockVO> queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
+			
+		List<GoodsStorehouseStockPO> goodsStorehouseStockPOs = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
+		List<GoodsStorehouseStockVO> goodsStorehouseStockVOs = new ArrayList<GoodsStorehouseStockVO>();
+		
+		
+		for(GoodsStorehouseStockPO goodsStorehouseStockPO : goodsStorehouseStockPOs){
+			
+			goodsStorehouseStockVO = new GoodsStorehouseStockVO();
+			
+			BeanUtil.copyProperties(goodsStorehouseStockPO, goodsStorehouseStockVO, Arrays.asList("goods","color","format","storehouse"));
+			
+			goodsStorehouseStockVOs.add(goodsStorehouseStockVO);
+		}
+
+		return goodsStorehouseStockVOs;
+	}
 
 	public StorehousePO instorehouse(long gid,long cid,long fid, long shId, float num) throws FLException{
 		
@@ -170,11 +201,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		if(storehouseDao.get(shId) == null){
 			throw new FLException(260005, "仓库不存在");
 		}
-		System.out.println("gid:"+gid);
-		System.out.println("cid:"+cid);
-		System.out.println("fid:"+fid);
-		System.out.println("shId:"+shId);
-		System.out.println("num:"+num);
+	
 		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
 		
 		if(outGoodsStorehouseStockPO == null){

@@ -1047,7 +1047,7 @@ jQuery(function($) {
 					}
 
 					var buttonsDiv = $('<div></div>').addClass("visible-md visible-lg hidden-sm hidden-xs action-buttons").css("padding", "5px").appendTo(profileDiv);
-					var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerIf.user.oldUserId + "" + workerIf.user.userName + "<br/>" + workerIf.user.duty).appendTo(buttonsDiv);
+					var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerIf.user.userId + "" + workerIf.user.userName + "<br/>" + workerIf.user.duty).appendTo(buttonsDiv);
 					var removeBtn = $('<a></a>').addClass('red pull-left').attr('href', '#').attr("cId", workerId).click(function(){
 
 						var id = $(this).attr('cId');
@@ -1082,7 +1082,7 @@ jQuery(function($) {
 
 	//添加
 	function setWorkerUrl(operate,res,options,ly_userId){
-				var workerInfo = res.findUser;
+				var workerInfo = res.constructer.user;
 				com.post(operate.queryWorkerUrl,options,function(data){
 					ly_constructer = data[operate.elementConstructers];
 					ly_copyworkers(ly_constructer);
@@ -1098,7 +1098,7 @@ jQuery(function($) {
 				}
 
 				var buttonsDiv = $('<div></div>').addClass("visible-md visible-lg hidden-sm hidden-xs action-buttons").css("padding", "5px").appendTo(profileDiv);
-				var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerInfo.oldUserId + "" + workerInfo.userName + "<br/>" + workerInfo.duty).appendTo(buttonsDiv);
+				var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerInfo.userId + "" + workerInfo.userName + "<br/>" + workerInfo.duty).appendTo(buttonsDiv);
 				var removeBtn = $('<a></a>').addClass('red pull-left').attr('href', '#').attr("cId", workerInfo.userId).click(
 					function () {
 

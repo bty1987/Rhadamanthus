@@ -187,10 +187,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
-				approvalSalesRefundService.approvalForSalesRefund(approvalVO);
+				approvalSalesRefundService.approvalForSalesRefund(approvalPO);
 				break;	
 			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
-				approvalManifestDBService.approvalManifestDB(approvalVO);
+				approvalManifestDBService.approvalManifestDB(approvalPO);
 				break;
 			
 		}
@@ -227,10 +227,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
-				approvalSalesRefundService.refuseForSalesRefund(approvalVO);
+				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
-				approvalManifestDBService.refuseManifestDB(approvalVO);
+				approvalManifestDBService.refuseManifestDB(approvalPO);
 				break;
 			default:
 				break;

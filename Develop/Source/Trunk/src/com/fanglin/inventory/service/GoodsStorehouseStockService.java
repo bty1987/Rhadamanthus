@@ -17,11 +17,16 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.vo.CheckListVO;
+import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
 import com.fanglin.utils.Paging;
 
 public interface GoodsStorehouseStockService {
 	
 	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters);
+	
+	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStock);
+	
+	public List<GoodsStorehouseStockVO> queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
 	
 	public void checkGoodsStorehouseStock(CheckListVO checkListVO, String userId) throws FLException;
 

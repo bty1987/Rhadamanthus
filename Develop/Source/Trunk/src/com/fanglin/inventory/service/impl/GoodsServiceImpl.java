@@ -172,19 +172,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addGoods(GoodsVO goodsVO) throws FLException {
 		
-		GoodsPO goodsPO = goodsDao.queryGoodsByNo(goodsVO.getNo());
-		
-		if(goodsPO != null){
-			throw new FLException(260002, "商品编号已存在");
-		}
-		
-		goodsPO = goodsDao.queryGoodsByBarcode(goodsVO.getBarcode());
-		
-		if(goodsPO != null){
-			throw new FLException(260003, "商品条形码已存在");
-		}
-		
-		goodsPO = new GoodsPO();
+		GoodsPO goodsPO = new GoodsPO();
 		if(goodsVO.getAssisType().getAtid()!=null){
 			new AssisTypePO();
 			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));

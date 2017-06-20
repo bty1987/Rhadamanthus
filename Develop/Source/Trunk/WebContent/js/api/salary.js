@@ -14,7 +14,8 @@ $.extend(api.index, {
 });
 
 $.extend(api.ds, {
-    salaryType: {url: "ds/salaryType.json", demo: true}
+    salaryType: {url: "ds/salaryType.json", demo: true},
+    workType: {url: "ds/workType.json", demo: true},
 });
 
 $.extend(api, {salary: {
@@ -61,10 +62,12 @@ $.extend(api, {salary: {
     cancelWorkerDeductSalaryToConfirm: {url: "cancelWorkerDeductSalaryToConfirm.do"},
     deleteWorkerBaseSalary: {url: "deleteWorkerBaseSalary.do"},
     deleteWorkerDeductSalary: {url: "deleteWorkerDeductSalary.do"},
-    
+
     queryWorkerSalary: {url: "queryWorkerSalary.do"},
     pageWorkerSalary: {url: "pageWorkerSalary.do"},
     addWorkerSalary:{url:"addWorkerSalary.do"},
     deleteWorkerSalary:{url:"deleteWorkerSalary.do"},
-    updateWorkerSalary: {url: "updateWorkerSalary.do"}
+    updateWorkerSalary: {url: "updateWorkerSalary.do"},
+    adoptWorkerSalary:{url:"adoptWorkerSalary.do"},
+    rejectWorkerSalary:{url:"rejectWorkerSalary.do"}
 }});

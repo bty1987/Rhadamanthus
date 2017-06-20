@@ -4,10 +4,10 @@ USE `communion`;
 DROP TABLE IF EXISTS `brand`;
 CREATE TABLE `brand` (
   `bId` int(11) NOT NULL AUTO_INCREMENT,
+  `cId` int(11) NOT NULL,
   `brandId` varchar(10) NOT NULL,
   `brandName` varchar(30) NOT NULL,
   `brandNamePinyin` varchar(216) NOT NULL,
-  `cId` int(11) NOT NULL,
   PRIMARY KEY (`bId`),
   KEY `indexone` (`cId`),
   KEY `indextwo` (`brandName`,`brandNamePinyin`)
@@ -20,7 +20,7 @@ CREATE TABLE `branduserright` (
   `bid` int(11) NOT NULL,
   PRIMARY KEY (`burId`),
   KEY `indexone` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌用户权限表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌用户权限表';
 
 DROP TABLE IF EXISTS `buildingnamerule`;
 CREATE TABLE `buildingnamerule` (
@@ -75,12 +75,12 @@ CREATE TABLE `counting` (
   `count` int(11) NOT NULL,
   PRIMARY KEY (`date`,`type`),
   KEY `indexone` (`date`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='统计数表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统计数表';
 
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customerId` varchar(10) DEFAULT NULL,
+  `customerId` varchar(10) NOT NULL,
   `customerName` varchar(32) NOT NULL,
   `customerNamePYAll` varchar(50) NOT NULL,
   `customerNamePYAB` varchar(50) NOT NULL,
@@ -91,10 +91,10 @@ CREATE TABLE `customer` (
   `email` varchar(32) NOT NULL,
   `address` varchar(128) NOT NULL,
   `relationshipType` varchar(40) NOT NULL,
-  `approveStatus` tinyint(2) DEFAULT '0',
-  `apId` int DEFAULT NULL,
+  `approveStatus` tinyint(2) DEFAULT '0'
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uniqueone` (`customerId`)
+  UNIQUE KEY `uniqueone` (`customerId`),
+  UNIQUE KEY `uniquetwo` (`phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户表';
 
 DROP TABLE IF EXISTS `department`;
@@ -110,25 +110,26 @@ CREATE TABLE `department` (
   `createTime` date NOT NULL COMMENT '创建时间',
   `des` varchar(128) DEFAULT NULL COMMENT '表述',
   `contractPrefix` varchar(32) DEFAULT NULL COMMENT '设计部门合同前缀(独有)',
-  `company` int NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`dId`),
   UNIQUE KEY `uniqueone` (`deptId`),
-  KEY indexone (`deptId`)
+  KEY `indexone` (`deptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='部门表';
 
-DROP TABLE IF EXISTS logininfo;
-CREATE TABLE logininfo (
-  liId int(11) NOT NULL AUTO_INCREMENT,
-  loginFlag varchar(32) NOT NULL,
-  code int(11) NOT NULL DEFAULT -1 COMMENT '-1 无确认, 0 成功 , 其他错误码',
-  message varchar(64) NOT NULL DEFAULT '',
-  authentication varchar(512) NOT NULL DEFAULT '',
-  optime bigint NOT NULL,
-  x double NOT NULL DEFAULT 0,
-  y double NOT NULL DEFAULT 0,
-  PRIMARY KEY (liId),
-  KEY indexone (loginFlag)
+
+DROP TABLE IF EXISTS `logininfo`;
+CREATE TABLE `logininfo` (
+  `liId` int(11) NOT NULL AUTO_INCREMENT,
+  `loginFlag` varchar(32) NOT NULL,
+  `code` int(11) NOT NULL DEFAULT '-1' COMMENT '-1 无确认, 0 成功 , 其他错误码',
+  `message` varchar(64) NOT NULL DEFAULT '',
+  `authentication` varchar(512) NOT NULL DEFAULT '',
+  `optime` bigint(20) NOT NULL,
+  `x` double NOT NULL DEFAULT '0',
+  `y` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`liId`),
+  KEY `indexone` (`loginFlag`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='二维码登陆信息';
 
 DROP TABLE IF EXISTS `measurementunit`;
@@ -148,6 +149,7 @@ CREATE TABLE `module` (
   `url` varchar(256) DEFAULT NULL,
   `level` tinyint(4) NOT NULL,
   `system` tinyint(4) NOT NULL,
+  `order` tinyint(2) NOT NULL DEFAULT '99',
   PRIMARY KEY (`mId`),
   KEY `indexone` (`fatherModuleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='模块表';
@@ -228,6 +230,15 @@ CREATE TABLE `role` (
   KEY `indexone` (`roleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
+DROP TABLE IF EXISTS `roleaction`;
+CREATE TABLE `roleaction` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roleId` varchar(10) NOT NULL,
+  `actionId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index` (`roleId`,`actionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
 DROP TABLE IF EXISTS `rolemodule`;
 CREATE TABLE `rolemodule` (
   `rmId` int(11) NOT NULL AUTO_INCREMENT,
@@ -245,7 +256,6 @@ CREATE TABLE `roleoperation` (
   PRIMARY KEY (`roId`),
   KEY `indexone` (`rId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色操作';
-
 DROP TABLE IF EXISTS `supplier`;
 CREATE TABLE `supplier` (
   `sId` int(11) NOT NULL AUTO_INCREMENT,
@@ -266,8 +276,17 @@ CREATE TABLE `supplieruserright` (
   KEY `indexone` (`sId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='供应商用户权限';
 
-DROP TABLE IF EXISTS `trackPoint`;
-CREATE TABLE `trackPoint` (
+DROP TABLE IF EXISTS `token`;
+CREATE TABLE `token` (
+  `tid` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`tid`),
+  KEY `indexone` (`key`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='token表';
+
+DROP TABLE IF EXISTS `trackpoint`;
+CREATE TABLE `trackpoint` (
   `tpId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL,
   `x` double NOT NULL,
@@ -278,18 +297,18 @@ CREATE TABLE `trackPoint` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `uId` int NOT NULL AUTO_INCREMENT,
+  `uId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL COMMENT '员工号',
   `oldUserId` varchar(32) DEFAULT NULL COMMENT '旧员工号',
   `roleId` varchar(10) DEFAULT NULL COMMENT '角色ID',
   `deptId` varchar(10) NOT NULL COMMENT '部门ID',
+  `company` tinyint(4) NOT NULL COMMENT '人员所属公司',
   `loginId` varchar(32) NOT NULL COMMENT '登录用户名',
   `password` varchar(32) DEFAULT NULL COMMENT '密码',
   `userName` varchar(32) NOT NULL COMMENT '真实姓名',
-  `userNamePinYin` varchar(128) NOT NULL COMMENT '真实姓名全拼',
+  `userNamePinYin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
   `currentName` varchar(32) DEFAULT NULL COMMENT '现用名',
   `status` varchar(10) NOT NULL COMMENT '人员状态(在职,离职..)',
-  `company` tinyint NOT NULL COMMENT '人员所属公司',
   `deptType` varchar(10) NOT NULL COMMENT '部门类型',
   `duty` varchar(256) NOT NULL COMMENT '职位',
   `gender` varchar(2) NOT NULL COMMENT '性别',
@@ -298,18 +317,44 @@ CREATE TABLE `user` (
   `phone` varchar(128) NOT NULL COMMENT '手机号',
   `userPhoto` varchar(128) DEFAULT NULL COMMENT '用户图片',
   `isLogin` tinyint(4) DEFAULT NULL COMMENT '是否允许登陆',
-  `extranet` tinyint(4) NOT NULL DEFAULT 0 COMMENT '外网登陆权限',
-  `freedom` tinyint(4) NOT NULL DEFAULT 0 COMMENT '特权 , 1 超时 , 2 操作黑名单',
+  `extranet` tinyint(4) NOT NULL DEFAULT '0' COMMENT '外网登陆权限',
+  `freedom` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`uId`),
   UNIQUE KEY `uniqueone` (`loginId`),
   UNIQUE KEY `uniquetwo` (`userId`),
-  KEY `indexone` (`userId`, `company`)
+  KEY `indexone` (`userId`,`company`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+DROP TABLE IF EXISTS `usercontract`;
+CREATE TABLE `usercontract` (
+  `ucId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(15) NOT NULL,
+  `contractId` varchar(32) NOT NULL,
+  `startTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `createTime` datetime NOT NULL,
+  `des` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`ucId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户合同表';
+
+DROP TABLE IF EXISTS `userexperience`;
+CREATE TABLE `userexperience` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(15) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `startTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `company` varchar(32) NOT NULL,
+  `position` varchar(32) NOT NULL,
+  `createTime` datetime NOT NULL,
+  `des` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作经历表';
 
 DROP TABLE IF EXISTS `userinfo`;
 CREATE TABLE `userinfo` (
-  `uiid` int NOT NULL AUTO_INCREMENT,
-  `uid` int NOT NULL,
+  `uiid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
   `employWay` varchar(10) NOT NULL COMMENT '招聘渠道',
   `recommendMan` varchar(32) DEFAULT NULL COMMENT '推荐人',
   `jobYears` int(2) DEFAULT NULL COMMENT '工作年限',
@@ -349,36 +394,6 @@ CREATE TABLE `userinfo` (
   PRIMARY KEY (`uiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
 
-LOCK TABLES `user` WRITE;
-INSERT INTO `user` VALUES ('1',NULL,'1','FL_DD_02','root','35FD596186101F2733C1DD2DD6FBFC6C','root','[root]','root','在职','2014-12-04 14:01:52','超级管理员','系统工程师','社会招聘','',3,'','2015-01-01','2014-12-08',2,'男','2014-08-16',0,'其它党派','000000000000000000','00000000000','','00000000000','是','2015-01-01','','','','是','是','是','是','','城市户口','辽宁沈阳','辽宁沈阳','是','是','2015-01-01','1234567890','0987654321',10000.000,'爱人','','12345678900987654','','','','/upload/Imag//userImg/2015/04/ab10cbfd4c894c289b8b6b01ffde9da5.png','是');
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `usercontract`;
-CREATE TABLE `usercontract` (
-  `ucId` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `contractId` varchar(32) NOT NULL,
-  `startTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `createTime` datetime NOT NULL,
-  `des` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`ucId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户合同表';
-
-DROP TABLE IF EXISTS `userexperience`;
-CREATE TABLE `userexperience` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `startTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `company` varchar(32) NOT NULL,
-  `position` varchar(32) NOT NULL,
-  `createTime` datetime NOT NULL,
-  `des` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工作经历表';
-
 DROP TABLE IF EXISTS `village`;
 CREATE TABLE `village` (
   `vId` int(11) NOT NULL AUTO_INCREMENT,
@@ -395,29 +410,18 @@ CREATE TABLE `village` (
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
   `count` int(11) NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`vId`),
   UNIQUE KEY `uniqueone` (`villageId`),
   KEY `indexone` (`buildingNameRuleId`,`cityProperId`),
   KEY `indextwo` (`villageId`,`cityProperId`,`buildingNameRuleId`),
-  KEY `indexthr` (`x`, `y`)
+  KEY `indexthr` (`x`,`y`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
 
-DROP TABLE IF EXISTS `token`;
-CREATE TABLE `token` (
-  `tid` int(11) NOT NULL AUTO_INCREMENT,
-  `key` varchar(32) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`tid`),
-  KEY `indexone` (`key`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='token表';
-
 DROP TABLE IF EXISTS `worktype`;
-
 CREATE TABLE `worktype` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
   `workTypeDes` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工种表';
-

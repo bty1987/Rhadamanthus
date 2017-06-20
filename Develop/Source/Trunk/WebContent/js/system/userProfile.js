@@ -15,15 +15,18 @@ jQuery(function($) {
 	$("#removePicture").on("click",removePicture);
 	
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
+		
+		var user = res.user;
+		var userInfo = user.userInfo;
 		 
-		userProfile.userPhoto=res.user.userPhoto;
-		userProfile.age = res.user.age;
+		userProfile.userPhoto = user.userPhoto;
+		userProfile.age = userInfo.age;
 		userProfile.phone = res.user.phone;
-		userProfile.emergencyMan = res.user.emergencyMan;
-		userProfile.emergencyPhone = res.user.emergencyPhone;
-		userProfile.qq=res.user.qq;
-		userProfile.wechat=res.user.wechat;
-		userProfile.email = res.user.email;
+		userProfile.emergencyMan = userInfo.emergencyMan;
+		userProfile.emergencyPhone = userInfo.emergencyPhone;
+		userProfile.qq = userInfo.qq;
+		userProfile.wechat = userInfo.wechat;
+		userProfile.email = userInfo.email;
 		
 		initUser();
 	});
@@ -51,14 +54,14 @@ jQuery(function($) {
 		}
 		
 		parm = {
-			"user.userPhoto":$("#picture").val(),
-			"user.age":$("#age").val(),
-			"user.phone":$("#telephone").val(),
-			"user.emergencyMan":$("#emergencyMan").val(),
-			"user.emergencyPhone":$("#emergencyPhone").val(),
-			"user.qq":$("#qq").val(),
-			"user.wechat":$("#wechat").val(),
-			"user.email":$("#email").val()	
+			"userInfo.userPhoto":$("#picture").val(),
+			"userInfo.user.age":$("#age").val(),
+			"userInfo.user.phone":$("#telephone").val(),
+			"userInfo.emergencyMan":$("#emergencyMan").val(),
+			"userInfo.emergencyPhone":$("#emergencyPhone").val(),
+			"userInfo.qq":$("#qq").val(),
+			"userInfo.wechat":$("#wechat").val(),
+			"userInfo.email":$("#email").val()	
 		};
 		
 		com.post(api.personel.saveUserForBaseInfo, parm, function(res){

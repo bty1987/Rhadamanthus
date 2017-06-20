@@ -179,23 +179,14 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 //	通过调拨审批
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int approvalManifestDB(ApprovalVO approvalVO)throws FLException {
+	public int approvalManifestDB(ApprovalPO approvalPO)throws FLException {
 		
-        ApprovalManifestDBPO approvalManifestDBPO = approvalManifestDBDao.queryApprovalManifestDBByAId(approvalVO.getAid());
+        ApprovalManifestDBPO approvalManifestDBPO = approvalManifestDBDao.queryApprovalManifestDBByAId(approvalPO.getAid());
 		
 		if (approvalManifestDBPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-        ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if (approvalPO == null) {
-			throw new FLException(240009 , "审批信息不存在");
-		}
-		
-        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalDao.update(approvalPO);
-		
+       
 		List<ApprovalManifestDBItemPO> approvalManifestDBItemPOs = approvalManifestDBItemDao.queryApprovalManifestDBItemByAmdbid(approvalManifestDBPO.getAmdbid());
 
 		if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
@@ -278,22 +269,13 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 //	拒绝调拨审批
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int refuseManifestDB(ApprovalVO approvalVO) throws FLException {
-		  ApprovalManifestDBPO approvalManifestDBPO = approvalManifestDBDao.queryApprovalManifestDBByAId(approvalVO.getAid());
+	public int refuseManifestDB(ApprovalPO approvalPO) throws FLException {
+		  ApprovalManifestDBPO approvalManifestDBPO = approvalManifestDBDao.queryApprovalManifestDBByAId(approvalPO.getAid());
 			
 			if (approvalManifestDBPO == null) {
 				throw new FLException(240003, "审批信息不完整");
 			}
-	        ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-			
-			if (approvalPO == null) {
-				throw new FLException(240009 , "审批信息不存在");
-			}
-			
-	        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-	        approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-	
-			approvalDao.update(approvalPO);
+	       
 			List<ApprovalManifestDBItemPO> approvalManifestDBItemPOs = approvalManifestDBItemDao.queryApprovalManifestDBItemByAmdbid(approvalManifestDBPO.getAmdbid());
 			if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
 				throw new FLException(260007, "货单无商品信息");

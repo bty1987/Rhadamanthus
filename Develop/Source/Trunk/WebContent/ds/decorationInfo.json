@@ -46,6 +46,10 @@
 		{"key":"1.5", "value":"6.5"},
 		{"key":"1.8", "value":"5.6"},
 		{"key":"2", "value":"5"}
+	], "orderType": [
+		{"key":"0", "value":"半包"},
+		{"key":"1", "value":"全包"},
+		{"key":"2", "value":"半价"}
 	],
     "errorCode": 0,
     "errorMsg": null

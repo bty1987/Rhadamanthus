@@ -80,6 +80,15 @@ public class UserInfoVO implements java.io.Serializable {
 	
 	private String email;
 
+	public UserInfoVO() {
+		super();
+	}
+
+	public UserInfoVO(UserVO user) {
+		super();
+		this.user = user;
+	}
+
 	public Long getUiid() {
 		return this.uiid;
 	}

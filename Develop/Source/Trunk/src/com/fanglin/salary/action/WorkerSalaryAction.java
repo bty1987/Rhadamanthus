@@ -27,6 +27,8 @@ public class WorkerSalaryAction extends BaseListAction{
 	
 	private List<WorkerSalaryVO> workerSalarys;
 	
+	private List<Long> wsIds;
+	
 	@Action(value = "pageWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String pageWorkerSalary (){
 		
@@ -45,7 +47,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value = "addWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addWorkerSalary() throws FLException{
 		
-		workerSalaryService.addWorkerSalary(workerSalary);
+		workerSalaryService.addWorkerSalary(workerSalary,queryUserId());
 		
 		return SUCCESS;
 	}
@@ -57,6 +59,22 @@ public class WorkerSalaryAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
+
+	@Action(value = "adoptWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String adoptWorkerSalary() throws FLException{
+		
+		workerSalaryService.adoptWorkerSalary(workerSalarys,queryUserId());
+			
+		return SUCCESS;
+			}
+	
+	@Action(value = "rejectWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectWorkerSalary() throws FLException{
+		
+		workerSalaryService.rejectWorkerSalary(workerSalarys,queryUserId());
+			
+		return SUCCESS;
+			}
 	
 	@Action(value = "deleteWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String deleteWorkerSalary() throws FLException{
@@ -64,7 +82,7 @@ public class WorkerSalaryAction extends BaseListAction{
 		workerSalaryService.deleteWorkerSalary(workerSalary);
 		
 		return  SUCCESS;
-	}
+		}
 	
 	public WorkerSalaryVO getWorkerSalary() {
 		
@@ -85,5 +103,16 @@ public class WorkerSalaryAction extends BaseListAction{
 		
 		this.workerSalarys = workerSalarys;
 	}
+
+	public List<Long> getWsIds() {
+		return wsIds;
+	}
+
+	public void setWsIds(List<Long> wsIds) {
+		this.wsIds = wsIds;
+	}
+
+	
+	
 	
 }

@@ -300,9 +300,9 @@ var QuotationDetail = (function(){
 			// $('#calTotalPrice').val(_total);
 
 
-			drawTable($('#sumLabSumMoney').text(),_total,utils.accMul(_totalfee, _tranRate), _tranRate,_dmanagefee,discount,cdiscount,ndiscount);
+			drawTable($('#sumLabSumMoney').text(),_total,utils.accMul(_totalfee, _tranRate),_dmanagefee,discount,cdiscount,ndiscount);
 
-			function drawTable(total,dtotal,transfee,tranRate,managefee,discount,cdiscount,ndiscount) {
+			function drawTable(total,dtotal,transfee,managefee,discount,cdiscount,ndiscount) {
 
 				var totalMoney = utils.changeTwoDecimal(utils.accAdd(utils.accAdd(total, transfee), managefee));
 
@@ -317,32 +317,32 @@ var QuotationDetail = (function(){
 
 				var divItem1 = $('<div></div>').addClass('fl-quo-cal-item');
 
-				divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info')).append(createCalItem("",'normal border-left alert-info')).append(createCalItem("装修",' small border-left-right alert-success')).append(createCalItem("",'normal border-left alert-success')).append(createCalItem("主材",'small border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal noborder'));
+				divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info')).append(createCalItem("装修",' small border-left-right alert-success')).append(createCalItem("",'normal border-left alert-success')).append(createCalItem("主材",'small border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal noborder'));
 				divItem1.appendTo(table);
 
 				var divItem2 = $('<div></div>').addClass('fl-quo-cal-item');
-				divItem2.append(createCalItem("版本",'normal')).append(createCalItem("折前总价",'normal')).append(createCalItem("打折项总额",'normal')).append(createCalItem("非打折项总额",'normal')).append(createCalItem("车运费",'normal')).append(createCalItem("管理费",'normal')).append(createCalItem("折扣",'small')).append(createCalItem("折后总价",'normal')).append(createCalItem("配比",'small')).append(createCalItem("主材额",'normal')).append(createCalItem("服务费",'normal')).append(createCalItem("实花总额",' normal alert-warning'));
+				divItem2.append(createCalItem("版本",'normal')).append(createCalItem("折前总价",'normal')).append(createCalItem("打折项总额",'normal')).append(createCalItem("非打折项总额",'normal')).append(createCalItem("管理费",'normal')).append(createCalItem("折扣",'small')).append(createCalItem("折后总价",'normal')).append(createCalItem("配比",'small')).append(createCalItem("主材额",'normal')).append(createCalItem("服务费",'normal')).append(createCalItem("实花总额",' normal alert-warning'));
 				divItem2.appendTo(table);
 
 				var banBaoDiv = $('<div></div>').addClass('fl-quo-cal-item');
-				banBaoDiv.append(createCalItem("半包",'normal')).append(createCalItem(total,'normal')).append(createCalItem(cdiscount,'normal')).append(createCalItem(ndiscount,'normal')).append(createCalItem(transfee,'normal')).append(createCalItem(managefee,'normal')).append(createCalItem(discount,'small')).append(createCalItem(dtotal,'normal')).append(createCalItem("-",'small')).append(createCalItem("-",'normal')).append(createCalItem("-",'normal')).append(createCalItem(dtotal,'normal alert-warning'));
+				banBaoDiv.append(createCalItem("半包",'normal')).append(createCalItem(total,'normal')).append(createCalItem(cdiscount,'normal')).append(createCalItem(utils.changeTwoDecimal(utils.accAdd(ndiscount,transfee)),'normal')).append(createCalItem(managefee,'normal')).append(createCalItem(discount,'small')).append(createCalItem(dtotal,'normal')).append(createCalItem("-",'small')).append(createCalItem("-",'normal')).append(createCalItem("-",'normal')).append(createCalItem(dtotal,'normal alert-warning'));
 				banBaoDiv.appendTo(table);
 
 				$.each(quo.machingType,function (i,v) {
 
 					var materialPrice = utils.changeTwoDecimal(utils.accMul(total,v.key));
 					var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice,config.serviceRate));
-					var projectPrice = utils.changeTwoDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accAdd(cdiscount,ndiscount),utils.accDiv(v.value,10)), transfee),managefee));
+					var projectPrice = utils.changeTwoDecimal(utils.accAdd(utils.accMul(utils.accAdd(utils.accAdd(cdiscount,ndiscount), transfee),utils.accDiv(v.value,10)),managefee));
 					var heJi = utils.changeTwoDecimal(utils.accAdd(projectPrice,utils.accAdd(materialPrice,servicePrice)));
 
 					var banJiaDiv = $('<div></div>').addClass('fl-quo-cal-item');
 	
 					if(i == Math.floor((quo.machingType.length / 2) - 1)){
-						banJiaDiv.append(createCalItem("半价",'normal border-top-bottom')).append(createCalItem(total,'normal border-top-bottom')).append(createCalItem(utils.accAdd(cdiscount,ndiscount),'normal border-top-bottom')).append(createCalItem("-",'normal border-top-bottom')).append(createCalItem(transfee,'normal border-top-bottom')).append(createCalItem(managefee,'normal border-top-bottom')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
+						banJiaDiv.append(createCalItem("半价",'normal border-top-bottom')).append(createCalItem(total,'normal border-top-bottom')).append(createCalItem(utils.accAdd(utils.accAdd(cdiscount,ndiscount),transfee),'normal border-top-bottom')).append(createCalItem("-",'normal border-top-bottom')).append(createCalItem(managefee,'normal border-top-bottom')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
 					}else if(i == (quo.machingType.length - 1)){
-						banJiaDiv.append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
+						banJiaDiv.append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem("",'normal border-top')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
 					}else{
-						banJiaDiv.append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
+						banJiaDiv.append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem("",'normal border-top-bottom')).append(createCalItem(v.value,'small')).append(createCalItem(projectPrice,'normal')).append(createCalItem(utils.accMul(v.key,100)+"%",'small')).append(createCalItem(materialPrice,'normal')).append(createCalItem(servicePrice,'normal')).append(createCalItem(heJi,'normal alert-warning'))
 					}
 					banJiaDiv.appendTo(table);
 				})
