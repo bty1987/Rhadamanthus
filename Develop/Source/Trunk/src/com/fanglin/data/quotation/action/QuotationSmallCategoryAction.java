@@ -11,6 +11,7 @@
 
 package com.fanglin.data.quotation.action;
 
+
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -44,6 +45,15 @@ public class QuotationSmallCategoryAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value="pageQuotationSmallCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageQuotationSmallCategory(){
+		
+		quotationSmallCategoryService.pageQuotationSmallCategory(getPaging(), getFilters());
+	    
+		return SUCCESS;
+	}
+
+	
 	public List<QuotationSmallCategoryVO> getQuotationSmallCategorys(){
 		return quotationSmallCategorys;
 	}

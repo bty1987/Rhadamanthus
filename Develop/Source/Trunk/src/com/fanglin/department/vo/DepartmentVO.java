@@ -17,7 +17,7 @@ public class DepartmentVO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
 	
-	private Integer dId;
+	private Integer did;
 
 	private String deptId;
 	
@@ -37,27 +37,29 @@ public class DepartmentVO implements Serializable {
 	
 	private CityProperVO cityProper;
 	
-	private int ident;
+	private Integer ident;
 	
-	private int company;
+	private Integer company;
+	
+	private Short status;
 	
 	public DepartmentVO(){
 		super();
 	}
 
 	public Integer getDid() {
-		return dId;
+		return did;
 	}
 
-	public void setDid(Integer dId) {
-		this.dId = dId;
+	public void setDid(Integer did) {
+		this.did = did;
 	}
 
-	public String getDeptId(){
+	public String getDeptId() {
 		return deptId;
 	}
 
-	public void setDeptId(String deptId){
+	public void setDeptId(String deptId) {
 		this.deptId = deptId;
 	}
 
@@ -125,20 +127,29 @@ public class DepartmentVO implements Serializable {
 		this.cityProper = cityProper;
 	}
 
-	public int getIdent() {
+	public Integer getIdent() {
 		return ident;
 	}
 
-	public void setIdent(int ident) {
+	public void setIdent(Integer ident) {
 		this.ident = ident;
 	}
 
-	public int getCompany() {
+	public Integer getCompany() {
 		return company;
 	}
 
-	public void setCompany(int company) {
+	public void setCompany(Integer company) {
 		this.company = company;
 	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
 
 }

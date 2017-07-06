@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.ChanDrawingDao;
 import com.fanglin.construction.po.ChanDrawingPO;
 import com.fanglin.construction.service.ChanDrawingService;
 import com.fanglin.construction.vo.ChanDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("chanDrawingService")
@@ -30,6 +33,9 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 	
 	@Autowired
 	private ChanDrawingDao chanDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public ChanDrawingVO queryChanDrawingById(int cdId){
@@ -79,7 +85,7 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateChanDrawing(ChanDrawingVO chanDrawingVO){
+	public int saveOrUpdateChanDrawing(ChanDrawingVO chanDrawingVO, String userId){
 		
 		ChanDrawingPO chanDrawingPO = null;
 		
@@ -90,6 +96,10 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 		}
 		
 		BeanUtil.copyProperties(chanDrawingVO, chanDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		chanDrawingPO.setCreater(userC);
+		chanDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		chanDrawingDao.saveOrUpdate(chanDrawingPO);
 		
@@ -100,7 +110,7 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<ChanDrawingVO> addChanDrawings(ChanDrawingVO chanDrawingVO, List<String> drawingUrls) {
+	public List<ChanDrawingVO> addChanDrawings(ChanDrawingVO chanDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<ChanDrawingVO> chanDrawingVOs = new ArrayList<ChanDrawingVO>();
 		
@@ -110,6 +120,10 @@ public class ChanDrawingServiceImpl implements ChanDrawingService {
 			
 			BeanUtil.copyProperties(chanDrawingVO, chanDrawingPO);
 			chanDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			chanDrawingPO.setCreater(userC);
+			chanDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			chanDrawingDao.save(chanDrawingPO);
 			

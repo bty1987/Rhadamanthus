@@ -90,13 +90,14 @@ public class ConstructerServiceImpl implements ConstructerService {
 			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
 		}
 		
-		UserPO userPO = userDao.get(constructerVO.getUser().getUserId());
+		UserPO userPO = userDao.queryUserByUserId(constructerVO.getUser().getUserId());
+		UserPO userC = userDao.queryUserByUserId(createrId);
 		
 		if(userPO == null){
 			throw new FLException(220005,"员工不存在");
 		}
 		
-		ConstructerPO constructerPO = new ConstructerPO(userPO, new UserPO(createrId));
+		ConstructerPO constructerPO = new ConstructerPO(userPO, userC);
 		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));
 		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept"));
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));

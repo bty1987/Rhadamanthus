@@ -132,7 +132,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return ;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -188,7 +188,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -294,7 +294,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -357,7 +357,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		int condition = 0;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO.getDuty().contains("设计部总监")){
 			condition = SystemConfig.getInt("majordomoCondition", 0);
@@ -383,7 +383,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -433,7 +433,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return ;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -492,7 +492,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	@Override
 	public void pageDecorationOrderForDesigner(Paging paging, List<Filter> filters, String userId){
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -604,7 +604,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -949,7 +949,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(!unstatus.contains(status)){
 			
-			UserPO userPO = userDao.get(userId);
+			UserPO userPO = userDao.queryUserByUserId(userId);
 			
 			if(userPO != null && !userPO.getDept().getDeptName().contains("客服")){
 				decorationOrderVO.getCustomer().setConfidentialInfo();
@@ -971,7 +971,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(!unstatus.contains(status)){
 			
-			UserPO userPO = userDao.get(userId);
+			UserPO userPO = userDao.queryUserByUserId(userId);
 			
 			if(!checkInfoDutys.contains(userPO.getDuty())){
 				decorationOrderVO.getCustomer().setConfidentialInfo();
@@ -1368,15 +1368,15 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setCustomerPO(new CustomerPO(decorationOrderVO.getCustomer().getId()));
 		decorationOrderPO.setVillagePO(new VillagePO(decorationOrderVO.getVillage().getVillageId()));
 		
-		UserPO designer = userDao.get(decorationOrderVO.getDesignerId());
-		UserPO salesman = userDao.get(decorationOrderVO.getSalesmanId());
+		UserPO designer = userDao.queryUserByUserId(decorationOrderVO.getDesignerId());
+		UserPO salesman = userDao.queryUserByUserId(decorationOrderVO.getSalesmanId());
 		
 		decorationOrderPO.setDesignerPO(designer);
 		decorationOrderPO.setSalesmanPO(salesman);
 		
 		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		UserPO operater = new UserPO(decorationOrderVO.getCreateUserId());
+		UserPO operater = userDao.queryUserByUserId(decorationOrderVO.getCreateUserId());
 		decorationOrderPO.setCreateUserPO(operater);
 		
 		decorationOrderPO.setProjectStatus(DecorationOrderPO.PROJECTSTATUS_WAITING_STR);
@@ -1431,7 +1431,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 		decorationOperatePO.setDecorationOrder(decorationOrderPO);
-		decorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		decorationOperatePO.setOperater(userDao.queryUserByUserId(decorationOrderVO.getCreateUserId()));
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_CREATE_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
@@ -1441,7 +1441,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOperatePO belongDecorationOperatePO = new DecorationOperatePO();
 		belongDecorationOperatePO.setDecorationOrder(decorationOrderPO);
-		belongDecorationOperatePO.setOperater(new UserPO(decorationOrderVO.getCreateUserId()));
+		belongDecorationOperatePO.setOperater(userDao.queryUserByUserId(decorationOrderVO.getCreateUserId()));
 		belongDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		belongDecorationOperatePO.setSourcer(decorationOrderPO.getSalesmanPO());
 		belongDecorationOperatePO.setTarger(decorationOrderPO.getDesignerPO());
@@ -1488,7 +1488,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 		decorationOperatePO.setDecorationOrder(decorationOrderPO);
-		decorationOperatePO.setOperater(new UserPO(userId));
+		decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
@@ -1511,7 +1511,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderDao.update(decorationOrderPO);
 			
 			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
-			decorationPaymentPO.setCreateUserPO(new UserPO(userId));
+			decorationPaymentPO.setCreateUserPO(userDao.queryUserByUserId(userId));
 			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
@@ -1523,7 +1523,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			if(refundValue < paymentValue){
 				DecorationPaymentPO penalty = new DecorationPaymentPO();
 				
-				penalty.setCreateUserPO(new UserPO(userId));
+				penalty.setCreateUserPO(userDao.queryUserByUserId(userId));
 				penalty.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 				penalty.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
 				penalty.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
@@ -1560,7 +1560,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(new UserPO(userId));
+			decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
@@ -1591,7 +1591,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 			decorationOperatePO.setDecorationOrder(decorationOrderPO);
-			decorationOperatePO.setOperater(new UserPO(userId));
+			decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SUB_DECORATION_QUOTATION_NUM_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);

@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.construction.dao.BricklayDrawingDao;
 import com.fanglin.construction.po.BricklayDrawingPO;
 import com.fanglin.construction.vo.BricklayDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("bricklayDrawingService")
@@ -29,6 +32,9 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 	
 	@Autowired
 	private BricklayDrawingDao bricklayDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public BricklayDrawingVO queryBricklayDrawingById(int bdId){
@@ -77,7 +83,7 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateBricklayDrawing(BricklayDrawingVO bricklayDrawingVO){
+	public int saveOrUpdateBricklayDrawing(BricklayDrawingVO bricklayDrawingVO, String  userId){
 		
 		BricklayDrawingPO bricklayDrawingPO = null;
 		
@@ -88,6 +94,10 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 		}
 		
 		BeanUtil.copyProperties(bricklayDrawingVO, bricklayDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		bricklayDrawingPO.setCreater(userC);
+		bricklayDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		bricklayDrawingDao.saveOrUpdate(bricklayDrawingPO);
 		
@@ -98,7 +108,7 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<BricklayDrawingVO> addbrBricklayDrawings(BricklayDrawingVO bricklayDrawingVO, List<String> drawingUrls) {
+	public List<BricklayDrawingVO> addbrBricklayDrawings(BricklayDrawingVO bricklayDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<BricklayDrawingVO> bricklayDrawingVOs = new ArrayList<BricklayDrawingVO>();
 		
@@ -108,6 +118,10 @@ public class BricklayDrawingService implements com.fanglin.construction.service.
 			
 			BeanUtil.copyProperties(bricklayDrawingVO, bricklayDrawingPO);
 			bricklayDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			bricklayDrawingPO.setCreater(userC);
+			bricklayDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			bricklayDrawingDao.save(bricklayDrawingPO);
 			

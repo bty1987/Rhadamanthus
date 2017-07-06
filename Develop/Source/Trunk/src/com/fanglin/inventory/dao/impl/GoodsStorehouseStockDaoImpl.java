@@ -11,6 +11,7 @@
 
 package com.fanglin.inventory.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -42,12 +43,15 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 		return (GoodsStorehouseStockPO) session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").createAlias("storehouse", "storehouse").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_FID_STR, fid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_SHID_STR, shId)).uniqueResult();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<GoodsStorehouseStockPO> queryGoodsStorehouseStockByGid(long gid, long cid, long fid) {
-		return session().createCriteria(GoodsStorehouseStockPO.class).createAlias("goods", "goods").createAlias("color", "color").createAlias("format", "format").add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(GoodsStorehouseStockPO.COLUMN_FID_STR, fid)).list();
+	public Float queryGoodsStorehouseStockByGid(long gid, long cid, long fid){
+		
+		String sql = "SELECT SUM(num) as nums from inventory.goodsstorehousestock where gid= :gid and cid= :cid AND fid= :fid";
+		
+		BigDecimal nums = (BigDecimal) session().createSQLQuery(sql).setLong("gid", gid).setLong("cid", cid).setLong("fid", fid).uniqueResult();
+		
+		return nums.floatValue();
 	}
-
 	
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
 		if(filters != null){

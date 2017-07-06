@@ -144,6 +144,8 @@ public class SalesPO implements Serializable {
 	
 	private String couponInfo;
 	
+	private short otherStatus;
+	
 	public SalesPO() {
 		super();
 	}
@@ -424,5 +426,13 @@ public class SalesPO implements Serializable {
 		this.couponInfo = couponInfo;
 	}
 
+	@Column(name="otherStatus")
+	public short getOtherStatus() {
+		return otherStatus;
+	}
 
+	public void setOtherStatus(short otherStatus) {
+		this.otherStatus = otherStatus;
+	}
+	
 }

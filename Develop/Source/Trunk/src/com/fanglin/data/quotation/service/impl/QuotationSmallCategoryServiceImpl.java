@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.data.quotation.service;
+package com.fanglin.data.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationSmallCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationSmallCategoryDao;
+import com.fanglin.data.quotation.service.QuotationSmallCategoryService;
 import com.fanglin.data.quotation.vo.QuotationSmallCategoryVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("quotationSmallCategoryService")
 @Transactional(readOnly=true)
@@ -44,7 +47,25 @@ public class QuotationSmallCategoryServiceImpl implements QuotationSmallCategory
 		
 		return quotationSmallCategoryVOs;
 	}
+	
+	@Override
+	public void pageQuotationSmallCategory(Paging paging, List<Filter> filters) {
+		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs = quotationSmallCategoryDao.pageQuotationSmallCategory(paging, filters);
+		List<QuotationSmallCategoryVO> quotationSmallCategoryVOs = new ArrayList<QuotationSmallCategoryVO>();
+		
+		for(QuotationSmallCategoryPO quotationSmallCategoryPO: quotationSmallCategoryPOs){
+			
+			QuotationSmallCategoryVO quotationSmallCategoryVO = new QuotationSmallCategoryVO();
 
+			BeanUtil.copyProperties(quotationSmallCategoryPO, quotationSmallCategoryVO);
+			
+			quotationSmallCategoryVOs.add(quotationSmallCategoryVO);
+		}
+		
+		paging.setData(quotationSmallCategoryVOs);
+	
+	}
+	
 	public QuotationSmallCategoryDao getQuotationSmallCategoryDao(){
 		return quotationSmallCategoryDao;
 	}
@@ -53,5 +74,7 @@ public class QuotationSmallCategoryServiceImpl implements QuotationSmallCategory
 			QuotationSmallCategoryDao quotationSmallCategoryDao){
 		this.quotationSmallCategoryDao = quotationSmallCategoryDao;
 	}
+
+
 	
 }

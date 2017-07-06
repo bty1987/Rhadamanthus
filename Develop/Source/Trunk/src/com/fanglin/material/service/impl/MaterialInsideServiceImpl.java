@@ -85,7 +85,7 @@ public class MaterialInsideServiceImpl implements MaterialInsideService {
 		
 		materialInsidePO.setCreateTime(DateUtil.current(MaterialInsidePO.CURRENT_TIME_FORMAT_STR));
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null){
 			materialInsidePO.setMaterialGuideId(userId);
@@ -139,7 +139,7 @@ public class MaterialInsideServiceImpl implements MaterialInsideService {
 		MaterialInsidePO materialInsidePO = materialInsideDao.get(materialInsideVO.getMiId());
 		
 		if(materialInsidePO != null){
-			UserPO userPO = userDao.get(userId);
+			UserPO userPO = userDao.queryUserByUserId(userId);
 			
 			if(userPO != null){
 				materialInsidePO.setMaterialGuideId(userId);

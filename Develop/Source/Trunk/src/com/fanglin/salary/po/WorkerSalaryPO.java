@@ -36,6 +36,8 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final short TYPE_SALARY_STR = 0;                      //工费类型   0工费 1扣款
 	
+	public static final short TYPE_SALARY_STRONE =1 ;
+	
 	public static final short STATUS_INIT_STR = 0;                      //状态  初始为0
 	
 	public static final short STATUS_INIT_STRONE = 1;                      //状态  初始为1
@@ -49,6 +51,9 @@ public class WorkerSalaryPO  implements Serializable{
 	public static final String COLUMN_SALARY_STR = "salary";       //如果该工人未设置过工费  初始为0
 	
 	public static final String COLUMN_APPROVETIME = "approveTime"; 
+	
+	public static final String COLUMN_CREATETIME = "createTime"; 
+	
 	
 	public static final String ORDERID_STR="decorationOrder.orderId"; //订单编号
 	
@@ -70,7 +75,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	private Timestamp createTime;
 	
-	private  UserPO   approver;
+	private  UserPO approver;
 	
 	private Timestamp approveTime ;
 	
@@ -83,6 +88,7 @@ public class WorkerSalaryPO  implements Serializable{
 	private short subtype ;
 	
 	private short status;
+	
 	private String comment ;
 
 	public WorkerSalaryPO() {
@@ -104,7 +110,11 @@ public class WorkerSalaryPO  implements Serializable{
 	this.user = user;
 	this.creater = creater;
 }
-
+	public WorkerSalaryPO(UserPO user ,UserPO creater) {
+		super();
+		this.user = user;
+		this.creater=creater;
+	}
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="wsid")
@@ -232,6 +242,6 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 	
 
-	
+
 
 }

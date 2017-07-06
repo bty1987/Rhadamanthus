@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.WaterwayCircuitCheckDrawingDao;
 import com.fanglin.construction.po.WaterwayCircuitCheckDrawingPO;
 import com.fanglin.construction.service.WaterwayCircuitCheckDrawingService;
 import com.fanglin.construction.vo.WaterwayCircuitCheckDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("waterwayCircuitCheckDrawingService")
@@ -30,6 +33,9 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 	
 	@Autowired
 	private WaterwayCircuitCheckDrawingDao waterwayCircuitCheckDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public WaterwayCircuitCheckDrawingVO queryWaterwayCircuitCheckDrawingById(int wcpdId){
@@ -78,7 +84,7 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateWaterwayCircuitCheckDrawing(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO){
+	public int saveOrUpdateWaterwayCircuitCheckDrawing(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, String userId){
 		WaterwayCircuitCheckDrawingPO waterwayCircuitCheckDrawingPO = null;
 		
 		if(waterwayCircuitCheckDrawingVO.getWccdId() == null || waterwayCircuitCheckDrawingVO.getWccdId() == 0){
@@ -88,6 +94,10 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 		}
 		
 		BeanUtil.copyProperties(waterwayCircuitCheckDrawingVO, waterwayCircuitCheckDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		waterwayCircuitCheckDrawingPO.setCreater(userC);
+		waterwayCircuitCheckDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		waterwayCircuitCheckDrawingDao.saveOrUpdate(waterwayCircuitCheckDrawingPO);
 		
@@ -98,7 +108,7 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<WaterwayCircuitCheckDrawingVO> addwaterWaterwayCircuitCheckDrawings(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, List<String> drawingUrls) {
+	public List<WaterwayCircuitCheckDrawingVO> addwaterWaterwayCircuitCheckDrawings(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<WaterwayCircuitCheckDrawingVO> waterwayCircuitCheckDrawingVOs = new ArrayList<WaterwayCircuitCheckDrawingVO>();
 		
@@ -108,6 +118,10 @@ public class WaterwayCircuitCheckDrawingServiceImpl implements WaterwayCircuitCh
 			
 			BeanUtil.copyProperties(waterwayCircuitCheckDrawingVO, waterwayCircuitCheckDrawingPO);
 			waterwayCircuitCheckDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			waterwayCircuitCheckDrawingPO.setCreater(userC);
+			waterwayCircuitCheckDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			waterwayCircuitCheckDrawingDao.save(waterwayCircuitCheckDrawingPO);
 			

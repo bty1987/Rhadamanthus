@@ -15,6 +15,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,21 +26,18 @@ public class MeasurementUnitPO implements Serializable{
 
 	private static final long serialVersionUID = -8051808038287996405L;
 	
+	public static final String COLUMN_NAME_STR = "name" ;
+	
+	public static final String COLUMN_ID_STR = "id";
+	
 	private int id;
 	
 	private String name;
 	
 	private String unitDes;
 	
-	public MeasurementUnitPO(){
-		
-	}
-	
-	public MeasurementUnitPO(int id){
-		this.id = id;
-	}
-
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	public int getId(){
 		return id;
@@ -64,6 +63,14 @@ public class MeasurementUnitPO implements Serializable{
 
 	public void setUnitDes(String unitDes){
 		this.unitDes = unitDes;
+	}
+	
+	public MeasurementUnitPO(int id){
+		this.id = id;
+	}
+
+	public MeasurementUnitPO() {
+		super();
 	}
 	
 }

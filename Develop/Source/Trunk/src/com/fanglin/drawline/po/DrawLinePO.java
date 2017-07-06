@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
@@ -50,9 +51,13 @@ public class DrawLinePO implements Serializable {
 	
 	private UserPO applayUserPO;
 	
-	private String drawLineGroup;
+	private DrawLineGroupPO drawLineGroupPO;
 	
-	private UserPO drawLineUserPO;
+	private String 	drawLineGroup;
+	
+	private UserPO 	drawLineUserPO;
+	
+	
 	
 	@Id
 	@GeneratedValue
@@ -133,15 +138,24 @@ public class DrawLinePO implements Serializable {
 		this.applayCount = applayCount;
 	}
 
-	public void setDrawLineGroup(String drawLineGroup){
-		this.drawLineGroup = drawLineGroup;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true,name = "dgid", referencedColumnName = "gid")
+	public DrawLineGroupPO getDrawLineGroupPO() {
+		return drawLineGroupPO;
 	}
 
-	public String getDrawLineGroup(){
+	public void setDrawLineGroupPO(DrawLineGroupPO drawLineGroupPO) {
+		this.drawLineGroupPO = drawLineGroupPO;
+	}
+
+	public String getDrawLineGroup() {
 		return drawLineGroup;
 	}
 
-	
+	public void setDrawLineGroup(String drawLineGroup) {
+		this.drawLineGroup = drawLineGroup;
+	}
+
 	public void setDrawLineUserPO(UserPO drawLineUserPO){
 		this.drawLineUserPO = drawLineUserPO;
 	}

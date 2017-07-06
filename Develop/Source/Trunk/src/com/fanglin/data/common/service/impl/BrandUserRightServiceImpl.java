@@ -57,6 +57,7 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 	public List<BrandUserRightVO> queryBrandUserRightForLogin(String userId) {
 		
 		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUserId(userId);
+	
 		List<BrandUserRightVO> brandUserRightVOs = new ArrayList<BrandUserRightVO>();
 		
 		BrandUserRightVO brandUserRightVO;

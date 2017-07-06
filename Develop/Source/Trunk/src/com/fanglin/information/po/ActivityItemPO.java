@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "activityitem", catalog = "platform")
 public class ActivityItemPO implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = -7540185816527717351L;
 	
 	public static final short TYPE_COUPON_INT = 0;

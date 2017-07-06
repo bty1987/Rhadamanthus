@@ -18,6 +18,8 @@ import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
 import com.fanglin.inventory.po.AssisOrderPO;
+import com.fanglin.inventory.po.ColorPO;
+import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AssisOrderService;
 import com.fanglin.inventory.vo.AssisOrderItemVO;
@@ -71,18 +73,20 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addAssisOrder(AssisOrderVO assisOrderVO,
-			List<AssisOrderItemVO> assisOrderItemVOs, String creater,String approver) {
+	public int addAssisOrder(AssisOrderVO assisOrderVO,List<AssisOrderItemVO> assisOrderItemVOs, String creater,String approver) {
 		
 		String word = "AO";
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT, "yyyyMMdd");
-		String no = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		
+		String no = String.valueOf(word) + currentDate + endNo;
 		
 		AssisOrderPO assisOrderPO = new AssisOrderPO(no);
 		
-		UserPO createrPO = userDao.get(creater);
-		UserPO approverPO = userDao.get(approver);
+		UserPO createrPO = userDao.queryUserByUserId(creater);
+		UserPO approverPO = userDao.queryUserByUserId(approver);
 		
 		BeanUtil.copyProperties(assisOrderVO, assisOrderPO, Arrays.asList("creater","approver","manifest"));
 		assisOrderPO.setOrderId(assisOrderVO.getOrderId());
@@ -96,10 +100,12 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		AssisOrderItemPO assisOrderItemPO;
 		
 		for(AssisOrderItemVO assisOrderItemVO: assisOrderItemVOs){
-			assisOrderItemPO = new AssisOrderItemPO(new GoodsPO());
+			assisOrderItemPO = new AssisOrderItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
-			BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,Arrays.asList("goods"));
+			BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,Arrays.asList("goods","color","format"));
 			BeanUtil.copyProperties(assisOrderItemVO.getGoods(), assisOrderItemPO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(assisOrderItemVO.getColor(), assisOrderItemPO.getColor());
+			BeanUtil.copyProperties(assisOrderItemVO.getFormat(), assisOrderItemPO.getFormat());
 			
 			assisOrderItemPO.setAoid(assisOrderPO.getAoid());
 			
@@ -111,10 +117,9 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateAssisOrderForStatus(AssisOrderVO assisOrderVO,String userId)
-			throws FLException {
+	public int updateAssisOrderForStatus(AssisOrderVO assisOrderVO,String userId)throws FLException {
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		AssisOrderPO assisOrderPO = assisOrderDao.get(assisOrderVO.getAoid());
 		

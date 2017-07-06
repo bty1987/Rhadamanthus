@@ -68,6 +68,15 @@ CREATE TABLE `cityproper` (
   KEY `indexone` (`cityProperId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市表';
 
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE `company` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` tinyint(2) NOT NULL,
+  `name` varchar(16) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
+
 DROP TABLE IF EXISTS `counting`;
 CREATE TABLE `counting` (
   `date` varchar(8) NOT NULL,
@@ -116,7 +125,6 @@ CREATE TABLE `department` (
   UNIQUE KEY `uniqueone` (`deptId`),
   KEY `indexone` (`deptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='部门表';
-
 
 DROP TABLE IF EXISTS `logininfo`;
 CREATE TABLE `logininfo` (
@@ -275,6 +283,17 @@ CREATE TABLE `supplieruserright` (
   PRIMARY KEY (`surId`),
   KEY `indexone` (`sId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='供应商用户权限';
+
+DROP TABLE IF EXISTS `systemconfig`;
+CREATE TABLE `systemconfig` (
+  `scid` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(32) NOT NULL,
+  `value` varchar(128) NOT NULL,
+  `cuid` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `comment` varchar(128),
+  PRIMARY KEY (`scid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 DROP TABLE IF EXISTS `token`;
 CREATE TABLE `token` (

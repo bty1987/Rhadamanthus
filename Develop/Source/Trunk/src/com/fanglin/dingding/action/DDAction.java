@@ -12,14 +12,13 @@
 package com.fanglin.dingding.action;
 
 import java.util.List;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.stereotype.Controller;
-
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.Department;
 import com.fanglin.dingding.po.User;
 import com.fanglin.dingding.service.DepartmentService;
@@ -31,22 +30,26 @@ import com.fanglin.dingding.utils.AuthHelper;
 @Controller
 public class DDAction extends BaseListAction {
 	
-	private static final long serialVersionUID = -6593413211279089778L;
-
+	private static final long serialVersionUID = -6593413211279089778L;	
+   
 	private String configInfo;
 	
 	private String url;
 	
 	private User user;
 	
-	private String userInfo;
-	
 	private String code;
+	
+	private List<Long> dids;
 	
 	private List<Department> departments;
 	
 	private Department department;
+     
+	private int errcode;
 	
+	private String userid;
+   	
 	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String requestDDConfig(){
 		
@@ -62,7 +65,7 @@ public class DDAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryUser(){
 		
@@ -73,18 +76,35 @@ public class DDAction extends BaseListAction {
 	
 	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryDDDepartment(){
+	System.out.println(department.getId());
+		departments = DepartmentService.queryDepartment(department.getId());
 		
-		departments = DepartmentService.queryDepartment(department);
-		
-		return SUCCESS;
-	}
-	
-	public String getUrl() {
-		return url;
+	  	return SUCCESS;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	@Action(value = "addDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String addUser2() throws FLException{
+		
+		 errcode = UserService.addDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
+		
+		 return SUCCESS;
+	}
+	
+	
+	@Action(value = "updateDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String updateUser() throws FLException{
+		
+		 errcode = UserService.updateDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
+		
+		 return SUCCESS;
+	}
+
+	@Action(value = "deleteDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String deleteDDUser()throws FLException{
+		
+		 errcode= UserService.deleteDDUser(userid);
+		
+		return SUCCESS;
 	}
 
 	public String getConfigInfo() {
@@ -95,20 +115,20 @@ public class DDAction extends BaseListAction {
 		this.configInfo = configInfo;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public String getUserInfo() {
-		return userInfo;
-	}
-
-	public void setUserInfo(String userInfo) {
-		this.userInfo = userInfo;
 	}
 
 	public String getCode() {
@@ -119,12 +139,12 @@ public class DDAction extends BaseListAction {
 		this.code = code;
 	}
 
-	public List<Department> getDepartments() {
-		return departments;
+	public List<Long> getDids() {
+		return dids;
 	}
 
-	public void setDepartments(List<Department> departments) {
-		this.departments = departments;
+	public void setDids(List<Long> dids) {
+		this.dids = dids;
 	}
 
 	public Department getDepartment() {
@@ -135,4 +155,29 @@ public class DDAction extends BaseListAction {
 		this.department = department;
 	}
 
+	public int getErrcode() {
+		return errcode;
+	}
+
+	public void setErrcode(int errcode) {
+		this.errcode = errcode;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+	
+	
 }

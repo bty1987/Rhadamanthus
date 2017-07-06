@@ -261,9 +261,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 					materialSubOrderItemPackage.setPostPoint(materialSubOrderItemPO.getPostPoint());
 					
 					materialSubOrderItemVO.setLevel(1);
-					materialSubOrderItemVO.setTotal((float) 0);
-					materialSubOrderItemVO.setPrePoint((float) 0);
-					materialSubOrderItemVO.setPostPoint((float) 0);
+					materialSubOrderItemVO.setTotal(0f);
+					materialSubOrderItemVO.setPrePoint(0f);
+					materialSubOrderItemVO.setPostPoint(0f);
 					
 					packageFlagMap.put(packageName, materialSubOrderItemPackage);
 					
@@ -277,9 +277,9 @@ public class MaterialSubOrderItemServiceImpl implements MaterialSubOrderItemServ
 					
 					materialSubOrderItemPackage = packageFlagMap.get(packageName);
 					materialSubOrderItemVO.setLevel(1);
-					materialSubOrderItemVO.setTotal((float) 0);
-					materialSubOrderItemVO.setPrePoint((float) 0);
-					materialSubOrderItemVO.setPostPoint((float) 0);
+					materialSubOrderItemVO.setTotal(0f);
+					materialSubOrderItemVO.setPrePoint(0f);
+					materialSubOrderItemVO.setPostPoint(0f);
 					
 					packageItemsList.add(materialSubOrderItemVO);
 				}

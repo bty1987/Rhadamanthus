@@ -32,7 +32,7 @@ import com.fanglin.decoration.service.AddReduceService;
 import com.fanglin.decoration.vo.AddReduceVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.utils.Arith;
@@ -58,6 +58,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
@@ -292,7 +295,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
 		
 		decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
-		decorationPaymentPO.setCreateUserPO(new UserPO(userId));
+		decorationPaymentPO.setCreateUserPO(userDao.queryUserByUserId(userId));
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);

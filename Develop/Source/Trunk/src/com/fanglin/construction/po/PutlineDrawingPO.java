@@ -13,11 +13,18 @@ package com.fanglin.construction.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "putlinedrawing", catalog = "platform")
@@ -44,6 +51,10 @@ public class PutlineDrawingPO implements java.io.Serializable {
 	private String drawingAddUrl;
 	
 	private short type;
+	
+	private UserPO creater;
+	
+	private Timestamp createTime;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -108,6 +119,25 @@ public class PutlineDrawingPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "createrId", referencedColumnName="userId")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

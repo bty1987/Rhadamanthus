@@ -91,7 +91,7 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 	@Action(value = "addWaterwayCircuitPowerDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addWaterwayCircuitPowerDrawing() throws FLException{
 		
-		waterwayCircuitPowerDrawingService.saveOrUpdateWaterwayCircuitPowerDrawing(waterwayCircuitPowerDrawing);
+		waterwayCircuitPowerDrawingService.saveOrUpdateWaterwayCircuitPowerDrawing(waterwayCircuitPowerDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class WaterwayCircuitPowerConstructionScheduleAction extends BaseListActi
 	@Action(value = "addWaterwayCircuitPowerDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addWaterwayCircuitPowerDrawings() throws FLException{
 		
-		waterwayCircuitPowerDrawings = waterwayCircuitPowerDrawingService.addWaterwayCircuitPowerDrawings(waterwayCircuitPowerDrawing, drawingUrls);
+		waterwayCircuitPowerDrawings = waterwayCircuitPowerDrawingService.addWaterwayCircuitPowerDrawings(waterwayCircuitPowerDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

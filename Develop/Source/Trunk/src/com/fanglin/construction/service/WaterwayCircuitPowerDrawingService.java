@@ -23,9 +23,9 @@ public interface WaterwayCircuitPowerDrawingService {
 	
 	public List<WaterwayCircuitPowerDrawingVO> queryWaterwayCircuitPowerDrawingByWcpcsId(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO);
 	
-	public int saveOrUpdateWaterwayCircuitPowerDrawing(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO);
+	public int saveOrUpdateWaterwayCircuitPowerDrawing(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, String userId);
 	
-	public List<WaterwayCircuitPowerDrawingVO> addWaterwayCircuitPowerDrawings(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, List<String> drawingUrls);
+	public List<WaterwayCircuitPowerDrawingVO> addWaterwayCircuitPowerDrawings(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteWaterwayCircuitPowerDrawingByWcpdId(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawing);
 	

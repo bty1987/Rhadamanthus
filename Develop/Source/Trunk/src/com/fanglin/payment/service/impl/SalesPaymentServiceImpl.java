@@ -12,6 +12,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.information.service.AssassinService;
 import com.fanglin.inventory.dao.SalesDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.dao.SalesReceiptDao;
@@ -20,6 +21,7 @@ import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.payment.po.SalesReceiptPO;
 import com.fanglin.payment.service.SalesPaymentService;
 import com.fanglin.inventory.service.SalesService;
+import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.payment.vo.SalesReceiptVO;
 import com.fanglin.inventory.vo.SalesVO;
@@ -36,6 +38,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 	@Autowired
 	private SalesService salesService;
+	
+	@Autowired
+	private AssassinService assassinService;
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
@@ -66,7 +71,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
 		salesReceiptPO.setCollecter(user);
 		salesReceiptPO.setCollecterName(user.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
@@ -141,7 +146,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
 		salesPaymentDao.update(salesPayment);
 
-		if (salesPayment.getType() == SalesPaymentPO.COLUMN_BTYPE_INT){
+		if (salesPayment.getType() == SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT){
 			
 			sales.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 			
@@ -176,7 +181,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales", "collecter", "confirmer"));
 		BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept" ));
-		UserPO userPO = userDao.get(cuid);
+		UserPO userPO = userDao.queryUserByUserId(cuid);
 		salesPaymentPO.setCreater(userPO);
 		salesPaymentPO.setCreaterName(userPO.getUserName());
 		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
@@ -184,11 +189,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		salesPaymentPO.setBrand(sales.getBrand());
 		salesPaymentPO.setCategory(sales.getCategory());
 		
-		if(salesPaymentVO.getType() == SalesPaymentPO.COLUMN_DTYPE_INT){
+		if(salesPaymentVO.getType() == SalesPaymentPO.COLUMN_DEPOSITREFUNDTYPE_INT){
 			
 			salesService.updateSalesStatusWaste(sales);
 			
-		}else if (salesPaymentVO.getType() == SalesPaymentPO.COLUMN_BTYPE_INT){
+		}else if (salesPaymentVO.getType() == SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT){
 			
 			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);
 			
@@ -252,7 +257,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 			SalesReceiptPO salesReceiptPO = salesReceiptDao.get(salesPayment.getSalesReceipt().getSrId());
 			salesReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
-			UserPO user = userDao.get(userId);
+			UserPO user = userDao.queryUserByUserId(userId);
 			salesReceiptPO.setConfirmer(user);
 			salesReceiptPO.setConfirmerName(user.getUserName());
 			salesReceiptDao.update(salesReceiptPO);
@@ -299,7 +304,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		}
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
 		salesReceiptPO.setCollecter(user);
 		salesReceiptPO.setCollecterName(user.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
@@ -361,7 +366,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
 		salesReceiptPO.setCouponInfo("");
 
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts();
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts() + salesReceiptPO.getAdvance();
 
 		Float referMoneyPY = 0f;
 		for (Long spid : spids) {
@@ -396,6 +401,24 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 				
 			} 
 		}
+		
+		PaymentVO paymentVO = new PaymentVO();
+		paymentVO.setOrderId(sales.getOrderId());
+		if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
+			paymentVO.setPaymentType("合同预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
+			paymentVO.setPaymentType("工程预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
+			paymentVO.setPaymentType("主材预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
+			paymentVO.setPaymentType("正林预付款");
+		}
+		paymentVO.setCash(salesPaymentVO.getAdvance());
+		paymentVO.setDes("InventorySystemPay");
+		paymentVO.setType("提现");
+
+		assassinService.PayPayment(paymentVO,userId);	
+		
 		return 0;
 	}
 
@@ -416,7 +439,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
 		salesReceiptPO.setCollecter(user);
 		salesReceiptPO.setCollecterName(user.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
@@ -484,7 +507,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesReceiptPO.setDes("");
 		}
 
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts() + salesReceiptPO.getCoupon();
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts() + salesReceiptPO.getCoupon() + salesReceiptPO.getAdvance();
 		Float referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_STR) {
@@ -505,6 +528,22 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 			salesDao.update(salesPO);
 		}
+		
+		PaymentVO paymentVO = new PaymentVO();
+		paymentVO.setOrderId(sales.getOrderId());
+		if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
+			paymentVO.setPaymentType("合同预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
+			paymentVO.setPaymentType("工程预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
+			paymentVO.setPaymentType("主材预付款");
+		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
+			paymentVO.setPaymentType("正林预付款");
+		}
+		paymentVO.setCash(salesPaymentVO.getAdvance());
+		paymentVO.setDes("InventorySystemPay");
+		paymentVO.setType("提现");
+		assassinService.PayPayment(paymentVO,userId);	
 
 		return 0;
 	}
@@ -531,7 +570,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 
 	    BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList( "sales", "collecter", "confirmer" ));
 	    BeanUtil.copyProperties(salesDao.querySalesBySid(salesPaymentVO.getSid()), salesPaymentPO.getSales(), Arrays.asList("village", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept"));
-	    UserPO userPO = userDao.get(cuid);
+	    UserPO userPO = userDao.queryUserByUserId(cuid);
 	    salesPaymentPO.setCreater(userPO);
 	    salesPaymentPO.setCreaterName(userPO.getUserName());
 	    salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);

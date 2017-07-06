@@ -44,7 +44,7 @@ public class PriceServiceImpl implements PriceService{
 		
 		PricePO pricePO = new PricePO();
 		
-		BeanUtil.copyProperties(priceVO, pricePO,"pid");
+		BeanUtil.copyProperties(priceVO, pricePO);
 		
 		priceDao.save(pricePO);
 		

@@ -108,7 +108,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		//实时更新盘点状态
 		CheckListPO checkListPO = new CheckListPO();
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		checkListPO.setType(type);
 		checkListPO.setNum(num);
@@ -143,22 +143,11 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 	
 	@Override
-	public List<GoodsStorehouseStockVO> queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
+	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
 			
-		List<GoodsStorehouseStockPO> goodsStorehouseStockPOs = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
-		List<GoodsStorehouseStockVO> goodsStorehouseStockVOs = new ArrayList<GoodsStorehouseStockVO>();
+		Float nums = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
 		
-		
-		for(GoodsStorehouseStockPO goodsStorehouseStockPO : goodsStorehouseStockPOs){
-			
-			goodsStorehouseStockVO = new GoodsStorehouseStockVO();
-			
-			BeanUtil.copyProperties(goodsStorehouseStockPO, goodsStorehouseStockVO, Arrays.asList("goods","color","format","storehouse"));
-			
-			goodsStorehouseStockVOs.add(goodsStorehouseStockVO);
-		}
-
-		return goodsStorehouseStockVOs;
+		return nums;
 	}
 
 	public StorehousePO instorehouse(long gid,long cid,long fid, long shId, float num) throws FLException{

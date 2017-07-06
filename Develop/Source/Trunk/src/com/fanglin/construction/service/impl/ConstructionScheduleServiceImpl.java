@@ -135,7 +135,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO){
 		
 		if(userPO == null){
-			userPO = userDao.get(userId);
+			userPO = userDao.queryUserByUserId(userId);
 		}else{
 			userId = userPO.getUserId();
 		}
@@ -186,7 +186,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		List<Integer> schedules = new ArrayList<Integer>();
 		
 		if(userPO == null){
-			userPO = userDao.get(userId);
+			userPO = userDao.queryUserByUserId(userId);
 		}else{
 			userId = userPO.getUserId();
 		}
@@ -311,7 +311,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		
 		BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO);
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null && constructionSchedulePO != null){
 			
 			int schedule = constructionSchedulePO.getSchedule();
@@ -346,63 +346,63 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO);
 			
 			if(constructionSchedulePO.getSupervisorQualityId() != null && !"".equals(constructionSchedulePO.getSupervisorQualityId())){
-				UserPO supervisonQualityUser =  userDao.get(constructionSchedulePO.getSupervisorQualityId());
+				UserPO supervisonQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId());
 				if(supervisonQualityUser != null){
 					constructionScheduleVO.setSupervisorQualityName(supervisonQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getChanQualityId() != null && !"".equals(constructionSchedulePO.getChanQualityId())){
-				UserPO chanQualityUser =  userDao.get(constructionSchedulePO.getChanQualityId());
+				UserPO chanQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getChanQualityId());
 				if(chanQualityUser != null){
 					constructionScheduleVO.setChanQualityName(chanQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getPutlineQualityId() != null && !"".equals(constructionSchedulePO.getPutlineQualityId())){
-				UserPO putlineQualityUser =  userDao.get(constructionSchedulePO.getPutlineQualityId());
+				UserPO putlineQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getPutlineQualityId());
 				if(putlineQualityUser != null){
 					constructionScheduleVO.setPutlineQualityName(putlineQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getWaterwayCircuitPowerQualityId() != null && !"".equals(constructionSchedulePO.getWaterwayCircuitPowerQualityId())){
-				UserPO waterwayCircuitQualityUser =  userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId());
+				UserPO waterwayCircuitQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getWaterwayCircuitPowerQualityId());
 				if(waterwayCircuitQualityUser != null){
 					constructionScheduleVO.setWaterwayCircuitPowerQualityName(waterwayCircuitQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getPowerQualityId() != null && !"".equals(constructionSchedulePO.getPowerQualityId())){
-				UserPO powerQualityUser =  userDao.get(constructionSchedulePO.getPowerQualityId());
+				UserPO powerQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getPowerQualityId());
 				if(powerQualityUser != null){
 					constructionScheduleVO.setPowerQualityName(powerQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getBricklayQualityId() != null && !"".equals(constructionSchedulePO.getBricklayQualityId())){
-				UserPO bricklayQualityUser =  userDao.get(constructionSchedulePO.getBricklayQualityId());
+				UserPO bricklayQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getBricklayQualityId());
 				if(bricklayQualityUser != null){
 					constructionScheduleVO.setBricklayQualityName(bricklayQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getCarpentQualityId() != null && !"".equals(constructionSchedulePO.getCarpentQualityId())){
-				UserPO carpentQualityUser =  userDao.get(constructionSchedulePO.getCarpentQualityId());
+				UserPO carpentQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getCarpentQualityId());
 				if(carpentQualityUser != null){
 					constructionScheduleVO.setCarpentQualityName(carpentQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getOilQualityId() != null && !"".equals(constructionSchedulePO.getOilQualityId())){
-				UserPO oilQualityUser =  userDao.get(constructionSchedulePO.getOilQualityId());
+				UserPO oilQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getOilQualityId());
 				if(oilQualityUser != null){
 					constructionScheduleVO.setOilQualityName(oilQualityUser.getCurrentName());
 				}
 			}
 			
 			if(constructionSchedulePO.getCleaningQualityId() != null && !"".equals(constructionSchedulePO.getCleaningQualityId())){
-				UserPO cleaningQualityUser =  userDao.get(constructionSchedulePO.getCleaningQualityId());
+				UserPO cleaningQualityUser =  userDao.queryUserByUserId(constructionSchedulePO.getCleaningQualityId());
 				if(cleaningQualityUser != null){
 					constructionScheduleVO.setCleaningQualityName(cleaningQualityUser.getCurrentName());
 				}
@@ -444,7 +444,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(constructionScheduleVO.getOrderId());
 		if(decorationOrderPO != null){
 			if(constructionScheduleVO.getSupervisorQualityId() != null){
-				decorationOrderPO.setSupervisorPO(new UserPO(constructionScheduleVO.getSupervisorQualityId()));
+				UserPO userPO = userDao.queryUserByUserId(constructionScheduleVO.getSupervisorQualityId());
+				decorationOrderPO.setSupervisorPO(userPO);
 			}else{
 				decorationOrderPO.setSupervisorPO(null);
 			}
@@ -467,8 +468,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				if(constructionSchedulePO != null){
 					
 					MessagePO messagePO = new MessagePO();
-					messagePO.setSender(new UserPO(constructionSchedulePO.getSupervisorQualityId()));
-					messagePO.setReceiver(new UserPO(constructionSchedulePO.getChanQualityId()));
+					UserPO senderU = userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId());
+					UserPO senderR = userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId());
+					messagePO.setSender(senderU);
+					messagePO.setReceiver(senderR);
 					messagePO.setType("施工进度消息");
 					messagePO.setContents(String.format("装修订单编号%s施工进度中,铲大白状态需要标记为成功或者通过.", constructionSchedulePO.getDecorationOrderPO().getOrderId()));
 					messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -588,8 +591,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 					
 					decorationPaymentDao.saveOrUpdate(_decorationPaymentPO);
 					
+					UserPO userS = userDao.queryUserByUserId(userId);
 					MessagePO messagePO = new MessagePO();
-					messagePO.setSender(new UserPO(userId));
+					messagePO.setSender(userS);
 					messagePO.setReceiver(decorationOrderPO.getDesignerPO());
 					messagePO.setType("违约金消息");
 					messagePO.setContents(String.format("装修订单编号:%s生成一条违约金记录信息", decorationOrderPO.getOrderId()));
@@ -645,7 +649,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		}else if(schedule == ConstructionSchedulePO.SCHEDULE_TYPE_PUTLINE_INT){
 			PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByCsId(csId);
 			if(putlineConstructionSchedulePO == null){
-				putlineConstructionSchedulePO = new PutlineConstructionSchedulePO(csId, decorationOrderPO, currentTime, currentTime);
+				putlineConstructionSchedulePO = new PutlineConstructionSchedulePO(csId, orderId, currentTime, currentTime);
 				
 				//根据订单id查询放线实体
 //				List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(orderId);
@@ -815,7 +819,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		for(UserPO userPO: userPOs){
 			
 			MessagePO messagePO = new MessagePO();
-			messagePO.setSender(new UserPO(qualityId));
+			UserPO userSender = userDao.queryUserByUserId(qualityId);
+			messagePO.setSender(userSender);
 			messagePO.setReceiver(userPO);
 			messagePO.setType("施工消息");
 			messagePO.setContents(String.format("装修订单编号:%s%s进度已经结束,请尽快回访客户", orderId, scheduleInfo));

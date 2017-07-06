@@ -91,7 +91,7 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addGroundLevelingDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addGroundLevelingDrawing() throws FLException{
 		
-		groundLevelingDrawingService.saveOrUpdateGroundLevelingDrawing(groundLevelingDrawing);
+		groundLevelingDrawingService.saveOrUpdateGroundLevelingDrawing(groundLevelingDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class GroundLevelingConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addGroundLevelingDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addGroundLevelingDrawings() throws FLException{
 		
-		groundLevelingDrawings = groundLevelingDrawingService.addGroundLevelingDrawings(groundLevelingDrawing, drawingUrls);
+		groundLevelingDrawings = groundLevelingDrawingService.addGroundLevelingDrawings(groundLevelingDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

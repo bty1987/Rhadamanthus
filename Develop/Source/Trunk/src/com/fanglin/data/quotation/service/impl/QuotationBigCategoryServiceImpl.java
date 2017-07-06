@@ -18,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationBigCategoryDao;
 import com.fanglin.data.quotation.service.QuotationBigCategoryService;
 import com.fanglin.data.quotation.vo.QuotationBigCategoryVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("quotationBigCategoryService")
 @Transactional(readOnly=true)
@@ -46,6 +48,24 @@ public class QuotationBigCategoryServiceImpl implements QuotationBigCategoryServ
 		return quotationBigCategoryVOs;
 	}
 
+	@Override
+	public void pageQuotationBigCategory(Paging paging, List<Filter> filters) {
+		
+		List<QuotationBigCategoryPO> quotationBigCategoryPOs = quotationBigCategoryDao.pageQuotationBigCategory(paging, filters);
+		List<QuotationBigCategoryVO> quotationBigCategoryVOs = new ArrayList<QuotationBigCategoryVO>();
+		
+		for(QuotationBigCategoryPO quotationBigCategoryPO: quotationBigCategoryPOs){
+			
+			QuotationBigCategoryVO quotationBigCategoryVO = new QuotationBigCategoryVO();
+
+			BeanUtil.copyProperties(quotationBigCategoryPO, quotationBigCategoryVO);
+			
+			quotationBigCategoryVOs.add(quotationBigCategoryVO);
+		}
+		
+		paging.setData(quotationBigCategoryVOs);
+	}
+	
 	public QuotationBigCategoryDao getQuotationBigCategoryDao(){
 		return quotationBigCategoryDao;
 	}
@@ -53,5 +73,7 @@ public class QuotationBigCategoryServiceImpl implements QuotationBigCategoryServ
 	public void setQuotationBigCategoryDao(QuotationBigCategoryDao quotationBigCategoryDao){
 		this.quotationBigCategoryDao = quotationBigCategoryDao;
 	}
+
+	
 	
 }

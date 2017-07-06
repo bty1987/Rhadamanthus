@@ -94,7 +94,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateStorehouseUser(UserVO userVO, List<Long> shIds) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

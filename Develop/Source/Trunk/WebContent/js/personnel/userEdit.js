@@ -1,6 +1,5 @@
-
 jQuery(function(a) {
-	
+
 	var user = {
 	    politicalType: [],
 	    householdType: [],
@@ -161,7 +160,6 @@ jQuery(function(a) {
     a(".collapse").collapse({
         toggle: !1
     });
-
     //编辑用户，获取用户信息
     if(params.tempUserId){
         user.editFlg = !0;
@@ -244,169 +242,6 @@ jQuery(function(a) {
     }).next().on(ace.click_event,function() {
         a(this).prev().focus()
     });
-
-    /*获取钉钉部门*/
-//    user.items.userId.val()
-    var deptList = null;
-    var selectedDepts = null;
-
-    com.post(api.dd.queryDDDepartment, {"department.parentid": 1}, function(res){
-        deptList = res.departments;
-    }, null, false);
-
-    if(user.items.userId.val()){
-
-        com.post(api.dd.queryDDUser, {"user.userid": user.items.userId.val()}, function(res){
-            selectedDepts = res.user.department;
-
-
-            var depts = [];
-
-            var length = selectedDepts.length;
-            if(length){
-                for(var i = 0; i<length; i++){
-                    depts.push(getSelectedDeptTree(selectedDepts[i]));
-                }
-            }
-
-            $('#dddept').val(depts.length ? depts.join(',') : null);
-        }, null, false);
-
-    }
-
-    if(!deptList.length) return;
-
-    var deptObj = {
-        '1' : {
-            name: '1',
-            type : 'folder',
-            //children : {}
-            id : 1
-        }
-    }, didList = [];
-
-    //获取所有叶子节点
-    $.each(deptList, function(i, v){
-        didList.push(v.id);
-    });
-
-    $.each(deptList, function(i,v){
-        if(v.parentid && didList.indexOf(v.parentid) != -1){
-            didList.splice(didList.indexOf(v.parentid),1);
-        }
-    });
-
-    var getDeptByDid = function(did){
-        var depts = {};
-
-        $.each(deptList, function(i, v){
-
-            if(v.parentid == did){
-                depts[v.id] = {
-                    name: v.name,
-                    type : didList.indexOf(v.id) == -1 ? 'folder' : 'item',
-                    id : v.id,
-                }
-
-                if(selectedDepts && selectedDepts.length && selectedDepts.indexOf(v.id) != -1){
-                    depts[v.id]["additionalParameters"] = {"item-selected" : true};
-                }
-            }
-        });
-
-        return depts;
-    };
-
-    $('#tree3').ace_tree({
-        dataSource: {
-            data : function(options, callback) {
-
-                console.log(options);
-
-                var $data = null;
-
-                if(!("name" in options) && !("type" in options)){
-                    $data = deptObj;//the root tree
-                    callback({ data: $data });
-                    return;
-                }
-                else if("type" in options && options.type == "folder") {
-                    if("children" in options)
-                        $data = options.children;
-                    else {
-                        $data = getDeptByDid(options.id);
-                    }
-                }
-
-                if($data != null)
-                    setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
-            }
-        },
-        loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-        'open-icon' : 'icon-minus',
-        'close-icon' : 'icon-plus',
-        'selectable' : true,
-        'multiSelect' : true,
-        'selected-icon' : null,
-        'unselected-icon' : null,
-        folderSelect : true,
-        cacheItems : false
-
-    }).on('selected', function (evt, opt) {
-        //console.log(opt.info)
-    });
-
-    $("#dddeptModal").on('hidden.bs.modal', function(e){
-
-        $('#tree3').find('.tree-folder').each(function(){
-            if($(this).css('display') != 'block')return true;
-            $(this).find('.tree-folder-header i').eq(0).trigger('click');
-        });
-    });
-
-    $('#dddeptbtn').click(function(){
-
-        $('#dddeptModal').modal('show');
-    });
-
-    $('#save').click(function(){
-
-        var items = $('#tree3' ).tree('selectedItems' );
-
-        var length = items.length;
-        var depts = [];
-        if(length){
-            selectedDepts = [];
-            for(var i =0; i<length; i++){
-                selectedDepts.push(items[i].id);
-                depts.push(getSelectedDeptTree(items[i].id));
-            }
-        }
-
-        $('#dddeptModal').modal("hide");
-    });
-
-    function getSelectedDeptTree(id){
-        var flag = true;
-        var chain = '';
-        while(flag){
-
-            $.each(deptList, function(i, v){
-                if(v.id == id){
-                    chain = chain ? v.name + '-' + chain : v.name + chain;
-
-                    if(v.parentid != 1){
-                        id = v.parentid
-                    }else{
-                        flag = false;
-                    }
-                    return false;
-                }else return true;
-            });
-        }
-
-        return chain;
-    }
 
     function saveData() {
         if (!com.validate() && !user.repeatFlg) {
@@ -491,7 +326,6 @@ jQuery(function(a) {
         user.contractList = [];
         user.experienceList = []
     };
-
 
 });
 

@@ -14,7 +14,6 @@ import javax.persistence.Table;
 import com.fanglin.inventory.po.SalesPO;
 import com.fanglin.personel.po.UserPO;
 
-
 @Entity
 @Table(name = "salespayment", catalog = "inventory")
 public class SalesPaymentPO  implements Serializable{
@@ -35,13 +34,17 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;          //销售单已确认状态
 	
-	public static final short COLUMN_DTYPE_INT = 7;                          //定金退款
+	public static final short COLUMN_DEPOSITTYPE_INT = 2;                    //定金
 	
-	public static final short COLUMN_BTYPE_INT = 5;                          //补款退款
+	public static final short COLUMN_REPLENISHMENTTYPE_INT = 3;              //补款
 	
-	public static final short COLUMN_JTYPE_INT = 6;                          //券退款
+	public static final short COLUMN_REFUNDSTYPE_INT = 4;                    //退款
 	
-	public static final short COLUMN_RTYPE_INT = 4;                          //退款
+	public static final short COLUMN_MAKEAREFUNDTYPE_INT = 5;                //补款退款
+	
+	public static final short COLUMN_VOUCHERREFUNDTYPE_INT = 6;              //券退款
+	
+	public static final short COLUMN_DEPOSITREFUNDTYPE_INT = 7;              //定金退款
 	
 	public static final String COLUMN_SALES_STATUS_STR = "status";        
 	
@@ -52,6 +55,14 @@ public class SalesPaymentPO  implements Serializable{
 	public static final String COLUMN_COLLECTTIME_STR ="salesReceipt.collectTime";
 	
 	public static final String COLUMN_CONFIRMTIME_STR ="salesReceipt.confirmTime";
+	
+	public static final short COLUMN_ADVANCETYPECONTRACT_INT = 1; 
+	
+	public static final short COLUMN_ADVANCETYPEENGINEERING_INT = 2; 
+	
+	public static final short COLUMN_ADVANCETYPEMATERIAL_INT = 3;
+	
+	public static final short COLUMN_ADVANCETYPEZHENGLIN_INT = 4; 
 	
 	private long spid;                    //款项ID
 

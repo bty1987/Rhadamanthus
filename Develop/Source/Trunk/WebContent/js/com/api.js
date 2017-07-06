@@ -40,6 +40,8 @@ var Api = function(){
             fillApi(path + 'right.js');
             fillApi(path + 'salary.js');
             fillApi(path + 'system.js');
+			fillApi(path + 'upgrade.js');
+			fillApi(path + 'member.js');
             
             return dtd.promise();
         }

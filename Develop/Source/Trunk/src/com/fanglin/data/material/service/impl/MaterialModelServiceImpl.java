@@ -53,7 +53,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	@Override
 	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId) throws FLException{
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		List<MaterialModelPO> materialModelPOs = null;
 		
 		if("驻店导购".equals(userPO.getDuty())){

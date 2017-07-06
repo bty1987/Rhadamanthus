@@ -49,7 +49,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Override
 	public List<Integer> queryDecorationOrderDesignDepartmentRightByUserId(UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -70,7 +70,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Transactional(rollbackFor=Exception.class)
 	public int updateDecorationOrderDesignDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -92,7 +92,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Override
 	public List<Integer> queryDecorationOrderSalesmanDepartmentRightByUserId(UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -113,7 +113,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Transactional(rollbackFor=Exception.class)
 	public int updateDecorationOrderSalesmanDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -135,7 +135,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Override
 	public List<String> queryDecorationOrderStatusRightByUserId(UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -156,7 +156,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	@Transactional(rollbackFor=Exception.class)
 	public int updateDecorationOrderStatusRight(UserVO userVO, List<String> statuses) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

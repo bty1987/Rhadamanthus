@@ -23,9 +23,9 @@ public interface ChanDrawingService {
 	
 	public List<ChanDrawingVO> queryChanDrawingByCcsId(ChanDrawingVO chanDrawingVO);
 	
-	public int saveOrUpdateChanDrawing(ChanDrawingVO chanDrawingVO);
+	public int saveOrUpdateChanDrawing(ChanDrawingVO chanDrawingVO, String userId);
 	
-	public List<ChanDrawingVO> addChanDrawings(ChanDrawingVO chanDrawingVO, List<String> drawingUrls);
+	public List<ChanDrawingVO> addChanDrawings(ChanDrawingVO chanDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteChanDrawingByCdId(ChanDrawingVO chanDrawingVO);
 	

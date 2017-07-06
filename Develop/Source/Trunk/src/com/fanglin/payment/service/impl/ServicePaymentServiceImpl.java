@@ -206,7 +206,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
 		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
-		UserPO userPO = userDao.get(cuid);
+		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -296,7 +296,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
 		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
-		UserPO userPO = userDao.get(cuid);
+		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -342,7 +342,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
 		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
-		UserPO userPO = userDao.get(cuid);
+		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -382,7 +382,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 			ServicePaymentPO servicePayment = servicePaymentDao.get(spid);
 
-			UserPO user = userDao.get(userId);
+			UserPO user = userDao.queryUserByUserId(userId);
 
 			servicePayment.setStatus(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
 			servicePayment.setConfirmer(user);
@@ -409,7 +409,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	private AdvanceReceiptPO addAdvanceReceipt(AdvanceReceiptVO advanceReceiptVO,String userId){
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
 		advanceReceiptPO.setCollectUser(user);
 		advanceReceiptPO.setCollectUserName(user.getUserName());
 		advanceReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
@@ -477,7 +477,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		ServicePaymentPO servicePayment = servicePaymentDao.get(servicePaymentVO.getSpid());
 
 		ServiceReceiptPO serviceReceiptPO = new ServiceReceiptPO();
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
 		serviceReceiptPO.setCollecter(user);
 		serviceReceiptPO.setCollecterName(user.getUserName());
 		serviceReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));

@@ -39,6 +39,16 @@ public class NoticeAction extends BaseListAction {
 	
 	private List<Integer> noticeIds;
 	
+	private List<Integer> dids;
+
+	public List<Integer> getDids() {
+		return dids;
+	}
+
+	public void setDids(List<Integer> dids) {
+		this.dids = dids;
+	}
+
 	@Action(value="pageNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageNotice() throws FLException{
 		
@@ -95,7 +105,12 @@ public class NoticeAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
+	@Action(value="updateNoticeDepartments",results={@Result(name="success",type="json",params={"ignoreHierarchy","false"})},params={"contentType","text/html"})
+	public String updateNoticeDepartments() throws FLException{
+		noticeService.updateNoticeDepartment(dids, notice);
+		return SUCCESS;
+	} 
+
 	public NoticeVO getNotice(){
 		return notice;
 	}

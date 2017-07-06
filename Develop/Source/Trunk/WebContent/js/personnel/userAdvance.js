@@ -1,19 +1,15 @@
 var userAdvance = {
 	postData: {},
 	postParam: {},
-	
 	userAdvanceItems: {},
 }
-
 jQuery(function($) {
 	
 	userAdvance.userAdvanceModal = $("#userAdvanceModal");
-	
 	userAdvance.userAdvanceItems.isLogin = $("#isLogin").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.extranet = $("#extranet").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.roleSel = $("#roleSel");
 	userAdvance.userAdvanceItems.company = $("#company");
-	
 	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 	
@@ -41,9 +37,7 @@ jQuery(function($) {
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-primary').html('权配');
-
 					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单设计')
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务')
 					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('订单状态')
@@ -122,9 +116,7 @@ jQuery(function($) {
 				userList && userList.length && $.each(userList, function(i, v){
 					$('input[name="advance"][value="'+ v +'"]', $list).prop('checked',true);
 				});
-
 				$dialog.modal("show");
-
 				this.postConf.path = api.right.updateDecorationOrderDesignDepartmentRight;
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
@@ -187,17 +179,13 @@ jQuery(function($) {
 					var $span = $('<span></span>').addClass('lbl').html(v.value);
 					$label.append($input).append($span).appendTo($list);
 				});
-
 				userList && userList.length && $.each(userList, function(i, v){
 					$('input[name="advance"][value="'+ v +'"]', $list).prop('checked',true);
 				});
-
 				$dialog.modal("show");
-
 				this.postConf.path = api.right.updateDecorationOrderStatusRight;
 				this.postConf.name = "statuses";
 				this.postConf["user.userId"] = userId;
-
 			},
 			setAdvance : function(){
 				var $dialog = this.$dialog;
@@ -253,15 +241,12 @@ function dialogUserAdvanceIndex(userId, userName){
 	com.post(api.personel.queryUserByUserId, options, function(res){
 		
 		var user = res.user;
-		
 		userAdvance.userAdvanceItems.company.bindData(userAdvance.company, "key", "value");
 		userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "roleId", "roleName");
-		
 		userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
 		userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
 		userAdvance.userAdvanceItems.company.val(user.company);
 		userAdvance.userAdvanceItems.roleSel.val(user.role.roleId);
-		
 		userAdvance.userAdvanceModal.modal("show");
 	}, null, false);
 }

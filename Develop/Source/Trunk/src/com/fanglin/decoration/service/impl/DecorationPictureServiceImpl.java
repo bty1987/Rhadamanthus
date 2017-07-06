@@ -24,7 +24,7 @@ import com.fanglin.decoration.dao.DecorationPictureDao;
 import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.decoration.service.DecorationPictureService;
 import com.fanglin.decoration.vo.DecorationPictureVO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -34,6 +34,9 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 	@Autowired
 	private DecorationPictureDao decorationPictureDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public List<DecorationPictureVO> queryDecorationPictureByOrderId(DecorationPictureVO decorationPictureVO){
@@ -66,7 +69,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		String _name = name.split("\\.")[0];
 		String _suffix = name.split("\\.")[1];
 		
-		decorationPicturePO.setUserPO(new UserPO(userId));
+		decorationPicturePO.setUserPO(userDao.queryUserByUserId(userId));
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPicturePO.setName(String.format("%s.%s", _name.substring(0, _name.length() > 8 ? 8 : _name.length()), _suffix));
 		decorationPicturePO.setStatus(DecorationPicturePO.STATUS_ENABLE_INT);

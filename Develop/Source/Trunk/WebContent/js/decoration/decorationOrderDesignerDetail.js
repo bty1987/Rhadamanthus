@@ -303,9 +303,9 @@ jQuery(function($) {
 				$('#materialPrice').html(res.materialPrice);
 				$('#servicePrice').html(res.servicePrice);
 				$('#quotationPrice').html(utils.changeThrDecimal(utils.accAdd(utils.accDiv(res.projectPrice,utils.accDiv(res.discount,10)),res.managePrice)));
-				var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.materialPaidup,res.materialPrice)),100);
+				var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.materialPaidup == null? 0:res.materialPaidup,res.materialPrice)),100);
 				$('#materialPercent').html(materialPercent > 100 ? 100:materialPercent + "%");
-				var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.servicePaidup,res.servicePrice)),100);
+				var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.servicePaidup == null? 0:res.servicePaidup,res.servicePrice)),100);
 				$('#servicePercent').html(servicePercent > 100 ? 100:servicePercent + "%");
 
 				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);

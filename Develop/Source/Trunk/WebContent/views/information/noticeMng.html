@@ -2,7 +2,7 @@
 .uploadify-button-text{line-height: 0 !important;}
 .lineheight0{line-height:15px !important;}
 </style>
-
+<!--通知页-->
 <div class="page-content">
 	<div class="row">
 		<div class="col-xs-12">
@@ -14,9 +14,9 @@
 			<div id="pagenation" class="fl-page-wrap clearfix"></div>
 		</div>
 	</div>
-	
+
 	<div class="modal fade" id="noticeModal" tabindex="-1">
-		<div class="modal-dialog" style="width: 800px;">
+		<div class="modal-dialog" style="width: 800px">
 			<div class="modal-content">
       			<div class="modal-header">
         			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
@@ -31,7 +31,7 @@
 								<span class='star'></span>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="typeSel">公告类型</label>
 							<div class="col-sm-9">
@@ -41,7 +41,7 @@
 								</select>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="prioritySel">优先级</label>
 							<div class="col-sm-9">
@@ -52,7 +52,7 @@
 								</select>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
 							<div class="col-sm-9">
@@ -65,7 +65,7 @@
 								<span class='star'></span>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
 							<div class="col-sm-9">
@@ -78,14 +78,14 @@
 								<span class='star'></span>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="isPublic">公开</label>
 							<div class="col-sm-9">
 								<input type="checkbox" id="isPublic" />
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="attachment">上传附件</label>
 							<div class="col-sm-3 col-xs-4">
@@ -94,11 +94,11 @@
 								<input type="text" class="hidden" id="filePath"/>
 							</div>
 						</div>
-						
+
 						<div class="form-group"  style="padding: 0 10px;">
 								<div class="wysiwyg-editor" id="contents" data-toggle="popover" data-trigger='manual'></div>
 						</div>
-						
+
 					</form>
       			</div>
 				<div class="modal-footer">
@@ -108,7 +108,60 @@
     		</div>
   		</div>
   	</div>
+
+	<div class="modal fade" id="managements" tabindex="-1">
+	<div class="modal-dialog" style="width: 800px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">管理部门是否可见</h4>
+			</div>
+			<div class="page-content">
+				<div class="row">
+					<div class="col-sm-3 widget-container-span" id="aaaa" style="width:100% !important">
+						<div class="widget-box transparent">
+							<div class="widget-header">
+								<h4 class="lighter">部门结构</h4>
+							</div>
+
+							<div class="widget-body">
+								<div class="widget-main padding-6 no-padding-left no-padding-right">
+									<div id="tree3" class="tree">
+
+										<div id="treecheck"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--<div class="col-sm-9 widget-container-span" style="width:70% !important;">
+						<div class="widget-box transparent">
+							<div class="widget-header">
+								<h4 class="lighter">部门列表</h4>
+							</div>
+
+							<div class="widget-body">
+								<div class="widget-main padding-12 no-padding-left no-padding-right">
+									<div id="condListUser" class="fl_search clearfix"></div> &lt;!&ndash;&lt;!&ndash; 查询条件&ndash;&gt;&ndash;&gt;
+									<div id="resultListUser" class="clearfix tab-pane active"></div> &lt;!&ndash;&lt;!&ndash;查询结果&ndash;&gt;&ndash;&gt;
+									<div id="pagenationUser" class="fl-page-wrap clearfix"></div>&lt;!&ndash;&lt;!&ndash;分页&ndash;&gt;&ndash;&gt;
+								</div>
+							</div>
+						</div>
+					</div>-->
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="manageBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+	</div>
 </div>
+
+
 
 <!--<script type="text/javascript">-->
 	<!--$.getScript('assets/js/jquery.hotkeys.min.js?version=' + versionCode);-->

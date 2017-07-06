@@ -88,7 +88,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		BeanUtil.copyProperties(purchaseVO, purchasePO, Arrays.asList("user"));
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		purchasePO.setUser(userPO);
 		purchasePO.setCreateTime(new Timestamp(System.currentTimeMillis()));

@@ -1,0 +1,48 @@
+package com.fanglin.member.dao.impl;
+
+import java.util.List;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.member.dao.MemberDetailDao;
+import com.fanglin.member.po.MemberDetailPO;
+import com.fanglin.utils.Paging;
+
+@Repository("memberDetailDao")
+public class MemberDetailDaoImpl extends DaoImpl<MemberDetailPO> implements MemberDetailDao {
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<MemberDetailPO> queryMemberDetailByOrderId(String orderId) {
+		return session().createCriteria(MemberDetailPO.class).add(Restrictions.eq("pid", orderId)).list();
+	}
+	
+	@Override
+	public List<MemberDetailPO> pageMemberDetail(Paging paging, List<Filter> filters) {
+
+		PagingQuery<MemberDetailPO> query = pagingQuery(paging, MemberDetailPO.class);
+
+		queryFilterExecute(query, filters);
+
+		return query.list();
+	}
+	
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
+
+		if(filters != null && filters.size() > 0){
+
+			for(Filter filter: filters){
+
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+				if("mcId".equals(field)){
+					query.add(query.getCriterion("memberCard.mcId", Long.valueOf(data), op));
+				}
+			}
+		}
+	}
+	
+}

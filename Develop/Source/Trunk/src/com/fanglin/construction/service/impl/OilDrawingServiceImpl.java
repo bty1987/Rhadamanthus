@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.OilDrawingDao;
 import com.fanglin.construction.po.OilDrawingPO;
 import com.fanglin.construction.service.OilDrawingService;
 import com.fanglin.construction.vo.OilDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("oilDrawingService")
@@ -30,6 +33,9 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 	
 	@Autowired
 	private OilDrawingDao oilDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public OilDrawingVO queryOilDrawingById(int odId){
@@ -77,7 +83,7 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateOilDrawing(OilDrawingVO oilDrawingVO){
+	public int saveOrUpdateOilDrawing(OilDrawingVO oilDrawingVO, String userId){
 		
 		OilDrawingPO oilDrawingPO = null;
 		
@@ -87,6 +93,10 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 			oilDrawingPO = oilDrawingDao.get(oilDrawingVO.getOdId());
 		}
 		BeanUtil.copyProperties(oilDrawingVO, oilDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		oilDrawingPO.setCreater(userC);
+		oilDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		oilDrawingDao.saveOrUpdate(oilDrawingPO);
 		
@@ -97,7 +107,7 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<OilDrawingVO> addOilDrawings(OilDrawingVO oilDrawingVO, List<String> drawingUrls) {
+	public List<OilDrawingVO> addOilDrawings(OilDrawingVO oilDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<OilDrawingVO> oilDrawingVOs = new ArrayList<OilDrawingVO>();
 		
@@ -107,6 +117,10 @@ public class OilDrawingServiceImpl implements OilDrawingService {
 			
 			BeanUtil.copyProperties(oilDrawingVO, oilDrawingPO);
 			oilDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			oilDrawingPO.setCreater(userC);
+			oilDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			oilDrawingDao.save(oilDrawingPO);
 			

@@ -6,7 +6,7 @@ $(function(){
     var materialOrderPostBalance = {
         //厂商结算值点击保存
         vsaveBtn: $("#vsaveBtn").on("click", updateMaterialSubOrderBalanceForVBalance),
-        //厂商结算点击保存
+        //结算值点击保存
         saveBtn: $("#saveBtn").on("click", updateMaterialSubOrderBalanceForBalance),
         smodal: $('#smodal').on("show.bs.modal", function(a) {
             com.clearValidator();
@@ -101,9 +101,7 @@ $(function(){
                 ["厂商抹零：",v.materialSubOrder.venderMaling,"grey"],
                 ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "blue"],
                 ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货' , "blue"],
-                //订单号
-                //["差值 :", v.difference , "grey"],
-                //业务员 业务大区 业务部门？
+
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -195,8 +193,6 @@ $(function(){
                 });
             }
 
-
-
             return $liLine;
         };
 
@@ -227,10 +223,10 @@ $(function(){
         $exportAnchor.click(function(){
             exportation();
         });
-
+ 
         return [$exportAnchor];
     });
-    //厂商结算值 点保存
+    //厂商结算值 点保存//
     function updateMaterialSubOrderBalanceForVBalance(){
         if (!com.validate('smodal')) {
 
@@ -243,7 +239,9 @@ $(function(){
             //调用后台方法
             com.post(api.material.updateMaterialSubOrderBalanceForVBalance, _params, function(a) {
                 //根据当前条件进行分页查询
-                searcher.doSearch();
+                setTimeout(function(){
+                    searcher.doSearch();
+                },500);
                 //隐藏弹出框
                 materialOrderPostBalance.smodal.modal("hide");
             });
@@ -259,7 +257,10 @@ $(function(){
                 "materialSubOrderBalance.balance": $('#balance').val()
             };
             com.post(api.material.updateMaterialSubOrderBalanceForBalance, _params, function(a) {
-                searcher.doSearch();
+                setTimeout(function(){
+                    searcher.doSearch();
+                },500);
+
                 materialOrderPostBalance.modal.modal("hide");
             });
         }
@@ -274,7 +275,10 @@ $(function(){
         com.post(api.material.vpostMaterialSubOrderBalance, _params, function(a) {
             com.showAlert(com.info, '厂商成功结算');
             //状态和结算时间在后台进行修改 前台并没有修改
-            searcher.doSearch();
+            setTimeout(function () {
+                searcher.doSearch();
+            },500);
+
         });
     }
 
@@ -287,7 +291,10 @@ $(function(){
 
         com.post(api.material.postMaterialSubOrderBalance, _params, function(a) {
         	com.showAlert(com.info, '成功结算');
-            searcher.doSearch();
+            setTimeout(function () {
+                searcher.doSearch();
+            },500);
+
         });
     }
     //导出功能
@@ -327,7 +334,7 @@ $(function(){
 					["抹零 ", "materialSubOrder.maling"],
 					["厂商抹零 ", "materialSubOrder.venderMaling"],
 					["状态", "status"],
-					["类型", "type"]
+					["类型", "type"],
                 ],
                 list: res.paging.data,
             }, function(v){
@@ -336,4 +343,6 @@ $(function(){
 			});
         });
     }
+
+
 });

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
-import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.service.OperationService;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
@@ -27,7 +25,6 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
 
 public class AccessInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = -1754802896214390640L;
@@ -42,8 +39,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		
-		String userId = "";
 		
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
@@ -76,9 +71,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				if(authentication.getUserId() != null){
 					
-					if(!actionName.startsWith("page") && !actionName.startsWith("query")){
-						logger.error(String.format("%s - %s - %s - %s", "AI", "I", authentication.getUserId(), actionName));
-					}
+					LogUtils.logging(logger, authentication.getUserId(), actionName);
 					
 					if(authentication.getUpdateTime() == -1){
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
@@ -95,8 +88,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 					
 					CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
 					
-					userId = authentication.getUserId();
-					
 					if(operationService.checkOperationByUserId(authentication.getUserId(), actionName, authentication.getRollcall())){
 						invocation.invoke();
 					}else{
@@ -108,15 +99,12 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
 				
-				// 获得值栈
-				ValueStack valueStack = invocation.getStack();
-				Integer errorCode = (Integer) valueStack.findValue("errorCode");
-				if(errorCode != null){
+				if((Integer) invocation.getStack().findValue("errorCode") != null){
 					
-					ActionLogPO actionLogPO = new ActionLogPO(actionName, new UserPO(userId), startTime, endTime.getTime() - startTime.getTime());
+					Long runTime = endTime.getTime() - startTime.getTime();
 					
-					if(actionLogPO.getRunTime() > 5000){
-						logService.addActionLog(actionLogPO);
+					if(runTime > 5000){
+						LogUtils.logging(logger, actionName, runTime);
 					}
 				}
 			}

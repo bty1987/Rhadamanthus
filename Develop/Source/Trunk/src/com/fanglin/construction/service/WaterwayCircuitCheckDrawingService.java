@@ -23,9 +23,9 @@ public interface WaterwayCircuitCheckDrawingService {
 	
 	public List<WaterwayCircuitCheckDrawingVO> queryWaterwayCircuitCheckDrawingByWcccsId(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO);
 	
-	public int saveOrUpdateWaterwayCircuitCheckDrawing(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO);
+	public int saveOrUpdateWaterwayCircuitCheckDrawing(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, String userId);
 	
-	public List<WaterwayCircuitCheckDrawingVO> addwaterWaterwayCircuitCheckDrawings(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, List<String> drawingUrls);
+	public List<WaterwayCircuitCheckDrawingVO> addwaterWaterwayCircuitCheckDrawings(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteWaterwayCircuitCheckDrawingByWccdId(WaterwayCircuitCheckDrawingVO waterwayCircuitCheckDrawing);
 	

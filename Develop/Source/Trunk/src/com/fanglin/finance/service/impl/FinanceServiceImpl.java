@@ -150,7 +150,7 @@ public class FinanceServiceImpl implements FinanceService {
 		}
 		
 		voucherPO.setOriginator(advanceReceiptPO.getCollectUser());
-		voucherPO.setPostor(userDao.get(poster.getUserId()));
+		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");
@@ -292,7 +292,7 @@ public class FinanceServiceImpl implements FinanceService {
 		}
 		
 		voucherPO.setOriginator(decorationReceiptPO.getCollectUserPO());
-		voucherPO.setPostor(userDao.get(poster.getUserId()));
+		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");
@@ -476,8 +476,8 @@ public class FinanceServiceImpl implements FinanceService {
 			abstracts = String.format("退订单%s子订单%s的主材款", orderId, msoNo);
 		}
 		
-		voucherPO.setOriginator(userDao.get(materialReceiptPO.getCollectUserId()));
-		voucherPO.setPostor(userDao.get(poster.getUserId()));
+		voucherPO.setOriginator(userDao.queryUserByUserId(materialReceiptPO.getCollectUserId()));
+		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");

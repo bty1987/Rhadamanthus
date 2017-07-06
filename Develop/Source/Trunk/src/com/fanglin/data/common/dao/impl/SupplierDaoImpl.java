@@ -50,12 +50,9 @@ public class SupplierDaoImpl extends DaoImpl<SupplierPO> implements SupplierDao 
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
-		
 		if(filters != null){
 			for(Filter filter: filters){
-				
 				String field = filter.getField();
-				
 				if(SupplierPO.COLUMN_NAME_STR.equals(field)){
 					query.add(query.getCriterion(SupplierPO.COLUMN_NAME_STR, filter.getData(), filter.getOp()));
 				}

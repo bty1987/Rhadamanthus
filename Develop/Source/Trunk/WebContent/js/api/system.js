@@ -85,5 +85,16 @@ $.extend(api, {system: {
     queryApproveUserForNameByType: {url: "queryApproveUserForNameByType.do"},
     addApproveUser: {url: "addApproveUser.do"},
     updateApproveUser: {url: "updateApproveUser.do"},
-    deleteApproveUser: {url: "deleteApproveUser.do"}
+    deleteApproveUser: {url: "deleteApproveUser.do"},
+
+    pageSystemConfig: {url: "pageSystemConfig.do"},
+    addSystemConfig:{url:"addSystemConfig.do", server: "communion"},
+    deleteSystemConfig:{url:"deleteSystemConfig.do", server: "communion"},
+
+    pageCompany: {url: "pageCompany.do", demo: true},
+    queryCompany: {url: "queryCompany.do"},
+    addCompany: {url: "addCompany.do", server: "communion"},
+    updateCompany: {url: "updateCompany.do", server: "communion"},
+    updateCompanyForStatus: {url: "updateCompanyForStatus.do", server: "communion"}
+
 }});

@@ -77,7 +77,7 @@ public class SalesServiceImpl implements SalesService {
 		
 		
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
 		
@@ -155,9 +155,9 @@ public class SalesServiceImpl implements SalesService {
 		String salesBrand = salesVO.getBrand();
 		String salesItemBrand = "";
 		
-		UserPO salesman = userDao.get(salesVO.getSalesman().getUserId());
-		UserPO guider = userDao.get(salesVO.getGuider().getUserId());
-		UserPO instorer = userDao.get(salesVO.getInstorer().getUserId());
+		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
+		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
+		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
 		
 		String currentDate = DateUtil.current("yyyyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate);
@@ -191,12 +191,12 @@ public class SalesServiceImpl implements SalesService {
 				
 				salesItemBrand = salesItemVO.getGoods().getBrand();
 				if(!salesItemBrand.equals(salesBrand)){
-					throw new FLException(111, "品牌不一致");
+					throw new FLException(260033, "品牌不一致");
 				}
 			}
 			
 			if(!salesItemBrand.equals(salesItemVO.getGoods().getBrand())){
-				throw new FLException(111, "品牌不一致");
+				throw new FLException(260033, "品牌不一致");
 			}
 			
 			SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());

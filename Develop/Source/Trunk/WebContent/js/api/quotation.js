@@ -57,6 +57,11 @@ $.extend(api, {quotation: {
     updateSystemDefineItemForDiscount: {url: "updateSystemDefineItemForDiscount.do"},
     deleteSystemDefineItemByIds: {url: "deleteSystemDefineItemByIds.do"},
 
+    pageQuotationBigCategory:{url:"pageQuotationBigCategory.do"},
+    pageQuotationType:{url:"pageQuotationType.do"},
+    pageQuotationSmallCategory:{url:"pageQuotationSmallCategory.do"},
+    pageQuotationClassification:{url:"pageQuotationClassification.do"},
+
     queryQuotationByOrderId: {url: "queryQuotationByOrderId.do", demo: true},
     queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do", demo: true},
     queryQuotationById: {url: "queryQuotationById.do", demo: true},

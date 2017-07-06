@@ -28,6 +28,10 @@ public class AssisOrderItemPO implements Serializable{
 	
 	private GoodsPO goods;
 	
+	private ColorPO color;
+	
+	private FormatPO format;
+	
 	private float num;
 	
 	public AssisOrderItemPO() {
@@ -37,6 +41,13 @@ public class AssisOrderItemPO implements Serializable{
 	public AssisOrderItemPO(GoodsPO goods) {
 		super();
 		this.goods = goods;
+	}
+
+	public AssisOrderItemPO(GoodsPO goods, ColorPO color, FormatPO format) {
+		super();
+		this.goods = goods;
+		this.color = color;
+		this.format = format;
 	}
 
 	@Id
@@ -69,6 +80,26 @@ public class AssisOrderItemPO implements Serializable{
 		this.goods = goods;
 	}
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
+	public ColorPO getColor() {
+		return color;
+	}
+
+	public void setColor(ColorPO color) {
+		this.color = color;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fid", referencedColumnName = "fid")
+	public FormatPO getFormat() {
+		return format;
+	}
+
+	public void setFormat(FormatPO format) {
+		this.format = format;
+	}
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;

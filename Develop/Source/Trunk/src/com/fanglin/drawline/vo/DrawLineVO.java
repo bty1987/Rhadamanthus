@@ -68,6 +68,8 @@ public class DrawLineVO implements Serializable {
 	
 	private String applayUserId;
 	
+	private Long   gid;
+	
 	private String drawLineGroup;
 	
 	private String drawLineUser;
@@ -234,6 +236,14 @@ public class DrawLineVO implements Serializable {
 
 	public float getHouseArea(){
 		return houseArea;
+	}
+	
+	public Long getGid() {
+		return gid;
+	}
+
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
 
 	public void setDrawLineGroup(String drawLineGroup){

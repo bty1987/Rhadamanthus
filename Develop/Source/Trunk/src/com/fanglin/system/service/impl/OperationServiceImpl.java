@@ -91,7 +91,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -139,7 +139,7 @@ public class OperationServiceImpl implements OperationService {
 		
 		boolean result = false;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -186,7 +186,7 @@ public class OperationServiceImpl implements OperationService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateRoleOperationByUserId(List<Integer> oIds, OperationVO operationVO, UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

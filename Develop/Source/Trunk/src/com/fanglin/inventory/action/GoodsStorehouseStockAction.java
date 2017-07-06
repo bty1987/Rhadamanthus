@@ -25,7 +25,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.vo.CheckListVO;
 import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
-import com.fanglin.utils.Arith;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -61,7 +60,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryStorehouseStockByShIdAGId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryGoodsStorehouseStockByShIdAGId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryStorehouseStockByShid() {
 		
 		goodsStorehouseStock = goodsStorehouseStockService.queryStorehouseStockByShIdAGId(goodsStorehouseStock);
@@ -72,15 +71,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 	@Action(value = "queryGoodsStorehouseStockByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsStorehouseStockByGid() {
 		
-		Float num = 0f;
-		
-		goodsStorehouseStocks = goodsStorehouseStockService.queryGoodsStorehouseStockByGid(goodsStorehouseStock);
-		
-		for(GoodsStorehouseStockVO goodsStorehouseStockVO : goodsStorehouseStocks){
-			num = Arith.add(goodsStorehouseStockVO.getNum(), num);
-		}
-		
-		nums = num;
+		nums = goodsStorehouseStockService.queryGoodsStorehouseStockByGid(goodsStorehouseStock);
 				
 		return SUCCESS;
 	}

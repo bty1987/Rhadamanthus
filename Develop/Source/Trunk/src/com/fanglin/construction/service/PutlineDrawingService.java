@@ -23,9 +23,9 @@ public interface PutlineDrawingService {
 	
 	public List<PutlineDrawingVO> queryPutlineDrawingByPlcsId(PutlineDrawingVO putlineDrawingVO);
 	
-	public int saveOrUpdatePutlineDrawing(PutlineDrawingVO putlineDrawingVO);
+	public int saveOrUpdatePutlineDrawing(PutlineDrawingVO putlineDrawingVO, String userId);
 	
-	public List<PutlineDrawingVO> addPutlineDrawings(PutlineDrawingVO putlineDrawingVO, List<String> drawingUrls);
+	public List<PutlineDrawingVO> addPutlineDrawings(PutlineDrawingVO putlineDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deletePutlineDrawingByPldId(PutlineDrawingVO putlineDrawingVO);
 	

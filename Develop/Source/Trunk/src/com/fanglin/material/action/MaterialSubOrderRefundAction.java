@@ -57,21 +57,6 @@ public class MaterialSubOrderRefundAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="cancelMaterialSubOrderRefundForModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String cancelMaterialSubOrderRefundForModel(){
-		
-		materialSubOrderRefundService.cancelMaterialSubOrderRefundForModel(materialSubOrderRefund.getMsorId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="cancelMaterialSubOrderRefundForPackage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String cancelMaterialSubOrderRefundForPackage(){
-		
-		materialSubOrderRefundService.cancelMaterialSubOrderRefundForPackage(msorIds, msoId);
-		
-		return SUCCESS;
-	}
 
 	public MaterialSubOrderRefundVO getMaterialSubOrderRefund(){
 		return materialSubOrderRefund;

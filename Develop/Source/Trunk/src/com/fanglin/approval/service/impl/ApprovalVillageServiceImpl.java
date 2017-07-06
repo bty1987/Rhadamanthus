@@ -32,6 +32,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -55,6 +56,9 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 	@Autowired
 	private MessageService messageService;
 
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForVillage(ApprovalVO approvalVO, ApprovalVillageVO approvalVillageVO, String userId) throws FLException {
@@ -83,13 +87,16 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_VILLAGE_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(orderId);
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_VILLAGE_STR, orderId, decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), villagePO.getVillageName(), approvalVillageVO.getNewHouseNumber()));
-		approvalPO.setSender(new UserPO(userId));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
+		approvalPO.setSender(sender);
+		approvalPO.setReceiver(receiver);
 		
 		approvalDao.save(approvalPO);
 		
@@ -99,7 +106,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		approvalVillagePO.setOldVillageId(decorationOrderPO.getVillagePO().getVillageId());
 		approvalVillagePO.setOldHouseNumber(decorationOrderPO.getHouseNumber());
 		
-		approvalDao.save(approvalVillagePO);
+		approvalVillageDao.save(approvalVillagePO);
 		
 		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
 		

@@ -403,7 +403,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentPO.setMaterialType(materialPaymentVO.getMaterialType());
 		materialPaymentPO.setMaterialBrand(materialPaymentVO.getMaterialBrand());
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			materialPaymentPO.setMsoNo("");
 			materialPaymentPO.setCreateUserId(userPO.getUserId());
@@ -655,7 +655,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				materialSubOrderDao.update(materialSubOrderPO);
 			}
 			
-			UserPO userPO = userDao.get(userId);
+			UserPO userPO = userDao.queryUserByUserId(userId);
 			if(userPO != null){
 				materialReceiptPO.setCollectUserName(userPO.getCurrentName());
 			}
@@ -775,7 +775,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			total = Arith.add(total, materialReceiptVO.getCoupon());
 		}
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			materialReceiptPO.setCollectUserName(userPO.getCurrentName());
 		}
@@ -1019,7 +1019,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			}
 		}
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			materialReceiptPO.setCollectUserName(userPO.getCurrentName());
 		}
@@ -1027,7 +1027,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		materialReceiptPO.setReceiptType(MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT);
 		materialReceiptPO.setDes(materialPaymentVO.getDes());
-		
+		materialReceiptPO.setRealMoney(real);
 		materialPaymentPO.setMaterialReceipt(materialReceiptPO);
 		
 		materialReceiptDao.save(materialReceiptPO);
@@ -1151,7 +1151,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					}
 				}
 				
-				UserPO userPO = userDao.get(userId);
+				UserPO userPO = userDao.queryUserByUserId(userId);
 				materialReceiptPO.setConfirmUserId(userId);
 				materialReceiptPO.setConfirmUserName(userPO.getUserName());
 				materialReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
@@ -1264,7 +1264,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			materialPaymentPO.setCreateUserId(userPO.getUserId());
 			materialPaymentPO.setCreateUserName(userPO.getCurrentName());

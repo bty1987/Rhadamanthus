@@ -13,10 +13,14 @@ package com.fanglin.data.quotation.service;
 
 import java.util.List;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.QuotationSmallCategoryVO;
+import com.fanglin.utils.Paging;
 
 public interface QuotationSmallCategoryService {
 	
 	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory();
+	
+	public void pageQuotationSmallCategory(Paging paging, List<Filter> filters);
 	
 }

@@ -91,7 +91,7 @@ public class CarpentConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addCarpentDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCarpentDrawing() throws FLException{
 		
-		carpentDrawingService.saveOrUpdateCarpentDrawing(carpentDrawing);
+		carpentDrawingService.saveOrUpdateCarpentDrawing(carpentDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class CarpentConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addCarpentDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCarpentDrawings() throws FLException{
 		
-		carpentDrawings = carpentDrawingService.addCarpentDrawings(carpentDrawing, drawingUrls);
+		carpentDrawings = carpentDrawingService.addCarpentDrawings(carpentDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

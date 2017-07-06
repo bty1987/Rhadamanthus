@@ -101,6 +101,7 @@ public class UserPO implements Serializable {
 		this.userId = userId;
 	}
 	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "uId") 
 	public int getUid() {
@@ -110,8 +111,7 @@ public class UserPO implements Serializable {
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
-
-	@Id
+	
 	@Column(name = "userId")
 	public String getUserId(){
 		return userId;

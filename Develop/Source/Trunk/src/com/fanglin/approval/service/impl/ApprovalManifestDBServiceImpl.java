@@ -124,16 +124,20 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 	
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT);//调拨
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);  
 		approvalPO.setIdent("");
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setComment(approvalManifestDBVO.getComment());
 
 		approvalPO.setContents(approvalManifestDBVO.getComment());
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
+		approvalPO.setReceiver(receiver);
 		
-		approvalPO.setSender(userDao.get(userId));
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		
@@ -198,7 +202,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		String word = "DB";
 		
-		UserPO userPO = userDao.get(approvalPO.getSender().getUserId());
+		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_DB_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");

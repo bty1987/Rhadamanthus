@@ -11,6 +11,7 @@
 
 package com.fanglin.data.quotation.action;
 
+
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -41,6 +42,13 @@ public class QuotationTypeAction extends BaseListAction {
 		
 		quotationTypes = quotationTypeService.queryQuotationType();
 		
+		return SUCCESS;
+	}
+	@Action(value="pageQuotationType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageQuotationType(){
+		
+		quotationTypeService.pageQuotationType(getPaging(), getFilters());
+	    
 		return SUCCESS;
 	}
 

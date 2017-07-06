@@ -91,7 +91,7 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addCleaningDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCleaningDrawing() throws FLException{
 		
-		cleaningDrawingService.saveOrUpdateCleaningDrawing(cleaningDrawing);
+		cleaningDrawingService.saveOrUpdateCleaningDrawing(cleaningDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class CleaningConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addCleaningDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCleaningDrawings() throws FLException{
 		
-		cleaningDrawings = cleaningDrawingService.addCleaningDrawings(cleaningDrawing, drawingUrls);
+		cleaningDrawings = cleaningDrawingService.addCleaningDrawings(cleaningDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

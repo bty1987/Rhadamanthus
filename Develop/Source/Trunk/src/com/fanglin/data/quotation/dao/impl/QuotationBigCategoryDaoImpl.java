@@ -11,17 +11,39 @@
 
 package com.fanglin.data.quotation.dao.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationBigCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationBigCategoryDao;
+import com.fanglin.utils.Paging;
 
 @Repository("quotationbigcategory")
 public class QuotationBigCategoryDaoImpl extends DaoImpl<QuotationBigCategoryPO> implements QuotationBigCategoryDao {
 
 	public QuotationBigCategoryDaoImpl(){
 		super(QuotationBigCategoryPO.class, true);
+	}
+
+	@Override
+	public List<QuotationBigCategoryPO> pageQuotationBigCategory(Paging paging,List<Filter> filters) {
+		 PagingQuery<QuotationBigCategoryPO> query = pagingQuery(paging, QuotationBigCategoryPO.class);
+			
+         if(filters != null){
+ 			for(Filter filter: filters){
+ 				if("name".equals(filter.getField())){
+ 					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+ 				}
+ 			}
+ 		}
+		
+		query.asc("id");
+		
+		return query.list();
 	}
 
 }

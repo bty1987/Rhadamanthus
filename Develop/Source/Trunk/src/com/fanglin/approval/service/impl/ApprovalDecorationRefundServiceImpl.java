@@ -34,6 +34,7 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -56,6 +57,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -92,13 +96,16 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(paymentId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecorationOrderPO().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
-		approvalPO.setSender(new UserPO(userId));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		

@@ -26,6 +26,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
@@ -55,6 +56,9 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public QuotationVO queryQuotationById(long qId){
@@ -218,7 +222,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		
 		quotationPO.setDecorationOrder(decorationOrderPO);
-		quotationPO.setCreateUser(new UserPO(userId));
+		quotationPO.setCreateUser(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotationPO.setSaveStatus(1);
 		quotationPO.setDiscount(10);
@@ -439,7 +443,7 @@ public class QuotationServiceImpl implements QuotationService {
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
 		
 		quotationPO.setDecorationOrder(decorationOrderPO);
-		quotationPO.setCreateUser(new UserPO(userId));
+		quotationPO.setCreateUser(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		QuotationPO copyPO = quotationDao.get(copyQId);

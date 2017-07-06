@@ -31,6 +31,7 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -51,6 +52,9 @@ public class ApprovalActivityServiceImpl implements ApprovalActivityService {
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalActivityVO approvalActivityVO, List<ApprovalActivityItemVO> approvalActivityItemVOs, String userId) throws FLException {
@@ -66,13 +70,16 @@ public class ApprovalActivityServiceImpl implements ApprovalActivityService {
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(orderId);
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalActivityVO.getOrderId(), approvalActivityVO.getActivityName()));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
-		approvalPO.setSender(new UserPO(userId));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		

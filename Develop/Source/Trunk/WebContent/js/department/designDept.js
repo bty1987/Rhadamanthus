@@ -78,7 +78,8 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+			var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("checked", v.status == 0 ? false : true);
+			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
             
             var propertyArr = [
                ["编号:", v.deptId, "grey"],
@@ -98,17 +99,23 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnDel).append($btnSpan).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
             	editDept(v.deptId, v.deptName, v.fatherDept.deptId, v.cityProper.city.region.regionId, v.cityProper.city.cityId, v.cityProper.cityProperId, v.contractPrefix, v.des);
             });
-            
-            $btnDel.click(function(){
-            	deleteDept(v.deptId);
-            });
+
+			$btnDel.click(function(){
+				var cvalue = $btnDel.prop("checked");
+				if(cvalue){
+					cvalue = 1;
+				}else{
+					cvalue = 0;
+				}
+				updateDept(v.deptId, cvalue);
+			});
             
             return $liLine;
         };
@@ -173,13 +180,14 @@ jQuery(function($) {
 		
 		designDept.modal.modal("show");
 	}
-	
-	function deleteDept(deptId){
-		var options = {
-			"deptIds[0]": deptId
-		};
-		
-		com.post(api.department.deleteDepartment, options, function(res){
+
+	function updateDept(deptId, cvalue){
+
+		var options = {};
+		options["dept.deptId"] = deptId;
+		options["dept.status"] = cvalue;
+
+		com.post(api.department.updateDepartmentForStatus, options, function(res){
 			searcher.doSearch();
 		});
 	}

@@ -36,6 +36,16 @@ public class MeasurementUnitAction extends BaseListAction {
 	
 	private List<MeasurementUnitVO> measurementUnits;
 	
+	private MeasurementUnitVO measurementUnit;
+	
+	@Action(value="pageMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageDrawLineGroup(){
+		
+		measurementUnits = measurementUnitService.pageMeasurementUnit(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="queryMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMeasurementUnit(){
 		
@@ -50,6 +60,14 @@ public class MeasurementUnitAction extends BaseListAction {
 
 	public void setMeasurementUnits(List<MeasurementUnitVO> measurementUnits){
 		this.measurementUnits = measurementUnits;
+	}
+
+	public MeasurementUnitVO getMeasurementUnit() {
+		return measurementUnit;
+	}
+
+	public void setMeasurementUnit(MeasurementUnitVO measurementUnit) {
+		this.measurementUnit = measurementUnit;
 	}
 	
 }

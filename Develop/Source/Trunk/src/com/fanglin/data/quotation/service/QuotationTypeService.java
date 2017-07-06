@@ -13,11 +13,15 @@ package com.fanglin.data.quotation.service;
 
 import java.util.List;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.QuotationTypeVO;
+import com.fanglin.utils.Paging;
 
 
 public interface QuotationTypeService {
 	
 	public List<QuotationTypeVO> queryQuotationType();
+	
+	public void pageQuotationType(Paging paging, List<Filter> filters);
 	
 }

@@ -17,10 +17,9 @@ import com.fanglin.core.vo.Filter;
 @Repository("workerSalaryDao")
 public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements WorkerSalaryDao {
 	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging,List<Filter> filters) {
-		
+
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
 		queryFilterExcute(query, filters);
-
 	
 		return query.list();
 	}
@@ -107,6 +106,20 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, eTimestamp, "le"));
 					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, sTimestamp, "ge"));
 				}
+				 if("createTime".equals(filter.getField())){
+						
+						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						
+						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+						
+						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+						
+						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, eTimestamp, "le"));
+						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, sTimestamp, "ge"));
+					}
 			
 			}
 		}

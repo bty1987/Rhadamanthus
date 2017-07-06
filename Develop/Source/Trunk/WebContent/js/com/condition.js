@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 存放查询条件的js，定义全项目的查询条件
  */
 
@@ -155,6 +155,16 @@ var Condition = function(api){
                 keyPath:"key",
                 valuePath:"value"
             }
+        },
+        //---------------系统配置------------------
+        systemConfig:{
+            label:"关键字查询",
+            type:"text",
+            submitConfig : {
+                name : "key",
+                op : "cn",
+                validate:null,
+            },
         },
         //-------系统
         regionName: {
@@ -440,6 +450,26 @@ var Condition = function(api){
                 valuePath:"name"
             }
         },
+        //--------放线小组---------
+        groupName : {
+            label : "放线小组",
+            type : "text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate : null
+            }
+        },
+        //------添加单位---------
+        measurementUnitName : {
+            label : "查询单位",
+            type : "text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate : null
+            }
+        },
         //--------数据-楼盘
         villageName :  {
             label : "楼盘名称",
@@ -687,6 +717,15 @@ var Condition = function(api){
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
+            }
+        },
+  name: {
+            label:"公司名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate:null
             }
         },
         userstatus : {
@@ -1256,6 +1295,16 @@ var Condition = function(api){
                 validate:null
             }
         },
+		
+        cerateTime: {
+            label:"创建时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "createTime",
+                op : "between",
+                validate:null
+            }
+        },
         salaryWorkduty: {
             label:"工种",
             type:"select",
@@ -1270,6 +1319,14 @@ var Condition = function(api){
                 listPath: "workType",
                 keyPath:"value",
                 valuePath:"value"
+            }
+        },createVipTime: {
+            label:"创建时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "createTime",
+                op : "between",
+                validate:null
             }
         }
     };

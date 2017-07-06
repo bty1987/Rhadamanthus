@@ -73,25 +73,25 @@ public class UserServiceImpl implements UserService {
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
 		}
-		
+		System.out.println(userPO.getDept().getDeptId());
 		if(userPO != null && !userPO.getRole().getRoleId().equals(RolePO.SUPER_ROLEID_STR)){
 			userVO = convertBean(userPO);
 		}
 		
 		return userVO;
 	}
-	
+
 	@Override
 	public UserVO queryUserByUserId(UserVO userVO) throws FLException{
-		
-		UserPO userPO = userDao.get(userVO.getUserId());
-		
+
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
+	
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
 		}
 		
 		userVO = convertBean(userPO);
-		
+		System.out.println(userVO);
 		return userVO;
 	}
 	
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 	public UserInfoVO queryUserInfoByUserId(UserInfoVO userInfoVO) throws FLException {
 		
 		UserVO userVO = userInfoVO.getUser();
-		
+	
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 		
 		if(userInfoPO == null){
@@ -190,14 +190,14 @@ public class UserServiceImpl implements UserService {
 		
 		return userVOs;
 	}
-	
+
 	@Override
 	public List<UserVO> queryUserForNameByDutyADept(String pinyinName, String duty, String curUserId){
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 
 		Paging paging = new Paging(0, 50);
 
-		UserPO userPO = userDao.get(curUserId);
+		UserPO userPO = userDao.queryUserByUserId(curUserId);
 
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADutyADeptId(paging, pinyinName, duty, userPO.getDept().getDeptId());
 		
@@ -207,14 +207,14 @@ public class UserServiceImpl implements UserService {
 		
 		return userVOs;
 	}
-	
+
 	@Override
 	public List<UserVO> queryUserForNameByDutysADept(String pinyinName, List<String> dutys, String curUserId){
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 
 		Paging paging = new Paging(0, 50);
 
-		UserPO userPO = userDao.get(curUserId);
+		UserPO userPO = userDao.queryUserByUserId(curUserId);
 
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADutysADeptId(paging, pinyinName, dutys, userPO.getDept().getDeptId());
 
@@ -244,7 +244,7 @@ public class UserServiceImpl implements UserService {
 
 		Paging paging = new Paging(0, 50);
 
-		UserPO userPO = userDao.get(curUserId);
+		UserPO userPO = userDao.queryUserByUserId(curUserId);
 
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADutysAODeptId(paging, pinyinName, dutysA, dutysO, userPO.getDept().getDeptId());
 

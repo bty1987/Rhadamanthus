@@ -5,7 +5,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.payment.vo.SalesReceiptVO;
-//import com.fanglin.inventory.vo.SalesVO;
 import com.fanglin.utils.Paging;
 
 public interface SalesPaymentService {

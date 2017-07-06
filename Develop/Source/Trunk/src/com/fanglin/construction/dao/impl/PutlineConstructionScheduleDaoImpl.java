@@ -28,7 +28,7 @@ public class PutlineConstructionScheduleDaoImpl extends DaoImpl<PutlineConstruct
 	@Override
 	public PutlineConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId){
 		//junhao edit 20141231
-		return (PutlineConstructionSchedulePO) session().createCriteria(PutlineConstructionSchedulePO.class).add(Restrictions.eq("decorationOrder.orderId", orderId)).uniqueResult();
+		return (PutlineConstructionSchedulePO) session().createCriteria(PutlineConstructionSchedulePO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
 	}
 
 	@Override

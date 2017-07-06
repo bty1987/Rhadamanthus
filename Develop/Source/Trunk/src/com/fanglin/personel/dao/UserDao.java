@@ -45,6 +45,8 @@ public interface UserDao extends Dao<UserPO> {
 	public List<UserPO> queryUserByDutys(List<String> dutys);
 	
 	public List<UserPO> queryUserByUserName(String userName);
+    
+    public UserPO queryUserByUserId(String userId);
 	
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
 	

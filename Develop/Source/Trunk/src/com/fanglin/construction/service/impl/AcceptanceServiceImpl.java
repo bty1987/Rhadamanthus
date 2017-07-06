@@ -83,20 +83,20 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		
 		if(constructionSchedulePO != null){
 			if(constructionSchedulePO.getSupervisorQualityId() != null){
-				acceptanceVO.setSupervisName(userDao.get(constructionSchedulePO.getSupervisorQualityId()).getCurrentName());
+				acceptanceVO.setSupervisName(userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId()).getCurrentName());
 			}
 			if(constructionSchedulePO.getWaterwayCircuitPowerQualityId() != null){
-				acceptanceVO.setWaterwayQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-				acceptanceVO.setCircuitQualityName(userDao.get(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+				acceptanceVO.setWaterwayQualityName(userDao.queryUserByUserId(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+				acceptanceVO.setCircuitQualityName(userDao.queryUserByUserId(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
 			}
 			if(constructionSchedulePO.getBricklayQualityId() != null){
-				acceptanceVO.setBricklayQualityName(userDao.get(constructionSchedulePO.getBricklayQualityId()).getCurrentName());
+				acceptanceVO.setBricklayQualityName(userDao.queryUserByUserId(constructionSchedulePO.getBricklayQualityId()).getCurrentName());
 			}
 			if(constructionSchedulePO.getCarpentQualityId() != null){
-				acceptanceVO.setCarpentQualityName(userDao.get(constructionSchedulePO.getCarpentQualityId()).getCurrentName());
+				acceptanceVO.setCarpentQualityName(userDao.queryUserByUserId(constructionSchedulePO.getCarpentQualityId()).getCurrentName());
 			}
 			if(constructionSchedulePO.getOilQualityId() != null){
-				acceptanceVO.setOilQualityName(userDao.get(constructionSchedulePO.getOilQualityId()).getCurrentName());
+				acceptanceVO.setOilQualityName(userDao.queryUserByUserId(constructionSchedulePO.getOilQualityId()).getCurrentName());
 			}
 		}
 		

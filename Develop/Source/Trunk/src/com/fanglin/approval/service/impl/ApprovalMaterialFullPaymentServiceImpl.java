@@ -29,6 +29,7 @@ import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -48,6 +49,9 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 	
 	@Autowired
 	private MaterialPaymentDao materialPaymentDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -77,13 +81,16 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(msoId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), approvalMaterialFullPaymentVO.getReferMoney()));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
-		approvalPO.setSender(new UserPO(userId));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		

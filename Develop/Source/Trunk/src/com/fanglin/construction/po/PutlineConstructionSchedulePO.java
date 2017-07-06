@@ -18,14 +18,9 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fanglin.decoration.po.DecorationOrderPO;
 
 @Entity
 @Table(name = "putlineconstructionschedule", catalog = "platform")
@@ -57,7 +52,7 @@ public class PutlineConstructionSchedulePO implements Serializable {
 	
 	private long csId;
 	
-	private DecorationOrderPO decorationOrder;
+	private String orderId;
 	
 	private String startTime;
 	
@@ -77,10 +72,10 @@ public class PutlineConstructionSchedulePO implements Serializable {
 		super();
 	}
 
-	public PutlineConstructionSchedulePO(long csId, DecorationOrderPO decorationOrder, String startTime, String endTime) {
+	public PutlineConstructionSchedulePO(long csId, String orderId, String startTime, String endTime) {
 		super();
 		this.csId = csId;
-		this.decorationOrder = decorationOrder;
+		this.orderId = orderId;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
@@ -159,14 +154,13 @@ public class PutlineConstructionSchedulePO implements Serializable {
 		this.csId = csId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrder(){
-		return decorationOrder;
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder){
-		this.decorationOrder = decorationOrder;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Column(name = "allocateTime")
