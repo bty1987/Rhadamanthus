@@ -92,7 +92,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	@Override
 	public void pageMaterialSubOrderByUserId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if("驻店导购".equals(userPO.getDuty())){
 			pageMaterialSubOrderByOrderIdInstoreId(paging, filters, orderId, userId);
@@ -119,7 +119,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	@Override
 	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			filters.add(new Filter(MaterialSubOrderPO.COLUMN_MATERIALDEPTID_STR, userPO.getDept().getDeptId(), "eq"));
 		}
@@ -225,7 +225,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 		}
 		materialSubOrderPO.setMsoNo(msoNo.toString());
 		
-		UserPO userPO = userDao.get(materialSubOrderVO.getSalesmanId());
+		UserPO userPO = userDao.queryUserByUserId(materialSubOrderVO.getSalesmanId());
 		
 		if(userPO != null){
 			materialSubOrderPO.setSalesmanName(userPO.getCurrentName());
@@ -248,7 +248,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			throw new FLException(180005, "业务人员信息获取失败");
 		}
 		
-		UserPO materialUserPO = userDao.get(materialSubOrderVO.getMaterialerId());
+		UserPO materialUserPO = userDao.queryUserByUserId(materialSubOrderVO.getMaterialerId());
 		if(materialUserPO != null){
 			materialSubOrderPO.setMaterialerId(materialUserPO.getUserId());
 			materialSubOrderPO.setMaterialerName(materialUserPO.getCurrentName());
@@ -265,7 +265,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			materialSubOrderPO.setInstoreId("");
 			materialSubOrderPO.setInstoreName("");
 		}else{
-			UserPO instorer = userDao.get(materialSubOrderVO.getInstoreId());
+			UserPO instorer = userDao.queryUserByUserId(materialSubOrderVO.getInstoreId());
 			if(instorer != null){
 				materialSubOrderPO.setInstoreId(instorer.getUserId());
 				materialSubOrderPO.setInstoreName(instorer.getCurrentName());
@@ -448,7 +448,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			
 			if(materialSubOrderPO != null && materialSubOrderPO.getStatus() == MaterialSubOrderPO.STATUS_TYPE_INIT_INT && materialSubOrderPO.getBalanceStatus() == MaterialSubOrderPO.BALANCE_STATUS_TYPE_INIT_INT){
 				materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_FINISH_INT);
-				
+			
 				materialSubOrderDao.update(materialSubOrderPO);
 			}
 		}
@@ -484,7 +484,6 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 							// 利润 : 总价 * 点位 , 成本 : 总价 * (1 - 点位)
 							balance = Arith.mul(total, prePoint);
 							materialSubOrderItemPackageNameList.add(msoId.toString() + materialSubOrderItemPO.getPackageName());
-							
 						}
 					}else{
 						if(materialSubOrderItemPO.getCalcType() == MaterialSubOrderItemPO.CALCTYPE_TYPE_BASE_INT){
@@ -497,8 +496,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 						
 					}
 					
-					totalBalance = Arith.add(totalBalance, balance);
-					
+					totalBalance = Arith.add(totalBalance, balance); 
 					materialSubOrderItemDao.update(materialSubOrderItemPO);
 				}
 				
@@ -509,18 +507,16 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 				materialSubOrderPO.setStatus(MaterialSubOrderPO.STATUS_TYPE_PREBALANCE_INT);
 				materialSubOrderPO.setBalanceStatus(MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT);
 				materialSubOrderDao.update(materialSubOrderPO);
-				
 				MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 				materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);
-				materialSubOrderBalancePO.setCreater(new UserPO(userId));
-				materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : new UserPO(materialSubOrderPO.getInstoreId()));
+				materialSubOrderBalancePO.setCreater(userDao.queryUserByUserId(userId));
+				materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : userDao.queryUserByUserId(materialSubOrderPO.getInstoreId()));
 				materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 				materialSubOrderBalancePO.setBalance(totalBalance);
 				materialSubOrderBalancePO.setDifference(Arith.sub(materialSubOrderPO.getTotal(), totalBalance));
 				materialSubOrderBalancePO.setType(MaterialSubOrderBalancePO.TYPE_ADD_INT);
 				materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT);
 				materialSubOrderBalancePO.setTotal(materialSubOrderPO.getTotal());
-				 
 				materialSubOrderBalanceDao.save(materialSubOrderBalancePO);
 			}
 		}

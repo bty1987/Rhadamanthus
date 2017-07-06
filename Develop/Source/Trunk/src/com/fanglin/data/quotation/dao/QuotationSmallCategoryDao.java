@@ -11,9 +11,15 @@
 
 package com.fanglin.data.quotation.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationSmallCategoryPO;
+import com.fanglin.utils.Paging;
 
 public interface QuotationSmallCategoryDao extends Dao<QuotationSmallCategoryPO>{
 
+	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters);
+	
 }

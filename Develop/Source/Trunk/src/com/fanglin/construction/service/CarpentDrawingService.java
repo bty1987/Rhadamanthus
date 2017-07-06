@@ -23,9 +23,9 @@ public interface CarpentDrawingService {
 	
 	public List<CarpentDrawingVO> queryCarpentDrawingByCcsId(CarpentDrawingVO carpentDrawingVO);
 	
-	public int saveOrUpdateCarpentDrawing(CarpentDrawingVO carpentDrawingVO);
+	public int saveOrUpdateCarpentDrawing(CarpentDrawingVO carpentDrawingVO, String userId);
 	
-	public List<CarpentDrawingVO> addCarpentDrawings(CarpentDrawingVO carpentDrawingVO, List<String> drawingUrls);
+	public List<CarpentDrawingVO> addCarpentDrawings(CarpentDrawingVO carpentDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteCarpentDrawingByCdId(CarpentDrawingVO carpentDrawingVO);
 

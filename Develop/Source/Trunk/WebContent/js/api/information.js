@@ -21,12 +21,13 @@ $.extend(api, {information: {
     deleteMessageByIds: {url: "deleteMessageByIds.do"},
 
     pageNotice: {url: "pageNotice.do", demo: true},
-    pageNoticeForDeptAValid: {url: "pageNoticeForDeptAValid.do", demo: true},
+    pageNoticeForSeenByType: {url: "pageNoticeForSeenByType.do", demo: true},
     queryNoticeForValid: {url: "queryNoticeForValid.do"},
-    queryNoticeById: {url: "queryNoticeById.do"},
+    queryNoticeByNid: {url: "queryNoticeByNid.do"},
     addNotice: {url: "addNotice.do"},
     updateNotice: {url: "updateNotice.do"},
     deleteNotice: {url: "deleteNotice.do"},
+    updateNoticeDepartments:{url:"updateNoticeDepartments.do"},
 
     pageActivity: {url: "pageActivity.do", demo: true},
     queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
@@ -36,6 +37,9 @@ $.extend(api, {information: {
     updateActivity: {url: "updateActivity.do"},
     updateActivityItem: {url: "updateActivityItem.do"},
     deleteActivityItemByAiId: {url: "deleteActivityItemByAiId.do"},
+
+    queryNoticeDepartmentByNoticeIdandDepartment:{url:"queryNoticeDepartmentByNoticeIdandDepartment.do"},
+ 
 
     queryEvent: {url: "queryEvent.do", demo:true},
     addEvent: {url: "addEvent.do"},

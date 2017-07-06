@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.PutlineDrawingDao;
 import com.fanglin.construction.po.PutlineDrawingPO;
 import com.fanglin.construction.service.PutlineDrawingService;
 import com.fanglin.construction.vo.PutlineDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("putlineDrawingService")
@@ -31,6 +34,8 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 	@Autowired
 	private PutlineDrawingDao putlineDrawingDao;
 
+	@Autowired
+	private UserDao userDao;
 	@Override
 	public PutlineDrawingVO queryPutlineDrawingById(int pldId){
 		
@@ -81,7 +86,7 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdatePutlineDrawing(PutlineDrawingVO putlineDrawingVO){
+	public int saveOrUpdatePutlineDrawing(PutlineDrawingVO putlineDrawingVO, String userId){
 		
 		PutlineDrawingPO putlineDrawingPO = null;
 		
@@ -92,6 +97,10 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 		}
 		
 		BeanUtil.copyProperties(putlineDrawingVO, putlineDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		putlineDrawingPO.setCreater(userC);
+		putlineDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		putlineDrawingDao.saveOrUpdate(putlineDrawingPO);
 		
@@ -102,7 +111,7 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<PutlineDrawingVO> addPutlineDrawings(PutlineDrawingVO putlineDrawingVO, List<String> drawingUrls) {
+	public List<PutlineDrawingVO> addPutlineDrawings(PutlineDrawingVO putlineDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<PutlineDrawingVO> putlineDrawingVOs = new ArrayList<PutlineDrawingVO>();
 		
@@ -112,6 +121,10 @@ public class PutlineDrawingServiceImpl implements PutlineDrawingService {
 			
 			BeanUtil.copyProperties(putlineDrawingVO, putlineDrawingPO);
 			putlineDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			putlineDrawingPO.setCreater(userC);
+			putlineDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			putlineDrawingDao.save(putlineDrawingPO);
 			

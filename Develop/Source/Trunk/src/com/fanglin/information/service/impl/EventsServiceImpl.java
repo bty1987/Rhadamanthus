@@ -74,7 +74,7 @@ public class EventsServiceImpl implements EventsService {
 			throw new FLException(160014, "事件数量到达上限");
 		}
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

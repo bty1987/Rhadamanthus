@@ -8,7 +8,10 @@
 		{"key":"6","value":"主材退货"},
 		{"key":"7","value":"主材场外退款"},
 		{"key":"8","value":"活动物品申领"},
-		{"key":"9","value":"主材补款提交"}
+		{"key":"9","value":"主材补款提交"},
+		{"key":"10","value":"销售退货"},
+		{"key":"11","value":"商品库存调拨"},
+		{"key":"12","value":"销售补款提交"}
     ],
     "errorCode": 0,
     "errorMsg": null

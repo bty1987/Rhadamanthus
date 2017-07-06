@@ -90,7 +90,9 @@ jQuery(function($) {
 	$(".WordSection1").css("display", "block");
 	
 	var orderTotalMoney = parseFloat(decorationOrder.orderTotalPrice);
-
+	
+	$("#decorationOrderType").html(decorationOrder.type == 0 ? "半包" : decorationOrder.type == 1 ? "全包" : "半价");
+	
 	if (decorationContract.signTime != null && decorationContract.signTime != "") {
 		var signSplit = decorationContract.signTime.split('-');
 

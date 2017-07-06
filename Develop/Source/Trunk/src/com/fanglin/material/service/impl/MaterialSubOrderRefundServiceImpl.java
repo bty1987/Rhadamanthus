@@ -20,16 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.material.dao.MaterialSubOrderDao;
-import com.fanglin.material.dao.MaterialSubOrderItemDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
-import com.fanglin.material.po.MaterialSubOrderItemPO;
-import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.material.po.MaterialSubOrderRefundPO;
 import com.fanglin.material.service.MaterialSubOrderRefundService;
 import com.fanglin.material.vo.MaterialSubOrderRefundVO;
-import com.fanglin.payment.dao.MaterialPaymentDao;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("materialSubOrderRefundService")
@@ -37,16 +31,7 @@ import com.fanglin.utils.BeanUtil;
 public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefundService {
 	
 	@Autowired
-	private MaterialSubOrderDao materialSubOrderDao;
-	
-	@Autowired
 	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
-	
-	@Autowired
-	private MaterialSubOrderItemDao materialSubOrderItemDao;
-	
-	@Autowired
-	private MaterialPaymentDao	materialPaymentDao;
 	
 	@Override
 	public List<MaterialSubOrderRefundVO> queryMaterialSubOrderRefundByMsoIdAIdents(long msoId, List<Integer> idents){
@@ -106,7 +91,7 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 					materialSubOrderRefundPackage.setExpanded(true);
 					
 					materialSubOrderRefundVO.setLevel(1);
-					materialSubOrderRefundVO.setTotal((float) 0);
+					materialSubOrderRefundVO.setTotal(0f);
 					
 					packageFlagMap.put(packageNameIdent, materialSubOrderRefundPackage);
 					
@@ -120,7 +105,7 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 					
 					materialSubOrderRefundPackage = packageFlagMap.get(packageNameIdent);
 					materialSubOrderRefundVO.setLevel(1);
-					materialSubOrderRefundVO.setTotal((float) 0);
+					materialSubOrderRefundVO.setTotal(0f);
 					
 					packageItemsList.add(materialSubOrderRefundVO);
 				}
@@ -150,75 +135,4 @@ public class MaterialSubOrderRefundServiceImpl implements MaterialSubOrderRefund
 		return materialSubOrderRefundVOs;
 	}
 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public boolean cancelMaterialSubOrderRefundForModel(long msorId){
-		
-		MaterialSubOrderRefundPO materialSubOrderRefundPO = materialSubOrderRefundDao.get(msorId);
-		
-		if(materialSubOrderRefundPO != null){
-			MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderRefundPO.getMsoiId());
-			if(materialSubOrderItemPO != null){
-				materialSubOrderItemPO.setNum(materialSubOrderItemPO.getNum() + materialSubOrderRefundPO.getNum());
-				materialSubOrderItemPO.setTotal(Arith.mul(materialSubOrderItemPO.getNum(), materialSubOrderItemPO.getPrice()));
-				materialSubOrderItemPO.setRefundStatus(MaterialSubOrderItemPO.REFUNDSTATUS_TYPE_INIT_INT);
-				
-				materialSubOrderItemDao.update(materialSubOrderItemPO);
-			}
-			
-			materialPaymentDao.deleteById(materialSubOrderRefundPO.getMpId());
-			materialSubOrderRefundDao.delete(materialSubOrderRefundPO);
-			
-			MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(materialSubOrderRefundPO.getMsoId());
-			if(materialSubOrderPO != null){
-				materialSubOrderPO.setTotal(Arith.add(materialSubOrderPO.getTotal(), materialSubOrderRefundPO.getTotal()));
-				materialSubOrderDao.update(materialSubOrderPO);
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public boolean cancelMaterialSubOrderRefundForPackage(List<Long> msorIds, long msoId){
-		
-		float total = 0;
-		long mpId = 0;
-		
-		for(long msorId: msorIds){
-			
-			MaterialSubOrderRefundPO materialSubOrderRefundPO = materialSubOrderRefundDao.get(msorId);
-			
-			if(materialSubOrderRefundPO != null){
-				MaterialSubOrderItemPO materialSubOrderItemPO = materialSubOrderItemDao.get(materialSubOrderRefundPO.getMsoiId());
-				
-				if(materialSubOrderItemPO != null){
-					materialSubOrderItemPO.setNum(materialSubOrderRefundPO.getNum() + materialSubOrderItemPO.getNum());
-					materialSubOrderItemDao.update(materialSubOrderItemPO);
-				}
-				
-				total = materialSubOrderRefundPO.getTotal();
-				mpId = materialSubOrderRefundPO.getMpId();
-				
-				materialSubOrderRefundDao.delete(materialSubOrderRefundPO);
-			}
-		}
-		
-		List<MaterialSubOrderItemPO> materialSubOrderItemPOs = materialSubOrderItemDao.queryMaterialSubOrderItemByMsoId(msoId);
-		for(MaterialSubOrderItemPO materialSubOrderItemPO: materialSubOrderItemPOs){
-			materialSubOrderItemPO.setTotal(Arith.add(materialSubOrderItemPO.getTotal(), total));
-			materialSubOrderItemDao.update(materialSubOrderItemPO);
-		}
-		
-		materialPaymentDao.deleteById(mpId);
-		
-		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
-		if(materialSubOrderPO != null){
-			materialSubOrderPO.setTotal(Arith.add(materialSubOrderPO.getTotal(), total));
-			materialSubOrderDao.update(materialSubOrderPO);
-		}
-		
-		return false;
-	}
 }

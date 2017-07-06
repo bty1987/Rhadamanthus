@@ -23,9 +23,9 @@ public interface OilDrawingService {
 	
 	public List<OilDrawingVO> queryOilDrawingByOcsId(OilDrawingVO oilDrawingVO);
 	
-	public int saveOrUpdateOilDrawing(OilDrawingVO oilDrawingVO);
+	public int saveOrUpdateOilDrawing(OilDrawingVO oilDrawingVO, String userId);
 	
-	public List<OilDrawingVO> addOilDrawings(OilDrawingVO oilDrawingVO, List<String> drawingUrls);
+	public List<OilDrawingVO> addOilDrawings(OilDrawingVO oilDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteOilDrawingByOdId(OilDrawingVO oilDrawingVO);
 

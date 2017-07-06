@@ -48,107 +48,113 @@ public class NoticeVO implements Serializable {
 		super();
 	}
 
-	public Integer getNoticeId(){
-		return noticeId;
-	}
-
-	public void setNoticeId(Integer noticeId){
-		this.noticeId = noticeId;
-	}
-
-	public UserVO getUser(){
-		return user;
-	}
-
-	public void setUser(UserVO user){
+	public NoticeVO(UserVO user, DepartmentVO dept) {
+		//super();
 		this.user = user;
-	}
-
-	public DepartmentVO getDept(){
-		return dept;
-	}
-
-	public void setDept(DepartmentVO dept){
 		this.dept = dept;
 	}
 
-	public String getTheme(){
+	public Integer getNoticeId() {
+		return noticeId;
+	}
+
+	public void setNoticeId(Integer noticeId) {
+		this.noticeId = noticeId;
+	}
+
+	public UserVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserVO user) {
+		this.user = user;
+	}
+
+	public DepartmentVO getDept() {
+		return dept;
+	}
+
+	public void setDept(DepartmentVO dept) {
+		this.dept = dept;
+	}
+
+	public String getTheme() {
 		return theme;
 	}
 
-	public void setTheme(String theme){
+	public void setTheme(String theme) {
 		this.theme = theme;
 	}
 
-	public String getType(){
+	public String getType() {
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public String getPriority(){
+	public String getPriority() {
 		return priority;
 	}
 
-	public void setPriority(String priority){
+	public void setPriority(String priority) {
 		this.priority = priority;
 	}
 
-	public String getStartTime(){
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime){
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime(){
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime){
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
-	public String getPublishTime(){
+	public String getPublishTime() {
 		return publishTime;
 	}
 
-	public void setPublishTime(String publishTime){
+	public void setPublishTime(String publishTime) {
 		this.publishTime = publishTime;
 	}
 
-	public String getIsPublic(){
+	public String getIsPublic() {
 		return isPublic;
 	}
 
-	public void setIsPublic(String isPublic){
+	public void setIsPublic(String isPublic) {
 		this.isPublic = isPublic;
 	}
 
-	public String getContents(){
+	public String getContents() {
 		return contents;
 	}
 
-	public void setContents(String contents){
+	public void setContents(String contents) {
 		this.contents = contents;
 	}
 
-	public String getContentsText(){
+	public String getContentsText() {
 		return contentsText;
 	}
 
-	public void setContentsText(String contentsText){
+	public void setContentsText(String contentsText) {
 		this.contentsText = contentsText;
 	}
 
-	public String getFilePath(){
+	public String getFilePath() {
 		return filePath;
 	}
 
-	public void setFilePath(String filePath){
+	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 

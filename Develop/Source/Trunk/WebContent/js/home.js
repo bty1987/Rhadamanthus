@@ -17,10 +17,10 @@ jQuery(function(){
     });
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-        $(".user-info .user-name").text(res.user.currentName);
+        $(".user-info .user-name").text(res.userInfo.user.currentName);
 
-        com.showImg($("#personalPic"), res.user.userPhoto, 180, 180, '');
-        com.showImg($("#userImg"), res.user.userPhoto, 30, 30, '');
+        com.showImg($("#personalPic"), res.userInfo.user.userPhoto, 180, 180, '');
+        com.showImg($("#userImg"), res.userInfo.user.userPhoto, 30, 30, '');
     });
 
     com.post(api.common.wmCode, {}, function(res){
@@ -306,7 +306,7 @@ function loadNotices(){
         "notice.type": "通知",
     }
 
-    com.post(api.information.pageNoticeForDeptAValid, options, function(res){
+    com.post(api.information.pageNoticeForSeenByType, options, function(res){
         $("#noticeList").empty();
         $.each(res.paging.data, function(i, v){
             getNoticeDOM(v).appendTo($("#noticeList"));
@@ -322,7 +322,7 @@ function loadActivities(){
         "notice.type": "活动",
     }
 
-    com.post(api.information.pageNoticeForDeptAValid, options, function(res){
+    com.post(api.information.pageNoticeForSeenByType, options, function(res){
         $("#activityList").empty();
         $.each(res.paging.data, function(i, v){
             getNoticeDOM(v).appendTo($("#activityList"));

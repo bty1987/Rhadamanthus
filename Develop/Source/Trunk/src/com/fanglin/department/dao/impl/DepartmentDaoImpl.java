@@ -36,7 +36,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
         PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
         
-        query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
+        //query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
         
         queryFilterExcute(query, filters);
 

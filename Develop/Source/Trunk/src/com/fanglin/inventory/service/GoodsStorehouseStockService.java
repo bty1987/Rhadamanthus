@@ -26,7 +26,7 @@ public interface GoodsStorehouseStockService {
 	
 	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStock);
 	
-	public List<GoodsStorehouseStockVO> queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
+	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
 	
 	public void checkGoodsStorehouseStock(CheckListVO checkListVO, String userId) throws FLException;
 

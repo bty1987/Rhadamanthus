@@ -18,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationClassificationPO;
 import com.fanglin.data.quotation.dao.QuotationClassificationDao;
 import com.fanglin.data.quotation.service.QuotationClassificationService;
 import com.fanglin.data.quotation.vo.QuotationClassificationVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("quotationClassificationService")
 @Transactional(readOnly=true)
@@ -46,12 +48,21 @@ public class QuotationClassificationServiceImpl implements QuotationClassificati
 		return quotationClassificationVOs;
 	}
 
-	public QuotationClassificationDao getQuotationClassificationDao(){
-		return quotationClassificationDao;
-	}
+	@Override
+	public void pageQuotationClassification(Paging paging, List<Filter> filters) {
+		// TODO Auto-generated method stub
+		List<QuotationClassificationPO> quotationClassificationPOs = quotationClassificationDao.pageQuotationClassification(paging, filters);
+		List<QuotationClassificationVO> quotationClassificationVOs = new ArrayList<QuotationClassificationVO>();
+		
+		for(QuotationClassificationPO quotationClassificationPO: quotationClassificationPOs){
+			
+			QuotationClassificationVO quotationClassificationVO = new QuotationClassificationVO();
 
-	public void setQuotationClassificationDao(QuotationClassificationDao quotationClassificationDao){
-		this.quotationClassificationDao = quotationClassificationDao;
+			BeanUtil.copyProperties(quotationClassificationPO, quotationClassificationVO);
+			
+			quotationClassificationVOs.add(quotationClassificationVO);
+		}
+		
+		paging.setData(quotationClassificationVOs);
 	}
-	
 }

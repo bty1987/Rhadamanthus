@@ -51,7 +51,7 @@ public class CheckListServiceImpl implements CheckListService {
 			
 			checkListVO = new CheckListVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new UserVO());
 			
-			BeanUtil.copyProperties(checkListPO, checkListVO, "goods", "color","format","storehouse", "createUser");
+			BeanUtil.copyProperties(checkListPO, checkListVO, Arrays.asList("goods", "color","format","storehouse", "createUser"));
 			BeanUtil.copyProperties(checkListPO.getGoods(), checkListVO.getGoods(),Arrays.asList("assisType"));
 			BeanUtil.copyProperties(checkListPO.getColor(), checkListVO.getColor());
 			BeanUtil.copyProperties(checkListPO.getFormat(), checkListVO.getFormat());

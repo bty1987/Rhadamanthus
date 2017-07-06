@@ -147,7 +147,7 @@ public class ModuleServiceImpl implements ModuleService {
 	@Override
 	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -207,7 +207,7 @@ public class ModuleServiceImpl implements ModuleService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateUserModuleByUserId(List<Integer> mIds, ModuleVO moduleVO, UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.get(userVO.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

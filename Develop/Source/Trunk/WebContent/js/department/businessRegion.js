@@ -6,7 +6,7 @@ jQuery(function($) {
 		cancelBtn: null,
 		modal: null,
 		items:{},
-		
+
 		editFlg: false,
 		postParam: {
 			'dept.type': '业务大区',
@@ -20,7 +20,7 @@ jQuery(function($) {
 			}
 		},
 	};
-	
+
 	bRegion.saveBtn = $("#saveBtn").on("click", saveData);
 	bRegion.cancelBtn = $("#cancelBtn");
 	
@@ -61,8 +61,9 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            
+            var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("checked", v.status == 0 ? false : true);
+			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
+
             var propertyArr = [
                ["编号:", v.deptId, "grey"],
                ["创建时间:", v.createTime, "grey"],
@@ -76,7 +77,7 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnDel).append($btnSpan).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
             
@@ -85,9 +86,15 @@ jQuery(function($) {
             });
             
             $btnDel.click(function(){
-            	deleteSalesmanRegion(v.deptId);
-            });
-            
+			var cvalue = $btnDel.prop("checked");
+			if(cvalue){
+				cvalue = 1;
+			}else{
+				cvalue = 0;
+			}
+			updateSalesmanRegion(v.deptId, cvalue);
+			});
+
             return $liLine;
         };
       
@@ -134,21 +141,23 @@ jQuery(function($) {
 		bRegion.modal.modal("show");
 	}
 	
-	function deleteSalesmanRegion(deptId){
-		var options = {
-			"deptIds[0]": deptId
-		};
+	function updateSalesmanRegion(deptId, cvalue){
+
+		var options = {};
+		options["dept.deptId"] = deptId;
+		options["dept.status"] = cvalue;
 		
-		com.post(api.department.deleteDepartment, options, function(res){
+		com.post(api.department.updateDepartmentForStatus, options, function(res){
 			searcher.doSearch();
 		});
 	}
 	
 	function saveData(){
+
 		if(com.validate()){
 			return;
 		}
-		
+
 		var url;
 		var options = {
 			'dept.ident': 14,
@@ -156,7 +165,7 @@ jQuery(function($) {
 			'dept.type': com.deptType.businessRegion,
 			'dept.des': bRegion.items.businessRegionDes.val()
 		};
-		
+
 		if(editFlg){
 			url = api.department.updateDepartment;
 			options['dept.deptId'] = bRegion.items.businessRegionId.val();
@@ -164,13 +173,11 @@ jQuery(function($) {
 			url = api.department.addDepartment;
 			options['dept.deptId'] = "BR_";
 		}
-		
 		com.post(url, options, function(res){
 			searcher.doSearch();
 		});
 		
-		bRegion.modal.modal("hide");   
+		bRegion.modal.modal("hide");
 	}
-	
 });
 

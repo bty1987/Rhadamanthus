@@ -95,7 +95,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 		
 		materialOutsidePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
 		}
@@ -105,7 +105,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		UserPO salesmanPO = userDao.get(materialOutsideVO.getSalesmanId());
+		UserPO salesmanPO = userDao.queryUserByUserId(materialOutsideVO.getSalesmanId());
 		if(salesmanPO == null){
 			throw new FLException(220005, "员工不存在");
 		}

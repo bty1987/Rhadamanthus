@@ -71,7 +71,7 @@ $(function(){
 
 	var _condArr = ['theme', 'dateRange'];
 	var searcher = new Searcher();
-	searcher.init( _condArr, "condList", api.information.pageNoticeForDeptAValid, function(list){
+	searcher.init( _condArr, "condList", api.information.pageNoticeForSeenByType, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]}, false);
 

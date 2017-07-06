@@ -24,6 +24,7 @@ import com.fanglin.information.dao.MessageDao;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
@@ -37,6 +38,8 @@ public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	private MessageDao messageDao;
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public void pageMessage(Paging paging, List<Filter> filters, String userId){
@@ -90,11 +93,16 @@ public class MessageServiceImpl implements MessageService {
 	    
         BeanUtil.copyProperties(messageVO, messagePO, Arrays.asList("receiver", "sender"));
         
-        messagePO.setReceiver(new UserPO());
-        messagePO.setSender(new UserPO());
+        String receiverID = messageVO.getReceiver().getUserId();
+        String senderID = messageVO.getSender().getUserId();
+        UserPO receiver = userDao.queryUserByUserId(receiverID);
+        UserPO sender = userDao.queryUserByUserId(senderID);
         
-        BeanUtil.copyProperties(messageVO.getReceiver(), messagePO.getReceiver(), Arrays.asList("role", "dept"));
-        BeanUtil.copyProperties(messageVO.getSender(), messagePO.getSender(), Arrays.asList("role", "dept"));
+        messagePO.setReceiver(receiver);
+        messagePO.setSender(sender);
+        
+        /*BeanUtil.copyProperties(messageVO.getReceiver(), messagePO.getReceiver(), Arrays.asList("role", "dept"));
+        BeanUtil.copyProperties(messageVO.getSender(), messagePO.getSender(), Arrays.asList("role", "dept"));*/
         
         messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
         
@@ -146,10 +154,10 @@ public class MessageServiceImpl implements MessageService {
 		
 		UserVO receiver = new UserVO();
 		UserVO sender = new UserVO();
-		
+		//取得实体类中的外键.先添加主键
 		UserPO _receiver = messagePO.getReceiver();
 		UserPO _sender = messagePO.getSender();
-		
+		//vo类对象的set值是po的对象
 		receiver.setUserName(_receiver.getUserName());
 		receiver.setCurrentName(_receiver.getCurrentName());
 		receiver.setUserId(_receiver.getUserId());
@@ -157,11 +165,13 @@ public class MessageServiceImpl implements MessageService {
 		sender.setUserName(_sender.getUserName());
 		sender.setCurrentName(_sender.getCurrentName());
 		sender.setUserId(_sender.getUserId());
-		
+		//保存获得的对象
 		messageVO.setReceiver(receiver);
 		messageVO.setSender(sender);
 		
 		return messageVO;
 	}
+
+	
 
 }

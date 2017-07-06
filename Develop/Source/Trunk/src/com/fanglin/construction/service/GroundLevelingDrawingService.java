@@ -23,9 +23,9 @@ public interface GroundLevelingDrawingService {
 	
 	public List<GroundLevelingDrawingVO> queryGroundLevelingDrawingByGlcsId(GroundLevelingDrawingVO groundLevelingDrawingVO);
 	
-	public int saveOrUpdateGroundLevelingDrawing(GroundLevelingDrawingVO groundLevelingDrawingVO);
+	public int saveOrUpdateGroundLevelingDrawing(GroundLevelingDrawingVO groundLevelingDrawingVO, String userId);
 	
-	public List<GroundLevelingDrawingVO> addGroundLevelingDrawings(GroundLevelingDrawingVO groundLevelingDrawingVO, List<String> drawingUrls);
+	public List<GroundLevelingDrawingVO> addGroundLevelingDrawings(GroundLevelingDrawingVO groundLevelingDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteGroundLevelingDrawingByGldId(GroundLevelingDrawingVO groundLevelingDrawingVO);
 

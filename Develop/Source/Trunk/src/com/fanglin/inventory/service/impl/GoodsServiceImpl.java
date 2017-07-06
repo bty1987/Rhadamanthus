@@ -172,12 +172,14 @@ public class GoodsServiceImpl implements GoodsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addGoods(GoodsVO goodsVO) throws FLException {
 		
-		GoodsPO goodsPO = new GoodsPO();
+		GoodsPO goodsPO;
 		if(goodsVO.getAssisType().getAtid()!=null){
-			new AssisTypePO();
+			goodsPO = new GoodsPO(new AssisTypePO());
 			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
 			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+			
 		}else{
+			goodsPO = new GoodsPO();
 			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
 		}
 		

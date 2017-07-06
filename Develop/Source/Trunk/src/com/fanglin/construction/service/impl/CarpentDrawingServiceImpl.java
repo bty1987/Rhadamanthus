@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.CarpentDrawingDao;
 import com.fanglin.construction.po.CarpentDrawingPO;
 import com.fanglin.construction.service.CarpentDrawingService;
 import com.fanglin.construction.vo.CarpentDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("carpentDrawingService")
@@ -30,6 +33,9 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 	
 	@Autowired
 	private CarpentDrawingDao carpentDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public CarpentDrawingVO queryCarpentDrawingById(int cdId){
@@ -77,7 +83,7 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateCarpentDrawing(CarpentDrawingVO carpentDrawingVO){
+	public int saveOrUpdateCarpentDrawing(CarpentDrawingVO carpentDrawingVO, String userId){
 		
 		CarpentDrawingPO carpentDrawingPO = null;
 		
@@ -88,6 +94,10 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 		}
 		
 		BeanUtil.copyProperties(carpentDrawingVO, carpentDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		carpentDrawingPO.setCreater(userC);
+		carpentDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		carpentDrawingDao.saveOrUpdate(carpentDrawingPO);
 		
@@ -98,7 +108,7 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<CarpentDrawingVO> addCarpentDrawings(CarpentDrawingVO carpentDrawingVO, List<String> drawingUrls) {
+	public List<CarpentDrawingVO> addCarpentDrawings(CarpentDrawingVO carpentDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<CarpentDrawingVO> carpentDrawingVOs = new ArrayList<CarpentDrawingVO>();
 		
@@ -108,6 +118,10 @@ public class CarpentDrawingServiceImpl implements CarpentDrawingService {
 			
 			BeanUtil.copyProperties(carpentDrawingVO, carpentDrawingPO);
 			carpentDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			carpentDrawingPO.setCreater(userC);
+			carpentDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			carpentDrawingDao.save(carpentDrawingPO);
 			

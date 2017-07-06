@@ -71,6 +71,8 @@ public class SalesVO implements Serializable {
 	private Float coupon;
 	
 	private String couponInfo;
+	
+	private Short otherStatus;
 
 	public SalesVO() {
 		super();
@@ -316,5 +318,15 @@ public class SalesVO implements Serializable {
 	public void setCouponInfo(String couponInfo) {
 		this.couponInfo = couponInfo;
 	}
+
+	public Short getOtherStatus() {
+		return otherStatus;
+	}
+
+	public void setOtherStatus(Short otherStatus) {
+		this.otherStatus = otherStatus;
+	}
+	
+	
 
 }

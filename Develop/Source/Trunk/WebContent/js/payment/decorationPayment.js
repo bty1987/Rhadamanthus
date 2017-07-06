@@ -529,7 +529,7 @@ jQuery(function($) {
     		["单位:", v.measurementUnit, "grey"],
     		["单价:", v.unitPrice, "grey"],
     		["工程量:", v.num, "grey"],
-    		["类型:", v.type, "grey"],
+    		//["类型:", v.type == "0" ? "普通报价项" : (v.type == "1" ? "系统定义项" : v.type == "2" ? "自定义项" : v.type == "3" ? "报价中报价项" : v.type == "4" ? "增项中报价项" : ""), "grey"],
     	];
 
     	$.each(propertyArr, function (index,value) {

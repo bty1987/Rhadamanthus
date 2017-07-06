@@ -40,13 +40,13 @@ public class EventsPO implements java.io.Serializable {
 	
 	private String content;
 	
-	private UserPO creater;
+	private UserPO creater; //创建人
+		
+	private UserPO holder;	//所有人
 	
-	private UserPO holder;
+	private DepartmentPO department; //归属部门
 	
-	private DepartmentPO department;
-	
-	private DepartmentPO region;
+	private DepartmentPO region;	//归属分区
 	
 	private short type;
 	

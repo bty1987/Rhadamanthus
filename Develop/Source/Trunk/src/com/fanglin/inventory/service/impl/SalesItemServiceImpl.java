@@ -124,9 +124,11 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesItemPO.setSid(salesVO.getSid());
 		
 		salesPO.setTotal(Arith.add(total, salesItemVO.getTotal()));
+		salesPO.setOtherStatus(salesVO.getOtherStatus());
 		
 		salesDao.update(salesPO);
 		salesItemDao.save(salesItemPO);
+		
 		return 0;
 	}
 

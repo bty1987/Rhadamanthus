@@ -66,7 +66,7 @@ public class FormatServiceImpl implements FormatService{
 		
 		FormatPO formatPO = new FormatPO();
 		
-		BeanUtil.copyProperties(formatVO, formatPO, "fid", "status");
+		BeanUtil.copyProperties(formatVO, formatPO);
 		formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);
 		
 		formatDao.save(formatPO);

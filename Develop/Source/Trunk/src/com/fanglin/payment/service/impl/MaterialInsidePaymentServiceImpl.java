@@ -116,7 +116,7 @@ public class MaterialInsidePaymentServiceImpl implements MaterialInsidePaymentSe
 			
 			materialInsidePaymentPO.setPaymentStatus(MaterialInsidePaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT);
 			
-			UserPO userPO = userDao.get(userId);
+			UserPO userPO = userDao.queryUserByUserId(userId);
 			materialInsidePaymentPO.setCollectUserId(userId);
 			materialInsidePaymentPO.setCollectUserName(userPO.getCurrentName());
 			materialInsidePaymentPO.setCollectTime(DateUtil.current(MaterialInsidePaymentPO.CURRENT_TIME_FORMAT_STR));

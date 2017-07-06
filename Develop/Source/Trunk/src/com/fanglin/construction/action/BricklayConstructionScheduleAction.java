@@ -91,7 +91,7 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addBricklayDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBricklayDrawing() throws FLException{
 		
-		bricklayDrawingService.saveOrUpdateBricklayDrawing(bricklayDrawing);
+		bricklayDrawingService.saveOrUpdateBricklayDrawing(bricklayDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class BricklayConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addBricklayDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBricklayDrawings() throws FLException{
 		
-		bricklayDrawings = bricklayDrawingService.addbrBricklayDrawings(bricklayDrawing, drawingUrls);
+		bricklayDrawings = bricklayDrawingService.addbrBricklayDrawings(bricklayDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

@@ -109,7 +109,7 @@ public class BackVisitServiceImpl implements BackVisitService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

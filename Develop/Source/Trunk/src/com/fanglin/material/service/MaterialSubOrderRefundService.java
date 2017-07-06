@@ -19,8 +19,5 @@ public interface MaterialSubOrderRefundService {
 	
 	public List<MaterialSubOrderRefundVO> queryMaterialSubOrderRefundByMsoIdAIdents(long msoId, List<Integer> idents);
 	
-	public boolean cancelMaterialSubOrderRefundForModel(long msorId);
-	
-	public boolean cancelMaterialSubOrderRefundForPackage(List<Long> msorIds, long msoId);
 
 }

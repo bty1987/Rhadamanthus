@@ -1,11 +1,18 @@
 
 $(function(){
     var notice = {
+        //定义SaveBtn获得noticeMng.html页的#saveBtn点击事件
         saveBtn: $("#saveBtn").on("click", saveData),
+        //定义cancelBtn获得noticeMng.html页的#cancelBtn取消按钮
         cancelBtn: $("#cancelBtn"),
+      /*  modals:$("#managements").on("show.bs.modal",function(){
+            modal("show");
+        }),*/
+        //弹出模态框
         modal: $("#noticeModal").on("show.bs.modal", function(a) {
             com.clearValidator()
         }),
+        //获取noticeMng.html的ID属性
         items: {
             theme : $("#theme"),
             typeSel : $("#typeSel"),
@@ -21,7 +28,7 @@ $(function(){
     };
 
     bindUploadfiy();
-
+//Datepicker是绑在一个标准的形式输入字段
     $(".date-picker").datepicker({autoclose : !0}).on("show", function() {
         setTimeout(function() {
             $(".dropdown-menu").css("z-index", 1060);
@@ -53,7 +60,11 @@ $(function(){
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+
             var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
+            var $management = $('<a></a>').addClass('btn btn-minier btn-primary').html('管理');
+
+
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
@@ -66,23 +77,32 @@ $(function(){
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", v.isPublic, "blue"],
                 ["内容:", v.contentsText, "grey"],
-            ];
 
+            ];
+            //循环出li中的属性
             $.each(propertyArr, function (index,value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
+
             });
-            
+            //undefined是判断是不是未定义的，如果v.filePath没有未定义 并且v.filePath 不等于空
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
+                //插入btnDown
             	$divBtnWrap.append($btnDown);
         	}
 
-            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
 
-            $liLine.append($h3).append($ulProperty);
-            
+            if(v.isPublic=="否") {
+                $divBtnWrap.append($management).append($btnEdit).append($btnDel).appendTo($h3);
+                $liLine.append($h3).append($ulProperty);
+            }else{
+                $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+                $liLine.append($h3).append($ulProperty);
+            }
+
             $btnDown.click(function(){
             	window.open(config.media + v.filePath);
             	return false;
@@ -92,6 +112,171 @@ $(function(){
                 notice.editFlg = !0;
                 var a = v;
                 void 0 != a && (notice.items.noticeId = a.noticeId, notice.items.userId = a.user.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority), notice.items.deptSel = a.dept.deptId, notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", com.isOrNotType[a.isPublic]), notice.items.contents.html(a.contents), notice.modal.modal("show"))
+            });
+
+            $management.unbind().bind('click',function(){
+                $("#tree3").removeData("tree");
+                $("#tree3").unbind('click');
+
+
+                var deptList =null;
+                com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
+                    deptList = res.deptList;
+
+                    console.log(deptList);
+                }, null, false);
+
+                var deptObj = {}, didList = [];
+
+                //获取所有叶子节点
+                $.each(deptList, function(i, v){
+
+                    didList.push(v.did);
+
+                });
+
+                $.each(deptList, function(i,v){
+                    if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
+                        didList.splice(didList.indexOf(v.fatherDept.did),1);
+
+                    }
+                });
+                var types=[];
+
+
+                //获取根节点
+                $.each(deptList, function (i, v) {
+
+
+                    console.log("wwwwwwwwwwwwwwwwww");
+                    if (v.fatherDept) return true;
+
+                    if (!deptObj[v.type]) {
+                        deptObj[v.type] = {
+                            name: v.type,
+                            type: 'folder',
+                            children: {}
+
+                        }
+                    }
+
+                    //   console.log(v.company);
+
+                    deptObj[v.type]['children'][v.did] = {
+
+                        name: v.deptName,
+                        type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+                        did: v.did,
+                        deptid: v.deptId
+
+                    };
+                    //    console.log(v.deptId);
+
+
+                });
+
+                var getDeptByDid = function(did){
+                    var depts = {};
+
+                    $.each(deptList, function(i, v){
+                        if(!v.fatherDept) return true;
+
+                        if(v.fatherDept.did == did){
+                            depts[v.did] = {
+                                name: v.deptName,
+                                type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+                                did : v.did,
+                                deptid : v.deptId
+                            }
+                            // console.log("did"+did);
+                        }
+
+                    });
+
+                    return depts;
+
+                };
+
+
+                $('#tree3').ace_tree({
+                    dataSource: {
+                        data : function(options, callback) {
+                            var checkbox=$('<input type="checkbox" />');
+                            var treeclass=$("#treecheck");
+                            var $data = null;
+
+
+                            if(!("name" in options) && !("type" in options)){
+                                $data = deptObj;//the root tree
+                                // console.log($data);
+                                callback({ data: $data });
+                                return;
+                            }
+                            else if("type" in options && options.type == "folder") {
+
+                                if("children" in options)
+                                    $data = options.children;
+                                else {
+                                    $data = getDeptByDid(options.did);
+
+                                }
+                                //  console.log($data);
+
+                            }
+
+                            treeclass.appendTo(checkbox);
+                            if($data != null)
+                                setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+
+
+                        }
+
+                    },
+                    loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+                    'open-icon' : 'icon-minus',
+                    'close-icon' : 'icon-plus',
+                    'selectable' : true,
+                    'selected-icon' : null,
+                    'unselected-icon' : null,
+                    'multiSelect': true,
+                    treeItemSelect:true,
+                    cacheItems: false,
+
+
+                });
+                $('#managements').modal('show');
+
+                $("#manageBtn").unbind().bind('click',function(){
+
+
+
+                    var items=$('#tree3').tree('selectedItems');
+
+                    $("#tree3").removeData("tree");
+                    $("#tree3").unbind('click');
+                    var dids={
+
+                    }
+                    var option={
+
+                        "notice.noticeId": v.noticeId
+                    };
+
+                    // console.log(v.noticeId);
+                    //循环将选中的部门did放到option里
+                    $.each(items,function(i,value){
+
+                        dids["dids["+i+"]"]= value.did;
+
+                    })
+                    if($.isEmptyObject(dids)){
+                        com.showAlert(com.error,"部门不能为空");
+                        return false;
+                    }
+                        com.post(api.information.updateNoticeDepartments, $.extend(option,dids));
+
+                });
+
             });
 
             $btnDel.click(function(){
@@ -118,7 +303,9 @@ $(function(){
 
     var _condArr = ['theme', 'dateRange', 'deptId'];
     var NoticeMngSeacher = new Searcher();
+    //将条件返回condList里
     NoticeMngSeacher.init( _condArr, "condList", api.information.pageNotice, function(list){
+        //将结果返回到页面的div里的id
         displayFunc.init('resultList', list);
     }, "pagenation", "noticeMngSeacherPostData", null, false, null, function(){
 
@@ -132,6 +319,7 @@ $(function(){
             notice.items.contents.html("");
             notice.modal.modal("show")
         });
+
 
         return [$adda];
     });
@@ -205,7 +393,8 @@ $(function(){
     };
 
     initializeContent();
-    function initializeContent() {
+    function initializeContent(){
+
         $("#contents").ace_wysiwyg({
             toolbar: ["font", null, "fontSize", null,
                 {
@@ -286,5 +475,141 @@ $(function(){
         "unsupported-file-type" === a ? c = "Unsupported format " + b : console.log("error uploading file", a, b);
         $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts")
     }
+
+/*
+
+    showTree()
+    function showTree() {
+
+        var deptList =null;
+    com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
+        deptList = res.deptList;
+
+        console.log(deptList);
+    }, null, false);
+
+    var deptObj = {}, didList = [];
+
+    //获取所有叶子节点
+    $.each(deptList, function(i, v){
+
+        didList.push(v.did);
+
+    });
+
+    $.each(deptList, function(i,v){
+        if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
+            didList.splice(didList.indexOf(v.fatherDept.did),1);
+
+        }
+    });
+    var types=[];
+
+
+    //获取根节点
+    $.each(deptList, function (i, v) {
+
+
+        console.log("wwwwwwwwwwwwwwwwww");
+        if (v.fatherDept) return true;
+
+        if (!deptObj[v.type]) {
+               deptObj[v.type] = {
+                name: v.type,
+                type: 'folder',
+                children: {}
+
+            }
+        }
+
+        //   console.log(v.company);
+
+        deptObj[v.type]['children'][v.did] = {
+
+            name: v.deptName,
+            type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+            did: v.did,
+            deptid: v.deptId
+
+        };
+        //    console.log(v.deptId);
+
+
+    });
+
+    var getDeptByDid = function(did){
+        var depts = {};
+
+        $.each(deptList, function(i, v){
+            if(!v.fatherDept) return true;
+
+            if(v.fatherDept.did == did){
+                depts[v.did] = {
+                    name: v.deptName,
+                    type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+                    did : v.did,
+                    deptid : v.deptId
+                }
+                // console.log("did"+did);
+            }
+
+        });
+
+        return depts;
+
+    };
+
+
+    $('#tree3').ace_tree({
+        dataSource: {
+            data : function(options, callback) {
+                var checkbox=$('<input type="checkbox" />');
+                var treeclass=$("#treecheck");
+                var $data = null;
+
+
+                if(!("name" in options) && !("type" in options)){
+                    $data = deptObj;//the root tree
+                    // console.log($data);
+                    callback({ data: $data });
+                    return;
+                }
+                else if("type" in options && options.type == "folder") {
+
+                    if("children" in options)
+                        $data = options.children;
+                    else {
+                        $data = getDeptByDid(options.did);
+
+                    }
+                    //  console.log($data);
+
+                }
+
+                treeclass.appendTo(checkbox);
+                if($data != null)
+                    setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+
+
+            }
+
+        },
+        loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+        'open-icon' : 'icon-minus',
+        'close-icon' : 'icon-plus',
+        'selectable' : true,
+        'selected-icon' : null,
+        'unselected-icon' : null,
+        'multiSelect': true,
+        treeItemSelect:true,
+        cacheItems: false,
+
+
+    });
+
+}
+*/
+
+
 
 });

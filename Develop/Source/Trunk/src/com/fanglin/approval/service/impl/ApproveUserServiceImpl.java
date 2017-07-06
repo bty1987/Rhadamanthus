@@ -23,6 +23,7 @@ import com.fanglin.approval.service.ApproveUserService;
 import com.fanglin.approval.vo.ApproveUserVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
@@ -35,6 +36,9 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 	@Autowired
 	private ApproveUserDao approveUserDao;
 
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	public void pageApproveUser(Paging paging, List<Filter> filters) {
 
@@ -78,8 +82,7 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addApproveUser(ApproveUserVO approveUserVO) throws FLException {
 
-		List<ApproveUserPO> approveUsers = approveUserDao
-				.queryApproveUserByUserId(approveUserVO.getUser().getUserId());
+		List<ApproveUserPO> approveUsers = approveUserDao.queryApproveUserByUserId(approveUserVO.getUser().getUserId());
 
 		for (ApproveUserPO approveUser : approveUsers) {
 			if (approveUser.getType()==approveUserVO.getType()) {
@@ -88,12 +91,10 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 		}
 
 		ApproveUserPO approveUserPO = new ApproveUserPO();
-		BeanUtil.copyProperties(approveUserVO, approveUserPO,Arrays.asList("user"));
-
-		approveUserPO.setUser(new UserPO());
-		BeanUtil.copyProperties(approveUserVO.getUser(),approveUserPO.getUser());
-
-		approveUserDao.saveOrUpdate(approveUserPO);
+		UserPO user= userDao.queryUserByUserId(approveUserVO.getUser().getUserId());
+		approveUserPO.setType(approveUserVO.getType());
+		approveUserPO.setUser(user);
+		approveUserDao.save(approveUserPO);
 
 		return 0;
 	}

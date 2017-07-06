@@ -124,7 +124,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		}
 		
 		for(ApprovalOrderBelongItemVO approvalOrderBelongItemVO: approvalOrderBelongItemVOs){
-			UserPO userPO = userDao.get(approvalOrderBelongItemVO.getBelongUserId());
+			UserPO userPO = userDao.queryUserByUserId(approvalOrderBelongItemVO.getBelongUserId());
 			
 			if(userPO == null){
 				throw new FLException(220005, "员工不存在");
@@ -158,13 +158,17 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(orderId);
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_ORDER_BELONG_STR, orderId, approvalOrderBelongVO.getBelongType(), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString()));
-		approvalPO.setSender(new UserPO(userId));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
+		
 		
 		approvalDao.save(approvalPO);
 		
@@ -238,7 +242,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		
 		List<ApprovalOrderBelongItemPO> approvalOrderBelongItemPOs = approvalOrderBelongItemDao.queryApprovalOrderBelongItemByAobId(approvalOrderBelongPO.getAobId());
 		for(ApprovalOrderBelongItemPO approvalOrderBelongItemPO: approvalOrderBelongItemPOs){
-			UserPO userPO = userDao.get(approvalOrderBelongItemPO.getBelongUserId());
+			UserPO userPO = userDao.queryUserByUserId(approvalOrderBelongItemPO.getBelongUserId());
 			
 			if(userPO == null){
 				throw new FLException(220005, "员工不存在");
@@ -252,6 +256,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalOrderBelongItemPO.getDefaultFlag())){
 				defaultUser = approvalOrderBelongItemPO.getBelongUserId();
+				
 			}
 			
 			orderBelongInfoPO.setBelongUserPO(userPO);
@@ -283,11 +288,11 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 				decorationOperateDao.save(decorationOperatePO);
 			}
 		}
-		
+		 UserPO attribution = userDao.queryUserByUserId(defaultUser);
 		if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){
-			decorationOrderPO.setDesignerPO(new UserPO(defaultUser));
+			decorationOrderPO.setDesignerPO(attribution);
 		}else{
-			decorationOrderPO.setSalesmanPO(new UserPO(defaultUser));
+			decorationOrderPO.setSalesmanPO(attribution);
 		}
 		
 		decorationOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

@@ -99,7 +99,7 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addChanDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addChanDrawing() throws FLException{
 		
-		chanDrawingService.saveOrUpdateChanDrawing(chanDrawing);
+		chanDrawingService.saveOrUpdateChanDrawing(chanDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -107,7 +107,7 @@ public class ChanConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addChanDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addChanDrawings() throws FLException{
 		
-		chanDrawings = chanDrawingService.addChanDrawings(chanDrawing, drawingUrls);
+		chanDrawings = chanDrawingService.addChanDrawings(chanDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

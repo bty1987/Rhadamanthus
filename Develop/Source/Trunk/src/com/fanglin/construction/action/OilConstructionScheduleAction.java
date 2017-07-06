@@ -91,7 +91,7 @@ public class OilConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addOilDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addOilDrawing() throws FLException{
 		
-		oilDrawingService.saveOrUpdateOilDrawing(oilDrawing);
+		oilDrawingService.saveOrUpdateOilDrawing(oilDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -99,7 +99,7 @@ public class OilConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addOilDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addOilDrawings() throws FLException{
 		
-		oilDrawings = oilDrawingService.addOilDrawings(oilDrawing, drawingUrls);
+		oilDrawings = oilDrawingService.addOilDrawings(oilDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

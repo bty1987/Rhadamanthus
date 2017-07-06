@@ -39,7 +39,7 @@ public class DecorationOperateServiceImpl implements DecorationOperateService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationOrderPO decorationOrderPO, List<DecorationBelongInfoPO> salesmans, List<DecorationBelongInfoPO> designers, String userId, float value, int flag, short type){
+	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationOrderPO decorationOrderPO, List<DecorationBelongInfoPO> salesmans, List<DecorationBelongInfoPO> designers, UserPO operater, float value, int flag, short type){
 		
 		for(DecorationBelongInfoPO salesman: salesmans){
 			for(DecorationBelongInfoPO designer: designers){
@@ -48,7 +48,7 @@ public class DecorationOperateServiceImpl implements DecorationOperateService {
 				decorationOperatePO.setDecorationOrder(decorationOrderPO);
 				decorationOperatePO.setSourcer(salesman.getBelongUserPO());
 				decorationOperatePO.setTarger(designer.getBelongUserPO());
-				decorationOperatePO.setOperater(new UserPO(userId));
+				decorationOperatePO.setOperater(operater);
 				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
 				decorationOperatePO.setDes("签订合同");

@@ -123,7 +123,7 @@ public class VoucherServiceImpl implements VoucherService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addVoucher(VoucherVO voucherVO, List<Long> atIds, String userId) throws FLException {
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
@@ -212,7 +212,7 @@ public class VoucherServiceImpl implements VoucherService {
 		
 		float total = 0;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
@@ -277,7 +277,7 @@ public class VoucherServiceImpl implements VoucherService {
 	@Transactional(rollbackFor=Exception.class)
 	public int postVouchers(List<Long> vIds, String userId) throws FLException {
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");

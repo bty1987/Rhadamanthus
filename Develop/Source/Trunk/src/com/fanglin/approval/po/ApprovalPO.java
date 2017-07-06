@@ -42,6 +42,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_MANIFESTDB_INT = 11;
 	
+	public static final short APPROVAL_TYPE_SALES_DIACOUNT_INT=12;
+	
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
@@ -80,7 +82,9 @@ public class ApprovalPO implements java.io.Serializable {
 	
 	public static final String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s";
 	
-	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "颜色:%s,规格:%s";
+	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "";
+	
+	public static final String APPROVAL_CONTENTS_SALES_DISCOUNT_STR ="订单号:%s,销售单号:%s,应收金额:%s";
 	
 	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT = 1;
 

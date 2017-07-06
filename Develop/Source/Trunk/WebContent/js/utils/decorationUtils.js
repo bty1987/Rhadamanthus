@@ -561,9 +561,12 @@ var decorationUtils = {
 
 				if (baseTypes.indexOf($paymentType) != -1){
 					$liLine.appendTo($baseul);
-					totalMoney += v.referMoney;
-					if($paymentStatus == '已确认'){
-						receiveMoney += v.realMoney;
+					if($paymentType != "定金" && $paymentType != "设计费"){
+						totalMoney += v.referMoney;
+						if($paymentStatus == '已确认'){
+
+								receiveMoney += v.realMoney;
+						}
 					}
 				}else {
 					$liLine.appendTo($otherul);
@@ -579,7 +582,7 @@ var decorationUtils = {
 			});
 		}
 
-		var paymentDiv = $("<div></div>").addClass('row');
+		var paymentDiv = $("<div></div>").addClass('row').attr('id','payedMoney');
 		var paymentHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("已收款项信息")));
 		var paymentBody = $("<div></div>").addClass('widget-body');
 		var paymentTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
@@ -588,9 +591,12 @@ var decorationUtils = {
 		paymentDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(paymentHeader, paymentBody)));
 		$('<div></div>').addClass('hr col-md-12').prependTo(paymentDiv);
 		$('<div></div>').addClass('hr col-md-12').appendTo(paymentDiv);
+		if ($('#payedMoney')){
+			$('#payedMoney').remove();
+		}
 		$mainDiv.after(paymentDiv);
 
-		$('#projectTotal').html(totalMoney);
+		$('#projectTotal').html(receiveMoney);
 		var projectPercent = totalMoney == 0? 0: utils.accMul(utils.changeThrDecimal(utils.accDiv(receiveMoney, totalMoney)), 100);
 		$('#projectPercent').html(projectPercent > 100 ? 100 : projectPercent + "%");
 		$('#addTotal').html(addMoney);

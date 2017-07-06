@@ -32,7 +32,7 @@ public class NoticePO implements Serializable {
 	public static final String NOTICE_STATUS_VALID_STR = "有效";
 	
 	public static final String NOTICE_STATUS_INVALID_STR = "失效";
-
+	
 	private Integer noticeId;
 	
 	private UserPO user;
@@ -58,6 +58,8 @@ public class NoticePO implements Serializable {
 	private String contentsText;
 	
 	private String filePath;
+	
+	
 	
 	public NoticePO(){
 		super();

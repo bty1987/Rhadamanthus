@@ -296,6 +296,11 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	public List<UserPO> queryUserByUserName(String userName){
 		return session().createCriteria(UserPO.class).add(Restrictions.ilike("userName", userName, MatchMode.ANYWHERE)).list();
 	}
+    
+    @Override
+	public UserPO queryUserByUserId(String userId){
+		 return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("userId",userId)).uniqueResult();
+	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -362,4 +367,5 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			}
 		}
 	}
+	
 }

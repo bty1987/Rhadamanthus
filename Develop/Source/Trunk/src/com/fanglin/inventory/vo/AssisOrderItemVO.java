@@ -12,6 +12,10 @@ public class AssisOrderItemVO implements Serializable{
 	
 	private GoodsVO goods;
 	
+	private ColorVO color;
+	
+	private FormatVO format;
+	
 	private Float num;
 
 	public AssisOrderItemVO() {
@@ -21,6 +25,13 @@ public class AssisOrderItemVO implements Serializable{
 	public AssisOrderItemVO(GoodsVO goods) {
 		super();
 		this.goods = goods;
+	}
+	
+	public AssisOrderItemVO(GoodsVO goods, ColorVO color, FormatVO format) {
+		super();
+		this.goods = goods;
+		this.color = color;
+		this.format = format;
 	}
 
 	public Long getAoiid() {
@@ -45,6 +56,22 @@ public class AssisOrderItemVO implements Serializable{
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
+	}
+
+	public ColorVO getColor() {
+		return color;
+	}
+
+	public void setColor(ColorVO color) {
+		this.color = color;
+	}
+
+	public FormatVO getFormat() {
+		return format;
+	}
+
+	public void setFormat(FormatVO format) {
+		this.format = format;
 	}
 
 	public Float getNum() {

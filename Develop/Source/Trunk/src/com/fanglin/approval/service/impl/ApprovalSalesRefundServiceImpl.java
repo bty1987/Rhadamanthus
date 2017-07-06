@@ -133,16 +133,20 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
 	
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);//销售退货
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);//初始
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		//过滤条件     订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),refundType));
-		approvalPO.setReceiver(userDao.get(approvalVO.getReceiverId()));
-		approvalPO.setSender(userDao.get(userId));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		
@@ -203,11 +207,11 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());//退款金额
 		salesPaymentPO.setBrand(salesPO.getBrand());//品牌
 		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_RTYPE_INT);
+		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REFUNDSTYPE_INT);
 		
 		salesPaymentDao.save(salesPaymentPO);
 		
-		UserPO userPO = userDao.get(approvalPO.getSender().getUserId());
+		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
 		RefundsPO refundsPO = new RefundsPO();
 		
 		refundsPO.setSid(salesPO.getSid());

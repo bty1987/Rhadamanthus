@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
@@ -16,6 +15,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
@@ -31,6 +31,10 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Autowired
 	private WorkerSalaryDao workerSalaryDao;
+	
+	
+	@Autowired
+	private UserDao userdao;
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
@@ -49,6 +53,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			if(workerSalaryPO.getApprover()!=null){
 				
 				workerSalaryVO.getApprover().setUserName(workerSalaryPO.getApprover().getUserName());
+			
 			}
 			workerSalaryVO.getCreater().setUserName(workerSalaryPO.getCreater().getUserName());
 			
@@ -96,8 +101,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId) throws FLException {
-		
-		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), new UserPO(workerSalaryVO.getUser().getUserId()),new UserPO(userId));
+		UserPO user = userdao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
+		UserPO	userpo = userdao.queryUserByUserId(userId);
+		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), user,userpo);
 		if(workerSalaryVO.getCsId() != null){
 			long csId = workerSalaryVO.getCsId();
 			ConstructionSchedulePO  constructionSchedulePO=  constructionScheduleDao.queryConstructionScheduleByCsId(csId);
@@ -152,7 +158,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor=Exception.class)
 	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId)  throws FLException{
 			
-		UserPO approval = new UserPO(userId);
+		UserPO approval = userdao.queryUserByUserId(userId);
 		for (WorkerSalaryVO workerSalaryVO : workerSalarys) {
 		
 		WorkerSalaryPO	workerSalaryPO=	workerSalaryDao.get(workerSalaryVO.getWsId());
@@ -172,7 +178,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor=Exception.class)
 	public int rejectWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId)  throws FLException{
 			
-		UserPO approval = new UserPO(userId);
+		UserPO approval = userdao.queryUserByUserId(userId);
 		for (WorkerSalaryVO workerSalaryVO : workerSalarys) {
 		
 		WorkerSalaryPO	workerSalaryPO=	workerSalaryDao.get(workerSalaryVO.getWsId());

@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.CleaningDrawingDao;
 import com.fanglin.construction.po.CleaningDrawingPO;
 import com.fanglin.construction.service.CleaningDrawingService;
 import com.fanglin.construction.vo.CleaningDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("cleaningDrawingService")
@@ -30,6 +33,9 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 	
 	@Autowired
 	private CleaningDrawingDao cleaningDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public CleaningDrawingVO queryCleaningDrawingById(int cdId){
@@ -77,7 +83,7 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateCleaningDrawing(CleaningDrawingVO cleaningDrawingVO){
+	public int saveOrUpdateCleaningDrawing(CleaningDrawingVO cleaningDrawingVO, String userId){
 		
 		CleaningDrawingPO cleaningDrawingPO = null;
 		
@@ -88,6 +94,10 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 		}
 		
 		BeanUtil.copyProperties(cleaningDrawingVO, cleaningDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		cleaningDrawingPO.setCreater(userC);
+		cleaningDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		cleaningDrawingDao.saveOrUpdate(cleaningDrawingPO);
 		
@@ -98,7 +108,7 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<CleaningDrawingVO> addCleaningDrawings(CleaningDrawingVO cleaningDrawingVO, List<String> drawingUrls) {
+	public List<CleaningDrawingVO> addCleaningDrawings(CleaningDrawingVO cleaningDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<CleaningDrawingVO> cleaningDrawingVOs = new ArrayList<CleaningDrawingVO>();
 		
@@ -108,6 +118,10 @@ public class CleaningDrawingServiceImpl implements CleaningDrawingService {
 			
 			BeanUtil.copyProperties(cleaningDrawingVO, cleaningDrawingPO);
 			cleaningDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			cleaningDrawingPO.setCreater(userC);
+			cleaningDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			cleaningDrawingDao.save(cleaningDrawingPO);
 			

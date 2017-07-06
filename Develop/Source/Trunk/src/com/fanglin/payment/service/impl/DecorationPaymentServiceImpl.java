@@ -47,6 +47,7 @@ import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -71,6 +72,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Autowired
 	private AdvancePaymentDao advancePaymentDao;
@@ -258,7 +262,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
 		
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationPaymentPO.setCreateUserPO(new UserPO(userId));
+		UserPO user = userDao.queryUserByUserId(userId);
+		decorationPaymentPO.setCreateUserPO(user);
 		decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
 		decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
 		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
@@ -329,7 +334,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO firstDecorationPayment = new DecorationPaymentPO();
 				
 				firstDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				firstDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				UserPO user = userDao.queryUserByUserId(createUserId);
+				firstDecorationPayment.setCreateUserPO(user);
 				firstDecorationPayment.setReferMoney((float) (Math.ceil((sumMoney * ((first + firstSecond) / 100)) / 100) * 100));
 				firstDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
 				firstDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -340,7 +346,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO secondDecorationPayment = new DecorationPaymentPO();
 				
 				secondDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				secondDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				secondDecorationPayment.setCreateUserPO(user);
 				secondDecorationPayment.setReferMoney((float) (Math.ceil((sumMoney * ((second) / 100)) / 100) * 100));
 				secondDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR);
 				secondDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -351,7 +357,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO thirdDecorationPayment = new DecorationPaymentPO();
 				
 				thirdDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				thirdDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				thirdDecorationPayment.setCreateUserPO(user);
 				thirdDecorationPayment.setReferMoney(sumMoney - (firstDecorationPayment.getReferMoney() + secondDecorationPayment.getReferMoney()));
 				thirdDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_FINAL_STR);
 				thirdDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -363,7 +369,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO firstDecorationPayment = new DecorationPaymentPO();
 				
 				firstDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				firstDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				UserPO user = userDao.queryUserByUserId(createUserId);
+				firstDecorationPayment.setCreateUserPO(user);
 				firstDecorationPayment.setReferMoney((float) (Math.ceil((sumMoney * ((first) / 100)) / 100) * 100));
 				firstDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
 				firstDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -374,7 +381,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO firstSecondDecorationPayment = new DecorationPaymentPO();
 				
 				firstSecondDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				firstSecondDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				firstSecondDecorationPayment.setCreateUserPO(user);
 				firstSecondDecorationPayment.setReferMoney((float) (Math	.ceil((sumMoney * ((firstSecond) / 100)) / 100) * 100));
 				firstSecondDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR);
 				firstSecondDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -385,7 +392,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO secondDecorationPayment = new DecorationPaymentPO();
 				
 				secondDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				secondDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				secondDecorationPayment.setCreateUserPO(user);
 				secondDecorationPayment.setReferMoney((float) (Math.ceil((sumMoney * ((second) / 100)) / 100) * 100));
 				secondDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR);
 				secondDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -396,7 +403,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO thirdDecorationPayment = new DecorationPaymentPO();
 				
 				thirdDecorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				thirdDecorationPayment.setCreateUserPO(new UserPO(createUserId));
+				thirdDecorationPayment.setCreateUserPO(user);
 				thirdDecorationPayment.setReferMoney(sumMoney - (firstDecorationPayment.getReferMoney() + secondDecorationPayment.getReferMoney() + firstSecondDecorationPayment.getReferMoney()));
 				thirdDecorationPayment.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_FINAL_STR);
 				thirdDecorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
@@ -481,7 +488,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationReceiptPO.setCollectUserPO(new UserPO(decorationPaymentVO.getCollectUserId()));
+		UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCollectUserId());
+		decorationReceiptPO.setCollectUserPO(user);
 		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
 		
 		decorationReceiptDao.update(decorationReceiptPO);
@@ -528,7 +536,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		if(paymentStatus.equals(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR) && decorationPaymentVO.getPaymentStatus().equals(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR)){
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
-			decorationPaymentPO.setCreateUserPO(new UserPO(decorationPaymentVO.getCreateUserId()));
+			UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCreateUserId());
+			decorationPaymentPO.setCreateUserPO(user);
 			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			if(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(paymentType)){ // 对于首付款 提交时需要将应收款项减去已付款的定金的余额
@@ -790,7 +799,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 		
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationReceiptPO.setCollectUserPO(new UserPO(decorationPaymentVO.getCollectUserId()));
+		UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCollectUserId());
+		decorationReceiptPO.setCollectUserPO(user);
 		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
 		
 		decorationPaymentPO.setRealMoney(realMoney);
@@ -864,7 +874,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 		
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationReceiptPO.setCollectUserPO(new UserPO(decorationPaymentVO.getCollectUserId()));
+		UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCollectUserId());
+		decorationReceiptPO.setCollectUserPO(user);
 		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
 
 		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
@@ -900,12 +911,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				
 				decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR);
 				decorationReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationReceiptPO.setConfirmUserPO(new UserPO(confirmUserId));
+				UserPO user = userDao.queryUserByUserId(confirmUserId);
+				decorationReceiptPO.setConfirmUserPO(user);
 				
 				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
 					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
 					
-					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, new UserPO(confirmUserId));
+					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, userDao.queryUserByUserId(confirmUserId));
 				}
 				
 				decorationReceiptDao.save(decorationReceiptPO);

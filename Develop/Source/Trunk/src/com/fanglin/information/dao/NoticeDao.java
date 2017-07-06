@@ -16,11 +16,12 @@ import com.fanglin.information.po.NoticePO;
 import com.fanglin.utils.Paging;
 
 public interface NoticeDao extends Dao<NoticePO> {
-	
+	//分页查询
 	public List<NoticePO> queryPageNotices(Paging paging, List<Filter> filters, String userId);
 	
 	public List<NoticePO> queryPageDeptValidNotices(Paging paging, List<String> deptIds, String type);
 	
 	public List<NoticePO> queryValidNotices(String type);
 	
+
 }

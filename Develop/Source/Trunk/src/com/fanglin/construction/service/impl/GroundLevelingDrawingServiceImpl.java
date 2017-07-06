@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.GroundLevelingDrawingDao;
 import com.fanglin.construction.po.GroundLevelingDrawingPO;
 import com.fanglin.construction.service.GroundLevelingDrawingService;
 import com.fanglin.construction.vo.GroundLevelingDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("groundLevelingDrawingService")
@@ -30,6 +33,9 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 	
 	@Autowired
 	private GroundLevelingDrawingDao groundLevelingDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public GroundLevelingDrawingVO queryGroundLevelingDrawingById(int gldId){
@@ -77,7 +83,7 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateGroundLevelingDrawing(GroundLevelingDrawingVO groundLevelingDrawingVO){
+	public int saveOrUpdateGroundLevelingDrawing(GroundLevelingDrawingVO groundLevelingDrawingVO, String userId){
 		GroundLevelingDrawingPO groundLevelingDrawingPO = null;
 		
 		if(groundLevelingDrawingVO.getGldId() == null || groundLevelingDrawingVO.getGldId() == 0){
@@ -86,6 +92,10 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 			groundLevelingDrawingPO = groundLevelingDrawingDao.get(groundLevelingDrawingVO.getGldId());
 		}
 		BeanUtil.copyProperties(groundLevelingDrawingVO, groundLevelingDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		groundLevelingDrawingPO.setCreater(userC);
+		groundLevelingDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		groundLevelingDrawingDao.saveOrUpdate(groundLevelingDrawingPO);
 		
@@ -97,7 +107,7 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<GroundLevelingDrawingVO> addGroundLevelingDrawings(GroundLevelingDrawingVO groundLevelingDrawingVO, List<String> drawingUrls) {
+	public List<GroundLevelingDrawingVO> addGroundLevelingDrawings(GroundLevelingDrawingVO groundLevelingDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<GroundLevelingDrawingVO> groundLevelingDrawingVOs = new ArrayList<GroundLevelingDrawingVO>();
 		
@@ -107,6 +117,10 @@ public class GroundLevelingDrawingServiceImpl implements GroundLevelingDrawingSe
 			
 			BeanUtil.copyProperties(groundLevelingDrawingVO, groundLevelingDrawingPO);
 			groundLevelingDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			groundLevelingDrawingPO.setCreater(userC);
+			groundLevelingDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			groundLevelingDrawingDao.save(groundLevelingDrawingPO);
 			

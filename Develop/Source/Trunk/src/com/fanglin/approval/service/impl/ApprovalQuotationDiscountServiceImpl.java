@@ -93,6 +93,8 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		List<UserPO> userPOs = null;
 		UserPO userPO = decorationOrderPO.getDesignerPO();
 		
@@ -115,8 +117,9 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		approvalPO.setIdent(String.valueOf(quotationId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount(), level));
-		approvalPO.setSender(userPO);
-		approvalPO.setReceiver(new UserPO(userPOs.get(0).getUserId()));
+		approvalPO.setReceiver(userPO);
+		approvalPO.setSender(sender);
+		
 		
 		approvalDao.save(approvalPO);
 		

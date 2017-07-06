@@ -170,6 +170,17 @@ CREATE TABLE `advancereceipt` (
   PRIMARY KEY (`arId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款项收据表';
 
+DROP TABLE IF EXISTS `assassin`;
+CREATE TABLE `assassin` (
+  `asId` int(11) NOT NULL AUTO_INCREMENT,
+  `api` varchar(64) NOT NULL,
+  `params` varchar(512) NOT NULL,
+  `server` varchar(32) NOT NULL,
+  `errorcode` int(11) NOT NULL,
+  `errormes` varchar(255) NOT NULL,
+  PRIMARY KEY (`asId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='代理表';
+
 DROP TABLE IF EXISTS `backvisit`;
 CREATE TABLE `backvisit` (
   `bvId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -206,6 +217,8 @@ CREATE TABLE `bricklaydrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`bdId`),
   KEY `indexone` (`bcsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='瓦工图纸表';
@@ -235,6 +248,8 @@ CREATE TABLE `carpentdrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='木工图纸表';
@@ -268,6 +283,8 @@ CREATE TABLE `chandrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='铲大白图纸表';
@@ -296,6 +313,8 @@ CREATE TABLE `cleaningdrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cdId`),
   KEY `indexone` (`ccsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='保洁工图纸表';
@@ -760,6 +779,7 @@ CREATE TABLE `drawline` (
   `status` varchar(45) DEFAULT NULL COMMENT '排队,申请放线,放线失败,放线成功',
   `applayCount` int(11) DEFAULT '1',
   `applayUserId` varchar(15) DEFAULT NULL,
+  `dgid` int(11),
   `drawLineGroup` varchar(45) DEFAULT NULL,
   `drawLineUserId` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`dlId`),
@@ -767,6 +787,14 @@ CREATE TABLE `drawline` (
   KEY `indextwo` (`drawLineGroup`,`status`,`applayTime`),
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
+
+CREATE TABLE `drawlinegroup`(
+  `gid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `content` varchar(128),
+  PRIMARY KEY (`gid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线小组表';
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
@@ -833,6 +861,8 @@ CREATE TABLE `groundlevelingdrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`gldId`),
   KEY `indexone` (`glcsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='地面找平图纸表';
@@ -1411,6 +1441,30 @@ CREATE TABLE `message` (
   KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `membercard`;
+CREATE TABLE `membercard` (
+  `mcid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(15) NOT NULL,
+  `orderId` varchar(15) NOT NULL,
+  `credits` int(11) NOT NULL DEFAULT '0',
+  `createTime` timestamp NULL NOT NULL,
+  PRIMARY KEY (`mcid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员卡表';
+
+DROP TABLE IF EXISTS `memberdetail`;
+CREATE TABLE `memberdetail` (
+  `mdid` int(11) NOT NULL AUTO_INCREMENT,
+  `mcid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1:主材, 2:装修',
+  `subtype` tinyint(1) NOT NULL '0' COMMENT '0: +, 1: -',
+  `credit` int(11) NOT NULL DEFAULT '0',
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
+  `createTime` int(11) NOT NULL,
+  `comment` varchar(128),
+  PRIMARY KEY (`mdid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员积分明细表';
+
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
   `noticeId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1429,6 +1483,14 @@ CREATE TABLE `notice` (
   PRIMARY KEY (`noticeId`),
   KEY `indexone` (`type`,`deptId`,`isPublic`,`startTime`,`endTime`,`publishTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
+
+DROP TABLE IF EXISTS `noticedepartment`;
+CREATE TABLE `noticedepartment` (
+  `ndid` int(11) NOT NULL AUTO_INCREMENT,
+  `nid` int(11) NOT NULL,
+  `did` int(11) NOT NULL,
+  PRIMARY KEY (`ndid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告部门表';
 
 DROP TABLE IF EXISTS `oilconstructionschedule`;
 CREATE TABLE `oilconstructionschedule` (
@@ -1454,6 +1516,8 @@ CREATE TABLE `oildrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`odId`),
   KEY `indexone` (`ocsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='油工工图纸表';
@@ -1524,6 +1588,8 @@ CREATE TABLE `putlinedrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`pldId`),
   KEY `indexone` (`plcsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线工图纸表';
@@ -1835,6 +1901,7 @@ CREATE TABLE `systemdefineitem` (
   PRIMARY KEY (`sdiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
 
+
 DROP TABLE IF EXISTS `usercheck`;
 CREATE TABLE `usercheck` (
   `ucId` bigint(32) NOT NULL AUTO_INCREMENT,
@@ -1935,6 +2002,8 @@ CREATE TABLE `waterwaycircuitcheckdrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`wccdId`),
   KEY `indexone` (`wcccsId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';
@@ -1966,6 +2035,8 @@ CREATE TABLE `waterwaycircuitpowerdrawing` (
   `drawingUrl` varchar(256) NOT NULL,
   `drawingAddUrl` varchar(256) DEFAULT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0',
+  `createrId` varchar(15),
+  `createTime`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`wcpdId`),
   KEY `indexone` (`wcpcsid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='水力电图纸表';

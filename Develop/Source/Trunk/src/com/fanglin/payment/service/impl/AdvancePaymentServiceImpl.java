@@ -160,8 +160,8 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		advanceReceiptPO.setDes(paymentVO.getDes());
 		advanceReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_INIT_INT);
-		advanceReceiptPO.setCollectUser(new UserPO(paymentVO.getCollectUser().getUserId()));
-		UserPO userPO = userDao.get(paymentVO.getCollectUser().getUserId());
+		UserPO userPO = userDao.queryUserByUserId(paymentVO.getCollectUser().getUserId());
+		advanceReceiptPO.setCollectUser(userPO);
 		advanceReceiptPO.setCollectUserName(userPO.getUserName());
 		advanceReceiptPO.setConfirmUserName("");
 		

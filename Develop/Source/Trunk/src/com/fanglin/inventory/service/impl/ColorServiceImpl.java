@@ -66,7 +66,7 @@ public class ColorServiceImpl implements ColorService{
 		
 		ColorPO colorPO = new ColorPO();
 		
-		BeanUtil.copyProperties(colorVO, colorPO, "cid", "status");
+		BeanUtil.copyProperties(colorVO, colorPO);
 		
 		colorPO.setStatus(ColorPO.STATUS_ENABLE_INT);
 		

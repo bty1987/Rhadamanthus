@@ -11,6 +11,7 @@
 
 package com.fanglin.data.quotation.action;
 
+
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -41,6 +42,14 @@ public class QuotationBigCategoryAction extends BaseListAction {
 		
 		quotationBigCategorys = quotationBigCategoryService.queryQuotationBigCategory();
 		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageQuotationBigCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageQuotationBigCategory(){
+		
+		quotationBigCategoryService.pageQuotationBigCategory(getPaging(), getFilters());
+	    
 		return SUCCESS;
 	}
 

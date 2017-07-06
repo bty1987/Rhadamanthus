@@ -37,5 +37,13 @@ public class LogUtils {
 			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
 		}
 	}
+	
+	public static void logging(Logger logger, String userId, String actionName){
+		logger.error(String.format("%s - %s - %s - %s", "AI", "I", userId, actionName));
+	}
+	
+	public static void logging(Logger logger, String actionName, Long runTime){
+		logger.error(String.format("%s - %s - %s - %s", "OT", "I", actionName), runTime.toString());
+	}
 
 }

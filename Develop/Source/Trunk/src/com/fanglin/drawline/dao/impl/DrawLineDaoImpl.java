@@ -37,11 +37,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	
 	@Override
 	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters){
-		
+		//分页查询
 		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
-		
+		//按条件塞选
 		queryFilterExcute(query, filters);
-		
+		//按照字段 从小到大排序
 		query.asc("actualStartTime");
 		
 		return query.list();
@@ -49,11 +49,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	
 	@Override
 	public List<DrawLinePO> queryDrawLine(List<Filter> filters) {
-		
+		//分页查询
 		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
-		
+		//按条件塞选
 		queryFilterExcute(query, filters);
-		
+		//不分页
 		query.notPaging();
 		
 		return query.list();
@@ -62,10 +62,14 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime){
-		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
+		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
+		
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
+				//塞选掉 状态为  放线失败,排队 的数据
 				.add(Restrictions.not(Restrictions.in("status", status)))
+				//查找大于开始时间
 				.add(Restrictions.ge("actualStartTime", startTime))
+				//查找小于结束时间 
 				.add(Restrictions.le("actualStartTime", endTime))
 				.list();
 	}
@@ -74,7 +78,9 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	@SuppressWarnings("unchecked")
 	public List<DrawLinePO> queryDrawLineByOrderId(String orderId){
 		return createCriteria(DrawLinePO.class)
+				//查询相同订单编号的数据
 				.add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				//按照放线信息ID 降序排列
 				.addOrder(Order.desc("dlId"))
 				.list();
 	}
@@ -82,24 +88,31 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DrawLinePO> queryDrawLineByGroupATime(String group, Timestamp startTime,Timestamp endTime){
-		List<String> status = Arrays.asList(new String[]{"防线失败", "排队"});
+		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
+		
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
+				//排除状态为 放线失败   排队的数据 
 				.add(Restrictions.not(Restrictions.in("status", status)))
 				.add(Restrictions.or(
 					Restrictions.or(
 						Restrictions.or(
+								//数据库开始时间>前台开始时间 并且  数据库开始时间<前台结束时间
 								Restrictions.and(Restrictions.gt("actualStartTime", startTime),Restrictions.lt("actualStartTime", endTime)),
+								//或者  数据库结束时间>前台开始时间  并且   数据库结束时间<前台结束时间
 								Restrictions.and(Restrictions.gt("actualEndTime", startTime),Restrictions.lt("actualEndTime", endTime))),
+								//或者   数据库开始时间<前台开始时间   并且 数据库结束时间>前台开始时间
 								Restrictions.and(Restrictions.lt("actualStartTime", startTime),Restrictions.gt("actualEndTime", startTime)
 						)),
+						//或者  数据库开始时间>前台结束时间  并且  数据库结束时间<前台结束时间
 						Restrictions.and(Restrictions.gt("actualStartTime", endTime),Restrictions.lt("actualEndTime", endTime))))
+				//where条件       数据库放线小组=前台获取的放线小组
 				.add(Restrictions.eq("drawLineGroup", group))
 				.list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		if(filters != null){
-
+			//重命名  第一个重命名为第二个
 			query.alias("decorationOrderPO", "decorationOrderPO");
 			query.alias("decorationOrderPO.villagePO", "villagePO");
 			query.alias("decorationOrderPO.designerPO", "designerPO");
@@ -109,6 +122,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 			query.alias("salesmanPO.dept", "salesmanDept");
 			
 			for(Filter filter: filters){
+				//判断是否为空
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
 						query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));

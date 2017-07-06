@@ -11,11 +11,15 @@
 
 package com.fanglin.data.quotation.dao.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationSmallCategoryPO;
 import com.fanglin.data.quotation.dao.QuotationSmallCategoryDao;
+import com.fanglin.utils.Paging;
 
 @Repository("quotationsmallcategory")
 public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategoryPO> implements QuotationSmallCategoryDao {
@@ -24,4 +28,21 @@ public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategor
 		super(QuotationSmallCategoryPO.class, true);
 	}
 
+	@Override
+	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters) {
+		 PagingQuery<QuotationSmallCategoryPO> query = pagingQuery(paging, QuotationSmallCategoryPO.class);
+			
+         if(filters != null){
+ 			for(Filter filter: filters){
+ 				if("name".equals(filter.getField())){
+ 					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+ 				}
+ 			}
+ 		}
+		
+		query.asc("id");
+		
+		return query.list();
+		
+	}
 }

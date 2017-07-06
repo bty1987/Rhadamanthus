@@ -27,27 +27,40 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	public NoticeDaoImpl(){
 		super(NoticePO.class);
 	}
-
+	//多条件分页
 	@Override
 	public List<NoticePO> queryPageNotices(Paging paging, List<Filter> filters, String userId){
-
+		//
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
-		
+		//重命名
 		query.alias("user", "user");
+		//user.userId =(equals) userId,
 		query.add(Restrictions.eq("user.userId", userId));
 		
+		//如果filters不等于空
 		if(filters != null){
+			//将集合的值循环赋给 filter对象
 			for(Filter filter : filters){
+				//如果filter.getDate不为空
 				if(StringUtils.isNotEmpty(filter.getData())){
+					//如果deptId相等于filter.getField
 					if("deptId".equals(filter.getField())){
+					//将dept重命名
 						query.alias("dept", "dept");
+						//查询条件
 						query.add(query.getCriterion("dept.deptId", filter));
+						//如果相等filter集合中的field
 					}else if("dateRange".equals(filter.getField())){
+						
 						String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 						String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
+						//开始时间小于等于结束时间
 						query.add(query.getCriterion("startTime", eTime, "le"));
+						//结束时间大于等于开始时间
 						query.add(query.getCriterion("endTime", sTime, "ge"));
+						//如果theme相等于filter集合中的Field
 					} else if("theme".equals(filter.getField())){
+						//条件主题等于(theme)filter
 						query.add(query.getCriterion("theme", filter));
 					}
 				}
@@ -55,7 +68,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		}
 		
 		query.desc("publishTime");
-		
+		//返回集合
 		return query.list();
 	}
 	
@@ -90,4 +103,5 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	    
 	    return query.list();
 	}
+
 }

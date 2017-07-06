@@ -262,8 +262,8 @@ public class PaymentServiceImpl implements PaymentService {
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
 		
-		advanceReceiptPO.setCollectUser(new UserPO(userId));
-		UserPO user = userDao.get(userId);
+		UserPO user = userDao.queryUserByUserId(userId);
+		advanceReceiptPO.setCollectUser(user);
 		advanceReceiptPO.setCollectUserName(user.getUserName());
 		advanceReceiptPO.setConfirmUserName("");
 		
@@ -316,7 +316,8 @@ public class PaymentServiceImpl implements PaymentService {
 				AdvanceReceiptPO relativeReceiptPO = relativePO.getAdvanceReceipt();
 				
 				relativeReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
-				relativeReceiptPO.setConfirmUser(new UserPO(currentUserId));
+				UserPO user = userDao.queryUserByUserId(currentUserId);
+				relativeReceiptPO.setConfirmUser(user);
 				relativePO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
 				
 				advanceReceiptDao.update(relativeReceiptPO);
@@ -324,7 +325,8 @@ public class PaymentServiceImpl implements PaymentService {
 			}
 			
 			advanceReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
-			advanceReceiptPO.setConfirmUser(new UserPO(currentUserId));
+			UserPO user = userDao.queryUserByUserId(currentUserId);
+			advanceReceiptPO.setConfirmUser(user);
 			paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
 			
 			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
@@ -332,7 +334,7 @@ public class PaymentServiceImpl implements PaymentService {
 				
 				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentPO.getOrderId());
 				
-				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, new UserPO(currentUserId));
+				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, userDao.queryUserByUserId(currentUserId));
 			}
 			
 			advanceReceiptDao.update(advanceReceiptPO);
@@ -404,6 +406,77 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int payPayment(PaymentVO paymentVO, String userId) throws FLException{
+		
+		DecorationOrderPO decorationOrderPO =  decorationOrderDao.queryDecorationOrderByOrderId(paymentVO.getOrderId());
+		
+		int customerId = decorationOrderPO.getCustomerPO().getId();
+		
+		CustomerPO customerPO = customerDao.get(customerId);
+		
+		if(customerPO == null){
+			throw new FLException(230001, "客户信息不存在");
+		}
+		
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId);
+		
+		if(advancePaymentPO == null){
+			throw new FLException(150010, "预付款余额不足");
+		}
+		
+		float balance = 0;
+		float recharge = gatherPayment(paymentVO);
+		String type = paymentVO.getType();
+		String paymentType = paymentVO.getPaymentType();
+		
+		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		
+		float overBalance = 0;
+		
+		if(PaymentPO.PAYMENT_TYPE_EXTRACT_STR.equals(type)){
+			
+			if(balance < recharge){
+				throw new FLException(150017, "预付款提款金额不足");
+			}
+			
+			overBalance = Arith.sub(balance, recharge);
+			
+			paymentVO.setRecharge(Math.abs(recharge));
+			paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+
+			AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
+			
+			AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
+			BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
+			
+			UserPO user = userDao.queryUserByUserId(userId);
+			advanceReceiptPO.setCollectUser(user);
+			advanceReceiptPO.setCollectUserName(user.getUserName());
+			advanceReceiptPO.setConfirmUserName("");
+			
+			advanceReceiptDao.save(advanceReceiptPO);
+			
+			PaymentPO paymentPO = new PaymentPO();
+			BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
+			
+			paymentPO.setCustomer(customerPO);
+			paymentPO.setBalance(overBalance);
+			paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+			paymentPO.setAdvanceReceipt(advanceReceiptPO);
+			
+			paymentDao.save(paymentPO);
+			advancePaymentDao.update(advancePaymentPO);
+			
+			paymentVO.setPaymentId(paymentPO.getPaymentId());
+		}else{
+			throw new FLException(150016, "预付款类型不正确");
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
 		
 		int customerId = paymentVO.getCustomer().getId();
@@ -444,8 +517,8 @@ public class PaymentServiceImpl implements PaymentService {
 			AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 			BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
 			
-			advanceReceiptPO.setCollectUser(new UserPO(userId));
-			UserPO user = userDao.get(userId);
+			UserPO user = userDao.queryUserByUserId(userId);
+			advanceReceiptPO.setCollectUser(user);
 			advanceReceiptPO.setCollectUserName(user.getUserName());
 			advanceReceiptPO.setConfirmUserName("");
 			
@@ -509,7 +582,8 @@ public class PaymentServiceImpl implements PaymentService {
 		AdvanceReceiptPO leftReceiptPO = new AdvanceReceiptPO();
 		
 		leftReceiptPO.setCash(convertCash);
-		leftReceiptPO.setCollectUser(new UserPO(operatorId));
+		UserPO user = userDao.queryUserByUserId(operatorId);
+		leftReceiptPO.setCollectUser(user);
 		leftReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		advanceReceiptDao.save(leftReceiptPO);
@@ -530,7 +604,8 @@ public class PaymentServiceImpl implements PaymentService {
 		AdvanceReceiptPO rightReceiptPO = new AdvanceReceiptPO();
 		
 		rightReceiptPO.setCash(convertCash);
-		rightReceiptPO.setCollectUser(new UserPO(operatorId));
+		UserPO users = userDao.queryUserByUserId(operatorId);
+		rightReceiptPO.setCollectUser(users);
 		rightReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		advanceReceiptDao.save(rightReceiptPO);

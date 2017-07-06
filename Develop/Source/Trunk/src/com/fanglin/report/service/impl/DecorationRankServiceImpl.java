@@ -80,7 +80,7 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 			TopVO topVO = new TopVO();
 			topVO.setTopName(decorationDesignerRankPO.getDesignerName());
 			
-			UserPO designer = userDao.get(decorationDesignerRankPO.getDesignerId());
+			UserPO designer = userDao.queryUserByUserId(decorationDesignerRankPO.getDesignerId());
 			if(designer != null){
 				topVO.setTopImg(designer.getUserPhoto());
 			}else{
@@ -180,7 +180,7 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = decorationDesignerRankDao.queryDecorationDesignerRankForPlaceByDesignerId(userId);

@@ -99,7 +99,7 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addPutlineDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPutlineDrawing() throws FLException{
 		
-		putlineDrawingService.saveOrUpdatePutlineDrawing(putlineDrawing);
+		putlineDrawingService.saveOrUpdatePutlineDrawing(putlineDrawing, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -107,7 +107,7 @@ public class PutlineConstructionScheduleAction extends BaseListAction{
 	@Action(value = "addPutlineDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPutlineDrawings() throws FLException{
 		
-		putlineDrawings = putlineDrawingService.addPutlineDrawings(putlineDrawing, drawingUrls);
+		putlineDrawings = putlineDrawingService.addPutlineDrawings(putlineDrawing, drawingUrls, queryUserId());
 		
 		return SUCCESS;
 	}

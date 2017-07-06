@@ -25,6 +25,7 @@ import com.fanglin.log.dao.ActionLogDao;
 import com.fanglin.log.po.ActionLogPO;
 import com.fanglin.log.service.LogService;
 import com.fanglin.log.vo.LogVO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -38,11 +39,18 @@ public class LogServiceImpl implements LogService {
 	@Autowired
 	private ActionLogDao actionLogDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	@Transactional(rollbackFor=Exception.class)
 	public int addActionLog(LogVO logVO){
+		
 		ActionLogPO actionLogPO = new ActionLogPO();
 		BeanUtil.copyProperties(logVO, actionLogPO);
-		actionLogPO.setCreateUserPO(new UserPO(logVO.getCreateUserId()));
+		
+		UserPO userPO = userDao.queryUserByUserId(logVO.getCreateUserId());
+		
+		actionLogPO.setCreateUserPO(userPO);
 		
 		actionLogDao.save(actionLogPO);
 		

@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.fanglin.construction.dao.WaterwayCircuitPowerDrawingDao;
 import com.fanglin.construction.po.WaterwayCircuitPowerDrawingPO;
 import com.fanglin.construction.service.WaterwayCircuitPowerDrawingService;
 import com.fanglin.construction.vo.WaterwayCircuitPowerDrawingVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("waterwayCircuitPowerDrawingService")
@@ -30,6 +33,9 @@ public class WaterwayCircuitPowerDrawingServiceImpl implements WaterwayCircuitPo
 	
 	@Autowired
 	private WaterwayCircuitPowerDrawingDao waterwayCircuitPowerDrawingDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public WaterwayCircuitPowerDrawingVO queryWaterwayCircuitPowerDrawingById(int wcpdId){
@@ -78,7 +84,7 @@ public class WaterwayCircuitPowerDrawingServiceImpl implements WaterwayCircuitPo
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveOrUpdateWaterwayCircuitPowerDrawing(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO){
+	public int saveOrUpdateWaterwayCircuitPowerDrawing(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, String userId){
 		
 		WaterwayCircuitPowerDrawingPO waterwayCircuitPowerDrawingPO = null;
 		
@@ -89,6 +95,10 @@ public class WaterwayCircuitPowerDrawingServiceImpl implements WaterwayCircuitPo
 		}
 		
 		BeanUtil.copyProperties(waterwayCircuitPowerDrawingVO, waterwayCircuitPowerDrawingPO);
+		//新添加的创建人和创建时间
+		UserPO userC = userDao.queryUserByUserId(userId);
+		waterwayCircuitPowerDrawingPO.setCreater(userC);
+		waterwayCircuitPowerDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
 		waterwayCircuitPowerDrawingDao.saveOrUpdate(waterwayCircuitPowerDrawingPO);
 		
@@ -99,7 +109,7 @@ public class WaterwayCircuitPowerDrawingServiceImpl implements WaterwayCircuitPo
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<WaterwayCircuitPowerDrawingVO> addWaterwayCircuitPowerDrawings(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, List<String> drawingUrls) {
+	public List<WaterwayCircuitPowerDrawingVO> addWaterwayCircuitPowerDrawings(WaterwayCircuitPowerDrawingVO waterwayCircuitPowerDrawingVO, List<String> drawingUrls, String userId) {
 		
 		List<WaterwayCircuitPowerDrawingVO> waterwayCircuitPowerDrawingVOs = new ArrayList<WaterwayCircuitPowerDrawingVO>();
 		
@@ -109,6 +119,10 @@ public class WaterwayCircuitPowerDrawingServiceImpl implements WaterwayCircuitPo
 			
 			BeanUtil.copyProperties(waterwayCircuitPowerDrawingVO, waterwayCircuitPowerDrawingPO);
 			waterwayCircuitPowerDrawingPO.setDrawingUrl(drawingUrl);
+			//新添加的创建人和创建时间
+			UserPO userC = userDao.queryUserByUserId(userId);
+			waterwayCircuitPowerDrawingPO.setCreater(userC);
+			waterwayCircuitPowerDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			
 			waterwayCircuitPowerDrawingDao.save(waterwayCircuitPowerDrawingPO);
 			

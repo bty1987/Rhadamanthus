@@ -58,6 +58,20 @@ $.extend(api, {data: {
     addVillage: {url: "addVillage.do", server: "communion"},
     updateVillage: {url: "updateVillage.do", server: "communion"},
     updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communion"},
-    updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"}
-    
+    updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"},
+
+
+    pageDrawlineGroup: {url:"pageDrawlineGroup.do"},
+    queryDrawlineGroup:{url:"queryDrawlineGroup.do"},
+    addDrawlineGroup: {url:"addDrawlineGroup.do"},
+    updateDrawlineGroup: {url:"updateDrawlineGroup.do"},
+    updateDrawlineGroupForStatus:{url:"updateDrawlineGroupForStatus.do"},
+
+
+    pageMeasurementUnit:{url:"pageMeasurementUnit.do"},
+    queryMeasurementUnit:{url:"queryMeasurementUnit.do"},
+    addMeasurementUnit:{url:"addMeasurementUnit.do", server: "communion"},
+    updateMeasurementUnit:{url:"updateMeasurementUnit.do", server: "communion"},
+
+
 }});

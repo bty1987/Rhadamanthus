@@ -30,6 +30,7 @@ import com.fanglin.approval.service.ApprovalMaterialOutsideRefundService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
 import com.fanglin.approval.service.ApprovalOrderBelongService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
+import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.service.ApprovalVillageService;
@@ -79,6 +80,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Autowired
 	private ApprovalSalesRefundService approvalSalesRefundService;
+	
+	@Autowired
+	private ApprovalSalesDiscountService approvalSalesDiscountService;
 	
 	@Override
 	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
@@ -192,7 +196,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
 				approvalManifestDBService.approvalManifestDB(approvalPO);
 				break;
-			
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT://12
+				approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
+			    break;
+			default:
+				break;
 		}
 		
 		approvalDao.update(approvalPO);

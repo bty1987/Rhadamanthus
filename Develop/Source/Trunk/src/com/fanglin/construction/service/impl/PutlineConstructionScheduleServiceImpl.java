@@ -23,7 +23,6 @@ import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
 import com.fanglin.construction.po.PutlineConstructionSchedulePO;
 import com.fanglin.construction.service.PutlineConstructionScheduleService;
 import com.fanglin.construction.vo.PutlineConstructionScheduleVO;
-import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.drawline.dao.DrawLineDao;
 import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.utils.BeanUtil;
@@ -46,7 +45,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		PutlineConstructionScheduleVO putlineConstructionScheduleVO = new PutlineConstructionScheduleVO();
 		
 		BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
-		putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
+		putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getOrderId());
 		
 		return putlineConstructionScheduleVO;
 	}
@@ -59,8 +58,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		}
 		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByOrderId(putlineConstructionScheduleVO.getOrderId());
 		if(putlineConstructionSchedulePO != null){
-			BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO, Arrays.asList("decorationOrder"));
-			putlineConstructionScheduleVO.setOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
+			BeanUtil.copyProperties(putlineConstructionSchedulePO, putlineConstructionScheduleVO);
 		}
 
 		return putlineConstructionScheduleVO;
@@ -79,10 +77,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 			putlineConstructionSchedulePO.setPutlineTime(DateUtil.current(PutlineConstructionSchedulePO.CURRENT_TIME_FORMAT_STR));
 		}
 		
-		BeanUtil.copyProperties(putlineConstructionScheduleVO, putlineConstructionSchedulePO, Arrays.asList("orderId"));
-		DecorationOrderPO order = new DecorationOrderPO();
-		order.setOrderId(putlineConstructionScheduleVO.getOrderId());
-		putlineConstructionSchedulePO.setDecorationOrder(order);
+		BeanUtil.copyProperties(putlineConstructionScheduleVO, putlineConstructionSchedulePO);
 		putlineConstructionScheduleDao.saveOrUpdate(putlineConstructionSchedulePO);
 		
 		return 0;
@@ -99,7 +94,7 @@ public class PutlineConstructionScheduleServiceImpl implements PutlineConstructi
 		if(putlineConstructionSchedulePO != null){
 			putlineConstructionSchedulePO.setPutlineStatus(putlineStatus);
 			
-			List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(putlineConstructionSchedulePO.getDecorationOrder().getOrderId());
+			List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(putlineConstructionSchedulePO.getOrderId());
 				
 			if(drawLinePOs != null && drawLinePOs.size() > 0){
 				

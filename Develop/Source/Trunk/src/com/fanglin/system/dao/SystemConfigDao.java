@@ -1,0 +1,17 @@
+package com.fanglin.system.dao;
+
+import java.util.List;
+
+import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.system.po.SystemConfigPO;
+
+import com.fanglin.utils.Paging;
+
+public interface SystemConfigDao extends Dao<SystemConfigPO>{
+	
+	public List<SystemConfigPO> pageSystemConfig(Paging paging,List<Filter> filters);
+	
+	public SystemConfigPO querySystemConfigByKey(String key);
+
+}

@@ -44,7 +44,7 @@ public class DUserCountDetailServiceImpl implements DUserCountDetailService {
 		
 		if(filters.size() == 0) return null;
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");

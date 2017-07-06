@@ -45,6 +45,7 @@ import com.fanglin.material.po.MaterialSubOrderRefundPO;
 import com.fanglin.material.vo.MaterialSubOrderItemVO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -91,6 +92,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	// 消息Service接口
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	// 获取主材退货审批项信息
 	@Override
@@ -163,6 +167,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO sender = userDao.queryUserByUserId(userId);
+		
 		String refundType = approvalMaterialRefundVO.getType() == MaterialSubOrderPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialSubOrderPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT);//主材退货
@@ -171,8 +178,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		//"订单号:%s,主材订单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s"
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
-		approvalPO.setReceiver(new UserPO(approvalVO.getReceiverId()));
-		approvalPO.setSender(new UserPO(userId));
+		approvalPO.setReceiver(receiver);
+		approvalPO.setSender(sender);
 		
 		approvalDao.save(approvalPO);
 		
@@ -342,11 +349,13 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		}
 		
 		if(balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT || balanceStatus == MaterialSubOrderPO.BALANCE_STATUS_TYPE_POST_INT){
+
+			UserPO instore = userDao.queryUserByUserId(materialSubOrderPO.getInstoreId());
 			
 			MaterialSubOrderBalancePO materialSubOrderBalancePO = new MaterialSubOrderBalancePO();
 			materialSubOrderBalancePO.setMaterialSubOrder(materialSubOrderPO);//主材订单信息类
 			materialSubOrderBalancePO.setCreater(approvalPO.getSender());//发送人
-			materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : new UserPO(materialSubOrderPO.getInstoreId()));//驻店编号(括号内为:三目运算符)
+			materialSubOrderBalancePO.setInstorer(materialSubOrderPO.getInstoreId() == null ? null : instore);//驻店编号(括号内为:三目运算符)
 			materialSubOrderBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			materialSubOrderBalancePO.setBalance(refundMoney);//结算值 (利润)
 			materialSubOrderBalancePO.setDifference(refundMoney);//差值(既总额 - 结算值)

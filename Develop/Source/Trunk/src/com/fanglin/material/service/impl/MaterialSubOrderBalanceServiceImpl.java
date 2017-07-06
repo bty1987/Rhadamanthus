@@ -33,7 +33,7 @@ import com.fanglin.material.po.MaterialSubOrderPO;
 import com.fanglin.material.service.MaterialSubOrderBalanceService;
 import com.fanglin.material.vo.MaterialSubOrderBalanceVO;
 import com.fanglin.material.vo.MaterialSubOrderVO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -55,6 +55,8 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	@Autowired
 	private SupplierUserRightDao supplierUserRightDao;
 	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
@@ -107,8 +109,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		for(MaterialSubOrderBalancePO materialSubOrderBalancePO: materialSubOrderBalancePOs){
 			
 			materialSubOrderBalanceVO = new MaterialSubOrderBalanceVO(new MaterialSubOrderVO(), new UserVO(), new UserVO(), new UserVO());
-			//将materialSubOrderBalanceVO的值赋值给materialSubOrderBalancePO，排除"materialSubOrder", "creater", "instorer", "poster"四个引用类型
-			BeanUtil.copyProperties(materialSubOrderBalancePO, materialSubOrderBalanceVO, "materialSubOrder", "creater", "instorer", "poster");
+			BeanUtil.copyProperties(materialSubOrderBalancePO, 	materialSubOrderBalanceVO, "materialSubOrder", "creater", "instorer", "poster");
 			BeanUtil.copyProperties(materialSubOrderBalancePO.getMaterialSubOrder(), materialSubOrderBalanceVO.getMaterialSubOrder());
 			
 			materialSubOrderBalanceVO.getCreater().setBaseInfo(materialSubOrderBalancePO.getCreater());
@@ -150,7 +151,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		
 		if(materialSubOrderBalancePO == null){
 			throw new FLException(180018, "主材结算信息不存在");
-		}
+		} 
 		
 		if(materialSubOrderBalancePO.getStatus() != MaterialSubOrderBalancePO.STATUS_PRE_BALANCE_INT){
 			throw new FLException(180019, "主材结算信息状态错误 ");
@@ -175,10 +176,10 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		if(materialSubOrderBalancePO.getStatus() == MaterialSubOrderBalancePO.STATUS_FINISH_INT){
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
-		//materialSubOrderBalancePO.setBalance(materialSubOrderBalanceVO.getBalance());
-		//将balance的值赋值到post
 		materialSubOrderBalancePO.setPost(materialSubOrderBalanceVO.getBalance());
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
+	
+		
 	}
 
 	@Override
@@ -195,7 +196,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
 		
-		materialSubOrderBalancePO.setPoster(new UserPO(userId));
+		materialSubOrderBalancePO.setPoster(userDao.queryUserByUserId(userId));
 		materialSubOrderBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
 		materialSubOrderBalancePO.setStatus(MaterialSubOrderBalancePO.STATUS_FINISH_INT);
 		

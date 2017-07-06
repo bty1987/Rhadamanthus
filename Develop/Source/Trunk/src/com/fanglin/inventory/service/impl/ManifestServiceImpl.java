@@ -144,7 +144,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		String word = "CG";
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CG_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
@@ -210,7 +210,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		String word = "XG";
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XG_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
@@ -295,7 +295,7 @@ public class ManifestServiceImpl implements ManifestService {
 		String word = "CR";
 		String attachment = "";
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
@@ -387,7 +387,7 @@ public class ManifestServiceImpl implements ManifestService {
 		String attachment ="";
 		String comment = "";
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XB_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
@@ -465,7 +465,7 @@ public class ManifestServiceImpl implements ManifestService {
 		String word = "PU";
 		String comment = "";
 		
-		UserPO userPO = userDao.get(uid);
+		UserPO userPO = userDao.queryUserByUserId(uid);
 		
 		//PO作为编号前缀 , 之后由8位数字组成
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PU_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
@@ -573,7 +573,7 @@ public class ManifestServiceImpl implements ManifestService {
 		String word = "AS";
 		String comment = "";
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");

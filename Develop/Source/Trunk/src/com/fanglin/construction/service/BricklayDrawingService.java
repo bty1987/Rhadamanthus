@@ -23,9 +23,9 @@ public interface BricklayDrawingService {
 	
 	public List<BricklayDrawingVO> queryBricklayDrawingByBcsdId(BricklayDrawingVO bricklayDrawingVO);
 	
-	public int saveOrUpdateBricklayDrawing(BricklayDrawingVO bricklayDrawingVO);
+	public int saveOrUpdateBricklayDrawing(BricklayDrawingVO bricklayDrawingVO, String userId);
 	
-	public List<BricklayDrawingVO> addbrBricklayDrawings(BricklayDrawingVO bricklayDrawingVO, List<String> drawingUrls);
+	public List<BricklayDrawingVO> addbrBricklayDrawings(BricklayDrawingVO bricklayDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteBrickLayDrawingByBdId(BricklayDrawingVO bricklayDrawingVO);
 

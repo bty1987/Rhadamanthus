@@ -31,6 +31,7 @@ $.extend(api, {approval: {
 	submitApprovalForDecorationActivity: {url: "submitApprovalForDecorationActivity.do"},
 	submitApprovalForSalesRefund: {url: "submitApprovalForSalesRefund.do"},
 	submitApprovalForManifestDB:{url: "submitApprovalForManifestDB.do"},
+      submitApprovalForSalesDiscount: {url: "submitApprovalForSalesDiscount.do"},
 
 	approveApproval: {url: "approveApproval.do"},
 	refuseApproval: {url: "refuseApproval.do"},

@@ -1,4 +1,4 @@
-#Fri Sep 02 08:51:01 CST 2016
+#Wed Jul 05 15:43:31 CST 2017
 eclipse.preferences.version=1
-validator.Checked=WebContent/configure/mediaconf/struts.xml,WebContent/views/contract/decorationContract1.html,conf/struts.xml,WebContent/views/contract/decorationContract.html
+validator.Checked=WebContent/views/contract/decorationContract2.html,WebContent/configure/mediaconf/struts.xml,WebContent/views/contract/decorationContract1.html,conf/struts.xml,WebContent/views/contract/decorationContract.html,WebContent/views/contract/decorationContractEHome.html
 validator.Unchecked=

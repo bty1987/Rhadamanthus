@@ -104,7 +104,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			TopVO topVO = new TopVO();
 			topVO.setTopName(materialDesignerRankPO.getDesignerName());
 			
-			UserPO designer = userDao.get(materialDesignerRankPO.getDesignerId());
+			UserPO designer = userDao.queryUserByUserId(materialDesignerRankPO.getDesignerId());
 			if(designer != null){
 				topVO.setTopImg(designer.getUserPhoto());
 			}else{
@@ -204,7 +204,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = materialDesignerRankDao.queryMaterialDesignerRankForPlaceByDesignerId(userId);
@@ -249,7 +249,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			TopVO topVO = new TopVO();
 			topVO.setTopName(zaterialDesignerRankPO.getDesignerName());
 			
-			UserPO designer = userDao.get(zaterialDesignerRankPO.getDesignerId());
+			UserPO designer = userDao.queryUserByUserId(zaterialDesignerRankPO.getDesignerId());
 			if(designer != null){
 				topVO.setTopImg(designer.getUserPhoto());
 			}else{
@@ -272,7 +272,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = zaterialDesignerRankDao.queryZaterialDesignerRankForPlaceByDesignerId(userId);

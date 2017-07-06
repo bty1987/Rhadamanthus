@@ -49,7 +49,7 @@ jQuery(function ($) {
                 ["创建人:", v.creater.userName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
                 ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
-                ["审批时间:", v.approveTime, "grey"],
+                ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "grey"],
                 ["订单号:", v.decorationOrder.orderId == null ? "无" : v.decorationOrder.orderId, "grey"],
                 ["楼盘地址:", ( v.decorationOrder.houseNumber) == null ? "无" : (v.decorationOrder.village.villageName + "" + v.decorationOrder.houseNumber), "grey"],
                 ["监理:", v.decorationOrder.supervisor == null ? "无" : v.decorationOrder.supervisor, "grey"],
@@ -107,8 +107,8 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['orderId', 'jober', 'salaryWorkduty' ,'salarystatus', 'approveTime'];
-    console.log(_condArr)
+    var _condArr = ['orderId', 'jober', 'salaryWorkduty' ,'salarystatus','cerateTime', 'approveTime'];
+
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "workersalaryPostData", null, false, null, function () {
@@ -135,7 +135,11 @@ jQuery(function ($) {
         var $adopti = $('<i></i>').addClass('icon-add bigger-110').appendTo($adopta);
         var $adoptspan = $('<span></span>').text('通过').appendTo($adopta);
 
-        return [$selecta, $adda, $adopta, $exporta, $importa];
+        var $batchImporta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'batchImport').css("margin", "0px 3px");
+        var $batchImporti = $('<i></i>').addClass('icon-upload bigger-110').appendTo($batchImporta);
+        var $batchImportspan = $('<span></span>').text('批量更新').appendTo($batchImporta);
+
+        return [$selecta, $adda, $adopta, $exporta, $importa,$batchImporta];
     });
 
     //全选
@@ -161,10 +165,15 @@ jQuery(function ($) {
 
     });
 
-    //导入
+
     $('a[name="import"]', '#pagenation').on("click", function () {
 
         $('#importModal').modal("show");
+    });
+
+    $('a[name="batchImport"]', '#pagenation').on("click", function () {
+        $('#batchImportModal').modal("show");
+
     });
     // 导出
     $('a[name="export"]', '#pagenation').on("click", function () {
@@ -183,6 +192,7 @@ jQuery(function ($) {
 
             $.exceler({
                 column: [
+                    ["工费Id","wsId"],
                     ["工人姓名", "user.userName"],
                     ["工人工号", "user.userId"],
                     ["创建人", "creater.userName"],
@@ -195,6 +205,7 @@ jQuery(function ($) {
                     ['金额', 'salary'],
                     ['类型', 'subtype'],
                     ['备注', 'comment'],
+                    ['状态',"status"]
                 ],
                 list: res.paging.data,
 
@@ -351,26 +362,54 @@ jQuery(function ($) {
             com.showAlert(com.error, "工费状态不可操作")
         })
     }
-
     $('#import').Huploadify({
-        'debug': false, // 开启调试
-        'auto': true, // 是否自动上传
-        'successTimeout': config.uploadTimeout, // 超时时间
-        'formData': {
-            'uploadType': 4,
+
+        'debug' : false, // 开启调试
+        'auto':true, // 是否自动上传
+        'successTimeout':config.uploadTimeout, // 超时时间
+        'formData':{
+            'uploadType':4,
         },
         'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.host + 'importMaterialModule.do', // 上传处理程序
-        'height': '30', // 浏览按钮的高度
-        'fileTypeDesc': '支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit': '2MB', // 上传文件的大小限制
-        'queueSizeLimit': 1, // 上传数量
-        'onUploadSuccess': function (file, data, response) { //上传到服务器，服务器返回相应信息到data里
-            console.log(data);
-            var dateObj = eval("(" + data + ")");
+        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'uploader': config.server + 'importWorkerSalary.do', // 上传处理程序
+        'height':'30', // 浏览按钮的高度
+        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit':'2MB', // 上传文件的大小限制
+        'queueSizeLimit' : 1, // 上传数量
+        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+
+            var dateObj = eval("("+data+")");
+            searcher.doSearch();
+
+        }
+    });
+
+    $('#batchImport').Huploadify({
+
+        'debug' : false, // 开启调试
+        'auto':true, // 是否自动上传
+        'successTimeout':config.uploadTimeout, // 超时时间
+        'formData':{
+            'uploadType':4,
+        },
+        'buttonClass': 'btn btn-success col-sm-12',
+        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'uploader': config.server + 'batchImportWorkerSalary.do', // 上传处理程序
+        'height':'30', // 浏览按钮的高度
+        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit':'2MB', // 上传文件的大小限制
+        'queueSizeLimit' : 1, // 上传数量
+        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+
+            var dateObj = eval("("+data+")");
+            
+
+
         }
     });
 

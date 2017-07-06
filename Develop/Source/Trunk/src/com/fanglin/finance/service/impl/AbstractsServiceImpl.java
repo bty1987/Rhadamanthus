@@ -40,7 +40,7 @@ public class AbstractsServiceImpl implements AbstractsService {
 	@Override
 	public List<AbstractsVO> queryAbstractsByOwnerId(String userId) throws FLException {
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
@@ -64,7 +64,7 @@ public class AbstractsServiceImpl implements AbstractsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addAbstracts(AbstractsVO abstractsVO, String userId) throws FLException {
 		
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");

@@ -32,6 +32,8 @@ public interface PaymentService {
 	
 	public int updatePayment(PaymentVO paymentVO);
 	
+	public int payPayment(PaymentVO paymentVO, String userId) throws FLException;
+	
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException;
 	
 	public int convertPayment(PaymentVO paymentVO, String convertLeftType, String convertRightType, float convertCash, String operatorId) throws FLException;

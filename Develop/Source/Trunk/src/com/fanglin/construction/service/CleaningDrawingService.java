@@ -23,9 +23,9 @@ public interface CleaningDrawingService {
 	
 	public List<CleaningDrawingVO> queryCleaningDrawingByCcsId(CleaningDrawingVO cleaningDrawingVO);
 	
-	public int saveOrUpdateCleaningDrawing(CleaningDrawingVO cleaningDrawingVO);
+	public int saveOrUpdateCleaningDrawing(CleaningDrawingVO cleaningDrawingVO, String userId);
 	
-	public List<CleaningDrawingVO> addCleaningDrawings(CleaningDrawingVO cleaningDrawingVO, List<String> drawingUrls);
+	public List<CleaningDrawingVO> addCleaningDrawings(CleaningDrawingVO cleaningDrawingVO, List<String> drawingUrls, String userId);
 	
 	public void deleteCleaningDrawingByCdId(CleaningDrawingVO cleaningDrawingVO);
 
