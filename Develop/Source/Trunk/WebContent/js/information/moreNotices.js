@@ -3,6 +3,7 @@ $(function(){
 
 		var renderList = function(tableId,listData){
 			var $tableWrap = $('#' + tableId).empty();
+
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -24,6 +25,17 @@ $(function(){
 			
 			var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
 
+			var myDate= new Date();
+			var starts = new Date(v.startTime);
+			var end = new Date(v.endTime);
+
+			var status="";
+			if(starts <= myDate && end >=myDate){
+				status="有效";
+			}else{
+				status="无效";
+			}
+
 			var propertyArr = [
 				["类型:", v.type, "grey"],
 				["优先级:", v.priority, "grey"],
@@ -33,6 +45,7 @@ $(function(){
 				["结束时间:", v.endTime, "grey"],
 				["公开:", v.isPublic, "grey"],
 				["内容:", v.contentsText, "grey"],
+				["状态:",status,"blue"],
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -41,7 +54,7 @@ $(function(){
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
-			
+
 			if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
             	$divBtnWrap.append($btnDown);
         	}
@@ -74,5 +87,6 @@ $(function(){
 	searcher.init( _condArr, "condList", api.information.pageNoticeForSeenByType, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]}, false);
+
 
 });

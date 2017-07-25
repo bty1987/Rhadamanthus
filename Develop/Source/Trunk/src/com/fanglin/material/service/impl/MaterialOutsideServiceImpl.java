@@ -97,7 +97,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "员工不存在");
 		}
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialOutsideVO.getOrderId());
@@ -107,7 +107,7 @@ public class MaterialOutsideServiceImpl implements MaterialOutsideService {
 		
 		UserPO salesmanPO = userDao.queryUserByUserId(materialOutsideVO.getSalesmanId());
 		if(salesmanPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "员工不存在");
 		}
 		
 		materialOutsidePO.setSalesmanName(salesmanPO.getUserName());

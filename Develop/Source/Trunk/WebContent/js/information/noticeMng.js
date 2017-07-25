@@ -68,6 +68,17 @@ $(function(){
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
+            var myDate= new Date();
+            var starts = new Date(v.startTime);
+            var end = new Date(v.endTime);
+
+            var statusStyle="label-success";
+            var status="";
+             if(starts <= myDate && end >=myDate){
+                 status="有效";
+             }else{
+                 status="无效";
+             }
             var propertyArr = [
                 ["类型:", v.type, "grey"],
                 ["优先级:", v.priority, "green"],
@@ -77,14 +88,17 @@ $(function(){
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", v.isPublic, "blue"],
                 ["内容:", v.contentsText, "grey"],
+                ["状态:", status, "blue"],
 
             ];
+
             //循环出li中的属性
             $.each(propertyArr, function (index,value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
                 $liProperty.appendTo($ulProperty);
 
             });
@@ -94,15 +108,18 @@ $(function(){
             	$divBtnWrap.append($btnDown);
         	}
 
-
-            if(v.isPublic=="否") {
+            if(starts <= myDate && end >=myDate){
+                if(v.isPublic=="否") {
                 $divBtnWrap.append($management).append($btnEdit).append($btnDel).appendTo($h3);
                 $liLine.append($h3).append($ulProperty);
-            }else{
+                }else{
                 $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
                 $liLine.append($h3).append($ulProperty);
             }
-
+            }else{
+                    $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+                    $liLine.append($h3).append($ulProperty);
+            }
             $btnDown.click(function(){
             	window.open(config.media + v.filePath);
             	return false;
@@ -118,12 +135,11 @@ $(function(){
                 $("#tree3").removeData("tree");
                 $("#tree3").unbind('click');
 
-
+                $('#managements').modal('show');
                 var deptList =null;
                 com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
                     deptList = res.deptList;
 
-                    console.log(deptList);
                 }, null, false);
 
                 var deptObj = {}, didList = [];
@@ -141,14 +157,8 @@ $(function(){
 
                     }
                 });
-                var types=[];
-
-
                 //获取根节点
                 $.each(deptList, function (i, v) {
-
-
-                    console.log("wwwwwwwwwwwwwwwwww");
                     if (v.fatherDept) return true;
 
                     if (!deptObj[v.type]) {
@@ -156,11 +166,8 @@ $(function(){
                             name: v.type,
                             type: 'folder',
                             children: {}
-
                         }
                     }
-
-                    //   console.log(v.company);
 
                     deptObj[v.type]['children'][v.did] = {
 
@@ -170,8 +177,6 @@ $(function(){
                         deptid: v.deptId
 
                     };
-                    //    console.log(v.deptId);
-
 
                 });
 
@@ -188,7 +193,6 @@ $(function(){
                                 did : v.did,
                                 deptid : v.deptId
                             }
-                            // console.log("did"+did);
                         }
 
                     });
@@ -208,7 +212,6 @@ $(function(){
 
                             if(!("name" in options) && !("type" in options)){
                                 $data = deptObj;//the root tree
-                                // console.log($data);
                                 callback({ data: $data });
                                 return;
                             }
@@ -220,14 +223,12 @@ $(function(){
                                     $data = getDeptByDid(options.did);
 
                                 }
-                                //  console.log($data);
 
                             }
 
                             treeclass.appendTo(checkbox);
                             if($data != null)
                                 setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
-
 
                         }
 
@@ -242,18 +243,15 @@ $(function(){
                     treeItemSelect:true,
                     cacheItems: false,
 
-
                 });
                 $('#managements').modal('show');
 
                 $("#manageBtn").unbind().bind('click',function(){
 
-
+                    $('#managements').modal("hide");
 
                     var items=$('#tree3').tree('selectedItems');
 
-                    $("#tree3").removeData("tree");
-                    $("#tree3").unbind('click');
                     var dids={
 
                     }
@@ -262,7 +260,6 @@ $(function(){
                         "notice.noticeId": v.noticeId
                     };
 
-                    // console.log(v.noticeId);
                     //循环将选中的部门did放到option里
                     $.each(items,function(i,value){
 
@@ -274,6 +271,8 @@ $(function(){
                         return false;
                     }
                         com.post(api.information.updateNoticeDepartments, $.extend(option,dids));
+                    $("#tree3").unbind('click');
+                    $("#tree3").removeData("tree");
 
                 });
 
@@ -283,6 +282,7 @@ $(function(){
                 bootbox.confirm("确定删除吗？", function(result) {
                     if(result) {
                         removeRow(v.noticeId);
+                        console.log(v.noticeId);
                     }
                 });
             });
@@ -303,7 +303,7 @@ $(function(){
 
     var _condArr = ['theme', 'dateRange', 'deptId'];
     var NoticeMngSeacher = new Searcher();
-    //将条件返回condList里
+        //将条件返回condList里
     NoticeMngSeacher.init( _condArr, "condList", api.information.pageNotice, function(list){
         //将结果返回到页面的div里的id
         displayFunc.init('resultList', list);
@@ -346,7 +346,7 @@ $(function(){
     }
 
     function removeRow(id) {
-        com.post(api.information.deleteNotice, {"noticeIds[0]" : id}, successCallback);
+        com.post(api.information.deleteNotice, {"notice.noticeId" : id}, successCallback);
     }
 
     function successCallback() {
@@ -475,141 +475,6 @@ $(function(){
         "unsupported-file-type" === a ? c = "Unsupported format " + b : console.log("error uploading file", a, b);
         $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts")
     }
-
-/*
-
-    showTree()
-    function showTree() {
-
-        var deptList =null;
-    com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
-        deptList = res.deptList;
-
-        console.log(deptList);
-    }, null, false);
-
-    var deptObj = {}, didList = [];
-
-    //获取所有叶子节点
-    $.each(deptList, function(i, v){
-
-        didList.push(v.did);
-
-    });
-
-    $.each(deptList, function(i,v){
-        if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
-            didList.splice(didList.indexOf(v.fatherDept.did),1);
-
-        }
-    });
-    var types=[];
-
-
-    //获取根节点
-    $.each(deptList, function (i, v) {
-
-
-        console.log("wwwwwwwwwwwwwwwwww");
-        if (v.fatherDept) return true;
-
-        if (!deptObj[v.type]) {
-               deptObj[v.type] = {
-                name: v.type,
-                type: 'folder',
-                children: {}
-
-            }
-        }
-
-        //   console.log(v.company);
-
-        deptObj[v.type]['children'][v.did] = {
-
-            name: v.deptName,
-            type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-            did: v.did,
-            deptid: v.deptId
-
-        };
-        //    console.log(v.deptId);
-
-
-    });
-
-    var getDeptByDid = function(did){
-        var depts = {};
-
-        $.each(deptList, function(i, v){
-            if(!v.fatherDept) return true;
-
-            if(v.fatherDept.did == did){
-                depts[v.did] = {
-                    name: v.deptName,
-                    type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-                    did : v.did,
-                    deptid : v.deptId
-                }
-                // console.log("did"+did);
-            }
-
-        });
-
-        return depts;
-
-    };
-
-
-    $('#tree3').ace_tree({
-        dataSource: {
-            data : function(options, callback) {
-                var checkbox=$('<input type="checkbox" />');
-                var treeclass=$("#treecheck");
-                var $data = null;
-
-
-                if(!("name" in options) && !("type" in options)){
-                    $data = deptObj;//the root tree
-                    // console.log($data);
-                    callback({ data: $data });
-                    return;
-                }
-                else if("type" in options && options.type == "folder") {
-
-                    if("children" in options)
-                        $data = options.children;
-                    else {
-                        $data = getDeptByDid(options.did);
-
-                    }
-                    //  console.log($data);
-
-                }
-
-                treeclass.appendTo(checkbox);
-                if($data != null)
-                    setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
-
-
-            }
-
-        },
-        loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-        'open-icon' : 'icon-minus',
-        'close-icon' : 'icon-plus',
-        'selectable' : true,
-        'selected-icon' : null,
-        'unselected-icon' : null,
-        'multiSelect': true,
-        treeItemSelect:true,
-        cacheItems: false,
-
-
-    });
-
-}
-*/
-
 
 
 });

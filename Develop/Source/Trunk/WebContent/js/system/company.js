@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -23,32 +23,19 @@
         };
 
         var creatLine = function(v){   //页面中的一条数据
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($h3);
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-        
+			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " "+ v.name));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');
 			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
 			var $span = $('<span></span>').addClass('lbl');
-
-
-            var propertyArr = [
-				["公司: ", v.name, "grey"],
-                ["编号: ", v.no, "grey"],
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
 
 			$btnStatus.append($statusSwitch).append($span);
 
@@ -104,7 +91,7 @@
 		validator: {
 			company: {
 				type: "v_company",
-				regex:  /\b[0-9]{1,2}\b/,
+				regex: /^([1-9]\d|\d)$/,
 				errorMsg: "请输入0~99数字 (如:1)."
 			},
 		},
@@ -148,7 +135,7 @@
 
 		company.modal.modal("show"); //弹出弹层
     }
-    
+    //保存
     function saveData(){
     	if(com.validate()|| company.repeatFlg)
     		return;
@@ -191,7 +178,7 @@
 			failcallBack && failcallBack();
 		});
 	}
-		
+	//刷新
     function successCallback(){
     	//$('button.btn-search','#condList').click();//调用成功后，执行查询操作  
 		companySeacher.doSearch();//调用成功后，执行com.Seacher中的doSeach方法

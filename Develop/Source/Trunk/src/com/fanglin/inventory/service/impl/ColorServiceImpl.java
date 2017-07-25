@@ -64,7 +64,13 @@ public class ColorServiceImpl implements ColorService{
 	@Transactional(rollbackFor=Exception.class)
 	public int addColor(ColorVO colorVO) throws FLException {
 		
-		ColorPO colorPO = new ColorPO();
+		ColorPO colorPO = colorDao.queryColorByName(colorVO.getGid(),colorVO.getName());
+		
+		if(colorPO!=null){
+			throw new FLException(260034,"颜色已存在");
+		}
+		
+		colorPO = new ColorPO();
 		
 		BeanUtil.copyProperties(colorVO, colorPO);
 		

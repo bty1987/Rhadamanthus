@@ -19,6 +19,8 @@ import com.fanglin.member.vo.MemberDetailVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,6 +36,9 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 	
 	@Autowired
 	private MemberCardDao memberCardDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao; 
 	
 	@Override
 	public void pageMemberDetail(Paging paging, List<Filter> filters) {
@@ -57,15 +62,16 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 	public List<MemberDetailVO> queryMemberDetailByOrderId(MemberCardVO memberCardVO) {
 		
 		List<MemberDetailVO> memberDetailVOs= new ArrayList<MemberDetailVO>();
-		List<MemberDetailPO> memberDetailPOs = memberDetailDao.queryMemberDetailByOrderId(memberCardVO.getOrderId());
+		MemberCardPO memberCardPO = memberCardDao.queryMemberCardByOrderId(memberCardVO.getOrderId());
+		List<MemberDetailPO> memberDetailPOs = memberDetailDao.queryMemberDetailByOrderId(memberCardPO.getMcId());
 
 		for(MemberDetailPO memberDetailPO: memberDetailPOs){
 			
 			MemberDetailVO _memberDetailVO = new MemberDetailVO(new UserVO());
 			
-			BeanUtil.copyProperties(memberDetailPO, _memberDetailVO, Arrays.asList("cuId"));
+			BeanUtil.copyProperties(memberDetailPO, _memberDetailVO, Arrays.asList("memberCard","cuId"));
 			
-			_memberDetailVO.getCuId().setBaseInfo(memberDetailPO.getCuId());
+			BeanUtil.copyProperties(memberDetailPO.getCuId(), _memberDetailVO.getCuId(), Arrays.asList("role","dept"));
 			
 			memberDetailVOs.add(_memberDetailVO);
 		}
@@ -79,12 +85,18 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 		
 		MemberDetailPO memberDetailPO = new MemberDetailPO(new MemberCardPO(),new UserPO());
 		
+		String systemKey = "integralmultiple";
+		SystemConfigPO systemConfig = systemConfigDao.querySystemConfigByKey(systemKey);
+		
 		BeanUtil.copyProperties(memberDetailVO, memberDetailPO, Arrays.asList("memberCard", "cuId"));
 		BeanUtil.copyProperties(memberDetailVO.getMemberCard(), memberDetailPO.getMemberCard());
 		UserPO userPO = userDao.queryUserByUserId(cuId);
 		memberDetailPO.setCuId(userPO);
 		Timestamp nowTime = new Timestamp(System.currentTimeMillis());
 		memberDetailPO.setCreateTime(nowTime.getTime());
+		memberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
+		memberDetailPO.setMultiple(Integer.valueOf(systemConfig.getValue()));
+		memberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
 		memberDetailPO.setPid(MemberDetailPO.COLUMN_PID_SHORT);
 		
 		if(memberDetailVO.getSubType() == MemberDetailPO.COLUMN_SUBTYPEPLUS_SHORT){

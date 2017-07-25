@@ -196,7 +196,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		if(outGoodsStorehouseStockPO == null){
 			throw new FLException(260008, "商品库存不足");
 		}
-		System.out.println("getNum:"+outGoodsStorehouseStockPO.getNum());
+		
 		if(outGoodsStorehouseStockPO.getNum() < num){
 			throw new FLException(260008, "商品库存不足");
 		}

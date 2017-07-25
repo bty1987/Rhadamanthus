@@ -11,7 +11,20 @@ $(function(){
         }
     };
 
+    var constructionParams = {};
+    var constructerParams = {};
+    var construcionScheName = {};
+
     $('#oid').text(order.oid);
+
+    $('.widget-box').addClass('flloading');
+    $('.widget-box', '#orderId').removeClass('flloading');
+
+    com.post(api.ds.constructionInfo,{},function (res) {
+        $.each(res.constructionSchedule,function (i,v) {
+            construcionScheName[v.key] = v.value;
+        })
+    },null,false);
 
     var initPhotoSwipeFromDOM = function(gallerySelector) {
 
@@ -211,9 +224,6 @@ $(function(){
          }*/
     };
 
-    $('.widget-box').addClass('flloading');
-    $('.widget-box', '#orderId').removeClass('flloading');
-
 //    获取订单基本信息
     com.post(api.decoration.queryDecorationOrderForDesignerByOrderId, {"decorationOrder.orderId": order.oid}, function(req){
         var $info = $('#baseinfo');
@@ -270,211 +280,96 @@ $(function(){
         }
     }, null, false);
     
-    com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": order.oid}, function(res){
-    	
-    	var constructers = res.constructers;
-    	var length = constructers.length;
-    	
-    	for(var i=0;i<length;i++){
-    		var constructer = constructers[i];
-    		$('.alert-info', '#cs' + constructer.schedule).addClass("hide");
-            $('[name="workers"]', '#cs' + constructer.schedule).append(createWoker(constructer));
-    	}
-    	
-    }, null, false);
 
-    //铲大白
-    getProjectInfo(
-        api.construction.queryChanConstructionScheduleByOrderId,
-        "chanConstructionSchedule.orderId",
-        'chanConstructionSchedule',
-        null, null, null,null,
-        api.construction.queryChanDrawingByCsId, 'chanDrawing.csId', 'csId','chanDrawings',
-        'cs1'
-    );
 
-    //放线
-    getProjectInfo(
-        api.construction.queryPutlineConstructionScheduleByOrderId,
-        "putlineConstructionSchedule.orderId",
-        'putlineConstructionSchedule',
-        null, null, null,null,
-        api.construction.queryPutlineDrawingByCsId, 'putlineDrawing.csId', 'csId','putlineDrawings',
-        'cs2'
-    );
+    initProject();
 
-    //水力电
-    getProjectInfo(
-        api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-        "waterwayCircuitPowerConstructionSchedule.orderId",
-        'waterwayCircuitPowerConstructionSchedule',
-        api.construction.queryWaterwayCircuitPowerConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
-        api.construction.queryWaterwayCircuitPowerDrawingByCsId, 'waterwayCircuitPowerDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
-        'cs3'
-    );
+    function initProject() {
 
-    //瓦工
-    getProjectInfo(
-        api.construction.queryBricklayConstructionScheduleByOrderId,
-        "bricklayConstructionSchedule.orderId",
-        'bricklayConstructionSchedule',
-        api.construction.queryBricklayConstructionScheduleWorker, 'bricklayConstructionSchedule.bcsId', 'bcsId','constructionScheduleWorkers',
-        api.construction.queryBricklayDrawingByCsId, 'bricklayDrawing.csId', 'csId','bricklayDrawings',
-        'cs4'
-    );
+        var constructionScheduleParams = {};
+        var constructionData = {};
+        var constructionDataBySche = {};
 
-    //地面找平
-    getProjectInfo(
-        api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-        "groundLevelingConstructionSchedule.orderId",
-        'groundLevelingConstructionSchedule',
-        api.construction.queryGroundLevelingConstructionScheduleWorker, 'groundLevelingConstructionSchedule.glcsId', 'glcsId','constructionScheduleWorkers',
-        api.construction.queryGroundLevelingDrawingByCsId, 'groundLevelingDrawing.csId', 'csId','groundLevelingDrawings',
-        'cs5'
-    );
 
-    // 木工
-    getProjectInfo(
-        api.construction.queryCarpentConstructionScheduleByOrderId,
-        "carpentConstructionSchedule.orderId",
-        'carpentConstructionSchedule',
-        api.construction.queryCarpentConstructionScheduleWorker, 'carpentConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
-        api.construction.queryCarpentDrawingByCsId, 'carpentDrawing.csId', 'csId','carpentDrawings',
-        'cs6'
-    );
+        constructionScheduleParams["constructionSchedule.orderId"] = order.oid;
+        constructionParams["construction.orderId"] = order.oid;
+        constructerParams["constructer.orderId"] = order.oid;
 
-    // 油工
-    getProjectInfo(
-        api.construction.queryOilConstructionScheduleByOrderId,
-        "oilConstructionSchedule.orderId",
-        'oilConstructionSchedule',
-        api.construction.queryOilConstructionScheduleWorker, 'oilConstructionSchedule.ocsId', 'ocsId','constructionScheduleWorkers',
-        api.construction.queryOilDrawingByCsId, 'oilDrawing.csId', 'csId','oilDrawings',
-        'cs7'
-    );
+        com.post(api.construction.queryConstructionScheduleByOrderId,constructionScheduleParams,function (res) {
+            $.each(res.constructionSchedules,function (i,v) {
+                constructionDataBySche[v.schedule] = new Array();
+                createProjectSchedule(v.schedule);
+            })
+        },null,false);
 
-    // 水电安装
-    getProjectInfo(
-        api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-        "waterwayCircuitCheckConstructionSchedule.orderId",
-        'waterwayCircuitCheckConstructionSchedule',
-        api.construction.queryWaterwayCircuitCheckConstructionScheduleWorker, 'waterwayCircuitPowerConstructionSchedule.wcpcsId', 'wcpcsId','constructionScheduleWorkers',
-        api.construction.queryWaterwayCircuitCheckDrawingByCsId, 'waterwayCircuitCheckDrawing.csId', 'csId','waterwayCircuitPowerDrawings',
-        'cs8'
-    );
+        com.post(api.construction.queryConstructionDrawingByOrderId,constructionParams,function (res) {
+            constructionData = res.constructionDrawings;
+        },function () {
+            return false;
+        },false);
 
-    // 保洁
-    getProjectInfo(
-        api.construction.queryCleaningConstructionScheduleByOrderId,
-        "cleaningConstructionSchedule.orderId",
-        'cleaningConstructionSchedule',
-        api.construction.queryCleaningConstructionScheduleWorker, 'cleaningConstructionSchedule.ccsId', 'ccsId','constructionScheduleWorkers',
-        api.construction.queryCleaningDrawingByCsId, 'cleaningDrawing.csId', 'csId','cleaningDrawings',
-        'cs9'
-    );
+        com.post(api.construction.queryConstructerByOrderId, constructerParams, function(res){
 
-    //
-    /**
-     *获取施工信息的方法
-     * @orderApi 根据订单编号获取信息的接口
-     * @orderParamName 根据订单编号获取信息的接口的参数名
-     * @orderRes 根据订单编号获取信息的接口返回值取值
-     *
-     * @workerApi 获取工人信息接口
-     * @workerParamName 工人接口参数名
-     * @workerParamValueName 工人接口参数值
-     * @workerRes 工人接口返回值
-     *
-     * @workerApi 获取图片信息接口
-     * @workerParamName 图片接口参数名
-     * @workerParamValueName 图片接口参数值
-     * @workerRes 图片接口返回值
-     *
-     * @domid html页面上的标签id
-     */
-    function getProjectInfo(orderApi, orderParamName, orderRes,
-                            workerApi, workerParamName, workerParamValueName,workerRes,
-                            picApi, picParamName, picParamValueName,picRes,
-                            domid
-    ){
-        var params = {};
-        params[orderParamName] = order.oid;
+            var constructers = res.constructers;
+            var length = constructers.length;
 
-        com.post(orderApi, params, function(res){
-
-            var info = res[orderRes], wokerDfd, picDfd, params;
-
-            //工人 v.workerPhoto v.workerPhone v.workerName
-//            if(workerApi){
-//                if(info[workerParamValueName]){
-//                    params = {};
-//                    params[workerParamName] = info[workerParamValueName];
-//                    com.post(workerApi, params, function(res){
-//                        var workers = res[workerRes];
-//                        if(workers && workers.length){
-//
-//                            $.each(workers, function(i, v){
-//                                var $worker = createWoker(v);
-//                                $('[name="workers"]','#'+domid).append($worker);
-//                            });
-//                        }else{
-//                            $('[name="workers"]','#'+domid).append('<div class="alert alert-info">当前进度没有分配工人!</div>');
-//                        }
-//                    }, null, false);
-//                }
-//
-//            }else{
-//                var $worker = createWoker(info);
-//                $('[name="workers"]','#'+domid).append($worker);
-//            }
-
-            //图片
-            if(info[picParamValueName]){
-                params = {};
-                params[picParamName] = info[picParamValueName];
-                com.post(picApi, params, function(res){
-                    //图片
-                    var pics = res[picRes];
-
-                    if(pics.length){
-                        $.each(pics, function(i, v){
-
-                            var path = {};
-                            var _type = v.type;
-                            var _url = _url2 = v.drawingUrl;
-
-                            if(_type == 0){
-                                path = {
-                                    url1 : config.media + '/showImg.do' + '?imgBasePath='+ _url +'&divFlag=1&width=50&height=50&timestamp='+ new Date().getTime(),
-                                    url2 : config.media + '/showImg.do' + '?imgBasePath='+ _url2 +'&divFlag=1&width=600&height=600&timestamp='+ new Date().getTime()
-                                };
-                            }
-                            if(_type == 1){
-                                path = {
-                                    url1 : config.dmedia + _url + '_50x50.jpg',
-                                    url2 : config.dmedia + _url2 + '_600x600.jpg'
-                                };
-                            }
-
-                            var $pic = createPic(path, null,'700x700');
-
-                            $('[name="project"]','#'+domid).append($pic);
-                        });
-
-                        initPhotoSwipeFromDOM('#'+domid +' [name="project"]');
-
-                    }else{
-                        $('[name="project"]','#'+domid).append('<div class="alert alert-info">当前进度没有施工进度图片!</div>');
-                    }
-                }, null, false);
+            if(length != 0){
+                $.merge(constructionData,res.constructers);
             }
 
-            if(!info[workerParamValueName] && !info[picParamValueName]){
-                $('.widget-main', '#'+domid).empty().append('<div class="alert alert-info">当前没有施工信息!</div>');
+            for(var i=0;i<length;i++){
+                var constructer = constructers[i];
+                $('.alert-info', '#cs' + constructer.schedule).addClass("hide");
+                $('[name="workers"]', '#cs' + constructer.schedule).append(createWoker(constructer));
             }
 
-            $('.widget-box', '#'+domid ).removeClass('flloading');
         }, null, false);
+
+        if(!$.isEmptyObject(constructionData)){
+            $.each(constructionData,function (i,v) {
+                constructionDataBySche[v.schedule].push(v);
+            });
+        }
+
+        if(!$.isEmptyObject(constructionDataBySche)) {
+            $.each(constructionDataBySche, function (i, v) {
+                var domid = "cs" + i;
+                if (v.length) {
+                    $.each(v, function (ind, poc) {
+                        if (poc.drawingUrl) {
+                            var path = {};
+                            var _type = poc.type;
+                            var _url = _url2 = poc.drawingUrl;
+                            if (_type == 0) {
+                                path = {
+                                    url1: config.media + '/showImg.do' + '?imgBasePath=' + _url + '&divFlag=1&width=50&height=50&timestamp=' + new Date().getTime(),
+                                    url2: config.media + '/showImg.do' + '?imgBasePath=' + _url2 + '&divFlag=1&width=600&height=600&timestamp=' + new Date().getTime()
+                                };
+                            }
+                            if (_type == 1) {
+                                path = {
+                                    url1: config.dmedia + _url + '_50x50.jpg',
+                                    url2: config.dmedia + _url2 + '_600x600.jpg'
+                                };
+                            }
+
+                            var $pic = createPic(path, null, '700x700');
+
+                            $('[name="project"]', '#' + domid).append($pic);
+                        }
+
+                    });
+
+                    initPhotoSwipeFromDOM('#' + domid + ' [name="project"]');
+
+                } else {
+                    $('.widget-main', '#' + domid).empty().append('<div class="alert alert-info">当前没有施工信息!</div>');
+                }
+
+                $('.widget-box', '#' + domid).removeClass('flloading');
+            })
+
+        }
     }
 
     function createPic(path, des, size){
@@ -544,4 +439,31 @@ $(function(){
         return $worker;
     }
 
+    function createProjectSchedule(i) {
+        var root = $('.timeline-items');
+
+        var mainDiv = $('<div></div>').addClass('timeline-item clearfix').attr('id',"cs"+i);
+
+        var infoDiv = $('<div></div>').addClass('timeline-info');
+        var infoDivI = i % 2 == 0 ? $('<i></i>').addClass('timeline-indicator icon-trophy btn btn-info no-hover green') : $('<i></i>').addClass('timeline-indicator icon-trophy btn btn-success no-hover green') ;
+
+        var widgetDiv = $('<div></div>').addClass('widget-box');
+        var headerDiv = i % 2 == 0 ? $('<div></div>').addClass('widget-header header-color-blue widget-header-small') : $('<div></div>').addClass('widget-header header-color-green widget-header-small') ;
+        var title = $('<h5></h5>').addClass('smaller').html(construcionScheName[i]);
+
+        var widgetBody = $('<div></div>').addClass('widget-body');
+        var widgetMain = $('<div></div>').addClass('widget-main');
+        var pName = $('<p></p>').addClass('orange').html('工人信息');
+        var workerDiv = $('<div></div>').addClass('dialogs').attr('name','workers');
+        var workerDdtailDiv = $('<div></div>').addClass('alert alert-info').html('当前进度没有分配工人!');
+        var pPic = $('<p></p>').addClass('orange').html('施工图片');
+        var projectDiv = $('<div></div>').addClass('timeline-gallery').attr('name','project');
+
+        infoDiv.append(infoDivI).appendTo(mainDiv);
+        headerDiv.append(title).appendTo(widgetDiv);
+        widgetBody.append(widgetMain.append(pName,workerDiv.append(workerDdtailDiv),pPic,projectDiv)).appendTo(widgetDiv);
+        widgetDiv.appendTo(mainDiv);
+        mainDiv.appendTo(root);
+
+    }
 });

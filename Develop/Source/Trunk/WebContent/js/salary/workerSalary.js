@@ -184,7 +184,7 @@ jQuery(function ($) {
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 500) {
+        if ($('span[name="totalRecords"]').text() > 5000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -203,6 +203,7 @@ jQuery(function ($) {
                     ['楼盘地址', ['decorationOrder.village', 'decorationOrder.houseNumber']],
                     ['监理', 'decorationOrder.supervisor'],
                     ['金额', 'salary'],
+                    ['工种', 'user.duty'],
                     ['类型', 'subtype'],
                     ['备注', 'comment'],
                     ['状态',"status"]
@@ -213,10 +214,13 @@ jQuery(function ($) {
 
                 v.approver.userName = v.approver.userName == null ? "" : v.approver.userName;
                 v.comment = v.comment == null ? "" : v.comment;
+                v.approveTime = v.approveTime == null ? "" : v.approveTime;
                 v.decorationOrder.supervisor = v.decorationOrder.supervisor == null ? "" : v.decorationOrder.supervisor;
                 v.decorationOrder.orderId = v.decorationOrder.orderId == null ? "" : v.decorationOrder.orderId;
                 v.decorationOrder.village = v.decorationOrder.village == null ? "" : v.decorationOrder.village.villageName;
-                v.decorationOrder.houseNumber = v.decorationOrder.houseNumber == null ? "" : v.decorationOrder.houseNumber
+                v.decorationOrder.houseNumber = v.decorationOrder.houseNumber == null ? "" : v.decorationOrder.houseNumber;
+                v.status =  v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回") ;
+
 
                 switch (v.subtype) {
 
@@ -247,6 +251,19 @@ jQuery(function ($) {
                     case 9 :
                         v.subtype = "工人家属保险";
                         break;
+                    case 10 :
+                        v.subtype = "砌墙工费";
+                        break;
+                    case 11 :
+                        v.subtype = "水电工费";
+                        break;
+                    case 12 :
+                        v.subtype = "水暖工费";
+                        break;
+                    case 13 :
+                        v.subtype = "电工费";
+                        break;
+
 
                 }
             });
@@ -266,8 +283,10 @@ jQuery(function ($) {
 
         })
 
-        com.post(api.salary.adoptWorkerSalary, options, function (res) {
+        com.post(api.salary.adoptWorkerSalary, options, function (data) {
             searcher.doSearch();
+        }, function (data) {
+            com.showAlert(com.error, "工费状态不可操作")
         })
 
     });
@@ -298,7 +317,11 @@ jQuery(function ($) {
             com.showAlert(com.error, "请选择工费类型！");
         } else {
             if (/^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/.test($('#workersalary').val())) {
-                if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3) {
+                if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3
+                    || $("#workersalarySubtype").val() == 10 || $("#workersalarySubtype").val() == 11  || $("#workersalarySubtype").val() == 12
+                    || $("#workersalarySubtype").val() == 13
+
+                ) {
                     options["workerSalary.type"] = 0;
                 } else if ($("#workersalarySubtype").val() == 4 && $('#workersalary').val() > 0) {
                     options["workerSalary.type"] = 0;
@@ -373,7 +396,7 @@ jQuery(function ($) {
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'importWorkerSalary.do', // 上传处理程序
+        'uploader': config.host + 'importWorkerSalary.do', // 上传处理程序
         'height':'30', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
@@ -398,7 +421,7 @@ jQuery(function ($) {
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'batchImportWorkerSalary.do', // 上传处理程序
+        'uploader': config.host + 'batchImportWorkerSalary.do', // 上传处理程序
         'height':'30', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀

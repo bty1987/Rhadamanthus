@@ -12,7 +12,6 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +28,13 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.AssassinService;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.PinYin4Util;
 
 @Service("approvalCustomerService")
 @Transactional(readOnly=true)
@@ -46,6 +45,9 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 	
 	@Autowired
 	private ApprovalCustomerDao approvalCustomerDao;
+	
+	@Autowired
+	private AssassinService assassinService;
 	
 	@Autowired
 	private CustomerDao customerDao;
@@ -69,7 +71,6 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		}
 		
 		CustomerPO customerPO = customerDao.get(customerId);
-		
 		if(customerPO == null){
 			throw new FLException(130002, "客户信息不存在");
 		}
@@ -93,9 +94,6 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		
 		approvalDao.save(approvalPO);
 		
-		customerPO.setEmail("test");
-		customerDao.merge(customerPO);
-		
 		ApprovalCustomerPO approvalCustomerPO = new ApprovalCustomerPO();
 		BeanUtil.copyProperties(approvalCustomerVO, approvalCustomerPO);
 		approvalCustomerPO.setAid(approvalPO.getAid());
@@ -107,6 +105,7 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
 		
 		messageService.sendMessage(messageVO);
+		
 		
 		return 0;
 	}
@@ -129,16 +128,11 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		
 		String customerName = approvalCustomerPO.getNewCustomerName();
 		
-		List<String> pinyinABs = PinYin4Util.getPinYinHeadChar(customerName);
-		List<String> pinyinAlls = PinYin4Util.getPinyin(customerName);
+		String api = "updateCustomer.do";
+		String params = String.format("customer.id=%s&customer.customerName=%s&customer.phone=%s", approvalCustomerPO.getCustomerId(), customerName, approvalCustomerPO.getNewCustomerPhone());
+		String content = String.format("客户编号:%s,新客户名称:%s,新客户电话:%s",approvalCustomerPO.getCustomerId(),customerName,approvalCustomerPO.getNewCustomerPhone());
 		
-		customerPO.setCustomerNamePYAB(pinyinABs.subList(0, pinyinABs.size() >= 2 ? 2 : pinyinABs.size()).toString());
-		customerPO.setCustomerNamePYAll(pinyinAlls.subList(0, pinyinAlls.size() >= 2 ? 2 : pinyinAlls.size()).toString());
-		
-		customerPO.setCustomerName(approvalCustomerPO.getNewCustomerName());
-		customerPO.setPhone(approvalCustomerPO.getNewCustomerPhone());
-		
-		customerDao.merge(customerPO);
+		assassinService.proxy("communion", api, params, content, approvalPO.getSender());
 		
 		return 0;
 	}

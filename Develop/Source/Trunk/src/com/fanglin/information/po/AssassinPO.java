@@ -2,11 +2,18 @@ package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "assassin", catalog = "platform")
@@ -18,13 +25,17 @@ public class AssassinPO implements java.io.Serializable {
 	
 	private String api;
 	
-	private String params;
+	private String content;
 	
 	private String server;
 	
 	private int errorcode;
 	
 	private String errormes;
+	
+	private UserPO operater;
+	
+	private Timestamp operateTime;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -47,12 +58,12 @@ public class AssassinPO implements java.io.Serializable {
 	}
 
 	@Column(name = "params")
-	public String getParams() {
-		return params;
+	public String getContent() {
+		return content;
 	}
 
-	public void setParams(String params) {
-		this.params = params;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	@Column(name = "server")
@@ -81,4 +92,24 @@ public class AssassinPO implements java.io.Serializable {
 	public void setErrormes(String errormes) {
 		this.errormes = errormes;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "ouid",referencedColumnName="uid")
+	public UserPO getOperater() {
+		return operater;
+	}
+
+	public void setOperater(UserPO operater) {
+		this.operater = operater;
+	}
+
+	@Column(name = "operateTime")
+	public Timestamp getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
+	}
+	
 }

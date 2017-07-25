@@ -26,5 +26,11 @@ public class ColorDaoImpl extends DaoImpl<ColorPO> implements ColorDao{
 		return session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_STATUS_STR,ColorPO.STATUS_ENABLE_INT)).list();
 	}
 
+	@Override
+	public ColorPO queryColorByName(long gid,String name) {
+		
+		return (ColorPO) session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_NAME_STR, name)).uniqueResult();
+	}
+
 	
 }

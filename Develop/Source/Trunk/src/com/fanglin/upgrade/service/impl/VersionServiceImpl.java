@@ -53,7 +53,7 @@ public class VersionServiceImpl implements VersionService {
 		
 		for (VersionPO versionPO : versionPOs) {
 			
-			if(versionPO.getVersionNumber().compareTo(versionVO.getVersionNumber())>0){
+			if(versionPO.getNo().compareTo(versionVO.getTrialno())>0){
 				
 				VersionVO version = new VersionVO();
 				
@@ -69,14 +69,14 @@ public class VersionServiceImpl implements VersionService {
 	@Override
 	public VersionVO matchVersion(VersionVO versionVO) {
 		
-		List<VersionPO> versionPOs = versionDao.matchVersion(versionVO.getTrialVersion());
+		List<VersionPO> versionPOs = versionDao.matchVersion(versionVO.getTrialno());
 		
 		Collections.sort(versionPOs, new Comparator<VersionPO>() {
 			@Override
 			public int compare(VersionPO version1, VersionPO version2) {
 				
-				String versionNumber1 = version1.getVersionNumber();
-				String versionNumber2 = version2.getVersionNumber();
+				String versionNumber1 = version1.getNo();
+				String versionNumber2 = version2.getNo();
 				
 				return versionNumber2.compareTo(versionNumber1);
 			}
@@ -93,11 +93,11 @@ public class VersionServiceImpl implements VersionService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addVersion(VersionVO versionVO) throws FLException{
 		
-		List<VersionPO> versionPOs = versionDao.matchVersion(versionVO.getTrialVersion());
+		List<VersionPO> versionPOs = versionDao.matchVersion(versionVO.getNo());
 		
 		for(VersionPO versionPO : versionPOs){
 			
-			if(versionPO.getVersionNumber().equals(versionVO.getVersionNumber()) && versionPO.getTrialVersion().equals(versionVO.getTrialVersion())){
+			if(versionPO.getNo().equals(versionVO.getNo()) && versionPO.getTrialno().equals(versionVO.getTrialno())){
 				
 				throw new FLException(300001, "版本已存在");
 				

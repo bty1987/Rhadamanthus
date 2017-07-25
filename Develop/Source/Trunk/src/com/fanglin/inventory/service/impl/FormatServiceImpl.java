@@ -64,7 +64,13 @@ public class FormatServiceImpl implements FormatService{
 	@Transactional(rollbackFor=Exception.class)
 	public int addFormat(FormatVO formatVO) throws FLException {
 		
-		FormatPO formatPO = new FormatPO();
+		FormatPO formatPO = formatDao.queryFormatByInfo(formatVO.getGid(),formatVO.getInfo());
+		
+		if(formatPO!=null){
+			throw new FLException(260035, "规格已存在");
+		}
+		
+		formatPO = new FormatPO();
 		
 		BeanUtil.copyProperties(formatVO, formatPO);
 		formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);

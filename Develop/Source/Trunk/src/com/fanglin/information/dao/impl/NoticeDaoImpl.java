@@ -10,7 +10,6 @@ package com.fanglin.information.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -27,81 +26,66 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	public NoticeDaoImpl(){
 		super(NoticePO.class);
 	}
-	//多条件分页
+	
 	@Override
-	public List<NoticePO> queryPageNotices(Paging paging, List<Filter> filters, String userId){
-		//
+	public List<NoticePO> pageNotice(Paging paging, List<Filter> filters, String userId){
+		
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
-		//重命名
+		
 		query.alias("user", "user");
-		//user.userId =(equals) userId,
+		
 		query.add(Restrictions.eq("user.userId", userId));
 		
-		//如果filters不等于空
-		if(filters != null){
-			//将集合的值循环赋给 filter对象
-			for(Filter filter : filters){
-				//如果filter.getDate不为空
-				if(StringUtils.isNotEmpty(filter.getData())){
-					//如果deptId相等于filter.getField
-					if("deptId".equals(filter.getField())){
-					//将dept重命名
-						query.alias("dept", "dept");
-						//查询条件
-						query.add(query.getCriterion("dept.deptId", filter));
-						//如果相等filter集合中的field
-					}else if("dateRange".equals(filter.getField())){
-						
-						String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
-						String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
-						//开始时间小于等于结束时间
-						query.add(query.getCriterion("startTime", eTime, "le"));
-						//结束时间大于等于开始时间
-						query.add(query.getCriterion("endTime", sTime, "ge"));
-						//如果theme相等于filter集合中的Field
-					} else if("theme".equals(filter.getField())){
-						//条件主题等于(theme)filter
-						query.add(query.getCriterion("theme", filter));
-					}
-				}
-			}
-		}
+		queryFilterExcute(query, filters);
 		
 		query.desc("publishTime");
-		//返回集合
+		
 		return query.list();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<NoticePO> queryValidNotices(String type){
-		return session().createCriteria(NoticePO.class)
-				.add(Restrictions.eq("type", type))
-				.add(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")))
-				.add(Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")))
-				.list(); 
-	}
-	
-	@Override
-	public List<NoticePO> queryPageDeptValidNotices(Paging paging, List<String> deptIds, String type){
-	    PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
-	    
-	    query.alias("dept", "dept");
-	    
-	    query.add(Restrictions.eq("type", type));
-	    
-	    if(deptIds.size() != 0){
-	    	query.add(Restrictions.or(Restrictions.in("dept.deptId", deptIds), Restrictions.eq("isPublic", "是")));
-	    }else{
-	    	query.add(Restrictions.eq("isPublic", "是"));
-	    }
-	    
-	    query.add(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")));
-        query.add(Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")));
-	    
-	    query.desc("publishTime");
-	    
+	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Long> nids, Short type){
+
+		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
+		
+		if(nids != null && nids.size() != 0){
+			query.add(Restrictions.or(Restrictions.in("nid", nids), Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT)));
+		}else{
+			query.add(Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT));
+		}
+		
+		query.add(Restrictions.eq("type", type));
+		query.add(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")));
+		query.add(Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")));
+		
+		query.desc("publishTime");
+		
 	    return query.list();
 	}
-
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
+		
+		if(filters != null){
+			
+			for(Filter filter: filters){
+			
+				if("deptId".equals(filter.getField())){
+				
+					query.alias("dept", "dept");
+					query.add(query.getCriterion("dept.deptId", filter));
+				}else if("dateRange".equals(filter.getField())){
+					
+					String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
+					String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
+					
+					query.add(query.getCriterion("startTime", eTime, "le"));
+					query.add(query.getCriterion("endTime", sTime, "ge"));
+					
+				} else if("theme".equals(filter.getField())){
+					query.add(query.getCriterion("theme", filter));
+				}
+			}
+		}
+	}
+	
 }

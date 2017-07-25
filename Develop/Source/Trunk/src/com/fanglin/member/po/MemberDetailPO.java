@@ -21,11 +21,15 @@ public class MemberDetailPO  implements java.io.Serializable {
 	
 	public static final short COLUMN_SUBTYPELESS_SHORT = 1;    //减少积分状态1
 	
+	public static final int COLUMN_ZERO_INT = 0;
+	
 	public static final String COLUMN_PID_STR = "pid"; 
 	
 	public static final short COLUMN_PID_SHORT = 0;            //新增明细pid默认值
 	
 	public static final short COLUMN_TURNPOINTSTYPE = 3;
+	
+	public static final String COLUMN_MEMBERCARDORDERID_STR = "memberCard.orderId";
 	
 	private long mdId;
 	
@@ -37,7 +41,13 @@ public class MemberDetailPO  implements java.io.Serializable {
 	
 	private short subType;
 	
-	private int credit;
+	private float credit;
+	
+	private float balance;
+	
+	private int multiple;
+	
+	private int divider;
 	
 	private UserPO cuId;
 	
@@ -104,12 +114,21 @@ public class MemberDetailPO  implements java.io.Serializable {
 	}
 
 	@Column(name = "credit")
-	public int getCredit() {
+	public float getCredit() {
 		return credit;
 	}
 
-	public void setCredit(int credit) {
+	public void setCredit(float credit) {
 		this.credit = credit;
+	}
+
+	@Column(name = "divider")
+	public int getDivider() {
+		return divider;
+	}
+
+	public void setDivider(int divider) {
+		this.divider = divider;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -139,4 +158,24 @@ public class MemberDetailPO  implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	@Column(name = "balance")
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	@Column(name = "multiple")
+	public int getMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(int multiple) {
+		this.multiple = multiple;
+	}
+	
+	
 }

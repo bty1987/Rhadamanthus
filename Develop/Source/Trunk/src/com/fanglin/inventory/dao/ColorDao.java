@@ -11,4 +11,6 @@ public interface ColorDao extends Dao<ColorPO>{
 	
 	public List<ColorPO> queryColorForEnableByGid(long gid);
 	
+	public ColorPO queryColorByName(long gid,String name);
+	
 }

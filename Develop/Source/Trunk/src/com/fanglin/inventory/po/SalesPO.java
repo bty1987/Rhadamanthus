@@ -70,6 +70,8 @@ public class SalesPO implements Serializable {
 	
 	public static final String COLUMN_NO_STR = "no";
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	public static final String COLUMN_INSTORERID_STR = "instorer.currentName";
@@ -100,7 +102,7 @@ public class SalesPO implements Serializable {
 	
 	private CustomerPO customer;
 	
-	private short company;
+	private int company;
 	
 	private UserPO salesman;
 	
@@ -221,13 +223,13 @@ public class SalesPO implements Serializable {
 	public void setCustomer(CustomerPO customer) {
 		this.customer = customer;
 	}
-
+	
 	@Column(name="company")
-	public short getCompany() {
+	public int getCompany() {
 		return company;
 	}
 
-	public void setCompany(short company) {
+	public void setCompany(int company) {
 		this.company = company;
 	}
 

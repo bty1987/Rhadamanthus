@@ -56,9 +56,9 @@ public class ManifestAction extends BaseListAction {
 	private ManifestItemVO manifestItem;
 	
 	@Action(value = "pageManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageManifest(){
+	public String pageManifest() throws FLException{
 		
-		manifestService.pageManifest(getPaging(), getFilters());
+		manifestService.pageManifest(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -98,7 +98,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForCG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForCG() throws FLException{
 		
-		manifestService.addManifestForCG(manifest, manifestItems,queryUserId());
+		manifestService.addManifestForCG(manifest, manifestItems,queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -106,7 +106,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForXG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForXG() throws FLException{
 		
-		manifestService.addManifestForXG(manifest, manifestItems, queryUserId());
+		manifestService.addManifestForXG(manifest, manifestItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -114,7 +114,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForCR", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForCR() throws FLException{
 		
-		manifestService.addManifestForCR(manifest, manifestItems, queryUserId());
+		manifestService.addManifestForCR(manifest, manifestItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -122,7 +122,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForXB", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForXB() throws FLException{
 		
-		manifestService.addManifestForXB(manifest, manifestItems,queryUserId());
+		manifestService.addManifestForXB(manifest, manifestItems,queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -130,7 +130,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForPU", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForPU() throws FLException{
 		
-		manifestService.addManifestForPU(manifest, pids,purchaseItems, manifestItems, queryUserId());
+		manifestService.addManifestForPU(manifest, pids,purchaseItems, manifestItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -138,7 +138,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForAS", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForAS() throws FLException{
 		
-		manifestService.addManifestForAS(manifest, manifestItems, aoids ,queryUserId());
+		manifestService.addManifestForAS(manifest, manifestItems, aoids ,queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

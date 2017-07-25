@@ -35,6 +35,8 @@ public class AssisOrderPO implements Serializable{
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;
@@ -56,6 +58,8 @@ public class AssisOrderPO implements Serializable{
 	private Timestamp approverTime;
 	
 	private short status;
+	
+	private int company;
 	
 	public AssisOrderPO() {
 		super();
@@ -140,6 +144,15 @@ public class AssisOrderPO implements Serializable{
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

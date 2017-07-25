@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customerservicebackvisit", catalog = "platform")
+@Table(name="customerservicebackvisit", catalog = "construction")
 public class CustomerServiceBackVisitPO implements Serializable{
 
 	private static final long serialVersionUID = -2601423017170518859L;

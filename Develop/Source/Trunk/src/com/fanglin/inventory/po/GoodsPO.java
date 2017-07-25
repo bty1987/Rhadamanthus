@@ -19,6 +19,8 @@ public class GoodsPO implements java.io.Serializable {
 	
 	public static final String COLUMN_NO_STR = "no";
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	public static final String COLUMN_NAME_STR = "name";
 	
 	public static final String COLUMN_PINYIN_STR = "pinyin";
@@ -42,6 +44,8 @@ public class GoodsPO implements java.io.Serializable {
 	public static final short TYPE_SUIT_INT = 1;
 	
 	private long gid;
+	
+	private int company;
 	
 	private String no;
 	
@@ -88,6 +92,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setGid(long gid) {
 		this.gid = gid;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	@Column(name = "no")

@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface MemberDetailDao  extends Dao<MemberDetailPO> {
 
-	public List<MemberDetailPO> queryMemberDetailByOrderId(String orderId);
+	public List<MemberDetailPO> queryMemberDetailByOrderId(long mcId);
 	
 	public List<MemberDetailPO> pageMemberDetail(Paging paging, List<Filter> filters);
 	

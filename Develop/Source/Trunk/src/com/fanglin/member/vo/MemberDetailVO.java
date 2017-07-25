@@ -16,7 +16,13 @@ public class MemberDetailVO  implements java.io.Serializable {
 	
 	private Short subType;
 	
-	private Integer credit;
+	private Float credit;
+	
+	private Float balance; 
+	
+	private Integer multiple;
+	
+	private Integer divider;
 	
 	private UserVO cuId;
 	
@@ -79,11 +85,11 @@ public class MemberDetailVO  implements java.io.Serializable {
 		this.subType = subType;
 	}
 
-	public Integer getCredit() {
+	public Float getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Integer credit) {
+	public void setCredit(Float credit) {
 		this.credit = credit;
 	}
 
@@ -109,6 +115,30 @@ public class MemberDetailVO  implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Float balance) {
+		this.balance = balance;
+	}
+
+	public Integer getMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(Integer multiple) {
+		this.multiple = multiple;
+	}
+
+	public Integer getDivider() {
+		return divider;
+	}
+
+	public void setDivider(Integer divider) {
+		this.divider = divider;
 	}
 
 }

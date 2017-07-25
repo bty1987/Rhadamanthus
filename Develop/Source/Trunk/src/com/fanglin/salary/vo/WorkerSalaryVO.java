@@ -5,6 +5,10 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.personel.vo.UserVO;
+/**
+ * @author Administrator
+ *
+ */
 public class WorkerSalaryVO  implements Serializable{
 	
 	private static final long serialVersionUID = -1896969348501581246L;
@@ -13,7 +17,7 @@ public class WorkerSalaryVO  implements Serializable{
 	
 	private DecorationOrderVO decorationOrder;
 	
-	private Long csId;
+	private Long cid;
 	
 	private UserVO user;
 	
@@ -58,12 +62,15 @@ public class WorkerSalaryVO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-	public Long getCsId() {
-		return csId;
+
+
+	public Long getCid() {
+		return cid;
 	}
 
-	public void setCsId(Long csId) {
-		this.csId = csId;
+
+	public void setCid(Long cid) {
+		this.cid = cid;
 	}
 
 

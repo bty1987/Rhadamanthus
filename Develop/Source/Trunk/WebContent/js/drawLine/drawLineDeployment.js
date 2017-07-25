@@ -302,21 +302,21 @@ jQuery(function($) {
 	function deployed(v){
 		//订单编号
 		var options = {
-			"constructionSchedule.orderId": v.orderId,
+			"construction.orderId": v.orderId,
 		};
 		//通过订单编号获取人员信息
-		com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res){
+		com.post(api.construction.queryConstructionForWorkerNameByOrderId, options, function(res){
 			
 			var queryUserNameUrl = "";
 			
 			for(var qualityName in qualityInfo){
 				//判断返回的字段是否有值
-				if(res.constructionSchedule[qualityName+"QualityName"] != null){
+				if(res.construction[qualityName+"QualityName"] != null){
 					//更新信息    第一个值是想更新信息的ID名,第二个是创建的option的value值,第三个是显示的value值
-					com.updateChosen(qualityName+"Quality", res.constructionSchedule[qualityName + "QualityId"], res.constructionSchedule[qualityName + "QualityName"])
+					com.updateChosen(qualityName+"Quality", res.construction[qualityName + "QualityId"], res.construction[qualityName + "QualityName"])
 				}
 				
-				qualityIds[qualityName] = res.constructionSchedule[qualityName+"QualityId"];
+				qualityIds[qualityName] = res.construction[qualityName+"QualityId"];
 			}
 		});
 		
@@ -375,7 +375,7 @@ jQuery(function($) {
 	function drawLineDeployed(){
 		
 		var options = {
-			"constructionSchedule.orderId": drawLineDeploymentPostData["orderId"],
+			"construction.orderId": drawLineDeploymentPostData["orderId"],
 		};
 		
 		for(var qualityId in qualityIds){
@@ -387,10 +387,10 @@ jQuery(function($) {
 				return;
 			}
 			
-			options["constructionSchedule."+qualityId+"QualityId"] = $id;
+			options["construction."+qualityId+"QualityId"] = $id;
 		}
 		//通过订单编号更新工程信息
-		com.post(api.construction.updateConstructionScheduleByOrderId, options, function(res){
+		com.post(api.construction.updateConstructionByOrderId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 			searcher.doSearch();
 		});

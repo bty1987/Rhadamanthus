@@ -41,9 +41,11 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Autowired
 	private AssisTypeDao assisTypeDao;
-
+	
 	@Override
-	public void pageGoods(Paging paging, List<Filter> filters) {
+	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException{
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
@@ -51,20 +53,23 @@ public class GoodsServiceImpl implements GoodsService {
 		GoodsVO goodsVO;
 		
 		for(GoodsPO goodsPO: goodsPOs){
-			
+				
 			goodsVO = new GoodsVO(new AssisTypeVO());
-			
+				
 			BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("assisType"));
 			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(), Arrays.asList("workType"));
-			
+				
 			goodsVOs.add(goodsVO);
+				
 		}
 
 		paging.setData(goodsVOs);
 	}
 
 	@Override
-	public List<GoodsVO> queryGoods(List<Filter> filters) {
+	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException{
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<GoodsPO> goodsPOs = goodsDao.queryGoods(filters);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
@@ -85,9 +90,9 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO) {
+	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO,int company){
 		
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByNo(goodsVO.getNo(), 10);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByNo(goodsVO.getNo(), 10,company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){
@@ -104,9 +109,9 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO) {
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO,int company){
 
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(),goodsVO.getPinyin(),goodsVO.getNo(), 10);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(),goodsVO.getPinyin(),goodsVO.getNo(), 10,company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){
@@ -123,9 +128,9 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 	
 	@Override
-	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO) {
+	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO,int company){
 		
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAssisType().getAtid());
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAssisType().getAtid(),company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){
@@ -143,9 +148,9 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO) {
+	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO,int company){
 
-		GoodsPO goodsPO = goodsDao.queryGoodsByBarcode(goodsVO.getBarcode());
+		GoodsPO goodsPO = goodsDao.queryGoodsByBarcode(goodsVO.getBarcode(),company);
 		
 		goodsVO = new GoodsVO(new AssisTypeVO());
 		
@@ -170,9 +175,10 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addGoods(GoodsVO goodsVO) throws FLException {
+	public int addGoods(GoodsVO goodsVO,int company) throws FLException {
 		
 		GoodsPO goodsPO;
+		
 		if(goodsVO.getAssisType().getAtid()!=null){
 			goodsPO = new GoodsPO(new AssisTypePO());
 			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
@@ -189,6 +195,7 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
 		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
+		goodsPO.setCompany(company);
 		
 		goodsDao.save(goodsPO);
 		

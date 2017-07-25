@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class CompanyVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1384863319040968146L;
+
 	private Integer cid;
 	
 	private Integer no;

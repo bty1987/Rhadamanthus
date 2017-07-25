@@ -40,6 +40,12 @@ public class AssisTypeDaoImpl extends DaoImpl<AssisTypePO> implements AssisTypeD
 		return session().createCriteria(AssisTypePO.class).add(Restrictions.eq(AssisTypePO.COLUMN_WORKTYPE_ID_STR, wtid)).list();
 	}
 
+	@Override
+	public AssisTypePO queryAssisTypeByName(String name) {
+		
+		return (AssisTypePO) session().createCriteria(AssisTypePO.class).add(Restrictions.eq(AssisTypePO.COLUMN_NAME_STR, name)).uniqueResult();
+	}
+	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
@@ -57,5 +63,5 @@ public class AssisTypeDaoImpl extends DaoImpl<AssisTypePO> implements AssisTypeD
 			}
 		}
 	}
-	
+
 }

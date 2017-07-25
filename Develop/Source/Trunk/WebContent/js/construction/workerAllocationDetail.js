@@ -11,15 +11,17 @@ jQuery(function($) {
 	}
 	var workerAllocationDetail = {
 
-		construstionSchedule: {},
+		construstion: {},
 
 		controlCondition: false,
 
 		schedule: 0,
 
+		construstionSchedule : "construstionSchedule",
+
 		operateDict: {
 			"1": {
-
+				num: 1,
 				galleryId: "chanGallery",
 				uploadId: "chanUpload",
 				tabbable: "chanDrawing",
@@ -40,27 +42,19 @@ jQuery(function($) {
 				schedule: "schedule",
 				status: "status",
 
-				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setChanConstructionScheduleForTimeFlag,
-				setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 				confirmEndTimeUrl: "",
 
 				setWorkerUrl: api.construction.addConstructer,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				nextAddInfoUrl: api.construction.updatePutlineConstructionSchedule,
-
-				elementId: "ccsId",
-				elementName: "chanConstructionSchedule",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
 				user: "user",
 				userId: "userId",
-
-				nextElementName: "putlineConstructionSchedule",
 
 				duty: "铲大白工人",
 
@@ -68,11 +62,11 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认或者当前铲大白状态没有成功!",
 			}, "2": {
+				num: 2,
 				galleryId: "putlineGallery",
 				uploadId: "putlineUpload",
 				tabbable: "putlineDrawing",
 
-				workerId: "putlineWorker",
 				startTimeId: "putlineStartTime",
 				startTimeFlagId: "putlineStartTimeFlag",
 				endTimeId: "putlineEndTime",
@@ -90,9 +84,7 @@ jQuery(function($) {
 				putlineTime: "putlineTime",
 				putlineStatus: "putlineStatus",
 
-				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
-				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-				setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -100,9 +92,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "plcsId",
-				elementName: "putlineConstructionSchedule",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -118,6 +108,7 @@ jQuery(function($) {
 
 				errorMsg: "放线状态不满足进行下个阶段要求!",
 			}, "3": {
+				num: 3,
 				name: "waterwayCircuitPower",
 				galleryId: "waterwayCircuitPowerGallery",
 				uploadId: "waterwayCircuitPowerUpload",
@@ -142,21 +133,15 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
-
 
 				setWorkerUrl: api.construction.addConstructer,
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "wcpcsId",
-				elementName: "waterwayCircuitPowerConstructionSchedule",
-				workerId: "wcpcswId",
-				workerName: "waterwayCircuitPowerConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -174,6 +159,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "4": {
+				num: 4,
 				name: "bricklay",
 				galleryId: "bricklayGallery",
 				uploadId: "bricklayUpload",
@@ -193,8 +179,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setBricklayConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -202,11 +187,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "bcsId",
-				elementName: "bricklayConstructionSchedule",
-				workerId: "bcswId",
-				workerName: "bricklayConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -221,7 +202,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "5": {
-
+				num: 5,
 				name: "groundLeveling",
 				galleryId: "groundLevelingGallery",
 				uploadId: "groundLevelingUpload",
@@ -241,8 +222,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setGroundLevelingConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -250,11 +230,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "glcsId",
-				elementName: "groundLevelingConstructionSchedule",
-				workerId: "glcswId",
-				workerName: "groundLevelingConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -269,6 +245,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "6": {
+				num: 6,
 				name: "carpent",
 				galleryId: "carpentGallery",
 				uploadId: "carpentUpload",
@@ -288,8 +265,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setCarpentConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -298,11 +274,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "ccsId",
-				elementName: "carpentConstructionSchedule",
-				workerId: "ccswId",
-				workerName: "carpentConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -317,6 +289,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "7": {
+				num: 7,
 				name: "oil",
 				galleryId: "oilGallery",
 				uploadId: "oilUpload",
@@ -336,8 +309,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setOilConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -345,11 +317,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "ocsId",
-				elementName: "oilConstructionSchedule",
-				workerId: "ocswId",
-				workerName: "oilConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -364,6 +332,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "8": {
+				num: 8,
 				name: "waterwayCircuitCheck",
 				galleryId: "waterwayCircuitCheckGallery",
 				uploadId: "waterwayCircuitCheckUpload",
@@ -388,8 +357,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -397,11 +365,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "wcccsId",
-				elementName: "waterwayCircuitCheckConstructionSchedule",
-				workerId: "wcccswId",
-				workerName: "waterwayCircuitCheckConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -419,6 +383,7 @@ jQuery(function($) {
 
 				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "9": {
+				num: 9,
 				name: "cleaning",
 				galleryId: "cleaningGallery",
 				uploadId: "cleaningUpload",
@@ -438,8 +403,7 @@ jQuery(function($) {
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
 
-				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
-				setTimeFlagUrl: api.construction.setCleaningConstructionScheduleForTimeFlag,
+				setTimeFlagUrl: api.construction.setConstructionScheduleForTimeFlag,
 				confirmStartTimeUrl: "",
 				confirmEndTimeUrl: "",
 
@@ -447,11 +411,7 @@ jQuery(function($) {
 				queryWorkerUrl: api.construction.queryConstructerByOrderId,
 				deleteWorkerUrl: api.construction.deleteConstructer,
 
-				elementId: "ccsId",
-				elementName: "cleaningConstructionSchedule",
-				workerId: "ccswId",
-				workerName: "cleaningConstructionScheduleWorker",
-				elementConstructerId: "cid",
+				elementConstructerId: "crid",
 				elementConstructerName: "constructer",
 				elementConstructers: "constructers",
 				elementConstructerCsId: "csId",
@@ -484,13 +444,13 @@ jQuery(function($) {
 
 	var orderId = params.orderId;
 
-	com.post(api.construction.queryConstructionScheduleByOrderId, {
-		"constructionSchedule.orderId": params.orderId
+	com.post(api.construction.queryConstructionByOrderId, {
+		"construction.orderId": params.orderId
 	}, function(res){
 
-		workerAllocationDetail.construstionSchedule = res.constructionSchedule;
+		workerAllocationDetail.construstion = res.construction;
 
-		var schedule = res.constructionSchedule.schedule;
+		var schedule = res.construction.schedule;
 		var operate = workerAllocationDetail.operateDict[schedule];
 
 		workerAllocationDetail.schedule = schedule;
@@ -554,24 +514,48 @@ jQuery(function($) {
 		var workerInfoCondition = false;
 
 		var orderId = params.orderId;
-		elementPostData[operate.elementName+".orderId"] = params.orderId;
+		elementPostData["constructionSchedule.orderId"] = params.orderId;
 		workerAllocationDetail.controlCondition = false;
 
-		com.post(operate.queryInfoUrl, elementPostData, function(res){
+		com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function(res){
 
-			var element = res[operate.elementName];
-			workerAllocationDetailPostData[operate.elementName+".csId"] = element["csId"];
-			workerAllocationDetailPostData[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+			var elements = res.constructionSchedules;
+			var element = [];
+			var eleSch = [];
+			var numi;
+			var ifFlag = false;
 
-			if(element[operate.elementId] != 0){
-				workerAllocationDetailPostData[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+			$.each(elements, function(i,v){
+				element.push(v)
+			});
+
+			$.each(element, function(i,v){
+				eleSch.push(v.schedule)
+			});
+
+			if(eleSch.contains(operate.num)){
+				for(var i = 0; i < element.length; i++){
+					if(element[i].schedule == operate.num){
+						ifFlag = true;
+						numi = i;
+						break;
+					}
+				}
+			}else{
+				com.showAlert(com.error,"工程信息不存在");
+			}
+
+			workerAllocationDetailPostData["constructionSchedule.cid"] = element[numi].cid;
+			workerAllocationDetailPostData["constructionSchedule.csId"] = element[numi].csId;
+
+			if(ifFlag && element[numi].cid != 0){
 
 				if(schedule == 1){
 
-					$("#"+operate.startTimeId).val(element.startTime);
-					$("#"+operate.endTimeId).val(element.endTime);
+					$("#"+operate.startTimeId).val( element[numi].startTime);
+					$("#"+operate.endTimeId).val( element[numi].endTime);
 
-					var chanStatus = element.status;
+					var chanStatus = element[numi].status;
 					var chanSuccessBtn = $("#chanSuccess");
 					var chanFailBtn = $("#chanFail");
 					var chanDelayBtn = $("#chanDelay");
@@ -580,10 +564,11 @@ jQuery(function($) {
 					chanSuccessBtn.click(function(){
 						var options = {};
 
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".status"] = 1;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 1;
 
+						console.log(options);
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.info, "铲大白成功!");
 							chanSuccessBtn.attr("disabled", "disabled");
@@ -599,9 +584,9 @@ jQuery(function($) {
 					chanFailBtn.click(function(){
 						var options = {};
 
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".status"] = 2;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 2;
 
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.warning, "铲大白失败!");
@@ -617,9 +602,9 @@ jQuery(function($) {
 
 					chanDelayBtn.click(function(){
 						var options = {};
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".status"] = 3;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 3;
 
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.warning, "铲大白延迟!");
@@ -633,9 +618,9 @@ jQuery(function($) {
 
 					chanPassBtn.click(function(){
 						var options = {};
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".status"] = 4;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 4;
 
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.info, "铲大白通过!");
@@ -674,7 +659,7 @@ jQuery(function($) {
 
 					$("#chanWorkerSubmit").on("click", function(){
 						var args = {};
-						args[operate.elementConstructerName + ".csId"] = element.csId;
+						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
 						args[operate.elementConstructerName + ".user.userId"] = $('#chanWorkerName').val();
 
@@ -705,26 +690,26 @@ jQuery(function($) {
 						return false;
 					});
 
-					if(element.startTimeFlag == 0){
+					if( element[numi].startTimeFlag == 0){
 						$("#"+operate.startTimeFlagId).click(function(){
 							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
+							options[operate.elementName+"."+operate.elementId] = element[numi][operate.elementId];
 							options[operate.elementName+"."+operate.startTimeFlag] = 1;
-							options[operate.elementName+"."+operate.endTimeFlag] = element[operate.endTimeFlag];
-							element[operate.startTimeFlag] = 1;
+							options[operate.elementName+"."+operate.endTimeFlag] = element[numi][operate.endTimeFlag];
+							 element[numi][operate.startTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if(element.endTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+							if( element[numi].endTimeFlag != 0 && workerInfoCondition){
+								if(elemen[schedule-1].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
 								}
-							}else if(element.endTimeFlag != 0 && !workerInfoCondition){
-								if(element.status != undefined && element.status == 4){
+							}else if( element[numi].endTimeFlag != 0 && !workerInfoCondition){
+								if( element[numi].status != undefined && element[numi].status == 4){
 									workerAllocationDetail.controlCondition = true;
 								}
 							}
@@ -735,26 +720,26 @@ jQuery(function($) {
 						$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if(element.endTimeFlag == 0){
+					if( element[numi].endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
 							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-							options[operate.elementName+"."+operate.endTimeFlag] = 1;
-							options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
-							element[operate.endTimeFlag] = 1;
+							options["constructionSchedule.csId"] = element[numi].csId;//这里的cid不确定是cid 还是csid
+							options["constructionSchedule.endTimeFlag"] = 1;
+							options["constructionSchedule.startTimeFlag"] = element[numi][operate.startTimeFlag];
+							 element[numi][operate.endTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if(element.startTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+							if( element[numi].startTimeFlag != 0 && workerInfoCondition){
+								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
 								}
-							}else if(element.startTimeFlag != 0 && !workerInfoCondition){
-								if(element.status != undefined && element.status == 4){
+							}else if( element[numi].startTimeFlag != 0 && !workerInfoCondition){
+								if( element[numi].status != undefined && element[numi].status == 4){
 									workerAllocationDetail.controlCondition = true;
 								}
 							}
@@ -765,22 +750,22 @@ jQuery(function($) {
 						$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && workerInfoCondition){
-						if(element.status != undefined && (element.status == 0 || element.status == 2)){
+					if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && workerInfoCondition){
+						if( element[numi].status != undefined && ( element[numi].status == 0 || element[numi].status == 2)){
 							workerAllocationDetail.controlCondition = false;
-						}else if(element.status != undefined && element.status == 1){
+						}else if( element[numi].status != undefined && element[numi].status == 1){
 							workerAllocationDetail.controlCondition = true;
 						}else{
 							workerAllocationDetail.controlCondition = true;
 						}
-					}else if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && !workerInfoCondition){
-						if(element.status != undefined && element.status == 4){
+					}else if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && !workerInfoCondition){
+						if( element[numi].status != undefined && element[numi].status == 4){
 							workerAllocationDetail.controlCondition = true;
 						}
 					}
 				}else if(schedule == 2){
 
-					$("#"+operate.putlineTimeId).val(element.startTime).attr("disabled", "disabled");
+					$("#"+operate.putlineTimeId).val( element[numi].startTime).attr("disabled", "disabled");
 					var options = {};
 					options[operate.elementConstructerName + ".orderId"] = params.orderId;
 					options[operate.elementConstructerName + ".schedule"] = schedule;
@@ -794,7 +779,7 @@ jQuery(function($) {
 
 					$("#fangWorkerSubmit").on("click", function(){
 						var args = {};
-						args[operate.elementConstructerName + ".csId"] = element.csId;
+						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
 						args[operate.elementConstructerName + ".user.userId"] = $('#fangWorkerName').val();
 
@@ -825,7 +810,7 @@ jQuery(function($) {
 						return false;
 					});
 
-					var putlineStatus = element.putlineStatus;
+					var putlineStatus = element[numi].status;
 					var putlineSuccessBtn = $("#putlineSuccess");
 					var putlineFailBtn = $("#putlineFail");
 
@@ -839,9 +824,9 @@ jQuery(function($) {
 					putlineSuccessBtn.click(function(){
 
 						var options = {};
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".putlineStatus"] = 1;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 1;
 
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.info, "成功放线!");
@@ -859,9 +844,9 @@ jQuery(function($) {
 					putlineFailBtn.click(function(){
 
 						var options = {};
-						options[operate.elementName+"."+operate.elementId] = workerAllocationDetailPostData[operate.elementName+"."+operate.elementId];
-						options[operate.elementName+".orderId"] = orderId;
-						options[operate.elementName+".putlineStatus"] = 2;
+						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.orderId"] = orderId;
+						options["constructionSchedule.status"] = 2;
 
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.warning, "放线失败!");
@@ -882,8 +867,8 @@ jQuery(function($) {
 						com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");
 					}
 
-					$("#"+operate.startTimeId).val(element.startTime);
-					$("#"+operate.endTimeId).val(element.endTime);
+					$("#"+operate.startTimeId).val(element[numi].startTime);
+					$("#"+operate.endTimeId).val(element[numi].endTime);
 
 					var options = {};
 					options[operate.elementConstructerName+".orderId"] = params.orderId;
@@ -901,7 +886,7 @@ jQuery(function($) {
 						}
 
 						var args = {};
-						args[operate.elementConstructerName + ".csId"] = element.csId;
+						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
 						args[operate.elementConstructerName + ".user.userId"] = $('#' + operate.name + "WorkerName").val();
 
@@ -926,20 +911,20 @@ jQuery(function($) {
 						return false;
 					});
 
-					if(element.startTimeFlag == 0){
+					if( element[numi].startTimeFlag == 0){
 						$("#"+operate.startTimeFlagId).click(function(){
 							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-							options[operate.elementName+"."+operate.startTimeFlag] = 1;
-							options[operate.elementName+"."+operate.endTimeFlag] = element[operate.endTimeFlag];
-							element[operate.startTimeFlag] = 1;
+							options["constructionSchedule.csId"] = element[numi].csId;
+							options["constructionSchedule."+operate.startTimeFlag] = 1;
+							options["constructionSchedule."+operate.endTimeFlag] = element[numi][operate.endTimeFlag];
+							 element[numi][operate.startTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if(element.endTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+							if( element[numi].endTimeFlag != 0 && workerInfoCondition){
+								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
@@ -952,20 +937,20 @@ jQuery(function($) {
 						$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if(element.endTimeFlag == 0){
+					if( element[numi].endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
 							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-							options[operate.elementName+"."+operate.endTimeFlag] = 1;
-							options[operate.elementName+"."+operate.startTimeFlag] = element[operate.startTimeFlag];
-							element[operate.endTimeFlag] = 1;
+							options["constructionSchedule.csId"] = element[numi].csId;
+							options["constructionSchedule."+operate.endTimeFlag] = 1;
+							options["constructionSchedule."+operate.startTimeFlag] = element[numi][operate.startTimeFlag];
+							 element[numi][operate.endTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if(element.startTimeFlag != 0 && workerInfoCondition){
-								if(element.status != undefined && (element.status != 0 || element.status != 2)){
+							if( element[numi].startTimeFlag != 0 && workerInfoCondition){
+								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
@@ -977,10 +962,10 @@ jQuery(function($) {
 						$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if(element.startTimeFlag != 0 && element.endTimeFlag != 0 && workerInfoCondition){
-						if(element.status != undefined && (element.status == 0 || element.status == 2)){
+					if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && workerInfoCondition){
+						if( element[numi].status != undefined && ( element[numi].status == 0 || element[numi].status == 2)){
 							workerAllocationDetail.controlCondition = false;
-						}else if(element.status != undefined && element.status == 1){
+						}else if( element[numi].status != undefined && element[numi].status == 1){
 							workerAllocationDetail.controlCondition = true;
 						}else{
 							workerAllocationDetail.controlCondition = true;
@@ -993,7 +978,7 @@ jQuery(function($) {
 				return false;
 
 			}else{
-				workerAllocationDetailPostData[operate.elementName+"."+operate.elementId] = 0;
+				workerAllocationDetailPostData["construction.cid"] = 0;
 			}
 		});
 	}
@@ -1055,7 +1040,7 @@ jQuery(function($) {
 						var worker = workers[id];
 
 						var args = {};
-						args[operate.elementConstructerName + "." + operate.elementConstructerId] = worker.cid;
+						args[operate.elementConstructerName + "." + operate.elementConstructerId] = worker.crid;
 
 						if(worker){
 							com.post(operate.deleteWorkerUrl, args, function(res){
@@ -1107,7 +1092,7 @@ jQuery(function($) {
 						var worker = workers[id];
 
 						var args = {};
-						args[operate.elementConstructerName + "." + operate.elementConstructerId] = workers[ly_userId].cid;
+						args[operate.elementConstructerName + "." + operate.elementConstructerId] = workers[ly_userId].crid;
 
 						if (worker) {
 							com.post(operate.deleteWorkerUrl, args, function (res) {

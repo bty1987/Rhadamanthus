@@ -28,7 +28,7 @@ public class SalesVO implements Serializable {
 	
 	private CustomerVO customer;
 	
-	private Short company;
+	private Integer company;
 	
 	private UserVO salesman;
 	
@@ -140,11 +140,11 @@ public class SalesVO implements Serializable {
 		this.customer = customer;
 	}
 
-	public Short getCompany() {
+	public Integer getCompany() {
 		return company;
 	}
 
-	public void setCompany(Short company) {
+	public void setCompany(Integer company) {
 		this.company = company;
 	}
 

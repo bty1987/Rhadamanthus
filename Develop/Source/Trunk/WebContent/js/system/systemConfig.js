@@ -84,8 +84,14 @@ $(function(){
     searcher.init(['systemConfig'], "condList",api.system.pageSystemConfig, function(data){
         //resultList是显示数据的DIV,data是返回值
         displayFunc.init('resultList', data);
-    }, "pagenation");
+    }, "pagenation", "systemConfigPostData", null, false, null, function(){
 
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'systemConfig').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    });
 
     function deletes(scid){
         bootbox.confirm("确定删除吗？", function(result) {
@@ -100,10 +106,10 @@ $(function(){
         });
     }
 
-    $('#addModule').on("click",function(){
+    $('[name="systemConfig"]' , '#pagenation').on("click",function(){
         com.cleanItems(system.config);
         system.modal.modal('show');
-    })
+    });
 
     function saveData(){
 

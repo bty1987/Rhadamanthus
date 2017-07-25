@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="rework", catalog = "platform")
+@Table(name="rework", catalog = "construction")
 public class ReworkPO implements Serializable{
 
 	private static final long serialVersionUID = 574508244898090148L;

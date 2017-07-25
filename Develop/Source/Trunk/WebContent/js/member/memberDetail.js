@@ -45,7 +45,7 @@ jQuery(function($) {
             var propertyArr = [
 
                 ["订单编号: ", params.orderId , "grey"],
-                ["积分类型: ", v.type == 1 ? "主材" : (v.type == 2 ? "装修" : ""),  "red"],
+                ["积分类型: ", v.type == 1 ? "主材" : (v.type == 2 ? "装修" : "转积分"),  "red"],
                 ["积分增减: ", v.subType == 0 ? "增加" : (v.subType == 1 ? "减少" : ""), "red"],
                 ["积分: ", v.credit + "分", "red"],
                 ["创建人: ", v.cuId.userName , "grey"],

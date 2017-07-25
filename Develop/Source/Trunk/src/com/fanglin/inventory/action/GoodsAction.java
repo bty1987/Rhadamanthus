@@ -49,49 +49,49 @@ public class GoodsAction extends BaseListAction {
 	private GoodsPackageVO goodsPackage;
 	
 	@Action(value = "pageGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageGoods(){
+	public String pageGoods() throws FLException{
 		
-		goodsService.pageGoods(getPaging(), getFilters());
+		goodsService.pageGoods(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoods(){
+	public String queryGoods() throws FLException{
 		
-		goodes = goodsService.queryGoods(getFilters());
+		goodes = goodsService.queryGoods(getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryGoodsByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsByNo(){
+	public String queryGoodsByNo() throws FLException{
 		
-		goodes = goodsService.queryGoodsByNo(goods);
+		goodes = goodsService.queryGoodsByNo(goods,queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryGoodsByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsByName(){
+	public String queryGoodsByName() throws FLException{
 		
-		goodes = goodsService.queryGoodsByName(goods);
+		goodes = goodsService.queryGoodsByName(goods,queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryGoodsByBarcode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsByBarcode(){
+	public String queryGoodsByBarcode() throws FLException {
 		
-		goods = goodsService.queryGoodsByBarcode(goods);
+		goods = goodsService.queryGoodsByBarcode(goods,queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryGoodsByAtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsByAtid(){
+	public String queryGoodsByAtid() throws FLException{
 		
-		goodes = goodsService.queryGoodsByAtid(goods);
+		goodes = goodsService.queryGoodsByAtid(goods,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -107,7 +107,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "addGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addGoods() throws FLException{
 		
-		goodsService.addGoods(goods);
+		goodsService.addGoods(goods,queryCompany());
 		
 		return SUCCESS;
 	}

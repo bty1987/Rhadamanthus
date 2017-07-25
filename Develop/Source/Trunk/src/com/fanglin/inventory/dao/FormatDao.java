@@ -11,4 +11,6 @@ public interface FormatDao extends Dao<FormatPO>{
 	
 	public List<FormatPO> queryFormatForEnableByGid(long gid);
 	
+	public FormatPO queryFormatByInfo(long gid,String info);
+	
 }

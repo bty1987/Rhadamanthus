@@ -11,11 +11,11 @@ import com.fanglin.utils.Paging;
 
 public interface SalesService {
 	
-	public void pageSales(Paging paging,List<Filter> filter,String userId);
+	public void pageSales(Paging paging,List<Filter> filter,String userId,int company);
 	
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 	
-	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs) throws FLException;
+	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException;
 	
 	public int updateSalesForCoupon(SalesVO salesVO) throws FLException;
 	

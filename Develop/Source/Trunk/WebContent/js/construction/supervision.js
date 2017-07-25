@@ -30,6 +30,7 @@ $(function(){
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 			var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
 			var $btnRe = $('<a></a>').addClass('btn btn-minier btn-primary').html('返工');
+			var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 
 			var propertyArr = [
 				["楼盘名:", v.village.villageName + " " + v.houseNumber, "grey"],
@@ -48,7 +49,7 @@ $(function(){
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnView).append($btnAddReduce).append($btnRe).appendTo($h3);
+			$divBtnWrap.append($btnView).append($btnAddReduce).append($btnRe).append($btnMoney).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
 
@@ -62,6 +63,10 @@ $(function(){
 
 			$btnRe.click(function(){
 				viewReworkIndex(v.orderId);
+			});
+
+			$btnMoney.click(function(){
+				viewDelGold(v.orderId);
 			});
 
 			return $liLine;
@@ -99,6 +104,13 @@ $(function(){
 	function viewReworkIndex(orderId){
 		params.orderId = orderId;
 		com.switchPage(api.index.supervisionReworkIndex.url);
+	}
+
+	function viewDelGold(orderId){
+		params['decorationOrderId'] = orderId;
+		params['auditStatusType'] = 'select';
+		params['rollback'] = api.index.supervisionIndex.url;
+		com.switchPage(api.index.auditRecordIndex.url);
 	}
 
 });

@@ -56,9 +56,9 @@ public class ManifestTemplateAction extends BaseListAction {
 	private List<Long> mtiIds;
 	
 	@Action(value = "pageManifestTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageManifestTemplate(){
+	public String pageManifestTemplate() throws FLException{
 		
-		manifestTemplateService.pageManifestTemplate(getPaging(), getFilters());
+		manifestTemplateService.pageManifestTemplate(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -90,7 +90,7 @@ public class ManifestTemplateAction extends BaseListAction {
 	@Action(value = "addManifestTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestTemplate() throws FLException{
 		
-		manifestTemplateService.addManifestTemplate(manifestTemplate);
+		manifestTemplateService.addManifestTemplate(manifestTemplate,queryCompany());
 		
 		return SUCCESS;
 	}

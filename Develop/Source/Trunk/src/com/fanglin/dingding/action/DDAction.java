@@ -16,14 +16,15 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.Department;
 import com.fanglin.dingding.po.User;
+import com.fanglin.dingding.service.AuthService;
 import com.fanglin.dingding.service.DepartmentService;
 import com.fanglin.dingding.service.UserService;
-import com.fanglin.dingding.utils.AuthHelper;
 
 @ParentPackage("dingding")
 @Namespace("/")
@@ -31,7 +32,16 @@ import com.fanglin.dingding.utils.AuthHelper;
 public class DDAction extends BaseListAction {
 	
 	private static final long serialVersionUID = -6593413211279089778L;	
-   
+	
+	@Autowired
+	private  AuthService authDDService ;
+    
+	@Autowired
+    private DepartmentService departmentDDService; 
+    
+	@Autowired
+    private UserService userDDService;
+    
 	private String configInfo;
 	
 	private String url;
@@ -53,7 +63,7 @@ public class DDAction extends BaseListAction {
 	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String requestDDConfig(){
 		
-		configInfo = AuthHelper.getConfig(url, null);
+		configInfo =authDDService.getConfig(url, null);
 		
 		return SUCCESS;
 	}
@@ -61,7 +71,7 @@ public class DDAction extends BaseListAction {
 	@Action(value = "queryDDUserInfo", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryUserInfo(){
 		
-		user = UserService.getUserInfo(code);
+		user = userDDService.getUserInfo(code);
 		
 		return SUCCESS;
 	}
@@ -69,15 +79,15 @@ public class DDAction extends BaseListAction {
 	@Action(value = "queryDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryUser(){
 		
-		user = UserService.getUser(user.getUserid());
+		user = userDDService.getUser(user.getUserid());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryDDDepartment(){
-	System.out.println(department.getId());
-		departments = DepartmentService.queryDepartment(department.getId());
+
+		departments = departmentDDService.queryDepartment(department.getId());
 		
 	  	return SUCCESS;
 	}
@@ -85,16 +95,15 @@ public class DDAction extends BaseListAction {
 	@Action(value = "addDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String addUser2() throws FLException{
 		
-		 errcode = UserService.addDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
+		 errcode =userDDService.addDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
 		
 		 return SUCCESS;
 	}
 	
-	
 	@Action(value = "updateDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String updateUser() throws FLException{
 		
-		 errcode = UserService.updateDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
+		 errcode = userDDService.updateDDUser(user.getUserid(),user.getName(),user.getPosition(),user.getMobile(),dids);
 		
 		 return SUCCESS;
 	}
@@ -102,7 +111,7 @@ public class DDAction extends BaseListAction {
 	@Action(value = "deleteDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String deleteDDUser()throws FLException{
 		
-		 errcode= UserService.deleteDDUser(userid);
+		 errcode= userDDService.deleteDDUser(userid);
 		
 		return SUCCESS;
 	}
@@ -178,6 +187,7 @@ public class DDAction extends BaseListAction {
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
 	}
-	
+
+
 	
 }

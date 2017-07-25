@@ -127,7 +127,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			UserPO userPO = userDao.queryUserByUserId(approvalOrderBelongItemVO.getBelongUserId());
 			
 			if(userPO == null){
-				throw new FLException(220005, "员工不存在");
+				throw new FLException(190005 , "人员不存在");
 			}
 			
 			if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) && !userPO.getDuty().contains("设计师")){
@@ -245,7 +245,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			UserPO userPO = userDao.queryUserByUserId(approvalOrderBelongItemPO.getBelongUserId());
 			
 			if(userPO == null){
-				throw new FLException(220005, "员工不存在");
+				throw new FLException(190005 , "人员不存在");
 			}
 			
 			DecorationBelongInfoPO orderBelongInfoPO = new DecorationBelongInfoPO();

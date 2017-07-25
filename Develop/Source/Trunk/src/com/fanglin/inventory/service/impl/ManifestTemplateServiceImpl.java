@@ -39,7 +39,9 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 	private ManifestTemplateItemDao manifestTemplateItemDao;
 
 	@Override
-	public void pageManifestTemplate(Paging paging, List<Filter> filters) {
+	public void pageManifestTemplate(Paging paging, List<Filter> filters,int company) {
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<ManifestTemplatePO> manifestTemplatePOs = manifestTemplateDao.pageManifestTemplate(paging, filters);
 		List<ManifestTemplateVO> manifestTemplateVOs = new ArrayList<ManifestTemplateVO>();
@@ -74,13 +76,14 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestTemplate(ManifestTemplateVO manifestTemplateVO) throws FLException {
+	public int addManifestTemplate(ManifestTemplateVO manifestTemplateVO,int company) throws FLException {
 		
 		ManifestTemplatePO manifestTemplatePO = new ManifestTemplatePO();
 		
 		BeanUtil.copyProperties(manifestTemplateVO, manifestTemplatePO);
 		
 		manifestTemplatePO.setStatus(ManifestTemplatePO.STATUS_ENABLE_INT);
+		manifestTemplatePO.setCompany(company);
 		
 		manifestTemplateDao.save(manifestTemplatePO);
 		

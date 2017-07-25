@@ -10,7 +10,12 @@ import com.fanglin.utils.Paging;
 public interface CompanyDao extends Dao<CompanyPO>{
 	
 	public List<CompanyPO> pageCompany(Paging paging, List<Filter> filters);
+	
+	public List<CompanyPO> queryCompany();
+	
 	public CompanyPO queryCompanyByName (String name);
-	public CompanyPO queryCompanyById(int cid);
+	
+	public CompanyPO queryCompanyByCid(int cid);
+	
 	public CompanyPO queryCompanyByNo(int no);
 }

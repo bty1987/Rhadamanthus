@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customerserviceguarantee", catalog = "platform")
+@Table(name="customerserviceguarantee", catalog = "construction")
 public class CustomerServiceGuaranteePO implements Serializable{
 
 	private static final long serialVersionUID = -6147848721739253445L;

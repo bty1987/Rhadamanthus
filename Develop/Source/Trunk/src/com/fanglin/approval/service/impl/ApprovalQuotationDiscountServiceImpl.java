@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @File Name		: ApprovalQuotationDiscountServiceImpl.java
  * @Package   	: com.fanglin.approval.service.impl
  * @Version		: 1.0
@@ -93,11 +93,9 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
-		UserPO sender = userDao.queryUserByUserId(userId);
-		
 		List<UserPO> userPOs = null;
 		UserPO userPO = decorationOrderPO.getDesignerPO();
-		
+		UserPO sender = userDao.queryUserByUserId(userId);
 		if(level == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT){
 			approvalDuty = "设计部经理";
 			
@@ -111,16 +109,13 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		if(userPOs == null || userPOs.size() == 0){
 			throw new FLException(200008, "审批信息错误,没有" + approvalDuty);
 		}
-		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(quotationId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount(), level));
-		approvalPO.setReceiver(userPO);
+		approvalPO.setReceiver(userPOs.get(0));
 		approvalPO.setSender(sender);
-		
-		
 		approvalDao.save(approvalPO);
 		
 		ApprovalQuotationDiscountPO approvalQuotationDiscountPO = new ApprovalQuotationDiscountPO();

@@ -13,6 +13,6 @@ public interface VersionDao extends Dao<VersionPO>{
 
 	public List<VersionPO> queryVersion(List<Filter> filters);
 	
-	public List<VersionPO> matchVersion(String trialversion);
+	public List<VersionPO> matchVersion(String trialno);
 	
 }

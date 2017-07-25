@@ -24,18 +24,18 @@ public interface GoodsDao extends Dao<GoodsPO>{
 	
 	public List<GoodsPO> queryGoods(List<Filter> filters);
 	
-	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit);
+	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit,int company);
 	
-	public List<GoodsPO> queryGoodsByNo(String no, int limit);
+	public List<GoodsPO> queryGoodsByNo(String no, int limit,int company);
 	
-	public List<GoodsPO> queryGoodsByBarcode(String barcode, int limit);
+	public List<GoodsPO> queryGoodsByBarcode(String barcode, int limit,int company);
 	
-	public List<GoodsPO> queryGoodsByAtid(long atid);
+	public List<GoodsPO> queryGoodsByAtid(long atid,int company);
 	
-	public GoodsPO queryGoodsByName(String name);
+	public GoodsPO queryGoodsByName(String name,int company);
 	
-	public GoodsPO queryGoodsByNo(String no);
+	public GoodsPO queryGoodsByNo(String no,int company);
 	
-	public GoodsPO queryGoodsByBarcode(String barcode);
+	public GoodsPO queryGoodsByBarcode(String barcode,int company);
 	
 }

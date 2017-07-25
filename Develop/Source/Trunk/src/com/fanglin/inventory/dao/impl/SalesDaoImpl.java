@@ -89,6 +89,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					
 					query.add(query.getCriterion(field, stimestamp, "ge"));
 					query.add(query.getCriterion(field, etimestamp, "le"));
+				}else if (SalesPO.COLUMN_COMPANY_STR.equals(field)){
+					query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 				
 			}

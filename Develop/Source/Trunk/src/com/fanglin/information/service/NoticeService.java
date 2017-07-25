@@ -20,18 +20,14 @@ public interface NoticeService {
 	
 	public void pageNotice(Paging paging, List<Filter> filters, String userId);
 
-	public NoticeVO queryNoticeById(Integer id);
+	public void pageNoticeForSeenByType(Paging paging, NoticeVO noticeVO, String userId) throws FLException;
 	
-	public List<NoticeVO> queryNoticeForValid(String type);
+	public NoticeVO queryNoticeByNid(NoticeVO noticeVO) throws FLException;
 	
-	public void pageNoticeForDeptAValid(Paging paging, NoticeVO noticeVO, String userId);
-	//添加和修改信息
-	public void saveOrUpdateNotice(NoticeVO noticeVO);
-	//删除
-	public void deleteNoticeById(Integer id);
-	//删除多条
-	public void deleteNotice(List<Integer> ids);
+	public int addNotice(NoticeVO noticeVO, String userId) throws FLException;
 	
-	public void updateNoticeDepartment(List<Integer> dids,NoticeVO noticev) throws FLException;
+	public int updateNotice(NoticeVO noticeVO) throws FLException;
+	
+	public int deleteNotice(NoticeVO noticeVO) throws FLException;
 	
 }

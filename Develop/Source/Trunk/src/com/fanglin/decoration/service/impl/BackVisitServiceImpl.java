@@ -28,6 +28,7 @@ import com.fanglin.decoration.po.BackVisitPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.BackVisitService;
 import com.fanglin.decoration.vo.BackVisitVO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -46,6 +47,9 @@ public class BackVisitServiceImpl implements BackVisitService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private MessageService messageDDService;
 	
 	@Override
 	public void pageBackVisitByOrderId(Paging paging, List<Filter> filters, BackVisitVO backVisitVO){
@@ -128,7 +132,7 @@ public class BackVisitServiceImpl implements BackVisitService {
 			List<String> receivers = backVisitVO.getReceivers();
 			
 			for(String receiverId: receivers){
-				com.fanglin.dingding.service.MessageService.sendMessageForBackVisit(receiverId.trim(), String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent());
+				messageDDService.sendMessageForBackVisit(receiverId.trim(), String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent());
 				
 				receiverIds.append(String.format("%s,", receiverId));
 			}

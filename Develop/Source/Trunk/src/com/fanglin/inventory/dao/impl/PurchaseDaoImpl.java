@@ -65,6 +65,8 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 					
 					query.add(query.getCriterion(PurchasePO.COLUMN_CREATETIME_STR, stimestamp, "ge"));
 					query.add(query.getCriterion(PurchasePO.COLUMN_CREATETIME_STR, etimestamp, "le"));
+				}else if ("company".equals(field)){
+					query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

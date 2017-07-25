@@ -87,6 +87,7 @@ CREATE TABLE `goods` (
   `atid` int(11) DEFAULT NULL COMMENT '辅类ID',
   `type` tinyint(2) NOT NULL DEFAULT '0',
   `status` tinyint(2) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品';
 
@@ -125,6 +126,7 @@ CREATE TABLE `manifest` (
   `comment` varchar(128) NOT NULL DEFAULT '',
   `attachment` varchar(256) NOT NULL DEFAULT '',
   `qmid` int(11) DEFAULT NULL COMMENT '引用货单ID',
+  `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单';
 
@@ -248,7 +250,7 @@ CREATE TABLE `sales` (
   `sid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(20) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `company` tinyint(2) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL DEFAULT '0',
   `vid` int(11) NOT NULL COMMENT '楼盘ID',
   `houseNumber` varchar(30) NOT NULL COMMENT '楼号',
   `cid` int(11) DEFAULT NULL COMMENT '客户ID',

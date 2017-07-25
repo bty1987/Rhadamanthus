@@ -13,4 +13,5 @@ public interface ApprovalSalesDiscountService {
 	
 	public int approvalForSalesDiscount(ApprovalPO approvalPO) throws FLException;
 	
+	public int refuseForSalesDiscount(ApprovalPO approvalPO) throws FLException;
 }

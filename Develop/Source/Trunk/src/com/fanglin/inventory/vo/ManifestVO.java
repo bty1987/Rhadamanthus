@@ -12,6 +12,8 @@ public class ManifestVO implements java.io.Serializable {
 
 	private Long mid;
 	
+	private Integer company;
+	
 	private String code;
 	
 	private Timestamp createTime;
@@ -47,6 +49,14 @@ public class ManifestVO implements java.io.Serializable {
 
 	public void setMid(Long mid) {
 		this.mid = mid;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	public String getCode() {

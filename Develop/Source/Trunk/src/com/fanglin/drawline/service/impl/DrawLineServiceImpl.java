@@ -24,26 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.construction.dao.BricklayConstructionScheduleDao;
-import com.fanglin.construction.dao.CarpentConstructionScheduleDao;
-import com.fanglin.construction.dao.ChanConstructionScheduleDao;
-import com.fanglin.construction.dao.CleaningConstructionScheduleDao;
+
+import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.dao.GroundLevelingConstructionScheduleDao;
-import com.fanglin.construction.dao.OilConstructionScheduleDao;
-import com.fanglin.construction.dao.PutlineConstructionScheduleDao;
-import com.fanglin.construction.dao.WaterwayCircuitCheckConstructionScheduleDao;
-import com.fanglin.construction.dao.WaterwayCircuitPowerConstructionScheduleDao;
-import com.fanglin.construction.po.BricklayConstructionSchedulePO;
-import com.fanglin.construction.po.CarpentConstructionSchedulePO;
-import com.fanglin.construction.po.ChanConstructionSchedulePO;
-import com.fanglin.construction.po.CleaningConstructionSchedulePO;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.po.GroundLevelingConstructionSchedulePO;
-import com.fanglin.construction.po.OilConstructionSchedulePO;
-import com.fanglin.construction.po.PutlineConstructionSchedulePO;
-import com.fanglin.construction.po.WaterwayCircuitCheckConstructionSchedulePO;
-import com.fanglin.construction.po.WaterwayCircuitPowerConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
@@ -81,40 +66,16 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private QuotationDao quotationDao;
 	
 	@Autowired
-	private ConstructionScheduleDao constructionScheduleDao;
-	
-	@Autowired
-	private ChanConstructionScheduleDao chanConstructionScheduleDao;
-	
-	@Autowired
-	private PutlineConstructionScheduleDao putlineConstructionScheduleDao;
-	
-	@Autowired
-	private WaterwayCircuitPowerConstructionScheduleDao waterwayCircuitPowerConstructionScheduleDao;
-	
-	@Autowired
-	private BricklayConstructionScheduleDao bricklayConstructionScheduleDao;
-	
-	@Autowired
-	private GroundLevelingConstructionScheduleDao groundLevelingConstructionScheduleDao;
-	
-	@Autowired
-	private CarpentConstructionScheduleDao carpentConstructionScheduleDao;
-	
-	@Autowired
-	private OilConstructionScheduleDao oilConstructionScheduleDao;
-	
-	@Autowired
-	private WaterwayCircuitCheckConstructionScheduleDao waterwayCircuitCheckConstructionScheduleDao;
-	
-	@Autowired
-	private CleaningConstructionScheduleDao cleaningConstructionScheduleDao;
-	
-	@Autowired
 	private MessageService messageService;
 	
 	@Autowired
 	private DrawLineGroupDao drawLineGroupDao;
+	
+	@Autowired
+	private ConstructionDao constructionDao;
+
+	@Autowired
+	private ConstructionScheduleDao constructionScheduleDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -348,127 +309,28 @@ public class DrawLineServiceImpl implements DrawLineService {
 		//更新或存入
 		drawlineDao.saveOrUpdate(newDrawLine);
 		//更新工程状态为铲大白
-		decorationOrderPO.setProjectStatus(ChanConstructionSchedulePO.CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
+		decorationOrderPO.setProjectStatus(ConstructionSchedulePO.CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
 		//更新状态
 		decorationOrderDao.update(decorationOrderPO);
 		//获取当前服务器时间(yyyy-MM-dd)
-		String currentTime = DateUtil.current(ChanConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
+		String currentTime = DateUtil.current(ConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
 		//查询一条与前台传入的OrderId相同的数据 并以对象的类型返回 (工程表)
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
-		//如果查询的为null
-		if(constructionSchedulePO == null){
-			//赋予空对象
-			constructionSchedulePO = new ConstructionSchedulePO();
-			//将订单编号传入
-			constructionSchedulePO.setDecorationOrderPO(new DecorationOrderPO(orderId));
-			//施工进度为 1:铲大白
-			constructionSchedulePO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
-			//将订单编号与施工进度存入数据库
-			constructionScheduleDao.save(constructionSchedulePO);
+		  ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+		if(constructionPO == null){
+			constructionPO = new ConstructionPO();
+			constructionPO.setDecorationOrderPO(new DecorationOrderPO(orderId));
+			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
+			constructionDao.save(constructionPO);
+			long cid = constructionPO.getCid();
+			
+			for (int i = 1; i <=9; i++) {
+				ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)i);
+				constructionScheduleDao.save(ConstructionSchedulePOO);
+			}
+			
 		}else{
-			//存入施工进度为  1:铲大白
-			constructionSchedulePO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
-			//更新以存在的订单编号的状态
-			constructionScheduleDao.update(constructionSchedulePO);
-		}
-		//获取工程ID
-		long csId = constructionSchedulePO.getCsId();
-		//通过订单编号获取铲大白工程信息
-		ChanConstructionSchedulePO chanConstructionSchedulePO = chanConstructionScheduleDao.queryChanConstructionScheduleByOrderId(orderId);
-		//如果获取到的信息不为null
-		if(chanConstructionSchedulePO != null){
-			//获取开工标示  0:可编辑
-			chanConstructionSchedulePO.setStartTimeFlag(ChanConstructionSchedulePO.STARTTIMEFLAG_TYPE_INIT_INT);
-			//获取完工标示  0: 可编辑
-			chanConstructionSchedulePO.setEndTimeFlag(ChanConstructionSchedulePO.ENDTIMEFLAG_TYPE_INIT_INT);
-			//获取状态    0: 初始 
-			chanConstructionSchedulePO.setStatus(ChanConstructionSchedulePO.STATUS_TYPE_INIT_INT);
-			//更新铲大白信息
-			chanConstructionScheduleDao.update(chanConstructionSchedulePO);
-		}else{
-			//创建一个新的对象    将工程ID,订单编号,系统当前时间 存入
-			chanConstructionSchedulePO = new ChanConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//将新对象更新或者存入
-			chanConstructionScheduleDao.saveOrUpdate(chanConstructionSchedulePO);
-		}
-		//通过订单编号获取放线表信息
-		PutlineConstructionSchedulePO putlineConstructionSchedulePO = putlineConstructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
-		//如果不为null
-		if(putlineConstructionSchedulePO != null){
-			//获取放线表中的状态存入  0: 初始 
-			putlineConstructionSchedulePO.setPutlineStatus(PutlineConstructionSchedulePO.PUTLINESTATUS_TYPE_INIT_INT);
-			putlineConstructionSchedulePO.setPutlineTime(currentTime);
-			//更新放线表
-			putlineConstructionScheduleDao.update(putlineConstructionSchedulePO);
-		}else{
-				//如果为null    将工程ID,修改状态为铲大白的工程表对象,当前时间 存入
-				putlineConstructionSchedulePO = new PutlineConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-				putlineConstructionSchedulePO.setPutlineTime(currentTime);
-				//将放线表存入
-				putlineConstructionScheduleDao.save(putlineConstructionSchedulePO);
-		}
-		//通过订单编号查询水电力表
-		WaterwayCircuitPowerConstructionSchedulePO waterwayCircuitPowerConstructionSchedulePO = waterwayCircuitPowerConstructionScheduleDao.queryCircuitPowerConstructionScheduleByOrderId(orderId);
-		//如果为null
-		if(waterwayCircuitPowerConstructionSchedulePO == null){
-			//将  工程ID,订单编号,系统时间 存入
-			waterwayCircuitPowerConstructionSchedulePO = new WaterwayCircuitPowerConstructionSchedulePO(csId, orderId, currentTime, currentTime);;
-			//存入或更新对象中的数据
-			waterwayCircuitPowerConstructionScheduleDao.saveOrUpdate(waterwayCircuitPowerConstructionSchedulePO);
-		}
-		//通过工程ID查询瓦工表
-		BricklayConstructionSchedulePO bricklayConstructionSchedulePO = bricklayConstructionScheduleDao.queryBricklayConstructionScheduleByCsId(csId);
-		//如果等于null
-		if(bricklayConstructionSchedulePO == null){
-			//将  工程ID,订单编号,系统当前时间   存入
-			bricklayConstructionSchedulePO = new BricklayConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//存入数据进数据库
-			bricklayConstructionScheduleDao.save(bricklayConstructionSchedulePO);
-		}
-		//通过工程ID 查询地面找平表
-		GroundLevelingConstructionSchedulePO groundLevelingConstructionSchedulePO = groundLevelingConstructionScheduleDao.queryGroundLevelingConstructionScheduleByCsId(csId);
-		//如果等于null
-		if(groundLevelingConstructionSchedulePO == null){
-			//将  工程ID,订单编号,当前系统时间   存入
-			groundLevelingConstructionSchedulePO = new GroundLevelingConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//存入地面找平表的信息
-			groundLevelingConstructionScheduleDao.save(groundLevelingConstructionSchedulePO);
-		}
-		//通过工程ID 查询木工表
-		CarpentConstructionSchedulePO carpentConstructionSchedulePO = carpentConstructionScheduleDao.queryCarpentConstructionScheduleByCsId(csId);
-		//如果为null
-		if(carpentConstructionSchedulePO == null){
-			//将    工程ID,订单编号,系统时间   存入
-			carpentConstructionSchedulePO = new CarpentConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//更新或存入木工表信息
-			carpentConstructionScheduleDao.saveOrUpdate(carpentConstructionSchedulePO);
-		}
-		//通过订单编号查询油工表
-		OilConstructionSchedulePO oilConstructionSchedulePO = oilConstructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
-		//如果为null
-		if(oilConstructionSchedulePO == null){
-			//将   工程ID,订单编号,系统时间  存入
-			oilConstructionSchedulePO = new OilConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//存入或更新  油工表
-			oilConstructionScheduleDao.saveOrUpdate(oilConstructionSchedulePO);
-		}
-		//通过订单编号查询   水电验收表
-		WaterwayCircuitCheckConstructionSchedulePO waterwayCircuitCheckConstructionSchedulePO = waterwayCircuitCheckConstructionScheduleDao.queryWaterwayCircuitCheckConstructionScheduleByOrderId(orderId);
-		//如果为null
-		if(waterwayCircuitCheckConstructionSchedulePO == null){
-			//将  工程ID,订单编号,系统时间 存入
-			waterwayCircuitCheckConstructionSchedulePO = new WaterwayCircuitCheckConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//存入或更新  水电验收表
-			waterwayCircuitCheckConstructionScheduleDao.saveOrUpdate(waterwayCircuitCheckConstructionSchedulePO);
-		}
-		//通过订单编号 获取保洁表
-		CleaningConstructionSchedulePO cleaningConstructionSchedulePO = cleaningConstructionScheduleDao.queryCleaningConstructionScheduleByOrderId(orderId);
-		//如果为null
-		if(cleaningConstructionSchedulePO == null){
-			//将  工程ID,订单编号,系统时间   存入
-			cleaningConstructionSchedulePO = new CleaningConstructionSchedulePO(csId, orderId, currentTime, currentTime);
-			//存入或更新 保洁表
-			cleaningConstructionScheduleDao.saveOrUpdate(cleaningConstructionSchedulePO);
+			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
+			constructionDao.update(constructionPO);
 		}
 		
 		return 0;

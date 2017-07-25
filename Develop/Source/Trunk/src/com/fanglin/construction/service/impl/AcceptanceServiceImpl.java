@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.AcceptanceDao;
 import com.fanglin.construction.dao.ConstructerDao;
-import com.fanglin.construction.dao.ConstructionScheduleDao;
+import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructerPO;
-import com.fanglin.construction.po.ConstructionSchedulePO;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
@@ -45,7 +45,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	private UserDao userDao;
 	
 	@Autowired
-	private ConstructionScheduleDao constructionScheduleDao;
+	private ConstructionDao constructionScheduleDao;
 	
 	@Autowired
 	private ConstructerDao constructerDao;
@@ -79,7 +79,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptanceVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
 		}
 		
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId);
+		ConstructionPO constructionSchedulePO = constructionScheduleDao.queryConstructionByOrderId(orderId);
 		
 		if(constructionSchedulePO != null){
 			if(constructionSchedulePO.getSupervisorQualityId() != null){
@@ -131,7 +131,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
 		}
 		
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(acceptanceVO.getOrderId());
+		ConstructionPO constructionSchedulePO = constructionScheduleDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
 		
 		if(constructionSchedulePO != null && (constructionSchedulePO.getAllocationWorkerFlag() & AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT) == 0){
 			constructionSchedulePO.setAllocationWorkerFlag(constructionSchedulePO.getAllocationWorkerFlag() + AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT);

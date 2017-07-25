@@ -7,13 +7,13 @@ import org.apache.struts2.json.annotations.JSON;
 
 public class VersionVO implements Serializable{
 
-	private static final long serialVersionUID = -1793564648176417285L;
-	
+	private static final long serialVersionUID = -2055209315930136686L;
+
 	private Long vid;
 	
-	private String versionNumber;
+	private String no;
 	
-	private String trialVersion;
+	private String trialno;
 	
 	private Timestamp createTime;
 	
@@ -31,20 +31,20 @@ public class VersionVO implements Serializable{
 		this.vid = vid;
 	}
 
-	public String getVersionNumber() {
-		return versionNumber;
+	public String getNo() {
+		return no;
 	}
 
-	public void setVersionNumber(String versionNumber) {
-		this.versionNumber = versionNumber;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getTrialVersion() {
-		return trialVersion;
+	public String getTrialno() {
+		return trialno;
 	}
 
-	public void setTrialVersion(String trialVersion) {
-		this.trialVersion = trialVersion;
+	public void setTrialno(String trialno) {
+		this.trialno = trialno;
 	}
 
 	@JSON(format="yyyy-MM-dd")

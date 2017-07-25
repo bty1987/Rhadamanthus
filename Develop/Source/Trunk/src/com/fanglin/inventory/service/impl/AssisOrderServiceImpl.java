@@ -49,7 +49,10 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageAssisOrder(Paging paging, List<Filter> filters) {
+	public void pageAssisOrder(Paging paging, List<Filter> filters,int company) {
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
+		
 		List<AssisOrderPO> assisOrderPOs = assisOrderDao.pageAssisOrder(paging, filters);
 		List<AssisOrderVO> assisOrderVOs = new ArrayList<AssisOrderVO>();
 		
@@ -73,7 +76,7 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addAssisOrder(AssisOrderVO assisOrderVO,List<AssisOrderItemVO> assisOrderItemVOs, String creater,String approver) {
+	public int addAssisOrder(AssisOrderVO assisOrderVO,List<AssisOrderItemVO> assisOrderItemVOs, String creater,String approver,int company) {
 		
 		String word = "AO";
 		
@@ -94,6 +97,7 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		assisOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		assisOrderPO.setApprover(approverPO);
 		assisOrderPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+		assisOrderPO.setCompany(company);
 		assisOrderPO.setStatus(AssisOrderPO.STATUS_ENABLE_INT);
 		assisOrderDao.save(assisOrderPO);
 		

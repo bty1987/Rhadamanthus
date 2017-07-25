@@ -12,44 +12,57 @@
 package com.fanglin.dingding.service;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.User;
-import com.fanglin.dingding.utils.AuthHelper;
-import com.fanglin.dingding.utils.Constant;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
+@Service("userDDService")
+@Transactional(readOnly = true)
 public class UserService {
-
-	public static  User getUserInfo(String code){
+	
+	@Autowired
+	private  AuthService authDDService ;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	public  User getUserInfo(String code){
 		
-		String accessToken = AuthHelper.getAccessToken();
+		String accessToken = authDDService.getAccessToken();
 		
-		String url = String.format(DDApi.DDAPI_GET_USER_INFO_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken, code);
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		
+		String url = String.format(DDApi.DDAPI_GET_USER_INFO_STR, oapiHost.getValue(), accessToken, code);
 		
 		JSONObject json = HttpHelper.httpGet(url);
 		
 		return JSON.parseObject(json.toJSONString(), User.class);
 	}
 	
-	public static User getUser(String userid) {
+	public  User getUser(String userid) {
 	
-		String accessToken = AuthHelper.getAccessToken();
+		String accessToken = authDDService.getAccessToken();
 		
-		String url = String.format(DDApi.DDAPI_GET_USER_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken, userid);
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		
+		String url = String.format(DDApi.DDAPI_GET_USER_STR, oapiHost.getValue(), accessToken, userid);
 		
 		JSONObject json = HttpHelper.httpGet(url);
 		
 		return JSON.parseObject(json.toJSONString(), User.class);
 	}
 	
-	public static int addUser(UserPO userPO){
+	public int addUser(UserPO userPO){
 		
 		User user = new User();
 		
@@ -58,37 +71,41 @@ public class UserService {
 		return 0;
 	}
 
-      public static int addDDUser(String userid,String currentName,String duty,String phone,List<Long> dids) throws FLException {
+      public  int addDDUser(String userid,String currentName,String duty,String phone,List<Long> dids) throws FLException {
 		
-    	  String accessToken = AuthHelper.getAccessToken();	
-			User user = new User() ;
+    	  String accessToken = authDDService.getAccessToken();	
+    	  User user = new User() ;
 			user.setMobile(phone);
 			user.setName(currentName);
 			user.setUserid(userid);
 			user.setPosition(duty);
 			user.setDepartment(dids);
+		
+		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
 						
-		 String url = String.format(DDApi.DDAPI_ADD_USER_STR, SystemConfig.getString(Constant.OAPI_HOST_STR),accessToken,  user);
+		 String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(),accessToken,  user);
 						
-		JSONObject json = HttpHelper.httpPost(url, user);
+		 JSONObject json = HttpHelper.httpPost(url, user);
 						 
-		int errcode=json.getInteger("errcode");
-			
-		return errcode; 
+		 int errcode=json.getInteger("errcode");
+		 	
+		 return errcode; 
 		
       }
 		
-      public static int  updateDDUser(String userid,String currentName,String duty,String phone,List<Long> dids) throws FLException {
+      public  int  updateDDUser(String userid,String currentName,String duty,String phone,List<Long> dids) throws FLException {
   		
-    	  String accessToken = AuthHelper.getAccessToken();	
-            User user = getUser(userid);
+    	String accessToken = authDDService.getAccessToken();	
+        User user = getUser(userid);
 	            user.setUserid(userid);
 				user.setMobile(phone);
 				user.setName(currentName);
 				user.setPosition(duty);
 				user.setDepartment(dids);
+		
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
 			
-		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, SystemConfig.getString(Constant.OAPI_HOST_STR),accessToken,  user);
+		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(),accessToken,  user);
 			
 		JSONObject json = HttpHelper.httpPost(url, user);
 			
@@ -98,11 +115,13 @@ public class UserService {
 		
 	 }
      
-      public static int  deleteDDUser(String userid)throws FLException {
+      public  int  deleteDDUser(String userid)throws FLException {
   		
-  		String accessToken = AuthHelper.getAccessToken();
+  		String accessToken =authDDService.getAccessToken();
   		
-  		String url = String.format(DDApi.DDAPI_DELETE_USER_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken, userid);
+  		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+  		
+  		String url = String.format(DDApi.DDAPI_DELETE_USER_STR,oapiHost.getValue(), accessToken, userid);
   		
   		JSONObject json = HttpHelper.httpGet(url);
   		

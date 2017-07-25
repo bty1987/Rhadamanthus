@@ -29,17 +29,16 @@ public class CompanyPO implements Serializable {
 
 	public static final int TYPE_HEADQUARTER_INT = 0;//总部
 	
-	public static final int TYPE_FANGLIN_INT = 1;//方林
-	
-	public static final int TYPE_BIGHOUSE_INT = 2;//大房子
-	
-	public static final int TYPE_YIJIA_INT = 3;//宜家
-
 	public static final String COLUMN_CID_STR = "cid";
 	
 	public static final String COLUMN_NAME_STR = "name";
 	
 	public static final String COLUMN_NO_STR = "no";
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short STATUS_ENABLE_INT = 0;
+	
 	private int cid;
 	
 	private int no;

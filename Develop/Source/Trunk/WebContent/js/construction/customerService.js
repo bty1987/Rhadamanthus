@@ -82,7 +82,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstructionSchedule, function(list){
+	searcher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceSeacherPostData");
 

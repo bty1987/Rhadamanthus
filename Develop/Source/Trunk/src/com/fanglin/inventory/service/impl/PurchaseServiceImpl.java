@@ -45,7 +45,9 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	private UserDao userDao;
 	
 	@Override
-	public void pagePurchase(Paging paging, List<Filter> filters) {
+	public void pagePurchase(Paging paging, List<Filter> filters,int company) {
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<PurchasePO> purchasePOs = purchaseDao.pagePurchase(paging, filters);
 		List<PurchaseVO> purchaseVOs = new ArrayList<PurchaseVO>();
@@ -79,7 +81,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addPurchase(PurchaseVO purchaseVO,List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException{
+	public int addPurchase(PurchaseVO purchaseVO,List<PurchaseItemVO> purchaseItemVOs,String userId,int company) throws FLException{
 		//PO作为编号前缀 , 之后由8位数字组成
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
 		String manifestId = String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
@@ -95,6 +97,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		purchasePO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
 		purchasePO.setStatus(PurchasePO.COLUMN_STATUS_STR);
 		purchasePO.setBalanceStatus(PurchasePO.COLUMN_BALANCESTATUS_STR);
+		purchasePO.setCompany(company);
 		//插入采购单信息
 		purchaseDao.save(purchasePO);
 		

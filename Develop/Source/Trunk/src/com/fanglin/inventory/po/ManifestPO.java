@@ -21,6 +21,8 @@ public class ManifestPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -993315610358345746L;
 	
+	public static final String COLUMN_COMPANY_STR ="company";
+	
 	public static final String COLUMN_MID_STR = "mid";
 	
 	public static final String COLUMN_CODE_STR = "code";
@@ -48,6 +50,8 @@ public class ManifestPO implements java.io.Serializable {
 	public static final short STATUS_DISABLE_INT = 1;	
 	
 	private long mid;
+	
+	private int company;
 	
 	private String code;
 	
@@ -92,6 +96,15 @@ public class ManifestPO implements java.io.Serializable {
 
 	public void setMid(long mid) {
 		this.mid = mid;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	@Column(name = "code")

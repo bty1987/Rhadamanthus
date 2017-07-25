@@ -71,5 +71,14 @@ $.extend(api, {salary: {
     adoptWorkerSalary:{url:"adoptWorkerSalary.do"},
     rejectWorkerSalary:{url:"rejectWorkerSalary.do"},
 	 batchImportWorkerSalary:{url:"batchImportWorkerSalary.do"},
-    importWorkerSalary:{url:"importWorkerSalary.do"}
+    importWorkerSalary:{url:"importWorkerSalary.do"},
+	 
+	 
+    pageDesignerSalary:{url:"pageDesignerSalary.do"},
+    adddesignerSalary:{url:"adddesignerSalary.do"},
+    updatedesignerSalary: {url: "updatedesignerSalary.do"},
+    adoptdesignerSalary:{url:"adoptdesignerSalary.do"},
+    rejectdesignerSalary:{url:"rejectdesignerSalary.do"},
+    deletedesignerSalary:{url: "deletedesignerSalary.do"}
+    
 }});

@@ -11,6 +11,7 @@ package com.fanglin.department.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.system.vo.CityProperVO;
 
 public class DepartmentVO implements Serializable {
@@ -151,5 +152,12 @@ public class DepartmentVO implements Serializable {
 		this.status = status;
 	}
 
+	public DepartmentVO setBaseInfo(DepartmentPO departmentPO){
+		this.did = departmentPO.getDid();
+		this.deptId = departmentPO.getDeptId();
+		this.deptName = departmentPO.getDeptName();
+		
+		return this;
+	}
 
 }

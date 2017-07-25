@@ -134,7 +134,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	//查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
-	searcher.init(["orderId", "designer", "salesman"], "condList", api.construction.pageDecorationOrderForConstructionSchedule, function(data){
+	searcher.init(["orderId", "designer", "salesman"], "condList", api.construction.pageDecorationOrderForConstruction, function(data){
 		//resultList是显示数据的DIV,data是返回值
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLinePersonPostData");
@@ -149,20 +149,20 @@ jQuery(function($) {
 		
 		var options = {};
 		//获取查询出来的订单编号
-		options["constructionSchedule.orderId"] = v.orderId;
+		options["construction.orderId"] = v.orderId;
 		//通过订单编号获取工程信息中监理和质检人员名称
-		com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res){
+		com.post(api.construction.queryConstructionForWorkerNameByOrderId, options, function(res){
 			
 			var queryUserNameUrl = "";
 			
 			for(var qualityName in qualityInfo){
 				//判断查询是否为空
-				if(res.constructionSchedule[qualityName+"QualityName"] == null){
+				if(res.construction[qualityName+"QualityName"] == null){
 					//向ID里面拼接 option标签
 					com.updateChosen(qualityName + 'Quality', '', '');
 				}else{
 					//如果不为空  第一个值为要拼接元素的ID名,第二个为KEY值,第三个为显示的value值
-					com.updateChosen(qualityName + 'Quality', res.constructionSchedule[qualityName+"QualityId"], res.constructionSchedule[qualityName+"QualityName"]);
+					com.updateChosen(qualityName + 'Quality', res.construction[qualityName+"QualityId"], res.construction[qualityName+"QualityName"]);
 				}
 			}
 			//将订单编号存入字典
@@ -186,12 +186,12 @@ jQuery(function($) {
 				return false;
 			}
 			//不为空 就将值 存入字典中
-			options["constructionSchedule." + qualityId + "QualityId"] = $id;
+			options["construction." + qualityId + "QualityId"] = $id;
 		}
 		//将订单编号 存入字典中
-		options["constructionSchedule.orderId"] = personInfoPostData["orderId"];
+		options["construction.orderId"] = personInfoPostData["orderId"];
 		//调用更新API,将更新的值传入
-		com.post(api.construction.updateConstructionScheduleByOrderId, options);
+		com.post(api.construction.updateConstructionByOrderId, options);
 		//将动态模块 隐藏
 		personInfo.personInfoModal.modal("hide");
 	}

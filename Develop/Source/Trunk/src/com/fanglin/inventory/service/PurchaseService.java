@@ -9,13 +9,13 @@ import com.fanglin.utils.Paging;
 
 public interface PurchaseService {
 	
-	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId) throws FLException;
+	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId,int company) throws FLException;
 
 	public int updatePurchase(PurchaseVO purchaseVO) throws FLException;
 	
 	public int updatePurchaseStatus(PurchaseVO purchaseVO) throws FLException;
 	
-	public void pagePurchase(Paging paging, List<Filter> filters);
+	public void pagePurchase(Paging paging, List<Filter> filters,int company);
 	
 	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
 	

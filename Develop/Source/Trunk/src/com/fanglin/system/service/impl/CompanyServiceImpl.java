@@ -26,14 +26,20 @@ public class CompanyServiceImpl implements CompanyService{
 	
 	@Override
 	public void pageCompany(Paging paging, List<Filter> filters) {
+		
 		List<CompanyPO> companyPOs = companyDao.pageCompany(paging, filters);
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
 		
+		CompanyVO companyVO;
+		
 		for(CompanyPO companyPO: companyPOs){
-			CompanyVO companyVO = new CompanyVO();
-			BeanUtil.copyProperties(companyPO,companyVO);
+			companyVO = new CompanyVO();
+	
+			BeanUtil.copyProperties(companyPO, companyVO);
+			
 			companyVOs.add(companyVO);
 		}
+		
 		paging.setData(companyVOs);	
 	}
 
@@ -43,8 +49,10 @@ public class CompanyServiceImpl implements CompanyService{
 		List<CompanyPO> companyPOs = companyDao.list();
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
 		
+		CompanyVO companyVO;
+		
 		for(CompanyPO companyPO: companyPOs){
-			CompanyVO companyVO = new CompanyVO();
+			companyVO = new CompanyVO();
 	
 			BeanUtil.copyProperties(companyPO, companyVO);
 			
@@ -58,38 +66,44 @@ public class CompanyServiceImpl implements CompanyService{
 	@Transactional(rollbackFor=Exception.class)
 	public int addCompany(CompanyVO companyVO) throws FLException {
 		
-		CompanyPO companyPOs = companyDao.queryCompanyByNo(companyVO.getNo());
-		if(companyPOs!=null){
-			throw new FLException(130013 , "公司编号已存在");
+		CompanyPO companyPO = companyDao.queryCompanyByNo(companyVO.getNo());
+		
+		if(companyPO!=null){
+			throw new FLException(230016 , "公司编号已存在");
 		}
 		
-		CompanyPO companyPO = companyDao.queryCompanyByName(companyVO.getName());
+		companyPO = companyDao.queryCompanyByName(companyVO.getName());
+		
 		if (companyPO!=null) {
-			throw new FLException(130014 , "公司名称已存在");
+			throw new FLException(230014 , "公司已经存在");
 		}
 	
 		companyPO = new CompanyPO();
+		
 		BeanUtil.copyProperties(companyVO,companyPO);
+		
 		companyDao.save(companyPO);
 		return 0;
 	}
 
-
-
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updateCompany(CompanyVO companyVO) throws FLException {
+		
+		CompanyPO companyPO = companyDao.queryCompanyByName(companyVO.getName());
+		
+		if (companyPO != null) {
+			throw new FLException(230014 , "公司已存在");
+		}
 	
-		CompanyPO companyPO = companyDao.queryCompanyById(companyVO.getCid());
-		if (companyPO==null) {
-			throw new FLException(230014 , "公司已经存在");
+		companyPO = companyDao.queryCompanyByCid(companyVO.getCid());
+		
+		if (companyPO == null) {
+			throw new FLException(230015 , "公司不存在");
 		}
-		CompanyPO companyPOs = companyDao.queryCompanyByName(companyVO.getName());
-		if (companyPOs!=null) {
-			throw new FLException(130014 , "公司名称已存在");
-		}
-		BeanUtil.copyProperties(companyVO,companyPO);
+		
 		companyPO.setName(companyVO.getName());
+		
 		companyDao.update(companyPO);
 		
 		return 0;
@@ -99,19 +113,17 @@ public class CompanyServiceImpl implements CompanyService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updateCompanyForStatus(CompanyVO companyVO) throws FLException {
 	
-		CompanyPO companyPO = companyDao.queryCompanyById(companyVO.getCid());
-		if (companyPO==null) {
-			throw new FLException(230014 , "公司已经存在");
+		CompanyPO companyPO = companyDao.queryCompanyByCid(companyVO.getCid());
+		
+		if (companyPO == null) {
+			throw new FLException(230015 , "公司不存在");
 		}
-		BeanUtil.copyProperties(companyVO,companyPO);
+		
 		companyPO.setStatus(companyVO.getStatus());
+		
 		companyDao.update(companyPO);
 		
 		return 0;
 	}
-
-
-
-
 
 }

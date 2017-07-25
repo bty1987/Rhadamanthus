@@ -77,7 +77,7 @@ public class EventsServiceImpl implements EventsService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		EventsPO eventsPO = new EventsPO();

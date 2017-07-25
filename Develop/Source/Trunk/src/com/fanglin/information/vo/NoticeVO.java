@@ -11,24 +11,21 @@ package com.fanglin.information.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class NoticeVO implements Serializable {
 
 	private static final long serialVersionUID = 134049609579042097L;
 
-	private Integer noticeId;
+	private Long nid;
 	
 	private UserVO user;
 	
-	private DepartmentVO dept;
-	
 	private String theme;
 	
-	private String type;
+	private Short type;
 	
-	private String priority;
+	private Short priority;
 	
 	private String startTime;
 	
@@ -36,7 +33,7 @@ public class NoticeVO implements Serializable {
 	
 	private String publishTime;
 	
-	private String isPublic;
+	private Short isPublic;
 	
 	private String contents;
 	
@@ -48,18 +45,16 @@ public class NoticeVO implements Serializable {
 		super();
 	}
 
-	public NoticeVO(UserVO user, DepartmentVO dept) {
-		//super();
+	public NoticeVO(UserVO user) {
 		this.user = user;
-		this.dept = dept;
 	}
 
-	public Integer getNoticeId() {
-		return noticeId;
+	public Long getNid() {
+		return nid;
 	}
 
-	public void setNoticeId(Integer noticeId) {
-		this.noticeId = noticeId;
+	public void setNid(Long nid) {
+		this.nid = nid;
 	}
 
 	public UserVO getUser() {
@@ -70,14 +65,6 @@ public class NoticeVO implements Serializable {
 		this.user = user;
 	}
 
-	public DepartmentVO getDept() {
-		return dept;
-	}
-
-	public void setDept(DepartmentVO dept) {
-		this.dept = dept;
-	}
-
 	public String getTheme() {
 		return theme;
 	}
@@ -86,19 +73,19 @@ public class NoticeVO implements Serializable {
 		this.theme = theme;
 	}
 
-	public String getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
-	public String getPriority() {
+	public Short getPriority() {
 		return priority;
 	}
 
-	public void setPriority(String priority) {
+	public void setPriority(Short priority) {
 		this.priority = priority;
 	}
 
@@ -126,11 +113,11 @@ public class NoticeVO implements Serializable {
 		this.publishTime = publishTime;
 	}
 
-	public String getIsPublic() {
+	public Short getIsPublic() {
 		return isPublic;
 	}
 
-	public void setIsPublic(String isPublic) {
+	public void setIsPublic(Short isPublic) {
 		this.isPublic = isPublic;
 	}
 

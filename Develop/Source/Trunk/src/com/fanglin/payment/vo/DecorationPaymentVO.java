@@ -32,8 +32,6 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String designerDepartment;
 	
-	private String designerRegion;
-	
 	private String salesman;
 	
 	private String village;
@@ -444,14 +442,6 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setDrId(Long drId) {
 		this.drId = drId;
-	}
-
-	public String getDesignerRegion() {
-		return designerRegion;
-	}
-
-	public void setDesignerRegion(String designerRegion) {
-		this.designerRegion = designerRegion;
 	}
 
 }

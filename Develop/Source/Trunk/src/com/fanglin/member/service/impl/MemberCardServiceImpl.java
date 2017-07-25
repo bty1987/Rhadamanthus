@@ -132,8 +132,11 @@ public class MemberCardServiceImpl  implements MemberCardService {
 		outMemberDetailPO.setType(MemberDetailPO.COLUMN_TURNPOINTSTYPE);
 		Timestamp outnowTime = new Timestamp(System.currentTimeMillis());
 		outMemberDetailPO.setCreateTime(outnowTime.getTime());
-		outMemberDetailPO.setCredit(menberDetailVO.getCredit());
+		outMemberDetailPO.setCredit(-menberDetailVO.getCredit());
+		outMemberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
+		outMemberDetailPO.setMultiple(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
 		outMemberDetailPO.setSubType(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
+		outMemberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
 		outMemberDetailPO.setPid(inMemberCardPO.getMcId());
 		memberDetailDao.save(outMemberDetailPO);
 		
@@ -144,7 +147,10 @@ public class MemberCardServiceImpl  implements MemberCardService {
 		Timestamp innowTime = new Timestamp(System.currentTimeMillis());
 		inMemberDetailPO.setCreateTime(innowTime.getTime());
 		inMemberDetailPO.setCredit(menberDetailVO.getCredit());
+		inMemberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
+		inMemberDetailPO.setMultiple(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
 		inMemberDetailPO.setSubType(MemberDetailPO.COLUMN_SUBTYPEPLUS_SHORT);
+		inMemberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
 		inMemberDetailPO.setPid(outMemberCardPO.getMcId());
 		memberDetailDao.save(inMemberDetailPO);
 		

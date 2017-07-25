@@ -20,21 +20,21 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsService {
 	
-	public void pageGoods(Paging paging, List<Filter> filters);
+	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException;
 	
-	public List<GoodsVO> queryGoods(List<Filter> filters);
+	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException;
 	
-	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO);
+	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO,int company);
 	
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO);
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO,int company);
 	
-	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO);
+	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO,int company);
 	
-	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO);
+	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO,int company);
 	
 	public GoodsVO queryGoodsByGId(GoodsVO goodsVO);
 	
-	public int addGoods(GoodsVO goodsVO) throws FLException;
+	public int addGoods(GoodsVO goodsVO,int company) throws FLException;
 	
 	public int updateGoods(GoodsVO goodsVO) throws FLException;
 	

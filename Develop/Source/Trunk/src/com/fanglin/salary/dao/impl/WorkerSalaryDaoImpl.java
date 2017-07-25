@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.salary.dao.WorkerSalaryDao;
@@ -32,18 +31,18 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long csId) {
+	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid) {
 		
-		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, csId)).list();
+		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
 	}
 
 
 	
 	@Override
-	public int countWorkerSalary(Long csId, String userId) {
+	public int countWorkerSalary(Long cid, String userId) {
 		
-		String sql = "select count(*) from platform.workerSalary where csId = :csId and userId = :userId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("csId", csId).setString("userId", userId).uniqueResult();
+		String sql = "select count(*) from platform.workerSalary where cid = :cid and userId = :userId";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setString("userId", userId).uniqueResult();
 		
 		return count.intValue();
 	}

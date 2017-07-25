@@ -48,9 +48,9 @@ public class PurchaseAction extends BaseListAction {
 	}
 	
 	@Action(value = "pagePurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pagePurchase(){
+	public String pagePurchase() throws FLException{
 		
-		purchaseService.pagePurchase(getPaging(), getFilters());
+		purchaseService.pagePurchase(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -66,7 +66,7 @@ public class PurchaseAction extends BaseListAction {
 	@Action(value = "addPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPurchase() throws FLException{
 		
-		purchaseService.addPurchase(purchase, purchaseItems, queryUserId());
+		purchaseService.addPurchase(purchase, purchaseItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

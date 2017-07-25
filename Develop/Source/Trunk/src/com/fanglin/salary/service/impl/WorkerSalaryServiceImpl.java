@@ -4,12 +4,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fanglin.construction.dao.ConstructionScheduleDao;
-import com.fanglin.construction.po.ConstructionSchedulePO;
+import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.VillageVO;
@@ -37,7 +36,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private UserDao userdao;
 
 	@Autowired
-	private ConstructionScheduleDao constructionScheduleDao;
+	private ConstructionDao constructionDao;
 	
 	
 	@Override
@@ -86,11 +85,13 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
 		
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCsId());
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCid());
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO() );
+			
+			
 			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user","decorationOrder","creater","approver"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role"));
 			workerSalarys.add(workerSalaryvo);
@@ -104,19 +105,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		UserPO user = userdao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
 		UserPO	userpo = userdao.queryUserByUserId(userId);
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), user,userpo);
-		if(workerSalaryVO.getCsId() != null){
-			long csId = workerSalaryVO.getCsId();
-			ConstructionSchedulePO  constructionSchedulePO=  constructionScheduleDao.queryConstructionScheduleByCsId(csId);
+		if(workerSalaryVO.getCid() != null){
+			long cid = workerSalaryVO.getCid();
+			ConstructionPO	 constructionPO =constructionDao.queryConstructionByCid(cid);
 			
-		    if (constructionSchedulePO == null) {
+		    if (constructionPO == null) {
 			      throw new FLException(120020, "工程信息不存在");
 			    }
 		   
-		 workerSalaryPO.getDecorationOrder().setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
-		    workerSalaryPO.setCsId(csId);
+		 workerSalaryPO.getDecorationOrder().setOrderId(constructionPO.getDecorationOrderPO().getOrderId());
+		    workerSalaryPO.setCid(cid);
 		}else{
 			
-		    workerSalaryPO.setCsId(WorkerSalaryPO.CSID_INIT_STR);
+		    workerSalaryPO.setCid(WorkerSalaryPO.CSID_INIT_STR);
 		}
 		workerSalaryPO.setSubtype(workerSalaryVO.getSubtype());
 		workerSalaryPO.setComment(workerSalaryVO.getComment());

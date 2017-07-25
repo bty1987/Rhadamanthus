@@ -52,7 +52,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		List<Integer> dIds = new ArrayList<Integer>();
@@ -73,7 +73,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		int uId = userPO.getUid();
@@ -95,7 +95,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		List<Integer> dIds = new ArrayList<Integer>();
@@ -116,7 +116,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		int uId = userPO.getUid();
@@ -138,7 +138,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		List<String> statuses = new ArrayList<String>();
@@ -159,7 +159,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		int uId = userPO.getUid();

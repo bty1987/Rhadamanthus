@@ -36,10 +36,10 @@ public class ConstructerAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryConstructerByCsId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructerByCsId(){
+	@Action(value = "queryConstructerByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructerByCid(){
 	
-		constructers = constructerService.queryConstructerByCsId(constructer);
+		constructers = constructerService.queryConstructerByCid(constructer);
 		
 		return SUCCESS;
 	}

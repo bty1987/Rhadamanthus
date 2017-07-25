@@ -11,9 +11,9 @@ import com.fanglin.utils.Paging;
 
 public interface AssisOrderService {
 	
-	public void pageAssisOrder(Paging paging, List<Filter> filters);
+	public void pageAssisOrder(Paging paging, List<Filter> filters,int company);
 	
-	public int addAssisOrder(AssisOrderVO AssisOrderVO,List<AssisOrderItemVO> assisOrderItemVOs, String creater, String approver);
+	public int addAssisOrder(AssisOrderVO AssisOrderVO,List<AssisOrderItemVO> assisOrderItemVOs, String creater, String approver,int company);
 	
 	public int updateAssisOrderForStatus(AssisOrderVO assisOrderVO,String userId) throws FLException;
 	

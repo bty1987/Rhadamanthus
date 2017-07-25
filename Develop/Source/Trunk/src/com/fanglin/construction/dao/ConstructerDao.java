@@ -9,10 +9,10 @@ public interface ConstructerDao extends Dao<ConstructerPO>{
 
 	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Integer schedule);
 
-	public List<ConstructerPO> queryConstructerByCsId(long csId, Integer schedule);
+	public List<ConstructerPO> queryConstructerByCrId(long crid, Integer schedule);
 
-	public ConstructerPO queryConstructerByCid(long cid);
+	public ConstructerPO queryConstructerByCrId(long crid);
 	
-	public int countConstructer(long csId, String userId, int schedule, short status);
+	public int countConstructer(long cid, String userId, int schedule, short status);
 
 }

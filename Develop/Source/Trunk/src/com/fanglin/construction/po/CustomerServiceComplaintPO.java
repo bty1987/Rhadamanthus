@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customerservicecomplaint", catalog = "platform")
+@Table(name="customerservicecomplaint", catalog = "construction")
 public class CustomerServiceComplaintPO implements Serializable{
 
 	private static final long serialVersionUID = 1570889773414503470L;

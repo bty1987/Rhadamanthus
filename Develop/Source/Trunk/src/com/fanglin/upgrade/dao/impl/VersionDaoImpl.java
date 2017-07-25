@@ -46,9 +46,9 @@ public class VersionDaoImpl extends DaoImpl<VersionPO> implements VersionDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<VersionPO> matchVersion(String trialVersion) {
+	public List<VersionPO> matchVersion(String trialno) {
 
-		return session().createCriteria(VersionPO.class).add(Restrictions.eq(VersionPO.COLUMN_TRIALVERSION_STR,trialVersion)).list();
+		return session().createCriteria(VersionPO.class).add(Restrictions.eq(VersionPO.COLUMN_TRIALNO_STR,trialno)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -61,7 +61,7 @@ public class VersionDaoImpl extends DaoImpl<VersionPO> implements VersionDao {
 				String op = filter.getOp();
 
 				if ("trialVersion".equals(field)) {
-					query.add(query.getCriterion(VersionPO.COLUMN_TRIALVERSION_STR,data, op));
+					query.add(query.getCriterion(VersionPO.COLUMN_TRIALNO_STR,data, op));
 				} else if ("createTime".equals(field)) {
 					
 					String sTime = data + " 00:00:00";

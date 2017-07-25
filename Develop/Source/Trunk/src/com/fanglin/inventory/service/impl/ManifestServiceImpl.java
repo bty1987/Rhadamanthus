@@ -98,7 +98,9 @@ public class ManifestServiceImpl implements ManifestService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageManifest(Paging paging, List<Filter> filters) {
+	public void pageManifest(Paging paging, List<Filter> filters,int company) {
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<ManifestPO> manifestPOs = manifestDao.pageManifest(paging, filters);
 		List<ManifestVO> manifestVOs = new ArrayList<ManifestVO>();
@@ -132,7 +134,7 @@ public class ManifestServiceImpl implements ManifestService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId) throws FLException {
+	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 		
 		if(manifestItemVOs == null || manifestItemVOs.size() < 0){
 			throw new FLException(260007,"货单无商品信息");
@@ -155,6 +157,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		
@@ -199,7 +202,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId) throws FLException {
+	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 		if(manifestItemVOs == null || manifestItemVOs.size() < 0){
 			throw new FLException(260007,"货单无商品信息");
 		}
@@ -221,6 +224,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		
@@ -265,7 +269,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId) throws FLException {
+	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
@@ -312,6 +316,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setCreateUser(userPO);
 		manifestPO.setQuoteManifest(manifestDao.get(manifestVO.getMid()));
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		
@@ -356,7 +361,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId) throws FLException {
+	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 		
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
@@ -404,6 +409,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setCreateUser(userPO);
 		manifestPO.setQuoteManifest(manifestDao.get(manifestVO.getMid()));
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		
@@ -450,7 +456,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs, List<ManifestItemVO> manifestItemVOs, String uid) throws FLException{
+	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs, List<ManifestItemVO> manifestItemVOs, String uid,int company) throws FLException{
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
@@ -482,6 +488,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setTotal(ManifestPO.COLUMN_TOTAL_STR);
 		manifestPO.setType(ManifestPO.COLUMN_TYPE_STR);
 		manifestPO.setStatus(ManifestPO.COLUMN_CONFIRMEDSTATUS_STR);	
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		
@@ -558,7 +565,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId)throws FLException {
+	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId,int company)throws FLException {
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
@@ -586,6 +593,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		

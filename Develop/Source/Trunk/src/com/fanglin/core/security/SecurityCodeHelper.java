@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: SecurityCodeHelper.java
  * @Package		：com.fanglin.commons.security 
  * @Version		: 1.0

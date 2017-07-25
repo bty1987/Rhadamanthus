@@ -18,6 +18,8 @@ public class FormatPO implements Serializable{
 	
 	public static final String COLUMN_GID_STR = "gid";
 	
+	public static final String COLUMN_INFO_STR = "info";
+	
 	public static final String COLUMN_STATUS_STR = "status";
 	
 	public static final short STATUS_ENABLE_INT = 0;

@@ -73,9 +73,9 @@ public class SalesServiceImpl implements SalesService {
 	
 	
 	@Override
-	public void pageSales(Paging paging, List<Filter> filter,String userId) {
+	public void pageSales(Paging paging, List<Filter> filter,String userId,int company) {
 		
-		
+		filter.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
@@ -122,7 +122,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException {
+	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException{
 		
 		SalesPO salesPO = salesDao.querySalesBySid(salesVO.getSid());
 		
@@ -148,7 +148,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs) throws FLException {
+	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException {
 		
 		SalesPO salesPO = new SalesPO(new VillagePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
@@ -177,41 +177,44 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setMaling(0);
 		salesPO.setVenderMaling(salesVO.getMaling());
 		salesPO.setNo(no);
-		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));;
+		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesPO.setCompany(company);
 			
 		salesDao.save(salesPO);
 		
 		salesVO.setSid(salesPO.getSid());
 		
-		for(SalesItemVO salesItemVO: salesItemVOs){
-			
-			BeanUtil.copyProperties(goodsDao.get(salesItemVO.getGoods().getGid()), salesItemVO.getGoods(),Arrays.asList("assisType"));
-			
-			if(salesItemBrand == null || "".equals(salesItemBrand)){
+		if(salesItemVOs != null){
+			for(SalesItemVO salesItemVO: salesItemVOs){
 				
-				salesItemBrand = salesItemVO.getGoods().getBrand();
-				if(!salesItemBrand.equals(salesBrand)){
+				BeanUtil.copyProperties(goodsDao.get(salesItemVO.getGoods().getGid()), salesItemVO.getGoods(),Arrays.asList("assisType"));
+				
+				if(salesItemBrand == null || "".equals(salesItemBrand)){
+					
+					salesItemBrand = salesItemVO.getGoods().getBrand();
+					if(!salesItemBrand.equals(salesBrand)){
+						throw new FLException(260033, "品牌不一致");
+					}
+				}
+				
+				if(!salesItemBrand.equals(salesItemVO.getGoods().getBrand())){
 					throw new FLException(260033, "品牌不一致");
 				}
+				
+				SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
+				
+				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
+				BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
+				BeanUtil.copyProperties(colorDao.get(salesItemVO.getColor().getCid()), salesItemPO.getColor());
+				BeanUtil.copyProperties(formatDao.get(salesItemVO.getFormat().getFid()), salesItemPO.getFormat());
+				
+				salesItemPO.setSid(salesVO.getSid());
+				salesPO.setTotal(salesVO.getTotal());
+				salesDao.update(salesPO);
+				
+				salesItemDao.save(salesItemPO);
+				
 			}
-			
-			if(!salesItemBrand.equals(salesItemVO.getGoods().getBrand())){
-				throw new FLException(260033, "品牌不一致");
-			}
-			
-			SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
-			
-			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
-			BeanUtil.copyProperties(colorDao.get(salesItemVO.getColor().getCid()), salesItemPO.getColor());
-			BeanUtil.copyProperties(formatDao.get(salesItemVO.getFormat().getFid()), salesItemPO.getFormat());
-			
-			salesItemPO.setSid(salesVO.getSid());
-			salesPO.setTotal(salesVO.getTotal());
-			salesDao.update(salesPO);
-			
-			salesItemDao.save(salesItemPO);
-			
 		}
 		
 		salesVO.setSid(salesPO.getSid());
