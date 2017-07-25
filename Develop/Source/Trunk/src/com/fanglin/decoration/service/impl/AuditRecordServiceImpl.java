@@ -41,17 +41,24 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 	private AuditScaleDao auditScaleDao;
 
 	@Override
-	public List<AuditRecordVO> queryAuditRecordByOrderId(AuditRecordVO auditRecord) {
+	public List<AuditRecordVO> queryAuditRecordByOrderId(AuditRecordVO auditRecord) throws FLException {
 		
 		List<AuditRecordVO> auditRecordVOs = new ArrayList<AuditRecordVO>();
-		List<AuditRecordPO> auditRecordPOs = auditRecordDao.queryAuditRecordByOrderId(auditRecord.getAudit().getDecorationOrder().getOrderId());
+		
+		AuditPO auditPO = auditDao.queryAuditByOrderId(auditRecord.getAudit().getDecorationOrder().getOrderId());
+		
+		if(auditPO == null){
+			throw new FLException(140044 , "审批记录不存在");
+		}
+		
+		List<AuditRecordPO> auditRecordPOs = auditRecordDao.queryAuditRecordByAid(auditPO.getAid());
 		
 		for(AuditRecordPO auditRecordPO:auditRecordPOs){
+			
 			AuditRecordVO auditRecordVO = new AuditRecordVO(new AuditVO());
 			
-			BeanUtil.copyProperties(auditRecordPO, auditRecordVO,Arrays.asList("audit","creater"));
-			BeanUtil.copyProperties(auditRecordPO.getAudit(), auditRecordVO.getAudit(),Arrays.asList("decorationOrder","auditer"));
-			
+			BeanUtil.copyProperties(auditRecordPO, auditRecordVO,Arrays.asList("creater"));
+		
 			auditRecordVOs.add(auditRecordVO);
  		}
 		
@@ -68,9 +75,9 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 		
 		AuditRecordPO auditRecordPO = new AuditRecordPO();
 		
-		BeanUtil.copyProperties(auditRecord, auditRecordPO,Arrays.asList("audit","creater"));
-		auditRecordPO.setAudit(auditPO);
+		BeanUtil.copyProperties(auditRecord, auditRecordPO,Arrays.asList("creater"));
 		
+		auditRecordPO.setAid(auditPO.getAid());
 		UserPO creater = userDao.queryUserByUserId(userId);
 		auditRecordPO.setCreater(creater);
 		auditRecordPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -91,11 +98,12 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 		}
 		
 		List<AuditScalePO> audisScales = auditScaleDao.queryAudtiScaleByArid(auditRecord.getArid());
+		
 		if(!audisScales.isEmpty()) {
 			throw new FLException(140045, "审批记录状态不可操作");
 		}
 		
-		BeanUtil.copyProperties(auditRecord, auditRecordPO,Arrays.asList("audit","creater"));
+		BeanUtil.copyProperties(auditRecord, auditRecordPO,Arrays.asList("creater"));
 		auditRecordPO.setStatus(AuditRecordPO.STATUS_INIT_SHORT);
 		auditRecordDao.update(auditRecordPO);
 		

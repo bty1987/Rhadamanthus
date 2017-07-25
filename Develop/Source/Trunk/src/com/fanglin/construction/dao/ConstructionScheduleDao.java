@@ -8,7 +8,7 @@ import com.fanglin.core.dao.Dao;
 public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO>{
 
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId, Short schedule);
-
-	public ConstructionSchedulePO queryConstructionScheduleByCidAndSchedule(Long cid, Short schedule);
+	
+	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid, Short schedule);
 
 }

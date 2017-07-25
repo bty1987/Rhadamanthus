@@ -17,17 +17,17 @@ public class MemberDetailPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4617781950715580910L;
 
-	public static final short COLUMN_SUBTYPEPLUS_SHORT = 0;    //增加积分状态0
+	public static final short SUBTYPE_PLUS_INT = 0;    //增加积分状态0
 	
-	public static final short COLUMN_SUBTYPELESS_SHORT = 1;    //减少积分状态1
+	public static final short SUBTYPE_LESS_INT = 1;    //减少积分状态1
 	
-	public static final int COLUMN_ZERO_INT = 0;
+	public static final int BALANCE_ZERO_INT = 0;
 	
 	public static final String COLUMN_PID_STR = "pid"; 
 	
-	public static final short COLUMN_PID_SHORT = 0;            //新增明细pid默认值
+	public static final short PID_INIT_SHORT = 0;            //新增明细pid默认值
 	
-	public static final short COLUMN_TURNPOINTSTYPE = 3;
+	public static final short SUBTYPE_TURNPOINTSTYPE_INT = 3;
 	
 	public static final String COLUMN_MEMBERCARDORDERID_STR = "memberCard.orderId";
 	

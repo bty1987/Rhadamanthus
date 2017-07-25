@@ -70,7 +70,7 @@
 
    var dutySeacher = new Searcher();
 
-	dutySeacher.init( ["name"], "condList", api.system.pageDuty, function(data){
+	dutySeacher.init( ["dutyName"], "condList", api.system.pageDuty, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "dutyPostData", null, false, null, function(){
 

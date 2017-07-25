@@ -6,9 +6,10 @@ import com.fanglin.construction.po.ConstructionDrawingPO;
 import com.fanglin.core.dao.Dao;
 
 public interface ConstructionDrawingDao extends Dao<ConstructionDrawingPO> {
-
-	public List<ConstructionDrawingPO> queryConstructionDrawing(Long cid, Short schedule);
+	
+	public List<ConstructionDrawingPO> queryConstructionDrawingByCid(Long cid, Short schedule);
 	
 	public List<ConstructionDrawingPO> queryConstructionDrawingByType(Short type);
+
 
 }

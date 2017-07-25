@@ -20,7 +20,7 @@ public class AuditRecordPO implements Serializable{
 
 	private static final long serialVersionUID = -5288629146839850025L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_AID_STR = "aid";
 	
 	public static final String COLUMN_ARIF_LONG = "arid";
 	
@@ -30,7 +30,7 @@ public class AuditRecordPO implements Serializable{
 	
 	private long arid;
 	
-	private AuditPO audit;
+	private long aid;
 	
 	private String comment;
 	
@@ -50,11 +50,6 @@ public class AuditRecordPO implements Serializable{
 		super();
 	}
 
-	public AuditRecordPO(AuditPO audit) {
-		super();
-		this.audit = audit;
-	}
-
 	@Id
 	@GeneratedValue
 	@Column(name="arid")
@@ -66,14 +61,13 @@ public class AuditRecordPO implements Serializable{
 		this.arid = arid;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "aid",referencedColumnName="aid")
-	public AuditPO getAudit() {
-		return audit;
+	@Column(name="aid")
+	public long getAid() {
+		return aid;
 	}
 
-	public void setAudit(AuditPO audit) {
-		this.audit = audit;
+	public void setAid(long aid) {
+		this.aid = aid;
 	}
 
 	@Column(name="comment")

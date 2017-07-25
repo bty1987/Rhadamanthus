@@ -44,12 +44,13 @@ $(function(){
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-danger hide').html('删除');
+            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-info').html('更新');
 
             var propertyArr = [
                 ["创建人:", v.createName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
                 ["说明:", v.comment, "grey"],
+                ["公司:", v.company.name , "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -64,7 +65,7 @@ $(function(){
             $liLine.append($h3).append($ulProperty);
 
             $btnDraw.click(function(){
-                deletes(v.scid);
+                edit(v);
             });
 
             return $liLine;
@@ -81,29 +82,22 @@ $(function(){
         }
     })();
     var searcher = new Searcher();
+
     searcher.init(['systemConfig'], "condList",api.system.pageSystemConfig, function(data){
         //resultList是显示数据的DIV,data是返回值
         displayFunc.init('resultList', data);
-    }, "pagenation", "systemConfigPostData", null, false, null, function(){
+    }, "pagenation");
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'systemConfig').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return [$adda];
-    });
+    //编辑
+    function edit(row){
+    	//给页面标签赋值
+        system.config.key.val(row.key);
+		system.config.value.val(row.value);
+		system.config.comment.val(row.comment);
 
-    function deletes(scid){
-        bootbox.confirm("确定删除吗？", function(result) {
-            if(result) {
-                com.post(api.system.deleteSystemConfig, {"systemConfigVO.scid": scid}, function(){
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-            }else{
-                return;
-            }
-        });
+
+		system.modal.modal("show"); //弹出弹层
     }
 
     $('[name="systemConfig"]' , '#pagenation').on("click",function(){
@@ -134,7 +128,7 @@ $(function(){
 
         };
 
-        com.post(api.system.addSystemConfig, options, function (res) {
+        com.post(api.system.updateSystemConfig, options, function (res) {
             //刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

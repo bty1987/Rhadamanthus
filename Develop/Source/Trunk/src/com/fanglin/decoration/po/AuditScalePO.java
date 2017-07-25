@@ -22,7 +22,7 @@ public class AuditScalePO implements Serializable {
 
 	private static final long serialVersionUID = -6192527565100234860L;
 	
-	public static final String COLUMN_ARID_STR = "auditRecord.arid";
+	public static final String COLUMN_ARID_STR = "arid";
 	
 	public static final int STATUS_INIT_INT = 0;
 	
@@ -34,7 +34,7 @@ public class AuditScalePO implements Serializable {
 	
 	private long asid;
 	
-	private AuditRecordPO auditRecord;
+	private long arid;
 	
 	private UserPO belongUser;
 	
@@ -42,9 +42,9 @@ public class AuditScalePO implements Serializable {
 	
 	private float money;
 	
-	private int type;
+	private short type;
 	
-	private int status;
+	private short status;
 	
 	private UserPO creater;
 	
@@ -54,10 +54,9 @@ public class AuditScalePO implements Serializable {
 		super();
 	}
 
-	public AuditScalePO(AuditRecordPO auditRecord, UserPO belongUser,
+	public AuditScalePO(UserPO belongUser,
 			DepartmentPO belongDepartment) {
 		super();
-		this.auditRecord = auditRecord;
 		this.belongUser = belongUser;
 		this.belongDepartment = belongDepartment;
 	}
@@ -73,16 +72,15 @@ public class AuditScalePO implements Serializable {
 		this.asid = asid;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "arid",referencedColumnName="arid")
-	public AuditRecordPO getAuditRecord() {
-		return auditRecord;
+	@Column(name="arid")
+	public long getArid() {
+		return arid;
 	}
 
-	public void setAuditRecord(AuditRecordPO auditRecord) {
-		this.auditRecord = auditRecord;
+	public void setArid(long arid) {
+		this.arid = arid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "buid",referencedColumnName="uid")
 	public UserPO getBelongUser() {
@@ -113,20 +111,20 @@ public class AuditScalePO implements Serializable {
 	}
 
 	@Column(name="type")
-	public int getType() {
+	public short getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name="status")
-	public int getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

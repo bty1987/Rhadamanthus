@@ -18,12 +18,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
@@ -32,6 +29,8 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
+import com.fanglin.data.construction.dao.ConstructionNodeDao;
+import com.fanglin.data.po.ConstructionNodeCompanyPO;
 import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
@@ -54,8 +53,6 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly=true)
 public class DrawLineServiceImpl implements DrawLineService {
 
-	protected Logger log = LoggerFactory.getLogger(getClass());
-	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
 	
@@ -76,6 +73,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
+	
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -317,20 +317,24 @@ public class DrawLineServiceImpl implements DrawLineService {
 		//查询一条与前台传入的OrderId相同的数据 并以对象的类型返回 (工程表)
 		  ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 		if(constructionPO == null){
+			
 			constructionPO = new ConstructionPO();
 			constructionPO.setDecorationOrderPO(new DecorationOrderPO(orderId));
 			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
 			constructionDao.save(constructionPO);
 			long cid = constructionPO.getCid();
+			List<ConstructionNodeCompanyPO> ConstructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(drawLineVO.getCompany());
 			
-			for (int i = 1; i <=9; i++) {
-				ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)i);
-				constructionScheduleDao.save(ConstructionSchedulePOO);
-			}
-			
-		}else{
-			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
-			constructionDao.update(constructionPO);
+			for (ConstructionNodeCompanyPO constructionNodeCompanyPO:ConstructionNodeCompanyPOs) {				
+				if(constructionNodeCompanyPO.getConstructionNode().getCnid()==1||constructionNodeCompanyPO.getConstructionNode().getCnid()==2){
+					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());
+					constructionScheduleDao.save(ConstructionSchedulePOO);
+				}else{
+					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());
+					ConstructionSchedulePOO.setStatus((short)1);
+					constructionScheduleDao.save(ConstructionSchedulePOO);
+				}			
+			}			
 		}
 		
 		return 0;

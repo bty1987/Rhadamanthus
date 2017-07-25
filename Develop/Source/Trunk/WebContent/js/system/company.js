@@ -1,4 +1,4 @@
-$(function(){
+﻿$(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -70,7 +70,7 @@ $(function(){
 
    var companySeacher = new Searcher();
 
-	companySeacher.init( ["name"], "condList", api.system.pageCompany, function(data){
+	companySeacher.init( ["companyName"], "condList", api.system.pageCompany, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "companyPostData", null, false, null, function(){
     	

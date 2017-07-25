@@ -143,6 +143,14 @@ CREATE TABLE `department` (
   KEY `indexone` (`deptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='部门表';
 
+DROP TABLE IF EXISTS `duty`;
+CREATE TABLE `duty` (
+  `did` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`did`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='职位表';
+
 DROP TABLE IF EXISTS `logininfo`;
 CREATE TABLE `logininfo` (
   `liId` int(11) NOT NULL AUTO_INCREMENT,

@@ -28,7 +28,9 @@ CREATE TABLE `workersalary` (
   `balanceTime` timestamp NULL NOT NULL,
   `salary` decimal(10,3) NOT NULL DEFAULT '0.000',
   `type` tinyint(2) NOT NULL DEFAULT '0',
+  `subtype` tinyint(2) NOT NULL DEFAULT '0',
   `status` tinyint(2) NOT NULL DEFAULT '0',
+  `comment` varchar(128),
   PRIMARY KEY (`wsid`),
   KEY `indexone` (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人工费';

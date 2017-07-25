@@ -194,8 +194,17 @@ var Condition = function(api){
                 validate:null
             }
         },
-  name: {
+        companyName: {
             label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate:null
+            }
+        },
+        dutyName: {
+            label:"职位名称",
             type:"text",
             submitConfig : {
                 name : "name",
@@ -1347,6 +1356,23 @@ var Condition = function(api){
                 op : "eq",
                 validate:null
             },
+  versionNumber:{
+            label:"试用版本",
+            type:"text",
+            submitConfig : {
+                name : "trialVersion",
+                op : "eq",
+                validate:null
+            }
+        },versionCreateTime:{
+            label:"创建时间",
+            type:"text",
+            submitConfig : {
+                name : "createTime",
+                op : "between",
+                validate:null
+            }
+        },
             dataSource : {//从后台取数据的各种配置
                 url : api.ds.workType,
                 postData:{},

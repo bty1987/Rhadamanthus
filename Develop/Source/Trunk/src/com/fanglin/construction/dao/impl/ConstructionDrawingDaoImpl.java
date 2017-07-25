@@ -19,7 +19,7 @@ public class ConstructionDrawingDaoImpl extends DaoImpl<ConstructionDrawingPO> i
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructionDrawingPO> queryConstructionDrawing(Long cid, Short schedule) {
+	public List<ConstructionDrawingPO> queryConstructionDrawingByCid(Long cid, Short schedule) {
 		Criteria constructionlist = session().createCriteria(ConstructionDrawingPO.class).add(Restrictions.eq(ConstructionDrawingPO.COLUMN_CID_STR, cid));
 		if(schedule != null){
 			constructionlist.add(Restrictions.eq(ConstructionDrawingPO.COLUMN_SCHEDULE_STR, schedule));

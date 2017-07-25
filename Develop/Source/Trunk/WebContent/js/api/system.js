@@ -91,6 +91,7 @@ $.extend(api, {system: {
     pageSystemConfig: {url: "pageSystemConfig.do"},
     addSystemConfig:{url:"addSystemConfig.do", server: "communion"},
     deleteSystemConfig:{url:"deleteSystemConfig.do", server: "communion"},
+    updateSystemConfig:{url:"updateSystemConfig.do"},
 
     pageDuty: {url: "pageDuty.do", demo: true},
     queryDuty: {url: "queryDuty.do"},

@@ -15,7 +15,6 @@ import com.fanglin.decoration.dao.AuditScaleDao;
 import com.fanglin.decoration.po.AuditRecordPO;
 import com.fanglin.decoration.po.AuditScalePO;
 import com.fanglin.decoration.service.AuditScaleService;
-import com.fanglin.decoration.vo.AuditRecordVO;
 import com.fanglin.decoration.vo.AuditScaleVO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
@@ -45,10 +44,9 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 		List<AuditScalePO> auditScalePOs = auditScaleDao.queryAudtiScaleByArid(auditScale.getAuditRecord().getArid());
 		
 		for(AuditScalePO auditScalePO:auditScalePOs){
-			AuditScaleVO auditScaleVO = new AuditScaleVO(new AuditRecordVO(),new UserVO(),new DepartmentVO(),new UserVO());
+			AuditScaleVO auditScaleVO = new AuditScaleVO(new UserVO(),new DepartmentVO(),new UserVO());
 			
-			BeanUtil.copyProperties(auditScalePO, auditScaleVO,Arrays.asList("belongUser","belongDepartment","auditRecord","creater"));
-			BeanUtil.copyProperties(auditScalePO.getAuditRecord(), auditScaleVO.getAuditRecord(),Arrays.asList("audit","creater"));
+			BeanUtil.copyProperties(auditScalePO, auditScaleVO,Arrays.asList("belongUser","belongDepartment","creater"));
 			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("role", "dept"));
 			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("role", "dept"));
 			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "cityProper"));
@@ -88,11 +86,11 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 				}
 			}
 					
-			AuditScalePO auditScalePO = new AuditScalePO(new AuditRecordPO(),new UserPO(),new DepartmentPO());
+			AuditScalePO auditScalePO = new AuditScalePO(new UserPO(),new DepartmentPO());
 			
 			BeanUtil.copyProperties(auditScaleVO, auditScalePO,Arrays.asList("auditRecord","belongUser","belongDepartment","creater"));
 			
-			auditScalePO.setAuditRecord(auditRecordDao.get(auditScaleVO.getAuditRecord().getArid()));
+			auditScalePO.setArid(auditScaleVO.getAuditRecord().getArid());
 	
 			UserPO belonguser = userDao.get(auditScaleVO.getBelongUser().getUid());
 			auditScalePO.setBelongUser(belonguser);
@@ -111,18 +109,24 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addAudtiScale(AuditScaleVO auditScale, String userId) throws FLException{
-		AuditScalePO auditScalePO = new AuditScalePO(new AuditRecordPO(),new UserPO(),new DepartmentPO());
+		AuditScalePO auditScalePO = new AuditScalePO(new UserPO(),new DepartmentPO());
 		
-		BeanUtil.copyProperties(auditScale, auditScalePO,Arrays.asList("auditRecord","belongUser","belongDepartment","creater"));
+		BeanUtil.copyProperties(auditScale, auditScalePO,Arrays.asList("belongUser","belongDepartment","creater"));
+		
 		AuditRecordPO auditRecordPO = auditRecordDao.get(auditScale.getAuditRecord().getArid());
-	
+		
+		if(auditRecordPO == null){
+			throw new FLException(140046 , "审批比例生成失败");
+		}
+		
 		List<AuditScalePO> auditScalePOs = auditScaleDao.queryAudtiScaleByArid(auditScale.getAuditRecord().getArid());
+		
 		for(AuditScalePO auditScalePOO:auditScalePOs){
 			if(!(auditScalePOO.getStatus() == AuditScalePO.STATUS_INIT_INT ||auditScalePOO.getStatus() == AuditScalePO.STATUS_CONFIRM_INT )){
 				throw new FLException(140047, "审批比例信息状态不可操作");
 			}
 		}
-		auditScalePO.setAuditRecord(auditRecordPO);
+		auditScalePO.setArid(auditRecordPO.getArid());
 		
 		UserPO belonguser = userDao.queryUserByUserId(auditScale.getBelongUser().getUserId());
 		auditScalePO.setBelongUser(belonguser);

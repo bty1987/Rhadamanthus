@@ -9,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionDrawingDao;
 import com.fanglin.construction.po.ConstructionDrawingPO;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.ConstructionDrawingService;
 import com.fanglin.construction.vo.ConstructionDrawingVO;
+import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -25,14 +29,50 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 	private ConstructionDrawingDao constructionDrawingDao;
 	
 	@Autowired
+	private ConstructionDao constructionDao;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	@Override
-	public List<ConstructionDrawingVO> queryConstructionDrawing(ConstructionDrawingVO constructionDrawingVO) {
+	public List<ConstructionDrawingVO> queryConstructionDrawingByOrderId(ConstructionVO constructionVO, ConstructionDrawingVO constructionDrawingVO) throws FLException {
+		
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
+		
+		if(constructionPO == null){
+			throw new FLException(120020, "工程信息不存在");
+		}
+		
+		Long cid = constructionPO.getCid();
+		
+		Short schedule = null;
+		
+		if(constructionDrawingVO != null){
+			schedule = constructionDrawingVO.getSchedule();
+		}
+		
+		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryConstructionDrawingByCid(cid, schedule);
+		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>(); 
+		
+		for(ConstructionDrawingPO constructionDrawingPO: constructionDrawingPOs){
+			
+			ConstructionDrawingVO _constructionDrawingVO = new ConstructionDrawingVO();
+			
+			BeanUtil.copyProperties(constructionDrawingPO, _constructionDrawingVO, Arrays.asList("creater"));
+			
+			constructionDrawingVOs.add(_constructionDrawingVO);
+		}
+		
+		return constructionDrawingVOs;
+	}
+	
+	@Override
+	public List<ConstructionDrawingVO> queryConstructionDrawingByCid(ConstructionDrawingVO constructionDrawingVO) {
 		
 		Long cid = constructionDrawingVO.getCid();
 		Short schedule = constructionDrawingVO.getSchedule();
-		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryConstructionDrawing(cid, schedule);
+		
+		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryConstructionDrawingByCid(cid, schedule);
 		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>(); 
 		
 		for(ConstructionDrawingPO constructionDrawingPO: constructionDrawingPOs){

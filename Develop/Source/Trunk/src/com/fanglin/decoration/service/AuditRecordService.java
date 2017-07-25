@@ -7,7 +7,7 @@ import com.fanglin.decoration.vo.AuditRecordVO;
 
 public interface AuditRecordService {
 
-	public List<AuditRecordVO> queryAuditRecordByOrderId(AuditRecordVO auditRecord);
+	public List<AuditRecordVO> queryAuditRecordByOrderId(AuditRecordVO auditRecord) throws FLException;
 	
 	public int addAuditRecord(AuditRecordVO auditRecord,String userId) throws FLException;
 	

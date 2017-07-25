@@ -95,7 +95,7 @@ jQuery(function($) {
                ["设计师:", v.designer, "grey"],
                ["面积:", v.houseArea, "blue"],
                ["创建时间:", v.createTime, "grey"],
-               ["进度:", v.schedule, "green"],
+               ["进度:", v.projectStatus, "green"],
                ["状态:", v.status, "red"],
            ];
             

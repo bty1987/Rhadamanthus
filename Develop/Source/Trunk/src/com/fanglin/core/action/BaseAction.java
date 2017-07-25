@@ -30,8 +30,6 @@ import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.json.annotations.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.interceptor.FLException;
@@ -55,8 +53,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	
 	public static final String BACKVALUE_LOGIN_STR = "login";
 	
-	protected Logger log = LoggerFactory.getLogger(getClass());
-
 	protected HttpServletRequest request;
 
 	protected HttpServletResponse response;

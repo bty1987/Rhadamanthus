@@ -9,7 +9,7 @@ public interface ConstructerDao extends Dao<ConstructerPO>{
 
 	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Integer schedule);
 
-	public List<ConstructerPO> queryConstructerByCrId(long crid, Integer schedule);
+	public List<ConstructerPO> queryConstructerByCid(long cid, Integer schedule);
 
 	public ConstructerPO queryConstructerByCrId(long crid);
 	

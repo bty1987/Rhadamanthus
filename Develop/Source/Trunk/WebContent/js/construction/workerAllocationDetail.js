@@ -15,13 +15,22 @@ jQuery(function($) {
 
 		controlCondition: false,
 
+		constructionSchedules: {},
+
 		schedule: 0,
+
+		scheduleNum: 0,
+
+		numi: 0,
 
 		construstionSchedule : "construstionSchedule",
 
 		operateDict: {
 			"1": {
 				num: 1,
+				name:"chan",
+				nodeName:"铲大白",
+				nodeNamePinyin: "chan",
 				galleryId: "chanGallery",
 				uploadId: "chanUpload",
 				tabbable: "chanDrawing",
@@ -40,7 +49,7 @@ jQuery(function($) {
 				endTime: "endTime",
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
-				status: "status",
+				status: "chanStatus",
 
 				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 				confirmEndTimeUrl: "",
@@ -63,6 +72,9 @@ jQuery(function($) {
 				errorMsg: "开工时间或者完工时间没有进行确认或者当前铲大白状态没有成功!",
 			}, "2": {
 				num: 2,
+				name: "putline",
+				nodeName:"放线",
+				nodeNamePinyin: "putline",
 				galleryId: "putlineGallery",
 				uploadId: "putlineUpload",
 				tabbable: "putlineDrawing",
@@ -71,9 +83,9 @@ jQuery(function($) {
 				startTimeFlagId: "putlineStartTimeFlag",
 				endTimeId: "putlineEndTime",
 				endTimeFlagId: "putlineEndTimeFlag",
-				putlineTimeId: "putlineTime",
+				putlineTimeId: "putlineStartTime",
 				putlineStatusId: "putlineStatus",
-				workerInfos: "fangWorkerInfos",
+				workerInfos: "putlineWorkerInfos",
 
 				worker: "workerId",
 				startTime: "startTime",
@@ -81,7 +93,7 @@ jQuery(function($) {
 				endTime: "endTime",
 				endTimeFlag: "endTimeFlag",
 				schedule: "schedule",
-				putlineTime: "putlineTime",
+				putlineTime: "putlineStartTime",
 				putlineStatus: "putlineStatus",
 
 				setStatusUrl: api.construction.setConstructionScheduleForStatus,
@@ -110,6 +122,8 @@ jQuery(function($) {
 			}, "3": {
 				num: 3,
 				name: "waterwayCircuitPower",
+				nodeName:"力水电",
+				nodeNamePinyin: "waterwayCircuitPower",
 				galleryId: "waterwayCircuitPowerGallery",
 				uploadId: "waterwayCircuitPowerUpload",
 				tabbable: "waterwayCircuitPowerDrawing",
@@ -161,6 +175,8 @@ jQuery(function($) {
 			}, "4": {
 				num: 4,
 				name: "bricklay",
+				nodeName:"瓦工",
+				nodeNamePinyin: "bricklay",
 				galleryId: "bricklayGallery",
 				uploadId: "bricklayUpload",
 				tabbable: "bricklayDrawing",
@@ -204,6 +220,8 @@ jQuery(function($) {
 			}, "5": {
 				num: 5,
 				name: "groundLeveling",
+				nodeName:"地面找平",
+				nodeNamePinyin: "groundLeveling",
 				galleryId: "groundLevelingGallery",
 				uploadId: "groundLevelingUpload",
 				tabbable: "groundLevelingDrawing",
@@ -247,6 +265,8 @@ jQuery(function($) {
 			}, "6": {
 				num: 6,
 				name: "carpent",
+				nodeName:"木工",
+				nodeNamePinyin: "carpent",
 				galleryId: "carpentGallery",
 				uploadId: "carpentUpload",
 				tabbable: "carpentDrawing",
@@ -291,6 +311,8 @@ jQuery(function($) {
 			}, "7": {
 				num: 7,
 				name: "oil",
+				nodeName:"油工",
+				nodeNamePinyin: "oil",
 				galleryId: "oilGallery",
 				uploadId: "oilUpload",
 				tabbable: "oilDrawing",
@@ -334,6 +356,8 @@ jQuery(function($) {
 			}, "8": {
 				num: 8,
 				name: "waterwayCircuitCheck",
+				nodeName:"水电验收",
+				nodeNamePinyin: "waterwayCircuitCheck",
 				galleryId: "waterwayCircuitCheckGallery",
 				uploadId: "waterwayCircuitCheckUpload",
 				tabbable: "waterwayCircuitCheckDrawing",
@@ -385,6 +409,8 @@ jQuery(function($) {
 			}, "9": {
 				num: 9,
 				name: "cleaning",
+				nodeName:"保洁",
+				nodeNamePinyin: "cleaning",
 				galleryId: "cleaningGallery",
 				uploadId: "cleaningUpload",
 				tabbable: "cleaningDrawing",
@@ -444,56 +470,34 @@ jQuery(function($) {
 
 	var orderId = params.orderId;
 
-	com.post(api.construction.queryConstructionByOrderId, {
-		"construction.orderId": params.orderId
-	}, function(res){
+	//动态获取节点轴
+	com.post(api.construction.queryConstructionScheduleByOrderId,{"constructionSchedule.orderId":params.orderId},function(res){
 
-		workerAllocationDetail.construstion = res.construction;
+		var constructionSchedule = res.constructionSchedules;
 
-		var schedule = res.construction.schedule;
-		var operate = workerAllocationDetail.operateDict[schedule];
+		workerAllocationDetail.constructionSchedules = res.constructionSchedules;
 
-		workerAllocationDetail.schedule = schedule;
-
-		if(!workerAllocationDetail.wizardSept[schedule]){
-			initWizardSept(operate, schedule);
-			workerAllocationDetail.wizardSept[schedule] = true;
-		}
-
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: schedule}).on('change' , function(e, info){
-			var step = 0;
-			var direction = info.direction;
-
-			if(direction == "previous"){
-				step = info.step - 1;
-
-				if(!workerAllocationDetail.wizardSept[step.toString()]){
-					initWizardSept(workerAllocationDetail.operateDict[step.toString()], step.toString());
-					workerAllocationDetail.wizardSept[step.toString()] = true;
-				}
-			}else if(direction == "next"){
-				step = info.step + 1;
-
-				if(step > workerAllocationDetail.schedule){
-					com.showAlert(com.warning, "当前功能不能进行施工阶段操作.");
-
-					return false;
-				}else{
-					if(!workerAllocationDetail.wizardSept[step]){
-						initWizardSept(workerAllocationDetail.operateDict[step], step);
-						workerAllocationDetail.wizardSept[step] = true;
-					}
-				}
-			}
-		}).on('finished', function(e) {
-			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
-		}).on('stepclick', function(e, info){
-			if(!workerAllocationDetail.wizardSept[info.step]){
-				initWizardSept(workerAllocationDetail.operateDict[info.step], info.step);
-				workerAllocationDetail.wizardSept[info.step] = true;
-			}
+		$.each(constructionSchedule, function(i, v){
+			constructerNode("#stepId", v.schedule,workerAllocationDetail.operateDict[v.schedule].nodeName);
+			constructerPane("#step-container", v.schedule,workerAllocationDetail.operateDict[v.schedule].nodeNamePinyin, workerAllocationDetail.operateDict[v.schedule].nodeName);
 		});
-	});
+
+
+			initWizardSept(workerAllocationDetail.operateDict[1], 1);
+
+			$('#fuelux-wizard').ace_wizard({status:true, currentStep: 1}).on('finished', function(e) {
+				com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
+			}).on('stepclick', function(e, info){
+
+				var stepId = $("[flag]").eq(info.step-1).attr("id");
+				var sd = stepId.substr(4,1);
+				if(!workerAllocationDetail.wizardSept[sd]){
+					initWizardSept(workerAllocationDetail.operateDict[sd], sd);
+				}
+			});
+
+
+	},null,false);
 
 	$('#modal-wizard .modal-header').ace_wizard();
 	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
@@ -510,52 +514,25 @@ jQuery(function($) {
 
 	function initWizardSept(operate, schedule){
 
+		addActive(schedule);
+
 		var elementPostData = {};
 		var workerInfoCondition = false;
 
 		var orderId = params.orderId;
 		elementPostData["constructionSchedule.orderId"] = params.orderId;
+		elementPostData["constructionSchedule.schedule"] = schedule;
 		workerAllocationDetail.controlCondition = false;
 
 		com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function(res){
 
-			var elements = res.constructionSchedules;
-			var element = [];
-			var eleSch = [];
-			var numi;
-			var ifFlag = false;
-
-			$.each(elements, function(i,v){
-				element.push(v)
-			});
-
-			$.each(element, function(i,v){
-				eleSch.push(v.schedule)
-			});
-
-			if(eleSch.contains(operate.num)){
-				for(var i = 0; i < element.length; i++){
-					if(element[i].schedule == operate.num){
-						ifFlag = true;
-						numi = i;
-						break;
-					}
-				}
-			}else{
-				com.showAlert(com.error,"工程信息不存在");
-			}
-
-			workerAllocationDetailPostData["constructionSchedule.cid"] = element[numi].cid;
-			workerAllocationDetailPostData["constructionSchedule.csId"] = element[numi].csId;
-
-			if(ifFlag && element[numi].cid != 0){
+			var element = res.constructionSchedules;
 
 				if(schedule == 1){
+					$("#"+operate.startTimeId).val( element[0].startTime);
+					$("#"+operate.endTimeId).val( element[0].endTime);
 
-					$("#"+operate.startTimeId).val( element[numi].startTime);
-					$("#"+operate.endTimeId).val( element[numi].endTime);
-
-					var chanStatus = element[numi].status;
+					var chanStatus = element[0].status;
 					var chanSuccessBtn = $("#chanSuccess");
 					var chanFailBtn = $("#chanFail");
 					var chanDelayBtn = $("#chanDelay");
@@ -564,7 +541,7 @@ jQuery(function($) {
 					chanSuccessBtn.click(function(){
 						var options = {};
 
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 1;
 
@@ -584,7 +561,7 @@ jQuery(function($) {
 					chanFailBtn.click(function(){
 						var options = {};
 
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 2;
 
@@ -602,7 +579,7 @@ jQuery(function($) {
 
 					chanDelayBtn.click(function(){
 						var options = {};
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 3;
 
@@ -618,7 +595,7 @@ jQuery(function($) {
 
 					chanPassBtn.click(function(){
 						var options = {};
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 4;
 
@@ -659,7 +636,7 @@ jQuery(function($) {
 
 					$("#chanWorkerSubmit").on("click", function(){
 						var args = {};
-						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
+						args[operate.elementConstructerName + ".cid"] = element[0].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
 						args[operate.elementConstructerName + ".user.userId"] = $('#chanWorkerName').val();
 
@@ -690,26 +667,26 @@ jQuery(function($) {
 						return false;
 					});
 
-					if( element[numi].startTimeFlag == 0){
+					if( element[0].startTimeFlag == 0){
 						$("#"+operate.startTimeFlagId).click(function(){
 							var options = {};
-							options[operate.elementName+"."+operate.elementId] = element[numi][operate.elementId];
+							options[operate.elementName+"."+operate.elementId] = element[0][operate.elementId];
 							options[operate.elementName+"."+operate.startTimeFlag] = 1;
-							options[operate.elementName+"."+operate.endTimeFlag] = element[numi][operate.endTimeFlag];
-							 element[numi][operate.startTimeFlag] = 1;
+							options[operate.elementName+"."+operate.endTimeFlag] = element[0][operate.endTimeFlag];
+							 element[0][operate.startTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if( element[numi].endTimeFlag != 0 && workerInfoCondition){
-								if(elemen[schedule-1].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
+							if( element[0].endTimeFlag != 0 && workerInfoCondition){
+								if(elemen[schedule-1].status != undefined && ( element[0].status != 0 || element[0].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
 								}
-							}else if( element[numi].endTimeFlag != 0 && !workerInfoCondition){
-								if( element[numi].status != undefined && element[numi].status == 4){
+							}else if( element[0].endTimeFlag != 0 && !workerInfoCondition){
+								if( element[0].status != undefined && element[0].status == 4){
 									workerAllocationDetail.controlCondition = true;
 								}
 							}
@@ -720,26 +697,26 @@ jQuery(function($) {
 						$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if( element[numi].endTimeFlag == 0){
+					if( element[0].endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
 							var options = {};
-							options["constructionSchedule.csId"] = element[numi].csId;//这里的cid不确定是cid 还是csid
+							options["constructionSchedule.csId"] = element[0].csId;//这里的cid不确定是cid 还是csid
 							options["constructionSchedule.endTimeFlag"] = 1;
-							options["constructionSchedule.startTimeFlag"] = element[numi][operate.startTimeFlag];
-							 element[numi][operate.endTimeFlag] = 1;
+							options["constructionSchedule.startTimeFlag"] = element[0][operate.startTimeFlag];
+							 element[0][operate.endTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if( element[numi].startTimeFlag != 0 && workerInfoCondition){
-								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
+							if( element[0].startTimeFlag != 0 && workerInfoCondition){
+								if( element[0].status != undefined && ( element[0].status != 0 || element[0].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
 								}
-							}else if( element[numi].startTimeFlag != 0 && !workerInfoCondition){
-								if( element[numi].status != undefined && element[numi].status == 4){
+							}else if( element[0].startTimeFlag != 0 && !workerInfoCondition){
+								if( element[0].status != undefined && element[0].status == 4){
 									workerAllocationDetail.controlCondition = true;
 								}
 							}
@@ -750,22 +727,22 @@ jQuery(function($) {
 						$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && workerInfoCondition){
-						if( element[numi].status != undefined && ( element[numi].status == 0 || element[numi].status == 2)){
+					if( workerInfoCondition){
+						if( element[0].status != undefined && ( element[0].status == 0 || element[0].status == 2)){
 							workerAllocationDetail.controlCondition = false;
-						}else if( element[numi].status != undefined && element[numi].status == 1){
+						}else if( element[0].status != undefined && element[0].status == 1){
 							workerAllocationDetail.controlCondition = true;
 						}else{
 							workerAllocationDetail.controlCondition = true;
 						}
-					}else if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && !workerInfoCondition){
-						if( element[numi].status != undefined && element[numi].status == 4){
+					}else if( !workerInfoCondition){
+						if( element[0].status != undefined && element[0].status == 4){
 							workerAllocationDetail.controlCondition = true;
 						}
 					}
 				}else if(schedule == 2){
 
-					$("#"+operate.putlineTimeId).val( element[numi].startTime).attr("disabled", "disabled");
+					$("#"+operate.putlineTimeId).val( element[0].startTime).attr("disabled", "disabled");
 					var options = {};
 					options[operate.elementConstructerName + ".orderId"] = params.orderId;
 					options[operate.elementConstructerName + ".schedule"] = schedule;
@@ -775,20 +752,20 @@ jQuery(function($) {
 					}, null, false);
 
 
-					com.initChosen('fangWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
+					com.initChosen('putlineWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
 
-					$("#fangWorkerSubmit").on("click", function(){
+					$("#putlineWorkerSubmit").on("click", function(){
 						var args = {};
-						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
+						args[operate.elementConstructerName + ".cid"] = element[0].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
-						args[operate.elementConstructerName + ".user.userId"] = $('#fangWorkerName').val();
+						args[operate.elementConstructerName + ".user.userId"] = $('#putlineWorkerName').val();
 
-						if($("#fangWorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
+						if($("#putlineWorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == ""){
 							com.showAlert(com.error, "工人名称不能为空!");
 							return false;
 						}
 
-						var ly_userId = $('#fangWorkerName').val();
+						var ly_userId = $('#putlineWorkerName').val();
 						if(ly_constructer && ly_constructer.length){
 							for (var i = 0; i < ly_constructer.length; i++){
 								var c = ly_constructer[i];
@@ -810,7 +787,7 @@ jQuery(function($) {
 						return false;
 					});
 
-					var putlineStatus = element[numi].status;
+					var putlineStatus = element[0].status;
 					var putlineSuccessBtn = $("#putlineSuccess");
 					var putlineFailBtn = $("#putlineFail");
 
@@ -824,7 +801,7 @@ jQuery(function($) {
 					putlineSuccessBtn.click(function(){
 
 						var options = {};
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 1;
 
@@ -844,7 +821,7 @@ jQuery(function($) {
 					putlineFailBtn.click(function(){
 
 						var options = {};
-						options["constructionSchedule.csId"] = element[numi].csId;
+						options["constructionSchedule.csId"] = element[0].csId;
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 2;
 
@@ -867,8 +844,8 @@ jQuery(function($) {
 						com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");
 					}
 
-					$("#"+operate.startTimeId).val(element[numi].startTime);
-					$("#"+operate.endTimeId).val(element[numi].endTime);
+					$("#"+operate.startTimeId).val(element[0].startTime);
+					$("#"+operate.endTimeId).val(element[0].endTime);
 
 					var options = {};
 					options[operate.elementConstructerName+".orderId"] = params.orderId;
@@ -886,7 +863,7 @@ jQuery(function($) {
 						}
 
 						var args = {};
-						args[operate.elementConstructerName + ".cid"] = element[numi].cid;
+						args[operate.elementConstructerName + ".cid"] = element[0].cid;
 						args[operate.elementConstructerName + ".schedule"] = schedule;
 						args[operate.elementConstructerName + ".user.userId"] = $('#' + operate.name + "WorkerName").val();
 
@@ -911,20 +888,20 @@ jQuery(function($) {
 						return false;
 					});
 
-					if( element[numi].startTimeFlag == 0){
+					if( element[0].startTimeFlag == 0){
 						$("#"+operate.startTimeFlagId).click(function(){
 							var options = {};
-							options["constructionSchedule.csId"] = element[numi].csId;
+							options["constructionSchedule.csId"] = element[0].csId;
 							options["constructionSchedule."+operate.startTimeFlag] = 1;
-							options["constructionSchedule."+operate.endTimeFlag] = element[numi][operate.endTimeFlag];
-							 element[numi][operate.startTimeFlag] = 1;
+							options["constructionSchedule."+operate.endTimeFlag] = element[0][operate.endTimeFlag];
+							 element[0][operate.startTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if( element[numi].endTimeFlag != 0 && workerInfoCondition){
-								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
+							if( element[0].endTimeFlag != 0 && workerInfoCondition){
+								if( element[0].status != undefined && ( element[0].status != 0 || element[0].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
@@ -937,20 +914,20 @@ jQuery(function($) {
 						$("#"+operate.startTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if( element[numi].endTimeFlag == 0){
+					if( element[0].endTimeFlag == 0){
 						$("#"+operate.endTimeFlagId).click(function(){
 							var options = {};
-							options["constructionSchedule.csId"] = element[numi].csId;
+							options["constructionSchedule.csId"] = element[0].csId;
 							options["constructionSchedule."+operate.endTimeFlag] = 1;
-							options["constructionSchedule."+operate.startTimeFlag] = element[numi][operate.startTimeFlag];
-							 element[numi][operate.endTimeFlag] = 1;
+							options["constructionSchedule."+operate.startTimeFlag] = element[0][operate.startTimeFlag];
+							 element[0][operate.endTimeFlag] = 1;
 
 							com.post(operate.setTimeFlagUrl, options, function(res){
 								$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 							});
 
-							if( element[numi].startTimeFlag != 0 && workerInfoCondition){
-								if( element[numi].status != undefined && ( element[numi].status != 0 || element[numi].status != 2)){
+							if( element[0].startTimeFlag != 0 && workerInfoCondition){
+								if( element[0].status != undefined && ( element[0].status != 0 || element[0].status != 2)){
 									workerAllocationDetail.controlCondition = true;
 								}else{
 									workerAllocationDetail.controlCondition = true;
@@ -962,10 +939,10 @@ jQuery(function($) {
 						$("#"+operate.endTimeFlagId).attr("disabled", "disabled");
 					}
 
-					if( element[numi].startTimeFlag != 0 && element[numi].endTimeFlag != 0 && workerInfoCondition){
-						if( element[numi].status != undefined && ( element[numi].status == 0 || element[numi].status == 2)){
+					if( element[0].startTimeFlag != 0 && element[0].endTimeFlag != 0 && workerInfoCondition){
+						if( element[0].status != undefined && ( element[0].status == 0 || element[0].status == 2)){
 							workerAllocationDetail.controlCondition = false;
-						}else if( element[numi].status != undefined && element[numi].status == 1){
+						}else if( element[0].status != undefined && element[0].status == 1){
 							workerAllocationDetail.controlCondition = true;
 						}else{
 							workerAllocationDetail.controlCondition = true;
@@ -977,9 +954,6 @@ jQuery(function($) {
 
 				return false;
 
-			}else{
-				workerAllocationDetailPostData["construction.cid"] = 0;
-			}
 		});
 	}
 
@@ -1117,4 +1091,94 @@ jQuery(function($) {
 				profileDiv.appendTo(workerInfos);
 				com.showAlert(com.info, "工人信息提交成功!");
 	}
+
+	//画节点信息轴
+	function constructerNode(stepul,schedule, nodeName){
+		var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
+		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
+		var stepSpan = $("<span></span>").addClass("title").html(nodeName).appendTo(stepLi);
+	}
+
+	//画施工人员面板
+	function constructerPane(paneId, schedule, scheduleNamePinyin, scheduleNameGBK){
+
+		console.log(paneId, schedule, scheduleNamePinyin, scheduleNameGBK);
+
+		var paneWorker = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
+		var paneWorkerRow = $("<div></div>").addClass("row").appendTo(paneWorker);
+		var paneWorkerForm = $("<form></form>").addClass("form-horizontal").appendTo(paneWorkerRow);
+		var paneWorkerGroup = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
+
+		var paneWorkerSm = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroup);
+		var paneWorkerH3 = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSm);
+		var paneWorkerI = $("<i></i>").addClass("icon-edit").appendTo(paneWorkerH3);
+		var paneWorkerSpan = $("<span></span>").html(scheduleNameGBK + "信息").appendTo(paneWorkerH3);
+
+		//开工时间
+		var paneWorkerGroupTwo = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+		var paneWorkerStart = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for",scheduleNamePinyin + "StartTime").html("开工时间").appendTo(paneWorkerGroupTwo);
+		var paneWorkerSmTwo = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTwo);
+		var paneWorkerInput = $("<input/>").attr("id",scheduleNamePinyin + "StartTime").attr("type","text").addClass("col-sm-12").attr("readonly","readonly").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(paneWorkerSmTwo);
+		var paneWorkerSpace = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
+
+		//完工时间
+		if(schedule != 2){
+			var paneWorkerGroupTh = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+			var paneWorkerEnd = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for",scheduleNamePinyin + "EndTime").html("完工时间").appendTo(paneWorkerGroupTh);
+			var paneWorkerSmTh = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTh);
+			var paneWorkerInputTwo = $("<input/>").attr("id",scheduleNamePinyin + "EndTime").attr("type","text").addClass("col-sm-12").attr("readonly","readonly").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(paneWorkerSmTh);
+			var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
+		}
+
+		//铲大白放线状态
+		if(schedule == 1 || schedule == 2){
+			var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+			var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for",scheduleNamePinyin + "Status").html(scheduleNameGBK + "状态").appendTo(paneWorkerGroupF);
+			var paneWorkerLabDiv = $("<div></div>").attr("id",scheduleNamePinyin + "Status").addClass("col-sm-6").appendTo(paneWorkerGroupF);
+			var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
+
+			var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id",scheduleNamePinyin + "Operate").appendTo(paneWorkerGroup);
+			var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
+			var paneWorkerBtnS = $("<button></button>").attr("id",scheduleNamePinyin + "Success").addClass("btn btn-xs btn-success").html("成功").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
+			var paneWorkerBtnD = $("<button></button>").attr("id",scheduleNamePinyin + "Fail").addClass("btn btn-xs btn-danger").html("失败").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
+			if(schedule == 1){
+				var paneWorkerBtnW = $("<button></button>").attr("id",scheduleNamePinyin + "Delay").addClass("btn btn-xs btn-warning").html("延迟").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
+				var paneWorkerBtnI = $("<button></button>").attr("id",scheduleNamePinyin + "Pass").addClass("btn btn-xs btn-info").html("通过").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
+			}
+		}
+		var paneWorkerGroupS = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
+		var paneWorkerSmS = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupS);
+		var paneWorkerHTh = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSmS);
+		var paneWorkerHThi = $("<i></i>").addClass("icon-edit").appendTo(paneWorkerHTh);
+		var paneWorkerHThSpan = $("<span></span>").html("工人信息").appendTo(paneWorkerHTh);
+
+		var paneWorkerGroupSe = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
+		var paneWorkerEnter = $("<div></div>").attr("id",scheduleNamePinyin + "WorkerEnter").appendTo(paneWorkerGroupSe);
+		var paneWorkerEnlab = $("<lable></lable>").addClass("col-sm-1 control-label").attr("for",scheduleNamePinyin + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);
+		var paneWorkerSel = $("<select></select>").attr("id",scheduleNamePinyin + "WorkerName").addClass("chosen-select col-sm-2 v_required").attr("data-placeholder","请输入工人名称").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(paneWorkerEnter);
+		var paneWorkerOp = $("<option></option>").attr("value","").html("&nbsp;").appendTo(paneWorkerSel);
+
+		var paneWorkerGroupEi = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
+		var paneWorkerSmEi = $("<div></div>").addClass("col-sm-offset-1").appendTo(paneWorkerGroupEi);
+		var paneWorkerbtnEi = $("<button></button>").attr("id",scheduleNamePinyin + "WorkerSubmit").addClass("btn btn-xs col-sm-2 workerSubmit").html("确认").appendTo(paneWorkerSmEi);
+		var paneWorkerSpaceEi = $("<div></div>").addClass("space-4").appendTo(paneWorkerForm);
+
+		var paneWorkerGroupNi = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
+		var paneWorkerSmNi = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupNi);
+		var paneWorkerInfoNi = $("<div></div>").attr("id",scheduleNamePinyin + "WorkerInfos").appendTo(paneWorkerSmNi);
+		var paneWorkerSpaceNi = $("<div></div>").addClass("space-4").appendTo(paneWorkerForm);
+
+	}
+
+	function addActive(schedule){
+		var con = workerAllocationDetail.constructionSchedules;
+		$.each(con,function(i, v){
+			$("#step" + v.schedule).removeClass("active");
+			$("#step" +  v.schedule).addClass("step-pane");
+		});
+		$("#step" + schedule).removeClass("step-pane");
+		$("#step" + schedule).addClass("active");
+
+	}
+
 });
