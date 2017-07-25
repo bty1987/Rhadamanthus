@@ -46,6 +46,14 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryConstructionScheduleByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionScheduleByCid(){
+		
+		constructionSchedules = constructionScheduleService.queryConstructionScheduleByCid(constructionSchedule);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "setConstructionScheduleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String setConstructionScheduleForStatus(){
 		

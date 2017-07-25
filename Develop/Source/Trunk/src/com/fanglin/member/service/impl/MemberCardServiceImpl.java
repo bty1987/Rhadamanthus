@@ -84,7 +84,7 @@ public class MemberCardServiceImpl  implements MemberCardService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
 		String memberNo = String.valueOf("VIP") + FormatUtil.fillZero(count, "00000000");
 		memberCardPO.setNo(memberNo);
-		memberCardPO.setCredits(MemberCardPO.COLUMN_CREDITS_INT); 
+		memberCardPO.setCredits(MemberCardPO.CREDITS_INIT_INT); 
 		memberCardPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
 		memberCardDao.save(memberCardPO);
@@ -129,28 +129,28 @@ public class MemberCardServiceImpl  implements MemberCardService {
 		MemberDetailPO outMemberDetailPO = new MemberDetailPO();
 		outMemberDetailPO.setMemberCard(outMemberCardPO);
 		outMemberDetailPO.setCuId(userPO);
-		outMemberDetailPO.setType(MemberDetailPO.COLUMN_TURNPOINTSTYPE);
+		outMemberDetailPO.setType(MemberDetailPO.SUBTYPE_TURNPOINTSTYPE_INT);
 		Timestamp outnowTime = new Timestamp(System.currentTimeMillis());
 		outMemberDetailPO.setCreateTime(outnowTime.getTime());
 		outMemberDetailPO.setCredit(-menberDetailVO.getCredit());
-		outMemberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
-		outMemberDetailPO.setMultiple(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
-		outMemberDetailPO.setSubType(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
-		outMemberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
+		outMemberDetailPO.setBalance(MemberDetailPO.BALANCE_ZERO_INT);
+		outMemberDetailPO.setMultiple(MemberDetailPO.SUBTYPE_LESS_INT);
+		outMemberDetailPO.setSubType(MemberDetailPO.SUBTYPE_LESS_INT);
+		outMemberDetailPO.setDivider(MemberDetailPO.BALANCE_ZERO_INT);
 		outMemberDetailPO.setPid(inMemberCardPO.getMcId());
 		memberDetailDao.save(outMemberDetailPO);
 		
 		MemberDetailPO inMemberDetailPO = new MemberDetailPO();
 		inMemberDetailPO.setMemberCard(inMemberCardPO);
 		inMemberDetailPO.setCuId(userPO);
-		inMemberDetailPO.setType(MemberDetailPO.COLUMN_TURNPOINTSTYPE);
+		inMemberDetailPO.setType(MemberDetailPO.SUBTYPE_TURNPOINTSTYPE_INT);
 		Timestamp innowTime = new Timestamp(System.currentTimeMillis());
 		inMemberDetailPO.setCreateTime(innowTime.getTime());
 		inMemberDetailPO.setCredit(menberDetailVO.getCredit());
-		inMemberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
-		inMemberDetailPO.setMultiple(MemberDetailPO.COLUMN_SUBTYPELESS_SHORT);
-		inMemberDetailPO.setSubType(MemberDetailPO.COLUMN_SUBTYPEPLUS_SHORT);
-		inMemberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
+		inMemberDetailPO.setBalance(MemberDetailPO.BALANCE_ZERO_INT);
+		inMemberDetailPO.setMultiple(MemberDetailPO.SUBTYPE_LESS_INT);
+		inMemberDetailPO.setSubType(MemberDetailPO.SUBTYPE_PLUS_INT);
+		inMemberDetailPO.setDivider(MemberDetailPO.BALANCE_ZERO_INT);
 		inMemberDetailPO.setPid(outMemberCardPO.getMcId());
 		memberDetailDao.save(inMemberDetailPO);
 		

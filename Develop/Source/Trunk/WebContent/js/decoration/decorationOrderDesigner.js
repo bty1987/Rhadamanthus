@@ -122,6 +122,7 @@ $(function(){
 					var $btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
 					var $btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
 					var $btnContract = $('<a></a>').addClass('btn btn-minier btn-danger').html('合同');
+					var $select = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 					var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
 					var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary').html('信息轴');
@@ -176,12 +177,18 @@ $(function(){
 						viewDecorationOrderTimelineIndex(v.orderId);
 					});
 
+					$select.click(function(){
+						viewDecorationOrderInAudit(v.orderId);
+					})
+
 					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
 					
 					if(["量房", "咨询", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnPrice);
 					}
-					
+
+					$divBtnWrap.append($select);
+
 					if(["定金", "已报价", "已签约", "重签合同", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnContract);
 					}
@@ -253,6 +260,14 @@ $(function(){
 			params.decorationOrderType = type;
 			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.addReduceIndex.url);
+		}
+
+		//扣款
+		var viewDecorationOrderInAudit = function(orderId){
+			params['decorationOrderId'] = orderId;
+			params['auditStatusType'] = 'select';
+			params['rollback'] = api.index.decorationOrderDesignerIndex.url;
+			com.switchPage(api.index.auditRecordIndex.url);
 		}
 		
 		var viewDecorationOrderTimelineIndex = function(orderId){

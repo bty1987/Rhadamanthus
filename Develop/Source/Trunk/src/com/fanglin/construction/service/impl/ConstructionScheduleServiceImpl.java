@@ -33,7 +33,30 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Override
 	public List<ConstructionScheduleVO> queryConstructionScheduleByOrderId(ConstructionScheduleVO constructionScheduleVO) {
 		
-		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getSchedule());
+		String orderId = constructionScheduleVO.getOrderId();
+		Short schedule = constructionScheduleVO.getSchedule();
+		
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId, schedule);
+		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
+		
+		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
+			if(constructionSchedulePO != null){
+				ConstructionScheduleVO constructionSchedule = new ConstructionScheduleVO();
+				BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
+				constructionScheduleVOs.add(constructionSchedule);
+			}
+		}
+		
+		return constructionScheduleVOs;
+	}
+	
+	@Override
+	public List<ConstructionScheduleVO> queryConstructionScheduleByCid(ConstructionScheduleVO constructionScheduleVO) {
+		
+		Long cid = constructionScheduleVO.getCid();
+		Short schedule = constructionScheduleVO.getSchedule();
+		
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(cid, schedule);
 		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
 		
 		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {

@@ -43,17 +43,16 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 	@Override
 	public DutyPO queryDutyByName(String name) {
-		// TODO Auto-generated method stub
+	
 		return  (DutyPO)session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).uniqueResult();
 
 	}
 
 	@Override
-	public DutyPO queryDutyById(long did) {
-		// TODO Auto-generated method stub
-		return (DutyPO)session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_DID_STR , did)).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<DutyPO> queryDuty() {
 
+		return session().createCriteria(DutyPO.class).list();
 	}
-
 
 }

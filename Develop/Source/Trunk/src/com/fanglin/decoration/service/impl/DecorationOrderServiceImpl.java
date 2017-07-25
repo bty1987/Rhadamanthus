@@ -130,7 +130,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	private DecorationOrderStatusRightDao decorationOrderStatusRightDao;
 	
 	@Autowired
-	  private AuditDao auditDao;
+	private AuditDao auditDao;
 	
 	@Override
 	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, String userId){
@@ -1465,9 +1465,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		belongDecorationOperatePO.setDes("订单归属");
 		
-		AuditPO auditPOs = new AuditPO();
-	    auditPOs.setDecorationOrder(decorationOrderPO);
-	    this.auditDao.save(auditPOs);
+		AuditPO auditPO = new AuditPO();
+	    auditPO.setDecorationOrder(decorationOrderPO);
+	    this.auditDao.save(auditPO);
 	}
 	
 	@Override

@@ -12,8 +12,7 @@ import com.fanglin.construction.po.ConstructerPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 
 @Repository("constructerDao")
-public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
-		ConstructerDao {
+public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements ConstructerDao {
 
 	public ConstructerDaoImpl() {
 		super(ConstructerPO.class);
@@ -34,10 +33,10 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ConstructerPO> queryConstructerByCrId(long crid, Integer schedule) {
+	public List<ConstructerPO> queryConstructerByCid(long cid, Integer schedule) {
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
-				.add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR, crid))
+				.add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR, cid))
 				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
 		if (schedule != null) {
 			c.add(Restrictions.eq("schedule", schedule));

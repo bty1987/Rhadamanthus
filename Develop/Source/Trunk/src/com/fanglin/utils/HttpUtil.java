@@ -5,11 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -298,12 +296,7 @@ public class HttpUtil {
 		}
     }
 	
-	public static void main(String[] args) throws UnsupportedEncodingException {
-//		HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg", "test.jpg", "d:\\");
-		
-//		httpGet("http://192.168.5.21/sendMessage.do?authentication=8E1BD9078DB393A947FB51697AE9FC97F97A8F2D15F4D224D309B161E6B1CC8E117F762457031BD020786A6D548DECCDB515B81EB0C4CA4A0182818A8FF08390674324B0053B8BB47EC50CA7583160AE63B1AE9181FC1240C38C910EF614C430D45478A074B54B7615448ACF64DD066C&message.contents=我勒个去&message.receiver.userId=FL-00479&message.type=个人消息");
-		
-		System.out.println(URLEncoder.encode("我勒个去","utf-8"));
-		
+	public static void main(String[] args) {
+		HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg", "test.jpg", "d:\\");
 	}
 }

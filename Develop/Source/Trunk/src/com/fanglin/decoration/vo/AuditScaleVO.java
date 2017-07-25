@@ -20,9 +20,9 @@ public class AuditScaleVO implements Serializable {
 	
 	private Float money;
 	
-	private Integer type;
+	private Short type;
 	
-	private Integer status;
+	private Short status;
 	
 	private UserVO creater;
 	
@@ -36,10 +36,9 @@ public class AuditScaleVO implements Serializable {
 		this.belongDepartment = belongDepartment;
 	}
 
-	public AuditScaleVO(AuditRecordVO auditRecord, UserVO belongUser,
+	public AuditScaleVO(UserVO belongUser,
 			DepartmentVO belongDepartment, UserVO creater) {
 		super();
-		this.auditRecord = auditRecord;
 		this.belongUser = belongUser;
 		this.belongDepartment = belongDepartment;
 		this.creater = creater;
@@ -89,19 +88,19 @@ public class AuditScaleVO implements Serializable {
 		this.money = money;
 	}
 
-	public Integer getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
-	public Integer getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 

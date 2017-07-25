@@ -28,7 +28,12 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	}
 	
 	@Override
-	public ConstructionSchedulePO queryConstructionScheduleByCidAndSchedule(Long cid, Short schedule) {
-		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid, Short schedule) {
+		Criteria constructionScheduleList = session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid));
+		if(schedule != null){
+			constructionScheduleList.add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule));
+		}
+		return constructionScheduleList.list();
 	}
 }

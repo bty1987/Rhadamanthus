@@ -421,28 +421,30 @@ public class ConstructionServiceImpl implements ConstructionService {
 		long cid = constructionVO.getCid();
 		short schedule = constructionVO.getSchedule().shortValue();
 		
-		ConstructionSchedulePO constructionPO = constructionScheduleDao.queryConstructionScheduleByCidAndSchedule(cid, schedule);
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(cid, schedule);
 		
-		if(constructionPO != null){
-			if(constructionPO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_DELAY_INT){
-				ConstructionPO constructionSchedulePO = constructionDao.get(constructionVO.getCid());
-				
-				if(constructionSchedulePO != null){
+		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
+			if(constructionSchedulePO != null){
+				if(constructionSchedulePO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_DELAY_INT){
+					ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 					
-					MessagePO messagePO = new MessagePO();
-					UserPO senderU = userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId());
-					UserPO senderR = userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId());
-					messagePO.setSender(senderU);
-					messagePO.setReceiver(senderR);
-					messagePO.setType("施工进度消息");
-					messagePO.setContents(String.format("装修订单编号%s施工进度中,铲大白状态需要标记为成功或者通过.", constructionSchedulePO.getDecorationOrderPO().getOrderId()));
-					messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					messagePO.setStatus("未读");
-					messagePO.setArgs("");
-					messageDao.saveOrUpdate(messagePO);
+					if(constructionSchedulePO != null){
+						
+						MessagePO messagePO = new MessagePO();
+						UserPO senderU = userDao.queryUserByUserId(constructionPO.getSupervisorQualityId());
+						UserPO senderR = userDao.queryUserByUserId(constructionPO.getSupervisorQualityId());
+						messagePO.setSender(senderU);
+						messagePO.setReceiver(senderR);
+						messagePO.setType("施工进度消息");
+						messagePO.setContents(String.format("装修订单编号%s施工进度中,铲大白状态需要标记为成功或者通过.", constructionPO.getDecorationOrderPO().getOrderId()));
+						messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+						messagePO.setStatus("未读");
+						messagePO.setArgs("");
+						messageDao.saveOrUpdate(messagePO);
+					}
+					
+					throw new FLException(120004, "铲大白状态需要标记为成功或者通过");
 				}
-				
-				throw new FLException(120004, "铲大白状态需要标记为成功或者通过");
 			}
 		}
 		
@@ -630,15 +632,16 @@ public class ConstructionServiceImpl implements ConstructionService {
 			break;
 		}
 	
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCidAndSchedule(cid, schedule);
-		if(constructionSchedulePO == null){
-			constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, schedule);
-			constructionScheduleDao.save(constructionSchedulePO);
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(cid, schedule);
+		for (ConstructionSchedulePO constructionSchedule : constructionSchedulePOs) {
+			if(constructionSchedule == null){
+				constructionSchedule = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, schedule);
+				constructionScheduleDao.save(constructionSchedule);
+			}
 		}
 		
-		
-		
 		decorationOrderDao.update(decorationOrderPO);
+		
 	}
 	
 	//之前pageDecorationOrderForConstructionScheduleByPlace用到这个方法，然后这个方法删除了 

@@ -63,7 +63,7 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 		
 		List<MemberDetailVO> memberDetailVOs= new ArrayList<MemberDetailVO>();
 		MemberCardPO memberCardPO = memberCardDao.queryMemberCardByOrderId(memberCardVO.getOrderId());
-		List<MemberDetailPO> memberDetailPOs = memberDetailDao.queryMemberDetailByOrderId(memberCardPO.getMcId());
+		List<MemberDetailPO> memberDetailPOs = memberDetailDao.queryMemberDetailByMcId(memberCardPO.getMcId());
 
 		for(MemberDetailPO memberDetailPO: memberDetailPOs){
 			
@@ -94,16 +94,16 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 		memberDetailPO.setCuId(userPO);
 		Timestamp nowTime = new Timestamp(System.currentTimeMillis());
 		memberDetailPO.setCreateTime(nowTime.getTime());
-		memberDetailPO.setBalance(MemberDetailPO.COLUMN_ZERO_INT);
+		memberDetailPO.setBalance(MemberDetailPO.BALANCE_ZERO_INT);
 		memberDetailPO.setMultiple(Integer.valueOf(systemConfig.getValue()));
-		memberDetailPO.setDivider(MemberDetailPO.COLUMN_ZERO_INT);
-		memberDetailPO.setPid(MemberDetailPO.COLUMN_PID_SHORT);
+		memberDetailPO.setDivider(MemberDetailPO.BALANCE_ZERO_INT);
+		memberDetailPO.setPid(MemberDetailPO.PID_INIT_SHORT);
 		
-		if(memberDetailVO.getSubType() == MemberDetailPO.COLUMN_SUBTYPEPLUS_SHORT){
+		if(memberDetailVO.getSubType() == MemberDetailPO.SUBTYPE_PLUS_INT){
 			memberDetailPO.setCredit(memberDetailVO.getCredit());
 			
 			
-		}else if(memberDetailVO.getSubType() == MemberDetailPO.COLUMN_SUBTYPELESS_SHORT){
+		}else if(memberDetailVO.getSubType() == MemberDetailPO.SUBTYPE_LESS_INT){
 			memberDetailPO.setCredit(-memberDetailVO.getCredit());
 		}
 		

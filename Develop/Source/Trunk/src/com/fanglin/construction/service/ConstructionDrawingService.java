@@ -3,10 +3,14 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.ConstructionDrawingVO;
+import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.core.interceptor.FLException;
 
 public interface ConstructionDrawingService {
+	
+	public List<ConstructionDrawingVO> queryConstructionDrawingByOrderId(ConstructionVO construction, ConstructionDrawingVO constructionDrawing) throws FLException;
 
-	public List<ConstructionDrawingVO> queryConstructionDrawing(ConstructionDrawingVO constructionDrawing);
+	public List<ConstructionDrawingVO> queryConstructionDrawingByCid(ConstructionDrawingVO constructionDrawing);
 	
 	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawing, String userId);
 

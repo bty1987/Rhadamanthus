@@ -7,11 +7,15 @@ jQuery(function($) {
 
 		stepLimit: 0,
 
+		constructionSchedules:{},
+
 		errorMsg: "进度控制",
 
 		operateDict: {
 			"1": {
 				workerInfos: "chanWorkerInfos",
+				nodeName:"铲大白",
+				nodeNamePinyin: "chan",
 
 				workerId: "chanWorker",
 				workerRatyId: "chanWorkerRaty",
@@ -29,6 +33,8 @@ jQuery(function($) {
 				duty: "铲大白工人",
 			}, "2": {
 				workerInfos: "putlineWorkerInfos",
+				nodeName:"放线",
+				nodeNamePinyin: "putline",
 
 				workerId: "putlineWorker",
 				workerRatyId: "putlineWorkerRaty",
@@ -46,6 +52,8 @@ jQuery(function($) {
 				duty: "放线小组",
 			}, "3": {
 				workerInfos: "waterwayCircuitPowerWorkerInfos",
+				nodeName:"力水电",
+				nodeNamePinyin: "waterwayCircuitPower",
 
 				workerId: "waterwayCircuitPowerWorkerId",
 				waterwayWorkerId: "waterwayWorker",
@@ -81,6 +89,8 @@ jQuery(function($) {
 				powerDuty:"力工",
 			}, "4": {
 				workerInfos: "bricklayWorkerInfos",
+				nodeName:"瓦工",
+				nodeNamePinyin: "bricklay",
 
 				workerId: "bricklayWorker",
 				workerRatyId: "bricklayWorkerRaty",
@@ -97,6 +107,8 @@ jQuery(function($) {
 				duty: "瓦工",
 			}, "5": {
 				workerInfos: "groundLevelingWorkerInfos",
+				nodeName:"地面找平",
+				nodeNamePinyin: "groundLeveling",
 
 				workerId: "groundLevelingWorker",
 				workerRatyId: "groundLevelingWorkerRaty",
@@ -114,6 +126,8 @@ jQuery(function($) {
 				duty: "地面找平",
 			}, "6": {
 				workerInfos: "carpentWorkerInfos",
+				nodeName:"木工",
+				nodeNamePinyin: "carpent",
 
 				workerId: "carpentWorker",
 				workerRatyId: "carpentWorkerRaty",
@@ -131,6 +145,8 @@ jQuery(function($) {
 				duty: "木工",
 			}, "7": {
 				workerInfos: "oilWorkerInfos",
+				nodeName:"油工",
+				nodeNamePinyin: "oil",
 
 				workerId: "oilWorker",
 				workerRatyId: "oilWorkerRaty",
@@ -148,6 +164,8 @@ jQuery(function($) {
 				duty: "油工",
 			}, "8": {
 				workerInfos: "waterwayCircuitCheckWorkerInfos",
+				nodeName:"水电验收",
+				nodeNamePinyin: "waterwayCircuitCheck",
 
 				workerId: "waterwayCircuitCheckWorker",
 				workerRatyId: "waterwayCircuitCheckWorkerRaty",
@@ -167,6 +185,8 @@ jQuery(function($) {
 				powerDuty:"力工",
 			}, "9": {
 				workerInfos: "cleaningWorkerInfos",
+				nodeName:"保洁",
+				nodeNamePinyin: "cleaning",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
 				setWorkerRaty: api.construction.updateConstructerForRate,
@@ -195,60 +215,34 @@ jQuery(function($) {
 	var commitFlag = false;
 	var workerIdsData = [];
 
-	com.post(api.construction.queryConstructionByOrderId, {
-		"construction.orderId": params.orderId
-	}, function(res){
+	//动态获取节点轴
+	com.post(api.construction.queryConstructionScheduleByOrderId,{"constructionSchedule.orderId":params.orderId},function(res){
 
-		customerServiceDetail.construstion = res.construction;
+		var constructionSchedule = res.constructionSchedules;
 
-		var schedule = res.construction.schedule;
+		customerServiceDetail.constructionSchedules = res.constructionSchedules;
 
-		var operate = customerServiceDetail.operateDict[schedule];
+		$.each(constructionSchedule, function(i, v){
+			customerServiceNode("#stepId", v.schedule,customerServiceDetail.operateDict[v.schedule].nodeName);
+			customerServicePane("#step-container", v.schedule,customerServiceDetail.operateDict[v.schedule].nodeNamePinyin, customerServiceDetail.operateDict[v.schedule].nodeName);
+		});
 
-		if(!customerServiceDetail.wizardSept[schedule]){
-			initWizardSept(operate, schedule);
-			customerServiceDetail.wizardSept[schedule] = true;
-			customerServiceDetail.stepLimit = schedule;
-		}
 
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: schedule}).on('change' , function(e, info){
+		initWizardSept(customerServiceDetail.operateDict[1], 1);
 
-			var step = 0;
-			var direction = info.direction;
-
-			if(direction == "previous"){
-				step = info.step - 1;
-			}else if(direction == "next"){
-				step = info.step + 1;
-
-				if(step > customerServiceDetail.stepLimit){
-					com.showAlert(com.warning, customerServiceDetail.errorMsg);
-					return false;
-				}
-			}
-			if(customerServiceDetail.wizardSept[schedule]) {
-				initWizardSept(customerServiceDetail.operateDict[step.toString()], step.toString());
-				customerServiceDetail.wizardSept[step.toString()] = true;
-			}
-		}).on('finished', function(e) {
-			bootbox.dialog({
-				message: "Thank you! Your information was successfully saved!",
-				buttons: {
-					"success" : {
-						"label" : "OK",
-						"className" : "btn-sm btn-primary"
-					}
-				}
-			});
-
+		$('#fuelux-wizard').ace_wizard({status:true, currentStep: 1}).on('finished', function(e) {
+			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
-			if(customerServiceDetail.wizardSept[schedule]) {
-				initWizardSept(customerServiceDetail.operateDict[info.step], info.step);
-				customerServiceDetail.wizardSept[info.step] = true;
+
+			var stepId = $("[flag]").eq(info.step-1).attr("id");
+			var sd = stepId.substr(4,1);
+			if(!customerServiceDetail.wizardSept[sd]){
+				initWizardSept(customerServiceDetail.operateDict[sd], sd);
 			}
 		});
 
-	});
+
+	},null,false);
 
 	$('#modal-wizard .modal-header').ace_wizard();
 	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
@@ -258,6 +252,8 @@ jQuery(function($) {
 	});
 
 	function initWizardSept(operate, schedule){
+
+		addActive(schedule)
 
 		var elementPostData = {};
 		elementPostData[operate.elementConstructerName+".orderId"] = params.orderId;
@@ -315,7 +311,7 @@ jQuery(function($) {
 						options["constructer.crid"] = workerIdsData[i];
 						options["constructer.rate"] = $("#"+workerIdsData[i] + "workerRaty-score").val();
 						options["constructer.assessment"] = $("#"+workerIdsData[i] + "workerRatyDes").val();
-						console.log(options);
+
 						if(commitFlag){
 							com.post(operate.setWorkerRaty, options, function(res){
 								com.showAlert(com.info, "保存成功!");
@@ -345,5 +341,39 @@ jQuery(function($) {
 			path: './assets/images/',
 			start: raty,
 		});
+	}
+
+	//画节点信息轴
+	function customerServiceNode(stepul,schedule, nodeName){
+		var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
+		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
+		var stepSpan = $("<span></span>").addClass("title").html(nodeName).appendTo(stepLi);
+	}
+
+	////画面板
+	function customerServicePane(paneId, schedule,scheduleNodeNamePinyin, scheduleNodeNameGBK){
+		var paneCus = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
+		var paneCusRow = $("<div></div>").addClass("row").appendTo(paneCus);
+		var paneCusForm = $("<form></form>").addClass("form-horizontal").appendTo(paneCusRow);
+		var paneCusGroup = $("<div></div>").addClass("form-group").appendTo(paneCusForm);
+		var paneCusSm = $("<div></div>").addClass("col-sm-12").appendTo(paneCusGroup);
+		var paneCusCent = $("<div></div>").addClass("text-center").appendTo(paneCusSm);
+		var paneCusH3 = $("<h3></h3>").addClass("header smaller lighter green").appendTo(paneCusCent);
+		var paneCusI = $("<i></i>").addClass("icon-group").appendTo(paneCusH3);
+		var paneCusSpan = $("<span></span>").html(scheduleNodeNameGBK + "工人信息").appendTo(paneCusH3);
+		var paneCusInfo = $("<div></div>").attr("id",scheduleNodeNamePinyin + "WorkerInfos").appendTo(paneCusCent);
+		var paneCusSpace = $("<div></div>").addClass("space-4").appendTo(paneCusForm);
+
+	}
+
+	function addActive(schedule){
+		var con = customerServiceDetail.constructionSchedules;
+		$.each(con,function(i, v){
+			$("#step" + v.schedule).removeClass("active");
+			$("#step" +  v.schedule).addClass("step-pane");
+		});
+		$("#step" + schedule).removeClass("step-pane");
+		$("#step" + schedule).addClass("active");
+
 	}
 });

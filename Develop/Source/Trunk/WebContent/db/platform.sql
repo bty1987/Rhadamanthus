@@ -143,6 +143,7 @@ CREATE TABLE `assassin` (
   PRIMARY KEY (`asId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='代理表';
 
+DROP TABLE IF EXISTS `audit`;
 CREATE TABLE `audit` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL COMMENT '订单编号',

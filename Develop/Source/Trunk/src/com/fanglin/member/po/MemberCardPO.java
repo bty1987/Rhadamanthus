@@ -15,7 +15,7 @@ public class MemberCardPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1649050342892502087L;
 	
-	public static final int COLUMN_CREDITS_INT = 0;      //初始积分
+	public static final int CREDITS_INIT_INT = 0;      
 	
 	public static final String COLUMN_ORDERID_STR = "orderId"; 
 	

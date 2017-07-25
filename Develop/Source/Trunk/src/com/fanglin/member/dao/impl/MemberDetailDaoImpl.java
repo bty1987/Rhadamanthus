@@ -18,7 +18,7 @@ public class MemberDetailDaoImpl extends DaoImpl<MemberDetailPO> implements Memb
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MemberDetailPO> queryMemberDetailByOrderId(long mcId) {
+	public List<MemberDetailPO> queryMemberDetailByMcId(long mcId) {
 		return session().createCriteria(MemberDetailPO.class).add(Restrictions.eq("memberCard.mcId", mcId)).list();
 	}
 	

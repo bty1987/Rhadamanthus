@@ -7,7 +7,7 @@ import com.fanglin.decoration.po.AuditRecordPO;
 
 public interface AuditRecordDao extends Dao<AuditRecordPO> {
 
-	public List<AuditRecordPO> queryAuditRecordByOrderId(String orderId);
+	public List<AuditRecordPO> queryAuditRecordByAid(long aid);
 	
 	public AuditRecordPO queryAuditRecordByArid(long arid);
 	

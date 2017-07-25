@@ -39,7 +39,7 @@ public class DutyServiceImpl implements DutyService {
 	@Override
 	public List<DutyVO> queryDuty() {
 
-		List<DutyPO> dutyPOs = dutyDao.list();
+		List<DutyPO> dutyPOs = dutyDao.queryDuty();
 		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
 
 		for (DutyPO dutyPO : dutyPOs) {
@@ -71,7 +71,7 @@ public class DutyServiceImpl implements DutyService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateDuty(DutyVO dutyVO) throws FLException {
 
-		DutyPO dutyPO = dutyDao.queryDutyById(dutyVO.getDid());
+		DutyPO dutyPO = dutyDao.get(dutyVO.getDid());
 		if (dutyPO == null) {
 			throw new FLException(130015, "职位不存在");
 		}
@@ -90,7 +90,7 @@ public class DutyServiceImpl implements DutyService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateDutyForStatus(DutyVO dutyVO) throws FLException {
 
-		DutyPO dutyPO = dutyDao.queryDutyById(dutyVO.getDid());
+		DutyPO dutyPO = dutyDao.get(dutyVO.getDid());
 		if (dutyPO == null) {
 			throw new FLException(130015, "职位不存在");
 		}

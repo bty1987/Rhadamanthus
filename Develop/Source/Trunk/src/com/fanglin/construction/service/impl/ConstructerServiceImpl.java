@@ -44,9 +44,10 @@ public class ConstructerServiceImpl implements ConstructerService {
 //		如果schedule没有传值将返回订单编号对应的所有施工人员信息
 		String orderId = constructerVO.getOrderId();
 		Integer schedule = constructerVO.getSchedule();
+		
 		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId,schedule);
-		 
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
+		
 		for (ConstructerPO constructerPO : constructerPOs) {
 			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
@@ -58,10 +59,13 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 	@Override
 	public List<ConstructerVO> queryConstructerByCid(ConstructerVO constructerVO) {
+		
 		long cid = constructerVO.getCid();
 		Integer schedule = constructerVO.getSchedule();
-		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCrId(cid,schedule);
+		
+		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByCid(cid,schedule);
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
+		
 		for (ConstructerPO constructerPO : constructerPOs) {
 			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
@@ -144,7 +148,6 @@ public class ConstructerServiceImpl implements ConstructerService {
 		}
 
 		constructerPO.setStatus(ConstructerPO.STATUS_DISABLE_SHORT);
-	  
 		constructerDao.update(constructerPO);
 	}
 	

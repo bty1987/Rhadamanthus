@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.ConstructionDrawingService;
 import com.fanglin.construction.vo.ConstructionDrawingVO;
+import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -38,14 +39,24 @@ public class ConstructionDrawingAction extends BaseListAction{
 	
 	private ConstructionDrawingVO constructionDrawing;
 	
+	private ConstructionVO construction;
+	
 	private List<ConstructionDrawingVO> constructionDrawings;
 	
 	private List<String> drawingUrls;
 	
-	@Action(value = "queryConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionDrawing(){
+	@Action(value = "queryConstructionDrawingByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionDrawingByOrderId() throws FLException{
 		
-		constructionDrawings = constructionDrawingService.queryConstructionDrawing(constructionDrawing);
+		constructionDrawings = constructionDrawingService.queryConstructionDrawingByOrderId(construction, constructionDrawing);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryConstructionDrawingByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionDrawingByCid(){
+		
+		constructionDrawings = constructionDrawingService.queryConstructionDrawingByCid(constructionDrawing);
 		
 		return SUCCESS;
 	}
@@ -80,6 +91,14 @@ public class ConstructionDrawingAction extends BaseListAction{
 
 	public void setConstructionDrawing(ConstructionDrawingVO constructionDrawing) {
 		this.constructionDrawing = constructionDrawing;
+	}
+	
+	public ConstructionVO getConstruction() {
+		return construction;
+	}
+
+	public void setConstruction(ConstructionVO construction) {
+		this.construction = construction;
 	}
 
 	public List<ConstructionDrawingVO> getConstructionDrawings() {

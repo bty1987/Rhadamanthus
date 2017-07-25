@@ -59,10 +59,12 @@ $.extend(api, {construction: {
     checkFinalyPayment: {url: "checkFinalyPayment.do"},
 
     queryConstructionScheduleByOrderId: {url: "queryConstructionScheduleByOrderId.do"},
+    queryConstructionScheduleByCid: {url: "queryConstructionScheduleByCid.do"},
     setConstructionScheduleForStatus: {url: "setConstructionScheduleForStatus.do"},
     setConstructionScheduleForInfo: {url: "setConstructionScheduleForInfo.do"},
 
-    queryConstructionDrawing: {url: "queryConstructionDrawing.do"},
+    queryConstructionDrawingByOrderId: {url: "queryConstructionDrawingByOrderId.do"},
+    queryConstructionDrawingByCid: {url: "queryConstructionDrawingByCid.do"},
     addConstructionDrawing: {url: "addConstructionDrawing.do"},
     addConstructionDrawings: {url: "addConstructionDrawings.do"},
     deleteConstructionDrawing: {url: "deleteConstructionDrawing.do"},

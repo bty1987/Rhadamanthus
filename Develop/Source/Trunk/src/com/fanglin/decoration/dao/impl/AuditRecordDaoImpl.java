@@ -16,8 +16,8 @@ public class AuditRecordDaoImpl extends DaoImpl<AuditRecordPO> implements AuditR
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AuditRecordPO> queryAuditRecordByOrderId(String orderId) {
-		return session().createCriteria(AuditRecordPO.class).createAlias("audit", "audit").createAlias("audit.decorationOrder", "decorationOrder").add(Restrictions.eq(AuditRecordPO.COLUMN_ORDERID_STR, orderId)).list();
+	public List<AuditRecordPO> queryAuditRecordByAid(long aid) {
+		return session().createCriteria(AuditRecordPO.class).add(Restrictions.eq(AuditRecordPO.COLUMN_AID_STR, aid)).list();
 	}
 	@Override
 	public AuditRecordPO queryAuditRecordByArid(long arid) {

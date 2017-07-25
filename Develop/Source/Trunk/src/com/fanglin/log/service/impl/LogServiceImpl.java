@@ -14,8 +14,6 @@ package com.fanglin.log.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,6 @@ import com.fanglin.utils.Paging;
 @Transactional(readOnly=true)
 public class LogServiceImpl implements LogService {
 
-	protected Logger log = LoggerFactory.getLogger(getClass());
-	
 	@Autowired
 	private ActionLogDao actionLogDao;
 	

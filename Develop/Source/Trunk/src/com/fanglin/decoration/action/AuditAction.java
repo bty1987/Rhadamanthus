@@ -62,5 +62,4 @@ public class AuditAction extends BaseListAction{
 		this.auditVO = auditVO;
 	}
 	
-	
 }

@@ -1,6 +1,7 @@
 package com.fanglin.decoration.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,11 +26,13 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 
 	@Override
 	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters) {
+		List<String> status = Arrays.asList(new String[]{"咨询", "量房","已报价"});
+		
 		PagingQuery<AuditPO> query = pagingQuery(paging,AuditPO.class);
 		
 		queryFilterExcute(query, filters);		
 		
-		return query.list();
+		return query.alias("decorationOrder","decorationOrder").add(Restrictions.not(Restrictions.in("decorationOrder.status", status))).list();
 	}
 	
 	@Override
