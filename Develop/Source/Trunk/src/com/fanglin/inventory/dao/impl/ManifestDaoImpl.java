@@ -90,6 +90,8 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 					
 				}else if(ManifestPO.COLUMN_CODE_STR.equals(field)){
 					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
+				}else if(ManifestPO.COLUMN_COMPANY_STR.equals(field)){
+					query.add(query.getCriterion(ManifestPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

@@ -158,6 +158,11 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "ping", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String ping() throws FLException{
+		return SUCCESS;
+	}
+	
 	public String getAuthenticationEncode() {
 		return authenticationEncode;
 	}

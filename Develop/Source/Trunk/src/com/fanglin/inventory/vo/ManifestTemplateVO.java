@@ -11,6 +11,8 @@ public class ManifestTemplateVO implements java.io.Serializable {
 	private String comment;
 	
 	private Short status;
+	
+	private Integer company;
 
 	public Long getMtId() {
 		return this.mtId;
@@ -42,6 +44,14 @@ public class ManifestTemplateVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

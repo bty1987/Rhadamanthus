@@ -14,7 +14,7 @@ public class MemberCardVO  implements java.io.Serializable {
 	
 	private String orderId;
 	
-	private Integer credits;
+	private Float credits;
 	
 	private Timestamp createTime;
 
@@ -42,11 +42,11 @@ public class MemberCardVO  implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 	
-	public Integer getCredits() {
+	public Float getCredits() {
 		return credits;
 	}
 
-	public void setCredits(Integer credits) {
+	public void setCredits(Float credits) {
 		this.credits = credits;
 	}
 

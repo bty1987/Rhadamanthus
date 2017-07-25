@@ -15,4 +15,6 @@ public interface AssisTypeDao extends Dao<AssisTypePO>{
 	
 	public List<AssisTypePO> queryAssisTypeByWtid(int wtid);
 	
+	public AssisTypePO queryAssisTypeByName(String name);
+	
 }

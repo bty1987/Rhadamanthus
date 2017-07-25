@@ -95,13 +95,16 @@ public class SalesItemServiceImpl implements SalesItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addSalesItem(SalesVO salesVO, SalesItemVO salesItemVO)throws FLException {
 		
-		
-		
 		SalesPO salesPO = salesDao.querySalesBySid(salesVO.getSid());
+		
 		SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
 		
 		if(salesPO == null ){
 			throw new FLException(260021, "销售单不存在");
+		}
+		
+		if(salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT){
+			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
 		float total = salesPO.getTotal();
@@ -115,7 +118,6 @@ public class SalesItemServiceImpl implements SalesItemService {
 		if(!salesPO.getBrand().equals(salesItemVO.getGoods().getBrand())){
 			throw new FLException(111, "品牌不一致");
 		}
-		
 		
 		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
 		BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
@@ -152,6 +154,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
+		if(salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT){
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+		
 		salesPO.setTotal(Arith.add(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()), salesItemVO.getTotal()));
 		
 		salesItemPO.setNum(salesItemVO.getNum());
@@ -180,6 +186,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 		}
 		
 		if(salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT){
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+		
+		if(salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT){
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 

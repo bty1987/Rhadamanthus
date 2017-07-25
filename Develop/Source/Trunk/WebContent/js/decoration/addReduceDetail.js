@@ -163,15 +163,17 @@ var AddReduceDetail = (function(){
 				_discountprice = utils.accMul( _discountprice, (_discountFlag == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
 			}
 
-			if(addReduceDetail.artype == 0){
-				params.decorationOrderType  == 2? _discountprice = utils.accMul(_discountprice,utils.accDiv(config.addreduceDiscount,10)):_discountprice;
-			}
+
 
 			_discountprice = utils.changeTwoDecimal(_discountprice);
 
 			var _totalprice,_totalpriced;
 			_totalprice = utils.changeTwoDecimal(utils.accMul(_num ,  _unitprice));
-			_totalpriced =  utils.changeTwoDecimal(utils.accMul(_num ,  _discountprice));
+			_totalpriced =  utils.accMul(_num ,  _discountprice);
+			if(addReduceDetail.artype == 0){
+				params.decorationOrderType  == 2? _totalpriced = utils.accMul(_totalpriced,utils.accDiv(config.addreduceDiscount,10)):_totalpriced;
+			}
+			_totalpriced = utils.changeTwoDecimal(_totalpriced)
 			return {
 				discountprice : _discountprice,
 				totalpriced : _totalpriced,
@@ -669,12 +671,12 @@ var AddReduceDetail = (function(){
 				_dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
 			}
 
-			if(addReduceDetail.artype == 0){
-				params.decorationOrderType  == 2 ? _dcp = utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount,10)):_dcp;
-			}
-
 			_dcp = utils.changeTwoDecimal(_dcp);
+			var total = utils.accMul(qv.num ,  _dcp);
 
+			if(addReduceDetail.artype == 0){
+				params.decorationOrderType  == 2? total = utils.accMul(total,utils.accDiv(config.addreduceDiscount,10)):total;
+			}
 			var _lineSet = [
 				["line", linenum],
 				["num", qv.num],//工程预算量
@@ -685,7 +687,7 @@ var AddReduceDetail = (function(){
 				["unit", qv.measurementUnit],//单位
 				["price unitprice", qv.unitPrice],//单价
 				["price discountprice", _dcp, ["data-discount", addReduceDetail.artype == 0 ?  "0" : qv.discount]],//折后单价
-				["price totalprice-discount",  utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp))],//总价
+				["price totalprice-discount",  utils.changeTwoDecimal(total)],//总价
 			];
 
 			var $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo;
@@ -738,6 +740,8 @@ var AddReduceDetail = (function(){
 				e.stopPropagation();
 				qv.content && com.showInfo(qv.content);
 			});
+
+
 
 			$item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp)) );
 

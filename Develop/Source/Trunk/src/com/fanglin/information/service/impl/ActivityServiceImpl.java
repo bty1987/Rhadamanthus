@@ -82,7 +82,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addActivity(ActivityVO activityVO, String userId, String userName) {
+	public void addActivity(ActivityVO activityVO, String userId, String userName){
 		
 		ActivityPO activityPO = new ActivityPO();
 		BeanUtil.copyProperties(activityVO, activityPO);

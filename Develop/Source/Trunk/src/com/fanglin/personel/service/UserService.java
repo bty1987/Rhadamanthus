@@ -49,4 +49,6 @@ public interface UserService {
 	
 	public UserVO validateUser(String loginId, String password);
 	
+	public int resetPassword(String UserId) throws FLException;
+	
 }

@@ -57,6 +57,9 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 	private MessageService messageService;
 
 	@Autowired
+	private com.fanglin.dingding.service.MessageService messageDDService;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	@Override
@@ -112,7 +115,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		
 		messageService.sendMessage(messageVO);
 		
-		com.fanglin.dingding.service.MessageService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents());
+		messageDDService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents());
 		
 		return 0;
 	}

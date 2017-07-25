@@ -27,6 +27,8 @@ public class AssisOrderVO implements Serializable{
 	
 	private Short status;
 	
+	private Integer company;
+	
 	public AssisOrderVO() {
 		super();
 	}
@@ -106,6 +108,14 @@ public class AssisOrderVO implements Serializable{
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

@@ -9,7 +9,7 @@ public interface ConstructerService {
 	
 	public List<ConstructerVO> queryConstructerByOrderId(ConstructerVO constructer);
 
-	public List<ConstructerVO> queryConstructerByCsId(ConstructerVO constructer);
+	public List<ConstructerVO> queryConstructerByCid(ConstructerVO constructer);
 
 	public void addConstructer(ConstructerVO constructer, String createrId) throws FLException;
 

@@ -12,25 +12,37 @@
 package com.fanglin.dingding.service;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.dingding.po.Department;
-import com.fanglin.dingding.utils.AuthHelper;
-import com.fanglin.dingding.utils.Constant;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
-import com.fanglin.utils.SystemConfig;
-
-
+@Service("departmentDDService")
+@Transactional(readOnly = true)
 public class DepartmentService {
 	
-	public static List<Department> queryDepartment(long did){
+	@Autowired
+	private   AuthService authDDService ;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	public  List<Department> queryDepartment(long did){
 		
-		String accessToken = AuthHelper.getAccessToken();
+		String accessToken = authDDService.getAccessToken();
 		
-		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken, did);
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
 		
+		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, did);
+	
 		JSONObject json = HttpHelper.httpGet(url);
 	
 		return JSON.parseArray(json.getJSONArray("department").toJSONString(), Department.class);

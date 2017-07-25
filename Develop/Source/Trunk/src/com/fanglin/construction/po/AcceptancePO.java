@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="acceptance", catalog = "platform")
+@Table(name="acceptance", catalog = "construction")
 public class AcceptancePO implements Serializable{
 
 	private static final long serialVersionUID = -4319485351492418003L;

@@ -142,7 +142,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
 	}
-
+ 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void vpostMaterialSubOrderBalance(MaterialSubOrderBalanceVO materialSubOrderBalanceVO) throws FLException {
@@ -179,7 +179,6 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		materialSubOrderBalancePO.setPost(materialSubOrderBalanceVO.getBalance());
 		materialSubOrderBalanceDao.update(materialSubOrderBalancePO);
 	
-		
 	}
 
 	@Override

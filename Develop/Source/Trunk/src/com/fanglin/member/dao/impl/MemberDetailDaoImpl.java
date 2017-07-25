@@ -11,11 +11,15 @@ import com.fanglin.utils.Paging;
 
 @Repository("memberDetailDao")
 public class MemberDetailDaoImpl extends DaoImpl<MemberDetailPO> implements MemberDetailDao {
+	
+	public MemberDetailDaoImpl() {
+		super(MemberDetailPO.class);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MemberDetailPO> queryMemberDetailByOrderId(String orderId) {
-		return session().createCriteria(MemberDetailPO.class).add(Restrictions.eq("pid", orderId)).list();
+	public List<MemberDetailPO> queryMemberDetailByOrderId(long mcId) {
+		return session().createCriteria(MemberDetailPO.class).add(Restrictions.eq("memberCard.mcId", mcId)).list();
 	}
 	
 	@Override

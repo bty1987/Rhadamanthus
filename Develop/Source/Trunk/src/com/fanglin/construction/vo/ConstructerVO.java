@@ -7,16 +7,27 @@ import com.fanglin.personel.vo.UserVO;
 public class ConstructerVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5071168089649592674L;
+	
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	private Long cid;
-	private Long csId;	//工程id
+	
+	private Long crid;
+	
+	private Long cid;	//工程id
+	
 	private String orderId;
+	
 	private UserVO	user;
+	
 	private Integer schedule;
+	
 	private Short rate;
+	
 	private String assessment;
+	
 	private UserVO creater;
+	
 	private Timestamp createTime;
+	
 	private Short status;
 
 	
@@ -35,20 +46,20 @@ public class ConstructerVO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
+	public Long getCrid() {
+		return crid;
+	}
+
+	public void setCrid(Long crid) {
+		this.crid = crid;
+	}
+
 	public Long getCid() {
-		return this.cid;
+		return cid;
 	}
 
 	public void setCid(Long cid) {
 		this.cid = cid;
-	}
-
-	public Long getCsId() {
-		return this.csId;
-	}
-
-	public void setCsId(Long csId) {
-		this.csId = csId;
 	}
 
 	public String getOrderId() {

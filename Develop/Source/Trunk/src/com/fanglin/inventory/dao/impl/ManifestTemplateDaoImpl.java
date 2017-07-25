@@ -61,6 +61,8 @@ public class ManifestTemplateDaoImpl extends DaoImpl<ManifestTemplatePO> impleme
 				
 				if(ManifestTemplatePO.COLUMN_NAME_STR.equals(field)){
 					query.add(query.getCriterion(ManifestTemplatePO.COLUMN_NAME_STR, data, op));
+				}else if(ManifestTemplatePO.COLUMN_COMPANY_STR.equals(field)){
+					query.add(query.getCriterion(ManifestTemplatePO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

@@ -1,0 +1,19 @@
+{
+  "perCharge": [
+    {"key":"designer", "value":"9"},
+    {"key":"manager", "value":"1"}
+  ],
+  "auditScaleStatus": [
+    {"key":"0", "value":"初始"},
+    {"key":"1", "value":"确认提交扣款信息"},
+    {"key":"2", "value":"已处理"},
+    {"key":"3", "value":"已退款"}
+  ],
+  "auditStatus":[
+    {"key":"已审批","value":"已审批"},
+    {"key":"未审批","value":"未审批"}
+  ],
+  "errorCode": 0,
+  "errorMsg": null
+
+}

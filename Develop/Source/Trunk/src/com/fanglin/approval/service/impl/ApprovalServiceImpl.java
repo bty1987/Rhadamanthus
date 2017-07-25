@@ -240,6 +240,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
 				approvalManifestDBService.refuseManifestDB(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT://12
+				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
+				break;
 			default:
 				break;
 		}

@@ -71,14 +71,6 @@ public class DepartmentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateDepartmentForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDepartmentForStatus() throws FLException{
-		
-		departmentService.updateDepartmentForStatus(dept);
-		
-		return SUCCESS;
-	}
 
 	public DepartmentVO getDept() {
 		return dept;

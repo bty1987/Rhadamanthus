@@ -194,6 +194,15 @@ var Condition = function(api){
                 validate:null
             }
         },
+  name: {
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate:null
+            }
+        },
         cityProperName: {
             label:"城区名称",
             type:"text",
@@ -719,15 +728,7 @@ var Condition = function(api){
                 valuePath: "deptName"
             }
         },
-  name: {
-            label:"公司名称",
-            type:"text",
-            submitConfig : {
-                name : "name",
-                op : "cn",
-                validate:null
-            }
-        },
+
         userstatus : {
             label:"状态",
             type:"select",
@@ -904,6 +905,38 @@ var Condition = function(api){
                 url : api.ds.decorationInfo,
                 postData:{ "timestamp": new Date().getTime()},
                 listPath: "houseClass",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        auditName:{
+            label : "审核人",//中文名
+            type : "autofill",//类型
+            submitConfig : {//向后台提交的配置
+                name : "auditer",//接口中的参数名
+                op : "cn",//查询方式
+                validate: null//校验规则
+            },
+            dataSource : {//从后台取数据的各种配置
+                url : api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData:{ "duty" : "预算审核专员" },//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath:"key",//用来向后台提交的字段的json路径
+                valuePath:"value"//用来在页面显示的字段的json路径
+            }
+        },
+        auditStatus : {
+            label:"审核状态",
+            type:"select",
+            submitConfig : {
+                name :　"auditStatus",
+                op : "eq",
+                validate : null
+            },
+            dataSource : {
+                url : api.ds.auditInfo,
+                postData:{"timestamp":new Date().getTime()},
+                listPath:"auditStatus",
                 keyPath:"key",
                 valuePath:"value"
             }
@@ -1279,6 +1312,7 @@ var Condition = function(api){
                 url : null,
                 postData : null,
                 listPath: [
+					{key: "0", value: "初始"},
                     {key: "1", value: "通过"},
                     {key: "2", value: "驳回"}
                 ],

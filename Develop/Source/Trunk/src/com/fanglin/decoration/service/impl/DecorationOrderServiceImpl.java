@@ -36,9 +36,11 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
+import com.fanglin.decoration.dao.AuditDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
+import com.fanglin.decoration.po.AuditPO;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
@@ -126,6 +128,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Autowired
 	private DecorationOrderStatusRightDao decorationOrderStatusRightDao;
+	
+	@Autowired
+	  private AuditDao auditDao;
 	
 	@Override
 	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, String userId){
@@ -614,10 +619,12 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<String> statuses = null;
 		
 		if(duty.contains("业务员")){
-			filters.add(new Filter("userSalesman", userPO.getUserId(), "eq"));
+			filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
 		}else{
 			List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid());
 			
+			if(decoratoinOrderSalesmanDepartmentRightPOs.isEmpty()) return;
+					
 			salesmanDepartmentIds = new ArrayList<Integer>();
 			
 			for(DecorationOrderSalesmanDepartmentRightPO decorationOrderSalesmanDepartmentRightPO: decoratoinOrderSalesmanDepartmentRightPOs){
@@ -774,9 +781,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		List<String> orderIds = new ArrayList<String>();
 		Map<String, DecorationOrderPO> decorationOrderMap = new HashMap<String, DecorationOrderPO>();
 		Map<String, DecorationOrderExportVO> decorationOrderExportMap = new HashMap<String, DecorationOrderExportVO>();
-		
+		String orderId;
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
-			String orderId = decorationOrderPO.getOrderId();
+			orderId = decorationOrderPO.getOrderId();
 			
 			DecorationOrderExportVO decorationOrderExportVO = new DecorationOrderExportVO();
 			
@@ -815,22 +822,30 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		for(QuotationPO quotationPO: quotationPOs){
 			
-			if(quotationPO.getType() != quotationPO.getDecorationOrder().getType()) continue;
-			
-			DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
-			
-			decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
-			decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
-			decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
-			decorationOrderExportVO.setManagePrice(quotationPO.getManagePrice());
-			decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
-			
-			if(quotationPO.getManageRate() == 0){
-				decorationOrderExportVO.setNotSalesmanCut(0f);
-				decorationOrderExportVO.setAchievement(0f);
-			}else{
-				decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
-				decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
+			short decorationOrderType = quotationPO.getDecorationOrder().getType();
+		    short quotationType = quotationPO.getType();
+		    
+		    if (decorationOrderType == DecorationOrderPO.TYPE_HOLONOMY_INT) {
+		        decorationOrderType = DecorationOrderPO.TYPE_PART_INT;
+		    }
+		    
+		    if (quotationType == decorationOrderType){
+		    	
+				DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
+				
+				decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
+				decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
+				decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
+				decorationOrderExportVO.setManagePrice(quotationPO.getManagePrice());
+				decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
+				
+				if(quotationPO.getManageRate() == 0){
+					decorationOrderExportVO.setNotSalesmanCut(0f);
+					decorationOrderExportVO.setAchievement(0f);
+				}else{
+					decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
+					decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
+				}
 			}
 		}
 		
@@ -1449,6 +1464,10 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		belongDecorationOperatePO.setValue(1f);
 		belongDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		belongDecorationOperatePO.setDes("订单归属");
+		
+		AuditPO auditPOs = new AuditPO();
+	    auditPOs.setDecorationOrder(decorationOrderPO);
+	    this.auditDao.save(auditPOs);
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="reworkdrawing", catalog = "platform")
+@Table(name="reworkdrawing", catalog = "construction")
 public class ReworkDrawingPO implements Serializable{
 
 	private static final long serialVersionUID = 6799307327658765089L;

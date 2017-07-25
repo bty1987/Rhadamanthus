@@ -13,26 +13,38 @@ package com.fanglin.dingding.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.dingding.po.AppMessageDelivery;
 import com.fanglin.dingding.po.OAMessage;
 import com.fanglin.dingding.po.TextMessage;
-import com.fanglin.dingding.utils.AuthHelper;
-import com.fanglin.dingding.utils.Constant;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
+@Service("messageDDService")
+@Transactional(readOnly = true)
 public class MessageService {
 	
-	public static int send(AppMessageDelivery delivery){
+	@Autowired
+	private   AuthService authDDService ;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	public  int send(AppMessageDelivery delivery){
 		
 		Logger logger = LoggerFactory.getLogger(MessageService.class);
 		
 		try {
-			String accessToken = AuthHelper.getAccessToken();
+			String accessToken = authDDService.getAccessToken();
 			
-			String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken);
+			SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+			
+			String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR,oapiHost.getValue(), accessToken);
 			
 			HttpHelper.httpPost(url, delivery.toJsonObject());
 		} catch (Exception e) {
@@ -42,14 +54,18 @@ public class MessageService {
 		return 0;
 	}
 	
-	public static int sendMessageForApproval(String receiveId, String senderName, int approvalId, String type, String contents){
+	public  int sendMessageForApproval(String receiveId, String senderName, int approvalId, String type, String contents){
 		
-		String accessToken = AuthHelper.getAccessToken();
+		String accessToken = authDDService.getAccessToken();
 		
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", SystemConfig.getString(Constant.APPROVAL_AGENTID_STR));
+		SystemConfigPO approvalAgentId = systemConfigDao.querySystemConfigByKey("approvalAgentId");
+		
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", approvalAgentId.getValue());
 		
 		OAMessage oaMessage = new OAMessage();
-		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s", SystemConfig.getString(Constant.MP_HOST_STR), approvalId);
+		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s",mpHost.getValue(), approvalId);
 		OAMessage.Head head = new OAMessage.Head();
 		head.bgcolor = "FFE8643E";
 		oaMessage.head = head;
@@ -62,32 +78,42 @@ public class MessageService {
 		
 		appMessageDelivery.withMessage(oaMessage);
 		
-		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken);
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		
+		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue() , accessToken);
 		
 		HttpHelper.httpPost(url, appMessageDelivery.toJsonObject());
 		
 		return 0;
 	}
 	
-	public static int sendMessageForPayment(String receiveId, String senderName, String contents){
+	public  int sendMessageForPayment(String receiveId, String senderName, String contents){
 		
 		TextMessage textMessage = new TextMessage(contents);
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", SystemConfig.getString(Constant.MESSAGE_AGENTID_STR));
+		
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfigByKey("messageAgentId");
+		
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
+		
 		appMessageDelivery.withMessage(textMessage);
-		com.fanglin.dingding.service.MessageService.send(appMessageDelivery);
+		
+		send(appMessageDelivery);
 		
 		return 0;
 	}
 	
-	public static int sendMessageForBackVisit(String receiveId, String senderName, String orderId, String contents){
+	public  int sendMessageForBackVisit(String receiveId, String senderName, String orderId, String contents){
 		
-		String accessToken = AuthHelper.getAccessToken();
+		String accessToken =authDDService.getAccessToken();
 		
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", SystemConfig.getString(Constant.SALESMAN_AGENTID_STR));
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		
+		SystemConfigPO salesmanAgentId = systemConfigDao.querySystemConfigByKey("salesmanAgentId");
+		
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", salesmanAgentId.getValue());
 		
 		OAMessage oaMessage = new OAMessage();
-		oaMessage.message_url = String.format("%s/dingding/salesman/backvisit.html?orderid=%s", SystemConfig.getString(Constant.MP_HOST_STR), orderId);
-		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s", SystemConfig.getString(Constant.MP_HOST_STR), orderId);
+		oaMessage.message_url = String.format("%s/dingding/salesman/backvisit.html?orderid=%s",mpHost.getValue(), orderId);
 		OAMessage.Head head = new OAMessage.Head();
 		head.bgcolor = "FFDFD130";
 		oaMessage.head = head;
@@ -100,11 +126,29 @@ public class MessageService {
 		
 		appMessageDelivery.withMessage(oaMessage);
 		
-		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, SystemConfig.getString(Constant.OAPI_HOST_STR), accessToken);
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		
+		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue(), accessToken);
 		
 		HttpHelper.httpPost(url, appMessageDelivery.toJsonObject());
 		
 		return 0;
 	}
+	 	
+	public  int sendMessage(String receiveId, String senderName, String contents){
+			
+		TextMessage textMessage = new TextMessage(contents);
+			
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfigByKey("messageAgentId");
+			
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
+			
+		appMessageDelivery.withMessage(textMessage);
+			
+		send(appMessageDelivery);
+			
+		return 0;
+	}
+	
 	
 }

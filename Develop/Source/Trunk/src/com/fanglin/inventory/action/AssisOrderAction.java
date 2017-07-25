@@ -38,9 +38,9 @@ public class AssisOrderAction extends BaseListAction{
 	private AssisOrderItemService assisOrderItemService;
 	
 	@Action(value = "pageAssisOrder", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageAssisOrder(){
+	public String pageAssisOrder() throws FLException{
 		
-		assisOrderService.pageAssisOrder(getPaging(), getFilters());
+		assisOrderService.pageAssisOrder(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -48,7 +48,7 @@ public class AssisOrderAction extends BaseListAction{
 	@Action(value = "addAssisOrder", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAssisOrder() throws FLException{
 		
-		assisOrderService.addAssisOrder(assisOrder, assisOrderItems, queryUserId() ,"");
+		assisOrderService.addAssisOrder(assisOrder, assisOrderItems, queryUserId() ,"",queryCompany());
 		
 		return SUCCESS;
 	}

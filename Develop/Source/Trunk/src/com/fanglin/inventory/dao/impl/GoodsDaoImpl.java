@@ -54,41 +54,41 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(GoodsPO.COLUMN_NAME_STR, name,MatchMode.ANYWHERE), Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no ,MatchMode.ANYWHERE)), Restrictions.ilike(GoodsPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE))).setMaxResults(limit).list();
+	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit,int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(GoodsPO.COLUMN_NAME_STR, name,MatchMode.ANYWHERE), Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no ,MatchMode.ANYWHERE)), Restrictions.ilike(GoodsPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE))).setMaxResults(limit).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByNo(String no, int limit) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no, MatchMode.ANYWHERE)).setMaxResults(limit).list();
+	public List<GoodsPO> queryGoodsByNo(String no, int limit,int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByBarcode(String barcode, int limit) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_BARCODE_STR, barcode, MatchMode.ANYWHERE)).setMaxResults(limit).list();
+	public List<GoodsPO> queryGoodsByBarcode(String barcode, int limit,int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_BARCODE_STR, barcode, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<GoodsPO> queryGoodsByAtid(long atid) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_ATID_STR, atid)).list();
+	public List<GoodsPO> queryGoodsByAtid(long atid,int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_ATID_STR, atid)).list();
 	}
 	
 	@Override
-	public GoodsPO queryGoodsByName(String name) {
-		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.eq(GoodsPO.COLUMN_NAME_STR, name), Restrictions.eq(GoodsPO.COLUMN_PINYIN_STR, name))).uniqueResult();
+	public GoodsPO queryGoodsByName(String name,int company) {
+		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.eq(GoodsPO.COLUMN_NAME_STR, name), Restrictions.eq(GoodsPO.COLUMN_PINYIN_STR, name))).uniqueResult();
 	}
 
 	@Override
-	public GoodsPO queryGoodsByNo(String no) {
-		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_NO_STR, no)).uniqueResult();
+	public GoodsPO queryGoodsByNo(String no,int company) {
+		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
 	@Override
-	public GoodsPO queryGoodsByBarcode(String barcode) {
-		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_BARCODE_STR, barcode)).uniqueResult();
+	public GoodsPO queryGoodsByBarcode(String barcode,int company) {
+		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_BARCODE_STR, barcode)).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
@@ -110,6 +110,8 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 					query.add(query.getCriterion(GoodsPO.COLUMN_CATEGORY_STR, data, op));
 				}else if(GoodsPO.COLUMN_BRAND_STR.equals(field)){
 					query.add(query.getCriterion(GoodsPO.COLUMN_BRAND_STR, data, op));
+				}else if(GoodsPO.COLUMN_COMPANY_STR.equals(field)){
+					query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

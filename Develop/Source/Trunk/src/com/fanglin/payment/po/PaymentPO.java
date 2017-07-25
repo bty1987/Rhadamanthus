@@ -48,6 +48,8 @@ public class PaymentPO implements Serializable {
 	public static final String PAYMENT_CONVERT_IN_STR = "预付款转入";
 	
 	public static final String PAYMENT_CONVERT_OUT_STR = "预付款转出";
+	
+	public static final String PAYMENT_TYPE_PAY_STR = "付款";
 
 	public static final String PAYMENT_STATUS_PAID_STR = "已付款";
 	

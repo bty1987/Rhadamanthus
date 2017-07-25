@@ -24,21 +24,8 @@ $(function(){
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.id));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var propertyArr = [
-                ["编号:", v.id, "grey"],
-                ["类型:", v.name, "grey"],
-
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-            $liLine.append($h3).append($ulProperty);
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.id+" "+ v.name));
+            $liLine.append($h3);
             return $liLine;
         };
 

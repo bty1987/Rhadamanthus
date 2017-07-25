@@ -31,14 +31,17 @@ $.extend(api.ds, {
 
 $.extend(api, {payment: {
     queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
-	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
+	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do" ,server : "platform" },
 
 	pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
 	queryPaymentByOrderId: {url: "queryPaymentByOrderId.do"},
 	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
 	collectPayment: {url: "collectPayment.do"},
 	confirmPayment: {url: "confirmPayment.do"},
+	updatePayment: {url: "updatePayment.do"},
+	payPayment: {url: "payPayment.do"},
 	withdrawPayment: {url: "withdrawPayment.do"},
+	
 
 	pageDecorationPaymentForCommit: {url: "pageDecorationPaymentForCommit.do", demo: true},
 	pageDecorationPaymentForCollect: {url: "pageDecorationPaymentForCollect.do", demo: true},
@@ -93,7 +96,7 @@ $.extend(api, {payment: {
 	pageSalesPaymentForConfirm : {url : "pageSalesPaymentForConfirm.do"},
 	pageSalesPaymentForNotInit : {url : "pageSalesPaymentForNotInit.do"},
 	querySalesPaymentBySid : {url : "querySalesPaymentBySid.do"},
-	querySalesPaymentForNotInitBySrId : {url : "querySalesPaymentForNotInitBySrId.do"},
+	querySalesPaymentForNotInitBySrId : {url : "querySalesPaymentForNotInitBySrid.do"},
 	querySalesReceiptBySrId : {url : "querySalesReceiptBySrId.do"},
 	addSalesPayment : {url : "addSalesPayment.do"},
 	collectSalesPayment : {url : "collectSalesPayment.do"},

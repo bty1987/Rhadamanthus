@@ -26,13 +26,10 @@ jQuery(function($) {
 		options: {},
 	};
 
-	com.post(api.construction.queryCleaningConstructionScheduleByOrderId, {"cleaningConstructionSchedule.orderId":params.orderId},
+	com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId":params.orderId,"constructionSchedule.schedule":9},
 		function(data){
-			cleaningConstructionSchedule = data.cleaningConstructionSchedule;
-			if(cleaningConstructionSchedule.startTimeFlag == 0 || cleaningConstructionSchedule.endTimeFlag == 0){
-				com.showAlert(com.error, "请确认此订单保洁开工时间和完工时间是否确认！");
-				return;
-			}
+			cleaningConstructionSchedule = data.constructionSchedule;
+
 			com.post(api.construction.queryAcceptance, {
 				"acceptance.orderId": params.orderId
 			}, function(res){

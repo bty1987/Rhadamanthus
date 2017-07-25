@@ -31,11 +31,16 @@ $.extend(api.index, {
     decorationOrderTimelineIndex: {url: "/views/decoration/decorationOrderTimeline.html"},
     decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
     backVisitIndex: {url: "/views/decoration/backVisit.html"},
-    createOrderIndex: {url: "/views/decoration/createOrder.html"}
+    createOrderIndex: {url: "/views/decoration/createOrder.html"},
+
+    auditIndex: {url: "/views/decoration/audit.html"},
+    auditRecordIndex: {url: "/views/decoration/auditRecord.html"},
+    auditDetail :{url:"/views/decoration/auditDetail.html"},
 });
 
 $.extend(api.ds, {
-    decorationInfo: {url: "ds/decorationInfo.json", demo: true}
+    decorationInfo: {url: "ds/decorationInfo.json", demo: true},
+    auditInfo: {url: "ds/audit.json", demo: true}
 });
 
 $.extend(api, {decoration: {
@@ -101,4 +106,17 @@ $.extend(api, {decoration: {
 	pageDecorationHolonomy: {url: "pageDecorationHolonomy.do"},
 	queryDecorationHolonomy: {url: "queryDecorationHolonomy.do"},
 	makeDecorationHolonomy: {url: "makeDecorationHolonomy.do"},
+
+    pageAudit: {url: "pageAudit.do"},
+    applyAudit: {url: "applyAudit.do"},
+
+    queryAuditRecordByOrderId: {url: "queryAuditRecordByOrderId.do"},
+    addAuditRecord: {url: "addAuditRecord.do"},
+    updateAuditRecord: {url: "updateAuditRecord.do"},
+
+    queryAuditScaleByArid: {url: "queryAuditScaleByArid.do"},
+    makeAuditScale: {url: "makeAuditScale.do"},
+    updateAudtiScaleForStatus: {url: "updateAudtiScaleForStatus.do"},
+    addAudtiScale: {url: "addAudtiScale.do"},
+    deleteAudtiScale: {url: "deleteAudtiScale.do"},
 }});

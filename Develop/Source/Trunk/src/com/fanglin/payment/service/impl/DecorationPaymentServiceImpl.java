@@ -34,6 +34,7 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.finance.service.FinanceService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -96,6 +97,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
+	
+	@Autowired
+	private MessageService messageDDService;
 	
 	@Override
 	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters){
@@ -820,7 +824,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 		
 		if(decorationOrderPO.getSupervisorPO() != null){
-			com.fanglin.dingding.service.MessageService.sendMessageForPayment(decorationOrderPO.getSupervisorPO().getUserId(), "", String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()));
+			messageDDService.sendMessageForPayment(decorationOrderPO.getSupervisorPO().getUserId(), "", String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()));
 		}
 		
 		return 0;
@@ -1039,9 +1043,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setHouseNumber(decorationOrderPO.getHouseNumber());
 		decorationPaymentVO.setDesigner(designer.getCurrentName());
 		decorationPaymentVO.setDesignerDepartment(designer.getDept().getDeptName());
-		decorationPaymentVO.setDesignerRegion(designer.getDept().getFatherDept().getDeptName());
 		decorationPaymentVO.setSalesman(salesman.getCurrentName());
-		
 		decorationPaymentVO.setOrderTotalPrice(decorationPaymentPO.getDecorationOrderPO().getOrderTotalPrice());
 		decorationPaymentVO.setOrderStatus(decorationPaymentPO.getDecorationOrderPO().getStatus());
 

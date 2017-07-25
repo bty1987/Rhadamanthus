@@ -15,6 +15,7 @@ $.extend(api.ds, {
 });
 
 $.extend(api, {report: {
+	pagePutline: {url: "pagePutline.do"},
     queryRankForPlace: {url: "queryRankForPlace.do", demo: true},
 
     queryDecorationDesignerRank: {url: "queryDecorationDesignerRank.do"},

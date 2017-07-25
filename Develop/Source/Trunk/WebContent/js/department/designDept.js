@@ -78,7 +78,7 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-			var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("checked", v.status == 0 ? false : true);
+			var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? false : true);
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
             
             var propertyArr = [
@@ -215,7 +215,7 @@ jQuery(function($) {
 			url = api.department.addDepartment;
 			options['dept.deptId'] = "DD_";
 		}
-		
+
 		com.post(url, options, function(res){
 			searcher.doSearch();
 		});

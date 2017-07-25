@@ -94,7 +94,7 @@ jQuery(function($) {
 		
 		var gallery = $("#"+galleryId);
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).css("border-color", "#ddd").appendTo(gallery);
-		var img = $('<img></img>');
+		var img = $('<img/>');
 		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").append(img).appendTo(imgLi);
 		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){

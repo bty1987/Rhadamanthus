@@ -40,7 +40,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSales() throws FLException{
 		
-		salesService.pageSales(getPaging(), getFilters(),queryUserId());;
+		salesService.pageSales(getPaging(), getFilters(),queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -57,7 +57,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "addSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSales() throws FLException{
 		
-		salesService.addSales(sales, salesItems); 
+		salesService.addSales(sales, salesItems,queryCompany()); 
 		
 		return SUCCESS;
 	}

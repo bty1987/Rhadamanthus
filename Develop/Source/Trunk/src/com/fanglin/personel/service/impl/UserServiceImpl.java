@@ -12,15 +12,16 @@ package com.fanglin.personel.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
+import com.fanglin.core.security.SecurityCodeHelper;
+import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.po.UserInfoPO;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserInfoDao userInfoDao;
+	
+	@Autowired
+	private MessageService messageDDService;
 	
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException{
@@ -69,11 +73,11 @@ public class UserServiceImpl implements UserService {
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
-		
+	
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
-		System.out.println(userPO.getDept().getDeptId());
+		
 		if(userPO != null && !userPO.getRole().getRoleId().equals(RolePO.SUPER_ROLEID_STR)){
 			userVO = convertBean(userPO);
 		}
@@ -87,11 +91,11 @@ public class UserServiceImpl implements UserService {
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 	
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		userVO = convertBean(userPO);
-		System.out.println(userVO);
+	
 		return userVO;
 	}
 	
@@ -103,7 +107,7 @@ public class UserServiceImpl implements UserService {
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 		
 		if(userInfoPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user"));
@@ -120,7 +124,7 @@ public class UserServiceImpl implements UserService {
 		UserPO userPO = userDao.queryUserByOldUserId(userVO.getOldUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
 	    userVO = convertBean(userPO);
@@ -285,6 +289,23 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return userVO;
+	}
+	
+	@Override
+	public int resetPassword(String userId) throws FLException{
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null ){
+			throw new FLException(190005, "人员不存在");
+		}
+		
+		String newPassword=SecurityCodeHelper.getSecurityCode(8, SecurityCodeLevel.Medium,false).toUpperCase();
+		
+		userDao.resetPassword(userId, MD5Helper.MD5(newPassword));
+		
+		messageDDService.sendMessage(userId,userPO.getUserName(),"重置密码,新密码为"+newPassword);
+	
+		return 0;
 	}
 	
 	private UserVO convertBean(UserPO userPO){

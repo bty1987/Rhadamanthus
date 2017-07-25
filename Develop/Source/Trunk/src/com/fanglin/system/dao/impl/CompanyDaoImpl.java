@@ -41,23 +41,23 @@ public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao{
 	}
 
 	@Override
-	public CompanyPO queryCompanyByName(String name) {
-		
-		return  (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_NAME_STR, name)).uniqueResult();
-
+	@SuppressWarnings("unchecked")
+	public List<CompanyPO> queryCompany() {
+		return session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_STATUS_STR, CompanyPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
-	public CompanyPO queryCompanyById(int cid) {
-	
+	public CompanyPO queryCompanyByName(String name) {
+		return  (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_NAME_STR, name)).uniqueResult();
+	}
+
+	@Override
+	public CompanyPO queryCompanyByCid(int cid) {
 		return (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_CID_STR , cid)).uniqueResult();
-		
 	}
 
 	@Override
 	public CompanyPO queryCompanyByNo(int no) {
-	
 		return (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_NO_STR , no)).uniqueResult();
-		
 	}
 }

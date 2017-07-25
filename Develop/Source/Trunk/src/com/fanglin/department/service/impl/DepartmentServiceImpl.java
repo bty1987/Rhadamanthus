@@ -121,20 +121,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 		return departmentVOs;
 	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateDepartmentForStatus(DepartmentVO departmentVO) {
-		
-		String deptId = departmentVO.getDeptId();
-		DepartmentPO departmentPO = departmentDao.get(deptId);
-		
-		if(departmentPO != null){
-			departmentPO.setStatus(departmentVO.getStatus());
-			departmentDao.update(departmentPO);
-		}
-			
-	}
 
 	public DepartmentVO convertBean(DepartmentPO departmentPO){
 		DepartmentVO departmentVO = new DepartmentVO();
@@ -156,5 +142,4 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 		return departmentVO;
 	}
-
 }

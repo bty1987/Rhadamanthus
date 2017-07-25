@@ -3,7 +3,7 @@ jQuery(function($) {
 
 	var customerServiceDetail = {
 
-		construstionSchedule: {},
+		construstion: {},
 
 		stepLimit: 0,
 
@@ -35,7 +35,6 @@ jQuery(function($) {
 				workerDesId: "putlineWorkerDes",
 
 				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
 				setWorkerRaty: api.construction.updateConstructerForRate,
 
 				elementId: "plcsId",
@@ -196,13 +195,13 @@ jQuery(function($) {
 	var commitFlag = false;
 	var workerIdsData = [];
 
-	com.post(api.construction.queryConstructionScheduleByOrderId, {
-		"constructionSchedule.orderId": params.orderId
+	com.post(api.construction.queryConstructionByOrderId, {
+		"construction.orderId": params.orderId
 	}, function(res){
 
-		customerServiceDetail.construstionSchedule = res.constructionSchedule;
+		customerServiceDetail.construstion = res.construction;
 
-		var schedule = res.constructionSchedule.schedule;
+		var schedule = res.construction.schedule;
 
 		var operate = customerServiceDetail.operateDict[schedule];
 
@@ -292,17 +291,17 @@ jQuery(function($) {
 						var workerNameSpan = $('<span id="workerNameSpan"></span>').text(workerInfo.user.userName).appendTo(workerNameGroupDiv);
 
 						var workerRatyGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
-						var workerRatyDiv = $('<div></div>').attr("id", workerInfo.cid+"workerRaty").appendTo(workerRatyGroupDiv);
+						var workerRatyDiv = $('<div></div>').attr("id", workerInfo.crid+"workerRaty").appendTo(workerRatyGroupDiv);
 
 						var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
-						var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.cid+"workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
+						var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid+"workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
 
 						profileDiv.appendTo($("#"+operate.workerInfos));
 
-						setWorkerRaty('#'+workerInfo.cid+"workerRaty", workerInfo.rate);
-						setWorkerDes("#"+workerInfo.cid+"workerRatyDes", workerInfo.assessment);
+						setWorkerRaty('#'+workerInfo.crid+"workerRaty", workerInfo.rate);
+						setWorkerDes("#"+workerInfo.crid+"workerRatyDes", workerInfo.assessment);
 
-						workerIdsData.push(constructers[i].cid);
+						workerIdsData.push(constructers[i].crid);
 					}
 
 					commitFlag = true;
@@ -313,10 +312,10 @@ jQuery(function($) {
 				$("#btnSave").click(function(){
 					for(var i=0;i<workerIdsData.length;i++){
 						var options = {};
-						options["constructer.cid"] = workerIdsData[i];
+						options["constructer.crid"] = workerIdsData[i];
 						options["constructer.rate"] = $("#"+workerIdsData[i] + "workerRaty-score").val();
 						options["constructer.assessment"] = $("#"+workerIdsData[i] + "workerRatyDes").val();
-						
+						console.log(options);
 						if(commitFlag){
 							com.post(operate.setWorkerRaty, options, function(res){
 								com.showAlert(com.info, "保存成功!");
@@ -331,7 +330,7 @@ jQuery(function($) {
 			for (var i = 0; i < constructers.length; i++){
 				var workerInfo = constructers[i];
 				if(workerInfo.cid == 0){
-					customerServiceDetail[operate.elementConstructerName+".cid"] = 0;
+					customerServiceDetail[operate.elementConstructerName+".crid"] = 0;
 				}
 			}
 		});

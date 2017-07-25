@@ -6,6 +6,8 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Long gid;
 	
+	private Integer company;
+	
 	private String no;
 	
 	private String name;
@@ -37,13 +39,20 @@ public class GoodsVO implements java.io.Serializable {
 		this.assisType = assisType;
 	}
 
-
 	public Long getGid() {
 		return this.gid;
 	}
 
 	public void setGid(Long gid) {
 		this.gid = gid;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	public String getNo() {

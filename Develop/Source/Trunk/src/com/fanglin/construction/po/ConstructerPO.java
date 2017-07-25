@@ -17,29 +17,44 @@ import com.fanglin.personel.po.UserPO;
 
 
 @Entity
-@Table(name = "constructer", catalog = "platform")
+@Table(name = "constructer", catalog = "construction")
 public class ConstructerPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7434364138129555697L;
-	public static final String  COLUMN_ORDERID_STR = "orderId";
-	public static final String  COLUMN_CSID_STR  = "csId";
-	public static final String  COLUMN_CID_STR  = "cid";
-	public static final String  COLUMN_STATUS_STR  = "status";
-	public static final String  COLUMN_USERID_STR = "user.userId";
-	public static final short	STATUS_ENABLE_SHORT  = 0;
-	public static final short	STATUS_DISABLE_SHORT  = 1;
-	private long cid;
-	private long csId;
-	private String orderId;
-	private UserPO	user;
-	private int schedule;
-	private short rate;
-	private String assessment;
-	private UserPO creater;
-	private Timestamp createTime;
-	private short status;
 	
-
+	public static final String  COLUMN_ORDERID_STR = "orderId";
+	
+	public static final String  COLUMN_CRID_STR  = "crid";
+	
+	public static final String  COLUMN_CID_STR  = "cid";
+	
+	public static final String  COLUMN_STATUS_STR  = "status";
+	
+	public static final String  COLUMN_USERID_STR = "user.userId";
+	
+	public static final short	STATUS_ENABLE_SHORT  = 0;
+	
+	public static final short	STATUS_DISABLE_SHORT  = 1;
+	
+	private long crid;
+	
+	private long cid;
+	
+	private String orderId;
+	
+	private UserPO	user;
+	
+	private int schedule;
+	
+	private short rate;
+	
+	private String assessment;
+	
+	private UserPO creater;
+	
+	private Timestamp createTime;
+	
+	private short status;
 	
 	public ConstructerPO() {
 		super();
@@ -49,7 +64,6 @@ public class ConstructerPO implements java.io.Serializable {
 		super();
 		this.user = user;
 	}
-
 	
 	public ConstructerPO(UserPO user, UserPO creater) {
 		super();
@@ -59,23 +73,24 @@ public class ConstructerPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "crid")
+	public long getCrid() {
+		return crid;
+	}
+
+	public void setCrid(long crid) {
+		this.crid = crid;
+	}
+
 	@Column(name = "cid")
 	public long getCid() {
-		return this.cid;
+		return cid;
 	}
 
 	public void setCid(long cid) {
 		this.cid = cid;
 	}
-
-	@Column(name = "csId")
-	public long getCsId() {
-		return this.csId;
-	}
-
-	public void setCsId(long csId) {
-		this.csId = csId;
-	}
+	
 
 	@Column(name = "orderId")
 	public String getOrderId() {

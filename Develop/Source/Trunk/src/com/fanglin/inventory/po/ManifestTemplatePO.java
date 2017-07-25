@@ -17,6 +17,8 @@ public class ManifestTemplatePO implements java.io.Serializable {
 	
 	public static final String COLUMN_NAME_STR = "name";
 	
+	public static final String COLUMN_COMPANY_STR ="company";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;
@@ -28,6 +30,8 @@ public class ManifestTemplatePO implements java.io.Serializable {
 	private String comment;
 	
 	private short status;
+	
+	private int company;
 
 	public ManifestTemplatePO() {
 		super();
@@ -67,12 +71,22 @@ public class ManifestTemplatePO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

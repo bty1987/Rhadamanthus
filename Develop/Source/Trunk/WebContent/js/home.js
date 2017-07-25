@@ -1,7 +1,7 @@
 jQuery(function(){
 
     $('#moreActivity').click(function(){
-        params["notice.type"] = "活动";
+        params["notice.type"] = 2;
         $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
         com.switchPage(api.index.moreNoticesIndex.url);
         $('.breadcrumb .nav2').hide();
@@ -9,7 +9,7 @@ jQuery(function(){
     });
 
     $('#moreNotice').click(function(){
-        params["notice.type"] = "通知";
+        params["notice.type"] = 1;
         $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
         com.switchPage(api.index.moreNoticesIndex.url);
         $('.breadcrumb .nav2').hide();
@@ -303,7 +303,7 @@ function loadNotices(){
     var options = {
         "paging.rows":5,
         "paging.page":1,
-        "notice.type": "通知",
+        "notice.type": 1,
     }
 
     com.post(api.information.pageNoticeForSeenByType, options, function(res){
@@ -319,7 +319,7 @@ function loadActivities(){
     var options = {
         "paging.rows":5,
         "paging.page":1,
-        "notice.type": "活动",
+        "notice.type": 2,
     }
 
     com.post(api.information.pageNoticeForSeenByType, options, function(res){
@@ -335,6 +335,7 @@ function getNoticeDOM(notice){
     var $title = $('<div><i class="icon-hand-right green"></i></div>');
     var $theme = $('<strong style="margin-left:7px;">'+notice.theme+' </strong>').appendTo($title);
 
+    var priorityText = "重要";
     var priorityStyle = "label-warning";
 
     $('<small class="detail" style="cursor:pointer">  [详细]</small>').on(ace.click_event, function(){
@@ -347,15 +348,18 @@ function getNoticeDOM(notice){
         return false;
     }).appendTo($theme);
 
-    if(notice.priority == "紧急"){
+    if(notice.priority == 2){
+    	priorityText = "紧急";
         priorityStyle = "label-danger";
-    }else if(notice.priority == "重要"){
+    }else if(notice.priority == 1){
+    	priorityText = "重要";
         priorityStyle = "label-warning";
-    }else if(notice.priority == "普通"){
+    }else if(notice.priority == 0){
+    	priorityText = "普通";
         priorityStyle = "label-yellow";
     }
 
-    $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + notice.priority+'</span>').addClass(priorityStyle).appendTo($title);
+    $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText +'</span>').addClass(priorityStyle).appendTo($title);
     var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">'
         + notice.contentsText+'</div><abbr title="' + notice.contentsText+'"></abbr></div>');
     var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'

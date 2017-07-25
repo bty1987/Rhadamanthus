@@ -77,6 +77,23 @@ CREATE TABLE `company` (
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
 
+DROP TABLE IF EXISTS `constructionnode`;
+CREATE TABLE `constructionnode` (
+  `cnid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: 启用, 1: 禁用',
+  `sort` tinyint(2) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`cnid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程节点表';
+
+DROP TABLE IF EXISTS `constructionnodecompany`;
+CREATE TABLE `constructionnodecompany` (
+  `cncid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL COMMENT '公司ID',
+  `cnid` int(11) NOT NULL COMMENT '工程节点ID',
+  PRIMARY KEY (`cncid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程节点-公司表';
+
 DROP TABLE IF EXISTS `counting`;
 CREATE TABLE `counting` (
   `date` varchar(8) NOT NULL,
@@ -292,6 +309,7 @@ CREATE TABLE `systemconfig` (
   `cuid` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `comment` varchar(128),
+  `company` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`scid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
@@ -343,6 +361,14 @@ CREATE TABLE `user` (
   UNIQUE KEY `uniquetwo` (`userId`),
   KEY `indexone` (`userId`,`company`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+DROP TABLE IF EXISTS `usercompany`;
+CREATE TABLE `usercompany` (
+  `ucid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `cid` int(11) NOT NULL,
+  PRIMARY KEY (`ucid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-公司表';
 
 DROP TABLE IF EXISTS `usercontract`;
 CREATE TABLE `usercontract` (

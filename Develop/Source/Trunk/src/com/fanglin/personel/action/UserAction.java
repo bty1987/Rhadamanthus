@@ -55,6 +55,7 @@ public class UserAction extends BaseListAction {
 	private List<KeyValueVO> autoFillKeyValue;
 	
 	private List<String> autoFillList;
+
 	
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
@@ -175,6 +176,15 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	
+	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetPassword() throws FLException{
+		
+		userService.resetPassword(user.getUserId());
+	
+		return SUCCESS;
+	}
+	
 	private void packageUserName(List<UserVO> users){
 		for(UserVO userVO: users){
 			KeyValueVO keyValueVO = new KeyValueVO();
@@ -277,5 +287,6 @@ public class UserAction extends BaseListAction {
 	public void setUsers(List<UserVO> users) {
 		this.users = users;
 	}
+
 
 }

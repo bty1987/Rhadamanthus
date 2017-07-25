@@ -29,6 +29,8 @@ public class PurchaseVO implements Serializable{
 	
 	private String comment;
 	
+	private Integer company;
+	
 	public PurchaseVO() {
 		super();
 	}
@@ -111,6 +113,14 @@ public class PurchaseVO implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 	
 }

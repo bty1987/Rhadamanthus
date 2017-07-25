@@ -8,7 +8,8 @@ $.extend(api.index, {
 });
 
 $.extend(api.ds, {
-    activityInfo: {url: "ds/activityInfo.json", demo: true}
+    activityInfo: {url: "ds/activityInfo.json", demo: true},
+    noticeInfo:{url:"ds/noticeInfo.json", demo: true}
 });
 
 $.extend(api, {information: {
@@ -22,13 +23,12 @@ $.extend(api, {information: {
 
     pageNotice: {url: "pageNotice.do", demo: true},
     pageNoticeForSeenByType: {url: "pageNoticeForSeenByType.do", demo: true},
-    queryNoticeForValid: {url: "queryNoticeForValid.do"},
     queryNoticeByNid: {url: "queryNoticeByNid.do"},
     addNotice: {url: "addNotice.do"},
     updateNotice: {url: "updateNotice.do"},
     deleteNotice: {url: "deleteNotice.do"},
     updateNoticeDepartments:{url:"updateNoticeDepartments.do"},
-
+    
     pageActivity: {url: "pageActivity.do", demo: true},
     queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
     queryActivityItemByAId: {url: "queryActivityItemByAId.do", demo: true},
@@ -37,8 +37,6 @@ $.extend(api, {information: {
     updateActivity: {url: "updateActivity.do"},
     updateActivityItem: {url: "updateActivityItem.do"},
     deleteActivityItemByAiId: {url: "deleteActivityItemByAiId.do"},
-
-    queryNoticeDepartmentByNoticeIdandDepartment:{url:"queryNoticeDepartmentByNoticeIdandDepartment.do"},
  
 
     queryEvent: {url: "queryEvent.do", demo:true},

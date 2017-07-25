@@ -26,6 +26,4 @@ public interface DepartmentService {
 	
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company);
 
-	public void updateDepartmentForStatus(DepartmentVO departmentVO);
-
 }

@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "qualitytestingrecord", catalog = "platform")
+@Table(name = "qualitytestingrecord", catalog = "construction")
 public class QualityTestingRecordPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2466855414573660718L;

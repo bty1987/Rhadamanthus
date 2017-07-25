@@ -20,7 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -33,17 +32,17 @@ public class NoticePO implements Serializable {
 	
 	public static final String NOTICE_STATUS_INVALID_STR = "失效";
 	
-	private Integer noticeId;
+	public static final short ISPUBLIC_PUBLIC_INT = 0; 
+	
+	private long nid;
 	
 	private UserPO user;
 	
-	private DepartmentPO dept;
-	
 	private String theme;
 	
-	private String type;
+	private short type;
 	
-	private String priority;
+	private short priority;
 	
 	private String startTime;
 	
@@ -51,7 +50,7 @@ public class NoticePO implements Serializable {
 	
 	private String publishTime;
 	
-	private String isPublic;
+	private short isPublic;
 	
 	private String contents;
 	
@@ -59,25 +58,23 @@ public class NoticePO implements Serializable {
 	
 	private String filePath;
 	
-	
-	
 	public NoticePO(){
 		super();
 	}
 
 	@Id
 	@GeneratedValue
-	@Column(nullable = false)
-	public Integer getNoticeId(){
-		return noticeId;
+	@Column(name="nid")
+	public long getNid() {
+		return nid;
 	}
 
-	public void setNoticeId(Integer noticeId){
-		this.noticeId = noticeId;
+	public void setNid(long nid) {
+		this.nid = nid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
+	@JoinColumn(name = "userId", referencedColumnName = "userId")
 	public UserPO getUser(){
 		return user;
 	}
@@ -86,17 +83,7 @@ public class NoticePO implements Serializable {
 		this.user = user;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "deptId", referencedColumnName = "deptId", nullable = false)
-	public DepartmentPO getDept(){
-		return dept;
-	}
-
-	public void setDept(DepartmentPO dept){
-		this.dept = dept;
-	}
-
-	@Column(nullable = false)
+	@Column(name="theme")
 	public String getTheme(){
 		return theme;
 	}
@@ -105,25 +92,25 @@ public class NoticePO implements Serializable {
 		this.theme = theme;
 	}
 
-	@Column(nullable = false)
-	public String getType(){
+	@Column(name="type")
+	public short getType(){
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(short type){
 		this.type = type;
 	}
 
-	@Column(nullable = false)
-	public String getPriority(){
+	@Column(name="priority")
+	public short getPriority(){
 		return priority;
 	}
 
-	public void setPriority(String priority){
+	public void setPriority(short priority){
 		this.priority = priority;
 	}
 
-	@Column(nullable = false)
+	@Column(name="startTime")
 	public String getStartTime(){
 		return startTime;
 	}
@@ -132,7 +119,7 @@ public class NoticePO implements Serializable {
 		this.startTime = startTime;
 	}
 
-	@Column(nullable = false)
+	@Column(name="endTime")
 	public String getEndTime(){
 		return endTime;
 	}
@@ -141,7 +128,7 @@ public class NoticePO implements Serializable {
 		this.endTime = endTime;
 	}
 
-	@Column(nullable = false)
+	@Column(name="publishTime")
 	public String getPublishTime(){
 		return publishTime;
 	}
@@ -150,16 +137,16 @@ public class NoticePO implements Serializable {
 		this.publishTime = publishTime;
 	}
 
-	@Column(nullable = false)
-	public String getIsPublic(){
+	@Column(name="isPublic")
+	public short getIsPublic(){
 		return isPublic;
 	}
 
-	public void setIsPublic(String isPublic){
+	public void setIsPublic(short isPublic){
 		this.isPublic = isPublic;
 	}
 
-	@Column(nullable = false)
+	@Column(name="contents")
 	public String getContents(){
 		return contents;
 	}
@@ -168,6 +155,7 @@ public class NoticePO implements Serializable {
 		this.contents = contents;
 	}
 
+	@Column(name="contentsText")
 	public String getContentsText(){
 		return contentsText;
 	}
@@ -176,6 +164,7 @@ public class NoticePO implements Serializable {
 		this.contentsText = contentsText;
 	}
 
+	@Column(name="filePath")
 	public String getFilePath(){
 		return filePath;
 	}

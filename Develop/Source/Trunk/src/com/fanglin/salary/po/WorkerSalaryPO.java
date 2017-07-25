@@ -24,7 +24,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_WSID_STR = "wsId";  
 	
-	public static final String COLUMN_CSID_STR = "csId";   
+	public static final String COLUMN_CSID_STR = "cid";   
 	
 	public static final String COLUMN_STATUS_STR = "status"; 
 	
@@ -65,7 +65,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	private long wsId;
 	
-	private long csId;
+	private long cid;
 	
 	private DecorationOrderPO decorationOrder;
 	
@@ -126,14 +126,17 @@ public class WorkerSalaryPO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-	@Column(name="csid")
-	public long getCsId() {
-		return csId;
-	}
 	
-	public void setCsId(long csId) {
-		this.csId = csId;
+	@Column(name="cid")
+	public long getCid() {
+		return cid;
 	}
+
+
+	public void setCid(long cid) {
+		this.cid = cid;
+	}
+
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId", referencedColumnName = "userId")

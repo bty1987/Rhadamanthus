@@ -19,9 +19,10 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.information.service.NoticeDepartmentService;
 import com.fanglin.information.service.NoticeService;
+import com.fanglin.information.vo.NoticeDepartmentVO;
 import com.fanglin.information.vo.NoticeVO;
-import com.fanglin.personel.vo.UserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -33,21 +34,14 @@ public class NoticeAction extends BaseListAction {
 	@Autowired
 	private NoticeService noticeService;
 	
+	@Autowired
+	private NoticeDepartmentService noticeDepartmentService;
+	
+	private List<NoticeDepartmentVO> noticeDepartments;
+	
 	private NoticeVO notice;
 	
-	private List<NoticeVO> noticeList;
-	
-	private List<Integer> noticeIds;
-	
 	private List<Integer> dids;
-
-	public List<Integer> getDids() {
-		return dids;
-	}
-
-	public void setDids(List<Integer> dids) {
-		this.dids = dids;
-	}
 
 	@Action(value="pageNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageNotice() throws FLException{
@@ -57,26 +51,26 @@ public class NoticeAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="pageNoticeForDeptAValid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-    public String pageNoticeForDeptAValid() throws FLException{
+	@Action(value="pageNoticeForSeenByType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+    public String pageNoticeForSeenByType() throws FLException{
 		
-        noticeService.pageNoticeForDeptAValid(getPaging(), notice, queryUserId());
+        noticeService.pageNoticeForSeenByType(getPaging(), notice, queryUserId());
         
         return SUCCESS;
     }
 	
-	@Action(value="queryNoticeForValid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryNoticeForValid(){
+	@Action(value="queryNoticeByNid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryNoticeByNid() throws FLException{
 		
-		noticeList = noticeService.queryNoticeForValid(notice.getType());
+		noticeService.queryNoticeByNid(notice);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="queryNoticeById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryNoticeById(){
+	@Action(value="queryNoticeDepartment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryNoticeDepartment() throws FLException{
 		
-		noticeService.queryNoticeById(notice.getNoticeId());
+		noticeDepartments = noticeDepartmentService.queryNoticeDepartment(notice);
 		
 		return SUCCESS;
 	}
@@ -84,32 +78,42 @@ public class NoticeAction extends BaseListAction {
 	@Action(value="addNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addNotice() throws FLException{
 		
-		notice.setUser(new UserVO(queryUserId()));
-		noticeService.saveOrUpdateNotice(notice);
+		noticeService.addNotice(notice, queryUserId());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="updateNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateNotice(){
+	public String updateNotice() throws FLException{
 		
-		noticeService.saveOrUpdateNotice(notice);
+		noticeService.updateNotice(notice);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="deleteNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteNotice(){
+	@Action(value="updateNoticeDepartment",results={@Result(name="success",type="json",params={"ignoreHierarchy","false"})},params={"contentType","text/html"})
+	public String updateNoticeDepartment() throws FLException{
 		
-		noticeService.deleteNotice(getNoticeIds());
+		noticeDepartmentService.updateNoticeDepartment(dids, notice);
+		
+		return SUCCESS;
+	} 
+	
+	@Action(value="deleteNotice", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deleteNotice() throws FLException{
+		
+		noticeService.deleteNotice(notice);
 		
 		return SUCCESS;
 	}
-	@Action(value="updateNoticeDepartments",results={@Result(name="success",type="json",params={"ignoreHierarchy","false"})},params={"contentType","text/html"})
-	public String updateNoticeDepartments() throws FLException{
-		noticeService.updateNoticeDepartment(dids, notice);
-		return SUCCESS;
-	} 
+
+	public List<NoticeDepartmentVO> getNoticeDepartments() {
+		return noticeDepartments;
+	}
+
+	public void setNoticeDepartments(List<NoticeDepartmentVO> noticeDepartments) {
+		this.noticeDepartments = noticeDepartments;
+	}
 
 	public NoticeVO getNotice(){
 		return notice;
@@ -119,20 +123,12 @@ public class NoticeAction extends BaseListAction {
 		this.notice = notice;
 	}
 
-	public List<Integer> getNoticeIds(){
-		return noticeIds;
+	public List<Integer> getDids() {
+		return dids;
 	}
 
-	public void setNoticeIds(List<Integer> noticeIds){
-		this.noticeIds = noticeIds;
-	}
-
-	public List<NoticeVO> getNoticeList(){
-		return noticeList;
-	}
-
-	public void setNoticeList(List<NoticeVO> noticeList){
-		this.noticeList = noticeList;
+	public void setDids(List<Integer> dids) {
+		this.dids = dids;
 	}
 
 }

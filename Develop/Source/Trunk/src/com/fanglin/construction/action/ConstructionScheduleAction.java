@@ -1,5 +1,5 @@
 /**
- * @File Name		: ConstructionScheduleAction.java
+ * @File Name		: ConstructionAction.java
  * @Package   	: com.fanglin.action.constructionSchedule
  * @Version		: 1.0
  * @Date			: 2014-9-29
@@ -11,6 +11,8 @@
 
 package com.fanglin.construction.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -21,121 +23,60 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class ConstructionScheduleAction extends BaseListAction{
 
-	private static final long serialVersionUID = 3579553772365688946L;
+	private static final long serialVersionUID = 1830437899502700213L;
 	
 	@Autowired
 	private ConstructionScheduleService constructionScheduleService;
 	
 	private ConstructionScheduleVO constructionSchedule;
 	
-	@Action(value = "pageDecorationOrderForConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForConstructionSchedule(){
-		
-		constructionScheduleService.pageDecorationOrderForConstructionSchedule(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
-		
-		constructionScheduleService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForQualityByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForQualityByUserId() throws FLException{
-		
-		constructionScheduleService.pageDecorationOrderForQualityByUserId(getPaging(), getFilters(), queryUserId(), null);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForAcceptance(){
-		
-		constructionScheduleService.pageDecorationOrderForAcceptance(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
+	private List<ConstructionScheduleVO> constructionSchedules;
 	
 	@Action(value = "queryConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleByOrderId() throws FLException{
+	public String queryConstructionScheduleByOrderId(){
 		
-		constructionSchedule = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryConstructionScheduleForWorkerNameByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleForWorkerNameByOrderId(){
-		
-		constructionSchedule = constructionScheduleService.queryConstructionScheduleForWorkerNameByOrderId(constructionSchedule);
+		constructionSchedules = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionScheduleByOrderId(){
+	@Action(value = "setConstructionScheduleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String setConstructionScheduleForStatus(){
 		
-		constructionScheduleService.saveOrUpdateConstructionScheduleByOrderId(constructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "nextConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String nextConstructionScheduleByOrderId() throws FLException{
-		
-		constructionScheduleService.nextConstructionScheduleByOrderId(constructionSchedule);
+		constructionScheduleService.setConstructionScheduleForStatus(constructionSchedule);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkConstructionScheduleForChanStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkConstructionScheduleForChanStatus() throws FLException{
+	@Action(value = "setConstructionScheduleForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String setConstructionScheduleForInfo(){
 		
-		constructionScheduleService.checkConstructionScheduleForChanStatus(constructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkFirstPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkFirstPayment() throws FLException{
-		
-		constructionScheduleService.checkFirstPayment(constructionSchedule);
+		constructionScheduleService.setConstructionScheduleForInfo(constructionSchedule);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkSecondPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkSecondPayment() throws FLException{
-		
-		constructionScheduleService.checkSecondPayment(constructionSchedule);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkFinalyPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkFinalyPayment() throws FLException{
-		
-		constructionScheduleService.checkFinalyPayment(constructionSchedule, queryUserId());
-		
-		return SUCCESS;
-	}
-
-	public ConstructionScheduleVO getConstructionSchedule(){
+	public ConstructionScheduleVO getConstructionSchedule() {
 		return constructionSchedule;
 	}
 
-	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule){
+	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule) {
 		this.constructionSchedule = constructionSchedule;
 	}
+
+	public List<ConstructionScheduleVO> getConstructionSchedules() {
+		return constructionSchedules;
+	}
+
+	public void setConstructionSchedules(
+			List<ConstructionScheduleVO> constructionSchedules) {
+		this.constructionSchedules = constructionSchedules;
+	}
+
 }

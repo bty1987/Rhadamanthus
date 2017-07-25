@@ -1,77 +1,80 @@
 package com.fanglin.information.service.impl;
 
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.dao.AssassinDao;
 import com.fanglin.information.po.AssassinPO;
 import com.fanglin.information.service.AssassinService;
-import com.fanglin.payment.vo.PaymentVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.HttpUtil;
-import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.LogUtils;
+
 
 @Service("assassinService")
 @Transactional(readOnly=true)
 public class AssassinServiceImpl implements AssassinService {
 	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private AssassinDao assassinDao;
-	
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int PayPayment(PaymentVO payment, String userId) throws FLException{
+	public int proxy(String server, String api, String params, String content, UserPO userPO) throws FLException {
 
-		SystemConfigPO AssassinFIP = systemConfigDao.querySystemConfigByKey("platform");
-		String platform = AssassinFIP.getValue();
-		                                                                         
-		SystemConfigPO communionServer = systemConfigDao.querySystemConfigByKey("communion");
-		String addressAuthentication = communionServer.getValue();
+		String communion = systemConfigDao.querySystemConfigByKey("communion").getValue();
+		String code = systemConfigDao.querySystemConfigByKey("tokenkey").getValue();
+		String secret = systemConfigDao.querySystemConfigByKey("tokensecret").getValue();
+		
+		server = systemConfigDao.querySystemConfigByKey(server).getValue();
 
-		String str = String.format("%s/requestAuthCode.do?userId=%s&code=baitianyu&secret=0C7134AAC334FBD88AAC850E51F2CE69", addressAuthentication, userId);
+		String str = String.format("%s/requestAuthCode.do?userId=%s&code=%s&secret=%s", communion, userPO.getUserId(), code, secret);
 		JSONObject result  = HttpUtil.httpGet(str);
 
 		String authentication;
-		
+
 		if(result != null && result.containsKey("authenticationEncode")){
 			authentication = result.get("authenticationEncode").toString();
 		}else{
 			throw new FLException(110010, "请求失败");
 		}
-
-		String payPayment = "%s/payPayment.do?payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.type=%s&payment.cash=%s&authentication=%s";
-
-		payPayment =  String.format(payPayment,platform,payment.getOrderId(),payment.getPaymentType(),payment.getDes(),payment.getType(),payment.getCash(),authentication);
-
-		JSONObject results = HttpUtil.httpGet(payPayment);
 		
-		JSONObject params = results.getJSONObject("payment");
+		String url = String.format("%s/%s?authentication=%s&%s",server, api, authentication, params);
+		
+		JSONObject results  = HttpUtil.httpGet(url);
+
 		int errorCode = results.getInteger("errorCode");
+		String errorMsg = results.getString("errorMsg");
+
 		AssassinPO assassinPO = new AssassinPO();
-		//插入一条操作纪律
+		
 		if(errorCode == 0){
-			assassinPO.setApi("payPayment.do");
-			assassinPO.setParams(params.toJSONString());
-			assassinPO.setServer("platform");
+			assassinPO.setApi(api);
+			assassinPO.setContent(content);
+			assassinPO.setServer(server);
 			assassinPO.setErrorcode(errorCode);
 			assassinPO.setErrormes("");
+			assassinPO.setOperater(userPO);
+			assassinPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			assassinDao.save(assassinPO);
 		}else{
-			String errormes = results.getString("errorMessage");
-			assassinPO.setApi("payPayment.do");
-			assassinPO.setParams(params.toJSONString());
-			assassinPO.setServer("platform");
-			assassinPO.setErrorcode(errorCode);
-			assassinPO.setErrormes(errormes);
+			LogUtils.logging(logger, server, results.getString("errorMsg"), api);
+			throw new FLException(errorCode, errorMsg);
 		}
-		
-		assassinDao.save(assassinPO);
 
-		return errorCode;
+		return 0;
 	}
-
+	
 }

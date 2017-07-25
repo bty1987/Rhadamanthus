@@ -10,7 +10,8 @@ $.extend(api.index, {
     changePasswordIndex: {url: "/views/system/changePassword.html"},
     resetPasswordIndex: {url: "/views/system/resetPassword.html"},
     versionIndex: {url: "/version.html"},
-    faqIndex: {url: "/faq.html"}
+    faqIndex: {url: "/faq.html"},
+    homeIndex:{url: "/home.html"}
 });
 
 $.extend(api.ds, {
@@ -90,6 +91,12 @@ $.extend(api, {system: {
     pageSystemConfig: {url: "pageSystemConfig.do"},
     addSystemConfig:{url:"addSystemConfig.do", server: "communion"},
     deleteSystemConfig:{url:"deleteSystemConfig.do", server: "communion"},
+
+    pageDuty: {url: "pageDuty.do", demo: true},
+    queryDuty: {url: "queryDuty.do"},
+    addDuty: {url: "addDuty.do"},
+    updateDuty: {url: "updateDuty.do"},
+    updateDutyForStatus: {url: "updateDutyForStatus.do"},
 
     pageCompany: {url: "pageCompany.do", demo: true},
     queryCompany: {url: "queryCompany.do"},

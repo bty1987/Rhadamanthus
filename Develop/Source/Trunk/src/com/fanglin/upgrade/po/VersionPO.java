@@ -15,19 +15,19 @@ import javax.persistence.Table;
 @Table(name = "version", catalog = "upgrade")
 public class VersionPO implements Serializable{
 
-	private static final long serialVersionUID = -3482372700667296973L;
+	private static final long serialVersionUID = -6202041259417390L;
+
+	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String COLUMN_VERSIONNUMBER_STR = "versionNumber";
-	
-	public static final String COLUMN_TRIALVERSION_STR = "trialVersion";
+	public static final String COLUMN_TRIALNO_STR = "trialno";
 	
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
 	private long vid;
 	
-	private String versionNumber;
+	private String no;
 	
-	private String trialVersion;
+	private String trialno;
 	
 	private Timestamp createTime;
 	
@@ -47,23 +47,22 @@ public class VersionPO implements Serializable{
 	public void setVid(long vid) {
 		this.vid = vid;
 	}
-
-	@Column(name = "versionNumber")
-	public String getVersionNumber() {
-		return versionNumber;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setVersionNumber(String versionNumber) {
-		this.versionNumber = versionNumber;
+	public void setNo(String no) {
+		this.no = no;
 	}
 	
-	@Column(name = "trialversion")
-	public String getTrialVersion() {
-		return trialVersion;
+	@Column(name = "trialno")
+	public String getTrialno() {
+		return trialno;
 	}
 
-	public void setTrialVersion(String trialVersion) {
-		this.trialVersion = trialVersion;
+	public void setTrialno(String trialno) {
+		this.trialno = trialno;
 	}
 
 	@Column(name = "createtime")

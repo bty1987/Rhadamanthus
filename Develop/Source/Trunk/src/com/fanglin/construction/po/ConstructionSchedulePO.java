@@ -1,5 +1,5 @@
 /**
- * @File Name		: ConstructionSchedule.java
+ * @File Name		: Bricklayconstructionschedule.java
  * @Package   	: com.fanglin.entity.constructionSchedule
  * @Version		: 1.0
  * @Date			: 2014-9-27
@@ -17,48 +17,37 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
-
 @Entity
-@Table(name="constructionschedule", catalog = "platform")
+@Table(name="constructionschedule", catalog = "construction")
 public class ConstructionSchedulePO implements Serializable{
 
-	private static final long serialVersionUID = -3113263670279309498L;
+	private static final long serialVersionUID = -4715729970075470712L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrderPO.orderId";
+	public static final String COLUMN_CSID_STR = "csId";
+	
+	public static final String COLUMN_CID_STR = "cid";
+	
+	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
 	
-	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisorQualityId";
+	public static final short STATUS_TYPE_INIT_INT = 0;
 	
-	public static final String COLUMN_CHANQUALITYID_STR = "chanQualityId";
+	public static final short STATUS_TYPE_SUCCESS_INT = 1;
 	
-	public static final String COLUMN_PUTLINEQUALITYID_STR = "putlineQualityId";
+	public static final short STATUS_TYPE_FAIL_INT = 2;
 	
-	public static final String COLUMN_WATERWAYCIRCUITQUALITYID_STR = "waterwayCircuitPowerQualityId";
+	public static final short STATUS_TYPE_DELAY_INT = 3;
 	
-	public static final String COLUMN_POWERQUALITYID_STR = "powerQualityId";
+	public static final short STATUS_TYPE_PASS_INT = 4;
 	
-	public static final String COLUMN_BRICKLAYQUALITYID_STR = "bricklayQualityId";
+	public static final short COLUMN_SCHEDULE_ONE = 1;
 	
-	public static final String COLUMN_CARPENTQUALITYID_STR = "carpentQualityId";
-	
-	public static final String COLUMN_OILQUALITYID_STR = "oilQualityId";
-	
-	public static final String COLUMN_CLEANINGQUALITYID_STR = "cleaningQualityId";
-	
-	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
-	
-	public static final String COLUMN_ALLOCATIONWORKERFLAG_STR = "allocationWorkerFlag";
-	
-	public static final String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
+	public static final short COLUMN_SCHEDULE_TWO = 2;
 	
 	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
 	
@@ -78,162 +67,138 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
 	
-	public static final String COLUMN_CSID_STR = "csId";
+	public static final String CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "铲大白";
 	
-	private long csId;
+	public static final String PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "放线";
 	
-	private DecorationOrderPO decorationOrderPO;
+	public static final String WATERWAYCIRCUITPOWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水电力";
 	
-	private String supervisorQualityId;
+	public static final String BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "瓦工";
 	
-	private String chanQualityId;
+	public static final String GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "地面找平";
 	
-	private String putlineQualityId;
+	public static final String CARPENT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "木工";
 	
-	private String waterwayCircuitPowerQualityId;
+	public static final String OIL_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "油工";
 	
-	private String powerQualityId;
+	public static final String WATERWAYCIRCUITCHECK_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "水电验收";
 	
-	private String bricklayQualityId;
+	public static final String CLEANING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR = "保洁";
 	
-	private String carpentQualityId;
+	public static final short STARTTIMEFLAG_TYPE_INIT_INT = 0;
 	
-	private String oilQualityId;
+	public static final short ENDTIMEFLAG_TYPE_INIT_INT = 1;
 	
-	private String cleaningQualityId;
+	public static final int CHAN_ALLOCATION_WORKER_FLAG_INT = 1;
 	
-	private int schedule;
+	public static final int PUBLINE_ALLOCATION_WORKER_FLAG_INT = 2;
 	
-	private int chanStatus;
+	public static final int WATERWAYCIRCUITPOWER_ALLOCATION_WORKER_FLAG_INT = 4;
 	
-	private int allocationWorkerFlag;
-
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="csId")
-	public long getCsId(){
-		return csId;
+	public static final int BRICKLAY_ALLOCATION_WORKER_FLAG_INT = 8;
+	
+	public static final int GROUNDLEVELING_ALLOCATION_WORKER_FLAG_INT = 16;
+	
+	public static final int CARPENT_ALLOCATION_WORKER_FLAG_INT = 32;
+	
+	public static final int OIL_ALLOCATION_WORKER_FLAG_INT = 64;
+	
+	public static final int WATERWAYCIRCUITCHECK_ALLOCATION_WORKER_FLAG_INT = 128;
+	
+	public static final int CLEANING_ALLOCATION_WORKER_FLAG_INT = 256;
+	
+	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
+	
+	private int csId;
+	
+	private long cid;
+	
+	private String orderId;
+	
+	private String startTime;
+	
+	private String endTime;
+	
+	private short status;
+	
+	private short schedule;
+	
+	public ConstructionSchedulePO() {
+		super();
 	}
 
-	public void setCsId(long csId){
-		this.csId = csId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrderPO() {
-		return decorationOrderPO;
-	}
-
-	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO) {
-		this.decorationOrderPO = decorationOrderPO;
-	}
-
-	@Column(name="supervisorQualityId")
-	public String getSupervisorQualityId(){
-		return supervisorQualityId;
-	}
-
-	public void setSupervisorQualityId(String supervisorQualityId){
-		this.supervisorQualityId = supervisorQualityId;
-	}
-
-	@Column(name="waterwayCircuitPowerQualityId")
-	public String getWaterwayCircuitPowerQualityId(){
-		return waterwayCircuitPowerQualityId;
-	}
-
-	public void setWaterwayCircuitPowerQualityId(String waterwayCircuitPowerQualityId){
-		this.waterwayCircuitPowerQualityId = waterwayCircuitPowerQualityId;
-	}
-
-	@Column(name="powerQualityId")
-	public String getPowerQualityId(){
-		return powerQualityId;
-	}
-
-	public void setPowerQualityId(String powerQualityId){
-		this.powerQualityId = powerQualityId;
-	}
-
-	@Column(name="bricklayQualityId")
-	public String getBricklayQualityId(){
-		return bricklayQualityId;
-	}
-
-	public void setBricklayQualityId(String bricklayQualityId){
-		this.bricklayQualityId = bricklayQualityId;
-	}
-
-	@Column(name="carpentQualityId")
-	public String getCarpentQualityId(){
-		return carpentQualityId;
-	}
-
-	public void setCarpentQualityId(String carpentQualityId){
-		this.carpentQualityId = carpentQualityId;
-	}
-
-	@Column(name="schedule")
-	public int getSchedule(){
-		return schedule;
-	}
-
-	public void setSchedule(int schedule){
+	public ConstructionSchedulePO(long cid, String orderId, String startTime, String endTime, short schedule) {
+		super();
+		this.cid = cid;
+		this.orderId = orderId;
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.schedule = schedule;
 	}
 
-	@Column(name="chanQualityId")
-	public String getChanQualityId(){
-		return chanQualityId;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "csid")
+	public int getCsId() {
+		return csId;
 	}
 
-	public void setChanQualityId(String chanQualityId){
-		this.chanQualityId = chanQualityId;
+	public void setCsId(int csId) {
+		this.csId = csId;
 	}
 
-	@Column(name="putlineQualityId")
-	public String getPutlineQualityId(){
-		return putlineQualityId;
+	@Column(name = "cid")
+	public long getCid() {
+		return cid;
 	}
 
-	public void setPutlineQualityId(String putlineQualityId){
-		this.putlineQualityId = putlineQualityId;
+	public void setCid(long cid) {
+		this.cid = cid;
 	}
 
-	@Column(name = "oilQualityId")
-	public String getOilQualityId(){
-		return oilQualityId;
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setOilQualityId(String oilQualityId){
-		this.oilQualityId = oilQualityId;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	@Column(name = "cleaningQualityId")
-	public String getCleaningQualityId(){
-		return cleaningQualityId;
+	@Column(name = "startTime")
+	public String getStartTime() {
+		return startTime;
 	}
 
-	public void setCleaningQualityId(String cleaningQualityId){
-		this.cleaningQualityId = cleaningQualityId;
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
 
-	@Column(name = "chanStatus")
-	public int getChanStatus(){
-		return chanStatus;
+	@Column(name = "endTime")
+	public String getEndTime() {
+		return endTime;
 	}
 
-	public void setChanStatus(int chanStatus){
-		this.chanStatus = chanStatus;
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
-	@Column(name = "allocationWorkerFlag")
-	public int getAllocationWorkerFlag() {
-		return allocationWorkerFlag;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setAllocationWorkerFlag(int allocationWorkerFlag) {
-		this.allocationWorkerFlag = allocationWorkerFlag;
+	public void setStatus(short status) {
+		this.status = status;
 	}
+
+	@Column(name = "schedule")
+	public short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(short schedule) {
+		this.schedule = schedule;
+	}
+
 }

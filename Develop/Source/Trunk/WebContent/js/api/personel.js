@@ -3,7 +3,8 @@ $.extend(api.index, {
     userIndex: {url: "/views/personnel/user.html"},
     userEditIndex: {url: '/views/personnel/userEdit.html'},
     userContractIndex: {url: "/views/personnel/userContract.html"},
-    userExperienceIndex: {url: "/views/personnel/userExperience.html"}
+    userExperienceIndex: {url: "/views/personnel/userExperience.html"},
+    DDUserEditIndex: {url: '/views/personnel/ddUserEdit.html'}
 });
 
 $.extend(api.ds, {
@@ -28,7 +29,8 @@ $.extend(api, {personel: {
     saveUserForBaseInfo: {url: "saveUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
-    resetPassword: {url: "resetPassword.do", server: "communion"},
+    
+    resetPassword: {url: "resetPassword.do"},
     changePassword: {url: "changePassword.do", server: "communion"},
     deleteUserByIds: {url: "deleteUserByIds.do", server: "communion"},
 
@@ -46,5 +48,10 @@ $.extend(api, {personel: {
     pageUserSalaryByUserId: {url: "pageUserSalaryByUserId.do"},
     addUserSalary: {url: "addUserSalary.do"},
     updateUserSalary: {url: "updateUserSalary.do"},
-    deleteUserSalary: {url: "deleteUserSalary.do"}
+    deleteUserSalary: {url: "deleteUserSalary.do"},
+    
+    queryUserCompany: {url: "queryUserCompany.do"},
+    updateUserCompany: {url: "updateUserCompany.do"},
+    
+
 }});

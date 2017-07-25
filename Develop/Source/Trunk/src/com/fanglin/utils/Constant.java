@@ -14,34 +14,34 @@ package com.fanglin.utils;
 public interface Constant {
 	
 	// cookie 认证相关定义
-	String COOKIE_AUTHENTICATION = "authentication";
-	int COOKIE_AUTHENTICATION_NUM = 6;
+	public static final String COOKIE_AUTHENTICATION = "authentication";
+	public static final int COOKIE_AUTHENTICATION_NUM = 6;
 	
-	String COOKIE_AUTHENTICATION_USERID = "userId=";
+	public static final String COOKIE_AUTHENTICATION_USERID = "userId=";
 	
-	String COOKIE_AUTHENTICATION_ROLEID = "roleId=";
+	public static final String COOKIE_AUTHENTICATION_ROLEID = "roleId=";
 	
-	String COOKIE_AUTHENTICATION_USERNAME = "userName=";
+	public static final String COOKIE_AUTHENTICATION_USERNAME = "userName=";
 	
-	String COOKIE_AUTHENTICATION_UPDATETIME = "updateTime=";
+	public static final String COOKIE_AUTHENTICATION_UPDATETIME = "updateTime=";
 	
-	String COOKIE_AUTHENTICATION_ISMOBILE = "isMobile=";
+	public static final String COOKIE_AUTHENTICATION_ISMOBILE = "isMobile=";
 	
-	String COOKIE_AUTHENTICATION_COMPANY = "company=";
+	public static final String COOKIE_AUTHENTICATION_COMPANY = "company=";
 	
-	String COOKIE_AUTHENTICATION_SPLIT = ",";
+	public static final String COOKIE_AUTHENTICATION_SPLIT = ",";
 	
 	// cookie 验证码定义
-	String COOKIE_VERIFYCODE = "verifyCode";
+	public static final String COOKIE_VERIFYCODE = "verifyCode";
 	
 	// 系统版本
-	String COOKIE_VERSIONCODE_STR = "versionCode";
+	public static final String COOKIE_VERSIONCODE_STR = "versionCode";
 	
 	// cookie 订单编号
-	String COOKIE_DECORATIONORDER_ORDERID = "decorationOrderId";
+	public static final String COOKIE_DECORATIONORDER_ORDERID = "decorationOrderId";
 	
 	// cookie 报价编号
-	String COOKIE_QUOTATIONID = "quotationId";
+	public static final String COOKIE_QUOTATIONID = "quotationId";
 	
 	public static final String COMMA = ",";
 	public static final String COLON = ":";

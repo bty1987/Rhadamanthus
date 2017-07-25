@@ -1,0 +1,17 @@
+{
+  "noticeType": [
+    {"key":"1","value":"通知"},
+    {"key":"2","value":"活动"}
+  ],
+  "noticePriority": [
+  {"key":"0","value":"普通"},
+  {"key":"1","value":"重要"},
+  {"key":"2","value":"紧急"}
+],
+  "noticeIsPublic": [
+  {"key":"0","value":"公开"},
+  {"key":"1","value":"部门公开"}
+],
+  "errorCode": 0,
+  "errorMsg": null
+}

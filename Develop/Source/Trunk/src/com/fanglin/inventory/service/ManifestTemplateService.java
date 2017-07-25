@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface ManifestTemplateService {
 	
-	public void pageManifestTemplate(Paging paging, List<Filter> filters);
+	public void pageManifestTemplate(Paging paging, List<Filter> filters,int company);
 	
 	public List<ManifestTemplateVO> queryManifestTemplate();
 	
-	public int addManifestTemplate(ManifestTemplateVO manifestTemplateVO) throws FLException;
+	public int addManifestTemplate(ManifestTemplateVO manifestTemplateVO,int company) throws FLException;
 	
 	public int updateManifestTemplate(ManifestTemplateVO manifestTemplateVO) throws FLException;
 	

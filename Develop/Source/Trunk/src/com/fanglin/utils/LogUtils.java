@@ -34,16 +34,20 @@ public class LogUtils {
 		if(SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
 			e.printStackTrace();
 		}else{
-			logger.error(String.format("%s - %s - %s - %s", "AI", "E", e.getMessage(), actionName));
+			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
 		}
 	}
 	
+	public static void logging(Logger logger, String server, String errormsg, String api){
+		logger.error(String.format("%s|%s|%s|%s|%s", "AI", "I", api, server, errormsg));
+	}
+	
 	public static void logging(Logger logger, String userId, String actionName){
-		logger.error(String.format("%s - %s - %s - %s", "AI", "I", userId, actionName));
+		logger.error(String.format("%s|%s|%s|%s", "AI", "I", actionName, userId));
 	}
 	
 	public static void logging(Logger logger, String actionName, Long runTime){
-		logger.error(String.format("%s - %s - %s - %s", "OT", "I", actionName), runTime.toString());
+		logger.error(String.format("%s|%s|%s|%s", "OT", "I", actionName, runTime.toString()));
 	}
 
 }

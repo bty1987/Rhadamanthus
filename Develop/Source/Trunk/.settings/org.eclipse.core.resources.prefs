@@ -1,4 +1,4 @@
-#Wed May 31 14:53:41 CST 2017
+#Mon Jul 17 18:30:31 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -134,4 +134,5 @@ encoding//WebContent/views/system/role.html=UTF-8
 encoding//WebContent/views/system/userProfile.html=UTF-8
 encoding//conf/sysconfig.properties=UTF-8
 encoding//src/com/fanglin/core/action=UTF-8
+encoding//src/com/fanglin/information/dao/impl/NoticeDaoImpl.java=UTF-8
 encoding/<project>=UTF-8

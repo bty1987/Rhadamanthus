@@ -3,23 +3,23 @@ jQuery(function($) {
 	
 	var qualityTestingDetail = {
 			
-		construstionSchedule: {},
+		construstio: {},
 		
 		qualityGalleryId: "qualityGallery",
 		qualityUpload: "qualityUpload",
 		
 		operateDict: {
 			"1": {
-				queryInfoUrl: api.construction.queryChanConstructionScheduleByOrderId,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
 				//setInfoUrl: api.construction.setChanConstructionScheduleForInfo,
-				setStatusUrl: api.construction.setChanConstructionScheduleForStatus,
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 				
-				queryDrawingUrl: api.construction.queryChanDrawingByCsId,
-				addDrawingUrl: api.construction.addChanDrawing,
-				deleteDrawingUrl: api.construction.deleteChanDrawing,
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				elementId: "ccsId",
-				elementName: "chanConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				drawingId: "cdId",
 				drawingName: "chanDrawing",
 				drawings: "chanDrawings",
@@ -28,17 +28,16 @@ jQuery(function($) {
 				
 				drawingType: 6,
 			}, "2": {
-				queryInfoUrl: api.construction.queryPutlineConstructionScheduleByOrderId,
-				updateInfoUrl: api.construction.updatePutlineConstructionSchedule,
-				setInfoUrl: api.construction.setPutlineConstructionScheduleForInfo,
-				setStatusUrl: api.construction.setPutlineConstructionScheduleForStatus,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryPutlineDrawingByCsId,
-				addDrawingUrl: api.construction.addPutlineDrawing,
-				deleteDrawingUrl: api.construction.deletePutlineDrawing,
-				
-				elementId: "plcsId",
-				elementName: "putlineConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				drawingId: "pldId",
 				drawingName: "putlineDrawing",
 				drawings: "putlineDrawings",
@@ -47,15 +46,15 @@ jQuery(function($) {
 				
 				drawingType: 7,
 			}, "3": {
-				queryInfoUrl: api.construction.queryWaterwayCircuitPowerConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setWaterwayCircuitPowerConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryWaterwayCircuitPowerDrawingByCsId,
-				addDrawingUrl: api.construction.addWaterwayCircuitPowerDrawing,
-				deleteDrawingUrl: api.construction.deleteWaterwayCircuitPowerDrawing,
-				
-				elementId: "wcpcsId",
-				elementName: "waterwayCircuitPowerConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "wcpcswId",
 				workerName: "waterwayCircuitPowerConstructionScheduleWorker",
 				drawingId: "wcpdId",
@@ -69,15 +68,15 @@ jQuery(function($) {
 				
 				drawingType: 8,
 			}, "4": {
-				queryInfoUrl: api.construction.queryBricklayConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setBricklayConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryBricklayDrawingByCsId,
-				addDrawingUrl: api.construction.addBricklayDrawing,
-				deleteDrawingUrl: api.construction.deleteBricklayDrawing,
-				
-				elementId: "bcsId",
-				elementName: "bricklayConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "bcswId",
 				workerName: "bricklayConstructionScheduleWorker",
 				drawingId: "bdId",
@@ -88,15 +87,15 @@ jQuery(function($) {
 				
 				drawingType: 9,
 			}, "5": {
-				queryInfoUrl: api.construction.queryGroundLevelingConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setGroundLevelingConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryGroundLevelingDrawingByCsId,
-				addDrawingUrl: api.construction.addGroundLevelingDrawing,
-				deleteDrawingUrl: api.construction.deleteGroundLevelingDrawing,
-				
-				elementId: "glcsId",
-				elementName: "groundLevelingConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "glcswId",
 				workerName: "groundLevelingConstructionScheduleWorker",
 				drawingId: "gldId",
@@ -107,15 +106,15 @@ jQuery(function($) {
 				
 				drawingType: 10,
 			}, "6": {
-				queryInfoUrl: api.construction.queryCarpentConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setCarpentConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryCarpentDrawingByCsId,
-				addDrawingUrl: api.construction.addCarpentDrawing,
-				deleteDrawingUrl: api.construction.deleteCarpentDrawing,
-				
-				elementId: "ccsId",
-				elementName: "carpentConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "ccswId",
 				workerName: "carpentConstructionScheduleWorker",
 				drawingId: "cdId",
@@ -126,15 +125,15 @@ jQuery(function($) {
 				
 				drawingType: 11,
 			}, "7": {
-				queryInfoUrl: api.construction.queryOilConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setOilConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryOilDrawingByCsId,
-				addDrawingUrl: api.construction.addOilDrawing,
-				deleteDrawingUrl: api.construction.deleteOilDrawing,
-				
-				elementId: "ocsId",
-				elementName: "oilConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "ocswId",
 				workerName: "oilConstructionScheduleWorker",
 				drawingId: "odId",
@@ -145,15 +144,15 @@ jQuery(function($) {
 				
 				drawingType: 12,
 			}, "8": {
-				queryInfoUrl: api.construction.queryWaterwayCircuitCheckConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setWaterwayCircuitCheckConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryWaterwayCircuitCheckDrawingByCsId,
-				addDrawingUrl: api.construction.addWaterwayCircuitCheckDrawing,
-				deleteDrawingUrl: api.construction.deleteWaterwayCircuitCheckDrawing,
-				
-				elementId: "wcccsId",
-				elementName: "waterwayCircuitCheckConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "wcccswId",
 				workerName: "waterwayCircuitCheckConstructionScheduleWorker",
 				drawingId: "wccdId",
@@ -167,15 +166,15 @@ jQuery(function($) {
 				
 				drawingType: 13,
 			}, "9": {
-				queryInfoUrl: api.construction.queryCleaningConstructionScheduleByOrderId,
-				setInfoUrl: api.construction.setCleaningConstructionScheduleForInfo,
+				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
+				setInfoUrl: api.construction.setConstructionScheduleForInfo,
+
+				queryDrawingUrl: api.construction.queryConstructionDrawingByCsId,
+				addDrawingUrl: api.construction.addConstructionDrawing,
+				deleteDrawingUrl: api.construction.deleteConstructionDrawing,
 				
-				queryDrawingUrl: api.construction.queryCleaningDrawingByCsId,
-				addDrawingUrl: api.construction.addCleaningDrawing,
-				deleteDrawingUrl: api.construction.deleteCleaningDrawing,
-				
-				elementId: "ccsId",
-				elementName: "cleaningConstructionSchedule",
+				elementId: "csId",
+				elementName: "constructionSchedule",
 				workerId: "ccswId",
 				workerName: "cleaningConstructionScheduleWorker",
 				drawingId: "cdId",
@@ -212,12 +211,12 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	com.post(api.construction.queryConstructionScheduleByOrderId, {
-		"constructionSchedule.orderId": params.orderId
+	com.post(api.construction.queryConstructionByOrderId, {
+		"construction.orderId": params.orderId
 	}, function(res){
-		qualityTestingDetail.construstionSchedule = res.constructionSchedule;
+		qualityTestingDetail.construstio = res.construction;
 		
-		var operate = qualityTestingDetail.operateDict[qualityTestingDetail.construstionSchedule.schedule];
+		var operate = qualityTestingDetail.operateDict[qualityTestingDetail.construstio.schedule];
 		
 		var elementPostData = {};
 		elementPostData[operate.elementName+".orderId"] = orderId;
@@ -226,7 +225,7 @@ jQuery(function($) {
 			var element = res[operate.elementName];
 			qualityTestingDetail[operate.elementName+".csId"] = element["csId"];
 			qualityTestingDetail[operate.elementName+"."+operate.elementId] = element[operate.elementId];
-			var schedule = qualityTestingDetail.construstionSchedule.schedule;
+			var schedule = qualityTestingDetail.construstio.schedule;
 			
 			if(schedule == 1){
 				$("#chan").css("display", "block");
@@ -454,7 +453,7 @@ jQuery(function($) {
 					var options = {};
 					options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					options[operate.elementName+".orderId"] = orderId;
-					options[operate.elementName+".putlineTime"] = $("#putlineTime").val();
+					options[operate.elementName+".endTime"] = $("#putlineTime").val();
 					options[operate.elementName+".status"] = "";
 					
 					if($("#putlineTime").val() == ""){
@@ -542,7 +541,7 @@ jQuery(function($) {
 				}
 				
 				var options = {};
-				options[operate.elementName+".csId"] = qualityTestingDetail[operate.elementName+".csId"];
+				options[operate.elementName+".cid"] = qualityTestingDetail[operate.elementName+".cid"];
 				options[operate.elementName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 				
 				com.post(operate.queryWorkerUrl, options, function(res){
@@ -555,7 +554,7 @@ jQuery(function($) {
 							
 							var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
 							var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
-							var profileImg = $('<img></img>').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(imgDiv);
+							var profileImg = $('<img />').attr("alt", workerInfo["workerId"]+"'s Photo").appendTo(imgDiv);
 							
 							if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
 								com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
@@ -576,7 +575,7 @@ jQuery(function($) {
 					}
 					
 					var args = {};
-					args[operate.workerName+".csId"] = qualityTestingDetail[operate.elementName+".csId"];
+					args[operate.workerName+".cid"] = qualityTestingDetail[operate.elementName+".cid"];
 					args[operate.workerName+"."+operate.elementId] = qualityTestingDetail[operate.elementName+"."+operate.elementId];
 					args[operate.workerName+".orderId"] = params.orderId;
 					args[operate.workerName+".workerId"] = $('#workerName').val();
@@ -588,7 +587,7 @@ jQuery(function($) {
 						
 						var profileDiv = $('<div class="profile-picture col-sm-2 text-center" style="margin: 4px;"></div>');
 						var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
-						var profileImg = $('<img></img>').attr("alt", workerInfo.workerId+"'s Photo").appendTo(imgDiv);
+						var profileImg = $('<img />').attr("alt", workerInfo.workerId+"'s Photo").appendTo(imgDiv);
 						
 						if(workerInfo.workerPhoto != null && workerInfo.workerPhoto != ""){
 							com.showImg(profileImg, workerInfo.workerPhoto, 150, 150, workerInfo.workerId+"'s Photo");
@@ -635,7 +634,7 @@ jQuery(function($) {
 			initUploadBtn(qualityTestingDetail.qualityGalleryId, qualityTestingDetail.qualityUpload, operate.drawingType, operate.drawingName, operate.elementId, element[operate.elementId], operate.addDrawingUrl, operate.deleteDrawingUrl, operate.drawingId);
 			
 			var options = {};
-			options[operate.drawingName+".csId"] = qualityTestingDetail.construstionSchedule.csId;
+			options[operate.drawingName+".cid"] = qualityTestingDetail.construstio.cid;
 			
 			com.post(operate.queryDrawingUrl, options, function(res){
 				var drawings = res[operate.drawings];
@@ -721,7 +720,7 @@ jQuery(function($) {
 	        	if(dateObj.errorCode == 0){
 					var options = {};
 					options[name+"."+id] = fId;
-					options[name+".csId"] = qualityTestingDetail.construstionSchedule.csId;
+					options[name+".cid"] = qualityTestingDetail.construstio.cid;
 					options[name+".drawingName"] = "";
 					options[name+".drawingUrl"] = dateObj.resUrl;
 					options[name+".drawingAddUrl"] = "";
@@ -743,7 +742,7 @@ jQuery(function($) {
 		
 		var gallery = $("#"+galleryId);
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-		var img = $('<img></img>');
+		var img = $('<img />');
 		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
 		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){

@@ -22,21 +22,21 @@ import com.fanglin.utils.Paging;
 
 public interface ManifestService {
 	
-	public void pageManifest(Paging paging, List<Filter> filters);
+	public void pageManifest(Paging paging, List<Filter> filters,int company);
 	
 	public ManifestVO queryManifestByMId(ManifestVO manifestVO);
 	
-	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId) throws FLException;
+	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId) throws FLException;
+	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId) throws FLException;
+	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId) throws FLException;
+	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs,List<ManifestItemVO> manifestItemVOs, String uid) throws FLException;
+	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs,List<ManifestItemVO> manifestItemVOs, String uid,int company) throws FLException;
 	
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId) throws FLException;
+	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId,int company) throws FLException;
 	
 	public int updateManifest(ManifestVO manifestVO) throws FLException;
 	

@@ -6,48 +6,49 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-import javax.persistence.JoinColumn;
-
 import javax.persistence.Table;
 
-import com.fanglin.information.po.NoticePO;
-
 @Entity
-@Table(name = "noticesdepartment", catalog = "platform")
+@Table(name = "noticedepartment", catalog = "platform")
 public class NoticeDepartmentPO implements Serializable{
-
 
 	private static final long serialVersionUID = 1145569082063384689L;
 	
-	public  static final String NOTICE = "notice.noticeId";
-	private Integer ndid;
-	private NoticePO notice;
+	private long ndid;
+	
+	private long nid;
+	
 	private int did;
 		
+	public NoticeDepartmentPO() {
+		super();
+	}
+
+	public NoticeDepartmentPO(long nid, int did) {
+		super();
+		this.nid = nid;
+		this.did = did;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ndid")
-	public Integer getNdid() {
+	public long getNdid() {
 		return ndid;
 	}
 	
-	public void setNdid(Integer ndid) {
+	public void setNdid(long ndid) {
 		this.ndid = ndid;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "nid", referencedColumnName="noticeId")
-	public NoticePO getNotice() {
-		return notice;
+	public long getNid() {
+		return nid;
 	}
-	
-	public void setNotice(NoticePO notice) {
-		this.notice = notice;
+
+	public void setNid(long nid) {
+		this.nid = nid;
 	}
 
 	@Column(name = "did")
@@ -58,8 +59,5 @@ public class NoticeDepartmentPO implements Serializable{
 	public void setDid(int did) {
 		this.did = did;
 	}
-	
-	
-
 	
 }

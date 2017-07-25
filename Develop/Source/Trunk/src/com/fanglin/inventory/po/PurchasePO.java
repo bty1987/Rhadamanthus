@@ -41,6 +41,8 @@ public class PurchasePO implements Serializable{
 	
 	public static final String COLUMN_COMMENT_STR = "comment";          //说明
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	private long pid;
 	
 	private String no;
@@ -58,6 +60,8 @@ public class PurchasePO implements Serializable{
 	private short balanceStatus;
 	
 	private String comment;
+	
+	private int company;
 	
 	public PurchasePO() {
 		super();
@@ -156,4 +160,14 @@ public class PurchasePO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
 }

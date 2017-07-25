@@ -20,7 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="inspectiondeduction", catalog = "platform")
+@Table(name="inspectiondeduction", catalog = "construction")
 public class InspectionDeductionPO implements Serializable{
 
 	private static final long serialVersionUID = 933595476588801026L;

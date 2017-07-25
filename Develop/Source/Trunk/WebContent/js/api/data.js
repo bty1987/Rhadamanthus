@@ -73,5 +73,11 @@ $.extend(api, {data: {
     addMeasurementUnit:{url:"addMeasurementUnit.do", server: "communion"},
     updateMeasurementUnit:{url:"updateMeasurementUnit.do", server: "communion"},
 
+    pageConstructionNode:{url:"pageConstructionNode.do"},
+    queryConstructionNode:{url:"queryConstructionNode.do"},
+    queryConstructionNodeByCid:{url:"queryConstructionNodeByCid.do"},
+    addConstructionNode:{url:"addConstructionNode.do"},
+    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
+    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do"},
 
 }});

@@ -27,7 +27,7 @@ public class MemberCardPO  implements java.io.Serializable {
 	
 	private String orderId;
 	
-	private int credits;
+	private float credits;
 	
 	private Timestamp createTime;
 
@@ -61,11 +61,11 @@ public class MemberCardPO  implements java.io.Serializable {
 	}
 
 	@Column(name = "credits")
-	public int getCredits() {
+	public float getCredits() {
 		return credits;
 	}
 
-	public void setCredits(int credits) {
+	public void setCredits(float credits) {
 		this.credits = credits;
 	}
 
