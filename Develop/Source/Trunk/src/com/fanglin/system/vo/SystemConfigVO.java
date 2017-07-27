@@ -2,6 +2,8 @@ package com.fanglin.system.vo;
 
 import java.io.Serializable;
 
+import org.apache.struts2.json.annotations.JSON;
+
 
 public class SystemConfigVO implements Serializable{
 
@@ -20,6 +22,8 @@ public class SystemConfigVO implements Serializable{
 	private String createTime;
 	
 	private String comment;
+	
+	private Integer company; 
 
 	public Long getScid() {
 		return scid;
@@ -61,6 +65,7 @@ public class SystemConfigVO implements Serializable{
 		this.createName = createName;
 	}
 
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -76,6 +81,13 @@ public class SystemConfigVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
 	
 }

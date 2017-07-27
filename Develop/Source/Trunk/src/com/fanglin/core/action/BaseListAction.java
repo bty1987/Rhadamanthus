@@ -1,4 +1,4 @@
-/*
+/**
  * @File Name	: BaseListAction.java
  * @Package		：com.fanglin.action 
  * @Version		: 1.0

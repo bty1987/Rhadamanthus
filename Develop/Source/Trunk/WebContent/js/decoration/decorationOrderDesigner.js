@@ -34,7 +34,6 @@ $(function(){
 					"drawLine.applayDes":$("#applayDes").val(),
 					"drawLine.applayTime":$("#applayTime").val(),
 					"drawLine.orderId":$("#decorationOrderId").val(),
-					"drawLine.company":order.drawLineModal.attr("company")
 				};
 
 				com.post(api.drawline.applayDrawLine, options);
@@ -162,7 +161,7 @@ $(function(){
 					});
 					
 					$btnLine.click(function(){
-						modalDrawLineModal(v.orderId,v.company);
+						modalDrawLineModal(v.orderId);
 					});
 
 					$btnContract.click(function(){
@@ -233,8 +232,6 @@ $(function(){
 			$("#applayDes").val("");
 			$("#applayTime").val("");
 			$("#decorationOrderId").val(decorationOrderId);
-			order.drawLineModal.attr("company",company);
-
 			order.drawLineModal.modal("show");
 		}
 		//合同

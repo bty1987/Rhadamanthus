@@ -19,6 +19,4 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 
 	public  void  deleteWorkerSalary (Long wsid);
 	
-
-	
 }

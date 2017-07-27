@@ -406,9 +406,10 @@ jQuery(function($) {
 			params.cid = v.cid;
 		});
 
-			initWizardSept(supervisionDetail.operateDict[1], 1);
+			var stepnum = constructionSchedule[0].schedule;
+			initWizardSept(supervisionDetail.operateDict[stepnum], stepnum);
 
-			$('#fuelux-wizard').ace_wizard({status:true, currentStep: 1}).on('finished', function(e) {
+			$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
 				com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 			}).on('stepclick', function(e, info){
 				var stepId = $("[flag]").eq(info.step-1).attr("id");

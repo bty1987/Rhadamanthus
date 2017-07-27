@@ -31,15 +31,13 @@ $.extend(api.ds, {
 
 $.extend(api, {payment: {
     queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
-	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do" ,server : "platform" },
+	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
 
 	pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
 	queryPaymentByOrderId: {url: "queryPaymentByOrderId.do"},
 	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
 	collectPayment: {url: "collectPayment.do"},
 	confirmPayment: {url: "confirmPayment.do"},
-	updatePayment: {url: "updatePayment.do"},
-	payPayment: {url: "payPayment.do"},
 	withdrawPayment: {url: "withdrawPayment.do"},
 	
 

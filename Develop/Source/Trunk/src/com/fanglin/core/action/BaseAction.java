@@ -152,6 +152,29 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return company;
 	}
 	
+	public Authentication authentication() throws FLException{
+		
+		Authentication authentication = new Authentication();
+		
+		try {
+			String au = request.getParameter("authentication");
+			
+			if(au == null){
+				au = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
+			}
+			
+			if(au == null){
+				throw new FLException(110005, "系统处理问题");
+			}
+			
+			authentication = new Authentication(au);
+		} catch (Exception e) {
+			throw new FLException(110005, "系统处理问题");
+		}
+		
+		return authentication;
+	}
+	
 	private String getAuthentication() throws FLException{
 		
 		String authentication;

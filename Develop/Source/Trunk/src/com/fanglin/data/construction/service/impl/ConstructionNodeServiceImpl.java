@@ -80,47 +80,4 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService{
 		return constructionNodeVOs;
 	}
 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addConstructionNode(ConstructionNodeVO constructionNodeVO) {
-		
-		ConstructionNodePO constructionNodePO = new ConstructionNodePO();
-		
-		constructionNodePO.setName(constructionNodeVO.getName());
-		
-		constructionNodeDao.save(constructionNodePO);
-		
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO) {
-		
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
-		
-		constructionNodePO.setStatus(constructionNodeVO.getStatus());
-		
-		constructionNodeDao.update(constructionNodePO);
-		
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateConstructionNodeCompany(ConstructionNodeCompanyVO constructionNodeCompanyVO,List<Long> cnids) {
-		
-		Long cid = constructionNodeCompanyVO.getCid();
-		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(cid);
-		for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
-			constructionNodeDao.delete(constructionNodeCompanyPO);
-		}
-		
-		for (Long cnid : cnids) {
-			ConstructionNodeCompanyPO constructionNodeCompanyPO = new ConstructionNodeCompanyPO();
-			constructionNodeCompanyPO.setCid(cid);
-			ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
-			constructionNodeCompanyPO.setConstructionNode(constructionNodePO);
-			constructionNodeDao.save(constructionNodeCompanyPO);
-		}
-	}
-
 }

@@ -40,7 +40,7 @@ public class UserService {
 		
 		String accessToken = authDDService.getAccessToken();
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
 		String url = String.format(DDApi.DDAPI_GET_USER_INFO_STR, oapiHost.getValue(), accessToken, code);
 		
@@ -53,7 +53,7 @@ public class UserService {
 	
 		String accessToken = authDDService.getAccessToken();
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
 		String url = String.format(DDApi.DDAPI_GET_USER_STR, oapiHost.getValue(), accessToken, userid);
 		
@@ -81,7 +81,7 @@ public class UserService {
 			user.setPosition(duty);
 			user.setDepartment(dids);
 		
-		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 						
 		 String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(),accessToken,  user);
 						
@@ -103,7 +103,7 @@ public class UserService {
 				user.setPosition(duty);
 				user.setDepartment(dids);
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 			
 		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(),accessToken,  user);
 			
@@ -119,7 +119,7 @@ public class UserService {
   		
   		String accessToken =authDDService.getAccessToken();
   		
-  		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+  		 SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
   		
   		String url = String.format(DDApi.DDAPI_DELETE_USER_STR,oapiHost.getValue(), accessToken, userid);
   		

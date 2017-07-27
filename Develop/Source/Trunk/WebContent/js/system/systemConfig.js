@@ -1,13 +1,15 @@
-$(function(){
+﻿$(function(){
 
     var system = {
-
         saveBtn: null,
         cancellBtn: null,
         modal: null,
         config:{},
-
+        
+        scid: null,
     }
+
+    var company = {};
 
     system.saveBtn = $('#saveBtn').on("click",saveData);
     system.cancellBtn = $("#cancelBtn");
@@ -16,7 +18,11 @@ $(function(){
     system.config.value = $("#value");
     system.config.comment = $("#comment");
 
-
+    com.post(api.system.queryCompany,{},function (res) {
+        $.each(res.companys,function(i,v){
+            company[v.cid] = v.name;
+        })
+    },null,false);
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -50,7 +56,7 @@ $(function(){
                 ["创建人:", v.createName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
                 ["说明:", v.comment, "grey"],
-                ["公司:", v.company.name , "grey"],
+                ["公司:", company[v.company] , "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -92,10 +98,12 @@ $(function(){
     //编辑
     function edit(row){
     	//给页面标签赋值
+    	
+    	system.scid = row.scid;
+    	
         system.config.key.val(row.key);
 		system.config.value.val(row.value);
 		system.config.comment.val(row.comment);
-
 
 		system.modal.modal("show"); //弹出弹层
     }
@@ -109,23 +117,21 @@ $(function(){
 
         var key = system.config.key.val();
         var value = system.config.value.val();
+        
         if(key == null || key == ''){
             bootbox.alert("Key不能为空");
             return;
         }
-
 
         if(value == null || value == ''){
             bootbox.alert("Value不能为空");
             return;
         }
         var options = {
-            "systemConfigVO.key" : system.config.key.val(),
-
-            "systemConfigVO.value": system.config.value.val(),
-
-            "systemConfigVO.comment": system.config.comment.val(),
-
+        	"systemConfig.scid": system.scid,
+            "systemConfig.key" : system.config.key.val(),
+            "systemConfig.value": system.config.value.val(),
+            "systemConfig.comment": system.config.comment.val(),
         };
 
         com.post(api.system.updateSystemConfig, options, function (res) {

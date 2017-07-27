@@ -26,6 +26,8 @@ public class SystemConfigPO implements Serializable{
 	
 	public static final String COLUMN_KEY_STR = "key";
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	private long scid;
 	
 	private String key;
@@ -38,6 +40,8 @@ public class SystemConfigPO implements Serializable{
 	
 	private String comment;
 	
+	private int company;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "scid")
@@ -94,7 +98,12 @@ public class SystemConfigPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
 
+	public void setCompany(int company) {
+		this.company = company;
+	}
 }

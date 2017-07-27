@@ -28,9 +28,9 @@ public class AuthService {
 	
 	public  String getAccessToken() {
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
-		SystemConfigPO company = systemConfigDao.querySystemConfigByKey("company");
+		SystemConfigPO company = systemConfigDao.querySystemConfig("company");
 
 		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, mpHost.getValue(),company.getValue());
 		
@@ -44,9 +44,9 @@ public class AuthService {
 	
 	public   String getJsapiTicket() {
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
-		SystemConfigPO company = systemConfigDao.querySystemConfigByKey("company");
+		SystemConfigPO company = systemConfigDao.querySystemConfig("company");
 		
 		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, mpHost.getValue(),company.getValue());
 		
@@ -112,7 +112,7 @@ public class AuthService {
 			logger.error(e.getMessage());
 		}
 		
-		SystemConfigPO corpId = systemConfigDao.querySystemConfigByKey("corpId");
+		SystemConfigPO corpId = systemConfigDao.querySystemConfig("corpId");
 	
 		return "({signature:'" + signature + "',nonceStr:'" + nonceStr + "',timeStamp:'" + timeStamp + "',corpId:'" + corpId.getValue() + "'})";
 	}

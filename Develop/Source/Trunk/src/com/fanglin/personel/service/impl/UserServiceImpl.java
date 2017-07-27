@@ -12,16 +12,17 @@ package com.fanglin.personel.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.po.UserInfoPO;
@@ -44,9 +45,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserInfoDao userInfoDao;
-	
-	@Autowired
-	private MessageService messageDDService;
 	
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException{
@@ -303,7 +301,7 @@ public class UserServiceImpl implements UserService {
 		
 		userDao.resetPassword(userId, MD5Helper.MD5(newPassword));
 		
-		messageDDService.sendMessage(userId,userPO.getUserName(),"重置密码,新密码为"+newPassword);
+//		messageDDService.sendMessage(userId,userPO.getUserName(),"重置密码,新密码为"+newPassword);
 	
 		return 0;
 	}

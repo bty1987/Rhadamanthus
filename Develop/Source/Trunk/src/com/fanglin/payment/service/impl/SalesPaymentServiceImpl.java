@@ -436,7 +436,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		}
 		
 		String api = "payPayment.do";
-		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.type=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", "付款", salesPaymentVO.getAdvance());
+		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
 		String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
 		
 		assassinService.proxy("platform", api, params, content, userPO);
@@ -576,7 +576,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		}
 		
 		String api = "payPayment.do";
-		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.type=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", "付款", salesPaymentVO.getAdvance());
+		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
 		String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
 		
 		assassinService.proxy("platform", api, params, content, userPO);

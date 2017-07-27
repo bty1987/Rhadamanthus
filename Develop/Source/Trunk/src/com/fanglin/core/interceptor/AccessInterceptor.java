@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
-import com.fanglin.log.service.LogService;
 import com.fanglin.system.service.OperationService;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
@@ -33,9 +32,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 	
 	@Autowired
 	private OperationService operationService;
-	
-	@Autowired
-	public LogService logService;
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {

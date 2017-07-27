@@ -1467,7 +1467,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		AuditPO auditPO = new AuditPO();
 	    auditPO.setDecorationOrder(decorationOrderPO);
-	    this.auditDao.save(auditPO);
+	    auditDao.save(auditPO);
 	}
 	
 	@Override

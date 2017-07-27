@@ -100,8 +100,12 @@ public class AuditServiceImpl implements AuditService{
 	
 		AuditPO auditPO = auditDao.get(auditVO.getAid());
 		
+		if(auditPO == null){
+			throw new FLException(140044 , "审批记录不存在");	
+		}
+		
 		if(auditPO.getAuditer()!=null){
-			throw new FLException(110007, "网络问题");			
+			throw new FLException(140048, "审核人已存在");			
 		}
 		
 		auditPO.setAuditer(userDao.queryUserByUserId(UserId));

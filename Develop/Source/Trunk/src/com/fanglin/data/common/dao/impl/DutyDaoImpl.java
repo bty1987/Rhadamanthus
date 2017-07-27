@@ -52,7 +52,7 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 	@SuppressWarnings("unchecked")
 	public List<DutyPO> queryDuty() {
 
-		return session().createCriteria(DutyPO.class).list();
+		return session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR,DutyPO.COLUMN_STATUS_INT)).list();
 	}
 
 }

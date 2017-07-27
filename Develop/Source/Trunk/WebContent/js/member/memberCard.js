@@ -108,7 +108,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['orderId', 'createVipTime'];
+    var _condArr = ['versionNumber', 'versionCreateTime'];
     searcher.init(_condArr, "condList", api.member.pageMemberCard, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "memberCardPostData", null, false, null, null);

@@ -482,10 +482,10 @@ jQuery(function($) {
 			constructerPane("#step-container", v.schedule,workerAllocationDetail.operateDict[v.schedule].nodeNamePinyin, workerAllocationDetail.operateDict[v.schedule].nodeName);
 		});
 
+		var stepnum = constructionSchedule[0].schedule;
+		initWizardSept(workerAllocationDetail.operateDict[stepnum], stepnum);
 
-			initWizardSept(workerAllocationDetail.operateDict[1], 1);
-
-			$('#fuelux-wizard').ace_wizard({status:true, currentStep: 1}).on('finished', function(e) {
+			$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
 				com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 			}).on('stepclick', function(e, info){
 
@@ -545,7 +545,6 @@ jQuery(function($) {
 						options["constructionSchedule.orderId"] = orderId;
 						options["constructionSchedule.status"] = 1;
 
-						console.log(options);
 						com.post(operate.setStatusUrl, options, function(res){
 							com.showAlert(com.info, "铲大白成功!");
 							chanSuccessBtn.attr("disabled", "disabled");
@@ -1101,8 +1100,6 @@ jQuery(function($) {
 
 	//画施工人员面板
 	function constructerPane(paneId, schedule, scheduleNamePinyin, scheduleNameGBK){
-
-		console.log(paneId, schedule, scheduleNamePinyin, scheduleNameGBK);
 
 		var paneWorker = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
 		var paneWorkerRow = $("<div></div>").addClass("row").appendTo(paneWorker);

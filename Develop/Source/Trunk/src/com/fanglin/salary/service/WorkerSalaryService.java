@@ -1,7 +1,6 @@
 package com.fanglin.salary.service;
 
 import java.util.List;
-
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.vo.WorkerSalaryVO;
@@ -22,6 +21,5 @@ public interface WorkerSalaryService {
 	public int rejectWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId) throws FLException;
 	
 	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException;
-	
 	
 }

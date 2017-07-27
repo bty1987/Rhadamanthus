@@ -42,7 +42,7 @@ public class MessageService {
 		try {
 			String accessToken = authDDService.getAccessToken();
 			
-			SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+			SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 			
 			String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR,oapiHost.getValue(), accessToken);
 			
@@ -58,9 +58,9 @@ public class MessageService {
 		
 		String accessToken = authDDService.getAccessToken();
 		
-		SystemConfigPO approvalAgentId = systemConfigDao.querySystemConfigByKey("approvalAgentId");
+		SystemConfigPO approvalAgentId = systemConfigDao.querySystemConfig("approvalAgentId");
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", approvalAgentId.getValue());
 		
@@ -78,7 +78,7 @@ public class MessageService {
 		
 		appMessageDelivery.withMessage(oaMessage);
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
 		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue() , accessToken);
 		
@@ -91,7 +91,7 @@ public class MessageService {
 		
 		TextMessage textMessage = new TextMessage(contents);
 		
-		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfigByKey("messageAgentId");
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId");
 		
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
 		
@@ -106,9 +106,9 @@ public class MessageService {
 		
 		String accessToken =authDDService.getAccessToken();
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfigByKey("mpHost");
+		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
-		SystemConfigPO salesmanAgentId = systemConfigDao.querySystemConfigByKey("salesmanAgentId");
+		SystemConfigPO salesmanAgentId = systemConfigDao.querySystemConfig("salesmanAgentId");
 		
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", salesmanAgentId.getValue());
 		
@@ -126,7 +126,7 @@ public class MessageService {
 		
 		appMessageDelivery.withMessage(oaMessage);
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
 		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue(), accessToken);
 		
@@ -139,7 +139,7 @@ public class MessageService {
 			
 		TextMessage textMessage = new TextMessage(contents);
 			
-		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfigByKey("messageAgentId");
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId");
 			
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
 			
