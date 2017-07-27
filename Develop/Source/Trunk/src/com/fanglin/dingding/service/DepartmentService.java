@@ -39,7 +39,7 @@ public class DepartmentService {
 		
 		String accessToken = authDDService.getAccessToken();
 		
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfigByKey("oapiHost");
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
 		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, did);
 	
@@ -47,8 +47,5 @@ public class DepartmentService {
 	
 		return JSON.parseArray(json.getJSONArray("department").toJSONString(), Department.class);
 	}
-	
-	
-	
 	
 }

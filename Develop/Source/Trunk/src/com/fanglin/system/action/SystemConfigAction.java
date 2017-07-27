@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.SystemConfigService;
 import com.fanglin.system.vo.SystemConfigVO;
 
@@ -23,32 +24,40 @@ public class SystemConfigAction extends BaseListAction {
 	@Autowired
 	private SystemConfigService systemConfigService;
 	
-	private SystemConfigVO systemConfigVO;
+	private SystemConfigVO systemConfig;
 	
-	private List<SystemConfigVO> systemConfigVOs;
+	private List<SystemConfigVO> systemConfigs;
 
 	@Action(value = "pageSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCityProper(){
 		
-		 systemConfigVOs = systemConfigService.pageSystemConfig(getPaging(), getFilters());
+		systemConfigs = systemConfigService.pageSystemConfig(getPaging(), getFilters());
+		 
+   		return SUCCESS;
+	}
+	
+	@Action(value = "updateSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSystemConfig() throws FLException{
+		
+		systemConfigService.updateSystemConfig(systemConfig);
 		
 		return SUCCESS;
 	}
-	
-	public SystemConfigVO getSystemConfigVO() {
-		return systemConfigVO;
+
+	public SystemConfigVO getSystemConfig() {
+		return systemConfig;
 	}
 
-	public void setSystemConfigVO(SystemConfigVO systemConfigVO) {
-		this.systemConfigVO = systemConfigVO;
+	public void setSystemConfig(SystemConfigVO systemConfig) {
+		this.systemConfig = systemConfig;
 	}
 
-	public List<SystemConfigVO> getSystemConfigVOs() {
-		return systemConfigVOs;
+	public List<SystemConfigVO> getSystemConfigs() {
+		return systemConfigs;
 	}
 
-	public void setSystemConfigVOs(List<SystemConfigVO> systemConfigVOs) {
-		this.systemConfigVOs = systemConfigVOs;
+	public void setSystemConfigs(List<SystemConfigVO> systemConfigs) {
+		this.systemConfigs = systemConfigs;
 	}
 
 }

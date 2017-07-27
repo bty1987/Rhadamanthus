@@ -20,6 +20,10 @@ public class DutyPO implements Serializable {
 
 	public static final String COLUMN_NAME_STR = "name";
 	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short COLUMN_STATUS_INT = 0;
+	
 	private long did;
 
 	private String name;

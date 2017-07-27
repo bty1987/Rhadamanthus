@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "constructionNode",catalog = "construction")
+@Table(name = "constructionNode",catalog = "communion")
 public class ConstructionNodePO implements Serializable {
 
 	private static final long serialVersionUID = 7434364138129555698L;

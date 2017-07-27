@@ -227,10 +227,10 @@ jQuery(function($) {
 			customerServicePane("#step-container", v.schedule,customerServiceDetail.operateDict[v.schedule].nodeNamePinyin, customerServiceDetail.operateDict[v.schedule].nodeName);
 		});
 
+		var stepnum = constructionSchedule[0].schedule;
+		initWizardSept(customerServiceDetail.operateDict[stepnum], stepnum);
 
-		initWizardSept(customerServiceDetail.operateDict[1], 1);
-
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: 1}).on('finished', function(e) {
+		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
 			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
 

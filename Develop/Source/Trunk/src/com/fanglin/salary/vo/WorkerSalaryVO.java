@@ -2,13 +2,12 @@ package com.fanglin.salary.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.personel.vo.UserVO;
-/**
- * @author Administrator
- *
- */
+
 public class WorkerSalaryVO  implements Serializable{
 	
 	private static final long serialVersionUID = -1896969348501581246L;
@@ -45,7 +44,6 @@ public class WorkerSalaryVO  implements Serializable{
 		super();
 	}
 
-
 	public WorkerSalaryVO(DecorationOrderVO decorationOrder, UserVO user,UserVO creater,UserVO approver) {
 		super();
 		this.decorationOrder = decorationOrder;
@@ -53,7 +51,7 @@ public class WorkerSalaryVO  implements Serializable{
 		this.creater = creater;
 		this.approver = approver;
 	}
-
+	
 	public Long getWsId() {
 		return wsId;
 	}
@@ -62,17 +60,13 @@ public class WorkerSalaryVO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-
-
 	public Long getCid() {
 		return cid;
 	}
 
-
 	public void setCid(Long cid) {
 		this.cid = cid;
 	}
-
 
 	public DecorationOrderVO getDecorationOrder() {
 		return decorationOrder;
@@ -89,7 +83,6 @@ public class WorkerSalaryVO  implements Serializable{
 	public void setUser(UserVO user) {
 		this.user = user;
 	}
-	
 
 	public UserVO getCreater() {
 		return creater;

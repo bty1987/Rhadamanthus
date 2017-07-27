@@ -15,10 +15,4 @@ public interface ConstructionNodeService {
 
 	public List<ConstructionNodeVO> queryConstructionNodeByCid(ConstructionNodeCompanyVO constructionNodeCompany);
 
-	public void addConstructionNode(ConstructionNodeVO constructionNode);
-
-	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNode);
-
-	public void updateConstructionNodeCompany(ConstructionNodeCompanyVO constructionNodeCompany, List<Long> cnids);
-
 }

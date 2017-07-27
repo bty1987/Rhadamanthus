@@ -63,7 +63,7 @@ $(function(){
 
 	var companySeacher = new Searcher();
 
-	companySeacher.init( ["name"], "condList", api.system.pageCompany, function(data){
+	companySeacher.init( ["companyName"], "condList", api.system.pageCompany, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "companyPostDataTwo", null, false, null, null);
 
@@ -86,7 +86,6 @@ $(function(){
 	//配置工程节点
 	function editConstructionNodeCompany(row){
 
-		//给页面标签赋值
 		com.post(api.data.queryConstructionNode,{"constructionNode.status":0},function(res){
 			constructionNodeCompany.nodeNames = res.constructionNodes;
 		},null,false);

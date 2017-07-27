@@ -938,7 +938,7 @@ var Condition = function(api){
             label:"审核状态",
             type:"select",
             submitConfig : {
-                name :　"auditStatus",
+                name: "auditStatus",
                 op : "eq",
                 validate : null
             },

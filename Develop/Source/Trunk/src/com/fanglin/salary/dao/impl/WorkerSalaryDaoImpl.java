@@ -15,11 +15,16 @@ import com.fanglin.core.vo.Filter;
 
 @Repository("workerSalaryDao")
 public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements WorkerSalaryDao {
+	
+	public WorkerSalaryDaoImpl() {
+		super(WorkerSalaryPO.class);
+	}
+	
 	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging,List<Filter> filters) {
 
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
 		queryFilterExcute(query, filters);
-	
+		
 		return query.list();
 	}
 
@@ -35,8 +40,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		
 		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
 	}
-
-
 	
 	@Override
 	public int countWorkerSalary(Long cid, String userId) {
@@ -56,39 +59,31 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		
-	
-		
-		
-		
-		
 		if (filters != null) {
 			for (Filter filter : filters) {
 				
-				
 				String filet = filter.getField();
-				String data =filter.getData();
+				String data = filter.getData();
 				String op = filter.getOp();
 				
-				if ("userName".equals(filet)) {
+				 if ("userName".equals(filet)) {
 						query.alias("user", "user");
 						query.add(query.getCriterion("user.userName", data, op));
-				}
+				  }
 				
-				if ("orderId".equals(filet)) {
+				 if ("orderId".equals(filet)) {
 					query.alias("decorationOrder", "decorationOrder");
 					query.add(query.getCriterion("decorationOrder.orderId", data, op));
-				} 
+				  } 
 				
-				
-				if ("duty".equals(filet)) {
+				 if ("duty".equals(filet)) {
 					query.alias("user", "user");
 					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_USER_USERDUTY, data, op));
-				}
+				  }
 				
-				if("status".equals(filet)){
+				 if("status".equals(filet)){
 					query.add(query.getCriterion(WorkerSalaryPO.STATUS_INIT_STRA, Short.parseShort(data), op));
-				}
-				
+				  }
 				
 				 if("approveTime".equals(filter.getField())){
 					
@@ -104,8 +99,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 					
 					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, eTimestamp, "le"));
 					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, sTimestamp, "ge"));
-				}
-				 if("createTime".equals(filter.getField())){
+				  }
+				if("createTime".equals(filter.getField())){
 						
 						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
@@ -118,15 +113,9 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 						
 						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, eTimestamp, "le"));
 						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, sTimestamp, "ge"));
-					}
-			
+				 }
 			}
 		}
 	}
-	
-	public WorkerSalaryDaoImpl() {
-		super(WorkerSalaryPO.class);
-	}
-
 	
 }

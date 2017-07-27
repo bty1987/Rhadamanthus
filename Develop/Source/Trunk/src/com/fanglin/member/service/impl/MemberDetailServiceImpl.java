@@ -86,7 +86,7 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 		MemberDetailPO memberDetailPO = new MemberDetailPO(new MemberCardPO(),new UserPO());
 		
 		String systemKey = "integralmultiple";
-		SystemConfigPO systemConfig = systemConfigDao.querySystemConfigByKey(systemKey);
+		SystemConfigPO systemConfig = systemConfigDao.querySystemConfig(systemKey);
 		
 		BeanUtil.copyProperties(memberDetailVO, memberDetailPO, Arrays.asList("memberCard", "cuId"));
 		BeanUtil.copyProperties(memberDetailVO.getMemberCard(), memberDetailPO.getMemberCard());

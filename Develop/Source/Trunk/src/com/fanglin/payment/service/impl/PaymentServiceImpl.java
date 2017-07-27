@@ -273,7 +273,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		
-		advancePaymentDao.saveOrUpdate(advanceReceiptPO);
+		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 		advanceReceiptDao.save(advanceReceiptPO);
 		paymentDao.save(paymentPO);
 		

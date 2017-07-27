@@ -28,40 +28,37 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_STATUS_STR = "status"; 
 	
-	public static final String COLUMN_USER_USERID_STR = "user.userId";  //员工编号
+	public static final String COLUMN_USER_USERID_STR = "user.userId";
 	
-	public static final String COLUMN_CREATETIME_STR = "createTime";    //创建时间
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 
-	public static final String COLUMN_BALANCETIME_STR = "balanceTime";  //结算时间
+	public static final String COLUMN_BALANCETIME_STR = "balanceTime";
 	
-	public static final short TYPE_SALARY_STR = 0;                      //工费类型   0工费 1扣款
+	public static final short TYPE_SALARY_STR = 0;                    
 	
 	public static final short TYPE_SALARY_STRONE =1 ;
 	
-	public static final short STATUS_INIT_STR = 0;                      //状态  初始为0
+	public static final short STATUS_INIT_STR = 0;                      
 	
-	public static final short STATUS_INIT_STRONE = 1;                      //状态  初始为1
+	public static final short STATUS_INIT_STRONE = 1;                     
 	
-	public static final short STATUS_INIT_STRTWO = 2;                      //状态  初始为2
+	public static final short STATUS_INIT_STRTWO = 2;                     
 	
-	public static final String STATUS_INIT_STRA = "status";                      //状态  初始为0
+	public static final String STATUS_INIT_STRA = "status";                      
 	
 	public static final Long CSID_INIT_STR = 0L; 
 	
-	public static final String COLUMN_SALARY_STR = "salary";       //如果该工人未设置过工费  初始为0
+	public static final String COLUMN_SALARY_STR = "salary";       
 	
 	public static final String COLUMN_APPROVETIME = "approveTime"; 
 	
 	public static final String COLUMN_CREATETIME = "createTime"; 
 	
+	public static final String ORDERID_STR="decorationOrder.orderId"; 
 	
-	public static final String ORDERID_STR="decorationOrder.orderId"; //订单编号
+	public static final String COLUMN_USER_USERNAME="user.userName";
 	
-	public static final String COLUMN_USER_USERNAME="user.userName"; //工人 姓名
-	
-	public static final String COLUMN_USER_USERDUTY="user.duty";  //工人职位
-	
-	
+	public static final String COLUMN_USER_USERDUTY="user.duty"; 
 	
 	private long wsId;
 	
@@ -95,7 +92,6 @@ public class WorkerSalaryPO  implements Serializable{
 		super();
 	}
 
-
 	public WorkerSalaryPO(DecorationOrderPO decorationOrder, UserPO user, UserPO creater,UserPO   approver) {
 		super();
 		this.decorationOrder = decorationOrder;
@@ -105,16 +101,17 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 
 	public WorkerSalaryPO( DecorationOrderPO decorationOrder ,UserPO user, UserPO creater) {
-	super();
-	this.decorationOrder = decorationOrder;
-	this.user = user;
-	this.creater = creater;
-}
+		super();
+		this.decorationOrder = decorationOrder;
+		this.user = user;
+		this.creater = creater;
+	}
 	public WorkerSalaryPO(UserPO user ,UserPO creater) {
 		super();
 		this.user = user;
 		this.creater=creater;
 	}
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="wsid")
@@ -126,17 +123,14 @@ public class WorkerSalaryPO  implements Serializable{
 		this.wsId = wsId;
 	}
 
-	
 	@Column(name="cid")
 	public long getCid() {
 		return cid;
 	}
 
-
 	public void setCid(long cid) {
 		this.cid = cid;
 	}
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -243,8 +237,5 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setApprover(UserPO approver) {
 		this.approver = approver;
 	}
-	
-
-
 
 }

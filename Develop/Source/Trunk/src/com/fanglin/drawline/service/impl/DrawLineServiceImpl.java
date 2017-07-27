@@ -323,8 +323,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
 			constructionDao.save(constructionPO);
 			long cid = constructionPO.getCid();
-			List<ConstructionNodeCompanyPO> ConstructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(drawLineVO.getCompany());
-			
+			List<ConstructionNodeCompanyPO> ConstructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid((long) decorationOrderPO.getCompany());
 			for (ConstructionNodeCompanyPO constructionNodeCompanyPO:ConstructionNodeCompanyPOs) {				
 				if(constructionNodeCompanyPO.getConstructionNode().getCnid()==1||constructionNodeCompanyPO.getConstructionNode().getCnid()==2){
 					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());

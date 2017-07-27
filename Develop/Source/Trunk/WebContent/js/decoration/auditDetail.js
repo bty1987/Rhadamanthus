@@ -36,8 +36,8 @@ jQuery(function($) {
 
     decorationUtils.init();
 
-    decorationOrderDetail.decorationOrderId = decorationOrderPostData.decorationOrderId;
-    decorationOrderDetail.orderType = decorationOrderPostData.type;
+    decorationOrderDetail.decorationOrderId = params.decorationOrderId;
+    decorationOrderDetail.orderType = params.type;
 
     decorationPayment.postParam.decorationOrderId = decorationOrderDetail.decorationOrderId;
     decorationPayment.postParam["decorationPayment.orderId"] = decorationOrderDetail.decorationOrderId;
@@ -145,7 +145,7 @@ function initWizard(){
         }else if(curstep == 7){
             decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
         }else if(curstep == 8){
-            addReduce(decorationOrderPostData.decorationOrderId);
+            addReduce(params.decorationOrderId);
         }
     }).on('finished', function(e) {
         com.switchPage(api.index.auditIndex.url);
@@ -163,7 +163,7 @@ function initWizard(){
         }else if(info.step == 7){
             decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
         }else if(info.step == 8){
-            addReduce(decorationOrderPostData.decorationOrderId);
+            addReduce(params.decorationOrderId);
         }
     });
 }
@@ -193,8 +193,8 @@ function addReduce(orderId) {
     com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': orderId}, function (data) {
         com.post(api.quotation.queryQuotationForDefaultByOrderId,
             {
-                "quotation.orderId": decorationOrderPostData.decorationOrderId,
-                "quotation.type": decorationOrderPostData.orderType
+                "quotation.orderId": params.decorationOrderId,
+                "quotation.type": params.orderType
             }, function (res) {
                 discount = res.quotation.discount;
                 qid = res.quotation.qid;

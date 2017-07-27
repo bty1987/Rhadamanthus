@@ -76,8 +76,8 @@ $.extend(api, {data: {
     pageConstructionNode:{url:"pageConstructionNode.do"},
     queryConstructionNode:{url:"queryConstructionNode.do"},
     queryConstructionNodeByCid:{url:"queryConstructionNodeByCid.do"},
-    addConstructionNode:{url:"addConstructionNode.do"},
-    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
-    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do"},
+    addConstructionNode:{url:"addConstructionNode.do", server: "communion"},
+    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do", server: "communion"},
+    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do", server: "communion"},
 
 }});

@@ -76,8 +76,6 @@ public class DrawLineVO implements Serializable {
 	
 	private String drawLineUserId;
 	
-	private Long company;
-	
 	public Long getDlId(){
 		return dlId;
 	}
@@ -304,12 +302,4 @@ public class DrawLineVO implements Serializable {
 		this.supervisor = supervisor;
 	}
 
-	public Long getCompany() {
-		return company;
-	}
-
-	public void setCompany(Long company) {
-		this.company = company;
-	}
-	
 }

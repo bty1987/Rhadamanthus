@@ -3,8 +3,7 @@ $.extend(api.index, {
     userIndex: {url: "/views/personnel/user.html"},
     userEditIndex: {url: '/views/personnel/userEdit.html'},
     userContractIndex: {url: "/views/personnel/userContract.html"},
-    userExperienceIndex: {url: "/views/personnel/userExperience.html"},
-   
+    userExperienceIndex: {url: "/views/personnel/userExperience.html"}
 });
 
 $.extend(api.ds, {
@@ -30,7 +29,7 @@ $.extend(api, {personel: {
     updateUser: {url: "updateUser.do", server: "communion"},
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
     
-    resetPassword: {url: "resetPassword.do"},
+    resetPassword: {url: "resetPassword.do", server: "communion"},
     changePassword: {url: "changePassword.do", server: "communion"},
     deleteUserByIds: {url: "deleteUserByIds.do", server: "communion"},
 
@@ -52,6 +51,6 @@ $.extend(api, {personel: {
     
     queryUserCompany: {url: "queryUserCompany.do"},
     updateUserCompany: {url: "updateUserCompany.do"},
-    
+  
 
 }});

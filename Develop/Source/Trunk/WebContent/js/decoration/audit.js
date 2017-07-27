@@ -1,5 +1,3 @@
-var decorationOrderPostData = {};
-
 
 jQuery(function($) {
 
@@ -137,10 +135,10 @@ jQuery(function($) {
 
 
     var auditScale = function (decorationOrderId, type, versionId, notSalesmanRate){
-        decorationOrderPostData["decorationOrderId"] = decorationOrderId;
-        decorationOrderPostData["orderType"] = type;
-        decorationOrderPostData["versionId"] = versionId;
-        decorationOrderPostData["notSalesmanRate"] = notSalesmanRate;
+        params["decorationOrderId"] = decorationOrderId;
+        params["orderType"] = type;
+        params["versionId"] = versionId;
+        params["notSalesmanRate"] = notSalesmanRate;
         com.switchPage(api.index.auditDetail.url);
     }
 

@@ -33,11 +33,11 @@ public class AssassinServiceImpl implements AssassinService {
 
 	public int proxy(String server, String api, String params, String content, UserPO userPO) throws FLException {
 
-		String communion = systemConfigDao.querySystemConfigByKey("communion").getValue();
-		String code = systemConfigDao.querySystemConfigByKey("tokenkey").getValue();
-		String secret = systemConfigDao.querySystemConfigByKey("tokensecret").getValue();
+		String communion = systemConfigDao.querySystemConfig("communion").getValue();
+		String code = systemConfigDao.querySystemConfig("tokenkey").getValue();
+		String secret = systemConfigDao.querySystemConfig("tokensecret").getValue();
 		
-		server = systemConfigDao.querySystemConfigByKey(server).getValue();
+		server = systemConfigDao.querySystemConfig(server).getValue();
 
 		String str = String.format("%s/requestAuthCode.do?userId=%s&code=%s&secret=%s", communion, userPO.getUserId(), code, secret);
 		JSONObject result  = HttpUtil.httpGet(str);

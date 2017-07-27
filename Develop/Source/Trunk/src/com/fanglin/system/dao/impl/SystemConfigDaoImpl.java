@@ -27,16 +27,19 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 		
 		queryFilterExcute(query, filters);
 		
-		query.desc("scid");
-		
 		return query.list();
 	}
 
 	@Override
-	public SystemConfigPO querySystemConfigByKey(String key) {
+	public SystemConfigPO querySystemConfig(String key) {
 		return (SystemConfigPO)createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR , key)).uniqueResult();
 	}
 	
+	@Override
+	public SystemConfigPO querySystemConfig(String key, int company) {
+		return (SystemConfigPO)createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR , key)).add(Restrictions.eq(SystemConfigPO.COLUMN_COMPANY_STR, company)).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters) {
 		if(filters != null){
 			for(Filter filter: filters){

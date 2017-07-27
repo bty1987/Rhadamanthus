@@ -12,6 +12,8 @@ public interface SystemConfigDao extends Dao<SystemConfigPO>{
 	
 	public List<SystemConfigPO> pageSystemConfig(Paging paging,List<Filter> filters);
 	
-	public SystemConfigPO querySystemConfigByKey(String key);
-
+	public SystemConfigPO querySystemConfig(String key);
+	
+	public SystemConfigPO querySystemConfig(String key, int company);
+	
 }

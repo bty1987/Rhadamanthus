@@ -13,7 +13,6 @@ public class DesignerSalaryVO implements Serializable {
 	
 	private static final long serialVersionUID = 4153564414258241141L;
 	
-	
 	private Integer dsid;
 	
 	private UserVO duser;
@@ -49,26 +48,21 @@ public class DesignerSalaryVO implements Serializable {
 		return dsid;
 	}
 
-
 	public void setDsid(Integer dsid) {
 		this.dsid = dsid;
 	}
-
 
 	public UserVO getDuser() {
 		return duser;
 	}
 
-
 	public void setDuser(UserVO duser) {
 		this.duser = duser;
 	}
 
-
 	public UserVO getCuser() {
 		return cuser;
 	}
-
 
 	public void setCuser(UserVO cuser) {
 		this.cuser = cuser;
@@ -79,16 +73,13 @@ public class DesignerSalaryVO implements Serializable {
 		return createTime;
 	}
 
-
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-
 	public UserVO getAuser() {
 		return auser;
 	}
-
 
 	public void setAuser(UserVO auser) {
 		this.auser = auser;
@@ -99,26 +90,21 @@ public class DesignerSalaryVO implements Serializable {
 		return approveTime;
 	}
 
-
 	public void setApproveTime(Timestamp approveTime) {
 		this.approveTime = approveTime;
 	}
-
 
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
 
-
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
 
-
 	public Float getSalary() {
 		return salary;
 	}
-
 
 	public void setSalary(Float salary) {
 		this.salary = salary;
@@ -129,13 +115,12 @@ public class DesignerSalaryVO implements Serializable {
 		return status;
 	}
 
-
 	public void setStatus(Short status) {
 		this.status = status;
 	}
 
 
-	}
+}
 
 
 
