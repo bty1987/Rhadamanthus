@@ -35,8 +35,6 @@ jQuery(function($) {
 	
 	url.url = url.url + "?" + args;
 	
-	console.log(params);
-	console.log(url);
 	
 	com.post(url, {}, function(res){
 		var materialSubOrder = res.materialSubOrder;

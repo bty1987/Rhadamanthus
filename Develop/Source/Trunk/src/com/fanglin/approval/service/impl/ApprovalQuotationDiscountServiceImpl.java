@@ -64,7 +64,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level) throws FLException {
+	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level, int company) throws FLException {
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		
@@ -116,6 +116,8 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount(), level));
 		approvalPO.setReceiver(userPOs.get(0));
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
+		
 		approvalDao.save(approvalPO);
 		
 		ApprovalQuotationDiscountPO approvalQuotationDiscountPO = new ApprovalQuotationDiscountPO();
@@ -167,7 +169,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 				approvalQuotationDiscountVO.setQuotationId(approvalQuotationDiscountPO.getQuotationId());
 				approvalQuotationDiscountVO.setNewDiscount(approvalQuotationDiscountPO.getNewDiscount());
 				
-				submitApprovalForQuotationDiscount(approvalVO, approvalQuotationDiscountVO, approvalPO.getSender().getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT);
+				submitApprovalForQuotationDiscount(approvalVO, approvalQuotationDiscountVO, approvalPO.getSender().getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT,approvalPO.getCompany());
 			}else{
 				QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
 				

@@ -123,8 +123,8 @@ public class AssisTypeServiceImpl implements AssisTypeService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateAssisTypeForStatus(AssisTypeVO assisTypeVO)
-			throws FLException {
+	public int updateAssisTypeForStatus(AssisTypeVO assisTypeVO) throws FLException {
+		
 		AssisTypePO assisTypePO = assistypeDao.get(assisTypeVO.getAtid());
 		
 		if(assisTypePO == null){

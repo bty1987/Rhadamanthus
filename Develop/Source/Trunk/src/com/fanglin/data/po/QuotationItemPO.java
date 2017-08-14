@@ -33,6 +33,8 @@ public class QuotationItemPO implements Serializable {
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
+	public static final String COLUMN_COMPANY_STR ="company";
+	
 	private long qiId;
 	
 	private String itemId;

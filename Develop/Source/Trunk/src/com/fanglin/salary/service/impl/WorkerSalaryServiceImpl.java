@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	
 	@Override
 	public void pageWorkerSalary(Paging paging, List<Filter> filters) {
-	
+		
 		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters);
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 		
@@ -102,6 +103,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId) throws FLException {
 		
 		UserPO user = userdao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
+	
 		UserPO	userpo = userdao.queryUserByUserId(userId);
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), user,userpo);
 		
@@ -138,7 +140,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
 		
-		WorkerSalaryPO workerSalaryPO = workerSalaryDao.queryWorkSalaryByWsId(workerSalaryVO.getWsId());
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
 		
 		if (workerSalaryPO == null) { 
 			throw new FLException(280001, "薪资信息不存在");
@@ -202,7 +204,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
 		
-		WorkerSalaryPO worksalarypo = workerSalaryDao.queryWorkSalaryByWsId(workerSalaryVO.getWsId());
+		WorkerSalaryPO worksalarypo = workerSalaryDao.get(workerSalaryVO.getWsId());
 		
 		if (worksalarypo == null) {
 			throw new FLException(280001, "薪资信息不存在");

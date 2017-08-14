@@ -41,7 +41,7 @@ public class ApprovalDecorationRefundAction extends BaseListAction {
 	@Action(value = "submitApprovalForDecorationRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForDecorationRefund() throws FLException{
 		
-		approvalDecorationRefundService.submitApprovalForDecorationRefund(approval, approvalDecorationRefund, queryUserId());
+		approvalDecorationRefundService.submitApprovalForDecorationRefund(approval, approvalDecorationRefund, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

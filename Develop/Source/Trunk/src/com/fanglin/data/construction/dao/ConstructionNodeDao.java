@@ -14,6 +14,6 @@ public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
 
 	public List<ConstructionNodePO> queryConstructionNode(Short status);
 
-	public List<ConstructionNodeCompanyPO> queryConstructionNodeCompanyByCid(Long cid);
-
+	public List<ConstructionNodeCompanyPO> queryConstructionNodeCompanyByCid(Integer cid);
+	
 }

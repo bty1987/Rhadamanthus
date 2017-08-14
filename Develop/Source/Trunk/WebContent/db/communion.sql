@@ -8,6 +8,7 @@ CREATE TABLE `brand` (
   `brandId` varchar(10) NOT NULL,
   `brandName` varchar(30) NOT NULL,
   `brandNamePinyin` varchar(216) NOT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`bId`),
   KEY `indexone` (`cId`),
   KEY `indextwo` (`brandName`,`brandNamePinyin`)
@@ -289,6 +290,20 @@ CREATE TABLE `roleoperation` (
   PRIMARY KEY (`roId`),
   KEY `indexone` (`rId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色操作';
+
+DROP TABLE IF EXISTS `server`;
+CREATE TABLE `server` (
+  `sid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `host` varchar(64) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `backup` tinyint(1) NOT NULL DEFAULT '0',
+  `master` tinyint(1) NOT NULL DEFAULT '0',
+  `slave` tinyint(1) NOT NULL DEFAULT '0',
+  `comment` varchar(64),
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务信息';
+
 DROP TABLE IF EXISTS `supplier`;
 CREATE TABLE `supplier` (
   `sId` int(11) NOT NULL AUTO_INCREMENT,
@@ -347,7 +362,7 @@ CREATE TABLE `user` (
   `oldUserId` varchar(32) DEFAULT NULL COMMENT '旧员工号',
   `roleId` varchar(10) DEFAULT NULL COMMENT '角色ID',
   `deptId` varchar(10) NOT NULL COMMENT '部门ID',
-  `company` tinyint(4) NOT NULL COMMENT '人员所属公司',
+  `company` int(11) NOT NULL COMMENT '公司ID',
   `loginId` varchar(32) NOT NULL COMMENT '登录用户名',
   `password` varchar(32) DEFAULT NULL COMMENT '密码',
   `userName` varchar(32) NOT NULL COMMENT '真实姓名',

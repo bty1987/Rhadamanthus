@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.drawline.vo;
+package com.fanglin.construction.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

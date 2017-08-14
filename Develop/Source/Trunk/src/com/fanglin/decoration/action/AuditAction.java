@@ -31,9 +31,9 @@ public class AuditAction extends BaseListAction{
 	private AuditVO auditVO;
 	
 	@Action(value = "pageAudit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForPlan(){
+	public String pageDrawLineForPlan() throws FLException{
 		
-		auditVOs = auditService.pageAudit(getPaging(), getFilters());
+		auditVOs = auditService.pageAudit(getPaging(), getFilters(), queryCompany());
 	
 		return SUCCESS;
 	}

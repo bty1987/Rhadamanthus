@@ -31,6 +31,8 @@ public class SecretUtils {
     }
 	
 	public static void main(String[] args) {
+		
+		System.out.println(getRandomString(8).toLowerCase());
 		System.out.println(getRandomString(8).toUpperCase());
 		
 	}

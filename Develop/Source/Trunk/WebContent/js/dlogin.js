@@ -132,7 +132,7 @@ jQuery(function(a){
                     $("#errorMsg").html(data.errorMsg);
                     verifyCode();
                 }else if(data.errorCode == 0) {
-                	setCookie("authentication" , data.authenticationEncode , config.timeout);
+                	setCookie("authentication" , data.authentication , config.timeout);
                 	setCookie("loginTime" , new Date().getTime() , config.timeout);
                 	setCookie("versionCode", config.versionCode, config.timeout);
                     document.location.href = "index.html?timestamp="+ new Date().getTime();

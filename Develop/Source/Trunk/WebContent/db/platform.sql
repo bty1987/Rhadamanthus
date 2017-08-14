@@ -38,26 +38,6 @@ CREATE TABLE `activityitem` (
   PRIMARY KEY (`aiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动物品表';
 
-DROP TABLE IF EXISTS `addorreducedetail`;
-CREATE TABLE `addorreducedetail` (
-  `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `arId` int(11) NOT NULL COMMENT '增减项编号',
-  `customerItemId` varchar(20) DEFAULT NULL,
-  `itemId` varchar(15) DEFAULT NULL,
-  `itemName` varchar(128) NOT NULL,
-  `itemType` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 报价项 1,自定义报价项目 2,新增自定义报价项目 3,系统定义报价项目',
-  `quotationClassificationId` int(11) NOT NULL,
-  `quotationBigCategoryId` int(11) NOT NULL,
-  `measurementUnitId` int(11) NOT NULL,
-  `itemWorkTypeId` int(11) NOT NULL,
-  `quotationItemDes` varchar(512) DEFAULT NULL,
-  `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `quotationFunctionAreaId` bigint(20) NOT NULL COMMENT '所属报价功能区编号',
-  PRIMARY KEY (`autoId`),
-  KEY `indexone` (`arId`,`itemId`,`itemType`,`customerItemId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项明细表';
-
 DROP TABLE IF EXISTS `addreduce`;
 CREATE TABLE `addreduce` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
@@ -138,10 +118,10 @@ CREATE TABLE `assassin` (
   `server` varchar(32) NOT NULL,
   `errorcode` int(11) NOT NULL,
   `errormes` varchar(255) NOT NULL,
-  `ouid` int(11) NOT NULL,
+  `ouid` int(11) NOT NULL DEFAULT '0',
   `operateTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`asId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='代理表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='代理表';
 
 DROP TABLE IF EXISTS `audit`;
 CREATE TABLE `audit` (
@@ -500,11 +480,13 @@ CREATE TABLE `drawline` (
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
-CREATE TABLE `drawlinegroup`(
+DROP TABLE IF EXISTS `drawlinegroup`;
+CREATE TABLE `drawlinegroup` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `content` varchar(128),
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线小组表';
 
@@ -747,6 +729,7 @@ CREATE TABLE `materialmodel` (
   `point` decimal(10,3) NOT NULL,
   `base` decimal(10,3) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`mmId`),
   KEY `indexone` (`materialModelName`),
   KEY `indextwo` (`brandId`)
@@ -890,8 +873,8 @@ CREATE TABLE `materialsuborder` (
   `salesmanName` varchar(32) NOT NULL,
   `materialerId` varchar(15) NOT NULL,
   `materialerName` varchar(32) NOT NULL,
-  `instoreId` varchar(15) NOT NULL,
-  `instoreName` varchar(32) NOT NULL,
+  `instoreId` varchar(15) DEFAULT NULL,
+  `instoreName` varchar(32) DEFAULT NULL,
   `materialType` varchar(32) NOT NULL DEFAULT '',
   `materialBrand` varchar(32) NOT NULL DEFAULT '',
   `designerFlag` tinyint(4) NOT NULL DEFAULT '0',
@@ -929,6 +912,7 @@ CREATE TABLE `materialsuborder` (
   `postProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
   `custProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
   `otherStatus` int(11) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`msoId`),
   KEY `indexone` (`orderId`,`status`),
   KEY `indextwo` (`balanceStatus`,`fullStatus`),
@@ -1083,20 +1067,6 @@ CREATE TABLE `measurementunit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计量单位表';
 
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE `message` (
-  `messageId` bigint(32) NOT NULL AUTO_INCREMENT,
-  `receiverId` varchar(15) NOT NULL,
-  `senderId` varchar(15) NOT NULL,
-  `type` varchar(10) NOT NULL COMMENT '类别',
-  `contents` varchar(256) NOT NULL,
-  `createTime` timestamp NULL NOT NULL,
-  `status` varchar(10) NOT NULL COMMENT '未读,已读',
-  `args` varchar(1024) DEFAULT NULL,
-  PRIMARY KEY (`messageId`),
-  KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
 DROP TABLE IF EXISTS `membercard`;
 CREATE TABLE `membercard` (
   `mcid` int(11) NOT NULL AUTO_INCREMENT,
@@ -1119,10 +1089,24 @@ CREATE TABLE `memberdetail` (
   `multiple` int(11) NOT NULL DEFAULT '0' COMMENT '倍数, 积分倍数',
   `divider` int(11) NOT NULL DEFAULT '0' COMMENT '除数,金额/除数=积分',
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` int(11) NOT NULL,
+  `createTime` bigint(20) NOT NULL,
   `comment` varchar(128),
   PRIMARY KEY (`mdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员积分明细表';
+
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `messageId` bigint(32) NOT NULL AUTO_INCREMENT,
+  `receiverId` varchar(15) NOT NULL,
+  `senderId` varchar(15) NOT NULL,
+  `type` varchar(10) NOT NULL COMMENT '类别',
+  `contents` varchar(256) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` varchar(10) NOT NULL COMMENT '未读,已读',
+  `args` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`messageId`),
+  KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=908183 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
@@ -1139,6 +1123,7 @@ CREATE TABLE `notice` (
   `contents` varchar(4096) NOT NULL,
   `contentsText` varchar(1024) NOT NULL,
   `filePath` varchar(128) DEFAULT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`nid`),
   KEY `indexone` (`type`,`deptId`,`isPublic`,`startTime`,`endTime`,`publishTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
@@ -1295,6 +1280,7 @@ CREATE TABLE `quotationversion` (
   `trafficDiscount` tinyint(1) NOT NULL DEFAULT '0',
   `manageRate` float NOT NULL,
   `manageDiscount` tinyint(1) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`qvId`),
   UNIQUE KEY `uniqueone` (`versionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
@@ -1369,6 +1355,7 @@ CREATE TABLE `systemdefineitem` (
   `unitPrice` decimal(10,3) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `discount` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`sdiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
 

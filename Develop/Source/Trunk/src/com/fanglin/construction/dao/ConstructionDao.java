@@ -20,15 +20,15 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionDao extends Dao<ConstructionPO> {
 	
-	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters);
+	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer companyId);
 	
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters);
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, Integer companyId);
 	
 	public List<ConstructionPO> pageConstructionForSupervisionByUserId(Paging paging, List<Filter> filters, String workTypeQuality, String userId);
 	
 	public List<ConstructionPO> pageConstructionForQuality(Paging paging, List<Filter> filters, List<Integer> schedules);
 	
-	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters);
+	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer companyId);
 	
 	public List<ConstructionPO> queryConstructionForSupervisionByUserId(List<Filter> filters, String supervisionUserId);
 	

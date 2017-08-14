@@ -24,7 +24,6 @@ import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -40,7 +39,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("paymentService")
 @Transactional(readOnly = true)
@@ -55,8 +53,8 @@ public class PaymentServiceImpl implements PaymentService {
 	@Autowired
 	private AdvanceReceiptDao advanceReceiptDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 
 	@Autowired
 	private CustomerDao customerDao;
@@ -101,37 +99,6 @@ public class PaymentServiceImpl implements PaymentService {
 		paging.setData(paymentVOs);
 	}
 
-	@Override
-	public List<PaymentVO> queryPayment(List<Filter> filters) {
-		
-		List<PaymentPO> paymentPOs = paymentDao.queryPayment(filters);
-		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
-		
-		for(PaymentPO paymentPO: paymentPOs){
-			PaymentVO paymentVO = new PaymentVO();
-			
-			AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-			
-			BeanUtil.copyProperties(paymentPO, paymentVO, Arrays.asList("customer", "collectUser", "confirmUser"));
-			BeanUtil.copyProperties(advanceReceiptPO, paymentVO, Arrays.asList("collectUser", "confirmUser", "status"));
-
-			paymentVO.setCustomer(new CustomerVO());
-			BeanUtil.copyProperties(paymentPO.getCustomer(), paymentVO.getCustomer());
-			paymentVO.setCustomerId(paymentVO.getCustomer().getCustomerId());
-			paymentVO.setCustomerName(paymentVO.getCustomer().getCustomerName());
-
-			paymentVO.setCollectUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), paymentVO.getCollectUser(), Arrays.asList("role", "dept"));
-			paymentVO.setCollectUserName(paymentVO.getCollectUser().getCurrentName());
-
-			paymentVO.setConfirmUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
-			
-			paymentVOs.add(paymentVO);
-		}
-		
-		return paymentVOs;
-	}
 
 	@Override
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO) {
@@ -328,12 +295,8 @@ public class PaymentServiceImpl implements PaymentService {
 			advanceReceiptPO.setConfirmUser(user);
 			paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
 			
-			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
+			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT){
 				advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_CONFIRM_INT);
-				
-				DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentPO.getOrderId());
-				
-				financeService.buildAdvanceFinance(decorationOrderPO, advanceReceiptPO, userDao.queryUserByUserId(currentUserId));
 			}
 			
 			advanceReceiptDao.update(advanceReceiptPO);
@@ -432,7 +395,7 @@ public class PaymentServiceImpl implements PaymentService {
 		float overBalance = 0;
 		
 		if(balance < recharge){
-			throw new FLException(150017, "预付款提款金额不足");
+			throw new FLException(150010, "预付款余额不足");
 		}
 		
 		overBalance = Arith.sub(balance, recharge);
@@ -496,7 +459,7 @@ public class PaymentServiceImpl implements PaymentService {
 		float overBalance = 0;
 			
 		if(balance < recharge){
-			throw new FLException(150017, "预付款提款金额不足");
+			throw new FLException(150010, "预付款余额不足");
 		}
 		
 		overBalance = Arith.sub(balance, recharge);
@@ -556,7 +519,7 @@ public class PaymentServiceImpl implements PaymentService {
 		float nowRightBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, convertRightType);
 		
 		if(nowLeftBalance < convertCash){
-			throw new FLException(150018, "预付款转换余额不足");
+			throw new FLException(150010, "预付款余额不足");
 		}
 		
 		float convertLeftVal = Arith.sub(nowLeftBalance, convertCash);

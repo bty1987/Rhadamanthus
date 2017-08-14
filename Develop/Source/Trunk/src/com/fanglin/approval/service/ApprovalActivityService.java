@@ -21,7 +21,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalActivityService {
 	
-	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalActivityVO approvalActivityVO, List<ApprovalActivityItemVO> approvalActivityItemVOs, String userId) throws FLException;
+	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalActivityVO approvalActivityVO, List<ApprovalActivityItemVO> approvalActivityItemVOs, String userId,int company) throws FLException;
 	
 	public int approvalForDecorationActivity(ApprovalPO approvalPO) throws FLException;
 

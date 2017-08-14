@@ -41,7 +41,7 @@ public class ApprovalVillageAction extends BaseListAction {
 	@Action(value = "submitApprovalForVillage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForVillage() throws FLException{
 		
-		approvalVillageService.submitApprovalForVillage(approval, approvalVillage, queryUserId());
+		approvalVillageService.submitApprovalForVillage(approval, approvalVillage, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

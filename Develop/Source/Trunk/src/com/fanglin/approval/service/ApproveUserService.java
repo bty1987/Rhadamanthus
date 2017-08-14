@@ -20,9 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface ApproveUserService {
 	
-	public void pageApproveUser(Paging paging, List<Filter> filters);
+	public void pageApproveUser(Paging paging, List<Filter> filters,int company);
 	
-	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO, ApproveUserVO userApproveVO);
+	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO, ApproveUserVO userApproveVO,int company);
 
 	public int addApproveUser(ApproveUserVO userApproveVO) throws FLException;
 

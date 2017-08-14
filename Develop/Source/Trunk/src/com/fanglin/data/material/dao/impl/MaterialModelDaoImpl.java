@@ -31,10 +31,10 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters){
+	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
-		
+		query.add(query.getCriterion("company",company,"eq"));
 		queryFilterExcute(query, filters);
 		
 		return query.list();
@@ -64,8 +64,8 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MaterialModelPO> queryMaterialModelByName(String materiModelName, int limit){
-		return session().createCriteria(MaterialModelPO.class).add(Restrictions.eq(MaterialModelPO.COLUMN_STATUS_STR, MaterialModelPO.TYPE_ENABLE_INT)).add(Restrictions.ilike(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR, materiModelName, MatchMode.ANYWHERE)).setMaxResults(limit).list();
+	public List<MaterialModelPO> queryMaterialModelByName(String materiModelName, int limit,int company){
+		return session().createCriteria(MaterialModelPO.class).add(Restrictions.eq(MaterialModelPO.COLUMN_STATUS_STR, MaterialModelPO.TYPE_ENABLE_INT)).add(Restrictions.eq("company", company)).add(Restrictions.ilike(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR, materiModelName, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 	
 	@SuppressWarnings("unchecked")

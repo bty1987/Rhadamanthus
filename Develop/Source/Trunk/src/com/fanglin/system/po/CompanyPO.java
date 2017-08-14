@@ -47,6 +47,15 @@ public class CompanyPO implements Serializable {
 
 	private short status;
 
+	public CompanyPO() {
+		super();
+	}
+
+	public CompanyPO(int cid) {
+		super();
+		this.cid = cid;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")

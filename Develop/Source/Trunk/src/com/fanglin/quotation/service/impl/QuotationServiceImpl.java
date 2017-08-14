@@ -441,7 +441,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
-		
+		quotationPO.setType(type);
 		quotationPO.setDecorationOrder(decorationOrderPO);
 		quotationPO.setCreateUser(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -541,10 +541,10 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
 			quotationPO.setUndisPrice(quotationVO.getUndisPrice());
 			quotationPO.setTrafficRate(quotationVO.getTrafficRate());
-		}else if(quotationPO.getType() == QuotationPO.TYPE_WHOLE_INT){
+		}/*else if(quotationPO.getType() == QuotationPO.TYPE_WHOLE_INT){
 			quotationPO.setQdiff(quotationVO.getQdiff());
 			quotationPO.setMdiff(quotationVO.getMdiff());
-		}
+		}*/
 	}
 	
 }

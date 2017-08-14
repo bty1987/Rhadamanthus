@@ -3,13 +3,7 @@ jQuery(function($) {
 
 	var customerServiceDetail = {
 
-		construstion: {},
-
-		stepLimit: 0,
-
 		constructionSchedules:{},
-
-		errorMsg: "进度控制",
 
 		operateDict: {
 			"1": {
@@ -17,187 +11,45 @@ jQuery(function($) {
 				nodeName:"铲大白",
 				nodeNamePinyin: "chan",
 
-				workerId: "chanWorker",
-				workerRatyId: "chanWorkerRaty",
-				workerDesId: "chanWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "ccsId",
-				elementName: "chanConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "铲大白工人",
 			}, "2": {
 				workerInfos: "putlineWorkerInfos",
 				nodeName:"放线",
 				nodeNamePinyin: "putline",
 
-				workerId: "putlineWorker",
-				workerRatyId: "putlineWorkerRaty",
-				workerDesId: "putlineWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "plcsId",
-				elementName: "putlineConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "放线小组",
 			}, "3": {
 				workerInfos: "waterwayCircuitPowerWorkerInfos",
 				nodeName:"力水电",
 				nodeNamePinyin: "waterwayCircuitPower",
 
-				workerId: "waterwayCircuitPowerWorkerId",
-				waterwayWorkerId: "waterwayWorker",
-				waterwayWorkerRatyId: "waterwayWorkerRaty",
-				waterwayWorkerRatyDesId: "waterwayWorkerRatyDes",
-				circuitWorkerId: "circuitWorker",
-				circuitWorkerRatyId: "circuitWorkerRaty",
-				circuitWorkerRatyDesId: "circuitWorkerRatyDes",
-				powerWorkerId: "powerWorker",
-
-				worker: "wcpcswId",
-				waterwayWorker: "waterwayWorkerId",
-				waterwayWorkerRaty: "waterwayWorkerRaty",
-				waterwayWorkerRatyDes: "waterwayWorkerRatyDes",
-				circuitWorker: "circuitWorkerId",
-				circuitWorkerRaty: "circuitWorkerRaty",
-				circuitWorkerRatyDes: "circuitWorkerRatyDes",
-				powerWorker: "powerWorkerId",
-				powerWorkerRaty: "powerWorkerRaty",
-				powerWorkerRatyDes: "powerWorkerRatyDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "wcpcsId",
-				elementName: "waterwayCircuitPowerConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				waterwayDuty: "水暖工",
-				circuitDuty:"电工",
-				powerDuty:"力工",
 			}, "4": {
 				workerInfos: "bricklayWorkerInfos",
 				nodeName:"瓦工",
 				nodeNamePinyin: "bricklay",
 
-				workerId: "bricklayWorker",
-				workerRatyId: "bricklayWorkerRaty",
-				workerDesId: "bricklayWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "bcsId",
-				elementName: "bricklayConstructionSchedule",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "瓦工",
 			}, "5": {
 				workerInfos: "groundLevelingWorkerInfos",
 				nodeName:"地面找平",
 				nodeNamePinyin: "groundLeveling",
 
-				workerId: "groundLevelingWorker",
-				workerRatyId: "groundLevelingWorkerRaty",
-				workerDesId: "groundLevelingWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "glcsId",
-				elementName: "groundLevelingConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "地面找平",
 			}, "6": {
 				workerInfos: "carpentWorkerInfos",
 				nodeName:"木工",
 				nodeNamePinyin: "carpent",
 
-				workerId: "carpentWorker",
-				workerRatyId: "carpentWorkerRaty",
-				workerDesId: "carpentWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "ccsId",
-				elementName: "carpentConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "木工",
 			}, "7": {
 				workerInfos: "oilWorkerInfos",
 				nodeName:"油工",
 				nodeNamePinyin: "oil",
 
-				workerId: "oilWorker",
-				workerRatyId: "oilWorkerRaty",
-				workerDesId: "oilWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "ocsId",
-				elementName: "oilConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "油工",
 			}, "8": {
 				workerInfos: "waterwayCircuitCheckWorkerInfos",
 				nodeName:"水电验收",
 				nodeNamePinyin: "waterwayCircuitCheck",
 
-				workerId: "waterwayCircuitCheckWorker",
-				workerRatyId: "waterwayCircuitCheckWorkerRaty",
-				workerDesId: "waterwayCircuitCheckWorkerDes",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "wcccsId",
-				elementName: "waterwayCircuitCheckConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				waterwayDuty: "水暖工",
-				circuitDuty:"电工",
-				powerDuty:"力工",
 			}, "9": {
 				workerInfos: "cleaningWorkerInfos",
 				nodeName:"保洁",
 				nodeNamePinyin: "cleaning",
-
-				queryInfoUrl: api.construction.queryConstructerByOrderId,
-				setWorkerRaty: api.construction.updateConstructerForRate,
-
-				elementId: "ccsId",
-				elementName: "cleaningConstructionSchedule",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "保洁工",
 			},
 		},
 		wizardSept: {
@@ -235,7 +87,7 @@ jQuery(function($) {
 		}).on('stepclick', function(e, info){
 
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
-			var sd = stepId.substr(4,1);
+			var sd = stepId.substring(4);
 			if(!customerServiceDetail.wizardSept[sd]){
 				initWizardSept(customerServiceDetail.operateDict[sd], sd);
 			}
@@ -256,12 +108,12 @@ jQuery(function($) {
 		addActive(schedule)
 
 		var elementPostData = {};
-		elementPostData[operate.elementConstructerName+".orderId"] = params.orderId;
-		elementPostData[operate.elementConstructerName+".schedule"] = schedule;
+		elementPostData["constructer.orderId"] = params.orderId;
+		elementPostData["constructer.schedule"] = schedule;
 
 		//得到全部的施工人员
-		com.post(operate.queryInfoUrl, elementPostData, function(res){
-			constructers = res[operate.elementConstructers];
+		com.post(api.construction.queryConstructerByOrderId, elementPostData, function(res){
+			constructers = res.constructers;
 
 			$("#btnSave").unbind("click");
 
@@ -313,7 +165,7 @@ jQuery(function($) {
 						options["constructer.assessment"] = $("#"+workerIdsData[i] + "workerRatyDes").val();
 
 						if(commitFlag){
-							com.post(operate.setWorkerRaty, options, function(res){
+							com.post(api.construction.updateConstructerForRate, options, function(res){
 								com.showAlert(com.info, "保存成功!");
 							});
 						}
@@ -326,7 +178,7 @@ jQuery(function($) {
 			for (var i = 0; i < constructers.length; i++){
 				var workerInfo = constructers[i];
 				if(workerInfo.cid == 0){
-					customerServiceDetail[operate.elementConstructerName+".crid"] = 0;
+					customerServiceDetail["constructer.crid"] = 0;
 				}
 			}
 		});
@@ -350,7 +202,7 @@ jQuery(function($) {
 		var stepSpan = $("<span></span>").addClass("title").html(nodeName).appendTo(stepLi);
 	}
 
-	////画面板
+	//画面板
 	function customerServicePane(paneId, schedule,scheduleNodeNamePinyin, scheduleNodeNameGBK){
 		var paneCus = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
 		var paneCusRow = $("<div></div>").addClass("row").appendTo(paneCus);

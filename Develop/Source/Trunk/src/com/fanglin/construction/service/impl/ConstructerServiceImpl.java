@@ -51,7 +51,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		for (ConstructerPO constructerPO : constructerPOs) {
 			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
-			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
+			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
 			constructerVOs.add(constructerV);
 		}
 		return constructerVOs;
@@ -69,7 +69,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		for (ConstructerPO constructerPO : constructerPOs) {
 			ConstructerVO constructerV = new ConstructerVO(new UserVO());
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
-			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role","dept"));
+			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
 			constructerVOs.add(constructerV);
 		}
 		return constructerVOs;

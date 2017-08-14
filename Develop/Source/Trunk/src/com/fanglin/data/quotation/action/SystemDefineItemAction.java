@@ -41,19 +41,19 @@ public class SystemDefineItemAction extends BaseListAction {
 	private List<Long> ids;
 	
 	@Action(value="pageSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageSystemDefineItem(){
+	public String pageSystemDefineItem() throws FLException{
 		
-		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters());
+		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="pageSystemDefineItemForEnable", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageSystemDefineItemForEnable(){
+	public String pageSystemDefineItemForEnable() throws FLException{
 		
 		getFilters().add(new Filter("status", "1", "eq"));
 		
-		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters());
+		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -61,7 +61,7 @@ public class SystemDefineItemAction extends BaseListAction {
 	@Action(value="querySystemDefineItemByItemId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String querySystemDefineItemByItemIdAndVersionId() throws FLException{
 		
-		systemDefineItem = systemDefineItemService.querySystemDefineItemByItemId(systemDefineItem);
+		systemDefineItem = systemDefineItemService.querySystemDefineItemByItemId(systemDefineItem,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -69,7 +69,7 @@ public class SystemDefineItemAction extends BaseListAction {
 	@Action(value="addSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addSystemDefineItem() throws FLException{
 
-		systemDefineItemService.addSystemDefineItem(systemDefineItem);
+		systemDefineItemService.addSystemDefineItem(systemDefineItem,queryCompany());
 		
 		return SUCCESS;
 	}

@@ -264,7 +264,7 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
-            
+
             var propertyArr = [
                ["订单号:", v.orderId, "grey"],
                ["楼盘地址:", v.village + ''+v.houseNumber, "grey"],
@@ -296,7 +296,7 @@ jQuery(function($) {
 				    info += decorationPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
-				  return info
+				  return info;
 			})(v.bank, v.bankInfo), "grey"]) : true;
 			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
@@ -316,7 +316,9 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
             
             $btnPrint.click(function(){
-            	printPayment(v.drId, v.orderId);
+            	com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.orderId + "&decorationPayment.orderId=" + v.orderId + "&decorationReceipt.drId=" + v.drId + "&time=" + params.loginTime,function () {
+					parent.layer.getFrameIndex(window.name);
+				})
             });
             
             return $liLine;
@@ -446,11 +448,7 @@ jQuery(function($) {
 		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'name');
 		$("#refundCouponType").trigger("chosen:updated");
 	}
-	
-	function printPayment(drId, orderId){
-		var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + drId + "&time=" + params.loginTime;
-		window.open(url);    
-    };
+
     
     function addBankDiv(index){
     	
@@ -529,7 +527,7 @@ jQuery(function($) {
     		["单位:", v.measurementUnit, "grey"],
     		["单价:", v.unitPrice, "grey"],
     		["工程量:", v.num, "grey"],
-    		//["类型:", v.type == "0" ? "普通报价项" : (v.type == "1" ? "系统定义项" : v.type == "2" ? "自定义项" : v.type == "3" ? "报价中报价项" : v.type == "4" ? "增项中报价项" : ""), "grey"],
+    		["类型:", v.type, "grey"],
     	];
 
     	$.each(propertyArr, function (index,value) {
@@ -712,8 +710,9 @@ jQuery(function($) {
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
-    				var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + params.loginTime;
-    				window.open(url);
+					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					});
     			}
     		});
     	});
@@ -802,8 +801,9 @@ jQuery(function($) {
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
-    				var url = api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + params.loginTime;
-    				window.open(url);
+					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					});
     			}
     		});
     		

@@ -17,7 +17,7 @@ import com.fanglin.utils.Paging;
 
 public interface DepartmentDao extends Dao<DepartmentPO> {
 
-    public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters);
+    public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters,int company);
     
     public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, String type);
     

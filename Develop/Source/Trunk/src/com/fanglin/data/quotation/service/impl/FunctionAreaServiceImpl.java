@@ -49,9 +49,9 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageFunctionArea(Paging paging, List<Filter> filters){
+	public void pageFunctionArea(Paging paging, List<Filter> filters,int company){
 		
-		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.pageFunctionArea(paging, filters);
+		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.pageFunctionArea(paging, filters,company);
 		List<FunctionAreaVO> functionAreaVOs = new ArrayList<FunctionAreaVO>();
 		
 		for(FunctionAreaPO functionAreaPO: functionAreaPOs){

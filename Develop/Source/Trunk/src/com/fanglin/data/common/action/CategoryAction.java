@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.CategoryService;
 import com.fanglin.data.common.vo.CategoryVO;
 
@@ -41,7 +42,7 @@ public class CategoryAction extends BaseListAction {
 	private List<Long> cIds;
 	
 	@Action(value="pageCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageCategory(){
+	public String pageCategory() throws FLException{
 		
 		categoryService.pageCategory(getPaging(), getFilters());
 		
@@ -49,7 +50,7 @@ public class CategoryAction extends BaseListAction {
 	}
 	
 	@Action(value="queryCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCategory(){
+	public String queryCategory() throws FLException{
 		
 		categorys = categoryService.queryCategory();
 		

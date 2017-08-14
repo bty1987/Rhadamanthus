@@ -135,7 +135,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	// 提交主材退货审批
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId) throws FLException {
+	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId,int company) throws FLException {
 		
 		long msoId = approvalMaterialRefundVO.getMsoId();
 		float dis = 0;
@@ -180,6 +180,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), materialSubOrderPO.getMaterialBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

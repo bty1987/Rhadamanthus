@@ -44,8 +44,8 @@ public class AssassinServiceImpl implements AssassinService {
 
 		String authentication;
 
-		if(result != null && result.containsKey("authenticationEncode")){
-			authentication = result.get("authenticationEncode").toString();
+		if(result != null && result.containsKey("authentication")){
+			authentication = result.get("authentication").toString();
 		}else{
 			throw new FLException(110010, "请求失败");
 		}

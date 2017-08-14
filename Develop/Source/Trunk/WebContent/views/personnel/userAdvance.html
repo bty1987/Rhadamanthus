@@ -41,11 +41,20 @@
 						</div>
 					</div>
 					<div class="space-4"></div>
-					
+
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+						<label class="col-sm-3 control-label no-padding-right" for="oldcompany">现在公司</label>
 						<div class="col-sm-9">
-							<select class="col-sm-7 col-xs-10 v_required" id="company" data-toggle="popover" data-trigger='manual'></select>
+							<input type="text"  id="oldcompany" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" readonly="readonly" data-trigger='manual'/>
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="company">新加入的公司</label>
+						<div class="col-sm-9">
+							<select class="col-sm-7 col-xs-10 v_required" id="company" data-toggle="popover" data-trigger='manual' ></select>
 						</div>
 					</div>
 					<div class="space-4"></div>
@@ -88,11 +97,24 @@
 			</div>
 
 			<div class="modal-body">
-				<div class="form-group col-sm-5">
-					<label class="col-sm-3 control-label no-padding-right" for="companysel">公司</label>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" for="currentcompany">现有公司权限</label>
 					<div class="col-sm-9">
-						<select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="companysel" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+						<input type="text" id="currentcompany"  class="col-xs-10 col-sm-7 v_required" data-toggle="popover" readonly="readonly" data-trigger='manual'/>
 					</div>
+				</div>
+
+				<div class="space-4"></div>
+
+				<div class="form-group" style="margin-top: 40px;">
+					<label class="col-sm-3 control-label no-padding-right" for="companyse">公司</label>
+					<div class="col-sm-9">
+						<select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="companyse" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+					</div>
+				</div>
+
+				<div class="space-4"></div>
+
 			</div>
 
 			<div class="modal-footer ">
@@ -102,7 +124,7 @@
 		</div>
 	</div>
 </div>
-</div>
+
 
 <script type="text/javascript">
 	$.getScript('js/personnel/userAdvance.js?version=' + versionCode);

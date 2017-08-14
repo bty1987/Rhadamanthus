@@ -20,9 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface BrandDao extends Dao<BrandPO> {
 	
-	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters);
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company);
 	
-	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName);
+	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName,int company);
 	
 	public List<BrandPO> queryBrandByCategoryId(long categoryId);
 	

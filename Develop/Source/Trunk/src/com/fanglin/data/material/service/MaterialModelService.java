@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialModelService {
 	
-	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId) throws FLException;
+	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId,int company) throws FLException;
 	
 	public List<MaterialModelVO> queryMaterialModel();
 	
@@ -32,11 +32,11 @@ public interface MaterialModelService {
 	
 	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO);
 	
-	public List<MaterialModelVO> queryMaterialModelForAllByName(MaterialModelVO materialModelVO);
+	public List<MaterialModelVO> queryMaterialModelForAllByName(MaterialModelVO materialModelVO,int company);
 	
 	public List<MaterialModelVO> queryMaterialModelForAllByNo(MaterialModelVO materialModelVO);
 	
-	public int addMaterialModel(MaterialModelVO materialModelVO) throws FLException;
+	public int addMaterialModel(MaterialModelVO materialModelVO,int company) throws FLException;
 	
 	public void updateMaterialModel(MaterialModelVO materialModelVO);
 	

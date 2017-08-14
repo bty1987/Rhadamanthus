@@ -1,8 +1,10 @@
 package com.fanglin.salary.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -58,7 +60,9 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_USER_USERNAME="user.userName";
 	
-	public static final String COLUMN_USER_USERDUTY="user.duty"; 
+	public static final String COLUMN_USER_USERDUTY="user.duty";
+	
+	public static final String COLUMN_USER_COMPANY="user.company"; 
 	
 	private long wsId;
 	

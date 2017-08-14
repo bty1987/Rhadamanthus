@@ -28,6 +28,8 @@ $.extend(api, {information: {
     updateNotice: {url: "updateNotice.do"},
     deleteNotice: {url: "deleteNotice.do"},
     updateNoticeDepartments:{url:"updateNoticeDepartments.do"},
+    queryNoticeDepartment: {url: "queryNoticeDepartment.do"},
+    updateNoticeDepartment:{url: "updateNoticeDepartment.do"},
     
     pageActivity: {url: "pageActivity.do", demo: true},
     queryActivityForValid: {url: "queryActivityForValid.do", demo: true},

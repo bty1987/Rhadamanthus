@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
 import com.fanglin.utils.DateUtil;
@@ -28,12 +29,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return query.list();
 	}
 
-	@Override
-	public WorkerSalaryPO queryWorkSalaryByWsId(Long wsId) {
-		
-		return (WorkerSalaryPO) session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_WSID_STR, wsId)).uniqueResult();
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid) {
@@ -66,6 +61,11 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				String data = filter.getData();
 				String op = filter.getOp();
 				
+				if(WorkerSalaryPO.COLUMN_USER_COMPANY.equals(filet)){
+					query.alias("user", "user");
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_USER_COMPANY, Integer.valueOf(data), op));
+				}
+				
 				 if ("userName".equals(filet)) {
 						query.alias("user", "user");
 						query.add(query.getCriterion("user.userName", data, op));
@@ -86,7 +86,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				  }
 				
 				 if("approveTime".equals(filter.getField())){
-					
 					
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";

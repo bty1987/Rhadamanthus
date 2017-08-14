@@ -44,7 +44,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId)throws FLException {
+	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId,int company)throws FLException {
 
 		long sid = approvalSalesDiscountVO.getSid();
 
@@ -82,6 +82,8 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR,salesPO.getOrderId(), salesPO.getNo(),approvalSalesDiscountVO.getReferMoney()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
+		
 		approvalDao.save(approvalPO);
 
 		ApprovalSalesDiscountPO approvalSalesDiscountPO = new ApprovalSalesDiscountPO();

@@ -2,8 +2,6 @@ var userAdvance = {
 	postData: {},
 	postParam: {},
 	userAdvanceItems: {},
-
-
 }
 var $wrap=null;
 
@@ -34,7 +32,6 @@ jQuery(function($) {
 					menuArr.level2.push(va)
 				}
 			})
-
 			$.each(menuArr.level2,function(i,va){
 				$.each(treeData,function(index,value){
 					if(value.fatherDept != null) {
@@ -72,8 +69,8 @@ jQuery(function($) {
 					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
 					if (!$parent.children('button').length) {
 						var $title = $parent.children('div');
-						$('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
-						$('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+						$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+						$('<button type="button" data-action="expand" class=" plus">Expand</button>').insertBefore($title);
 					}
 
 					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
@@ -96,8 +93,8 @@ jQuery(function($) {
 						$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
 						if (!$parent.children('button').length) {
 							var $title = $parent.children('div');
-							$('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
-							$('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+							$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
+							$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
 						}
 
 						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
@@ -108,15 +105,144 @@ jQuery(function($) {
 				var $this = $(this);
 				$this.siblings('ol').addClass('hide');
 				$this.parent().find('.plus').toggleClass('hide');
+				$this.parent().find('.minus').removeClass('hide');
 				$this.toggleClass('hide');
 			});
-
+			// 加号collapse  .minus
 			$('button[data-action="expand"]').click(function () {
 				var $this = $(this);
 				$this.siblings('ol').removeClass('hide');
 				$this.parent().find('.minus').toggleClass('hide');
+				$this.parent().find('.plus').removeClass('hide');
 				$this.toggleClass('hide');
 			});
+
+		}, null, false);
+
+	}
+
+	function showDesignDepartment(){
+		$wrap = $('#moduleModal').find('.modal-body').empty();
+
+		com.post(api.department.queryDepartment, {"dept.type": "设计部"}, function (res) {
+			var tree = res.deptList;
+			if (!tree || !tree.length) {
+				return;
+			}
+			var menuArr = {
+				level1 : [],
+				level2 : [],
+				level3 : [],
+			};
+			var menuObj = {
+				level1:{},
+				level2 : {},
+				level3 : {},
+			};
+			var $tree = $('<ol class="dd-list"></ol>');
+			$wrap.append($tree);
+			menuArr.level1=[{did: -1, deptName: "全部"}];
+
+			$.each(tree,function(i, va){
+					var aa = true ;
+					if(menuArr.level2.length>0) {
+						$.each(menuArr.level2, function (j, vl) {
+							if(va.fatherDept.deptId == vl.deptId){
+								aa = false;
+								return false;
+							}
+						})
+					}else{
+						aa = false;
+						menuArr.level2.push(va.fatherDept);
+					}
+					if(aa){
+						menuArr.level2.push(va.fatherDept);
+					}
+			})
+
+			$.each(menuArr.level2,function(i,va){
+				$.each(tree,function(index,value){
+					if (value.fatherDept.deptId == va.deptId) {
+							menuArr.level3.push(value)
+					}
+				})
+			})
+			if (menuArr.level1.length) {
+				$.each(menuArr.level1, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
+					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					$li.append($div).appendTo($tree);
+					menuObj.level1[va.did] = $li;
+				});
+			}
+
+			if (menuArr.level2.length) {
+				$.each(menuArr.level2, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					menuObj.level2[va.did] = $li;
+					$li.append($div);
+
+					var $parent = menuObj.level1[-1]
+					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+					if (!$parent.children('button').length) {
+						var $title = $parent.children('div');
+						$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+					}
+
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","one");
+					$li.appendTo($pol);
+				});
+			}
+
+			if (menuArr.level3.length) {
+				$.each(menuArr.level3, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
+					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did)
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					menuObj.level3[va.did] = $li;
+					$li.append($div);
+
+					var $parent = menuObj.level2[va.fatherDept.did];
+					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+					if (!$parent.children('button').length) {
+						var $title = $parent.children('div');
+						// 减号
+						$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
+
+						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+					}
+
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","two");
+					$li.appendTo($pol);
+				});
+			}
+			$('button[data-action="collapse"]').click(function () {
+				var $this = $(this);
+				$this.siblings('ol').addClass('hide');
+				$this.parent().find('.plus').toggleClass('hide');
+				$this.parent().find('.minus').removeClass('hide');
+				$this.toggleClass('hide');
+			});
+			 $('button[data-action="expand"]').click(function () {
+			 var $this = $(this);
+			 $this.siblings('ol').removeClass('hide');
+			 $this.parent().find('.minus').toggleClass('hide');
+			 $this.parent().find('.plus').removeClass('hide');
+			 $this.toggleClass('hide');
+			 });
 
 		}, null, false);
 
@@ -129,11 +255,11 @@ jQuery(function($) {
 	userAdvance.userAdvanceItems.extranet = $("#extranet").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.roleSel = $("#roleSel");
 	userAdvance.userAdvanceItems.company = $("#company");
-
-	userAdvance.userAdvanceItems.companysel = $("#companysel").chosen({
-		width: "216px"
+	userAdvance.userAdvanceItems.companysel = $("#companyse").chosen({
+		width: "200px"
 	});
-
+	userAdvance.userAdvanceItems.currentcompany=$("#currentcompany");
+	userAdvance.userAdvanceItems.oldcompany=$("#oldcompany");
 	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 
@@ -141,9 +267,6 @@ jQuery(function($) {
 		userAdvance.deptType = res.deptType;
 	}, null, false);
 
-	com.post(api.ds.companyType, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.company = res.company;
-	}, null, false);
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.roleList = res.roleList;
 	}, null, false);
@@ -195,17 +318,17 @@ jQuery(function($) {
 							}
 						var userCompanys={};
 						var cids=[];
+						var companyname=[];
 						com.post(api.personel.queryUserCompany, options, function(res){
-								userCompanys = res.userCompanys;
-								$.each(userCompanys,function(i,va){
-									cids.push(va.cid);
-								});
-							}, null, false);
-						userAdvance.userAdvanceItems.companysel.trigger("chosen:updated");
-						$.each(cids,
-							function(i,val) {
-								$("[value\x3d'" + val + "']", userAdvance.userAdvanceItems.companysel).attr("selected", "selected")
+							userCompanys = res.userCompanys;
+
+							$.each(userCompanys,function(i,va){
+								companyname.push(va.company.name);
 							});
+
+							}, null, false);
+
+						userAdvance.userAdvanceItems.currentcompany.val(companyname)
 						userAdvance.userAdvanceItems.companysel.trigger("chosen:updated");
 
 						$('button[name="saveCompanyBtn"]').unbind().bind('click',function(){
@@ -218,13 +341,14 @@ jQuery(function($) {
 							  $.each(userAdvance.userAdvanceItems.companysel.val().splice(','),function(i,value){
 								newcids.push(value)
 								});
-
 								$.each(newcids, function(i, val){
 									params["cids" + "[" + i + "]"] = val;
 								});
+
 								com.post(api.personel.updateUserCompany, params,function (res) {
+
 								},null,false)
-						}else{
+							}else{
 								params["cids"]=[];
 								com.post(api.personel.updateUserCompany, params,function (res) {
 								},null,false)
@@ -269,7 +393,7 @@ jQuery(function($) {
 			//设计权限配置
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
-				showDepaermentModal();
+				showDesignDepartment();
 				com.post(api.right.queryDecorationOrderDesignDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
 					if(data.dids.length){
 						$.each(data.dids, function(i, v){
@@ -376,8 +500,6 @@ jQuery(function($) {
 
 	displayFunc.setAdvance();
 
-
-
 });
 
 function dialogUserAdvanceIndex(userId){
@@ -387,11 +509,14 @@ function dialogUserAdvanceIndex(userId){
 	}
 	com.post(api.personel.queryUserByUserId, options, function(res){
 		var user = res.user;
-		userAdvance.userAdvanceItems.company.bindData(userAdvance.company, "key", "value");
+
+		userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
 		userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "roleId", "roleName");
 		userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
 		userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
-		userAdvance.userAdvanceItems.company.val(user.company);
+
+		userAdvance.userAdvanceItems.oldcompany.val(user.companys)
+		userAdvance.userAdvanceItems.company.val();
 		userAdvance.userAdvanceItems.roleSel.val(user.role.roleId);
 		userAdvance.userAdvanceModal.modal("show");
 	}, null, false);
@@ -402,12 +527,11 @@ function saveData(){
 		"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
 		"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
 		"user.role.roleId": userAdvance.userAdvanceItems.roleSel.val(),
-		"user.company": userAdvance.userAdvanceItems.company.val(),
+		"user.companys": userAdvance.userAdvanceItems.company.val(),
 	}
 	com.post(api.personel.updateUserForAdvance, options, function(res){
 		com.showAlert(com.info, "提交成功");
 	});
-
 	userAdvance.userAdvanceModal.modal("hide");
 
 	return false;

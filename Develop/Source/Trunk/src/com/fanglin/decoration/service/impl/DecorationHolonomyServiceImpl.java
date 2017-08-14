@@ -42,9 +42,11 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	private DecorationPaymentService decorationPaymentService;
 	
 	@Override
-	public void pageDecorationHolonomy(Paging paging, List<Filter> filters) {
+	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) {
 		
 		if(filters.size() == 0) return ;
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		List<DecorationHolonomyPO> decorationHolonomyPOs = decorationHolonomyDao.pagedecorationHolonomy(paging, filters);
 		List<DecorationHolonomyVO> decorationHolonomyVOs = new ArrayList<DecorationHolonomyVO>();

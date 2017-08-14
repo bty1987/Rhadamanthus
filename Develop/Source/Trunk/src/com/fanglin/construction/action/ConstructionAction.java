@@ -36,9 +36,9 @@ public class ConstructionAction extends BaseListAction{
 	private ConstructionVO construction;
 	
 	@Action(value = "pageDecorationOrderForConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForConstruction(){
+	public String pageDecorationOrderForConstruction() throws FLException{
 		
-		constructionService.pageDecorationOrderForConstruction(getPaging(), getFilters());
+		constructionService.pageDecorationOrderForConstruction(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -46,7 +46,7 @@ public class ConstructionAction extends BaseListAction{
 	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
 		
-		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null);
+		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -60,9 +60,9 @@ public class ConstructionAction extends BaseListAction{
 	}
 	
 	@Action(value = "pageDecorationOrderForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForAcceptance(){
+	public String pageDecorationOrderForAcceptance() throws FLException{
 		
-		constructionService.pageDecorationOrderForAcceptance(getPaging(), getFilters());
+		constructionService.pageDecorationOrderForAcceptance(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -87,14 +87,6 @@ public class ConstructionAction extends BaseListAction{
 	public String updateConstructionByOrderId(){
 		
 		constructionService.saveOrUpdateConstructionByOrderId(construction);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "nextConstructionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String nextConstructionByOrderId() throws FLException{
-		
-		constructionService.nextConstructionByOrderId(construction);
 		
 		return SUCCESS;
 	}

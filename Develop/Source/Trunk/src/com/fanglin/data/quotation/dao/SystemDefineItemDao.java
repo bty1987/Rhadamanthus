@@ -20,8 +20,8 @@ import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemDao extends Dao<SystemDefineItemPO> {
 	
-	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters);
+	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters,int company);
 
-	public SystemDefineItemPO querySystemDefineItemById(String itemId);
+	public SystemDefineItemPO querySystemDefineItemById(String itemId,int company);
 	
 }

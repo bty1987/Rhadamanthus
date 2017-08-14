@@ -280,7 +280,9 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				printPayment(v.serviceReceipt.srId, v.decorationOrder.orderId);
+				com.popup("专用收款收据__订单编号：" + v.decorationOrder.orderId  ,api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.decorationOrder.orderId + "&servicePayment.orderId=" + v.decorationOrder.orderId + "&serviceReceipt.srId=" + v.serviceReceipt.srId + "&time=" + params.loginTime,function () {
+					parent.layer.getFrameIndex(window.name);
+				})
 			});
 
             $liLine.append($h3).append($ulProperty);
@@ -298,11 +300,6 @@ jQuery(function($) {
             }
         };
     })();
-
-	function printPayment(srId, orderId){
-		var url = api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&servicePayment.orderId=" + orderId + "&serviceReceipt.srId=" + srId + "&time=" + params.loginTime;
-		window.open(url);
-	};
 
     //查询服务款已收款信息
     var hsearcher = new Searcher();

@@ -10,8 +10,16 @@
 </style>
 
 </head>
-<body>
+<body style="background-color: #ffffff">
 	<div id="paymentReceipt"></div>
+
+	<div style="float:right">
+		<br/>
+		<a id="printPaymentReceipt" class="btn btn-minier btn-primary pull-left" name="confirms">
+			<i class="icon-ok bigger-110"></i>
+			<span id="btnPrint">打印收据</span>
+		</a>
+	</div>
 	
 	<script type="text/javascript">
 	
@@ -28,6 +36,11 @@
 				window.authentication = cookie.split("=")[1];
 			}
 		}
+
+		var csses = "";
+		csses += '<link rel="stylesheet" href="../../assets/css/ace.css?version=' + versionCode + '" />'; // ace styles
+
+		document.write(csses);
 		
 		var jses = "";
 		

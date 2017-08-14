@@ -29,6 +29,8 @@ public class DrawLineGroupPO implements Serializable {
 	
 	public static final String COLUMN_GID_STR = "gid";
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	private long gid ; 
 	
 	private String name ; 
@@ -37,7 +39,7 @@ public class DrawLineGroupPO implements Serializable {
 	
 	private String content ;
 
-	
+	private int company;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="gid")
@@ -74,6 +76,14 @@ public class DrawLineGroupPO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	} 
 	
 }

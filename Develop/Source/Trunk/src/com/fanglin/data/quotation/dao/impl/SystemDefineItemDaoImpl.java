@@ -30,7 +30,7 @@ public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> impleme
 	}
 
 	@Override
-	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters){
+	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<SystemDefineItemPO> query = pagingQuery(paging, SystemDefineItemPO.class);
 		
@@ -38,12 +38,13 @@ public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> impleme
 		
 		query.asc("itemId");
 		
-		return query.list();
+		return query.add(Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR,company)).list();
 	}
 	
 	@Override
-	public SystemDefineItemPO querySystemDefineItemById(String itemId){
-		return (SystemDefineItemPO)session().createCriteria(SystemDefineItemPO.class).add(Restrictions.eq("itemId", itemId)).uniqueResult();
+	public SystemDefineItemPO querySystemDefineItemById(String itemId,int company){
+		return (SystemDefineItemPO)session().createCriteria(SystemDefineItemPO.class).add(Restrictions.and(Restrictions.eq("itemId", itemId),(Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR, company)))).uniqueResult();
+		
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

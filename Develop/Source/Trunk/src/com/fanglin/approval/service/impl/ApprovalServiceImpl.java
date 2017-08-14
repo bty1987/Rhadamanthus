@@ -85,9 +85,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private ApprovalSalesDiscountService approvalSalesDiscountService;
 	
 	@Override
-	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
+	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company){
 		
-		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalByReceiveId(paging, filters, userId);
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalByReceiveId(paging, filters, userId,company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
@@ -106,9 +106,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 	
 	@Override
-	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId) {
+	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company){
 		
-		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalBySenderId(paging, filters, userId);
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalBySenderId(paging, filters, userId,company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
@@ -121,8 +121,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			approvalVO.setSenderName(approvalPO.getSender().getCurrentName());
 			
 			approvalVOs.add(approvalVO);
-		}
-		
+		}	
 		paging.setData(approvalVOs);
 	}
 	

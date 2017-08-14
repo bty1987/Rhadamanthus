@@ -31,7 +31,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	}
 
 	@Override
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters){
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters,int company){
 		PagingQuery<FunctionAreaPO> query = pagingQuery(paging, FunctionAreaPO.class);
 		
 		if(filters != null){
@@ -44,7 +44,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 			}
 		}
 		
-		return query.list();
+		return query.alias("quotationVersion","quotationVersion").add(Restrictions.eq("quotationVersion.company",company)).list();
 	}
 
 	@Override

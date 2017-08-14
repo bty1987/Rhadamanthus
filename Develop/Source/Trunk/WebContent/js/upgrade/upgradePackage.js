@@ -1,14 +1,14 @@
 jQuery(function($) {
 	
-	var version = {
+	var upgrade = {
 		saveBtn : $("#saveBtn").on("click", saveData),
 		cancelBtn : $("#cancelBtn").on("click", empty),
-		modal : $("#versionModal").on("show.bs.modal", function(a) {
+		modal : $("#upgradeModal").on("show.bs.modal", function(a) {
 			com.clearValidator()
 		}),
 		items : {
-			versionNumber : $("#versionNumber"),
-			trialVersion : $("#trialVersion"),
+			upgradeNumber : $("#upgradeNumber"),
+			trialUpgrade : $("#trialUpgrade"),
 			createTime : $("#createTime"),
 			content : $("#content"),
 			path : $("#path"),
@@ -44,20 +44,16 @@ jQuery(function($) {
 
 		var creatLine = function(v) {
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid')
-					.append(
-							$('<small></small>').addClass('blue').html(
-									v.versionNumber));
-			var $ulProperty = $('<ul></ul>').addClass(
-					'list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass(
-					'pull-right action-buttons');
+			var $h3 = $('<h3></h3>').addClass('oid').append(
+							$('<small></small>').addClass('blue').html(v.no));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger')
 					.html('删除');
 
-			var propertyArr = [ [ "最新版本:", v.versionNumber, "grey" ],
-					[ "适用版本:", v.trialVersion, "green" ],
+			var propertyArr = [ [ "最新版本:", v.no, "grey" ],
+					[ "适用版本:", v.trialno, "green" ],
 					[ "创建时间:", v.createTime, "grey" ],
 					[ "版本说明:", v.content, "pink" ], [ "路径:", v.path, "blue" ], ];
 
@@ -76,10 +72,10 @@ jQuery(function($) {
 			$btnDel.click(function() {
 				bootbox.confirm("确定删除吗？", function(result) {
 					if (result) {
-						com.post(api.upgrade.deleteVersion, {
-							"version.vid" : v.vid
+						com.post(api.upgrade.deleteUpgrade, {
+							"upgrade.ugid" : v.ugid
 						}, function() {
-							versionSeacher.doSearch();
+							upgradeSeacher.doSearch();
 						})
 					}
 				});
@@ -99,52 +95,52 @@ jQuery(function($) {
 		}
 	})();
 
-	var _condArr = [ 'versionNumber', 'versionCreateTime' ];
-	var versionSeacher = new Searcher();
-	versionSeacher.init(_condArr, "condList", api.upgrade.pageVersion,
+	var _condArr = [ 'upgradeNumber', 'upgradeCreateTime' ];
+	var upgradeSeacher = new Searcher();
+	upgradeSeacher.init(_condArr, "condList", api.upgrade.pageUpgrade,
 			function(list) {
 				displayFunc.init('resultList', list);
 				if (jQuery().datepicker) {
-					$('[name="versionCreateTime"]').datepicker({
+					$('[name="upgradeCreateTime"]').datepicker({
 						format : 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
 						autoclose : true,
 					});
 				}
-			}, "pagenation", "versionPostData", null, false, null, function() {
+			}, "pagenation", "upgradePostData", null, false, null, function() {
 
 				var $adda = $('<a></a>').addClass(
 						'btn btn-minier btn-primary pull-left').attr('name',
-						'addVersion').css("margin", "0px 3px");
+						'addUpgrade').css("margin", "0px 3px");
 				var $addi = $('<i></i>').addClass('icon-plus bigger-110')
 						.appendTo($adda);
 				var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
 				$adda.click(function() {
-					version.modal.modal("show")
+					upgrade.modal.modal("show")
 				});
 
 				return [ $adda ];
 			});
 
 	function saveData() {
-		if (com.validate("versionModal")) {
+		if (com.validate("upgradeModal")) {
 			return false
 		} else {
 			var option = {
-				"version.versionNumber" : version.items.versionNumber.val(),
-				"version.trialVersion" : version.items.trialVersion.val(),
-				"version.createTime" : version.items.createTime.val(),
-				"version.content" : version.items.content.val(),
-				"version.path" : version.items.path.val(),
-				"version.fileSize" : version.items.fileSize.val(),
+				"upgrade.no" : upgrade.items.upgradeNumber.val(),
+				"upgrade.trialno" : upgrade.items.trialUpgrade.val(),
+				"upgrade.createTime" : upgrade.items.createTime.val(),
+				"upgrade.content" : upgrade.items.content.val(),
+				"upgrade.path" : upgrade.items.path.val(),
+				"upgrade.fileSize" : upgrade.items.fileSize.val(),
 			}
 
-			com.post(api.upgrade.addVersion, option, function() {
+			com.post(api.upgrade.addUpgrade, option, function() {
 				com.showAlert(com.info, '添加成功');
 				empty()
-				versionSeacher.doSearch()
+				upgradeSeacher.doSearch()
 			})
-			version.modal.modal("hide")
+			upgrade.modal.modal("hide")
 		}
 	}
 
@@ -180,12 +176,42 @@ jQuery(function($) {
 	});
 
 	function empty() {
-		$('#versionNumber').val("");
-		$('#trialVersion').val("");
+		$('#upgradeNumber').val("");
+		$('#trialUpgrade').val("");
 		$('#createTime').val("");
 		$('#content').val("");
 		$('#path').val("");
 		$("#fileSize").val("");
 	}
 
+    function checkInfo() {
+
+        var flag = true;
+
+        if (!$('#cashDiv').hasClass('hide')) {
+
+            var num = $('#cash');
+            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+
+            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
+                num.focus().select();
+                num.addClass('tooltip-info').attr({
+                    "data-rel": "popover",
+                    "data-placement": "right",
+                    "data-original-title": "",
+                    "title": "",
+                    "data-content": "价格输入内容格式错误!"
+                }).popover('show');
+                flag = false;
+            } else {
+                num.popover('destroy');
+            }
+
+        }
+
+
+
+        return flag;
+
+    }
 });

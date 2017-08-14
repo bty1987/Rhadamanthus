@@ -43,7 +43,6 @@ jQuery(function($) {
 				["总价:", v.orderTotalPrice, "blue"],
 				["折扣:", v.discount, "blue"],
 				["面积:", v.houseArea, "blue"],
-				["工程状态:", v.schedule, "grey"],
 				["进度:", v.projectStatus, "red"]
 			];
 

@@ -4,21 +4,39 @@
 
 
 $.extend(api, {upgrade: {
-	
-	pageVersion:{
-		url:"pageVersion.do"
+
+    pageUpgrade:{
+		url:"pageUpgrade.do"
 	},
-    queryVersion :{
+    queryUpgrade :{
+        url:"queryUpgrade.do"
+    },
+    matchUpgrade:{
+    	url:"matchUpgrade.do"
+    },
+    addUpgrade:{
+    	url:"addUpgrade.do"
+    },
+    deleteUpgrade:{
+    	url:"deleteUpgrade.do"
+    },
+    pageVersion:{
+        url:"pageVersion.do"
+    },
+    queryVersion:{
         url:"queryVersion.do"
     },
-    matchVersion:{
-    	url:"matchVersion.do"
-    },
     addVersion:{
-    	url:"addVersion.do"
+        url:"addVersion.do"
+    },
+    updateVersion:{
+        url:"updateVersion.do"
+    },
+    updateVersionForStatus:{
+        url:"updateVersionForStatus.do"
     },
     deleteVersion:{
-    	url:"deleteVersion.do"
+        url:"deleteVersion.do"
     }
     
 }});

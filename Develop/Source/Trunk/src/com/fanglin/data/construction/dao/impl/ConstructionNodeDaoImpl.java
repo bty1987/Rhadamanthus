@@ -55,7 +55,7 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructionNodeCompanyPO> queryConstructionNodeCompanyByCid(Long cid) {
+	public List<ConstructionNodeCompanyPO> queryConstructionNodeCompanyByCid(Integer cid) {
 		return session().createCriteria(ConstructionNodeCompanyPO.class).add(Restrictions.eq(ConstructionNodeCompanyPO.COLUMN_CID_STR, cid)).list();
 	}
 

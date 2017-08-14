@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.decoration.vo;
+package com.fanglin.exports.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

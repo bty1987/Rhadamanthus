@@ -153,7 +153,6 @@ public class QuotationMaterialItemServiceImpl implements QuotationMaterialItemSe
 		if(quotationPO == null){
 			throw new FLException(200003, "报价不存在");
 		}
-		
 		quotationPO.setMdiff(Arith.sub(quotationPO.getMdiff(), quotationMaterialItemVO.getDiff()));
 		
 		quotationMaterialItemDao.delete(quotationMaterialItemPO);

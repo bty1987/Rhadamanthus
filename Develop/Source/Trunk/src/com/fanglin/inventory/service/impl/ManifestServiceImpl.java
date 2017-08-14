@@ -43,7 +43,6 @@ import com.fanglin.inventory.po.PurchaseManifestPO;
 import com.fanglin.inventory.po.PurchasePO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
-import com.fanglin.inventory.service.PurchaseAmountService;
 import com.fanglin.inventory.service.StorehouseStockService;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
@@ -90,9 +89,6 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Autowired
 	private StorehouseStockService storehouseStockService;
-	
-	@Autowired
-	private PurchaseAmountService purchaseAmountService;
 	
 	@Autowired
 	private CountingService countingService;
@@ -181,10 +177,12 @@ public class ManifestServiceImpl implements ManifestService {
 				long ishId = manifestItemVO.getInstorehouse().getShId();
 				
 				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
+				
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItemPO.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(total, num));
+				float _total = Arith.add(total, manifestItemPO.getUnitPrice());
+				
+				totals = Arith.add(totals,Arith.mul(_total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -195,7 +193,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setTotal(totals);
 		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		return 0;
 	}
@@ -250,8 +248,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItemPO.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(total, num));
+				float _total = Arith.sub(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(_total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -262,7 +260,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setTotal(totals);
 		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		return 0;
 	}
@@ -341,8 +339,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItem.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItem.getUnitPrice());
-				totals = Arith.add(totals, Arith.mul(total, num));
+				float _total = Arith.sub(total, manifestItem.getUnitPrice());
+				totals = Arith.add(totals, Arith.mul(_total, num));
 			}
 			
 			manifestItem.setNum(num);
@@ -354,7 +352,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setTotal(totals);
 		manifestPO.setComment(manifestVO.getComment());
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		return 0;
 	}
@@ -436,8 +434,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItem.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItem.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(total, num));
+				float _total = Arith.add(total, manifestItem.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(_total, num));
 			}
 			
 			manifestItem.setNum(num);
@@ -449,7 +447,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setTotal(totals);
 		manifestPO.setComment(comment);
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		return 0;
 	}
@@ -500,7 +498,7 @@ public class ManifestServiceImpl implements ManifestService {
 			
 			purchaseItemPO.setSurplus(purchaseItemVO.getSurplus());
 			
-			purchaseItemDao.save(purchaseItemPO);
+			purchaseItemDao.update(purchaseItemPO);
 			
 		}
 		
@@ -527,8 +525,8 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
 				storehouseStockService.updateStorehouseStock(ishId, month, num);
 				
-				total = Arith.add(total, manifestItemPO.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(total, num));
+				float _total = Arith.add(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(_total, num));
 			}			
 			
 			manifestItemPO.setMid(manifestPO.getMid());
@@ -540,7 +538,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestPO.setComment(comment);
 		manifestPO.setTotal(totals);
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		PurchasePO purchasePO;
 		PurchaseManifestPO purchaseManifestPO;
@@ -551,7 +549,7 @@ public class ManifestServiceImpl implements ManifestService {
 			
 			purchasePO.setStatus(PurchasePO.COLUMN_SECTIONSTATUS_STR);
 			
-			purchaseDao.save(purchasePO);
+			purchaseDao.update(purchasePO);
 			
 			purchaseManifestPO = new PurchaseManifestPO(purchasePO,manifestPO);
 			
@@ -619,22 +617,20 @@ public class ManifestServiceImpl implements ManifestService {
 				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
 				
-				total = Arith.sub(total, manifestItemPO.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(total, num));
+				float _total = Arith.sub(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(_total, num));
 			}
 			
 			manifestItemPO.setMid(manifestPO.getMid());
 			
 			manifestItemDao.save(manifestItemPO);
 			
-			
 		}
-		
 		
 		manifestPO.setTotal(totals);
 		manifestPO.setComment(comment);
 		
-		purchaseAmountService.updatePurchaseAmount(month, totals);
+		manifestDao.update(manifestPO);
 		
 		AssisOrderPO assisOrderPO;
 		AssisManifestPO assisManifestPO;
@@ -646,7 +642,7 @@ public class ManifestServiceImpl implements ManifestService {
 			assisOrderPO.setApprover(userPO);
 			assisOrderPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
 			
-			assisOrderDao.save(assisOrderPO);
+			assisOrderDao.update(assisOrderPO);
 			
 			assisManifestPO = new AssisManifestPO(assisOrderPO,manifestPO);
 			
@@ -692,6 +688,8 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		
+		manifestDao.update(manifestPO);
 		
 		return 0;
 	}

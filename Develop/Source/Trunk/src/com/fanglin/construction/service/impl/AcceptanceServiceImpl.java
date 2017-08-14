@@ -45,7 +45,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	private UserDao userDao;
 	
 	@Autowired
-	private ConstructionDao constructionScheduleDao;
+	private ConstructionDao constructionDao;
 	
 	@Autowired
 	private ConstructerDao constructerDao;
@@ -79,24 +79,24 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptanceVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
 		}
 		
-		ConstructionPO constructionSchedulePO = constructionScheduleDao.queryConstructionByOrderId(orderId);
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 		
-		if(constructionSchedulePO != null){
-			if(constructionSchedulePO.getSupervisorQualityId() != null){
-				acceptanceVO.setSupervisName(userDao.queryUserByUserId(constructionSchedulePO.getSupervisorQualityId()).getCurrentName());
+		if(constructionPO != null){
+			if(constructionPO.getSupervisorQualityId() != null && !constructionPO.getSupervisorQualityId().equals("")){
+				acceptanceVO.setSupervisName(userDao.queryUserByUserId(constructionPO.getSupervisorQualityId()).getCurrentName());
 			}
-			if(constructionSchedulePO.getWaterwayCircuitPowerQualityId() != null){
-				acceptanceVO.setWaterwayQualityName(userDao.queryUserByUserId(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-				acceptanceVO.setCircuitQualityName(userDao.queryUserByUserId(constructionSchedulePO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+			if(constructionPO.getWaterwayCircuitPowerQualityId() != null && !constructionPO.getWaterwayCircuitPowerQualityId().equals("")){
+				acceptanceVO.setWaterwayQualityName(userDao.queryUserByUserId(constructionPO.getWaterwayCircuitPowerQualityId()).getCurrentName());
+				acceptanceVO.setCircuitQualityName(userDao.queryUserByUserId(constructionPO.getWaterwayCircuitPowerQualityId()).getCurrentName());
 			}
-			if(constructionSchedulePO.getBricklayQualityId() != null){
-				acceptanceVO.setBricklayQualityName(userDao.queryUserByUserId(constructionSchedulePO.getBricklayQualityId()).getCurrentName());
+			if(constructionPO.getBricklayQualityId() != null && !constructionPO.getBricklayQualityId().equals("")){
+				acceptanceVO.setBricklayQualityName(userDao.queryUserByUserId(constructionPO.getBricklayQualityId()).getCurrentName());
 			}
-			if(constructionSchedulePO.getCarpentQualityId() != null){
-				acceptanceVO.setCarpentQualityName(userDao.queryUserByUserId(constructionSchedulePO.getCarpentQualityId()).getCurrentName());
+			if(constructionPO.getCarpentQualityId() != null && !constructionPO.getCarpentQualityId().equals("")){
+				acceptanceVO.setCarpentQualityName(userDao.queryUserByUserId(constructionPO.getCarpentQualityId()).getCurrentName());
 			}
-			if(constructionSchedulePO.getOilQualityId() != null){
-				acceptanceVO.setOilQualityName(userDao.queryUserByUserId(constructionSchedulePO.getOilQualityId()).getCurrentName());
+			if(constructionPO.getOilQualityId() != null && !constructionPO.getOilQualityId().equals("")){
+				acceptanceVO.setOilQualityName(userDao.queryUserByUserId(constructionPO.getOilQualityId()).getCurrentName());
 			}
 		}
 		
@@ -131,12 +131,12 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
 		}
 		
-		ConstructionPO constructionSchedulePO = constructionScheduleDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
 		
-		if(constructionSchedulePO != null && (constructionSchedulePO.getAllocationWorkerFlag() & AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT) == 0){
-			constructionSchedulePO.setAllocationWorkerFlag(constructionSchedulePO.getAllocationWorkerFlag() + AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT);
+		if(constructionPO != null && (constructionPO.getAllocationWorkerFlag() & AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT) == 0){
+			constructionPO.setAllocationWorkerFlag(constructionPO.getAllocationWorkerFlag() + AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT);
 			
-			constructionScheduleDao.update(constructionSchedulePO);
+			constructionDao.update(constructionPO);
 		}
 		
 		if(acceptancePO.getAcceptanceTime() == null){

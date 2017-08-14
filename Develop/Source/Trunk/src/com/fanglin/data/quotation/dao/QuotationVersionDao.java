@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface QuotationVersionDao extends Dao<QuotationVersionPO> {
 	
-	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters);
+	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters,int company);
 	
-	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int defaultFlag);
+	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int company,int defaultFlag);
 
-	public List<QuotationVersionPO> queryQuotationVersion();
+	public List<QuotationVersionPO> queryQuotationVersion(int company);
 	
 	public QuotationVersionPO queryQuotationVersionByVersionId(String versionId);
 

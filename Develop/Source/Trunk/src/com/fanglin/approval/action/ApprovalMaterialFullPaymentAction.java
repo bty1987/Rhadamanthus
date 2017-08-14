@@ -41,7 +41,7 @@ public class ApprovalMaterialFullPaymentAction extends BaseListAction {
 	@Action(value = "submitApprovalForMaterialFullPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForMaterialFullPayment() throws FLException{
 		
-		approvalMaterialFullPaymentService.submitApprovalForDecorationRefund(approval, approvalMaterialFullPayment, queryUserId());
+		approvalMaterialFullPaymentService.submitApprovalForDecorationRefund(approval, approvalMaterialFullPayment, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

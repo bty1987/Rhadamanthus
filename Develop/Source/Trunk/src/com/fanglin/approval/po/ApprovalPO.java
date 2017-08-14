@@ -109,6 +109,8 @@ public class ApprovalPO implements java.io.Serializable {
 	private String contents;
 
 	private String comment;
+	
+	private int company;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -203,5 +205,14 @@ public class ApprovalPO implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
 
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	
 }

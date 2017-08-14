@@ -79,9 +79,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 	private ConstructionScheduleDao constructionScheduleDao;
 	
 	@Override
-	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters){
+	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters, Integer companyId){
 		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstruction(paging, filters);
+		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstruction(paging, filters, companyId);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){
@@ -92,7 +92,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO){
+	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO, Integer companyId){
 		
 		if(userPO == null){
 			userPO = userDao.queryUserByUserId(userId);
@@ -108,7 +108,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			}
 		}
 		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters);
+		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters, companyId);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){
@@ -219,10 +219,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 	}
 	
 	@Override
-	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters){
+	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters, Integer companyId){
 		
-		String acceptanceFlagOp = "and";
-		Filter acceptanceFilter = null;
+		String acceptanceFlagOp = null;
 	
 		for(Filter filter: filters){
 			if(ConstructionPO.COLUMN_ACCEPTANCEFLAG_STR.equals(filter.getField())){
@@ -230,20 +229,15 @@ public class ConstructionServiceImpl implements ConstructionService {
 				
 				if("notAcceptanced".equals(_flag)){
 					acceptanceFlagOp = "nand";
+				}else{
+					acceptanceFlagOp = "and";
 				}
-				
-				acceptanceFilter = filter;
 			}
 		}
 		
-		if(acceptanceFilter != null){
-			filters.remove(acceptanceFilter);
-		}
-		
 		filters.add(new Filter(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR, String.valueOf(AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT), acceptanceFlagOp));
-		filters.add(new Filter(ConstructionPO.COLUMN_SCHEDULE_STR, String.valueOf(ConstructionPO.SCHEDULE_TYPE_CLEANING_INT), "eq"));
 		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForAcceptance(paging, filters);
+		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForAcceptance(paging, filters, companyId);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){
@@ -574,88 +568,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 		
 		return 0;
 	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void nextConstructionByOrderId(ConstructionVO constructionVO) throws FLException{
-		
-		String orderId = constructionVO.getOrderId();
-		String currentTime = DateUtil.current(ConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
-		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
-		
-		if(decorationOrderPO == null){
-			throw new FLException(140013, "订单不存在");
-		}
-		
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
-		if(constructionPO == null){
-			constructionPO = new ConstructionPO();
-			constructionPO.setDecorationOrderPO(new DecorationOrderPO(orderId));
-			constructionPO.setSchedule(ConstructionPO.SCHEDULE_TYPE_CHAN_INT);
-		}else{
-			int schedule = constructionVO.getSchedule();
-			constructionPO.setSchedule(schedule);
-		}
-		constructionDao.saveOrUpdate(constructionPO);
-		
-		long cid = constructionPO.getCid();
-		short schedule = (short)constructionPO.getSchedule();
-		
-		switch (schedule) {
-		case ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.CHAN_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_PUTLINE_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.PUBLINE_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.WATERWAYCIRCUITPOWER_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_BRICKLAY_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.BRICKLAY_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_GROUNDLEVELING_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.GROUNDLEVELING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_CARPENT_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.CARPENT_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_OIL_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.OIL_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.WATERWAYCIRCUITCHECK_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		case ConstructionSchedulePO.SCHEDULE_TYPE_CLEANING_INT:
-			decorationOrderPO.setProjectStatus(ConstructionSchedulePO.CLEANING_CONSTRUCTION_SCHEDULE_TYPE_NAME_STR);
-			break;
-		}
-	
-		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(cid, schedule);
-		for (ConstructionSchedulePO constructionSchedule : constructionSchedulePOs) {
-			if(constructionSchedule == null){
-				constructionSchedule = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, schedule);
-				constructionScheduleDao.save(constructionSchedule);
-			}
-		}
-		
-		decorationOrderDao.update(decorationOrderPO);
-		
-	}
-	
-	//之前pageDecorationOrderForConstructionScheduleByPlace用到这个方法，然后这个方法删除了 
-//	private void pageOrderByUserIdAWorkType(Paging paging, List<Filter> filters, String workTypeQuality, String userId){
-//		
-//		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.pageConstructionScheduleForSupervisionByUserId(paging, filters, workTypeQuality, userId);
-//		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
-//		
-//		for(ConstructionSchedulePO constructionSchedulePO: constructionSchedulePOs){
-//			decorationOrderVOs.add(decorationOrderPOToVO(constructionSchedulePO.getDecorationOrderPO()));
-//		}
-//		
-//		paging.setData(decorationOrderVOs);
-//	}
 	
 	private DecorationOrderVO decorationOrderPOToVO(DecorationOrderPO decorationOrderPO){
 		

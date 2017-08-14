@@ -1,14 +1,9 @@
 $(function(){
-
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
-    /*	modals:$("#manage").on("show.bs.modal",function(a){
-     com.clearValidator()
-     });*/
-
+    var cle = {}
+    cle.tree=$("tree3")
+    var mediaid=null;
+    var fileName=null;
+    var fileSize=null;
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -47,17 +42,26 @@ $(function(){
                         com.switchPage(api.index.userEditIndex.url);
                     });
 
-
                     //添加点击事件
-                    $addDD.click(function(){
+                    $addDD.unbind().bind('click',function(){
+                        //com.cleanItems(cle)
+                        $('#tree3').html("");
+                        $('#ddModal').modal('show');
                         $("#tree3").removeData("tree");
                         $("#tree3").unbind('click');
-                        $('#ddModal').modal('show');
+
                         var deptList = null;
                         com.post(api.dd.queryDDDepartment, {"department.id": 1}, function(res){
                             deptList = res.departments;
                         }, null, false);
-                        if(!deptList.length) return;
+                        if(deptList == null ){
+                            console.log("刷新再试")
+                            return;
+                        }
+                        if(!deptList.length) {
+                           console.log("刷新再试")
+                            return;
+                        }
                         var deptObj = {
                             '1' : {
                                 name: '1',
@@ -74,7 +78,6 @@ $(function(){
                                 didList.splice(didList.indexOf(v.parentid),1);
                             }
                         });
-
                         $('#tree3').ace_tree({
                             dataSource: {
                                 data : function(options, callback) {
@@ -104,9 +107,7 @@ $(function(){
                             'unselected-icon' : null,
                             folderSelect : true,
                             cacheItems : false
-
                         }).on('selected', function (evt, opt) {
-                            //console.log(opt.info)
                         });
                         var getDeptByDid = function(did){
                             var depts = {};
@@ -138,9 +139,7 @@ $(function(){
                                 });
                             }
                             return chain;
-
                         }
-
                         $('#save').unbind().bind('click',function(){
                             var items = $('#tree3' ).tree('selectedItems' );
                             var length = items.length;
@@ -151,8 +150,9 @@ $(function(){
                                 }
                             }
                             $('#ddModal').modal("hide");
-                            var params = {"user.userid" : v.userId,
-                                "user.Name":v.currentName,
+                            var params = {
+                                "user.userid" : v.userId,
+                                "user.name":v.currentName,
                                 "user.Mobile":v.phone,
                                 "user.Position":v.duty,
                             };
@@ -161,7 +161,6 @@ $(function(){
                                     params["dids" + "[" + i + "]"]=items[i].id;
                                 }
                             }
-
                             com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
                                 if(res.user.userid != null){
                                     com.post(api.dd.updateDDUser, params, function(data){
@@ -179,22 +178,20 @@ $(function(){
                                             com.showAlert(com.error,"创建失败" );
                                         }
                                     });
-
                                 }
                             }, null, false);
                         });
                         $('#cancel').click(function(){
                             $("#tree3").removeData("tree");
                         });
+
                     });
                     $('#closeM').click(function(){
                         $("#tree3").removeData("tree");
                     });
-//编辑钉钉信息
+//同步钉钉信息
                     $updateDD.click(function(){
-                      /*  params.tempUserId = v.userId;
-                        com.switchPage(api.index.DDUserEditIndex.url);*/
-                        var  selectedDepts=[];
+                       var  selectedDepts=[];
                         com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function(res){
                             selectedDepts = res.user.department;
                             if(selectedDepts == null){
@@ -202,11 +199,11 @@ $(function(){
                                 return;
                             }
                             var params = {
-                            "user.userid" : v.userId,
-                            "user.Name":v.currentName,
-                            "user.Mobile":v.phone,
-                            "user.Position":v.duty,
-                             "dids":selectedDepts
+                                "user.userid" : v.userId,
+                                "user.name":v.currentName,
+                                "user.Mobile":v.phone,
+                                "user.Position":v.duty,
+                                 "dids":selectedDepts
                             }
 
                             com.post(api.dd.updateDDUser, params, function(data){
@@ -216,23 +213,36 @@ $(function(){
                                     com.showAlert(com.error,"更新失败" );
                                 }
                             });
-
                           }, null, false);
-
 
                     });
 //删除点击事件
                     $deleteDD.click(function(){
-                        com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
-                            if(res.user.name != null){
-                                com.post(api.dd.deleteDDUser, {"userid":  v.userId}, function(data){
-                                    if($.trim(data.errcode) == $.trim(0) ){
-                                        com.showAlert(com.info, "删除成功");}
-                                    else{com.showAlert(com.error,"删除失败");}
+                        var btn = $(this);
+                        var span = btn.find('span');
+                        btn.find('i').remove();
+                        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
+                        span.prepend(loading);
+                        var message = "<p>确定要删除该员工吗?</p>";
+                        bootbox.confirm(message, function(result) {
+                            if(result){
+                                com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
+
+                                    if(res.user.name != null){
+                                        com.post(api.dd.deleteDDUser, {"user.userid":  v.userId}, function(data){
+                                            if($.trim(data.errcode) == $.trim(0) ){
+                                                com.showAlert(com.info, "删除成功");}
+                                            else{com.showAlert(com.error,"删除失败");}
+                                        });
+                                    }
+                                    else{
+                                        com.showAlert(com.error, "钉钉中没有该用户，无法删除");
+                                    }
                                 });
-                            }
-                            else{
-                                com.showAlert(com.error, "钉钉中没有该用户，无法删除");
+                            }else{
+                                btn.find('i').remove();
+                                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                                span.prepend(prepared);
                             }
                         });
                     });
@@ -302,5 +312,11 @@ $(function(){
         }
     });
 
+
+
 });
+
+
+
+
 

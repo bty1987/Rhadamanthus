@@ -25,8 +25,8 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.common.vo.ExcelWorkSheet;
 import com.fanglin.core.action.BaseExportAction;
-import com.fanglin.decoration.service.DecorationOrderService;
-import com.fanglin.decoration.vo.DecorationOrderExportVO;
+import com.fanglin.exports.service.DecorationOrderExportService;
+import com.fanglin.exports.vo.DecorationOrderExportVO;
 import com.fanglin.utils.PoiExcelUtil;
 
 @ParentPackage("base")
@@ -37,14 +37,14 @@ public class DecorationOrderExportAction extends BaseExportAction{
 	private static final long serialVersionUID = 1175808206393666579L;
 	
 	@Autowired
-	private DecorationOrderService decorationOrderService;
+	private DecorationOrderExportService decorationOrderExportService;
 	
 	@Action(value = "exportDecorationorderByContractTime", results = { @Result(name = "success", type = "stream", params = { "contentType", "text/html", "contentDisposition", "attachment;fileName=${fileName}", "inputName", "downloadFileInputStream", "encode", "true"}) })
 	public String exportDecorationorderByContractTime(){
 		
 		setFileName("订单签单信息.xls");
 		
-		List<DecorationOrderExportVO> decorationOrderExportVOs = decorationOrderService.queryDecorationOrderForComplete(getFilters());
+		List<DecorationOrderExportVO> decorationOrderExportVOs = decorationOrderExportService.queryDecorationOrderForComplete(getFilters());
 		
 		ExcelWorkSheet<DecorationOrderExportVO> sheet = new ExcelWorkSheet<DecorationOrderExportVO>();
 		sheet.setData(decorationOrderExportVOs);

@@ -97,7 +97,7 @@ public class MaterialSubOrderAction extends BaseListAction{
 	@Action(value="addMaterialSubOrder", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMaterialSubOrder() throws FLException{
 		
-		materialSubOrderService.addMaterialSubOrder(materialSubOrder, materialSubOrderItems, queryUserId());
+		materialSubOrderService.addMaterialSubOrder(materialSubOrder, materialSubOrderItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

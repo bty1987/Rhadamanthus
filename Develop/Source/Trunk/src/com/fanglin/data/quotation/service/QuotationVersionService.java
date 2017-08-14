@@ -21,13 +21,13 @@ import com.fanglin.utils.Paging;
 
 public interface QuotationVersionService {
 	
-	public void pageQuotationVersion(Paging paging, List<Filter> filters);
+	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company);
 	
 	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO);
 	
-	public List<QuotationVersionVO> queryQuotationVersion();
+	public List<QuotationVersionVO> queryQuotationVersion(int company);
 	
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO);
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company);
 	
 	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO);
 	

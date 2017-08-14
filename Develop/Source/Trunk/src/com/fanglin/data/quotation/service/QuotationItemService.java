@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface QuotationItemService {
 	
-	public void pageQuotationItem(Paging paging, List<Filter> filters);
+	public void pageQuotationItem(Paging paging, List<Filter> filters,int company);
 	
 	public void pageQuotationItemByVersionId(Paging paging, List<Filter> filters, QuotationItemVO quotationItemVO);
 

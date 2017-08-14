@@ -42,17 +42,17 @@ public class QuotationVersionAction extends BaseListAction {
 	private String versionId;
 	
 	@Action(value="pageQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationVersion(){
+	public String pageQuotationVersion() throws FLException{
 
-		quotationVersionService.pageQuotationVersion(getPaging(), getFilters());
+		quotationVersionService.pageQuotationVersion(getPaging(), getFilters(),queryCompany());
 	    
 		return SUCCESS;
 	}
 	
 	@Action(value="queryQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationVersion(){
+	public String queryQuotationVersion() throws FLException{
 		
-		quotationVersions = quotationVersionService.queryQuotationVersion();
+		quotationVersions = quotationVersionService.queryQuotationVersion(queryCompany());
 	    
 		return SUCCESS;
 	}
@@ -66,9 +66,9 @@ public class QuotationVersionAction extends BaseListAction {
 	}
 	
 	@Action(value="addQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addQuotationVersion(){
+	public String addQuotationVersion() throws FLException{
 		
-		quotationVersionService.saveQuotationVersion(quotationVersion);
+		quotationVersionService.saveQuotationVersion(quotationVersion,queryCompany());
 	    
 		return SUCCESS;
 	}

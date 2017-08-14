@@ -29,6 +29,52 @@ $(function(){
         document.cookie = cname + "=" + cvalue + "; " + expires;
     }
 	
+	var companysel = null;
+
+    params.loginTime = window.loginTime;
+    params.userCompany = window.userCompany;
+
+    com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
+
+        params.userInfo = res.userInfo;
+
+        $(".user-info .user-name").text(res.userInfo.user.currentName);
+        com.post(api.system.queryCompanyByCid,{"company.cid": res.userInfo.user.companys},function(res){
+        	params.company = res.company;
+            $(".companyinfo .companyName").text(res.company.name)
+        }, null, false);
+
+    }, null, false);
+
+    com.post(api.personel.queryUserCompany, {"user.uid": params.userInfo.user.uid}, function (res) {
+
+        var companysel = $('#companysel').html("");
+
+        $.each(res.userCompanys, function(i,v){
+            var $li = $('<li></li>').appendTo(companysel);
+            var $a = $('<a></a>').attr('data-cid',v.company.cid).text(v.company.name).appendTo($li);
+            $a.click(function(e){
+                 com.post(api.common.changeAuthCode,{"company": v.company.cid },function(res){
+                	 
+                     params.authentication = res.authentication;
+                     setCookie("authentication" , params.authentication, config.timeout);
+                     
+                     com.switchPage(api.index.homeIndex.url);
+
+                     companysel.parent().removeClass("open");
+                     
+                     com.post(api.system.queryCompanyByCid,{"company.cid": v.company.cid},function(res){
+                         params.company = res.company;
+                         $(".companyinfo .companyName").text(res.company.name)
+                     }, null, false);
+                     
+                 }, null, false);
+                 
+                 return false;
+            });
+        });
+    }, null, false);
+	
 	$("#logout").on("click", function(e){
 		setCookie("authentication", "", -1);
 		window.location.href = '/';

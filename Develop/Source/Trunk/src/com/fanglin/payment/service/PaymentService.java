@@ -20,8 +20,6 @@ public interface PaymentService {
 
 	public void pagePaymentForHistory(Paging paging, List<Filter> filters);
 	
-	public List<PaymentVO> queryPayment(List<Filter> filters);
-	
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 	
 	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId) throws FLException;

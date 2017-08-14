@@ -25,21 +25,22 @@ public class FormatUtil {
 		return df.format(number);
 	}
 	
-	public static short decodeCompany(String company){
+	public static int decodeCompany(String company){
 		
 		int $length = company.length();
-		int $index = Integer.parseInt(company.substring($length-1));
+		int $index = Integer.parseInt(company.substring($length-2, $length-1));
+		int _index = Integer.parseInt(company.substring($length-1));
 		
-		return Short.parseShort(company.substring($index, $index+1));
+		return Integer.parseInt(company.substring($index, $index+_index));
 	}
 	
-	public static int encodeCompany(int company){
-		return Integer.parseInt(String.format("%d%d%d%d", (int)((Math.random()*9+1)*100), company, (int)((Math.random()*9+1)*10), 3));
+	public static String encodeCompany(int company){
+		return String.format("%d%d%d%d%d", (int)((Math.random()*9+1)*100), company, (int)((Math.random()*9+1)*10), 3, String.valueOf(company).length());
 	}
 	
 	public static void main(String[] args){
 		System.out.println(fillZero(offset(3), "0000"));
-		System.out.println(encodeCompany(1));
+		System.out.println(encodeCompany(10));
 		System.out.println(decodeCompany(String.valueOf(encodeCompany(1))));
 	}
 }

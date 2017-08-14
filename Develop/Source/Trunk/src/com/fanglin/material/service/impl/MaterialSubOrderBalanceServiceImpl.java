@@ -59,9 +59,10 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	private UserDao userDao;
 
 	@Override
-	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
+	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters,int company) {
 		if(filters.size() == 0) return;
-		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters);
+	
+		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters,company);
 		List<MaterialSubOrderBalanceVO> materialSubOrderBalanceVOs = new ArrayList<MaterialSubOrderBalanceVO>();
 		
 		MaterialSubOrderBalanceVO materialSubOrderBalanceVO;
@@ -84,7 +85,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 	}
 
 	@Override
-	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId) throws FLException {
+	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId,int company) throws FLException {
 		
 		SupplierPO supplierPO = supplierDao.querySupplierByLoginId(userId);
 		
@@ -101,7 +102,7 @@ public class MaterialSubOrderBalanceServiceImpl implements MaterialSubOrderBalan
 		
 		filters.add(new Filter(MaterialSubOrderBalancePO.COLUMN_USERID_STR, userIds, "in"));
 		
-		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters);
+		List<MaterialSubOrderBalancePO> materialSubOrderBalancePOs = materialSubOrderBalanceDao.pageMaterialSubOrderBalance(paging, filters,company);
 		List<MaterialSubOrderBalanceVO> materialSubOrderBalanceVOs = new ArrayList<MaterialSubOrderBalanceVO>();
 		
 		MaterialSubOrderBalanceVO materialSubOrderBalanceVO;

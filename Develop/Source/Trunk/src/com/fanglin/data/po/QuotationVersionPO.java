@@ -26,6 +26,8 @@ public class QuotationVersionPO implements Serializable{
 
 	private static final long serialVersionUID = -852822561077114137L;
 	
+	public static final String COLUMN_COMPANY_STR ="company";
+	
 	private int qvId;
 	
 	private String versionId;
@@ -43,6 +45,8 @@ public class QuotationVersionPO implements Serializable{
 	private float manageRate;
 	
 	private short manageDiscount;
+	
+	private int company;
 	
 	public QuotationVersionPO(){}
 	
@@ -132,5 +136,16 @@ public class QuotationVersionPO implements Serializable{
 	public void setManageDiscount(short manageDiscount) {
 		this.manageDiscount = manageDiscount;
 	}
+	
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
+	
 	
 }

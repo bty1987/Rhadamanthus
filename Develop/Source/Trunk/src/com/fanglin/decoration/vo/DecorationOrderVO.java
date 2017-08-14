@@ -119,8 +119,6 @@ public class DecorationOrderVO implements Serializable {
 
 	private String salesmanType;
 	
-	private Integer company;
-	
 	public String getOrderId(){
 		return orderId;
 	}
@@ -507,13 +505,4 @@ public class DecorationOrderVO implements Serializable {
 	public void setAutoId(Long autoId){
 		this.autoId = autoId;
 	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-
 }

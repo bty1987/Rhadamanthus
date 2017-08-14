@@ -190,7 +190,7 @@ jQuery(function($) {
 			}
 
 			if(materialBrand == ""){
-				materialBrand =  $this.find('.materialBrandName').text();
+				materialBrand =  $this.find('.materialBrandName').val();
 			}else{
 				if(materialBrand !=  $this.find('.materialBrandName').text()){
 					materialBrandFlag = false;

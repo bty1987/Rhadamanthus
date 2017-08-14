@@ -8,6 +8,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserCompanyService;
@@ -28,7 +29,6 @@ public class UserCompanyAction extends BaseListAction {
 	
 	private UserVO user;
 	
-	private List<Integer> cids;
 	
 	@Action(value = "queryUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserCompany() throws FLException{
@@ -38,13 +38,6 @@ public class UserCompanyAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserCompany() throws FLException{
-		
-		userCompanyService.updateUserCompany(user, cids);
-		
-		return SUCCESS;
-	}
 	
 	public List<UserCompanyVO> getUserCompanys() {
 		return userCompanys;
@@ -62,12 +55,6 @@ public class UserCompanyAction extends BaseListAction {
 		this.user = user;
 	}
 
-	public List<Integer> getCids() {
-		return cids;
-	}
-
-	public void setCids(List<Integer> cids) {
-		this.cids = cids;
-	}
+	
 	
 }

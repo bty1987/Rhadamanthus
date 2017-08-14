@@ -7,21 +7,17 @@ import org.apache.struts2.json.annotations.JSON;
 
 public class VersionVO implements Serializable{
 
-	private static final long serialVersionUID = -2055209315930136686L;
-
+	private static final long serialVersionUID = -1793564648176417285L;
+	
 	private Long vid;
 	
 	private String no;
 	
-	private String trialno;
-	
 	private Timestamp createTime;
 	
-	private String content;
+	private String comment;
 	
-	private String path;
-	
-	private Long fileSize;
+	private Short status;
 
 	public Long getVid() {
 		return vid;
@@ -38,15 +34,7 @@ public class VersionVO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-
-	public String getTrialno() {
-		return trialno;
-	}
-
-	public void setTrialno(String trialno) {
-		this.trialno = trialno;
-	}
-
+	
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -56,28 +44,20 @@ public class VersionVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	public String getContent() {
-		return content;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public String getPath() {
-		return path;
+	public Short getStatus() {
+		return status;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public Long getFileSize() {
-		return fileSize;
-	}
-
-	public void setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 	
 }

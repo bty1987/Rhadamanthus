@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.NoticeDao;
 import com.fanglin.information.dao.NoticeDepartmentDao;
@@ -46,9 +47,9 @@ public class NoticeServiceImpl implements NoticeService{
     private UserDao userDao;
 
     @Override
-    public void pageNotice(Paging paging, List<Filter> filters, String userId){
+    public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication){
 
-        List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, userId);
+        List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
         List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
         
         for(NoticePO noticePO: noticePOs){
@@ -75,9 +76,9 @@ public class NoticeServiceImpl implements NoticeService{
     }
     
     @Override
-    public void pageNoticeForSeenByType(Paging paging,NoticeVO noticeVO, String userId) throws FLException{
+    public void pageNoticeForSeenByType(Paging paging,NoticeVO noticeVO, Authentication authentication) throws FLException{
     	
-    	UserPO userPO = userDao.queryUserByUserId(userId);
+    	UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
     	
     	if(userPO == null){
     		throw new FLException(190005, "人员不存在");
@@ -90,7 +91,7 @@ public class NoticeServiceImpl implements NoticeService{
     		nids.add(noticeDepartmentPO.getNid());
     	}
     	
-    	List<NoticePO> noticePOs = noticeDao.pageNoticeForSeenByType(paging, nids, noticeVO.getType());
+    	List<NoticePO> noticePOs = noticeDao.pageNoticeForSeenByType(paging, nids, noticeVO.getType(), authentication.getCompany());
     	List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
 
 		for(NoticePO noticePO: noticePOs){
@@ -102,9 +103,9 @@ public class NoticeServiceImpl implements NoticeService{
     
     @Override
     @Transactional(rollbackFor=Exception.class)
-	public int addNotice(NoticeVO noticeVO, String userId) throws FLException {
+	public int addNotice(NoticeVO noticeVO, Authentication authentication) throws FLException {
     	
-    	UserPO userPO = userDao.queryUserByUserId(userId);
+    	UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
     	
     	if(userPO == null){
     		throw new FLException(190005, "人员不存在");
@@ -117,6 +118,7 @@ public class NoticeServiceImpl implements NoticeService{
 		noticePO.setUser(userPO);
 		
 		noticePO.setPublishTime(DateUtil.current("yyyy-MM-dd"));
+		noticePO.setCompany(authentication.getCompany());
 		
 		noticeDao.save(noticePO);	
 		

@@ -27,7 +27,7 @@ public class DecorationHolonomyAction extends BaseListAction {
 	@Action(value = "pageDecorationHolonomy", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationHolonomy() throws FLException{
 
-		decorationHolonomyService.pageDecorationHolonomy(getPaging(), getFilters());
+		decorationHolonomyService.pageDecorationHolonomy(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}

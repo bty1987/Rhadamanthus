@@ -13,7 +13,7 @@ public interface ApprovalManifestDBService {
 	
 	public List<ApprovalManifestDBItemVO> queryApprovalManifestDBItem(ApprovalVO approvalVO) throws FLException;
 	
-    public int submitApprovalForManifestDB(ApprovalVO approvalVO,ApprovalManifestDBVO approvalManifestDBVO,List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs,String userId) throws FLException;
+    public int submitApprovalForManifestDB(ApprovalVO approvalVO,ApprovalManifestDBVO approvalManifestDBVO,List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs,String userId, int company) throws FLException;
 	
 	public int approvalManifestDB(ApprovalPO approvalPO) throws FLException;
 	

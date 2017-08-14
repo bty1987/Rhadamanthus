@@ -39,17 +39,17 @@ public class ApproveUserAction extends BaseListAction {
 	private List<KeyValueVO> autoFillKeyValue;
 	
 	@Action(value = "pageApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPageapproveUser(){
+	public String queryPageapproveUser() throws FLException{
 		
-		approveUserService.pageApproveUser(getPaging(), getFilters());
+		approveUserService.pageApproveUser(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryApproveUserForNameByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryApproveUserForNameByType(){
+	public String queryApproveUserForNameByType() throws FLException{
 		
-		List<ApproveUserVO> approveUserVOs = approveUserService.queryApproveUserForNameByType(user, approveUser);
+		List<ApproveUserVO> approveUserVOs = approveUserService.queryApproveUserForNameByType(user, approveUser,queryCompany());
 		
 		for(ApproveUserVO approveUserVO : approveUserVOs){
 			KeyValueVO keyValueVO = new KeyValueVO();

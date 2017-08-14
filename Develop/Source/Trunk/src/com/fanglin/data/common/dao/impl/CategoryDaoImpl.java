@@ -43,6 +43,7 @@ public class CategoryDaoImpl extends DaoImpl<CategoryPO> implements CategoryDao 
 		return query.list();
 	}
 
+
 	@Override
 	public CategoryPO queryCategoryByCId(long cId) {
 		return (CategoryPO) session().createCriteria(CategoryPO.class).add(Restrictions.eq(CategoryPO.COLUMN_CID_STR, cId)).uniqueResult();

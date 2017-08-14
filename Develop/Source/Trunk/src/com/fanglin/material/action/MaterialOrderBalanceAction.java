@@ -51,7 +51,7 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 	@Action(value="pageMaterialSubOrderBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialSubOrderBalance() throws FLException{
 		
-		materialSubOrderBalanceService.pageMaterialSubOrderBalance(getPaging(), getFilters());
+		materialSubOrderBalanceService.pageMaterialSubOrderBalance(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -59,7 +59,7 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 	@Action(value="pageMaterialSubOrderBalanceForVender", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialSubOrderBalanceForVender() throws FLException{
 		
-		materialSubOrderBalanceService.pageMaterialSubOrderBalanceForVender(getPaging(), getFilters(), queryUserId());
+		materialSubOrderBalanceService.pageMaterialSubOrderBalanceForVender(getPaging(), getFilters(), queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -67,7 +67,7 @@ public class MaterialOrderBalanceAction extends BaseListAction{
 	@Action(value="pageMaterialSubOrderForPreBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialSubOrderForPreBalance() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderForPreBalance(getPaging(), getFilters(), queryUserId());
+		materialSubOrderService.pageMaterialSubOrderForPreBalance(getPaging(), getFilters(), queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

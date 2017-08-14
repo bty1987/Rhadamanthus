@@ -116,7 +116,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		BeanUtil.copyProperties(goodsDao.get(salesItemVO.getGoods().getGid()), salesItemVO.getGoods(),Arrays.asList("assisType"));
 		
 		if(!salesPO.getBrand().equals(salesItemVO.getGoods().getBrand())){
-			throw new FLException(111, "品牌不一致");
+			throw new FLException(260036, "销售项品牌不同"); // 品牌不一致 没有错误code码
 		}
 		
 		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
@@ -194,6 +194,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 		}
 
 		salesPO.setTotal(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()));
+		
+		salesDao.update(salesPO);
 		salesItemDao.delete(salesItemPO);
 		
 		return 0;

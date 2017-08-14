@@ -46,7 +46,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForGeneral", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForGeneral() throws FLException{
 
-		decorationOrderService.pageDecorationOrderForGeneral(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForGeneral(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -54,7 +54,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForCommon", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForCommon() throws FLException{
 
-		decorationOrderService.pageDecorationOrderForCommon(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForCommon(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -62,7 +62,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForDesigner", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForDesigner() throws FLException{
 		
-		decorationOrderService.pageDecorationOrderForDesigner(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForDesigner(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -70,7 +70,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForSalesman", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForSalesman() throws FLException{
 
-		decorationOrderService.pageDecorationOrderForSalesman(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForSalesman(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -78,7 +78,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForMaterial", results = { @Result(name = "success", type = "json", params = {	"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderByMaterial() throws FLException{
 		
-		decorationOrderService.pageDecorationOrderForMaterial(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForMaterial(getPaging(), getFilters(), authentication());
 		
 		return SUCCESS;
 	}
@@ -86,7 +86,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForBelong", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForBelong() throws FLException{
 
-		decorationOrderService.pageDecorationOrderForBelong(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForBelong(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -94,7 +94,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "pageDecorationOrderForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForAdvance() throws FLException{
 
-		decorationOrderService.pageDecorationOrderForAdvance(getPaging(), getFilters(), queryUserId());
+		decorationOrderService.pageDecorationOrderForAdvance(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -144,7 +144,7 @@ public class DecorationOrderAction extends BaseListAction {
 		
 		decorationOrder.setCreateUserId(queryUserId());
 		
-		decorationOrderService.createDecorationOrder(decorationOrder);
+		decorationOrderService.createDecorationOrder(decorationOrder, queryCompany());
 		
 		return SUCCESS;
 	}

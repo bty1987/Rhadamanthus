@@ -79,7 +79,7 @@ jQuery(function($) {
     });
 
     function resetPassword(userId, userName){
-        bootbox.confirm("确定要重置（"+userName+"）的密码吗？",function(result){
+        bootbox.confirm("确定要重置("+userName+")的密码吗?",function(result){
             if(result == true){
                 com.post(api.personel.resetPassword, {'user.userId': userId},function(res){
 

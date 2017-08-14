@@ -14,15 +14,15 @@ import com.fanglin.utils.Paging;
 @Repository("companyDao")
 public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao{
 
-	  public CompanyDaoImpl(){
-	        super(CompanyPO.class);
-	    }
+	public CompanyDaoImpl(){
+		super(CompanyPO.class);
+	}
 	  
 	@Override
 	public List<CompanyPO> pageCompany(Paging paging, List<Filter> filters) {
 
         PagingQuery<CompanyPO> query = pagingQuery(paging, CompanyPO.class);
-
+        
         if(filters != null){
  			for(Filter filter: filters){
 				String field = filter.getField();

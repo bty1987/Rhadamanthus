@@ -45,7 +45,7 @@ public class ApprovalManifestDBAction extends BaseListAction{
 	@Action(value = "submitApprovalForManifestDB", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String submitApprovalForManifestDB() throws FLException {
 
-		approvalManifestDBService.submitApprovalForManifestDB(approval,approvalManifestDB, approvalManifestDBItems, queryUserId());
+		approvalManifestDBService.submitApprovalForManifestDB(approval,approvalManifestDB, approvalManifestDBItems, queryUserId(), queryCompany());
 
 		return SUCCESS;
 

@@ -29,9 +29,10 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public DrawLineGroupPO queryDrawLineGroupByName(String groupName) {
-		return (DrawLineGroupPO) createCriteria(DrawLineGroupPO.class).add(Restrictions.eq(DrawLineGroupPO.COLUMN_NAME_STR , groupName)).uniqueResult();
+	public List<DrawLineGroupPO> queryDrawLineGroupByName(String groupName) {
+		return createCriteria(DrawLineGroupPO.class).add(Restrictions.eq(DrawLineGroupPO.COLUMN_NAME_STR , groupName)).list();
 	}
 	
 	@Override
@@ -41,8 +42,8 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DrawLineGroupPO> queryDrawLineGroup() {
-		return (List<DrawLineGroupPO>)createCriteria(DrawLineGroupPO.class).add(Restrictions.not(Restrictions.eq("status", DrawLineGroupPO.STATUS_DISABLE_INT))).list();
+	public List<DrawLineGroupPO> queryDrawLineGroup(int company) {
+		return (List<DrawLineGroupPO>)createCriteria(DrawLineGroupPO.class).add(Restrictions.eq("status", DrawLineGroupPO.STATUS_ENABLE_INT)).add(Restrictions.eq(DrawLineGroupPO.COLUMN_COMPANY_STR,company)).list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters) {
@@ -51,7 +52,10 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 				if(StringUtils.isNotEmpty(filter.getData())){				
 					if("name".equals(filter.getField())){
 						query.add(query.getCriterion("name",(filter.getData()), filter.getOp()));
-					}			
+					}	
+					if ("company".equals(filter.getField())){
+						query.add(query.getCriterion("company",Integer.valueOf(filter.getData()), filter.getOp()));
+					}
 				}				
 			}				
 		}	

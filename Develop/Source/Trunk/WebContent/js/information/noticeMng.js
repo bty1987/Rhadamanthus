@@ -1,18 +1,14 @@
 
 $(function(){
+    var noticeType = {};
+    var  noticePriority={};
+    var noticeIsPublic={};
     var notice = {
-        //定义SaveBtn获得noticeMng.html页的#saveBtn点击事件
         saveBtn: $("#saveBtn").on("click", saveData),
-        //定义cancelBtn获得noticeMng.html页的#cancelBtn取消按钮
         cancelBtn: $("#cancelBtn"),
-      /*  modals:$("#managements").on("show.bs.modal",function(){
-            modal("show");
-        }),*/
-        //弹出模态框
         modal: $("#noticeModal").on("show.bs.modal", function(a) {
             com.clearValidator()
         }),
-        //获取noticeMng.html的ID属性
         items: {
             theme : $("#theme"),
             typeSel : $("#typeSel"),
@@ -27,6 +23,22 @@ $(function(){
         repeatFlg: !1
     };
 
+    com.post(api.ds.noticeInfo, {}, function(res){
+        $("#prioritySel").bindData(res.noticePriority, "key", "value");
+        $("#typeSel").bindData(res.noticeType, "key", "value");
+        $.each(res.noticeType,function (i,v) {
+            noticeType[v.key] = v.value;//类型
+        });
+        $.each(res.noticePriority,function (i,va) {
+            noticePriority[va.key] = va.value;//类型
+        });
+        $.each(res.noticeIsPublic,function (i,val) {
+            noticeIsPublic[val.key] = val.value;//类型
+        });
+    },null,false);
+
+
+
     bindUploadfiy();
 //Datepicker是绑在一个标准的形式输入字段
     $(".date-picker").datepicker({autoclose : !0}).on("show", function() {
@@ -38,7 +50,6 @@ $(function(){
     });
 
     var displayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -79,14 +90,14 @@ $(function(){
              }else{
                  status="无效";
              }
+
             var propertyArr = [
-                ["类型:", v.type, "grey"],
-                ["优先级:", v.priority, "green"],
-                ["发布部门:", v.dept.deptName, "grey"],
+                ["类型:", noticeType[v.type], "grey"],
+                ["优先级:", noticePriority[v.priority], "green"],
                 ["发布人:", v.user.currentName, "grey"],
                 ["开始时间:", v.startTime, "grey"],
                 ["结束时间:", v.endTime, "grey"],
-                ["公开:", v.isPublic, "blue"],
+                ["公开:", noticeIsPublic[v.isPublic], "blue"],
                 ["内容:", v.contentsText, "grey"],
                 ["状态:", status, "blue"],
 
@@ -102,20 +113,18 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
 
             });
-            //undefined是判断是不是未定义的，如果v.filePath没有未定义 并且v.filePath 不等于空
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
                 //插入btnDown
             	$divBtnWrap.append($btnDown);
         	}
-
             if(starts <= myDate && end >=myDate){
-                if(v.isPublic=="否") {
-                $divBtnWrap.append($management).append($btnEdit).append($btnDel).appendTo($h3);
-                $liLine.append($h3).append($ulProperty);
+                if(v.isPublic == 1) {
+                    $divBtnWrap.append($management).append($btnEdit).append($btnDel).appendTo($h3);
+                    $liLine.append($h3).append($ulProperty);
                 }else{
-                $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-                $liLine.append($h3).append($ulProperty);
-            }
+                    $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+                    $liLine.append($h3).append($ulProperty);
+                }
             }else{
                     $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
                     $liLine.append($h3).append($ulProperty);
@@ -128,166 +137,45 @@ $(function(){
             $btnEdit.click(function(){
                 notice.editFlg = !0;
                 var a = v;
-                void 0 != a && (notice.items.noticeId = a.noticeId, notice.items.userId = a.user.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority), notice.items.deptSel = a.dept.deptId, notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", com.isOrNotType[a.isPublic]), notice.items.contents.html(a.contents), notice.modal.modal("show"))
-            });
+                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, notice.items.userId = a.user.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority),  notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", a.isPublic == 0), notice.items.contents.html(a.contents), notice.modal.modal("show"))});
 
             $management.unbind().bind('click',function(){
-                $("#tree3").removeData("tree");
-                $("#tree3").unbind('click');
-
-                $('#managements').modal('show');
-                var deptList =null;
-                com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
-                    deptList = res.deptList;
-
-                }, null, false);
-
-                var deptObj = {}, didList = [];
-
-                //获取所有叶子节点
-                $.each(deptList, function(i, v){
-
-                    didList.push(v.did);
-
+                     showDepaermentModal()
+                   $('#moduleModal').modal('show');
+                     var noticedids=[];
+                      com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
+                          $.each(res.noticeDepartments,function(i,val){
+                                 noticedids[i]=(val.did);
+                                 $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
+                         })
+                      });
+                      $("#saveCompanyBtn").unbind().bind('click',function(){
+                        $('#moduleModal').modal("hide");
+                          var list = $('input[name="module"]:checked', $('#moduleModal'));
+                          var params = {"notice.nid": v.nid};
+                          list.length && (
+                              $.each(list, function(i, v){
+                                  var $v = $(this).val();
+                                  params["dids" + "[" + i + "]"] = $v;
+                                  if($v == -1 || $v == '全部') return false;
+                              })
+                          );
+                          console.log(params)
+                         com.post(api.information.updateNoticeDepartment, params,function(res){
+                             console.log("更新成功"+res)
+                            },null,false)
                 });
+            });
 
-                $.each(deptList, function(i,v){
-                    if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
-                        didList.splice(didList.indexOf(v.fatherDept.did),1);
-
-                    }
-                });
-                //获取根节点
-                $.each(deptList, function (i, v) {
-                    if (v.fatherDept) return true;
-
-                    if (!deptObj[v.type]) {
-                        deptObj[v.type] = {
-                            name: v.type,
-                            type: 'folder',
-                            children: {}
+                $btnDel.click(function(){
+                    bootbox.confirm("确定删除吗?", function(result) {
+                        if(result) {
+                            removeRow(v.nid);
                         }
-                    }
-
-                    deptObj[v.type]['children'][v.did] = {
-
-                        name: v.deptName,
-                        type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-                        did: v.did,
-                        deptid: v.deptId
-
-                    };
-
-                });
-
-                var getDeptByDid = function(did){
-                    var depts = {};
-
-                    $.each(deptList, function(i, v){
-                        if(!v.fatherDept) return true;
-
-                        if(v.fatherDept.did == did){
-                            depts[v.did] = {
-                                name: v.deptName,
-                                type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-                                did : v.did,
-                                deptid : v.deptId
-                            }
-                        }
-
                     });
-
-                    return depts;
-
-                };
-
-
-                $('#tree3').ace_tree({
-                    dataSource: {
-                        data : function(options, callback) {
-                            var checkbox=$('<input type="checkbox" />');
-                            var treeclass=$("#treecheck");
-                            var $data = null;
-
-
-                            if(!("name" in options) && !("type" in options)){
-                                $data = deptObj;//the root tree
-                                callback({ data: $data });
-                                return;
-                            }
-                            else if("type" in options && options.type == "folder") {
-
-                                if("children" in options)
-                                    $data = options.children;
-                                else {
-                                    $data = getDeptByDid(options.did);
-
-                                }
-
-                            }
-
-                            treeclass.appendTo(checkbox);
-                            if($data != null)
-                                setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
-
-                        }
-
-                    },
-                    loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-                    'open-icon' : 'icon-minus',
-                    'close-icon' : 'icon-plus',
-                    'selectable' : true,
-                    'selected-icon' : null,
-                    'unselected-icon' : null,
-                    'multiSelect': true,
-                    treeItemSelect:true,
-                    cacheItems: false,
-
-                });
-                $('#managements').modal('show');
-
-                $("#manageBtn").unbind().bind('click',function(){
-
-                    $('#managements').modal("hide");
-
-                    var items=$('#tree3').tree('selectedItems');
-
-                    var dids={
-
-                    }
-                    var option={
-
-                        "notice.noticeId": v.noticeId
-                    };
-
-                    //循环将选中的部门did放到option里
-                    $.each(items,function(i,value){
-
-                        dids["dids["+i+"]"]= value.did;
-
-                    })
-                    if($.isEmptyObject(dids)){
-                        com.showAlert(com.error,"部门不能为空");
-                        return false;
-                    }
-                        com.post(api.information.updateNoticeDepartments, $.extend(option,dids));
-                    $("#tree3").unbind('click');
-                    $("#tree3").removeData("tree");
-
                 });
 
-            });
-
-            $btnDel.click(function(){
-                bootbox.confirm("确定删除吗？", function(result) {
-                    if(result) {
-                        removeRow(v.noticeId);
-                        console.log(v.noticeId);
-                    }
-                });
-            });
-
-            return $liLine;
+                return $liLine;
         };
 
         return {
@@ -303,9 +191,7 @@ $(function(){
 
     var _condArr = ['theme', 'dateRange', 'deptId'];
     var NoticeMngSeacher = new Searcher();
-        //将条件返回condList里
     NoticeMngSeacher.init( _condArr, "condList", api.information.pageNotice, function(list){
-        //将结果返回到页面的div里的id
         displayFunc.init('resultList', list);
     }, "pagenation", "noticeMngSeacherPostData", null, false, null, function(){
 
@@ -319,36 +205,40 @@ $(function(){
             notice.items.contents.html("");
             notice.modal.modal("show")
         });
-
-
         return [$adda];
     });
 
     function saveData() {
-        if (!com.validate() && !notice.repeatFlg) if ("" == notice.items.contents.text().trim()) com.showTips(notice.items.contents, "内容不能为空.");
-        else {
-            var a, b = {
-                "notice.theme": notice.items.theme.val(),
-                "notice.type": notice.items.typeSel.val(),
-                "notice.priority": notice.items.prioritySel.val(),
-                "notice.user.userId": notice.items.userId,
-                "notice.startTime": notice.items.startTime.val(),
-                "notice.endTime": notice.items.endTime.val(),
-                "notice.isPublic": com.isOrNotType[notice.items.isPublic.prop("checked")],
-                "notice.contents": notice.items.contents.html(),
-                "notice.contentsText": notice.items.contents.text(),
-                "notice.filePath": $("#filePath").val()
-            };
-            notice.editFlg ? (a = api.information.updateNotice, b["notice.noticeId"] = notice.items.noticeId, b["notice.dept.deptId"] = notice.items.deptSel) : a = api.information.addNotice;
-            com.post(a, b, successCallback);
-            notice.modal.modal("hide")
+        if (!com.validate() && !notice.repeatFlg){
+            if ("" == notice.items.contents.text().trim()){
+                com.showTips(notice.items.contents, "内容不能为空.");
+            }else if(notice.items.startTime.val() > notice.items.endTime.val()){
+                bootbox.alert("结束时间不能小于开始时间");
+
+                }else{
+                    var a, b = {
+                        "notice.nid":notice.items.nid,
+                        "notice.theme": notice.items.theme.val(),
+                        "notice.type": notice.items.typeSel.val(),
+                        "notice.priority": notice.items.prioritySel.val(),
+                        "notice.user.userId": notice.items.userId,
+                        "notice.startTime": notice.items.startTime.val(),
+                        "notice.endTime": notice.items.endTime.val(),
+                        "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
+                        "notice.contents": notice.items.contents.html(),
+                        "notice.contentsText": notice.items.contents.text(),
+                        "notice.filePath": $("#filePath").val()
+                    };
+                    notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
+                    com.post(a, b, successCallback);
+                    notice.modal.modal("hide")
+                }
         }
     }
 
     function removeRow(id) {
-        com.post(api.information.deleteNotice, {"notice.noticeId" : id}, successCallback);
+        com.post(api.information.deleteNotice, {"notice.nid" : id}, successCallback);
     }
-
     function successCallback() {
         com.showAlert(com.info, "操作成功");
         NoticeMngSeacher.doSearch();
@@ -477,4 +367,124 @@ $(function(){
     }
 
 
+    function showDepaermentModal() {
+        $wrap = $('#moduleModal').find('.modal-body').empty();
+        com.post(api.department.queryDepartment, {"dept.type": "all"}, function (res) {
+            var treeData = res.deptList;
+            if (!treeData || !treeData.length) {
+                return;
+            }
+            var menuArr = {
+                level1 : [],
+                level2 : [],
+                level3 : [],
+            };
+            var menuObj = {
+                level1:{},
+                level2 : {},
+                level3 : {},
+            };
+            var $tree = $('<ol class="dd-list"></ol>');
+            var arr=[];
+            $wrap.append($tree);
+
+            menuArr.level1=[{did: -1, deptName: "全部"}];
+
+            $.each(treeData, function(i, v){
+                arr.push(v.did);
+            });
+            $.each(treeData,function(i,v){
+                if(v.fatherDept == null){
+                    menuArr.level2.push(v)
+                }
+            })
+
+            $.each(menuArr.level2,function(i,v){
+                $.each(treeData,function(index,value){
+                    if(value.fatherDept != null) {
+                        if (value.fatherDept.deptId == v.deptId) {
+                            menuArr.level3.push(value)
+                        }
+                    }
+                })
+            })
+
+            if (menuArr.level1.length) {
+                $.each(menuArr.level1, function (i, v) {
+                    var $li = $('<li></li>').addClass('dd-item');
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
+                    var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did);
+                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+                    var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+                    $indexCheck.append($label).appendTo($div);
+                    $li.append($div).appendTo($tree);
+                    menuObj.level1[v.did] = $li;
+                });
+            }
+
+            if (menuArr.level2.length) {
+                $.each(menuArr.level2, function (i, v) {
+                    var $li = $('<li></li>').addClass('dd-item');
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
+                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+                    var $label = $('<label></label>').append('<span class="lbl"></span>');
+                    $indexCheck.append($label).appendTo($div);
+                    menuObj.level2[v.did] = $li;
+                    $li.append($div);
+
+                    var $parent = menuObj.level1[-1]
+                    $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+                    if (!$parent.children('button').length) {
+                        var $title = $parent.children('div');
+                        $('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
+                        $('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+                    }
+
+                    var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
+                    $li.appendTo($pol);
+                });
+            }
+
+            if (menuArr.level3.length) {
+                $.each(menuArr.level3, function (i, v) {
+                    if(v != null) {
+                        var $li = $('<li></li>').addClass('dd-item');
+                        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
+                        var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did)
+                        var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+                        var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+                        $indexCheck.append($label).appendTo($div);
+                        menuObj.level3[v.did] = $li;
+                        $li.append($div);
+
+                        var $parent = menuObj.level2[v.fatherDept.did];
+                        $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+                        if (!$parent.children('button').length) {
+                            var $title = $parent.children('div');
+                            $('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
+                            $('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+                        }
+
+                        var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
+                        $li.appendTo($pol);
+                    }
+                });
+            }
+            $('button[data-action="collapse"]').click(function () {
+                var $this = $(this);
+                $this.siblings('ol').addClass('hide');
+                $this.parent().find('.plus').toggleClass('hide');
+                $this.toggleClass('hide');
+            });
+
+            $('button[data-action="expand"]').click(function () {
+                var $this = $(this);
+                $this.siblings('ol').removeClass('hide');
+                $this.parent().find('.minus').toggleClass('hide');
+                $this.toggleClass('hide');
+            });
+
+        }, null, false);
+
+    }
 });

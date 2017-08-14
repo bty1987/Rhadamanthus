@@ -111,7 +111,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
     //	提交销售退货审批
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForSalesRefund(ApprovalVO approvalVO,ApprovalSalesRefundVO approvalSalesRefundVO,List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs,String userId) throws FLException {
+	public int submitApprovalForSalesRefund(ApprovalVO approvalVO,ApprovalSalesRefundVO approvalSalesRefundVO,List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs,String userId,int company) throws FLException {
 
 		long sid = approvalSalesRefundVO.getSid();
 		
@@ -147,6 +147,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),refundType));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

@@ -11,10 +11,10 @@ public interface DrawLineGroupDao extends Dao<DrawLineGroupPO> {
 	
 	public List<DrawLineGroupPO> pageDrawLineGroup(Paging paging, List<Filter> filters);
 	
-	public DrawLineGroupPO queryDrawLineGroupByName(String groupName) ;
+	public List<DrawLineGroupPO> queryDrawLineGroupByName(String groupName) ;
 	
 	public DrawLineGroupPO queryDrawLineGroupById(long gid) ;
 	
-	public List<DrawLineGroupPO> queryDrawLineGroup();
+	public List<DrawLineGroupPO> queryDrawLineGroup(int company);
 	
 }

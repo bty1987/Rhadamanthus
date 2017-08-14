@@ -78,12 +78,6 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 					
-					authentication.setUpdateTime((new Date()).getTime());
-					String authenticationString = authentication.getAuthenticationStr();
-					String authenticationEncodeString = AESHelper.encryptToString(authenticationString, SystemConfig.getString("encryptKey"));
-					
-					CookieUtil.addCookie((HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE), Constant.COOKIE_AUTHENTICATION, authenticationEncodeString);
-					
 					if(operationService.checkOperationByUserId(authentication.getUserId(), actionName, authentication.getRollcall())){
 						invocation.invoke();
 					}else{

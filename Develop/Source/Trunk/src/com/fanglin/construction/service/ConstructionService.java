@@ -21,13 +21,13 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionService {
 	
-	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters);
+	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters, Integer companyId);
 	
-	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
+	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO, Integer companyId);
 
 	public void pageDecorationOrderForQualityByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
 	
-	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters);
+	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters, Integer companyId);
 	
 	public ConstructionVO queryConstructionById(int cid);
 	
@@ -46,7 +46,5 @@ public interface ConstructionService {
 	public int checkSecondPayment(ConstructionVO constructionVO) throws FLException;
 
 	public int checkFinalyPayment(ConstructionVO constructionVO, String userId) throws FLException;
-
-	public void nextConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
 
 }

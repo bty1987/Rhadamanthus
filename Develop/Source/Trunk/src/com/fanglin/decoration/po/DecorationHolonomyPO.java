@@ -24,6 +24,8 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	
 	public static final String COLUMN_DESIGNER_STR = "designer.currentName";
 
+	public static final String COLUMN_COMPANY_STR = "decorationOrder.company";
+	
 	public static final float MONEY_SERVICEPAIDUP_FLOAT = 0f;
 	
 	public static final short STATUS_INIT_SHORT = 0;

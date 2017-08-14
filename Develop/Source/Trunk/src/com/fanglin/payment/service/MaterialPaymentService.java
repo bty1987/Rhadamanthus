@@ -32,8 +32,6 @@ public interface MaterialPaymentService {
 	
 	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters);
 	
-	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters);
-	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByMsoId(MaterialPaymentVO materialPaymentVO);

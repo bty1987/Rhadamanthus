@@ -372,9 +372,11 @@ jQuery(function($) {
 
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
-            $btnPrint.click(function(){
-            	printPayment(v.mrId, v.orderId);
-            });
+			$btnPrint.click(function(){
+				com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + v.mrId + "&decorationOrder.orderId=" + v.orderId + "&time=" + params.loginTime,function () {
+					parent.layer.getFrameIndex(window.name);
+				})
+			});
 
             return $liLine;
         };
@@ -639,11 +641,6 @@ jQuery(function($) {
 		materialPayment.editFlg =  false;
 	}
 
-	function printPayment(mrId, orderId){
-		var url = api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + mrId + "&decorationOrder.orderId=" + orderId + "&time=" + params.loginTime;
-		window.open(url);
-    }
-
 	function initRefundModal(){
 		$("#refundBankCardDiv").addClass("hide");
 		$("#refundBankCard").removeAttr("checked","checked");
@@ -899,8 +896,9 @@ jQuery(function($) {
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.materialPaymentReceiptIndex.url + mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime;
-					window.open(url);
+					com.popup("专用收款收据__订单编号：" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					})
 				}
 			});
 		});
@@ -980,8 +978,9 @@ jQuery(function($) {
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + res.materialPayment.mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime;;
-					window.open(url);
+					com.popup("专用收款收据__订单编号：" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + res.materialPayment.mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					});
 				}
 			});
 

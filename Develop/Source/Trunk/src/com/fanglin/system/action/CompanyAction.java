@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.vo.CompanyVO;
 
@@ -26,10 +27,9 @@ public class CompanyAction extends BaseListAction{
 	private CompanyVO company;
 	
 	private List<CompanyVO> companys;
-
 	
 	@Action(value = "pageCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCompany(){
+	public String pageCompany() throws FLException{
 		
 		companyService.pageCompany(getPaging(), getFilters());
 		
@@ -37,9 +37,17 @@ public class CompanyAction extends BaseListAction{
 	}
 	
 	@Action(value = "queryCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCompanys(){
+	public String queryCompanys() throws FLException{
 		
-		companys=companyService.queryCompany();
+		companys = companyService.queryCompany();
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryCompanyByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCompanyByCid() throws FLException{
+		
+		company = companyService.queryCompanyByCid(company);
 		
 		return SUCCESS;
 	}

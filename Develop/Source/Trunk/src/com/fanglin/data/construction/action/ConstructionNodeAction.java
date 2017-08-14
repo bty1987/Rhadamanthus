@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.construction.service.ConstructionNodeService;
 import com.fanglin.data.construction.vo.ConstructionNodeCompanyVO;
 import com.fanglin.data.construction.vo.ConstructionNodeVO;
@@ -49,7 +50,7 @@ public class ConstructionNodeAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryConstructionNodeByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionNodeByCid(){
+	public String queryConstructionNodeByCid() throws FLException{
 		
 		constructionNodes = constructionNodeService.queryConstructionNodeByCid(constructionNodeCompany);
 		

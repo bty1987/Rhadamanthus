@@ -26,4 +26,12 @@ public interface DepartmentService {
 	
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company);
 
+	public void addDepartment(DepartmentVO departmentVO, String userId) throws FLException;
+
+	public void updateDepartment(DepartmentVO departmentVO) throws FLException;
+
+	public void updateDepartmentForStatus(DepartmentVO departmentVO) throws FLException;
+
+	public void deleteDepartment(DepartmentVO departmentVO) throws FLException;
+
 }
