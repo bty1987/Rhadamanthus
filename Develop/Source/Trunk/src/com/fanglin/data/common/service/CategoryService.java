@@ -27,7 +27,7 @@ public interface CategoryService {
 	
 	public CategoryVO queryCategoryByCategoryId(CategoryVO categoryVO);
 	
-	public int addCategory(CategoryVO categoryVO);
+	public int addCategory(CategoryVO categoryVO,int company);
 	
 	public int updateCategory(CategoryVO categoryVO);
 	

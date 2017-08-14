@@ -22,6 +22,7 @@ public class CategoryPO implements java.io.Serializable {
 	private String categoryId;
 	
 	private String categoryName;
+	
 
 	public CategoryPO() {
 		super();
@@ -60,5 +61,7 @@ public class CategoryPO implements java.io.Serializable {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	
+	
 
 }

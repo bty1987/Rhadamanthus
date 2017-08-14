@@ -392,7 +392,7 @@ $(function(){
         'fileSizeLimit':'2MB', // 上传文件的大小限制
         'queueSizeLimit' : 1, // 上传数量
         'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-        	console.log(data);
+        
         	var dateObj = eval("("+data+")");
         }
     });

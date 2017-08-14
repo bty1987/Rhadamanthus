@@ -43,7 +43,7 @@ public class FormatServiceImpl implements FormatService{
 	@Override
 	public List<FormatVO> queryFormatForEnableByGid(FormatVO formatVO) {
 		
-		List<FormatPO> formatPOs = formatDao.queryFormatByGid(formatVO.getGid());
+		List<FormatPO> formatPOs = formatDao.queryFormatForEnableByGid(formatVO.getGid());
 		List<FormatVO> formatVOs = new ArrayList<FormatVO>();
 		
 		for(FormatPO formatPO: formatPOs){
@@ -51,8 +51,6 @@ public class FormatServiceImpl implements FormatService{
 			formatVO = new FormatVO();
 			
 			BeanUtil.copyProperties(formatPO, formatVO);
-			
-			formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);
 			
 			formatVOs.add(formatVO);
 		}
@@ -73,6 +71,7 @@ public class FormatServiceImpl implements FormatService{
 		formatPO = new FormatPO();
 		
 		BeanUtil.copyProperties(formatVO, formatPO);
+		
 		formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);
 		
 		formatDao.save(formatPO);

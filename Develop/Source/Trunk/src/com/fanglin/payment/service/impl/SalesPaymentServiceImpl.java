@@ -284,7 +284,30 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	    if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), salesPaymentVO.getType()) > 0) {
 	      throw new FLException(150033, "款项类型已存在");
 	    }
+	    
+	    if(salesPaymentVO.getType() == SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT){
+	    	
+	    	List<SalesPaymentPO> salesPayments = salesPaymentDao.querySalesPaymentsBySid(salesPaymentVO.getSid());
 
+	    	if(salesPayments.size() == 1){
+	    		SalesPaymentPO salesPayment = salesPayments.get(0);
+				
+				if(salesPayment.getStatus() == SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+					throw new FLException(150029, "款项不可提交");
+				}
+			}
+	    }
+	    
+	    
+	    if(salesPaymentVO.getType() == SalesPaymentPO.COLUMN_DEPOSITTYPE_INT){
+	    	
+	    	if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSid(), SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT) > 0){
+	  	      throw new FLException(150033, "补款已提交");
+	  	    }
+
+	    }
+	    
+	    
 	    SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
 	    BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList( "sales", "collecter", "confirmer" ));
@@ -423,24 +446,29 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesDao.update(salesPO);
 		}
 		
-		String paymentType = "";
 		
-		if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
-			paymentType = "合同预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
-			paymentType = "工程预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
-			paymentType = "主材预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
-			paymentType = "正林预付款";
+		if(salesPaymentVO.getAdvanceType() != null){
+			
+			String paymentType = "";
+			
+			if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
+				paymentType = "合同预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
+				paymentType = "工程预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
+				paymentType = "主材预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
+				paymentType = "正林预付款";
+			}
+			
+			String api = "payPayment.do";
+			String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
+			String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
+			
+			assassinService.proxy("platform", api, params, content, userPO);
+
 		}
 		
-		String api = "payPayment.do";
-		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
-		String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
-		
-		assassinService.proxy("platform", api, params, content, userPO);
-
 		return 0;
 	}
 	
@@ -563,23 +591,27 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			} 
 		}
 		
-		String paymentType = "";
-		
-		if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
-			paymentType = "合同预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
-			paymentType = "工程预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
-			paymentType = "主材预付款";
-		}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
-			paymentType = "正林预付款";
+		if(salesPaymentVO.getAdvanceType() != null){
+			
+			String paymentType = "";
+			
+			if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT){
+				paymentType = "合同预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT){
+				paymentType = "工程预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT){
+				paymentType = "主材预付款";
+			}else if(salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT){
+				paymentType = "正林预付款";
+			}
+			
+			String api = "payPayment.do";
+			String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
+			String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
+			
+			assassinService.proxy("platform", api, params, content, userPO);
+
 		}
-		
-		String api = "payPayment.do";
-		String params = String.format("payment.orderId=%s&payment.paymentType=%s&payment.des=%s&payment.cash=%s", sales.getOrderId(), paymentType, "InventoryPayPayment", salesPaymentVO.getAdvance());
-		String content = String.format("订单号:%s,预付款类型:%s,金额:%s", sales.getOrderId(), paymentType, salesPaymentVO.getAdvance());
-		
-		assassinService.proxy("platform", api, params, content, userPO);
 		
 		return 0;
 	}
@@ -739,6 +771,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException{
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
+		
+		if (salesPayment == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
 
 		if(salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
 			throw new FLException(150019, "款项不能撤销");

@@ -87,8 +87,6 @@ jQuery(function($) {
 			
 			materialSubOrderDetail.refundType = 6;
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
-
-			console.log(refundMaterialSubOrderItemData);
 		}),
 		//倒单按钮
 		daodanBtn: $('#daodanBtn').on("click", function(){

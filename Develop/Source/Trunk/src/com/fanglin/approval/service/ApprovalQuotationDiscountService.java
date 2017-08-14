@@ -18,7 +18,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalQuotationDiscountService {
 	
-	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level) throws FLException;
+	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level,int company) throws FLException;
 	
 	public int approvalForQuotationDiscount(ApprovalPO approvalPO) throws FLException;
 

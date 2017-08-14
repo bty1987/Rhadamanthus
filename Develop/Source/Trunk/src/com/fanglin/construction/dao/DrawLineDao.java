@@ -9,26 +9,26 @@
  * @Describing	: 
  */
 
-package com.fanglin.drawline.dao;
+package com.fanglin.construction.dao;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.drawline.po.DrawLinePO;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineDao extends Dao<DrawLinePO> {
 	
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters);
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, Integer companyId);
 	
-	public List<DrawLinePO> queryDrawLine(List<Filter> filters);
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters, Integer companyId);
 
-	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime);
+	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime, Integer companyId);
 	
 	public List<DrawLinePO> queryDrawLineByOrderId(String orderId);
 	
-	public List<DrawLinePO> queryDrawLineByGroupATime(String group, Timestamp startTime, Timestamp endTime);
+	public List<DrawLinePO> queryDrawLineByGroupATime(long gid, Timestamp startTime, Timestamp endTime, Integer companyId);
 	
 }

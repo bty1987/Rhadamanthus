@@ -44,9 +44,9 @@ public class BrandServiceImpl implements BrandService {
 	private CountingService countingService;
 
 	@Override
-	public void pageBrand(Paging paging, List<Filter> filters) {
+	public void pageBrand(Paging paging, List<Filter> filters,int company) {
 		
-		List<BrandPO> brandPOs = brandDao.pageBrand(paging, filters);
+		List<BrandPO> brandPOs = brandDao.pageBrand(paging, filters,company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 		
 		for(BrandPO brandPO: brandPOs){
@@ -63,10 +63,10 @@ public class BrandServiceImpl implements BrandService {
 		}
 		
 		paging.setData(brandVOs);
-	}
+	} 
 	
 	@Override
-	public List<BrandVO> queryBrand() {
+	public List<BrandVO> queryBrand(int company) {
 		
 		List<BrandPO> brandPOs = brandDao.list();
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
@@ -79,6 +79,7 @@ public class BrandServiceImpl implements BrandService {
 			
 			brandVO.setCategoryId(categoryPO.getCategoryId());
 			brandVO.setCategoryName(categoryPO.getCategoryName());
+			brandVO.setCompany(company);
 			
 			brandVOs.add(brandVO);
 		}
@@ -87,11 +88,11 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName) {
+	public List<BrandVO> queryBrandForPinYinName(String pinyinName,int company) {
 		
 		Paging paging = new Paging(0, 10);
 		
-		List<BrandPO> brandPOs = brandDao.pageBrandByBrandNamePinYin(paging, pinyinName);
+		List<BrandPO> brandPOs = brandDao.pageBrandByBrandNamePinYin(paging, pinyinName,company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 		
 		for(BrandPO brandPO: brandPOs){
@@ -163,7 +164,7 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addBrand(BrandVO brandVO) {
+	public int addBrand(BrandVO brandVO,int company) {
 		
 		BrandPO brandPO = new BrandPO();
 		
@@ -175,7 +176,7 @@ public class BrandServiceImpl implements BrandService {
 		brandId.append(FormatUtil.fillZero(count, "000"));
 		
 		brandPO.setBrandId(brandId.toString());
-		
+		brandPO.setCompany(company);
 		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("brandId", "category"));
 		
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));

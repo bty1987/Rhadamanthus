@@ -19,7 +19,7 @@ import com.fanglin.utils.Paging;
 
 public interface UserService {
 	
-	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, int company) throws FLException;
+	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException;
 	
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException;
 	
@@ -27,28 +27,46 @@ public interface UserService {
 	
 	public UserInfoVO queryUserInfoByUserId(UserInfoVO userInfoVO) throws FLException;
 	
+	public UserInfoVO queryUserForSelfByUserId(UserInfoVO userInfoVO) throws FLException;
+	
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
-	public List<UserVO> queryUserByDetpIdADuty(String deptId, String duty);
+	public List<UserVO> queryUserByDetpIdADuty(String deptId, String duty) throws FLException;
 	
-	public List<UserVO> queryUserForNameByPinyinName(String pinyinName);
+	public List<UserVO> queryUserForNameByPinyinName(String pinyinName,Integer company) throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty);
+	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty,Integer  company) throws FLException;
 	
-	public List<UserVO> queryUserForNameByDutys(String pinyinName, List<String> dutys);
+	public List<UserVO> queryUserForNameByDutys(String pinyinName, List<String> dutys,Integer  company) throws FLException;
 	
-	public List<UserVO> queryUserForNameByDutyADept(String pinyinName, String duty, String curUserId);
+	public List<UserVO> queryUserForNameByDutyADept(String pinyinName, String duty, String curUserId,Integer  company) throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDutysADept(String pinyinName, List<String> dutys, String curUserId);
+	public List<UserVO> queryUserForNameByDutysADept(String pinyinName, List<String> dutys, String curUserId,Integer  company)throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO);
+	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO,Integer  company)throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDutysAODept(String pinyinName, List<String> dutysA, List<String> dutysO, String curUserId);
+	public List<UserVO> queryUserForNameByDutysAODept(String pinyinName, List<String> dutysA, List<String> dutysO, String curUserId,Integer  company)throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDeptType(String pinyinName, String deptType);
+	public List<UserVO> queryUserForNameByDeptType(String pinyinName, String deptType)throws FLException ;
 	
-	public UserVO validateUser(String loginId, String password);
+	public UserVO validateUser(String loginId, String password) throws FLException;
 	
-	public int resetPassword(String UserId) throws FLException;
+	//public int resetPassword(String UserId) throws FLException;
+	
+	public void resetPassword(String UserId) throws FLException;
+	
+	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
+	
+	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
+	
+	public void updateUserForBaseInfo(UserInfoVO userInfoVO) throws FLException;
+	
+	public void updateUserForIsLogin(UserVO userVO) throws FLException;
+	
+	public void updateUserForAdvance(UserVO userVO) throws FLException;
+	
+	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
+	
+	
 	
 }

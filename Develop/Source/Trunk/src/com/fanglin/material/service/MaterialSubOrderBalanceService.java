@@ -20,9 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialSubOrderBalanceService {
 	
-	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters);
+	public void pageMaterialSubOrderBalance(Paging paging, List<Filter> filters,int company);
 	
-	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId) throws FLException;
+	public void pageMaterialSubOrderBalanceForVender(Paging paging, List<Filter> filters, String userId,int company) throws FLException;
 	
 	public void updateMaterialSubOrderBalanceForVBalance(MaterialSubOrderBalanceVO materialSubOrderBalanceVO) throws FLException;
 	

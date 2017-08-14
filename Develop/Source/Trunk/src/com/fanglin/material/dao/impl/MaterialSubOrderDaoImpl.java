@@ -60,10 +60,10 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 	}
 
 	@Override
-	public List<MaterialSubOrderPO> pageMaterialSubOrderPreBalance(Paging paging, List<Filter> filters){
+	public List<MaterialSubOrderPO> pageMaterialSubOrderPreBalance(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
-		
+		query.add(query.getCriterion("company", company, "eq"));
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_STATUS_STR, MaterialSubOrderPO.STATUS_TYPE_INIT_INT, "eq"));
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_FULLSTATUS_STR, MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT, "eq"));
 		
@@ -73,13 +73,13 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 	}
 
 	@Override
-	public List<MaterialSubOrderPO> pageMaterialSubOrderPostBalance(Paging paging, List<Filter> filters){
+	public List<MaterialSubOrderPO> pageMaterialSubOrderPostBalance(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
 		
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_BALANCESTATUS_STR, MaterialSubOrderPO.BALANCE_STATUS_TYPE_PRE_INT, "eq"));
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_FULLSTATUS_STR, MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT, "eq"));
-		
+		query.add(query.getCriterion("company", company, "eq"));
 		queryFilterExcute(query, filters);
 		
 		return query.list();

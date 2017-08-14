@@ -101,6 +101,7 @@ $.extend(api, {system: {
 
     pageCompany: {url: "pageCompany.do", demo: true},
     queryCompany: {url: "queryCompany.do"},
+    queryCompanyByCid: {url: "queryCompanyByCid.do"},
     addCompany: {url: "addCompany.do", server: "communion"},
     updateCompany: {url: "updateCompany.do", server: "communion"},
     updateCompanyForStatus: {url: "updateCompanyForStatus.do", server: "communion"}

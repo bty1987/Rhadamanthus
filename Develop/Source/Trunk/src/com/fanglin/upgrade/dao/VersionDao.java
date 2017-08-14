@@ -8,11 +8,11 @@ import com.fanglin.upgrade.po.VersionPO;
 import com.fanglin.utils.Paging;
 
 public interface VersionDao extends Dao<VersionPO>{
-	
+
 	public List<VersionPO> pageVersion(Paging paging, List<Filter> filters);
 
 	public List<VersionPO> queryVersion(List<Filter> filters);
 	
-	public List<VersionPO> matchVersion(String trialno);
+	public VersionPO queryVersionByNo(String no);
 	
 }

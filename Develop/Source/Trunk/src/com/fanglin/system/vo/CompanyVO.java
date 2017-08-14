@@ -6,7 +6,7 @@ public class CompanyVO implements Serializable {
 
 	private static final long serialVersionUID = 1384863319040968146L;
 
-	private Integer cid;
+	private String cid;
 	
 	private Integer no;
 
@@ -14,11 +14,11 @@ public class CompanyVO implements Serializable {
 
 	private Short status;
 
-	public Integer getCid() {
+	public String getCid() {
 		return cid;
 	}
 
-	public void setCid(Integer cid) {
+	public void setCid(String cid) {
 		this.cid = cid;
 	}
 

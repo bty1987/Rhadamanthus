@@ -384,7 +384,9 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					
 					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", eTime, "le"));
 					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", sTime, "ge"));
-		        }
+		        }else if("company".equals(field)){
+					query.add(query.getCriterion("company", Integer.valueOf(data), op));
+				}
 			}
 		}
 	}

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class DrawLineGroupVO implements Serializable {
 	
-	
 	private static final long serialVersionUID = 7432243814812625222L;
 
 	private Long gid ; 
@@ -14,6 +13,8 @@ public class DrawLineGroupVO implements Serializable {
 	private short status;
 	
 	private String content ;
+	
+	private Integer company;
 
 	public Long getGid() {
 		return gid;
@@ -46,9 +47,13 @@ public class DrawLineGroupVO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
-	
-	
 
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
+	
 }

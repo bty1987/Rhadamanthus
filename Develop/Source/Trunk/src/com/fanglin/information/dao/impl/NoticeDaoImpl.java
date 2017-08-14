@@ -17,6 +17,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.NoticeDao;
 import com.fanglin.information.po.NoticePO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -28,11 +29,15 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	}
 	
 	@Override
-	public List<NoticePO> pageNotice(Paging paging, List<Filter> filters, String userId){
+	public List<NoticePO> pageNotice(Paging paging, List<Filter> filters, String userId, Integer company){
 		
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
 		query.alias("user", "user");
+		
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			query.add(Restrictions.eq("company", company));
+		}
 		
 		query.add(Restrictions.eq("user.userId", userId));
 		
@@ -44,7 +49,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	}
 	
 	@Override
-	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Long> nids, Short type){
+	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Long> nids, Short type, Integer company){
 
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
@@ -52,6 +57,10 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 			query.add(Restrictions.or(Restrictions.in("nid", nids), Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT)));
 		}else{
 			query.add(Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT));
+		}
+		
+		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
+			query.add(Restrictions.eq("company", company));
 		}
 		
 		query.add(Restrictions.eq("type", type));

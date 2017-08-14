@@ -65,15 +65,7 @@ jQuery(function(a) {
     com.post(api.ds.departmentInfo, {timestamp: (new Date).getTime()},function(a) {
         user.deptType = a.deptType
     },null, !1);
-    //获取公司select的各种option
-    com.post(api.ds.companyType, {timestamp: (new Date).getTime()},function(c) {
-        var b = {};
-        a.each(c.company,function(a, c) {
-            b[c.key] = c.value
-        });
-        user.company = b
-    },null, !1);
-    //获取政治面貌，学历等select的各种option
+
     com.post(api.ds.personInfo, {timestamp: (new Date).getTime()},function(a) {
         user.politicalType = a.politicalType;
         user.householdType = a.householdType;
@@ -165,11 +157,12 @@ jQuery(function(a) {
         user.editFlg = !0;
         user.items.userId.prop("disabled", "true");
         user.items.userId.css("display", "block");
+        user.currentCompany=null;
         com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(data){
         	
             var $userInfo = data.userInfo;
             var $user = $userInfo.user;
-            
+
             void 0 != a && (
             	user.editUserId = $user.userId,
                 user.editLoginId = $user.loginId,
@@ -201,7 +194,7 @@ jQuery(function(a) {
                 user.items.houseTypeSel.val($userInfo.houseType), 
                 user.items.lover.val($userInfo.lover),
                 user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
-                user.items.company.val($user.company[$user.company]),
+                user.items.company.val( $user.companys),
                 user.items.deptTypeSel.val($user.deptType).trigger("change",function() {
                     user.items.deptSel.val($user.dept.deptId);
                     user.items.dutySel.val("");
@@ -291,7 +284,8 @@ jQuery(function(a) {
                 "userInfo.medicalNum": user.items.medicalNum.val(),
                 "userInfo.salary": user.items.salary.val(),
                 "userInfo.bank": user.items.bank.val(),
-                "userInfo.bankCardNum": user.items.bankCardNum.val()
+                "userInfo.bankCardNum": user.items.bankCardNum.val(),
+
             };
             for (a = 0; a < user.experienceList.length; a++) b["user.experiences[" + a + "].userId"] = b["user.userId"],
                 b["user.experiences[" + a + "].id"] = user.experienceList[a].experienceId,
@@ -309,7 +303,7 @@ jQuery(function(a) {
                 b["user.contracts[" + a + "].des"] = user.contractList[a].des,
                 b["user.contracts[" + a + "].flag"] = user.contractList[a].flag;
 
-            user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser, b["user.company"] = 1);
+            user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser);
 
             com.post(a, b, successCallback, failCallback);
 

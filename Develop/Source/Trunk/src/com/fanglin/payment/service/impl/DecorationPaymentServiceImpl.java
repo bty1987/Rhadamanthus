@@ -34,7 +34,6 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -85,8 +84,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 //	@Autowired
 //	private QuotationDao quotationDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 	
 //	@Autowired
 //	private DecorationActivityItemDao decorationActivityItemDao;
@@ -136,21 +135,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		filters.add(new Filter("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, "ne"));
 		
 		pageDecorationPayment(paging, filters);
-	}
-	
-	@Override
-	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters){
-
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPayment(filters);
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
-			
-			decorationPaymentVOs.add(decorationPaymentVO);
-		}
-		
-		return decorationPaymentVOs;
 	}
 	
 	@Override
@@ -703,11 +687,24 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				PaymentVO paymentVO = new PaymentVO();
 				paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
 				paymentVO.setCash(decorationPaymentVO.getAdvance());
-				paymentVO.setDes(String.format("付款装修订单号:%s,付款类型:%s", decorationOrderPO.getOrderId(), decorationPaymentVO.getPaymentType()));
+				//修改预付款备注拼接字符串付款类型为null的BUG：_paymentType
+				paymentVO.setDes(String.format("付款装修订单号:%s,付款类型:%s", decorationOrderPO.getOrderId(), _paymentType));
 				paymentVO.setCollectUser(new UserVO(decorationPaymentVO.getCollectUserId()));
 				paymentVO.setCustomer(new CustomerVO(decorationPaymentPO.getDecorationOrderPO().getCustomerPO().getId()));
 				paymentVO.setPaymentType(_paymentType);
 				paymentVO.setOrderId(decorationOrderPO.getOrderId());
+				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+				//在预付款历史收款中，存储操作后对应类型的预付款余额
+				if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), decorationPaymentVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), decorationPaymentVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), decorationPaymentVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), decorationPaymentVO.getAdvance()));
+				}
+				
 				
 				advancePaymentService.updateAdvancePayment(paymentVO);
 			}
@@ -914,10 +911,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				UserPO user = userDao.queryUserByUserId(confirmUserId);
 				decorationReceiptPO.setConfirmUserPO(user);
 				
-				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
+				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
 					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
-					
-					financeService.buildDecorationFinance(decorationPaymentPO.getDecorationOrderPO(), decorationReceiptPO, userDao.queryUserByUserId(confirmUserId));
 				}
 				
 				decorationReceiptDao.save(decorationReceiptPO);

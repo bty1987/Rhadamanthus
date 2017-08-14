@@ -32,12 +32,11 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     }
 
     @Override
-    public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters){
+    public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters,int company){
 
         PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
         
-        //query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
-        
+        query.add(Restrictions.eq("company", company));
         queryFilterExcute(query, filters);
 
         return query.list();

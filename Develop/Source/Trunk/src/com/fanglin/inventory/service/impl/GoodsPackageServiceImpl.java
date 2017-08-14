@@ -89,6 +89,8 @@ public class GoodsPackageServiceImpl implements GoodsPackageService{
 		
 		goodsPO.setType(GoodsPO.TYPE_SUIT_INT);
 		
+		goodsDao.update(goodsPO);
+		
 		goodsPackageDao.save(goodsPackagePO);
 		
 		return 0;
@@ -115,6 +117,8 @@ public class GoodsPackageServiceImpl implements GoodsPackageService{
 			goodsPO = goodsDao.get(goodsPackageVO.getPid());
 			
 			goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
+			
+			goodsDao.update(goodsPO);
 		}
 		
 		return 0;

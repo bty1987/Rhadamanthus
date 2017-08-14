@@ -61,7 +61,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForVillage(ApprovalVO approvalVO, ApprovalVillageVO approvalVillageVO, String userId) throws FLException {
+	public int submitApprovalForVillage(ApprovalVO approvalVO, ApprovalVillageVO approvalVillageVO, String userId, int company) throws FLException {
 		
 		String orderId = approvalVillageVO.getOrderId();
 		String villageId = approvalVillageVO.getNewVillageId();
@@ -97,6 +97,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_VILLAGE_STR, orderId, decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), villagePO.getVillageName(), approvalVillageVO.getNewHouseNumber()));
 		approvalPO.setSender(sender);
 		approvalPO.setReceiver(receiver);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

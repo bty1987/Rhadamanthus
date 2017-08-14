@@ -13,6 +13,8 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.WorkTypeVO;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
+import com.fanglin.inventory.dao.ColorDao;
+import com.fanglin.inventory.dao.FormatDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
 import com.fanglin.inventory.po.AssisOrderPO;
 import com.fanglin.inventory.po.ColorPO;
@@ -36,6 +38,12 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 	@Autowired
 	private AssisOrderDao assisOrderDao;
+	
+	@Autowired
+	private ColorDao colorDao;
+	
+	@Autowired
+	private FormatDao formatDao;
 
 	@Override
 	public List<AssisOrderItemVO> queryAssisOrderItemByAoid(AssisOrderItemVO assisOrderItemVO) {
@@ -62,10 +70,9 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 					
 				}
 			}
-			
-			
 
 			assisOrderItemVOs.add(assisOrderItemVO);
+			
 		}
 
 		return assisOrderItemVOs;
@@ -145,7 +152,12 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 			throw new FLException(260025, "辅料项不存在");
 		}
 		
+		ColorPO colorPO = colorDao.get(assisOrderItemVO.getColor().getCid());
+		FormatPO formatPO = formatDao.get(assisOrderItemVO.getFormat().getFid());
+		
 		assisOrderItemPO.setNum(assisOrderItemVO.getNum());
+		assisOrderItemPO.setColor(colorPO);
+		assisOrderItemPO.setFormat(formatPO);
 
 		assisOrderItemDao.update(assisOrderItemPO);
 

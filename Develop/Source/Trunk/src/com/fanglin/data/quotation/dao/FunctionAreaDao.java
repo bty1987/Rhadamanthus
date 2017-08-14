@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface FunctionAreaDao extends Dao<FunctionAreaPO> {
 	
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters);
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters,int company);
 	
 	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId);
 	

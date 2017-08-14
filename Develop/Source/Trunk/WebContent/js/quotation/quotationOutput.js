@@ -498,6 +498,12 @@ jQuery(function($) {
 	}, null, false);
 	
 	generatePrintPage(type);
+
+	$("#btnPrint").click(function(){
+		$("#printPaymentReceipt").attr('style','display:none');
+		window.print();
+		$("#printPaymentReceipt").attr('style','display:block');
+	});
 });
 
 function generatePrintPage(type){

@@ -55,7 +55,7 @@ public class ApprovalMaterialOutsideRefundServiceImpl implements ApprovalMateria
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForMaterialOutsideRefund(ApprovalVO approvalVO, ApprovalMaterialOutsideRefundVO approvalMaterialOutsideRefundVO, String userId) throws FLException {
+	public int submitApprovalForMaterialOutsideRefund(ApprovalVO approvalVO, ApprovalMaterialOutsideRefundVO approvalMaterialOutsideRefundVO, String userId,int company) throws FLException {
 		
 		long moId = approvalMaterialOutsideRefundVO.getMoId();
 		
@@ -88,6 +88,7 @@ public class ApprovalMaterialOutsideRefundServiceImpl implements ApprovalMateria
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_OUTSIDE_REFUND_STR, materialOutsidePO.getOrderId(), materialOutsidePO.getOrderAddr(), materialOutsidePO.getCustomerName(), materialOutsidePO.getSales(), materialOutsidePO.getProfit()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

@@ -7,10 +7,13 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.fanglin.salary.po.WorkerSalaryPO;
 import com.fanglin.salary.service.WorkerSalaryService;
 import com.fanglin.salary.vo.WorkerSalaryVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -27,7 +30,9 @@ public class WorkerSalaryAction extends BaseListAction{
 	private List<WorkerSalaryVO> workerSalarys;
 	
 	@Action(value = "pageWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String pageWorkerSalary (){
+	public  String pageWorkerSalary () throws FLException{
+		
+		getFilters().add(new Filter(WorkerSalaryPO.COLUMN_USER_COMPANY ,String.valueOf(queryCompany()),"eq"));
 		
 		workerSalaryService.pageWorkerSalary(getPaging(), getFilters());
 		
@@ -35,7 +40,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	}
 
 	@Action(value = "queryWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryWorkerSalary(){
+	public String queryWorkerSalary() throws FLException{
 		
 		workerSalarys = workerSalaryService.queryWorkerSalary(workerSalary);
 	

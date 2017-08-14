@@ -27,13 +27,14 @@ import com.fanglin.utils.Paging;
 public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 
 	public BrandDaoImpl(){
-		super(BrandPO.class);
+		super(BrandPO.class); 
 	}
 
 	@Override
-	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters) {
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
+		query.add(Restrictions.eq("company", company));
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -49,11 +50,12 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName) {
+	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName,int company) {
 		
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 		
 		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_BRANDNAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_BRANDNAMEPINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
+		query.add(Restrictions.eq("company", company));
 		
 		return query.list();
 	}

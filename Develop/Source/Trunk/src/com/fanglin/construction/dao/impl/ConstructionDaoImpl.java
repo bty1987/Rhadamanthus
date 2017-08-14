@@ -36,9 +36,11 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters) {
+	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer companyId) {
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
+		
+		query.add(query.getCriterion("decorationOrderPO.company", companyId, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -46,8 +48,11 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters){
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, Integer companyId){
+		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
+		
+		query.add(query.getCriterion("decorationOrderPO.company", companyId, "eq"));
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -159,20 +164,19 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 	
 	@Override
-	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters){
+	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer companyId){
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
-		query.add(query.getCriterion(ConstructionPO.COLUMN_SCHEDULE_STR, ConstructionPO.SCHEDULE_TYPE_CLEANING_INT, "eq"));
+		
+		query.add(query.getCriterion("decorationOrderPO.company", companyId, "eq"));
 		
 		if(filters != null){
-			
 			for(Filter filter: filters){
 				String field = filter.getField();
 				Object data = filter.getData();
 				String op = filter.getOp();
 				
 				if(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR.equals(field)){
-					
 					if("and".equals(op)){
 						query.add(Restrictions.sqlRestriction(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR + " & ?", data.toString(), StringType.INSTANCE));
 					}else if("nand".equals(op)){
@@ -265,7 +269,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				}else if("salesman".equals(field)){
 					query.add(query.getCriterion("salesman.currentName", data, op));
 				}else if("supervisor".equals(field)){
-					query.alias("decorationOrderPO.orderSupervisorPO", "supervisor");
+					query.alias("decorationOrderPO.supervisorPO", "supervisor");
 					query.add(query.getCriterion("supervisor.currentName", data, op));
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.villageName", data, op));

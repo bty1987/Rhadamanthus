@@ -17,6 +17,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -75,6 +77,8 @@ public class MaterialModelPO implements Serializable {
 	private float base;
 	
 	private short status;
+	
+	private int company;
 
 	@Id
 	@Column(name="mmId")
@@ -113,8 +117,8 @@ public class MaterialModelPO implements Serializable {
 		this.materialUnitPrice = materialUnitPrice;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable=false, name="brandId")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false, name="brandId",referencedColumnName = "bId")
 	public BrandPO getBrand(){
 		return brand;
 	}
@@ -123,8 +127,8 @@ public class MaterialModelPO implements Serializable {
 		this.brand = brand;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable=false, name="measurementUnitId")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false, name="measurementUnitId",referencedColumnName = "id")
 	public MeasurementUnitPO getMeasurementUnit(){
 		return measurementUnit;
 	}
@@ -212,5 +216,15 @@ public class MaterialModelPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
+	
 
 }

@@ -53,14 +53,8 @@ public class LoginAction extends BaseListAction {
 	@Autowired
 	private LoginLogService loginLogService;
 	
-	private String authenticationEncode;
+	private String authentication;
 	
-	private UserVO user;
-	
-	private String configInfo;
-	
-	private String url;
-
 	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String doLogin() {
 
@@ -104,11 +98,9 @@ public class LoginAction extends BaseListAction {
 				    	throw new FLException(110007, "网络问题");
 				    }
 				    
-				    this.user = user;
+				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
 				    
-				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, user.getCompany(), user.getFreedom());
-				    
-					authenticationEncode = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+				    authentication = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					
 					loginLogVO.setSuccessFlag(1);
 					loginLogService.addLoginLog(loginLogVO);
@@ -124,12 +116,6 @@ public class LoginAction extends BaseListAction {
 			
 			LogUtils.logging(logger, e, "doLogin");
 		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "login", results = { @Result(name = "success", type = "dispatcher", location = "/dlogin.html") })
-	public String login() throws FLException {
 		
 		return SUCCESS;
 	}
@@ -163,36 +149,12 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	public String getAuthenticationEncode() {
-		return authenticationEncode;
+	public String getAuthentication() {
+		return authentication;
 	}
 
-	public void setAuthenticationEncode(String authenticationEncode) {
-		this.authenticationEncode = authenticationEncode;
+	public void setAuthentication(String authentication) {
+		this.authentication = authentication;
 	}
 
-	public UserVO getUser() {
-		return user;
-	}
-
-	public void setUser(UserVO user) {
-		this.user = user;
-	}
-
-	public String getConfigInfo() {
-		return configInfo;
-	}
-
-	public void setConfigInfo(String configInfo) {
-		this.configInfo = configInfo;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
 }

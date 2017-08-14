@@ -24,6 +24,7 @@ import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
 
 @Service("messageDDService")
 @Transactional(readOnly = true)
@@ -35,12 +36,12 @@ public class MessageService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 	
-	public  int send(AppMessageDelivery delivery){
+	public  int send(AppMessageDelivery delivery,Integer company){
 		
 		Logger logger = LoggerFactory.getLogger(MessageService.class);
 		
 		try {
-			String accessToken = authDDService.getAccessToken();
+			String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 			
 			SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 			
@@ -54,9 +55,9 @@ public class MessageService {
 		return 0;
 	}
 	
-	public  int sendMessageForApproval(String receiveId, String senderName, int approvalId, String type, String contents){
+	public  int sendMessageForApproval(String receiveId, String senderName, int approvalId, String type, String contents,Integer company){
 		
-		String accessToken = authDDService.getAccessToken();
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
 		SystemConfigPO approvalAgentId = systemConfigDao.querySystemConfig("approvalAgentId");
 		
@@ -87,7 +88,7 @@ public class MessageService {
 		return 0;
 	}
 	
-	public  int sendMessageForPayment(String receiveId, String senderName, String contents){
+	public  int sendMessageForPayment(String receiveId, String senderName, String contents,Integer company){
 		
 		TextMessage textMessage = new TextMessage(contents);
 		
@@ -97,14 +98,14 @@ public class MessageService {
 		
 		appMessageDelivery.withMessage(textMessage);
 		
-		send(appMessageDelivery);
+		send(appMessageDelivery,company);
 		
 		return 0;
 	}
 	
-	public  int sendMessageForBackVisit(String receiveId, String senderName, String orderId, String contents){
+	public  int sendMessageForBackVisit(String receiveId, String senderName, String orderId, String contents,Integer company){
 		
-		String accessToken =authDDService.getAccessToken();
+		String accessToken =authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
 		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
@@ -135,7 +136,7 @@ public class MessageService {
 		return 0;
 	}
 	 	
-	public  int sendMessage(String receiveId, String senderName, String contents){
+	public  int sendMessage(String receiveId, String senderName, String contents,Integer company){
 			
 		TextMessage textMessage = new TextMessage(contents);
 			
@@ -145,7 +146,7 @@ public class MessageService {
 			
 		appMessageDelivery.withMessage(textMessage);
 			
-		send(appMessageDelivery);
+		send(appMessageDelivery,company);
 			
 		return 0;
 	}

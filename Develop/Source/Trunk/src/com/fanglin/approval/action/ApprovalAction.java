@@ -39,7 +39,7 @@ public class ApprovalAction extends BaseListAction {
 	@Action(value = "pageApprovalByReceiveId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String pageApprovalByReceiveId() throws FLException {
 
-		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(),queryUserId());
+		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(),queryUserId(),queryCompany());
 
 		return SUCCESS;
 	}
@@ -48,7 +48,7 @@ public class ApprovalAction extends BaseListAction {
 		@Action(value = "pageApprovalBySenderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 		public String pageApprovalBySenderId() throws FLException {
 
-			approvalService.pageApprovalBySenderId(getPaging(), getFilters(),queryUserId());
+			approvalService.pageApprovalBySenderId(getPaging(), getFilters(),queryUserId(),queryCompany());
 
 			return SUCCESS;
 		}

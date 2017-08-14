@@ -46,7 +46,7 @@ public class ApprovalOrderBelongAction extends BaseListAction {
 	@Action(value = "submitApprovalForOrderBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForOrderBelong() throws FLException{
 		
-		approvalOrderBelongService.submitApprovalForOrderBelong(approval, approvalOrderBelong, approvalOrderBelongItems, queryUserId());
+		approvalOrderBelongService.submitApprovalForOrderBelong(approval, approvalOrderBelong, approvalOrderBelongItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

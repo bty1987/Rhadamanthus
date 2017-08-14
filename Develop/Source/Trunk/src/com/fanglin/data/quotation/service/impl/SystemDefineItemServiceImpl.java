@@ -39,9 +39,9 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	private SystemDefineItemDao systemDefineItemDao;
 	
 	@Override
-	public void pageSystemDefineItem(Paging paging, List<Filter> filters){
+	public void pageSystemDefineItem(Paging paging, List<Filter> filters,int company){
 		
-		List<SystemDefineItemPO> systemDefineItemPOs = systemDefineItemDao.pageSystemDefineItem(paging, filters);
+		List<SystemDefineItemPO> systemDefineItemPOs = systemDefineItemDao.pageSystemDefineItem(paging, filters,company);
 		List<SystemDefineItemVO> systemDefineItemVOs = new ArrayList<SystemDefineItemVO>();
 		
 		for(SystemDefineItemPO systemDefineItemPO: systemDefineItemPOs){
@@ -69,9 +69,9 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	}
 	
 	@Override
-	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO) throws FLException{
+	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO,int company) throws FLException{
 		
-		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId());
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId(),company);
 		
 		if(systemDefineItemPO == null){
 			throw new FLException(200015, "系统自定义报价项不存在");
@@ -97,9 +97,9 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException {
+	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO,int company) throws FLException {
 		
-		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId());
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId(),company);
 		
 		if(systemDefineItemPO != null){
 			throw new FLException(200009, "系统自定义报价项编号存在");
@@ -111,7 +111,7 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
 		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
 		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
-		
+		systemDefineItemPO.setCompany(company);
 		systemDefineItemDao.save(systemDefineItemPO);
 		
 		return 0;

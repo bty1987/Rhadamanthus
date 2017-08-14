@@ -2,7 +2,7 @@
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
+     * tableId ,用来显示的div的id
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){
@@ -180,8 +180,8 @@
 	}
 	//刷新
     function successCallback(){
-    	//$('button.btn-search','#condList').click();//调用成功后，执行查询操作  
-		companySeacher.doSearch();//调用成功后，执行com.Seacher中的doSeach方法
+    	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
+		companySeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
     }
     
 });

@@ -34,12 +34,13 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	}
 
 	@Override
-	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId) {
+	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company) {
 		
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
 		
 		query.alias("receiver", "receiver");
 		query.add(Restrictions.eq("receiver.userId", userId));
+		query.add(Restrictions.eq("company", company));
 		
 		if(filters != null){
 			approvalQuery(filters, query);
@@ -52,12 +53,13 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	}
 
 	@Override
-	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId) {
+	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company) {
 		
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
 		
 		query.alias("sender", "sender");
 		query.add(Restrictions.eq("sender.userId", userId));
+		query.add(Restrictions.eq("company", company));
 		
 		if(filters != null){
 			approvalQuery(filters, query);

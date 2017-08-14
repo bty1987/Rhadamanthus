@@ -1,13 +1,10 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
@@ -48,9 +45,9 @@ public class DrawLineGroupServiceImpl  implements DrawLineGroupService{
 	}
 	
 	@Override
-	public List<DrawLineGroupVO> queryDrawLineGroup() {
+	public List<DrawLineGroupVO> queryDrawLineGroup(int company) {
 		
-		List<DrawLineGroupPO> drawLineGroupPOs = drawLineGroupDao.queryDrawLineGroup();
+		List<DrawLineGroupPO> drawLineGroupPOs = drawLineGroupDao.queryDrawLineGroup(company);
 		
 		List<DrawLineGroupVO> drawLineGroupVOs = new ArrayList<DrawLineGroupVO>();
 		
@@ -69,27 +66,38 @@ public class DrawLineGroupServiceImpl  implements DrawLineGroupService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void saveDrawLineGroup(DrawLineGroupVO drawLineGroupVO) throws FLException {
+	public void saveDrawLineGroup(DrawLineGroupVO drawLineGroupVO,int company) throws FLException {
 		
-		DrawLineGroupPO  drawLineGroupPOs = drawLineGroupDao.queryDrawLineGroupByName(drawLineGroupVO.getName());
+		List<DrawLineGroupPO>  drawLineGroupPOs = drawLineGroupDao.queryDrawLineGroupByName(drawLineGroupVO.getName());
 		
-		if(drawLineGroupPOs != null){
-			throw new FLException(130009, "放线小组已存在");
-		}
+		if (drawLineGroupPOs.isEmpty()){
+				
+				DrawLineGroupPO  drawLineGroupPO = new  DrawLineGroupPO();
+				drawLineGroupPO.setName(drawLineGroupVO.getName());
+				drawLineGroupPO.setContent(drawLineGroupVO.getContent());
+				drawLineGroupPO.setStatus(DrawLineGroupPO.STATUS_ENABLE_INT);
+				drawLineGroupPO.setCompany(company);
 		
-		DrawLineGroupPO  drawLineGroupPO = new  DrawLineGroupPO();
-		
-		drawLineGroupPO.setName(drawLineGroupVO.getName());
-		
-		drawLineGroupPO.setContent(drawLineGroupVO.getContent());
-		
-		drawLineGroupPO.setStatus(DrawLineGroupPO.STATUS_ENABLE_INT);
-		
-		drawLineGroupDao.save(drawLineGroupPO);
+				drawLineGroupDao.save(drawLineGroupPO);
+			}
+			else{
+				for (DrawLineGroupPO drawLineGroupPO : drawLineGroupPOs) {
+				
+					if (drawLineGroupPO.getCompany() == company){
+						throw new FLException(130009, "放线小组已存在");
+					}
+				}
+				
+					DrawLineGroupPO  drawLineGroup = new  DrawLineGroupPO();
+					drawLineGroup.setName(drawLineGroupVO.getName());
+					drawLineGroup.setContent(drawLineGroupVO.getContent());
+					drawLineGroup.setStatus(DrawLineGroupPO.STATUS_ENABLE_INT);
+					drawLineGroup.setCompany(company);
+					
+					drawLineGroupDao.save(drawLineGroup);
+			}
 		
 	}
-
-
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

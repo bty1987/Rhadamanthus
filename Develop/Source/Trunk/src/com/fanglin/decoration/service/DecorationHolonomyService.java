@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationHolonomyService {
 	
-	public void pageDecorationHolonomy(Paging paging,List<Filter> filters);
+	public void pageDecorationHolonomy(Paging paging,List<Filter> filters, int company);
 	
 	public DecorationHolonomyVO queryDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO);
 	

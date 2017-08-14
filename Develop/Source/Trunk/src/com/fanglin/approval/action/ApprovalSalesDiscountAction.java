@@ -30,7 +30,7 @@ public class ApprovalSalesDiscountAction extends BaseListAction {
 	@Action(value = "submitApprovalForSalesDiscount", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String submitApprovalForSalesDiscount() throws FLException {
 	
-		approvalSalesDiscountService.submitApprovalSalesDiscount(approval,approvalSalesDiscount, queryUserId());
+		approvalSalesDiscountService.submitApprovalSalesDiscount(approval,approvalSalesDiscount, queryUserId(), queryCompany());
 
 		return SUCCESS;
 

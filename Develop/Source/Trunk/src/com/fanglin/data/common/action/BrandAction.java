@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.BrandService;
 import com.fanglin.data.common.vo.BrandVO;
 
@@ -49,17 +50,17 @@ public class BrandAction extends BaseListAction {
 	private List<String> autoFillList;
 	
 	@Action(value="pageBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageBrand(){
+	public String pageBrand() throws FLException{
 		
-		brandService.pageBrand(getPaging(), getFilters());
+		brandService.pageBrand(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="queryBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrand(){
+	public String queryBrand() throws FLException{
 		
-		brands = brandService.queryBrand();
+		brands = brandService.queryBrand(queryCompany());
 		
 		return SUCCESS;
 	}
@@ -89,13 +90,13 @@ public class BrandAction extends BaseListAction {
 	}
 	
 	@Action(value="queryBrandForPinYinName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandForPinYinName(){
+	public String queryBrandForPinYinName() throws FLException{
 		
-		brands = brandService.queryBrandForPinYinName(pinyinName);
+		brands = brandService.queryBrandForPinYinName(pinyinName,queryCompany());
 		
 		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getBrandId());
+			keyValueVO.setKey(brandVO.getBrandId()); 
 			keyValueVO.setValue(brandVO.getBrandName());
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(brandVO.getBrandName());
@@ -105,9 +106,9 @@ public class BrandAction extends BaseListAction {
 	}
 	
 	@Action(value="queryBrandForPinYinNameACategoryName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandForPinYinNameACategoryName(){
+	public String queryBrandForPinYinNameACategoryName() throws FLException{
 		
-		brands = brandService.queryBrandForPinYinName(pinyinName);
+		brands = brandService.queryBrandForPinYinName(pinyinName,queryCompany());
 		
 		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.construction.dao.ConstructionNodeDao;
 import com.fanglin.data.construction.service.ConstructionNodeService;
@@ -15,7 +17,9 @@ import com.fanglin.data.construction.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodeCompanyPO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("constructionNodeService")
 @Transactional(readOnly=true)
@@ -65,19 +69,75 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService{
 	}
 	
 	@Override
-	public List<ConstructionNodeVO> queryConstructionNodeByCid(ConstructionNodeCompanyVO constructionNodeCompanyVO) {
-		
-		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs  = constructionNodeDao.queryConstructionNodeCompanyByCid(constructionNodeCompanyVO.getCid());
-		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
-		
-		for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
-			ConstructionNodePO constructionNodePO= constructionNodeCompanyPO.getConstructionNode();
-			ConstructionNodeVO constructionNodeVO  = new ConstructionNodeVO();
-			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-			constructionNodeVOs.add(constructionNodeVO);
+	public List<ConstructionNodeVO> queryConstructionNodeByCid(ConstructionNodeCompanyVO constructionNodeCompanyVO) throws FLException{
+
+		try{
+			
+			int cid = FormatUtil.decodeCompany(AESHelper.decryptString(constructionNodeCompanyVO.getCid(), SystemConfig.getString("encryptKey")));
+			
+			List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs  = constructionNodeDao.queryConstructionNodeCompanyByCid(cid);
+			List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
+			
+			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
+				ConstructionNodePO constructionNodePO= constructionNodeCompanyPO.getConstructionNode();
+				ConstructionNodeVO constructionNodeVO  = new ConstructionNodeVO();
+				BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
+				constructionNodeVOs.add(constructionNodeVO);
+			}
+			
+			return constructionNodeVOs;
+		}catch (Exception e) {
+			throw new FLException(230015 , "公司不存在");
 		}
 		
-		return constructionNodeVOs;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void addConstructionNode(ConstructionNodeVO constructionNodeVO) {
+
+	  ConstructionNodePO constructionNodePO = new ConstructionNodePO();
+
+	  constructionNodePO.setName(constructionNodeVO.getName());
+
+	  constructionNodeDao.save(constructionNodePO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO) {
+
+	  ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+	  constructionNodePO.setStatus(constructionNodeVO.getStatus());
+
+	  constructionNodeDao.update(constructionNodePO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateConstructionNodeCompany(ConstructionNodeCompanyVO constructionNodeCompanyVO,List<Long> cnids) throws FLException {
+
+	  try {
+	    int cid = FormatUtil.decodeCompany(AESHelper.decryptString(constructionNodeCompanyVO.getCid(), SystemConfig.getString("encryptKey")));
+
+	    List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(cid);
+	    for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
+	      constructionNodeDao.delete(constructionNodeCompanyPO);
+	    }
+
+	    for (Long cnid : cnids) {
+	      ConstructionNodeCompanyPO constructionNodeCompanyPO = new ConstructionNodeCompanyPO();
+	      constructionNodeCompanyPO.setCid(cid);
+	      ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
+	      constructionNodeCompanyPO.setConstructionNode(constructionNodePO);
+	      constructionNodeDao.save(constructionNodeCompanyPO);
+	    }
+	  } catch (Exception e) {
+	    throw new FLException(230015 , "公司不存在");
+	  }
 	}
 
 }

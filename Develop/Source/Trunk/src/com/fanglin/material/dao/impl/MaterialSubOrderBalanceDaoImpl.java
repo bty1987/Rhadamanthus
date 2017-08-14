@@ -35,12 +35,12 @@ public class MaterialSubOrderBalanceDaoImpl extends DaoImpl<MaterialSubOrderBala
 	}
 
 	@Override
-	public List<MaterialSubOrderBalancePO> pageMaterialSubOrderBalance(Paging paging, List<Filter> filters) {
+	public List<MaterialSubOrderBalancePO> pageMaterialSubOrderBalance(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<MaterialSubOrderBalancePO> query = pagingQuery(paging, MaterialSubOrderBalancePO.class);
+		query.add(query.getCriterion("materialSubOrder.company", company, "eq"));
 		
 		queryFilterExecute(query, filters);
-		
 		return query.list();
 	}
 	

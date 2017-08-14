@@ -23,7 +23,7 @@ public class ConstructionNodeCompanyPO implements Serializable {
 	
 	private long cncid;
 	
-	private long cid;
+	private int cid;
 	
 	private ConstructionNodePO constructionNode;
 
@@ -39,11 +39,11 @@ public class ConstructionNodeCompanyPO implements Serializable {
 	}
 
 	@Column(name = "cid")
-	public long getCid() {
+	public int getCid() {
 		return cid;
 	}
 
-	public void setCid(long cid) {
+	public void setCid(int cid) {
 		this.cid = cid;
 	}
 

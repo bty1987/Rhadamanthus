@@ -43,9 +43,9 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageQuotationVersion(Paging paging, List<Filter> filters){
+	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company){
 		
-		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters);
+		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters,company);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
 		
 		for(QuotationVersionPO quotationVersionPO: quotationVersionPOs){
@@ -69,9 +69,9 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	}
 	
 	@Override
-	public List<QuotationVersionVO> queryQuotationVersion(){
+	public List<QuotationVersionVO> queryQuotationVersion(int company){
 		
-		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.queryQuotationVersion();
+		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.queryQuotationVersion(company);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
 		
 		for(QuotationVersionPO quotationVersionPO: quotationVersionPOs){
@@ -86,27 +86,25 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO){
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company){
 		
 		QuotationVersionPO quotationVersionPO = null;
 		
 		if(quotationVersionVO.getDefaultFlag() == 1){
-			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(1);
-			
-			for(QuotationVersionPO _quotationVersionPO: defaultFlagQuotationVersionPOs){
-				_quotationVersionPO.setDefaultFlag(0);
-				quotationVersionDao.update(_quotationVersionPO);
+			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(company,1);
+			if(!defaultFlagQuotationVersionPOs.isEmpty()){
+				for(QuotationVersionPO _quotationVersionPO: defaultFlagQuotationVersionPOs){
+					_quotationVersionPO.setDefaultFlag(0);
+					quotationVersionDao.update(_quotationVersionPO);
+				}
 			}
-			
-			BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
-			
-			//级联更新订单状态是咨询和量房 已报价的订单 使用的报价版本
+			//级联更新订单状态是咨询和量房 已报价的订单 使用的报价版本 
 			//quotationVersionDao.changeRelationTable(quotationVersionPO.getVersionId());
-		}else{
+		}
 			quotationVersionPO = new QuotationVersionPO();
 			
 			BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
-		}
+		
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
@@ -114,9 +112,8 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		versionId.append(SystemConfig.getString("companyIdent", ""));
 		versionId.append(SystemConfig.getString("quotationVersionIdent", "QV_"));
 		versionId.append(FormatUtil.fillZero(count, "000"));
-		
 		quotationVersionPO.setVersionId(versionId.toString());
-		
+		quotationVersionPO.setCompany(company);
 		quotationVersionDao.save(quotationVersionPO);
 	}
 	
@@ -127,7 +124,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		QuotationVersionPO sourceQuotationVersionPO = quotationVersionDao.get(quotationVersionVO.getVersionId());
 		
 		if(quotationVersionVO.getDefaultFlag() == 1){
-			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(1);
+			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(sourceQuotationVersionPO.getCompany(),1);
 			
 			for(QuotationVersionPO quotationVersionPO: defaultFlagQuotationVersionPOs){
 				quotationVersionPO.setDefaultFlag(0);

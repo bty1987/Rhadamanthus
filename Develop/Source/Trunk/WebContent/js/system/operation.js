@@ -102,8 +102,8 @@ $(function(){
                 }, callback: function(data){
                     this.flprocess(data ,'mId', 'name');
                 },
-                isResultTypeMap : true //必填值为true，获取key，value的标识，
-                , flupdater: function(k,v){//下拉列表选中时的一些处理，必填对选中项的key和value做处理
+                isResultTypeMap : true //必填值为true,获取key,value的标识,
+                , flupdater: function(k,v){//下拉列表选中时的一些处理,必填对选中项的key和value做处理
                     //k: key, v:value
                     return v;
                 }
@@ -132,7 +132,7 @@ $(function(){
     }
 
     function deleteOperation(oid){
-        bootbox.confirm("确定删除吗？", function(result) {
+        bootbox.confirm("确定删除吗?", function(result) {
             if(result) {
                 com.post(api.system.deleteOperation, {"operation.oid": oid}, function(){
                     search();

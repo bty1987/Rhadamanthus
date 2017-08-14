@@ -40,8 +40,6 @@ public class DepartmentVO implements Serializable {
 	
 	private Integer ident;
 	
-	private Integer company;
-	
 	private Short status;
 	
 	public DepartmentVO(){
@@ -134,14 +132,6 @@ public class DepartmentVO implements Serializable {
 
 	public void setIdent(Integer ident) {
 		this.ident = ident;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
 	}
 
 	public Short getStatus() {

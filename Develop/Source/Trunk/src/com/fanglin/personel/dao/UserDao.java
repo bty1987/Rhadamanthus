@@ -22,17 +22,17 @@ public interface UserDao extends Dao<UserPO> {
 	
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName, String duty);
+	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName, String duty,Integer company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADutys(Paging paging, String pinyinName, List<String> dutys);
+	public List<UserPO> pageUserForNameByPinyinNameADutys(Paging paging, String pinyinName, List<String> dutys,Integer company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADutyADeptId(Paging paging, String pinyinName, String duty, String deptId);
+	public List<UserPO> pageUserForNameByPinyinNameADutyADeptId(Paging paging, String pinyinName, String duty, String deptId,Integer  company);
 
-	public List<UserPO> pageUserForNameByPinyinNameADutysADeptId(Paging paging, String pinyinName, List<String> dutys, String deptId);
+	public List<UserPO> pageUserForNameByPinyinNameADutysADeptId(Paging paging, String pinyinName, List<String> dutys, String deptId,Integer  company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO);
+	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO,Integer company);
 
-	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId);
+	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId,Integer  company);
 	
 	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType);
 

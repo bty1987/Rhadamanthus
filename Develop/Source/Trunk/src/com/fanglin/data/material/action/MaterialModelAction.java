@@ -44,7 +44,7 @@ public class MaterialModelAction extends BaseExportAction{
 	@Action(value="pageMaterialModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialModel() throws FLException{
 		
-		materialModelService.pageMaterialModel(getPaging(), getFilters(), queryUserId());
+		materialModelService.pageMaterialModel(getPaging(), getFilters(), queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -74,9 +74,9 @@ public class MaterialModelAction extends BaseExportAction{
 	}
 	
 	@Action(value="queryMaterialModelForAllByName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialModelForAllByName(){
+	public String queryMaterialModelForAllByName() throws FLException{
 		
-		materialModels = materialModelService.queryMaterialModelForAllByName(materialModel);
+		materialModels = materialModelService.queryMaterialModelForAllByName(materialModel,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -92,7 +92,7 @@ public class MaterialModelAction extends BaseExportAction{
 	@Action(value="addMaterialModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMaterialModel() throws FLException{
 		
-		materialModelService.addMaterialModel(materialModel);
+		materialModelService.addMaterialModel(materialModel,queryCompany());
 		
 		return SUCCESS;
 	}

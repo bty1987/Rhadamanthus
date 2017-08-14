@@ -29,7 +29,12 @@ var QuotationDetail = (function(){
 					});
 				}),
 				//打印
-				$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime),
+				//$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime),
+				$btnPrint : $('#printFinanceBtn').click(function(){
+					com.popup("家装预算__订单编号：" + params.orderId  ,api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					})
+				}),
 				//返回
 				$btnBack : $('#detailBckBtn').on(ace.click_event, function(){
 					bootbox.confirm("当前页面存在重要数据,是否进行当前操作?", function(result) {
@@ -1450,7 +1455,7 @@ var QuotationDetail = (function(){
 
 				var options = {
 					"quotationMaterialItem.qmiId": $line.attr('data-qmiid'),
-					"quotationMaterialItem.diff": $line.attr('data-diff')
+					"quotationMaterialItem.diff": $line.find('.diff').text(),
 				};
 				com.post(api.quotation.deleteQuotationMaterialItem, options, function(res){
 					$line.remove();

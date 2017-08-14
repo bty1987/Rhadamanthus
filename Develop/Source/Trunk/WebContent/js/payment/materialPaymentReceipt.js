@@ -165,12 +165,11 @@ function createReceiptTable(){
 	var noTable = $('<table style="width: 100%; border-collapse:collapse;"></table>').appendTo(center);
 	var noTr = $('<tr></tr>').appendTo(noTable);
 	var noTd = $('<td colspan="4"></td>').appendTo(noTr);
+	var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
+	var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "专用收据").appendTo(headReceiptDiv);
 	
 	var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
-	var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
-	var headReceiptTd = $('<td colspan="4"></td>').appendTo(headReceiptTr);
-	var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
-	var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(config.companyName + "专用收据").appendTo(headReceiptDiv);
+
 	
 	var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 	var noReceiptTd = $('<td style="width: 15%"></td>').text('订单编号: ' + commonInfo["orderId"]).appendTo(orderReceiptTr);
@@ -232,5 +231,11 @@ function createReceiptTable(){
 	
 	var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 	var paymentDesTd = $('<td colspan="4"></td>').text('备注: ' + commonInfo["materialPaymentDes"]).appendTo(addrReceiptTr);
+
+	$("#btnPrint").click(function(){
+		$("#printMaterialPaymentReceipt").attr('style','display:none');
+		window.print();
+		$("#printMaterialPaymentReceipt").attr('style','display:block');
+	});
 		
 }

@@ -63,7 +63,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId) throws FLException {
+	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId, int company) throws FLException {
 		
 		long paymentId = approvalDecorationRefundVO.getPaymentId();
 		
@@ -106,6 +106,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecorationOrderPO().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

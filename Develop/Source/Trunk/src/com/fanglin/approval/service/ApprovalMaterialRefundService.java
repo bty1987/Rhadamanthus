@@ -43,7 +43,7 @@ public interface ApprovalMaterialRefundService {
 	 * @return
 	 * @throws FLException
 	 */
-	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId) throws FLException;
+	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId, int company) throws FLException;
 	
 	/**
 	 * 批准主材退款

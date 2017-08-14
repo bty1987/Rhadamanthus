@@ -43,7 +43,9 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 	private QuotationItemDao quotationItemDao;
 	
 	@Override
-	public void pageQuotationItem(Paging paging, List<Filter> filters){
+	public void pageQuotationItem(Paging paging, List<Filter> filters,int company){
+		
+		filters.add(new Filter(QuotationItemPO.COLUMN_COMPANY_STR, String.valueOf(company), "eq"));
 		
 		List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();

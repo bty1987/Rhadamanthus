@@ -2,6 +2,8 @@ var decorationOrderDetail = {
 	decorationOrderId:null,
 	orderType:"",
 
+	items: {},
+
 	type:{
 		"半包":0,
 		"全包":1,
@@ -51,7 +53,15 @@ jQuery(function($) {
 	
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
-	
+
+	decorationOrderDetail.items.houseType = $('#houseType');
+	decorationOrderDetail.items.houseClass = $('#houseClass');
+
+	com.post(api.ds.decorationInfo, {}, function(res){
+		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
+		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
+	}, null, false);
+
 	$('#customerInfosBtn').on(ace.click_event, function(){
 		$.gritter.add({
 			title: '客户敏感信息',

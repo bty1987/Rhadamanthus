@@ -2,6 +2,7 @@ package com.fanglin.system.service.impl;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("CompanyService")
 @Transactional(readOnly = true)
@@ -25,7 +29,7 @@ public class CompanyServiceImpl implements CompanyService{
 	private CompanyDao  companyDao;
 	
 	@Override
-	public void pageCompany(Paging paging, List<Filter> filters) {
+	public void pageCompany(Paging paging, List<Filter> filters) throws FLException {
 		
 		List<CompanyPO> companyPOs = companyDao.pageCompany(paging, filters);
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
@@ -35,7 +39,13 @@ public class CompanyServiceImpl implements CompanyService{
 		for(CompanyPO companyPO: companyPOs){
 			companyVO = new CompanyVO();
 	
-			BeanUtil.copyProperties(companyPO, companyVO);
+			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+			
+			try {
+				companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+			} catch (Exception e) {
+				throw new FLException(230017, "公司获取失败");
+			}
 			
 			companyVOs.add(companyVO);
 		}
@@ -44,9 +54,9 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	@Override
-	public List<CompanyVO> queryCompany() {
+	public List<CompanyVO> queryCompany() throws FLException {
 		
-		List<CompanyPO> companyPOs = companyDao.list();
+		List<CompanyPO> companyPOs = companyDao.queryCompany();
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
 		
 		CompanyVO companyVO;
@@ -54,7 +64,13 @@ public class CompanyServiceImpl implements CompanyService{
 		for(CompanyPO companyPO: companyPOs){
 			companyVO = new CompanyVO();
 	
-			BeanUtil.copyProperties(companyPO, companyVO);
+			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+			
+			try {
+				companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+			} catch (Exception e) {
+				throw new FLException(230017, "公司获取失败");
+			}
 			
 			companyVOs.add(companyVO);
 		}
@@ -62,6 +78,32 @@ public class CompanyServiceImpl implements CompanyService{
 		return companyVOs;
 	}
 	
+	@Override
+	public CompanyVO queryCompanyByCid(CompanyVO companyVO) throws FLException {
+		
+		CompanyPO companyPO;
+		
+		try {
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+		} catch (Exception e) {
+			throw new FLException(230017, "公司获取失败");
+		}
+		
+		if (companyPO == null) {
+			throw new FLException(230015 , "公司不存在");
+		}
+		
+		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+		
+		try {
+			companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+		} catch (Exception e) {
+			throw new FLException(230017, "公司获取失败");
+		}
+		
+		return companyVO;
+	}
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addCompany(CompanyVO companyVO) throws FLException {
@@ -90,13 +132,13 @@ public class CompanyServiceImpl implements CompanyService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updateCompany(CompanyVO companyVO) throws FLException {
 		
-		CompanyPO companyPO = companyDao.queryCompanyByName(companyVO.getName());
+		CompanyPO companyPO;
 		
-		if (companyPO != null) {
-			throw new FLException(230014 , "公司已存在");
+		try {
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+		} catch (Exception e) {
+			throw new FLException(230017, "公司获取失败");
 		}
-	
-		companyPO = companyDao.queryCompanyByCid(companyVO.getCid());
 		
 		if (companyPO == null) {
 			throw new FLException(230015 , "公司不存在");
@@ -113,7 +155,13 @@ public class CompanyServiceImpl implements CompanyService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updateCompanyForStatus(CompanyVO companyVO) throws FLException {
 	
-		CompanyPO companyPO = companyDao.queryCompanyByCid(companyVO.getCid());
+		CompanyPO companyPO;
+		
+		try {
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+		} catch (Exception e) {
+			throw new FLException(230017, "公司获取失败");
+		}
 		
 		if (companyPO == null) {
 			throw new FLException(230015 , "公司不存在");

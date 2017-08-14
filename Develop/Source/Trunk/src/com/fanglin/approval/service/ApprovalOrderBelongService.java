@@ -21,7 +21,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalOrderBelongService {
 	
-	public int submitApprovalForOrderBelong(ApprovalVO approvalVO, ApprovalOrderBelongVO approvalOrderBelongVO, List<ApprovalOrderBelongItemVO> approvalOrderBelongItemVOs, String userId) throws FLException;
+	public int submitApprovalForOrderBelong(ApprovalVO approvalVO, ApprovalOrderBelongVO approvalOrderBelongVO, List<ApprovalOrderBelongItemVO> approvalOrderBelongItemVOs, String userId, int company) throws FLException;
 	
 	public int approvalForOrderBelong(ApprovalPO approvalPO) throws FLException;
 

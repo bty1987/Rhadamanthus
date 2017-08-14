@@ -14,9 +14,7 @@ package com.fanglin.payment.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +30,6 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.finance.service.FinanceService;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
 import com.fanglin.material.po.MaterialSubOrderPO;
@@ -83,8 +80,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Autowired
 	private MaterialSubOrderRefundDao materialSubOrderRefundDao;
 	
-	@Autowired
-	private FinanceService financeService;
+//	@Autowired
+//	private FinanceService financeService;
 	
 	@Autowired
 	private UserDao userDao;
@@ -235,49 +232,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		paging.setData(materialPaymentVOs);
 	}
 
-	@Override
-	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters){
-		
-		Map<Integer, String> types = new HashMap<Integer, String>();
-		types.put(2, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR);
-		types.put(3, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR);
-		types.put(4, MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR);
-		types.put(5, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR);
-		types.put(6, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR);
-		types.put(7, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR);
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		MaterialSubOrderPO materialSubOrderPO;
-		MaterialPaymentVO materialPaymentVO;
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			
-			materialPaymentVO = new MaterialPaymentVO();
-			
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO);
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO);
-			}
-			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-			
-			if(materialSubOrderPO != null){
-				BeanUtil.copyProperties(materialSubOrderPO, materialPaymentVO);
-				
-				materialPaymentVO.setMsoCoupon(materialSubOrderPO.getCoupon());
-				materialPaymentVO.setMsoCouponInfo(materialSubOrderPO.getCouponInfo());
-			}
-			
-			materialPaymentVO.setPaymentTypeName(types.get(materialPaymentVO.getPaymentType()));
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-		
-		return materialPaymentVOs;
-	}
 
 	@Override
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO) {
@@ -414,6 +368,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		if(materialSubOrderPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
 			
+			if(materialPaymentDao.countMaterialPaymentByMsoIdAType(materialPaymentVO.getMsoId(),MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT)>0){
+				throw new FLException(150036, "补款已提交");
+			}
+			
 			materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 			materialSubOrderPO.setDepositPayment(materialPaymentPO.getReferMoney());
 			
@@ -425,7 +383,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				MaterialPaymentPO depositPayment = materialPaymentPOs.get(0);
 				
 				if(depositPayment.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
-					throw new FLException(150029, "主材定金未收款");
+					throw new FLException(150029, "款项不可提交");
 				}
 			}
 			
@@ -506,6 +464,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					perPayment.setCollectUser(new UserVO(userId));
 					perPayment.setCustomer(new CustomerVO(customerPO.getId()));
 					perPayment.setPaymentType(_paymentType);
+					perPayment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+					//在预付款历史收款中，存储操作后对应类型的预付款余额
+					if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
+						perPayment.setBalance(Arith.sub(advancePaymentPO.getBalance(), materialPaymentVO.getAdvance()));
+					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
+						perPayment.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), materialPaymentVO.getAdvance()));
+					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
+						perPayment.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), materialPaymentVO.getAdvance()));
+					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
+						perPayment.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), materialPaymentVO.getAdvance()));
+					}
 					
 					MaterialSubOrderPO materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
 					
@@ -736,6 +705,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				paymentVO.setCustomer(new CustomerVO(customerPO.getId()));
 				paymentVO.setPaymentType(_paymentType);
 				paymentVO.setOrderId(materialSubOrderVO.getOrderId());
+				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+				//在预付款历史收款中，存储操作后对应类型的预付款余额
+				if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), materialReceiptVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), materialReceiptVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), materialReceiptVO.getAdvance()));
+				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
+					paymentVO.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), materialReceiptVO.getAdvance()));
+				}
 				
 				materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
 				materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
@@ -1111,65 +1091,62 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void confirmMaterialPayment(List<Long> mpIds, String userId) throws FLException{
-		
+
 		for(Long mpId: mpIds){
 			MaterialPaymentPO materialPaymentPO = materialPaymentDao.get(mpId);
-			
+
 			if(materialPaymentPO == null){
 				throw new FLException(150003, "款项不存在");
 			}
-			
+
 			MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
-			
+
 			MaterialSubOrderPO materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-			
+
 			if(materialSubOrderPO == null){
 				throw new FLException(180001, "主材订单不存在");
 			}
-			
+
 			if(materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT){
 				if(materialPaymentPO.getPaymentType() == MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT){
-					
+
 					List<MaterialSubOrderRefundPO> materialSubOrderRefundPOs = materialSubOrderRefundDao.queryMaterialSubOrderRefundByMpId(materialPaymentPO.getMpId());
-					
+
 					for(MaterialSubOrderRefundPO materialSubOrderRefundPO: materialSubOrderRefundPOs){
 						materialSubOrderRefundPO.setStatus(MaterialSubOrderRefundPO.STATUS_TYPE_PAYMENTCONFIRM_INT);
 						materialSubOrderRefundDao.update(materialSubOrderRefundPO);
 					}
 				}else{
-					
+
 					int materialPaymentType = materialPaymentPO.getPaymentType();
-					
+
 					if(materialSubOrderPO != null){
 						if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
 							materialSubOrderPO.setDepositStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT);
 						}else if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT || materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
 							materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_CONFIRM_INT);
 						}
-						
+
 						materialSubOrderDao.update(materialSubOrderPO);
 					}
 				}
-				
+
 				UserPO userPO = userDao.queryUserByUserId(userId);
 				materialReceiptPO.setConfirmUserId(userId);
 				materialReceiptPO.setConfirmUserName(userPO.getUserName());
 				materialReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 				materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
-				
-				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT && SystemConfig.getInt("voucherFlag") != 0){
+
+				if(materialReceiptPO.getStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
 					materialReceiptPO.setStatus((short) MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT);
-					
-					DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(materialSubOrderPO.getOrderId());
-					
-					financeService.buildMaterialFinance(decorationOrderPO, materialSubOrderPO, materialReceiptPO, userPO);
 				}
-				
+
 				materialReceiptDao.update(materialReceiptPO);
 				materialPaymentDao.update(materialPaymentPO);
 			}
 		}
 	}
+
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

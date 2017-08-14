@@ -34,4 +34,6 @@ public class CategoryVO implements java.io.Serializable {
 		this.categoryName = categoryName;
 	}
 
+	
+
 }

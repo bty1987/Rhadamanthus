@@ -42,19 +42,16 @@ public class ColorServiceImpl implements ColorService{
 	@Override
 	public List<ColorVO> queryColorForEnableByGid(ColorVO colorVO) {
 		
-		List<ColorPO> colorPOs = colorDao.queryColorByGid(colorVO.getGid());
+		List<ColorPO> colorPOs = colorDao.queryColorForEnableByGid(colorVO.getGid());
 		List<ColorVO> colorVOs = new ArrayList<ColorVO>();
 		
 		for(ColorPO colorPO: colorPOs){
 			
-			if(colorPO.getStatus()==ColorPO.STATUS_ENABLE_INT){
-				
-				colorVO = new ColorVO();
-				
-				BeanUtil.copyProperties(colorPO, colorVO);
-				
-				colorVOs.add(colorVO);
-			}
+			colorVO = new ColorVO();
+			
+			BeanUtil.copyProperties(colorPO, colorVO);
+			
+			colorVOs.add(colorVO);
 		}
 		
 		return colorVOs;

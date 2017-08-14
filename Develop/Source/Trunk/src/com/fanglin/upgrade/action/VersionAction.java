@@ -18,15 +18,15 @@ import com.fanglin.upgrade.vo.VersionVO;
 @Namespace("/")
 @Controller
 public class VersionAction extends BaseListAction{
-	
-	private static final long serialVersionUID = -73141511258270262L;
 
+	private static final long serialVersionUID = -6929762321931073057L;
+	
 	@Autowired
 	private VersionService versionService;
 	
-	private VersionVO version;
-	
 	private List<VersionVO> versions;
+	
+	private VersionVO version;
 	
 	@Action(value = "pageVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageVersion(){
@@ -35,19 +35,11 @@ public class VersionAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-
+	
 	@Action(value = "queryVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryVersion(){
 		
-		versions = versionService.queryVersion(getFilters(), version);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "matchVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String matchVersion(){
-		
-		version = versionService.matchVersion(version);
+		versions = versionService.queryVersion(getFilters());
 		
 		return SUCCESS;
 	}
@@ -60,12 +52,36 @@ public class VersionAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVersion() throws FLException{
+		
+		versionService.updateVersion(version);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateVersionForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVersionForStatus() throws FLException{
+		
+		versionService.updateVersionForStatus(version);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteVersion() throws FLException{
 		
 		versionService.deleteVersion(version);
 		
 		return SUCCESS;
+	}
+
+	public List<VersionVO> getVersions() {
+		return versions;
+	}
+
+	public void setVersions(List<VersionVO> versions) {
+		this.versions = versions;
 	}
 
 	public VersionVO getVersion() {
@@ -76,12 +92,4 @@ public class VersionAction extends BaseListAction{
 		this.version = version;
 	}
 
-	public List<VersionVO> getVersions() {
-		return versions;
-	}
-
-	public void setVersions(List<VersionVO> versions) {
-		this.versions = versions;
-	}
-	
 }

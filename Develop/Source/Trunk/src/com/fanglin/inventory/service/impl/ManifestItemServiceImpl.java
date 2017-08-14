@@ -183,6 +183,8 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 		manifestPO.setTotal(manifestVO.getTotal());
 		manifestPO.setComment(comment);
+		
+		manifestDao.update(manifestPO);
 
 		manifestItemDao.save(manifestItemPO);
 
@@ -259,8 +261,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteManifestItem(ManifestVO manifestVO,
-			ManifestItemVO manifestItemVO) throws FLException {
+	public int deleteManifestItem(ManifestVO manifestVO,ManifestItemVO manifestItemVO) throws FLException {
 
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 

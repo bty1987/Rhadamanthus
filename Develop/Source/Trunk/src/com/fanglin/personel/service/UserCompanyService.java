@@ -10,6 +10,6 @@ public interface UserCompanyService {
 
 	public List<UserCompanyVO> queryUserCompany(UserVO userVO) throws FLException;
 	
-	public int updateUserCompany(UserVO userVO, List<Integer> cids)throws FLException;
+	public int updateUserCompany(UserVO userVO, List<String> cids)throws FLException;
 	
 }

@@ -36,9 +36,9 @@ public class QuotationItemAction extends BaseListAction {
 	private QuotationItemVO quotationItem;
 	
 	@Action(value="pageQuotationItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationItem(){
+	public String pageQuotationItem() throws FLException{
 		
-		quotationItemService.pageQuotationItem(getPaging(), getFilters());
+		quotationItemService.pageQuotationItem(getPaging(), getFilters(),queryCompany());
 	    
 		return SUCCESS;
 	}

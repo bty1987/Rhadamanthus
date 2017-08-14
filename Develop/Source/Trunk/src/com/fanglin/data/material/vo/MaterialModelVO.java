@@ -17,184 +17,198 @@ public class MaterialModelVO implements Serializable{
 
 	private static final long serialVersionUID = -5221234193724730179L;
 	
-	private int mmId;
+	private Integer mmId;
 	
 	private String materialModelNo;
 	
 	private String materialModelName;
 	
-	private long materialTypeId;
+	private Long materialTypeId;
 	
 	private String materialTypeName;
 	
-	private long materialBrandId;
+	private Long materialBrandId;
 	
 	private String materialBrandName;
 	
-	private int measurementUnitId;
+	private Integer measurementUnitId;
 	
 	private String measurementUnitName;
 	
-	private float materialUnitPrice;
+	private Float materialUnitPrice;
 	
-	private float materialPurchasePrice;
+	private Float materialPurchasePrice;
 	
-	private float discount;
+	private Float discount;
 	
-	private int calcType;
+	private Integer calcType;
 	
-	private float point;
+	private Float point;
 	
-	private float base;
+	private Float base;
 	
 	private String calcTypeName;
 	
-	private float calcValue;
+	private Float calcValue;
 	
-	private short status;
+	private Short status;
+	
+	private Integer company;
 
-	public int getMmId(){
+	public Integer getMmId() {
 		return mmId;
 	}
 
-	public void setMmId(int mmId){
+	public void setMmId(Integer mmId) {
 		this.mmId = mmId;
 	}
-	
-	public String getMaterialModelNo(){
+
+	public String getMaterialModelNo() {
 		return materialModelNo;
 	}
 
-	public void setMaterialModelNo(String materialModelNo){
+	public void setMaterialModelNo(String materialModelNo) {
 		this.materialModelNo = materialModelNo;
 	}
 
-	public String getMaterialModelName(){
+	public String getMaterialModelName() {
 		return materialModelName;
 	}
 
-	public void setMaterialModelName(String materialModelName){
+	public void setMaterialModelName(String materialModelName) {
 		this.materialModelName = materialModelName;
 	}
 
-	public float getMaterialUnitPrice(){
-		return materialUnitPrice;
-	}
-
-	public void setMaterialUnitPrice(float materialUnitPrice){
-		this.materialUnitPrice = materialUnitPrice;
-	}
-
-	public long getMaterialBrandId(){
-		return materialBrandId;
-	}
-
-	public void setMaterialBrandId(long materialBrandId){
-		this.materialBrandId = materialBrandId;
-	}
-
-	public String getMaterialBrandName(){
-		return materialBrandName;
-	}
-
-	public void setMaterialBrandName(String materialBrandName){
-		this.materialBrandName = materialBrandName;
-	}
-
-	public int getMeasurementUnitId(){
-		return measurementUnitId;
-	}
-
-	public void setMeasurementUnitId(int measurementUnitId){
-		this.measurementUnitId = measurementUnitId;
-	}
-
-	public String getMeasurementUnitName(){
-		return measurementUnitName;
-	}
-
-	public void setMeasurementUnitName(String measurementUnitName){
-		this.measurementUnitName = measurementUnitName;
-	}
-
-	public float getDiscount(){
-		return discount;
-	}
-
-	public void setDiscount(float discount){
-		this.discount = discount;
-	}
-
-	public float getBase(){
-		return base;
-	}
-
-	public void setBase(float base){
-		this.base = base;
-	}
-
-	public long getMaterialTypeId(){
+	public Long getMaterialTypeId() {
 		return materialTypeId;
 	}
 
-	public void setMaterialTypeId(long materialTypeId){
+	public void setMaterialTypeId(Long materialTypeId) {
 		this.materialTypeId = materialTypeId;
 	}
-	
-	public int getCalcType(){
-		return calcType;
-	}
 
-	public void setCalcType(int calcType){
-		this.calcType = calcType;
-	}
-
-	public String getMaterialTypeName(){
+	public String getMaterialTypeName() {
 		return materialTypeName;
 	}
 
-	public void setMaterialTypeName(String materialTypeName){
+	public void setMaterialTypeName(String materialTypeName) {
 		this.materialTypeName = materialTypeName;
 	}
 
-	public float getPoint(){
-		return point;
+	public Long getMaterialBrandId() {
+		return materialBrandId;
 	}
 
-	public void setPoint(float point){
-		this.point = point;
+	public void setMaterialBrandId(Long materialBrandId) {
+		this.materialBrandId = materialBrandId;
 	}
 
-	public float getMaterialPurchasePrice(){
+	public String getMaterialBrandName() {
+		return materialBrandName;
+	}
+
+	public void setMaterialBrandName(String materialBrandName) {
+		this.materialBrandName = materialBrandName;
+	}
+
+	public Integer getMeasurementUnitId() {
+		return measurementUnitId;
+	}
+
+	public void setMeasurementUnitId(Integer measurementUnitId) {
+		this.measurementUnitId = measurementUnitId;
+	}
+
+	public String getMeasurementUnitName() {
+		return measurementUnitName;
+	}
+
+	public void setMeasurementUnitName(String measurementUnitName) {
+		this.measurementUnitName = measurementUnitName;
+	}
+
+	public Float getMaterialUnitPrice() {
+		return materialUnitPrice;
+	}
+
+	public void setMaterialUnitPrice(Float materialUnitPrice) {
+		this.materialUnitPrice = materialUnitPrice;
+	}
+
+	public Float getMaterialPurchasePrice() {
 		return materialPurchasePrice;
 	}
 
-	public void setMaterialPurchasePrice(float materialPurchasePrice){
+	public void setMaterialPurchasePrice(Float materialPurchasePrice) {
 		this.materialPurchasePrice = materialPurchasePrice;
 	}
 
-	public String getCalcTypeName(){
+	public Float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Float discount) {
+		this.discount = discount;
+	}
+
+	public Integer getCalcType() {
+		return calcType;
+	}
+
+	public void setCalcType(Integer calcType) {
+		this.calcType = calcType;
+	}
+
+	public Float getPoint() {
+		return point;
+	}
+
+	public void setPoint(Float point) {
+		this.point = point;
+	}
+
+	public Float getBase() {
+		return base;
+	}
+
+	public void setBase(Float base) {
+		this.base = base;
+	}
+
+	public String getCalcTypeName() {
 		return calcTypeName;
 	}
 
-	public void setCalcTypeName(String calcTypeName){
+	public void setCalcTypeName(String calcTypeName) {
 		this.calcTypeName = calcTypeName;
 	}
 
-	public float getCalcValue(){
+	public Float getCalcValue() {
 		return calcValue;
 	}
 
-	public void setCalcValue(float calcValue){
+	public void setCalcValue(Float calcValue) {
 		this.calcValue = calcValue;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
+
+	
+	
+	
 	
 }

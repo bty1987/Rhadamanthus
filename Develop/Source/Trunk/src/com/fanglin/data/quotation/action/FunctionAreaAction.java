@@ -42,9 +42,9 @@ public class FunctionAreaAction extends BaseListAction {
 	private List<FunctionAreaVO> functionAreas;
 	
 	@Action(value="pageFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageFunctionArea(){
+	public String pageFunctionArea() throws FLException{
 		
-		functionAreaService.pageFunctionArea(getPaging(), getFilters());
+		functionAreaService.pageFunctionArea(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}

@@ -29,6 +29,8 @@ public class SystemDefineItemPO implements Serializable {
 	
 	public static final int TYPE_SYSTEMDEFINEITEM_INT = 3;	
 	
+	public static final String COLUMN_COMPANY_STR ="company";
+	
 	private long sdiId;
 	
 	private String itemId;
@@ -48,6 +50,8 @@ public class SystemDefineItemPO implements Serializable {
 	private short status;
 	
 	private short discount;
+	
+	private int company;
 	
 	public SystemDefineItemPO(){
 		super();
@@ -152,4 +156,13 @@ public class SystemDefineItemPO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
 }

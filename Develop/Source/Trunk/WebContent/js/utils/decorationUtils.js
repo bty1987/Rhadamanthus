@@ -329,13 +329,13 @@ var decorationUtils = {
 					var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.materialBrand));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
+					var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+
 					$('<b></b>').html(v.materialType).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
 					$('<b></b>').html(v.materialBrand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
-					$('<b></b>').attr("name", "total").attr("value", v.referMoney).html(v.referMoney).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
 					$liLine.append($h4).append($ulProperty).appendTo($ulbrand);
-
-					var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
 
 					$total = utils.changeThrDecimal($total + _refer);
 				}
@@ -832,11 +832,26 @@ var decorationUtils = {
 			$('#servicePrice').html(checkNull(res.servicePrice));
 			$('#materialPaidup').html(checkNull(res.materialPaidup));
 			$('#servicePaidup').html(checkNull(res.servicePaidup));
-			$('#quotationPrice').html(checkNull(Math.ceil(utils.changeThrDecimal(utils.accAdd(utils.accDiv(res.projectPrice, utils.accDiv(res.discount, 10)), res.managePrice)))));
-			var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.materialPaidup, res.materialPrice)), 100);
-			$('#materialPercent').html(checkNull(materialPercent > 100 ? 100 : materialPercent) + "%");
-			var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.servicePaidup, res.servicePrice)), 100);
-			$('#servicePercent').html(checkNull(servicePercent > 100 ? 100 : servicePercent) + "%");
+
+			if(res.managePrice == null){
+				$('#quotationPrice').html(0);
+			}else {
+				$('#quotationPrice').html(checkNull(Math.ceil(utils.changeThrDecimal(utils.accAdd(utils.accDiv(checkNull(res.projectPrice), utils.accDiv(checkNull(res.discount), 10)), res.managePrice)))));
+			}
+
+			if(res.materialPrice == null){
+				$('#materialPercent').html(0);
+			}else {
+				var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(checkNull(res.materialPaidup), res.materialPrice)), 100);
+				$('#materialPercent').html(checkNull(materialPercent > 100 ? 100 : materialPercent) + "%");
+			}
+
+			if(res.servicePrice == null){
+				$('#servicePercent').html(0);
+			}else {
+				var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(checkNull(res.servicePaidup), res.servicePrice)), 100);
+				$('#servicePercent').html(checkNull(servicePercent > 100 ? 100 : servicePercent) + "%");
+			}
 
 		});
 
@@ -848,7 +863,7 @@ var decorationUtils = {
 			var $tableWrap = $('#hoServiceMoney');
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 			$.each(data, function (i, v) {
-				console.log(v)
+				// console.log(v)
 				var serviceReceipt = v.serviceReceipt;
 
 				var $liLine = $('<li></li>').addClass('item-orange clearfix');

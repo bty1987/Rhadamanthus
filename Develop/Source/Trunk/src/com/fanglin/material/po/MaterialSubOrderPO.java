@@ -66,6 +66,7 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	//增加归属部门名
 	public static final String COLUMN_DEPARTMENTNAME_STR="departmentName";
 	
+	
 	public static final int MSO_TYPE_GIVE_INT = 4;
 	
 	public static final int MSO_TYPE_INSIDE_INT = 5;
@@ -215,6 +216,8 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	private float postProfit;
 	
 	private float custProfit;
+	
+	private int company;
 	
 	private String des;
 
@@ -660,6 +663,15 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 
 	public void setDistotal(float distotal) {
 		this.distotal = distotal;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 	
 	

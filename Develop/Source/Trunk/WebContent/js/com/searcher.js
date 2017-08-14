@@ -1,6 +1,6 @@
 /**
  * Created by Administrator on 2016/4/7.
- * eval()方法使用，通过方法名字符串调用方法
+ * eval()方法使用,通过方法名字符串调用方法
  */
 
 
@@ -25,7 +25,7 @@ var Searcher = function(){
         /**
          * 根据查询条件的编号列表初始化页面查询条件区域
          * params:
-         *      condCodeArrs:数组（查询条编号的数组）
+         *      condCodeArrs:数组(查询条编号的数组)
          *      searchId:放查询条件的div的id
          *      url:查询调用的URL
          *      displayFunc:向后台请求的回调函数
@@ -92,13 +92,13 @@ var Searcher = function(){
             var _rtype = condRule['type'];//标签类型
 
             var _rname = condRule['submitConfig']['name'];//向后台提交提交时的参数名
-            var _rop = condRule['submitConfig']['op'];//提交给后台时的查询条件：等于或者包含
+            var _rop = condRule['submitConfig']['op'];//提交给后台时的查询条件:等于或者包含
             if(condRule['dataSource']){
                 var _rurl = condRule['dataSource']['url'];//autofill和select标签获取可选值的接口
                 var _rkey = condRule['dataSource']["keyPath"];//autofill和select取值时调用接口后处理返回值时用来作为提交项的参数名
                 var _rvalue = condRule['dataSource']["valuePath"];//autofill和select取值时调用接口后处理返回值时用来显示的参数名
                 var _rpostParam = condRule['dataSource']["postData"];//autofill和select取值时调用接口时传的参数
-                var _rresult = condRule['dataSource']["listPath"];//autofill和select取值时调用接口后取值用的eg：data.deptList
+                var _rresult = condRule['dataSource']["listPath"];//autofill和select取值时调用接口后取值用的eg:data.deptList
             }
 
             $label.text(_rlabel + ':').appendTo($item);
@@ -475,11 +475,11 @@ var Searcher = function(){
          *     condCodeArrs:查询条件编号的数组
          *     searchId:查询控件显示标签id
          *     url:分页查询路径
-         *     displayFunc:分页查询的回调函数（画列表）
+         *     displayFunc:分页查询的回调函数(画列表)
          *     pagerId:分页控件的标签id
          *     historyName:保存历史查询条件的查询条件名
          *     extraParams: 分页查询的其他查询参数{key:val}形式
-         *     noPagingFlag : 不分页标识，true，标识不分页
+         *     noPagingFlag: 不分页标识,true,标识不分页
          * */
         init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns, resultListId){
             /*各种设置*/

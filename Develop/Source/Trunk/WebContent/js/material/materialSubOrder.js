@@ -263,7 +263,7 @@ jQuery(function($) {
 			$("#" + name + "PaymentInfo").css("display", "none").html("");
 			$("#" + name + "PaymentBtn").css("display", "none");
 			$("#" + name + "RefundBtn").css("display", "none");
-		}
+    }
 		
 		materialSubOrder.materialSubOrderItems.depositRefundBtn.css("display", "none");
 		
@@ -551,11 +551,13 @@ jQuery(function($) {
 					
 					materialSubOrderPostData["materialSubOrder.depositStatus"] = 0;
 					
-					materialSubOrder.materialSubOrderItems.depositPaymentBtn.css("display", "inline");
+					materialSubOrder.materialSubOrderItems.depositPaymentBtn.css("display", "none");
 					materialSubOrder.materialSubOrderItems.depositRefundBtn.css("display", "none");
-					materialSubOrder.materialSubOrderItems.fullPaymentBtn.css("display", "inline");
+					materialSubOrder.materialSubOrderItems.fullPaymentBtn.css("display", "none");
 					materialSubOrder.materialSubOrderItems.fullRefundBtn.css("display", "none");
-					
+                    materialSubOrder.materialSubOrderItems.couponBtn.css("display", "none");
+                    materialSubOrder.materialSubOrderItems.malingBtn.css("display", "none");
+
 					searcher.doSearch();
 				}, null, false);
 			}

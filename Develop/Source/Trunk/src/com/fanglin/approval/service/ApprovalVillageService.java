@@ -18,7 +18,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalVillageService {
 	
-	public int submitApprovalForVillage(ApprovalVO approvalVO, ApprovalVillageVO approvalVillageVO, String userId) throws FLException;
+	public int submitApprovalForVillage(ApprovalVO approvalVO, ApprovalVillageVO approvalVillageVO, String userId, int company) throws FLException;
 	
 	public int approvalForVillage(ApprovalPO approvalPO) throws FLException;
 

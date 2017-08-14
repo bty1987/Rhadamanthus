@@ -55,7 +55,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalMaterialFullPaymentVO approvalMaterialFullPaymentVO, String userId) throws FLException {
+	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalMaterialFullPaymentVO approvalMaterialFullPaymentVO, String userId, int company) throws FLException {
 		
 		long msoId = approvalMaterialFullPaymentVO.getMsoId();
 		
@@ -91,6 +91,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), approvalMaterialFullPaymentVO.getReferMoney()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

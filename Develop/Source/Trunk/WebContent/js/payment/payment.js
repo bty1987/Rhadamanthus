@@ -257,9 +257,11 @@ jQuery(function($) {
            
             $liLine.append($h3).append($ulProperty).append($ulStyle);
             
-            $btnPrint.click(function(){
-            	printPayment(v.paymentId);
-            });
+			$btnPrint.click(function(){
+				com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + v.paymentId + "&time=" + params.loginTime,function () {
+					parent.layer.getFrameIndex(window.name);
+				})
+			});
             
             return $liLine;
         };
@@ -435,11 +437,7 @@ jQuery(function($) {
 		$("#convertModal").modal("hide");
 	}
 	
-	function printPayment(paymentId){
-		
-		var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + paymentId + "&time=" + params.loginTime;
-		window.open(url);
-	}
+
 
 	function saveData(){
 		$('.payWayError').hide();
@@ -526,8 +524,9 @@ jQuery(function($) {
 			
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					var url = api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + params.loginTime;
-					window.open(url);
+					com.popup("专用收款收据__订单编号：" + res.payment.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					})
 				}
 			});
 		});
@@ -587,7 +586,7 @@ jQuery(function($) {
 					["订单号","orderId"],
 					['收款类型','type'],
 					['预付款类型','paymentType'],
-					['操作金额','balance'],
+					['操作金额','recharge'],
 					['收款人', 'collectUserName'],
 					['收款时间', 'collectTime'],
 					['状态', 'status'],

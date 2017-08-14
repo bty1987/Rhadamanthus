@@ -31,8 +31,6 @@ public interface DecorationPaymentService {
 
 	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters);
 	
-	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters);
-
 	public DecorationPaymentVO queryDecorationPaymentById(long autoId);
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO);

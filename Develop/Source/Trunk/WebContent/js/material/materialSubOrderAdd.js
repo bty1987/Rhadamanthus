@@ -29,7 +29,7 @@ jQuery(function($) {
 		});
 	}, null, false);
 	
-	console.log(materialSubOrderAdd.materialType);
+
 	
 	com.post(api.material.queryMaterialSubOrderByMsoId, materialSubOrderAddPostData, function(res){
 		
@@ -54,7 +54,8 @@ jQuery(function($) {
 		
 		materialSubOrderAdd.totalSum = parseFloat(materialSubOrder.total);
 		
-		console.log(materialSubOrderAdd.totalSum);
+
+
 		
 	}, null, false);
 
@@ -268,7 +269,6 @@ jQuery(function($) {
 			options["materialSubOrderItems["+i+"].total"] = $this.find('.total input').val();
 			options["materialSubOrderItems["+i+"].packageName"] = $this.find('.packageName input').val();
 			options["materialSubOrderItems["+i+"].des"] = $this.find('.des input').val();
-
 			if($this.attr('calcType') == 1){
 				options["materialSubOrderItems["+i+"].prePoint"] = $this.attr('point');
 			}else{
@@ -332,7 +332,6 @@ jQuery(function($) {
 
 			var _item = data.materialModel;
 
-			console.log(_item);
 
 			columnActionInit($line, _item, true);
 		}, function(data){
@@ -372,7 +371,6 @@ jQuery(function($) {
 	}
 	
 	function recount($line, recountPriceFlag){
-		console.log('recount');
 		if(checkDataValue($line)){
 			recountPriceFlag && $line.find('.price input').val(utils.changeTwoDecimal(utils.accMul(parseFloat($line.find('.salePrice input').val()), parseFloat($line.find('.postDiscount input').val()))));
 			$line.find('.total input').val(utils.changeTwoDecimal(utils.accMul(parseFloat($line.find('.price input').val()), parseFloat($line.find('.num input').val()))));

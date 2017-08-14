@@ -10,9 +10,11 @@ import com.fanglin.utils.Paging;
 
 public interface CompanyService {
 
-    public void pageCompany(Paging paging, List<Filter> filters);
+    public void pageCompany(Paging paging, List<Filter> filters) throws FLException;
     
-    public List<CompanyVO> queryCompany();
+    public List<CompanyVO> queryCompany() throws FLException;
+    
+    public CompanyVO queryCompanyByCid(CompanyVO companyVO) throws FLException;
     
 	public int addCompany(CompanyVO companyVO) throws FLException;
 

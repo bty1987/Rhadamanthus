@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "brand", catalog = "communion")
 public class BrandPO implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = -1250639697212151929L;
 	
 	public static final String COLUMN_BID_STR = "bId";
@@ -36,6 +36,8 @@ public class BrandPO implements java.io.Serializable {
 	private String brandNamePinyin;
 	
 	private CategoryPO category;
+	
+	private int company;
 	
 	public BrandPO() {
 		super();
@@ -93,5 +95,15 @@ public class BrandPO implements java.io.Serializable {
 	public void setCategory(CategoryPO category) {
 		this.category = category;
 	}
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
+	
 
 }

@@ -1,8 +1,6 @@
 
 jQuery(function($) {
 
-	var gcsId;
-
 	//从服务器查询出来的所有工人
 	var constructionScheduleWorkers;
 
@@ -10,15 +8,11 @@ jQuery(function($) {
 
 		step:0,
 
-		construstion: {},
-
 		controlCondition: false,
 
 		constructionSchedules:{},
 
 		schedule: 0,
-
-		scheduleNum:0,
 
 		constructionSchedule:"constructionSchedule",
 
@@ -32,34 +26,12 @@ jQuery(function($) {
 				tabbable: "chanDrawing",
 				navTabbable:"chanNavTab",
 
-				workerId: "chanWorker",
 				startTimeId: "chanStartTime",
 				endTimeId: "chanEndTime",
-				statusId: "status",
 				workerInfos: "chanWorkerInfos",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
 				status: "chanStatus",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmEndTimeUrl: "",
-
-				drawings: "chanDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "putlineConstructionSchedule",
-
-				duty: "铲大白工人",
-
 				drawingType: 6,
 
-				errorMsg: "开工时间或者完工时间没有进行确认或者当前铲大白状态没有成功!",
 			}, "2": {
 				num: 2,
 				nodeName:"放线",
@@ -69,37 +41,13 @@ jQuery(function($) {
 				tabbable: "putlineDrawing",
 				navTabbable:"putlineNavTab",
 
-				workerId: "putlineWorker",
 				startTimeId: "putlineStartTime",
 				endTimeId: "putlineEndTime",
 				putlineTimeId: "putlineStartTime",
 				putlineStatusId: "putlineStatus",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-				putlineTime: "putlineTime",
-				putlineStatus: "putlineStatus",
 				workerInfos: "putlineWorkerInfos",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "putlineDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "waterwayCircuitPowerConstructionSchedule",
-
-				duty: "放线小组",
-
 				drawingType: 7,
 
-				errorMsg: "放线状态不满足进行下个阶段要求!",
 			}, "3": {
 				num: 3,
 				nodeName:"力水电",
@@ -109,40 +57,11 @@ jQuery(function($) {
 				tabbable: "waterwayCircuitPowerDrawing",
 				navTabbable:"waterwayCircuitPowerNavTab",
 
-				waterwayWorkerId: "waterwayWorker",
-				circuitWorkerId: "circuitWorker",
-				powerWorkerId: "powerWorker",
 				startTimeId: "waterwayCircuitPowerStartTime",
 				endTimeId: "waterwayCircuitPowerEndTime",
 				workerInfos: "waterwayCircuitPowerWorkerInfos",
-
-				waterwayWorker: "waterwayWorkerId",
-				circuitWorker: "circuitWorkerId",
-				powerWorker: "powerWorkerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "waterwayCircuitPowerDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "bricklayConstructionSchedule",
-
-				waterwayDuty: "水暖工",
-				circuitDuty:"电工",
-				powerDuty:"力工",
-				waterwayCircuitDuty: "水电工",
-
 				drawingType: 8,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "4": {
 				num: 4,
 				nodeName:"瓦工",
@@ -152,33 +71,11 @@ jQuery(function($) {
 				tabbable: "bricklayDrawing",
 				navTabbable:"bricklayNavTab",
 
-				workerId: "bricklayWorker",
 				startTimeId: "bricklayStartTime",
 				endTimeId: "bricklayEndTime",
 				workerInfos: "bricklayWorkerInfos",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "bricklayDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "groundLevelingConstructionSchedule",
-
-				duty: "瓦工",
-
 				drawingType: 9,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "5": {
 				num: 5,
 				nodeName:"地面找平",
@@ -188,32 +85,11 @@ jQuery(function($) {
 				tabbable: "groundLevelingDrawing",
 				navTabbable:"groundLevelingNavTab",
 
-				workerId: "groundLevelingWorker",
 				startTimeId: "groundLevelingStartTime",
 				endTimeId: "groundLevelingEndTime",
 				workerInfos: "groundLevelingWorkerInfos",
-
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "groundLevelingDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "carpentConstructionSchedule",
-
-				duty: "地面找平",
-
 				drawingType: 10,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "6": {
 				num: 6,
 				nodeName:"木工",
@@ -223,33 +99,11 @@ jQuery(function($) {
 				tabbable: "carpentDrawing",
 				navTabbable:"carpentNavTab",
 
-				workerId: "carpentWorker",
 				startTimeId: "carpentStartTime",
 				endTimeId: "carpentEndTime",
 				workerInfos: "carpentWorkerInfos",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "carpentDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "oilConstructionSchedule",
-
-				duty: "木工",
-
 				drawingType: 11,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "7": {
 				num: 7,
 				nodeName:"油工",
@@ -259,33 +113,11 @@ jQuery(function($) {
 				tabbable: "oilDrawing",
 				navTabbable:"oilNavTab",
 
-				workerId: "oilWorker",
 				startTimeId: "oilStartTime",
 				endTimeId: "oilEndTime",
 				workerInfos: "oilWorkerInfos",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "oilDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "waterwayCircuitCheckConstructionSchedule",
-
-				duty: "油工",
-
 				drawingType: 12,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "8": {
 				num: 8,
 				nodeName:"水电验收",
@@ -295,40 +127,11 @@ jQuery(function($) {
 				tabbable: "waterwayCircuitCheckDrawing",
 				navTabbable:"waterwayCircuitCheckNavTab",
 
-				waterwayWorkerId: "waterwayWorker",
-				circuitWorkerId: "circuitWorker",
-				powerWorkerId: "powerWorker",
 				startTimeId: "waterwayCircuitCheckStartTime",
 				endTimeId: "waterwayCircuitCheckEndTime",
 				workerInfos: "waterwayCircuitCheckWorkerInfos",
-
-				waterwayWorker: "waterwayWorkerId",
-				circuitWorker: "circuitWorkerId",
-				powerWorker: "powerWorkerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "waterwayCircuitCheckDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				nextElementName: "cleaningConstructionSchedule",
-
-				waterwayDuty: "水暖工",
-				circuitDuty:"电工",
-				powerDuty:"力工",
-				waterwayCircuitDuty: "水电工",
-
 				drawingType: 13,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			}, "9": {
 				num: 9,
 				nodeName:"保洁",
@@ -338,31 +141,11 @@ jQuery(function($) {
 				tabbable: "cleaningDrawing",
 				navTabbable:"cleaningNavTab",
 
-				workerId: "cleaningWorker",
 				startTimeId: "cleaningStartTime",
 				endTimeId: "cleaningEndTime",
 				workerInfos: "cleaningWorkerInfos",
-
-				worker: "workerId",
-				startTime: "startTime",
-				endTime: "endTime",
-				schedule: "schedule",
-
-				queryInfoUrl: api.construction.queryConstructionScheduleByOrderId,
-				queryWorkerUrl: api.construction.queryConstructerByOrderId,
-				confirmStartTimeUrl: "",
-				confirmEndTimeUrl: "",
-
-				drawings: "cleaningDrawings",
-				elementConstructerId: "cid",
-				elementConstructerName: "constructer",
-				elementConstructers: "constructers",
-
-				duty: "保洁工",
-
 				drawingType: 14,
 
-				errorMsg: "开工时间或者完工时间没有进行确认!",
 			},
 		},
 
@@ -413,7 +196,7 @@ jQuery(function($) {
 				com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 			}).on('stepclick', function(e, info){
 				var stepId = $("[flag]").eq(info.step-1).attr("id");
-				var sd = stepId.substr(4,1);
+				var sd = stepId.substring(4);
 				if(!supervisionDetail.wizardSept[sd]){
 					initWizardSept(supervisionDetail.operateDict[sd], sd);
 				}
@@ -449,50 +232,36 @@ jQuery(function($) {
 
 			var element = res.constructionSchedules;
 
-				supervisionDetail["constructionSchedule.csId"] = element[0].csId;
+			supervisionDetail["constructionSchedule.csId"] = element[0].csId;
 
-				if(schedule == 1){
+			if(schedule == 1){
 
-					var workerLength = 0;
-					$("#"+operate.startTimeId).val(element[0].startTime);
-					$("#"+operate.endTimeId).val(element[0].endTime);
+				var workerLength = 0;
+				$("#"+operate.startTimeId).val(element[0].startTime);
+				$("#"+operate.endTimeId).val(element[0].endTime);
 
-					var statusDiv = $("#"+operate.status).html("");
-					if(element[0].status == 1){
-						$("<span></span>").addClass("label label-success").text("成功").appendTo(statusDiv);
-					}else if(element[0].status == 2){
-						$("<span></span>").addClass("label label-danger").text("失败").appendTo(statusDiv);
-					}else if(element[0].status == 3){
-						$("<span></span>").addClass("label label-warning").text("延迟").appendTo(statusDiv);
-					}else if(element[0].status == 4){
-						$("<span></span>").addClass("label label-info").text("通过").appendTo(statusDiv);
-					}else{
-						$("<span></span>").addClass("label").text("待处理").appendTo(statusDiv);
-					}
+				var statusDiv = $("#"+operate.status).html("");
+				if(element[0].status == 1){
+					$("<span></span>").addClass("label label-success").text("成功").appendTo(statusDiv);
+				}else if(element[0].status == 2){
+					$("<span></span>").addClass("label label-danger").text("失败").appendTo(statusDiv);
+				}else if(element[0].status == 3){
+					$("<span></span>").addClass("label label-warning").text("延迟").appendTo(statusDiv);
+				}else if(element[0].status == 4){
+					$("<span></span>").addClass("label label-info").text("通过").appendTo(statusDiv);
+				}else{
+					$("<span></span>").addClass("label").text("待处理").appendTo(statusDiv);
+				}
 
-					var options = {};
-					options[operate.elementConstructerName + ".orderId"] = params.orderId;
-					options[operate.elementConstructerName + ".schedule"] = schedule;
-					com.post(operate.queryWorkerUrl,options, function(res){
-						workerInfoCondition = queryConstructer(operate, res);
+				var options = {};
+				options["constructer.orderId"] = params.orderId;
+				options["constructer.schedule"] = schedule;
 
-						if(workerInfoCondition){
-
-							if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
-								supervisionDetail.controlCondition = false;
-							}else if(element[0].status != undefined && element[0].status == 1){
-								supervisionDetail.controlCondition = true;
-							}else{
-								supervisionDetail.controlCondition = true;
-							}
-						}else if(!workerInfoCondition){
-							if(element[0].status != undefined && element[0].status == 4){
-								supervisionDetail.controlCondition = true;
-							}
-						}
-					});
+				com.post(api.construction.queryConstructerByOrderId, options, function(res){
+					workerInfoCondition = queryConstructer(operate, res);
 
 					if(workerInfoCondition){
+
 						if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
 							supervisionDetail.controlCondition = false;
 						}else if(element[0].status != undefined && element[0].status == 1){
@@ -505,83 +274,98 @@ jQuery(function($) {
 							supervisionDetail.controlCondition = true;
 						}
 					}
-				}else if(schedule == 2){
+				});
 
-					$("#"+operate.putlineTimeId).val(element[0].startTime).attr("disabled", "disabled");
+				if(workerInfoCondition){
+					if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
+						supervisionDetail.controlCondition = false;
+					}else if(element[0].status != undefined && element[0].status == 1){
+						supervisionDetail.controlCondition = true;
+					}else{
+						supervisionDetail.controlCondition = true;
+					}
+				}else if(!workerInfoCondition){
+					if(element[0].status != undefined && element[0].status == 4){
+						supervisionDetail.controlCondition = true;
+					}
+				}
+			}else if(schedule == 2){
 
-					var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
+				$("#"+operate.putlineTimeId).val(element[0].startTime).attr("disabled", "disabled");
+
+				var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
+
+				var options = {};
+				options["constructer.orderId"] = params.orderId;
+				options["constructer.schedule"] = schedule;
+
+				//查询施工人员
+				com.post(api.construction.queryConstructerByOrderId, options, function(res){
+					workerInfoCondition = queryConstructer(operate, res);
+				}, null, false);
+
+				if(element[0].status == 1){
+					if(workerInfoCondition){
+						supervisionDetail.controlCondition = true;
+					}
+
+					$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
+				}else if(element[0].status == 2){
+					$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
+				}else{
+					$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
+				}
+			}else{
+				//这里是3-9
+				if(schedule == element[0].schedule){
+					$("#"+operate.startTimeId).val(element[0].startTime);
+					$("#"+operate.endTimeId).val(element[0].endTime);
 
 					var options = {};
-					options[operate.elementConstructerName+".orderId"] = params.orderId;
-					options[operate.elementConstructerName + ".schedule"] = schedule;
+					options["constructer.orderId"] = params.orderId;
+					options["constructer.schedule"] = schedule;
 
 					//查询施工人员
-					com.post(operate.queryWorkerUrl, options, function(res){
+					com.post(api.construction.queryConstructerByOrderId, options, function(res){
 						workerInfoCondition = queryConstructer(operate, res);
 					}, null, false);
 
-					if(element[0].status == 1){
-						if(workerInfoCondition){
+					if(workerInfoCondition){
+						if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
+							supervisionDetail.controlCondition = false;
+						}else if(element[0].status != undefined && element[0].status == 1){
+							supervisionDetail.controlCondition = true;
+						}else{
 							supervisionDetail.controlCondition = true;
 						}
-
-						$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
-					}else if(element[0].status == 2){
-						$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
-					}else{
-						$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
 					}
-				}else{
-					//这里是3-9
-					if(schedule == element[0].schedule){
-						$("#"+operate.startTimeId).val(element[0].startTime);
-						$("#"+operate.endTimeId).val(element[0].endTime);
-
-						var options = {};
-						options[operate.elementConstructerName+".orderId"] = params.orderId;
-						options[operate.elementConstructerName + ".schedule"] = schedule;
-
-						//查询施工人员
-						com.post(operate.queryWorkerUrl, options, function(res){
-							workerInfoCondition = queryConstructer(operate, res);
-						}, null, false);
-
-						if(workerInfoCondition){
-							if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
-								supervisionDetail.controlCondition = false;
-							}else if(element[0].status != undefined && element[0].status == 1){
-								supervisionDetail.controlCondition = true;
-							}else{
-								supervisionDetail.controlCondition = true;
-							}
-						}
-					}
-				}//这里是3-9结束
-
-				var options = {};
-				options["constructionDrawing.cid"] = params.cid;
-
-				com.post(api.construction.queryConstructionDrawingByCid, options, function(res){
-					var drawings = res.constructionDrawings;
-					$("#" + operate.Gallery).html("");
-
-					for(var i=0;i<drawings.length;i++){
-						var drawing = drawings[i];
-
-						options["constructionDrawing.cdId"] = drawing.cdId;
-
-						if(drawing.schedule == operate.num ){
-							appendGalleryElement(operate.Gallery, drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
-						}
-					}
-				});
-				initUploadBtn(operate,element, operate.num);
-				$('#'+operate.tabbable).removeClass("active");
-
-				if($('#'+operate.navTabbable+' li:last-of-type').hasClass("active")){
-					$('#'+operate.tabbable).addClass("active");
 				}
-				return false;
+			}//这里是3-9结束
+
+			var options = {};
+			options["constructionDrawing.cid"] = params.cid;
+
+			com.post(api.construction.queryConstructionDrawingByCid, options, function(res){
+				var drawings = res.constructionDrawings;
+				$("#" + operate.Gallery).html("");
+
+				for(var i=0;i<drawings.length;i++){
+					var drawing = drawings[i];
+
+					options["constructionDrawing.cdId"] = drawing.cdId;
+
+					if(drawing.schedule == operate.num ){
+						appendGalleryElement(operate.Gallery, drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
+					}
+				}
+			});
+			initUploadBtn(operate,element, operate.num);
+			$('#'+operate.tabbable).removeClass("active");
+
+			if($('#'+operate.navTabbable+' li:last-of-type').hasClass("active")){
+				$('#'+operate.tabbable).addClass("active");
+			}
+			return false;
 
 		});
 	}
@@ -703,36 +487,10 @@ jQuery(function($) {
 		com.post(api.salary.queryWorkerSalary, options, function(res) {
 			$.each(res.workerSalarys, function(i, v) {
 				var vsubtype, vstatus;
-				switch(v.subtype)
-				{
-					case 1:
-						vsubtype = "工费"
-						break;
-					case 2:
-						vsubtype = "增项"
-						break;
-					case 3:
-						vsubtype = "油工一级奖励"
-						break;
-					case 4:
-						vsubtype = "维修款"
-						break;
-					case 5:
-						vsubtype = "罚款"
-						break;
-					case 6:
-						vsubtype = "工程质保金"
-						break;
-					case 7:
-						vsubtype = "工具押金"
-						break;
-					case 8:
-						vsubtype = "借款"
-						break;
-					case 9:
-						vsubtype = "工人家属保险"
-						break;
-				}
+
+				com.post(api.ds.salaryType, {}, function(res){
+					vsubtype = res.SalaryType[v.subtype - 1].name;
+				},null,false);
 
 				switch(v.status)
 				{
@@ -950,7 +708,6 @@ jQuery(function($) {
 		});
 		$("#step" + schedule).removeClass("step-pane");
 		$("#step" + schedule).addClass("active");
-
 
 	}
 });

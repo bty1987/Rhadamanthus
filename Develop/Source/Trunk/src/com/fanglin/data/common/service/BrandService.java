@@ -19,11 +19,11 @@ import com.fanglin.utils.Paging;
 
 public interface BrandService {
 	
-	public void pageBrand(Paging paging, List<Filter> filters);
+	public void pageBrand(Paging paging, List<Filter> filters,int company);
 	
-	public List<BrandVO> queryBrand();
+	public List<BrandVO> queryBrand(int company);
 	
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName);
+	public List<BrandVO> queryBrandForPinYinName(String pinyinName,int company);
 	
 	public BrandVO queryBrandByBId(BrandVO brandVO);
 	
@@ -31,7 +31,7 @@ public interface BrandService {
 	
 	public List<BrandVO> queryBrandByCategoryId(BrandVO brandVO);
 	
-	public int addBrand(BrandVO brandVO);
+	public int addBrand(BrandVO brandVO,int company);
 	
 	public int updateBrand(BrandVO brandVO);
 	

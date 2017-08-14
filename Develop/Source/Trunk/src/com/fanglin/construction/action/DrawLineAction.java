@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.drawline.action;
+package com.fanglin.construction.action;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +21,11 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.construction.service.DrawLineService;
+import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.drawline.service.DrawLineService;
-import com.fanglin.drawline.vo.DrawLineVO;
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -46,38 +45,38 @@ public class DrawLineAction extends BaseListAction{
 	private String date;
 	
 	@Action(value = "pageDrawLineForPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForPlan(){
+	public String pageDrawLineForPlan() throws FLException{
 		
 		getFilters().add(new Filter("status", "排队", "eq"));
 		
-		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters());
+		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
 	
 		return SUCCESS;
 	}
 
 	@Action(value = "pageDrawLineForAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForAssign(){
+	public String pageDrawLineForAssign() throws FLException{
 		
 		getFilters().add(new Filter("status", "排队", "ne"));
 		getFilters().add(new Filter("drawLineGroup", drawLine.getDrawLineGroup(), "eq"));
 		
-		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters());
+		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
 	
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDrawLine(){
+	public String queryDrawLine() throws FLException{
 		
-		drawLines = drawLineService.queryDrawLine(getFilters());
+		drawLines = drawLineService.queryDrawLine(getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "countDrawLineByDate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countDrawLineByDate(){
+	public String countDrawLineByDate() throws FLException{
 		
-		drawLineDateCount = drawLineService.countDrawLineByDate(drawLine);
+		drawLineDateCount = drawLineService.countDrawLineByDate(drawLine, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -85,7 +84,7 @@ public class DrawLineAction extends BaseListAction{
 	@Action(value = "applayDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String applayDecorationOrderDrawLine() throws FLException{
 		
-		drawLineService.applayDrawLine(drawLine, queryUserId());
+		drawLineService.applayDrawLine(drawLine, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -93,7 +92,7 @@ public class DrawLineAction extends BaseListAction{
 	@Action(value = "resetDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resetDrawLine() throws FLException{
 		
-		drawLineService.resetDrawLine(drawLine);
+		drawLineService.resetDrawLine(drawLine, queryCompany());
 	
 		return SUCCESS;
 	}

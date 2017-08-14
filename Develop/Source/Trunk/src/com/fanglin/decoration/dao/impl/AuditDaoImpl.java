@@ -105,6 +105,8 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						}else if(data.equals("未审批")){
 							query.add(Restrictions.isNull("auditer"));
 						}
+					}else if("company".equals(field)){
+						query.add(query.getCriterion("decorationOrder.company", Integer.valueOf(data), op));
 					}
 				}				
 			}				

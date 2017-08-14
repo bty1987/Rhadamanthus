@@ -168,7 +168,7 @@ jQuery(function($) {
 	com.post(api.ds.decorationInfo,{},function (res) {
 		$('#houseClass').bindData(res.houseClass,"key","value");
 
-	});
+	},null,false);
 
 	if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
 		decorationUtils.initDecorationHolonomy('step6',decorationOrderDetail.decorationOrderId);

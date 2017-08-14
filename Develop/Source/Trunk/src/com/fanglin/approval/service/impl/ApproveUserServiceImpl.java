@@ -40,29 +40,30 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageApproveUser(Paging paging, List<Filter> filters) {
-
-		List<ApproveUserPO> approveUserPOs = approveUserDao.pageApproveUser(paging, filters);
+	public void pageApproveUser(Paging paging, List<Filter> filters,int company) {
+		
+		List<ApproveUserPO> approveUserPOs = approveUserDao.pageApproveUser(paging, filters,company);
 		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
 
 		for (ApproveUserPO approveUserPO : approveUserPOs) {
+	
 			ApproveUserVO approveUserVO = new ApproveUserVO(new UserVO());
 			BeanUtil.copyProperties(approveUserPO, approveUserVO,Arrays.asList("user"));
 
 			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept"));
 
 			approveUserVOs.add(approveUserVO);
-		}
+			}
 
 		paging.setData(approveUserVOs);
 	}
 
-	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,	ApproveUserVO approveUserVO) {
+	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,	ApproveUserVO approveUserVO,int company) {
 		Paging paging = new Paging();
 		paging.setPage(0);
 		paging.setRows(50);
 
-		List<ApproveUserPO> approveUserPOs = approveUserDao.queryApproveUserForNameByType(paging,userVO.getUserNamePinYin(), approveUserVO.getType());
+		List<ApproveUserPO> approveUserPOs = approveUserDao.queryApproveUserForNameByType(paging,userVO.getUserNamePinYin(), approveUserVO.getType(),company);
 		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
 
 		for (ApproveUserPO approveUserPO : approveUserPOs) {
@@ -73,8 +74,7 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 			BeanUtil.copyProperties(approveUserPO.getUser(),_approveUserVO.getUser(), Arrays.asList("role", "dept"));
 
 			approveUserVOs.add(_approveUserVO);
-		}
-
+			}
 		return approveUserVOs;
 	}
 

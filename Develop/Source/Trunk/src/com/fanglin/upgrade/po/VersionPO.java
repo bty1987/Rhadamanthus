@@ -15,28 +15,26 @@ import javax.persistence.Table;
 @Table(name = "version", catalog = "upgrade")
 public class VersionPO implements Serializable{
 
-	private static final long serialVersionUID = -6202041259417390L;
-
+	private static final long serialVersionUID = -3482372700667296973L;
+	
 	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String COLUMN_TRIALNO_STR = "trialno";
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final String COLUMN_CREATETIME_STR = "createTime";
+	public static final short STATUS_ENABLED_INT = 0;
+	
+	public static final short STATUS_DISABLED_INT = 1;
 	
 	private long vid;
 	
 	private String no;
 	
-	private String trialno;
-	
 	private Timestamp createTime;
 	
-	private String content;
+	private String comment;
 	
-	private String path;
-	
-	private long fileSize;
-	
+	private short status;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "vid")
@@ -47,6 +45,7 @@ public class VersionPO implements Serializable{
 	public void setVid(long vid) {
 		this.vid = vid;
 	}
+	
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -55,17 +54,8 @@ public class VersionPO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
-	@Column(name = "trialno")
-	public String getTrialno() {
-		return trialno;
-	}
 
-	public void setTrialno(String trialno) {
-		this.trialno = trialno;
-	}
-
-	@Column(name = "createtime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -74,31 +64,22 @@ public class VersionPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name = "content")
-	public String getContent() {
-		return content;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	@Column(name = "path")
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
-	@Column(name = "filesize")
-	public long getFileSize() {
-		return fileSize;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setFileSize(long fileSize) {
-		this.fileSize = fileSize;
+	public void setStatus(short status) {
+		this.status = status;
 	}
-
+	
 }

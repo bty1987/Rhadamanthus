@@ -10,9 +10,15 @@
 </style>
 
 </head>
-<body>
+<body style="background-color: #ffffff">
 	<div id="decorationPaymentReceipt"></div>
-	
+	<div style="float:right">
+		<br/>
+		<a id="printDecorationPaymentReceipt" class="btn btn-minier btn-primary pull-left" name="confirms">
+			<i class="icon-ok bigger-110"></i>
+			<span id="btnPrint">打印收据</span>
+		</a>
+	</div>
 	<script type="text/javascript">
 	
 		var server = "http://" + document.location.host + "/";
@@ -28,24 +34,28 @@
 				window.authentication = cookie.split("=")[1];
 			}
 		}
+		var csses = "";
+		csses += '<link rel="stylesheet" href="../../assets/css/ace.css?version=' + versionCode + '" />'; // ace styles
+
+		document.write(csses);
 		
 		var jses = "";
 		
 		if(!window.jQuery){
 			jses += '<script src="' + server + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
 		}
-	
+
 		if("ontouchend" in document){
 			jses += '<script src="' + server + 'assets/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
 		}
-		
+
 		jses += '<script src="' + server + 'assets/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'assets/js/ace-elements.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/js/ace.min.js?version=' + versionCode + '"><\/script>';
 		

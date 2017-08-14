@@ -20,13 +20,13 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialModelDao extends Dao<MaterialModelPO> {
 	
-	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters);
+	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters,int company);
 	
 	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<String> brandIds);
 	
 	public List<MaterialModelPO> queryMaterialModel(List<Filter> filters);
 	
-	public List<MaterialModelPO> queryMaterialModelByName(String materialModelName, int limit);
+	public List<MaterialModelPO> queryMaterialModelByName(String materialModelName, int limit,int company);
 	
 	public List<MaterialModelPO> queryMaterialModelByNo(String materiModelNo, int limit);
 	

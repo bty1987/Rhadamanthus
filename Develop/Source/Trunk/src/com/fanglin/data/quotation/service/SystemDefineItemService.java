@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemService {
 	
-	public void pageSystemDefineItem(Paging paging, List<Filter> filters);
+	public void pageSystemDefineItem(Paging paging, List<Filter> filters,int company);
 	
-	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO,int company) throws FLException;
 	
-	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
+	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO,int company) throws FLException;
 	
 	public int updateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
 	

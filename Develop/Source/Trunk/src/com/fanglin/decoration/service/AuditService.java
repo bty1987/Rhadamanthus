@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface AuditService {
 	
-	public List<AuditVO> pageAudit(Paging paging, List<Filter> filters);
+	public List<AuditVO> pageAudit(Paging paging, List<Filter> filters, int company);
 
 	public void applyAudit(AuditVO auditVO,String UserId)throws FLException;
 	

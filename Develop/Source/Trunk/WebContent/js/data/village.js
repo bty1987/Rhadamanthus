@@ -3,7 +3,7 @@ $(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
+     * tableId ,用来显示的div的id
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){
@@ -254,7 +254,7 @@ $(function(){
         div.appendChild(arrow);
 
         circle.appendChild(div);
-        return circle;//当调用map.removeOverlay或者map.clearOverlays方法时，API会自动将initialize方法返回的DOM元素进行移除。
+        return circle;//当调用map.removeOverlay或者map.clearOverlays方法时,API会自动将initialize方法返回的DOM元素进行移除。
     };
 
     ComplexCustomOverlay.prototype.draw = function(){

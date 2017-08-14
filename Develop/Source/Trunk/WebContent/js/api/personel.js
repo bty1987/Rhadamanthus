@@ -27,6 +27,7 @@ $.extend(api, {personel: {
     addUser: {url: "addUser.do", server: "communion"},
     saveUserForBaseInfo: {url: "saveUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
+  
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
     
     resetPassword: {url: "resetPassword.do", server: "communion"},
@@ -50,7 +51,8 @@ $.extend(api, {personel: {
     deleteUserSalary: {url: "deleteUserSalary.do"},
     
     queryUserCompany: {url: "queryUserCompany.do"},
-    updateUserCompany: {url: "updateUserCompany.do"},
+    
+    updateUserCompany: {url: "updateUserCompany.do", server: "communion"},
   
 
 }});

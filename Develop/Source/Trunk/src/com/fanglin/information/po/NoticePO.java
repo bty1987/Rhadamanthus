@@ -28,6 +28,8 @@ public class NoticePO implements Serializable {
 
 	private static final long serialVersionUID = 134049609579042097L;
 	
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	public static final String NOTICE_STATUS_VALID_STR = "有效";
 	
 	public static final String NOTICE_STATUS_INVALID_STR = "失效";
@@ -57,6 +59,8 @@ public class NoticePO implements Serializable {
 	private String contentsText;
 	
 	private String filePath;
+	
+	private int company;
 	
 	public NoticePO(){
 		super();
@@ -171,6 +175,15 @@ public class NoticePO implements Serializable {
 
 	public void setFilePath(String filePath){
 		this.filePath = filePath;
+	}
+
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

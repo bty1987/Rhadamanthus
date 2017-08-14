@@ -2,6 +2,8 @@ package com.fanglin.personel.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.system.vo.CompanyVO;
+
 
 public class UserCompanyVO implements Serializable {
 
@@ -11,12 +13,16 @@ public class UserCompanyVO implements Serializable {
 		
 	private int uid;
 		
-	private int cid;
+	private CompanyVO company;
 	
 	public UserCompanyVO() {
 		super();
 	}
-
+	
+	public UserCompanyVO(CompanyVO company) {
+		super();
+		this.company = company;
+	}
 	public long getUcid() {
 		return ucid;
 	}
@@ -32,13 +38,14 @@ public class UserCompanyVO implements Serializable {
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
-
-	public int getCid() {
-		return cid;
+	
+	public CompanyVO getCompany() {
+		return company;
 	}
 
-	public void setCid(int cid) {
-		this.cid = cid;
+	public void setCompany(CompanyVO company) {
+		this.company = company;
 	}
 
+	
 }

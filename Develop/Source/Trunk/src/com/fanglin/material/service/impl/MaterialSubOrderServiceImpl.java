@@ -154,9 +154,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId){
+	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId,int company){
 		
-		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPreBalance(paging, filters);
+		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPreBalance(paging, filters,company);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
 		
 		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
@@ -170,9 +170,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	}
 
 	@Override
-	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters){
+	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters,int company){
 
-		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPostBalance(paging, filters);
+		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderPostBalance(paging, filters,company);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
 		
 		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
@@ -196,7 +196,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId) throws FLException{
+	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId,int company) throws FLException{
 
 		float total = 0;
 		float discountTotal = 0;
@@ -224,7 +224,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			}
 		}
 		materialSubOrderPO.setMsoNo(msoNo.toString());
-		
+		materialSubOrderPO.setCompany(company);
 		UserPO userPO = userDao.queryUserByUserId(materialSubOrderVO.getSalesmanId());
 		
 		if(userPO != null){

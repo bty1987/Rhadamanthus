@@ -75,7 +75,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForOrderBelong(ApprovalVO approvalVO, ApprovalOrderBelongVO approvalOrderBelongVO, List<ApprovalOrderBelongItemVO> approvalOrderBelongItemVOs, String userId) throws FLException {
+	public int submitApprovalForOrderBelong(ApprovalVO approvalVO, ApprovalOrderBelongVO approvalOrderBelongVO, List<ApprovalOrderBelongItemVO> approvalOrderBelongItemVOs, String userId, int company) throws FLException {
 		
 		StringBuffer oldBelongUserName = new StringBuffer();
 		StringBuffer oldBelongRate = new StringBuffer();
@@ -168,7 +168,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_ORDER_BELONG_STR, orderId, approvalOrderBelongVO.getBelongType(), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
-		
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

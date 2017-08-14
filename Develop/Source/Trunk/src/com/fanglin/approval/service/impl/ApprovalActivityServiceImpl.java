@@ -57,7 +57,7 @@ public class ApprovalActivityServiceImpl implements ApprovalActivityService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalActivityVO approvalActivityVO, List<ApprovalActivityItemVO> approvalActivityItemVOs, String userId) throws FLException {
+	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalActivityVO approvalActivityVO, List<ApprovalActivityItemVO> approvalActivityItemVOs, String userId, int company) throws FLException {
 		
 		String orderId = approvalActivityVO.getOrderId();
 		
@@ -80,6 +80,7 @@ public class ApprovalActivityServiceImpl implements ApprovalActivityService {
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalActivityVO.getOrderId(), approvalActivityVO.getActivityName()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

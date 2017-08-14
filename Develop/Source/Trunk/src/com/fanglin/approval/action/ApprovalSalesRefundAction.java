@@ -47,7 +47,7 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String submitApprovalForSalesRefund() throws FLException {
 
-		approvalSalesRefundService.submitApprovalForSalesRefund(approval,approvalSalesRefund, approvalSalesRefundItem, queryUserId());
+		approvalSalesRefundService.submitApprovalForSalesRefund(approval,approvalSalesRefund, approvalSalesRefundItem, queryUserId(),queryCompany());
 
 		return SUCCESS;
 

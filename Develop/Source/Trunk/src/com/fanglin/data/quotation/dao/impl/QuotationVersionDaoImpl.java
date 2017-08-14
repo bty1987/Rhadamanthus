@@ -31,7 +31,7 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	}
 
 	@Override
-	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters){
+	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<QuotationVersionPO> query = pagingQuery(paging, QuotationVersionPO.class);
 		
@@ -39,19 +39,19 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 		
 		query.desc("defaultFlag");
 		
-		return query.list();
+		return query.add(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR,company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int defaultFlag){
-		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq("defaultFlag", defaultFlag)).list();
+	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int company,int defaultFlag){
+		return createCriteria(QuotationVersionPO.class).add(Restrictions.and(Restrictions.eq("defaultFlag", defaultFlag),(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR, company)))).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationVersionPO> queryQuotationVersion(){
-		return createCriteria(QuotationVersionPO.class).addOrder(Order.desc("defaultFlag")).list();
+	public List<QuotationVersionPO> queryQuotationVersion(int company){
+		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc("defaultFlag")).list();
 	}
 	
 	@Override

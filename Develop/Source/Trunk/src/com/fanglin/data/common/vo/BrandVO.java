@@ -18,6 +18,8 @@ public class BrandVO implements java.io.Serializable {
 	
 	private String categoryName;
 	
+	private int company;
+	
 	public Long getBid() {
 		return bid;
 	}
@@ -73,5 +75,15 @@ public class BrandVO implements java.io.Serializable {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
+	
 
 }

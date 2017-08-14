@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addCategory(CategoryVO categoryVO) {
+	public int addCategory(CategoryVO categoryVO,int company) {
 		
 		CategoryPO categoryPO = new CategoryPO();
 		
@@ -107,7 +108,6 @@ public class CategoryServiceImpl implements CategoryService {
 		categoryId.append(FormatUtil.fillZero(count, "000"));
 		
 		categoryPO.setCategoryId(categoryId.toString());
-		
 		BeanUtil.copyProperties(categoryVO, categoryPO, Arrays.asList("categoryId"));
 		
 		categoryDao.save(categoryPO);

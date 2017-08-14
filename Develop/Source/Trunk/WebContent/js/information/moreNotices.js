@@ -1,4 +1,20 @@
 $(function(){
+	var noticeType = {};
+	var  noticePriority={};
+	var noticeIsPublic={};
+	com.post(api.ds.noticeInfo, {}, function(res){
+
+		$.each(res.noticeType,function (i,v) {
+			noticeType[v.key] = v.value;//类型
+		});
+		$.each(res.noticePriority,function (i,va) {
+			noticePriority[va.key] = va.value;//类型
+		});
+		$.each(res.noticeIsPublic,function (i,val) {
+			noticeIsPublic[val.key] = val.value;//类型
+		});
+	},null,false);
+
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
@@ -37,15 +53,14 @@ $(function(){
 			}
 
 			var propertyArr = [
-				["类型:", v.type, "grey"],
-				["优先级:", v.priority, "grey"],
-				["发布部门:", v.dept.deptName, "grey"],
-				["发布人:", v.user.userName, "grey"],
+				["类型:", noticeType[v.type], "grey"],
+				["优先级:", noticePriority[v.priority], "green"],
+				["发布人:", v.user.currentName, "grey"],
 				["开始时间:", v.startTime, "grey"],
 				["结束时间:", v.endTime, "grey"],
-				["公开:", v.isPublic, "grey"],
+				["公开:", noticeIsPublic[v.isPublic], "blue"],
 				["内容:", v.contentsText, "grey"],
-				["状态:",status,"blue"],
+				["状态:", status, "blue"],
 			];
 
 			$.each(propertyArr, function (index,value) {

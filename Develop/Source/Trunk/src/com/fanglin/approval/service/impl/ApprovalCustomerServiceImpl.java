@@ -60,7 +60,7 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForCustomer(ApprovalVO approvalVO, ApprovalCustomerVO approvalCustomerVO, String userId) throws FLException {
+	public int submitApprovalForCustomer(ApprovalVO approvalVO, ApprovalCustomerVO approvalCustomerVO, String userId, int company) throws FLException {
 		
 		int customerId = approvalCustomerVO.getCustomerId();
 		
@@ -91,6 +91,7 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_CUSTOMER_STR, customerName, phone, approvalCustomerVO.getNewCustomerName(), approvalCustomerVO.getNewCustomerPhone()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		

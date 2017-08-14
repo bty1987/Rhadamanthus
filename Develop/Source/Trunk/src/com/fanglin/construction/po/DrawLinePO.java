@@ -9,7 +9,7 @@
  * @Describing	: 
  */
 
-package com.fanglin.drawline.po;
+package com.fanglin.construction.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

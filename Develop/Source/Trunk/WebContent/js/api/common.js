@@ -12,6 +12,8 @@ $.extend(api, {common: {
     wmCode: {url: "wmCode.do", demo: true},
 
     createTree: {url: "createTree.do", demo: true},
+    
+    changeAuthCode: {url: "changeAuthCode.do", server: "communion"},
 
     logout: {url: "logout.do"},
 

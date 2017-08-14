@@ -24,6 +24,7 @@ import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
 
 @Service("departmentDDService")
 @Transactional(readOnly = true)
@@ -35,9 +36,9 @@ public class DepartmentService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 	
-	public  List<Department> queryDepartment(long did){
-		
-		String accessToken = authDDService.getAccessToken();
+	public  List<Department> queryDepartment(long did,Integer company){
+
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		

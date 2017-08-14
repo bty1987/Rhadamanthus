@@ -31,13 +31,13 @@ public interface MaterialSubOrderService {
 	
 	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
-	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId);
+	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId,int company);
 	
-	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters);
+	public void pageMaterialSubOrderForPostBalance(Paging paging, List<Filter> filters,int company);
 	
 	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(MaterialSubOrderVO materialSubOrderVO);
 	
-	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId) throws FLException;
+	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId,int company) throws FLException;
 	
 	public void updateMaterialSubOrderForPreBalancePT(MaterialSubOrderVO materialSubOrderVO, int caclType);
 	

@@ -26,8 +26,8 @@ public class UserVO implements Serializable {
 	private String oldUserId;
 	
 	private RoleVO role;
-	
-	private Integer company;
+
+	private String companys;
 	
 	private DepartmentVO dept;
 	
@@ -254,14 +254,6 @@ public class UserVO implements Serializable {
 		this.freedom = freedom;
 	}
 
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-	
 	public UserVO setBaseInfo(UserPO userPO){
 		
 		if(userPO != null){
@@ -277,4 +269,14 @@ public class UserVO implements Serializable {
 		return this;
 	}
 
+	public String getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(String companys) {
+		this.companys = companys;
+	}
+	
+
+	
 }

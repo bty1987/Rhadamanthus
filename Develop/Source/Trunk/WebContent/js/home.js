@@ -1,5 +1,4 @@
 jQuery(function(){
-
     $('#moreActivity').click(function(){
         params["notice.type"] = 2;
         $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
@@ -16,19 +15,15 @@ jQuery(function(){
         $('.breadcrumb .nav3').hide();
     });
 
-    com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-        $(".user-info .user-name").text(res.userInfo.user.currentName);
-
-        com.showImg($("#personalPic"), res.userInfo.user.userPhoto, 180, 180, '');
-        com.showImg($("#userImg"), res.userInfo.user.userPhoto, 30, 30, '');
-    });
-
     com.post(api.common.wmCode, {}, function(res){
         var img = new Image();
         img.src = res.watermark;
         url = 'url("' + img.src + '")'
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
+    
+    com.showImg($("#personalPic"), params.userInfo.user.userPhoto, 180, 180, '');
+    com.showImg($("#userImg"), params.userInfo.user.userPhoto, 30, 30, '');
 
     loadNotices();
     loadActivities();
@@ -176,7 +171,7 @@ jQuery(function(){
             var $g2 = $('<div></div>').addClass('form-group');
             $g2.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 内容 </label>');
             $g2.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + calEvent.content + '</span></div>');
-            
+
             var $g3 = $('<div></div>').addClass('form-group');
             $g3.append('<label class="col-sm-3 control-label no-padding-right no-padding" for="form-field-1"> 创建人 </label>');
             $g3.append('<div class="col-sm-9"><span class="col-xs-10 col-sm-10">' + (calEvent.creater.currentName != null ? calEvent.creater.currentName : '无') + '</span></div>');
@@ -197,13 +192,13 @@ jQuery(function(){
                         "className" : "btn-sm btn-danger",
                         "callback": function() {
 
-                             com.post(api.information.deleteEvent, {
-                                 "event.eid": calEvent.eid
-                             }, function(){
-                                 calendar.fullCalendar('removeEvents' , function(ev){
-                                     return (ev._id == calEvent._id);
-                                 })
-                             });
+                            com.post(api.information.deleteEvent, {
+                                "event.eid": calEvent.eid
+                            }, function(){
+                                calendar.fullCalendar('removeEvents' , function(ev){
+                                    return (ev._id == calEvent._id);
+                                })
+                            });
 
 
                         }
@@ -265,13 +260,13 @@ jQuery(function(){
 
         viewDisplay: function (view) {
 
-        },//动态把数据查出，按照月份动态查询
+        },//动态把数据查出,按照月份动态查询
 
         dayClick: function (date, allDay, jsEvent, view) {
             var selectdate = $.fullCalendar.formatDate(date, "yyyy-MM-dd");//选择当前日期的时间转换
 
             return false;
-        },//日期点击后弹出的jq ui的框，添加日程记录
+        },//日期点击后弹出的jq ui的框,添加日程记录
 
         loading: function (bool) {
             if (bool) $('#loading').show();
@@ -349,17 +344,17 @@ function getNoticeDOM(notice){
     }).appendTo($theme);
 
     if(notice.priority == 2){
-    	priorityText = "紧急";
+        priorityText = "紧急";
         priorityStyle = "label-danger";
     }else if(notice.priority == 1){
-    	priorityText = "重要";
+        priorityText = "重要";
         priorityStyle = "label-warning";
     }else if(notice.priority == 0){
-    	priorityText = "普通";
+        priorityText = "普通";
         priorityStyle = "label-yellow";
     }
 
-    $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText +'</span>').addClass(priorityStyle).appendTo($title);
+    $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText+'</span>').addClass(priorityStyle).appendTo($title);
     var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">'
         + notice.contentsText+'</div><abbr title="' + notice.contentsText+'"></abbr></div>');
     var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'
@@ -391,44 +386,44 @@ function loadMessageCount(){
 }
 
 function queryTopInfo(url, name, info){
-	var url = api.report[url];
-	
-	var topTable = $('.top-table').html("");
-	
-	$('.nowTopType').html(info);
-	
-	com.post(url, {}, function(res){
-		var topList = "";
-		
-		$.each(res.ranks, function(i, v){
-			
-			var _name = v[name];
-			var _rank = v["rank"];
-			
-			var rankImg = '';
-			
-			var rankLi = $("<li></li>");
-			var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
-			var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
-			
-			if(_rank != null){
-				var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
-			}
-			
-			if(i == 0){
-				rankLi.addClass('bigger-150 orange');
-				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-			}else if(i == 1){
-				rankLi.addClass('bigger-120 blue');
-				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-			}else if(i == 2){
-				rankLi.addClass('bigger-120 blue');
-				$('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-			}
-			
-			rankLi.appendTo(topTable);
-		});
-	});
+    var url = api.report[url];
+
+    var topTable = $('.top-table').html("");
+
+    $('.nowTopType').html(info);
+
+    com.post(url, {}, function(res){
+        var topList = "";
+
+        $.each(res.ranks, function(i, v){
+
+            var _name = v[name];
+            var _rank = v["rank"];
+
+            var rankImg = '';
+
+            var rankLi = $("<li></li>");
+            var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
+            var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
+
+            if(_rank != null){
+                var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
+            }
+
+            if(i == 0){
+                rankLi.addClass('bigger-150 orange');
+                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+            }else if(i == 1){
+                rankLi.addClass('bigger-120 blue');
+                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+            }else if(i == 2){
+                rankLi.addClass('bigger-120 blue');
+                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
+            }
+
+            rankLi.appendTo(topTable);
+        });
+    });
 }
 
 function loadTopSelf(opts){

@@ -51,7 +51,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	private MaterialBrandRightDao materialBrandRightDao;
 	
 	@Override
-	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId) throws FLException{
+	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId,int company) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		List<MaterialModelPO> materialModelPOs = null;
@@ -68,7 +68,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 				materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
 			}
 		}else{
-			materialModelPOs = materialModelDao.pageMaterialModel(paging, filters);
+			materialModelPOs = materialModelDao.pageMaterialModel(paging, filters,company);
 		}
 		
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
@@ -96,7 +96,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addMaterialModel(MaterialModelVO materialModelVO) throws FLException{
+	public int addMaterialModel(MaterialModelVO materialModelVO,int company) throws FLException{
 		
 		MaterialModelPO materialModelPO = materialModelDao.queryMaterialModelByNoBrand(materialModelVO.getMaterialModelNo(), materialModelVO.getMaterialBrandId());
 		
@@ -109,7 +109,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		
 		materialModelPO.setBrand(new BrandPO(materialModelVO.getMaterialBrandId()));
 		materialModelPO.setMeasurementUnit(new MeasurementUnitPO(materialModelVO.getMeasurementUnitId()));
-		
+		materialModelPO.setCompany(company);
 		materialModelPO.setBase(0);
 		materialModelPO.setPoint(0);
 		materialModelPO.setStatus(MaterialModelPO.TYPE_DISABLE_INT);
@@ -239,9 +239,9 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	}
 
 	@Override
-	public List<MaterialModelVO> queryMaterialModelForAllByName(MaterialModelVO materialModelVO){
+	public List<MaterialModelVO> queryMaterialModelForAllByName(MaterialModelVO materialModelVO,int company){
 		
-		List<MaterialModelPO> materialModelPOs = materialModelDao.queryMaterialModelByName(materialModelVO.getMaterialModelName(), MATERIAL_LIMIT_INT);
+		List<MaterialModelPO> materialModelPOs = materialModelDao.queryMaterialModelByName(materialModelVO.getMaterialModelName(), MATERIAL_LIMIT_INT,company);
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
 		
 		for(MaterialModelPO materialModelPO: materialModelPOs){

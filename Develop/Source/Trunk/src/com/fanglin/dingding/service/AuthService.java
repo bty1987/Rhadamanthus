@@ -3,6 +3,7 @@ package com.fanglin.dingding.service;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.util.Formatter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,11 @@ public class AuthService {
 	@Autowired
 	private SystemConfigDao systemConfigDao; 
 	
-	public  String getAccessToken() {
+	public  String getAccessToken(String company) {
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
-		
-		SystemConfigPO company = systemConfigDao.querySystemConfig("company");
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 
-		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, mpHost.getValue(),company.getValue());
-		
+		String url = String.format(DDApi.DDAPI_GET_TOKEN_STR, isv.getValue(), company);
 
 		JSONObject response = HttpHelper.httpGet(url);
 		
@@ -42,13 +40,11 @@ public class AuthService {
 		return dAccessTokenPO.getAccesstoken();
 	}
 	
-	public   String getJsapiTicket() {
+	public   String getJsapiTicket(String company) {
 		
 		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
 		
-		SystemConfigPO company = systemConfigDao.querySystemConfig("company");
-		
-		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, mpHost.getValue(),company.getValue());
+		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, mpHost.getValue(),company);
 		
 		JSONObject response = HttpHelper.httpGet(url);
 		
@@ -87,7 +83,7 @@ public class AuthService {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public  String getConfig(String urlString, String queryString){
+	public  String getConfig(String urlString, String queryString, String company){
 		
 		String url;
 		String queryStringEncode = null;
@@ -106,7 +102,7 @@ public class AuthService {
 		String signature = null;
 		
 		try {
-			ticket = getJsapiTicket();
+			ticket = getJsapiTicket(company);
 			signature =sign(ticket, nonceStr, timeStamp, signedUrl);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

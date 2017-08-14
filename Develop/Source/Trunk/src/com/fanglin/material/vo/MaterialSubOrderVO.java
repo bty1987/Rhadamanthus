@@ -125,6 +125,8 @@ public class MaterialSubOrderVO implements Serializable {
 	private Float refund;
 	
 	private String refundDes;
+	
+	private Integer company;
 
 	public Long getMsoId(){
 		return msoId;
@@ -557,6 +559,14 @@ public class MaterialSubOrderVO implements Serializable {
 
 	public void setDistotal(Float distotal) {
 		this.distotal = distotal;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	

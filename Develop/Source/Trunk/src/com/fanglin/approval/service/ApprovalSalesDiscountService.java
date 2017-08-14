@@ -9,7 +9,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalSalesDiscountService {
 
-	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO,String userId) throws FLException;
+	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO,String userId,int company) throws FLException;
 	
 	public int approvalForSalesDiscount(ApprovalPO approvalPO) throws FLException;
 	

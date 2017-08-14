@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface FunctionAreaService {
 	
-	public void pageFunctionArea(Paging paging, List<Filter> filters);
+	public void pageFunctionArea(Paging paging, List<Filter> filters,int company);
 	
 	public FunctionAreaVO queryFunctionAreaByIdAVersionId(FunctionAreaVO functionAreaVO) throws FLException;
 	

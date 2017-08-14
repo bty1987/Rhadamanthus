@@ -31,7 +31,6 @@ import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
-import com.fanglin.inventory.service.PurchaseAmountService;
 import com.fanglin.inventory.service.StorehouseStockService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
@@ -68,9 +67,6 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	
 	@Autowired
 	private CountingService countingService;
-	
-	@Autowired
-	private PurchaseAmountService purchaseAmountService;
 	
 	@Autowired
 	private GoodsStorehouseStockService goodsStorehouseStockService;
@@ -117,7 +113,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 //	提交商品库存调拨审批
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForManifestDB(ApprovalVO approvalVO,ApprovalManifestDBVO approvalManifestDBVO ,List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs,String userId) throws FLException {
+	public int submitApprovalForManifestDB(ApprovalVO approvalVO,ApprovalManifestDBVO approvalManifestDBVO ,List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs,String userId, int company) throws FLException {
 	
 
         ApprovalPO approvalPO = new ApprovalPO();
@@ -133,11 +129,10 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setComment(approvalManifestDBVO.getComment());
-
 		approvalPO.setContents(approvalManifestDBVO.getComment());
 		approvalPO.setReceiver(receiver);
-		
 		approvalPO.setSender(sender);
+		approvalPO.setCompany(company);
 		
 		approvalDao.save(approvalPO);
 		
@@ -214,9 +209,9 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setType((short)5);
 		manifestPO.setCreateUser(userPO);
-		
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
 		manifestPO.setAttachment(approvalManifestDBPO.getAttachment());
+		manifestPO.setCompany(approvalPO.getCompany());
 		
 		manifestDao.save(manifestPO);
 		
@@ -265,7 +260,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		manifestPO.setTotal(total);
 		manifestPO.setComment(approvalManifestDBPO.getComment());
-		purchaseAmountService.updatePurchaseAmount(month, total);
+		manifestDao.update(manifestPO);
 
 		return 0;
 	}

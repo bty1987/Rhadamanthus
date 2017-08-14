@@ -1,7 +1,8 @@
 var decorationOrderDetail = {
 	decorationOrderId:null,
 	orderType:"",
-
+	items: {},
+	
 	type:{
 		"半包":0,
 		"全包":1,
@@ -52,7 +53,15 @@ jQuery(function($) {
 	decorationOrderDetail.printQuotationModal = $("#printQuotationModal");
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
-	
+
+	decorationOrderDetail.items.houseType = $('#houseType');
+	decorationOrderDetail.items.houseClass = $('#houseClass');
+
+	com.post(api.ds.decorationInfo, {}, function(res){
+		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
+		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
+	}, null, false);
+
 	$('#customerInfosBtn').on(ace.click_event, function(){
 		$.gritter.add({
 			title: '客户敏感信息',
@@ -144,8 +153,6 @@ function initWizard(){
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 7){
 			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
-		}else if(curstep == 8){
-			decorationUtils.initConstructionScheduleInfo();
 		}
 	}).on('finished', function(e) {
 		com.switchPage(api.index.decorationOrderCommonIndex.url);
@@ -162,8 +169,6 @@ function initWizard(){
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 7){
 			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
-		}else if(info.step == 8){
-			decorationUtils.initConstructionScheduleInfo();
 		}
 	});
 }

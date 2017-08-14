@@ -24,9 +24,9 @@ public interface MaterialSubOrderDao extends Dao<MaterialSubOrderPO> {
 	
 	public List<MaterialSubOrderPO> pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId);
 	
-	public List<MaterialSubOrderPO> pageMaterialSubOrderPreBalance(Paging paging, List<Filter> filters);
+	public List<MaterialSubOrderPO> pageMaterialSubOrderPreBalance(Paging paging, List<Filter> filters,int company);
 	
-	public List<MaterialSubOrderPO> pageMaterialSubOrderPostBalance(Paging paging, List<Filter> filters);
+	public List<MaterialSubOrderPO> pageMaterialSubOrderPostBalance(Paging paging, List<Filter> filters,int company);
 	
 	public List<MaterialSubOrderPO> queryMaterialSubOrder(List<Filter> filters);
 	

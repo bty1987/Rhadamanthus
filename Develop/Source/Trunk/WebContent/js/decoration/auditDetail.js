@@ -1,6 +1,7 @@
 var decorationOrderDetail = {
     decorationOrderId:null,
     orderType:"",
+    items: {},
 
     type:{
         "半包":0,
@@ -52,6 +53,14 @@ jQuery(function($) {
     decorationOrderDetail.printQuotationModal = $("#printQuotationModal");
     decorationOrderDetail.activitys = $("#activitys");
     decorationOrderDetail.activityItems = $("#activityItems");
+
+    decorationOrderDetail.items.houseType = $('#houseType');
+    decorationOrderDetail.items.houseClass = $('#houseClass');
+
+    com.post(api.ds.decorationInfo, {}, function(res){
+        decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
+        decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
+    }, null, false);
 
     $('#customerInfosBtn').on(ace.click_event, function(){
         $.gritter.add({

@@ -13,6 +13,7 @@ CREATE TABLE `approval` (
   `approvalTime` timestamp NULL NOT NULL,
   `contents` varchar(256) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`aId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批表';
 

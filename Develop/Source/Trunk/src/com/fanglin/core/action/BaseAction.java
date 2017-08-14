@@ -167,7 +167,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				throw new FLException(110005, "系统处理问题");
 			}
 			
-			authentication = new Authentication(au);
+			authentication = new Authentication(AESHelper.decryptString(au, SystemConfig.getString("encryptKey")));
 		} catch (Exception e) {
 			throw new FLException(110005, "系统处理问题");
 		}
