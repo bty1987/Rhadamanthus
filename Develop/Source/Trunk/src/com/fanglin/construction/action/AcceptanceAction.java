@@ -1,11 +1,11 @@
 /**
- * @File Name		: AcceptanceAction.java
+ * @File Name	: AcceptanceAction.java
  * @Package   	: com.fanglin.action.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-26
+ * @Date		: 2014-9-26
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 

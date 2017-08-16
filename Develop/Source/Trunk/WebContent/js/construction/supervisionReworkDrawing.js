@@ -65,7 +65,7 @@ jQuery(function($) {
         'fileTypeExts':'*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
         'fileSizeLimit':'3MB', // 上传文件的大小限制
         'queueSizeLimit' : 25, // 上传数量
-        'onUploadSuccess':function(file, data, response){ // 上传到服务器，服务器返回相应信息到data里 
+        'onUploadSuccess':function(file, data, response){ // 上传到服务器, 服务器返回相应信息到data里 
         	var dateObj = eval("("+data+")");
         	
         	if(dateObj.errorCode == 0){

@@ -30,9 +30,11 @@ public class ManifestTemplateDaoImpl extends DaoImpl<ManifestTemplatePO> impleme
 	}
 
 	@Override
-	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters) {
+	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters,int company) {
 
 		PagingQuery<ManifestTemplatePO> query = pagingQuery(paging, ManifestTemplatePO.class);
+		
+		query.add(query.getCriterion(ManifestTemplatePO.COLUMN_COMPANY_STR,company,"eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -61,8 +63,6 @@ public class ManifestTemplateDaoImpl extends DaoImpl<ManifestTemplatePO> impleme
 				
 				if(ManifestTemplatePO.COLUMN_NAME_STR.equals(field)){
 					query.add(query.getCriterion(ManifestTemplatePO.COLUMN_NAME_STR, data, op));
-				}else if(ManifestTemplatePO.COLUMN_COMPANY_STR.equals(field)){
-					query.add(query.getCriterion(ManifestTemplatePO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

@@ -1,11 +1,11 @@
 /**
- * @File Name		: Bricklaydrawing.java
+ * @File Name	: Bricklaydrawing.java
  * @Package   	: com.fanglin.entity.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 

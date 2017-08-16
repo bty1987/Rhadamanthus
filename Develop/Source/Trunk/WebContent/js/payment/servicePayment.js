@@ -189,7 +189,7 @@ jQuery(function($) {
 
 			$btnService.click(function(){
 			    if(money <= 0){
-                    com.showAlert(com.error, "当前服务费已交满，不能重复交款!");
+                    com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
                     return false;
                 }
 				servicePayment.baseModal.attr("ChargeType","2");
@@ -198,7 +198,7 @@ jQuery(function($) {
 
             $btnRefunds.click(function(){
                 if(v.servicePaidup == 0){
-                    com.showAlert(com.error, "当前服务费未交，不能退款!");
+                    com.showAlert(com.error, "当前服务费未交,不能退款!");
                     return false;
                 }
                 servicePayment.baseModal.attr("ChargeType","3");
@@ -280,9 +280,9 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				com.popup("专用收款收据__订单编号：" + v.decorationOrder.orderId  ,api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.decorationOrder.orderId + "&servicePayment.orderId=" + v.decorationOrder.orderId + "&serviceReceipt.srId=" + v.serviceReceipt.srId + "&time=" + params.loginTime,function () {
+				com.popup("专用收款收据__订单编号:" + v.decorationOrder.orderId  ,api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.decorationOrder.orderId + "&servicePayment.orderId=" + v.decorationOrder.orderId + "&serviceReceipt.srId=" + v.serviceReceipt.srId + "&time=" + parent.params.loginTime,function () {
 					parent.layer.getFrameIndex(window.name);
-				})
+				},null,true)
 			});
 
             $liLine.append($h3).append($ulProperty);
@@ -467,7 +467,7 @@ jQuery(function($) {
         var accounts = $("#accounts").val();
         var accountsBank = $("#accountsBankName").val();
 
-        //累计叠加金额，与总金额对比是否相等
+        //累计叠加金额,与总金额对比是否相等
         var realMoney = parseFloat(cash != "" ? cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(checkv != "" ? checkv : 0) + parseFloat(installment != "" ? installment : 0) + parseFloat(accounts != "" ? accounts : 0);
 
         if (referMoney != realMoney) {
@@ -478,7 +478,7 @@ jQuery(function($) {
 		if(servicePayment.baseModal.attr("ChargeType")==2) {
 			var sMoney = $("#sMoney").val();
 			if (realMoney > sMoney) {
-				com.showAlert(com.error, "当前所收服务费多于剩余服务费，不能收款!");
+				com.showAlert(com.error, "当前所收服务费多于剩余服务费,不能收款!");
 				return false;
 			}
 		}

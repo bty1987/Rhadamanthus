@@ -85,7 +85,7 @@ function initMaterialInsidePaymentHistoryList(){
 				$.jgrid.showSelectInfo(materialInsidePaymentCheck.listMaterialInsidePaymentHistoryGrid.attr("id"));
 				return false;
 			}else{
-				bootbox.confirm("确定要将符合条件的所有收款项目，置为已确认状态吗?", function(result) {
+				bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 					if(result) {
 						var _rowIds = materialInsidePaymentCheck.listMaterialInsidePaymentHistoryGrid.jqGrid('getGridParam','selarrrow');
 						var options = {};

@@ -425,8 +425,10 @@ jQuery(function($) {
 	}
 	
 	function receiptMaterialSubOrder(msoId){
-		var url = api.index.materialSubOrderReceipt.url + "?type=1&materialSubOrder.msoId=" + msoId + "&time=" + params.loginTime;
-		window.open(url);
+        var url = api.index.materialSubOrderReceipt.url + "?type=1&materialSubOrder.msoId=" + msoId + "&time=" + parent.params.loginTime;
+		com.popup("主材销售收据",url,function () {
+			parent.layer.getFrameIndex(window.name);
+        },null,true);
 	}
 	
 	function deleteMaterialSubOrder(msoId){

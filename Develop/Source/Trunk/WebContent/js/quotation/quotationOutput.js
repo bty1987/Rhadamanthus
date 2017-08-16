@@ -424,7 +424,7 @@ jQuery(function($) {
 	var type, p = window.location.search.substr(1);
 	
 	if(p.indexOf('time=') != -1){
-		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+		params.loginTime = parent.params.loginTime;
 	}
 	
 	$.each(p.split('&'), function(i, v){
@@ -498,12 +498,6 @@ jQuery(function($) {
 	}, null, false);
 	
 	generatePrintPage(type);
-
-	$("#btnPrint").click(function(){
-		$("#printPaymentReceipt").attr('style','display:none');
-		window.print();
-		$("#printPaymentReceipt").attr('style','display:block');
-	});
 });
 
 function generatePrintPage(type){

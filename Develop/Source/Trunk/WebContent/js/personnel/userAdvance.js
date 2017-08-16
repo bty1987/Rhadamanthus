@@ -328,7 +328,13 @@ jQuery(function($) {
 
 							}, null, false);
 
-						userAdvance.userAdvanceItems.currentcompany.val(companyname)
+						userAdvance.userAdvanceItems.currentcompany.html("");
+						companyname && companyname.length && $.each(companyname, function(i, v){
+						    var $div=$('<div></div>');
+							var $span=$('<span class="tag"></span>').html(v).appendTo($div);
+							userAdvance.userAdvanceItems.currentcompany.append($div)
+						});
+
 						userAdvance.userAdvanceItems.companysel.trigger("chosen:updated");
 
 						$('button[name="saveCompanyBtn"]').unbind().bind('click',function(){

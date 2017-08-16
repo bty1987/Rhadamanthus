@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 	
-	public List<WorkerSalaryPO>  pageWorkerSalary(Paging paging,List<Filter> filters);
+	public List<WorkerSalaryPO>  pageWorkerSalary(Paging paging,List<Filter> filters,int company);
 
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId,Long csId);
 	

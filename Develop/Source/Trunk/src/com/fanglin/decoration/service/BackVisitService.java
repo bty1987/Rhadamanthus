@@ -24,7 +24,7 @@ public interface BackVisitService {
 	
 	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO);
 	
-	public void addBackVisit(BackVisitVO backVisitVO, String userId) throws FLException;
+	public void addBackVisit(BackVisitVO backVisitVO, String userId, int company) throws FLException;
 
 	public void deleteBackVisitById(BackVisitVO orderDesignPicture);
 

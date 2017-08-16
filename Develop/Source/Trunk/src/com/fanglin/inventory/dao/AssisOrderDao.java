@@ -9,6 +9,6 @@ import com.fanglin.utils.Paging;
 
 public interface AssisOrderDao extends Dao<AssisOrderPO>{
 	
-	public List<AssisOrderPO> pageAssisOrder(Paging paging,List<Filter> filters);
+	public List<AssisOrderPO> pageAssisOrder(Paging paging,List<Filter> filters,int company);
 	
 }

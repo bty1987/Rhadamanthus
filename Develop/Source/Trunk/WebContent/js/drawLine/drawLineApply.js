@@ -130,7 +130,7 @@ jQuery(function($) {
 	
 	function saveData(){
 
-		bootbox.confirm("确认提交申请吗？",function(res){
+		bootbox.confirm("确认提交申请吗?",function(res){
 			if(res){
 				if(com.validate("drawLineModal")){
 					return;

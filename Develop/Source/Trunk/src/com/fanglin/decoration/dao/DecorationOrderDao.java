@@ -20,17 +20,17 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationOrderDao extends Dao<DecorationOrderPO> {
 	
-	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses);
+	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company);
 	
-	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<Filter> filters);
+	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, int company);
 	
-	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses);
+	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company);
 	
-	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses);
+	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company);
 	
-	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<Filter> filters);
+	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<Filter> filters, int company);
 	
-	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<Filter> filters);
+	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<Filter> filters, int company);
 	
 	public List<DecorationOrderPO> pageDecorationOrderByOrderIds(Paging paging, List<Filter> filters, List<String> orderIds);
 	

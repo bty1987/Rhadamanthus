@@ -20,6 +20,8 @@ public class QuotationBigCategoryVO implements Serializable{
 	private int id;
 	
 	private String name;
+	
+	private Long quotationType;
 
 	public int getId(){
 		return id;
@@ -36,5 +38,13 @@ public class QuotationBigCategoryVO implements Serializable{
 	public void setName(String name){
 		this.name = name;
 	}
-	
+
+	public Long getQuotationType() {
+		return quotationType;
+	}
+
+	public void setQuotationType(Long quotationType) {
+		this.quotationType = quotationType;
+	}
+		
 }

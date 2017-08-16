@@ -17,7 +17,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.NoticeDao;
 import com.fanglin.information.po.NoticePO;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -35,10 +34,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		
 		query.alias("user", "user");
 		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			query.add(Restrictions.eq("company", company));
-		}
-		
+		query.add(Restrictions.eq("company", company));
 		query.add(Restrictions.eq("user.userId", userId));
 		
 		queryFilterExcute(query, filters);
@@ -53,14 +49,12 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
+		query.add(Restrictions.eq("company", company));
+		
 		if(nids != null && nids.size() != 0){
 			query.add(Restrictions.or(Restrictions.in("nid", nids), Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT)));
 		}else{
 			query.add(Restrictions.eq("isPublic", NoticePO.ISPUBLIC_PUBLIC_INT));
-		}
-		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			query.add(Restrictions.eq("company", company));
 		}
 		
 		query.add(Restrictions.eq("type", type));

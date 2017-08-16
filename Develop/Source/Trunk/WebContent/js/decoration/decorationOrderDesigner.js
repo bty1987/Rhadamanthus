@@ -28,7 +28,7 @@ $(function(){
 		if(com.validate("drawLineModal")){
 			return;
 		}
-		bootbox.confirm("确认申请放线吗？", function(res){
+		bootbox.confirm("确认申请放线吗?", function(res){
 			if(res){
 				var options ={
 					"drawLine.applayDes":$("#applayDes").val(),
@@ -71,7 +71,7 @@ $(function(){
 			return;
 		}
 
-		bootbox.confirm("确认要保存合同信息吗？",function(result){
+		bootbox.confirm("确认要保存合同信息吗?",function(result){
 			if(result){
 				var options ={
 					"decorationContract.orderId":contract.decorationOrderId,
@@ -100,7 +100,7 @@ $(function(){
 
 	/**
 	 * 回调函数比速提供 init(tableId, result.list)方法
-	 * tableId ，用来显示的div的id
+	 * tableId ,用来显示的div的id
 	 * result.list 列表的json数组
 	 * */
 	var displayFunc  = (function(){
@@ -137,6 +137,7 @@ $(function(){
 						["合同报价:", v.orderTotalPrice, "grey"],
 						["量房时间:", v.createTime, "grey"],
 						["签单时间:", v.contractTime, "grey"],
+						["定金时间:", v.depositTime, "grey"],
 						["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
 						["状态:", v.status, "red"]
 					];
@@ -245,7 +246,9 @@ $(function(){
 	    		if(res.decorationContract == null || res.decorationContract.autoId == null){
 	    			$("#printContractBtn").attr("disabled",true);
 	    		}else{
-	    			$("#printContractBtn").attr("disabled",false).attr('href', '/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId + "&time=" + params.loginTime);
+	    			$("#printContractBtn").attr("disabled",false).off("click").on("click",function () {
+						com.popup("打印合同",'/views/contract/' + res.decorationContract.templateHtml + "?decorationContract.orderId=" + contract.decorationOrderId + "&time=" + parent.params.loginTime,null,null,true)
+					});
 	    		}
 
 	    		order.agreementModal.modal("show");
@@ -280,7 +283,7 @@ $(function(){
 		}
 	})();
 
-	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType'];
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType','depositTimeDateRange'];
 
 	com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
 		var condition = res.conditions;
@@ -416,8 +419,6 @@ function showErrorAlert (reason, detail) {
 	var msg = '';
 	if (reason === 'unsupported-file-type') {
 		msg = "Unsupported format " + detail;
-	}else{
-		console.log("error uploading file", reason, detail);
 	}
 	$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
 }

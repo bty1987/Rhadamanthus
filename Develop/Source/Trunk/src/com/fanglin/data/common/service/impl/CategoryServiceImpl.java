@@ -96,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addCategory(CategoryVO categoryVO,int company) {
+	public int addCategory(CategoryVO categoryVO) {
 		
 		CategoryPO categoryPO = new CategoryPO();
 		

@@ -71,31 +71,7 @@ public class DepartmentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	@Action(value = "addDepartmentasd", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDepartment() throws FLException{
-		departmentService.addDepartment(dept, queryUserId());
-		
-		return SUCCESS;
-	}
-	@Action(value = "updateDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDepartment() throws FLException{
-		departmentService.updateDepartment(dept);
-		
-		return SUCCESS;
-	}
-	@Action(value = "updateDepartmentForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDepartmentForStatus() throws FLException{
-		departmentService.updateDepartmentForStatus(dept);
-		
-		return SUCCESS; 
-	}
-	@Action(value = "deleteDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteDepartment() throws FLException{
-		 
-		departmentService.deleteDepartment(dept);
-		return SUCCESS;
-	}
-
+	
 	public DepartmentVO getDept() {
 		return dept;
 	}

@@ -38,9 +38,9 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final short TYPE_SALARY_STR = 0;                    
 	
-	public static final short TYPE_SALARY_STRONE =1 ;
+	public static final short TYPE_SALARY_STRONE =1;
 	
-	public static final short STATUS_INIT_STR = 0;                      
+	public static final short STATUS_INIT_STR = 0;                    
 	
 	public static final short STATUS_INIT_STRONE = 1;                     
 	
@@ -56,13 +56,11 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_CREATETIME = "createTime"; 
 	
-	public static final String ORDERID_STR="decorationOrder.orderId"; 
+	public static final String ORDERID_STR = "decorationOrder.orderId"; 
 	
-	public static final String COLUMN_USER_USERNAME="user.userName";
+	public static final String COLUMN_USER_USERNAME = "user.userName";
 	
-	public static final String COLUMN_USER_USERDUTY="user.duty";
-	
-	public static final String COLUMN_USER_COMPANY="user.company"; 
+	public static final String COLUMN_USER_USERDUTY = "user.duty";
 	
 	private long wsId;
 	

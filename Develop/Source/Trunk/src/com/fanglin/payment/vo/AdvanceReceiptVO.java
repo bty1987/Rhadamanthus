@@ -2,6 +2,8 @@ package com.fanglin.payment.vo;
 
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 public class AdvanceReceiptVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4309455035240158229L;
@@ -78,6 +80,7 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 		this.collectUserName = collectUserName;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}
@@ -102,6 +105,7 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 		this.confirmUserName = confirmUserName;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}

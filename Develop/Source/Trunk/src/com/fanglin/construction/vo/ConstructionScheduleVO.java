@@ -1,11 +1,11 @@
 /**
- * @File Name		: CleaningConstructionScheduleVO.java
+ * @File Name	: CleaningConstructionScheduleVO.java
  * @Package   	: com.fanglin.vo.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 

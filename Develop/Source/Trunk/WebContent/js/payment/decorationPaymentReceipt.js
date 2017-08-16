@@ -14,7 +14,7 @@ jQuery(function($) {
 	var a = p.split("&");
 	
 	if(p.indexOf('time=') != -1){
-		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+		params.loginTime = parent.params.loginTime;
 	}
 	
 	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
@@ -118,7 +118,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.advance)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -157,6 +157,7 @@ function generateOneReceipt(){
 		
 		var start = i*receipt.onePageCount;
 		var first  = receipt.receipts[start];
+        console.log(first)
 		var No = utils.padLeft(first.paymentId,11);
 		var supervisor = "";
 		
@@ -189,7 +190,7 @@ function generateOneReceipt(){
 
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var addrReceiptTd = $('<td colspan="2"></td>').text('客户地址: ' + receipt.order.village.villageName + receipt.order.houseNumber).appendTo(presonReceiptTr);
-		var supervisorNameTd = $('<td style="width: 35%"></td>').text('收款日期: ' + first.collectTime).appendTo(presonReceiptTr);
+        var supervisorNameTd = $('<td style="width: 35%"></td>').text('收款日期: ' + first.collectTime).appendTo(presonReceiptTr);
 		var designerReceiptTd = $('<td style="width: 30%"></td>').text('监 理: ' + supervisor).appendTo(presonReceiptTr);
 
 		var sumMoney = 0;
@@ -236,13 +237,6 @@ function generateOneReceipt(){
 
 		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var collectDesTd = $('<td colspan="4"></td>').text('备注: ' + receipt.order.decorationReceiptDes).appendTo(addrReceiptTr);
-
-
-        $("#btnPrint").click(function(){
-            $("#printDecorationPaymentReceipt").attr('style','display:none');
-            window.print();
-            $("#printDecorationPaymentReceipt").attr('style','display:block');
-        });
         
 	}
 }

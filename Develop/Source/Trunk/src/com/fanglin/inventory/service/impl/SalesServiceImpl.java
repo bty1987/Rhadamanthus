@@ -19,8 +19,6 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.inventory.dao.ColorDao;
-import com.fanglin.inventory.dao.FormatDao;
 import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.SalesDao;
 import com.fanglin.inventory.dao.SalesItemDao;
@@ -60,12 +58,6 @@ public class SalesServiceImpl implements SalesService {
 	private GoodsDao goodsDao;
 	
 	@Autowired
-	private ColorDao colorDao;
-	
-	@Autowired
-	private FormatDao formatDao;
-	
-	@Autowired
 	private  VillageDao villageDao;
 	
 	@Autowired
@@ -74,8 +66,6 @@ public class SalesServiceImpl implements SalesService {
 	
 	@Override
 	public void pageSales(Paging paging, List<Filter> filter,String userId,int company) {
-		
-		filter.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
@@ -97,7 +87,7 @@ public class SalesServiceImpl implements SalesService {
 			filter.add(new Filter(SalesPO.COLUMN_SALESMANID_STR, id, "eq") );
 		}
 		
-		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter);
+		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter,company);
 		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
 		
 		for(SalesPO salesPO:salesPOs){
@@ -153,7 +143,6 @@ public class SalesServiceImpl implements SalesService {
 		SalesPO salesPO = new SalesPO(new VillagePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
 		String salesBrand = salesVO.getBrand();
-		String salesItemBrand = "";
 		
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
@@ -182,22 +171,13 @@ public class SalesServiceImpl implements SalesService {
 			
 		salesDao.save(salesPO);
 		
-		salesVO.setSid(salesPO.getSid());
-		
-		if(salesItemVOs != null){
+		if(salesItemVOs != null && salesItemVOs.size()!=0){
+			
 			for(SalesItemVO salesItemVO: salesItemVOs){
 				
-				BeanUtil.copyProperties(goodsDao.get(salesItemVO.getGoods().getGid()), salesItemVO.getGoods(),Arrays.asList("assisType"));
-				
-				if(salesItemBrand == null || "".equals(salesItemBrand)){
+				GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
 					
-					salesItemBrand = salesItemVO.getGoods().getBrand();
-					if(!salesItemBrand.equals(salesBrand)){
-						throw new FLException(260033, "品牌不一致");
-					}
-				}
-				
-				if(!salesItemBrand.equals(salesItemVO.getGoods().getBrand())){
+				if(!goodsPO.getBrand().equals(salesBrand)){
 					throw new FLException(260033, "品牌不一致");
 				}
 				
@@ -205,20 +185,16 @@ public class SalesServiceImpl implements SalesService {
 				
 				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
 				BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
-				BeanUtil.copyProperties(colorDao.get(salesItemVO.getColor().getCid()), salesItemPO.getColor());
-				BeanUtil.copyProperties(formatDao.get(salesItemVO.getFormat().getFid()), salesItemPO.getFormat());
+				BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
+				BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
 				
-				salesItemPO.setSid(salesVO.getSid());
-				salesPO.setTotal(salesVO.getTotal());
-				salesDao.update(salesPO);
+				salesItemPO.setSid(salesPO.getSid());
 				
 				salesItemDao.save(salesItemPO);
 				
 			}
 		}
 		
-		salesVO.setSid(salesPO.getSid());
-				
 		return 0;
 	}
 

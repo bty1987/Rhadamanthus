@@ -15,9 +15,15 @@ var decorationUtils = {
 		var quotationId = decorationOrderDetail.quotation.qid;
 
 		if (quotationId) {
-			$("#printProjectBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1&time=" + params.loginTime);
-			$("#printFinanceBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=2&time=" + params.loginTime);
-			$("#printCustomerBtn").attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=3&time=" + params.loginTime);
+			$("#printProjectBtn").click(function () {
+				com.popup("打印报价",api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1&time=" + params.loginTime,null,null,true)
+			});
+			$("#printFinanceBtn").click(function () {
+				com.popup("打印报价",api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1&time=" + params.loginTime,null,null,true)
+			});
+			$("#printCustomerBtn").click(function () {
+				com.popup("打印报价",api.index.quotationOutputIndex.url + "?quotation.qid=" + quotationId + "&type=1&time=" + params.loginTime,null,null,true)
+			});
 
 			com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function (res) {
 				decorationOrderDetail.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
@@ -139,8 +145,6 @@ var decorationUtils = {
 			addReduceItem.dcp = _dcp;
 			addReduceItem.dcpt = _dcpt;
 
-			//console.log(addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName);
-
 			if (quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName]) {
 				quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
 			}
@@ -161,10 +165,6 @@ var decorationUtils = {
 		decorationOrderDetail.quotationFunctionAreaItemCs = quotationFunctionAreaItemCs;
 		decorationOrderDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
 		decorationOrderDetail.reduceNums = reduceNums;
-
-		//console.log(quotationFunctionAreaItemCs);
-		//console.log(quotationFunctionAreaItemWs);
-		//console.log(reduceNums);
 
 	}, initQuotationDetail: function () {
 
@@ -666,7 +666,7 @@ var decorationUtils = {
 			'fileSizeLimit': '5MB', // 上传文件的大小限制
 			'multi': multi,
 			'queueSizeLimit': 5, // 上传数量
-			'onUploadSuccess': function (file, data, response) { // 上传到服务器，服务器返回相应信息到data里
+			'onUploadSuccess': function (file, data, response) { // 上传到服务器,服务器返回相应信息到data里
 				callback(data);
 			}
 		});
@@ -751,7 +751,6 @@ var decorationUtils = {
 
 			$delA.click(function () {
 				com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
-					//console.log(res);
 					$("#imgLi_" + res.decorationPicture.dpId).remove();
 				})
 			});
@@ -863,7 +862,6 @@ var decorationUtils = {
 			var $tableWrap = $('#hoServiceMoney');
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 			$.each(data, function (i, v) {
-				// console.log(v)
 				var serviceReceipt = v.serviceReceipt;
 
 				var $liLine = $('<li></li>').addClass('item-orange clearfix');

@@ -1,11 +1,11 @@
 /**
- * @File Name		: ConstructionScheduleAction.java
- * @Package   	: com.fanglin.action.constructionSchedule
+ * @File Name	: ConstructionAction.java
+ * @Package   	: com.fanglin.action.construction
  * @Version		: 1.0
- * @Date			: 2014-9-29
+ * @Date		: 2014-9-29
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -47,14 +47,6 @@ public class ConstructionAction extends BaseListAction{
 	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
 		
 		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null, queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForQualityByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForQualityByUserId() throws FLException{
-		
-		constructionService.pageDecorationOrderForQualityByUserId(getPaging(), getFilters(), queryUserId(), null);
 		
 		return SUCCESS;
 	}

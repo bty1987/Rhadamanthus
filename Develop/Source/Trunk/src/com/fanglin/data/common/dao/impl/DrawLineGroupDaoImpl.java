@@ -19,20 +19,19 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 		super(DrawLineGroupPO.class);
 	}
 	
-	public List<DrawLineGroupPO> pageDrawLineGroup(Paging paging, List<Filter> filters){
+	public List<DrawLineGroupPO> pageDrawLineGroup(Paging paging, List<Filter> filters,int company){
 		
 		PagingQuery<DrawLineGroupPO> query = pagingQuery(paging, DrawLineGroupPO.class);
-		
+		query.add(Restrictions.eq("company", company));
 		queryFilterExcute(query, filters);
 		
 		return query.list();
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<DrawLineGroupPO> queryDrawLineGroupByName(String groupName) {
-		return createCriteria(DrawLineGroupPO.class).add(Restrictions.eq(DrawLineGroupPO.COLUMN_NAME_STR , groupName)).list();
+	public DrawLineGroupPO queryDrawLineGroupByName(String groupName, int company) {
+		return (DrawLineGroupPO)createCriteria(DrawLineGroupPO.class).add(Restrictions.eq(DrawLineGroupPO.COLUMN_NAME_STR , groupName)).add(Restrictions.eq("company", company)).uniqueResult();
 	}
 	
 	@Override
@@ -43,19 +42,21 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DrawLineGroupPO> queryDrawLineGroup(int company) {
-		return (List<DrawLineGroupPO>)createCriteria(DrawLineGroupPO.class).add(Restrictions.eq("status", DrawLineGroupPO.STATUS_ENABLE_INT)).add(Restrictions.eq(DrawLineGroupPO.COLUMN_COMPANY_STR,company)).list();
+		return (List<DrawLineGroupPO>)createCriteria(DrawLineGroupPO.class).add(Restrictions.eq("status", DrawLineGroupPO.STATUS_ENABLE_INT)).add(Restrictions.eq("company",company)).list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters) {
+		
 		if(filters != null){
+			
 			for(Filter filter: filters){
-				if(StringUtils.isNotEmpty(filter.getData())){				
+				
+				if(StringUtils.isNotEmpty(filter.getData())){	
+					
 					if("name".equals(filter.getField())){
 						query.add(query.getCriterion("name",(filter.getData()), filter.getOp()));
 					}	
-					if ("company".equals(filter.getField())){
-						query.add(query.getCriterion("company",Integer.valueOf(filter.getData()), filter.getOp()));
-					}
+					
 				}				
 			}				
 		}	

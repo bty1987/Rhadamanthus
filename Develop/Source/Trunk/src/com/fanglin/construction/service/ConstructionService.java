@@ -1,11 +1,11 @@
 /**
- * @File Name		: ConstructionScheduleService.java
- * @Package   	: com.fanglin.service.constructionSchedule
+ * @File Name	: ConstructionService.java
+ * @Package   	: com.fanglin.service.construction
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -21,13 +21,11 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionService {
 	
-	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters, Integer companyId);
+	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO, Integer companyId);
+	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO, Integer company);
 
-	public void pageDecorationOrderForQualityByUserId(Paging paging, List<Filter> filters, String userId, UserPO userPO);
-	
-	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters, Integer companyId);
+	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters, Integer company);
 	
 	public ConstructionVO queryConstructionById(int cid);
 	

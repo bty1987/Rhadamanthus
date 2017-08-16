@@ -12,13 +12,6 @@
 </head>
 <body style="background-color: #ffffff">
 	<div id="decorationPaymentReceipt"></div>
-	<div style="float:right">
-		<br/>
-		<a id="printDecorationPaymentReceipt" class="btn btn-minier btn-primary pull-left" name="confirms">
-			<i class="icon-ok bigger-110"></i>
-			<span id="btnPrint">打印收据</span>
-		</a>
-	</div>
 	<script type="text/javascript">
 	
 		var server = "http://" + document.location.host + "/";
@@ -34,10 +27,6 @@
 				window.authentication = cookie.split("=")[1];
 			}
 		}
-		var csses = "";
-		csses += '<link rel="stylesheet" href="../../assets/css/ace.css?version=' + versionCode + '" />'; // ace styles
-
-		document.write(csses);
 		
 		var jses = "";
 		
@@ -57,7 +46,7 @@
 		jses += '<script src="' + server + 'assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
 
 		jses += '<script src="' + server + 'assets/js/ace-elements.js?version=' + versionCode + '"><\/script>';
-		jses += '<script src="' + server + 'assets/js/ace.min.js?version=' + versionCode + '"><\/script>';
+		jses += '<script src="' + server + 'assets/js/ace.js?version=' + versionCode + '"><\/script>';
 		
 		jses += '<script src="' + server + 'js/com/api.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'js/com/config.js?version=' + versionCode + '"><\/script>';

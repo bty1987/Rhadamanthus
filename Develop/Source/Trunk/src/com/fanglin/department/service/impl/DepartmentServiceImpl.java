@@ -30,7 +30,6 @@ import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.CityProperPO;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.system.vo.RegionVO;
@@ -58,9 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public void pageDepartment(Paging paging, List<Filter> filters, DepartmentVO departmentVO, int company) throws FLException{
 		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			filters.add(new Filter("company", String.valueOf(company), "eq"));
-		}
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		if(departmentVO != null && departmentVO.getType() != null){
 			filters.add(new Filter("type", departmentVO.getType(), "eq"));
@@ -75,14 +72,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 		
 		paging.setData(departmentVOs);
+		
+ 
 	}
 	
 	@Override
 	public List<DepartmentVO> queryDepartment(String type, Integer company) throws FLException{
 		
-		Integer _company = company != CompanyPO.TYPE_HEADQUARTER_INT ? company : null;
-		
-		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, _company);
+	
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		Map<Integer, Integer> companys = new HashMap<Integer, Integer>(); 
@@ -122,13 +120,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 		
-		Integer _company = null;
-		
-		if(company != CompanyPO.TYPE_HEADQUARTER_INT){
-			_company = company;
-		}
-		
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), _company, departmentVO.getType());
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), company, departmentVO.getType());
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		for(DepartmentPO departmentPO: departmentPOs){
@@ -141,7 +133,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addDepartment(DepartmentVO departmentVO, String userId) throws FLException{
+	public void addDepartment(DepartmentVO departmentVO, String userId,int company) throws FLException{
 		
 		if(departmentVO.getCreateTime() == null || departmentVO.getCreateTime().trim().equals("")){
 			departmentVO.setCreateTime(DateUtil.current());
@@ -176,9 +168,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
 		}
-		
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
-		departmentPO.setCompany(userPO.getCompany());
+		departmentPO.setCompany(company); 
 		
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getDeptName());
 		departmentPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());

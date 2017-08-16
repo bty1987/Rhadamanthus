@@ -18,7 +18,7 @@ jQuery(function($) {
 	var args = window.location.search.substr(1);
 	
 	if(args.indexOf('time=') != -1){
-		params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
+		params.loginTime = parent.params.loginTime;
 	}
 	
 	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
@@ -232,10 +232,4 @@ function createReceiptTable(){
 	var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 	var paymentDesTd = $('<td colspan="4"></td>').text('备注: ' + commonInfo["materialPaymentDes"]).appendTo(addrReceiptTr);
 
-	$("#btnPrint").click(function(){
-		$("#printMaterialPaymentReceipt").attr('style','display:none');
-		window.print();
-		$("#printMaterialPaymentReceipt").attr('style','display:block');
-	});
-		
 }

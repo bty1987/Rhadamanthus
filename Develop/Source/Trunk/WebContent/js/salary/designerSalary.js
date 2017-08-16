@@ -1,4 +1,4 @@
-
+/*
 jQuery(function ($) {
 
     var designersalary = {
@@ -443,4 +443,4 @@ function updatadesignersalary() {
         }
     });
 
-});
+});*/

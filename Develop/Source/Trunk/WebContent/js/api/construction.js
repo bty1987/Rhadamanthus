@@ -9,10 +9,6 @@ $.extend(api.index, {
     onsiteInspectionRecordIndex: {url: "/views/construction/onsiteInspectionRecord.html"},
     onsiteInspectionDeductionIndex: {url: "/views/construction/onsiteInspectionDeduction.html"},
 
-    qualityTestingIndex: {url: "/views/construction/qualityTesting.html"},
-    qualityTestingDetailIndex: {url: "/views/construction/qualityTestingDetail.html"},
-    qualityTestingRecordIndex: {url: "/views/construction/qualityTestingRecord.html"},
-
     customerServiceIndex: {url: "/views/construction/customerService.html"},
     customerServiceDetailIndex: {url: "/views/construction/customerServiceDetail.html"},
 
@@ -47,7 +43,6 @@ $.extend(api, {construction: {
 
     pageDecorationOrderForConstruction: {url: "pageDecorationOrderForConstruction.do", demo: true},
     pageDecorationOrderForSupervisionByUserId: {url: "pageDecorationOrderForSupervisionByUserId.do", demo: true},
-    pageDecorationOrderForQualityByUserId: {url: "pageDecorationOrderForQualityByUserId.do", demo: true},
     pageDecorationOrderForAcceptance: {url: "pageDecorationOrderForAcceptance.do", demo: true},
     queryConstructionByOrderId: {url: "queryConstructionByOrderId.do", demo: true},
     queryConstructionForWorkerNameByOrderId: {url: "queryConstructionForWorkerNameByOrderId.do", demo: true},

@@ -74,6 +74,10 @@ CREATE TABLE `company` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `no` tinyint(2) NOT NULL,
   `name` varchar(16) NOT NULL,
+  `fullname` varchar(32) NOT NULL,
+  `address` varchar(64) NOT NULL,
+  `corporation` varchar(8) NOT NULL,
+  `phone` varchar(16) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
@@ -202,6 +206,7 @@ DROP TABLE IF EXISTS `quotationbigcategory`;
 CREATE TABLE `quotationbigcategory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) DEFAULT NULL,
+  `quotationType` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项大类表';
 
@@ -216,6 +221,7 @@ DROP TABLE IF EXISTS `quotationsmallcategory`;
 CREATE TABLE `quotationsmallcategory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) DEFAULT '',
+  `quotationType` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项小类表';
 

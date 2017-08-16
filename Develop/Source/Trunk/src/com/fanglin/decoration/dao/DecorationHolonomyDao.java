@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationHolonomyDao extends Dao<DecorationHolonomyPO> {
 	
-	public List<DecorationHolonomyPO> pagedecorationHolonomy(Paging paging,List<Filter> filters);
+	public List<DecorationHolonomyPO> pagedecorationHolonomy(Paging paging,List<Filter> filters, int company);
 
 	public DecorationHolonomyPO queryDecorationHolonomyByOrderId(String orderId);
 }

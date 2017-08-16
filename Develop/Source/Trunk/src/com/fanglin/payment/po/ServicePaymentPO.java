@@ -46,11 +46,11 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	private DecorationOrderPO decorationOrder;    //订单编号
 	
-	private short type;                   //类型 , 0: 收款 , 1: 退款
+	private short type;                   //类型 ,0: 收款,1: 退款
 	
-	private int pid;                  //预付款款项ID
+	private int pid;                      //预付款款项ID
 	
-	private short status;                 //状态, 0: 初始, 1: 已收款, 2: 已确认
+	private short status;                 //状态,0: 初始,1: 已收款,2: 已确认
 	
 	private UserPO creater;               //创建人ID
 	

@@ -98,5 +98,4 @@ public class RefundsVO  implements Serializable{
 		this.comment = comment;
 	}
 	
-	
 }

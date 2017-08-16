@@ -1185,7 +1185,6 @@ CREATE TABLE `quotation` (
   `discount` decimal(10,3) NOT NULL DEFAULT '10.000',
   `totalPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1,默认',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包 , 全包',
   `saveStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
   `calFlag` int(11) NOT NULL DEFAULT '1',
   `latexCut` decimal(10,3) DEFAULT '0.000' COMMENT '乳胶漆提点',

@@ -9,9 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineGroupDao extends Dao<DrawLineGroupPO> {
 	
-	public List<DrawLineGroupPO> pageDrawLineGroup(Paging paging, List<Filter> filters);
+	public List<DrawLineGroupPO> pageDrawLineGroup(Paging paging, List<Filter> filters, int company);
 	
-	public List<DrawLineGroupPO> queryDrawLineGroupByName(String groupName) ;
+	public DrawLineGroupPO queryDrawLineGroupByName(String groupName, int company) ;
 	
 	public DrawLineGroupPO queryDrawLineGroupById(long gid) ;
 	

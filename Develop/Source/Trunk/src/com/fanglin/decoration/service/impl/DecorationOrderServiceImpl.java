@@ -136,13 +136,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return ;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -194,8 +192,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
@@ -231,14 +227,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			statuses = null;
 		}
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
 			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 			
 			if(decorationOrderPO.getOrderTotalPrice() != 0){
 			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
@@ -302,13 +298,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForMaterial(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForMaterial(paging, filters, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -317,7 +311,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 				
-				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+				QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 				if(quotationPO == null){
 					decorationOrderVO.setOrderTotalPrice(new Float(0));
 				}else{
@@ -393,8 +387,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
@@ -403,7 +395,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		filters.add(new Filter("statuses", statuses, "ni"));
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, null, null, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -445,13 +437,11 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return ;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForGeneral(paging, filters, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -511,8 +501,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
-		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
 
 		String duty = userPO.getDuty();
 		
@@ -553,14 +541,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			}
 		}
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, designDepartmentIds, statuses);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, designDepartmentIds, statuses, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
 			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 			
 			if(decorationOrderPO.getOrderTotalPrice() != 0){
 			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
@@ -622,8 +610,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new Filter("company", String.valueOf(authentication.getCompany()), "eq"));
-		
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 		
 		if(userPO == null) return;
@@ -667,7 +653,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			}
 		}
 		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesman(paging, filters, salesmanDepartmentIds, statuses);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesman(paging, filters, salesmanDepartmentIds, statuses, authentication.getCompany());
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -677,7 +663,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderVO.setOrderTotalPrice(new Float(0));
 			}
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 			
 			if(decorationOrderPO.getOrderTotalPrice() != 0){
 			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
@@ -771,7 +757,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 			if(quotationPO == null){
 				decorationOrderVO.setOrderTotalPrice(new Float(0));
 			}else{
@@ -961,7 +947,7 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(decorationOrderVO.getType() != decorationOrderPO.getType()){
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, type);
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 			
 			if(quotationPO == null){
 				throw new FLException(200003, "报价不存在");

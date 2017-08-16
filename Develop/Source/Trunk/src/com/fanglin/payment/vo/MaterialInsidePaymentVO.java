@@ -1,5 +1,7 @@
 package com.fanglin.payment.vo;
 
+import org.apache.struts2.json.annotations.JSON;
+
 
 public class MaterialInsidePaymentVO implements java.io.Serializable {
 
@@ -157,6 +159,7 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.collectUserName = collectUserName;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public String getCollectTime(){
 		return this.collectTime;
 	}
@@ -181,6 +184,7 @@ public class MaterialInsidePaymentVO implements java.io.Serializable {
 		this.confirmUserName = confirmUserName;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public String getConfirmTime(){
 		return this.confirmTime;
 	}

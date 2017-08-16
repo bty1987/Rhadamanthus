@@ -45,9 +45,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException{
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters);
+		List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters,company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		GoodsVO goodsVO;
@@ -69,9 +67,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException{
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<GoodsPO> goodsPOs = goodsDao.queryGoods(filters);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoods(filters,company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		GoodsVO goodsVO;

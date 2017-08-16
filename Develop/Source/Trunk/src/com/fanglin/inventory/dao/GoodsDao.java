@@ -20,9 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsDao extends Dao<GoodsPO>{
 	
-	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters);
+	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters,int company);
 	
-	public List<GoodsPO> queryGoods(List<Filter> filters);
+	public List<GoodsPO> queryGoods(List<Filter> filters,int company);
 	
 	public List<GoodsPO> queryGoodsByName(String name,String pinyin,String no, int limit,int company);
 	

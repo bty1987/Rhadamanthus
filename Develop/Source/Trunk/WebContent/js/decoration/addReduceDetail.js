@@ -156,7 +156,7 @@ var AddReduceDetail = (function(){
 		calculateQuoteFee : function($quote){
 			var _num = parseFloat($quote.find('.num .cell-wrap').text());
 			var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
 
 			var _discountprice = _unitprice;
 			if(addReduceDetail.artype == 1){
@@ -224,8 +224,6 @@ var AddReduceDetail = (function(){
 		functionAreaModalConfirm : function(){
 			var that = this;
 			$('#confirmItemBtn').off().on(ace.click_event, function(){
-				
-				console.log(that.showingModalName);
 
 				var funcid = $('#quotationFunctionAreaId').val();
 				that.functionAreaId = funcid;

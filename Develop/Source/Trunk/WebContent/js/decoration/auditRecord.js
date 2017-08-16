@@ -423,7 +423,7 @@ $(function () {
         };
         //修改
         var changeAuditScaleStatus = function (asid){
-            bootbox.confirm("确认提交扣款信息？",function(res){
+            bootbox.confirm("确认提交扣款信息?",function(res){
                 //如果为ture
                 if(res){
                     com.post(api.decoration.updateAudtiScaleForStatus,makeAuditScalePostdata(asid,null,null,null,null,null,1), function(res){
@@ -435,7 +435,7 @@ $(function () {
         };
         //删除人员扣款
         var delAuditScale = function (asid) {
-            bootbox.confirm("确认删除审核记录？",function(res){
+            bootbox.confirm("确认删除审核记录?",function(res){
                 if(res) {
                     com.post(api.decoration.deleteAudtiScale, makeAuditScalePostdata(asid), function (res) {
                         com.showAlert(com.info, "删除成功");

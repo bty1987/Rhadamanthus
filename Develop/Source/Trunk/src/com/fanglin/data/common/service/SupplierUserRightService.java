@@ -13,12 +13,13 @@ package com.fanglin.data.common.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.SupplierUserRightVO;
 
 public interface SupplierUserRightService {
 	
 	public List<SupplierUserRightVO> querySupplierUserRightBySId(SupplierUserRightVO supplierUserRightVO);
 	
-	public int updateSupplierUserRight(SupplierUserRightVO supplierUserRightVO, List<String> userIds);
+	public int updateSupplierUserRight(SupplierUserRightVO supplierUserRightVO, List<String> userIds)throws FLException ;
 
 }

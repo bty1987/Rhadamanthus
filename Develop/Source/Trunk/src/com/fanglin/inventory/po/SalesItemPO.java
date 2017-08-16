@@ -236,5 +236,4 @@ public class SalesItemPO implements Serializable {
 		this.cvalue = cvalue;
 	}
 
-
 }

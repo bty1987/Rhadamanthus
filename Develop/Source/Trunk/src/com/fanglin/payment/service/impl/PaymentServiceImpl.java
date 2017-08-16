@@ -46,38 +46,35 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private PaymentDao paymentDao;
-	
+
 	@Autowired
 	private AdvancePaymentDao advancePaymentDao;
 	
 	@Autowired
 	private AdvanceReceiptDao advanceReceiptDao;
-	
-//	@Autowired
-//	private FinanceService financeService;
 
 	@Autowired
 	private CustomerDao customerDao;
-	
+
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
 	public void pagePaymentForHistory(Paging paging, List<Filter> filters){
-		
+
 		if(filters.size() == 0) return;
-		
+
 		List<PaymentPO> paymentPOs = paymentDao.pagePaymentForHistory(paging, filters);
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for(PaymentPO paymentPO: paymentPOs){
 			PaymentVO paymentVO = new PaymentVO();
-			
+
 			AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-			
+
 			BeanUtil.copyProperties(paymentPO, paymentVO, Arrays.asList("customer", "collectUser", "confirmUser"));
 			BeanUtil.copyProperties(advanceReceiptPO, paymentVO, Arrays.asList("collectUser", "confirmUser", "status"));
 
@@ -92,7 +89,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 			paymentVO.setConfirmUser(new UserVO());
 			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
-			
+
 			paymentVOs.add(paymentVO);
 		}
 
@@ -102,15 +99,15 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO) {
-		
+
 		List<PaymentPO> paymentPOs = paymentDao.queryPaymentByOrderId(paymentVO.getOrderId());
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
-		
+
 		for(PaymentPO paymentPO: paymentPOs){
 			PaymentVO _paymentVO = new PaymentVO();
-			
+
 			AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-			
+
 			BeanUtil.copyProperties(paymentPO, _paymentVO, Arrays.asList("customer", "collectUser", "confirmUser"));
 			BeanUtil.copyProperties(advanceReceiptPO, _paymentVO, Arrays.asList("collectUser", "confirmUser", "status"));
 
@@ -125,32 +122,32 @@ public class PaymentServiceImpl implements PaymentService {
 
 			_paymentVO.setConfirmUser(new UserVO());
 			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), _paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
-			
+
 			paymentVOs.add(_paymentVO);
 		}
-		
+
 		return paymentVOs;
 	}
 
 	@Override
 	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId) throws FLException{
-		
+
 		PaymentPO paymentPO = paymentDao.get(paymentVO.getPaymentId());
-		
+
 		if(paymentPO == null){
 			throw new FLException(150003, "款项不存在");
 		}
-		
+
 		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-		
+
 		if(advanceReceiptPO == null){
 			throw new FLException(150026, "收据不存在");
 		}
-		
+
 		if(!userId.equals(advanceReceiptPO.getCollectUser().getUserId())){
 			throw new FLException(150014, "收款人不匹配");
 		}
-		
+
 		BeanUtil.copyProperties(paymentPO, paymentVO, Arrays.asList("customer", "collectUser", "confirmUser"));
 		BeanUtil.copyProperties(advanceReceiptPO, paymentVO, Arrays.asList("collectUser", "confirmUser", "status"));
 
@@ -165,140 +162,140 @@ public class PaymentServiceImpl implements PaymentService {
 
 		paymentVO.setConfirmUser(new UserVO());
 		BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
-		
+
 		return paymentVO;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectPayment(PaymentVO paymentVO, String userId) throws FLException {
-		
+
 		int customerId = paymentVO.getCustomer().getId();
-		
+
 		CustomerPO customerPO = customerDao.get(customerId);
-		
+
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
 		}
-		
+
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId);
-		
+
 		if(advancePaymentPO == null){
 			advancePaymentPO = new AdvancePaymentPO();
 			advancePaymentPO.setCustomer(new CustomerPO(customerId));
 		}
-		
+
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(paymentVO.getOrderId());
-		
+
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		float balance = 0;
 		float recharge = gatherPayment(paymentVO);
 		String type = paymentVO.getType();
 		String paymentType = paymentVO.getPaymentType();
-		
+
 		List<String> paymentTypes = Arrays.asList(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR, PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR);
-		
+
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
 		float overBalance = 0;
-		
+
 		if(!paymentTypes.contains(paymentType)){
 			throw new FLException(150028, "预付款类型错误");
 		}
-		
-//		if((PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType) || PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(paymentType)) && decorationOrderPO.getDecorationActivityPO() == null){
-//			throw new FLException(150015, "收款对应订单没有参加活动,不能收取合同/工程预付款");
-//		}
-		
+
+		//		if((PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType) || PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(paymentType)) && decorationOrderPO.getDecorationActivityPO() == null){
+		//			throw new FLException(150015, "收款对应订单没有参加活动,不能收取合同/工程预付款");
+		//		}
+
 		if(!PaymentPO.PAYMENT_TYPE_COLLECTION_STR.equals(type)){
 			throw new FLException(150016, "预付款操作不正确");
 		}
-		
+
 		overBalance = Arith.add(balance, recharge);
-		
+
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
-		
+
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
-		
+
 		UserPO user = userDao.queryUserByUserId(userId);
 		advanceReceiptPO.setCollectUser(user);
 		advanceReceiptPO.setCollectUserName(user.getUserName());
 		advanceReceiptPO.setConfirmUserName("");
-		
+
 		PaymentPO paymentPO = new PaymentPO();
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
-		
+
 		paymentPO.setBalance(overBalance);
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
-		
+
 		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 		advanceReceiptDao.save(advanceReceiptPO);
 		paymentDao.save(paymentPO);
-		
+
 		paymentVO.setPaymentId(paymentPO.getPaymentId());
-			
+
 		if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType)){
 			List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
-			
+
 			if(status.contains(decorationOrderPO.getStatus())){
 				decorationOrderPO.setStatus(DecorationOrderPO.STATUS_DEPOSIT_STR);
 				decorationOrderPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 			}
-			
+
 			decorationOrderDao.update(decorationOrderPO);
 		}
-			
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int confirmPayment(List<Integer> paymentIds, String currentUserId) throws FLException{
-		
+
 		for(Integer paymentId: paymentIds){
 			PaymentPO paymentPO = paymentDao.get(paymentId);
 			AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-			
+
 			if(paymentPO == null || PaymentPO.PAYMENT_STATUS_CONFIRMED_STR.equals(paymentPO.getStatus())){ // 如果是已撤销或已确认不做动作
 				continue;
 			}
-			
+
 			String type = paymentPO.getType();
-			
+
 			if(PaymentPO.PAYMENT_CONVERT_OUT_STR.equals(type) || PaymentPO.PAYMENT_CONVERT_IN_STR.equals(type)){
 				String tempRelativeId = paymentPO.getDes().split("-")[1];
 				Integer relativeId = Integer.valueOf(tempRelativeId.substring(0, tempRelativeId.length() - 1));
-				
+
 				PaymentPO relativePO = paymentDao.get(relativeId);
 				AdvanceReceiptPO relativeReceiptPO = relativePO.getAdvanceReceipt();
-				
+
 				relativeReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 				UserPO user = userDao.queryUserByUserId(currentUserId);
 				relativeReceiptPO.setConfirmUser(user);
 				relativePO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
-				
+
 				advanceReceiptDao.update(relativeReceiptPO);
 				paymentDao.update(relativePO);
 			}
-			
+
 			advanceReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 			UserPO user = userDao.queryUserByUserId(currentUserId);
 			advanceReceiptPO.setConfirmUser(user);
 			paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_STR);
-			
+
 			if(advanceReceiptPO.getStatus() != AdvanceReceiptPO.STATUS_CONFIRM_INT){
 				advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_CONFIRM_INT);
 			}
-			
+
 			advanceReceiptDao.update(advanceReceiptPO);
 			paymentDao.update(paymentPO);
 		}
@@ -309,18 +306,18 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updatePayment(PaymentVO paymentVO){
-		
+
 		PaymentPO paymentPO = paymentDao.get(paymentVO.getPaymentId());
 		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-		
+
 		if(paymentPO != null){
-			
+
 			Float cash = paymentVO.getCash();
 			Float bank = paymentVO.getBank();
 			Float checkv = paymentVO.getCheckv();
 			Float installment = paymentVO.getInstallment();
 			Float accounts = paymentVO.getAccounts();
-			
+
 			if(cash != null && cash != 0){
 				advanceReceiptPO.setCash(paymentVO.getCash());
 				advanceReceiptPO.setCashInfo(paymentVO.getCashInfo());
@@ -356,191 +353,191 @@ public class PaymentServiceImpl implements PaymentService {
 				advanceReceiptPO.setAccounts(0);
 				advanceReceiptPO.setAccountsBankName("");
 			}
-			
+
 			paymentPO.setDes(paymentVO.getDes());
 		}
-		
+
 		paymentDao.update(paymentPO);
 		advanceReceiptDao.update(advanceReceiptPO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int payPayment(PaymentVO paymentVO, String userId) throws FLException{
-		
+
 		DecorationOrderPO decorationOrderPO =  decorationOrderDao.queryDecorationOrderByOrderId(paymentVO.getOrderId());
-		
+
 		int customerId = decorationOrderPO.getCustomerPO().getId();
-		
+
 		CustomerPO customerPO = customerDao.get(customerId);
-		
+
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
 		}
-		
+
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId);
-		
+
 		if(advancePaymentPO == null){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		float balance = 0;
 		float recharge = gatherPayment(paymentVO);
 		String paymentType = paymentVO.getPaymentType();
-		
+
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
-		
+
 		float overBalance = 0;
-		
+
 		if(balance < recharge){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		overBalance = Arith.sub(balance, recharge);
-		
+
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
-		
+
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
-		
+
 		UserPO user = userDao.queryUserByUserId(userId);
 		advanceReceiptPO.setCollectUser(user);
 		advanceReceiptPO.setCollectUserName(user.getUserName());
 		advanceReceiptPO.setConfirmUserName("");
-		
+
 		advanceReceiptDao.save(advanceReceiptPO);
-		
+
 		PaymentPO paymentPO = new PaymentPO();
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
-		
+
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setBalance(overBalance);
 		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
-		
+
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
-		
+
 		paymentVO.setPaymentId(paymentPO.getPaymentId());
-		
+
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
-		
+
 		int customerId = paymentVO.getCustomer().getId();
-		
+
 		CustomerPO customerPO = customerDao.get(customerId);
-		
+
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
 		}
-		
+
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId);
-		
+
 		if(advancePaymentPO == null){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		float balance = 0;
 		float recharge = gatherPayment(paymentVO);
 		String paymentType = paymentVO.getPaymentType();
-		
+
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
-		
+
 		float overBalance = 0;
-			
+
 		if(balance < recharge){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		overBalance = Arith.sub(balance, recharge);
-		
+
 		paymentVO.setRecharge(Math.abs(recharge));
 		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
-		
+
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status"));
-		
+
 		UserPO user = userDao.queryUserByUserId(userId);
 		advanceReceiptPO.setCollectUser(user);
 		advanceReceiptPO.setCollectUserName(user.getUserName());
 		advanceReceiptPO.setConfirmUserName("");
-		
+
 		advanceReceiptDao.save(advanceReceiptPO);
-		
+
 		PaymentPO paymentPO = new PaymentPO();
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
-		
+
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setBalance(overBalance);
 		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setType(PaymentPO.PAYMENT_TYPE_EXTRACT_STR);
-		
+
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
-		
+
 		paymentVO.setPaymentId(paymentPO.getPaymentId());
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int convertPayment(PaymentVO paymentVO, String convertLeftType, String convertRightType, float convertCash, String operatorId) throws FLException{
-		
+
 		String orderId = paymentVO.getOrderId();
 		int customerId = paymentVO.getCustomer().getId();
-		
+
 		CustomerPO customerPO = customerDao.get(customerId);
-		
+
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
 		}
-		
+
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId);
-		
+
 		if(advancePaymentPO == null){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		float nowLeftBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, convertLeftType);
 		float nowRightBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, convertRightType);
-		
+
 		if(nowLeftBalance < convertCash){
 			throw new FLException(150010, "预付款余额不足");
 		}
-		
+
 		float convertLeftVal = Arith.sub(nowLeftBalance, convertCash);
 		float convertRightVal = Arith.add(nowRightBalance, convertCash);
-		
+
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertLeftType, convertLeftVal);
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertRightType, convertRightVal);
-		
+
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertLeftType, convertLeftVal);
 		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, convertRightType, convertRightVal);
-		
+
 		PaymentPO leftPaymentPO = new PaymentPO();
 		AdvanceReceiptPO leftReceiptPO = new AdvanceReceiptPO();
-		
+
 		leftReceiptPO.setCash(convertCash);
 		UserPO user = userDao.queryUserByUserId(operatorId);
 		leftReceiptPO.setCollectUser(user);
 		leftReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		advanceReceiptDao.save(leftReceiptPO);
-		
+
 		leftPaymentPO.setCustomer(customerPO);
 		leftPaymentPO.setOrderId(orderId);
 		leftPaymentPO.setBalance(convertLeftVal);
@@ -549,20 +546,20 @@ public class PaymentServiceImpl implements PaymentService {
 		leftPaymentPO.setPaymentType(convertLeftType);
 		leftPaymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		leftPaymentPO.setAdvanceReceipt(leftReceiptPO);
-		
+
 		paymentDao.save(leftPaymentPO);
 		Integer leftPaymentId = leftPaymentPO.getPaymentId();
-		
+
 		PaymentPO rightPaymentPO = new PaymentPO();
 		AdvanceReceiptPO rightReceiptPO = new AdvanceReceiptPO();
-		
+
 		rightReceiptPO.setCash(convertCash);
 		UserPO users = userDao.queryUserByUserId(operatorId);
 		rightReceiptPO.setCollectUser(users);
 		rightReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		advanceReceiptDao.save(rightReceiptPO);
-		
+
 		rightPaymentPO.setCustomer(customerPO);
 		rightPaymentPO.setOrderId(orderId);
 		rightPaymentPO.setBalance(convertRightVal);
@@ -571,27 +568,27 @@ public class PaymentServiceImpl implements PaymentService {
 		rightPaymentPO.setPaymentType(convertRightType);
 		rightPaymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		rightPaymentPO.setAdvanceReceipt(rightReceiptPO);
-		
+
 		advancePaymentDao.update(advancePaymentPO);
 		paymentDao.save(rightPaymentPO);
 		Integer rightPaymentId = rightPaymentPO.getPaymentId();
-		
+
 		leftPaymentPO.setDes(String.format("%s转入%s:%f元(关联预付款编号-%s)", convertLeftType, convertRightType, convertCash, rightPaymentId));
 		rightPaymentPO.setDes(String.format("%s转入%s:%f元(关联预付款编号-%s)", convertLeftType, convertRightType, convertCash, leftPaymentId));
-		
+
 		return 0;
 	}
-	
+
 	public static float gatherPayment(PaymentVO paymentVO){
-		
+
 		float recharge = 0;
-		
+
 		Float cash = paymentVO.getCash();
 		Float bank = paymentVO.getBank();
 		Float checkv = paymentVO.getCheckv();
 		Float installment = paymentVO.getInstallment();
 		Float accounts = paymentVO.getAccounts();
-		
+
 		if(cash != null){
 			recharge = Arith.add(cash, recharge);
 		}
@@ -607,8 +604,42 @@ public class PaymentServiceImpl implements PaymentService {
 		if(accounts != null){
 			recharge = Arith.add(accounts, recharge);
 		}
-		
+
 		return recharge;
 	}
 
+	public static PaymentVO advancePaymentBalance(String paymentName,Float advance,String _paymentType,Float customerAdvance,String userId,Integer customerId,AdvancePaymentPO advancePaymentPO, String orderId) throws FLException{
+		
+		PaymentVO paymentVO = new PaymentVO();
+		
+		if(customerAdvance < advance){
+			throw new FLException(150010, "预付款余额不足");
+		}else{
+			paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
+			paymentVO.setCash(advance);
+			//修改预付款备注拼接字符串付款类型为null的BUG:_paymentType
+			if(paymentName.equals(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR)){
+				paymentVO.setDes(String.format("装修订单号:%s,付款类型:%s", orderId, _paymentType));
+			}else if(paymentName.equals(PaymentPO.PAYMENT_MATERIAL_PAYMENTNAME_STR)){
+				paymentVO.setDes(String.format("主材订单号:%s,付款类型:%s", orderId, _paymentType));
+			}
+			paymentVO.setCollectUser(new UserVO(userId));
+			paymentVO.setCustomer(new CustomerVO(customerId));
+			paymentVO.setPaymentType(_paymentType);
+			paymentVO.setOrderId(orderId);
+			paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+			//在预付款历史收款中,存储操作后对应类型的预付款余额
+			if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
+				paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), advance));
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
+				paymentVO.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), advance));
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
+				paymentVO.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), advance));
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
+				paymentVO.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), advance));
+			}
+		}
+		
+		return paymentVO;
+	}
 }

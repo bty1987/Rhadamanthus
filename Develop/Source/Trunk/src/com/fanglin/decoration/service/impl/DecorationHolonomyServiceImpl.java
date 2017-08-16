@@ -46,9 +46,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		
 		if(filters.size() == 0) return ;
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<DecorationHolonomyPO> decorationHolonomyPOs = decorationHolonomyDao.pagedecorationHolonomy(paging, filters);
+		List<DecorationHolonomyPO> decorationHolonomyPOs = decorationHolonomyDao.pagedecorationHolonomy(paging, filters, company);
 		List<DecorationHolonomyVO> decorationHolonomyVOs = new ArrayList<DecorationHolonomyVO>();
 		
 		for(DecorationHolonomyPO decorationHolonomyPO: decorationHolonomyPOs){

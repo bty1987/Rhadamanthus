@@ -111,31 +111,21 @@ public class DecorationOrderExportServiceImpl implements DecorationOrderExportSe
 		List<QuotationPO> quotationPOs = quotationDao.queryQuotationForDefaultByOrderIds(orderIds);
 		
 		for(QuotationPO quotationPO: quotationPOs){
-			
-			short decorationOrderType = quotationPO.getDecorationOrder().getType();
-		    short quotationType = quotationPO.getType();
-		    
-		    if (decorationOrderType == DecorationOrderPO.TYPE_HOLONOMY_INT) {
-		        decorationOrderType = DecorationOrderPO.TYPE_PART_INT;
-		    }
-		    
-		    if (quotationType == decorationOrderType){
 		    	
-				DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
-				
-				decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
-				decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
-				decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
-				decorationOrderExportVO.setManagePrice(quotationPO.getManagePrice());
-				decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
-				
-				if(quotationPO.getManageRate() == 0){
-					decorationOrderExportVO.setNotSalesmanCut(0f);
-					decorationOrderExportVO.setAchievement(0f);
-				}else{
-					decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
-					decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
-				}
+			DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
+			
+			decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
+			decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
+			decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
+			decorationOrderExportVO.setManagePrice(quotationPO.getManagePrice());
+			decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
+			
+			if(quotationPO.getManageRate() == 0){
+				decorationOrderExportVO.setNotSalesmanCut(0f);
+				decorationOrderExportVO.setAchievement(0f);
+			}else{
+				decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
+				decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
 			}
 		}
 		

@@ -39,19 +39,19 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 		
 		query.desc("defaultFlag");
 		
-		return query.add(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR,company)).list();
+		return query.add(Restrictions.eq("company",company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int company,int defaultFlag){
-		return createCriteria(QuotationVersionPO.class).add(Restrictions.and(Restrictions.eq("defaultFlag", defaultFlag),(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR, company)))).list();
+		return createCriteria(QuotationVersionPO.class).add(Restrictions.and(Restrictions.eq("defaultFlag", defaultFlag),(Restrictions.eq("company", company)))).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationVersionPO> queryQuotationVersion(int company){
-		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq(QuotationVersionPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc("defaultFlag")).list();
+		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).addOrder(Order.desc("defaultFlag")).list();
 	}
 	
 	@Override

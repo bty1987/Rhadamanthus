@@ -225,5 +225,5 @@ public class BrandServiceImpl implements BrandService {
 		
 		return 0;
 	}
-
+	
 }

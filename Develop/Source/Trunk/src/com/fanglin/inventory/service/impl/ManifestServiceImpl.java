@@ -96,9 +96,7 @@ public class ManifestServiceImpl implements ManifestService {
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters,int company) {
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<ManifestPO> manifestPOs = manifestDao.pageManifest(paging, filters);
+		List<ManifestPO> manifestPOs = manifestDao.pageManifest(paging, filters,company);
 		List<ManifestVO> manifestVOs = new ArrayList<ManifestVO>();
 		
 		ManifestVO manifestVO;

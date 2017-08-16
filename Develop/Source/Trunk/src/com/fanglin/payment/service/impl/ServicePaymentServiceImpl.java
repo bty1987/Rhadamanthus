@@ -190,7 +190,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	}
 	
 	/**
-	 * 生成服务款信息与收据（servicePayment、serviceReceipt）、并生成或更新：payment、advancePayment、advancereceipt、decorationholonomy
+	 * 生成服务款信息与收据(servicePayment、serviceReceipt),并生成或更新:payment,advancePayment,advancereceipt,decorationholonomy
 	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -221,7 +221,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ServicePaymentPO.COLUMN_RATIO_STR));
 		servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 
-		//如果现有服务费加上原交服务费 > 总服务费， 将差额给预付款
+		//如果现有服务费加上原交服务费 >总服务费,将差额给预付款
 		if(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup())>decorationHolonomy.getServicePrice()){
 			Float sumMoney = Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup());
 			Float subMoney = Arith.sub(sumMoney, decorationHolonomy.getServicePrice());
@@ -237,20 +237,20 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		serviceReceiptVO.setRealMoney(money);
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的，实收主材额和实收服务费
+		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setMaterialPaidup(Arith.add(servicePaymentPO.getAdvanceMoney(), decorationHolonomy.getMaterialPaidup()));
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 
-		//查询该客户是否有记录，如有进行更新，否则添加
+		//查询该客户是否有记录,如有进行更新,否则添加
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrder.getCustomerPO().getCustomerId());
 		AdvancePaymentPO advancePayment = new AdvancePaymentPO(new CustomerPO());
 		if(advancePaymentPO != null){
-			//如果有记录，需要将materialBalance– 原有主材预付款金额 + 新的主材预付款金额 ; 然后更新
+			//如果有记录,需要将materialBalance – 原有主材预付款金额 + 新的主材预付款金额 ;然后更新
 			advancePaymentPO.setMaterialBalance(Arith.add(advancePaymentPO.getMaterialBalance(), servicePaymentPO.getAdvanceMoney()));
 			advancePaymentDao.update(advancePaymentPO);
 		}else{
-			//生成advancePayment表中的materialBalance– 主材预付款金额
+			//生成advancePayment表中的materialBalance – 主材预付款金额
 			BeanUtil.copyProperties(decorationOrder.getCustomerPO(), advancePayment.getCustomer());
 			advancePayment.setBalance(0f);
 			advancePayment.setProjectBalance(0f);
@@ -280,7 +280,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	}
 	
 	/**
-	 * 服务款项收款 , 主要针对服务费收款
+	 * 服务款项收款,主要针对服务费收款
 	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -318,7 +318,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的，实收主材额和实收服务费
+		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 
@@ -364,7 +364,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的，实收主材额和实收服务费
+		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
 		decorationHolonomyDao.update(decorationHolonomy);
 

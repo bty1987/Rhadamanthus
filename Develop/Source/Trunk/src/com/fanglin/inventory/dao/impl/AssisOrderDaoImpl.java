@@ -21,9 +21,11 @@ public class AssisOrderDaoImpl extends DaoImpl<AssisOrderPO> implements AssisOrd
 	}
 	
 	@Override
-	public List<AssisOrderPO> pageAssisOrder(Paging paging, List<Filter> filters) {
+	public List<AssisOrderPO> pageAssisOrder(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<AssisOrderPO> query = pagingQuery(paging, AssisOrderPO.class);
+		
+		query.add(query.getCriterion(AssisOrderPO.COLUMN_COMPANY_STR, company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -75,8 +77,6 @@ public class AssisOrderDaoImpl extends DaoImpl<AssisOrderPO> implements AssisOrd
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_APPROVERTIME_STR, etimestamp, "le"));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
-				}else if("company".equals(field)){
-					query.add(query.getCriterion(AssisOrderPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

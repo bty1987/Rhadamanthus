@@ -110,9 +110,9 @@ $(function(){
             };
             var _people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');
             _people.length && $.each(_people, function(i,v){
-            	if($.trim(v) != ""){
-            		a['backVisit.receivers[' + i + ']'] = v;
-            	}
+                if($.trim(v) != ""){
+                    a['backVisit.receivers[' + i + ']'] = v;
+                }
             });
 
             com.post(api.decoration.addBackVisit, a, successCallback)

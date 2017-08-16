@@ -50,7 +50,4 @@ public class RefundsAction extends BaseListAction {
 		this.refundsItems = refundsItems;
 	}
 
-
-
-
 }

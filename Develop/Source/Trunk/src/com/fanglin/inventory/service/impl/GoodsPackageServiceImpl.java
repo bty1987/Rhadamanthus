@@ -69,14 +69,6 @@ public class GoodsPackageServiceImpl implements GoodsPackageService{
 		if(goodsPO == null){
 			throw new FLException(260004, "商品不存在");
 		}
-		/*
-		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryGoodsForPackage(goodsPackageVO.getPid());
-		
-		for(GoodsPackagePO goodsPackagePO : goodsPackagePOs){
-			if(goodsPackagePO.getGoods().getGid() == goodsPackageVO.getGoods().getGid() && goodsPackagePO.getColor().getCid() ==goodsPackageVO.getColor().getCid()&&goodsPackagePO.getFormat().getFid()==goodsPackageVO.getFormat().getFid()){
-				throw new FLException(160032, "套餐中商品已存在"); 
-			}
-		}*/
 		
 		GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(),new ColorPO(),new FormatPO());
 		

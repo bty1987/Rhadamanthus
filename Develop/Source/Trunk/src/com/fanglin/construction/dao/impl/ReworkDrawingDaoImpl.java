@@ -1,11 +1,11 @@
 /**
- * @File Name		: ReworkDrawingDaoImpl.java
+ * @File Name	: ReworkDrawingDaoImpl.java
  * @Package   	: com.fanglin.dao.impl.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-24
+ * @Date		: 2014-9-24
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -27,12 +27,12 @@ public class ReworkDrawingDaoImpl extends DaoImpl<ReworkDrawingPO> implements Re
 		super(ReworkDrawingPO.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<ReworkDrawingPO> queryDrawingByReworkId(int reworkId){
 		
 		return session().createCriteria(ReworkDrawingPO.class).add(Restrictions.eq(ReworkDrawingPO.COLUMN_RWID_STR, reworkId)).list();
+	
 	}
 	
-
 }

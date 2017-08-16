@@ -1,11 +1,11 @@
 /**
- * @File Name		: DecorationOrderService
+ * @File Name	: DecorationOrderService
  * @Package   	: com.fanglin.service.decorationOrder
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: bty1987
- * @Email			: 
+ * @Email		: 
  * @Describing	: 
  */
 
@@ -21,15 +21,15 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
 	
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, Integer companyId);
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, Integer company);
 	
-	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer companyId);
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company);
 	
-	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer companyId);
+	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company);
 
-	public int applayDrawLine(DrawLineVO drawLine, String userId, Integer companyId) throws FLException;
+	public int applayDrawLine(DrawLineVO drawLine, String userId, Integer company) throws FLException;
 
-	public int resetDrawLine(DrawLineVO drawLine, Integer companyId) throws FLException;
+	public int resetDrawLine(DrawLineVO drawLine, Integer company) throws FLException;
 
 	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId) throws FLException;
 

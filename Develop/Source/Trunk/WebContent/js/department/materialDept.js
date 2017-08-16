@@ -147,7 +147,7 @@ jQuery(function($) {
 		material.modal.modal("show");
     });
 	
-	function editDept(deptId, deptName, regionId, cityId, cityProperId, contractPrefix, des){
+	function editDept(deptId, deptName, regionId, cityId, cityProperId, des){
 		editFlg = true;
 		
 		material.items.materialDeptId.val(deptId).prop("disabled", true).css("display", "block");

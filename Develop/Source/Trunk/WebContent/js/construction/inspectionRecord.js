@@ -154,7 +154,7 @@ jQuery(function($) {
 	}
 	
 	function delRecord(irId){
-		bootbox.confirm("确认删除吗？", function(res){
+		bootbox.confirm("确认删除吗?", function(res){
 			if(res){
 				com.post(api.construction.deleteInspectionRecord, {"irIds[0]": irId}, function(res){
 					searcher.doSearch();

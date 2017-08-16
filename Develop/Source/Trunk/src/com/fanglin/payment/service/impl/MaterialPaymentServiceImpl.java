@@ -427,6 +427,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		if(materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
 			
+			Float advance = materialPaymentVO.getAdvance();
+			
 			if(materialPaymentVO.getAdvance() != 0){
 				
 				int advanceType = materialPaymentVO.getAdvanceType();
@@ -453,40 +455,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
 				}
 				
-				if(customerAdvance < materialPaymentVO.getAdvance()){
-					throw new FLException(150010, "预付款余额不足");
-				}else{
-					
-					PaymentVO perPayment = new PaymentVO();
-					perPayment.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
-					perPayment.setCash(materialPaymentVO.getAdvance());
-					perPayment.setDes(String.format("主材订单号:%s,付款类型:%s", materialPaymentPO.getMsoNo(), paymentType));
-					perPayment.setCollectUser(new UserVO(userId));
-					perPayment.setCustomer(new CustomerVO(customerPO.getId()));
-					perPayment.setPaymentType(_paymentType);
-					perPayment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-					//在预付款历史收款中，存储操作后对应类型的预付款余额
-					if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
-						perPayment.setBalance(Arith.sub(advancePaymentPO.getBalance(), materialPaymentVO.getAdvance()));
-					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
-						perPayment.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), materialPaymentVO.getAdvance()));
-					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
-						perPayment.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), materialPaymentVO.getAdvance()));
-					}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
-						perPayment.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), materialPaymentVO.getAdvance()));
-					}
-					
-					MaterialSubOrderPO materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
-					
-					if(materialSubOrderPO != null){
-						perPayment.setOrderId(materialSubOrderPO.getOrderId());
-					}
-					
-					advancePaymentService.updateAdvancePayment(perPayment);
-					
-					materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
-					materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
+				PaymentVO paymentVO  = new PaymentVO();
+				
+				MaterialSubOrderPO materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
+				
+				String orderId = "";
+				
+				if(materialSubOrderPO != null){
+					orderId = materialSubOrderPO.getOrderId();
 				}
+				
+				paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getId(), advancePaymentPO, orderId);
+				advancePaymentService.updateAdvancePayment(paymentVO);
+				
+				materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
+				materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
 			}
 			
 //			if(materialPaymentVO.getCoupon() != 0 && decorationActivityItemVOs != null && decorationActivityItemVOs.size() > 0){
@@ -706,7 +689,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				paymentVO.setPaymentType(_paymentType);
 				paymentVO.setOrderId(materialSubOrderVO.getOrderId());
 				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-				//在预付款历史收款中，存储操作后对应类型的预付款余额
+				//在预付款历史收款中,存储操作后对应类型的预付款余额
 				if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
 					paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), materialReceiptVO.getAdvance()));
 				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){

@@ -1,11 +1,11 @@
 /**
- * @File Name		: AcceptanceServiceImpl.java
+ * @File Name	: AcceptanceServiceImpl.java
  * @Package   	: com.fanglin.service.impl.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-26
+ * @Date		: 2014-9-26
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -72,6 +72,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		acceptanceVO.setOrderId(orderId);
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		
 		if(decorationOrderPO != null){
 			acceptanceVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
 			acceptanceVO.setOrderAddr(decorationOrderPO.getVillagePO().getVillageName()+" "+decorationOrderPO.getHouseNumber());
@@ -117,6 +118,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 				}
 			}
 		}
+		
 		return acceptanceVO;
 	}
 	

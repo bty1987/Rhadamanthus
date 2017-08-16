@@ -14,7 +14,7 @@ jQuery(function($) {
 	var a = p.split("&");
 	
 	if(p.indexOf('time=') != -1){
-		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
+        params.loginTime = parent.params.loginTime;
 	}
 	
 	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
@@ -218,11 +218,6 @@ function generateOneReceipt(){
 		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var collectDesTd = $('<td colspan="4"></td>').text('备注: ' + receipt.order.serviceReceiptDes).appendTo(addrReceiptTr);
 
-		$("#btnPrint").click(function(){
-			$("#printServicePaymentReceipt").attr('style','display:none');
-			window.print();
-			$("#printServicePaymentReceipt").attr('style','display:block');
-		});
 	}
 }
 

@@ -4,7 +4,7 @@ $(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
+     * tableId ,用来显示的div的id
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){

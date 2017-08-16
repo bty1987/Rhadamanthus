@@ -51,7 +51,7 @@ public class AssisOrderItemPO implements Serializable{
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
+	@GeneratedValue(strategy = IDENTITY) 
 	@Column(name = "aoiid")
 	public long getAoiid() {
 		return aoiid;

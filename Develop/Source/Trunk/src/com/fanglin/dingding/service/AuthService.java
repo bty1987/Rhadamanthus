@@ -42,9 +42,9 @@ public class AuthService {
 	
 	public   String getJsapiTicket(String company) {
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 		
-		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, mpHost.getValue(),company);
+		String url = String.format(DDApi.DDAPI_GET_JSAPI_TICKET_STR, isv.getValue(),company);
 		
 		JSONObject response = HttpHelper.httpGet(url);
 		

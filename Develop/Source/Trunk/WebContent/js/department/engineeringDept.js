@@ -149,7 +149,7 @@ jQuery(function($) {
 		engineering.modal.modal("show");   
     });
 	
-	function editDept(deptId, deptName, regionId, cityId, cityProperId, contractPrefix, des){
+	function editDept(deptId, deptName, regionId, cityId, cityProperId, des){
 		editFlg = true;
 		
 		engineering.items.engineeringDeptId.val(deptId).prop("disabled", true).css("display", "block");

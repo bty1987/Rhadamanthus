@@ -9,11 +9,11 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineGroupService  {
 
-	public List<DrawLineGroupVO> pageDrawLineGroup(Paging paging, List<Filter> filters);
+	public List<DrawLineGroupVO> pageDrawLineGroup(Paging paging, List<Filter> filters, int conmpany);
 	
 	public  List<DrawLineGroupVO>  queryDrawLineGroup(int company);
 	
-	public  void  saveDrawLineGroup(DrawLineGroupVO drawLineGroupVO,int company) throws FLException;
+	public  void  saveDrawLineGroup(DrawLineGroupVO drawLineGroupVO, int company) throws FLException;
 	
 	public  void  updateDrawLineGroup(DrawLineGroupVO drawLineGroupVO) throws FLException;
 	

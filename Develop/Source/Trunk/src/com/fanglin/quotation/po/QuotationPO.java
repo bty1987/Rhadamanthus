@@ -60,8 +60,6 @@ public class QuotationPO implements Serializable {
 	
 	private int status;
 	
-	private short type;
-	
 	private float basicPrice;
 	
 	private float setpackage;
@@ -174,15 +172,6 @@ public class QuotationPO implements Serializable {
 
 	public void setStatus(int status){
 		this.status = status;
-	}
-	
-	@Column(name = "type")
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
 	}
 	
 	@Column(name = "totalPrice")

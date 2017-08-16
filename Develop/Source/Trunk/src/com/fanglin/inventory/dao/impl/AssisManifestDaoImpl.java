@@ -12,4 +12,5 @@ public class AssisManifestDaoImpl extends DaoImpl<AssisManifestPO> implements As
 	public AssisManifestDaoImpl(){
 		super(AssisManifestPO.class);
 	}
+	
 }

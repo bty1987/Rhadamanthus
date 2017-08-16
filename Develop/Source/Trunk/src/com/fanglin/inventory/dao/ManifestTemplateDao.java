@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface ManifestTemplateDao extends Dao<ManifestTemplatePO> {
 	
-	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters);
+	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters,int company);
 	
 	public List<ManifestTemplatePO> queryManifestTemplate();
 	

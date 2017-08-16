@@ -1,11 +1,11 @@
 /**
- * @File Name		: ConstructionScheduleDao.java
- * @Package   	: com.fanglin.dao.constructionSchedule
+ * @File Name	: ConstructionDao.java
+ * @Package   	: com.fanglin.dao.construction
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -20,15 +20,13 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionDao extends Dao<ConstructionPO> {
 	
-	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer companyId);
+	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, Integer companyId);
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, Integer company);
 	
 	public List<ConstructionPO> pageConstructionForSupervisionByUserId(Paging paging, List<Filter> filters, String workTypeQuality, String userId);
 	
-	public List<ConstructionPO> pageConstructionForQuality(Paging paging, List<Filter> filters, List<Integer> schedules);
-	
-	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer companyId);
+	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company);
 	
 	public List<ConstructionPO> queryConstructionForSupervisionByUserId(List<Filter> filters, String supervisionUserId);
 	

@@ -1,4 +1,4 @@
-#Mon Jul 17 18:30:31 CST 2017
+#Wed Aug 16 07:17:01 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -26,9 +26,6 @@ encoding//WebContent/views/construction/customerServiceDetail.html=UTF-8
 encoding//WebContent/views/construction/customerServiceGuarantee.html=UTF-8
 encoding//WebContent/views/construction/inspection.html=UTF-8
 encoding//WebContent/views/construction/inspectionRecord.html=UTF-8
-encoding//WebContent/views/construction/qualityTesting.html=UTF-8
-encoding//WebContent/views/construction/qualityTestingDetail.html=UTF-8
-encoding//WebContent/views/construction/qualityTestingRecord.html=UTF-8
 encoding//WebContent/views/construction/supervision.html=UTF-8
 encoding//WebContent/views/construction/supervisionDetail.html=UTF-8
 encoding//WebContent/views/construction/supervisionRework.html=UTF-8

@@ -36,10 +36,8 @@ public class AuditServiceImpl implements AuditService{
 	
 	@Override
 	public List<AuditVO> pageAudit(Paging paging, List<Filter> filters, int company) {
-
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
-		List<AuditPO> AuditPOs = auditDao.pageAudit(paging, filters);
+		List<AuditPO> AuditPOs = auditDao.pageAudit(paging, filters, company);
 		
 		List<AuditVO> AuditVOs = new ArrayList<AuditVO>();
 		

@@ -51,9 +51,7 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 	@Override
 	public void pageAssisOrder(Paging paging, List<Filter> filters,int company) {
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<AssisOrderPO> assisOrderPOs = assisOrderDao.pageAssisOrder(paging, filters);
+		List<AssisOrderPO> assisOrderPOs = assisOrderDao.pageAssisOrder(paging, filters,company);
 		List<AssisOrderVO> assisOrderVOs = new ArrayList<AssisOrderVO>();
 		
 		AssisOrderVO assisOrderVO;

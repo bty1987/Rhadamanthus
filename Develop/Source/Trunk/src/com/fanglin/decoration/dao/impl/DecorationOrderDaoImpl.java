@@ -36,7 +36,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses){
+	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
@@ -44,6 +44,8 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 			query.alias("designer.dept", "designerDept");
 			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
 		}
+		
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		if(statuses != null && statuses.size() > 0){
 			query.add(Restrictions.in("status", statuses));
@@ -57,9 +59,11 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<Filter> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, int company){
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+		
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		List<String> nostatus = Arrays.asList(DecorationOrderPO.STATUS_TERMINATION_STR, DecorationOrderPO.STATUS_WASTE_STR);
 		
@@ -72,10 +76,12 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses) {
+	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
+		query.add(query.getCriterion("company", company, "eq"));
+	
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
 			query.alias("designerPO", "designer");
 			query.alias("designer.dept", "designerDept");
@@ -94,9 +100,11 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses) {
+	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		if(salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0){
 			query.alias("salesmanPO", "salesman");
@@ -116,8 +124,10 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<Filter> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForMaterial(Paging paging, List<Filter> filters, int company){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -129,8 +139,10 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<Filter> filters){
+	public List<DecorationOrderPO> pageDecorationOrderForPutline(Paging paging, List<Filter> filters, int company){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		query.alias("putlineConstructionSchedules", "putlineConstructionSchedule");
 		
@@ -378,15 +390,25 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					
 					query.add(query.getCriterion("createTime", eTimestamp, "le"));
 					query.add(query.getCriterion("createTime", sTimestamp, "ge"));
+				}else if("depositTimeDateRange".equals(field)){
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+					
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+					
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+					
+					query.add(query.getCriterion("depositTime", eTimestamp, "le"));
+					query.add(query.getCriterion("depositTime", sTimestamp, "ge"));
 				}else if("putlineTimeDateRange".equals(field)){
 					String sTime = data.split("-")[0].replaceAll("/", "-");
 					String eTime = data.split("-")[1].replaceAll("/", "-");
 					
 					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", eTime, "le"));
 					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", sTime, "ge"));
-		        }else if("company".equals(field)){
-					query.add(query.getCriterion("company", Integer.valueOf(data), op));
-				}
+		        }
 			}
 		}
 	}

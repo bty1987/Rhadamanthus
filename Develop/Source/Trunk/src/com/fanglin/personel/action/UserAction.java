@@ -176,10 +176,10 @@ public class UserAction extends BaseListAction {
 	}
 	
 	
-	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String resetPassword() throws FLException{
+	@Action(value = "resetPasswords", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetPasswords() throws FLException{
 		
-		userService.resetPassword(user.getUserId());
+		userService.resetPasswords(user.getUserId(),queryCompany());
 	
 		return SUCCESS;
 	}

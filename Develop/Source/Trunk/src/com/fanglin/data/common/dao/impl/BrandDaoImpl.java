@@ -29,22 +29,14 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	public BrandDaoImpl(){
 		super(BrandPO.class); 
 	}
-
+	
 	@Override
 	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 		query.add(Restrictions.eq("company", company));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				if("categoryId".equals(filter.getField())){
-					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
-				}else{
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
-			}
-		}
+
+		queryFilterExcute(query,filters);
 		
 		return query.list();
 	}
@@ -58,6 +50,18 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 		query.add(Restrictions.eq("company", company));
 		
 		return query.list();
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters){
+		if(filters != null){
+			for(Filter filter:filters){
+				if("categoryId".equals(filter.getField())){
+					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
+				}else{
+					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+				}
+			}
+		}
 	}
 
 	@Override

@@ -16,11 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
@@ -34,6 +32,7 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -95,6 +94,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
+	
+	@Autowired
+	private MessageService messageDDService;
 	
 	@Override
 	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters){
@@ -299,7 +301,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 //				sumMoney = Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff()));
 			}
 
-			//重新生成款项时，由于首付款已经生成过且定金余额已被减 所以需要把自动减去的定金剩余金额补回来
+			//重新生成款项时,由于首付款已经生成过且定金余额已被减 所以需要把自动减去的定金剩余金额补回来
 			DecorationPaymentPO firstPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAType(orderId, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR);
 			if(firstPaymentPO != null){
 				DecorationPaymentPO depositPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAType(orderId, DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR);
@@ -681,36 +683,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				_paymentType = CustomerPO.BALANCE_TYPE_PROJECT_STR;
 			}
 			
-			if(decorationPaymentVO.getAdvance() > customerAdvance){
-				throw new FLException(150010, "预付款余额不足");
-			}else{
-				PaymentVO paymentVO = new PaymentVO();
-				paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
-				paymentVO.setCash(decorationPaymentVO.getAdvance());
-				//修改预付款备注拼接字符串付款类型为null的BUG：_paymentType
-				paymentVO.setDes(String.format("付款装修订单号:%s,付款类型:%s", decorationOrderPO.getOrderId(), _paymentType));
-				paymentVO.setCollectUser(new UserVO(decorationPaymentVO.getCollectUserId()));
-				paymentVO.setCustomer(new CustomerVO(decorationPaymentPO.getDecorationOrderPO().getCustomerPO().getId()));
-				paymentVO.setPaymentType(_paymentType);
-				paymentVO.setOrderId(decorationOrderPO.getOrderId());
-				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-				//在预付款历史收款中，存储操作后对应类型的预付款余额
-				if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), decorationPaymentVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), decorationPaymentVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), decorationPaymentVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), decorationPaymentVO.getAdvance()));
-				}
-				
-				
-				advancePaymentService.updateAdvancePayment(paymentVO);
-			}
+			PaymentVO paymentVO  = new PaymentVO();
+			
+			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, decorationPaymentVO.getCollectUserId(), decorationPaymentPO.getDecorationOrderPO().getCustomerPO().getId(), advancePaymentPO, decorationOrderPO.getOrderId());
+			
+			advancePaymentService.updateAdvancePayment(paymentVO);
 			
 			decorationReceiptPO.setAdvance(decorationPaymentVO.getAdvance());
 		}
+		
 		
 		Float coupon = decorationPaymentVO.getCoupon();
 		
@@ -816,9 +797,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 		
-//		if(decorationOrderPO.getSupervisorPO() != null){
-//			messageDDService.sendMessageForPayment(decorationOrderPO.getSupervisorPO().getUserId(), "", String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()));
-//		}
+		if(decorationOrderPO.getSupervisorPO() != null){
+			messageDDService.sendMessageForPayment(decorationOrderPO.getSupervisorPO().getUserId(), "", String.format("订单:%s,地址:%s %s的%s款项,金额:%s完成收款", decorationOrderPO.getOrderId(), decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()),decorationOrderPO.getCompany());
+		}
 		
 		return 0;
 	}

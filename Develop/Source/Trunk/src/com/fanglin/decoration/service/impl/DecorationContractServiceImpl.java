@@ -198,7 +198,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationContractPO.setDecorationOrderPO(decorationOrderPO);
 		}
 		
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId, decorationOrderPO.getType());
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		
 		if(quotationPO == null){
 			throw new FLException(140008, "订单没有报价信息");
@@ -337,6 +337,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		decorationOperatePO.setValue(-decorationOrderPO.getOrderTotalPrice());
 		decorationOperatePO.setDes("重签合同");
 		
 		decorationOperateDao.save(decorationOperatePO);
