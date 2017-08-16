@@ -92,7 +92,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 		supplierPO = new SupplierPO();
 		
-		BeanUtil.copyProperties(supplierVO, supplierPO, "sid");
+		BeanUtil.copyProperties(supplierVO, supplierPO, "sid", "isLogin");
 		
 		supplierPO.setPassword(MD5Helper.MD5(SystemConfig.getString("defaultPassword", "fanglin")));
 		supplierPO.setIsLogin((short) 0);
@@ -156,5 +156,5 @@ public class SupplierServiceImpl implements SupplierService {
 		
 		return 0;
 	}
-
+	
 }

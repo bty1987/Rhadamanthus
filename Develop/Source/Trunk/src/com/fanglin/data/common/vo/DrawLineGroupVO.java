@@ -10,7 +10,7 @@ public class DrawLineGroupVO implements Serializable {
 	
 	private String name ; 
 	
-	private short status;
+	private Short status;
 	
 	private String content ;
 	
@@ -32,11 +32,11 @@ public class DrawLineGroupVO implements Serializable {
 		this.name = name;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 

@@ -1,11 +1,11 @@
 /**
- * @File Name		: ReworkVo.java
+ * @File Name	: ReworkVo.java
  * @Package   	: com.fanglin.vo
  * @Version		: 1.0
- * @Date			: 2014-9-23
+ * @Date		: 2014-9-23
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 

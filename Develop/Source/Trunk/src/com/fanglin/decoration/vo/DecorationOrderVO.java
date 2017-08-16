@@ -119,6 +119,8 @@ public class DecorationOrderVO implements Serializable {
 
 	private String salesmanType;
 	
+	private Timestamp depositTime;
+	
 	public String getOrderId(){
 		return orderId;
 	}
@@ -504,5 +506,14 @@ public class DecorationOrderVO implements Serializable {
 
 	public void setAutoId(Long autoId){
 		this.autoId = autoId;
+	}
+	
+	@JSON(format="yyyy-MM-dd")
+	public Timestamp getDepositTime() {
+		return depositTime;
+	}
+
+	public void setDepositTime(Timestamp depositTime) {
+		this.depositTime = depositTime;
 	}
 }

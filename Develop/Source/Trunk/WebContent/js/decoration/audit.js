@@ -121,7 +121,7 @@ jQuery(function($) {
 
 
     function applyAudit(aid){
-        bootbox.confirm("确认审核吗？",function(res){
+        bootbox.confirm("确认审核吗?",function(res){
             //如果为ture
             if(res){
                 com.post(api.decoration.applyAudit, {"auditVO.aid":aid}, function(res){

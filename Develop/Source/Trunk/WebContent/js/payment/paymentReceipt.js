@@ -11,7 +11,7 @@ jQuery(function($) {
 	var args = window.location.search.substr(1);
 	
 	if(args.indexOf('time=') != -1){
-		params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
+        params.loginTime = parent.params.loginTime;
 	}
 	
 	var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;
@@ -138,8 +138,6 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 			
 			var $order = orderInfo[k];
 			
-			console.log($order.supervisor);
-			
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 			var noReceiptTd = $('<td style="width: 33%"></td>').text('订单编号: ' + $order.orderId).appendTo(orderReceiptTr);
 			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + $order.village.villageName + ' ' + $order.houseNumber).appendTo(orderReceiptTr);
@@ -183,10 +181,5 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 		var desTr = $('<tr></tr>').appendTo(receiptTable);
 		var desTd = $('<td colspan="3"></td>').text('备注: ' + commonInfo["des"]).appendTo(desTr);
 
-		$("#btnPrint").click(function(){
-			$("#printPaymentReceipt").attr('style','display:none');
-			window.print();
-			$("#printPaymentReceipt").attr('style','display:block');
-		});
 	}
 }

@@ -32,9 +32,11 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 	}
 
 	@Override
-	public List<ManifestPO> pageManifest(Paging paging, List<Filter> filters) {
+	public List<ManifestPO> pageManifest(Paging paging, List<Filter> filters , int company) {
 		
 		PagingQuery<ManifestPO> query = pagingQuery(paging, ManifestPO.class);
+		
+		query.add(query.getCriterion(ManifestPO.COLUMN_COMPANY_STR,company,"eq"));
 		
 		queryFilterExecute(query, filters);
 		
@@ -90,8 +92,6 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 					
 				}else if(ManifestPO.COLUMN_CODE_STR.equals(field)){
 					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
-				}else if(ManifestPO.COLUMN_COMPANY_STR.equals(field)){
-					query.add(query.getCriterion(ManifestPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

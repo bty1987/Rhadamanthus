@@ -184,7 +184,7 @@ jQuery(function($) {
 
 	function removeRow(id){
 
-		bootbox.confirm("确认删除吗？", function(res){
+		bootbox.confirm("确认删除吗?", function(res){
 			if(res){
 				com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]"  : id}, successCallback);
 			}

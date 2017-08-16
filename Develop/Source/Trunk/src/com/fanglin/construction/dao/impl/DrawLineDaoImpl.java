@@ -1,11 +1,11 @@
 /**
- * @File Name		: DecorationOrderDrawLineDaoImpl
+ * @File Name	: DecorationOrderDrawLineDaoImpl
  * @Package   	: com.fanglin.dao
  * @Version		: 1.0
- * @Date			: 2014-9-21
+ * @Date		: 2014-9-21
  * @Copyright	: Copyright Creators 2014
  * @Author		:  bty1987
- * @Email			: 
+ * @Email		: 
  * @Describing	: 
  */
 
@@ -36,11 +36,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 	
 	@Override
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, Integer companyId){
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, Integer company){
 
 		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", companyId, "eq"));
+		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -50,11 +50,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 	
 	@Override
-	public List<DrawLinePO> queryDrawLine(List<Filter> filters, Integer companyId) {
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters, Integer company) {
 
 		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", companyId, "eq"));
+		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -65,14 +65,14 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime, Integer companyId){
+	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime, Integer company){
 		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
 		
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				
 				.createAlias("decorationOrderPO", "decorationOrderPO")
 				
-				.add(Restrictions.eq("decorationOrderPO.company", companyId))
+				.add(Restrictions.eq("decorationOrderPO.company", company))
 
 				.add(Restrictions.not(Restrictions.in("status", status)))
 
@@ -91,19 +91,20 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 				.add(Restrictions.eq("decorationOrderPO.orderId", orderId))
 
 				.addOrder(Order.desc("dlId"))
+				
 				.list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DrawLinePO> queryDrawLineByGroupATime(long gid, Timestamp startTime,Timestamp endTime, Integer companyId){
+	public List<DrawLinePO> queryDrawLineByGroupATime(long gid, Timestamp startTime,Timestamp endTime, Integer company){
 		
 		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
 	
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				.createAlias("decorationOrderPO", "decorationOrderPO")
 				.createAlias("drawLineGroupPO", "drawLineGroupPO")
-				.add(Restrictions.eq("decorationOrderPO.company", companyId))
+				.add(Restrictions.eq("decorationOrderPO.company", company))
 				.add(Restrictions.eq("drawLineGroupPO.gid", gid))
 				.add(Restrictions.not(Restrictions.in("status", status)))
 				.add(Restrictions.or(

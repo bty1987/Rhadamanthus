@@ -316,9 +316,9 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
             
             $btnPrint.click(function(){
-            	com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.orderId + "&decorationPayment.orderId=" + v.orderId + "&decorationReceipt.drId=" + v.drId + "&time=" + params.loginTime,function () {
+            	com.popup("专用收款收据__订单编号:" + v.orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.orderId + "&decorationPayment.orderId=" + v.orderId + "&decorationReceipt.drId=" + v.drId + "&time=" + parent.params.loginTime,function () {
 					parent.layer.getFrameIndex(window.name);
-				})
+				},null,true)
             });
             
             return $liLine;
@@ -361,7 +361,7 @@ jQuery(function($) {
 			$("#refundCouponDiv").addClass("hide");
 			
 			decorationPayment.refundModal.modal("show");
-		}else{ // 定金 , 设计费 , 首付款 , 首付二期款 , 二期款 , 尾款
+		}else{ // 定金,设计费,首付款,首付二期款,二期款,尾款
 			initBaseModal();
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
 			
@@ -710,9 +710,9 @@ jQuery(function($) {
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
-					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + params.loginTime,function () {
+					com.popup("专用收款收据__订单编号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + parent.params.loginTime,function () {
 						parent.layer.getFrameIndex(window.name);
-					});
+					},null,true);
     			}
     		});
     	});
@@ -801,9 +801,9 @@ jQuery(function($) {
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
-					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + params.loginTime,function () {
+					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + parent.params.loginTime,function () {
 						parent.layer.getFrameIndex(window.name);
-					});
+					},null,true);
     			}
     		});
     		

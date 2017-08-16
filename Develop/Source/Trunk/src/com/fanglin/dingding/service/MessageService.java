@@ -59,14 +59,14 @@ public class MessageService {
 		
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
-		SystemConfigPO approvalAgentId = systemConfigDao.querySystemConfig("approvalAgentId");
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId", company);
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 		
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", approvalAgentId.getValue());
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", messageAgentId.getValue());
 		
 		OAMessage oaMessage = new OAMessage();
-		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s",mpHost.getValue(), approvalId);
+		oaMessage.message_url = String.format("%s/dingding/approval/approvalItem.html?approval.aid=%s",isv.getValue(), approvalId);
 		OAMessage.Head head = new OAMessage.Head();
 		head.bgcolor = "FFE8643E";
 		oaMessage.head = head;
@@ -92,8 +92,8 @@ public class MessageService {
 		
 		TextMessage textMessage = new TextMessage(contents);
 		
-		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId");
-		
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId", company);
+	
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
 		
 		appMessageDelivery.withMessage(textMessage);
@@ -107,14 +107,14 @@ public class MessageService {
 		
 		String accessToken =authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
-		SystemConfigPO mpHost = systemConfigDao.querySystemConfig("mpHost");
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 		
-		SystemConfigPO salesmanAgentId = systemConfigDao.querySystemConfig("salesmanAgentId");
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId", company);
 		
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", salesmanAgentId.getValue());
+		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", messageAgentId.getValue());
 		
 		OAMessage oaMessage = new OAMessage();
-		oaMessage.message_url = String.format("%s/dingding/salesman/backvisit.html?orderid=%s",mpHost.getValue(), orderId);
+		oaMessage.message_url = String.format("%s/dingding/salesman/backvisit.html?orderid=%s",isv.getValue(), orderId);
 		OAMessage.Head head = new OAMessage.Head();
 		head.bgcolor = "FFDFD130";
 		oaMessage.head = head;
@@ -137,11 +137,11 @@ public class MessageService {
 	}
 	 	
 	public  int sendMessage(String receiveId, String senderName, String contents,Integer company){
-			
+		
 		TextMessage textMessage = new TextMessage(contents);
 			
-		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId");
-			
+		SystemConfigPO messageAgentId = systemConfigDao.querySystemConfig("messageAgentId", company);
+	
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "",messageAgentId.getValue());
 			
 		appMessageDelivery.withMessage(textMessage);

@@ -52,7 +52,7 @@
 					<div class="space-4"></div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="company">新加入的公司</label>
+						<label class="col-sm-3 control-label no-padding-right" for="company">公司修改为</label>
 						<div class="col-sm-9">
 							<select class="col-sm-7 col-xs-10 v_required" id="company" data-toggle="popover" data-trigger='manual' ></select>
 						</div>
@@ -91,36 +91,35 @@
 <div class="modal fade" id="companyModal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
+
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title">公司权限配置</h4>
 			</div>
 
 			<div class="modal-body">
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right" for="currentcompany">现有公司权限</label>
-					<div class="col-sm-9">
-						<input type="text" id="currentcompany"  class="col-xs-10 col-sm-7 v_required" data-toggle="popover" readonly="readonly" data-trigger='manual'/>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="currentcompany">现有公司权限</label>
+						<div class="col-sm-9">
+							<div class="tags" style="border: 0px" id="currentcompany"></div>
+						</div>
 					</div>
-				</div>
-
-				<div class="space-4"></div>
-
-				<div class="form-group" style="margin-top: 40px;">
-					<label class="col-sm-3 control-label no-padding-right" for="companyse">公司</label>
-					<div class="col-sm-9">
-						<select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="companyse" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+					<div class="space-4"></div>
+					<div class="form-group" >
+						<label class="col-sm-3 control-label no-padding-right" for="companyse">公司</label>
+						<div class="col-sm-9">
+							<select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="companyse" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+						</div>
 					</div>
-				</div>
-
-				<div class="space-4"></div>
-
+                 </form>
 			</div>
 
 			<div class="modal-footer ">
 				<button type="button" name="saveCompanyBtn" class="btn btn-primary">保存</button>
 				<button type="button" name="cancelCompanyBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
+
 		</div>
 	</div>
 </div>

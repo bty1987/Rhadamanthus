@@ -49,9 +49,9 @@
                 edit(v);
             });
 
-			v.status && $statusSwitch.prop("checked", true);
+			v.status == 0 && $statusSwitch.prop("checked", true);
 			$statusSwitch.switchBtn("status-lbl").on("click",function() {
-				$statusSwitch.prop("checked") ? (updateStatus(v.cid, 1, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.cid, 0,function(){$statusSwitch.prop("checked")}));
+				$statusSwitch.prop("checked") ? (updateStatus(v.cid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.cid, 1,function(){$statusSwitch.prop("checked")}));
 			});
 			return $liLine;
         };

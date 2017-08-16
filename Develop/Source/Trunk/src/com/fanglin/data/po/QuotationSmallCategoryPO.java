@@ -28,6 +28,8 @@ public class QuotationSmallCategoryPO implements Serializable{
 	
 	private String name;
 	
+	private long quotationType;
+	
 	public QuotationSmallCategoryPO(){
 		
 	}
@@ -54,5 +56,16 @@ public class QuotationSmallCategoryPO implements Serializable{
 	public void setName(String name){
 		this.name = name;
 	}
+	
+	@Column(name="quotationType")
+	public long getQuotationType() {
+		return quotationType;
+	}
 
+	public void setQuotationType(long quotationType) {
+		this.quotationType = quotationType;
+	}
+
+	
+	
 }

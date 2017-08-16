@@ -63,7 +63,6 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	@Autowired
 	private CheckListDao checkListDao;
 	
-	
 	@Override
 	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters) {
 		

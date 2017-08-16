@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 
 public interface UserDao extends Dao<UserPO> {
 	
-	public List<UserPO> pageUser(Paging paging, List<Filter> filters);
+	public List<UserPO> pageUser(Paging paging, List<Filter> filters, Integer company);
 	
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company);
 	
@@ -34,9 +34,9 @@ public interface UserDao extends Dao<UserPO> {
 
 	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId,Integer  company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType);
+	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType,Integer company);
 
-	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters);
+	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters,Integer company);
 	
 	public UserPO queryUserByLoginId(String loginId);
 

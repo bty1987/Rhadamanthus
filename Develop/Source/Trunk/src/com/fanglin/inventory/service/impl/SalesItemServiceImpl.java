@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.dao.ColorDao;
-import com.fanglin.inventory.dao.FormatDao;
 import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.SalesDao;
 import com.fanglin.inventory.dao.SalesItemDao;
@@ -42,12 +40,6 @@ public class SalesItemServiceImpl implements SalesItemService {
 	@Autowired
 	private GoodsDao goodsDao;
 	
-	@Autowired
-	private ColorDao colorDao;
-	
-	@Autowired
-	private FormatDao formatDao;
-
 	@Override
 	public List<SalesItemVO> querySalesItemBySid(SalesVO salesVO) {
 		
@@ -93,11 +85,9 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addSalesItem(SalesVO salesVO, SalesItemVO salesItemVO)throws FLException {
+	public int addSalesItem(SalesVO salesVO, List<SalesItemVO> salesItemVOs)throws FLException {
 		
 		SalesPO salesPO = salesDao.querySalesBySid(salesVO.getSid());
-		
-		SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
 		
 		if(salesPO == null ){
 			throw new FLException(260021, "销售单不存在");
@@ -107,29 +97,41 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
-		float total = salesPO.getTotal();
-		
 		if(salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT){
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
-		BeanUtil.copyProperties(goodsDao.get(salesItemVO.getGoods().getGid()), salesItemVO.getGoods(),Arrays.asList("assisType"));
+		float total = salesPO.getTotal();
+		float _total = 0f;
 		
-		if(!salesPO.getBrand().equals(salesItemVO.getGoods().getBrand())){
-			throw new FLException(260036, "销售项品牌不同"); // 品牌不一致 没有错误code码
+		for(SalesItemVO salesItemVO : salesItemVOs){
+			
+			GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+			
+			if(!salesPO.getBrand().equals(goodsPO.getBrand())){
+				throw new FLException(260036, "销售项品牌不同"); // 品牌不一致 没有错误code码
+			}
+			
+			SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
+			
+			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
+			BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
+			
+			salesItemPO.setSid(salesVO.getSid());
+			
+			salesPO.setOtherStatus(salesVO.getOtherStatus());
+			
+			_total = Arith.add(_total, salesItemVO.getTotal());
+			
+			salesItemDao.save(salesItemPO);
+			
 		}
 		
-		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
-		BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("assisType"));
-		BeanUtil.copyProperties(colorDao.get(salesItemVO.getColor().getCid()), salesItemPO.getColor());
-		BeanUtil.copyProperties(formatDao.get(salesItemVO.getFormat().getFid()), salesItemPO.getFormat());
-		salesItemPO.setSid(salesVO.getSid());
-		
-		salesPO.setTotal(Arith.add(total, salesItemVO.getTotal()));
-		salesPO.setOtherStatus(salesVO.getOtherStatus());
+		salesPO.setTotal(Arith.add(total, _total));
 		
 		salesDao.update(salesPO);
-		salesItemDao.save(salesItemPO);
 		
 		return 0;
 	}
@@ -163,9 +165,11 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesItemPO.setNum(salesItemVO.getNum());
 		salesItemPO.setTotal(salesItemVO.getTotal());
 		salesItemPO.setComment(salesItemVO.getComment());
-	
-		salesDao.update(salesPO);
+		
 		salesItemDao.update(salesItemPO);
+		
+		salesDao.update(salesPO);
+		
 		return 0;
 	}
 
@@ -196,6 +200,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setTotal(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()));
 		
 		salesDao.update(salesPO);
+		
 		salesItemDao.delete(salesItemPO);
 		
 		return 0;

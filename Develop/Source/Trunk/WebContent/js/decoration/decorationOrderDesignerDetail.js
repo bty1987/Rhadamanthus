@@ -356,7 +356,7 @@ jQuery(function($) {
 				"approvalDecorationRefund.paymentId": decorationOrderDetail.paymentId,
 			}
 			
-			bootbox.confirm("确认要提交退款申请吗？", function(res) {
+			bootbox.confirm("确认要提交退款申请吗?", function(res) {
 				if(res){
 					com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
 						decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
@@ -842,7 +842,7 @@ jQuery(function($) {
 
 function submintPayment(paymentId, paymentType){
 	
-	bootbox.confirm("确认要提交" + paymentType + "吗？", function(result){
+	bootbox.confirm("确认要提交" + paymentType + "吗?", function(result){
 		if(result){
 			com.post(api.payment.submitDecorationPayment, {"decorationPayment.autoId":paymentId}, function(res){
 				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);

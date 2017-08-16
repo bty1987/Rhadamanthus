@@ -29,6 +29,7 @@ import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
+
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.information.vo.MessageVO;
@@ -55,7 +56,10 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 	
 	@Autowired
 	private MessageService messageService;
-
+	
+	@Autowired
+	private com.fanglin.dingding.service.MessageService messageDDService;
+	
 	@Autowired
 	private UserDao userDao;
 	
@@ -113,8 +117,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		
 		messageService.sendMessage(messageVO);
 		
-//		messageDDService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents());
-		
+		messageDDService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents(),company);
 		return 0;
 	}
 

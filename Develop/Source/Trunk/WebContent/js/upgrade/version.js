@@ -64,7 +64,7 @@ $(function () {
 
             var propertyArr = [
                 ["创建时间:", v.createTime, "grey"],
-                ["更新内容:", v.comment, "green"],
+                ["更新内容:", v.comment, "grey"],
             ];
 
             //循环出li中的属性
@@ -121,7 +121,7 @@ $(function () {
             })
 
             $btnDel.click(function () {
-                bootbox.confirm("确定删除吗？", function (result) {
+                bootbox.confirm("确定删除吗?", function (result) {
                     if (result) {
                         com.post(api.upgrade.deleteVersion, {
                             "version.vid": v.vid

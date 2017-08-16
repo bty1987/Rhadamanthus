@@ -373,9 +373,9 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnPrint.click(function(){
-				com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + v.mrId + "&decorationOrder.orderId=" + v.orderId + "&time=" + params.loginTime,function () {
+				com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + v.mrId + "&decorationOrder.orderId=" + v.orderId + "&time=" + parent.params.loginTime,function () {
 					parent.layer.getFrameIndex(window.name);
-				})
+				},null,true)
 			});
 
             return $liLine;
@@ -874,7 +874,7 @@ jQuery(function($) {
 
 		$.each(materialPaymentPostData.paymentInfo, function(i, v){
 			options["materialPayments["+i+"].mpId"] = v.mpId;
-		})
+		});
 
 		for(var arg in args){
 			options["materialReceipt."+arg] = args[arg];
@@ -896,9 +896,9 @@ jQuery(function($) {
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					com.popup("专用收款收据__订单编号：" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime,function () {
+					com.popup("专用收款收据__订单编号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + parent.params.loginTime,function () {
 						parent.layer.getFrameIndex(window.name);
-					})
+					},null,true)
 				}
 			});
 		});
@@ -978,9 +978,9 @@ jQuery(function($) {
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
-					com.popup("专用收款收据__订单编号：" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + res.materialPayment.mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + params.loginTime,function () {
+					com.popup("专用收款收据__订单编号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + res.materialPayment.mrId + "&decorationOrder.orderId=" + materialPaymentPostData.orderId + "&time=" + parent.params.loginTim,function () {
 						parent.layer.getFrameIndex(window.name);
-					});
+					},null,true);
 				}
 			});
 

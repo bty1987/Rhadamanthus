@@ -62,6 +62,12 @@ jQuery(function($) {
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("处理");
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
 
+			var disposeStatus;
+			if(v.status == 0){
+				disposeStatus = "未处理";
+			}else if(v.status == 1){
+				disposeStatus = "已处理";
+			}
 
 			var propertyArr = [
 				["客户名:", v.customerName, "grey"],
@@ -71,7 +77,7 @@ jQuery(function($) {
 				["类型:", complaint.typeDict[v.type], "grey"],
 				["时间:", v.createTime, "grey"],
 				["备注:", v.des, "grey"],
-				["状态:", v.status, "grey"],
+				["状态:", disposeStatus, "grey"],
 				["处理信息:", v.handle, "grey"],
 			];
 

@@ -380,28 +380,38 @@ com = {
 		return $media + api.common.showImg.url + '?imgBasePath=' + url;
 	}, downloadFile: function($e, url, name){
 		$e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
-	}, popup: function(title, url, success, cancel) {
-		layer.full(
-			layer.open({
-				type: 2,
-				skin: 'layui-layer-lan',
-				title:title,
-				content: url,
-				zIndex: 9999,
-				move: false,
-				success: function(){
-					if(success != null && typeof(success) == 'function'){
-						success();
-					}
-				},
-				cancel: function (){
-					if(cancel != null && typeof(cancel) == 'function'){
-						cancel();
-					}
+	}, popup: function (title, url, success, cancel, isPrint) {
+		var layerPra = {
+			type: 2,
+			skin: 'layui-layer-lan',
+			title:title,
+			content: url,
+			zIndex:9999,
+			move: false,
+			success: function(){
+				if(success != null && typeof(success) == 'function'){
+					success();
 				}
-			})
+			},
+			cancel: function (){
+				if(cancel != null && typeof(cancel) == 'function'){
+					cancel();
+				}
+			}
+		};
+
+		if(isPrint){
+			$.extend(layerPra,{btn:["打印"],btn1:function(index, layero){
+				var body = layer.getChildFrame('body', index);
+				var iframeWin = window[layero.find('iframe')[0]['name']];
+				iframeWin.print();
+			}})
+		}
+
+		layer.full(
+			layer.open(layerPra)
 		);
-	}
+    }
 };
 
 Array.prototype.formatArrayMapToStr = function(k, v){

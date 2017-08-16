@@ -461,11 +461,11 @@ jQuery(function($) {
 				var buttonsDiv = $('<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons" style="padding: 5px;"></div>').appendTo(profileDiv);
 				//buttonSpan工人工费按钮
 				var buttonSpan = $('<div id="workerNameSpan"></div>').html('<a style="float: left; margin-left: -5px;" class="icon-money icon-2x" href="#"></a>').appendTo(buttonsDiv);
-				//工人编号、名称、职务
+				//工人编号, 名称, 职务
 				var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.user.userId + "" + workerInfo.user.userName + "<br/>" + workerInfo.user.duty).appendTo(buttonsDiv);
 
-				//循环一个人，将当前这个人的下标绑定到原始对象上，因为jquery对象是原始对象的封装，每次获取都不一样，所以没法用jquery对象存
-				//这个就是存储到原始dom对象上,简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
+				//循环一个人, 将当前这个人的下标绑定到原始对象上, 因为jquery对象是原始对象的封装，每次获取都不一样, 所以没法用jquery对象存
+				//这个就是存储到原始dom对象上, 简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
 				buttonSpan[0]._index = i;
 				buttonSpan.click(function () {
 					_show_WorkerSalary(this._index);
@@ -518,7 +518,7 @@ jQuery(function($) {
 							com.post(api.salary.deleteWorkerSalary, data,function(){
 								$("#salary" + i).remove();
 							},function(res){
-								com.showAlert(com.error, "工费状态不可操作！");
+								com.showAlert(com.error, "工费状态不可操作!");
 							});
 						}))
 					.append('<hr/>');
@@ -529,7 +529,7 @@ jQuery(function($) {
 			var salaryDivT = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv);
 			var salaryLabelT = $('<label><b>添加工费</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","salary").appendTo(salaryDivT);
 			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9").attr("id","salary").attr("data-toggle","popover").attr("data-trigger","manual").css("width", "320px").css("height", "30px").appendTo(salaryDivT);
-			var salaryText = $('<span><b>* 扣款项请输入负数，如：-123 !!!</b></span>').css("color","red").css("margin-left","-50px").appendTo(salaryDiv);
+			var salaryText = $('<span><b>* 扣款项请输入负数, 如: -123 !!!</b></span>').css("color","red").css("margin-left","-50px").appendTo(salaryDiv);
 
 			var salaryDiv3 = $('<div></div>').addClass("form-group").css("height","50px").css("margin-bottom","0px");
 			var salaryDivTh = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv3);
@@ -588,9 +588,9 @@ jQuery(function($) {
 		var url = api.salary.addWorkerSalary;
 
 		if(($('#salary').val()) == ""){
-			com.showAlert(com.error,"请输入工人工费！");
+			com.showAlert(com.error,"请输入工人工费!");
 		}else if($("#salaryType").val() == 0){
-			com.showAlert(com.error,"请选择工费类型！");
+			com.showAlert(com.error,"请选择工费类型!");
 		}else{
 			if(/^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/.test($('#salary').val()) ){
 				if($("#salaryType").val() == 1 || $("#salaryType").val() == 2 || $("#salaryType").val() == 3 ){
@@ -606,7 +606,7 @@ jQuery(function($) {
 				com.post(url,options);
 				$('#guaranteeModal').modal('hide');
 			}else{
-				com.showAlert(com.error,"请正确输入工人工费，小数点后最多保留3位！");
+				com.showAlert(com.error,"请正确输入工人工费, 小数点后最多保留3位!");
 			}
 		}
 	}

@@ -39,9 +39,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private ConstructionDao constructionDao;
 	
 	@Override
-	public void pageWorkerSalary(Paging paging, List<Filter> filters) {
+	public void pageWorkerSalary(Paging paging, List<Filter> filters, int company) {
 		
-		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters);
+		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters,company);
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs){

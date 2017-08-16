@@ -22,4 +22,5 @@ public interface PurchaseItemService {
 	public List<PurchaseItemVO> queryPurchaseItemBySiid(PurchaseItemVO purchaseItemVO);
 	
 	public List<PurchaseItemVO> queryPurchaseItemBySiids(List<Long> siids);
+	
 }

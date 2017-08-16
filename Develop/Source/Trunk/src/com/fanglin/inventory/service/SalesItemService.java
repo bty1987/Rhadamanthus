@@ -12,7 +12,7 @@ public interface SalesItemService {
 	
 	public List<SalesItemVO> querySalesItemBySids(List<Long> sids);
 	
-	public int addSalesItem(SalesVO salesVO,SalesItemVO salesItemVO) throws FLException;
+	public int addSalesItem(SalesVO salesVO,List<SalesItemVO> salesItemVOs) throws FLException;
 	
 	public int updateSalesItem(SalesItemVO salesItemVO) throws FLException;
 	

@@ -902,6 +902,15 @@ var Condition = function (api) {
                 validate: null
             }
         },
+		depositTimeDateRange : {
+			label:"定金时间",
+			type:"dateRangePicker",
+			submitConfig : {
+				name : "depositTimeDateRange",
+				op : "cn",
+				validate:null
+			}
+        },
         houseClass: {
             label: "房屋类型",
             type: "select",

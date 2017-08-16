@@ -41,9 +41,7 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 	@Override
 	public void pageManifestTemplate(Paging paging, List<Filter> filters,int company) {
 		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<ManifestTemplatePO> manifestTemplatePOs = manifestTemplateDao.pageManifestTemplate(paging, filters);
+		List<ManifestTemplatePO> manifestTemplatePOs = manifestTemplateDao.pageManifestTemplate(paging, filters,company);
 		List<ManifestTemplateVO> manifestTemplateVOs = new ArrayList<ManifestTemplateVO>();
 		
 		for(ManifestTemplatePO manifestTemplatePO: manifestTemplatePOs){

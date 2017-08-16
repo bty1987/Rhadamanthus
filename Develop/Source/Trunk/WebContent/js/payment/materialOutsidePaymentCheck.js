@@ -96,7 +96,7 @@ function initializeListgrid(){
 				$.jgrid.showSelectInfo(materialOutside.listgrid.attr("id"));
 				return false;
 			}else{
-				bootbox.confirm("确定要将符合条件的所有收款项目，置为已确认状态吗?", function(result) {
+				bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 					if(result) {
 						var _rowIds = materialOutside.listgrid.jqGrid('getGridParam','selarrrow');
 						var options = {};

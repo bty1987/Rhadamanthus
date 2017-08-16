@@ -18,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.SupplierUserRightDao;
 import com.fanglin.data.common.service.SupplierUserRightService;
 import com.fanglin.data.common.vo.SupplierUserRightVO;
 import com.fanglin.data.po.SupplierUserRightPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
@@ -32,6 +34,9 @@ public class SupplierUserRightServiceImpl implements SupplierUserRightService {
 
 	@Autowired
 	private SupplierUserRightDao supplierUserRightDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public List<SupplierUserRightVO> querySupplierUserRightBySId(SupplierUserRightVO supplierUserRightVO) {
@@ -55,7 +60,7 @@ public class SupplierUserRightServiceImpl implements SupplierUserRightService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateSupplierUserRight(SupplierUserRightVO supplierUserRightVO, List<String> userIds) {
+	public int updateSupplierUserRight(SupplierUserRightVO supplierUserRightVO, List<String> userIds) throws FLException {
 		
 		long sId = supplierUserRightVO.getSid();
 		
@@ -63,16 +68,23 @@ public class SupplierUserRightServiceImpl implements SupplierUserRightService {
 		
 		if(userIds != null && userIds.size() > 0){
 			
+			UserPO userPO;
 			SupplierUserRightPO supplierUserRightPO;
 			
 			for(String userId: userIds){
-				supplierUserRightPO = new SupplierUserRightPO(sId, new UserPO(userId));
+				
+				userPO = userDao.queryUserByUserId(userId);
+				
+				if(userPO == null){
+					throw new FLException(190005, "人员不存在");
+				}
+				
+				supplierUserRightPO = new SupplierUserRightPO(sId, userPO);
 				
 				supplierUserRightDao.save(supplierUserRightPO);
 			}
 		}
 		
 		return 0;
-	}
-
+	}	
 }

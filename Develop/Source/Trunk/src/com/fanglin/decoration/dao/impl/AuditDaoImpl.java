@@ -25,10 +25,12 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 	}
 
 	@Override
-	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters) {
+	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters, int company) {
 		List<String> status = Arrays.asList(new String[]{"咨询", "量房","已报价"});
 		
 		PagingQuery<AuditPO> query = pagingQuery(paging,AuditPO.class);
+		
+		query.add(query.getCriterion("decorationOrder.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);		
 		
@@ -105,8 +107,6 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						}else if(data.equals("未审批")){
 							query.add(Restrictions.isNull("auditer"));
 						}
-					}else if("company".equals(field)){
-						query.add(query.getCriterion("decorationOrder.company", Integer.valueOf(data), op));
 					}
 				}				
 			}				

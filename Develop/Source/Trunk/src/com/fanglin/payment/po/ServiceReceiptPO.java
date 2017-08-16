@@ -51,7 +51,7 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	private float bank;                //刷卡
 	
-	private String bankInfo;           //刷卡信息;
+	private String bankInfo;           //刷卡信息
 	
 	private float checkv;              //转账
 	

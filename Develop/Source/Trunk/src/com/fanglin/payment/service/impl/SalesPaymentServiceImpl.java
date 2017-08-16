@@ -116,7 +116,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			BeanUtil.copyProperties(salesPaymentPO.getSales().getInstorer(), salesPaymentVO.getSales().getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
 			BeanUtil.copyProperties(salesPaymentPO.getSales().getGuideDept(), salesPaymentVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper"));
 			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter","confirmer"));
-			//收款人、收款时间是BeanUtil赋值过去的
+			//收款人,收款时间是BeanUtil赋值过去的
 			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role","dept"));
 
 			salesPaymentVOs.add(salesPaymentVO);
@@ -154,7 +154,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			BeanUtil.copyProperties(salesPaymentPO.getSales().getInstorer(), salesPaymentVO.getSales().getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
 			BeanUtil.copyProperties(salesPaymentPO.getSales().getGuideDept(), salesPaymentVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper"));
 			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter","confirmer"));
-			//确认人、确认时间是BeanUtil赋值过去的
+			//确认人,确认时间是BeanUtil赋值过去的
 			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role","dept"));
 
 			salesPaymentVOs.add(salesPaymentVO);

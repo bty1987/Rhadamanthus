@@ -20,20 +20,26 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId, Short schedule) {
+		
 		Criteria constructionScheduleList = session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId));
+		
 		if(schedule != null){
 			constructionScheduleList.add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule));
 		}
+		
 		return constructionScheduleList.list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid, Short schedule) {
+		
 		Criteria constructionScheduleList = session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid));
+		
 		if(schedule != null){
 			constructionScheduleList.add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule));
 		}
+		
 		return constructionScheduleList.list();
 	}
 }

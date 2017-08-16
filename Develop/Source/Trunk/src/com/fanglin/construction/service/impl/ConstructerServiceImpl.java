@@ -54,6 +54,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
 			constructerVOs.add(constructerV);
 		}
+		
 		return constructerVOs;
 	}
 
@@ -72,6 +73,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
 			constructerVOs.add(constructerV);
 		}
+		
 		return constructerVOs;
 	}
 

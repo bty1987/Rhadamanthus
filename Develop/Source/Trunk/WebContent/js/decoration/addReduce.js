@@ -63,7 +63,7 @@ jQuery(function($) {
 			});
 
 			$btnDel.click(function(){
-				bootbox.confirm("确认删除吗？",function(flag) {
+				bootbox.confirm("确认删除吗?",function(flag) {
 					flag && removeRow(v.arId);
 				})
 			});
@@ -126,9 +126,9 @@ jQuery(function($) {
 			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
 		});
 		
-		url += "quotation.orderId=" + params.decorationOrderId + "&quotation.type=" + params.decorationOrderType + "&time=" + params.loginTime;
+		url += "quotation.orderId=" + params.decorationOrderId + "&quotation.type=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
 		
-		window.open(url);
+		com.popup("增减项打印",url,null,null,true)
 	});
 
 	function viewDetailAddReduce(addReduceId){

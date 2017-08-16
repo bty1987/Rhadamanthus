@@ -97,7 +97,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "addSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesItem() throws FLException{
 		
-		salesItemService.addSalesItem(sales, salesItem);
+		salesItemService.addSalesItem(sales, salesItems);
 		
 		return SUCCESS;
 	}

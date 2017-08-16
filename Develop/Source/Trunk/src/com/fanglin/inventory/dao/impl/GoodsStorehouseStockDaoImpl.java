@@ -50,6 +50,12 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 		
 		BigDecimal nums = (BigDecimal) session().createSQLQuery(sql).setLong("gid", gid).setLong("cid", cid).setLong("fid", fid).uniqueResult();
 		
+		if(nums==null){
+			
+			nums = BigDecimal.ZERO;
+			
+		}
+		
 		return nums.floatValue();
 	}
 	

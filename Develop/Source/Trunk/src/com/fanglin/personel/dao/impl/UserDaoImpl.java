@@ -26,11 +26,13 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	public List<UserPO> pageUser(Paging paging, List<Filter> filters){
+	public List<UserPO> pageUser(Paging paging, List<Filter> filters,Integer company){
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		queryFilterExcute(query, filters);
+		
+		query.add(Restrictions.eq("company", company));
 		
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
 		query.asc("userId");
@@ -45,12 +47,10 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		
 		query.alias("role", "role");
 		
+		query.add(Restrictions.eq("company", company));
+		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
 		}
 		
 		query.add(Restrictions.eq("status", "在职"));
@@ -66,16 +66,16 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		
 		query.alias("role", "role");
 		
+		query.add(Restrictions.eq("company", company));
+		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
 		}
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
+		
 		query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
 		query.add(Restrictions.eq("status", "在职"));
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
+	
 		return query.list();
 	}
 	
@@ -86,19 +86,19 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		
 		query.alias("role", "role");
 		
+		query.add(Restrictions.eq("company", company));
+		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
 		}
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
+		
 		for(String duty: dutys){
 			query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
 		}
 
 		query.add(Restrictions.eq("status", "在职"));
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
+	
 		return query.list();
 	}
 	
@@ -108,11 +108,10 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		query.alias("role", "role");
+		
+		query.add(Restrictions.eq("company", company));
+		
 		query.add(Restrictions.eq("dept.deptId", deptId));
-
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
@@ -131,15 +130,15 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		query.alias("role", "role");
+		
+		query.add(Restrictions.eq("company", company));
+		
 		query.add(Restrictions.eq("dept.deptId", deptId));
 
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
 		}
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
-
+		
 		for(String duty : dutys){
 			query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
 		}
@@ -154,13 +153,15 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO,Integer company){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
 		query.alias("role", "role");
+		
+		query.add(Restrictions.eq("company", company));
+		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
 		}
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
+		
 		Criterion criterionA = null;
 
 		if(dutysA != null){
@@ -195,7 +196,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		query.add(Restrictions.eq("status", "在职"));
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
+	
 		return query.list();
 	}
 	
@@ -203,13 +204,13 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId,Integer company){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
 		query.alias("role", "role");
+		
+		query.add(Restrictions.eq("company", company));
+		
 		query.add(Restrictions.eq("dept.deptId", deptId));
 
-		if(company != null){
-			query.add(Restrictions.eq("company", company));
-		}
-		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
 		}
@@ -245,16 +246,18 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(criterionO != null){
 			query.add(criterionO);
 		}
-
+	
 		query.add(Restrictions.eq("status", "在职"));
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
 		return query.list();
 	}
 	
 	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType) {
+	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType,Integer company) {
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
+		query.add(Restrictions.eq("company", company));
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
@@ -268,11 +271,13 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
-	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters){
+	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters,Integer company){
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		queryFilterExcute(query, filters);
+		
+		query.add(Restrictions.eq("company", company));
 		
 		query.add(Restrictions.eq("status", "在职"));
 		
@@ -378,8 +383,6 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 					query.add(query.getCriterion("duty", filter));
 				}else if("identity".equals(field)){
 					query.add(query.getCriterion("identity", filter));
-				}else if("company".equals(field)){
-					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

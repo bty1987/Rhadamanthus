@@ -29,6 +29,7 @@ $.extend(api, {personel: {
     updateUser: {url: "updateUser.do", server: "communion"},
   
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
+    resetPasswords: {url: "resetPasswords.do"},
     
     resetPassword: {url: "resetPassword.do", server: "communion"},
     changePassword: {url: "changePassword.do", server: "communion"},

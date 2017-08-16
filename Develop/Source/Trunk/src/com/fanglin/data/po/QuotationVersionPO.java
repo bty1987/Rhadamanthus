@@ -26,8 +26,6 @@ public class QuotationVersionPO implements Serializable{
 
 	private static final long serialVersionUID = -852822561077114137L;
 	
-	public static final String COLUMN_COMPANY_STR ="company";
-	
 	private int qvId;
 	
 	private String versionId;

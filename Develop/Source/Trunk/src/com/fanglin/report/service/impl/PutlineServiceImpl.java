@@ -56,7 +56,7 @@ public class PutlineServiceImpl implements PutlineService {
 		DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
 		BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
 		
-		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 		
 		if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 			if(quotationPO == null){

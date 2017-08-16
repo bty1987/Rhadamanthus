@@ -56,7 +56,6 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 		return (StorehousePO) session().createCriteria(StorehousePO.class).add(Restrictions.eq(StorehousePO.COLUMN_STATUS_STR, StorehousePO.STATUS_ENABLE_INT)).add(Restrictions.eq(StorehousePO.COLUMN_CODE_STR, code)).uniqueResult();
 	}
 	
-	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
@@ -74,7 +73,5 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 			}
 		}
 	}
-
-
 
 }

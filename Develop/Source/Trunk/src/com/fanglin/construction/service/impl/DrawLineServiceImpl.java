@@ -1,11 +1,11 @@
 /**
- * @File Name		: DecorationOrdereServiceImpl.java
+ * @File Name	: DecorationOrdereServiceImpl.java
  * @Package   	: com.fanglin.service.impl
  * @Version		: 1.0
- * @Date			: 2014-7-27
+ * @Date		: 2014-7-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -81,9 +81,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private UserDao userDao;
 	
 	@Override
-	public List<DrawLineVO>  pageDrawLine(Paging paging,List<Filter> filters, Integer companyId){
+	public List<DrawLineVO>  pageDrawLine(Paging paging,List<Filter> filters, Integer company){
 
-		List<DrawLinePO> drawLinePOs = drawlineDao.pageDrawLine(paging, filters, companyId);
+		List<DrawLinePO> drawLinePOs = drawlineDao.pageDrawLine(paging, filters, company);
 
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
 		
@@ -138,7 +138,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				
 			}
 
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 
 			if(quotationPO == null){
 
@@ -164,13 +164,13 @@ public class DrawLineServiceImpl implements DrawLineService {
 	}
 	
 	@Override
-	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer companyId) {
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) {
 		
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
 
 		if(filters.size() == 0) return drawLineVOs;
 
-		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(filters, companyId);
+		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(filters, company);
 		
 		for(DrawLinePO drawLinePO: drawLinePOs){
 
@@ -223,7 +223,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				
 			}
 
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId(), decorationOrderPO.getType());
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
 
 			if(quotationPO == null){
 
@@ -248,14 +248,14 @@ public class DrawLineServiceImpl implements DrawLineService {
 	}
 
 	@Override
-	public HashMap<String, HashMap<String,Integer>> countDrawLineByDate(DrawLineVO drawLineVO, Integer companyId){
+	public HashMap<String, HashMap<String,Integer>> countDrawLineByDate(DrawLineVO drawLineVO, Integer company){
 		
 		Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.getFirstDay(DateUtil.parseDate(drawLineVO.getStartTime(), "yyyy-MM-dd HH:mm:ss")));
 		Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.getLastDay(DateUtil.parseDate(drawLineVO.getEndTime(), "yyyy-MM-dd HH:mm:ss")));
 		
 		HashMap<String, HashMap<String,Integer>> drawLineInfos = new HashMap<String, HashMap<String,Integer>>();
 
-		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(startTime, endTime, companyId);
+		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(startTime, endTime, company);
 		
 		for(DrawLinePO drawLinePO: drawLinePOs){
 
@@ -284,7 +284,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int applayDrawLine(DrawLineVO drawLineVO, String userId, Integer companyId) throws FLException{
+	public int applayDrawLine(DrawLineVO drawLineVO, String userId, Integer company) throws FLException{
 
 		String orderId = drawLineVO.getOrderId();
 
@@ -321,7 +321,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawlineDao.saveOrUpdate(newDrawLine);
 
 		//设置装修订单的初始进度
-		List<ConstructionNodeCompanyPO> nodeList = constructionNodeDao.queryConstructionNodeCompanyByCid(companyId);
+		List<ConstructionNodeCompanyPO> nodeList = constructionNodeDao.queryConstructionNodeCompanyByCid(company);
 		String nodeName = nodeList.get(0).getConstructionNode().getName();
 		decorationOrderPO.setProjectStatus(nodeName);
 
@@ -334,7 +334,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			
 			constructionPO = new ConstructionPO();
 			constructionPO.setDecorationOrderPO(new DecorationOrderPO(orderId));
-			constructionPO.setSchedule(ConstructionSchedulePO.SCHEDULE_TYPE_CHAN_INT);
+			constructionPO.setSchedule((int)nodeList.get(0).getConstructionNode().getCnid());
 			constructionDao.save(constructionPO);
 			
 			long cid = constructionPO.getCid();
@@ -363,7 +363,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int resetDrawLine(DrawLineVO drawLineVO, Integer companyId) throws FLException{
+	public int resetDrawLine(DrawLineVO drawLineVO, Integer company) throws FLException{
 		
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
 
@@ -379,7 +379,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		Timestamp start = DateUtil.getDateToTimestamp(date);
 
-		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLineByGroupATime(drawLineVO.getGid(), start, end, companyId);
+		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLineByGroupATime(drawLineVO.getGid(), start, end, company);
 		
 		if(drawLinePOs != null && drawLinePOs.size() > 0){
 			

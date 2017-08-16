@@ -1,11 +1,11 @@
 /**
- * @File Name		: QuotationVO
+ * @File Name	: QuotationVO
  * @Package   	: com.fanglin.vo
  * @Version		: 1.0
- * @Date			: 2014-9-27
+ * @Date		: 2014-9-27
  * @Copyright	: Copyright Creators 2014
  * @Author		: bty1987
- * @Email			: 
+ * @Email		: 
  * @Describing	: 
  */
 

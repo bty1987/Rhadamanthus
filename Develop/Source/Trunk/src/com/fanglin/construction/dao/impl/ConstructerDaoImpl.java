@@ -18,41 +18,54 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 		super(ConstructerPO.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<ConstructerPO> queryConstructerByOrderId(String orderId,Integer schedule) {
+		
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId))
 				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		
 		if (schedule != null) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
+		
 		return c.list();
+		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<ConstructerPO> queryConstructerByCid(long cid, Integer schedule) {
+		
 		Criteria c =  session()
 				.createCriteria(ConstructerPO.class)
 				.add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR, cid))
 				.add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		
 		if (schedule != null) {
 			c.add(Restrictions.eq("schedule", schedule));
 		}
+		
 		return c.list();
+		
 	}
 
 	@Override
 	public ConstructerPO queryConstructerByCrId(long crid) {
+		
 		return (ConstructerPO)session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR,crid)).uniqueResult();
+	
 	}
 
 	@Override
 	public int countConstructer(long cid, String userId, int schedule, short status) {
+		
 		String sql = "select count(*) from construction.constructer where cid = :cid and userId = :userId and schedule = :schedule and status = :status";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setString("userId", userId).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
+		
 		return count.intValue();
+		
 	}
 }

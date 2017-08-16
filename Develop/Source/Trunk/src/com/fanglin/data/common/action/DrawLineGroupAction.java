@@ -8,10 +8,8 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.service.DrawLineGroupService;
 import com.fanglin.data.common.vo.DrawLineGroupVO;
 
@@ -32,9 +30,7 @@ public class DrawLineGroupAction extends BaseListAction {
 	@Action(value="pageDrawlineGroup", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageDrawLineGroup() throws FLException{
 		
-		getFilters().add(new Filter("company",String.valueOf(queryCompany()),"eq"));
-		
-		 drawLineGroups = drawLineGroupService.pageDrawLineGroup(getPaging(), getFilters());
+		 drawLineGroups = drawLineGroupService.pageDrawLineGroup(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}

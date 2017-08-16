@@ -88,8 +88,6 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Transactional(rollbackFor=Exception.class)
 	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company){
 		
-		QuotationVersionPO quotationVersionPO = null;
-		
 		if(quotationVersionVO.getDefaultFlag() == 1){
 			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(company,1);
 			if(!defaultFlagQuotationVersionPOs.isEmpty()){
@@ -98,13 +96,11 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 					quotationVersionDao.update(_quotationVersionPO);
 				}
 			}
-			//级联更新订单状态是咨询和量房 已报价的订单 使用的报价版本 
-			//quotationVersionDao.changeRelationTable(quotationVersionPO.getVersionId());
 		}
-			quotationVersionPO = new QuotationVersionPO();
-			
-			BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
 		
+		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
+			
+		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		

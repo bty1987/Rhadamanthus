@@ -1,11 +1,11 @@
 /**
- * @File Name		: ConstructionAction.java
+ * @File Name	: ConstructionAction.java
  * @Package   	: com.fanglin.action.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-29
+ * @Date		: 2014-9-29
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -105,8 +105,7 @@ public class ConstructionDrawingAction extends BaseListAction{
 		return constructionDrawings;
 	}
 
-	public void setConstructionDrawings(
-			List<ConstructionDrawingVO> constructionDrawings) {
+	public void setConstructionDrawings(List<ConstructionDrawingVO> constructionDrawings) {
 		this.constructionDrawings = constructionDrawings;
 	}
 

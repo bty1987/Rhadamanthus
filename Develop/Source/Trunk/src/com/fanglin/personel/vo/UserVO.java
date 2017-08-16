@@ -254,21 +254,6 @@ public class UserVO implements Serializable {
 		this.freedom = freedom;
 	}
 
-	public UserVO setBaseInfo(UserPO userPO){
-		
-		if(userPO != null){
-			setUid(userPO.getUid());
-			setUserId(userPO.getUserId());
-			setCurrentName(userPO.getCurrentName());
-			setUserName(userPO.getUserName());
-			setUserPhoto(userPO.getUserPhoto());
-			setPhone(userPO.getPhone());
-			setDuty(userPO.getDuty());
-		}
-		
-		return this;
-	}
-
 	public String getCompanys() {
 		return companys;
 	}
@@ -277,6 +262,19 @@ public class UserVO implements Serializable {
 		this.companys = companys;
 	}
 	
-
-	
+	public UserVO setBaseInfo(UserPO userPO){
+			
+			if(userPO != null){
+				setUid(userPO.getUid());
+				setUserId(userPO.getUserId());
+				setCurrentName(userPO.getCurrentName());
+				setUserName(userPO.getUserName());
+				setUserPhoto(userPO.getUserPhoto());
+				setPhone(userPO.getPhone());
+				setDuty(userPO.getDuty());
+			}
+			
+			return this;
+		}
+		
 }

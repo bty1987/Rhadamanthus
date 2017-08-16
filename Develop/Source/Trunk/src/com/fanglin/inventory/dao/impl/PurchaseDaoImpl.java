@@ -20,9 +20,11 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 	}
 
 	@Override
-	public List<PurchasePO> pagePurchase(Paging paging, List<Filter> filters) {
+	public List<PurchasePO> pagePurchase(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
+		
+		query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR,company,"eq"));
 
 		queryFilterExecute(query, filters);
 		
@@ -65,8 +67,6 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 					
 					query.add(query.getCriterion(PurchasePO.COLUMN_CREATETIME_STR, stimestamp, "ge"));
 					query.add(query.getCriterion(PurchasePO.COLUMN_CREATETIME_STR, etimestamp, "le"));
-				}else if ("company".equals(field)){
-					query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

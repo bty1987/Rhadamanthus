@@ -286,7 +286,7 @@ jQuery(function($) {
 	}
 	
 	function reset(dlId){
-		bootbox.confirm("确认重置申请吗？",function(res){
+		bootbox.confirm("确认重置申请吗?",function(res){
 			if(res){
 				com.post(api.drawline.setDrawLineForFailure, {"drawLine.dlId":dlId}, function(res){
 					com.showAlert(com.info, "操作成功");

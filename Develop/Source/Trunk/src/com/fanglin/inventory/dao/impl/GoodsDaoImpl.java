@@ -31,9 +31,11 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	}
 	
 	@Override
-	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters) {
+	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<GoodsPO> query = pagingQuery(paging, GoodsPO.class);
+		
+		query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -41,9 +43,11 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	}
 
 	@Override
-	public List<GoodsPO> queryGoods(List<Filter> filters) {
+	public List<GoodsPO> queryGoods(List<Filter> filters,int company) {
 
 		PagingQuery<GoodsPO> query = pagingQuery(new Paging(), GoodsPO.class);
+		
+		query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -110,8 +114,6 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 					query.add(query.getCriterion(GoodsPO.COLUMN_CATEGORY_STR, data, op));
 				}else if(GoodsPO.COLUMN_BRAND_STR.equals(field)){
 					query.add(query.getCriterion(GoodsPO.COLUMN_BRAND_STR, data, op));
-				}else if(GoodsPO.COLUMN_COMPANY_STR.equals(field)){
-					query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 			}
 		}

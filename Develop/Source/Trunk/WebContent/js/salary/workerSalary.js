@@ -6,9 +6,11 @@ jQuery(function ($) {
         cancelBtn: null,
         modal: null,
         items: {},
-        editFlg: false,
+        editFlg: false
 
     };
+
+    var salaryType = [];
 
     salary.saveBtn = $("#saveBtn").on("click", saveData);
     salary.cancelBtn = $("#cancelBtn");
@@ -18,6 +20,15 @@ jQuery(function ($) {
 
     $.extend(com.validator, salary.validator);
 
+    com.post(api.ds.salaryType,{},function (data) {
+
+        var SalaryType = data.SalaryType;
+
+        $.each(SalaryType,function (i,y) {
+            salaryType[y.key] = y.name;
+
+        });
+    },null,false);
 
     var displayFunc = (function () {
 
@@ -37,6 +48,7 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
+
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.user.userName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -65,22 +77,27 @@ jQuery(function ($) {
                 "id": "check",
                 "class": "ace ace-checkbox-2",
                 "value": v.wsId
-            })
+            });
             var $span = $('<span></span>').addClass('lbl blue bigger-150');
 
             $.each(propertyArr, function (index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
+
             });
+
             $divBtnWrap.append($adopt).append($btnrefuse).append($btnDel).appendTo($h3);
             $label.append($input).append($span).prependTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnDel.click(function () {
+
                 deletebystatus(v.wsId);
             });
+
             $adopt.click(function () {
 
                 adopt(v.wsId);
@@ -103,7 +120,7 @@ jQuery(function ($) {
             drawLine: function (v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
@@ -117,7 +134,6 @@ jQuery(function ($) {
         var $selecta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'select').css("margin", "0px 3px");
         var $selecti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($selecta);
         var $selectspan = $('<span></span>').text('全选').appendTo($selecta);
-
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -142,29 +158,26 @@ jQuery(function ($) {
         return [$selecta, $adda, $adopta, $exporta, $importa,$batchImporta];
     });
 
-    //全选
     $('a[name="select"]').on("click", function () {
 
         if ($('input[type="checkbox"]').prop('checked')) {
-            $('input[type="checkbox"]').removeAttr('checked')
-            $('input[type="checkbox"]').prop('checked', false)
+            $('input[type="checkbox"]').removeAttr('checked');
+            $('input[type="checkbox"]').prop('checked', false);
 
         } else {
-            $('input[type="checkbox"]').attr('checked', true)
-            $('input[type="checkbox"]').prop('checked', true)
+            $('input[type="checkbox"]').attr('checked', true);
+            $('input[type="checkbox"]').prop('checked', true);
 
         }
     });
-    //创建
+
     $('a[name="add"]', '#pagenation').on("click", function () {
 
         com.cleanItems(salary.items);
-        $('#workersalaryModal').modal("show")
+        $('#workersalaryModal').modal("show");
         com.initChosen('workersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {"userNamePinYin": $("#workersalaryuser").val()}, "autoFillKeyValue", "key", "value");
 
-
     });
-
 
     $('a[name="import"]', '#pagenation').on("click", function () {
 
@@ -175,9 +188,8 @@ jQuery(function ($) {
         $('#batchImportModal').modal("show");
 
     });
-    // 导出
-    $('a[name="export"]', '#pagenation').on("click", function () {
 
+    $('a[name="export"]', '#pagenation').on("click", function () {
 
         if ($('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -188,6 +200,7 @@ jQuery(function ($) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
+
         com.post(api.salary.pageWorkerSalary, $.extend({}, params.workersalaryPostData, {"paging.noPage": 1}), function (res) {
 
             $.exceler({
@@ -208,7 +221,7 @@ jQuery(function ($) {
                     ['备注', 'comment'],
                     ['状态',"status"]
                 ],
-                list: res.paging.data,
+                list: res.paging.data
 
             }, function (v) {
 
@@ -220,57 +233,13 @@ jQuery(function ($) {
                 v.decorationOrder.village = v.decorationOrder.village == null ? "" : v.decorationOrder.village.villageName;
                 v.decorationOrder.houseNumber = v.decorationOrder.houseNumber == null ? "" : v.decorationOrder.houseNumber;
                 v.status =  v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回") ;
+                v.subtype = salaryType[v.subtype];
 
-
-                switch (v.subtype) {
-
-                    case 1 :
-                        v.subtype = "工费";
-                        break;
-                    case 2 :
-                        v.subtype = "增项";
-                        break;
-                    case 3 :
-                        v.subtype = "油工一级奖励";
-                        break;
-                    case 4 :
-                        v.subtype = "维修款";
-                        break;
-                    case 5 :
-                        v.subtype = "罚款";
-                        break;
-                    case 6 :
-                        v.subtype = "工程质保金";
-                        break;
-                    case 7 :
-                        v.subtype = "工具押金";
-                        break;
-                    case 8 :
-                        v.subtype = "借款";
-                        break;
-                    case 9 :
-                        v.subtype = "工人家属保险";
-                        break;
-                    case 10 :
-                        v.subtype = "砌墙工费";
-                        break;
-                    case 11 :
-                        v.subtype = "水电工费";
-                        break;
-                    case 12 :
-                        v.subtype = "水暖工费";
-                        break;
-                    case 13 :
-                        v.subtype = "电工费";
-                        break;
-
-
-                }
             });
-        })
+        });
 
     });
-    //通过
+
     $('a[name="adopt"]', '#pagenation').on("click", function (v) {
 
         var options = {};
@@ -279,15 +248,15 @@ jQuery(function ($) {
         $.each(groupCheckbox, function (i, v) {
 
             var $v = $(v);
-            options["workerSalarys[" + i + "].wsId"] = $v.attr('value')
+            options["workerSalarys[" + i + "].wsId"] = $v.attr('value');
 
-        })
+        });
 
-        com.post(api.salary.adoptWorkerSalary, options, function (data) {
+        com.post(api.salary.adoptWorkerSalary, options, function () {
             searcher.doSearch();
-        }, function (data) {
-            com.showAlert(com.error, "工费状态不可操作")
-        })
+        }, function () {
+            com.showAlert(com.error, "工费状态不可操作");
+        });
 
     });
 
@@ -297,19 +266,14 @@ jQuery(function ($) {
         if (SalaryType && SalaryType.length) {
             $.each(SalaryType, function (i, v) {
                 $('<option></option>').attr("value", v.key).html(v.name).appendTo("#workersalarySubtype");
-            })
+            });
         }
     }, null, false);
 
-
     function saveData(options) {
 
-
         var url = api.salary.addWorkerSalary;
-
-
         var options = {};
-
 
         if (($('#workersalary').val()) == "") {
             com.showAlert(com.error, "请输入工人工费！");
@@ -340,7 +304,7 @@ jQuery(function ($) {
 
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function () {
             searcher.doSearch();
         });
     }
@@ -351,10 +315,10 @@ jQuery(function ($) {
 
             "workerSalary.wsId": wsId
 
-        }, function (res) {
+        }, function () {
             searcher.doSearch();
-        }, function (data) {
-            com.showAlert(com.error, "工费状态不可操作")
+        }, function () {
+            com.showAlert(com.error, "工费状态不可操作");
         });
     }
 
@@ -362,36 +326,37 @@ jQuery(function ($) {
 
         var options = {};
 
-        options["workerSalarys[0].wsId"] = wsId
+        options["workerSalarys[0].wsId"] = wsId;
 
-        com.post(api.salary.adoptWorkerSalary, options, function (res) {
+        com.post(api.salary.adoptWorkerSalary, options, function () {
             searcher.doSearch();
 
         }, function () {
-            com.showAlert(com.error, "工费状态不可操作")
-        })
+            com.showAlert(com.error, "工费状态不可操作");
+        });
     }
 
     function refuse(wsId) {
 
         var options = {};
 
-        options["workerSalarys[0].wsId"] = wsId
+        options["workerSalarys[0].wsId"] = wsId;
 
-        com.post(api.salary.rejectWorkerSalary, options, function (res) {
+        com.post(api.salary.rejectWorkerSalary, options, function () {
             searcher.doSearch();
 
         }, function () {
-            com.showAlert(com.error, "工费状态不可操作")
-        })
+            com.showAlert(com.error, "工费状态不可操作");
+        });
     }
+
     $('#import').Huploadify({
 
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
         'successTimeout':config.uploadTimeout, // 超时时间
         'formData':{
-            'uploadType':4,
+            'uploadType':4
         },
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
@@ -416,7 +381,7 @@ jQuery(function ($) {
         'auto':true, // 是否自动上传
         'successTimeout':config.uploadTimeout, // 超时时间
         'formData':{
-            'uploadType':4,
+            'uploadType':4
         },
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
@@ -430,8 +395,6 @@ jQuery(function ($) {
         'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
 
             var dateObj = eval("("+data+")");
-            
-
 
         }
     });

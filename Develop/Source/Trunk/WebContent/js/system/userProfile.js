@@ -15,7 +15,7 @@ jQuery(function($) {
 	$("#removePicture").on("click",removePicture);
 	var userid=-null;
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-    console.log(res.userInfo)
+  
 		userProfile.userPhoto=res.userInfo.user.userPhoto;
 		userProfile.age = res.userInfo.age;
 		userProfile.phone = res.userInfo.user.phone;
@@ -55,6 +55,7 @@ jQuery(function($) {
 			"userInfo.user.userPhoto":$("#picture").val(),
 			"userInfo.user.userId": userid,
 			"userInfo.user.phone":$("#telephone").val(),
+			"userInfo.age":$("#age").val(),
 			"userInfo.emergencyMan":$("#emergencyMan").val(),
 			"userInfo.emergencyPhone":$("#emergencyPhone").val(),
 			"userInfo.qq":$("#qq").val(),
@@ -62,7 +63,6 @@ jQuery(function($) {
 			"userInfo.email":$("#email").val()
 		};
 
-		console.log(parm)
 		com.post(api.personel.saveUserForBaseInfo, parm, function(res){
 			userProfile.userPhoto = $("#picture").val();
 			userProfile.age = $("#age").val();

@@ -94,7 +94,7 @@ function villageInit(cellvalue, options, rowdata){
 }
 
 function terminalContract(decorationOrderId){
-	bootbox.confirm("确认要终止合同吗？",function(res){
+	bootbox.confirm("确认要终止合同吗?",function(res){
 	});
 }
 

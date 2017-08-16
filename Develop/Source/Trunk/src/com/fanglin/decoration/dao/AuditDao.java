@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface AuditDao extends Dao<AuditPO> {
 	
-	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters);
+	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters, int company);
 	
 	public AuditPO queryAuditByOrderId(String orderId);
 	

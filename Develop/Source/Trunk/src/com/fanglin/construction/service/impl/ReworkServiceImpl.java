@@ -1,11 +1,11 @@
 /**
- * @File Name		: ReworkServiceImpl.java
+ * @File Name	: ReworkServiceImpl.java
  * @Package   	: com.fanglin.service.impl.constructionSchedule
  * @Version		: 1.0
- * @Date			: 2014-9-23
+ * @Date		: 2014-9-23
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 

@@ -34,7 +34,7 @@ public class PaymentPO implements Serializable {
 	
 	public static final String PAYMENT_PAYMENTTYPE_ZATERIAL_STR = "正林预付款";
 	
-	//提现, 收款,  退款, 付款, 转换款项, 预付款转换
+	//提现,收款,退款,付款,转换款项,预付款转换
 	public static final String PAYMENT_TYPE_EXTRACT_STR = "提现"; //减
 	
 	public static final String PAYMENT_TYPE_COLLECTION_STR = "收款";
@@ -54,6 +54,10 @@ public class PaymentPO implements Serializable {
 	public static final String PAYMENT_STATUS_CONFIRMED_STR = "已确认";
 	
 	public static final String PAYMENT_STATUS_CANCELED_STR = "已撤销";
+	
+	public static final String PAYMENT_DECORETION_PAYMENTNAME_STR = "装修款";
+	
+	public static final String PAYMENT_MATERIAL_PAYMENTNAME_STR = "主材款";
 	
 	private int paymentId;
 	
@@ -75,7 +79,7 @@ public class PaymentPO implements Serializable {
 	
 	private String des;
 	
-	private long convertPaymentId; // 对应转换款项关联表的id, 致远表对应
+	private long convertPaymentId; // 对应转换款项关联表的id,致远表对应
 	
 	public PaymentPO(){
 		super();

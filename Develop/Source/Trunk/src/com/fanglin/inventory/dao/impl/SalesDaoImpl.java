@@ -22,9 +22,11 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSales(Paging paging, List<Filter> filters) {
+	public List<SalesPO> pageSales(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR,company,"eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -89,8 +91,6 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					
 					query.add(query.getCriterion(field, stimestamp, "ge"));
 					query.add(query.getCriterion(field, etimestamp, "le"));
-				}else if (SalesPO.COLUMN_COMPANY_STR.equals(field)){
-					query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
 				}
 				
 			}

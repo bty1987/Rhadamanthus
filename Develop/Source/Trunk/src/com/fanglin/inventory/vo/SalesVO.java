@@ -326,7 +326,5 @@ public class SalesVO implements Serializable {
 	public void setOtherStatus(Short otherStatus) {
 		this.otherStatus = otherStatus;
 	}
-	
-	
 
 }
