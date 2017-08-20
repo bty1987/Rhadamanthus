@@ -29,15 +29,15 @@ public class DecorationOrderDesignDepartmentRightDaoImpl extends DaoImpl<Decorat
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderDesignDepartmentRightPO> queryDecorationOrderDesignDepartmentRightByUId(int uId) {
-		return session().createCriteria(DecorationOrderDesignDepartmentRightPO.class).add(Restrictions.eq(DecorationOrderDesignDepartmentRightPO.COLUMN_UID_STR, uId)).list();
+	public List<DecorationOrderDesignDepartmentRightPO> queryDecorationOrderDesignDepartmentRightByUId(int uId, int company) {
+		return session().createCriteria(DecorationOrderDesignDepartmentRightPO.class).add(Restrictions.eq(DecorationOrderDesignDepartmentRightPO.COLUMN_UID_STR, uId)).add(Restrictions.eq(DecorationOrderDesignDepartmentRightPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public int deleteDecorationOrderDesignDepartmentRightByUId(int uId) {
+	public int deleteDecorationOrderDesignDepartmentRightByUId(int uId, int company) {
 		
-		String sql = "delete from platform.decorationorderdesigndepartmentright where uId = :uId";
-		session().createSQLQuery(sql).setLong("uId", uId).executeUpdate();
+		String sql = "delete from platform.decorationorderdesigndepartmentright where uId = :uId and company = :company";
+		session().createSQLQuery(sql).setLong("uId", uId).setInteger("company", company).executeUpdate();
 		
 		return 0;
 	}

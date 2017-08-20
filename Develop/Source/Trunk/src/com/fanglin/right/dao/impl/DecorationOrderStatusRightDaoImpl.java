@@ -29,14 +29,14 @@ public class DecorationOrderStatusRightDaoImpl extends DaoImpl<DecorationOrderSt
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderStatusRightPO> queryDecorationOrderStatusRightByUId(int uId) {
-		return session().createCriteria(DecorationOrderStatusRightPO.class).add(Restrictions.eq(DecorationOrderStatusRightPO.COLUMN_UID_STR, uId)).list();
+	public List<DecorationOrderStatusRightPO> queryDecorationOrderStatusRightByUId(int uId, int company) {
+		return session().createCriteria(DecorationOrderStatusRightPO.class).add(Restrictions.eq(DecorationOrderStatusRightPO.COLUMN_UID_STR, uId)).add(Restrictions.eq(DecorationOrderStatusRightPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public int deleteDecorationOrderStatusRightByUId(int uId) {
+	public int deleteDecorationOrderStatusRightByUId(int uId, int company) {
 		
-		String sql = "delete from platform.decorationorderstatusright where uId = :uId";
+		String sql = "delete from platform.decorationorderstatusright where uId = :uId and company = :company";
 		session().createSQLQuery(sql).setLong("uId", uId).executeUpdate();
 		
 		return 0;

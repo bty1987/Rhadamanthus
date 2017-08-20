@@ -18,8 +18,8 @@ import com.fanglin.right.po.DecorationOrderStatusRightPO;
 
 public interface DecorationOrderStatusRightDao extends Dao<DecorationOrderStatusRightPO> {
 	
-	public List<DecorationOrderStatusRightPO> queryDecorationOrderStatusRightByUId(int uId);
+	public List<DecorationOrderStatusRightPO> queryDecorationOrderStatusRightByUId(int uId, int company);
 	
-	public int deleteDecorationOrderStatusRightByUId(int uId);
+	public int deleteDecorationOrderStatusRightByUId(int uId, int company);
 
 }

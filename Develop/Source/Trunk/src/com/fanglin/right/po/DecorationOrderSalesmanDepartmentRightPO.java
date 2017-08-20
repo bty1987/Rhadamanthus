@@ -16,12 +16,16 @@ public class DecorationOrderSalesmanDepartmentRightPO implements java.io.Seriali
 	public static final int DEPARTMENT_ALL_ENABLE_INT = -1;
 	
 	public static final String COLUMN_UID_STR = "uid";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	private int dosdrId;
 	
 	private int uid;
 	
 	private int did;
+	
+	private int company;
 
 	public DecorationOrderSalesmanDepartmentRightPO() {
 		super();
@@ -60,6 +64,15 @@ public class DecorationOrderSalesmanDepartmentRightPO implements java.io.Seriali
 
 	public void setDid(int did) {
 		this.did = did;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

@@ -18,16 +18,16 @@ import com.fanglin.personel.vo.UserVO;
 
 public interface DecorationOrderRightService {
 	
-	public List<Integer> queryDecorationOrderDesignDepartmentRightByUserId(UserVO userVO) throws FLException;
+	public List<Integer> queryDecorationOrderDesignDepartmentRightByUserId(UserVO userVO, int company) throws FLException;
 	
-	public int updateDecorationOrderDesignDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException;
+	public int updateDecorationOrderDesignDepartmentRight(UserVO userVO, List<Integer> dIds, int company) throws FLException;
 	
-	public List<Integer> queryDecorationOrderSalesmanDepartmentRightByUserId(UserVO userVO) throws FLException;
+	public List<Integer> queryDecorationOrderSalesmanDepartmentRightByUserId(UserVO userVO, int company) throws FLException;
 	
-	public int updateDecorationOrderSalesmanDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException;
+	public int updateDecorationOrderSalesmanDepartmentRight(UserVO userVO, List<Integer> dIds, int company) throws FLException;
 	
-	public List<String> queryDecorationOrderStatusRightByUserId(UserVO userVO) throws FLException;
+	public List<String> queryDecorationOrderStatusRightByUserId(UserVO userVO, int company) throws FLException;
 	
-	public int updateDecorationOrderStatusRight(UserVO userVO, List<String> statuses) throws FLException;
+	public int updateDecorationOrderStatusRight(UserVO userVO, List<String> statuses, int company) throws FLException;
 	
 }
