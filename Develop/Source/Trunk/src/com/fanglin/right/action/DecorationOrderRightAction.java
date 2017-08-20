@@ -44,7 +44,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="queryDecorationOrderDesignDepartmentRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationOrderDesignDepartmentRightByUserId() throws FLException{
 		
-		dids = decorationOrderRightService.queryDecorationOrderDesignDepartmentRightByUserId(user);
+		dids = decorationOrderRightService.queryDecorationOrderDesignDepartmentRightByUserId(user, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -52,7 +52,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="queryDecorationOrderSalesmanDepartmentRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationOrderSalesmanDepartmentRightByUserId() throws FLException{
 		
-		dids = decorationOrderRightService.queryDecorationOrderSalesmanDepartmentRightByUserId(user);
+		dids = decorationOrderRightService.queryDecorationOrderSalesmanDepartmentRightByUserId(user, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="queryDecorationOrderStatusRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationOrderStatusRightByUserId() throws FLException{
 		
-		statuses = decorationOrderRightService.queryDecorationOrderStatusRightByUserId(user);
+		statuses = decorationOrderRightService.queryDecorationOrderStatusRightByUserId(user, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -68,7 +68,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="updateDecorationOrderDesignDepartmentRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateDecorationOrderDesignDepartmentRight() throws FLException{
 		
-		decorationOrderRightService.updateDecorationOrderDesignDepartmentRight(user, dids);
+		decorationOrderRightService.updateDecorationOrderDesignDepartmentRight(user, dids, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -76,7 +76,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="updateDecorationOrderSalesmanDepartmentRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateDecorationOrderSalesmanDepartmentRight() throws FLException{
 		
-		decorationOrderRightService.updateDecorationOrderSalesmanDepartmentRight(user, dids);
+		decorationOrderRightService.updateDecorationOrderSalesmanDepartmentRight(user, dids, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -84,7 +84,7 @@ public class DecorationOrderRightAction extends BaseListAction {
 	@Action(value="updateDecorationOrderStatusRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateDecorationOrderStatusRight() throws FLException{
 		
-		decorationOrderRightService.updateDecorationOrderStatusRight(user, statuses);
+		decorationOrderRightService.updateDecorationOrderStatusRight(user, statuses, queryCompany());
 		
 		return SUCCESS;
 	}

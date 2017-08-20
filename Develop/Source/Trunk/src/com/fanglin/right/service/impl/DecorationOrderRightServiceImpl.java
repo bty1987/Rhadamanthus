@@ -47,7 +47,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	private UserDao userDao;
 
 	@Override
-	public List<Integer> queryDecorationOrderDesignDepartmentRightByUserId(UserVO userVO) throws FLException {
+	public List<Integer> queryDecorationOrderDesignDepartmentRightByUserId(UserVO userVO, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -57,7 +57,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<Integer> dIds = new ArrayList<Integer>();
 		
-		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
+		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid(), company);
 		
 		for(DecorationOrderDesignDepartmentRightPO decorationOrderDesignDepartmentRightPO: decorationOrderDesignDepartmentRightPOs){
 			dIds.add(decorationOrderDesignDepartmentRightPO.getDid());
@@ -68,7 +68,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationOrderDesignDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException {
+	public int updateDecorationOrderDesignDepartmentRight(UserVO userVO, List<Integer> dIds, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -78,7 +78,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		int uId = userPO.getUid();
 		
-		decorationOrderDesignDepartmentRightDao.deleteDecorationOrderDesignDepartmentRightByUId(userPO.getUid());
+		decorationOrderDesignDepartmentRightDao.deleteDecorationOrderDesignDepartmentRightByUId(userPO.getUid(), company);
 		
 		if(dIds != null){
 			for(Integer dId: dIds){
@@ -90,7 +90,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	}
 
 	@Override
-	public List<Integer> queryDecorationOrderSalesmanDepartmentRightByUserId(UserVO userVO) throws FLException {
+	public List<Integer> queryDecorationOrderSalesmanDepartmentRightByUserId(UserVO userVO, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -100,7 +100,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<Integer> dIds = new ArrayList<Integer>();
 		
-		List<DecorationOrderSalesmanDepartmentRightPO> decorationOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid());
+		List<DecorationOrderSalesmanDepartmentRightPO> decorationOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid(), company);
 		
 		for(DecorationOrderSalesmanDepartmentRightPO decorationOrderSalesmanDepartmentRightPO: decorationOrderSalesmanDepartmentRightPOs){
 			dIds.add(decorationOrderSalesmanDepartmentRightPO.getDid());
@@ -111,7 +111,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationOrderSalesmanDepartmentRight(UserVO userVO, List<Integer> dIds) throws FLException {
+	public int updateDecorationOrderSalesmanDepartmentRight(UserVO userVO, List<Integer> dIds, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -121,7 +121,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		int uId = userPO.getUid();
 		
-		decorationOrderSalesmanDepartmentRightDao.deleteDecorationOrderSalesmanDepartmentRightByUId(uId);
+		decorationOrderSalesmanDepartmentRightDao.deleteDecorationOrderSalesmanDepartmentRightByUId(uId, company);
 		
 		if(dIds != null){
 			for(Integer dId: dIds){
@@ -133,7 +133,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 	}
 
 	@Override
-	public List<String> queryDecorationOrderStatusRightByUserId(UserVO userVO) throws FLException {
+	public List<String> queryDecorationOrderStatusRightByUserId(UserVO userVO, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -143,7 +143,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		List<String> statuses = new ArrayList<String>();
 		
-		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid());
+		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid(), company);
 		
 		for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
 			statuses.add(decorationOrderStatusRightPO.getStatus());
@@ -154,7 +154,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationOrderStatusRight(UserVO userVO, List<String> statuses) throws FLException {
+	public int updateDecorationOrderStatusRight(UserVO userVO, List<String> statuses, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -164,7 +164,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		int uId = userPO.getUid();
 		
-		decorationOrderStatusRightDao.deleteDecorationOrderStatusRightByUId(uId);
+		decorationOrderStatusRightDao.deleteDecorationOrderStatusRightByUId(uId, company);
 		
 		if(statuses != null){
 			for(String status: statuses){

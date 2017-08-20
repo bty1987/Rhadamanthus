@@ -16,12 +16,16 @@ public class DecorationOrderStatusRightPO implements java.io.Serializable {
 	public static final String STATUS_ALL_ENABLE_STR = "全部";
 	
 	public static final String COLUMN_UID_STR = "uid";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	private int dosrId;
 	
 	private int uid;
 	
 	private String status;
+	
+	private int company;
 	
 	public DecorationOrderStatusRightPO() {
 		super();
@@ -60,6 +64,15 @@ public class DecorationOrderStatusRightPO implements java.io.Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

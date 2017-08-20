@@ -16,12 +16,16 @@ public class DecorationOrderDesignDepartmentRightPO implements java.io.Serializa
 	public static final int DEPARTMENT_ALL_ENABLE_INT = -1;
 	
 	public static final String COLUMN_UID_STR = "uid";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	private int doddrId;
 	
 	private int uid;
 	
 	private int did;
+	
+	private int company;
 
 	public DecorationOrderDesignDepartmentRightPO() {
 		super();
@@ -60,6 +64,14 @@ public class DecorationOrderDesignDepartmentRightPO implements java.io.Serializa
 
 	public void setDid(int did) {
 		this.did = did;
+	}
+
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }
