@@ -11,9 +11,8 @@ jQuery(function($) {
 
 	var personInfoPostData = {};
 
-	var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-	var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
-	var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
+	var qualityInfo = {"supervisor":"工程部监理"};
+	var qualityIds = {"supervisor":""};
 
 	personInfo.cancelBtn = $("#cancelBtn");
 
@@ -27,21 +26,12 @@ jQuery(function($) {
 
 	for(var qualityName in qualityInfo){
 		var options = {};
+
 		if(qualityName == "supervisor"){
 			options["duty"] = qualityInfo[qualityName];
 			queryUserNameUrl = api.personel.queryUserForNameByDuty;
-		}else if(qualityName == "waterwayCircuitPower"){
-			queryUserNameUrl = api.personel.queryUserForNameByDutysAO;
-			dutys = qualityInfo[qualityName].split(",");
-			for(var i=0;i<dutys.length;i++){
-				options["dutysO["+i+"]"] = dutys[i]+"工";
-			}
-			options["dutys[0]"] = "质检";
-		}else{
-			options["dutys[0]"] = qualityInfo[qualityName];
-			options["dutys[1]"] = "质检";
-			queryUserNameUrl = api.personel.queryUserForNameByDutys;
 		}
+
 		com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
 	}
 	
@@ -124,7 +114,6 @@ jQuery(function($) {
 	function deployed(v){
 		
 		for(var qualityName in qualityInfo){
-
 			com.clearValidator("#"+qualityName+"Quality_chosen", true);
 		}
 		

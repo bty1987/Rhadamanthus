@@ -26,11 +26,15 @@ public class ApproveUserPO implements Serializable{
 
     private static final long serialVersionUID = 950904568941125216L;
 
+    public static final String COLUMN_TYPE_STR = "type";
+    
     private int auid;
     
     private UserPO  user;
    
     private short  type;
+    
+    private String comment;
     
     public ApproveUserPO(){
         super();
@@ -70,5 +74,14 @@ public class ApproveUserPO implements Serializable{
     public void setType(short type){
         this.type = type;
     }
+
+    @Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 }

@@ -264,17 +264,21 @@ jQuery(function($) {
 	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){
+
+		var options = {};
+		var $inputs = $('input[name="dpIds"]:checked');
+
+		$.each($inputs, function(i, v){
+			options["paymentIds["+i+"]"] = $(v).attr('dpId');
+		});
+
+		if($inputs.length == 0){
+			com.showAlert(com.warning, "当前未选择要确认的装修款项信息");
+			return false;
+		}
 		
 		bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 			if(result) {
-				
-				var options = {};
-				var $inputs = $('input[name="dpIds"]:checked');
-				
-				$.each($inputs, function(i, v){
-					options["paymentIds["+i+"]"] = $(v).attr('dpId');
-				});
-				
 				com.post(api.payment.confirmDecorationPayment, options, function(res){
 					searcher.doSearch();
 					hsearcher.doSearch();

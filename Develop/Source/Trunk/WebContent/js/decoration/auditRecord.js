@@ -208,6 +208,12 @@ $(function () {
         };
         //生成人员扣款
         var makeAuditRecord = function (total,arid) {
+
+            if(auditRecord.managerId == null ){
+                com.showAlert(com.error,"设计师无对应部门经理");
+                return;
+            }
+
             com.post(api.decoration.makeAuditScale,$.extend(makeAuditScalesPostdata(0,arid,auditRecord.designerId,auditRecord.deptId,((utils.accMul(total,perCharge["designer"]))/10),0),
                 makeAuditScalesPostdata(1,arid,auditRecord.managerId,auditRecord.deptId,((utils.accMul(total,perCharge["manager"]))/10),1)),function (res) {
                 com.showAlert(com.info,"生成人员成功");
@@ -334,7 +340,7 @@ $(function () {
                 bootbox.alert('扣款金额只能输入整数');
                 return;
             }
-            com.post(api.decoration.addAudtiScale,makeAuditScalePostdata(null,auditScale.arid,auditScalePage.userId.val(),auditScalePage.deptId.val(),auditScalePage.money.val(),0),function (res) {
+            com.post(api.decoration.addAuditScale,makeAuditScalePostdata(null,auditScale.arid,auditScalePage.userId.val(),auditScalePage.deptId.val(),auditScalePage.money.val(),0),function (res) {
                 com.showAlert(com.info,"添加成功");
                 auditScalePage.auditScaleModel.modal("hide");
                 clearAuditScaleModel();
@@ -426,7 +432,7 @@ $(function () {
             bootbox.confirm("确认提交扣款信息?",function(res){
                 //如果为ture
                 if(res){
-                    com.post(api.decoration.updateAudtiScaleForStatus,makeAuditScalePostdata(asid,null,null,null,null,null,1), function(res){
+                    com.post(api.decoration.updateAuditScaleForStatus,makeAuditScalePostdata(asid,null,null,null,null,null,1), function(res){
                         com.showAlert(com.info, "操作成功");
                         initPages(auditScale.arid);
                     });
@@ -437,7 +443,7 @@ $(function () {
         var delAuditScale = function (asid) {
             bootbox.confirm("确认删除审核记录?",function(res){
                 if(res) {
-                    com.post(api.decoration.deleteAudtiScale, makeAuditScalePostdata(asid), function (res) {
+                    com.post(api.decoration.deleteAuditScale, makeAuditScalePostdata(asid), function (res) {
                         com.showAlert(com.info, "删除成功");
                         initPages(auditScale.arid);
                     }, function (e) {

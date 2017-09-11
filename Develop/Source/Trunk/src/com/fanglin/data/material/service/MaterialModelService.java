@@ -30,7 +30,7 @@ public interface MaterialModelService {
 	
 	public MaterialModelVO queryMaterialModelByMmId(MaterialModelVO materialModelVO);
 	
-	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO);
+	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO,int company);
 	
 	public List<MaterialModelVO> queryMaterialModelForAllByName(MaterialModelVO materialModelVO,int company);
 	

@@ -124,8 +124,10 @@ $(function(){
 					var $select = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 					var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
+					var $btnExtension = $('<a></a>').addClass('btn btn-minier btn-pink').html('扩展项');
 					var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary').html('信息轴');
-					
+					var $btnCal = $('<a></a>').addClass('btn btn-minier btn-danger').html('决算');
+
 					var propertyArr = [
 						["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
 						["客户名:", v.customer.customerName, "grey"],
@@ -181,6 +183,14 @@ $(function(){
 						viewDecorationOrderInAudit(v.orderId);
 					})
 
+					$btnExtension.click(function(){
+						viewExtension(v.orderId);
+					});
+
+					$btnCal.click(function(){
+						viewDecorationFinalSettlement(v.orderId, v.type);
+					});
+
 					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
 					
 					if(["量房", "咨询", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
@@ -192,9 +202,16 @@ $(function(){
 					if(["定金", "已报价", "已签约", "重签合同", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnContract);
 					}
-					
+
+					if([ "定金", "已报价", "重签合同","已签约", "已完工"].indexOf(v.status) != -1){
+						$divBtnWrap.append($btnExtension);
+					}
+
 					if(["已签约", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnAddMinus);
+						if(v.type == 2){
+							$divBtnWrap.append($btnCal);
+						}
 					}
 					
 					$divBtnWrap.append($btnInfo);
@@ -269,10 +286,25 @@ $(function(){
 			params['rollback'] = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.auditRecordIndex.url);
 		}
-		
+
+		//时间轴
 		var viewDecorationOrderTimelineIndex = function(orderId){
 			params.decorationOrderId = orderId;
 			com.switchPage(api.index.decorationOrderTimelineIndex.url);
+		}
+
+		//扩展项
+		var viewExtension = function (decorationOrderId){
+			params.decorationOrderId = decorationOrderId;
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
+			com.switchPage(api.index.extensionIndex.url);
+		}
+
+		//决算
+		function viewDecorationFinalSettlement(decorationOrderId,type){
+			params.decorationOrderId = decorationOrderId;
+			params.type = type;
+			com.switchPage(api.index.decorationFinalSettlementIndex.url);
 		}
 
 		return {

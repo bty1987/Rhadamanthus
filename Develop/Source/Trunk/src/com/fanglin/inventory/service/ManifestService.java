@@ -15,6 +15,8 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.po.ManifestItemPO;
+import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
@@ -38,8 +40,14 @@ public interface ManifestService {
 	
 	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId,int company) throws FLException;
 	
+	public int addManifestForPS(List<ManifestItemPO> manifestItemPOs,String userId,int company) throws FLException;
+	
+	public int addManifestForPM(List<ManifestItemPO> manifestItemPOs,String userId,int company) throws FLException;
+	
 	public int updateManifest(ManifestVO manifestVO) throws FLException;
 	
 	public int confirmManifest(ManifestVO manifestVO) throws FLException;
+	
+	public int addManifestForPackage(List<ManifestItemPO> manifestItemPOs, String comment, ManifestPO manifestPO) throws FLException;
 	
 }

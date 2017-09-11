@@ -13,6 +13,7 @@ package com.fanglin.data.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -44,5 +45,11 @@ public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategor
 		
 		return query.list();
 		
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationSmallCategoryPO> queryQuotationSmallCategory(Integer qtid) {
+		return session().createCriteria(QuotationSmallCategoryPO.class).add(Restrictions.eq("qtid", qtid)).list();
 	}
 }

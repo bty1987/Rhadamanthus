@@ -13,10 +13,9 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.personel.po.UserExperiencePO;
-import com.fanglin.utils.Paging;
 
 public interface UserExperienceDao extends Dao<UserExperiencePO> {
 
-	public List<UserExperiencePO> pageUserExperiencesByUserId(Paging paging, String userId);
+	public List<UserExperiencePO> queryUserExperiencesByUid(Integer uid);
 	
 }

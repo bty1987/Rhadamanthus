@@ -22,15 +22,15 @@ public interface MaterialModelDao extends Dao<MaterialModelPO> {
 	
 	public List<MaterialModelPO> pageMaterialModel(Paging paging, List<Filter> filters,int company);
 	
-	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<String> brandIds);
+	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<Long> brandIds);
 	
 	public List<MaterialModelPO> queryMaterialModel(List<Filter> filters);
 	
 	public List<MaterialModelPO> queryMaterialModelByName(String materialModelName, int limit,int company);
 	
-	public List<MaterialModelPO> queryMaterialModelByNo(String materiModelNo, int limit);
+	public List<MaterialModelPO> queryMaterialModelsByNo(String materiModelNo,int limit);
 	
-	public MaterialModelPO queryMaterialModelByNo(String materiModelNo);
+	public MaterialModelPO queryMaterialModelByNo(String materiModelNo,int company);
 	
 	public MaterialModelPO queryMaterialModelByNameBrand(String materialModelNo, long bId);
 

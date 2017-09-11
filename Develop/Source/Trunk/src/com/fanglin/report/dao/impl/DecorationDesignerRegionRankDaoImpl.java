@@ -30,20 +30,22 @@ public class DecorationDesignerRegionRankDaoImpl extends DaoImpl<DecorationDesig
 	}
 
 	@Override
-	public DecorationDesignerRegionRankPO queryDecorationDesignerRegionRankForInitByRegionId(String regionId) {
+	public DecorationDesignerRegionRankPO queryDecorationDesignerRegionRankForInitByRegionId(String regionId,int company) {
 		return (DecorationDesignerRegionRankPO) session().createCriteria(DecorationDesignerRegionRankPO.class)
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, regionId))
+				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_STATUS_STR, DecorationDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationDesignerRegionRankPO> queryDecorationDesignerRegionRankForTop(int top) {
+	public List<DecorationDesignerRegionRankPO> queryDecorationDesignerRegionRankForTop(int top,int company) {
 		
 		Criteria criteria = session().createCriteria(DecorationDesignerRegionRankPO.class)
 				.add(Restrictions.ne(DecorationDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, ""))
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_STATUS_STR, DecorationDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
+				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.addOrder(Order.desc(DecorationDesignerRegionRankPO.COLUMN_RANK_STR));
 		
 		if(top >= 0){

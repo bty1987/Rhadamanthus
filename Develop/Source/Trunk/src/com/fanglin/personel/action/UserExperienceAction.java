@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserExperienceService;
 import com.fanglin.personel.vo.UserExperienceVO;
 
@@ -22,43 +23,33 @@ public class UserExperienceAction extends BaseListAction {
 
 	@Autowired
 	private UserExperienceService userExperienceService;
+	
+	private List<UserExperienceVO> userExperiences;
 
-	private List<UserExperienceVO> userExperienceList;
+	private UserExperienceVO userExperience;
 	
-	private List<Long> userExperienceIds;
-	
-	private String editUserId;
-	
-	@Action(value = "pageUserExperienceByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUserExperienceByUserId(){
+	@Action(value = "queryUserExperienceByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserExperienceByUid() throws FLException{
 		
-		userExperienceService.pageUserExperienceByUserId(getPaging(), getEditUserId());
+		userExperiences = userExperienceService.queryUserExperienceByUid(userExperience);
 		
 		return SUCCESS;
 	}
 
-	public List<UserExperienceVO> getUserExperienceList(){
-		return userExperienceList;
+	public List<UserExperienceVO> getUserExperiences() {
+		return userExperiences;
 	}
 
-	public void setUserExperienceList(List<UserExperienceVO> userExperienceList){
-		this.userExperienceList = userExperienceList;
+	public void setUserExperiences(List<UserExperienceVO> userExperiences) {
+		this.userExperiences = userExperiences;
 	}
 
-	public List<Long> getUserExperienceIds(){
-		return userExperienceIds;
+	public UserExperienceVO getUserExperience() {
+		return userExperience;
 	}
 
-	public void setUserExperienceIds(List<Long> userExperienceIds){
-		this.userExperienceIds = userExperienceIds;
+	public void setUserExperience(UserExperienceVO userExperience) {
+		this.userExperience = userExperience;
 	}
-
-	public String getEditUserId(){
-		return editUserId;
-	}
-
-	public void setEditUserId(String editUserId){
-		this.editUserId = editUserId;
-	}
-
+	
 }

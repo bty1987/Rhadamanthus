@@ -11,6 +11,9 @@ import javax.persistence.Table;
 
 import com.fanglin.inventory.po.SalesItemPO;
 
+
+
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity

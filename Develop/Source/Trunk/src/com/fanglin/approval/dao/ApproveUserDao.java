@@ -22,5 +22,7 @@ public interface ApproveUserDao extends Dao<ApproveUserPO> {
 	
 	public List<ApproveUserPO> queryApproveUserForNameByType(Paging paging, String pinyinName, Short type,int company);
 	
+	public List<ApproveUserPO> queryApprovalUserByType(short type,int company);
+	
 	public List<ApproveUserPO> queryApproveUserByUserId(String userId);
 }

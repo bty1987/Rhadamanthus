@@ -30,7 +30,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	@Override
 	public int countSalesPaymentBySid(long sid) {
 
-		String sql = "select count(*) from inventory.salespayment where sid =:sid";
+		String sql = "select count(*) from payment.salespayment where sid =:sid";
 		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).uniqueResult();
 		return num.intValue();
 	}
@@ -38,7 +38,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	@Override
 	public int countSalesPaymentBySidAType(Long sid,Short type) {
 
-		String sql = "select count(*) from inventory.salespayment where sid =:sid and type =:type";
+		String sql = "select count(*) from payment.salespayment where sid =:sid and type =:type";
 		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type).uniqueResult();
 		return num.intValue();
 	}

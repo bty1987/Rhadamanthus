@@ -44,9 +44,9 @@ public interface DecorationOrderDao extends Dao<DecorationOrderPO> {
 	
 	public DecorationOrderPO queryDecorationOrderByOrderId(String orderId);
 	
-	public List<DecorationOrderPO> queryDecorationOrderByCustomer(Integer cid, String customerId);
+	public List<DecorationOrderPO> queryDecorationOrderByCustomer(Integer cid, String customerId, int company);
 	
-	public DecorationOrderPO queryDecorationOrderByVillageIdAHouseNumber(String villageId, String hoseNumber);
+	public DecorationOrderPO queryDecorationOrderByVillageIdAHouseNumber(String villageId, String hoseNumber,int company);
 	
 	public double countDecorationOrderForTotalPrice(List<Filter> filters);
 	

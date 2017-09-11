@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "advancereceipt", catalog = "platform")
+@Table(name = "advancereceipt", catalog = "payment")
 public class AdvanceReceiptPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4094999268147934216L;

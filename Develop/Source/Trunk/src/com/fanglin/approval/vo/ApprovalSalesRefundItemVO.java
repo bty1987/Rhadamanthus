@@ -5,6 +5,10 @@ import java.io.Serializable;
 import com.fanglin.inventory.vo.SalesItemVO;
 
 
+
+
+
+
 public class ApprovalSalesRefundItemVO implements Serializable {
 
 	private static final long serialVersionUID = 2363581968985577616L;

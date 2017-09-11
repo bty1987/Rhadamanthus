@@ -34,6 +34,26 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		
 		return query.list();
 	}
+	
+	@Override
+	public List<SalesPO> pageSalesForBalance(Paging paging,List<Filter> filters, int company) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR,company,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYSTATUS_STR,SalesPO.FULLPAYSTATUS_CONFIRM_SHORT,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_BALANCESTATUS_STR,SalesPO.BALANCESTATUS_INIT_SHORT,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_STATUS_STR,SalesPO.STATUS_INIT_SHORT,"eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sid");
+		
+		return query.list();
+	}
 
 	@Override
 	public SalesPO querySalesBySid(Long sid) {
@@ -74,11 +94,11 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 					
-					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, sTimestamp, "ge"));
-				}else if (SalesPO.COLIMN_DEPT_STR.equals(field)){
+					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_STR, sTimestamp, "ge"));
+				}else if (SalesPO.COLUMN_DEPT_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
-				}else if(SalesPO.COLIMN_FULLPAYTIME_STR.equals(field)){
+				}else if(SalesPO.COLUMN_FULLPAYTIME_STR.equals(field)){
 					
 					String sTime = data + " 00:00:00";
 					String eTime = data + " 23:59:59";
@@ -91,6 +111,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					
 					query.add(query.getCriterion(field, stimestamp, "ge"));
 					query.add(query.getCriterion(field, etimestamp, "le"));
+				}else if(SalesPO.COLUMN_BRAND_STR.equals(field)){
+					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
 				}
 				
 			}

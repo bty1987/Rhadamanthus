@@ -31,7 +31,7 @@ var materialPayment = {
 		price: {
 			type: "v_price",
 			regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-			errorMsg: "价格内容输入错误错误."
+			errorMsg: "价格内容输入错误."
 		},
 	},
 };
@@ -373,9 +373,15 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnPrint.click(function(){
-				com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + v.mrId + "&decorationOrder.orderId=" + v.orderId + "&time=" + parent.params.loginTime,function () {
-					parent.layer.getFrameIndex(window.name);
-				},null,true)
+				if(v.collectUserName!=params.userInfo.user.userName){
+					com.showAlert(com.warning, "收款人不匹配，不能打印");
+					return false;
+				}else{
+					com.popup("专用收款收据__订单编号：" + v.orderId  ,api.index.materialPaymentReceiptIndex.url + "?materialReceipt.mrId=" + v.mrId + "&decorationOrder.orderId=" + v.orderId + "&time=" + parent.params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					},null,true)
+				}
+
 			});
 
             return $liLine;
@@ -591,7 +597,9 @@ jQuery(function($) {
 
 			initBaseModal();
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-
+			$("#checkvBankName").find("option").eq(0).attr("selected","selected");
+			$("#installmentBankName").find("option").eq(0).attr("selected","selected");
+			$("#accountsBankName").find("option").eq(0).attr("selected","selected");
 //			var options = {
 //				"decorationOrder.orderId": payment.orderId,
 //			}

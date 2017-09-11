@@ -31,10 +31,6 @@ public class AcceptanceVO implements Serializable{
 	
 	private String acceptanceTime;
 	
-	private String waterwayQualityName;
-	
-	private String waterwayWorkerName;
-	
 	private Integer waterwayQuality;
 	
 	private Integer waterwayServer;
@@ -42,10 +38,6 @@ public class AcceptanceVO implements Serializable{
 	private Integer waterwayHygiene;
 	
 	private String waterwayDes;
-	
-	private String circuitQualityName;
-	
-	private String circuitWorkerName;
 	
 	private Integer circuitQuality;
 	
@@ -55,10 +47,6 @@ public class AcceptanceVO implements Serializable{
 	
 	private String circuitDes;
 	
-	private String bricklayQualityName;
-	
-	private String bricklayWorkerName;
-	
 	private Integer bricklayQuality;
 	
 	private Integer bricklayServer;
@@ -67,10 +55,6 @@ public class AcceptanceVO implements Serializable{
 	
 	private String bricklayDes;
 	
-	private String carpentQualityName;
-	
-	private String carpentWorkerName;
-	
 	private Integer carpentQuality;
 	
 	private Integer carpentServer;
@@ -78,10 +62,6 @@ public class AcceptanceVO implements Serializable{
 	private Integer carpentHygiene;
 	
 	private String carpentDes;
-	
-	private String oilQualityName;
-	
-	private String oilWorkerName;
 	
 	private Integer oilQuality;
 	
@@ -412,87 +392,7 @@ public class AcceptanceVO implements Serializable{
 	public void setContractCode(String contractCode){
 		this.contractCode = contractCode;
 	}
-
-	public String getWaterwayQualityName(){
-		return waterwayQualityName;
-	}
-
-	public void setWaterwayQualityName(String waterwayQualityName){
-		this.waterwayQualityName = waterwayQualityName;
-	}
-
-	public String getWaterwayWorkerName(){
-		return waterwayWorkerName;
-	}
-
-	public void setWaterwayWorkerName(String waterwayWorkerName){
-		this.waterwayWorkerName = waterwayWorkerName;
-	}
-
-	public String getCircuitQualityName(){
-		return circuitQualityName;
-	}
-
-	public void setCircuitQualityName(String circuitQualityName){
-		this.circuitQualityName = circuitQualityName;
-	}
-
-	public String getCircuitWorkerName(){
-		return circuitWorkerName;
-	}
-
-	public void setCircuitWorkerName(String circuitWorkerName){
-		this.circuitWorkerName = circuitWorkerName;
-	}
-
-	public String getBricklayQualityName(){
-		return bricklayQualityName;
-	}
-
-	public void setBricklayQualityName(String bricklayQualityName){
-		this.bricklayQualityName = bricklayQualityName;
-	}
-
-	public String getBricklayWorkerName(){
-		return bricklayWorkerName;
-	}
-
-	public void setBricklayWorkerName(String bricklayWorkerName){
-		this.bricklayWorkerName = bricklayWorkerName;
-	}
-
-	public String getCarpentQualityName(){
-		return carpentQualityName;
-	}
-
-	public void setCarpentQualityName(String carpentQualityName){
-		this.carpentQualityName = carpentQualityName;
-	}
-
-	public String getCarpentWorkerName(){
-		return carpentWorkerName;
-	}
-
-	public void setCarpentWorkerName(String carpentWorkerName){
-		this.carpentWorkerName = carpentWorkerName;
-	}
-
-	public String getOilQualityName(){
-		return oilQualityName;
-	}
-
-	public void setOilQualityName(String oilQualityName){
-		this.oilQualityName = oilQualityName;
-	}
-
-	public String getOilWorkerName(){
-		return oilWorkerName;
-	}
-
-	public void setOilWorkerName(String oilWorkerName){
-		this.oilWorkerName = oilWorkerName;
-	}
-
+	
 	public String getSupervisId(){
 		return supervisId;
 	}

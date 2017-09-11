@@ -1,57 +1,15 @@
 
 jQuery(function($) {
 
+	var constructionNode = {};
 	var customerServiceDetail = {
 
 		constructionSchedules:{},
+		constructionNodeName:[
+			"chan", "putline", "waterwayCircuitPower", "bricklay", "groundLeveling",
+			"carpent", "oil", "waterwayCircuitCheck", "cleaning",
+		],
 
-		operateDict: {
-			"1": {
-				workerInfos: "chanWorkerInfos",
-				nodeName:"铲大白",
-				nodeNamePinyin: "chan",
-
-			}, "2": {
-				workerInfos: "putlineWorkerInfos",
-				nodeName:"放线",
-				nodeNamePinyin: "putline",
-
-			}, "3": {
-				workerInfos: "waterwayCircuitPowerWorkerInfos",
-				nodeName:"力水电",
-				nodeNamePinyin: "waterwayCircuitPower",
-
-			}, "4": {
-				workerInfos: "bricklayWorkerInfos",
-				nodeName:"瓦工",
-				nodeNamePinyin: "bricklay",
-
-			}, "5": {
-				workerInfos: "groundLevelingWorkerInfos",
-				nodeName:"地面找平",
-				nodeNamePinyin: "groundLeveling",
-
-			}, "6": {
-				workerInfos: "carpentWorkerInfos",
-				nodeName:"木工",
-				nodeNamePinyin: "carpent",
-
-			}, "7": {
-				workerInfos: "oilWorkerInfos",
-				nodeName:"油工",
-				nodeNamePinyin: "oil",
-
-			}, "8": {
-				workerInfos: "waterwayCircuitCheckWorkerInfos",
-				nodeName:"水电验收",
-				nodeNamePinyin: "waterwayCircuitCheck",
-
-			}, "9": {
-				workerInfos: "cleaningWorkerInfos",
-				nodeName:"保洁",
-				nodeNamePinyin: "cleaning",
-			},
-		},
 		wizardSept: {
 			"1": false,
 			"2": false,
@@ -61,11 +19,19 @@ jQuery(function($) {
 			"6": false,
 			"7": false,
 		},
+
 	};
 
 	var orderId = params;
 	var commitFlag = false;
 	var workerIdsData = [];
+
+	//获取所有节点
+	com.post(api.data.queryConstructionNode, {}, function(res){
+		$.each(res.constructionNodes, function(i, v){
+			constructionNode[v.cnid] = v.name;
+		})
+	}, null, false);
 
 	//动态获取节点轴
 	com.post(api.construction.queryConstructionScheduleByOrderId,{"constructionSchedule.orderId":params.orderId},function(res){
@@ -75,24 +41,22 @@ jQuery(function($) {
 		customerServiceDetail.constructionSchedules = res.constructionSchedules;
 
 		$.each(constructionSchedule, function(i, v){
-			customerServiceNode("#stepId", v.schedule,customerServiceDetail.operateDict[v.schedule].nodeName);
-			customerServicePane("#step-container", v.schedule,customerServiceDetail.operateDict[v.schedule].nodeNamePinyin, customerServiceDetail.operateDict[v.schedule].nodeName);
+			customerServiceNode("#stepId", v.schedule);
+			customerServicePane("#step-container", v.schedule, customerServiceDetail.constructionNodeName[v.schedule-1]);
 		});
 
 		var stepnum = constructionSchedule[0].schedule;
-		initWizardSept(customerServiceDetail.operateDict[stepnum], stepnum);
+		initWizardSept(stepnum);
 
 		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
 			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
-
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
 			var sd = stepId.substring(4);
 			if(!customerServiceDetail.wizardSept[sd]){
-				initWizardSept(customerServiceDetail.operateDict[sd], sd);
+				initWizardSept(sd);
 			}
 		});
-
 
 	},null,false);
 
@@ -103,7 +67,7 @@ jQuery(function($) {
 		com.switchPage(api.index.customerServiceIndex.url);
 	});
 
-	function initWizardSept(operate, schedule){
+	function initWizardSept(schedule){
 
 		addActive(schedule)
 
@@ -120,7 +84,7 @@ jQuery(function($) {
 			if(schedule){
 				workerIdsData = [];
 				commitFlag = false;
-				$("#"+operate.workerInfos).html("");
+				$("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos").html("");
 
 				if(constructers.length != 0 ){
 					for(var i=0;i<constructers.length;i++){
@@ -144,7 +108,7 @@ jQuery(function($) {
 						var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
 						var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid+"workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
 
-						profileDiv.appendTo($("#"+operate.workerInfos));
+						profileDiv.appendTo($("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos"));
 
 						setWorkerRaty('#'+workerInfo.crid+"workerRaty", workerInfo.rate);
 						setWorkerDes("#"+workerInfo.crid+"workerRatyDes", workerInfo.assessment);
@@ -154,7 +118,7 @@ jQuery(function($) {
 
 					commitFlag = true;
 				}else{
-					$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#"+operate.workerInfos));
+					$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos"));
 				}
 
 				$("#btnSave").click(function(){
@@ -196,14 +160,14 @@ jQuery(function($) {
 	}
 
 	//画节点信息轴
-	function customerServiceNode(stepul,schedule, nodeName){
+	function customerServiceNode(stepul, schedule){
 		var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
 		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-		var stepSpan = $("<span></span>").addClass("title").html(nodeName).appendTo(stepLi);
+		var stepSpan = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
 	}
 
 	//画面板
-	function customerServicePane(paneId, schedule,scheduleNodeNamePinyin, scheduleNodeNameGBK){
+	function customerServicePane(paneId, schedule,scheduleNodeNamePinyin){
 		var paneCus = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
 		var paneCusRow = $("<div></div>").addClass("row").appendTo(paneCus);
 		var paneCusForm = $("<form></form>").addClass("form-horizontal").appendTo(paneCusRow);
@@ -212,10 +176,9 @@ jQuery(function($) {
 		var paneCusCent = $("<div></div>").addClass("text-center").appendTo(paneCusSm);
 		var paneCusH3 = $("<h3></h3>").addClass("header smaller lighter green").appendTo(paneCusCent);
 		var paneCusI = $("<i></i>").addClass("icon-group").appendTo(paneCusH3);
-		var paneCusSpan = $("<span></span>").html(scheduleNodeNameGBK + "工人信息").appendTo(paneCusH3);
+		var paneCusSpan = $("<span></span>").html(constructionNode[schedule] + "工人信息").appendTo(paneCusH3);
 		var paneCusInfo = $("<div></div>").attr("id",scheduleNodeNamePinyin + "WorkerInfos").appendTo(paneCusCent);
 		var paneCusSpace = $("<div></div>").addClass("space-4").appendTo(paneCusForm);
-
 	}
 
 	function addActive(schedule){
@@ -226,6 +189,6 @@ jQuery(function($) {
 		});
 		$("#step" + schedule).removeClass("step-pane");
 		$("#step" + schedule).addClass("active");
-
 	}
+
 });

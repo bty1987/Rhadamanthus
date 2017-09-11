@@ -22,4 +22,6 @@ public interface QuotationSmallCategoryDao extends Dao<QuotationSmallCategoryPO>
 
 	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters);
 	
+	public List<QuotationSmallCategoryPO> queryQuotationSmallCategory(Integer qtid);
+	
 }

@@ -30,19 +30,21 @@ public class MaterialDesignerRegionRankDaoImpl extends DaoImpl<MaterialDesignerR
 	}
 	
 	@Override
-	public MaterialDesignerRegionRankPO queryMaterialDesignerRegionRankByRegionIdInit(String regionId){
+	public MaterialDesignerRegionRankPO queryMaterialDesignerRegionRankByRegionIdInit(String regionId,int company){
 		return (MaterialDesignerRegionRankPO) session().createCriteria(MaterialDesignerRegionRankPO.class)
 				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, regionId))
+				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_STATUS_STR, MaterialDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialDesignerRegionRankPO> queryMaterialDesignerRegionRankForTop(int top){
+	public List<MaterialDesignerRegionRankPO> queryMaterialDesignerRegionRankForTop(int top,int company){
 		
 		Criteria criteria = session().createCriteria(MaterialDesignerRegionRankPO.class)
 				.add(Restrictions.ne(MaterialDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, ""))
+				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRegionRankPO.COLUMN_STATUS_STR, MaterialDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(MaterialDesignerRegionRankPO.COLUMN_RANK_STR));
 		

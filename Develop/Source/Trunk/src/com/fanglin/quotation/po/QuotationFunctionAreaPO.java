@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "quotationfunctionarea", catalog = "platform")
+@Table(name = "quotationfunctionarea", catalog = "quotation")
 public class QuotationFunctionAreaPO implements Serializable {
 
 	private static final long serialVersionUID = 7743703726911437039L;

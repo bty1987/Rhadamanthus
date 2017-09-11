@@ -66,7 +66,6 @@ jQuery(function($) {
 
 			var typeName = v.type;
 
-			
 				if (typeName == "6") {
 					$divBtnWrap.append($btnDetails).appendTo($h3);
 				}
@@ -97,7 +96,7 @@ jQuery(function($) {
 	searcher.init([ "receiverName", "approvalType", "createTime", "approvalTime" ], "condList",
 			api.approval.pageApprovalBySenderId, function(data) {
 				displayFunc.init('resultList', data);
-			}, "pagenation", "approvalTrackPostData");
+			}, "pagenation", "approvalSenderTrackPostData");
 
 
 

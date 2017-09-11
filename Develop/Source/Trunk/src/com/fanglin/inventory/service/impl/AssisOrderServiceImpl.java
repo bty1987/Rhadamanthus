@@ -1,5 +1,6 @@
 package com.fanglin.inventory.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -14,12 +15,13 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.VillageDao;
+import com.fanglin.data.common.vo.VillageVO;
+import com.fanglin.data.po.VillagePO;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
 import com.fanglin.inventory.po.AssisOrderPO;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AssisOrderService;
 import com.fanglin.inventory.vo.AssisOrderItemVO;
@@ -46,6 +48,9 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 	private UserDao userDao;
 	
 	@Autowired
+	private VillageDao villageDao;
+	
+	@Autowired
 	private CountingService countingService;
 	
 	@Override
@@ -58,12 +63,23 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		
 		for(AssisOrderPO assisOrderPO: assisOrderPOs){
 			
-			assisOrderVO = new AssisOrderVO(new UserVO(),new UserVO());
+			assisOrderVO = new AssisOrderVO(new VillageVO(),new UserVO(),new UserVO(),new UserVO());
 			
-			BeanUtil.copyProperties(assisOrderPO, assisOrderVO, Arrays.asList("creater","approver","manifest"));
+			BeanUtil.copyProperties(assisOrderPO, assisOrderVO, Arrays.asList("village","supervisor","creater","approver","fetchTime"));
 			
+			BeanUtil.copyProperties(assisOrderPO.getVillage(), assisOrderVO.getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
+			
+			assisOrderVO.getSupervisor().setBaseInfo(assisOrderPO.getSupervisor());
 			assisOrderVO.getCreater().setBaseInfo(assisOrderPO.getCreater());
 			assisOrderVO.getApprover().setBaseInfo(assisOrderPO.getApprover());
+			
+//			SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			
+			Timestamp now = assisOrderPO.getFetchTime();
+			if(now != null){
+				assisOrderVO.setFetchTime(now.toString());
+			}
+//			String str = df.format(now);
 			
 			assisOrderVOs.add(assisOrderVO);
 		}
@@ -86,15 +102,28 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		
 		AssisOrderPO assisOrderPO = new AssisOrderPO(no);
 		
+		VillagePO villagePO = villageDao.get(assisOrderVO.getVillage().getVillageId());
+		if(assisOrderVO.getSupervisor()!= null){
+			UserPO supervisorPO = userDao.queryUserByUserId(assisOrderVO.getSupervisor().getUserId());
+			assisOrderPO.setSupervisor(supervisorPO);
+		}
+		
 		UserPO createrPO = userDao.queryUserByUserId(creater);
 		UserPO approverPO = userDao.queryUserByUserId(approver);
 		
-		BeanUtil.copyProperties(assisOrderVO, assisOrderPO, Arrays.asList("creater","approver","manifest"));
+		BeanUtil.copyProperties(assisOrderVO, assisOrderPO, Arrays.asList("village","supervisor","creater","approver","fetchTime"));
 		assisOrderPO.setOrderId(assisOrderVO.getOrderId());
+		assisOrderPO.setVillage(villagePO);
+		assisOrderPO.setHouseNumber(assisOrderVO.getHouseNumber());
+		
 		assisOrderPO.setCreater(createrPO);
 		assisOrderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		assisOrderPO.setApprover(approverPO);
 		assisOrderPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+
+		Date date = DateUtil.parseDate(assisOrderVO.getFetchTime(), "yyyy-MM-dd");
+		Timestamp end = DateUtil.getDateToTimestamp(date);
+		assisOrderPO.setFetchTime(end);
 		assisOrderPO.setCompany(company);
 		assisOrderPO.setStatus(AssisOrderPO.STATUS_ENABLE_INT);
 		assisOrderDao.save(assisOrderPO);
@@ -102,12 +131,11 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		AssisOrderItemPO assisOrderItemPO;
 		
 		for(AssisOrderItemVO assisOrderItemVO: assisOrderItemVOs){
-			assisOrderItemPO = new AssisOrderItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+			
+			assisOrderItemPO = new AssisOrderItemPO(new GoodsPO());
 			
 			BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,Arrays.asList("goods","color","format"));
 			BeanUtil.copyProperties(assisOrderItemVO.getGoods(), assisOrderItemPO.getGoods(),Arrays.asList("assisType"));
-			BeanUtil.copyProperties(assisOrderItemVO.getColor(), assisOrderItemPO.getColor());
-			BeanUtil.copyProperties(assisOrderItemVO.getFormat(), assisOrderItemPO.getFormat());
 			
 			assisOrderItemPO.setAoid(assisOrderPO.getAoid());
 			
@@ -124,6 +152,10 @@ public class AssisOrderServiceImpl implements AssisOrderService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		AssisOrderPO assisOrderPO = assisOrderDao.get(assisOrderVO.getAoid());
+		
+		if(assisOrderPO == null){
+			throw new FLException(260023,"辅料单不存在");
+		}
 		
 		assisOrderPO.setStatus(AssisOrderPO.STATUS_REJECT_INT);
 		assisOrderPO.setApprover(userPO);

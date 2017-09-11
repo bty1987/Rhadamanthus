@@ -189,7 +189,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		
 		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
 		
-		messageService.sendMessage(messageVO);
+		messageService.sendMessage(messageVO,company);
 		
 		return 0;
 	}

@@ -122,6 +122,14 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="checkDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String checkDecorationPayment() throws FLException{
+		
+		decorationPaymentService.checkDecorationPayment(decorationPayment.getAutoId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="addDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addDecorationPayment() throws FLException{
 		

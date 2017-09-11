@@ -81,14 +81,6 @@ public class QuotationVersionAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="copyQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String copyQuotationVersion() throws FLException{
-		
-		quotationVersionService.copyQuotationVersion(quotationVersion, versionId);
-	    
-		return SUCCESS;
-	}
-
 	public List<QuotationVersionVO> getQuotationVersions() {
 		return quotationVersions;
 	}

@@ -36,19 +36,21 @@ public class ZaterialDesignerRankDaoImpl extends DaoImpl<ZaterialDesignerRankPO>
 	}
 
 	@Override
-	public ZaterialDesignerRankPO queryZaterialDesignerRankByDesignerIdInit(String designerId){
+	public ZaterialDesignerRankPO queryZaterialDesignerRankByDesignerIdInit(String designerId,int company){
 		return (ZaterialDesignerRankPO) session().createCriteria(ZaterialDesignerRankPO.class)
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
+				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_STATUS_STR, ZaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZaterialDesignerRankPO> queryZaterialDesignerRankForTop(int top){
+	public List<ZaterialDesignerRankPO> queryZaterialDesignerRankForTop(int top,int company){
 		
 		Criteria criteria = session().createCriteria(ZaterialDesignerRankPO.class)
 				.add(Restrictions.ne(ZaterialDesignerRankPO.COLUMN_DESIGNERID_STR, ""))
+				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerRankPO.COLUMN_STATUS_STR, ZaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(ZaterialDesignerRankPO.COLUMN_RANK_STR));
 		
@@ -60,12 +62,12 @@ public class ZaterialDesignerRankDaoImpl extends DaoImpl<ZaterialDesignerRankPO>
 	}
 
 	@Override
-	public List<?> queryZaterialDesignerRankForPlaceByDesignerId(String designerId) {
+	public List<?> queryZaterialDesignerRankForPlaceByDesignerId(String designerId,int company) {
 		
 		int status = ZaterialDesignerRankPO.STATUS_TYPE_INIT_INT;
 		
-		String sql = "select b.rank, (select count(1)+1 from platform.zaterialdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank) place from platform.zaterialdesignerrank b where b.status =:statusC and b.designerId =:designerId";
+		String sql = "select b.rank, (select count(1)+1 from platform.zaterialdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank and a.company =:companyA and b.company =:companyB) place from platform.zaterialdesignerrank b where b.status =:statusC and b.designerId =:designerId and b.company =:companyC";
 		
-		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setString("designerId", designerId).list();
+		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setInteger("companyA", company).setInteger("companyB", company).setInteger("companyC", company).setString("designerId", designerId).list();
 	}
 }

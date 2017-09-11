@@ -70,6 +70,8 @@ public class SalesPO implements Serializable {
 	
 	public static final String COLUMN_NO_STR = "no";
 	
+	public static final String COLUMN_BRAND_STR = "brand";
+	
 	public static final String COLUMN_COMPANY_STR = "company";
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
@@ -86,9 +88,15 @@ public class SalesPO implements Serializable {
 	
 	public static final String COLUMN_SID_STR ="sid";
 	
-	public static final String COLIMN_DEPT_STR ="dept.deptName";
+	public static final String COLUMN_DEPT_STR ="dept.deptName";
 	
-	public static final String COLIMN_FULLPAYTIME_STR = "fullpayTime";
+	public static final String COLUMN_FULLPAYTIME_STR = "fullpayTime";
+	
+	public static final String COLUMN_FULLPAYSTATUS_STR = "fullpayStatus";
+	
+	public static final String COLUMN_BALANCESTATUS_STR = "balanceStatus";
+	
+	public static final String COLUMN_STATUS_STR = "status";
 	
 	private long sid;
 	
@@ -103,6 +111,8 @@ public class SalesPO implements Serializable {
 	private CustomerPO customer;
 	
 	private int company;
+	
+	private int dompany;
 	
 	private UserPO salesman;
 	
@@ -231,6 +241,15 @@ public class SalesPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name="dompany")
+	public int getDompany() {
+		return dompany;
+	}
+
+	public void setDompany(int dompany) {
+		this.dompany = dompany;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -67,6 +67,8 @@ $(function(){
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function(){
+                queryQuotationBigCategory(v.qtid);
+                queryQuotationSmallCategory(v.qtid);
                 edit(v);
             });
 
@@ -181,19 +183,63 @@ $(function(){
     com.post(api.quotation.queryQuotationType, {},function(a) {
         quotationItem.data.quotationTypeData = a.quotationTypes;
         $("#quotationType").bindData(quotationItem.data.quotationTypeData, "id", "name");
+        $("#quotationType").prepend("<option value='0'>请选择</option>");
     });
     com.post(api.quotation.queryQuotationClassification, {}, function(a) {
         quotationItem.data.quotationClassificationData = a.quotationClassifications;
         $("#quotationClassification").bindData(quotationItem.data.quotationClassificationData, "id", "name");
     });
-    com.post(api.quotation.queryQuotationBigCategory, {}, function(a) {
+
+    $("#quotationType").change(function() {
+        var quotationType = $("#quotationType").val();
+        if(quotationType!=2){
+            $('#unitPrice').removeAttr('readonly').val('');
+        }
+        if(quotationType == 0 || quotationType == '0'){
+            openModal();
+            return;
+        }else {
+            queryQuotationBigCategory(quotationType);
+            queryQuotationSmallCategory(quotationType);
+            if(quotationType == 2){
+                $('#unitPrice').attr('readonly','readonly').val(0);
+            }
+        }
+
+    });
+    $('#quotationItemModal').on('hide.bs.modal', function () {
+        openModal();
+    });
+    function openModal(){
+        $("#quotationBigCategory").html('');
+        $("#quotationSmallCategory").html('');
+        $("#quotationBigCategory").prepend("<option value='0'>请选择类型</option>");
+        $("#quotationSmallCategory").prepend("<option value='0'>请选择类型</option>");
+        $('#unitPrice').removeAttr('readonly').val('');
+    };
+
+    function queryQuotationBigCategory(quotationType){
+        com.post(api.quotation.queryQuotationBigCategory, {"quotationBigCategory.qtid":quotationType}, function(a) {
+            quotationItem.data.quotationBigCategoryData = a.quotationBigCategorys;
+            $("#quotationBigCategory").bindData(quotationItem.data.quotationBigCategoryData, "id", "name");
+        });
+    };
+
+    function queryQuotationSmallCategory(quotationType){
+        com.post(api.quotation.queryQuotationSmallCategory, {"quotationSmallCategory.qtid":quotationType}, function(a) {
+            quotationItem.data.quotationSmallCategoryData = a.quotationSmallCategorys;
+            $("#quotationSmallCategory").bindData(quotationItem.data.quotationSmallCategoryData, "id", "name")
+        });
+    };
+
+    /*com.post(api.quotation.queryQuotationBigCategory, {}, function(a) {
         quotationItem.data.quotationBigCategoryData = a.quotationBigCategorys;
         $("#quotationBigCategory").bindData(quotationItem.data.quotationBigCategoryData, "id", "name");
     });
     com.post(api.quotation.queryQuotationSmallCategory, {}, function(a) {
         quotationItem.data.quotationSmallCategoryData = a.quotationSmallCategorys;
         $("#quotationSmallCategory").bindData(quotationItem.data.quotationSmallCategoryData, "id", "name")
-    });
+    });*/
     com.post(api.common.queryMeasurementUnit, {}, function(a) {
         quotationItem.data.measurementUnitData = a.measurementUnits;
         $("#measurementUnit").bindData(quotationItem.data.measurementUnitData, "id", "name")
@@ -218,7 +264,7 @@ $(function(){
         
         quotationItem.modal.modal("show");
     });
-    
+    //导出功能
     $('a[name="import"]', '#pagenation').click(function () {
     	
     	if($('span[name="totalRecords"]').text() == 0){
@@ -275,6 +321,13 @@ $(function(){
 
     //保存
     function saveData() {
+        var _quotationType = $('#quotationType').val() == 0 || $('#quotationType').val() == '0';
+        var _quotationBigCategory = $('#quotationBigCategory').val() == 0 || $('#quotationBigCategory').val() == '0';
+        var _quotationSmallCategory = $('#quotationSmallCategory').val() == 0 || $('#quotationSmallCategory').val() == '0';
+        if(_quotationType || _quotationBigCategory || _quotationSmallCategory){
+            bootbox.alert("请选择类型以及大类小类");
+            return;
+        }
         if (!com.validate() && !quotationItem.repeatFlg) {
             var a, c = {
                 "quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),

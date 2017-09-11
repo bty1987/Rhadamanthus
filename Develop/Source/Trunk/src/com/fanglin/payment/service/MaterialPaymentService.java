@@ -40,6 +40,8 @@ public interface MaterialPaymentService {
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
 	
+	public void checkMaterialPayment(long mpId) throws FLException;
+	
 	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
 	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;

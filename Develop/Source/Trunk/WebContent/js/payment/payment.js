@@ -258,9 +258,14 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
             
 			$btnPrint.click(function(){
-				com.popup("专用收款收据__订单编号:" + v.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + v.paymentId + "&time=" + parent.params.loginTime,function () {
-					parent.layer.getFrameIndex(window.name);
-				},null,true)
+				if(v.collectUser.userName!=params.userInfo.user.userName){
+					com.showAlert(com.warning, "收款人不匹配，不能打印");
+					return false;
+				}else{
+					com.popup("专用收款收据__订单编号:" + v.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + v.paymentId + "&time=" + parent.params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					},null,true)
+				}
 			});
             
             return $liLine;
@@ -401,7 +406,7 @@ jQuery(function($) {
 	
 	function convertCach(){
 		
-		if(com.validate()){
+		if(com.validate("paymentModal")){
 			return;
 		}
 		
@@ -442,7 +447,7 @@ jQuery(function($) {
 	function saveData(){
 		$('.payWayError').hide();
 		
-		if(com.validate()){
+		if(com.validate("paymentModal")){
 			return;
 		}
 		

@@ -29,7 +29,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnCopy = $('<a></a>').addClass('btn btn-minier btn-success').html('复制报价');
+
 
             var propertyArr = [
                 ["编号:", v.versionId, "grey"],
@@ -54,10 +54,6 @@ $(function(){
 
             $btnEdit.click(function(){
                 editLine(v);
-            });
-
-            $btnCopy.click(function(){
-                copyVersion(v.versionId);
             });
 
             return $liLine;
@@ -95,7 +91,7 @@ $(function(){
             com.clearValidator();
             com.clearValidator("#versionId", !0)
         }),
-        saveCopyVersionBtn : $("#saveCopyVersionBtn").on("click", saveCopyVersionData),
+
         cancelCopyVersionBtn : $("#cancelCopyVersionBtn"),
         modalCopyVersion : $("#copyVersionModal").on("show.bs.modal", function(a) {
             com.clearValidator();
@@ -181,10 +177,7 @@ $(function(){
         quotationVersion.modal.modal("show");
     }
 
-    function copyVersion(a){
-        $("#copySourceVersionId").val(a);
-        quotationVersion.modalCopyVersion.modal("show")
-    }
+
 
     function saveData() {
         com.clearValidator();
@@ -205,25 +198,7 @@ $(function(){
         }
     }
 
-    function saveCopyVersionData() {
-        com.clearValidator();
-        com.clearValidator("#copyVersionId", !0);
-        if (!com.validate("copyVersionModal") && !quotationVersion.repeatFlg) {
-        	
-        	var options = {
-    			"versionId": $("#copySourceVersionId").val(),
-                "quotationVersion.versionId": quotationVersion.quotationVersionItems.copyVersionId.val(),
-                "quotationVersion.versionName": quotationVersion.quotationVersionItems.copyVersionName.val(),
-                "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.copyTrafficRate.val(),
-                "quotationVersion.manageRate": quotationVersion.quotationVersionItems.copyManageRate.val(),
-                "quotationVersion.defaultFlag": 0,
-                "quotationVersion.versionDes": quotationVersion.quotationVersionItems.copyVersionDes.val()
-        	}
-        	
-            com.post(api.quotation.copyQuotationVersion, options, successCallback);
-            quotationVersion.modalCopyVersion.modal("hide");
-        }
-    }
+
 
     function successCallback() {
         com.showAlert(com.info, "操作成功");

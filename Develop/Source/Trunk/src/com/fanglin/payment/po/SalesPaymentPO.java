@@ -15,7 +15,7 @@ import com.fanglin.inventory.po.SalesPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "salespayment", catalog = "inventory")
+@Table(name = "salespayment", catalog = "payment")
 public class SalesPaymentPO  implements Serializable{
 
 	private static final long serialVersionUID = -6488725711320678781L;

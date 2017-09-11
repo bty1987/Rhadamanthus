@@ -23,10 +23,10 @@ public interface AuditScaleService {
 
 	public int makeAuditScale(List<AuditScaleVO> auditScales, String userId) throws FLException;
 	
-	public int addAudtiScale(AuditScaleVO auditScale, String userId)throws FLException;
+	public int addAuditScale(AuditScaleVO auditScale, String userId)throws FLException;
 	
-	public int updateAudtiScaleForStatus(AuditScaleVO auditScale) throws FLException;
+	public int updateAuditScaleForStatus(AuditScaleVO auditScale) throws FLException;
 	
-	public int deleteAudtiScale(AuditScaleVO auditScale) throws FLException;
+	public int deleteAuditScale(AuditScaleVO auditScale) throws FLException;
 	
 }

@@ -119,12 +119,8 @@ jQuery(function($) {
 		};
 
 		com.post(api.approval.approveApproval, options, function(res) {
-
 			searcher.doSearch();
-		},function(e){
-
-			searcher.doSearch();
-		});
+		},null,false);
 	}
 
 	function refuseApproval(aId) {
@@ -134,12 +130,8 @@ jQuery(function($) {
 		}
 
 		com.post(api.approval.refuseApproval, options, function(res) {
-
 			searcher.doSearch();
-		},function(e){
-
-			searcher.doSearch();
-		});
+		},null,false);
 	}
 
 	function queryMaterialSubOrder(aId,$this) {
@@ -163,7 +155,7 @@ jQuery(function($) {
 					.append('<hr/>');
 			})
 			$('#msoiModel').modal("show");
-		}, null, false)
+		}, null, false);
 	}
 
 });

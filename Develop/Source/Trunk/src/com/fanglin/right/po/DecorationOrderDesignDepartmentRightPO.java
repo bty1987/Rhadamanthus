@@ -31,10 +31,11 @@ public class DecorationOrderDesignDepartmentRightPO implements java.io.Serializa
 		super();
 	}
 
-	public DecorationOrderDesignDepartmentRightPO(int uid, int did) {
+	public DecorationOrderDesignDepartmentRightPO(int uid, int did, int company) {
 		super();
 		this.uid = uid;
 		this.did = did;
+		this.company = company;
 	}
 
 	@Id

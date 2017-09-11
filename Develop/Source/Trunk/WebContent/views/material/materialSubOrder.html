@@ -126,11 +126,8 @@
 					
 					<div class="form-group">
 						<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
-						<div class="col-sm-9">
-							<select id="approveManSel" class="chosen-select col-xs-10 col-sm-6 v_required" data-placeholder="请输入审批人" data-toggle="popover" data-trigger='manual' style="display: none;">
-								<option value="">&nbsp;</option>
-							</select> 
-							<span class='star'></span>
+						<div class="col-sm-6" id="approveManSel">
+
 						</div>
 					</div>
 					<div class="space-4"></div>
@@ -146,4 +143,5 @@
 
 <script type="text/javascript">
 	$.getScript('js/material/materialSubOrder.js?version=' + versionCode);
+	$.getScript('js/utils/approvalUtils.js?version=' + versionCode);
 </script>

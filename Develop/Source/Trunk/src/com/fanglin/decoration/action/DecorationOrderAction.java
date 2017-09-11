@@ -100,9 +100,9 @@ public class DecorationOrderAction extends BaseListAction {
 	}
 
 	@Action(value = "queryDecorationOrderByVillageIdAHouseNumber", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationOrderByVillageIdAHouseNumber(){
+	public String queryDecorationOrderByVillageIdAHouseNumber() throws FLException{
 
-		decorationOrder = decorationOrderService.queryDecorationOrderByVillageIdAHouseNumber(decorationOrder);
+		decorationOrder = decorationOrderService.queryDecorationOrderByVillageIdAHouseNumber(decorationOrder, authentication());
 		
 		return SUCCESS;
 	}
@@ -110,7 +110,7 @@ public class DecorationOrderAction extends BaseListAction {
 	@Action(value = "queryDecorationOrderByCustomerId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderByCustomerId() throws FLException{
 
-		decorationOrders = decorationOrderService.queryDecorationOrderByCustomerId(decorationOrder);
+		decorationOrders = decorationOrderService.queryDecorationOrderByCustomerId(decorationOrder, authentication());
 
 		return SUCCESS;
 	}
@@ -144,7 +144,7 @@ public class DecorationOrderAction extends BaseListAction {
 		
 		decorationOrder.setCreateUserId(queryUserId());
 		
-		decorationOrderService.createDecorationOrder(decorationOrder, queryCompany());
+		decorationOrderService.createDecorationOrder(decorationOrder, authentication());
 		
 		return SUCCESS;
 	}
@@ -194,7 +194,7 @@ public class DecorationOrderAction extends BaseListAction {
 	public String terminalDecorationOrder() throws FLException{
 
 		decorationOrder.setDesignerId(queryUserId());
-		decorationOrderService.terminalDecorationOrder(decorationOrder, refundValue, paymentValue, queryUserId());
+		decorationOrderService.terminalDecorationOrder(decorationOrder, refundValue, paymentValue, authentication());
 		
 		return SUCCESS;
 	}

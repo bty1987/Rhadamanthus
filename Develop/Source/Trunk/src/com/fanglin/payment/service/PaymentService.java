@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentService {
 
-	public void pagePaymentForHistory(Paging paging, List<Filter> filters);
+	public void pagePaymentForHistory(Paging paging, List<Filter> filters, int company);
 	
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 	

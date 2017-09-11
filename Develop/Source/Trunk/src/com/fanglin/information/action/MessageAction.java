@@ -1,11 +1,3 @@
-/**
- * Title: MessageAction
- * Description:
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
- * @author bty1987
- */
-
 package com.fanglin.information.action;
 
 import java.util.List;
@@ -46,7 +38,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="pageMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMessage() throws FLException{
 		
-		messageService.pageMessage(getPaging(), getFilters(), queryUserId());
+		messageService.pageMessage(getPaging(), getFilters(), queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -54,7 +46,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="queryMessageForUnRead", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMessageForUnRead() throws FLException{
 		
-		messageList = messageService.queryMessageForUnRead(queryUserId());
+		messageList = messageService.queryMessageForUnRead(queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -62,7 +54,7 @@ public class MessageAction extends BaseListAction {
 	@Action(value="countMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String countMessage() throws FLException{
 		
-		messageCount = messageService.countMessage(queryUserId());
+		messageCount = messageService.countMessage(queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -72,7 +64,7 @@ public class MessageAction extends BaseListAction {
 		
 		message.setSender(new UserVO(queryUserId()));
 		
-		messageService.sendMessage(message);
+		messageService.sendMessage(message,queryCompany());
 		
 		return SUCCESS;
 	}

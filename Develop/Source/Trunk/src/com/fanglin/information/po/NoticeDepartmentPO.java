@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "noticedepartment", catalog = "platform")
+@Table(name = "noticedepartment", catalog = "information")
 public class NoticeDepartmentPO implements Serializable{
 
 	private static final long serialVersionUID = 1145569082063384689L;

@@ -1,9 +1,7 @@
 $(function(){
-    var cle = {}
-    cle.tree=$("tree3")
-    var mediaid=null;
-    var fileName=null;
-    var fileSize=null;
+
+
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -21,6 +19,8 @@ $(function(){
                     var $addDD=$('<a></a>').addClass('btn btn-minier btn-danger').html('添加到钉钉');
                     var $updateDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
                     var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-pink').html('从钉钉删除');
+                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-success').html('工作经历');
+
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
                         ["用户名:", v.loginId, "grey"],
@@ -44,7 +44,7 @@ $(function(){
 
                     //添加点击事件
                     $addDD.unbind().bind('click',function(){
-                        //com.cleanItems(cle)
+
                         $('#tree3').html("");
                         $('#ddModal').modal('show');
                         $("#tree3").removeData("tree");
@@ -55,11 +55,6 @@ $(function(){
                             deptList = res.departments;
                         }, null, false);
                         if(deptList == null ){
-                            console.log("刷新再试")
-                            return;
-                        }
-                        if(!deptList.length) {
-                           console.log("刷新再试")
                             return;
                         }
                         var deptObj = {
@@ -247,7 +242,49 @@ $(function(){
                         });
                     });
 
-                    $divBtnWrap.append($btnEdit).append($addDD).append($updateDD).append($deleteDD).appendTo($h3);
+                    $userexception.unbind().bind('click',function(){
+
+                        $('#userExpModal').modal('show');
+                        $('#userException').html("");
+
+                        var $divgroup=$('<div></div>').addClass('form-group');
+                        var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                       
+                        var  userExperiences=null;
+
+                        com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid":v.uid},function(res) {
+                            userExperiences = res.userExperiences;
+                        },null,false);
+
+                        if(userExperiences && userExperiences.length){
+
+                            $.each(userExperiences,function(ind,val){
+                                var $liLi = $('<li></li>').addClass('item-blue clearfix');
+                                var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                                var $divw = $('<div></div>').addClass('pull-right action-buttons');
+                                var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
+
+                                var ecperienceArr = [
+                                    ["类型:", val.type, "grey"],
+                                    ["备注:", val.comment, "grey"],
+                                    ["调动时间:",val.createTime,"grey"]
+                                ];
+                                $.each(ecperienceArr, function (index,value) {
+                                    var $liPro = $('<li></li>');
+                                    $('<strong></strong>').html(value[0]).appendTo($liPro);
+                                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPro);
+                                    $liPro.appendTo($ulPro);
+                                });
+
+                                $divw.appendTo($h2);
+                                $liLi.append($h2).append($ulPro).appendTo($uli)
+                            })
+                        }
+
+                            $uli.append($divgroup).appendTo($('#userException'));
+                    });
+
+                    $divBtnWrap.append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -311,8 +348,6 @@ $(function(){
             var dateObj = eval("("+data+")");
         }
     });
-
-
 
 });
 

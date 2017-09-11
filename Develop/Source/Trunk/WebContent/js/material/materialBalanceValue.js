@@ -23,15 +23,15 @@ jQuery(function($) {
 			}, price: {
 				type: "v_price",
 				regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-				errorMsg: "价格内容输入错误错误."
+				errorMsg: "价格内容输入错误."
 			}, discount: {
 				type: "v_discount",
 				regex: /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/g,
-				errorMsg: "折扣内容输入错误错误."
+				errorMsg: "折扣内容输入错误."
 			}, point: {
 				type: "v_point",
 				regex: /^(1\.0{1,2}|1|0\.[0-9]{1,3})$/g,
-				errorMsg: "点位内容输入错误错误."
+				errorMsg: "点位内容输入错误."
 			}
 		},
 	};

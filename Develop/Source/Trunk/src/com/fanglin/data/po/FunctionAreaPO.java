@@ -23,7 +23,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "functionArea", catalog = "platform")
+@Table(name = "functionArea", catalog = "quotation")
 public class FunctionAreaPO implements Serializable {
 
 	public static final long serialVersionUID = 13444646L;

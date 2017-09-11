@@ -66,7 +66,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "signDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String signDecorationContract() throws FLException{
 		
-		decorationContractService.signDecorationContract(decorationContract, queryUserId());
+		decorationContractService.signDecorationContract(decorationContract, authentication());
 		
 		return SUCCESS;
 	}

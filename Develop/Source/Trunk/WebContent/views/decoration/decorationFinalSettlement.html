@@ -1,0 +1,120 @@
+<div id="decorationFinalSettlementPageContent" class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="widget-box no-border">
+
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+                                    <ul class="wizard-steps">
+
+                                        <li data-target="#step1" class="complete">
+                                            <span class="step">1</span>
+                                            <span class="title">报价信息</span></li>
+
+                                        <li data-target="#step2" class="complete">
+                                            <span class="step">2</span>
+                                            <span class="title">主材信息</span></li>
+
+                                        <li data-target="#step3" class="complete">
+                                            <span class="step">3</span>
+                                            <span class="title">决算信息</span></li>
+
+
+                                    </ul>
+                                </div>
+
+                                <hr/>
+                                <div class="step-content row-fluid position-relative" id="step-container">
+
+                                    <div class="step-pane active" id="step1">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label no-padding-right "
+                                                           for="showWay">显示方式：</label>
+                                                    <div class="col-md-6">
+                                                        <select class="col-md-6" id="showWay">
+                                                            <option value="0">功能区分组</option>
+                                                            <option value="1">工种分组</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 space-6"></div>
+                                            <div class="col-md-12" id="quotationItemListDiv">
+                                                <div class="flloading" style="height: 100px"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-pane active" id="step2">
+                                        <div class="row">
+                                            <div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+                                                <div class="widget-box transparent">
+                                                    <div class="widget-header">
+                                                        <h5>
+                                                            <strong>详细款项</strong>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="widget-body">
+                                                        <div class="widget-body-inner" id="materialPayment"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+                                                <div class="widget-box transparent">
+                                                    <div class="widget-header">
+                                                        <h5>
+                                                            <strong>品牌汇总</strong>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-md-12 space-6"></div>
+                                                    <div class="widget-body">
+                                                        <div class="widget-body-inner" id="materialPaymentBrand"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-pane active" id="step3">
+
+                                    </div>
+
+                                </div>
+
+                                <hr/>
+                                <div class="row-fluid wizard-actions">
+
+                                    <button id="btnBack" class="btn btn-info" type="button">
+                                        <i class="icon-mail-forward "></i>返回
+                                    </button>
+                                    <button class="btn btn-prev">
+                                        <i class="icon-arrow-left"></i> 上一步
+                                    </button>
+
+                                    <button class="btn btn-success btn-next" data-last="完成">
+                                        下一步 <i class="icon-arrow-right icon-on-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.getScript('js/utils/decorationUtils.js?version=' + versionCode);
+    $.getScript('js/utils/quotationUtils.js?version=' + versionCode);
+    $.getScript('js/utils/materialUtils.js?version=' + versionCode);
+    $.getScript('js/decoration/decorationFinalSettlement.js?version=' + versionCode);
+</script>

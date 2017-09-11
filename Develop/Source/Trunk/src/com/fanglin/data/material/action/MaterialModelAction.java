@@ -66,9 +66,9 @@ public class MaterialModelAction extends BaseExportAction{
 	}
 	
 	@Action(value="queryMaterialModelByNo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialModelByNo(){
+	public String queryMaterialModelByNo() throws FLException{
 		
-		materialModelService.queryMaterialModelByNo(materialModel);
+		materialModelService.queryMaterialModelByNo(materialModel,queryCompany());
 		
 		return SUCCESS;
 	}

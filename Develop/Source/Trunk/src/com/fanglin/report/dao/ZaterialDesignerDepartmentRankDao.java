@@ -20,8 +20,8 @@ public interface ZaterialDesignerDepartmentRankDao extends Dao<ZaterialDesignerD
 	
 	public List<ZaterialDesignerDepartmentRankPO> queryZaterialDesignerDepartmentRank();
 	
-	public ZaterialDesignerDepartmentRankPO queryZaterialDesignerDepartmentRankByDeptIdInit(String deptId);
+	public ZaterialDesignerDepartmentRankPO queryZaterialDesignerDepartmentRankByDeptIdInit(String deptId,int company);
 	
-	public List<ZaterialDesignerDepartmentRankPO> queryZaterialDesignerDepartmentRankForTop(int top);
+	public List<ZaterialDesignerDepartmentRankPO> queryZaterialDesignerDepartmentRankForTop(int top,int company);
 
 }

@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: UserAction.java
- * @Package		：com.fanglin.action 
+ * @Package		: com.fanglin.action 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014

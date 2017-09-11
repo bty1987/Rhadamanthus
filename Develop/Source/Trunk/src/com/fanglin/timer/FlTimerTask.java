@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 这是一个打铃的程序，必须隔一段时间打一次
+ * 这是一个打铃的程序,必须隔一段时间打一次
  * @author sam
  */
 public class FlTimerTask extends TimerTask {

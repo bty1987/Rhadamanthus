@@ -40,9 +40,9 @@ public class PaymentAction extends BaseListAction {
 	private List<Integer> paymentIds;
 	
 	@Action(value = "pagePaymentForHistory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pagePaymentForHistory(){
+	public String pagePaymentForHistory() throws FLException{
 		
-		paymentService.pagePaymentForHistory(getPaging(), getFilters());
+		paymentService.pagePaymentForHistory(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -75,14 +75,6 @@ public class PaymentAction extends BaseListAction {
 	public String confirmPayment() throws FLException{
 		
 		paymentService.confirmPayment(paymentIds, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updatePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePayment() throws FLException{
-		
-		paymentService.updatePayment(payment);
 		
 		return SUCCESS;
 	}

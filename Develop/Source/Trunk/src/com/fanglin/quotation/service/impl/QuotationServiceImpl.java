@@ -28,9 +28,12 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -55,6 +58,12 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+	
+	@Autowired
+	private ExtensionDao extensionDao;
+	
+	@Autowired
+	private ExtensionItemDao extensionItemDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -373,7 +382,7 @@ public class QuotationServiceImpl implements QuotationService {
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		
 		if(defaultQuotationPO != null){
-			deleteQuotationByQId(defaultQuotationPO.getQid());
+			deleteQuotationByQId(defaultQuotationPO.getQid(),orderId);
 		}
 		
 		quotationPO.setStatus(1); // 设置复制报价为默认报价
@@ -458,7 +467,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200014, "默认报价不能删除");
 		}
 		
-		deleteQuotationByQId(qId);
+		deleteQuotationByQId(qId,quotationPO.getDecorationOrder().getOrderId());
 		
 		return 0;
 	}
@@ -492,10 +501,24 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private int deleteQuotationByQId(long qId){
+	private int deleteQuotationByQId(long qId,String orderId)throws FLException{
 		
 		List<QuotationFunctionAreaPO> quotationFunctionAreas = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(qId);
-		
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
+		if(extensionPOs != null && extensionPOs.size()>0){
+			List<Long> extensionIds =new ArrayList<Long>();
+			for (ExtensionPO extensionPO:extensionPOs) {
+				extensionIds.add(extensionPO.getEid());
+			}
+			List<Integer> distincts = extensionItemDao.queryQuotationFunctionAreaIdByEids(extensionIds);
+			for(QuotationFunctionAreaPO quotationFunctionAreaPO:quotationFunctionAreas){
+				for(int distinct : distincts){
+					if(distinct == quotationFunctionAreaPO.getQfaId()){
+						throw new FLException(200028, "功能区存在拓展项");
+					}
+				}
+			}
+		}
 		for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreas){
 			
 			long quotatoinFunctionAreaId = quotationFunctionAreaPO.getQfaId();
@@ -510,20 +533,14 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	public static void convertQuotationVOToPOForAdvance(QuotationVO quotationVO, QuotationPO quotationPO){
-		
-		if(quotationPO.getDecorationOrder().getType() == DecorationOrderPO.TYPE_PART_INT ||quotationPO.getDecorationOrder().getType() == DecorationOrderPO.TYPE_HOLONOMY_INT){
-			quotationPO.setDiscount(quotationVO.getDiscount());
-			quotationPO.setTotalPrice(quotationVO.getTotalPrice());
-			quotationPO.setLatexCut(quotationVO.getLatexCut());
-			quotationPO.setManagePrice(quotationVO.getManagePrice());
-			quotationPO.setManageRate(quotationVO.getManageRate());
-			quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
-			quotationPO.setUndisPrice(quotationVO.getUndisPrice());
-			quotationPO.setTrafficRate(quotationVO.getTrafficRate());
-		}/*else if(quotationPO.getType() == QuotationPO.TYPE_WHOLE_INT){
-			quotationPO.setQdiff(quotationVO.getQdiff());
-			quotationPO.setMdiff(quotationVO.getMdiff());
-		}*/
+		quotationPO.setDiscount(quotationVO.getDiscount());
+		quotationPO.setTotalPrice(quotationVO.getTotalPrice());
+		quotationPO.setLatexCut(quotationVO.getLatexCut());
+		quotationPO.setManagePrice(quotationVO.getManagePrice());
+		quotationPO.setManageRate(quotationVO.getManageRate());
+		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
+		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
+		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 	}
 	
 }

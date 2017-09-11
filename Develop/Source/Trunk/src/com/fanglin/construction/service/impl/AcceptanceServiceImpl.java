@@ -11,17 +11,13 @@
 
 package com.fanglin.construction.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.AcceptanceDao;
-import com.fanglin.construction.dao.ConstructerDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.AcceptancePO;
-import com.fanglin.construction.po.ConstructerPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
@@ -46,9 +42,6 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	
 	@Autowired
 	private ConstructionDao constructionDao;
-	
-	@Autowired
-	private ConstructerDao constructerDao;
 	
 	@Override
 	public AcceptanceVO queryAcceptanceById(int actId){
@@ -85,37 +78,6 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		if(constructionPO != null){
 			if(constructionPO.getSupervisorQualityId() != null && !constructionPO.getSupervisorQualityId().equals("")){
 				acceptanceVO.setSupervisName(userDao.queryUserByUserId(constructionPO.getSupervisorQualityId()).getCurrentName());
-			}
-			if(constructionPO.getWaterwayCircuitPowerQualityId() != null && !constructionPO.getWaterwayCircuitPowerQualityId().equals("")){
-				acceptanceVO.setWaterwayQualityName(userDao.queryUserByUserId(constructionPO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-				acceptanceVO.setCircuitQualityName(userDao.queryUserByUserId(constructionPO.getWaterwayCircuitPowerQualityId()).getCurrentName());
-			}
-			if(constructionPO.getBricklayQualityId() != null && !constructionPO.getBricklayQualityId().equals("")){
-				acceptanceVO.setBricklayQualityName(userDao.queryUserByUserId(constructionPO.getBricklayQualityId()).getCurrentName());
-			}
-			if(constructionPO.getCarpentQualityId() != null && !constructionPO.getCarpentQualityId().equals("")){
-				acceptanceVO.setCarpentQualityName(userDao.queryUserByUserId(constructionPO.getCarpentQualityId()).getCurrentName());
-			}
-			if(constructionPO.getOilQualityId() != null && !constructionPO.getOilQualityId().equals("")){
-				acceptanceVO.setOilQualityName(userDao.queryUserByUserId(constructionPO.getOilQualityId()).getCurrentName());
-			}
-		}
-		
-		List<ConstructerPO> constructerPOs = constructerDao.queryConstructerByOrderId(orderId, null);
-		
-		if(constructerPOs != null && constructerPOs.size() > 0){
-			 for (ConstructerPO constructerPO : constructerPOs) {
-				if(constructerPO.getUser().getDuty().contains("水暖工")){
-					acceptanceVO.setWaterwayWorkerName(constructerPO.getUser().getUserName());
-				}else if(constructerPO.getUser().getDuty().contains("电工")){
-					acceptanceVO.setCircuitWorkerName(constructerPO.getUser().getUserName());
-				}else if(constructerPO.getUser().getDuty().contains("瓦工")){
-					acceptanceVO.setBricklayWorkerName(constructerPO.getUser().getUserName());
-				}else if(constructerPO.getUser().getDuty().contains("木工")){
-					acceptanceVO.setCarpentWorkerName(constructerPO.getUser().getUserName());
-				}else if(constructerPO.getUser().getDuty().contains("油工")){
-					acceptanceVO.setOilWorkerName(constructerPO.getUser().getUserName());
-				}
 			}
 		}
 		

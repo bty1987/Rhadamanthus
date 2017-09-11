@@ -408,7 +408,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId) throws FLException{
+	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId, Integer company) throws FLException{
 
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
 
@@ -442,7 +442,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			
 				message.setContents(String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecorationOrderPO().getOrderId()));
 				
-				messageService.sendMessage(message);
+				messageService.sendMessage(message, company);
 			}
 		
 		}else{

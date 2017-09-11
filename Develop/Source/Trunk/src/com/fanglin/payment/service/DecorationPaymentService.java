@@ -39,6 +39,8 @@ public interface DecorationPaymentService {
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO);
 	
+	public void checkDecorationPayment(long autoId) throws FLException;
+	
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 	
 	public int makeDecorationPayment(DecorationPaymentVO decorationPaymentVO, String createUserId) throws FLException;

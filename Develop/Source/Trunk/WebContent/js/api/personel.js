@@ -29,9 +29,8 @@ $.extend(api, {personel: {
     updateUser: {url: "updateUser.do", server: "communion"},
   
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
-    resetPasswords: {url: "resetPasswords.do"},
+    resetPassword: {url: "resetPassword.do"},
     
-    resetPassword: {url: "resetPassword.do", server: "communion"},
     changePassword: {url: "changePassword.do", server: "communion"},
     deleteUserByIds: {url: "deleteUserByIds.do", server: "communion"},
 
@@ -40,10 +39,7 @@ $.extend(api, {personel: {
     updateUserContract: {url: "updateUserContract.do", server: "communion"},
     deleteUserContract: {url: "deleteUserContract.do", server: "communion"},
 
-    pageUserExperienceByUserId: {url: "pageUserExperienceByUserId.do"},
-    addUserExperience: {url: "addUserExperience.do", server: "communion"},
-    updateUserExperience: {url: "updateUserExperience.do", server: "communion"},
-    deleteUserExperience: {url: "deleteUserExperience.do", server: "communion"},
+    queryUserExperienceByUid: {url: "queryUserExperienceByUid.do"},
 
     pageUserSalary: {url: "pageUserSalary.do"},
     pageUserSalaryByUserId: {url: "pageUserSalaryByUserId.do"},

@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "materialoutsidepayment", catalog = "platform")
+@Table(name = "materialoutsidepayment", catalog = "payment")
 public class MaterialOutsidePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -341320174803538669L;

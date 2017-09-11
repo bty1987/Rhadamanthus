@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: DateUtil.java
- * @Package		：com.fanglin.utils 
+ * @Package		: com.fanglin.utils 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
@@ -73,9 +73,9 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获得当前系统时间串，格式如“yyyyMMddHHmmss”
+	 * 获得当前系统时间串,格式如"yyyyMMddHHmmss"
 	 * 
-	 * @return “yyyyMMddHHmmss”格式的串
+	 * @return "yyyyMMddHHmmss"格式的串
 	 */
 	public static String current(){
 		return current("yyyyMMddHHmmss");
@@ -108,7 +108,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 将”yyyyMMddHHmmss“格式的时间转换为目标格式的字符串类型时间 Example : String formattedDate =
+	 * 将"yyyyMMddHHmmss"格式的时间转换为目标格式的字符串类型时间 Example : String formattedDate =
 	 * DateUtil.format("20070906112351", "yyyy年MM月dd日 HH时mm分ss秒")
 	 * 
 	 * @param date yyyyMMddHHmmss格式字符串时间.例如20070906112351
@@ -120,24 +120,24 @@ public class DateUtil {
 	}
 
 	/**
-	 * 将”yyyyMMddHHmmss“格式的时间转换为“yyyy年MM月dd日”格式的字符串类型时间 Example : String formattedDate =
+	 * 将"yyyyMMddHHmmss"格式的时间转换为"yyyy年MM月dd日"格式的字符串类型时间 Example : String formattedDate =
 	 * DateUtil.format("20070906112351")
 	 * 
 	 * @param date
 	 *            yyyyMMddHHmmss格式字符串时间.例如20070906112351
-	 * @return 格式为“yyyy年MM月dd日”的结果串
+	 * @return 格式为"yyyy年MM月dd日"的结果串
 	 */
 	public static String formatShort(String date){
 		return formatMedium(date, "yyyy年MM月dd日");
 	}
 
 	/**
-	 * 将”yyyyMMddHHmmss“格式的时间转换为“yyyy-MM-dd”格式的字符串类型时间 Example : String formattedDate =
+	 * 将"yyyyMMddHHmmss"格式的时间转换为"yyyy-MM-dd"格式的字符串类型时间 Example : String formattedDate =
 	 * DateUtil.format("20070906112351")
 	 * 
 	 * @param date
 	 *            yyyyMMddHHmmss格式字符串时间.例如20070906112351
-	 * @return 格式为“yyyy-MM-dd”的结果串
+	 * @return 格式为"yyyy-MM-dd"的结果串
 	 */
 	public static String format(String date){
 		return formatMedium(date, "yyyy-MM-dd");

@@ -97,28 +97,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 	}
 	
 	@Override
-	public List<PurchaseItemVO> queryPurchaseItemBySiid(PurchaseItemVO purchaseItemVO) {
-		
-		List<PurchaseItemPO> purchaseItemPOs = purchaseItemDao.queryPurchaseItemBySiid(purchaseItemVO.getSiid());
-		List<PurchaseItemVO> purchaseItemVOs = new ArrayList<PurchaseItemVO>();
-		
-		for(PurchaseItemPO purchaseItemPO: purchaseItemPOs){
-			
-			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
-			
-			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("assisType"));
-			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
-			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
-			
-			purchaseItemVOs.add(purchaseItemVO);
-			
-		}
-		
-		return purchaseItemVOs;
-	}
-
-	@Override
 	public List<PurchaseItemVO> queryPurchaseItemBySiids(List<Long> siids) {
 		
 		List<PurchaseItemPO> purchaseItemPOs = purchaseItemDao.queryPurchaseItemBySiids(siids);
@@ -183,6 +161,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			FormatPO formatPO = formatDao.get(purchaseItemVOs.getFormat().getFid());
 			
 			purchaseItemPO.setFormat(formatPO);
+			purchaseItemPO.setUnitPrice(purchaseItemVOs.getUnitPrice());
 			purchaseItemPO.setNum(purchaseItemVOs.getNum());
 			purchaseItemPO.setSurplus(purchaseItemVOs.getNum());
 			
@@ -211,6 +190,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 		
+		purchaseItemPO.setUnitPrice(purchaseItemVO.getUnitPrice());
 		purchaseItemPO.setNum(purchaseItemVO.getNum());
 		purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 		purchaseItemDao.update(purchaseItemPO);

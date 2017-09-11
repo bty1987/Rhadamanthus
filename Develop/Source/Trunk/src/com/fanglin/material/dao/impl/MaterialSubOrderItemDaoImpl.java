@@ -55,12 +55,6 @@ public class MaterialSubOrderItemDaoImpl extends DaoImpl<MaterialSubOrderItemPO>
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMpId(long mpId){
-		return session().createCriteria(MaterialSubOrderItemPO.class).add(Restrictions.eq(MaterialSubOrderItemPO.COLUMN_MPID_STR, mpId)).list();
-	}
-
-	@Override
 	public MaterialSubOrderItemPO queryMaterialSubOrderItemByMsoiId(long msoiId) {
 		return (MaterialSubOrderItemPO) session().createCriteria(MaterialSubOrderItemPO.class).add(Restrictions.eq(MaterialSubOrderItemPO.COLUMN_MSOIID_STR, msoiId)).uniqueResult();
 	}
@@ -85,7 +79,7 @@ public class MaterialSubOrderItemDaoImpl extends DaoImpl<MaterialSubOrderItemPO>
 
 	@Override
 	public void deleteMaterialSubOrderItemByMsoId(long msoId){
-		String sql= "delete from platform.materialsuborderitem where msoId = ?";
+		String sql= "delete from material.materialsuborderitem where msoId = ?";
 		
 		session().createSQLQuery(sql).setLong(0, msoId).executeUpdate();
 	}

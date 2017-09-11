@@ -19,7 +19,7 @@ import com.fanglin.utils.Paging;
 
 public interface QuotationSmallCategoryService {
 	
-	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory();
+	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory(QuotationSmallCategoryVO quotationSmallCategory);
 	
 	public void pageQuotationSmallCategory(Paging paging, List<Filter> filters);
 	

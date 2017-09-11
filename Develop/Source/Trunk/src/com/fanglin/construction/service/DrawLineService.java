@@ -31,6 +31,6 @@ public interface DrawLineService {
 
 	public int resetDrawLine(DrawLineVO drawLine, Integer company) throws FLException;
 
-	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId) throws FLException;
+	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId, Integer company) throws FLException;
 
 }

@@ -59,10 +59,10 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 	public void copyQuotaitonItem(String sourceVersionId, String newVersionId){
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("insert into platform.quotationItem (itemId,versionId,quotationTypeId,quotationClassificationId,quotationBigCategoryId,quotationSmallCategoryId,itemName,measurementUnitId,itemWorkTypeId,quotationItemDes,unitPrice) ");
+		sql.append("insert into quotation.quotationItem (itemId,versionId,quotationTypeId,quotationClassificationId,quotationBigCategoryId,quotationSmallCategoryId,itemName,measurementUnitId,itemWorkTypeId,quotationItemDes,unitPrice) ");
 		sql.append("select itemId,'");
 		sql.append(newVersionId);
-		sql.append("',quotationTypeId,quotationClassificationId,quotationBigCategoryId,quotationSmallCategoryId,itemName,measurementUnitId,itemWorkTypeId,quotationItemDes,unitPrice from platform.quotationItem where versionId='");
+		sql.append("',quotationTypeId,quotationClassificationId,quotationBigCategoryId,quotationSmallCategoryId,itemName,measurementUnitId,itemWorkTypeId,quotationItemDes,unitPrice from quotation.quotationItem where versionId='");
 		sql.append(sourceVersionId);
 		sql.append("'");
 	  

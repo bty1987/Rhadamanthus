@@ -1,6 +1,6 @@
-///*
+/**
 // * @File Name	: Office2Pdf.java
-// * @Package		：com.fanglin.utils 
+// * @Package		: com.fanglin.utils 
 // * @Version		: 1.0
 // * @Date		: 2014-7-7
 // * @Copyright	: Copyright Creators 2014
@@ -8,12 +8,12 @@
 // * @Email		: 
 // * Describing	: doc 转换为 pdf 工具类
 // */
-//
+
 package com.fanglin.utils;
-//
+
 //import jp.ne.so_net.ga2.no_ji.jcom.IDispatch;
 //import jp.ne.so_net.ga2.no_ji.jcom.ReleaseManager;
-//
+
 public class Office2Pdf {
 //	public void createPDF(String officePath, String pdfPath) throws Exception {
 //		ReleaseManager rm = null;

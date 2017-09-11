@@ -15,7 +15,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "servicepayment", catalog = "platform")
+@Table(name = "servicepayment", catalog = "payment")
 public class ServicePaymentPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5195595430982438028L;

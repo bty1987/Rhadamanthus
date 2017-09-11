@@ -402,16 +402,30 @@ com = {
 
 		if(isPrint){
 			$.extend(layerPra,{btn:["打印"],btn1:function(index, layero){
-				var body = layer.getChildFrame('body', index);
-				var iframeWin = window[layero.find('iframe')[0]['name']];
-				iframeWin.print();
-			}})
+					var body = layer.getChildFrame('body', index);
+					var iframeWin = window[layero.find('iframe')[0]['name']];
+					iframeWin.print();
+				},success:function (index, layero) {
+					$('.layui-layer-title').text("");
+
+					var divM = $("<div></div>");
+					var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title);
+					var div2 = $(".layui-layer-btn").css({"float":"right","width":"67%"});
+
+					divM.append(div1,div2).appendTo($('.layui-layer-title'));
+
+				}
+				}
+			);
+
+			layerPra.skin = "layui-layer-hong"
+			
 		}
 
 		layer.full(
 			layer.open(layerPra)
 		);
-    }
+	}
 };
 
 Array.prototype.formatArrayMapToStr = function(k, v){

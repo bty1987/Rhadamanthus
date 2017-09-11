@@ -37,9 +37,9 @@ public class DecorationRankAction extends BaseListAction {
 	private List<?> ranks;
 	
 	@Action(value="queryDecorationDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationDesignerRank(){
+	public String queryDecorationDesignerRank()throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRankForTop(-1);
+		ranks = decorationRankService.queryDecorationDesignerRankForTop(-1,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -47,7 +47,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="queryDecorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationDesignerDepartmentRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), -1);
+		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), -1,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -55,15 +55,15 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="queryDecorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationDesignerRegionRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), -1);
+		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), -1,queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="decorationDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String decorationDesignerRank(){
+	public String decorationDesignerRank()throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRankForTop(10);
+		ranks = decorationRankService.queryDecorationDesignerRankForTop(10,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -71,7 +71,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="decorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String decorationDesignerDepartmentRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), 10);
+		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), 10,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -79,7 +79,7 @@ public class DecorationRankAction extends BaseListAction {
 	@Action(value="decorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String decorationDesignerRegionRank() throws FLException{
 		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), 10);
+		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), 10,queryCompany());
 		
 		return SUCCESS;
 	}

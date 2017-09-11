@@ -107,6 +107,18 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						}else if(data.equals("未审批")){
 							query.add(Restrictions.isNull("auditer"));
 						}
+					}else if("auditTime".equals(field)){
+						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						
+						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+						
+						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+						
+						query.add(query.getCriterion("auditTime", eTimestamp, "le"));
+						query.add(query.getCriterion("auditTime", sTimestamp, "ge"));
 					}
 				}				
 			}				

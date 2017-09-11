@@ -536,17 +536,18 @@ jQuery(function($) {
 		}
 
 		var packageName = $line.find('.packageName input');
-		if(packageName.val().length > 8){
+		var packageRex = /^[\u4E00-\u9FA5A-Za-z0-9]{0,7}$/;
+		if(!packageRex.test(packageName.val())){
 			packageName.focus().select();
 			packageName.addClass('tooltip-info').attr({
 				"data-rel" : "popover",
 				"data-placement" : "top",
 				"data-original-title" : "",
 				"title" : "",
-				"data-content" : "套餐名称长度需要小于8!"
+				"data-content" : "请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成)!"
 			}).popover('show');
 			flag =  false;
-		}else{
+        }else{
 			packageName.popover('destroy');
 		}
 

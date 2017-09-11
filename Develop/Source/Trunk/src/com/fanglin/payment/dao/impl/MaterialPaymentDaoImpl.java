@@ -160,7 +160,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	public int countMaterialPaymentByMsoIdAType(long msoId, Integer paymentType) {
 
-		String sql = "select count(*) from platform.materialpayment where msoId =:msoId and paymentType =:paymentType";
+		String sql = "select count(*) from payment.materialpayment where msoId =:msoId and paymentType =:paymentType";
 		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("msoId", msoId).setInteger("paymentType", paymentType).uniqueResult();
 		return num.intValue();
 	}

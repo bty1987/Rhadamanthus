@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
@@ -140,25 +139,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		}
 	}
 	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void copyQuotationVersion(QuotationVersionVO quotationVersionVO, String sourceVersionId) throws FLException{
-		
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(sourceVersionId);
-		
-		if(quotationVersionPO == null){
-			throw new FLException(200016, String.format("报价版本(%s)已存在", sourceVersionId));
-		}
-		
-		quotationVersionPO = new QuotationVersionPO();
-		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO);
-		quotationVersionPO.setDefaultFlag(0);
-		
-		quotationVersionDao.saveOrUpdate(quotationVersionPO);
-		
-		// 复制对应报价版本的所有报价项
-		// quotationItemDao.copyQuotaitonItem(sourceVersionId, quotationVersionPO.getVersionId());
-	}
+	
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)

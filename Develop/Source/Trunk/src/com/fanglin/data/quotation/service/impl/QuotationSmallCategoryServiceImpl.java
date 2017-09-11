@@ -34,9 +34,13 @@ public class QuotationSmallCategoryServiceImpl implements QuotationSmallCategory
 	private QuotationSmallCategoryDao quotationSmallCategoryDao;
 
 	@Override
-	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory(){
-		
-		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs = quotationSmallCategoryDao.list();
+	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory(QuotationSmallCategoryVO quotationSmallCategory){
+		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs =null;
+		if(quotationSmallCategory!=null){
+			quotationSmallCategoryPOs = quotationSmallCategoryDao.queryQuotationSmallCategory(quotationSmallCategory.getQtid());
+		}else{
+			quotationSmallCategoryPOs = quotationSmallCategoryDao.list();
+		}
 		List<QuotationSmallCategoryVO> quotationSmallCategoryVOs = new ArrayList<QuotationSmallCategoryVO>();
 		
 		for(QuotationSmallCategoryPO quotationSmallCategoryPO: quotationSmallCategoryPOs){

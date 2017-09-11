@@ -16,9 +16,7 @@ import com.fanglin.data.material.vo.MaterialBrandRightVO;
 public interface MaterialBrandRightService {
 	
 	public MaterialBrandRightVO queryMaterialBrandRightByUserId(MaterialBrandRightVO materialBrandRightVO);
-	
-	public MaterialBrandRightVO queryMaterialBrandForBrandByUserId(MaterialBrandRightVO materialBrandRightVO);
-	
-	public void saveMaterialBrandRight(MaterialBrandRightVO materialBrandRightVO);
+		
+	public void updateMaterialBrandRight(MaterialBrandRightVO materialBrandRightVO);
 
 }

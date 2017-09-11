@@ -20,24 +20,24 @@ import com.fanglin.report.vo.DecorationDesignerRegionRankVO;
 
 public interface DecorationRankService {
 	
-	public List<DecorationDesignerRankVO> queryDecorationDesignerRankForTop(int top);
+	public List<DecorationDesignerRankVO> queryDecorationDesignerRankForTop(int top,int company);
 	
-	public List<TopVO> queryDecorationDesignerRank(int top);
+	public List<TopVO> queryDecorationDesignerRank(int top,int company);
 	
-	public List<DecorationDesignerDepartmentRankVO> queryDecorationDesignerDepartmentRankForTop(String userId, int top);
+	public List<DecorationDesignerDepartmentRankVO> queryDecorationDesignerDepartmentRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryDecorationDesignerDepartmentRank(int top);
+	public List<TopVO> queryDecorationDesignerDepartmentRank(int top,int company);
 	
-	public List<DecorationDesignerRegionRankVO> queryDecorationDesignerRegionRankForTop(String userId, int top);
+	public List<DecorationDesignerRegionRankVO> queryDecorationDesignerRegionRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryDecorationDesignerRegionRank(int top);
+	public List<TopVO> queryDecorationDesignerRegionRank(int top,int company);
 	
-	public List<String> queryDecorationDesignerForPlaceByUserId(String userId);
+	public List<String> queryDecorationDesignerForPlaceByUserId(String userId,int company);
 	
-	public int updateDecorationDesignerRank(String designerId, String designerName, float count, String currentTime);
+	public int updateDecorationDesignerRank(String designerId, String designerName, float count, String currentTime,int company);
 	
-	public int updateDecorationDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime);
+	public int updateDecorationDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company);
 	
-	public int updateDecorationDesignerRegionRank(String regionId, String regionName, float count, String currentTime);
+	public int updateDecorationDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company);
 	
 }

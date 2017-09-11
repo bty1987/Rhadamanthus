@@ -76,13 +76,6 @@ public class QuotationAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryQuotationForStatusByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationForStatusByOrderId() throws FLException{
-		
-		canChange = quotationService.checkQuotationForStatusByOrderId(quotation, null, false);
-	    
-		return SUCCESS;
-	}
 	
 	@Action(value = "addQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotation() throws FLException{

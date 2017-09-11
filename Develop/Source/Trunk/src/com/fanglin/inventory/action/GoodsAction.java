@@ -112,6 +112,14 @@ public class GoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "addPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPackage() throws FLException{
+		
+		goodsService.addPackage(goods, goodsPackages, queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateGoods() throws FLException{
 		

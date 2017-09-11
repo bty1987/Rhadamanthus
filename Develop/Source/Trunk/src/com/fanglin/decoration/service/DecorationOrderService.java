@@ -36,7 +36,7 @@ public interface DecorationOrderService {
 	
 	public void pageDecorationOrderForAdvance(Paging paging, List<Filter> filters, Authentication authentication);
 	
-	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO);
+	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO, Authentication authentication);
 	
 	public int queryDecorationOrderForCondition(String userId);
 	
@@ -46,7 +46,7 @@ public interface DecorationOrderService {
 
 	public DecorationOrderVO queryDecorationOrderById(String decorationOrderId) throws FLException;
 	
-	public List<DecorationOrderVO> queryDecorationOrderByCustomerId(DecorationOrderVO decorationOrderVO) throws FLException;
+	public List<DecorationOrderVO> queryDecorationOrderByCustomerId(DecorationOrderVO decorationOrderVO, Authentication authentication) throws FLException;
 	
 	public void checkDecorationOrderExist(DecorationOrderVO decorationOrderVO);
 	
@@ -62,11 +62,11 @@ public interface DecorationOrderService {
 	
 	public void changeDecorationOrderForType(DecorationOrderVO decorationOrderVO, String userId);
 
-	public void createDecorationOrder(DecorationOrderVO decorationOrderVO,int company) throws FLException;
+	public void createDecorationOrder(DecorationOrderVO decorationOrderVO, Authentication authentication) throws FLException;
 
 	public int obsoleteDecorationOrder(DecorationOrderVO decorationOrderVO, String userName) throws FLException;
 
-	public int terminalDecorationOrder(DecorationOrderVO decorationOrderVO, float refundValue, float paymentValue, String userId) throws FLException;
+	public int terminalDecorationOrder(DecorationOrderVO decorationOrderVO, float refundValue, float paymentValue, Authentication authentication) throws FLException;
 	
 	public int subDecorationOrderForQuotationTime(DecorationOrderVO decorationOrderVO, String userId) throws FLException;
 	

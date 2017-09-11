@@ -35,12 +35,14 @@ public class QuotationBigCategoryAction extends BaseListAction {
 	@Autowired
 	private QuotationBigCategoryService quotationBigCategoryService;
 	
+	private QuotationBigCategoryVO quotationBigCategory;
+	
 	private List<QuotationBigCategoryVO> quotationBigCategorys;
 	
 	@Action(value="queryQuotationBigCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryQuotationBigCategory(){
 		
-		quotationBigCategorys = quotationBigCategoryService.queryQuotationBigCategory();
+		quotationBigCategorys = quotationBigCategoryService.queryQuotationBigCategory(quotationBigCategory);
 		
 		return SUCCESS;
 	}
@@ -51,6 +53,14 @@ public class QuotationBigCategoryAction extends BaseListAction {
 		quotationBigCategoryService.pageQuotationBigCategory(getPaging(), getFilters());
 	    
 		return SUCCESS;
+	}
+
+	public QuotationBigCategoryVO getQuotationBigCategory() {
+		return quotationBigCategory;
+	}
+
+	public void setQuotationBigCategory(QuotationBigCategoryVO quotationBigCategory) {
+		this.quotationBigCategory = quotationBigCategory;
 	}
 
 	public List<QuotationBigCategoryVO> getQuotationBigCategorys(){

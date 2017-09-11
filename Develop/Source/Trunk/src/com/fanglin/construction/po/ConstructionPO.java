@@ -38,22 +38,6 @@ public class ConstructionPO implements Serializable{
 	
 	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisorQualityId";
 	
-	public static final String COLUMN_CHANQUALITYID_STR = "chanQualityId";
-	
-	public static final String COLUMN_PUTLINEQUALITYID_STR = "putlineQualityId";
-	
-	public static final String COLUMN_WATERWAYCIRCUITQUALITYID_STR = "waterwayCircuitPowerQualityId";
-	
-	public static final String COLUMN_POWERQUALITYID_STR = "powerQualityId";
-	
-	public static final String COLUMN_BRICKLAYQUALITYID_STR = "bricklayQualityId";
-	
-	public static final String COLUMN_CARPENTQUALITYID_STR = "carpentQualityId";
-	
-	public static final String COLUMN_OILQUALITYID_STR = "oilQualityId";
-	
-	public static final String COLUMN_CLEANINGQUALITYID_STR = "cleaningQualityId";
-	
 	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
 	
 	public static final String COLUMN_ALLOCATIONWORKERFLAG_STR = "allocationWorkerFlag";
@@ -85,22 +69,6 @@ public class ConstructionPO implements Serializable{
 	private DecorationOrderPO decorationOrderPO;
 	
 	private String supervisorQualityId;
-	
-	private String chanQualityId;
-	
-	private String putlineQualityId;
-	
-	private String waterwayCircuitPowerQualityId;
-	
-	private String powerQualityId;
-	
-	private String bricklayQualityId;
-	
-	private String carpentQualityId;
-	
-	private String oilQualityId;
-	
-	private String cleaningQualityId;
 	
 	private int schedule;
 	
@@ -138,42 +106,6 @@ public class ConstructionPO implements Serializable{
 		this.supervisorQualityId = supervisorQualityId;
 	}
 
-	@Column(name="waterwayCircuitPowerQualityId")
-	public String getWaterwayCircuitPowerQualityId(){
-		return waterwayCircuitPowerQualityId;
-	}
-
-	public void setWaterwayCircuitPowerQualityId(String waterwayCircuitPowerQualityId){
-		this.waterwayCircuitPowerQualityId = waterwayCircuitPowerQualityId;
-	}
-
-	@Column(name="powerQualityId")
-	public String getPowerQualityId(){
-		return powerQualityId;
-	}
-
-	public void setPowerQualityId(String powerQualityId){
-		this.powerQualityId = powerQualityId;
-	}
-
-	@Column(name="bricklayQualityId")
-	public String getBricklayQualityId(){
-		return bricklayQualityId;
-	}
-
-	public void setBricklayQualityId(String bricklayQualityId){
-		this.bricklayQualityId = bricklayQualityId;
-	}
-
-	@Column(name="carpentQualityId")
-	public String getCarpentQualityId(){
-		return carpentQualityId;
-	}
-
-	public void setCarpentQualityId(String carpentQualityId){
-		this.carpentQualityId = carpentQualityId;
-	}
-
 	@Column(name="schedule")
 	public int getSchedule(){
 		return schedule;
@@ -181,42 +113,6 @@ public class ConstructionPO implements Serializable{
 
 	public void setSchedule(int schedule){
 		this.schedule = schedule;
-	}
-
-	@Column(name="chanQualityId")
-	public String getChanQualityId(){
-		return chanQualityId;
-	}
-
-	public void setChanQualityId(String chanQualityId){
-		this.chanQualityId = chanQualityId;
-	}
-
-	@Column(name="putlineQualityId")
-	public String getPutlineQualityId(){
-		return putlineQualityId;
-	}
-
-	public void setPutlineQualityId(String putlineQualityId){
-		this.putlineQualityId = putlineQualityId;
-	}
-
-	@Column(name = "oilQualityId")
-	public String getOilQualityId(){
-		return oilQualityId;
-	}
-
-	public void setOilQualityId(String oilQualityId){
-		this.oilQualityId = oilQualityId;
-	}
-
-	@Column(name = "cleaningQualityId")
-	public String getCleaningQualityId(){
-		return cleaningQualityId;
-	}
-
-	public void setCleaningQualityId(String cleaningQualityId){
-		this.cleaningQualityId = cleaningQualityId;
 	}
 
 	@Column(name = "chanStatus")

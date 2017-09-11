@@ -64,11 +64,11 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	private DecorationOrderDao decorationOrderDao;
 	
 	@Override
-	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO) {
+	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company) {
 		
 		List<Float> advances = new ArrayList<Float>();
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCustomerId());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCustomerId(),company);
 		
 		if(advancePaymentPO != null){
 			advances.add(advancePaymentPO.getBalance());
@@ -92,7 +92,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getCustomerId());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getCustomerId(),decorationOrderPO.getCompany());
 		
 		if(advancePaymentPO != null){
 			advances.add(advancePaymentPO.getBalance());
@@ -108,7 +108,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateAdvancePayment(PaymentVO paymentVO) throws FLException {
+	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException {
 		
 		float recharge = 0;
 		List<String> plusStatus = Arrays.asList(new String[]{PaymentPO.PAYMENT_TYPE_COLLECTION_STR, PaymentPO.PAYMENT_TYPE_REFUND_STR, PaymentPO.PAYMENT_TYPE_CONVERT_STR});
@@ -119,7 +119,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 			throw new FLException(230001, "客户信息不存在");
 		}
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId(),company);
 		
 		if(advancePaymentPO == null){
 			
@@ -170,6 +170,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		paymentPO.setBalance(overBalance);
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
+		paymentPO.setCompany(company);
 		
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
 

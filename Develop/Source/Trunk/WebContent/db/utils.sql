@@ -105,4 +105,4 @@ select distinct q.orderid, o.versionId, o.status, o.contractTime from quotation 
 /* 销售款导出 */
 select s.orderId, s.no, v.villageName, s.houseNumber, s.userName, sd.deptName, sr.deptName, s.category, s.brand, p.createrName, p.referMoney, r.collecterName, r.collectTime, r.cash, r.cashInfo, r.bank, r.bankinfo, r.checkv, r.checkvbank, r.installment, r.installmentBank, r.accounts, r.accountsBank, r.advancetype, r.advance, r.coupon, r.couponInfo
 from sales s, salespayment p, salesreceipt r, communion.user s, communion.department sd, communion.department sr, communion.village v 
-where p.status != 0 and s.sid = p.sid and p.srid = r.srid and s.suid = s.uid and s.did = sd.did and s.rid = sr.did and s.vid = v.vid;
+where r.collectTime > '2017-08-01 00:00:00' and r.collectTime < '2017-08-31 23:59:59' and p.status != 0 and s.sid = p.sid and p.srid = r.srid and s.suid = s.uid and s.did = sd.did and s.rid = sr.did and s.vid = v.vid;

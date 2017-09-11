@@ -18,8 +18,8 @@ import com.fanglin.report.po.DecorationDesignerDepartmentRankPO;
 
 public interface DecorationDesignerDepartmentRankDao extends Dao<DecorationDesignerDepartmentRankPO> {
 	
-	public DecorationDesignerDepartmentRankPO queryDecorationDesignerDepartmentRankForInitByDeptId(String deptId);
+	public DecorationDesignerDepartmentRankPO queryDecorationDesignerDepartmentRankForInitByDeptId(String deptId,int company);
 	
-	public List<DecorationDesignerDepartmentRankPO> queryDecorationDesignerDepartmentRankForTop(int top);
+	public List<DecorationDesignerDepartmentRankPO> queryDecorationDesignerDepartmentRankForTop(int top,int company);
 
 }

@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: SpringApplicationContext.java
- * @Package		：com.fanglin.utils 
+ * @Package		: com.fanglin.utils 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014

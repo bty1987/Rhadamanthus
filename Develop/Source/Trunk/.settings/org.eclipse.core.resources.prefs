@@ -1,4 +1,4 @@
-#Wed Aug 16 07:17:01 CST 2017
+#Mon Aug 21 14:29:53 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -36,8 +36,6 @@ encoding//WebContent/views/data/category.html=UTF-8
 encoding//WebContent/views/data/customer.html=UTF-8
 encoding//WebContent/views/data/supplier.html=UTF-8
 encoding//WebContent/views/data/village.html=UTF-8
-encoding//WebContent/views/decoration/addReduce.html=UTF-8
-encoding//WebContent/views/decoration/addReduceDetail.html=UTF-8
 encoding//WebContent/views/decoration/backVisit.html=UTF-8
 encoding//WebContent/views/decoration/createOrder.html=UTF-8
 encoding//WebContent/views/decoration/decorationActivity.html=UTF-8

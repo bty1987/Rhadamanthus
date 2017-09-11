@@ -1,9 +1,9 @@
 var config = {
-	versionCode: "1.5.017",
+	versionCode: "1.5.018",
 	system: 1,
 	uploadTimeout: 30,
 	quotationLimitDiscount: 8.8,
-	timeout: 30,
+	timeout: 120,
 	
 	serviceRate: 0.1,
 	addreduceManagerPrice:true,

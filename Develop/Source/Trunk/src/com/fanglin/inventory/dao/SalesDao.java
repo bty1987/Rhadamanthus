@@ -11,6 +11,8 @@ public interface SalesDao extends Dao<SalesPO> {
 	
 	public List<SalesPO> pageSales(Paging paging, List<Filter> filter,int company);
 	
+	public List<SalesPO> pageSalesForBalance(Paging paging, List<Filter> filter,int company);
+	
 	public SalesPO querySalesBySid(Long sid);
 	
 }

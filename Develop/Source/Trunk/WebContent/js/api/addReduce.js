@@ -1,6 +1,8 @@
 
 $.extend(api.index, {
-    
+    addReduceIndex: {url: "/views/quotation/addReduce.html"},
+    addReduceDetailIndex: {url: "/views/quotation/addReduceDetail.html"},
+    addReduceOutputIndex: {url: "/views/quotation/addReduceOutput.html"},
 });
 
 $.extend(api.ds, {

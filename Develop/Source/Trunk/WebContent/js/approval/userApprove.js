@@ -1,4 +1,4 @@
-
+﻿
 jQuery(function($) {
 	
 	var approve = {
@@ -15,7 +15,7 @@ jQuery(function($) {
 	approve.cancelBtn = $("#cancelBtn");
 	approve.modal = $("#approveModal");
 	approve.items.userSel = $("#userSel");
-	
+	approve.items.comment = $("#comment");
 	com.post(api.ds.approvalType, {"timestamp": new Date().getTime()}, function(res){
 		approve.approvalType = res.approvalType;
 		
@@ -49,7 +49,6 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	console.log(v);
         	var user = v.user;
         	
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
@@ -62,7 +61,8 @@ jQuery(function($) {
             var propertyArr = [
                 ["编号:", user.userId, "grey"],
                 ["职位:", user.duty, "grey"],
-                ["类型:", approve.approvalTypeData[v.type], "red"]
+                ["类型:", approve.approvalTypeData[v.type], "red"],
+                ["说明:", v.comment, "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -97,7 +97,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 
-	searcher.init(["userName", "approvalType"], "condList", api.system.pageApproveUser, function(data){
+	searcher.init(["userName", "approvalType"], "condList", api.approval.pageApproveUser, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "approvalUserPostData", null, false, null, function(){
 		
@@ -113,7 +113,7 @@ jQuery(function($) {
 
 		com.updateChosen('userSel', '', '');
 		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
-		
+		com.cleanItems(approve.items);
 		approve.modal.modal("show");
     });
 
@@ -125,7 +125,7 @@ jQuery(function($) {
 		
 		com.post(api.approval.deleteApproveUser, options, function(){
 			searcher.doSearch();
-		});
+		},null,false);
 	}
 
 	function saveData(){
@@ -134,16 +134,13 @@ jQuery(function($) {
 		var options = {
 			'approveUser.user.userId': approve.items.userSel.val(),
 			'approveUser.type': approve.items.type.val(),
+			'approveUser.comment': approve.items.comment.val(),
 		};
-
-
 			url = api.approval.addApproveUser;
-
-
+			
 		com.post(url, options, function(res){
-
 			searcher.doSearch();
-		});
+		},null,false);
 
 		approve.modal.modal("hide");
 	}

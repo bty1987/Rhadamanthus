@@ -11,6 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.inventory.po.ColorPO;
+import com.fanglin.inventory.po.FormatPO;
+import com.fanglin.inventory.po.GoodsPO;
+
 @Entity
 @Table(name = "salesitem", catalog = "inventory")
 public class SalesItemPO implements Serializable {
@@ -20,6 +24,10 @@ public class SalesItemPO implements Serializable {
 	public static final String COLUMN_SID_STR ="sid";
 	
 	public static final String COLUMN_SIID_STR ="siid";
+	
+	public static final short CTYPE_RESERVEPRICE_INT = 0;
+	
+	public static final short CTYPE_POINT_INT = 1;
 	
 	private long siid;
 	

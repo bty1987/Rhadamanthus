@@ -1,10 +1,3 @@
-/**
- * Title: MessageDaoImpl
- * Description:
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
- * @author bty1987
- */
 
 package com.fanglin.information.dao.impl;
 
@@ -30,9 +23,9 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	}
 
 	@Override
-	public List<MessagePO> pageMessages(Paging paging, List<Filter> filters, String userId){
-
+	public List<MessagePO> pageMessages(Paging paging, List<Filter> filters, String userId,int company){
 		PagingQuery<MessagePO> query = pagingQuery(paging, MessagePO.class);
+		query.add(Restrictions.eq("company", company));
 		
 		query.alias("receiver", "receiver");
 		query.add(Restrictions.eq("receiver.userId", userId));
@@ -62,9 +55,10 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MessagePO> queryMessageForUnreadByUserId(String userId){
+	public List<MessagePO> queryMessageForUnreadByUserId(String userId,int company){
 		Criteria query = session().createCriteria(MessagePO.class);
 		
+		query.add(Restrictions.eq("company", company));
 		query.createAlias("receiver", "receiver");
 		query.add(Restrictions.eq("receiver.userId", userId));
 		query.add(Restrictions.eq("status", MessagePO.MESSAGE_STATUS_UNREAD_STR));
@@ -73,9 +67,11 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	}
 
 	@Override
-	public int queryMessageCount(String userId){
-		String sql = "select count(*) from platform.message where receiverId = :receiverId and status = :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setString("receiverId", userId).uniqueResult();
+	public int queryMessageCount(String userId,int company){
+		
+		String sql = "select count(*) from information.message where receiverId = :receiverId and status = :status and company = :company";
+	
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setString("receiverId", userId).setInteger("company", company).uniqueResult();
 		
 		return count.intValue();
 	}
@@ -83,7 +79,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	@Override
 	public int updateMessageForRead(List<Integer> messageIds) {
 		
-		String sql = "update platform.message set status = :status where messageId in :messageIds";
+		String sql = "update information.message set status = :status where messageId in :messageIds";
 		session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_READED_STR).setParameterList("messageIds", messageIds).executeUpdate();
 		
 		return 0;
@@ -91,14 +87,14 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 
 	@Override
 	public void updateApproveMsgSerial(String msgSerial){
-		String sql = "update platform.message set args = null where args like :args";
+		String sql = "update information.message set args = null where args like :args";
 		session().createSQLQuery(sql).setString("args", "%"+msgSerial+"%").executeUpdate();
 	}
 
 	@Override
 	public int deleteMessageByIdAStatusAUnType(List<Integer> messageIds, String status, List<String> unTypes) {
 		
-		String sql = "delete from platform.message where messageId in :messageIds and status = :stauts and type not in :untypes";
+		String sql = "delete from information.message where messageId in :messageIds and status = :stauts and type not in :untypes";
 		
 		session().createSQLQuery(sql).setParameterList("messageIds", messageIds).setString("status", status).setParameterList("untypes", unTypes).executeUpdate();
 		

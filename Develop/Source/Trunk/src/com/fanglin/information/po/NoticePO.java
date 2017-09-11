@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "notice", catalog = "platform")
+@Table(name = "notice", catalog = "information")
 public class NoticePO implements Serializable {
 
 	private static final long serialVersionUID = 134049609579042097L;

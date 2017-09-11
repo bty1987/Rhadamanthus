@@ -185,26 +185,5 @@ public class AESHelper {
 		}
 		return result;
 	}
-	
-	public static void main(String[] args) throws Exception {
-		String str = "12345" + 3;
-		String key = "FanglinServer";
-		String encrytStr;
-		// byte[] encrytByte;
-
-		// byte[] byteRe = enCrypt(str,key);
-
-		// 加密过的二进制数组转化成16进制的字符串
-		encrytStr = parseByte2HexStr(encryptTobyte(str, key));
-		System.out.println("加密后：" + encrytStr);
-
-		// 加密过的16进制的字符串转化成二进制数组
-		// encrytByte = parseHexStr2Byte(encrytStr);
-		System.out.println("解密后：" + decryptByte(parseHexStr2Byte(encrytStr), key));
-		
-		System.out.println("加密后：" + encryptToString("userId=FL-00479,roleId=R_50,userName=白添宇,updateTime=1481262867035,company=0,timeout=1,rollcall=0", "FanglinTest"));
-		System.out.println("解密后：" + decryptString("8E1BD9078DB393A947FB51697AE9FC97F97A8F2D15F4D224D309B161E6B1CC8E117F762457031BD020786A6D548DECCD4C247B393805A3CDFF4462A28D7C095D2F16E8BE2F3E96C55126D4049955E593A527F6C55541434830A7C2E3A2BCF07A", "test"));
-		
-	}
 
 }

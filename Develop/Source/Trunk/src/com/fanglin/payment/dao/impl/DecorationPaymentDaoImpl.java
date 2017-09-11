@@ -135,7 +135,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@Override
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId) {
 		
-		String sql = "update platform.decorationpayment set orderId=:newOrderId where orderId=:oldOrderId";
+		String sql = "update payment.decorationpayment set orderId=:newOrderId where orderId=:oldOrderId";
 	    
 	    session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 		
@@ -147,7 +147,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		
 		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
 
-		String sql = "delete from platform.decorationpayment where orderId=:orderId and paymentType in :paymentTypes";
+		String sql = "delete from payment.decorationpayment where orderId=:orderId and paymentType in :paymentTypes";
 	    
 	    return session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentTypes", paymentTypes).executeUpdate();
 	}

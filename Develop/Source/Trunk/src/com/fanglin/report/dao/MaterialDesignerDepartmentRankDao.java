@@ -18,8 +18,8 @@ import com.fanglin.report.po.MaterialDesignerDepartmentRankPO;
 
 public interface MaterialDesignerDepartmentRankDao extends Dao<MaterialDesignerDepartmentRankPO> {
 	
-	public MaterialDesignerDepartmentRankPO queryMaterialDesignerDepartmentRankByDeptIdInit(String deptId);
+	public MaterialDesignerDepartmentRankPO queryMaterialDesignerDepartmentRankByDeptIdInit(String deptId,int company);
 	
-	public List<MaterialDesignerDepartmentRankPO> queryMaterialDesignerDepartmentRankForTop(int top);
+	public List<MaterialDesignerDepartmentRankPO> queryMaterialDesignerDepartmentRankForTop(int top,int company);
 
 }

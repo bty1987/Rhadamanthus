@@ -79,27 +79,38 @@ jQuery(function($) {
 		}),
 		//全退按钮
 		fullRefundBtn: $('#fullRefundBtn').on("click", function(){
-			
-			var options = {};
-			
-			$("#refundTotal").val(fullFunctionData(options));
-			refundMaterialSubOrderItemData = options;
-			
-			materialSubOrderDetail.refundType = 6;
-			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+            var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
+            if(fullStatus == 3 || fullStatus == 2){
+                var options = {};
+
+                $("#refundTotal").val(fullFunctionData(options));
+                refundMaterialSubOrderItemData = options;
+
+                materialSubOrderDetail.refundType = 6;
+                approvalUtils.initqueryApprovalUser('approvalUser',6);
+                materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+			}else{
+            	com.showAlert(com.warning,"主材未收款不允许全退");
+			}
+
 		}),
 		//倒单按钮
 		daodanBtn: $('#daodanBtn').on("click", function(){
-			
-			var options = {};
-			
-			$("#refundTotal").val(fullFunctionData(options));
-			refundMaterialSubOrderItemData = options;
-			
-			materialSubOrderDetail.refundType = 7;
-			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+            var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
+            if(fullStatus == 3 || fullStatus == 2){
+                var options = {};
 
-			console.log(refundMaterialSubOrderItemData);
+                $("#refundTotal").val(fullFunctionData(options));
+                refundMaterialSubOrderItemData = options;
+
+                materialSubOrderDetail.refundType = 7;
+                approvalUtils.initqueryApprovalUser('approvalUser',6);
+                materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
+			}else{
+                com.showAlert(com.warning,"主材未收款不允许倒单");
+			}
+
+
 		}),
 		//退货确认按钮
 		refundCommitBtn : $("#refundCommitBtn").click(function(){
@@ -196,6 +207,7 @@ jQuery(function($) {
 			refundMaterialSubOrderItemData = options;
 			
 			materialSubOrderDetail.refundType = 0;
+			approvalUtils.initqueryApprovalUser('approvalUser',6);
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
 
 		}),
@@ -536,8 +548,6 @@ jQuery(function($) {
 				allempty = false;
 			}
 
-			//_price = parseFloat($this.find('.price').text());
-			//_total = utils.changeTwoDecimal(utils.accMul(_price, _numNew));
 
 			options["materialSubOrderItems["+i+"].msoiId"] = $this.attr('msoiId');
 			options["materialSubOrderItems["+i+"].materialModelNo"] = $this.attr('materialModelNo');
@@ -650,7 +660,14 @@ jQuery(function($) {
 
 	function saveRefundData(){
 
-		com.clearValidator("#couponType", true);
+        var length = $('#approvalUser').find('input:checked').length;
+
+        if(length == 0){
+            com.showAlert(com.error, "请选择审批人!");
+            return;
+        }
+
+        com.clearValidator("#couponType", true);
 
 		if(com.validate()){
 			return;
@@ -666,9 +683,8 @@ jQuery(function($) {
 			com.showTips(refund, "退款不能大于型号退款总金额.", true);
 			return ;
 		}
-
 		options["approvalMaterialRefund.msoId"] = materialSubOrderItemPostData["materialSubOrder.msoId"];
-		options["approval.receiverId"] = $("#approver").val();
+        options["approval.receiverId"] = $('#approvalUser').find('input:checked').attr('userid');
 		options["approval.comment"] = refundDes.val();
 		options["approvalMaterialRefund.type"] = materialSubOrderDetail.refundType;
 		options["approvalMaterialRefund.refund"] = refund.val();
@@ -719,7 +735,7 @@ jQuery(function($) {
 
 			    options["approvalMaterialRefundItems[" + index + "].materialSubOrderItem.msoiId"] = $line.attr('msoiid');
 			    options["approvalMaterialRefundItems[" + index + "].num"] = $line.attr('num');
-			    options["approvalMaterialRefundItems[" + index + "].total"] = parseFloat($('[packageName=' + $line.attr('packageName') + '][level=0]').attr('total'));
+			    options["approvalMaterialRefundItems[" + index + "].total"] = parseFloat($('[packagename=' + $line.attr('packagename') + '][level=0]').attr('total'));
 
 			    index++;
 			  }else{

@@ -41,7 +41,7 @@ public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> impleme
 	public int deleteFunctionAreaItemByFunctionAreaId(long functionAreaId){
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("delete from platform.functionAreaQuoteItem where functionAreaId=:functionAreaId");
+		sql.append("delete from quotation.functionAreaQuoteItem where functionAreaId=:functionAreaId");
 		
 		return session().createSQLQuery(sql.toString()).setLong("functionAreaId", functionAreaId).executeUpdate();
 	}

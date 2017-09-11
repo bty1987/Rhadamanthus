@@ -6,17 +6,28 @@ jQuery(function ($) {
         cancelBtn: null,
         modal: null,
         items: {},
-        editFlg: false
+        validator: {
+               
+            workersalary: {
+                type: "v_salary",
+                regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
+                errorMsg: "请正确输入工人工费，小数点后最多保留3位"
+            },
+
+            
+        },
+        repeatFlg :false
 
     };
 
     var salaryType = [];
-
+    $.extend(com.validator, salary.validator);
     salary.saveBtn = $("#saveBtn").on("click", saveData);
     salary.cancelBtn = $("#cancelBtn");
     salary.modal = $("#workersalaryModal");
     salary.items.workersalary= $("#workersalary");
-    salary.items.workersalarycomment= $("#workersalarycomment");
+    salary.items.workersalaryuser = $("#workersalaryuser");
+    salary.items.workersalarycomment = $("#workersalarycomment");
 
     $.extend(com.validator, salary.validator);
 
@@ -270,43 +281,37 @@ jQuery(function ($) {
         }
     }, null, false);
 
+
     function saveData(options) {
 
-        var url = api.salary.addWorkerSalary;
-        var options = {};
+       if( !com.validate("workersalaryModal")) {
 
-        if (($('#workersalary').val()) == "") {
-            com.showAlert(com.error, "请输入工人工费！");
-        } else if ($("#workersalarySubtype").val() == 0) {
-            com.showAlert(com.error, "请选择工费类型！");
-        } else {
-            if (/^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/.test($('#workersalary').val())) {
-                if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3
-                    || $("#workersalarySubtype").val() == 10 || $("#workersalarySubtype").val() == 11  || $("#workersalarySubtype").val() == 12
-                    || $("#workersalarySubtype").val() == 13
+           var url = api.salary.addWorkerSalary;
+           var options = {};
 
-                ) {
-                    options["workerSalary.type"] = 0;
-                } else if ($("#workersalarySubtype").val() == 4 && $('#workersalary').val() > 0) {
-                    options["workerSalary.type"] = 0;
-                } else {
-                    options["workerSalary.type"] = 1;
-                }
-                options["workerSalary.user.userId"] = $('#workersalaryuser').val();
-                options["workerSalary.salary"] = $('#workersalary').val();
-                options["workerSalary.subtype"] = $("#workersalarySubtype").val();
-                options["workerSalary.comment"] = $("#workersalarycomment").val();
+           if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3
+               || $("#workersalarySubtype").val() == 10 || $("#workersalarySubtype").val() == 11 || $("#workersalarySubtype").val() == 12
+               || $("#workersalarySubtype").val() == 13
 
-                $('#workersalaryModal').modal('hide');
-            } else {
-                com.showAlert(com.error, "请正确输入工人工费，小数点后最多保留3位！");
-            }
+           ) {
+               options["workerSalary.type"] = 0;
+           } else if ($("#workersalarySubtype").val() == 4 && $('#workersalary').val() > 0) {
+               options["workerSalary.type"] = 0;
+           } else {
+               options["workerSalary.type"] = 1;
+           }
+           options["workerSalary.user.userId"] = $('#workersalaryuser').val();
+           options["workerSalary.salary"] = $('#workersalary').val();
+           options["workerSalary.subtype"] = $("#workersalarySubtype").val();
+           options["workerSalary.comment"] = $("#workersalarycomment").val();
 
-        }
+           com.post(url, options, function () {
+               searcher.doSearch();
+           });
 
-        com.post(url, options, function () {
-            searcher.doSearch();
-        });
+           $('#workersalaryModal').modal('hide');
+       }
+
     }
 
     function deletebystatus(wsId) {

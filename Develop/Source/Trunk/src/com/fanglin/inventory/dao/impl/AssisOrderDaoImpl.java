@@ -49,6 +49,9 @@ public class AssisOrderDaoImpl extends DaoImpl<AssisOrderPO> implements AssisOrd
 				}else if("approverName".equals(field)){
 					query.alias("approver","approver");
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_APPROVER_NAME_STR, data, op));
+				}else if("userId".equals(field)){
+					query.alias("creater", "creater");
+					query.add(query.getCriterion(AssisOrderPO.COLUMN_CREATER_USERID_STR, data, op));
 				}else if(AssisOrderPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion(AssisOrderPO.COLUMN_ORDERID_STR, data, op));
 				}else if(AssisOrderPO.COLUMN_CREATETIME_STR.equals(field)){

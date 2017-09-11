@@ -22,7 +22,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "quotationItem", catalog = "platform")
+@Table(name = "quotationItem", catalog = "quotation")
 public class QuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455543326014L;

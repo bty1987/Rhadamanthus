@@ -34,9 +34,9 @@ public class PriceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryPurchaseByGidASelling", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPurchaseByGidASelling(){
-		price = priceService.queryPurchaseByGidASelling(price);
+	@Action(value = "queryPriceByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPriceByPid(){
+		price = priceService.queryPriceByPid(price);
 		return SUCCESS;
 	}
 	

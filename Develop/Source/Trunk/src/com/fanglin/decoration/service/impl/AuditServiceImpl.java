@@ -82,9 +82,12 @@ public class AuditServiceImpl implements AuditService{
 			auditVO.setDeptId(designer.getDept().getDeptId());
 			List<UserPO> duty = userDao.queryUserByDeptIdADuty(designer.getDept().getDeptId(),"设计部经理");
 			
-			auditVO.setDeptDutyUId(duty.get(0).getUid());
-			
-			auditVO.setDeptDutyName(duty.get(0).getCurrentName());
+			if(!duty.isEmpty()){
+				
+				auditVO.setDeptDutyUId(duty.get(0).getUid());
+				auditVO.setDeptDutyName(duty.get(0).getCurrentName());
+			}
+				
 			
 			AuditVOs.add(auditVO);
 		}

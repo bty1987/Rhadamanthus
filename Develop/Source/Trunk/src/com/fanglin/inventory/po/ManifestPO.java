@@ -41,6 +41,10 @@ public class ManifestPO implements java.io.Serializable {
 	
 	public static final Short COLUMN_TYPE_STR = 6;
 	
+	public static final Short TYPE_PM_INT = 8;
+	
+	public static final Short TYPE_PS_INT = 9;
+	
 	public static final int COLUMN_CUSTOMERID_STR = 0;
 	
 	public static final Short COLUMN_CONFIRMEDSTATUS_STR = 1;

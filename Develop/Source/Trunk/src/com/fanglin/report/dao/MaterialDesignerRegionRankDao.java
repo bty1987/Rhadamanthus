@@ -18,8 +18,8 @@ import com.fanglin.report.po.MaterialDesignerRegionRankPO;
 
 public interface MaterialDesignerRegionRankDao extends Dao<MaterialDesignerRegionRankPO> {
 	
-	public MaterialDesignerRegionRankPO queryMaterialDesignerRegionRankByRegionIdInit(String regionId);
+	public MaterialDesignerRegionRankPO queryMaterialDesignerRegionRankByRegionIdInit(String regionId,int company);
 	
-	public List<MaterialDesignerRegionRankPO> queryMaterialDesignerRegionRankForTop(int top);
+	public List<MaterialDesignerRegionRankPO> queryMaterialDesignerRegionRankForTop(int top,int company);
 
 }

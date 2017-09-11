@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.VillagePO;
 import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "assisorder", catalog = "inventory")
@@ -24,6 +25,8 @@ public class AssisOrderPO implements Serializable{
 	public static final String COLUMN_CREATER_UID_STR = "creater.uid";
 	
 	public static final String COLUMN_CREATER_NAME_STR = "creater.userName";
+	
+	public static final String COLUMN_CREATER_USERID_STR = "creater.userId";
 	
 	public static final String COLUMN_APPROVER_NAME_STR = "approver.userName";
 	
@@ -49,6 +52,12 @@ public class AssisOrderPO implements Serializable{
 	
 	private String orderId;
 	
+	private VillagePO village;
+	
+	private String houseNumber;
+	
+	private UserPO supervisor;
+	
 	private UserPO creater;
 	
 	private Timestamp createTime;
@@ -56,6 +65,8 @@ public class AssisOrderPO implements Serializable{
 	private UserPO approver;
 	
 	private Timestamp approverTime;
+	
+	private Timestamp fetchTime;
 	
 	private short status;
 	
@@ -100,6 +111,35 @@ public class AssisOrderPO implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "vid", referencedColumnName = "vId")
+	public VillagePO getVillage() {
+		return village;
+	}
+
+	public void setVillage(VillagePO village) {
+		this.village = village;
+	}
+	
+	@Column(name = "houseNumber")
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "supervisorId", referencedColumnName = "uId")
+	public UserPO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserPO supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "createrId", referencedColumnName = "uId")
 	public UserPO getCreater() {
 		return creater;
@@ -137,6 +177,15 @@ public class AssisOrderPO implements Serializable{
 		this.approverTime = approverTime;
 	}
 	
+	@Column(name = "fetchTime")
+	public Timestamp getFetchTime() {
+		return fetchTime;
+	}
+
+	public void setFetchTime(Timestamp fetchTime) {
+		this.fetchTime = fetchTime;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

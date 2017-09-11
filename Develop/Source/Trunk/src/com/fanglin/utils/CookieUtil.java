@@ -13,16 +13,16 @@ public class CookieUtil {
 	public static void addCookie(HttpServletResponse response, String name, String value) throws UnsupportedEncodingException {
 		value = URLEncoder.encode(value, "UTF-8");
 		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(2 * 60 * 60);// 保存2小时；
+		cookie.setMaxAge(2 * 60 * 60);// 保存2小时
 		cookie.setPath("/");
 		response.addCookie(cookie);
 	}
 
-	// 添加cookie； | UnsupportedEncodingException，转码异常
+	// 添加cookie; | UnsupportedEncodingException,转码异常
 	public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) throws UnsupportedEncodingException {
 		value = URLEncoder.encode(value, "UTF-8");
 		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(maxAge);// 保存maxAge秒；
+		cookie.setMaxAge(maxAge);// 保存maxAge秒
 		cookie.setPath("/");
 		response.addCookie(cookie);
 	}
@@ -34,7 +34,7 @@ public class CookieUtil {
 		
 		if(cookies != null){
 			for(Cookie cookie : cookies){
-				if(cookieName.equals(cookie.getName())){ // 获取具体的cookie；
+				if(cookieName.equals(cookie.getName())){ // 获取具体的cookie
 					value = URLDecoder.decode(cookie.getValue(), "UTF-8");
 					
 					return value;
@@ -53,7 +53,7 @@ public class CookieUtil {
 				if(cookieName.equals(cookie.getName())){
 					cookie.setValue("");
 					cookie.setMaxAge(0);
-					cookie.setPath("/"); // 添加，清除时需要加路径才能清除掉；
+					cookie.setPath("/"); // 添加, 清除时需要加路径才能清除掉
 					response.addCookie(cookie);
 				}
 			}

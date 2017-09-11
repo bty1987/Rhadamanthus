@@ -108,7 +108,7 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addAudtiScale(AuditScaleVO auditScale, String userId) throws FLException{
+	public int addAuditScale(AuditScaleVO auditScale, String userId) throws FLException{
 		AuditScalePO auditScalePO = new AuditScalePO(new UserPO(),new DepartmentPO());
 		
 		BeanUtil.copyProperties(auditScale, auditScalePO,Arrays.asList("belongUser","belongDepartment","creater"));
@@ -143,7 +143,7 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAudtiScaleForStatus(AuditScaleVO auditScale) throws FLException{
+	public int updateAuditScaleForStatus(AuditScaleVO auditScale) throws FLException{
 		AuditScalePO auditScalePO = auditScaleDao.get(auditScale.getAsid());
 		
 		boolean status = true;
@@ -169,7 +169,7 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAudtiScale(AuditScaleVO auditScale) throws FLException {
+	public int deleteAuditScale(AuditScaleVO auditScale) throws FLException {
 		
 		AuditScalePO auditScalePO = auditScaleDao.get(auditScale.getAsid());
 		

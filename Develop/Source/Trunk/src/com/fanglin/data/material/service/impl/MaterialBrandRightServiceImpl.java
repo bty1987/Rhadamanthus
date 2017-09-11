@@ -53,10 +53,16 @@ public class MaterialBrandRightServiceImpl implements MaterialBrandRightService 
 			
 			if(!"".equals(materialBrandRightPO.getBrandId())){
 				
-				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
+				List<String> brandId = Arrays.asList(materialBrandRightPO.getBrandId().split("#"));
+				List<Long> brandIds = new ArrayList<Long>();
+				for(int i=0;i<brandId.size();i++) {
+					brandIds.add(Long.parseLong(brandId.get(i)));
+				}
+				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(brandIds); 
 				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 				
-				for(BrandPO brandPO: brandPOs){
+				for(BrandPO brandPO : brandPOs){
+				
 					BrandVO brandVO = new BrandVO();
 					
 					BeanUtil.copyProperties(brandPO, brandVO);
@@ -64,7 +70,7 @@ public class MaterialBrandRightServiceImpl implements MaterialBrandRightService 
 					
 					brandVOs.add(brandVO);
 				}
-				
+
 				materialBrandRightVO.setBrands(brandVOs);
 			}
 		}
@@ -72,43 +78,10 @@ public class MaterialBrandRightServiceImpl implements MaterialBrandRightService 
 		return materialBrandRightVO;
 	}
 
-	@Override
-	public MaterialBrandRightVO queryMaterialBrandForBrandByUserId(MaterialBrandRightVO materialBrandRightVO) {
-		
-		String userId = materialBrandRightVO.getUserId();
-		
-		MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(userId);
-		
-		if(materialBrandRightPO == null){
-			materialBrandRightVO.setUserId(userId);
-			materialBrandRightVO.setBrandId("");
-		}else{
-			BeanUtil.copyProperties(materialBrandRightPO, materialBrandRightVO, Arrays.asList("brands"));
-			
-			if(!"".equals(materialBrandRightPO.getBrandId())){
-				
-				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
-				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
-				
-				for(BrandPO brandPO: brandPOs){
-					BrandVO brandVO = new BrandVO();
-					
-					BeanUtil.copyProperties(brandPO, brandVO);
-					BeanUtil.copyProperties(brandPO.getCategory(), brandVO);
-					
-					brandVOs.add(brandVO);
-				}
-				
-				materialBrandRightVO.setBrands(brandVOs);
-			}
-		}
-		
-		return materialBrandRightVO;
-	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void saveMaterialBrandRight(MaterialBrandRightVO materialBrandRightVO){
+	public void updateMaterialBrandRight(MaterialBrandRightVO materialBrandRightVO){
 		
 		MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(materialBrandRightVO.getUserId());
 		

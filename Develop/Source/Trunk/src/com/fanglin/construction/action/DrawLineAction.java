@@ -102,7 +102,7 @@ public class DrawLineAction extends BaseListAction{
 		
 		drawLine.setStatus("放线成功");
 		
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId(), queryCompany());
 	
 		return SUCCESS;
 	}
@@ -112,7 +112,7 @@ public class DrawLineAction extends BaseListAction{
 		
 		drawLine.setStatus("放线失败");
 		
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId(), queryCompany());
 	
 		return SUCCESS;
 	}

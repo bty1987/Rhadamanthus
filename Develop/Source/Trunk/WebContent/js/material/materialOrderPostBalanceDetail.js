@@ -37,11 +37,11 @@ jQuery(function($) {
             }else{
                 for(var a = 0;a < _arr.length; a++){
                 	if(val.packageName == ""){
-                        if(val.materialModelName == _arr[a].materialModelName && val.materialModelNo == _arr[a].materialModelNo){
+                        if(val.materialModelName == _arr[a].materialModelName && val.materialModelNo == _arr[a].materialModelNo && val.price == _arr[a].price  && val.salePrice == _arr[a].salePrice && val.prePoint == _arr[a].prePoint){
                             _arr[a].num = utils.accAdd(val.num,_arr[a].num);
                             _arr[a].total = utils.accAdd(val.total,_arr[a].total);
                             break;
-                        }else if(val.materialModelName != _arr[a].materialModelName ||  val.materialModelNo != _arr[a].materialModelNo){
+                        }else if(val.materialModelName != _arr[a].materialModelName ||  val.materialModelNo != _arr[a].materialModelNo || val.price != _arr[a].price  || val.salePrice != _arr[a].salePrice || val.prePoint != _arr[a].prePoint){
                             flag ++;
                         }
 					}else{
@@ -49,11 +49,11 @@ jQuery(function($) {
                                 _arr[a].total = utils.accAdd(val.total,_arr[a].total);
                                 break;
 							}
-                            if(val.materialModelName == _arr[a].materialModelName && val.materialModelNo == _arr[a].materialModelNo && val.packageName == _arr[a].packageName){
+                            if(val.materialModelName == _arr[a].materialModelName && val.materialModelNo == _arr[a].materialModelNo && val.packageName == _arr[a].packageName && val.price == _arr[a].price  && val.salePrice == _arr[a].salePrice && val.prePoint != _arr[a].prePoint){
                                 _arr[a].num = utils.accAdd(val.num,_arr[a].num);
                                 _arr[a].total = utils.accAdd(val.total,_arr[a].total);
                                 break;
-                            }else if(val.materialModelName != _arr[a].materialModelName ||  val.materialModelNo != _arr[a].materialModelNo || val.packageName != _arr[a].packageName){
+                            }else if(val.materialModelName != _arr[a].materialModelName ||  val.materialModelNo != _arr[a].materialModelNo || val.packageName != _arr[a].packageName || val.price != _arr[a].price  || val.salePrice != _arr[a].salePrice || val.prePoint != _arr[a].prePoint){
                                 flag ++;
                             }
 					}

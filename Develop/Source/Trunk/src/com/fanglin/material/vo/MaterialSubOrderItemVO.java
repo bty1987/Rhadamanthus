@@ -21,8 +21,6 @@ public class MaterialSubOrderItemVO implements Serializable{
 	
 	private Long msoId;
 	
-	private Long mpId;
-	
 	private String materialModelNo;
 	
 	private String materialModelName;
@@ -97,14 +95,6 @@ public class MaterialSubOrderItemVO implements Serializable{
 
 	public void setMsoId(Long msoId){
 		this.msoId = msoId;
-	}
-
-	public Long getMpId(){
-		return mpId;
-	}
-
-	public void setMpId(Long mpId){
-		this.mpId = mpId;
 	}
 
 	public String getMaterialModelName(){

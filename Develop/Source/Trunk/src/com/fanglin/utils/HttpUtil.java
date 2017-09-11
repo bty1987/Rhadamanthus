@@ -8,6 +8,10 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -15,6 +19,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -38,13 +43,11 @@ public class HttpUtil {
 	
 	private static final int CONNECT_TIMEOUT_INT = 2000;
 	
-	private static final int RESPONSE_CODE_SUCCESS_INT = 200;
+	private static final List<Integer> RESPONSE_CODE_SUCCESS_LIST = Arrays.asList(200, 201, 202, 203, 204, 25, 206);
 	
 	private static final int RESPONSE_ERRCODE_SUCCESS_INT = 0;
 	
 	private static final String RESPONSE_PRINT_ISSUES_STR = "request url failed, http code=%d, url=%s";
-	
-	private static final String RESPONSE_PRINT_FAIL_STR = "request url=%s, return value=%s";
 	
 	private static final String RESPONSE_PRINT_EXCEPTION_STR = "request url=%s, exception, msg=%s";
 	
@@ -62,7 +65,7 @@ public class HttpUtil {
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
             
-            if (response.getStatusLine().getStatusCode() != RESPONSE_CODE_SUCCESS_INT) {
+            if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
                 logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
                 return null;
             }
@@ -76,15 +79,7 @@ public class HttpUtil {
 
                 JSONObject result = JSON.parseObject(resultStr);
                 
-                Integer errcode = result.getInteger("errcode");
-                Integer errorCode = result.getInteger("errorCode");
-                
-                if ((errcode != null && errcode == RESPONSE_ERRCODE_SUCCESS_INT) || (errorCode != null && errorCode == RESPONSE_ERRCODE_SUCCESS_INT)) {
-                    return result;
-                } else {
-                    logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
-                    return result;
-                }
+                return result;
             }
         } catch (IOException e) {
             logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
@@ -118,7 +113,7 @@ public class HttpUtil {
             
             response = httpClient.execute(httpPost, new BasicHttpContext());
 
-            if (response.getStatusLine().getStatusCode() != RESPONSE_CODE_SUCCESS_INT) {
+            if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
             	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
                 return null;
             }
@@ -132,12 +127,55 @@ public class HttpUtil {
                 
                 System.out.println(resultStr);
                 
-                if (result.getInteger("errcode") == RESPONSE_ERRCODE_SUCCESS_INT) {
-                    return result;
-                } else {
-                	logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
-                	return result;
+                return result;
+            }
+        } catch (IOException e) {
+        	logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
+        } finally {
+        	if (response != null) {
+            	try {
+                    response.close();
+                } catch (IOException e) {
+                	logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
                 }
+            }
+        }
+
+        return null;
+    }
+	
+	public static JSONObject httpPut(String url, Object data){
+        HttpPut httpPut = new HttpPut(url);
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SOCKET_TIMEOUT_INT).setConnectTimeout(CONNECT_TIMEOUT_INT).build();
+        httpPut.setConfig(requestConfig);
+        httpPut.addHeader("Content-Type", "application/json");
+        
+        System.out.println(url);
+        System.out.println(data.toString());
+
+        try {
+        	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
+            httpPut.setEntity(requestEntity);
+            
+            response = httpClient.execute(httpPut, new BasicHttpContext());
+
+            if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
+            	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
+                return null;
+            }
+            
+            HttpEntity entity = response.getEntity();
+            
+            if (entity != null) {
+                String resultStr = EntityUtils.toString(entity, "utf-8");
+
+                JSONObject result = JSON.parseObject(resultStr);
+                
+                System.out.println(resultStr);
+                
+                return result;
             }
         } catch (IOException e) {
         	logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
@@ -167,7 +205,7 @@ public class HttpUtil {
         try {
             response = httpClient.execute(httpPost, new BasicHttpContext());
 
-            if (response.getStatusLine().getStatusCode() != RESPONSE_CODE_SUCCESS_INT) {
+            if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
             	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
                 return null;
             }
@@ -224,7 +262,7 @@ public class HttpUtil {
                 
                 return obj;
             } else {
-                if (response.getStatusLine().getStatusCode() != RESPONSE_CODE_SUCCESS_INT) {
+            	if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
                 	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
                     return null;
                 }
@@ -297,6 +335,15 @@ public class HttpUtil {
     }
 	
 	public static void main(String[] args) {
-		HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg", "test.jpg", "d:\\");
+//		HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg", "test.jpg", "d:\\");
+		
+		String url = "http://192.168.5.100:9200/test/test";
+		
+		Map<String, String> param = new HashMap<String, String>();
+		
+		param.put("name", "test2");
+		
+		HttpUtil.httpPost(url, param);
+		
 	}
 }

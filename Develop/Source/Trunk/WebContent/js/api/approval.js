@@ -15,11 +15,12 @@ $.extend(api, {approval: {
 	pageApprovalBySenderId: {url: "pageApprovalBySenderId.do", demo: true},
 	pageApproveUser: {url: "pageApproveUser.do", demo: true},
 	queryApprovalByAId: {url: "queryApprovalByAId.do"},
-    queryApproveUserForNameByType: {url: "queryApproveUserForNameByType.do"},
+	queryApproveUserForNameByType: {url: "queryApproveUserForNameByType.do"},
 	queryApprovalSalesRefundItem: {url: "queryApprovalSalesRefundItem.do"},
-    queryApprovalManifestDBItem: {url: "queryApprovalManifestDBItem.do"},
-    queryApprovalMaterialRefundItem: {url: "queryApprovalMaterialRefundItem.do"},
-        
+	queryApprovalManifestDBItem: {url: "queryApprovalManifestDBItem.do"},
+	queryApprovalMaterialRefundItem: {url: "queryApprovalMaterialRefundItem.do"},
+	queryApproveUserByType:{url: "queryApproveUserByType.do"},  
+ 
 	submitApprovalForCustomer: {url: "submitApprovalForCustomer.do"},
 	submitApprovalForVillage: {url: "submitApprovalForVillage.do"},
 	submitApprovalForOrderBelong: {url: "submitApprovalForOrderBelong.do"},
@@ -31,12 +32,12 @@ $.extend(api, {approval: {
 	submitApprovalForDecorationActivity: {url: "submitApprovalForDecorationActivity.do"},
 	submitApprovalForSalesRefund: {url: "submitApprovalForSalesRefund.do"},
 	submitApprovalForManifestDB:{url: "submitApprovalForManifestDB.do"},
-      submitApprovalForSalesDiscount: {url: "submitApprovalForSalesDiscount.do"},
+	submitApprovalForSalesDiscount: {url: "submitApprovalForSalesDiscount.do"},
 
 	approveApproval: {url: "approveApproval.do"},
 	refuseApproval: {url: "refuseApproval.do"},
-    deleteApproveUser: {url: "deleteApproveUser.do"},
-    addApproveUser: {url: "addApproveUser.do"},
+	deleteApproveUser: {url: "deleteApproveUser.do"},
+	addApproveUser: {url: "addApproveUser.do"},
       
     
 }});

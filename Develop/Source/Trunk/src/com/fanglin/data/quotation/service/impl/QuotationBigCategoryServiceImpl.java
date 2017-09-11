@@ -34,9 +34,16 @@ public class QuotationBigCategoryServiceImpl implements QuotationBigCategoryServ
 	private QuotationBigCategoryDao quotationBigCategoryDao;
 	
 	@Override
-	public List<QuotationBigCategoryVO> queryQuotationBigCategory(){
+	public List<QuotationBigCategoryVO> queryQuotationBigCategory(QuotationBigCategoryVO quotationBigCategory){
 		
-		List<QuotationBigCategoryPO> quotationBigCategoryPOs = quotationBigCategoryDao.list();
+		List<QuotationBigCategoryPO> quotationBigCategoryPOs = null;
+		
+		if(quotationBigCategory!=null){
+			quotationBigCategoryPOs = quotationBigCategoryDao.queryQuotationBigCategory(quotationBigCategory.getQtid());
+		}else{
+			 quotationBigCategoryPOs = quotationBigCategoryDao.list();
+		}
+		
 		List<QuotationBigCategoryVO> quotationBigCategoryVOs = new ArrayList<QuotationBigCategoryVO>();
 		
 		for(QuotationBigCategoryPO quotationBigCategoryPO: quotationBigCategoryPOs){

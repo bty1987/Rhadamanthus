@@ -38,7 +38,7 @@
 					<div class="form-group">
 						<label for="form-field-1" class="col-sm-3 control-label no-padding-right" for="complaintTime">时间</label>
 						<div class="col-sm-9">
-							<input id="complaintTime" class="date-picker col-xs-10 col-sm-5 v_required" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+							<input id="complaintTime" class="date-picker col-xs-10 col-sm-5 v_required" readonly="readonly" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
 						</div>
 					</div>
 				
@@ -67,7 +67,7 @@
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right" for="complaintDes">描述</label>
 						<div class="col-sm-9">
-							<textarea id="complaintDes" rows="3" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
+							<textarea id="complaintDes" maxlength="256" rows="3" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
 						</div>
 					</div>
 					<div class="space-4"></div>

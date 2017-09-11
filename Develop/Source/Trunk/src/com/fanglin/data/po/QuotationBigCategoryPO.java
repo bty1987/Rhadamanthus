@@ -28,7 +28,7 @@ public class QuotationBigCategoryPO implements Serializable{
 	
 	private String name;
 	
-	private long quotationType;
+	private int qtid;
 	
 	public QuotationBigCategoryPO(){
 		
@@ -56,15 +56,14 @@ public class QuotationBigCategoryPO implements Serializable{
 	public void setName(String name){
 		this.name = name;
 	}
-	
+
 	@Column(name="quotationType")
-	public long getQuotationType() {
-		return quotationType;
+	public int getQtid() {
+		return qtid;
 	}
 
-	public void setQuotationType(long quotationType) {
-		this.quotationType = quotationType;
+	public void setQtid(int qtid) {
+		this.qtid = qtid;
 	}
-
 	
 }

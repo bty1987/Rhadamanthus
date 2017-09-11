@@ -119,9 +119,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			initQuotationList();
 		}, null, false);
-		
-		btn.button("reset");
-		
+
 		decorationQuotation.replicaQuotationModal.modal("hide");
 	});
 	

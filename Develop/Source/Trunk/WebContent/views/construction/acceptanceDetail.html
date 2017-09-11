@@ -42,7 +42,7 @@
 								</div>
 								<label class="col-sm-1 control-label no-padding-right" for="acceptanceTime">验收日期</label>
 								<div class="col-sm-3">
-									<input id="acceptanceTime" class="date-picker col-sm-8 v_required" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									<input id="acceptanceTime" class="date-picker col-sm-8 v_required" readonly="readonly" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
 								</div>
 							</div>
 						
@@ -61,58 +61,7 @@
 				</div>
 
 				<div class="widget-body">
-					<div class="widget-main">
-						
-						<form class="form-horizontal">
-				
-							<div class="form-group">
-								<label class="col-sm-1 control-label no-padding-right" for="waterwayQualityName">水路质检</label>
-								<div class="col-sm-1">
-									<input id="waterwayQualityName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="circuitQualityName">电路质检</label>
-								<div class="col-sm-1">
-									<input id="circuitQualityName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="bricklayQualityName">瓦工质检</label>
-								<div class="col-sm-1">
-									<input id="bricklayQualityName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="carpentQualityName">木工质检</label>
-								<div class="col-sm-1">
-									<input id="carpentQualityName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="oilQualityName">油工质检</label>
-								<div class="col-sm-1">
-									<input id="oilQualityName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="col-sm-1 control-label no-padding-right" for="waterwayWorkerName">水路工人</label>
-								<div class="col-sm-1">
-									<input id="waterwayWorkerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="circuitWorkerName">电路工人</label>
-								<div class="col-sm-1">
-									<input id="circuitWorkerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="bricklayWorkerName">瓦工工人</label>
-								<div class="col-sm-1">
-									<input id="bricklayWorkerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="carpentWorkerName">木工工人</label>
-								<div class="col-sm-1">
-									<input id="carpentWorkerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-								<label class="col-sm-1 control-label no-padding-right" for="oilWorkerName">油工工人</label>
-								<div class="col-sm-1">
-									<input id="oilWorkerName" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
-								</div>
-							</div>
-						
-						</form>
-					
+					<div class="widget-main" id="constructerDiv" style="margin-left:30px">
 					</div>
 				</div>
 			</div>
@@ -425,7 +374,7 @@
 								<div class="row col-sm-6">
 									<label class="col-sm-3 control-label no-padding-right" for="propose">建议</label>
 									<div class="col-sm-9">
-										<textarea id="propose" rows="3" cols="10" class="col-sm-12"></textarea>
+										<textarea id="propose" maxlength="256" rows="3" cols="10" class="col-sm-12"></textarea>
 									</div>
 								</div>
 							</div>
