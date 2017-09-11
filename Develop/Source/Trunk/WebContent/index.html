@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <title>Information Platform</title>
+    
     <meta charset="utf-8" />
     <meta content="no-cache"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -55,10 +58,10 @@
         csses += '<link rel="stylesheet" href="assets/css/datepicker.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/css/daterangepicker.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/zTreeStyle.css?version=' + versionCode + '" />';
+        csses +=
         csses += '<link rel="stylesheet" href="assets/css/huploadify.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/css/colorbox.css?version=' + versionCode + '" />';
-		csses += '<link rel="stylesheet" href="assets/css/layer.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/css/layer.css?version=' + versionCode + '" />';
 
         csses += '<link rel="stylesheet" href="assets/css/ace.css?version=' + versionCode + '" />'; // ace styles
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
@@ -84,11 +87,18 @@
 
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
-            <a href="#" class="navbar-brand" id="name"></a>
+            <a href="#" class="navbar-brand" id="name">Information Platform</a>
         </div>
 
         <div class="navbar-header pull-right">
             <ul class="nav ace-nav">
+                <li class="dark">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <span class="companyinfo"><small></small><span class="companyName"></span></span>
+                        <i class="icon-caret-down"></i>
+                    </a>
+                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
+                </li>
                 <li class="red">
                     <a href="#" id="faqInfo">
                         <i class="icon-key"></i>
@@ -247,7 +257,6 @@
     jses += '<script src="assets/js/ace.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="assets/js/ace-elements.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="assets/js/ace-extra.min.js?version=' + versionCode + '"><\/script>';
-	jses += '<script src="assets/js/layer.js?version=' + versionCode + '"><\/script>';
 
     jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
@@ -259,7 +268,7 @@
     jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-
+    jses += '<script src="assets/js/layer.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
     document.write(jses);

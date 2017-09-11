@@ -30,19 +30,21 @@ public class MaterialDesignerRankDaoImpl extends DaoImpl<MaterialDesignerRankPO>
 	}
 	
 	@Override
-	public MaterialDesignerRankPO queryMaterialDesignerRankByDesignerIdInit(String designerId){
+	public MaterialDesignerRankPO queryMaterialDesignerRankByDesignerIdInit(String designerId,int company){
 		return (MaterialDesignerRankPO) session().createCriteria(MaterialDesignerRankPO.class)
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
+				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_STATUS_STR, MaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MaterialDesignerRankPO> queryMaterialDesignerRankForTop(int top){
+	public List<MaterialDesignerRankPO> queryMaterialDesignerRankForTop(int top,int company){
 		
 		Criteria criteria = session().createCriteria(MaterialDesignerRankPO.class)
 				.add(Restrictions.ne(MaterialDesignerRankPO.COLUMN_DESIGNERID_STR, ""))
+				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_STATUS_STR, MaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(MaterialDesignerRankPO.COLUMN_RANK_STR));
 		
@@ -54,13 +56,13 @@ public class MaterialDesignerRankDaoImpl extends DaoImpl<MaterialDesignerRankPO>
 	}
 	
 	@Override
-	public List<?> queryMaterialDesignerRankForPlaceByDesignerId(String designerId) {
+	public List<?> queryMaterialDesignerRankForPlaceByDesignerId(String designerId,int company) {
 		
 		int status = MaterialDesignerRankPO.STATUS_TYPE_INIT_INT;
 		
-		String sql = "select b.rank, (select count(1)+1 from platform.materialdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank) place from platform.materialdesignerrank b where b.status =:statusC and b.designerId =:designerId";
+		String sql = "select b.rank, (select count(1)+1 from platform.materialdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank and a.company =:companyA and b.company =:companyB) place from platform.materialdesignerrank b where b.status =:statusC and b.designerId =:designerId and b.company =:companyC";
 		
-		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setString("designerId", designerId).list();
+		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setInteger("companyA", company).setInteger("companyB", company).setInteger("companyC", company).setString("designerId", designerId).list();
 	}
 
 }

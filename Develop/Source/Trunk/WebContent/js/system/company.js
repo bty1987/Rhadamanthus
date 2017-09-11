@@ -31,7 +31,20 @@
 
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
+			var propertyArr = [
+			   	["编号:", v.no, "grey"],
+			   	["全名:", v.fullname, "grey"],
+			   	["地址:", v.address, "grey"],
+			   	["法人:", v.corporation, "grey"],
+			   	["电话:", v.phone, "grey"],
+			 ];
+			$.each(propertyArr, function (index,value) {
+	               var $liProperty = $('<li></li>');
+	               $('<strong></strong>').html(value[0]).appendTo($liProperty);
+	               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+	               $liProperty.appendTo($ulProperty);
+	           });
+			
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');
 			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -101,11 +114,14 @@
     	
    //给全局变量赋值（主要操作是制定页面标签）
 //	company.saveBtn = $("#saveAddItemBtn").on("click", saveData);
-	company.cancelBtn = $("#cancelBtn");
+    company.cancelBtn = $("#cancelBtn");
 	company.modal = $("#addItemModal");
 	company.companyItems.cid = $("#cid");
+	company.companyItems.fullname = $("#fullname");
+	company.companyItems.address = $("#address");
+	company.companyItems.corporation = $("#corporation");
+	company.companyItems.phone = $("#phone");
 	company.companyItems.name = $("#_name");
-
 
 	company.companyItems.no = $("#no").on("blur",function(){
 		$this = $(this);
@@ -130,7 +146,11 @@
 		company.companyItems.cid.val(row.cid);
 		company.companyItems.no.val(row.no);
 		company.companyItems.name.val(row.name);
-
+		company.companyItems.fullname.val(row.fullname);
+		company.companyItems.address.val(row.address);
+		company.companyItems.corporation.val(row.corporation);
+		company.companyItems.phone.val(row.phone);
+		
 		company.companyItems.no.prop("disabled", true);
 
 		company.modal.modal("show"); //弹出弹层
@@ -144,7 +164,11 @@
     	var options = {
 			
     		"company.no":company.companyItems.no.val(),
-    		"company.name": $('#_name').val()
+    		"company.name": $('#_name').val(),
+    		"company.fullname": $('#fullname').val(),
+    		"company.address": $('#address').val(),
+    		"company.corporation": $('#corporation').val(),
+    		"company.phone": $('#phone').val(),
     	};
 
     	if(company.editFlg) {

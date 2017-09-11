@@ -9,7 +9,10 @@ $.extend(api.index, {
     quotationDetailIndex: {url: "/views/quotation/quotationDetail.html"},
     quotationPartIndex: {url: "/views/quotation/quotationPart.html"},
     quotationWholeIndex: {url: "/views/quotation/quotationWhole.html"},
-    quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"}
+    quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"},
+
+    extensionIndex: {url: "/views/quotation/extension.html"},
+    extensionDetailIndex: {url: "/views/quotation/extensionDetail.html"},
 });
 
 $.extend(api.ds, {
@@ -27,8 +30,7 @@ $.extend(api, {quotation: {
     queryQuotationVersionByVersionId: {url: "queryQuotationVersionByVersionId.do"},
     addQuotationVersion: {url: "addQuotationVersion.do"},
     updateQuotationVersion: {url: "updateQuotationVersion.do"},
-    copyQuotationVersion: {url: "copyQuotationVersion.do"},
-
+    
     pageFunctionArea: {url: "pageFunctionArea.do", demo: true},
     queryFunctionAreaByIdAVersionId: {url: "queryFunctionAreaByIdAVersionId.do"},
     queryFunctionAreaByVersionId: {url: "queryFunctionAreaByVersionId.do", demo: true},
@@ -65,7 +67,6 @@ $.extend(api, {quotation: {
     queryQuotationByOrderId: {url: "queryQuotationByOrderId.do", demo: true},
     queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do", demo: true},
     queryQuotationById: {url: "queryQuotationById.do", demo: true},
-    queryQuotationForStatusByOrderId: {url: "queryQuotationForStatusByOrderId.do", demo: true},
     queryQuotationForConfig: {url: "queryQuotationForConfig.do", demo: true},
     checkQuotationForStatusByOrderId: {url: "checkQuotationForStatusByOrderId.do"},
     addQuotation: {url: "addQuotation.do"},
@@ -86,11 +87,20 @@ $.extend(api, {quotation: {
     updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
     updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
     deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
+    updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 
-    queryQuotationMaterialItemByQId: {url:"queryQuotationMaterialItemByQId.do"},
-    addQuotationMaterialItem: {url:"addQuotationMaterialItem.do"},
-    upgradeQuotationMaterialItem: {url:"upgradeQuotationMaterialItem.do"},
-    discountQuotationMaterialItem: {url:"discountQuotationMaterialItem.do"},
-    deleteQuotationMaterialItem: {url:"deleteQuotationMaterialItem.do"},
-    updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"}
+
+    pageExtensionByOrderId:{url:"pageExtensionByOrderId.do"},
+    queryExtensionByOrderId:{url:"queryExtensionByOrderId.do"},
+    addExtension:{url:"addExtension.do"},
+    updateExtension:{url:"updateExtension.do"},
+    updateExtensionForAdvance:{url:"updateExtensionForAdvance.do"},
+    deleteExtension:{url:"deleteExtension.do"},
+
+    queryExtensionItemByEid:{url:"queryExtensionItemByEid.do"},
+    queryExtensionItemByEids:{url:"queryExtensionItemByEids.do"},
+    updateExtensionItem:{url:"updateExtensionItem.do"},
+    deleteExtensionItem:{url:"deleteExtensionItem.do"},
+
+
 }});

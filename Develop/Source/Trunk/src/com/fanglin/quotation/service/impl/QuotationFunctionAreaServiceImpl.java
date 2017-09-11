@@ -25,9 +25,12 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
+import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -49,6 +52,12 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	
 	@Autowired
 	private QuotationDao quotationDao;
+	
+	@Autowired
+	private ExtensionDao extensionDao;
+	
+	@Autowired
+	private ExtensionItemDao extensionItemDao;
 	
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
@@ -160,17 +169,16 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 			
-			short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT;
-			
-			if(Arrays.asList(new Short[]{QuotationFunctionAreaPO.TYPE_FUNCTIONAREA_TOTAL_INT, QuotationFunctionAreaPO.TYPE_NOT_COUNT_INT}).contains(quotationFunctionAreaPO.getType())){
-				itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT;
-			}
 			
 			for(FunctionAreaItemPO functionAreaItemPO: functionAreaItemPOs){
+				short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT;
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 				
 				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
 				
+				if(functionAreaItemPO.getQuotationItem().getQuotationType().getId() == 2){
+					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_MATERIAL_INT;
+				}
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
 				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getItemName());
 				quotationFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
@@ -231,6 +239,20 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		
 		if(quotationPO == null){
 			throw new FLException(200003, "报价不存在");
+		}
+		
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(quotationPO.getDecorationOrder().getOrderId());
+		if(extensionPOs != null && extensionPOs.size()>0){
+			List<Long> extensionIds =new ArrayList<Long>();
+			for (ExtensionPO extensionPO:extensionPOs) {
+				extensionIds.add(extensionPO.getEid());
+			}
+			List<Integer> distincts = extensionItemDao.queryQuotationFunctionAreaIdByEids(extensionIds);
+				for(int distinct : distincts){
+					if(distinct == quotationFunctionAreaVO.getQfaId()){
+						throw new FLException(200028, "功能区存在拓展项");
+					}
+				}
 		}
 		
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);

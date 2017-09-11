@@ -94,8 +94,8 @@ jQuery(function($) {
 		decorationOrderDetail.printQuotationModal.modal("show");
 	});
 	
-	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 1}, "autoFillKeyValue", "key", "value");
+	// com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
+	// com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 1}, "autoFillKeyValue", "key", "value");
 	com.initChosen('villageSel', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", 'key', 'value').on('change', function(e){
 		if($("#villageSel").val() == null||$("#villageSel").val() == "") return;
 		
@@ -166,20 +166,27 @@ jQuery(function($) {
 		});
 		
 		$("#customerDes").val("");
-		
-		com.updateChosen('approveManSel', '', '');
+
+		approvalUtils.initqueryApprovalUser("approveManSel",1);
 		
 		$("#customerApproveModal").modal("show");
 	});
 	
 	$("#cApproveSaveBtn").on("click", function(){
 		
-		if (com.validate('customerApproveModal')){
+		if (com.validate('customerApproveModal') || decorationOrderDetail.cRepeatFlg){
+			return;
+		}
+
+		var receiverId = $("#approveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
 			return;
 		}
 		
 		var options = {
-			"approval.receiverId": $("#approveManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": $("#customerDes").val(),
 			"approvalCustomer.customerId": decorationOrderDetail.customer.id,
 			"approvalCustomer.newCustomerName": $("#customerName").val(),
@@ -196,9 +203,7 @@ jQuery(function($) {
 	$('#villageApproveBtn').on("click", function(){
 		com.clearValidator();
 		com.clearValidator("#houseNumber", true);
-		
-		com.updateChosen('approveManSel', decorationOrderDetail.village.villageId, decorationOrderDetail.village.villageName);
-		com.updateChosen('vApproveManSel', '', '');
+
 		
 		$("#houseNumber").val(decorationOrderDetail.village.houseNumber);
 		
@@ -207,7 +212,7 @@ jQuery(function($) {
 		
 		$("#buildingRuleContent").text("说明："+decorationOrderDetail.village.ruleContent+";eg."+decorationOrderDetail.village.ruleExample);
 		$("#villageDes").val("");
-		
+		approvalUtils.initqueryApprovalUser("vApproveManSel",2);
 		$("#villageApproveModal").modal("show");
 	});
 	
@@ -233,9 +238,23 @@ jQuery(function($) {
 		if(com.validate('villageApproveModal')|| decorationOrderDetail.vRepeatFlg){
 			return;
 		}
-			
+
+		var receiverId = $("#vApproveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+		var reg = new RegExp("\\s");
+		var houseNumber = $("#houseNumber").val().substr(1).match(reg);
+
+		if(houseNumber != null ){
+			com.showAlert(com.error,"楼牌号不允许存在空格");
+			return;
+		}
+		
 		var options = {
-			"approval.receiverId": $("#vApproveManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": $("#villageDes").val(),
 			"approvalVillage.orderId": $("#orderId").val(),
 			"approvalVillage.newVillageId": $("#villageSel").val(),
@@ -322,7 +341,7 @@ function initWizard(){
 		curstep == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
 		
 		if(curstep == 2){
-			decorationUtils.loadQuotationDetail();
+			quotationUtils.loadQuotationDetail();
 		}else if(curstep == 3){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if(curstep == 4){
@@ -339,7 +358,7 @@ function initWizard(){
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide");
 		
 		if(info.step == 2){
-			decorationUtils.loadQuotationDetail();
+			quotationUtils.loadQuotationDetail();
 		}else if(info.step == 3){
 			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 4){

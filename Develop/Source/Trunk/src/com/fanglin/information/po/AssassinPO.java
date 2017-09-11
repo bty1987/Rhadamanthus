@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "assassin", catalog = "platform")
+@Table(name = "assassin", catalog = "information")
 public class AssassinPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8696621508235364905L;

@@ -19,31 +19,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.Filter;
-import com.fanglin.report.dao.MaterialBrandCountDao;
 import com.fanglin.report.dao.MaterialDepartmentCountDao;
 import com.fanglin.report.dao.MaterialDesignerCountDao;
 import com.fanglin.report.dao.MaterialDesignerDepartmentCountDao;
 import com.fanglin.report.dao.MaterialDesignerRegionCountDao;
-import com.fanglin.report.dao.MaterialTypeCountDao;
 import com.fanglin.report.dao.ZaterialDesignerCountDao;
 import com.fanglin.report.dao.ZaterialDesignerDepartmentCountDao;
 import com.fanglin.report.dao.ZaterialDesignerRegionCountDao;
-import com.fanglin.report.po.MaterialBrandCountPO;
 import com.fanglin.report.po.MaterialDepartmentCountPO;
 import com.fanglin.report.po.MaterialDesignerCountPO;
 import com.fanglin.report.po.MaterialDesignerDepartmentCountPO;
 import com.fanglin.report.po.MaterialDesignerRegionCountPO;
-import com.fanglin.report.po.MaterialTypeCountPO;
 import com.fanglin.report.po.ZaterialDesignerCountPO;
 import com.fanglin.report.po.ZaterialDesignerDepartmentCountPO;
 import com.fanglin.report.po.ZaterialDesignerRegionCountPO;
 import com.fanglin.report.service.MaterialReportService;
-import com.fanglin.report.vo.MaterialBrandCountVO;
 import com.fanglin.report.vo.MaterialDepartmentCountVO;
 import com.fanglin.report.vo.MaterialDesignerCountVO;
 import com.fanglin.report.vo.MaterialDesignerDepartmentCountVO;
 import com.fanglin.report.vo.MaterialDesignerRegionCountVO;
-import com.fanglin.report.vo.MaterialTypeCountVO;
 import com.fanglin.report.vo.ZaterialDesignerCountVO;
 import com.fanglin.report.vo.ZaterialDesignerDepartmentCountVO;
 import com.fanglin.report.vo.ZaterialDesignerRegionCountVO;
@@ -53,12 +47,6 @@ import com.fanglin.utils.BeanUtil;
 @Service("materialReportService")
 @Transactional(readOnly=true)
 public class MaterialReportServiceImpl implements MaterialReportService {
-	
-	@Autowired
-	private MaterialTypeCountDao materialTypeCountDao;
-	
-	@Autowired
-	private MaterialBrandCountDao materialBrandCountDao;
 	
 	@Autowired
 	private MaterialDepartmentCountDao materialDepartmentCountDao;
@@ -81,46 +69,6 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	@Autowired
 	private ZaterialDesignerRegionCountDao zaterialDesignerRegionCountDao;
 	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialTypeCount(String materialType, float count, String currentTime) {
-		
-		MaterialTypeCountPO materialTypeCountPO = materialTypeCountDao.queryMaterialTypeCountByMaterialTypeATime(materialType, currentTime);
-		
-		if(materialTypeCountPO != null){
-			materialTypeCountPO.setTotal(Arith.add(materialTypeCountPO.getTotal(), count));
-		}else{
-			materialTypeCountPO = new MaterialTypeCountPO();
-			materialTypeCountPO.setCreateTime(currentTime);
-			materialTypeCountPO.setMaterialType(materialType);
-			materialTypeCountPO.setTotal(count);
-		}
-		
-		materialTypeCountDao.saveOrUpdate(materialTypeCountPO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialBrandCount(String materialBrand, float count, String currentTime) {
-		
-		MaterialBrandCountPO materialBrandCountPO = materialBrandCountDao.queryMaterialBrandCountByMaterialBrandATime(materialBrand, currentTime);
-		
-		if(materialBrandCountPO != null){
-			materialBrandCountPO.setTotal(Arith.add(materialBrandCountPO.getTotal(), count));
-		}else{
-			materialBrandCountPO = new MaterialBrandCountPO();
-			materialBrandCountPO.setCreateTime(currentTime);
-			materialBrandCountPO.setMaterialBrand(materialBrand);
-			materialBrandCountPO.setTotal(count);
-		}
-		
-		materialBrandCountDao.saveOrUpdate(materialBrandCountPO);
-		
-		return 0;
-	}
-
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updateMaterialDepartmentCount(String departmentId, float count, String currentTime) {
@@ -283,38 +231,6 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 	}
 
 	@Override
-	public List<MaterialTypeCountVO> reportMaterialTypeCount(List<Filter> filters) {
-		
-		List<MaterialTypeCountPO> materialTypeCountPOs = materialTypeCountDao.queryMaterialTypeCount(filters);
-		List<MaterialTypeCountVO> materialTypeCountVOs = new ArrayList<MaterialTypeCountVO>();
-		
-		for(MaterialTypeCountPO materialTypeCountPO: materialTypeCountPOs){
-			MaterialTypeCountVO materialTypeCountVO = new MaterialTypeCountVO();
-			BeanUtil.copyProperties(materialTypeCountPO, materialTypeCountVO);
-			
-			materialTypeCountVOs.add(materialTypeCountVO);
-		}
-		
-		return materialTypeCountVOs;
-	}
-
-	@Override
-	public List<MaterialBrandCountVO> reportMaterialBrandCount(List<Filter> filters) {
-		
-		List<MaterialBrandCountPO> materialBrandCountPOs = materialBrandCountDao.queryMaterialBrandCount(filters);
-		List<MaterialBrandCountVO> materialBrandCountVOs = new ArrayList<MaterialBrandCountVO>();
-		
-		for(MaterialBrandCountPO materialBrandCountPO: materialBrandCountPOs){
-			MaterialBrandCountVO materialBrandCountVO = new MaterialBrandCountVO();
-			BeanUtil.copyProperties(materialBrandCountPO, materialBrandCountVO);
-			
-			materialBrandCountVOs.add(materialBrandCountVO);
-		}
-		
-		return materialBrandCountVOs;
-	}
-
-	@Override
 	public List<MaterialDepartmentCountVO> reportMaterialDepartmentCount(List<Filter> filters){
 		
 		List<MaterialDepartmentCountPO> materialDepartmentCountPOs = materialDepartmentCountDao.queryMaterialDepartmentCount(filters);
@@ -419,42 +335,6 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 		}
 		
 		return zaterialDesignerRegionCountVOs;
-	}
-
-	@Override
-	public List<MaterialTypeCountVO> countMaterialTypeCount(List<Filter> filters) {
-		
-		List<Object> result = materialTypeCountDao.countMaterialTypeCount(filters);
-		List<MaterialTypeCountVO> materialTypeCountVOs = new ArrayList<MaterialTypeCountVO>();
-		
-		for(Object r: result){
-			Object[] materialTypeCount = (Object[]) r;
-			
-			MaterialTypeCountVO materialTypeCountVO = new MaterialTypeCountVO();
-			materialTypeCountVO.setTotal(Float.valueOf(materialTypeCount[0].toString()));
-			materialTypeCountVO.setMaterialType(materialTypeCount[1].toString());
-			materialTypeCountVOs.add(materialTypeCountVO);
-		}
-		
-		return materialTypeCountVOs;
-	}
-
-	@Override
-	public List<MaterialBrandCountVO> countMaterialBrandCount(List<Filter> filters) {
-		
-		List<Object> result = materialBrandCountDao.countMaterialBrandCount(filters);
-		List<MaterialBrandCountVO> materialBrandCountVOs = new ArrayList<MaterialBrandCountVO>();
-		
-		for(Object r: result){
-			Object[] materialBrandCount = (Object[]) r;
-			
-			MaterialBrandCountVO materialBrandCountVO = new MaterialBrandCountVO();
-			materialBrandCountVO.setTotal(Float.valueOf(materialBrandCount[0].toString()));
-			materialBrandCountVO.setMaterialBrand(materialBrandCount[1].toString());
-			materialBrandCountVOs.add(materialBrandCountVO);
-		}
-		
-		return materialBrandCountVOs;
 	}
 
 	@Override

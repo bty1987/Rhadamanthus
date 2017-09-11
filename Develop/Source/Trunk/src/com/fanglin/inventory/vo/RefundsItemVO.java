@@ -1,7 +1,5 @@
 package com.fanglin.inventory.vo;
 
-import com.fanglin.inventory.vo.SalesItemVO;
-
 public class RefundsItemVO implements java.io.Serializable{
 
 	private static final long serialVersionUID = 5543447445422987680L;

@@ -17,8 +17,6 @@ import com.fanglin.data.common.vo.BrandUserRightVO;
 
 public interface BrandUserRightService {
 	
-	public List<BrandUserRightVO> queryBrandUserRightForUserId(BrandUserRightVO brandUserRightVO);
-	
 	public List<BrandUserRightVO> queryBrandUserRightForLogin(String userId);
 	
 	public void updateBrandUserRight(BrandUserRightVO brandUserRightVO, List<Long> bids);

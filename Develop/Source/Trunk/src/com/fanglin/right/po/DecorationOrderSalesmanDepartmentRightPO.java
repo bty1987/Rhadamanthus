@@ -31,10 +31,11 @@ public class DecorationOrderSalesmanDepartmentRightPO implements java.io.Seriali
 		super();
 	}
 
-	public DecorationOrderSalesmanDepartmentRightPO(int uid, int did) {
+	public DecorationOrderSalesmanDepartmentRightPO(int uid, int did, int company) {
 		super();
 		this.uid = uid;
 		this.did = did;
+		this.company = company;
 	}
 
 	@Id

@@ -31,9 +31,9 @@ public class ApproveUserAction extends BaseListAction {
 	private UserVO user;
 
 	private ApproveUserVO approveUser;
-
-	private List<ApproveUserVO> approveUserList;
-
+	
+	private List<ApproveUserVO> approvalUsers;
+	
 	private List<Integer> approveUserIds;
 	
 	private List<KeyValueVO> autoFillKeyValue;
@@ -42,6 +42,14 @@ public class ApproveUserAction extends BaseListAction {
 	public String queryPageapproveUser() throws FLException{
 		
 		approveUserService.pageApproveUser(getPaging(), getFilters(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryApproveUserByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApproveUserByType() throws FLException{
+		
+		approvalUsers = approveUserService.queryApprovalUserByType(approveUser,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -94,12 +102,12 @@ public class ApproveUserAction extends BaseListAction {
 		this.approveUser = approveUser;
 	}
 
-	public List<ApproveUserVO> getApproveUserList() {
-		return approveUserList;
+	public List<ApproveUserVO> getApprovalUsers() {
+		return approvalUsers;
 	}
 
-	public void setApproveUserList(List<ApproveUserVO> approveUserList) {
-		this.approveUserList = approveUserList;
+	public void setApprovalUsers(List<ApproveUserVO> approvalUsers) {
+		this.approvalUsers = approvalUsers;
 	}
 
 	public List<Integer> getApproveUserIds() {

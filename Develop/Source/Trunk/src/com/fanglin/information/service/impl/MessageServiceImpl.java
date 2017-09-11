@@ -1,11 +1,3 @@
-/**
- * Title: MessageServiceImpl
- * Description:
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
- * @author bty1987
- */
-
 package com.fanglin.information.service.impl;
 
 import java.util.ArrayList;
@@ -13,11 +5,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.MessageDao;
@@ -42,8 +32,8 @@ public class MessageServiceImpl implements MessageService {
 	private UserDao userDao;
 	
 	@Override
-	public void pageMessage(Paging paging, List<Filter> filters, String userId){
-		List<MessagePO> messagePOs = messageDao.pageMessages(paging, filters, userId);
+	public void pageMessage(Paging paging, List<Filter> filters, String userId,int company){
+		List<MessagePO> messagePOs = messageDao.pageMessages(paging, filters, userId,company);
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
 		
 		for(MessagePO messagePO: messagePOs){
@@ -54,8 +44,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public List<MessageVO> queryMessageForUnRead(String userId){
-		List<MessagePO> messagePOs = messageDao.queryMessageForUnreadByUserId(userId);
+	public List<MessageVO> queryMessageForUnRead(String userId,int company){
+		List<MessagePO> messagePOs = messageDao.queryMessageForUnreadByUserId(userId,company);
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
 		
 		for(MessagePO messagePO: messagePOs){
@@ -66,22 +56,22 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public int countMessage(String userId){
-		return messageDao.queryMessageCount(userId);
+	public int countMessage(String userId,int company){
+		return messageDao.queryMessageCount(userId,company);
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void sendMessage(MessageVO messageVO) throws FLException{
+	public void sendMessage(MessageVO messageVO,int company) throws FLException{
 		
 		messageVO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		saveMessage(messageVO);
+		saveMessage(messageVO,company);
 	}
 	
 	@Override
     @Transactional(rollbackFor=Exception.class)
-    public void saveMessage(MessageVO messageVO){
+    public void saveMessage(MessageVO messageVO,int company){
 		
 		if(messageVO.getArgs() != null){
 			Map<String, String> args = MessageUtil.getMapFromStr(messageVO.getArgs());
@@ -97,12 +87,9 @@ public class MessageServiceImpl implements MessageService {
         String senderID = messageVO.getSender().getUserId();
         UserPO receiver = userDao.queryUserByUserId(receiverID);
         UserPO sender = userDao.queryUserByUserId(senderID);
-        
+        messagePO.setCompany(company);
         messagePO.setReceiver(receiver);
         messagePO.setSender(sender);
-        
-        /*BeanUtil.copyProperties(messageVO.getReceiver(), messagePO.getReceiver(), Arrays.asList("role", "dept"));
-        BeanUtil.copyProperties(messageVO.getSender(), messagePO.getSender(), Arrays.asList("role", "dept"));*/
         
         messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
         
@@ -171,7 +158,5 @@ public class MessageServiceImpl implements MessageService {
 		
 		return messageVO;
 	}
-
-	
 
 }

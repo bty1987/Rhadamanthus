@@ -24,6 +24,8 @@ public class DecorationDesignerRegionRankPO implements java.io.Serializable {
 	
 	public static final String COLUMN_RANK_STR = "rank";
 
+	public static final String COLUMN_COMPANY_STR = "company";
+	
 	private int ddrrId;
 	
 	private String designerRegionId;
@@ -38,6 +40,8 @@ public class DecorationDesignerRegionRankPO implements java.io.Serializable {
 	
 	private int status;
 
+	private int company;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ddrrId")
@@ -101,6 +105,15 @@ public class DecorationDesignerRegionRankPO implements java.io.Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

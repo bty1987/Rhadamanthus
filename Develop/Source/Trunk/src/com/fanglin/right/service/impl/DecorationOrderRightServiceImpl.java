@@ -82,7 +82,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		if(dIds != null){
 			for(Integer dId: dIds){
-				decorationOrderDesignDepartmentRightDao.save(new DecorationOrderDesignDepartmentRightPO(uId, dId));
+				decorationOrderDesignDepartmentRightDao.save(new DecorationOrderDesignDepartmentRightPO(uId, dId, company));
 			}
 		}
 		
@@ -125,7 +125,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		if(dIds != null){
 			for(Integer dId: dIds){
-				decorationOrderSalesmanDepartmentRightDao.save(new DecorationOrderSalesmanDepartmentRightPO(uId, dId));
+				decorationOrderSalesmanDepartmentRightDao.save(new DecorationOrderSalesmanDepartmentRightPO(uId, dId, company));
 			}
 		}
 		
@@ -168,7 +168,7 @@ public class DecorationOrderRightServiceImpl implements DecorationOrderRightServ
 		
 		if(statuses != null){
 			for(String status: statuses){
-				decorationOrderStatusRightDao.save(new DecorationOrderStatusRightPO(uId, status));
+				decorationOrderStatusRightDao.save(new DecorationOrderStatusRightPO(uId, status, company));
 			}
 		}
 		

@@ -143,7 +143,7 @@ function initWizard(){
         info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 
         if(curstep == 2){
-            decorationUtils.loadQuotationDetail();
+            quotationUtils.loadQuotationDetail();
         }else if(curstep == 3){
             decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
         }else if(curstep == 4){
@@ -161,7 +161,7 @@ function initWizard(){
     }).on('stepclick', function(e,info){
 
         if(info.step == 2){
-            decorationUtils.loadQuotationDetail();
+            quotationUtils.loadQuotationDetail();
         }else if(info.step == 3){
             decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
         }else if(info.step == 4){

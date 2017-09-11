@@ -65,7 +65,12 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			}
 			
 			if(!"".equals(materialBrandRightPO.getBrandId())){
-				materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, Arrays.asList(materialBrandRightPO.getBrandId().split("#")));
+				List<Long> brandIDs = new ArrayList<Long>();
+				String[] brandIds = materialBrandRightPO.getBrandId().split("#");
+				for(String id : brandIds){
+					brandIDs.add(Long.parseLong(id));
+				}
+				materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, brandIDs);
 			}
 		}else{
 			materialModelPOs = materialModelDao.pageMaterialModel(paging, filters,company);
@@ -229,10 +234,9 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	}
 
 	@Override
-	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO){
-		
-		MaterialModelPO materialModelPO = materialModelDao.queryMaterialModelByNo(materialModelVO.getMaterialModelNo());
-		
+	public MaterialModelVO queryMaterialModelByNo(MaterialModelVO materialModelVO,int company){
+
+		MaterialModelPO materialModelPO = materialModelDao.queryMaterialModelByNo(materialModelVO.getMaterialModelNo(), company);
 		BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 		
 		return materialModelVO;
@@ -264,7 +268,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	@Override
 	public List<MaterialModelVO> queryMaterialModelForAllByNo(MaterialModelVO materialModelVO){
 		
-		List<MaterialModelPO> materialModelPOs = materialModelDao.queryMaterialModelByNo(materialModelVO.getMaterialModelNo(), MATERIAL_LIMIT_INT);
+		List<MaterialModelPO> materialModelPOs = materialModelDao.queryMaterialModelsByNo(materialModelVO.getMaterialModelNo(), MATERIAL_LIMIT_INT);
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
 		
 		for(MaterialModelPO materialModelPO: materialModelPOs){

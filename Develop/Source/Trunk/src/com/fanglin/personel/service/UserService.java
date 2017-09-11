@@ -31,27 +31,15 @@ public interface UserService {
 	
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
-	public List<UserVO> queryUserByDetpIdADuty(String deptId, String duty, Integer company) throws FLException;
-	
 	public List<UserVO> queryUserForNameByPinyinName(String pinyinName,Integer company) throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty,Integer  company) throws FLException;
+	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty) throws FLException;
 	
-	public List<UserVO> queryUserForNameByDutys(String pinyinName, List<String> dutys,Integer  company) throws FLException;
-	
-	public List<UserVO> queryUserForNameByDutyADept(String pinyinName, String duty, String curUserId,Integer  company) throws FLException ;
-	
-	public List<UserVO> queryUserForNameByDutysADept(String pinyinName, List<String> dutys, String curUserId,Integer  company)throws FLException ;
-	
-	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO,Integer  company)throws FLException ;
-	
-	public List<UserVO> queryUserForNameByDutysAODept(String pinyinName, List<String> dutysA, List<String> dutysO, String curUserId,Integer  company)throws FLException ;
-	
-	public List<UserVO> queryUserForNameByDeptType(String pinyinName, String deptType,Integer company)throws FLException ;
-	
+	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO)throws FLException ;
+		
 	public UserVO validateUser(String loginId, String password) throws FLException;
 	
-	public int resetPasswords(String UserId,Integer company) throws FLException;
+	public int resetPassword(String UserId,Integer company) throws FLException;
 	
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
 	

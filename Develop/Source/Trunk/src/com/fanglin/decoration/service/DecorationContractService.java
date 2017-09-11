@@ -12,6 +12,7 @@
 package com.fanglin.decoration.service;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.decoration.vo.DecorationContractVO;
 
 public interface DecorationContractService {
@@ -22,7 +23,7 @@ public interface DecorationContractService {
 	
 	public int saveDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 	
-	public int signDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
+	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
 	
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 	

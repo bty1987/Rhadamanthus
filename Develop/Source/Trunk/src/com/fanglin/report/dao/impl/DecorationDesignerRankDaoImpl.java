@@ -30,20 +30,22 @@ public class DecorationDesignerRankDaoImpl extends DaoImpl<DecorationDesignerRan
 	}
 
 	@Override
-	public DecorationDesignerRankPO queryDecorationDesignerRankForInitByDesignerId(String designerId) {
+	public DecorationDesignerRankPO queryDecorationDesignerRankForInitByDesignerId(String designerId,int company) {
 		return (DecorationDesignerRankPO) session().createCriteria(DecorationDesignerRankPO.class)
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
+				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_STATUS_STR, DecorationDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationDesignerRankPO> queryDecorationDesignerRankForTop(int top) {
+	public List<DecorationDesignerRankPO> queryDecorationDesignerRankForTop(int top,int company) {
 		
 		Criteria criteria = session().createCriteria(DecorationDesignerRankPO.class)
 				.add(Restrictions.ne(DecorationDesignerRankPO.COLUMN_DESIGNERID_STR, ""))
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_STATUS_STR, DecorationDesignerRankPO.STATUS_TYPE_INIT_INT))
+				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.addOrder(Order.desc(DecorationDesignerRankPO.COLUMN_RANK_STR));
 		
 		if(top >= 0){
@@ -55,13 +57,13 @@ public class DecorationDesignerRankDaoImpl extends DaoImpl<DecorationDesignerRan
 	}
 
 	@Override
-	public List<?> queryDecorationDesignerRankForPlaceByDesignerId(String designerId) {
+	public List<?> queryDecorationDesignerRankForPlaceByDesignerId(String designerId,int company) {
 		
 		int status = DecorationDesignerRankPO.STATUS_TYPE_INIT_INT;
 		
-		String sql = "select b.rank, (select count(1)+1 from platform.decorationdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank) place from platform.decorationdesignerrank b where b.status =:statusC and b.designerId =:designerId";
+		String sql = "select b.rank, (select count(1)+1 from platform.decorationdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank and a.company =:companyA and b.company =:companyB) place from platform.decorationdesignerrank b where b.status =:statusC and b.designerId =:designerId and b.company =:companyC";
 		
-		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setString("designerId", designerId).list();
+		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setInteger("companyA", company).setInteger("companyB", company).setInteger("companyC", company).setString("designerId", designerId).list();
 	}
 
 }

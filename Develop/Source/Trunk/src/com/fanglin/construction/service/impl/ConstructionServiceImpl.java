@@ -31,9 +31,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.decoration.dao.AddReduceDao;
+import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.AddReducePO;
+import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.information.dao.MessageDao;
@@ -204,62 +204,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 				UserPO supervisonQualityUser =  userDao.queryUserByUserId(constructionPO.getSupervisorQualityId());
 				if(supervisonQualityUser != null){
 					constructionVO.setSupervisorQualityName(supervisonQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getChanQualityId() != null && !"".equals(constructionPO.getChanQualityId())){
-				UserPO chanQualityUser =  userDao.queryUserByUserId(constructionPO.getChanQualityId());
-				if(chanQualityUser != null){
-					constructionVO.setChanQualityName(chanQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getPutlineQualityId() != null && !"".equals(constructionPO.getPutlineQualityId())){
-				UserPO putlineQualityUser =  userDao.queryUserByUserId(constructionPO.getPutlineQualityId());
-				if(putlineQualityUser != null){
-					constructionVO.setPutlineQualityName(putlineQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getWaterwayCircuitPowerQualityId() != null && !"".equals(constructionPO.getWaterwayCircuitPowerQualityId())){
-				UserPO waterwayCircuitQualityUser =  userDao.queryUserByUserId(constructionPO.getWaterwayCircuitPowerQualityId());
-				if(waterwayCircuitQualityUser != null){
-					constructionVO.setWaterwayCircuitPowerQualityName(waterwayCircuitQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getPowerQualityId() != null && !"".equals(constructionPO.getPowerQualityId())){
-				UserPO powerQualityUser =  userDao.queryUserByUserId(constructionPO.getPowerQualityId());
-				if(powerQualityUser != null){
-					constructionVO.setPowerQualityName(powerQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getBricklayQualityId() != null && !"".equals(constructionPO.getBricklayQualityId())){
-				UserPO bricklayQualityUser =  userDao.queryUserByUserId(constructionPO.getBricklayQualityId());
-				if(bricklayQualityUser != null){
-					constructionVO.setBricklayQualityName(bricklayQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getCarpentQualityId() != null && !"".equals(constructionPO.getCarpentQualityId())){
-				UserPO carpentQualityUser =  userDao.queryUserByUserId(constructionPO.getCarpentQualityId());
-				if(carpentQualityUser != null){
-					constructionVO.setCarpentQualityName(carpentQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getOilQualityId() != null && !"".equals(constructionPO.getOilQualityId())){
-				UserPO oilQualityUser =  userDao.queryUserByUserId(constructionPO.getOilQualityId());
-				if(oilQualityUser != null){
-					constructionVO.setOilQualityName(oilQualityUser.getCurrentName());
-				}
-			}
-			
-			if(constructionPO.getCleaningQualityId() != null && !"".equals(constructionPO.getCleaningQualityId())){
-				UserPO cleaningQualityUser =  userDao.queryUserByUserId(constructionPO.getCleaningQualityId());
-				if(cleaningQualityUser != null){
-					constructionVO.setCleaningQualityName(cleaningQualityUser.getCurrentName());
 				}
 			}
 		}

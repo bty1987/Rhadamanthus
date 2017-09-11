@@ -21,7 +21,7 @@ import javax.persistence.Table;
 import com.fanglin.data.po.CustomerPO;
 
 @Entity
-@Table(name = "payment", catalog = "platform")
+@Table(name = "payment", catalog = "payment")
 public class PaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 2529822120958975802L;
@@ -80,6 +80,8 @@ public class PaymentPO implements Serializable {
 	private String des;
 	
 	private long convertPaymentId; // 对应转换款项关联表的id,致远表对应
+	
+	private int company;
 	
 	public PaymentPO(){
 		super();
@@ -194,4 +196,12 @@ public class PaymentPO implements Serializable {
 		this.convertPaymentId = convertPaymentId;
 	}
 
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 }

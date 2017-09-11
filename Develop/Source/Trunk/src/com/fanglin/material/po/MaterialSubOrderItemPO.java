@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "materialsuborderitem", catalog = "platform")
+@Table(name = "materialsuborderitem", catalog = "material")
 public class MaterialSubOrderItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2310778692937056830L;
@@ -28,8 +28,6 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 	public static final String COLUMN_REFUNDSTATUS_STR = "refundStatus";
 	
 	public static final String COLUMN_BALANCESTATUS_STR = "balanceStatus";
-	
-	public static final String COLUMN_MPID_STR = "mpId";
 	
 	public static final int STATUS_TYPE_INIT_INT = 0;
 	
@@ -58,9 +56,7 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 	private long msoiId;
 	
 	private long msoId;
-	
-	private long mpId;
-	
+		
 	private String materialModelNo;
 	
 	private String materialModelName;
@@ -125,15 +121,6 @@ public class MaterialSubOrderItemPO implements java.io.Serializable {
 
 	public void setMsoId(long msoId){
 		this.msoId = msoId;
-	}
-
-	@Column(name = "mpId")
-	public long getMpId(){
-		return mpId;
-	}
-
-	public void setMpId(long mpId){
-		this.mpId = mpId;
 	}
 
 	@Column(name = "materialModelNo")

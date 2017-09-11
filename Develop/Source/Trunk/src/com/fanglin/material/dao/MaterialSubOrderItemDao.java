@@ -23,9 +23,7 @@ public interface MaterialSubOrderItemDao extends Dao<MaterialSubOrderItemPO> {
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoId(long msoId);
 	
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMsoIdNotRefund(long msoId);
-	
-	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByMpId(long mpId);
-	
+		
 	public MaterialSubOrderItemPO queryMaterialSubOrderItemByMsoiId(long msoiId);
 	
 	public List<MaterialSubOrderItemPO> queryMaterialSubOrderItemByName(long msoId, String name, int limit);

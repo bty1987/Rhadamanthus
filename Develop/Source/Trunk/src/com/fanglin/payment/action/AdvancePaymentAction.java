@@ -47,9 +47,9 @@ public class AdvancePaymentAction extends BaseListAction {
 	private float zaterialAdvance;
 	
 	@Action(value="queryAdvancePaymentByCustomerId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryAdvancePaymentByCustomerId(){
+	public String queryAdvancePaymentByCustomerId() throws FLException{
 		
-		List<Float> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer);
+		List<Float> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer,queryCompany());
 		
 		balanceAdvance = advances.get(0);
 		projectAdvance = advances.get(1);

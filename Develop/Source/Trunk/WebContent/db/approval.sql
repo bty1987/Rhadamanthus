@@ -9,8 +9,8 @@ CREATE TABLE `approval` (
   `type` tinyint(4) NOT NULL,
   `ident` varchar(20) NOT NULL,
   `status` tinyint(4) NOT NULL,
-  `createTime` timestamp NULL NOT NULL,
-  `approvalTime` timestamp NULL NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `approvalTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `contents` varchar(256) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
   `company` int(11) NOT NULL,
@@ -172,17 +172,17 @@ CREATE TABLE `approvalsalesdiscount` (
   `sid` int(11) NOT NULL,
   `refermoney` decimal(10,3) NOT NULL,
   PRIMARY KEY (`asdid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='销售补款项审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售补款项审批表';
 
 DROP TABLE IF EXISTS `approvalmanifestdb`;
 CREATE TABLE `approvalmanifestdb` (
   `amdbid` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(11) NOT NULL,
-  `manifestTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `manifestTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(128) NOT NULL DEFAULT '',
   `attachment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`amdbid`)
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8 COMMENT='调拨审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='调拨审批表';
 
 DROP TABLE IF EXISTS `approvalmanifestdbitem`;
 CREATE TABLE `approvalmanifestdbitem` (
@@ -196,12 +196,13 @@ CREATE TABLE `approvalmanifestdbitem` (
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `comment` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`amdbiid`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COMMENT='调拨项审批表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='调拨项审批表';
 
 DROP TABLE IF EXISTS `approveuser`;
 CREATE TABLE `approveuser` (
   `auid` bigint(32) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL,
   `type` tinyint(2) NOT NULL,
+  `comment` varchar(64),
   PRIMARY KEY (`auid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

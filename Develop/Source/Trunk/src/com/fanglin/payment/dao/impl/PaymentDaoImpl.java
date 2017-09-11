@@ -31,9 +31,11 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentPO> pagePaymentForHistory(Paging paging, List<Filter> filters){
+	public List<PaymentPO> pagePaymentForHistory(Paging paging, List<Filter> filters, int company){
 
 		PagingQuery<PaymentPO> query = pagingQuery(paging, PaymentPO.class);
+		
+		query.add(query.getCriterion("company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 

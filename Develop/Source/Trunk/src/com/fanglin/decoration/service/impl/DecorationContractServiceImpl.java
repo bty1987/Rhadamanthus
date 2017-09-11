@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.dao.AddReduceDao;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
@@ -39,6 +39,7 @@ import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.report.service.DecorationRankService;
@@ -165,14 +166,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int signDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException{
+	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException{
 		
 		List<String> noUpdateStatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
 		List<Object> noPaymentStatus = Arrays.asList(new Object[]{null, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR});
 		
 		boolean resignFlag = false;
 		String orderId = decorationContractVO.getOrderId();
-		
+		String userId = authentication.getUserId();
+				
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
 		if(decorationOrderPO == null){
@@ -190,6 +192,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
 			throw new FLException(140037, "订单存在未处理审批项");
 		}
+		
+		int decorationOrderCompany = decorationOrderPO.getCompany();
 		
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
 		
@@ -283,9 +287,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			String notCountDecorationContractUserId = SystemConfig.getString("notCountDecorationContractUserId", "");
 			
 			if(notCountDesignDepartmentId.indexOf(designerId) == -1 && notCountDecorationContractUserId.indexOf(userId) == -1){ // 部分部门不参与业绩统计
-				decorationRankService.updateDecorationDesignerRank(designerId, designerName, rank, currentTimeStr);
-				decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, rank, currentTimeStr);
-				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, rank, currentTimeStr);
+				decorationRankService.updateDecorationDesignerRank(designerId, designerName, rank, currentTimeStr, decorationOrderCompany);
+				decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, rank, currentTimeStr, decorationOrderCompany);
+				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, rank, currentTimeStr, decorationOrderCompany);
 			}
 			
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);

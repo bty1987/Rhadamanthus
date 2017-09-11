@@ -19,7 +19,7 @@ import com.fanglin.utils.Paging;
 
 public interface QuotationBigCategoryService {
 	
-	public List<QuotationBigCategoryVO> queryQuotationBigCategory();
+	public List<QuotationBigCategoryVO> queryQuotationBigCategory(QuotationBigCategoryVO quotationBigCategory);
 	
 	public void pageQuotationBigCategory(Paging paging, List<Filter> filters);
 

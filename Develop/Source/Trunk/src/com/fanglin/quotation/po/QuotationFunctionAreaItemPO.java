@@ -26,7 +26,7 @@ import javax.persistence.Table;
 import com.fanglin.data.po.QuotationItemPO;
 
 @Entity
-@Table(name = "quotationfunctionareaitem", catalog = "platform")
+@Table(name = "quotationfunctionareaitem", catalog = "quotation")
 public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private static final long serialVersionUID = 3077313706873385773L;
@@ -40,6 +40,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public static final short TYPE_QUOTATION_MANAGE_INT = 3;
 	
 	public static final short TYPE_QUOTATION_FIX_INT = 4;
+	
+	public static final short TYPE_QUOTATION_MATERIAL_INT = 5;
 
 	private long qfaiId;
 

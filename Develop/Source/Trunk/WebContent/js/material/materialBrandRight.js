@@ -28,9 +28,9 @@ jQuery(function($) {
 		flsource: {
 			url : api.data.queryBrandForPinYinName,
 			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
+			resultList : "brands",
+			keyPath : "bid",
+			valuePath : "brandName",
 			isResultTypeMap : true, //是否是key - value 形式的列表
 		},
 	});
@@ -106,7 +106,7 @@ jQuery(function($) {
 	}, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
 	
 	function dialogMaterialBrandRight(userId){
-		
+
 		materialBrandRight.userId = userId;
 
 		com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
@@ -119,7 +119,7 @@ jQuery(function($) {
 
 			if(res.materialBrandRight.brands.length){
 				$.each(res.materialBrandRight.brands, function(i, v){
-					_tag.fladd(v.brandId, v.brandName);
+					_tag.fladd(v.bid.toString(), v.brandName);
 				});
 
 			}
@@ -129,7 +129,6 @@ jQuery(function($) {
 	}
 	
 	function saveData(){
-		
 		if(com.validate())
 			return;
 		
@@ -137,7 +136,6 @@ jQuery(function($) {
 		var brandright = "#";
 		
 		var brandIds = $("#brandright").val();
-		
 		if(brandIds == null){
 			brandright = "";
 		}else{
@@ -152,7 +150,7 @@ jQuery(function($) {
 		options["materialBrandRight.userId"] = materialBrandRight.userId;
 		options["materialBrandRight.brandId"] = brandright;
 		
-		com.post(api.material.saveMaterialBrandRight, options);
+		com.post(api.material.updateMaterialBrandRight, options);
 		
 		materialBrandRight.modal.modal("hide");   
 	}

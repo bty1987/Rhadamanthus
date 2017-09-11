@@ -120,6 +120,8 @@ public class DecorationOrderVO implements Serializable {
 	private String salesmanType;
 	
 	private Timestamp depositTime;
+
+	private String dompany;
 	
 	public String getOrderId(){
 		return orderId;
@@ -515,5 +517,13 @@ public class DecorationOrderVO implements Serializable {
 
 	public void setDepositTime(Timestamp depositTime) {
 		this.depositTime = depositTime;
+	}
+
+	public String getDompany() {
+		return dompany;
+	}
+
+	public void setDompany(String dompany) {
+		this.dompany = dompany;
 	}
 }

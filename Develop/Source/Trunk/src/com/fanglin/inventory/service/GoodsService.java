@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.Paging;
 
@@ -39,5 +40,7 @@ public interface GoodsService {
 	public int updateGoods(GoodsVO goodsVO) throws FLException;
 	
 	public int updateGoodsForStatus(GoodsVO goodsVO) throws FLException;
+	
+	public int addPackage(GoodsVO goodsVO,List<GoodsPackageVO> goodsPackageVOs,int company) throws FLException;
 
 }

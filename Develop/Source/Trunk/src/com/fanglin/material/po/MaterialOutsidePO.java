@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "materialoutside", catalog = "platform")
+@Table(name = "materialoutside", catalog = "material")
 public class MaterialOutsidePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -229331967740042428L;

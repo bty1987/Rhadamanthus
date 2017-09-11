@@ -31,6 +31,7 @@ import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.dao.PurchaseDao;
 import com.fanglin.inventory.dao.PurchaseItemDao;
 import com.fanglin.inventory.dao.PurchaseManifestDao;
+import com.fanglin.inventory.dao.StorehouseDao;
 import com.fanglin.inventory.po.AssisManifestPO;
 import com.fanglin.inventory.po.AssisOrderPO;
 import com.fanglin.inventory.po.ColorPO;
@@ -41,6 +42,7 @@ import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchaseManifestPO;
 import com.fanglin.inventory.po.PurchasePO;
+import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
 import com.fanglin.inventory.service.StorehouseStockService;
@@ -92,6 +94,8 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Autowired
 	private CountingService countingService;
+	
+	@Autowired StorehouseDao storehouseDao;
 	
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters,int company) {
@@ -652,6 +656,74 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int addManifestForPS(List<ManifestItemPO> manifestItemPOs, String userId, int company) throws FLException {
+		
+		String word = "PS";//套拆
+		String comment = "";
+		String attachment = "";
+		float total = 0f;
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		
+		ManifestPO manifestPO = new ManifestPO(manifestId);
+		
+		manifestPO.setAttachment(attachment);
+		manifestPO.setComment(comment);
+		manifestPO.setTotal(total);
+		manifestPO.setType(ManifestPO.TYPE_PS_INT);
+		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setCreateUser(userPO);
+		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
+		
+		manifestDao.save(manifestPO);
+		
+		addManifestForPackage(manifestItemPOs, comment, manifestPO);
+		
+		return 0;
+	
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int addManifestForPM(List<ManifestItemPO> manifestItemPOs, String userId, int company)throws FLException {
+		
+		String word = "PM";
+		String comment = "";
+		String attachment = "";
+		float total = 0f;
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PM_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		
+		ManifestPO manifestPO = new ManifestPO(manifestId);
+		
+		manifestPO.setAttachment(attachment);
+		manifestPO.setComment(comment);
+		manifestPO.setTotal(total);
+		manifestPO.setType(ManifestPO.TYPE_PM_INT);
+		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setCreateUser(userPO);
+		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
+		
+		manifestDao.save(manifestPO);
+		
+		addManifestForPackage(manifestItemPOs, comment, manifestPO);
+		
+		return 0;
+	
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int updateManifest(ManifestVO manifestVO) throws FLException {
 		
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
@@ -691,5 +763,47 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		return 0;
 	}
+
+	@Override
+	public int addManifestForPackage(List<ManifestItemPO> manifestItemPOs,String comment, ManifestPO manifestPO) throws FLException {
+		
+		for(ManifestItemPO manifestItem : manifestItemPOs){
+			
+			if(manifestItem.getOutstorehouse() != null){
+				
+				StorehousePO storehousePO = storehouseDao.get(manifestItem.getOutstorehouse().getShId());
+				
+				if(storehousePO == null){
+					throw new FLException(260005, "仓库不存在");
+				}
+				
+				manifestItem.setOutstorehouse(manifestItem.getOutstorehouse());
+				
+			}
+			
+			if(manifestItem.getInstorehouse() != null){
+				
+				StorehousePO storehousePO = storehouseDao.get(manifestItem.getInstorehouse().getShId());
+				
+				if(storehousePO == null){
+					throw new FLException(260005, "仓库不存在");
+				}
+				
+				manifestItem.setInstorehouse(manifestItem.getInstorehouse());
+				
+			}
+			
+			manifestItem.setUnitPrice(0f);
+			manifestItem.setComment(comment);
+			manifestItem.setMid(manifestPO.getMid());
+			
+			manifestItemDao.save(manifestItem);
+			
+		}
+		
+		return 0;
+	}
+
+	
 
 }

@@ -30,20 +30,22 @@ public class DecorationDesignerDepartmentRankDaoImpl extends DaoImpl<DecorationD
 	}
 
 	@Override
-	public DecorationDesignerDepartmentRankPO queryDecorationDesignerDepartmentRankForInitByDeptId(String deptId) {
+	public DecorationDesignerDepartmentRankPO queryDecorationDesignerDepartmentRankForInitByDeptId(String deptId,int company) {
 		return (DecorationDesignerDepartmentRankPO) session().createCriteria(DecorationDesignerDepartmentRankPO.class)
 				.add(Restrictions.eq(DecorationDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, deptId))
+				.add(Restrictions.eq(DecorationDesignerDepartmentRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(DecorationDesignerDepartmentRankPO.COLUMN_STATUS_STR, DecorationDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationDesignerDepartmentRankPO> queryDecorationDesignerDepartmentRankForTop(int top) {
+	public List<DecorationDesignerDepartmentRankPO> queryDecorationDesignerDepartmentRankForTop(int top,int company) {
 		
 		Criteria criteria = session().createCriteria(DecorationDesignerDepartmentRankPO.class)
 				.add(Restrictions.ne(DecorationDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, ""))
 				.add(Restrictions.eq(DecorationDesignerDepartmentRankPO.COLUMN_STATUS_STR, DecorationDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
+				.add(Restrictions.eq(DecorationDesignerDepartmentRankPO.COLUMN_COMPANY_STR, company))
 				.addOrder(Order.desc(DecorationDesignerDepartmentRankPO.COLUMN_RANK_STR));
 		
 		if(top >= 0){

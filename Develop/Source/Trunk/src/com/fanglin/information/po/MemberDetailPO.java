@@ -1,6 +1,7 @@
 package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "memberdetail", catalog = "platform")
+@Table(name = "memberdetail", catalog = "information")
 public class MemberDetailPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4617781950715580910L;

@@ -20,10 +20,10 @@ import com.fanglin.payment.vo.PaymentVO;
 
 public interface AdvancePaymentService {
 	
-	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO);
+	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company);
 	
 	public List<Float> queryAdvancePaymentByOrderId(DecorationOrderVO decorationOrderVO) throws FLException;
 	
-	public int updateAdvancePayment(PaymentVO paymentVO) throws FLException;
+	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException;
 	
 }

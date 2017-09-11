@@ -13,19 +13,13 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.WorkTypeVO;
 import com.fanglin.inventory.dao.AssisOrderDao;
 import com.fanglin.inventory.dao.AssisOrderItemDao;
-import com.fanglin.inventory.dao.ColorDao;
-import com.fanglin.inventory.dao.FormatDao;
 import com.fanglin.inventory.po.AssisOrderItemPO;
 import com.fanglin.inventory.po.AssisOrderPO;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AssisOrderItemService;
 import com.fanglin.inventory.vo.AssisOrderItemVO;
 import com.fanglin.inventory.vo.AssisOrderVO;
 import com.fanglin.inventory.vo.AssisTypeVO;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -39,12 +33,6 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 	@Autowired
 	private AssisOrderDao assisOrderDao;
 	
-	@Autowired
-	private ColorDao colorDao;
-	
-	@Autowired
-	private FormatDao formatDao;
-
 	@Override
 	public List<AssisOrderItemVO> queryAssisOrderItemByAoid(AssisOrderItemVO assisOrderItemVO) {
 
@@ -53,12 +41,10 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 		for (AssisOrderItemPO assisOrderItemPO : assisOrderItemPOs) {
 
-			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(new AssisTypeVO(new WorkTypeVO())),new ColorVO(),new FormatVO());
+			assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(new AssisTypeVO(new WorkTypeVO())));
 
 			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,Arrays.asList("goods","color","format"));
 			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getColor(),assisOrderItemVO.getColor());
-			BeanUtil.copyProperties(assisOrderItemPO.getFormat(),assisOrderItemVO.getFormat());
 			
 			if(assisOrderItemPO.getGoods().getAssisType()!=null){
 				
@@ -86,12 +72,10 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 		
 		for (AssisOrderItemPO assisOrderItemPO : assisOrderItemPOs) {
 
-			AssisOrderItemVO assisOrderItemVO = new AssisOrderItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
+			AssisOrderItemVO assisOrderItemVO = new AssisOrderItemVO(new GoodsVO());
 
 			BeanUtil.copyProperties(assisOrderItemPO, assisOrderItemVO,Arrays.asList("goods","color","format"));
 			BeanUtil.copyProperties(assisOrderItemPO.getGoods(),assisOrderItemVO.getGoods(), Arrays.asList("assisType"));
-			BeanUtil.copyProperties(assisOrderItemPO.getColor(),assisOrderItemVO.getColor());
-			BeanUtil.copyProperties(assisOrderItemPO.getFormat(),assisOrderItemVO.getFormat());
 
 			assisOrderItemVOs.add(assisOrderItemVO);
 		}
@@ -117,12 +101,10 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 
 		AssisOrderItemPO assisOrderItemPO;
 
-		assisOrderItemPO = new AssisOrderItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+		assisOrderItemPO = new AssisOrderItemPO(new GoodsPO());
 
 		BeanUtil.copyProperties(assisOrderItemVO, assisOrderItemPO,Arrays.asList("goods","color","format"));
 		BeanUtil.copyProperties(assisOrderItemVO.getGoods(),assisOrderItemPO.getGoods(), Arrays.asList("assisType"));
-		BeanUtil.copyProperties(assisOrderItemVO.getColor(),assisOrderItemPO.getColor());
-		BeanUtil.copyProperties(assisOrderItemVO.getFormat(),assisOrderItemPO.getFormat());
 
 		assisOrderItemPO.setNum(assisOrderItemVO.getNum());
 		assisOrderItemPO.setAoid(assisOrderVO.getAoid());
@@ -152,12 +134,7 @@ public class AssisOrderItemServiceImpl implements AssisOrderItemService {
 			throw new FLException(260025, "辅料项不存在");
 		}
 		
-		ColorPO colorPO = colorDao.get(assisOrderItemVO.getColor().getCid());
-		FormatPO formatPO = formatDao.get(assisOrderItemVO.getFormat().getFid());
-		
 		assisOrderItemPO.setNum(assisOrderItemVO.getNum());
-		assisOrderItemPO.setColor(colorPO);
-		assisOrderItemPO.setFormat(formatPO);
 
 		assisOrderItemDao.update(assisOrderItemPO);
 

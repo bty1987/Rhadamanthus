@@ -157,7 +157,6 @@ function generateOneReceipt(){
 		
 		var start = i*receipt.onePageCount;
 		var first  = receipt.receipts[start];
-        console.log(first)
 		var No = utils.padLeft(first.paymentId,11);
 		var supervisor = "";
 		

@@ -42,7 +42,7 @@ $.extend(api, {material: {
     queryMaterialBrandRight: {url: "queryMaterialBrandRight.do", demo: true},
     queryMaterialBrandRightForLogin: {url: "queryMaterialBrandRightForLogin.do", demo: true},
     queryMaterialBrandRightForBrand: {url: "queryMaterialBrandRightForLogin.do", demo: true},
-    saveMaterialBrandRight: {url: "saveMaterialBrandRight.do"},
+    updateMaterialBrandRight: {url: "updateMaterialBrandRight.do"},
 
     pageMaterialInside: {url: "pageMaterialInside.do"},
     pageMaterialInsideByUserId: {url: "pageMaterialInsideByUserId.do"},

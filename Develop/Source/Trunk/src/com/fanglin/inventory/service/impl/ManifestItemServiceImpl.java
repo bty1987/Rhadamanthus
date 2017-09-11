@@ -82,29 +82,6 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 	}
 	
 	@Override
-	public List<ManifestItemVO> queryManifestItemBySiid(ManifestItemVO manifestItemVO) {
-		
-		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemBySiid(manifestItemVO.getSiid());
-		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
-
-		for (ManifestItemPO manifestItemPO : manifestItemPOs) {
-
-			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(),new FormatVO(), new StorehouseVO(), new StorehouseVO());
-
-			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse","outstorehouse"));
-			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("assisType"));
-			BeanUtil.copyProperties(manifestItemPO.getColor(),manifestItemVO.getColor());
-			BeanUtil.copyProperties(manifestItemPO.getFormat(),manifestItemVO.getFormat());
-			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(),manifestItemVO.getInstorehouse());
-			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(),manifestItemVO.getOutstorehouse());
-
-			manifestItemVOs.add(manifestItemVO);
-		}
-
-		return manifestItemVOs;
-	}
-
-	@Override
 	public List<ManifestItemVO> queryManifestItemBySiids(List<Long> siids) {
 		
 		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemBySiids(siids);

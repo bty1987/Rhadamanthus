@@ -1,11 +1,3 @@
-/**
- * Title: MessagermationPO
- * Description:
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
- * @author bty1987
- */
-
 package com.fanglin.information.po;
 
 import java.io.Serializable;
@@ -21,7 +13,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "message", catalog = "platform")
+@Table(name = "message", catalog = "information")
 public class MessagePO implements Serializable {
 
 	private static final long serialVersionUID = 7068359813579637502L;
@@ -54,7 +46,7 @@ public class MessagePO implements Serializable {
 	
 	public static final String MESSAGE_TYPE_FEEDBACK_REFUND_STR = "退款审批反馈消息";
 	
-	private Integer messageId;
+	private int messageId;
 	
 	private UserPO receiver;
 	
@@ -70,17 +62,19 @@ public class MessagePO implements Serializable {
 	
 	private String args;
 	
+	private int company;
+	
 	public MessagePO(){
 		super();
 	}
 
 	@Id
 	@GeneratedValue
-	public Integer getMessageId(){
+	public int getMessageId() {
 		return messageId;
 	}
 
-	public void setMessageId(Integer messageId){
+	public void setMessageId(int messageId) {
 		this.messageId = messageId;
 	}
 
@@ -148,4 +142,13 @@ public class MessagePO implements Serializable {
 		this.args = args;
 	}
 
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
 }

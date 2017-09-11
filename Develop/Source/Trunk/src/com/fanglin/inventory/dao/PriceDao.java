@@ -9,5 +9,5 @@ public interface PriceDao extends Dao<PricePO>{
 	
 	public List<PricePO> queryPriceByGid(long gid);
 	
-	public PricePO queryPurchaseByGidASelling(long pid);
+	public PricePO queryPriceByPid(long pid);
 }

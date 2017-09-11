@@ -30,19 +30,21 @@ public class MaterialDesignerDepartmentRankDaoImpl extends DaoImpl<MaterialDesig
 	}
 	
 	@Override
-	public MaterialDesignerDepartmentRankPO queryMaterialDesignerDepartmentRankByDeptIdInit(String deptId){
+	public MaterialDesignerDepartmentRankPO queryMaterialDesignerDepartmentRankByDeptIdInit(String deptId,int company){
 		return (MaterialDesignerDepartmentRankPO) session().createCriteria(MaterialDesignerDepartmentRankPO.class)
 				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, deptId))
+				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_STATUS_STR, MaterialDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialDesignerDepartmentRankPO> queryMaterialDesignerDepartmentRankForTop(int top){
+	public List<MaterialDesignerDepartmentRankPO> queryMaterialDesignerDepartmentRankForTop(int top,int company){
 		
 		Criteria criteria = session().createCriteria(MaterialDesignerDepartmentRankPO.class)
 				.add(Restrictions.ne(MaterialDesignerDepartmentRankPO.COLUMN_DESIGNERDEPTID_STR, ""))
+				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerDepartmentRankPO.COLUMN_STATUS_STR, MaterialDesignerDepartmentRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(MaterialDesignerDepartmentRankPO.COLUMN_RANK_STR));
 		

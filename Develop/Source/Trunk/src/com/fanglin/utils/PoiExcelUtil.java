@@ -99,7 +99,7 @@ public class PoiExcelUtil {
 			cell.setCellValue(text);
 		}
 
-		// 遍历集合数据，产生数据行
+		// 遍历集合数据,产生数据行
 		int index = 0;
 		for(int i = 0; i < sheetObj.getData().size(); ++i){
 			index++;
@@ -154,7 +154,7 @@ public class PoiExcelUtil {
 		String extension = filePath.lastIndexOf(".") == -1 ? "" : filePath.substring(filePath.lastIndexOf(".") + 1);
 		
 		if("xls".equals(extension)){
-			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象，strPath 传入文件路径
+			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象,strPath 传入文件路径
 		} else if("xlsx".equals(extension)){
 			wb = new XSSFWorkbook(new FileInputStream(file));
 		} else {
@@ -170,7 +170,7 @@ public class PoiExcelUtil {
 		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
 		
 		if("xls".equals(extension)){
-			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象，strPath 传入文件路径
+			wb = new HSSFWorkbook(new FileInputStream(file)); // 构造 XSSFWorkbook 对象,strPath 传入文件路径
 		} else if("xlsx".equals(extension)){
 			wb = new XSSFWorkbook(new FileInputStream(file));
 		} else {

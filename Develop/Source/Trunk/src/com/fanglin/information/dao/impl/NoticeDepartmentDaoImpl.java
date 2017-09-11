@@ -31,7 +31,7 @@ public class NoticeDepartmentDaoImpl extends DaoImpl<NoticeDepartmentPO> impleme
 	@Override
 	public int deleteNoticeDepartment(Long noticeId) {
 		
-		String sql="delete from platform.noticeDepartment where nid= :nid";
+		String sql="delete from information.noticeDepartment where nid= :nid";
 		session().createSQLQuery(sql).setLong("nid", noticeId).executeUpdate();
 		
 		return 0;

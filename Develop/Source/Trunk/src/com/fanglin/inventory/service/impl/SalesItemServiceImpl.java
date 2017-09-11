@@ -10,17 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.dao.GoodsDao;
-import com.fanglin.inventory.dao.SalesDao;
-import com.fanglin.inventory.dao.SalesItemDao;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
-import com.fanglin.inventory.po.SalesItemPO;
-import com.fanglin.inventory.po.SalesPO;
-import com.fanglin.inventory.service.SalesItemService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.inventory.dao.SalesDao;
+import com.fanglin.inventory.dao.SalesItemDao;
+import com.fanglin.inventory.po.SalesItemPO;
+import com.fanglin.inventory.po.SalesPO;
+import com.fanglin.inventory.service.SalesItemService;
 import com.fanglin.inventory.vo.SalesItemVO;
 import com.fanglin.inventory.vo.SalesVO;
 import com.fanglin.utils.Arith;
@@ -123,9 +123,15 @@ public class SalesItemServiceImpl implements SalesItemService {
 			
 			salesPO.setOtherStatus(salesVO.getOtherStatus());
 			
-			_total = Arith.add(_total, salesItemVO.getTotal());
+			_total = Arith.add(_total, salesItemPO.getTotal());
 			
 			salesItemDao.save(salesItemPO);
+			
+		}
+		
+		if(_total!=salesVO.getTotal()){
+			
+			throw new FLException(150025, "款项金额不正确");
 			
 		}
 		

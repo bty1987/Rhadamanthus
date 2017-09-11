@@ -20,8 +20,8 @@ public interface ZaterialDesignerRegionRankDao extends Dao<ZaterialDesignerRegio
 	
 	public List<ZaterialDesignerRegionRankPO> queryZaterialDesignerRegionRank();
 	
-	public ZaterialDesignerRegionRankPO queryZaterialDesignerRegionRankByRegionIdInit(String regionId);
+	public ZaterialDesignerRegionRankPO queryZaterialDesignerRegionRankByRegionIdInit(String regionId,int company);
 	
-	public List<ZaterialDesignerRegionRankPO> queryZaterialDesignerRegionRankForTop(int top);
+	public List<ZaterialDesignerRegionRankPO> queryZaterialDesignerRegionRankForTop(int top,int company);
 
 }

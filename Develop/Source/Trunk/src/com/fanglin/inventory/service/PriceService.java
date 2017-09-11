@@ -9,7 +9,7 @@ public interface PriceService {
 	
 	public List<PriceVO> queryPriceByGid(PriceVO priceVO);
 	
-	public PriceVO queryPurchaseByGidASelling(PriceVO priceVO);
+	public PriceVO queryPriceByPid(PriceVO priceVO);
 	
 	public int addPrice(PriceVO priceVO) throws FLException;
 	

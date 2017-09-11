@@ -31,10 +31,11 @@ public class DecorationOrderStatusRightPO implements java.io.Serializable {
 		super();
 	}
 
-	public DecorationOrderStatusRightPO(int uid, String status) {
+	public DecorationOrderStatusRightPO(int uid, String status, int company) {
 		super();
 		this.uid = uid;
 		this.status = status;
+		this.company = company;
 	}
 
 	@Id

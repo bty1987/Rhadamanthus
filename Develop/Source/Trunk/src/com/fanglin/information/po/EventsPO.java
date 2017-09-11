@@ -1,13 +1,14 @@
 package com.fanglin.information.po;
 
-import java.sql.Timestamp;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,7 +20,7 @@ import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "events", catalog = "platform")
+@Table(name = "events", catalog = "information")
 public class EventsPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6821683708554610678L;

@@ -25,44 +25,44 @@ public interface MaterialRankService {
 	
 	public List<MaterialDesignerRankVO> queryMaterialDesignerRank();
 	
-	public List<MaterialDesignerRankVO> queryMaterialDesignerRankForTop(int top);
+	public List<MaterialDesignerRankVO> queryMaterialDesignerRankForTop(int top,int company);
 	
-	public List<TopVO> queryMaterialDesignerRank(int top);
+	public List<TopVO> queryMaterialDesignerRank(int top,int company);
 	
-	public List<MaterialDesignerDepartmentRankVO> queryMaterialDesignerDepartmentRankForTop(String userId, int top);
+	public List<MaterialDesignerDepartmentRankVO> queryMaterialDesignerDepartmentRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryMaterialDesignerDepartmentRank(int top);
+	public List<TopVO> queryMaterialDesignerDepartmentRank(int top,int company);
 	
-	public List<MaterialDesignerRegionRankVO> queryMaterialDesignerRegionRankForTop(String userId, int top);
+	public List<MaterialDesignerRegionRankVO> queryMaterialDesignerRegionRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryMaterialDesignerRegionRank(int top);
+	public List<TopVO> queryMaterialDesignerRegionRank(int top,int company);
 	
-	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId);
+	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId,int company);
 	
-	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top);
+	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top,int company);
 	
-	public List<TopVO> queryZaterialDesignerRank(int top);
+	public List<TopVO> queryZaterialDesignerRank(int top,int company);
 	
-	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId);
+	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId,int company);
 	
-	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top);
+	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryZaterialDesignerDepartmentRank(int top);
+	public List<TopVO> queryZaterialDesignerDepartmentRank(int top,int company);
 	
-	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top);
+	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top,int company);
 	
-	public List<TopVO> queryZaterialDesignerRegionRank(int top);
+	public List<TopVO> queryZaterialDesignerRegionRank(int top,int company);
 	
-	public int updateMaterialDesignerRank(String designerId, String designerName, float count, String currentTime);
+	public int updateMaterialDesignerRank(String designerId, String designerName, float count, String currentTime,int company);
 	
-	public int updateMaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime);
+	public int updateMaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company);
 	
-	public int updateMaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime);
+	public int updateMaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company);
 	
-	public int updateZaterialDesignerRank(String designerId, String designerName, float count, String currentTime);
+	public int updateZaterialDesignerRank(String designerId, String designerName, float count, String currentTime,int company);
 	
-	public int updateZaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime);
+	public int updateZaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company);
 	
-	public int updateZaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime);
+	public int updateZaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company);
 
 }

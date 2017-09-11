@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.inventory.dao.RefundsItemDao;
-import com.fanglin.inventory.po.RefundsItemPO;
-import com.fanglin.inventory.service.RefundsItemService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.inventory.dao.RefundsItemDao;
+import com.fanglin.inventory.po.RefundsItemPO;
+import com.fanglin.inventory.service.RefundsItemService;
 import com.fanglin.inventory.vo.RefundsItemVO;
 import com.fanglin.inventory.vo.RefundsVO;
 import com.fanglin.inventory.vo.SalesItemVO;
@@ -22,7 +22,7 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("RefundsItemService")
 @Transactional(readOnly=true)
-public class RefundsItemServiceImpl  implements RefundsItemService {
+public class RefundsItemServiceImpl implements RefundsItemService {
 
 	@Autowired 
 	private RefundsItemDao refundsItemDao;

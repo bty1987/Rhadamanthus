@@ -90,7 +90,7 @@ public class DecorationOrderExportServiceImpl implements DecorationOrderExportSe
 				decorationOrderExportVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
 			}
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(decorationOrderPO.getCustomerPO().getId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(decorationOrderPO.getCustomerPO().getId(), decorationOrderPO.getCompany());
 			if(advancePaymentPO != null){
 				decorationOrderExportVO.setAdvancePayment(advancePaymentPO.getBalance());
 			}else{

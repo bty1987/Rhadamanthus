@@ -41,11 +41,12 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	}
 
 	@Override
-	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<String> brandIds){
+	public List<MaterialModelPO> pageMaterialModelByBrandIds(Paging paging, List<Filter> filters, List<Long> brandIds){
 		
 		PagingQuery<MaterialModelPO> query = pagingQuery(paging, MaterialModelPO.class);
 		
-		query.add(Restrictions.in("brand.brandId", brandIds));
+		query.add(Restrictions.in("brand.bid", brandIds));
+		
 		queryFilterExcute(query, filters);
 		
 		return query.list();
@@ -70,13 +71,13 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MaterialModelPO> queryMaterialModelByNo(String materiModelNo, int limit){
+	public List<MaterialModelPO> queryMaterialModelsByNo(String materiModelNo, int limit){
 		return session().createCriteria(MaterialModelPO.class).add(Restrictions.eq(MaterialModelPO.COLUMN_STATUS_STR, MaterialModelPO.TYPE_ENABLE_INT)).add(Restrictions.ilike(MaterialModelPO.COLUMN_MATERIALMODELNO_STR, materiModelNo, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@Override
-	public MaterialModelPO queryMaterialModelByNo(String materiModelNo){
-		return (MaterialModelPO) session().createCriteria(MaterialModelPO.class).add(Restrictions.eq(MaterialModelPO.COLUMN_MATERIALMODELNO_STR, materiModelNo)).uniqueResult();
+	public MaterialModelPO queryMaterialModelByNo(String materiModelNo,int company){
+		return (MaterialModelPO) session().createCriteria(MaterialModelPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(MaterialModelPO.COLUMN_MATERIALMODELNO_STR, materiModelNo)).uniqueResult();
 	}
 
 	@Override
@@ -111,8 +112,10 @@ public class MaterialModelDaoImpl extends DaoImpl<MaterialModelPO> implements Ma
 					query.add(query.getCriterion("brand.bid", Long.valueOf(filter.getData()), "eq"));
 				}else if(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR.equals(field)){
 					query.add(query.getCriterion(MaterialModelPO.COLUMN_MATERIALMODELNAME_STR, filter.getData(), filter.getOp()));
-				}else{
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+				}else if("materialBrandName".equals(field)){
+					query.add(query.getCriterion("brand.brandName", filter.getData(), filter.getOp()));
+				}else if(MaterialModelPO.COLUMN_MATERIALMODELNO_STR.equals(field)){
+					query.add(query.getCriterion(MaterialModelPO.COLUMN_MATERIALMODELNO_STR, filter.getData(), filter.getOp()));
 				}
 			}
 		}

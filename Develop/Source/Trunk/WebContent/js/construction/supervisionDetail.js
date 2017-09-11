@@ -3,149 +3,42 @@ jQuery(function($) {
 
 	//从服务器查询出来的所有工人
 	var constructionScheduleWorkers;
+	var constructionNodes = {};
 
 	var supervisionDetail = {
-
-		step:0,
 
 		controlCondition: false,
 
 		constructionSchedules:{},
 
-		schedule: 0,
-
-		constructionSchedule:"constructionSchedule",
-
 		operateDict: {
 			"1": {
-				num: 1,
-				nodeName:"铲大白",
-				nodeNamePinyin:"chan",
-				Gallery:"chanGallery",
-				uploadId: "chanUpload",
-				tabbable: "chanDrawing",
-				navTabbable:"chanNavTab",
-
-				startTimeId: "chanStartTime",
-				endTimeId: "chanEndTime",
-				workerInfos: "chanWorkerInfos",
-				status: "chanStatus",
+				name:"chan",
 				drawingType: 6,
-
 			}, "2": {
-				num: 2,
-				nodeName:"放线",
-				nodeNamePinyin:"putline",
-				Gallery:"putlineGallery",
-				uploadId: "putlineUpload",
-				tabbable: "putlineDrawing",
-				navTabbable:"putlineNavTab",
-
-				startTimeId: "putlineStartTime",
-				endTimeId: "putlineEndTime",
-				putlineTimeId: "putlineStartTime",
-				putlineStatusId: "putlineStatus",
-				workerInfos: "putlineWorkerInfos",
+				name:"putline",
 				drawingType: 7,
-
 			}, "3": {
-				num: 3,
-				nodeName:"力水电",
-				nodeNamePinyin:"waterwayCircuitPower",
-				Gallery: "waterwayCircuitPowerGallery",
-				uploadId: "waterwayCircuitPowerUpload",
-				tabbable: "waterwayCircuitPowerDrawing",
-				navTabbable:"waterwayCircuitPowerNavTab",
-
-				startTimeId: "waterwayCircuitPowerStartTime",
-				endTimeId: "waterwayCircuitPowerEndTime",
-				workerInfos: "waterwayCircuitPowerWorkerInfos",
+				name:"waterwayCircuitPower",
 				drawingType: 8,
-
 			}, "4": {
-				num: 4,
-				nodeName:"瓦工",
-				nodeNamePinyin:"bricklay",
-				Gallery: "bricklayGallery",
-				uploadId: "bricklayUpload",
-				tabbable: "bricklayDrawing",
-				navTabbable:"bricklayNavTab",
-
-				startTimeId: "bricklayStartTime",
-				endTimeId: "bricklayEndTime",
-				workerInfos: "bricklayWorkerInfos",
+				name:"bricklay",
 				drawingType: 9,
-
 			}, "5": {
-				num: 5,
-				nodeName:"地面找平",
-				nodeNamePinyin:"groundLeveling",
-				Gallery : "groundLevelingGallery",
-				uploadId: "groundLevelingUpload",
-				tabbable: "groundLevelingDrawing",
-				navTabbable:"groundLevelingNavTab",
-
-				startTimeId: "groundLevelingStartTime",
-				endTimeId: "groundLevelingEndTime",
-				workerInfos: "groundLevelingWorkerInfos",
+				name:"groundLeveling",
 				drawingType: 10,
-
 			}, "6": {
-				num: 6,
-				nodeName:"木工",
-				nodeNamePinyin:"carpent",
-				Gallery: "carpentGallery",
-				uploadId: "carpentUpload",
-				tabbable: "carpentDrawing",
-				navTabbable:"carpentNavTab",
-
-				startTimeId: "carpentStartTime",
-				endTimeId: "carpentEndTime",
-				workerInfos: "carpentWorkerInfos",
+				name:"carpent",
 				drawingType: 11,
-
 			}, "7": {
-				num: 7,
-				nodeName:"油工",
-				nodeNamePinyin:"oil",
-				Gallery: "oilGallery",
-				uploadId: "oilUpload",
-				tabbable: "oilDrawing",
-				navTabbable:"oilNavTab",
-
-				startTimeId: "oilStartTime",
-				endTimeId: "oilEndTime",
-				workerInfos: "oilWorkerInfos",
+				name:"oil",
 				drawingType: 12,
-
 			}, "8": {
-				num: 8,
-				nodeName:"水电验收",
-				nodeNamePinyin:"waterwayCircuitCheck",
-				Gallery: "waterwayCircuitCheckGallery",
-				uploadId: "waterwayCircuitCheckUpload",
-				tabbable: "waterwayCircuitCheckDrawing",
-				navTabbable:"waterwayCircuitCheckNavTab",
-
-				startTimeId: "waterwayCircuitCheckStartTime",
-				endTimeId: "waterwayCircuitCheckEndTime",
-				workerInfos: "waterwayCircuitCheckWorkerInfos",
+				name:"waterwayCircuitCheck",
 				drawingType: 13,
-
 			}, "9": {
-				num: 9,
-				nodeName:"保洁",
-				nodeNamePinyin:"cleaning",
-				Gallery: "cleaningGallery",
-				uploadId: "cleaningUpload",
-				tabbable: "cleaningDrawing",
-				navTabbable:"cleaningNavTab",
-
-				startTimeId: "cleaningStartTime",
-				endTimeId: "cleaningEndTime",
-				workerInfos: "cleaningWorkerInfos",
+				name:"cleaning",
 				drawingType: 14,
-
 			},
 		},
 
@@ -176,6 +69,14 @@ jQuery(function($) {
 
 	var orderId = params.orderId;
 
+	//获取节点名称
+	com.post(api.data.queryConstructionNode, {}, function(res){
+		$.each(res.constructionNodes, function(i, v){
+			constructionNodes["num" + v.cnid] = v.cnid;
+			constructionNodes[v.cnid] = v.name;
+		})
+	}, null, false);
+
 	//动态获取节点轴
 	com.post(api.construction.queryConstructionScheduleByOrderId,{"constructionSchedule.orderId":params.orderId},function(res){
 
@@ -184,25 +85,23 @@ jQuery(function($) {
 		supervisionDetail.constructionSchedules = res.constructionSchedules;
 
 		$.each(constructionSchedule, function(i, v){
-			constructionNode("#stepId", v.schedule,supervisionDetail.operateDict[v.schedule].nodeName);
-			constructionPane("#step-container", v.schedule,supervisionDetail.operateDict[v.schedule].nodeNamePinyin, supervisionDetail.operateDict[v.schedule].nodeName);
+			constructionNode("#stepId", v.schedule);
+			constructionPane("#step-container", v.schedule,supervisionDetail.operateDict[v.schedule].name);
 			params.cid = v.cid;
 		});
 
-			var stepnum = constructionSchedule[0].schedule;
-			initWizardSept(supervisionDetail.operateDict[stepnum], stepnum);
+		var stepnum = constructionSchedule[0].schedule;
+		initWizardSept(supervisionDetail.operateDict[stepnum], stepnum);
 
-			$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
-				com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
-			}).on('stepclick', function(e, info){
-				var stepId = $("[flag]").eq(info.step-1).attr("id");
-				var sd = stepId.substring(4);
-				if(!supervisionDetail.wizardSept[sd]){
-					initWizardSept(supervisionDetail.operateDict[sd], sd);
-				}
-			});
-
-
+		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
+			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
+		}).on('stepclick', function(e, info){
+			var stepId = $("[flag]").eq(info.step-1).attr("id");
+			var sd = stepId.substring(4);
+			if(!supervisionDetail.wizardSept[sd]){
+				initWizardSept(supervisionDetail.operateDict[sd], sd);
+			}
+		});
 	},null,false);
 
 	$('#modal-wizard .modal-header').ace_wizard();
@@ -237,10 +136,10 @@ jQuery(function($) {
 			if(schedule == 1){
 
 				var workerLength = 0;
-				$("#"+operate.startTimeId).val(element[0].startTime);
-				$("#"+operate.endTimeId).val(element[0].endTime);
+				$("#" + operate.name + "StartTime").val(element[0].startTime);
+				$("#" + operate.name + "EndTime").val(element[0].endTime);
 
-				var statusDiv = $("#"+operate.status).html("");
+				var statusDiv = $("#" + operate.name + "Status").html("");
 				if(element[0].status == 1){
 					$("<span></span>").addClass("label label-success").text("成功").appendTo(statusDiv);
 				}else if(element[0].status == 2){
@@ -291,9 +190,9 @@ jQuery(function($) {
 				}
 			}else if(schedule == 2){
 
-				$("#"+operate.putlineTimeId).val(element[0].startTime).attr("disabled", "disabled");
+				$("#"+operate.name + "StartTime").val(element[0].startTime).attr("disabled", "disabled");
 
-				var putlineStatusDiv = $("#"+operate.putlineStatusId).html("");
+				var putlineStatusDiv = $("#" + operate.name + "Status").html("");
 
 				var options = {};
 				options["constructer.orderId"] = params.orderId;
@@ -318,8 +217,8 @@ jQuery(function($) {
 			}else{
 				//这里是3-9
 				if(schedule == element[0].schedule){
-					$("#"+operate.startTimeId).val(element[0].startTime);
-					$("#"+operate.endTimeId).val(element[0].endTime);
+					$("#" + operate.name + "StartTime").val(element[0].startTime);
+					$("#" + operate.name + "EndTime").val(element[0].endTime);
 
 					var options = {};
 					options["constructer.orderId"] = params.orderId;
@@ -347,32 +246,31 @@ jQuery(function($) {
 
 			com.post(api.construction.queryConstructionDrawingByCid, options, function(res){
 				var drawings = res.constructionDrawings;
-				$("#" + operate.Gallery).html("");
+				$("#" + operate.name + "Gallery").html("");
 
 				for(var i=0;i<drawings.length;i++){
 					var drawing = drawings[i];
 
 					options["constructionDrawing.cdId"] = drawing.cdId;
 
-					if(drawing.schedule == operate.num ){
-						appendGalleryElement(operate.Gallery, drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
+					if(drawing.schedule == constructionNodes["num" + schedule] ){
+						appendGalleryElement(operate.name + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
 					}
 				}
 			});
-			initUploadBtn(operate,element, operate.num);
-			$('#'+operate.tabbable).removeClass("active");
+			initUploadBtn(operate, element, constructionNodes["num" + schedule]);
+			$('#'+operate.name + "Drawing").removeClass("active");
 
-			if($('#'+operate.navTabbable+' li:last-of-type').hasClass("active")){
-				$('#'+operate.tabbable).addClass("active");
+			if($('#' + operate.name + "NavTab" + ' li:last-of-type').hasClass("active")){
+				$('#' + operate.name + "Drawing").addClass("active");
 			}
 			return false;
-
 		});
 	}
 
 	function initUploadBtn(operate, ele, eleschedule){
 
-		$("#"+operate.uploadId).html("").Huploadify({
+		$("#" + operate.name + "Upload").html("").Huploadify({
 			'debug' : false, // 开启调试
 			'auto':true, // 是否自动上传
 			'successTimeout':150, // 超时时间
@@ -406,7 +304,7 @@ jQuery(function($) {
 
 					com.post(api.construction.addConstructionDrawing, options, function(res){
 						var drawing = res.constructionDrawing;
-							appendGalleryElement(operate.Gallery, drawing.cdId, dateObj.resUrl, 0, "", api.construction.deleteConstructionDrawing);
+						appendGalleryElement(operate.name + "Gallery", drawing.cdId, dateObj.resUrl, 0, "", api.construction.deleteConstructionDrawing);
 					});
 				}else{
 					console.log(data);
@@ -416,8 +314,8 @@ jQuery(function($) {
 	}
 
 	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl){
-
-		var gallery = $("#"+galleryId);
+		
+		var gallery = $("#" + galleryId);
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
 		var img = $('<img />');
 		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
@@ -447,7 +345,7 @@ jQuery(function($) {
 	//查询施工人员
 	function queryConstructer(operate, res) {
 		constructionScheduleWorkers = res.constructers;
-		$("#" + operate.workerInfos).html("");
+		$("#" + operate.name + "WorkerInfos").html("");
 		if (constructionScheduleWorkers.length != 0) {
 			//迭代所有的工人
 			for (var i = 0; i < constructionScheduleWorkers.length; i++) {
@@ -470,11 +368,11 @@ jQuery(function($) {
 				buttonSpan.click(function () {
 					_show_WorkerSalary(this._index);
 				});
-				profileDiv.appendTo($("#" + operate.workerInfos));
+				profileDiv.appendTo($("#" + operate.name + "WorkerInfos"));
 			}
 			return true;
 		} else {
-			$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate.workerInfos));
+			$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate.name + "WorkerInfos"));
 			return false;
 		}
 	}
@@ -549,7 +447,7 @@ jQuery(function($) {
 			var salaryDiv4 = $('<div></div>').addClass("form-group").css("height","80px");
 			var salaryDivF = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv4);
 			var salaryBz = $('<label><b>备注</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","comment").appendTo(salaryDivF);
-			var salaryBzInp = $('<textarea></textarea>').attr("id","comment").css("width","320px").appendTo(salaryDivF);
+			var salaryBzInp = $('<textarea></textarea>').attr("id","comment").attr("maxlength","256").css("width","320px").appendTo(salaryDivF);
 
 			var salaryDivFi = $('<div></div>').addClass("col-sm-9").css("width","850px").css("padding-top","20px").css("text-align","center").css("height","50px").appendTo(salaryDiv4);
 			var salaryBtn = $('<button><b>保存</b></button>').addClass("btn btn-sm  btn-primary").attr("id","saveBtn").appendTo(salaryDivFi)
@@ -612,14 +510,14 @@ jQuery(function($) {
 	}
 
 	//画节点信息轴
-	function constructionNode(stepul,schedule, nodeName){
+	function constructionNode(stepul, schedule){
 		var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
 		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-		var stepSpan = $("<span></span>").addClass("title").html(nodeName).appendTo(stepLi);
+		var stepSpan = $("<span></span>").addClass("title").html(constructionNodes[schedule]).appendTo(stepLi);
 	}
 
 	//画节点下面的面板
-	function constructionPane(paneId, schedule,scheduleNamePinyin, scheduleNameGBK){
+	function constructionPane(paneId, schedule,scheduleNamePinyin){
 
 		var paneDiv = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
 
@@ -644,7 +542,7 @@ jQuery(function($) {
 		var paneTabThree = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var paneTabH3 = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneTabThree);
 		var paneTabH3I = $("<i></i>").addClass("icon-edit").appendTo(paneTabH3);
-		var paneTabSpan = $("<span></span>").html(scheduleNameGBK + "信息").appendTo(paneTabH3);
+		var paneTabSpan = $("<span></span>").html(constructionNodes[schedule] + "信息").appendTo(paneTabH3);
 
 		//开工时间
 		var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
@@ -664,7 +562,7 @@ jQuery(function($) {
 			var paneSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 			var paneStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 			var paneStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStatus);
-			var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for",scheduleNamePinyin + "Status").html(scheduleNameGBK  + "状态").appendTo(paneStatusTwo);
+			var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for",scheduleNamePinyin + "Status").html(constructionNodes[schedule]  + "状态").appendTo(paneStatusTwo);
 			var paaneStatusTh = $("<div></div>").attr("id",scheduleNamePinyin + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
 			var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 		}
@@ -700,7 +598,6 @@ jQuery(function($) {
 	}
 
 	function addActive(schedule){
-
 		var con = supervisionDetail.constructionSchedules;
 		$.each(con,function(i, v){
 			$("#step" + v.schedule).removeClass("active");
@@ -708,6 +605,5 @@ jQuery(function($) {
 		});
 		$("#step" + schedule).removeClass("step-pane");
 		$("#step" + schedule).addClass("active");
-
 	}
 });

@@ -7,13 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.CustomerPO;
 
 @Entity
-@Table(name = "advancepayment", catalog = "platform")
+@Table(name = "advancepayment", catalog = "payment")
 public class AdvancePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3956125205251478439L;
@@ -31,6 +31,8 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	private float zhenglinBalance;
 	
 	private float projectBalance;
+	
+	private int company;
 	
 	public AdvancePaymentPO() {
 		super();
@@ -88,7 +90,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 		this.projectBalance = projectBalance;
 	}
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="id")
 	public CustomerPO getCustomer() {
 		return customer;
@@ -96,6 +98,15 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	public void setCustomer(CustomerPO customer) {
 		this.customer = customer;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

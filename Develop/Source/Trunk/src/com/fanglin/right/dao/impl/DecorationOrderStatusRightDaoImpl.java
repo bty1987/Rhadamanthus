@@ -37,7 +37,7 @@ public class DecorationOrderStatusRightDaoImpl extends DaoImpl<DecorationOrderSt
 	public int deleteDecorationOrderStatusRightByUId(int uId, int company) {
 		
 		String sql = "delete from platform.decorationorderstatusright where uId = :uId and company = :company";
-		session().createSQLQuery(sql).setLong("uId", uId).executeUpdate();
+		session().createSQLQuery(sql).setLong("uId", uId).setInteger("company", company).executeUpdate();
 		
 		return 0;
 	}

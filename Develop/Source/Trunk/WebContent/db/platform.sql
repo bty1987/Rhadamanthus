@@ -12,123 +12,12 @@ CREATE TABLE `actionlog` (
   PRIMARY KEY (`alId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
 
-DROP TABLE IF EXISTS `activity`;
-CREATE TABLE `activity` (
-  `aId` int(11) NOT NULL AUTO_INCREMENT,
-  `activityName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL,
-  `createUserName` varchar(32) NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `createTime` timestamp NULL NOT NULL,
-  `startTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `endTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `content` varchar(32) NOT NULL DEFAULT '',
-  PRIMARY KEY (`aId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动表';
-
-DROP TABLE IF EXISTS `activityitem`;
-CREATE TABLE `activityitem` (
-  `aiId` int(11) NOT NULL AUTO_INCREMENT,
-  `aId` int(11) NOT NULL,
-  `activityName` varchar(32) NOT NULL,
-  `activityItemName` varchar(32) NOT NULL,
-  `num` int(11) NOT NULL DEFAULT '0',
-  `type` tinyint(4) NOT NULL,
-  `money` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`aiId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动物品表';
-
-DROP TABLE IF EXISTS `addreduce`;
-CREATE TABLE `addreduce` (
-  `arId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
-  `managePrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '管理费',
-  `total` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL COMMENT '0 未提交 1,已提交/未付款 2,已付款 3,已确认',
-  `createTime` timestamp NULL NOT NULL,
-  `content` varchar(256) NOT NULL,
-  `dpId` bigint(20) DEFAULT NULL COMMENT '对应收款编号',
-  PRIMARY KEY (`arId`),
-  KEY `indexone` (`orderId`,`type`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项表';
-
-DROP TABLE IF EXISTS `addreduceitem`;
-CREATE TABLE `addreduceitem` (
-  `ariId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `arId` int(11) NOT NULL COMMENT '增减项编号',
-  `itemName` varchar(128) NOT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
-  `measurementUnit` varchar(10) NOT NULL,
-  `workType` varchar(15) NOT NULL,
-  `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `quotationFunctionAreaId` bigint(20) NOT NULL COMMENT '所属报价功能区编号',
-  `quoteItemId` bigint(20) DEFAULT '0',
-  `content` varchar(512) DEFAULT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ariId`),
-  KEY `indexone` (`arId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项目';
-
-DROP TABLE IF EXISTS `advancepayment`;
-CREATE TABLE `advancepayment` (
-  `apId` int(11) NOT NULL AUTO_INCREMENT,
-  `customerId` int(11) NOT NULL,
-  `balance` decimal(10,3) DEFAULT NULL,
-  `materialBalance` decimal(10,3) DEFAULT '0.000',
-  `zhenglinBalance` decimal(10,3) DEFAULT '0.000',
-  `projectBalance` decimal(10,3) DEFAULT '0.000',
-  PRIMARY KEY (`apId`),
-  UNIQUE KEY `uniqueone` (`customerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户预付款';
-
-DROP TABLE IF EXISTS `advancereceipt`;
-CREATE TABLE `advancereceipt` (
-  `arId` int(11) NOT NULL AUTO_INCREMENT,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankInfo` varchar(512) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `receiptType` tinyint(4) NOT NULL,
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `apId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`arId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款项收据表';
-
-DROP TABLE IF EXISTS `assassin`;
-CREATE TABLE `assassin` (
-  `asId` int(11) NOT NULL AUTO_INCREMENT,
-  `api` varchar(64) NOT NULL,
-  `params` varchar(512) NOT NULL,
-  `server` varchar(32) NOT NULL,
-  `errorcode` int(11) NOT NULL,
-  `errormes` varchar(255) NOT NULL,
-  `ouid` int(11) NOT NULL DEFAULT '0',
-  `operateTime` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`asId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='代理表';
-
 DROP TABLE IF EXISTS `audit`;
 CREATE TABLE `audit` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL COMMENT '订单编号',
   `auid` int(11) COMMENT '审核人ID',
-  `auditTime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '审核时间',
+  `auditTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '审核时间',
   PRIMARY KEY (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审核表';
 
@@ -138,9 +27,9 @@ CREATE TABLE `auditrecord` (
   `aid` int(11) NOT NULL,
   `unitprice` decimal(10,3) NOT NULL COMMENT '单价',
   `num` decimal(10,3) NOT NULL COMMENT '数量',
-  `discount` decimal(2,2) NOT NULL COMMENT '折扣',
+  `discount` decimal(5,2) NOT NULL COMMENT '折扣',
   `cuid` int(11) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(255) NOT NULL COMMENT '说明',
   `status` tinyint(1) NOT NULL COMMENT '状态',
   PRIMARY KEY (`arid`)
@@ -150,8 +39,10 @@ DROP TABLE IF EXISTS `auditscale`;
 CREATE TABLE `auditscale` (
   `asid` int(11) NOT NULL AUTO_INCREMENT,
   `arid` int(11) NOT NULL,
+  `cuid` int(11) NOT NULL,
   `buid` int(11) NOT NULL COMMENT '归属人ID',
   `bdid` int(11) NOT NULL COMMENT '归属人部门',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `money` decimal(10,3) NOT NULL COMMENT '金额',
   `type` tinyint(1) NOT NULL COMMENT '类型',
   `status` tinyint(1) NOT NULL COMMENT '状态',
@@ -193,7 +84,7 @@ CREATE TABLE `decorationactivityitem` (
   `content` varchar(32) NOT NULL DEFAULT '',
   `receiveUserId` varchar(15) NOT NULL DEFAULT '',
   `receiveUserName` varchar(15) NOT NULL DEFAULT '',
-  `receiveTime` timestamp NULL NOT NULL,
+  `receiveTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`daiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单活动物品表';
 
@@ -222,6 +113,7 @@ CREATE TABLE `decorationdesignerdepartmentrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`dddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
@@ -235,6 +127,7 @@ CREATE TABLE `decorationdesignerrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`ddrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
@@ -248,13 +141,14 @@ CREATE TABLE `decorationdesignerregionrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`ddrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
 
 DROP TABLE IF EXISTS `decorationholonomy`;
 CREATE TABLE `decorationholonomy` (
-  `dhid` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
+  `dhid` int(11) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
   `orderId` varchar(15) NOT NULL COMMENT '订单编号',
   `name` varchar(32) DEFAULT NULL COMMENT '名称',
   `maching` decimal(10,3) NOT NULL COMMENT '主材配比',
@@ -269,7 +163,21 @@ CREATE TABLE `decorationholonomy` (
   `servicePaidup` decimal(10,3) DEFAULT '0.000' COMMENT '实收服务费',
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`dhid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单半价信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单半价信息';
+
+DROP TABLE IF EXISTS `decorationinclusive`;
+CREATE TABLE `decorationinclusive` (
+  `diid` int(11) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
+  `orderId` varchar(15) NOT NULL COMMENT '订单编号',
+  `contractPrice` decimal(10,3) NOT NULL COMMENT '合同额',
+  `projectPrice` decimal(10,3) NOT NULL COMMENT '工程总额',
+  `cdiff` decimal(10,3) DEFAULT '0.000' COMMENT '工程增项',
+  `mdiff` decimal(10,3) DEFAULT '0.000' COMMENT '主材增项',
+  `managePrice` decimal(10,3) NOT NULL COMMENT '管理费',
+  `manageRate` decimal(10,3) NOT NULL COMMENT '管理费比例',
+  `materialPaidup` decimal(10,3) DEFAULT '0.000' COMMENT '实收主材额',
+  PRIMARY KEY (`diid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单套餐信息';
 
 DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
@@ -286,7 +194,7 @@ CREATE TABLE `decorationoperate` (
   PRIMARY KEY (`doId`),
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`operateTime`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单操作';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单操作';
 
 DROP TABLE IF EXISTS `decorationorder`;
 CREATE TABLE `decorationorder` (
@@ -339,13 +247,14 @@ CREATE TABLE `decorationorder` (
   KEY `indexsev` (`salesmanId`),
   KEY `indexeig` (`status`),
   KEY `indexnig` (`company`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单表';
 
 DROP TABLE IF EXISTS `decorationorderdesigndepartmentright`;
 CREATE TABLE `decorationorderdesigndepartmentright` (
   `doddrId` int(20) NOT NULL AUTO_INCREMENT,
   `uId` int(11) NOT NULL,
   `dId` int(11) NOT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`doddrId`),
   KEY `indexone` (`uId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单设计部权限';
@@ -369,20 +278,12 @@ CREATE TABLE `decorationorderdrawline` (
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
-DROP TABLE IF EXISTS `decorationorderoperatehistory`;
-CREATE TABLE `decorationorderoperatehistory` (
-  `doophId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `operateTime` varchar(20) DEFAULT NULL,
-  `des` varchar(256) DEFAULT '',
-  PRIMARY KEY (`doophId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修订单操作信息历史记录';
-
 DROP TABLE IF EXISTS `decorationordersalesmandepartmentright`;
 CREATE TABLE `decorationordersalesmandepartmentright` (
   `dosdrId` int(20) NOT NULL AUTO_INCREMENT,
   `uId` int(11) NOT NULL,
   `dId` int(11) NOT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`dosdrId`),
   KEY `indexone` (`uId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单业务部权限';
@@ -392,30 +293,10 @@ CREATE TABLE `decorationorderstatusright` (
   `dosrId` int(20) NOT NULL AUTO_INCREMENT,
   `uId` int(11) NOT NULL,
   `status` varchar(10) NOT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`dosrId`),
   KEY `indexone` (`uId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
-
-DROP TABLE IF EXISTS `decorationpayment`;
-CREATE TABLE `decorationpayment` (
-  `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `paymentType` varchar(10) NOT NULL COMMENT '预付款,设计费,定金,首付款,首付二期款,二期款,尾款,增项款,减项款,退款,违约金',
-  `paymentStatus` varchar(10) NOT NULL DEFAULT '未提交' COMMENT '申请审批,审批未通过,未提交 , 未付款 , 已付款,已确认',
-  `createUserId` varchar(15) DEFAULT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `paymentBlance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '付款余额',
-  `other` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '对于首付款是定金转首付金额',
-  `createDes` varchar(128) DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `drId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`autoId`),
-  KEY `indexone` (`orderId`),
-  KEY `indextwo` (`createUserId`),
-  KEY `indexthr` (`collectUserId`),
-  KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `decorationpicture`;
 CREATE TABLE `decorationpicture` (
@@ -432,54 +313,6 @@ CREATE TABLE `decorationpicture` (
   KEY `indexone` (`orderId`,`uploadTime`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计图纸';
 
-DROP TABLE IF EXISTS `decorationreceipt`;
-CREATE TABLE `decorationreceipt` (
-  `drId` int(11) NOT NULL AUTO_INCREMENT,
-  `collectUserId` varchar(15) DEFAULT NULL,
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT NULL,
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankInfo` varchar(512) DEFAULT NULL,
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) DEFAULT NULL,
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) DEFAULT NULL,
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) DEFAULT NULL,
-  `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `couponInfo` varchar(512) DEFAULT NULL,
-  `advance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `advanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `receiptType` tinyint(4) NOT NULL,
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `dpId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`drId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款项收据表';
-
-DROP TABLE IF EXISTS `drawline`;
-CREATE TABLE `drawline` (
-  `dlId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `applayTime` timestamp NULL DEFAULT NULL,
-  `applayDes` varchar(100) DEFAULT NULL,
-  `actualStartTime` timestamp NULL DEFAULT NULL,
-  `actualEndTime` timestamp NULL DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL COMMENT '排队,申请放线,放线失败,放线成功',
-  `applayCount` int(11) DEFAULT '1',
-  `applayUserId` varchar(15) DEFAULT NULL,
-  `dgid` int(11),
-  `drawLineGroup` varchar(45) DEFAULT NULL,
-  `drawLineUserId` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`dlId`),
-  KEY `indexone` (`orderId`),
-  KEY `indextwo` (`drawLineGroup`,`status`,`applayTime`),
-  KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
-
 DROP TABLE IF EXISTS `drawlinegroup`;
 CREATE TABLE `drawlinegroup` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
@@ -489,47 +322,6 @@ CREATE TABLE `drawlinegroup` (
   `company` int(11) NOT NULL,
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线小组表';
-
-DROP TABLE IF EXISTS `events`;
-CREATE TABLE `events` (
-  `eId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) NOT NULL,
-  `content` varchar(256) NOT NULL DEFAULT '',
-  `createrId` varchar(15) DEFAULT NULL,
-  `holderId` varchar(15) NOT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
-  `deptId` varchar(10) DEFAULT NULL,
-  `regionId` varchar(10) DEFAULT NULL,
-  `showDate` date NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  PRIMARY KEY (`eId`),
-  KEY `indexone` (`holderId`,`showDate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事件表';
-
-DROP TABLE IF EXISTS `functionarea`;
-CREATE TABLE `functionarea` (
-  `faId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `functionAreaId` varchar(10) NOT NULL,
-  `functionAreaName` varchar(20) NOT NULL,
-  `versionId` varchar(11) NOT NULL,
-  `functionAreaOrder` int(11) NOT NULL,
-  `functionAreaType` varchar(10) NOT NULL DEFAULT '普通' COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`faId`),
-  KEY `indexone` (`functionAreaId`,`versionId`,`functionAreaType`,`functionAreaOrder`),
-  KEY `indextwo` (`versionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区表';
-
-DROP TABLE IF EXISTS `functionareaquoteitem`;
-CREATE TABLE `functionareaquoteitem` (
-  `faiId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `functionAreaId` bigint(20) NOT NULL,
-  `quoteItemId` bigint(20) NOT NULL,
-  PRIMARY KEY (`faiId`),
-  KEY `indexone` (`functionAreaId`,`quoteItemId`),
-  KEY `indextwo` (`quoteItemId`,`functionAreaId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
 
 DROP TABLE IF EXISTS `materialbrand`;
 CREATE TABLE `materialbrand` (
@@ -612,6 +404,7 @@ CREATE TABLE `materialdesignerdepartmentrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`mddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
@@ -625,6 +418,7 @@ CREATE TABLE `materialdesignerrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`mdrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
@@ -650,67 +444,10 @@ CREATE TABLE `materialdesignerregionrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`mdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
-
-DROP TABLE IF EXISTS `materialinside`;
-CREATE TABLE `materialinside` (
-  `miId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `materialGuideId` varchar(15) NOT NULL,
-  `materialGuideName` varchar(32) NOT NULL,
-  `materialTypeId` int(11) NOT NULL,
-  `materialType` varchar(32) NOT NULL,
-  `materialBrandId` int(11) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `sales` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `orderId` varchar(15) NOT NULL,
-  PRIMARY KEY (`miId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内信息';
-
-DROP TABLE IF EXISTS `materialinsidepayment`;
-CREATE TABLE `materialinsidepayment` (
-  `mipId` int(11) NOT NULL AUTO_INCREMENT,
-  `miId` int(11) NOT NULL,
-  `paymentType` tinyint(4) NOT NULL DEFAULT '0',
-  `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL,
-  `materialBrandName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL DEFAULT '',
-  `createUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` date DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` date DEFAULT NULL,
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankName` varchar(20) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`mipId`),
-  KEY `indexone` (`miId`),
-  KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内收款表';
 
 DROP TABLE IF EXISTS `materialmodel`;
 CREATE TABLE `materialmodel` (
@@ -734,312 +471,6 @@ CREATE TABLE `materialmodel` (
   KEY `indexone` (`materialModelName`),
   KEY `indextwo` (`brandId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='型号表';
-
-DROP TABLE IF EXISTS `materialoutside`;
-CREATE TABLE `materialoutside` (
-  `moId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `salesmanId` varchar(15) NOT NULL,
-  `salesmanName` varchar(32) NOT NULL,
-  `deptId` varchar(10) NOT NULL,
-  `deptName` varchar(32) NOT NULL,
-  `regionId` varchar(10) NOT NULL,
-  `regionName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL,
-  `createUserName` varchar(32) NOT NULL,
-  `materialType` varchar(32) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
-  `sales` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`moId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外信息';
-
-DROP TABLE IF EXISTS `materialoutsidepayment`;
-CREATE TABLE `materialoutsidepayment` (
-  `mopId` int(11) NOT NULL AUTO_INCREMENT,
-  `moId` int(11) NOT NULL,
-  `paymentType` tinyint(4) NOT NULL DEFAULT '0',
-  `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL,
-  `materialBrandName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL DEFAULT '',
-  `createUserName` varchar(32) NOT NULL DEFAULT '',
-  `createTime` timestamp NULL DEFAULT NULL,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `morId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`mopId`),
-  KEY `indexone` (`moId`),
-  KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外收款表';
-
-DROP TABLE IF EXISTS `materialoutsidereceipt`;
-CREATE TABLE `materialoutsidereceipt` (
-  `morId` int(11) NOT NULL AUTO_INCREMENT,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankName` varchar(20) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `mopId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`morId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外款项收据表';
-
-DROP TABLE IF EXISTS `materialpayment`;
-CREATE TABLE `materialpayment` (
-  `mpId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoNo` varchar(15) NOT NULL,
-  `paymentType` tinyint(4) NOT NULL DEFAULT '0',
-  `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `materialType` varchar(32) NOT NULL DEFAULT '',
-  `materialBrand` varchar(32) NOT NULL DEFAULT '',
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL DEFAULT '',
-  `createUserName` varchar(32) NOT NULL DEFAULT ''
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `mrId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`mpId`),
-  KEY `indexone` (`msoId`,`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单款项表';
-
-DROP TABLE IF EXISTS `materialreceipt`;
-CREATE TABLE `materialreceipt` (
-  `mrId` int(11) NOT NULL AUTO_INCREMENT,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankInfo` varchar(512) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `advance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `advanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `couponType` tinyint(4) NOT NULL DEFAULT '0',
-  `couponInfo` text NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `receiptType` tinyint(4) NOT NULL,
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `mpId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`mrId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材款项收据表';
-
-DROP TABLE IF EXISTS `materialsuborder`;
-CREATE TABLE `materialsuborder` (
-  `msoId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoNo` varchar(15) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `salesmanId` varchar(15) NOT NULL,
-  `salesmanName` varchar(32) NOT NULL,
-  `materialerId` varchar(15) NOT NULL,
-  `materialerName` varchar(32) NOT NULL,
-  `instoreId` varchar(15) DEFAULT NULL,
-  `instoreName` varchar(32) DEFAULT NULL,
-  `materialType` varchar(32) NOT NULL DEFAULT '',
-  `materialBrand` varchar(32) NOT NULL DEFAULT '',
-  `designerFlag` tinyint(4) NOT NULL DEFAULT '0',
-  `packageFlag` tinyint(4) NOT NULL DEFAULT '0',
-  `regionId` varchar(10) NOT NULL,
-  `regionName` varchar(32) NOT NULL,
-  `departmentId` varchar(10) NOT NULL,
-  `departmentName` varchar(32) NOT NULL,
-  `materialDeptId` varchar(10) NOT NULL,
-  `materialDeptName` varchar(32) NOT NULL,
-  `createTime` timestamp NULL NOT NULL,
-  `preBalanceTime` timestamp NULL NOT NULL,
-  `postBalanceTime` timestamp NULL NOT NULL,
-  `msoType` tinyint(4) DEFAULT '0',
-  `status` tinyint(4) DEFAULT '0' COMMENT '初始, 删除',
-  `depositPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `depositStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `fullPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `fullStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `deliveryStatus` tinyint(4) DEFAULT '0' COMMENT '送货状态',
-  `balanceStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `base` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `point` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `distotal` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣总价',
-  `maling` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `venderMaling` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `couponInfo` varchar(64) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `deliveryTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `deliveryUserId` varchar(15) NOT NULL DEFAULT '',
-  `fullCollectTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `postProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `custProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `otherStatus` int(11) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`msoId`),
-  KEY `indexone` (`orderId`,`status`),
-  KEY `indextwo` (`balanceStatus`,`fullStatus`),
-  KEY `indexthr` (`msoNo`),
-  KEY `indexfor` (`orderAddr`),
-  KEY `indexfiv` (`salesmanName`),
-  KEY `indexsix` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
-
-DROP TABLE IF EXISTS `materialsuborderbalance`;
-CREATE TABLE `materialsuborderbalance` (
-  `msobId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `createrId` varchar(15) NOT NULL,
-  `instorerId` varchar(15) DEFAULT NULL,
-  `posterId` varchar(15) DEFAULT NULL,
-  `balanceTime` timestamp NULL DEFAULT NULL COMMENT '预结算时间',
-  `balance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `difference` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `vbalanceTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
-  `post` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `ident` int(11) NOT NULL DEFAULT '0',
-  `mpid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`msobId`),
-  KEY `indexone` (`msoId`),
-  KEY `indextwo` (`instorerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
-
-DROP TABLE IF EXISTS `materialsuborderitem`;
-CREATE TABLE `materialsuborderitem` (
-  `msoiId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `mpId` int(11) NOT NULL DEFAULT '0',
-  `materialModelNo` varchar(64) NOT NULL,
-  `materialModelName` varchar(64) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL DEFAULT '',
-  `materialBrandName` varchar(32) NOT NULL DEFAULT '',
-  `measurementUnitName` varchar(10) NOT NULL,
-  `packageName` varchar(10) NOT NULL DEFAULT '',
-  `materialUnitPrice` decimal(10,3) NOT NULL,
-  `materialPurchasePrice` decimal(10,3) NOT NULL,
-  `salePrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `price` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `discount` decimal(10,3) NOT NULL DEFAULT '1.000',
-  `postDiscount` decimal(10,3) NOT NULL DEFAULT '1.000',
-  `num` decimal(10,3) DEFAULT '0.000',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `balanceStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `refundStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `calcType` tinyint(4) NOT NULL DEFAULT '0',
-  `prePoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `postPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) DEFAULT '',
-  `rawCalcType` tinyint(4) NOT NULL DEFAULT '0',
-  `rawPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`msoiId`),
-  KEY `indexone` (`mpId`),
-  KEY `indextwo` (`msoId`,`status`,`refundStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
-
-DROP TABLE IF EXISTS `materialsuborderpostbalance`;
-CREATE TABLE `materialsuborderpostbalance` (
-  `msopobId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoNo` varchar(15) NOT NULL,
-  `userId` varchar(15) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `postBalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`msopobId`),
-  KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
-
-DROP TABLE IF EXISTS `materialsuborderprebalance`;
-CREATE TABLE `materialsuborderprebalance` (
-  `msoprbId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoNo` varchar(15) NOT NULL,
-  `userId` varchar(15) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `preBalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`msoprbId`),
-  KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单预结算表';
-
-DROP TABLE IF EXISTS `materialsuborderrefund`;
-CREATE TABLE `materialsuborderrefund` (
-  `msorId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoiId` int(11) NOT NULL,
-  `dpbsId` int(11) NOT NULL,
-  `mpId` int(11) NOT NULL,
-  `ident` int(11) NOT NULL,
-  `materialModelNo` varchar(64) NOT NULL,
-  `materialModelName` varchar(64) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL DEFAULT '',
-  `materialBrandName` varchar(32) NOT NULL DEFAULT '',
-  `measurementUnitName` varchar(10) NOT NULL,
-  `packageName` varchar(10) NOT NULL DEFAULT '',
-  `materialUnitPrice` decimal(10,3) NOT NULL,
-  `materialPurchasePrice` decimal(10,3) NOT NULL,
-  `salePrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `price` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `discount` decimal(10,3) NOT NULL DEFAULT '1.000',
-  `postDiscount` decimal(10,3) NOT NULL DEFAULT '1.000',
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `balanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `calcType` tinyint(4) NOT NULL DEFAULT '0',
-  `prePoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `postPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) DEFAULT '',
-  `refundDes` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`msorId`),
-  KEY `indexone` (`msoId`,`status`),
-  KEY `indextwo` (`mpId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单退款信息表';
 
 DROP TABLE IF EXISTS `materialtype`;
 CREATE TABLE `materialtype` (
@@ -1067,75 +498,6 @@ CREATE TABLE `measurementunit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计量单位表';
 
-DROP TABLE IF EXISTS `membercard`;
-CREATE TABLE `membercard` (
-  `mcid` int(11) NOT NULL AUTO_INCREMENT,
-  `no` varchar(15) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `credits` int(11) NOT NULL DEFAULT '0',
-  `createTime` timestamp NULL NOT NULL,
-  PRIMARY KEY (`mcid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员卡表';
-
-DROP TABLE IF EXISTS `memberdetail`;
-CREATE TABLE `memberdetail` (
-  `mdid` int(11) NOT NULL AUTO_INCREMENT,
-  `mcid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1:主材, 2:装修',
-  `subtype` tinyint(1) NOT NULL '0' COMMENT '0: +, 1: -',
-  `credit` float NOT NULL DEFAULT '0',
-  `balance` int(11) NOT NULL DEFAULT '0' COMMENT '余额',
-  `multiple` int(11) NOT NULL DEFAULT '0' COMMENT '倍数, 积分倍数',
-  `divider` int(11) NOT NULL DEFAULT '0' COMMENT '除数,金额/除数=积分',
-  `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` bigint(20) NOT NULL,
-  `comment` varchar(128),
-  PRIMARY KEY (`mdid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员积分明细表';
-
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE `message` (
-  `messageId` bigint(32) NOT NULL AUTO_INCREMENT,
-  `receiverId` varchar(15) NOT NULL,
-  `senderId` varchar(15) NOT NULL,
-  `type` varchar(10) NOT NULL COMMENT '类别',
-  `contents` varchar(256) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `status` varchar(10) NOT NULL COMMENT '未读,已读',
-  `args` varchar(1024) DEFAULT NULL,
-  PRIMARY KEY (`messageId`),
-  KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=908183 DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `notice`;
-CREATE TABLE `notice` (
-  `nid` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `deptId` varchar(10) NOT NULL,
-  `theme` varchar(64) NOT NULL,
-  `type` tinyint(1) NOT NULL COMMENT '1: 通知, 2: 活动',
-  `priority` tinyint(1) NOT NULL COMMENT '优先级 , 0: 普通, 1: 重要, 2: 紧急',
-  `startTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `publishTime` date NOT NULL,
-  `isPublic` tinyint(1) NOT NULL COMMENT '公开, 0: 公开, 1: 非公开',
-  `contents` varchar(4096) NOT NULL,
-  `contentsText` varchar(1024) NOT NULL,
-  `filePath` varchar(128) DEFAULT NULL,
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`nid`),
-  KEY `indexone` (`type`,`deptId`,`isPublic`,`startTime`,`endTime`,`publishTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
-
-DROP TABLE IF EXISTS `noticedepartment`;
-CREATE TABLE `noticedepartment` (
-  `ndid` int(11) NOT NULL AUTO_INCREMENT,
-  `nid` int(11) NOT NULL,
-  `did` int(11) NOT NULL,
-  PRIMARY KEY (`ndid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告部门表';
-
 DROP TABLE IF EXISTS `orderbelonginfo`;
 CREATE TABLE `orderbelonginfo` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1156,101 +518,6 @@ CREATE TABLE `orderbelonginfo` (
   KEY `indexone` (`orderId`,`belongType`,`belongUserId`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
 
-DROP TABLE IF EXISTS `payment`;
-CREATE TABLE `payment` (
-  `paymentId` bigint(32) NOT NULL AUTO_INCREMENT,
-  `customerId` int(11) NOT NULL,
-  `balance` decimal(10,3) NOT NULL,
-  `recharge` decimal(10,3) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `des` varchar(256) DEFAULT NULL,
-  `status` varchar(10) DEFAULT NULL,
-  `paymentType` varchar(10) NOT NULL,
-  `convertPaymentId` bigint(20) DEFAULT NULL,
-  `orderId` varchar(15) DEFAULT NULL,
-  `arId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`paymentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `quotation`;
-CREATE TABLE `quotation` (
-  `qId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `quotationName` varchar(64) NOT NULL,
-  `decorationStyle` varchar(10) DEFAULT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
-  `createUserId` varchar(15) NOT NULL,
-  `content` varchar(45) DEFAULT NULL,
-  `undisPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折前总价',
-  `discount` decimal(10,3) NOT NULL DEFAULT '10.000',
-  `totalPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1,默认',
-  `saveStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
-  `calFlag` int(11) NOT NULL DEFAULT '1',
-  `latexCut` decimal(10,3) DEFAULT '0.000' COMMENT '乳胶漆提点',
-  `managePrice` decimal(10,3) DEFAULT '0.000' COMMENT '管理费',
-  `manageRate` decimal(2,3) DEFAULT '0.000' COMMENT '管理费比例',
-  `trafficPrice` decimal(10,3) DEFAULT '0.000' COMMENT '车运费',
-  `trafficRate` decimal(2,3) NOT NULL DEFAULT '0.000' COMMENT '车运费比例',
-  `basicPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '基础额,套餐',
-  `setpackage` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '套系金额,套餐',
-  `qdiff` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '报价差额',
-  `mdiff` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '主材差额',
-  PRIMARY KEY (`qId`),
-  KEY `indexone` (`orderId`,`createTime`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价表';
-
-DROP TABLE IF EXISTS `quotationfunctionarea`;
-CREATE TABLE `quotationfunctionarea` (
-  `qfaId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `quotationId` bigint(20) NOT NULL,
-  `functionAreaName` varchar(10) NOT NULL,
-  `functionAreaOrder` int(11) DEFAULT NULL,
-  `functionAreaType` varchar(10) DEFAULT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`qfaId`),
-  KEY `indexone` (`quotationId`,`functionAreaOrder`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区';
-
-DROP TABLE IF EXISTS `quotationfunctionareaitem`;
-CREATE TABLE `quotationfunctionareaitem` (
-  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
-  `itemName` varchar(192) NOT NULL,
-  `measurementUnit` varchar(10) NOT NULL,
-  `workType` varchar(15) NOT NULL,
-  `unitPrice` decimal(10,3) NOT NULL,
-  `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `quotationFunctionAreaId` bigint(20) NOT NULL,
-  `quotationItemId` bigint(20) DEFAULT NULL,
-  `content` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`qfaiId`),
-  KEY `indexone` (`quotationFunctionAreaId`),
-  KEY `indextwo` (`quotationItemId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
-
-DROP TABLE IF EXISTS `quotationitem`;
-CREATE TABLE `quotationitem` (
-  `qiId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `itemId` varchar(10) NOT NULL,
-  `versionId` varchar(11) NOT NULL,
-  `quotationTypeId` int(11) NOT NULL,
-  `quotationClassificationId` int(11) NOT NULL,
-  `quotationBigCategoryId` int(11) NOT NULL,
-  `quotationSmallCategoryId` int(11) NOT NULL,
-  `itemName` varchar(128) NOT NULL,
-  `measurementUnitId` int(11) NOT NULL,
-  `itemWorkTypeId` int(11) NOT NULL,
-  `quotationItemDes` varchar(512) NOT NULL,
-  `unitPrice` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`qiId`),
-  KEY `indexone` (`itemId`,`versionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项目表';
-
 DROP TABLE IF EXISTS `quotationmaterialitem`;
 CREATE TABLE `quotationmaterialitem` (
   `qmiId` int(11) NOT NULL AUTO_INCREMENT,
@@ -1268,105 +535,16 @@ CREATE TABLE `quotationmaterialitem` (
   KEY `indexone` (`qid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
-DROP TABLE IF EXISTS `quotationversion`;
-CREATE TABLE `quotationversion` (
-  `qvId` int(11) NOT NULL AUTO_INCREMENT,
-  `versionId` varchar(11) NOT NULL,
-  `versionName` varchar(32) NOT NULL,
-  `defaultFlag` int(11) NOT NULL DEFAULT '0',
-  `versionDes` varchar(100) DEFAULT NULL,
-  `trafficRate` float NOT NULL,
-  `trafficDiscount` tinyint(1) NOT NULL DEFAULT '0',
-  `manageRate` float NOT NULL,
-  `manageDiscount` tinyint(1) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`qvId`),
-  UNIQUE KEY `uniqueone` (`versionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
-
-DROP TABLE IF EXISTS `servicepayment`;
-CREATE TABLE `servicepayment` (
-  `spid` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `pid` int(11) NOT NULL COMMENT '预付款款项ID',
-  `type` tinyint(1) NOT NULL,
-  `status` tinyint(1) DEFAULT '0',
-  `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
-  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
-  `createrName` varchar(32) NOT NULL COMMENT '创建人姓名',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT '收款人姓名',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT '确认人姓名',
-  `createTime` timestamp NULL DEFAULT NULL,
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `serviceMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `advanceMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) DEFAULT '',
-  `srid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`spid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务款项';
-
-DROP TABLE IF EXISTS `servicereceipt`;
-CREATE TABLE `servicereceipt` (
-  `srid` int(11) NOT NULL AUTO_INCREMENT,
-  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
-  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT '收款人姓名',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT '确认人姓名',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankInfo` varchar(512) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBank` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBank` varchar(20) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`srid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务收据';
-
 DROP TABLE IF EXISTS `servicerecord`;
 CREATE TABLE `servicerecord` (
   `srId` bigint(20) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL,
   `operateUserId` varchar(15) NOT NULL,
-  `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `info` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srId`),
   KEY `indexone` (`operateUserId`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='服务记录';
-
-DROP TABLE IF EXISTS `systemdefineitem`;
-CREATE TABLE `systemdefineitem` (
-  `sdiId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `itemId` varchar(10) NOT NULL,
-  `quotationBigCategoryId` int(11) NOT NULL,
-  `itemName` varchar(128) NOT NULL,
-  `measurementUnitId` int(11) NOT NULL,
-  `itemWorkTypeId` int(11) NOT NULL,
-  `quotationItemDes` varchar(512) NOT NULL,
-  `unitPrice` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`sdiId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';
-
-DROP TABLE IF EXISTS `usercheck`;
-CREATE TABLE `usercheck` (
-  `ucId` bigint(32) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `checkTime` timestamp NULL DEFAULT NULL,
-  `x` double NOT NULL,
-  `y` double NOT NULL,
-  PRIMARY KEY (`ucId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户考勤表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务记录';
 
 DROP TABLE IF EXISTS `venderbalance`;
 CREATE TABLE `venderbalance` (
@@ -1457,6 +635,7 @@ CREATE TABLE `zaterialdesignerdepartmentrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`zddrId`),
   KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
@@ -1470,6 +649,7 @@ CREATE TABLE `zaterialdesignerrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`zdrId`),
   KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
@@ -1496,6 +676,17 @@ CREATE TABLE `zaterialdesignerregionrank` (
   `endTime` date NOT NULL,
   `rank` double NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`zdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';
+
+DROP TABLE IF EXISTS `paymentscale`;
+CREATE TABLE `platform`.`paymentscale` (
+  `psid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `scale` varchar(32) NOT NULL,
+  `comment` varchar(128),
+  PRIMARY KEY (`psid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例';

@@ -443,6 +443,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesDao.update(salesPO);
 		} else if (salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT) {
 			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
+			salesPO.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 			salesDao.update(salesPO);
 		}
 		
@@ -585,7 +586,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			}else if(salesPayment.getType() == SalesPO.STATUS_DBACKORDER_SHORT){
 				
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
-				
+				salesPO.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 				salesDao.update(salesPO);
 				
 			} 
@@ -684,18 +685,24 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesReceiptPO.setAdvance(SalesReceiptPO.COLUMN_MONEY_STR);
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_STR);
 		}
+		
+		if (salesReceiptVO.getCoupon() != null) {
+			salesReceiptPO.setCoupon(salesReceiptVO.getCoupon());
+			salesReceiptPO.setCouponInfo(salesReceiptVO.getCouponInfo());
+		} else {
+			salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
+			salesReceiptPO.setCouponInfo("");
+		}
 
 		if (salesReceiptVO.getDes() != null)
 			salesReceiptPO.setDes(salesReceiptVO.getDes());
 		else {
 			salesReceiptPO.setDes("");
 		}
+		
 		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
 
-		salesReceiptPO.setCoupon(SalesReceiptPO.COLUMN_COUPON_STR);
-		salesReceiptPO.setCouponInfo("");
-
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts();
+		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts() + salesReceiptPO.getCoupon();
 		Float referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_STR) {

@@ -23,9 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.report.service.MaterialReportService;
-import com.fanglin.report.vo.MaterialBrandCountVO;
 import com.fanglin.report.vo.MaterialDepartmentCountVO;
-import com.fanglin.report.vo.MaterialTypeCountVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -37,10 +35,6 @@ public class MaterialReportAction extends BaseListAction {
 	@Autowired
 	private MaterialReportService materialReportService;
 	
-	private List<MaterialTypeCountVO> materialTypeCounts;
-	
-	private List<MaterialBrandCountVO> materialBrandCounts;
-	
 	private List<MaterialDepartmentCountVO> materialDepartmentCounts;
 	
 	private int reportType;
@@ -50,22 +44,6 @@ public class MaterialReportAction extends BaseListAction {
 	private List<?> designerDepartments;
 	
 	private List<?> designerRegions;
-	
-	@Action(value="materialTypeReport", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String materialTypeReport(){
-		
-		materialTypeCounts = materialReportService.reportMaterialTypeCount(getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="materialBrandReport", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String materialBrandReport(){
-		
-		materialBrandCounts = materialReportService.reportMaterialBrandCount(getFilters());
-		
-		return SUCCESS;
-	}
 	
 	@Action(value="materialDepartmentReport", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String materialDepartmentReport(){
@@ -113,22 +91,6 @@ public class MaterialReportAction extends BaseListAction {
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="countMaterialType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String countMaterialType(){
-		
-		materialTypeCounts = materialReportService.countMaterialTypeCount(getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="countMaterialBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String countMaterialBrand(){
-		
-		materialBrandCounts = materialReportService.countMaterialBrandCount(getFilters());
 		
 		return SUCCESS;
 	}
@@ -205,23 +167,6 @@ public class MaterialReportAction extends BaseListAction {
 
 	public void setMaterialDepartmentCounts(List<MaterialDepartmentCountVO> materialDepartmentCounts){
 		this.materialDepartmentCounts = materialDepartmentCounts;
-	}
-
-	public List<MaterialTypeCountVO> getMaterialTypeCounts() {
-		return materialTypeCounts;
-	}
-
-	public void setMaterialTypeCounts(List<MaterialTypeCountVO> materialTypeCounts) {
-		this.materialTypeCounts = materialTypeCounts;
-	}
-
-	public List<MaterialBrandCountVO> getMaterialBrandCounts() {
-		return materialBrandCounts;
-	}
-
-	public void setMaterialBrandCounts(
-			List<MaterialBrandCountVO> materialBrandCounts) {
-		this.materialBrandCounts = materialBrandCounts;
 	}
 
 	public List<?> getDesigners() {

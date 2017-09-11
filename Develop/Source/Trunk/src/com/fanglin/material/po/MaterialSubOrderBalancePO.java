@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "materialsuborderbalance", catalog = "platform")
+@Table(name = "materialsuborderbalance", catalog = "material")
 public class MaterialSubOrderBalancePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7169809440225703812L;
@@ -61,6 +61,7 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	public static final short TYPE_SUB_INT = 1;
 	
 	public static final short TYPE_SUBED_INT = 2; // 结算之后退货
+	
 
 	private int msobId;
 	
@@ -190,7 +191,7 @@ public class MaterialSubOrderBalancePO implements java.io.Serializable {
 	public void setVbalanceTime(Timestamp vbalanceTime) {
 		this.vbalanceTime = vbalanceTime;
 	}
-    //4.9 侯骅峰增加post结算值get set方法
+  
 	@Column(name="post")
 	public float getPost() {
 		return post;

@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: IPUtil.java
- * @Package		：com.fanglin.utils 
+ * @Package		: com.fanglin.utils 
  * @Version		: 1.0
  * @Date		: 2014-8-19
  * @Copyright	: Copyright Creators 2014

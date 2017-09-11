@@ -26,13 +26,13 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 	}
 
 	@Override
-	public AdvancePaymentPO queryAdvancePaymentByCid(int cid) {
-		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("customer", "customer").add(Restrictions.eq("customer.id", cid)).uniqueResult();
+	public AdvancePaymentPO queryAdvancePaymentByCid(int cid,int company) {
+		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("customer", "customer").add(Restrictions.eq("company", company)).add(Restrictions.eq("customer.id", cid)).uniqueResult();
 	}
 
 	@Override
-	public AdvancePaymentPO queryAdvancePaymentByCustomerId(String customerId) {
-		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("customer", "customer").add(Restrictions.eq("customer.customerId", customerId)).uniqueResult();
+	public AdvancePaymentPO queryAdvancePaymentByCustomerId(String customerId,int company) {
+		return (AdvancePaymentPO) session().createCriteria(AdvancePaymentPO.class).createAlias("customer", "customer").add(Restrictions.eq("company", company)).add(Restrictions.eq("customer.customerId", customerId)).uniqueResult();
 	}
 
 }

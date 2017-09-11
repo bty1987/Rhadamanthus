@@ -3,7 +3,8 @@ $.extend(api.index, {
     categoryIndex: {url: "/views/data/category.html"},
     brandIndex: {url: "/views/data/brand.html"},
     customerIndex: {url: "/views/data/customer.html"},
-    villageIndex: {url: "/views/data/village.html"}
+    villageIndex: {url: "/views/data/village.html"},
+	PaymentScale: {url: "/views/data/paymentScale.html"}
 });
 
 $.extend(api.ds, {
@@ -79,5 +80,9 @@ $.extend(api, {data: {
     addConstructionNode:{url:"addConstructionNode.do", server: "communion"},
     updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do", server: "communion"},
     updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do", server: "communion"},
+	
+	queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
+    addPaymentScale: {url:"addPaymentScale.do"},
+    deletePaymentScale: {url:"deletePaymentScale.do"},
 
 }});

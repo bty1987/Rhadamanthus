@@ -24,7 +24,7 @@ public class PriceDaoImpl extends DaoImpl<PricePO> implements PriceDao{
 	}
 
 	@Override
-	public PricePO queryPurchaseByGidASelling(long pid) {
+	public PricePO queryPriceByPid(long pid) {
 		
 		return (PricePO) session().createCriteria(PricePO.class).add(Restrictions.eq(PricePO.COLUMN_PID_STR, pid)).uniqueResult();
 				

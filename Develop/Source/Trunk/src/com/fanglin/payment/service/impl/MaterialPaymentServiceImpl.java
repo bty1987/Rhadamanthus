@@ -15,17 +15,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
@@ -49,7 +46,6 @@ import com.fanglin.payment.vo.MaterialReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.report.service.MaterialRankService;
 import com.fanglin.report.service.MaterialReportService;
 import com.fanglin.utils.Arith;
@@ -325,6 +321,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		return materialPaymentVOs;
 	}
+	
+	@Override
+	public void checkMaterialPayment(long mpId) throws FLException{
+		
+		MaterialPaymentPO materialPayment = materialPaymentDao.get(mpId);
+		
+		if(materialPayment.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+			throw new FLException(150008, "款项不能进行收款");
+		}
+		
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -441,7 +448,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					throw new FLException(230001, "客户信息不存在");
 				}
 				
-				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
+				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId(),materialPaymentPO.getMaterialSubOrder().getCompany());
 				
 				if(advancePaymentPO == null){
 					throw new FLException(150010, "预付款余额不足");
@@ -466,7 +473,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				}
 				
 				paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getId(), advancePaymentPO, orderId);
-				advancePaymentService.updateAdvancePayment(paymentVO);
+				advancePaymentService.updateAdvancePayment(paymentVO,materialSubOrderPO.getCompany());
 				
 				materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
 				materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
@@ -577,8 +584,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					
 					if(notCountDesignDepartmentId.indexOf(departmentId) == -1){
 					
-						materialReportService.updateMaterialTypeCount(materialSubOrderPO.getMaterialType(), count, currentTimeStr); // 主材品类业绩统计
-						materialReportService.updateMaterialBrandCount(materialSubOrderPO.getMaterialBrand(), count, currentTimeStr); // 主材品牌业绩统计
 						materialReportService.updateMaterialDepartmentCount(materialSubOrderPO.getMaterialDeptId(), count, currentTimeStr); // 主材部门业绩统计
 						
 						if(materialSubOrderPO.getDesignerFlag() == MaterialSubOrderPO.DESIGNERFLAG_TYPE_DESIGNER_INT){
@@ -588,17 +593,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 								materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
 								materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
 								
-								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 							}else{
 								materialReportService.updateMaterialDesignerCount(salesmanId,salesmanName, departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计师业绩
 								materialReportService.updateMaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计部门业绩
 								materialReportService.updateMaterialDesignerRegionCount(regionId, regionName, count, currentTimeStr); // 统计主材设计分区业绩
 								
-								materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-								materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-								materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+								materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 							}
 						}
 					}
@@ -662,7 +667,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId(),decorationOrderPO.getCompany());
 			
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
@@ -676,35 +681,15 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
 			}
 			
-			if(customerAdvance < materialReceiptVO.getAdvance()){
-				throw new FLException(150010, "预付款余额不足");
-			}else{
-				
-				PaymentVO paymentVO = new PaymentVO();
-				paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
-				paymentVO.setCash(materialReceiptVO.getAdvance());
-				paymentVO.setDes("主材批量收款");
-				paymentVO.setCollectUser(new UserVO(userId));
-				paymentVO.setCustomer(new CustomerVO(customerPO.getId()));
-				paymentVO.setPaymentType(_paymentType);
-				paymentVO.setOrderId(materialSubOrderVO.getOrderId());
-				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-				//在预付款历史收款中,存储操作后对应类型的预付款余额
-				if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getBalance(), materialReceiptVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getProjectBalance(), materialReceiptVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getMaterialBalance(), materialReceiptVO.getAdvance()));
-				}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(_paymentType)){
-					paymentVO.setBalance(Arith.sub(advancePaymentPO.getZhenglinBalance(), materialReceiptVO.getAdvance()));
-				}
-				
-				materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
-				materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
-				
-				advancePaymentService.updateAdvancePayment(paymentVO);
-			}
+			PaymentVO paymentVO  = new PaymentVO();
+			
+			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getId(), advancePaymentPO, materialSubOrderVO.getOrderId());
+			paymentVO.setDes("主材批量收款");
+			advancePaymentService.updateAdvancePayment(paymentVO,decorationOrderPO.getCompany());
+			
+			materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
+			materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
+			
 		}
 		
 		if(cash != null && cash != 0){
@@ -813,8 +798,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 					
 						//--------------------------------------业绩统计-------------------------------
 						
-						materialReportService.updateMaterialTypeCount(materialSubOrderPO.getMaterialType(), count, currentTimeStr); // 主材品类业绩统计
-						materialReportService.updateMaterialBrandCount(materialSubOrderPO.getMaterialBrand(), count, currentTimeStr); // 主材品牌业绩统计
 						materialReportService.updateMaterialDepartmentCount(materialSubOrderPO.getMaterialDeptId(), count, currentTimeStr); // 主材部门业绩统计
 						
 						//--------------------------------------设计中心和部门业绩统计-------------------------------
@@ -825,17 +808,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 								materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
 								materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
 								
-								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 							}else{
 								materialReportService.updateMaterialDesignerCount(salesmanId, salesmanName, departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计师业绩
 								materialReportService.updateMaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计部门业绩
 								materialReportService.updateMaterialDesignerRegionCount(regionId, regionName, count, currentTimeStr); // 统计主材设计分区业绩
 								
-								materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-								materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-								materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+								materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+								materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 							}
 						}
 					}
@@ -954,8 +937,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			if(notCountDesignDepartmentId.indexOf(departmentId) == -1){ // 指定部门不参与业绩统计
 			
-				materialReportService.updateMaterialTypeCount(materialSubOrderPO.getMaterialType(), count, currentTimeStr); // 主材品类业绩统计
-				materialReportService.updateMaterialBrandCount(materialSubOrderPO.getMaterialBrand(), count, currentTimeStr); // 主材品牌业绩统计
 				materialReportService.updateMaterialDepartmentCount(materialSubOrderPO.getMaterialDeptId(), count, currentTimeStr); // 主材部门业绩统计
 				
 				//--------------------------------------设计中心和部门业绩统计-------------------------------
@@ -966,17 +947,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 						materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
 						materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
 						
-						materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-						materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-						materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+						materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+						materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+						materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 					}else{
 						materialReportService.updateMaterialDesignerCount(salesmanId, salesmanName, departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计师业绩
 						materialReportService.updateMaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, count, currentTimeStr); // 统计主材设计部门业绩
 						materialReportService.updateMaterialDesignerRegionCount(regionId, regionName, count, currentTimeStr); // 统计主材设计分区业绩
 						
-						materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr);
-						materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr);
-						materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr);
+						materialRankService.updateMaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
+						materialRankService.updateMaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
+						materialRankService.updateMaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
 					}
 				}
 			}

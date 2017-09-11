@@ -145,7 +145,10 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		
 		companyPO.setName(companyVO.getName());
-		
+		companyPO.setFullname(companyVO.getFullname());
+		companyPO.setAddress(companyVO.getAddress());
+		companyPO.setCorporation(companyVO.getCorporation());
+		companyPO.setPhone(companyVO.getPhone());
 		companyDao.update(companyPO);
 		
 		return 0;

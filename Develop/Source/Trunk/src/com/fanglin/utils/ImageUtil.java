@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: ImageUtil.java
- * @Package		：com.fanglin.utils 
+ * @Package		: com.fanglin.utils 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
@@ -22,7 +22,7 @@ import magick.*;
 public class ImageUtil {
 
 	static {
-		// 不能漏掉这个，不然jmagick.jar的路径找不到
+		// 不能漏掉这个,不然jmagick.jar的路径找不到
 		System.setProperty("jmagick.systemclassloader", "no");
 	}
 
@@ -331,7 +331,7 @@ public class ImageUtil {
 				aInfo.setFill(PixelPacket.queryColorDatabase("white"));
 				aInfo.setUnderColor(new PixelPacket(0, 0, 0, 100));
 				aInfo.setPointsize(12);
-				// 解决中文乱码问题,自己可以去随意定义个自己喜欢字体，我在这用的微软雅黑
+				// 解决中文乱码问题,自己可以去随意定义个自己喜欢字体,我在这用的微软雅黑
 				String fontPath = "C:/WINDOWS/Fonts/MSYH.TTF";
 				// String fontPath = "/usr/maindata/MSYH.TTF";
 				aInfo.setFont(fontPath);
@@ -339,7 +339,7 @@ public class ImageUtil {
 				aInfo.setOpacity(0);
 				aInfo.setText("　" + text + "于　"
 						+ new SimpleDateFormat("yyyy-MM-dd").format(new Date())
-						+ "上传于XXXX网，版权归作者所有！");
+						+ "上传于XXXX网,版权归作者所有!");
 				aInfo.setGeometry("+" + (wideth - tl) + "+" + (height - 5));
 				scaled.annotateImage(aInfo);
 			}

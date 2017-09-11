@@ -87,14 +87,6 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryPurchaseItemBySiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPurchaseItemBySiid(){
-		
-		purchaseItems = purchaseItemService.queryPurchaseItemBySiid(purchaseItem);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryPurchaseByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPurchaseByPid(){
 		

@@ -17,7 +17,7 @@ jQuery(function($) {
 	decorationBelong.belongStatus = params.orderBelongStatus;
 	decorationBelong.belongType = params.orderBelongType;
 	
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 3}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 3}, "autoFillKeyValue", "key", "value");
 	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : decorationBelong.belongType == "设计" ? "设计师" : ""}, "autoFillKeyValue", "key", "value").on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;
@@ -87,7 +87,14 @@ jQuery(function($) {
 		if(com.validate("approveModal")){
 			return;
 		}
-		
+
+		var receiverId = $("#approveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+
 		var options = {};
 		
 		var num = 0;
@@ -127,7 +134,7 @@ jQuery(function($) {
 		options["approvalOrderBelong.orderId"] = decorationBelong.decorationOrderId;
 		options["approvalOrderBelong.belongType"] = decorationBelong.belongType;
 		
-		options["approval.receiverId"] = $("#approveManSel").val();
+		options["approval.receiverId"] = receiverId;
 		options["approval.comment"] = $("#changeReason").val();
 		
 		com.post(api.approval.submitApprovalForOrderBelong, options, function(res){
@@ -227,8 +234,8 @@ jQuery(function($) {
 
 	function saveOrderBelongInfo(){
 		$("#changeReason").val("");
-		
-		com.updateChosen('approveManSel', '', '');
+
+		approvalUtils.initqueryApprovalUser("approveManSel",3);
 		
 		$("#approveModal").modal("show");	
 	}

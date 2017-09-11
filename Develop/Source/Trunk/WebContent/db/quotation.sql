@@ -1,0 +1,192 @@
+CREATE DATABASE  IF NOT EXISTS `quotation`;
+USE `quotation`;
+
+
+CREATE TABLE `addreduce` (
+  `arId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `type` tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
+  `managePrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '管理费',
+  `total` decimal(10,3) NOT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `content` varchar(256) NOT NULL,
+  `dpId` bigint(20) DEFAULT NULL COMMENT '对应收款编号',
+  PRIMARY KEY (`arId`),
+  KEY `indexone` (`orderId`,`type`,`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项表';
+
+
+CREATE TABLE `addreduceitem` (
+  `ariId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `arId` int(11) NOT NULL COMMENT '增减项编号',
+  `itemName` varchar(128) NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `quotationFunctionAreaId` bigint(20) NOT NULL COMMENT '所属报价功能区编号',
+  `quoteItemId` bigint(20) DEFAULT '0',
+  `content` varchar(512) DEFAULT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ariId`),
+  KEY `indexone` (`arId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项目';
+
+
+CREATE TABLE `extension` (
+  `eId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `content` varchar(256) NOT NULL,
+  PRIMARY KEY (`eId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项';
+
+CREATE TABLE `extensionitem` (
+  `eiId` int(11) NOT NULL AUTO_INCREMENT,
+  `eId` int(11) NOT NULL,
+  `itemName` varchar(128) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `num` decimal(10,3) NOT NULL,
+  `quotationFunctionAreaId` int(11) NOT NULL,
+  `quoteItemId` int(11) NOT NULL,
+  `content` varchar(512) DEFAULT NULL,
+  PRIMARY KEY (`eiId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项目';
+
+
+CREATE TABLE `functionarea` (
+  `faId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `functionAreaId` varchar(10) NOT NULL,
+  `functionAreaName` varchar(20) NOT NULL,
+  `versionId` varchar(11) NOT NULL,
+  `functionAreaOrder` int(11) NOT NULL,
+  `functionAreaType` varchar(10) NOT NULL DEFAULT '普通' COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
+  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`faId`),
+  KEY `indexone` (`functionAreaId`,`versionId`,`functionAreaType`,`functionAreaOrder`),
+  KEY `indextwo` (`versionId`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区表';
+
+
+CREATE TABLE `functionareaquoteitem` (
+  `faiId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `functionAreaId` bigint(20) NOT NULL,
+  `quoteItemId` bigint(20) NOT NULL,
+  PRIMARY KEY (`faiId`),
+  KEY `indexone` (`functionAreaId`,`quoteItemId`),
+  KEY `indextwo` (`quoteItemId`,`functionAreaId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
+
+CREATE TABLE `quotation` (
+  `qId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL,
+  `quotationName` varchar(64) NOT NULL,
+  `decorationStyle` varchar(10) DEFAULT NULL,
+  `createTime` timestamp NULL DEFAULT NULL,
+  `createUserId` varchar(15) NOT NULL,
+  `content` varchar(45) DEFAULT NULL,
+  `undisPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折前总价',
+  `discount` decimal(10,3) NOT NULL DEFAULT '10.000',
+  `totalPrice` decimal(10,3) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1、默认',
+  `saveStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
+  `calFlag` int(11) NOT NULL DEFAULT '1',
+  `latexCut` decimal(10,3) DEFAULT '0.000',
+  `managePrice` decimal(10,3) DEFAULT '0.000',
+  `manageRate` decimal(10,3) DEFAULT '0.000',
+  `trafficPrice` decimal(10,3) DEFAULT '0.000',
+  `trafficRate` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '车运费比例',
+  `basicPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `setpackage` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `qdiff` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `mdiff` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`qId`),
+  KEY `indexone` (`orderId`,`createTime`,`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价表';
+
+CREATE TABLE `quotationfunctionarea` (
+  `qfaId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `quotationId` bigint(20) NOT NULL,
+  `functionAreaName` varchar(10) NOT NULL,
+  `functionAreaOrder` int(11) DEFAULT NULL,
+  `functionAreaType` varchar(10) DEFAULT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
+  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`qfaId`),
+  KEY `indexone` (`quotationId`,`functionAreaOrder`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区';
+
+CREATE TABLE `quotationfunctionareaitem` (
+  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(192) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `num` decimal(10,3) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL,
+  `quotationFunctionAreaId` bigint(20) NOT NULL,
+  `quotationItemId` bigint(20) DEFAULT NULL,
+  `content` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`qfaiId`),
+  KEY `indexone` (`quotationFunctionAreaId`),
+  KEY `indextwo` (`quotationItemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+
+
+CREATE TABLE `quotationitem` (
+  `qiId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `itemId` varchar(10) NOT NULL,
+  `versionId` varchar(11) NOT NULL,
+  `quotationTypeId` int(11) NOT NULL,
+  `quotationClassificationId` int(11) NOT NULL,
+  `quotationBigCategoryId` int(11) NOT NULL,
+  `quotationSmallCategoryId` int(11) NOT NULL,
+  `itemName` varchar(128) NOT NULL,
+  `measurementUnitId` int(11) NOT NULL,
+  `itemWorkTypeId` int(11) NOT NULL,
+  `quotationItemDes` varchar(512) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `discount` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`qiId`),
+  KEY `indexone` (`itemId`,`versionId`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项目表';
+
+CREATE TABLE `quotationversion` (
+  `qvId` int(11) NOT NULL AUTO_INCREMENT,
+  `versionId` varchar(11) NOT NULL,
+  `versionName` varchar(32) NOT NULL,
+  `defaultFlag` int(11) NOT NULL DEFAULT '0',
+  `versionDes` varchar(100) DEFAULT NULL,
+  `trafficRate` float NOT NULL,
+  `trafficDiscount` tinyint(1) NOT NULL DEFAULT '0',
+  `manageRate` float NOT NULL,
+  `manageDiscount` tinyint(1) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`qvId`),
+  UNIQUE KEY `uniqueone` (`versionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
+
+CREATE TABLE `systemdefineitem` (
+  `sdiId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `itemId` varchar(10) NOT NULL,
+  `quotationBigCategoryId` int(11) NOT NULL,
+  `itemName` varchar(128) NOT NULL,
+  `measurementUnitId` int(11) NOT NULL,
+  `itemWorkTypeId` int(11) NOT NULL,
+  `quotationItemDes` varchar(512) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL DEFAULT '0',
+  `discount` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sdiId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';

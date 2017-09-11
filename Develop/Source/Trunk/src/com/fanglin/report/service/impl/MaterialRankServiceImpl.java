@@ -72,14 +72,14 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	public List<MaterialDesignerRankVO> queryMaterialDesignerRank() {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
 	@Override
-	public List<MaterialDesignerRankVO> queryMaterialDesignerRankForTop(int top){
+	public List<MaterialDesignerRankVO> queryMaterialDesignerRankForTop(int top,int company){
 		
-		List<MaterialDesignerRankPO> materialDesignerRankPOs = materialDesignerRankDao.queryMaterialDesignerRankForTop(top);
+		List<MaterialDesignerRankPO> materialDesignerRankPOs = materialDesignerRankDao.queryMaterialDesignerRankForTop(top,company);
 		List<MaterialDesignerRankVO> materialDesignerRankVOs = new ArrayList<MaterialDesignerRankVO>();
 		
 		for(MaterialDesignerRankPO materialDesignerRankPO: materialDesignerRankPOs){
@@ -95,9 +95,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryMaterialDesignerRank(int top){
+	public List<TopVO> queryMaterialDesignerRank(int top,int company){
 		
-		List<MaterialDesignerRankPO> materialDesignerRankPOs = materialDesignerRankDao.queryMaterialDesignerRankForTop(top);
+		List<MaterialDesignerRankPO> materialDesignerRankPOs = materialDesignerRankDao.queryMaterialDesignerRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(MaterialDesignerRankPO materialDesignerRankPO: materialDesignerRankPOs){
@@ -122,9 +122,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<MaterialDesignerDepartmentRankVO> queryMaterialDesignerDepartmentRankForTop(String userId, int top){
+	public List<MaterialDesignerDepartmentRankVO> queryMaterialDesignerDepartmentRankForTop(String userId, int top,int company){
 		
-		List<MaterialDesignerDepartmentRankPO> materialDesignerDepartmentRankPOs = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankForTop(top);
+		List<MaterialDesignerDepartmentRankPO> materialDesignerDepartmentRankPOs = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankForTop(top,company);
 		List<MaterialDesignerDepartmentRankVO> materialDesignerDepartmentRankVOs = new ArrayList<MaterialDesignerDepartmentRankVO>();
 		
 		for(MaterialDesignerDepartmentRankPO materialDesignerDepartmentRankPO: materialDesignerDepartmentRankPOs){
@@ -140,9 +140,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryMaterialDesignerDepartmentRank(int top){
+	public List<TopVO> queryMaterialDesignerDepartmentRank(int top,int company){
 		
-		List<MaterialDesignerDepartmentRankPO> materialDesignerDepartmentRankPOs = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankForTop(top);
+		List<MaterialDesignerDepartmentRankPO> materialDesignerDepartmentRankPOs = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(MaterialDesignerDepartmentRankPO materialDesignerDepartmentRankPO: materialDesignerDepartmentRankPOs){
@@ -161,9 +161,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<MaterialDesignerRegionRankVO> queryMaterialDesignerRegionRankForTop(String userId, int top){
+	public List<MaterialDesignerRegionRankVO> queryMaterialDesignerRegionRankForTop(String userId, int top,int company){
 		
-		List<MaterialDesignerRegionRankPO> materialDesignerRegionRankPOs = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankForTop(10);
+		List<MaterialDesignerRegionRankPO> materialDesignerRegionRankPOs = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankForTop(10,company);
 		List<MaterialDesignerRegionRankVO> materialDesignerRegionRankVOs = new ArrayList<MaterialDesignerRegionRankVO>();
 		
 		for(MaterialDesignerRegionRankPO materialDesignerRegionRankPO: materialDesignerRegionRankPOs){
@@ -179,9 +179,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryMaterialDesignerRegionRank(int top){
+	public List<TopVO> queryMaterialDesignerRegionRank(int top,int company){
 		
-		List<MaterialDesignerRegionRankPO> materialDesignerRegionRankPOs = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankForTop(top);
+		List<MaterialDesignerRegionRankPO> materialDesignerRegionRankPOs = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(MaterialDesignerRegionRankPO materialDesignerRegionRankPO: materialDesignerRegionRankPOs){
@@ -200,14 +200,14 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId) {
+	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId,int company) {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
-			List<?> _ = materialDesignerRankDao.queryMaterialDesignerRankForPlaceByDesignerId(userId);
+			List<?> _ = materialDesignerRankDao.queryMaterialDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
 				
@@ -222,9 +222,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top){
+	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top,int company){
 		
-		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top);
+		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top,company);
 		List<ZaterialDesignerRankVO> zaterialDesignerRankVOs = new ArrayList<ZaterialDesignerRankVO>();
 		
 		for(ZaterialDesignerRankPO zaterialDesignerRankPO: zaterialDesignerRankPOs){
@@ -240,9 +240,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryZaterialDesignerRank(int top){
+	public List<TopVO> queryZaterialDesignerRank(int top,int company){
 		
-		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top);
+		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(ZaterialDesignerRankPO zaterialDesignerRankPO: zaterialDesignerRankPOs){
@@ -268,14 +268,14 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId) {
+	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId,int company) {
 
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
-			List<?> _ = zaterialDesignerRankDao.queryZaterialDesignerRankForPlaceByDesignerId(userId);
+			List<?> _ = zaterialDesignerRankDao.queryZaterialDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
 				
@@ -290,9 +290,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top){
+	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top,int company){
 		
-		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(10);
+		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(10,company);
 		List<ZaterialDesignerDepartmentRankVO> zaterialDesignerDepartmentRankVOs = new ArrayList<ZaterialDesignerDepartmentRankVO>();
 		
 		for(ZaterialDesignerDepartmentRankPO zaterialDesignerDepartmentRankPO: zaterialDesignerDepartmentRankPOs){
@@ -308,9 +308,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryZaterialDesignerDepartmentRank(int top){
+	public List<TopVO> queryZaterialDesignerDepartmentRank(int top,int company){
 		
-		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(top);
+		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(ZaterialDesignerDepartmentRankPO zaterialDesignerDepartmentRankPO: zaterialDesignerDepartmentRankPOs){
@@ -329,9 +329,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top){
+	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top,int company){
 		
-		List<ZaterialDesignerRegionRankPO> zaterialDesignerRegionRankPOs = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankForTop(10);
+		List<ZaterialDesignerRegionRankPO> zaterialDesignerRegionRankPOs = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankForTop(10,company);
 		List<ZaterialDesignerRegionRankVO> zaterialDesignerRegionRankVOs = new ArrayList<ZaterialDesignerRegionRankVO>();
 		
 		for(ZaterialDesignerRegionRankPO zaterialDesignerRegionRankPO: zaterialDesignerRegionRankPOs){
@@ -347,8 +347,8 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<TopVO> queryZaterialDesignerRegionRank(int top){
-		List<ZaterialDesignerRegionRankPO> zaterialDesignerRegionRankPOs = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankForTop(10);
+	public List<TopVO> queryZaterialDesignerRegionRank(int top,int company){
+		List<ZaterialDesignerRegionRankPO> zaterialDesignerRegionRankPOs = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankForTop(10,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(ZaterialDesignerRegionRankPO zaterialDesignerRegionRankPO: zaterialDesignerRegionRankPOs){
@@ -368,9 +368,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialDesignerRank(String designerId, String designerName, float count, String currentTime) {
+	public int updateMaterialDesignerRank(String designerId, String designerName, float count, String currentTime,int company) {
 		
-		MaterialDesignerRankPO materialDesignerRankPO = materialDesignerRankDao.queryMaterialDesignerRankByDesignerIdInit(designerId);
+		MaterialDesignerRankPO materialDesignerRankPO = materialDesignerRankDao.queryMaterialDesignerRankByDesignerIdInit(designerId, company);
 		if(materialDesignerRankPO != null){
 			materialDesignerRankPO.setRank(Arith.add(materialDesignerRankPO.getRank(), count));
 		}else{
@@ -380,6 +380,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			materialDesignerRankPO.setDesignerId(designerId);
 			materialDesignerRankPO.setDesignerName(designerName);
 			materialDesignerRankPO.setRank(count);
+			materialDesignerRankPO.setCompany(company);
 		}
 		materialDesignerRankDao.saveOrUpdate(materialDesignerRankPO);
 		
@@ -388,9 +389,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime) {
+	public int updateMaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company) {
 		
-		MaterialDesignerDepartmentRankPO materialDesignerDepartmentRankPO = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankByDeptIdInit(departmentId);
+		MaterialDesignerDepartmentRankPO materialDesignerDepartmentRankPO = materialDesignerDepartmentRankDao.queryMaterialDesignerDepartmentRankByDeptIdInit(departmentId, company);
 		if(materialDesignerDepartmentRankPO != null){
 			materialDesignerDepartmentRankPO.setRank(Arith.add(materialDesignerDepartmentRankPO.getRank(), count));
 		}else{
@@ -400,6 +401,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			materialDesignerDepartmentRankPO.setDesignerDeptId(departmentId);
 			materialDesignerDepartmentRankPO.setDesignerDeptName(departmentName);
 			materialDesignerDepartmentRankPO.setRank(count);
+			materialDesignerDepartmentRankPO.setCompany(company);
 		}
 		materialDesignerDepartmentRankDao.saveOrUpdate(materialDesignerDepartmentRankPO);
 		
@@ -408,9 +410,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime) {
+	public int updateMaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company) {
 		
-		MaterialDesignerRegionRankPO materialDesignerRegionRankPO = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankByRegionIdInit(regionId);
+		MaterialDesignerRegionRankPO materialDesignerRegionRankPO = materialDesignerRegionRankDao.queryMaterialDesignerRegionRankByRegionIdInit(regionId, company);
 		if(materialDesignerRegionRankPO != null){
 			materialDesignerRegionRankPO.setRank(Arith.add(materialDesignerRegionRankPO.getRank(), count));
 		}else{
@@ -420,6 +422,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			materialDesignerRegionRankPO.setDesignerRegionId(regionId);
 			materialDesignerRegionRankPO.setDesignerRegionName(regionName);
 			materialDesignerRegionRankPO.setRank(count);
+			materialDesignerRegionRankPO.setCompany(company);
 		}
 		materialDesignerRegionRankDao.saveOrUpdate(materialDesignerRegionRankPO);
 		
@@ -428,9 +431,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateZaterialDesignerRank(String designerId, String designerName, float count, String currentTime) {
+	public int updateZaterialDesignerRank(String designerId, String designerName, float count, String currentTime,int company) {
 		
-		ZaterialDesignerRankPO zaterialDesignerRankPO = zaterialDesignerRankDao.queryZaterialDesignerRankByDesignerIdInit(designerId);
+		ZaterialDesignerRankPO zaterialDesignerRankPO = zaterialDesignerRankDao.queryZaterialDesignerRankByDesignerIdInit(designerId, company);
 		if(zaterialDesignerRankPO != null){
 			zaterialDesignerRankPO.setRank(Arith.add(zaterialDesignerRankPO.getRank(), count));
 		}else{
@@ -440,6 +443,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			zaterialDesignerRankPO.setDesignerId(designerId);
 			zaterialDesignerRankPO.setDesignerName(designerName);
 			zaterialDesignerRankPO.setRank(count);
+			zaterialDesignerRankPO.setCompany(company);
 		}
 		zaterialDesignerRankDao.saveOrUpdate(zaterialDesignerRankPO);
 		
@@ -448,9 +452,9 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateZaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime) {
+	public int updateZaterialDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company) {
 
-		ZaterialDesignerDepartmentRankPO zaterialDesignerDepartmentRankPO = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankByDeptIdInit(departmentId);
+		ZaterialDesignerDepartmentRankPO zaterialDesignerDepartmentRankPO = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankByDeptIdInit(departmentId, company);
 		if(zaterialDesignerDepartmentRankPO != null){
 			zaterialDesignerDepartmentRankPO.setRank(Arith.add(zaterialDesignerDepartmentRankPO.getRank(), count));
 		}else{
@@ -460,6 +464,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			zaterialDesignerDepartmentRankPO.setDesignerDeptId(departmentId);
 			zaterialDesignerDepartmentRankPO.setDesignerDeptName(departmentName);
 			zaterialDesignerDepartmentRankPO.setRank(count);
+			zaterialDesignerDepartmentRankPO.setCompany(company);
 		}
 		zaterialDesignerDepartmentRankDao.saveOrUpdate(zaterialDesignerDepartmentRankPO);
 		
@@ -468,10 +473,10 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateZaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime) {
+	public int updateZaterialDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company) {
 
 		
-		ZaterialDesignerRegionRankPO zaterialDesignerRegionRankPO = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankByRegionIdInit(regionId);
+		ZaterialDesignerRegionRankPO zaterialDesignerRegionRankPO = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankByRegionIdInit(regionId, company);
 		if(zaterialDesignerRegionRankPO != null){
 			zaterialDesignerRegionRankPO.setRank(Arith.add(zaterialDesignerRegionRankPO.getRank(), count));
 		}else{
@@ -481,6 +486,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 			zaterialDesignerRegionRankPO.setDesignerRegionId(regionId);
 			zaterialDesignerRegionRankPO.setDesignerRegionName(regionName);
 			zaterialDesignerRegionRankPO.setRank(count);
+			zaterialDesignerRegionRankPO.setCompany(company);
 		}
 		zaterialDesignerRegionRankDao.saveOrUpdate(zaterialDesignerRegionRankPO);
 		

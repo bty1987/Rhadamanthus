@@ -424,7 +424,7 @@ jQuery(function($) {
 	var type, p = window.location.search.substr(1);
 	
 	if(p.indexOf('time=') != -1){
-		params.loginTime = parent.params.loginTime;
+		params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
 	}
 	
 	$.each(p.split('&'), function(i, v){

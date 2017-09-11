@@ -32,26 +32,7 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 	
 	@Autowired
 	private BrandUserRightDao brandUserRightDao;
-	
-	@Override
-	public List<BrandUserRightVO> queryBrandUserRightForUserId(BrandUserRightVO brandUserRightVO) {
-		
-		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUserId(brandUserRightVO.getUserId());
-		List<BrandUserRightVO> brandUserRightVOs = new ArrayList<BrandUserRightVO>();
-		
-		for(BrandUserRightPO brandUserRightPO: brandUserRightPOs){
-			
-			brandUserRightVO = new BrandUserRightVO(new BrandVO());
-			
-			BeanUtil.copyProperties(brandUserRightPO, brandUserRightVO, "brand");
-			BeanUtil.copyProperties(brandUserRightPO.getBrand(), brandUserRightVO.getBrand());
-			BeanUtil.copyProperties(brandUserRightPO.getBrand().getCategory(), brandUserRightVO.getBrand());
-			
-			brandUserRightVOs.add(brandUserRightVO);
-		}
-		
-		return brandUserRightVOs;
-	}
+
 
 	@Override
 	public List<BrandUserRightVO> queryBrandUserRightForLogin(String userId) {

@@ -21,7 +21,7 @@ public class QuotationBigCategoryVO implements Serializable{
 	
 	private String name;
 	
-	private Long quotationType;
+	private Integer qtid;
 
 	public int getId(){
 		return id;
@@ -39,12 +39,11 @@ public class QuotationBigCategoryVO implements Serializable{
 		this.name = name;
 	}
 
-	public Long getQuotationType() {
-		return quotationType;
+	public Integer getQtid() {
+		return qtid;
 	}
 
-	public void setQuotationType(Long quotationType) {
-		this.quotationType = quotationType;
+	public void setQtid(Integer qtid) {
+		this.qtid = qtid;
 	}
-		
 }

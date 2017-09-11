@@ -63,7 +63,7 @@ jQuery(function($) {
 	materialSubOrderPostData["materialSubOrder.customerName"] = params.customerName;
 	materialSubOrderPostData["materialSubOrder.designerId"] = params.designerId;
 	materialSubOrderPostData["materialSubOrder.designerName"] = params.designerName;
-	
+
 	com.post(api.ds.couponType, {}, function(res){
 		materialSubOrder.couponType = res.materialCouponTypes;
 		$("#couponType").bindData(materialSubOrder.couponType, 'key', 'value', false);
@@ -73,17 +73,22 @@ jQuery(function($) {
 		materialSubOrder.materialStatus = res.materialStatus;
 	}, null, false);
 
-	
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value");
 	
 	materialSubOrder.approveSaveBtn = $("#approveSaveBtn").on("click", function(){
+        var length = $('#approveManSel').find('input:checked').length;
+
+        if(length == 0){
+            com.showAlert(com.error, "请选择审批人!");
+            return;
+        }
 		
 		if(com.validate('approvalMaterialFullPaymentModal')){
 			return;
 		}
 		
 		var options = {
-			"approval.receiverId": $("#approveManSel").val(),
+			"approval.receiverId": $('#approveManSel').find('input:checked').attr('userid'),
 			"approval.comment": "",
 			"approvalMaterialFullPayment.msoId": materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"],
 			"approvalMaterialFullPayment.referMoney": materialSubOrderPostData["approvalMaterialFullPayment.referMoney"],
@@ -92,6 +97,9 @@ jQuery(function($) {
 		com.post(api.approval.submitApprovalForMaterialFullPayment, options);
 		
 		materialSubOrder.approvalMaterialFullPaymentModal.modal("hide");
+		setTimeout(function(){
+            searcher.doSearch();
+        },400);
 	});
 	
 	var displayFunc  = (function(){
@@ -178,8 +186,9 @@ jQuery(function($) {
 					});
 					
 					if([0, 1, 2, 3, 4, 5].indexOf(v.status) != -1){
+
 						v.fullStatus == 0 && $divBtnWrap.append($btnAdd);
-						(v.fullStatus == 3 || v.otherStatus & 2 == 2) && $divBtnWrap.append($btnMend);
+						v.fullStatus == 3 && $divBtnWrap.append($btnMend);
 						
 						$divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnSend).append($btnPrint).appendTo($h3);
 					}else{
@@ -220,6 +229,11 @@ jQuery(function($) {
 	});
 	
 	function viewMaterialSubOrderAddIndex(v){
+
+		if(v.fullStatus == 4){
+			com.showAlert(com.warning,"补款提交正在审批中，不允许添项");
+			return;
+		}
 		
 		materialSubOrderPostData["materialSubOrder.msoId"] = v.msoId;
 		materialSubOrderPostData["materialSubOrder.materialBrand"] = v.materialBrand;
@@ -247,6 +261,11 @@ jQuery(function($) {
 	}
 	
 	function dialogMaterialSubOrderMoney(v){
+
+		if(v.fullStatus == 4){
+			com.showAlert(com.msg,"补款正在审批");
+			return;
+		}
 
 		materialSubOrderPostData["materialSubOrder.msoId"] = v.msoId;
 		materialSubOrderPostData["materialSubOrder.orderId"] = v.orderId;
@@ -582,7 +601,8 @@ jQuery(function($) {
 			materialSubOrderPostData["approvalMaterialFullPayment.referMoney"] = materialSubOrder.materialSubOrderItems.fullPayment.val();
 			
 			com.updateChosen('approveManSel', '', '');
-			
+
+			approvalUtils.initqueryApprovalUser('approveManSel',9);
 			materialSubOrder.materialSubOrderMoneyModal.modal("hide");
 			materialSubOrder.approvalMaterialFullPaymentModal.modal("show");
 		}else{
@@ -895,6 +915,7 @@ jQuery(function($) {
 		
 		return false;
 	});
+
 	
 });
 

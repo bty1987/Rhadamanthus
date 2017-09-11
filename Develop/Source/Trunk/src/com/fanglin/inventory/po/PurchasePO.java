@@ -37,7 +37,9 @@ public class PurchasePO implements Serializable{
 	
 	public static final short COLUMN_SECTIONSTATUS_STR = 1;             //部分入库状态
 	
-	public static final short COLUMN_BALANCESTATUS_STR = 0;             //结算状态
+	public static final short COLUMN_BALANCESTATUS_STR = 0;             //结算状态初始
+	
+	public static final short COLUMN_DONEBALANCESTATUS_STR = 1;			//结算状态已结算
 	
 	public static final String COLUMN_COMMENT_STR = "comment";          //说明
 	

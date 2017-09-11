@@ -12,6 +12,14 @@ public class CompanyVO implements Serializable {
 
 	private String name;
 
+	private String fullname;
+	
+	private String address;
+	
+	private String corporation;
+	
+	private String phone;
+	
 	private Short status;
 
 	public String getCid() {
@@ -38,6 +46,38 @@ public class CompanyVO implements Serializable {
 		this.name = name;
 	}
 
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCorporation() {
+		return corporation;
+	}
+
+	public void setCorporation(String corporation) {
+		this.corporation = corporation;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -45,5 +85,6 @@ public class CompanyVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
 
 }

@@ -59,7 +59,7 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 	@Override
 	public int countEvents(String userId, String showDate) throws ParseException {
 		
-		String sql = "select count(*) from platform.events where holderId = :holderId and showDate = :showDate";
+		String sql = "select count(*) from information.events where holderId = :holderId and showDate = :showDate";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("holderId", userId).setString("showDate", showDate).uniqueResult();
 		
 		return count.intValue();

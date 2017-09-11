@@ -61,7 +61,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryGoodsStorehouseStockByShIdAGId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseStockByShid() {
+	public String queryStorehouseStockByShIdAGId() {
 		
 		goodsStorehouseStock = goodsStorehouseStockService.queryStorehouseStockByShIdAGId(goodsStorehouseStock);
 		
@@ -73,6 +73,30 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		
 		nums = goodsStorehouseStockService.queryGoodsStorehouseStockByGid(goodsStorehouseStock);
 				
+		return SUCCESS;
+	}
+	
+	@Action(value = "makeGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeGoodsStorehouseStock()throws FLException{
+		
+		goodsStorehouseStockService.makeGoodsStorehouseStock(goodsStorehouseStock);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "splitPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String splitPackage() throws FLException{
+		
+		goodsStorehouseStockService.splitPackage(goodsStorehouseStock, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "mergePackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String mergePackage() throws FLException{
+		
+		goodsStorehouseStockService.mergePackage(goodsStorehouseStock, queryUserId(), queryCompany());
+		
 		return SUCCESS;
 	}
 

@@ -192,6 +192,17 @@ CREATE TABLE `module` (
   KEY `indexone` (`fatherModuleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='模块表';
 
+DROP TABLE IF EXISTS `monitor`;
+CREATE TABLE `monitor` (
+  `name` varchar(32) NOT NULL,
+  `host` varchar(20) NOT NULL,
+  `type` varchar(16) NOT NULL,
+  `comment` varchar(128) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT 0,
+  `updateTime` timestamp NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='监控';
+
 DROP TABLE IF EXISTS `operation`;
 CREATE TABLE `operation` (
   `oId` int(11) NOT NULL AUTO_INCREMENT,
@@ -336,7 +347,7 @@ CREATE TABLE `systemconfig` (
   `key` varchar(32) NOT NULL,
   `value` varchar(128) NOT NULL,
   `cuid` int(11) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(128),
   `company` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`scid`)
@@ -424,6 +435,16 @@ CREATE TABLE `userexperience` (
   `des` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作经历表';
+
+DROP TABLE IF EXISTS  `userexperience`;
+CREATE TABLE `userexperience` (
+  `upid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(15) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `comment` varchar(128) NOT NULL,
+  PRIMARY KEY (`upid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工作经历表';
 
 DROP TABLE IF EXISTS `userinfo`;
 CREATE TABLE `userinfo` (

@@ -21,7 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="quotationVersion", catalog = "platform")
+@Table(name="quotationVersion", catalog = "quotation")
 public class QuotationVersionPO implements Serializable{
 
 	private static final long serialVersionUID = -852822561077114137L;

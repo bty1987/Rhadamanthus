@@ -56,6 +56,13 @@ public class ApproveUserDaoImpl extends DaoImpl<ApproveUserPO> implements Approv
 		return query.list();
     }
     
+    @Override
+    @SuppressWarnings("unchecked")
+	public List<ApproveUserPO> queryApprovalUserByType(short type,int company) {
+		
+		return session().createCriteria(ApproveUserPO.class).add(Restrictions.eq(ApproveUserPO.COLUMN_TYPE_STR, type)).createAlias("user", "user").add(Restrictions.eq("user.company", company)).list();
+	}
+    
 	@Override
 	@SuppressWarnings("unchecked")
     public List<ApproveUserPO> queryApproveUserByUserId(String userId){
@@ -77,4 +84,6 @@ public class ApproveUserDaoImpl extends DaoImpl<ApproveUserPO> implements Approv
             }
         }
 	}
+
+	
 }

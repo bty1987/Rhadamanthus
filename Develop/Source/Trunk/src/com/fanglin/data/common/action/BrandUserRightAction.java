@@ -40,14 +40,6 @@ public class BrandUserRightAction extends BaseListAction {
 	private List<BrandUserRightVO> brandUserRights;
 	
 	private List<Long> bids;
-
-	@Action(value="queryBrandUserRightForUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandUserRightForUserId(){
-		
-		brandUserRights = brandUserRightService.queryBrandUserRightForUserId(brandUserRight);
-		
-		return SUCCESS;
-	}
 	
 	@Action(value="queryBrandUserRightForLogin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialBrandRightForLogin() throws FLException{

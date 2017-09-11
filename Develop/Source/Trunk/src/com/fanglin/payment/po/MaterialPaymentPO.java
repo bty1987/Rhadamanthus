@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fanglin.material.po.MaterialSubOrderPO;
 
 @Entity
-@Table(name = "materialpayment", catalog = "platform")
+@Table(name = "materialpayment", catalog = "payment")
 public class MaterialPaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4500536292742086545L;

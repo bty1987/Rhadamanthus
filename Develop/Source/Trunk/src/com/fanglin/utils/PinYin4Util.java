@@ -1,6 +1,6 @@
-/*
+/**
  * @File Name	: PinYin4Util.java
- * @Package		：com.fanglin.utils 
+ * @Package		: com.fanglin.utils 
  * @Version		: 1.0
  * @Date		: 2014-7-7
  * @Copyright	: Copyright Creators 2014
@@ -152,10 +152,10 @@ public class PinYin4Util {
 	}
 	
 	/**
-	 * 获得汉语串的全拼串，多音字用,号分割
+	 * 获得汉语串的全拼串,多音字用,号分割
 	 * 
 	 * @param in 要转换的串
-	 * @return 对应的全拼串，多音字用,号分割
+	 * @return 对应的全拼串,多音字用,号分割
 	 */
 	public static List<String> getPinyin(String in){
 
@@ -178,7 +178,7 @@ public class PinYin4Util {
 	 * 获得汉语串的首字符串
 	 * 
 	 * @param in 要转换的串
-	 * @return 首字符串，多音字用,号分割
+	 * @return 首字符串,多音字用,号分割
 	 */
 	public static List<String> getPinYinHeadChar(String in){
 		PinYin4Util u = new PinYin4Util();

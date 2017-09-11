@@ -53,9 +53,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	private UserDao userDao;
 
 	@Override
-	public List<DecorationDesignerRankVO> queryDecorationDesignerRankForTop(int top){
+	public List<DecorationDesignerRankVO> queryDecorationDesignerRankForTop(int top,int company){
 		
-		List<DecorationDesignerRankPO> decorationDesignerRankPOs = decorationDesignerRankDao.queryDecorationDesignerRankForTop(top);
+		List<DecorationDesignerRankPO> decorationDesignerRankPOs = decorationDesignerRankDao.queryDecorationDesignerRankForTop(top,company);
 		List<DecorationDesignerRankVO> decorationDesignerRankVOs = new ArrayList<DecorationDesignerRankVO>();
 		
 		for(DecorationDesignerRankPO decorationDesignerRankPO: decorationDesignerRankPOs){
@@ -71,9 +71,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryDecorationDesignerRank(int top){
+	public List<TopVO> queryDecorationDesignerRank(int top,int company){
 		
-		List<DecorationDesignerRankPO> decorationDesignerRankPOs = decorationDesignerRankDao.queryDecorationDesignerRankForTop(top);
+		List<DecorationDesignerRankPO> decorationDesignerRankPOs = decorationDesignerRankDao.queryDecorationDesignerRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(DecorationDesignerRankPO decorationDesignerRankPO: decorationDesignerRankPOs){
@@ -98,9 +98,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 
 	@Override
-	public List<DecorationDesignerDepartmentRankVO> queryDecorationDesignerDepartmentRankForTop(String userId, int top){
+	public List<DecorationDesignerDepartmentRankVO> queryDecorationDesignerDepartmentRankForTop(String userId, int top,int company){
 		
-		List<DecorationDesignerDepartmentRankPO> decorationDesignerDepartmentRankPOs = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForTop(top);
+		List<DecorationDesignerDepartmentRankPO> decorationDesignerDepartmentRankPOs = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForTop(top,company);
 		List<DecorationDesignerDepartmentRankVO> decorationDesignerDepartmentRankVOs = new ArrayList<DecorationDesignerDepartmentRankVO>();
 		
 		for(DecorationDesignerDepartmentRankPO decorationDesignerDepartmentRankPO: decorationDesignerDepartmentRankPOs){
@@ -116,9 +116,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryDecorationDesignerDepartmentRank(int top){
+	public List<TopVO> queryDecorationDesignerDepartmentRank(int top,int company){
 		
-		List<DecorationDesignerDepartmentRankPO> decorationDesignerDepartmentRankPOs = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForTop(top);
+		List<DecorationDesignerDepartmentRankPO> decorationDesignerDepartmentRankPOs = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(DecorationDesignerDepartmentRankPO decorationDesignerDepartmentRankPO: decorationDesignerDepartmentRankPOs){
@@ -137,9 +137,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 
 	@Override
-	public List<DecorationDesignerRegionRankVO> queryDecorationDesignerRegionRankForTop(String userId, int top){
+	public List<DecorationDesignerRegionRankVO> queryDecorationDesignerRegionRankForTop(String userId, int top,int company){
 		
-		List<DecorationDesignerRegionRankPO> decorationDesignerRegionRankPOs = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForTop(top);
+		List<DecorationDesignerRegionRankPO> decorationDesignerRegionRankPOs = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForTop(top,company);
 		List<DecorationDesignerRegionRankVO> decorationDesignerRegionRankVOs = new ArrayList<DecorationDesignerRegionRankVO>();
 		
 		for(DecorationDesignerRegionRankPO decorationDesignerRegionRankPO: decorationDesignerRegionRankPOs){
@@ -155,9 +155,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 	
 	@Override
-	public List<TopVO> queryDecorationDesignerRegionRank(int top){
+	public List<TopVO> queryDecorationDesignerRegionRank(int top,int company){
 		
-		List<DecorationDesignerRegionRankPO> decorationDesignerRegionRankPOs = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForTop(top);
+		List<DecorationDesignerRegionRankPO> decorationDesignerRegionRankPOs = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForTop(top,company);
 		List<TopVO> topVOs = new ArrayList<TopVO>();
 		
 		for(DecorationDesignerRegionRankPO decorationDesignerRegionRankPO: decorationDesignerRegionRankPOs){
@@ -176,14 +176,14 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 	}
 
 	@Override
-	public List<String> queryDecorationDesignerForPlaceByUserId(String userId) {
+	public List<String> queryDecorationDesignerForPlaceByUserId(String userId,int company) {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null && "设计师".equals(userPO.getDuty())){
-			List<?> _ = decorationDesignerRankDao.queryDecorationDesignerRankForPlaceByDesignerId(userId);
+			List<?> _ = decorationDesignerRankDao.queryDecorationDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
 				
@@ -199,9 +199,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationDesignerRank(String designerId, String designerName, float count, String currentTime) {
+	public int updateDecorationDesignerRank(String designerId, String designerName, float count, String currentTime,int company) {
 		
-		DecorationDesignerRankPO decorationDesignerRankPO = decorationDesignerRankDao.queryDecorationDesignerRankForInitByDesignerId(designerId);
+		DecorationDesignerRankPO decorationDesignerRankPO = decorationDesignerRankDao.queryDecorationDesignerRankForInitByDesignerId(designerId,company);
 		if(decorationDesignerRankPO != null){
 			decorationDesignerRankPO.setRank(Arith.add(decorationDesignerRankPO.getRank(), count));
 		}else{
@@ -211,6 +211,7 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 			decorationDesignerRankPO.setDesignerId(designerId);
 			decorationDesignerRankPO.setDesignerName(designerName);
 			decorationDesignerRankPO.setRank(count);
+			decorationDesignerRankPO.setCompany(company);
 		}
 		decorationDesignerRankDao.saveOrUpdate(decorationDesignerRankPO);
 		
@@ -219,9 +220,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime) {
+	public int updateDecorationDesignerDepartmentRank(String departmentId, String departmentName, float count, String currentTime,int company) {
 		
-		DecorationDesignerDepartmentRankPO decorationDesignerDepartmentRankPO = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForInitByDeptId(departmentId);
+		DecorationDesignerDepartmentRankPO decorationDesignerDepartmentRankPO = decorationDesignerDepartmentRankDao.queryDecorationDesignerDepartmentRankForInitByDeptId(departmentId,company);
 		if(decorationDesignerDepartmentRankPO != null){
 			decorationDesignerDepartmentRankPO.setRank(Arith.add(decorationDesignerDepartmentRankPO.getRank(), count));
 		}else{
@@ -231,6 +232,7 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 			decorationDesignerDepartmentRankPO.setDesignerDeptId(departmentId);
 			decorationDesignerDepartmentRankPO.setDesignerDeptName(departmentName);
 			decorationDesignerDepartmentRankPO.setRank(count);
+			decorationDesignerDepartmentRankPO.setCompany(company);
 		}
 		decorationDesignerDepartmentRankDao.saveOrUpdate(decorationDesignerDepartmentRankPO);
 		
@@ -239,9 +241,9 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationDesignerRegionRank(String regionId, String regionName, float count, String currentTime) {
+	public int updateDecorationDesignerRegionRank(String regionId, String regionName, float count, String currentTime,int company) {
 		
-		DecorationDesignerRegionRankPO decorationDesignerRegionRankPO = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForInitByRegionId(regionId);
+		DecorationDesignerRegionRankPO decorationDesignerRegionRankPO = decorationDesignerRegionRankDao.queryDecorationDesignerRegionRankForInitByRegionId(regionId,company);
 		if(decorationDesignerRegionRankPO != null){
 			decorationDesignerRegionRankPO.setRank(Arith.add(decorationDesignerRegionRankPO.getRank(), count));
 		}else{
@@ -251,6 +253,7 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 			decorationDesignerRegionRankPO.setDesignerRegionId(regionId);
 			decorationDesignerRegionRankPO.setDesignerRegionName(regionName);
 			decorationDesignerRegionRankPO.setRank(count);
+			decorationDesignerRegionRankPO.setCompany(company);
 		}
 		decorationDesignerRegionRankDao.saveOrUpdate(decorationDesignerRegionRankPO);
 		

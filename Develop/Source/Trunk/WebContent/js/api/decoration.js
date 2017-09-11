@@ -1,8 +1,6 @@
 
 $.extend(api.index, {
-    addReduceIndex: {url: "/views/decoration/addReduce.html"},
-    addReduceDetailIndex: {url: "/views/decoration/addReduceDetail.html"},
-    addReduceOutputIndex: {url: "/views/decoration/addReduceOutput.html"},
+
 
     decorationOrderDesignerIndex: {url: "/views/decoration/decorationOrderDesigner.html"},
     decorationOrderDesignerDetailIndex: {url: "/views/decoration/decorationOrderDesignerDetail.html"},
@@ -36,6 +34,8 @@ $.extend(api.index, {
     auditIndex: {url: "/views/decoration/audit.html"},
     auditRecordIndex: {url: "/views/decoration/auditRecord.html"},
     auditDetail :{url:"/views/decoration/auditDetail.html"},
+
+    decorationFinalSettlementIndex : {url:"/views/decoration/decorationFinalSettlement.html"}
 });
 
 $.extend(api.ds, {
@@ -107,6 +107,10 @@ $.extend(api, {decoration: {
 	queryDecorationHolonomy: {url: "queryDecorationHolonomy.do"},
 	makeDecorationHolonomy: {url: "makeDecorationHolonomy.do"},
 
+    pageDecorationInclusive: {url: "pageDecorationInclusive.do"},
+    queryDecorationInclusive: {url: "queryDecorationInclusive.do"},
+    makeDecorationInclusive: {url: "makeDecorationInclusive.do"},
+
     pageAudit: {url: "pageAudit.do"},
     applyAudit: {url: "applyAudit.do"},
 
@@ -116,7 +120,7 @@ $.extend(api, {decoration: {
 
     queryAuditScaleByArid: {url: "queryAuditScaleByArid.do"},
     makeAuditScale: {url: "makeAuditScale.do"},
-    updateAudtiScaleForStatus: {url: "updateAudtiScaleForStatus.do"},
-    addAudtiScale: {url: "addAudtiScale.do"},
-    deleteAudtiScale: {url: "deleteAudtiScale.do"},
+    updateAuditScaleForStatus: {url: "updateAuditScaleForStatus.do"},
+    addAuditScale: {url: "addAuditScale.do"},
+    deleteAuditScale: {url: "deleteAuditScale.do"},
 }});

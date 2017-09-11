@@ -309,8 +309,8 @@ jQuery(function($) {
 			$("#customerId").trigger("chosen:updated");
 			
 			$("#customerModal").modal("hide");
-		}, function(res){
-			com.showAlert(com.error, res);
+		}, function(e){
+			com.showAlert(com.error, e.errorMsg);
 		}, false);
 	}
 

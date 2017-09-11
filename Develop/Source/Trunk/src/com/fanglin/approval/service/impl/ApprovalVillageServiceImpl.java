@@ -115,7 +115,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		
 		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
 		
-		messageService.sendMessage(messageVO);
+		messageService.sendMessage(messageVO,company);
 		
 		messageDDService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents(),company);
 		return 0;
@@ -136,7 +136,10 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
-		
+		DecorationOrderPO villagePO = decorationOrderDao.queryDecorationOrderByVillageIdAHouseNumber(approvalVillagePO.getNewVillageId(), approvalVillagePO.getNewHouseNumber(), approvalPO.getCompany());
+		if (villagePO!=null) {
+			throw new FLException(140034, "订单楼盘,楼号已存在");
+		}
 		decorationOrderPO.setVillagePO(new VillagePO(approvalVillagePO.getNewVillageId()));
 		decorationOrderPO.setHouseNumber(approvalVillagePO.getNewHouseNumber());
 		

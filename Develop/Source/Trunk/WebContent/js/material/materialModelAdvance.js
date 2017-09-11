@@ -136,7 +136,7 @@ $(function(){
             materialModelNo : $("#materialModelNo").on("blur",function() {
                 $this = $(this);
                 void 0 != $this.val() && "" != $this.val().trim() && com.post(api.material.queryMaterialModelByNo, {"materialModel.materialModelNo": $this.val()},function(a) {
-                    0 != a.materialModel.mmId ? (com.showTips($this, "\u8be5\u578b\u53f7\u7f16\u53f7\u5df2\u5b58\u5728", !0), materialModel.repeatFlg = !0) : (com.clearValidator("#materialModelNo", !0), materialModel.repeatFlg = !1)
+                	a.materialModel.mmId != null ? (com.showTips($this, "\u8be5\u578b\u53f7\u7f16\u53f7\u5df2\u5b58\u5728", !0), materialModel.repeatFlg = false) : (com.clearValidator("#materialModelNo", true), materialModel.repeatFlg = true)
                 })
             }),
             materialModelName : $("#materialModelName"),
@@ -183,17 +183,17 @@ $(function(){
             price: {
                 type: "v_price",
                 regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-                errorMsg: "价格内容输入错误错误."
+                errorMsg: "价格内容输入错误."
             },
             discount: {
                 type: "v_discount",
                 regex: /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/g,
-                errorMsg: "折扣内容输入错误错误."
+                errorMsg: "折扣内容输入错误."
             },
             point: {
                 type: "v_point",
                 regex: /^(1\.0{1,2}|1|0|0\.[0-9]{1,3})$/g,
-                errorMsg: "点位内容输入错误错误."
+                errorMsg: "点位内容输入错误."
             }
         }
     };
@@ -269,8 +269,16 @@ $(function(){
 
     //保存
     function saveData() {
-        if (!com.validate() && !materialModel.repeatFlg) {
-            var _params = {
+    	
+    	var url = "";    
+    	
+        if(materialModel.editFlg == true && !com.validate()){          
+            url = api.material.updateMaterialModel;
+        }else if (!com.validate() && materialModel.repeatFlg && materialModel.editFlg == false) {
+        	url = api.material.addMaterialModel;
+        }
+        
+        var params = {
                 "materialModel.mmId": materialModel.materialModelItems.mmId.val(),
                 "materialModel.materialModelNo": materialModel.materialModelItems.materialModelNo.val(),
                 "materialModel.materialModelName": materialModel.materialModelItems.materialModelName.val(),
@@ -281,14 +289,12 @@ $(function(){
                 "materialModel.measurementUnitName": materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
                 "materialModel.materialUnitPrice": materialModel.materialModelItems.materialUnitPrice.val(),
                 "materialModel.materialPurchasePrice": materialModel.materialModelItems.materialPurchasePrice.val(),
-                "materialModel.discount": materialModel.materialModelItems.discount.val(),
-            };
-            com.post(materialModel.editFlg ? api.material.updateMaterialModel: api.material.addMaterialModel, _params, function(a) {
-                searcher.doSearch();
-            });
-        }
-        
-        materialModel.modal.modal("hide");
+                "materialModel.discount": materialModel.materialModelItems.discount.val()
+        };
+        com.post(url,params,function(a){
+        	materialModel.modal.modal("hide");
+            searcher.doSearch();
+        });              
     }
     
     function advance(){

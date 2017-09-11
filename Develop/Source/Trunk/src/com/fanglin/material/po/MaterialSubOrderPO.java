@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "materialsuborder", catalog = "platform")
+@Table(name = "materialsuborder", catalog = "material")
 public class MaterialSubOrderPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5594088406016802710L;

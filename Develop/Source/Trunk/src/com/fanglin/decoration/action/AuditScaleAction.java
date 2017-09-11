@@ -45,26 +45,26 @@ public class AuditScaleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateAudtiScaleForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "updateAuditScaleForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAudtiScaleForStatus() throws FLException{
 
-		auditScaleService.updateAudtiScaleForStatus(auditScale);
+		auditScaleService.updateAuditScaleForStatus(auditScale);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "addAudtiScale", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "addAuditScale", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAudtiScale() throws FLException{
 
-		auditScaleService.addAudtiScale(auditScale, queryUserId());
+		auditScaleService.addAuditScale(auditScale, queryUserId());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "deleteAudtiScale", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "deleteAuditScale", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAudtiScale() throws FLException{
 
-		auditScaleService.deleteAudtiScale(auditScale);
+		auditScaleService.deleteAuditScale(auditScale);
 		
 		return SUCCESS;
 	}

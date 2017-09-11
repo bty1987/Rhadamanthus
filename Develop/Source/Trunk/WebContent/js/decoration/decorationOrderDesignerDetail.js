@@ -147,12 +147,12 @@ jQuery(function($) {
 	decorationOrderDetail.decorationPaymentModal = $("#decorationPaymentModal");
 	decorationOrderDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
 	decorationOrderDetail.otherPaymentModal = $("#otherPaymentModal");
-	
-	com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 5}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
-	com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 1}, "autoFillKeyValue", "key", "value");
-	com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
+
+	// com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 5}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
+	//com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
 	com.initChosen('villageSel', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", 'key', 'value').on('change', function(e){
 		if ($("#villageSel").val() == null || $("#villageSel").val() == ""){
 			return;
@@ -173,7 +173,9 @@ jQuery(function($) {
 	if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
 		decorationUtils.initDecorationHolonomy('step6',decorationOrderDetail.decorationOrderId);
 	}
-
+	if(decorationOrderDetail.orderType == decorationOrderDetail.type["全包"]){
+		decorationUtils.initDecorationInclusive('step6',decorationOrderDetail.decorationOrderId);
+	}
 
 	$("#btnPrintDefaultQuotationInfo").on('click', function(res) {
 		decorationOrderDetail.printQuotationModal.modal("show");
@@ -192,6 +194,34 @@ jQuery(function($) {
 		if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
 			$('#forDiscount').removeClass('hide');
 		}
+
+		com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (res) {
+			$("#paymentScale").empty();
+			$.each(res.paymentScales,function (i,v) {
+				var $approvaler = $('<label></label>');
+				var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px");
+				var $input = $('<input>').attr({
+					"type": "radio",
+					"name": "form-field-radio",
+					"class": "ace",
+					"psid": v.psid
+				});
+
+				if(i == 0){
+					$input.attr('checked','true');
+				}
+
+				var $span = $('<span></span>').addClass('lbl').html($('<label></label>').attr('style', 'display:inline-block;width:47px;text-align-last:justify;margin-left:10px').text(v.name));
+				var $comment = $('<span></span>').addClass("lbl").text(v.comment == null ? " " : v.comment).attr("style", "margin-left:15px");
+				$input.appendTo($approvaler);
+				$span.appendTo($approvaler);
+				$comment.appendTo($approvaler);
+				$approvaler.appendTo($div);
+				$div.appendTo($("#paymentScale"));
+
+			})
+
+		});
 
 		decorationOrderDetail.quotationTotalPriceModal.modal("show");
 		
@@ -236,10 +266,9 @@ jQuery(function($) {
 			$("#referMoney").val("");
 			$("#refundApprove").removeClass("hide");
 			$("#changeReason").addClass("v_required");
-			$("#refundApproveManSel").addClass("v_required");
 			$("#changeReason").val("");
-			
-			com.updateChosen('approveManSel', '', '');
+
+			approvalUtils.initqueryApprovalUser("refundApproveManSel",5);
 			
 			decorationOrderDetail.refundDecorationPaymentModal.modal("show");
 		});
@@ -265,19 +294,37 @@ jQuery(function($) {
 			bootbox.alert("合同款不能小于1元");
 			return;
 		}
+
+		var psId = $("#paymentScale").find('input:checked').attr('psid');
+
+		if(psId == null || psId == ""){
+			com.showAlert(com.error,"请选择款项比例!");
+			return;
+		}
 		
 		var options = {
 			"decorationPayment.referMoney": $("#decorationOrderTotalMoney").val(),
 			"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
+			"decorationPayment.psId": psId,
 		}
 
 		if(decorationOrderDetail.orderType == decorationOrderDetail.type["半价"]){
 
 			var manageRate = 0;
 
-			com.post(api.quotation.queryQuotationVersionByVersionId,{ "quotationVersion.versionId": decorationOrderDetail.versionId},function (res) {
-				manageRate = res.quotationVersion.manageRate;
-			},null,false);
+			com.post(api.quotation.queryQuotationForDefaultByOrderId,{"quotation.orderId":decorationOrderDetail.decorationOrderId},function (res) {
+
+				if (res.quotation.manageRate != null && res.quotation.manageRate != 0){
+					manageRate = res.quotation.manageRate;
+				}else{
+					com.post(api.quotation.queryQuotationVersionByVersionId,{ "quotationVersion.versionId": decorationOrderDetail.versionId},function (data) {
+						manageRate = data.quotationVersion.manageRate;
+					},null,false);
+				}
+			},function (e) {
+				com.showAlert(com.error,e.errorMsg);
+				return;
+			},false);
 
 			var maching = $('#decorationOrderDiscount').val();
 			var discout = $('#decorationOrderDiscount').find("option:selected").text();
@@ -291,7 +338,8 @@ jQuery(function($) {
 				"decorationHolonomy.projectPrice": projectPrice,
 				"decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationOrderDetail.notSalesmanRate),
 				"decorationHolonomy.serviceRate": serviceRate,
-				"decorationHolonomy.status": 0
+				"decorationHolonomy.status": 0,
+				"decorationHolonomy.psId": psId,
 			};
 
 			com.post(api.decoration.makeDecorationHolonomy,options,function (res) {
@@ -314,6 +362,30 @@ jQuery(function($) {
 				com.showAlert(com.error,e.errorMsg);
 			})
 
+		}else if(decorationOrderDetail.orderType == decorationOrderDetail.type["全包"]){
+
+			options = {
+				"decorationInclusive.decorationOrder.orderId": decorationOrderDetail.decorationOrderId,
+				"decorationInclusive.contractPrice": $("#decorationOrderTotalMoney").val(),
+				"decorationInclusive.psId": psId,
+			};
+
+			com.post(api.decoration.makeDecorationInclusive,options,function (res) {
+				com.showAlert(com.info,"保存成功");
+
+				res = res.decorationInclusive;
+
+				$('#contractPrice').html(res.contractPrice);
+				$('#projectPrice').html(res.projectPrice);
+				$('#cdiff').html(res.cdiff);
+				$('#mdiff').html(res.mdiff);
+				$('#managePrice').html(res.managePrice);
+				$('#materialPaidup').html(res.materialPaidup);
+
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			},function (e) {
+				com.showAlert(com.error,e.errorMsg);
+			})
 		}else {
 			com.post(api.payment.makeDecorationPayment, options, function(res){
 				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
@@ -347,11 +419,18 @@ jQuery(function($) {
 		if(com.validate("refundDecorationPaymentModal")){
 			return;
 		}
-		
+
+		var receiverId = $("#refundApproveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+
 		if(decorationPayment.editFlag == 0){
 			
 			var options = {
-				"approval.receiverId": $("#refundApproveManSel").val(),
+				"approval.receiverId": receiverId,
 				"approval.comment": $("#changeReason").val(),
 				"approvalDecorationRefund.paymentId": decorationOrderDetail.paymentId,
 			}
@@ -359,6 +438,7 @@ jQuery(function($) {
 			bootbox.confirm("确认要提交退款申请吗?", function(res) {
 				if(res){
 					com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
+						com.showAlert(com.info, "提交成功");
 						decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
 					});
 				}
@@ -429,7 +509,14 @@ jQuery(function($) {
 		if(com.validate()){
 			return;
 		}
-		
+
+		var receiverId = $("#approveActivityItemManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+
 		if(decorationOrderDetail.activity.things.val() == null && decorationOrderDetail.activity.coupons.val() == null){
 			com.showAlert(com.warning, "活动物品或券需要选择才能提交");
 			return;
@@ -442,7 +529,7 @@ jQuery(function($) {
 		
 		var index = 0;
 		var options = {
-			"approval.receiverId": $("#approveActivityItemManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": "",
 			"approvalActivity.activityId": decorationOrderDetail.activity.activity.val(),
 			"approvalActivity.orderId": orderId,
@@ -499,12 +586,19 @@ jQuery(function($) {
 		if(com.validate()){
 			return;
 		}
+
+		var receiverId = $("#approveSpecialActivityItemManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
 		
 		var orderId = decorationOrderDetail.decorationOrderId;
 		var type = decorationOrderDetail.activity.activityType.val();
 		
 		var options = {
-			"approval.receiverId": $("#approveSpecialActivityItemManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": "",
 			"approvalActivity.activityId": -1,
 			"approvalActivity.orderId": orderId,
@@ -553,6 +647,9 @@ jQuery(function($) {
 			
 			decorationUtils.addActivityItemForDiv(decorationOrderDetail.activityItems, decorationActivityItem, uiBtnMethod);
 		});
+
+		decorationOrderDetail.convertDecorationActivityItemModal.modal("hide")
+
 	});
 
 	$.extend(com.validator, decorationOrderDetail.validator);
@@ -597,9 +694,10 @@ jQuery(function($) {
 			}
 		});
 		$("#customerDes").val("");
-		
-		com.updateChosen('approveManSel', '', '');
-		
+		$("#approveManSel").empty();
+
+		approvalUtils.initqueryApprovalUser("approveManSel",2);
+
 		$("#customerApproveModal").modal("show");
 	});
 	
@@ -652,7 +750,9 @@ jQuery(function($) {
 			
 			decorationOrderDetail.activity.activity.bindData(_activitys, "aid", "activityName", false);
 		}, null, false);
-		
+
+		approvalUtils.initqueryApprovalUser("approveActivityItemManSel",8);
+
 		decorationOrderDetail.applyDecorationActivityItemModal.modal("show");
 	});
 	
@@ -665,21 +765,40 @@ jQuery(function($) {
 		});
 		
 		decorationOrderDetail.activity.couponInfo.css("display", "none");
-		
+
+		approvalUtils.initqueryApprovalUser("approveSpecialActivityItemManSel",8);
+
 		decorationOrderDetail.applySpecialDecorationActivityItemModal.modal("show");
 	});
-	
+
 	$("#cApproveSaveBtn").on("click", function() {
-		if (com.validate('customerApproveModal')){
+		
+		if (com.validate('customerApproveModal') || decorationOrderDetail.cRepeatFlg){
 			return;
 		}
 		
+		var receiverId = $("#approveManSel").find('input:checked').attr('userid');
+		
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+
+		var reg = new RegExp("\\s");
+		var customerNameSp = $("#customerName").val().substr(1).match(reg);
+		var customerPhoneSp = $("#customerPhone").val().substr(1).match(reg);
+
+		if(customerNameSp != null || customerPhoneSp != null){
+			com.showAlert(com.error,"客户姓名或电话不允许存在空格");
+			return;
+		}
+
 		var options = {
-			"approval.receiverId": $("#approveManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": $("#customerDes").val(),
 			"approvalCustomer.customerId": decorationOrderDetail.customer.id,
-			"approvalCustomer.newCustomerName": $("#customerName").val(),
-			"approvalCustomer.newCustomerPhone": $("#customerPhone").val(),
+			"approvalCustomer.newCustomerName": $("#customerName").val().replace(" ",""),
+			"approvalCustomer.newCustomerPhone": $("#customerPhone").val().replace(" ",""),
 		}
 		
 		com.post(api.approval.submitApprovalForCustomer, options, function(res){
@@ -695,9 +814,7 @@ jQuery(function($) {
 		com.clearValidator("#houseNumber", true);
 		
 		$("#houseNumber").val(decorationOrderDetail.village.houseNumber);
-		
-		com.updateChosen('villageSel', decorationOrderDetail.village.villageId, decorationOrderDetail.village.villageName);
-		com.updateChosen('vApproveManSel', '', '');
+
 		
 		com.validator.houseNumber["regex"] = eval("/^"+decorationOrderDetail.village.rule+"$/g");
 		com.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+decorationOrderDetail.village.ruleContent+")";
@@ -709,6 +826,8 @@ jQuery(function($) {
 
 		approveData["villageName"] = decorationOrderDetail.village.villageName;
 		approveData["houseNumber"] = decorationOrderDetail.village.houseNumber;
+
+		approvalUtils.initqueryApprovalUser("vApproveManSel",2);
 
 		$("#villageApproveModal").modal("show");
 	});
@@ -733,9 +852,23 @@ jQuery(function($) {
 		if(com.validate('villageApproveModal')|| decorationOrderDetail.vRepeatFlg){
 			return;
 		}
-			
+
+		var receiverId = $("#vApproveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+		var reg = new RegExp("\\s");
+		var houseNumber = $("#houseNumber").val().substr(1).match(reg);
+
+		if(houseNumber != null ){
+			com.showAlert(com.error,"楼牌号不允许存在空格");
+			return;
+		}
+
 		var options = {
-			"approval.receiverId": $("#vApproveManSel").val(),
+			"approval.receiverId": receiverId,
 			"approval.comment": $("#villageDes").val(),
 			"approvalVillage.orderId": $("#orderId").val(),
 			"approvalVillage.newVillageId": $("#villageSel").val(),
@@ -899,7 +1032,7 @@ function editRefundPayment(paymentId, oldmoney, paymentType) {
 		}else{
 			$("#referMoney").attr("disabled",false);
 		}
-		
+
 		decorationOrderDetail.refundDecorationPaymentModal.modal("show");
 	});
 }
@@ -914,7 +1047,7 @@ function initWizard() {
 		curstep == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 		
 		if (curstep == 2) {
-			decorationUtils.loadQuotationDetail();
+			quotationUtils.loadQuotationDetail();
 		} else if (curstep == 3) {
 			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if (curstep == 4){
@@ -932,7 +1065,7 @@ function initWizard() {
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 		
 		if (info.step == 2) {
-			decorationUtils.loadQuotationDetail();
+			quotationUtils.loadQuotationDetail();
 		} else if (info.step == 3) {
 			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
 		}else if (info.step == 4){
@@ -945,6 +1078,18 @@ function initWizard() {
 		}
 	}).on('next', function(e, info) {
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
+		if (curstep == 2) {
+			quotationUtils.loadQuotationDetail();
+		} else if (curstep == 3) {
+			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId);
+		}else if (curstep == 4){
+			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
+		}else if (curstep == 5) {
+			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, activityBtnMethod, decorationOrderDetail.decorationOrderId);
+			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, uiBtnMethod, decorationOrderDetail.decorationOrderId);
+		}else if(curstep == 7){
+			decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
+		}
 	}).on('previous', function(e, info) {
 		info.step == 1 ? decorationOrderDetail.btnSaveBaseDecorationOrderInfo.removeClass("hide") : decorationOrderDetail.btnSaveBaseDecorationOrderInfo.addClass("hide")
 	});

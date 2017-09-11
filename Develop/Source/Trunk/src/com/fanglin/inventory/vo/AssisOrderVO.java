@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class AssisOrderVO implements Serializable{
@@ -17,6 +18,12 @@ public class AssisOrderVO implements Serializable{
 	
 	private String orderId;
 	
+	private VillageVO village;
+	
+	private String houseNumber;
+	
+	private UserVO supervisor;
+	
 	private UserVO creater;
 	
 	private Timestamp createTime;
@@ -25,9 +32,12 @@ public class AssisOrderVO implements Serializable{
 	
 	private Timestamp approverTime;
 	
+	private String fetchTime;
+	
 	private Short status;
 	
 	private Integer company;
+	
 	
 	public AssisOrderVO() {
 		super();
@@ -38,8 +48,11 @@ public class AssisOrderVO implements Serializable{
 		this.creater = creater;
 	}
 
-	public AssisOrderVO(UserVO creater, UserVO approver) {
+	public AssisOrderVO(VillageVO village, UserVO supervisor, UserVO creater,
+			UserVO approver) {
 		super();
+		this.village = village;
+		this.supervisor = supervisor;
 		this.creater = creater;
 		this.approver = approver;
 	}
@@ -66,6 +79,30 @@ public class AssisOrderVO implements Serializable{
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+	
+	public VillageVO getVillage() {
+		return village;
+	}
+
+	public void setVillage(VillageVO village) {
+		this.village = village;
+	}
+
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	public UserVO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserVO supervisor) {
+		this.supervisor = supervisor;
 	}
 
 	public UserVO getCreater() {
@@ -100,6 +137,14 @@ public class AssisOrderVO implements Serializable{
 
 	public void setApproverTime(Timestamp approverTime) {
 		this.approverTime = approverTime;
+	}
+	
+	public String getFetchTime() {
+		return fetchTime;
+	}
+
+	public void setFetchTime(String fetchTime) {
+		this.fetchTime = fetchTime;
 	}
 
 	public Short getStatus() {

@@ -23,6 +23,8 @@ public class ApproveUserVO implements Serializable{
     
     private Short  type;
 
+    private String comment;
+    
 	public ApproveUserVO() {
 		super();
 	}
@@ -55,5 +57,13 @@ public class ApproveUserVO implements Serializable{
     public void setType(Short type){
         this.type = type;
     }
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 }

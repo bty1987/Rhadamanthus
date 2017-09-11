@@ -404,6 +404,38 @@ var Condition = function (api) {
                 valuePath: "name"
             }
         },
+        quotationBigCategoryEngineering: {
+            label: "大类",
+            type: "select",
+            submitConfig: {
+                name: "quotationBigCategoryId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationBigCategory,
+                postData: {"quotationBigCategory.qtid":1},
+                listPath: "quotationBigCategorys",
+                keyPath: "id",
+                valuePath: "name"
+            }
+        },
+        quotationBigCategoryMaterial: {
+            label: "大类",
+            type: "select",
+            submitConfig: {
+                name: "quotationBigCategoryId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationBigCategory,
+                postData: {"quotationBigCategory.qtid":2},
+                listPath: "quotationBigCategorys",
+                keyPath: "id",
+                valuePath: "name"
+            }
+        },
         quotationBigCategoryId: {
             label: "大类",
             type: "select",
@@ -431,6 +463,38 @@ var Condition = function (api) {
             dataSource: {//从后台取数据的各种配置
                 url: api.quotation.queryQuotationSmallCategory,
                 postData: {},
+                listPath: "quotationSmallCategorys",
+                keyPath: "id",
+                valuePath: "name"
+            }
+        },
+        quotationSmallCategoryEngineering: {
+            label: "小类",
+            type: "select",
+            submitConfig: {
+                name: "quotationSmallCategoryId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationSmallCategory,
+                postData: {"quotationSmallCategory.qtid":1},
+                listPath: "quotationSmallCategorys",
+                keyPath: "id",
+                valuePath: "name"
+            }
+        },
+        quotationSmallCategoryMaterial: {
+            label: "小类",
+            type: "select",
+            submitConfig: {
+                name: "quotationSmallCategoryId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationSmallCategory,
+                postData: {"quotationSmallCategory.qtid":2},
                 listPath: "quotationSmallCategorys",
                 keyPath: "id",
                 valuePath: "name"
@@ -898,6 +962,15 @@ var Condition = function (api) {
             type: "dateRangePicker",
             submitConfig: {
                 name: "signTimeDateRange",
+                op: "cn",
+                validate: null
+            }
+        },
+		auditTime: {
+            label: "审核时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "auditTime",
                 op: "cn",
                 validate: null
             }

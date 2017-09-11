@@ -280,9 +280,14 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				com.popup("专用收款收据__订单编号:" + v.decorationOrder.orderId  ,api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.decorationOrder.orderId + "&servicePayment.orderId=" + v.decorationOrder.orderId + "&serviceReceipt.srId=" + v.serviceReceipt.srId + "&time=" + parent.params.loginTime,function () {
-					parent.layer.getFrameIndex(window.name);
-				},null,true)
+				if(v.collecter.currentName!=params.userInfo.user.userName){
+					com.showAlert(com.warning, "收款人不匹配，不能打印");
+					return false;
+				}else{
+					com.popup("专用收款收据__订单编号:" + v.decorationOrder.orderId  ,api.index.servicePaymentReceiptIndex.url + "?decorationOrder.orderId=" + v.decorationOrder.orderId + "&servicePayment.orderId=" + v.decorationOrder.orderId + "&serviceReceipt.srId=" + v.serviceReceipt.srId + "&time=" + parent.params.loginTime,function () {
+						parent.layer.getFrameIndex(window.name);
+					},null,true)
+				}
 			});
 
             $liLine.append($h3).append($ulProperty);

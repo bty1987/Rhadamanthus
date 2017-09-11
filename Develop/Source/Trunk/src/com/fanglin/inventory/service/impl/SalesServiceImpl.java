@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.common.dao.VillageDao;
@@ -20,23 +21,24 @@ import com.fanglin.data.po.VillagePO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.inventory.dao.GoodsDao;
-import com.fanglin.inventory.dao.SalesDao;
-import com.fanglin.inventory.dao.SalesItemDao;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.inventory.dao.SalesDao;
+import com.fanglin.inventory.dao.SalesItemDao;
 import com.fanglin.inventory.po.SalesItemPO;
 import com.fanglin.inventory.po.SalesPO;
 import com.fanglin.inventory.service.SalesService;
 import com.fanglin.inventory.vo.SalesItemVO;
 import com.fanglin.inventory.vo.SalesVO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("salesService")
 @Transactional(readOnly=true)
@@ -110,6 +112,53 @@ public class SalesServiceImpl implements SalesService {
 		paging.setData(salesVOs); 
 
 	}
+	
+	@Override
+	public void pageSalesForBalance(Paging paging, List<Filter> filter,String userId, int company) {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		String duty = userPO.getDuty();
+		
+		String id = Integer.toString(userPO.getUid());
+		if(!"管理员".equals(duty)){
+			if(filter.size() == 0) return;
+		}
+		if("驻店导购".equals(duty)){
+			filter.add(new Filter(SalesPO.COLUMN_INSTORERID_STR, id, "eq") );
+		}else if("主材导购".equals(duty)){
+			filter.add(new Filter(SalesPO.COLUMN_GUIDERID_STR, id, "eq") );
+		}else if("管理员".equals(duty)){
+			
+		}else {
+			filter.add(new Filter(SalesPO.COLUMN_SALESMANID_STR, id, "eq") );
+		}
+		
+		List<SalesPO> salesPOs = salesDao.pageSalesForBalance(paging, filter,company);
+		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
+		
+		for(SalesPO salesPO:salesPOs){
+			
+			SalesVO _salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
+			
+			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
+			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesPO.getVillage(), _salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
+			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
+			
+			salesVOs.add(_salesVO);
+		}
+		
+		paging.setData(salesVOs); 
+		
+	}
 
 	@Override
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException{
@@ -140,6 +189,18 @@ public class SalesServiceImpl implements SalesService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException {
 		
+		int dompany;
+		
+		try {
+			
+			dompany = FormatUtil.decodeCompany(AESHelper.decryptString(salesVO.getDompanys(), SystemConfig.getString("encryptKey")));
+			
+		} catch (Exception e) {
+			
+			throw new FLException(230015 , "公司不存在");
+			
+		}
+			
 		SalesPO salesPO = new SalesPO(new VillagePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
 		String salesBrand = salesVO.getBrand();
@@ -168,6 +229,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setNo(no);
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPO.setCompany(company);
+		salesPO.setDompany(dompany);
 			
 		salesDao.save(salesPO);
 		
@@ -285,5 +347,5 @@ public class SalesServiceImpl implements SalesService {
 		
 		return 0;
 	}
-	
+
 }

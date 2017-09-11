@@ -25,7 +25,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "functionareaquoteitem", catalog = "platform")
+@Table(name = "functionareaquoteitem", catalog = "quotation")
 public class FunctionAreaItemPO implements Serializable {
 
 	private static final long serialVersionUID = 13444646L;

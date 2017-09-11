@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "materialinside", catalog = "platform")
+@Table(name = "materialinside", catalog = "material")
 public class MaterialInsidePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3376405548558094341L;

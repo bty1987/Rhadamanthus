@@ -234,11 +234,11 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationOrderPO> queryDecorationOrderByCustomer(Integer cid, String customerId){
+	public List<DecorationOrderPO> queryDecorationOrderByCustomer(Integer cid, String customerId, int company){
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_TERMINATION_STR});
 		
-		Criteria criteria = session().createCriteria(DecorationOrderPO.class).createAlias("customerPO", "customer").add(Restrictions.not(Restrictions.in("status", status)));
+		Criteria criteria = session().createCriteria(DecorationOrderPO.class).add(Restrictions.eq("company", company)).createAlias("customerPO", "customer").add(Restrictions.not(Restrictions.in("status", status)));
 		
 		if(cid != null){
 			criteria.add(Restrictions.eq("customer.id", cid));
@@ -250,11 +250,12 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public DecorationOrderPO queryDecorationOrderByVillageIdAHouseNumber(String villageId, String hoseNumber){
+	public DecorationOrderPO queryDecorationOrderByVillageIdAHouseNumber(String villageId, String hoseNumber, int company){
 		
 		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_TERMINATION_STR});
 		
 		return (DecorationOrderPO)session().createCriteria(DecorationOrderPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq("villagePO.villageId", villageId))
 				.add(Restrictions.eq("houseNumber", hoseNumber))
 				.add(Restrictions.not(Restrictions.in("status", status)))

@@ -22,9 +22,9 @@ public class RefundsAction extends BaseListAction {
 	private static final long serialVersionUID = 3474050727800940828L;
 	
 	@Autowired
-	private RefundsItemService  refundsItemService;
+	private RefundsItemService refundsItemService;
 	
-	private RefundsVO  refunds;
+	private RefundsVO refunds;
 	
 	private List<RefundsItemVO>  refundsItems;
 	

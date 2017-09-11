@@ -46,6 +46,18 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	private StorehousePO storehouse;
 	
 	private float num;
+	
+	public GoodsStorehouseStockPO() {
+		super();
+	}
+
+	public GoodsStorehouseStockPO(GoodsPO goods, ColorPO color,FormatPO format, StorehousePO storehouse) {
+		super();
+		this.goods = goods;
+		this.color = color;
+		this.format = format;
+		this.storehouse = storehouse;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

@@ -8,10 +8,14 @@
 
 package com.fanglin.personel.service;
 
-import com.fanglin.utils.Paging;
+import java.util.List;
+
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.vo.UserExperienceVO;
+
 
 public interface UserExperienceService {
 	
-	public void pageUserExperienceByUserId(Paging paging, String userId);
+	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperienceVO)throws FLException;
 	
 }

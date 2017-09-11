@@ -2,15 +2,16 @@ package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 
 @Entity
-@Table(name = "membercard", catalog = "platform")
+@Table(name = "membercard", catalog = "information")
 public class MemberCardPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1649050342892502087L;

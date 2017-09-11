@@ -126,6 +126,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		
 		decorationpaymentVO.setReferMoney((float) Math.floor(Arith.add(disprojectPrice, managePrice)));
 		decorationpaymentVO.setOrderId(orderId);
+		decorationpaymentVO.setPsId(decorationHolonomyVO.getPsId());
 		
 		decorationPaymentService.makeDecorationPayment(decorationpaymentVO, userId);
 		

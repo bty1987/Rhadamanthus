@@ -35,12 +35,14 @@ public class QuotationSmallCategoryAction extends BaseListAction {
 	@Autowired
 	private QuotationSmallCategoryService quotationSmallCategoryService;
 	
+	private QuotationSmallCategoryVO quotationSmallCategory;
+	
 	private List<QuotationSmallCategoryVO> quotationSmallCategorys;
 	
 	@Action(value="queryQuotationSmallCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryQuotationSmallCategory(){
 		
-		quotationSmallCategorys = quotationSmallCategoryService.queryQuotationSmallCategory();
+		quotationSmallCategorys = quotationSmallCategoryService.queryQuotationSmallCategory(quotationSmallCategory);
 		
 		return SUCCESS;
 	}
@@ -54,6 +56,15 @@ public class QuotationSmallCategoryAction extends BaseListAction {
 	}
 
 	
+	public QuotationSmallCategoryVO getQuotationSmallCategory() {
+		return quotationSmallCategory;
+	}
+
+	public void setQuotationSmallCategory(
+			QuotationSmallCategoryVO quotationSmallCategory) {
+		this.quotationSmallCategory = quotationSmallCategory;
+	}
+
 	public List<QuotationSmallCategoryVO> getQuotationSmallCategorys(){
 		return quotationSmallCategorys;
 	}

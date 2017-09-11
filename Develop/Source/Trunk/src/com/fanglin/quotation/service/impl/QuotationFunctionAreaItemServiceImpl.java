@@ -91,7 +91,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			
 			quotationFunctionAreaItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(quotationFunctionAreaItemVO.getQuotationFunctionAreaId()));
 			
-			if(quotationFunctionAreaItemVO.getType() == 0){
+			if(quotationFunctionAreaItemVO.getType() == 0 || quotationFunctionAreaItemVO.getType() == 5 || quotationFunctionAreaItemVO.getType() == 4){
 				quotationFunctionAreaItemPO.setQuotationItem(new QuotationItemPO(quotationFunctionAreaItemVO.getQuotationItemId()));
 				quotationFunctionAreaItemPO.setContent(null);
 			}else{

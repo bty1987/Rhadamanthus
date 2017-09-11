@@ -33,5 +33,11 @@ public interface GoodsStorehouseStockService {
 	public StorehousePO instorehouse(long gid, long cid, long fid, long shId, float num) throws FLException;
 
 	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId, float num) throws FLException;
+	
+	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO)throws FLException;
+	
+	public int splitPackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
+	
+	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
 
 }

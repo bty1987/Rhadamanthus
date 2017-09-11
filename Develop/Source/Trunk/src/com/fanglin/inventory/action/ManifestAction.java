@@ -79,14 +79,6 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryManifestItemBySiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestItemBySiid(){
-		
-		manifestItems = manifestItemService.queryManifestItemBySiid(manifestItem);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryManifestItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryManifestItemBySiids(){
 		

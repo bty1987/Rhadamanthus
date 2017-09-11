@@ -2,6 +2,10 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.inventory.vo.ColorVO;
+import com.fanglin.inventory.vo.FormatVO;
+import com.fanglin.inventory.vo.GoodsVO;
+
 
 public class SalesItemVO implements Serializable {
 

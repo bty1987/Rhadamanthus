@@ -28,7 +28,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "drawline", catalog = "platform")
+@Table(name = "drawline", catalog = "construction")
 public class DrawLinePO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;

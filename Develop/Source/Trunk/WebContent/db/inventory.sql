@@ -14,10 +14,14 @@ CREATE TABLE `assisorder` (
   `aoid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL,
   `orderId` varchar(15) NOT NULL,
+  `vid` int(11) NOT NULL,
+  `houseNumber` varchar(30) NOT NULL,
+  `supervisorId` int(11),
   `createrId` int(11) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `approverId` int(11) DEFAULT NULL,
-  `approverTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `approverTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fetchTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(2) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`aoid`)
@@ -199,6 +203,17 @@ CREATE TABLE `purchaseamount` (
   KEY `indexone` (`month`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购金额';
 
+CREATE TABLE `purchasebalance` (
+  `pbid` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `cuid` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `balance` decimal(10,3) NOT NULL,
+  `status` tinyint(2) NOT NULL,
+  `comment` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`pbid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购结算';
+
 DROP TABLE IF EXISTS `purchaseitem`;
 CREATE TABLE `purchaseitem` (
   `piid` int(11) NOT NULL AUTO_INCREMENT,
@@ -251,7 +266,8 @@ CREATE TABLE `sales` (
   `sid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(20) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `company` int(11) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  `dompany` int(11) NOT NULL,
   `vid` int(11) NOT NULL COMMENT '楼盘ID',
   `houseNumber` varchar(30) NOT NULL COMMENT '楼号',
   `cid` int(11) DEFAULT NULL COMMENT '客户ID',
@@ -312,7 +328,7 @@ CREATE TABLE `salesmanifestitem` (
   `type` tinyint(2) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`smiid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='销售采购项';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购项';
 
 DROP TABLE IF EXISTS `salespayment`;
 CREATE TABLE `salespayment` (
@@ -356,6 +372,41 @@ CREATE TABLE `salesreceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售收据表';
+
+DROP TABLE IF EXISTS `salesbalance`;
+CREATE TABLE `salesbalance` (
+  `sbid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL COMMENT '销售单',
+  `rid` int(11) DEFAULT NULL COMMENT '退货单',
+  `cuid` varchar(32) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `puid` varchar(32) DEFAULT NULL COMMENT '结算人',
+  `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
+  `venderTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '总额',
+  `balance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '预结算值',
+  `difference` decimal(10,3) DEFAULT '0.000' COMMENT '差值',
+  `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '厂商结算',
+  `pbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
+  `type` tinyint(2) NOT NULL COMMENT '类型,0:购货,1:预结算退货,2:结算退货',
+  `status` tinyint(2) NOT NULL COMMENT '状态,0:预结算,1:厂商结算,2:结算',
+  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`sbid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算';
+
+DROP TABLE IF EXISTS `salesbalanceitem`;
+CREATE TABLE `salesbalanceitem` (
+  `sbiid` int(11) NOT NULL AUTO_INCREMENT,
+  `sbid` int(11) NOT NULL COMMENT '销售结算ID',
+  `siid` int(11) NOT NULL COMMENT '销售项ID',
+  `rawCtype` tinyint(2) NOT NULL COMMENT '原结算方式, 0:底价,1:结算',
+  `rawCvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原结算值',
+  `ctype` tinyint(2) NOT NULL COMMENT '结算方式',
+  `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
+  `num` decimal(10,3) NOT NULL COMMENT '数量',
+  `total` decimal(10,3) NOT NULL COMMENT '总价',
+  PRIMARY KEY (`sbiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算项';
 
 DROP TABLE IF EXISTS `storehouse`;
 CREATE TABLE `storehouse` (

@@ -34,6 +34,8 @@ public class DecorationHolonomyVO implements Serializable {
 	
 	private Short status;
 	
+	private Long psId;
+	
 	public DecorationHolonomyVO() {
 		super();
 	}
@@ -155,6 +157,16 @@ public class DecorationHolonomyVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+	public Long getPsId() {
+		return psId;
+	}
+
+	public void setPsId(Long psId) {
+		this.psId = psId;
+	}
+
+
 
 
 }

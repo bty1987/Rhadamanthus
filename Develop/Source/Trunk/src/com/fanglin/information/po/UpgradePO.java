@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "upgrade", catalog = "upgrade")
+@Table(name = "upgrade", catalog = "information")
 public class UpgradePO implements Serializable{
 
 	private static final long serialVersionUID = -6202041259417390L;

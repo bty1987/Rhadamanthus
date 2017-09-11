@@ -1,3 +1,4 @@
+
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
@@ -22,10 +23,14 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.dao.RefundsDao;
 import com.fanglin.inventory.dao.RefundsItemDao;
+import com.fanglin.inventory.dao.SalesBalanceDao;
+import com.fanglin.inventory.dao.SalesBalanceItemDao;
 import com.fanglin.inventory.dao.SalesDao;
 import com.fanglin.inventory.dao.SalesItemDao;
 import com.fanglin.inventory.po.RefundsItemPO;
 import com.fanglin.inventory.po.RefundsPO;
+import com.fanglin.inventory.po.SalesBalanceItemPO;
+import com.fanglin.inventory.po.SalesBalancePO;
 import com.fanglin.inventory.po.SalesItemPO;
 import com.fanglin.inventory.po.SalesPO;
 import com.fanglin.inventory.vo.ColorVO;
@@ -36,6 +41,7 @@ import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -72,6 +78,11 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private SalesBalanceDao salesBalanceDao;
+
+	@Autowired
+	private SalesBalanceItemDao salesBalanceItemDao;
     //获取销售退货审批向信息
 	@Override
 	public List<ApprovalSalesRefundItemVO> queryApprovalSalesRefundItem(ApprovalVO approvalVO) throws FLException {
@@ -199,9 +210,13 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(260021 , "销售单不存在");
 		}
 		
+		float refundMoney = 0;
+		short balanceStatus = salesPO.getBalanceStatus();
+		
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 		
 		salesPaymentPO.setSales(salesPO);
+		
 		salesPaymentPO.setCreater(approvalPO.getSender());
 		salesPaymentPO.setCreaterName(approvalPO.getSender().getUserName());
 		salesPaymentPO.setCategory(salesPO.getCategory());
@@ -225,17 +240,39 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		
 		refundsDao.save(refundsPO);
 		
+		SalesBalancePO salesBalancePO = new SalesBalancePO ();
+		
+		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+				
+		salesBalancePO.setSales(salesPO);
+		salesBalancePO.setRefunds(refundsPO);
+		salesBalancePO.setCreater(approvalPO.getSender());
+		salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
+		salesBalancePO.setBalance(refundMoney);
+		salesBalancePO.setVbalance(0f);
+		salesBalancePO.setPbalance(0f);
+		salesBalancePO.setType(balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT?SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT:SalesBalancePO.TYPE_BALANCEREFUNDS_INT);
+		salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+		salesBalancePO.setComment(salesPO.getComment());
+		
+		salesBalanceDao.save(salesBalancePO);
+		
+		}
+		
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
 		
 		for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
 			
 			SalesItemPO salesItemPO = approvalSalesRefundItemPO.getSalesItem();
-			
+
+			float price=salesItemPO.getPrice();//折让价
+			float disPrice=salesItemPO.getDisPrice();//折扣价
 			RefundsItemPO refundsItemPO = new RefundsItemPO();
 			
 			float num = approvalSalesRefundItemPO.getNum();//退货数量
 			float total = approvalSalesRefundItemPO.getTotal();//退货金额
-
+			
 			BeanUtil.copyProperties(salesItemPO, refundsItemPO);
 			refundsItemPO.setRid(refundsPO.getRid());
 			refundsItemPO.setTotal(total);
@@ -245,8 +282,37 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 			refundsItemDao.save(refundsItemPO);
 			
+			if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+                 //0: 底价 , 1: 点位	
+				float cvalue=salesItemPO.getCvalue();//结算值
+				
+	             //利润 = (折让价 - 底价) * 数量
+				if (salesItemPO.getCtype()==SalesItemPO.CTYPE_RESERVEPRICE_INT) {//0: 底价
+					refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(price, cvalue), num));
+					}else if (salesItemPO.getCtype()==SalesItemPO.CTYPE_POINT_INT) { //1: 点位
+						//利润 = (折让价 - 折扣价 * (1 - 点位)) * 数量   == (折让价 - 折扣价+折扣价 *点位)* 数量
+						refundMoney =  Arith.sub(refundMoney, Arith.mul(Arith.sub(Arith.mul(disPrice, cvalue), Arith.sub(disPrice, price)), num));
+					}
+				SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO ();
+				salesBalanceItemPO.setCtype(salesItemPO.getCtype());
+				salesBalanceItemPO.setCvalue(cvalue);
+				salesBalanceItemPO.setNum(approvalSalesRefundItemPO.getNum());
+				salesBalanceItemPO.setRawCvalue(salesItemPO.getRawCvalue());
+				salesBalanceItemPO.setSalesItem(salesItemPO);
+				salesBalanceItemPO.setRawCtype(salesItemPO.getRawCtype());
+				salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
+				salesBalanceItemPO.setTotal(Arith.sub(0, approvalSalesRefundItemPO.getTotal()));
+				salesBalanceItemDao.save(salesBalanceItemPO);
+				
+			}
 		}
-
+		
+		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+			salesBalancePO.setBalance(refundMoney);
+		
+			salesBalanceDao.update(salesBalancePO);
+			}
+		
 		if (approvalSalesRefundPO.getType() != 0) {
 			salesPO.setStatus(approvalSalesRefundPO.getType());
 		}

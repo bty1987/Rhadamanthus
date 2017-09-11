@@ -1,5 +1,5 @@
 $(function(){
-	
+
 	$('#fl-statement').statement("子功能区", "报价项配置");
 
     /**
@@ -151,7 +151,13 @@ $(function(){
             modal: $("#selectItemModal").on("show.bs.modal", function(a) {}),
             btnAdd : $('#addBtn').on('click',function(){
                 functionAreaItem.modal.modal("show");
-                initQuotationItemList();
+                var _type = true;
+                initQuotationItemList(_type);
+            }),
+            addBtnMaterial : $('#addBtnMaterial').on('click',function(){
+                functionAreaItem.modal.modal("show");
+                var _type = false;
+                initQuotationItemList(_type);
             }),
             btnDel : $('#delBtn').on('click',function(){
 
@@ -351,12 +357,17 @@ $(function(){
     function successFunctionAreaItemCallback() {
         com.showAlert(com.info, "操作成功");
         initFunctionAreaItemList();
+        functionAreaItem.modal.modal("hide");
     }
 
-    //初始化报价项目的按条件分页查询弹层
-    function initQuotationItemList() {
-
-        var extraParams  = {"quotationItem.versionId": quotationItem.postParam["quotationItem.versionId"]} ;
+    //初始化工程报价项目的按条件分页查询弹层
+    function initQuotationItemList(__type) {
+        var extraParams = {};
+        if(__type){
+            extraParams  = {"quotationItem.versionId": quotationItem.postParam["quotationItem.versionId"],"quotationItem.quotationTypeId":1} ;
+        }else {
+            extraParams  = {"quotationItem.versionId": quotationItem.postParam["quotationItem.versionId"],"quotationItem.quotationTypeId":2} ;
+       }
 
         var quoDisplayFunc  = (function(){
 
@@ -420,7 +431,7 @@ $(function(){
 
             return {
                 init : function(tableId,listData){
-                    $('#' + tableId).html(null);
+                    $('#' + tableId).html("");
                     renderList(tableId,listData);
                 },
                 drawLine : function(v){
@@ -428,14 +439,22 @@ $(function(){
                 }
             }
         })();
+        var condArr = [];
+        var quotationFuncAreaPostData;
+        if(__type){
+            condArr = ['itemName', 'quotationBigCategoryEngineering', 'quotationSmallCategoryEngineering', 'quotationWorkTypeId'];
+            quotationFuncAreaPostData = "quotationFuncAreaPostData";
+        }else{
+            condArr = ['itemName', 'quotationBigCategoryMaterial', 'quotationSmallCategoryMaterial'];
+            quotationFuncAreaPostData = "_quotationFuncAreaPostData";
+        }
 
-        var condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId'];
 
         var quotationSeacher = new Searcher();
 
         quotationSeacher.init( condArr, "quoCondList", api.quotation.pageQuotationItemByVersionId, function(data){
             quoDisplayFunc.init('quoResultList', data);
-        }, "quoPagenation", "quotationFuncAreaPostData", extraParams);
+        }, "quoPagenation",quotationFuncAreaPostData , extraParams);
 
     }
 
@@ -453,5 +472,6 @@ $(function(){
             quotationClassification == functionAreaType || "普通" == functionAreaType && ("基础部分" == quotationClassification || "其他部分" == quotationClassification) ? (_params["functionAreaItems[" + i + "].functionArea.faId"] = $("#selectFunctionAreaId").val(), _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(), _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification) : bootbox.alert("不能将(" + itemName + ")添加到该功能区中")
 
         }), !jQuery.isEmptyObject(_params) && com.post(api.quotation.addFunctionAreaItem, _params, successFunctionAreaItemCallback));
+
     }
 });

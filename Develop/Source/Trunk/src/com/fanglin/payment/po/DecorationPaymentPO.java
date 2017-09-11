@@ -27,7 +27,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "decorationPayment", catalog = "platform")
+@Table(name = "decorationPayment", catalog = "payment")
 public class DecorationPaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 1341114461146L;
@@ -79,6 +79,8 @@ public class DecorationPaymentPO implements Serializable {
 	public static final String PAYMENTSTATUS_PASS_STR = "审批通过";
 	
 	public static final String PAYMENTSTATUS_REFUND_STR = "申请退款";
+	
+	public static final int CHARSCALE_COUNT_INT = 4;
 
 	private long autoId;
 	

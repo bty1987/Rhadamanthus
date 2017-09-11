@@ -19,11 +19,8 @@ jQuery(function($) {
 	};
 	
 	var drawLineDeploymentPostData = {};
-
-	var qualityInfo = {"supervisor":"工程部监理", "chan":"铲大白工人", "putline":"放线小组", "waterwayCircuitPower":"水暖,电,力", "bricklay":"瓦工", "carpent":"木工", "oil":"油工", "cleaning":"保洁工"};
-	var qualityIds = {"supervisor":"", "chan":"", "putline":"", "waterwayCircuitPower":"", "bricklay":"", "carpent":"", "oil":"", "cleaning":""};
-	var qualityFlag = {"supervisor":false, "chan":false, "putline":false, "waterwayCircuitPower":false, "bricklay":false, "carpent":false, "oil":false, "cleaning":false};
-
+	var qualityInfo = {"supervisor":"工程部监理"};
+	var qualityIds = {"supervisor":""};
 
 	drawLineDeployment.saveBtn = $("#saveBtn").on("click", saveData);
 
@@ -112,17 +109,6 @@ jQuery(function($) {
 		if(qualityName == "supervisor"){
 			options["duty"] = qualityInfo[qualityName];
 			queryUserNameUrl = api.personel.queryUserForNameByDuty;
-		}else if(qualityName == "waterwayCircuitPower"){
-			queryUserNameUrl = api.personel.queryUserForNameByDutysAO;
-			dutys = qualityInfo[qualityName].split(",");
-			for(var i=0;i<dutys.length;i++){
-				options["dutysO["+i+"]"] = dutys[i]+"工";
-			}
-			options["dutys[0]"] = "质检";
-		}else{
-			options["dutys[0]"] = qualityInfo[qualityName];
-			options["dutys[1]"] = "质检";
-			queryUserNameUrl = api.personel.queryUserForNameByDutys;
 		}
 		com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
 	}
@@ -274,7 +260,7 @@ jQuery(function($) {
 			
 			for(var qualityName in qualityInfo){
 				if(res.construction[qualityName+"QualityName"] != null){
-					com.updateChosen(qualityName+"Quality", res.construction[qualityName + "QualityId"], res.construction[qualityName + "QualityName"])
+					com.updateChosen(qualityName+"Quality", res.construction[qualityName + "QualityId"], res.construction[qualityName + "QualityName"]);
 				}
 				qualityIds[qualityName] = res.construction[qualityName+"QualityId"];
 			}
@@ -329,16 +315,16 @@ jQuery(function($) {
 		var options = {
 			"construction.orderId": drawLineDeploymentPostData["orderId"],
 		};
-		
+
 		for(var qualityId in qualityIds){
 			
 			var $id = $('#' + qualityId + 'Quality').val();
-			
+
 			if(!$id){
 				com.showTips($("#"+qualityId+"Quality_chosen"), "内容不能为空");
 				return;
 			}
-			
+
 			options["construction."+qualityId+"QualityId"] = $id;
 		}
 		com.post(api.construction.updateConstructionByOrderId, options, function(res){
@@ -348,6 +334,10 @@ jQuery(function($) {
 		
 		drawLineDeployment.drawLineDeploymentModal.modal("hide");
 	}
+
+	drawLineDeployment.drawLineDeploymentModal.on('hide.bs.modal', function(){
+		com.updateChosen("supervisorQuality", "", "");
+	});
 
 	drawLineDeployment.drawLineApplyModal.on('shown.bs.modal', function(e){
 		initPlan();

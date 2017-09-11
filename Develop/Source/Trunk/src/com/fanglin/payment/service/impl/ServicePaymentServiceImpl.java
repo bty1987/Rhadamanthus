@@ -243,7 +243,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		decorationHolonomyDao.update(decorationHolonomy);
 
 		//查询该客户是否有记录,如有进行更新,否则添加
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrder.getCustomerPO().getCustomerId());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrder.getCustomerPO().getCustomerId(),decorationOrder.getCompany());
 		AdvancePaymentPO advancePayment = new AdvancePaymentPO(new CustomerPO());
 		if(advancePaymentPO != null){
 			//如果有记录,需要将materialBalance – 原有主材预付款金额 + 新的主材预付款金额 ;然后更新

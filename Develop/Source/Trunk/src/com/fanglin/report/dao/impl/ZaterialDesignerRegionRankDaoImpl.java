@@ -35,18 +35,20 @@ public class ZaterialDesignerRegionRankDaoImpl extends DaoImpl<ZaterialDesignerR
 	}
 
 	@Override
-	public ZaterialDesignerRegionRankPO queryZaterialDesignerRegionRankByRegionIdInit(String regionId){
+	public ZaterialDesignerRegionRankPO queryZaterialDesignerRegionRankByRegionIdInit(String regionId,int company){
 		return (ZaterialDesignerRegionRankPO) session().createCriteria(ZaterialDesignerRegionRankPO.class)
 				.add(Restrictions.eq(ZaterialDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, regionId))
+				.add(Restrictions.eq(ZaterialDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerRegionRankPO.COLUMN_STATUS_STR, ZaterialDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZaterialDesignerRegionRankPO> queryZaterialDesignerRegionRankForTop(int top){
+	public List<ZaterialDesignerRegionRankPO> queryZaterialDesignerRegionRankForTop(int top,int company){
 		return session().createCriteria(ZaterialDesignerRegionRankPO.class)
 				.add(Restrictions.ne(ZaterialDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, ""))
+				.add(Restrictions.eq(ZaterialDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(ZaterialDesignerRegionRankPO.COLUMN_STATUS_STR, ZaterialDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(ZaterialDesignerRegionRankPO.COLUMN_RANK_STR))
 				.setFirstResult(0).setMaxResults(top).list();

@@ -30,6 +30,8 @@ public class SalesVO implements Serializable {
 	
 	private Integer company;
 	
+	private String dompanys;
+	
 	private UserVO salesman;
 	
 	private DepartmentVO dept;
@@ -146,6 +148,14 @@ public class SalesVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getDompanys() {
+		return dompanys;
+	}
+
+	public void setDompanys(String dompanys) {
+		this.dompanys = dompanys;
 	}
 
 	public UserVO getSalesman() {

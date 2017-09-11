@@ -58,6 +58,26 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 		paging.setData(approveUserVOs);
 	}
 
+	@Override
+	public List<ApproveUserVO> queryApprovalUserByType(ApproveUserVO userApproveVO, int company) {
+
+		List<ApproveUserPO> approveUserPOs = approveUserDao.queryApprovalUserByType(userApproveVO.getType(),company);
+		
+		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
+		
+		for (ApproveUserPO approveUserPO : approveUserPOs) {
+		
+			ApproveUserVO approveUserVO = new ApproveUserVO();
+			BeanUtil.copyProperties(approveUserPO,approveUserVO,Arrays.asList("user"));
+			approveUserVO.setUser(new UserVO());
+			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept"));
+			
+			approveUserVOs.add(approveUserVO);
+		}
+		
+		return approveUserVOs;
+	}
+	
 	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,	ApproveUserVO approveUserVO,int company) {
 		Paging paging = new Paging();
 		paging.setPage(0);
@@ -94,6 +114,8 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 		UserPO user= userDao.queryUserByUserId(approveUserVO.getUser().getUserId());
 		approveUserPO.setType(approveUserVO.getType());
 		approveUserPO.setUser(user);
+		approveUserPO.setComment(approveUserVO.getComment());
+		
 		approveUserDao.save(approveUserPO);
 
 		return 0;

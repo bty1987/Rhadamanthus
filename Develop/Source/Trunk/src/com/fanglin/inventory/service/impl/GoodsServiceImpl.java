@@ -23,10 +23,15 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.dao.AssisTypeDao;
 import com.fanglin.inventory.dao.GoodsDao;
+import com.fanglin.inventory.dao.GoodsPackageDao;
 import com.fanglin.inventory.po.AssisTypePO;
+import com.fanglin.inventory.po.ColorPO;
+import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.inventory.po.GoodsPackagePO;
 import com.fanglin.inventory.service.GoodsService;
 import com.fanglin.inventory.vo.AssisTypeVO;
+import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -41,6 +46,9 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Autowired
 	private AssisTypeDao assisTypeDao;
+	
+	@Autowired
+	private GoodsPackageDao goodsPackageDao;
 	
 	@Override
 	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException{
@@ -195,6 +203,8 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		goodsDao.save(goodsPO);
 		
+		goodsPO.getGid();
+		
 		return 0;
 	}
 
@@ -235,6 +245,74 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setStatus(goodsVO.getStatus());
 		
 		goodsDao.update(goodsPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int addPackage(GoodsVO goodsVO,List<GoodsPackageVO> goodsPackageVOs, int company)throws FLException {
+
+		GoodsPO goodsPO;
+		
+		if(goodsVO.getAssisType().getAtid()!=null){
+			goodsPO = new GoodsPO(new AssisTypePO());
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
+			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+			
+		}else{
+			goodsPO = new GoodsPO();
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
+		}
+		
+		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
+	    
+		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
+		
+		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
+		goodsPO.setType(GoodsPO.TYPE_SUIT_INT);
+		goodsPO.setCompany(company);
+		
+		goodsDao.save(goodsPO);
+		
+		goodsPO = goodsDao.get(goodsPO.getGid());
+		
+		if(goodsPO == null){
+			throw new FLException(260004,"商品不存在");
+		}
+		
+		String brand = goodsPO.getBrand();
+		
+		GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(),new ColorPO(),new FormatPO());
+		
+		for (GoodsPackageVO goodsPackageVO : goodsPackageVOs) {
+			
+			if(goodsPackageVO.getGoods().getGid() == null){
+				throw new FLException(260004,"商品不存在");
+			}
+			
+			String brandPackage = goodsDao.get(goodsPackageVO.getGoods().getGid()).getBrand();
+			
+			short typePackage = goodsDao.get(goodsPackageVO.getGoods().getGid()).getType();
+			
+			if(typePackage == 1){
+				throw new FLException(260043,"套餐归属商品不可为套餐");
+			}
+			
+			if(!brand.equals(brandPackage)){
+				throw new FLException(260044,"品牌不一致");
+			}
+			
+			BeanUtil.copyProperties(goodsPackageVO, goodsPackagePO, Arrays.asList("pid","goods","color","format"));
+			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(goodsPackageVO.getColor(), goodsPackagePO.getColor());
+			BeanUtil.copyProperties(goodsPackageVO.getFormat(), goodsPackagePO.getFormat());
+			
+			goodsPackagePO.setPid(goodsPO.getGid());
+			
+			goodsPackageDao.save(goodsPackagePO);
+			
+		}
 		
 		return 0;
 	}
