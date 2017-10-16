@@ -1,0 +1,276 @@
+<!--<div class="container-fluid">-->
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-3 form-horizontal">
+                <div>
+                    <div class="portlet-title">
+                        <div class="caption">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-body" id="left">
+                    <div class="widget-main" style="border-right: 1px solid #c5d0dc;">
+
+                        <div class="form-group">
+                            <label for="goodsName" class="col-sm-3 control-label no-padding-right">商品名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="category" class="col-sm-3 control-label no-padding-right">品类</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="category" readonly>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="brand" class="col-sm-3 control-label no-padding-right">品牌</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="brand" readonly>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="measurementUnit" class="col-sm-3 control-label no-padding-right">单位</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="measurementUnit" readonly>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="color" class="col-sm-3 control-label no-padding-right">颜色</label>
+                            <div class="col-md-9">
+                                <select class="col-md-10" id="color" data-placeholder="请输入颜色" data-toggle="popover" data-trigger="manual">
+
+                                </select><i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="format" class="col-sm-3 control-label no-padding-right">规格</label>
+                            <div class="col-md-9">
+                                <select class="col-md-10" id="format" data-placeholder="请输入规格" data-toggle="popover" data-trigger="manual">
+
+                                </select><i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase" class="col-sm-3 control-label no-padding-right">售价</label>
+                            <div class="col-md-9">
+                                <select class="col-md-10" id="purchase" data-placeholder="请输入售价" data-toggle="popover" data-trigger="manual" >
+
+                                </select><i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount" class="col-sm-3 control-label no-padding-right">折扣</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="discount" readonly>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="disPrice" class="col-sm-3 control-label no-padding-right">折扣价</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="disPrice">
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="postDis" class="col-sm-3 control-label no-padding-right">折让</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="postDis">
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selling" class="col-sm-3 control-label no-padding-right">折让价</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="selling">
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num" class="col-sm-3 control-label no-padding-right">数量</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="num">
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total" class="col-sm-3 control-label no-padding-right">总价</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="total" readonly>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="remark" class="col-sm-3 control-label no-padding-right">备注</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="remark">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-10 hide" data-toggle="popover" data-trigger="manual" id="bid">
+                            </div>
+                        </div>
+
+                        <div class="form-group buttons row-fluid col-xs-12">
+                            <button id="add" type="button" class="btn btn-primary pull-left col-xs-4">
+
+                                <span>添加</span>
+                            </button>
+                            <button id="submit" type="button" class="btn btn-success pull-left col-xs-4">
+
+                                <span>提交</span>
+                            </button>
+                            <button id="refresh" type="button" class="btn btn-danger pull-left col-xs-4">
+
+                                <span>重置</span>
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!--补充内容-->
+            <div class="tab-content col-xs-9" style="border: 0;">
+                <div class="form-horizontal">
+                    <div>
+                        <div class="caption">
+                        </div>
+                    </div>
+                    <div class="widget-body" style="border: 0px;">
+                        <div class="widget-main" id="searchInfo" style="border-bottom: 1px solid #c5d0dc">
+                            <div class="form-group">
+                                <div class="lable_input col-xs-4">
+                                    <label for="orderId" class="col-sm-3 control-label no-padding-right">订单号</label>
+                                    <div class="col-sm-9">
+                                        <input id="orderId" type="text" class="order_inputinfo col-xs-10 col-sm-10"
+                                               placeholder="请输入订单号"/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="customerName" class="col-sm-3 control-label no-padding-right">客户姓名</label>
+                                    <div class="col-sm-9">
+                                        <input id="customerName" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="salesmanName" class="col-sm-3 control-label no-padding-right">渠道</label>
+                                    <div class="col-sm-9">
+                                        <input id="salesmanName" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="lable_input col-xs-4">
+                                    <label for="instorer" class="col-sm-3 control-label no-padding-right">驻店</label>
+                                    <div class="col-sm-9">
+                                        <input id="instorer" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="guider" class="col-sm-3 control-label no-padding-right">导购</label>
+                                    <div class="col-sm-9">
+                                        <input id="guider" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="brand" class="col-sm-3 control-label no-padding-right">品牌</label>
+                                    <div class="col-sm-9">
+                                        <input id="brands" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <i class="icon-asterisk"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="lable_input col-xs-4">
+                                    <label for="coupon" class="col-sm-3 control-label no-padding-right">券值</label>
+                                    <div class="col-sm-9">
+                                        <input id="coupon" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="couponInfo" class="col-sm-3 control-label no-padding-right">券信息</label>
+                                    <div class="col-sm-9">
+                                        <select id="couponInfo" class="col-xs-10 col-sm-10"></select>
+                                    </div>
+
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="maling" class="col-sm-3 control-label no-padding-right">抹零</label>
+                                    <div class="col-sm-9">
+                                        <input id="maling" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="lable_input col-xs-4">
+                                    <label for="totals" class="col-sm-3 control-label no-padding-right">总额</label>
+                                    <div class="col-sm-9">
+                                        <input id="totals" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly/>
+                                    </div>
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="orderAddr" class="col-sm-3 control-label no-padding-right">楼盘地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="orderAddr" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly/>
+                                    </div>
+                                </div>
+                                <div class="lable_input col-xs-4">
+                                    <label for="comment" class="col-sm-3 control-label no-padding-right">备注</label>
+                                    <div class="col-sm-9">
+                                        <input id="comment" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--已添加的主材-->
+                <div class="form-horizontal">
+
+                    <ul id="salesItemList" class="widget-main col-xs-11" style="overflow: auto;height: 520px;width: 98%;">
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--</div>-->
+<div id="viewPopUp" class="portlet box"></div>
+<script src="js/sales/createSales.js"></script>
+

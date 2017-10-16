@@ -1,0 +1,50 @@
+<div class="page-content">
+    <div class="row">
+		<div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix" style="margin-left: 12px"></div>
+        
+        
+            <div class="clearfix" id="resultList"></div>
+            <div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div id="layerAdd" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+
+
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">报价类型<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="m-wrap col-xs-6" name="name" id="quoteTypeName" rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+    $(function(){
+        $.getScript('js/production/quoteType.js');
+    });
+</script>
+

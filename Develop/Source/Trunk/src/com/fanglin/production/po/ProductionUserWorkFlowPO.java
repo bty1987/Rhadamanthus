@@ -22,11 +22,12 @@ public class ProductionUserWorkFlowPO implements Serializable{
 
 	private static final long serialVersionUID = -7296398551060429237L;
 	
+	
 	private long puwfid;
 	
-	private ProductionWorkFlowPO pwfid;
+	private ProductionWorkFlowPO  productionworkflow;
 	
-	private UserPO ouid;
+	private UserPO operator;
 	
 	private Timestamp operateTime;
 
@@ -34,10 +35,10 @@ public class ProductionUserWorkFlowPO implements Serializable{
 		super();
 	}
 
-	public ProductionUserWorkFlowPO(ProductionWorkFlowPO pwfid, UserPO ouid) {
+	public ProductionUserWorkFlowPO(ProductionWorkFlowPO productionworkflow, UserPO operator) {
 		super();
-		this.pwfid = pwfid;
-		this.ouid = ouid;
+		this.productionworkflow = productionworkflow;
+		this.operator = operator;
 	}
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -49,30 +50,32 @@ public class ProductionUserWorkFlowPO implements Serializable{
 	public void setPuwfid(long puwfid) {
 		this.puwfid = puwfid;
 	}
-
+			
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pwfid", referencedColumnName = "pwfid")
-	public ProductionWorkFlowPO getPwfid() {
-		return pwfid;
+	public ProductionWorkFlowPO getProductionworkflow() {
+		return productionworkflow;
 	}
 
-	public void setPwfid(ProductionWorkFlowPO pwfid) {
-		this.pwfid = pwfid;
+	public void setProductionworkflow(ProductionWorkFlowPO productionworkflow) {
+		this.productionworkflow = productionworkflow;
 	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ouid", referencedColumnName = "uid")
-	public UserPO getOuid() {
-		return ouid;
+	public UserPO getOperator() {
+		return operator;
 	}
-
-	public void setOuid(UserPO ouid) {
-		this.ouid = ouid;
+		
+	public void setOperator(UserPO operator) {
+		this.operator = operator;
 	}
+	
 	@Column(name = "operateTime")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
-
+	
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}

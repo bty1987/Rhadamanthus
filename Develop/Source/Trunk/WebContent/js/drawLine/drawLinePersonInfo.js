@@ -20,7 +20,7 @@ jQuery(function($) {
 
 	personInfo.personInfoModal = $("#personInfoModal");
 
-	com.post(api.ds.constructionInfo, {}, function(res){
+	com.post(api.ds.construction, {}, function(res){
 		$("#scheduleSearch").bindData(res.constructionSchedule, "key", "value", true);
 	});
 

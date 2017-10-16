@@ -62,10 +62,10 @@ public class MemberCardAction  extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "turnPointsForMemberCard", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String turnPointsForMemberCard() throws FLException{
+	@Action(value = "tranMemberCard", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranMemberCard() throws FLException{
 		
-		memberCardService.turnPointsForMemberCard(outMemberCard,inMemberCard,memberDetail,queryUserId());
+		memberCardService.tranMemberCard(outMemberCard,inMemberCard,memberDetail,queryUserId());
 		
 		return SUCCESS;
 	}

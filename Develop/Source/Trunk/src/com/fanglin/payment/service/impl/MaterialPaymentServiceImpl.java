@@ -27,6 +27,7 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
+import com.fanglin.information.service.MemberCardService;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderRefundDao;
 import com.fanglin.material.po.MaterialSubOrderPO;
@@ -69,6 +70,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private AdvancePaymentService advancePaymentService;
+	
+	@Autowired
+	private MemberCardService memberCardService;
 	
 	@Autowired
 	private MaterialSubOrderDao materialSubOrderDao;
@@ -272,28 +276,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		return materialPaymentVOs;
 	}
 	
-	@Override
-	public float queryMaterialPaymentForCouponByMsoId(MaterialPaymentVO materialPaymentVO){
-		
-		float coupon = 0;
-		
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoId(materialPaymentVO.getMsoId(), null);
-		
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			if(materialPaymentPO.getPaymentType() != MaterialPaymentPO.PAYMENTTYPE_TYPE_INIT_INT){
-				
-				MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
-				
-				if(materialReceiptPO != null){
-					coupon = Arith.add(coupon, materialReceiptPO.getCoupon());
-				}
-			}
-		}
-		
-		materialPaymentVO.setCoupon(coupon);
-		
-		return coupon;
-	}
 
 	@Override
 	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId) {
@@ -589,10 +571,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 						if(materialSubOrderPO.getDesignerFlag() == MaterialSubOrderPO.DESIGNERFLAG_TYPE_DESIGNER_INT){
 							
 							if(materialBrandName.contains("正林") && !"正林理石".equals(materialBrandName)){
-								materialReportService.updateZaterialDesignerCount(salesmanId,salesmanName, departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计师业绩
-								materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
-								materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
-								
 								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
 								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
 								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
@@ -625,6 +603,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialPaymentDao.update(materialPaymentPO);
 			
 			materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+			
+			//生成会员卡积分
+			memberCardService.IncreaseMemberCardIntegraldivider(materialSubOrderPO, materialPaymentPO, userPO);
+
 		}
 		
 		return 0;
@@ -804,10 +786,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 						if(materialSubOrderPO.getDesignerFlag() == MaterialSubOrderPO.DESIGNERFLAG_TYPE_DESIGNER_INT){
 							
 							if(materialBrandName.contains("正林") && !"正林理石".equals(materialBrandName)){
-								materialReportService.updateZaterialDesignerCount(salesmanId, salesmanName, departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计师业绩
-								materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
-								materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
-								
 								materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
 								materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
 								materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
@@ -830,6 +808,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialPaymentDao.update(materialPaymentPO);
 			
 			materialReceiptVO.setMrId(materialReceiptPO.getMrId());
+			
+			//生成会员卡积分
+			memberCardService.IncreaseMemberCardIntegraldivider(materialSubOrderPO, materialPaymentPO, userPO);
 		}
 		
 		return 0;
@@ -858,6 +839,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		Float cash = materialPaymentVO.getCash();
 		Float bank = materialPaymentVO.getBank();
+		Float checkv = materialPaymentVO.getCheckv();
+		Float installment = materialPaymentVO.getInstallment();
+		Float accounts = materialPaymentVO.getAccounts();
 		Float coupon = materialPaymentVO.getCoupon();
 		
 		int msoType = materialSubOrderPO.getMsoType();
@@ -877,6 +861,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
 			
 			real = Arith.add(real, bank);
+		}
+		if(checkv != null && checkv != 0){
+			materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
+			materialReceiptPO.setCheckvBankName(materialPaymentVO.getCheckvBankName());
+			real = Arith.add(real, materialPaymentVO.getCheckv());
+		}
+		if(installment != null && installment != 0){
+			materialReceiptPO.setInstallment(materialPaymentVO.getInstallment());
+			materialReceiptPO.setInstallmentBankName(materialPaymentVO.getInstallmentBankName());
+			real = Arith.add(real, materialPaymentVO.getInstallment());
+		}
+		if(accounts != null && accounts != 0){
+			materialReceiptPO.setAccounts(materialPaymentVO.getAccounts());
+			materialReceiptPO.setAccountsBankName(materialPaymentVO.getAccountsBankName());
+			real = Arith.add(real, materialPaymentVO.getAccounts());
 		}
 		if(coupon != null && coupon != 0f){
 			materialReceiptPO.setCoupon(coupon);
@@ -943,10 +942,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				if(materialSubOrderPO.getDesignerFlag() == MaterialSubOrderPO.DESIGNERFLAG_TYPE_DESIGNER_INT){
 					
 					if(materialBrandName.contains("正林") && !"正林木门".equals(materialBrandName)){
-						materialReportService.updateZaterialDesignerCount(salesmanId, salesmanName, departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计师业绩
-						materialReportService.updateZaterialDesignerDepartmentCount(departmentId, departmentName, regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计部门业绩
-						materialReportService.updateZaterialDesignerRegionCount(regionId, regionName, materialBrandName, count, currentTimeStr); // 统计正林设计中心业绩
-						
 						materialRankService.updateZaterialDesignerRank(salesmanId, salesmanName, count, currentTimeStr,materialSubOrderPO.getCompany());
 						materialRankService.updateZaterialDesignerDepartmentRank(departmentId, departmentName, count, currentTimeStr,materialSubOrderPO.getCompany());
 						materialRankService.updateZaterialDesignerRegionRank(regionId, regionName, count, currentTimeStr,materialSubOrderPO.getCompany());
@@ -978,6 +973,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentDao.update(materialPaymentPO);
 		
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+		
+		//扣除会员卡积分
+		memberCardService.MinusMemberCardIntegraldivider(materialSubOrderPO, materialPaymentPO, userPO);
 		
 		return 0;
 	}

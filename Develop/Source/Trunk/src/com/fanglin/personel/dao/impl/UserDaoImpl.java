@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -34,8 +34,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		query.add(Restrictions.eq("company", company));
 		
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		query.asc("userId");
 		
+		query.asc("userId");
+	
 		return query.list();
 	}
 	
@@ -55,52 +56,56 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
-		query.alias("role", "role");
-		
 		query.add(Restrictions.eq("company", company));
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
+			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
 		}
 		
 		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
 		
+		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+	
 		return query.list();
+
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName, String duty){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
-		query.alias("role", "role");
-		
 		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
+			
+			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
+				
 		}
+
+		query.add(Restrictions.like("duty", duty, MatchMode.START));
 		
-		query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
 		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-	
+		
+		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+		
 		return query.list();
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
-		query.alias("role", "role");
-		
-		
 		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
+			
+			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
+		
 		}
 		
 		Criterion criterionA = null;
@@ -108,9 +113,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(dutysA != null){
 			for(String duty: dutysA){
 				if(criterionA == null){
-					criterionA = Restrictions.ilike("duty", duty, MatchMode.ANYWHERE);
+					criterionA = Restrictions.like("duty", duty, MatchMode.START);
 				} else {
-					criterionA = Restrictions.and(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE), criterionA);
+					criterionA = Restrictions.and(Restrictions.like("duty", duty, MatchMode.START), criterionA);
 				}
 			}
 		}
@@ -120,9 +125,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(dutysO != null){
 			for(String duty: dutysO){
 				if(criterionO == null){
-					criterionO = Restrictions.ilike("duty", duty, MatchMode.ANYWHERE);
+					criterionO = Restrictions.like("duty", duty, MatchMode.START);
 				} else {
-					criterionO = Restrictions.or(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE), criterionO);
+					criterionO = Restrictions.or(Restrictions.like("duty", duty, MatchMode.START), criterionO);
 				}
 			}
 		}
@@ -134,181 +139,25 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(criterionO != null){
 			query.add(criterionO);
 		}
-
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
 	
+		query.add(Restrictions.eq("status", "在职"));
+		
+		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+		
 		return query.list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
-		return session().createCriteria(UserPO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("identity", ident)).list();
+		
+		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone),Restrictions.eq("identity", ident))).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty){
 		return createCriteria(UserPO.class).add(Restrictions.eq("duty", duty)).add(Restrictions.eq("dept.deptId", deptId)).list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<UserPO> queryUserByDutys(List<String> dutys){
-
-		Criteria query = session().createCriteria(UserPO.class);
-		
-		query.createAlias("role", "role");
-		
-		for(String duty : dutys){
-			query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
-		}
-
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
-		return query.list();
-	}
-	
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADutys(Paging paging, String pinyinName, List<String> dutys,Integer company){
-
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.alias("role", "role");
-		
-		query.add(Restrictions.eq("company", company));
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		for(String duty: dutys){
-			query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
-		}
-
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-	
-		return query.list();
-	}
-	
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADutyADeptId(Paging paging, String pinyinName, String duty, String deptId,Integer  company){
-
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.alias("role", "role");
-		
-		query.add(Restrictions.eq("company", company));
-		
-		query.add(Restrictions.eq("dept.deptId", deptId));
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
-		return query.list();
-	}
-	
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADutysADeptId(Paging paging, String pinyinName, List<String> dutys, String deptId,Integer company){
-
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.alias("role", "role");
-		
-		query.add(Restrictions.eq("company", company));
-		
-		query.add(Restrictions.eq("dept.deptId", deptId));
-
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		for(String duty : dutys){
-			query.add(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE));
-		}
-
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		
-		return query.list();
-	}
-
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId,Integer company){
-
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.alias("role", "role");
-		
-		query.add(Restrictions.eq("company", company));
-		
-		query.add(Restrictions.eq("dept.deptId", deptId));
-
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-
-		Criterion criterionA = null;
-
-		if(dutysA != null){
-			for(String duty : dutysA){
-				if(criterionA == null){
-					criterionA = Restrictions.ilike("duty", duty, MatchMode.ANYWHERE);
-				} else {
-					criterionA = Restrictions.and(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE), criterionA);
-				}
-			}
-		}
-
-		Criterion criterionO = null;
-
-		if(dutysO != null){
-			for(String duty : dutysO){
-				if(criterionO == null){
-					criterionO = Restrictions.ilike("duty", duty, MatchMode.ANYWHERE);
-				} else {
-					criterionO = Restrictions.or(Restrictions.ilike("duty", duty, MatchMode.ANYWHERE), criterionO);
-				}
-			}
-		}
-
-		if(criterionA != null){
-			query.add(criterionA);
-		}
-
-		if(criterionO != null){
-			query.add(criterionO);
-		}
-	
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
-		return query.list();
-	}
-	
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType,Integer company) {
-		
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.add(Restrictions.eq("company", company));
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		query.add(Restrictions.ilike("deptType", deptType, MatchMode.ANYWHERE));
-		query.add(Restrictions.eq("status", "在职"));
-		query.add(Restrictions.ne("role.roleId", UserPO.SUPER_USERID_STR));
-		
-		return query.list();
 	}
 	
 	@Override
@@ -328,7 +177,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByUserName(String userName){
-		return session().createCriteria(UserPO.class).add(Restrictions.ilike("userName", userName, MatchMode.ANYWHERE)).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.like("userName", userName, MatchMode.START)).list();
 	}
 
 	@Override

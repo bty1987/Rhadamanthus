@@ -63,7 +63,7 @@ public class DDAction extends BaseListAction {
 	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String queryDDDepartment() throws FLException{
 		
-		departments = departmentDDService.queryDepartment(department.getId(),queryCompany());
+		departments = departmentDDService.queryDepartment(queryCompany());
 		
 	  	return SUCCESS;
 	}

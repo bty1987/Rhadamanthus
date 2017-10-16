@@ -16,19 +16,9 @@ $.extend(api.index, {
     materialOrderPreBalanceDetailIndex: {url: "/views/material/materialOrderPreBalanceDetail.html"},
     materialOrderPostBalanceIndex: {url: "/views/material/materialOrderPostBalance.html"},
     materialOrderPostBalanceDetailIndex: {url: "/views/material/materialOrderPostBalanceDetail.html"},
-    materialOutsideIndex: {url: "/views/material/materialOutside.html"},
 
-    materialInsideIndex: {url: "/views/material/materialInside.html"},
-    materialInsidePaymentIndex: {url: "/views/payment/materialInsidePayment.html"},
-    materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
 });
 
-$.extend(api.ds, {
-    materialInfo: {url: "ds/materialInfo.json", demo: true},
-    bankType: {url: "ds/bankType.json", demo: true},
-    couponType: {url: "ds/couponType.json", demo: true},
-    approvalType: {url: "ds/approvalType.json", demo: true},
-});
 
 $.extend(api, {material: {
     queryMaterialBrand: {url: "queryMaterialBrand.do"},
@@ -43,12 +33,6 @@ $.extend(api, {material: {
     queryMaterialBrandRightForLogin: {url: "queryMaterialBrandRightForLogin.do", demo: true},
     queryMaterialBrandRightForBrand: {url: "queryMaterialBrandRightForLogin.do", demo: true},
     updateMaterialBrandRight: {url: "updateMaterialBrandRight.do"},
-
-    pageMaterialInside: {url: "pageMaterialInside.do"},
-    pageMaterialInsideByUserId: {url: "pageMaterialInsideByUserId.do"},
-    addMaterialInside: {url: "addMaterialInside.do"},
-    updateMaterialInside: {url: "updateMaterialInside.do"},
-    deleteMaterialInsideByMiIds: {url: "deleteMaterialInsideByMiIds.do"},
 
     pageMaterialModel: {url: "pageMaterialModel.do", demo: true},
     queryMaterialModel: {url: "queryMaterialModel.do"},
@@ -73,18 +57,12 @@ $.extend(api, {material: {
     vpostMaterialSubOrderBalance: {url: "vpostMaterialSubOrderBalance.do"},
     postMaterialSubOrderBalance: {url: "postMaterialSubOrderBalance.do"},
 
-    pageMaterialOutside: {url: "pageMaterialOutside.do", demo: true},
-    pageMaterialOutsideByUserId: {url: "pageMaterialOutsideByUserId.do", demo: true},
-    addMaterialOutside: {url: "addMaterialOutside.do"},
-    updateMaterialOutside: {url: "updateMaterialOutside.do"},
-    confirmMaterialOutsideByIds: {url: "confirmMaterialOutsideByIds.do"},
-    deleteMaterialOutsideByIds: {url: "deleteMaterialOutsideByIds.do"},
-
     pageMaterialSubOrder: {url: "pageMaterialSubOrder.do"},
     pageMaterialSubOrderByUserId: {url: "pageMaterialSubOrderByUserId.do", demo: true},
     pageMaterialSubOrderByOrderId: {url: "pageMaterialSubOrderByOrderId.do"},
     pageMaterialSubOrderByOrderIdADeptId: {url: "pageMaterialSubOrderByOrderIdADeptId.do"},
     queryMaterialSubOrderByMsoId: {url: "queryMaterialSubOrderByMsoId.do", demo: true},
+    queryMaterialSubOrderByMsoNo : {url:"queryMaterialSubOrderByMsoNo.do",demo : true},
     addMaterialSubOrder: {url: "addMaterialSubOrder.do"},
     updateMaterialSubOrderForCoupon: {url: "updateMaterialSubOrderForCoupon.do"},
     updateMaterialSubOrderForMaling: {url: "updateMaterialSubOrderForMaling.do"},

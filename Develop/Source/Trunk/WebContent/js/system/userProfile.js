@@ -45,7 +45,7 @@ jQuery(function($) {
 		initUser();
 	});
 	
-	$("#save").on("click",function(){
+	$("#saveBtn").on("click",function(){
 	
 		if(com.validate()){
 			return;
@@ -63,7 +63,7 @@ jQuery(function($) {
 			"userInfo.email":$("#email").val()
 		};
 
-		com.post(api.personel.saveUserForBaseInfo, parm, function(res){
+		com.post(api.personel.updateUserForBaseInfo, parm, function(res){
 			userProfile.userPhoto = $("#picture").val();
 			userProfile.age = $("#age").val();
 			userProfile.phone = $("#telephone").val();

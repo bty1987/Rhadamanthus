@@ -77,7 +77,7 @@ $(function(){
 				$statusSwitch.prop("checked") ? (updateStatus(v.sdiId, 1, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.sdiId, 0,function(){$statusSwitch.prop("checked")}));
 			});
 
-			v.discount && $btnDiscount.prop("checked", true);
+			v.discount && $discountSwitch.prop("checked", true);
 			$discountSwitch.switchBtn("discount-lbl").on("click",function() {
 				$discountSwitch.prop("checked") ? (updateDiscount(v.sdiId, 1, function(){$discountSwitch.removeAttr("checked")})) : (updateDiscount(v.sdiId, 0,function(){$discountSwitch.prop("checked")}));
 			});

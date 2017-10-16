@@ -3,6 +3,7 @@ package com.fanglin.production.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -31,7 +32,7 @@ public class QuoteTypeDaoImpl extends DaoImpl<QuoteTypePO> implements QuoteTypeD
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<QuoteTypePO> queryQuoteType() {
-		return session().createCriteria(QuoteTypePO.class).list();
+		return session().createCriteria(QuoteTypePO.class).add(Restrictions.eq(QuoteTypePO.COLUMN_STATUS_STR, QuoteTypePO.STATUS_ENABLE_SHORT)).list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query ,List<Filter> filters){

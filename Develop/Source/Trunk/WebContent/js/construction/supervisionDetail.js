@@ -93,7 +93,7 @@ jQuery(function($) {
 		var stepnum = constructionSchedule[0].schedule;
 		initWizardSept(supervisionDetail.operateDict[stepnum], stepnum);
 
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
+		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
 			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
@@ -106,11 +106,6 @@ jQuery(function($) {
 
 	$('#modal-wizard .modal-header').ace_wizard();
 	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
-
-	$('#showConstructionPicture').click(function(){
-		supervisionDetail.constructionPictureModal.modal("show");
-	});
-
 	$('[data-rel=popover]').popover({html:true});
 
 	$('#btnBack').on(ace.click_event, function(){
@@ -134,8 +129,6 @@ jQuery(function($) {
 			supervisionDetail["constructionSchedule.csId"] = element[0].csId;
 
 			if(schedule == 1){
-
-				var workerLength = 0;
 				$("#" + operate.name + "StartTime").val(element[0].startTime);
 				$("#" + operate.name + "EndTime").val(element[0].endTime);
 
@@ -160,7 +153,6 @@ jQuery(function($) {
 					workerInfoCondition = queryConstructer(operate, res);
 
 					if(workerInfoCondition){
-
 						if(element[0].status != undefined && (element[0].status == 0 || element[0].status == 2)){
 							supervisionDetail.controlCondition = false;
 						}else if(element[0].status != undefined && element[0].status == 1){

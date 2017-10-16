@@ -53,22 +53,6 @@ public class ApproveUserAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryApproveUserForNameByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryApproveUserForNameByType() throws FLException{
-		
-		List<ApproveUserVO> approveUserVOs = approveUserService.queryApproveUserForNameByType(user, approveUser,queryCompany());
-		
-		for(ApproveUserVO approveUserVO : approveUserVOs){
-			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(approveUserVO.getUser().getUserId());
-			keyValueVO.setValue(approveUserVO.getUser().getCurrentName() + "-" + approveUserVO.getUser().getUserId());
-			
-			getAutoFillKeyValue().add(keyValueVO);
-		}
-		
-		return SUCCESS;
-	}
 
 	@Action(value = "addApproveUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addApproveUser() throws FLException{

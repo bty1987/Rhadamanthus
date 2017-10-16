@@ -10,12 +10,12 @@ CREATE TABLE `workersalary` (
   `salary` decimal(10,3) NOT NULL DEFAULT '0.000',
   `type` tinyint(4) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
-  `subtype` tinyint(4) DEFAULT '0' COMMENT '◊”¿‡–Õ',
+  `subtype` tinyint(4) DEFAULT '0' COMMENT 'Â≠êÁ±ªÂûã',
   `comment` varchar(64) DEFAULT NULL,
-  `createrId` varchar(15) NOT NULL COMMENT '¥¥Ω®»À',
+  `createrId` varchar(15) NOT NULL COMMENT 'ÂàõÂª∫‰∫∫',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `approverId` varchar(15) DEFAULT NULL COMMENT '…Û≈˙»À',
+  `approverId` varchar(15) DEFAULT NULL COMMENT 'ÂÆ°Êâπ‰∫∫',
   `approveTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`wsid`),
   KEY `indexone` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='π§»Àπ§∑—';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Â∑•‰∫∫Â∑•Ë¥π';

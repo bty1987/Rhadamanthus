@@ -106,6 +106,10 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private Long psId;
 	
+	private Short oneType;
+	
+	private Short twoType;
+	
 	public Long getAutoId(){
 		return autoId;
 	}
@@ -452,6 +456,22 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setPsId(Long psId) {
 		this.psId = psId;
+	}
+
+	public Short getOneType() {
+		return oneType;
+	}
+
+	public void setOneType(Short oneType) {
+		this.oneType = oneType;
+	}
+
+	public Short getTwoType() {
+		return twoType;
+	}
+
+	public void setTwoType(Short twoType) {
+		this.twoType = twoType;
 	}
 
 }

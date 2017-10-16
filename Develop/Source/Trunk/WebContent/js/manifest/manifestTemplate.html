@@ -1,0 +1,68 @@
+
+<div id="goodsPageContent" class="page-content">
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+
+            <div class="clearfix" id="resultList"></div> <!--查询结果-->
+
+            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div> <!--分页-->
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="layerAdd" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+
+            <div class="widget-main">
+                <div class="row" style="margin: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">名称</label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" data-required="1" id="name" name="name" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">说明</label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="comment" name="comment" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+    $(function(){
+        $.getScript('js/manifest/manifestTemplate.js');
+    });
+</script>

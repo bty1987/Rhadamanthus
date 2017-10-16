@@ -23,25 +23,6 @@
 
 							</div>
 
-							<div class="messageDetail" id="messageDetail" style="display: none; margin-top: 20px;">
-								<div class="message-header clearfix">
-									<div class="pull-left">
-										<i class="icon-user bigger-110 orange middle"></i>
-										<span class="sender" style='color:#6a9cba'></span>&nbsp;
-										<i class="icon-time bigger-110 orange middle"></i>
-										<span class="createTime"></span>
-									</div>
-									<div class="action-buttons pull-right">
-										<span class='uselessMsg' style='color:red;display:none;'>该审批消息已作废.</span>
-										<button id="passBtn" class='btn btn-xs btn-success approve-btn' style="display: none;">审批通过</button>
-										<button id="refuseBtn" class='btn btn-xs btn-danger approve-btn' style="display: none;">审批拒绝</button>
-										<button id="returnBtn" class='btn btn-xs btn-info'>返回</button>
-									</div>
-								</div>
-								<div class="hr hr-double"></div>
-								<div class="contents"></div>
-								<div class="hr hr-double"></div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -86,36 +67,7 @@
 			</div>
 		</div>
 	</div>
-	
-	<div class="modal fade" id="discountModal" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="discountDialog">该折扣低于7.5折, 是否计入业绩?</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group col-sm-5">
-							<label class="col-sm-6 control-label no-padding-right" for="isPerformance">计入业绩</label>
-							<div class="col-sm-6">
-								<input type="checkbox" id="isPerformance" />
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="performanceSaveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="performanceCancelBtn" class="btn btn-default"
-						data-dismiss="modal">取消</button>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
-
 <script type="text/javascript">
 	$.getScript('js/information/messageMng.js?version=' + versionCode);
 </script>

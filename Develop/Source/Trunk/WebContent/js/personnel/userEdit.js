@@ -1,44 +1,44 @@
 jQuery(function(a) {
 
-	var user = {
-	    politicalType: [],
-	    householdType: [],
-	    educationType: [],
-	    houseType: [],
-	    statusType: [],
-	    employWayType: [],
-	    employType: [],
-	    experienceType: [],
-	    deptType: [],
-	    dutyTypeMap: {},
-	    saveBtn: null,
-	    cancelBtn: null,
-	    items: {},
-	    editFlg: !1,
-	    postParam: {},
-	    editUserId: null,
-	    editLoginId: null,
-	    roleList: {},
-	    roleKey: "roleId",
-	    roleValue: "roleName",
-	    deptList: {},
-	    deptKey: "deptId",
-	    deptValue: "deptName",
-	    eSaveBtn: null,
-	    eCancelBtn: null,
-	    eModal: null,
-	    eItems: {},
-	    eEditFlg: !1,
-	    eEditNum: null,
-	    experienceList: [],
-	    cSaveBtn: null,
-	    cCancelBtn: null,
-	    cModal: null,
-	    cItems: {},
-	    cEditFlg: !1,
-	    cEditNum: null,
-	    contractList: []
-	};
+    var user = {
+        politicalType: [],
+        householdType: [],
+        educationType: [],
+        houseType: [],
+        statusType: [],
+        employWayType: [],
+        employType: [],
+        experienceType: [],
+        deptType: [],
+        dutyTypeMap: {},
+        saveBtn: null,
+        cancelBtn: null,
+        items: {},
+        editFlg: !1,
+        postParam: {},
+        editUserId: null,
+        editLoginId: null,
+        roleList: {},
+        roleKey: "roleId",
+        roleValue: "roleName",
+        deptList: {},
+        deptKey: "deptId",
+        deptValue: "deptName",
+        eSaveBtn: null,
+        eCancelBtn: null,
+        eModal: null,
+        eItems: {},
+        eEditFlg: !1,
+        eEditNum: null,
+        experienceList: [],
+        cSaveBtn: null,
+        cCancelBtn: null,
+        cModal: null,
+        cItems: {},
+        cEditFlg: !1,
+        cEditNum: null,
+        contractList: []
+    };
 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
@@ -56,17 +56,18 @@ jQuery(function(a) {
     user.items.oldUserId = a("#oldUserId").on("blur",function() {
         $this = a(this);
         void 0 != $this.val() && "" != $this.val().trim() && com.post(api.personel.queryUserByOldUserId, {
-                "user.oldUserId": $this.val()
+            "user.oldUserId": $this.val()
         },function(a) {
             a.user ? (com.showTips($this, "\u8be5\u539f\u59cb\u5de5\u53f7\u5df2\u7ecf\u5b58\u5728", !0), user.repeatFlg = !0) : (com.clearValidator("#oldUserId", !0), user.repeatFlg = !1)
         })
     });
     //获取部门类型
-    com.post(api.ds.departmentInfo, {timestamp: (new Date).getTime()},function(a) {
+    com.post(api.ds.department, {timestamp: (new Date).getTime()},function(a) {
         user.deptType = a.deptType
     },null, !1);
 
-    com.post(api.ds.personInfo, {timestamp: (new Date).getTime()},function(a) {
+    com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
+        
         user.politicalType = a.politicalType;
         user.householdType = a.householdType;
         user.educationType = a.educationType;
@@ -107,14 +108,14 @@ jQuery(function(a) {
         function() {
             $this = a(this);
             void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.clearValidator("#loginId", !0), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
-                    "user.loginId": $this.val()
-                }, function(res) {
-                	user.repeatFlg = !0
-                	com.showTips($this, "\u8be5\u7528\u6237\u540d\u5df2\u7ecf\u5b58\u5728", !0);
-                }, function(res){
-                	user.repeatFlg = !1
-                	com.clearValidator("#loginId", !0);
-                });
+                "user.loginId": $this.val()
+            }, function(res) {
+                user.repeatFlg = !0
+                com.showTips($this, "\u8be5\u7528\u6237\u540d\u5df2\u7ecf\u5b58\u5728", !0);
+            }, function(res){
+                user.repeatFlg = !1
+                com.clearValidator("#loginId", !0);
+            });
         });
     user.items.deptSel = a("#deptSel");
     user.items.dutySel = a("#dutySel").chosen({
@@ -159,71 +160,71 @@ jQuery(function(a) {
         user.items.userId.css("display", "block");
         user.currentCompany=null;
         com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(data){
-        	
+
             var $userInfo = data.userInfo;
             var $user = $userInfo.user;
 
             void 0 != a && (
-            	user.editUserId = $user.userId,
-                user.editLoginId = $user.loginId,
-                user.items.userId.val($user.userId),
-                user.items.oldUserId.val($user.oldUserId),
-                user.items.userName.val($user.userName).prop("disabled", !0),
-                user.items.currentName.val($user.currentName),
-                user.items.gender.prop("checked", com.genderType[$user.gender]),
-                user.items.age.val($userInfo.age), 
-                user.items.birthday.val($user.birthday),
-                user.items.politicalSel.val($userInfo.political),
-                user.items.jobYears.val($userInfo.jobYears),
-                user.items.identity.val($user.identity),
-                user.items.phone.val($user.phone),
-                user.items.address.val($userInfo.address),
-                user.items.hometownAddress.val($userInfo.hometownAddress),
-                user.items.householdSel.val($userInfo.householdType),
-                user.items.emergencyMan.val($userInfo.emergencyMan),
-                user.items.emergencyPhone.val($userInfo.emergencyPhone),
-                user.items.isPresentGraduate.prop("checked", com.isOrNotType[$userInfo.isPresentGraduate]),
-                user.items.graduateTime.val($userInfo.graduateTime),
-                user.items.school.val($userInfo.school),
-                user.items.educationSel.val($userInfo.education),
-                user.items.specialty.val($userInfo.specialty),
-                user.items.isMarried.prop("checked", com.isOrNotType[$userInfo.isMarried]),
-                user.items.isBirth.prop("checked", com.isOrNotType[$userInfo.isBirth]),
-                user.items.isHouseLoan.prop("checked", com.isOrNotType[$userInfo.isHouseLoan]),
-                user.items.isCarLoan.prop("checked", com.isOrNotType[$userInfo.isCarLoan]),
-                user.items.houseTypeSel.val($userInfo.houseType), 
-                user.items.lover.val($userInfo.lover),
-                user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
-                user.items.company.val( $user.companys),
-                user.items.deptTypeSel.val($user.deptType).trigger("change",function() {
-                    user.items.deptSel.val($user.dept.deptId);
-                    user.items.dutySel.val("");
-                    user.items.dutySel.trigger("chosen:updated");
-                    var b = $user.duty.split(",");
-                    $.each(b,
-                        function(a, b) {
-                            $("[value\x3d'" + b + "']", user.items.dutySel).attr("selected", "selected")
-                        });
-                    user.items.dutySel.trigger("chosen:updated")
-                }),
-                user.items.statusSel.val($user.status),
-                user.items.employWaySel.val($userInfo.employWay),
-                user.items.employTypeSel.val($userInfo.employType),
-                user.items.recommendMan.val($userInfo.recommendMan),
-                user.items.entryTime.val($userInfo.entryTime),
-                user.items.employTime.val($userInfo.employTime),
-                user.items.serviceYears.val($userInfo.serviceYears),
-                user.items.isContract.prop("checked", com.isOrNotType[$userInfo.isContract]),
-                user.items.isInsurance.prop("checked", com.isOrNotType[$userInfo.isInsurance]),
-                user.items.insuranceTime.val($userInfo.insuranceTime),
-                user.items.pensionNum.val($userInfo.pensionNum),
-                user.items.medicalNum.val($userInfo.medicalNum),
-                user.items.salary.val($userInfo.salary),
-                user.items.bank.val($userInfo.bank),
-                user.items.bankCardNum.val($userInfo.bankCardNum),
-                com.clearValidator("#loginId", !0),
-                com.clearValidator("#userId", !0),
-                com.clearValidator()
+                user.editUserId = $user.userId,
+                    user.editLoginId = $user.loginId,
+                    user.items.userId.val($user.userId),
+                    user.items.oldUserId.val($user.oldUserId),
+                    user.items.userName.val($user.userName).prop("disabled", !0),
+                    user.items.currentName.val($user.currentName),
+                    user.items.gender.prop("checked", com.genderType[$user.gender]),
+                    user.items.age.val($userInfo.age),
+                    user.items.birthday.val($user.birthday),
+                    user.items.politicalSel.val($userInfo.political),
+                    user.items.jobYears.val($userInfo.jobYears),
+                    user.items.identity.val($user.identity),
+                    user.items.phone.val($user.phone),
+                    user.items.address.val($userInfo.address),
+                    user.items.hometownAddress.val($userInfo.hometownAddress),
+                    user.items.householdSel.val($userInfo.householdType),
+                    user.items.emergencyMan.val($userInfo.emergencyMan),
+                    user.items.emergencyPhone.val($userInfo.emergencyPhone),
+                    user.items.isPresentGraduate.prop("checked", com.isOrNotType[$userInfo.isPresentGraduate]),
+                    user.items.graduateTime.val($userInfo.graduateTime),
+                    user.items.school.val($userInfo.school),
+                    user.items.educationSel.val($userInfo.education),
+                    user.items.specialty.val($userInfo.specialty),
+                    user.items.isMarried.prop("checked", com.isOrNotType[$userInfo.isMarried]),
+                    user.items.isBirth.prop("checked", com.isOrNotType[$userInfo.isBirth]),
+                    user.items.isHouseLoan.prop("checked", com.isOrNotType[$userInfo.isHouseLoan]),
+                    user.items.isCarLoan.prop("checked", com.isOrNotType[$userInfo.isCarLoan]),
+                    user.items.houseTypeSel.val($userInfo.houseType),
+                    user.items.lover.val($userInfo.lover),
+                    user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
+                    user.items.company.val( $user.companys),
+                    user.items.deptTypeSel.val($user.deptType).trigger("change",function() {
+                        user.items.deptSel.val($user.dept.deptId);
+                        user.items.dutySel.val("");
+                        user.items.dutySel.trigger("chosen:updated");
+                        var b = $user.duty.split(",");
+                        $.each(b,
+                            function(a, b) {
+                                $("[value\x3d'" + b + "']", user.items.dutySel).attr("selected", "selected")
+                            });
+                        user.items.dutySel.trigger("chosen:updated")
+                    }),
+                    user.items.statusSel.val($user.status),
+                    user.items.employWaySel.val($userInfo.employWay),
+                    user.items.employTypeSel.val($userInfo.employType),
+                    user.items.recommendMan.val($userInfo.recommendMan),
+                    user.items.entryTime.val($userInfo.entryTime),
+                    user.items.employTime.val($userInfo.employTime),
+                    user.items.serviceYears.val($userInfo.serviceYears),
+                    user.items.isContract.prop("checked", com.isOrNotType[$userInfo.isContract]),
+                    user.items.isInsurance.prop("checked", com.isOrNotType[$userInfo.isInsurance]),
+                    user.items.insuranceTime.val($userInfo.insuranceTime),
+                    user.items.pensionNum.val($userInfo.pensionNum),
+                    user.items.medicalNum.val($userInfo.medicalNum),
+                    user.items.salary.val($userInfo.salary),
+                    user.items.bank.val($userInfo.bank),
+                    user.items.bankCardNum.val($userInfo.bankCardNum),
+                    com.clearValidator("#loginId", !0),
+                    com.clearValidator("#userId", !0),
+                    com.clearValidator()
             )
         });
     }

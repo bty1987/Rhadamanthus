@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface ActivityService {
 	
-	public void pageActivity(Paging paging, List<Filter> filters, String userId);
+	public void pageActivity(Paging paging, List<Filter> filters, String userId,int company);
 	
-	public List<ActivityVO> queryActivityForValid();
+	public List<ActivityVO> queryActivityForValid(int company);
 	
-	public void addActivity(ActivityVO activityVO, String userId, String userName);
+	public void addActivity(ActivityVO activityVO, String userId, String userName, int company);
 	
 	public void updateActivity(ActivityVO activityVO, String userId) throws FLException;
 	

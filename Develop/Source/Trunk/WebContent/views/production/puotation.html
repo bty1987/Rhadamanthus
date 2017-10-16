@@ -1,0 +1,91 @@
+
+<div  class="page-content">
+    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>报价单</small></h1></div></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row" style="margin-left:10px;margin-right:10px">
+                <div id="list"></div>
+                <div>
+                    <h3 class="clearfix" >
+                        <a  class="btn btn-info btn-xs pull-left" id="addpuotationBtn" style="margin:0px 3px">创建</a>
+                        <a  class="btn btn-xs pull-left" id="backBtn" style="margin:0px 3px">返回</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="layerAdd" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-right">名称</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="span6 m-wrap col-xs-8" name="name"
+                                       rules="{required:true}" readonly>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-right">备注信息</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="span6 m-wrap col-xs-8" name="comment"
+                                       rules="{required:true}">
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="layerAdd2" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 ">折让</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="m-wrap col-xs-6" name="dis" id="dis"
+                                       rules="{required:true}">
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 ">总价</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="m-wrap col-xs-6" name="total" id="total"
+                                       rules="{required:true}">
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+
+<script src="js/production/puotation.js"></script>

@@ -66,7 +66,7 @@ $(function () {
     };
     var auditRecordPostdata = {};
     var status = {};
-    com.post(api.ds.auditInfo,{},function (res) {
+    com.post(api.ds.decoration,{},function (res) {
         auditScalePage.status.bindData(res.auditScaleStatus,"key","value");
         $.each(res.auditScaleStatus,function (i,v) {
             status[v.key] = v.value;
@@ -86,7 +86,7 @@ $(function () {
         orderId:"auditRecord.audit.decorationOrder.orderId"
     };
 
-    com.post(api.ds.auditInfo,{},function (res) {
+    com.post(api.ds.decoration,{},function (res) {
         $.each(res.perCharge,function (i,v) {
             perCharge[v.key] = v.value;
         })

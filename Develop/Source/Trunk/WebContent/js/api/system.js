@@ -14,11 +14,6 @@ $.extend(api.index, {
     homeIndex:{url: "/home.html"}
 });
 
-$.extend(api.ds, {
-    companyType: {url: "ds/companyType.json", demo: true},
-    workType: {url: "ds/workType.json", demo: true}
-});
-
 $.extend(api, {system: {
     pageCity: {url: "pageCity.do", demo: true},
     queryCity: {url: "queryCity.do", demo: true},

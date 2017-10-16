@@ -1,13 +1,3 @@
-/**
- * @File Name		: ActivityAction.java
- * @Package   	: com.fanglin.information.action
- * @Version		: 1.0
- * @Date			: 2015-11-2
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
 
 package com.fanglin.information.action;
 
@@ -51,15 +41,15 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="pageActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageActivity() throws FLException{
 		
-		activityService.pageActivity(getPaging(), getFilters(), queryUserId());
+		activityService.pageActivity(getPaging(), getFilters(), queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="queryActivityForValid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryActivityForValid(){
+	public String queryActivityForValid() throws FLException{
 		
-		activitys = activityService.queryActivityForValid();
+		activitys = activityService.queryActivityForValid(queryCompany());
 		
 		return SUCCESS;
 	}
@@ -75,7 +65,7 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="addActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addActivity() throws FLException{
 		
-		activityService.addActivity(activity, queryUserId(), queryUserName());
+		activityService.addActivity(activity, queryUserId(), queryUserName(),queryCompany());
 		
 		return SUCCESS;
 	}

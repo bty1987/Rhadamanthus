@@ -11,8 +11,6 @@ package com.fanglin.approval.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -41,20 +39,6 @@ public class ApproveUserDaoImpl extends DaoImpl<ApproveUserPO> implements Approv
         return query.list();
     }
     
-    @Override
-    public List<ApproveUserPO> queryApproveUserForNameByType(Paging paging, String pinyinName, Short type,int company){
-    	PagingQuery<ApproveUserPO> query = pagingQuery(paging, ApproveUserPO.class);
-    	
-		query.alias("user", "user");
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.ilike("user.userName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("user.userNamePinYin", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		query.add(Restrictions.eq("type", type));
-		query.add(Restrictions.eq("user.company", company));
-		return query.list();
-    }
     
     @Override
     @SuppressWarnings("unchecked")
@@ -83,7 +67,5 @@ public class ApproveUserDaoImpl extends DaoImpl<ApproveUserPO> implements Approv
                 }  
             }
         }
-	}
-
-	
+	}	
 }

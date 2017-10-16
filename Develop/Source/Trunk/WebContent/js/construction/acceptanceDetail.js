@@ -43,7 +43,7 @@ jQuery(function($) {
 
 		for(var i = 1; i <= acceptanceDetail.ratyLength; i++){
 			$('#raty' + i).raty({
-				path: './assets/images/',
+				path: './assets/altogether/images/',
 				number: 4,
 				start: acceptanceInfo[acceptanceDetail.ratyIds[i-1]],
 			});
@@ -115,7 +115,7 @@ jQuery(function($) {
 	function constructerImg(imgPath, name, duty, schedule){
 		var pane = $("<div></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo($("#" + constructionScheName[schedule]));
 		var imgUrl = config.media + '/showImg.do' + '?imgBasePath=' + imgPath + '&divFlag=1&width=' + 150 + '&height=' + 150 + '&timestamp='+ new Date().getTime();
-		var paneImg = $('<img onerror="javascript:this.src=\'./assets/images/avatar2.png\';" />').attr("src", imgUrl).css("margin-right", "20px").css("width", "50px").css("height", "50px").css("margin-bottom", "10px").appendTo(pane);
+		var paneImg = $('<img onerror="javascript:this.src=\'./assets/altogether/images/avatar2.png\';" />').attr("src", imgUrl).css("margin-right", "20px").css("width", "50px").css("height", "50px").css("margin-bottom", "10px").appendTo(pane);
 		var constructerName = $("<span></span>").css("margin-right", "20px").html(name).appendTo(pane);
 		var constructerDuty = $("<span></span>").html(duty).appendTo(pane);
 	}

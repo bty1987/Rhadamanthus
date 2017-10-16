@@ -2,6 +2,7 @@ package com.fanglin.information.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,14 @@ import com.fanglin.information.po.MemberDetailPO;
 import com.fanglin.information.service.MemberCardService;
 import com.fanglin.information.vo.MemberCardVO;
 import com.fanglin.information.vo.MemberDetailVO;
+import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
@@ -38,6 +44,9 @@ public class MemberCardServiceImpl  implements MemberCardService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageMemberCard(Paging paging, List<Filter> filters) {
@@ -113,7 +122,7 @@ public class MemberCardServiceImpl  implements MemberCardService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int turnPointsForMemberCard(MemberCardVO outMemberCardVO,MemberCardVO inMemberCardVO,MemberDetailVO menberDetailVO,String userId) throws FLException {
+	public int tranMemberCard(MemberCardVO outMemberCardVO,MemberCardVO inMemberCardVO,MemberDetailVO menberDetailVO,String userId) throws FLException {
 		
 		MemberCardPO outMemberCardPO = memberCardDao.queryMemberCardByNo(outMemberCardVO.getNo());
 		MemberCardPO inMemberCardPO = memberCardDao.queryMemberCardByNo(inMemberCardVO.getNo());
@@ -161,6 +170,100 @@ public class MemberCardServiceImpl  implements MemberCardService {
 		inMemberCardPO.setCredits(inMemberCardPO.getCredits()+menberDetailVO.getCredit());
 		
 		memberCardDao.update(inMemberCardPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int IncreaseMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
+		
+		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialSubOrderPO.getOrderId());
+		
+		if(memberCard != null){
+			//integraldivider  积分比例       integralmultiple  积分倍数
+			int integraldivider = Integer.valueOf(systemConfigDao.querySystemConfig("integraldivider").getValue());
+			int integralmultiple = Integer.valueOf(systemConfigDao.querySystemConfig("integralmultiple").getValue());
+			
+			memberCard.setCredits(memberCard.getCredits() + materialPaymentPO.getReferMoney()/integraldivider*integralmultiple);
+			
+			MemberDetailPO memberDetailPO = new MemberDetailPO();
+			memberDetailPO.setMemberCard(memberCard);
+			memberDetailPO.setPid(materialPaymentPO.getMpId());
+			memberDetailPO.setType(MemberDetailPO.SUBTYPE_LESS_INT);
+			memberDetailPO.setSubType(MemberDetailPO.SUBTYPE_PLUS_INT);
+			memberDetailPO.setCredit(materialPaymentPO.getReferMoney()/integraldivider*integralmultiple);
+			memberDetailPO.setBalance(materialPaymentPO.getReferMoney()/integraldivider*integralmultiple);
+			memberDetailPO.setMultiple(integralmultiple);
+			memberDetailPO.setDivider(integraldivider);
+			memberDetailPO.setCuId(userPO);
+			memberDetailPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()).getTime());
+			memberDetailPO.setComment("主材收款");
+			
+			memberDetailDao.save(memberDetailPO);
+			memberCardDao.update(memberCard);
+		}
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int MinusMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
+		
+		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialSubOrderPO.getOrderId());
+		float refundMoney = materialPaymentPO.getReferMoney();
+		float refundIntegral = 0f;
+		if(memberCard != null){
+			
+			List<MemberDetailPO> memberDetailPOs = memberDetailDao.queryMemberDetailByMcIdForSubType(memberCard.getMcId());
+			
+			if(memberDetailPOs != null){
+				
+				for(MemberDetailPO memberDetail:memberDetailPOs){
+					
+					if(memberDetail.getBalance()!=0){
+						
+						if(memberDetail.getBalance()/memberDetail.getMultiple()*memberDetail.getDivider() < refundMoney){
+							refundMoney = refundMoney - memberDetail.getBalance()/memberDetail.getMultiple()*memberDetail.getDivider();
+							refundIntegral = Arith.add(refundIntegral, memberDetail.getBalance());
+							memberDetail.setBalance(MemberDetailPO.BALANCE_ZERO_INT);
+							memberDetailDao.update(memberDetail);
+						}else{							
+							float _balance = memberDetail.getBalance()-refundMoney/memberDetail.getDivider()*memberDetail.getMultiple();
+							
+							if(_balance<0){
+								_balance = 0;
+							}
+							
+							refundIntegral = refundIntegral+refundMoney/memberDetail.getDivider()*memberDetail.getMultiple();
+							memberDetail.setBalance(_balance);
+							memberDetailDao.update(memberDetail);
+							
+							MemberDetailPO memberDetailPO = new MemberDetailPO();
+							float refund = memberCard.getCredits()-refundIntegral;
+							memberDetailPO.setMemberCard(memberCard);
+							memberDetailPO.setPid(materialPaymentPO.getMpId());
+							memberDetailPO.setType(MemberDetailPO.SUBTYPE_LESS_INT);
+							memberDetailPO.setSubType(MemberDetailPO.SUBTYPE_LESS_INT);
+							memberDetailPO.setCredit(-refundIntegral);
+							memberDetailPO.setBalance(MemberDetailPO.BALANCE_ZERO_INT);
+							memberDetailPO.setMultiple(1);
+							memberDetailPO.setDivider(0);
+							memberDetailPO.setCuId(userPO);
+							memberDetailPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()).getTime());
+							memberDetailPO.setComment("主材退款");
+							memberDetailDao.save(memberDetailPO);
+							
+							memberCard.setCredits(refund);
+							memberCardDao.update(memberCard);
+							
+							break;
+						}
+					}
+				}
+			}
+		}
 		
 		return 0;
 	}

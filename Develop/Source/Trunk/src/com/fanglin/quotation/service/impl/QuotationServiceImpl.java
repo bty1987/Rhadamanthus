@@ -39,9 +39,10 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.SystemConfig;
+
 
 @Service("quotationService")
 @Transactional(readOnly=true)
@@ -61,6 +62,9 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Autowired
 	private ExtensionDao extensionDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
@@ -189,13 +193,16 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	@Override
-	public Map<String, List<String>> queryQuotationForConfig() {
+	public Map<String, List<String>> queryQuotationForConfig(int company) {
 		
 		Map<String, List<String>> config = new HashMap<String, List<String>>();
 		
-		config.put("manageRates", Arrays.asList(SystemConfig.getString("manageRate").split(",")));
-		config.put("trafficRates", Arrays.asList(SystemConfig.getString("trafficRate").split(",")));
-		config.put("latexCutScales", Arrays.asList(SystemConfig.getString("latexCutScale").split(",")));
+		config.put("manageRates", Arrays.asList(systemConfigDao.querySystemConfig("manageRate", company).getValue().split(",")));
+		config.put("trafficRates", Arrays.asList(systemConfigDao.querySystemConfig("trafficRate", company).getValue().split(",")));
+		
+	
+		/*config.put("manageRates", Arrays.asList(SystemConfig.getString("manageRate").split(",")));
+		config.put("trafficRates", Arrays.asList(SystemConfig.getString("trafficRate").split(",")));*/
 		
 		return config;
 	}
@@ -209,7 +216,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		QuotationPO quotationPO = new QuotationPO();
 		
-		if(quotationDao.countQuotationByOrderId(orderId) >= SystemConfig.getInt("limitQuotationNumber", 3)){
+		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
@@ -344,13 +351,13 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		if(quotationDao.countQuotationByOrderId(orderId) >= SystemConfig.getInt("limitQuotationNumber", 3)){
+		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
-		if(decorationOrderPO.getQuotationTimeLimit() >= SystemConfig.getInt("quotationTimeLimit")){
+		if(decorationOrderPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
 			decorationOrderPO.setQuotationTimeLimit(decorationOrderPO.getQuotationTimeLimit() + 1);
@@ -416,13 +423,13 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 	
-		if(quotationDao.countQuotationByOrderId(orderId) >= SystemConfig.getInt("limitQuotationNumber", 3)){
+		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
-		if(decorationOrderPO.getQuotationTimeLimit() >= SystemConfig.getInt("quotationTimeLimit")){
+		if(decorationOrderPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
 			decorationOrderPO.setQuotationTimeLimit(decorationOrderPO.getQuotationTimeLimit() + 1);
@@ -535,7 +542,6 @@ public class QuotationServiceImpl implements QuotationService {
 	public static void convertQuotationVOToPOForAdvance(QuotationVO quotationVO, QuotationPO quotationPO){
 		quotationPO.setDiscount(quotationVO.getDiscount());
 		quotationPO.setTotalPrice(quotationVO.getTotalPrice());
-		quotationPO.setLatexCut(quotationVO.getLatexCut());
 		quotationPO.setManagePrice(quotationVO.getManagePrice());
 		quotationPO.setManageRate(quotationVO.getManageRate());
 		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());

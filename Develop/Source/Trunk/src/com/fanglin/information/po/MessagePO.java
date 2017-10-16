@@ -18,51 +18,53 @@ public class MessagePO implements Serializable {
 
 	private static final long serialVersionUID = 7068359813579637502L;
 	
-	public static final String MESSAGE_STATUS_READED_STR = "已读";
+	public static final short MESSAGE_STATUS_READED_STR = 1;    
 	
-	public static final String MESSAGE_STATUS_UNREAD_STR = "未读";
-
-	public static final String MESSAGE_TYPE_SELL_STR = "销售消息";
+	public static final short MESSAGE_STATUS_UNREAD_STR = 0;  
 	
-	public static final String MESSAGE_TYPE_RETURN_STR = "退货消息";
+	public static final short MESSAGE_DRESULT_SUCCESS_STR = 0;    
 	
-	public static final String MESSAGE_TYPE_DELIVER_STR = "放线消息";
+	public static final short MESSAGE_DRESULT_FAIL_STR = 1;  
 	
-	public static final String MESSAGE_TYPE_BELONG_STR = "归属消息";
+	public static final String MESSAGE_TYPE_RETURN_STR = "退货消息";       
 	
-	public static final String MESSAGE_TYPE_APPROVAL_STR = "审批消息";
+	public static final String MESSAGE_TYPE_DELIVER_STR = "放线消息";  
 	
-	public static final String MESSAGE_TYPE_BUDGET_AUDIT_STR = "预算审核消息";
+	public static final String MESSAGE_TYPE_APPROVAL_STR = "审批消息";  
 	
-	public static final String MESSAGE_TYPE_BACKVISIT_STR = "回访消息";
+	public static final String MESSAGE_TYPE_BUDGET_AUDIT_STR = "预算审核消息";  
 	
-	public static final String MESSAGE_TYPE_MANAGEMENT_STR = "管理消息";
+	public static final short MESSAGE_TYPE_PAYMENT_STR = 0 ;  
 	
-	public static final String MESSAGE_TYPE_FEEDBACK_VILLAGE_STR = "楼号审批反馈消息";
+	public static final short MESSAGE_TYPE_SEND_APPROVAL_STR = 1 ; 
 	
-	public static final String MESSAGE_TYPE_FEEDBACK_CUSTOMER_STR = "客户信息审批反馈消息";
+	public static final short MESSAGE_TYPE_SEND_BLONG_STR = 2 ; 
 	
-	public static final String MESSAGE_TYPE_FEEDBACK_DISCOUNT_STR = "折扣审批反馈消息";
+	public static final short MESSAGE_TYPE_SEND_CONSTRUCTION_STR = 3 ; 
 	
-	public static final String MESSAGE_TYPE_FEEDBACK_REFUND_STR = "退款审批反馈消息";
+	public static final short MESSAGE_TYPE_SEND_PERSONEL_STR = 4 ;
 	
-	private int messageId;
+	public static final short MESSAGE_TYPE_SEND_VISIT_STR = 5 ;
+	
+	private int mid;
 	
 	private UserPO receiver;
 	
 	private UserPO sender;
 	
-	private String type;
+	private short type;
 	
 	private String contents;
 	
 	private Timestamp createTime;
 	
-	private String status;
+	private short status;
 	
 	private String args;
 	
 	private int company;
+	
+	private short dresult;
 	
 	public MessagePO(){
 		super();
@@ -70,12 +72,12 @@ public class MessagePO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	public int getMessageId() {
-		return messageId;
+	public int getMid() {
+		return mid;
 	}
 
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
+	public void setMid(int mid) {
+		this.mid = mid;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -89,7 +91,7 @@ public class MessagePO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "senderId", referencedColumnName = "userId")
+	@javax.persistence.JoinColumn(name = "senderId", referencedColumnName = "userId")
 	public UserPO getSender(){
 		return sender;
 	}
@@ -99,11 +101,11 @@ public class MessagePO implements Serializable {
 	}
 
 	@Column(nullable = false)
-	public String getType(){
+	public short getType() {
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(short type) {
 		this.type = type;
 	}
 
@@ -126,14 +128,15 @@ public class MessagePO implements Serializable {
 	}
 
 	@Column(nullable = false)
-	public String getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
-
+	
+	@Column(name="args")
 	public String getArgs(){
 		return args;
 	}
@@ -149,6 +152,15 @@ public class MessagePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(nullable = false)
+	public short getDresult() {
+		return dresult;
+	}
+
+	public void setDresult(short dresult) {
+		this.dresult = dresult;
 	}
 	
 }

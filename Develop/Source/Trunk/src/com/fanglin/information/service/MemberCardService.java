@@ -5,6 +5,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.vo.MemberCardVO;
 import com.fanglin.information.vo.MemberDetailVO;
+import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.payment.po.MaterialPaymentPO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface MemberCardService {
@@ -17,6 +20,10 @@ public interface MemberCardService {
 	
 	public int updateMemberCard(MemberCardVO memberCardVO) throws FLException;
 	
-	public int turnPointsForMemberCard(MemberCardVO outMemberCardVO,MemberCardVO inMemberCardVO,MemberDetailVO memberDetailVO,String userId) throws FLException;
+	public int tranMemberCard(MemberCardVO outMemberCardVO,MemberCardVO inMemberCardVO,MemberDetailVO memberDetailVO,String userId) throws FLException;
+	
+	public int IncreaseMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException;
+	
+	public int MinusMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException;
 	
 }

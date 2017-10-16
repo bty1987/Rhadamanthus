@@ -17,7 +17,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="workerSalary", catalog = "platform")
+@Table(name="workerSalary", catalog = "salary")
 public class WorkerSalaryPO  implements Serializable{
 	
 	private static final long serialVersionUID = -6436620084581973635L;

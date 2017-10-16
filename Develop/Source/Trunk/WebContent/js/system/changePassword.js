@@ -17,16 +17,17 @@ jQuery(function($) {
 		}
 	});
 
-	$("#save").on("click", function(e){
+	$("#saveBtn").on("click", function(e){
+
 		if(com.validate()||!password.sameFalg){
 			return;
 		}
-		
+
 		var param = {
 			"password":$("#oldPassword").val(),
 			"rePassword":$("#password").val()
 		};
-		
+
 		com.post(api.personel.changePassword, param, function(res){
 			window.location.href = api.common.logout.url + "?timestamp="+new Date().getTime();
 		});

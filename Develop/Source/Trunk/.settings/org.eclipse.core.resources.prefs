@@ -1,4 +1,4 @@
-#Mon Aug 21 14:29:53 CST 2017
+#Mon Oct 16 15:32:37 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/assets/js/typeahead-bs2.min.js=UTF-8
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
@@ -76,7 +76,6 @@ encoding//WebContent/views/information/noticeMng.html=UTF-8
 encoding//WebContent/views/management/management.html=UTF-8
 encoding//WebContent/views/material/materialBalanceValue.html=UTF-8
 encoding//WebContent/views/material/materialBrandRight.html=UTF-8
-encoding//WebContent/views/material/materialInside.html=UTF-8
 encoding//WebContent/views/material/materialModel.html=UTF-8
 encoding//WebContent/views/material/materialModelAdvance.html=UTF-8
 encoding//WebContent/views/material/materialOrder.html=UTF-8
@@ -84,7 +83,6 @@ encoding//WebContent/views/material/materialOrderPostBalance.html=UTF-8
 encoding//WebContent/views/material/materialOrderPostBalanceDetail.html=UTF-8
 encoding//WebContent/views/material/materialOrderPreBalance.html=UTF-8
 encoding//WebContent/views/material/materialOrderPreBalanceDetail.html=UTF-8
-encoding//WebContent/views/material/materialOutside.html=UTF-8
 encoding//WebContent/views/material/materialSaleOrder.html=UTF-8
 encoding//WebContent/views/material/materialSubOrder.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderAdd.html=UTF-8
@@ -93,8 +91,6 @@ encoding//WebContent/views/material/materialSubOrderDetail.html=UTF-8
 encoding//WebContent/views/material/materialSubOrderRefund.html=UTF-8
 encoding//WebContent/views/payment/decorationPayment.html=UTF-8
 encoding//WebContent/views/payment/decorationPaymentCheck.html=UTF-8
-encoding//WebContent/views/payment/materialInsidePayment.html=UTF-8
-encoding//WebContent/views/payment/materialOutsidePayment.html=UTF-8
 encoding//WebContent/views/payment/materialPayment.html=UTF-8
 encoding//WebContent/views/payment/materialPaymentCheck.html=UTF-8
 encoding//WebContent/views/payment/payment.html=UTF-8

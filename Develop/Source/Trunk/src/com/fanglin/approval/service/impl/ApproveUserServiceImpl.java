@@ -77,26 +77,6 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 		
 		return approveUserVOs;
 	}
-	
-	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO,	ApproveUserVO approveUserVO,int company) {
-		Paging paging = new Paging();
-		paging.setPage(0);
-		paging.setRows(50);
-
-		List<ApproveUserPO> approveUserPOs = approveUserDao.queryApproveUserForNameByType(paging,userVO.getUserNamePinYin(), approveUserVO.getType(),company);
-		List<ApproveUserVO> approveUserVOs = new ArrayList<ApproveUserVO>();
-
-		for (ApproveUserPO approveUserPO : approveUserPOs) {
-			ApproveUserVO _approveUserVO = new ApproveUserVO();
-			BeanUtil.copyProperties(approveUserPO, _approveUserVO,Arrays.asList("user"));
-			
-			_approveUserVO.setUser(new UserVO());
-			BeanUtil.copyProperties(approveUserPO.getUser(),_approveUserVO.getUser(), Arrays.asList("role", "dept"));
-
-			approveUserVOs.add(_approveUserVO);
-			}
-		return approveUserVOs;
-	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

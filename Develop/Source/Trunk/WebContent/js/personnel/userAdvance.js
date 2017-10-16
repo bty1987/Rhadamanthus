@@ -1,4 +1,4 @@
-var userAdvance = {
+﻿var userAdvance = {
 	postData: {},
 	postParam: {},
 	userAdvanceItems: {},
@@ -106,9 +106,10 @@ jQuery(function($) {
 				$this.siblings('ol').addClass('hide');
 				$this.parent().find('.plus').toggleClass('hide');
 				$this.parent().find('.minus').removeClass('hide');
+				$this.siblings('ol').find('.dd-list').addClass('hide');
 				$this.toggleClass('hide');
 			});
-			// 加号collapse  .minus
+			
 			$('button[data-action="expand"]').click(function () {
 				var $this = $(this);
 				$this.siblings('ol').removeClass('hide');
@@ -234,14 +235,15 @@ jQuery(function($) {
 				$this.siblings('ol').addClass('hide');
 				$this.parent().find('.plus').toggleClass('hide');
 				$this.parent().find('.minus').removeClass('hide');
+				$this.siblings('ol').find('.dd-list').addClass('hide');
 				$this.toggleClass('hide');
 			});
 			 $('button[data-action="expand"]').click(function () {
-			 var $this = $(this);
-			 $this.siblings('ol').removeClass('hide');
-			 $this.parent().find('.minus').toggleClass('hide');
-			 $this.parent().find('.plus').removeClass('hide');
-			 $this.toggleClass('hide');
+				 var $this = $(this);
+				 $this.siblings('ol').removeClass('hide');
+				 $this.parent().find('.minus').toggleClass('hide');
+				 $this.parent().find('.plus').removeClass('hide');
+				 $this.toggleClass('hide');
 			 });
 
 		}, null, false);
@@ -263,9 +265,9 @@ jQuery(function($) {
 	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 
-	com.post(api.ds.departmentInfo, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.deptType = res.deptType;
-	}, null, false);
+	//com.post(api.ds.department, {"timestamp": new Date().getTime()}, function(res){
+	//	userAdvance.deptType = res.deptType;
+	//}, null, false);
 
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.roleList = res.roleList;
@@ -434,7 +436,7 @@ jQuery(function($) {
 				var list=[{key: "全部", value: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
-				com.post(api.ds.decorationInfo, {}, function(data){
+				com.post(api.ds.decoration, {}, function(data){
 					list = list.concat(data.decorationOrderStatus);
 				}, null, false);
 				com.post(api.right.queryDecorationOrderStatusRightByUserId, { "user.userId" : userId}, function(data){

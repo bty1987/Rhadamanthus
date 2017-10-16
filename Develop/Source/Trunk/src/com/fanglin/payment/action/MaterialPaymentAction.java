@@ -109,14 +109,6 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="queryMaterialPaymentForCouponByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPaymentCouponByMsoId(){
-		
-		materialPaymentService.queryMaterialPaymentForCouponByMsoId(materialPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryMaterialPaymentForNotInitByMrId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentForNotInitByMrId() throws FLException{
 		

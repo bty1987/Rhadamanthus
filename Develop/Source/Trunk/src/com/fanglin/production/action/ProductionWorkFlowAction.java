@@ -26,7 +26,7 @@ public class ProductionWorkFlowAction extends BaseAction{
 	private ProductionWorkFlowVO productionWorkFlow;
 	private List<ProductionWorkFlowVO> productionWorkFlows;
 	private String no;
-	private Long uid;
+	private Integer uid;
 	
 	@Action(value = "queryProductionWorkFlowByPwpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionWorkFlowByPwpid(){
@@ -68,10 +68,10 @@ public class ProductionWorkFlowAction extends BaseAction{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	public Long getUid() {
+	public Integer getUid() {
 		return uid;
 	}
-	public void setUid(Long uid) {
+	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
 	

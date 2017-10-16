@@ -14,9 +14,10 @@ package com.fanglin.decoration.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.payment.vo.DecorationPaymentVO;
 
 public class DecorationContractVO implements Serializable {
 
@@ -42,7 +43,7 @@ public class DecorationContractVO implements Serializable {
 	
 	private Float orderTotalPrice;
 	
-	private Map<String, String> payments;
+	private List<DecorationPaymentVO> payments;
 	
 	private List<Integer> paymentRates;
 
@@ -113,11 +114,11 @@ public class DecorationContractVO implements Serializable {
 		return workingDuration;
 	}
 
-	public Map<String, String> getPayments() {
+	public List<DecorationPaymentVO> getPayments() {
 		return payments;
 	}
 
-	public void setPayments(Map<String, String> payments) {
+	public void setPayments(List<DecorationPaymentVO> payments) {
 		this.payments = payments;
 	}
 

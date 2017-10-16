@@ -57,7 +57,7 @@ jQuery(function($) {
 	decorationOrderDetail.items.houseType = $('#houseType');
 	decorationOrderDetail.items.houseClass = $('#houseClass');
 
-	com.post(api.ds.decorationInfo, {}, function(res){
+	com.post(api.ds.decoration, {}, function(res){
 		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
 		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
 	}, null, false);
@@ -127,7 +127,7 @@ jQuery(function($) {
 		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
-	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
+	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, false);
 	
 });
 
@@ -156,8 +156,6 @@ function initWizard(){
 			quotationUtils.loadQuotationDetail();
 		}else if(info.step == 3){
 			decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationOrderDetail.decorationOrderId, true);
-		}else if(info.step == 4){
-			decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
 		}else if(info.step == 4){
 			decorationUtils.decorationActivityInfo(decorationOrderDetail.activitys, null, decorationOrderDetail.decorationOrderId);
 			decorationUtils.decorationActivityItemInfo(decorationOrderDetail.activityItems, null, decorationOrderDetail.decorationOrderId);

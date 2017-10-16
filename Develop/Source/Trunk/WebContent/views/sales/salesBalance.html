@@ -1,0 +1,136 @@
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+<!--厂商结算值弹窗-->
+<div id="vbalanceValue" style="padding: 40px 0;display: none">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form">
+
+            <div class="alert alert-error hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                You have some form errors. Please check below.
+
+            </div>
+
+            <div class="alert alert-success hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                Your form validation is successful!
+
+            </div>
+
+            <div class="form-group" style="margin-right: 0">
+
+                <label class="col-xs-4 control-label ">厂商结算值</label>
+
+                <div class="col-xs-8">
+
+                    <input type="text" class="col-xs-4" name="vbalanceValue">
+                    <i class="icon-asterisk"></i>
+
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-right: 0">
+
+                <label class="col-xs-4 control-label ">总价</label>
+
+                <div class="col-xs-8">
+
+                    <input type="text" class="col-xs-4" name="total" readonly>
+
+                </div>
+
+            </div>
+
+
+        </form>
+    </div>
+
+</div>
+<!--结算值弹窗-->
+<div id="pbalanceValue" style="padding: 40px 0;display: none">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+
+            <div class="alert alert-error hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                You have some form errors. Please check below.
+
+            </div>
+
+            <div class="alert alert-success hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                Your form validation is successful!
+
+            </div>
+
+            <div class="form-group" style="margin-right: 0">
+
+                <label class="col-xs-4 control-label ">结算值</label>
+
+                <div class="col-xs-8">
+
+                    <input type="text" class="col-xs-4" name="pbalanceValue">
+                    <i class="icon-asterisk"></i>
+
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-right: 0">
+
+                <label class="col-xs-4 control-label">预结算成本额</label>
+
+                <div class="col-xs-8">
+
+                    <input type="text" class="col-xs-4" name="balanceValue" readonly>
+
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-right: 0">
+
+                <label class="col-xs-4 control-label">厂商结算额</label>
+
+                <div class="col-xs-8">
+
+                    <input type="text" class="col-xs-4" name="vbalanceValue"  readonly>
+
+                </div>
+
+            </div>
+
+
+        </form>
+    </div>
+
+</div>
+<!--收款查看--><!--子项查看--><!--退款查看--><!--退货查看-->
+<div id="viewPopUp" class="portlet box" style="padding: 20px 0;display: none">
+
+    <div class="clearfix" id="resultListItem"></div>
+
+</div>
+
+<script>
+    $(function(){
+        $.getScript('js/sales/salesBalance.js');
+    });
+</script>

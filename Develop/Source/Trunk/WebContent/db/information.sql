@@ -1,4 +1,4 @@
-﻿CREATE DATABASE  IF NOT EXISTS information;
+CREATE DATABASE  IF NOT EXISTS information;
 USE information;
 
 CREATE TABLE `activity` (
@@ -8,8 +8,8 @@ CREATE TABLE `activity` (
   `createUserName` varchar(32) NOT NULL,
   `status` tinyint(4) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `startTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `endTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`aId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动表';
@@ -38,7 +38,7 @@ CREATE TABLE `assassin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='代理表';
 
 CREATE TABLE `events` (
-  `eId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `eId` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL, 
   `content` varchar(256) NOT NULL DEFAULT '',
   `createrId` varchar(15) DEFAULT NULL,
@@ -73,14 +73,14 @@ CREATE TABLE `memberdetail` (
   `multiple` int(11) NOT NULL DEFAULT '0' COMMENT '倍数, 积分倍数',
   `divider` int(11) NOT NULL DEFAULT '0' COMMENT '除数,金额/除数=积分',
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` bigint(20) NOT NULL,
+  `createTime` int(11) NOT NULL,
   `comment` varchar(128),
   PRIMARY KEY (`mdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员积分明细表';
 
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
-  `messageId` bigint(32) NOT NULL AUTO_INCREMENT,
+  `messageId` int(11) NOT NULL AUTO_INCREMENT,
   `receiverId` varchar(15) NOT NULL,
   `senderId` varchar(15) NOT NULL,
   `type` varchar(10) NOT NULL COMMENT '类别',
@@ -124,9 +124,9 @@ CREATE TABLE `upgrade` (
   `ugid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(64) NOT NULL,
   `trialno` varchar(64) NOT NULL,
-  `createtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `content` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
-  `filesize` bigint(64) NOT NULL,
+  `filesize` int(11) NOT NULL,
   PRIMARY KEY (`ugid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='升级表'; 

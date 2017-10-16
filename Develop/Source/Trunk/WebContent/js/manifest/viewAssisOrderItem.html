@@ -1,0 +1,110 @@
+
+<div class="">
+    <div class="row" style="margin: 20px;margin-right: 0px">
+        <div class="col-xs-12">
+            <div id="assisOrderOrderId" class="table-responsive col-xs-4" style="margin: 0 auto;border-right:1px solid orange;height: 520px;max-height: 520px;margin-right: 20px">
+                <table class="table" style="margin-right: 6%">
+                    <tbody>
+                    <tr>
+                        <td id="villageName">楼盘地址:</td>
+                        <th></th>
+                    <tr>
+                        <td id="customerName">客户名:</td>
+                        <th></th>
+                    <tr>
+                        <td id="designDepartment">设计部:</td>
+                        <th></th>
+                    <tr>
+                        <td id="designer">设计师:</td>
+                        <th></th>
+                    <tr>
+                        <td id="businessDepartment">业务部:</td>
+                        <th></th>
+                    <tr>
+                        <td id="salesman">业务员:</td>
+                        <th></th>
+                    <tr>
+                        <td id="houseArea">面积:</td>
+                        <th></th>
+                    <tr>
+                        <td id="orderTotalPrice">合同报价:</td>
+                        <th></th>
+                    <tr>
+                        <td id="measureTime">签单时间:</td>
+                        <th></th>
+                    <tr>
+                        <td id="contractTime">量房时间:</td>
+                        <th></th>
+                    <tr>
+                        <td id="status">状态:</td>
+                        <th></th>
+                    <tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="assisOrderItem" class="col-xs-8 column" style="max-height: 510px;overflow: hidden;overflow-y: scroll;width: 64%">
+
+                <div class="flex-wrap" id="form">
+
+                    <div>
+
+
+                        <div class="inline">
+
+                            <div class="inline">
+                            </div>
+
+                        </div>
+
+                        <div class="devide-line"></div>
+
+                    </div>
+                </div>
+
+                <ul class="flex-table">
+                    <li class="line table-title">
+                        <div class="line-wrap order">
+                            <div class="cell index"></div>
+                        </div>
+                        <div class="line-wrap content col8">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">名称</div>
+                            <div class="cell">颜色</div>
+                            <div class="cell">规格</div>
+                            <div class="cell">单位</div>
+                            <div class="cell">仓库</div>
+                            <div class="cell">数量</div>
+                            <div class="cell">备注</div>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="flex-table" id="list"></ul>
+
+                <div style="margin-top: 15px;">
+
+
+                    <div class="inline">
+
+                        <label>备注</label>
+                        <div class="inline long">
+                            <input type="text" id="comment">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(function(){
+        $.getScript('js/manifest/viewAssisOrderItem.js');
+    });
+</script>

@@ -5,6 +5,7 @@ var AddReduceDetail = (function(){
 		artype : null,//增减项类型//"0":"增项", "1":"减项", "2":"漏项"
 		orderid :null,//订单编号
 		versionid : null,//报价版本
+		ordertype : null,//订单类型
 		discount : null,
 		qid : null,//订单的默认报价编号
 		arid : null,//增减项编号
@@ -96,7 +97,7 @@ var AddReduceDetail = (function(){
 			//功能区选择弹出层 todo
 			com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {"quotation.qid": that.qid}, function(res){
 				$("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
-				$("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
+				$("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName",false,null,"type");
 			});
 		},
 		initBtnItems : function(){
@@ -161,26 +162,30 @@ var AddReduceDetail = (function(){
 		total : 0,//总金额
 		//计算报价项各种值
 		calculateQuoteFee : function($quote){
+			var quotationFunctionAreaType = parseFloat($quote.find('.cell.line').attr("quotationFunctionAreaType"));
+			var addReduceItemType = parseFloat($quote.find('.typedict').attr("data-type"));
 			var _num = parseFloat($quote.find('.num .cell-wrap').text());
 			var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
 			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
 
 			var _discountprice = _unitprice;
-			if(addReduceDetail.artype == 1){
-				_discountprice = utils.accMul( _discountprice, (_discountFlag == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
+			if([1, 3].indexOf(addReduceItemType) != -1){
+				_discountprice = utils.changeTwoDecimal(utils.accMul( _discountprice, (_discountFlag == 1 || addReduceDetail.ordertype == 2 ? utils.accDiv(addReduceDetail.discount, 10) : 1)));
+			}else if([0, 2, 4].indexOf(addReduceItemType) != -1 && addReduceDetail.ordertype == 2){
+				_discountprice = utils.changeTwoDecimal(utils.accMul(_discountprice,utils.accDiv(config.addreduceDiscount, 10)));
 			}
+			/*_discountprice = quotationFunctionAreaType == 3 && [3].indexOf(addReduceItemType) != -1 ? 0 : utils.changeTwoDecimal(_discountprice) ;*/
 
+			var _totalprice = utils.changeTwoDecimal(utils.accMul(_num ,  _unitprice));
+			var _totalpriced =  utils.changeTwoDecimal( utils.accMul(_num ,  _discountprice));
+			/*if(quotationFunctionAreaType == 3 &&  [3].indexOf(addReduceItemType) != -1){
+				_totalprice = 0 , _totalpriced = 0 ;
+			}*/
 
-
-			_discountprice = utils.changeTwoDecimal(_discountprice);
-
-			var _totalprice,_totalpriced;
-			_totalprice = utils.changeTwoDecimal(utils.accMul(_num ,  _unitprice));
-			_totalpriced =  utils.accMul(_num ,  _discountprice);
-			if(addReduceDetail.artype == 0){
-				params.decorationOrderType  == 2? _totalpriced = utils.accMul(_totalpriced,utils.accDiv(config.addreduceDiscount,10)):_totalpriced;
-			}
-			_totalpriced = utils.changeTwoDecimal(_totalpriced)
+			/*if(addReduceDetail.artype == 0){
+				params.decorationOrderType  == 2 ? _totalpriced = utils.accMul(_totalpriced,utils.accDiv(config.addreduceDiscount,10)):_totalpriced;
+			}*/
+			/*_totalpriced = utils.changeTwoDecimal(_totalpriced)*/
 			return {
 				discountprice : _discountprice,
 				totalpriced : _totalpriced,
@@ -229,9 +234,9 @@ var AddReduceDetail = (function(){
 
 		//功能区选择弹层确认按钮
 		functionAreaModalConfirm : function(){
+
 			var that = this;
 			$('#confirmItemBtn').off().on(ace.click_event, function(){
-
 				var funcid = $('#quotationFunctionAreaId').val();
 				that.functionAreaId = funcid;
 				that.functionAreaName = $('#quotationFunctionAreaId').find('option:selected').text();
@@ -266,20 +271,22 @@ var AddReduceDetail = (function(){
 							}
 						});
 					}, null, false);
-					
+
 					com.post(api.addReduce.queryAddReduceItemByAddReduceIds, arIds, function(res){
 						var $tableWrap = $('#addItemList', addReduceDetail.$modals.addAddItemModal).empty();
 						var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 						
 						if(res.addReduceItems && res.addReduceItems.length){
 							$.each(res.addReduceItems, function(i, v){
-								v.quotationItemDes = v.content;
-								var $liLine = painter.createQuoteModalItem(v, "ariId");
-								$liLine.appendTo($ul);
+								if(v.quotationFunctionAreaId == funcid) {
+									v.quotationItemDes = v.content;
+									var $liLine = painter.createQuoteModalItem(v, "ariId");
+									$liLine.appendTo($ul);
+								}
 							});
 							$ul.appendTo($tableWrap);
 						}
-					});
+					}, null, false);
 					
 				}else if(that.showingModalName == 'extensionItemModal'){
 					var index = 0;
@@ -297,13 +304,15 @@ var AddReduceDetail = (function(){
 
 						if(res.extensionItems && res.extensionItems.length){
 							$.each(res.extensionItems, function(i, v){
-								v.quotationItemDes = v.content;
-								var $liLine = painter.createQuoteModalItem(v, "eiId");
-								$liLine.appendTo($ul);
+								if(v.quotationFunctionAreaId == funcid) {
+									v.quotationItemDes = v.content;
+									var $liLine = painter.createQuoteModalItem(v, "eiId");
+									$liLine.appendTo($ul);
+								}
 							});
 							$ul.appendTo($tableWrap);
 						}
-					});
+					}, null, false);
 				}
 
 				addReduceDetail.$modals.functionAreaModal.modal('hide');
@@ -354,7 +363,8 @@ var AddReduceDetail = (function(){
 				var addRow = {
 					"num" : $("#num").val(),//工程预算量
 					"itemName" : $("#itemName").val(),//名称
-					"quotationFunctionAreaId" : $("#quotationFunctionAreaId").val(),//功能区
+					"quotationFunctionAreaId" : $("#addQuotationFunctionAreaId").val(),//功能区
+					"quotationFunctionAreaName" : $("#addQuotationFunctionAreaId").find('option:selected').text(),
 					"measurementUnit" : $("#measurementUnit").val(),//单位
 					"unitPrice" : $("#unitPrice").val(),//单价(折后单价、总价为计算值)
 					"workType" : $("#workType").val(),//工种
@@ -383,7 +393,7 @@ var AddReduceDetail = (function(){
 					"addReduceItem.unitPrice" : addRow.unitPrice,//单价 ;
 					"addReduceItem.num" : addRow.num,//工程量 ;
 					"addReduceItem.quotationFunctionAreaId" : addRow.quotationFunctionAreaId,//所属功能区Id ;
-					"addReduceItem.quotationFunctionAreaName" : $("#quotationFunctionAreaId").find('option:selected').text(),//所属功能区name ;
+					"addReduceItem.quotationFunctionAreaName" : $("#addQuotationFunctionAreaId").find('option:selected').text(),//所属功能区name ;
 					"quotationFunctionAreaItem.content" : addRow.content,
 				};
 				var _index = $('.fl-quo-item', '#addReduceItemDiv').length;
@@ -470,6 +480,7 @@ var AddReduceDetail = (function(){
 				if($this.val() && $('input[data-qiid="' + $this.val() +'"]', '#addReduceItemDiv').length){
 					return;
 				}
+
 				var _quotval = {
 					"num" : 0,//工程预算量
 					"itemName" : $li.find('.lbl').text(),//名称
@@ -480,7 +491,7 @@ var AddReduceDetail = (function(){
 					"unitPrice" : parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0),//单价(折后单价、总价为计算值)
 					"content" : $li.find("li .quotationItemDes").text(),//工艺说明
 					"workType" : $li.find("li .workType").text(),//工种
-					//操作
+					"quotationFunctionAreaType" : $this.attr('quotationFunctionAreaType'),
 					"type" : type,//类型(隐藏属性)
 					"ariId" : "",//增减项中报价项的id
 					"quoteItemId" : $this.val(),//id(隐藏属性)
@@ -553,7 +564,6 @@ var AddReduceDetail = (function(){
 				var qfobj = arCalculator.calculateQuoteFee(that.$nowLine);
 				that.$nowLine.attr('data-del-flag', 1);
 				var sumobj = arCalculator.calculateArFees();
-
 				com.clearValidator();
 				var _params = $.extend(true, {}, args, addReduceDetail.basicParams, {"addReduce.total" : sumobj.sumd + qfobj.totalpriced});
 				com.post(api.addReduce.updateAddReduceItem, _params, function(res){
@@ -650,15 +660,16 @@ var AddReduceDetail = (function(){
 		createQuoteModalItem : function(v, idname){
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
-
 			var $label = $('<label></label>');
 			var $input = $('<input>').attr({
 				"type" : "checkbox",
 				"name" : "modalQuots",
 				"class" : "ace ace-checkbox-2",
 				"data-discount-flag" : v.discount,
+				"quotationFunctionAreaType" : $('#quotationFunctionAreaId').find('option:selected').attr("other"),
 				//功能区
 			}).val(v[idname]);
+
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
 
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -700,20 +711,20 @@ var AddReduceDetail = (function(){
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
 			var typeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
 
-			var _dcp =  qv.unitPrice;
+			var _dcp = utils.changeTwoDecimal(qv.unitPrice);
 
-			if(addReduceDetail.artype == 1){
-				_dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(addReduceDetail.discount, 10) : 1));
+			if([1, 3].indexOf(qv.type) != -1){
+				_dcp = utils.changeTwoDecimal(utils.accMul( _dcp, (qv.discount == 1 || addReduceDetail.ordertype == 2 ? utils.accDiv(addReduceDetail.discount, 10) : 1)));
+			}else if([0, 2, 4].indexOf(qv.type) != -1 && addReduceDetail.ordertype == 2){
+				_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
 			}
+			/*if(qv.quotationFunctionAreaType == 3 && [3].indexOf(qv.type) != -1){
+				_dcp = 0;
+			}*/
+			var total = utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp));
 
-			_dcp = utils.changeTwoDecimal(_dcp);
-			var total = utils.accMul(qv.num ,  _dcp);
-
-			if(addReduceDetail.artype == 0){
-				params.decorationOrderType  == 2? total = utils.accMul(total,utils.accDiv(config.addreduceDiscount,10)):total;
-			}
 			var _lineSet = [
-				["line", linenum],
+				["line", linenum,['quotationFunctionAreaType',qv.quotationFunctionAreaType]],
 				["num", qv.num],//工程预算量
 				["name", qv.itemName],//名称
 				["type typedict", typeDict[qv.type], ['data-type', qv.type]],//类型
@@ -722,7 +733,7 @@ var AddReduceDetail = (function(){
 				["unit", qv.measurementUnit],//单位
 				["price unitprice", qv.unitPrice],//单价
 				["price discountprice", _dcp, ["data-discount", addReduceDetail.artype == 0 ?  "0" : qv.discount]],//折后单价
-				["price totalprice-discount",  utils.changeTwoDecimal(total)],//总价
+				["price totalprice-discount",  utils.changeTwoDecimal(total),["style", "white-space:nowrap"]],//总价
 			];
 
 			var $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo;
@@ -776,9 +787,7 @@ var AddReduceDetail = (function(){
 				qv.content && com.showInfo(qv.content);
 			});
 
-
-
-			$item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp)) );
+			 $item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  qv.unitPrice)));
 
 			return $item;
 		},
@@ -788,7 +797,6 @@ var AddReduceDetail = (function(){
 		init : function(){
 			var _type = params["addReduce.type"];//"0":"增项", "1":"减项", "2":"漏项"
 			addReduceDetail.artype = _type;
-
 			if(_type == "0"){
 				$('#sumLabType').text('增项');
 				$('#addNormalItemBtn').removeClass('hide');
@@ -802,7 +810,7 @@ var AddReduceDetail = (function(){
 				$('#addSystemDefineItemBtn').removeClass('hide');
 				$('#addItemBtn').removeClass('hide');
 			}
-
+			addReduceDetail.ordertype = params.decorationOrderType;
 			addReduceDetail.arid = params.addReduceId;
 			addReduceDetail.basicParams["addReduce.arId"] = params.addReduceId;
 			addReduceDetail.basicParams["addReduceItem.arId"] = params.addReduceId;
@@ -810,7 +818,7 @@ var AddReduceDetail = (function(){
             //根据订单编号获取默认报价
 			com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId" : addReduceDetail.orderid, "quotation.type": params.decorationOrderType}, function(res){
 				addReduceDetail.discount = res.quotation.discount;
-				$('#sumLabDiscount').text(res.quotation.discount);
+				$('#sumLabDiscount').text(addReduceDetail.discount);
 				addReduceDetail.qid = res.quotation.qid;
 				addReduceDetail.versionid = res.quotation.versionId;
 			}, null, false);

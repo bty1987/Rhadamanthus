@@ -10,5 +10,4 @@ public interface WorkFlowPlanService {
 	public List<WorkflowPlanVO> queryWorkflowPlanByWpid(WorkflowPlanVO  workflowPlanVO);
 
 	public int updateWorkflowPlan(WorkflowPlanVO workflowPlanVO,List<Long> wfids) throws Exception;
-
 }

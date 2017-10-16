@@ -11,7 +11,7 @@ CREATE TABLE `advancepayment` (
   `company` int(11) NOT NULL,
   PRIMARY KEY (`apId`),
   UNIQUE KEY `uniqueone` (`customerId`,`company`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='¿Í»§Ô¤¸¶¿î';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='å®¢æˆ·é¢„ä»˜æ¬¾';
 
 CREATE TABLE `advancereceipt` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
@@ -37,13 +37,13 @@ CREATE TABLE `advancereceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `apId` int(11) DEFAULT NULL,
   PRIMARY KEY (`arId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ô¤¸¶¿îÏîÊÕ¾İ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='é¢„ä»˜æ¬¾é¡¹æ”¶æ®è¡¨';
 
 CREATE TABLE `decorationpayment` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
-  `paymentType` varchar(10) NOT NULL COMMENT 'Ô¤¸¶¿î¡¢Éè¼Æ·Ñ¡¢¶¨½ğ¡¢Ê×¸¶¿î¡¢Ê×¸¶¶şÆÚ¿î¡¢¶şÆÚ¿î¡¢Î²¿î¡¢ÔöÏî¿î¡¢¼õÏî¿î¡¢ÍË¿î¡¢Î¥Ô¼½ğ',
-  `paymentStatus` varchar(10) NOT NULL DEFAULT 'Î´Ìá½»' COMMENT 'ÉêÇëÉóÅú,ÉóÅúÎ´Í¨¹ı,Î´Ìá½» , Î´¸¶¿î , ÒÑ¸¶¿î,ÒÑÈ·ÈÏ',
+  `paymentType` varchar(10) NOT NULL COMMENT 'é¢„ä»˜æ¬¾ã€è®¾è®¡è´¹ã€å®šé‡‘ã€é¦–ä»˜æ¬¾ã€é¦–ä»˜äºŒæœŸæ¬¾ã€äºŒæœŸæ¬¾ã€å°¾æ¬¾ã€å¢é¡¹æ¬¾ã€å‡é¡¹æ¬¾ã€é€€æ¬¾ã€è¿çº¦é‡‘',
+  `paymentStatus` varchar(10) NOT NULL DEFAULT 'æœªæäº¤' COMMENT 'ç”³è¯·å®¡æ‰¹,å®¡æ‰¹æœªé€šè¿‡,æœªæäº¤ , æœªä»˜æ¬¾ , å·²ä»˜æ¬¾,å·²ç¡®è®¤',
   `createUserId` varchar(15) DEFAULT NULL,
   `createTime` timestamp NULL DEFAULT NULL,
   `collectUserId` varchar(15) DEFAULT NULL,
@@ -59,8 +59,8 @@ CREATE TABLE `decorationpayment` (
   `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
   `advancePayment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `collectDes` varchar(128) DEFAULT NULL,
-  `paymentBlance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '¸¶¿îÓà¶î',
-  `other` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '¶ÔÓÚÊ×¸¶¿îÊÇ¶¨½ğ×ªÊ×¸¶½ğ¶î',
+  `paymentBlance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT 'ä»˜æ¬¾ä½™é¢',
+  `other` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT 'å¯¹äºé¦–ä»˜æ¬¾æ˜¯å®šé‡‘è½¬é¦–ä»˜é‡‘é¢',
   `createDes` varchar(128) DEFAULT NULL,
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -103,7 +103,7 @@ CREATE TABLE `decorationreceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `dpId` int(11) DEFAULT NULL,
   PRIMARY KEY (`drId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='×°ĞŞ¿îÏîÊÕ¾İ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='è£…ä¿®æ¬¾é¡¹æ”¶æ®è¡¨';
 
 CREATE TABLE `materialinsidepayment` (
   `mipId` int(11) NOT NULL AUTO_INCREMENT,
@@ -137,7 +137,7 @@ CREATE TABLE `materialinsidepayment` (
   PRIMARY KEY (`mipId`),
   KEY `indexone` (`miId`),
   KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ö÷²Ä³¡ÄÚÊÕ¿î±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ä¸»æåœºå†…æ”¶æ¬¾è¡¨';
 
 CREATE TABLE `materialoutsidepayment` (
   `mopId` int(11) NOT NULL AUTO_INCREMENT,
@@ -170,7 +170,7 @@ CREATE TABLE `materialoutsidepayment` (
   PRIMARY KEY (`mopId`),
   KEY `indexone` (`moId`),
   KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ö÷²Ä³¡ÍâÊÕ¿î±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ä¸»æåœºå¤–æ”¶æ¬¾è¡¨';
 
 CREATE TABLE `materialoutsidereceipt` (
   `morId` int(11) NOT NULL AUTO_INCREMENT,
@@ -195,7 +195,7 @@ CREATE TABLE `materialoutsidereceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `mopId` int(11) DEFAULT NULL,
   PRIMARY KEY (`morId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ö÷²Ä³¡Íâ¿îÏîÊÕ¾İ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ä¸»æåœºå¤–æ¬¾é¡¹æ”¶æ®è¡¨';
 
 CREATE TABLE `materialpayment` (
   `mpId` int(11) NOT NULL AUTO_INCREMENT,
@@ -234,7 +234,7 @@ CREATE TABLE `materialpayment` (
   `mrId` int(11) DEFAULT NULL,
   PRIMARY KEY (`mpId`),
   KEY `indexone` (`msoId`,`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ö÷²Ä×Ó¶©µ¥¿îÏî±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ä¸»æå­è®¢å•æ¬¾é¡¹è¡¨';
 
 CREATE TABLE `materialreceipt` (
   `mrId` int(11) NOT NULL AUTO_INCREMENT,
@@ -265,7 +265,7 @@ CREATE TABLE `materialreceipt` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `mpId` int(11) DEFAULT NULL,
   PRIMARY KEY (`mrId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ö÷²Ä¿îÏîÊÕ¾İ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ä¸»ææ¬¾é¡¹æ”¶æ®è¡¨';
 
 CREATE TABLE `payment` (
   `paymentId` bigint(32) NOT NULL AUTO_INCREMENT,
@@ -298,24 +298,24 @@ CREATE TABLE `payment` (
 
 CREATE TABLE `salespayment` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT 'ÏúÊÛµ¥ID',
+  `sid` int(11) NOT NULL COMMENT 'é”€å”®å•ID',
   `type` tinyint(4) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `category` varchar(32) NOT NULL DEFAULT '',
   `brand` varchar(32) NOT NULL DEFAULT '',
-  `cuid` int(11) NOT NULL COMMENT '´´½¨ÈËID',
-  `createrName` varchar(32) NOT NULL COMMENT '´´½¨ÈËÃû',
+  `cuid` int(11) NOT NULL COMMENT 'åˆ›å»ºäººID',
+  `createrName` varchar(32) NOT NULL COMMENT 'åˆ›å»ºäººå',
   `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   `srid` int(11) DEFAULT NULL,
   PRIMARY KEY (`spid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÏúÊÛ¿îÏî±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='é”€å”®æ¬¾é¡¹è¡¨';
 
 CREATE TABLE `salesreceipt` (
   `srid` int(11) NOT NULL AUTO_INCREMENT,
-  `cluid` int(11) DEFAULT NULL COMMENT 'ÊÕ¿îÈËID',
-  `cfuid` int(11) DEFAULT NULL COMMENT 'È·ÈÏÈËID',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT 'ÊÕ¿îÈËÃû',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'È·ÈÏÈËÃû',
+  `cluid` int(11) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººID',
+  `cfuid` int(11) DEFAULT NULL COMMENT 'ç¡®è®¤äººID',
+  `collecterName` varchar(32) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººå',
+  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'ç¡®è®¤äººå',
   `collectTime` timestamp NULL DEFAULT NULL,
   `confirmTime` timestamp NULL DEFAULT NULL,
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -335,20 +335,20 @@ CREATE TABLE `salesreceipt` (
   `couponInfo` text NOT NULL,
   `des` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='ÏúÊÛÊÕ¾İ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='é”€å”®æ”¶æ®è¡¨';
 
 CREATE TABLE `servicepayment` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
-  `pid` int(11) NOT NULL COMMENT 'Ô¤¸¶¿î¿îÏîID',
+  `pid` int(11) NOT NULL COMMENT 'é¢„ä»˜æ¬¾æ¬¾é¡¹ID',
   `type` tinyint(1) NOT NULL,
   `status` tinyint(1) DEFAULT '0',
-  `cuid` int(11) NOT NULL COMMENT '´´½¨ÈËID',
-  `cluid` int(11) DEFAULT NULL COMMENT 'ÊÕ¿îÈËID',
-  `cfuid` int(11) DEFAULT NULL COMMENT 'È·ÈÏÈËID',
-  `createrName` varchar(32) NOT NULL COMMENT '´´½¨ÈËĞÕÃû',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT 'ÊÕ¿îÈËĞÕÃû',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'È·ÈÏÈËĞÕÃû',
+  `cuid` int(11) NOT NULL COMMENT 'åˆ›å»ºäººID',
+  `cluid` int(11) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººID',
+  `cfuid` int(11) DEFAULT NULL COMMENT 'ç¡®è®¤äººID',
+  `createrName` varchar(32) NOT NULL COMMENT 'åˆ›å»ºäººå§“å',
+  `collecterName` varchar(32) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººå§“å',
+  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'ç¡®è®¤äººå§“å',
   `createTime` timestamp NULL DEFAULT NULL,
   `collectTime` timestamp NULL DEFAULT NULL,
   `confirmTime` timestamp NULL DEFAULT NULL,
@@ -357,14 +357,14 @@ CREATE TABLE `servicepayment` (
   `des` varchar(256) DEFAULT '',
   `srid` int(11) DEFAULT NULL,
   PRIMARY KEY (`spid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='·şÎñ¿îÏî';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='æœåŠ¡æ¬¾é¡¹';
 
 CREATE TABLE `servicereceipt` (
   `srid` int(11) NOT NULL AUTO_INCREMENT,
-  `cluid` int(11) DEFAULT NULL COMMENT 'ÊÕ¿îÈËID',
-  `cfuid` int(11) DEFAULT NULL COMMENT 'È·ÈÏÈËID',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT 'ÊÕ¿îÈËĞÕÃû',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'È·ÈÏÈËĞÕÃû',
+  `cluid` int(11) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººID',
+  `cfuid` int(11) DEFAULT NULL COMMENT 'ç¡®è®¤äººID',
+  `collecterName` varchar(32) DEFAULT NULL COMMENT 'æ”¶æ¬¾äººå§“å',
+  `confirmerName` varchar(32) DEFAULT NULL COMMENT 'ç¡®è®¤äººå§“å',
   `collectTime` timestamp NULL DEFAULT NULL,
   `confirmTime` timestamp NULL DEFAULT NULL,
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -380,4 +380,4 @@ CREATE TABLE `servicereceipt` (
   `accountsBank` varchar(20) NOT NULL DEFAULT '',
   `des` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='·şÎñÊÕ¾İ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='æœåŠ¡æ”¶æ®';

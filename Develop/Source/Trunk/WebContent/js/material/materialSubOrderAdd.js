@@ -23,7 +23,7 @@ jQuery(function($) {
 	materialSubOrderAddPostData["materialSubOrder.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	materialSubOrderAddPostData["materialSubOrder.materialBrand"] = materialSubOrderPostData["materialSubOrder.materialBrand"];
 	
-	com.post(api.ds.materialInfo, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		$.each(res.materialOrderType, function(k, v){
 			materialSubOrderAdd.materialType[v.key] = v.value;
 		});

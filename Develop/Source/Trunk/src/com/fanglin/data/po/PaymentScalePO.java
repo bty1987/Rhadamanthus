@@ -23,8 +23,6 @@ public class PaymentScalePO implements Serializable{
 	
 	private String name;
 	
-	private String scale;
-	
 	private String comment;
 	
 	public PaymentScalePO() {
@@ -56,15 +54,6 @@ public class PaymentScalePO implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	@Column(name="scale")
-	public String getScale() {
-		return scale;
-	}
-
-	public void setScale(String scale) {
-		this.scale = scale;
 	}
 	
 	@Column(name="comment")

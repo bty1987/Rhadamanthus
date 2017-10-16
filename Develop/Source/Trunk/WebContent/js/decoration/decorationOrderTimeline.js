@@ -20,7 +20,7 @@ $(function(){
     $('.widget-box').addClass('flloading');
     $('.widget-box', '#orderId').removeClass('flloading');
 
-    com.post(api.ds.constructionInfo,{},function (res) {
+    com.post(api.ds.construction,{},function (res) {
         $.each(res.constructionSchedule,function (i,v) {
             construcionScheName[v.key] = v.value;
         })
@@ -236,7 +236,7 @@ $(function(){
         $('[name="dphone"]',$info).text(decorationOrder.designerPhone|| '');
         $('[name="sname"]',$info).text(decorationOrder.salesman);
         $('[name="sphone"]',$info).text(decorationOrder.salesmanPhone|| '');
-        $('[name="vname"]',$info).text(decorationOrder.supervisor);
+        $('[name="vname"]',$info).text(decorationOrder.supervisor|| '');
         $('[name="vphone"]',$info).text(decorationOrder.supervisorPhone|| '');
         $('[name="status"]',$info).text(decorationOrder.status);
 
@@ -425,7 +425,7 @@ $(function(){
         var $worker = $('<div></div>').addClass('itemdiv dialogdiv'),
             $user = $('<div></div>').addClass('user'),
             url = config.media + api.common.showImg.url + '?imgBasePath=' + v.user.userPhoto + '&divFlag=1&width=48&height=48',
-            $userImg  = $('<img onerror="javascript:this.src=\'./assets/images/avatar2.png\';">').attr('src', url),
+            $userImg  = $('<img onerror="javascript:this.src=\'./assets/ace/images/avatar2.png\';">').attr('src', url),
 
             $body = $('<div></div>').addClass('body').css('background', '#fff'),
             $name = $('<div class="name"><span class="blue">' + v.user.userName + '</span></span></div>'),

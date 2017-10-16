@@ -36,8 +36,6 @@ public interface MaterialPaymentService {
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByMsoId(MaterialPaymentVO materialPaymentVO);
 	
-	public float queryMaterialPaymentForCouponByMsoId(MaterialPaymentVO materialPaymentVO);
-	
 	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
 	
 	public void checkMaterialPayment(long mpId) throws FLException;

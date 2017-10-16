@@ -1,0 +1,83 @@
+<div class="page-content" style="padding: 40px 20px">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="clearfix relative" id="form">
+
+                <div class="inline">
+
+                    <button class="btn btn-yellow" id="addPurchase">添加一条采购信息</button>
+
+                    <button id="submitPurchase" class="btn btn-info" data-loading-text="提交中..." type="submit"><i
+                            class="icon-ok"></i>保存
+                    </button>
+
+                </div>
+
+                <div class="pull-right" style="margin-bottom: 1%;width: 30%">
+
+                    <div class="inline">
+
+                        <label>单据日期</label>
+                        <div class="inline">
+                            <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
+                                   value=""/>
+                        </div>
+
+                    </div>
+
+                    <div class="inline">
+                        <label>交付日期</label>
+                        <div class="inline">
+                            <input name="deliveryTime" class="m-wrap m-ctrl-medium date-picker" readonly size="16"
+                                   type="text" value=""/>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <ul class="flex-table">
+                <li class="line table-title">
+                    <div class="line-wrap order">
+                        <div class="cell index"></div>
+                    </div>
+                    <div class="line-wrap content col9">
+                        <div class="cell">商品编号</div>
+                        <div class="cell">商品名称</div>
+                        <div class="cell">品类</div>
+                        <div class="cell">品牌</div>
+                        <div class="cell">颜色</div>
+                        <div class="cell">规格</div>
+                        <div class="cell">数量</div>
+                        <div class="cell">件数</div>
+                        <div class="cell">单价</div>
+                    </div>
+                    <div class="line-wrap action">
+                        <div class="cell option">操作</div>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="flex-table" id="list"></ul>
+
+            <div style="margin-top: 15px;">
+
+                <div class="inline-group">
+
+                    <label>备注</label>
+                    <div class="item long">
+                        <input type="text" id="comment">
+                    </div>
+                </div>
+                <div style="margin-top: 10px" class="col-sm-1 pull-right inline">
+                    <span>总价:</span><span id="totalSpan">0</span>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script src="js/manifest/createPurchase.js"></script>

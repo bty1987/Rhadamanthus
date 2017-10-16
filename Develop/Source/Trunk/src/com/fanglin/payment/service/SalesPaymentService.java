@@ -3,6 +3,7 @@ package com.fanglin.payment.service;
 import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.vo.SalesVO;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.payment.vo.SalesReceiptVO;
 import com.fanglin.utils.Paging;
@@ -20,6 +21,8 @@ public interface SalesPaymentService {
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
+	
+	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesVO salesVO);
 	
 	public int addSalesPayment(SalesPaymentVO salesPaymentVO,String cuid) throws FLException;
 	

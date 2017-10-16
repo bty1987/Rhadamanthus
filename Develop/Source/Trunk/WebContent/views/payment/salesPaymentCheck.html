@@ -1,0 +1,30 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#decorationPaymentList">已收款</a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#history">已确认</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="decorationPaymentList" class="tab-pane active">
+                    <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+                    <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+                    <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+                </div>
+                <div id="history" class="tab-pane">
+                    <div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+                    <div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+                    <div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.getScript('js/payment/salesPaymentCheck.js');
+</script>

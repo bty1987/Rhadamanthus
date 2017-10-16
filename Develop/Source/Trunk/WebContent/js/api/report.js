@@ -10,9 +10,6 @@ $.extend(api.index, {
     rankIndex: {url: "/views/report/rank.html"}
 });
 
-$.extend(api.ds, {
-    
-});
 
 $.extend(api, {report: {
 	pagePutline: {url: "pagePutline.do"},

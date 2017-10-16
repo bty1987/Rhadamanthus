@@ -43,8 +43,8 @@ jQuery(function($) {
 	materialPayment.baseModal = $("#baseItemModal").on('show.bs.modal', function(e){
 		com.clearValidator();
 	});
-	materialPayment.saveBtn = $("#saveBtn").on("click", payment);
-	materialPayment.saveBtn = $("#saveRefundBtn").on("click", refund);
+	materialPayment.saveBtn = $("#saveBtn").bindClick(payment);
+	materialPayment.saveBtn = $("#saveRefundBtn").bindClick(refund);
 	materialPayment.cancelBtn = $("#cancelBtn").on("click", function(){
 		materialPayment.historyFlag = false;
 	});
@@ -53,6 +53,13 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
+    materialPayment.items.cashCheckbox = $("#cashCheckbox");
+    materialPayment.items.bankCheckbox = $("#bankCheckbox");
+    materialPayment.items.checkvCheckbox = $("#checkvCheckbox");
+    materialPayment.items.installmentCheckbox = $("#installmentCheckbox");
+    materialPayment.items.accountsCheckbox = $("#accountsCheckbox");
+    materialPayment.items.couponCheckbox = $("#couponCheckbox");
+    materialPayment.items.advanceCheckbox = $("#advanceCheckbox");
 	materialPayment.items.couponType = $("#couponType");
 
 	com.post(api.common.queryReceiptType, {}, function(res){
@@ -109,23 +116,7 @@ jQuery(function($) {
 
 	$("#history").removeClass("active");
 
-	$("#refundBankCard").on("click",function(e) {
-		$("#refundBankCardDiv").removeClass("hide");
-		$("#refundBankName").addClass("v_required");
-
-		$("#refundCashInfoDiv").addClass("hide");
-		$("#refundCashInfo").removeClass("v_required");
-	});
-
-	$("#refundCash").on("click",function(e) {
-		$("#refundBankCardDiv").addClass("hide");
-		$("#refundBankName").removeClass("v_required");
-
-		$("#refundCashInfoDiv").removeClass("hide");
-		$("#refundCashInfo").addClass("v_required");
-	});
-
-	for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
+	/*for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
 		$("#" + materialPayment.paymentModelNameData[i] + "Checkbox").on("click",function(e) {
 			var _name = $(this).attr("key");
 			var _checkboxId = "#" + _name + "Checkbox";
@@ -146,9 +137,13 @@ jQuery(function($) {
 				$(_checkboxId).removeAttr("checked","checked");
 			}
 		});
-	}
+	}*/
 
-	com.post(api.ds.materialInfo, {}, function(res){
+    $("#baseItemModal :checkbox").on("change", function(){
+        $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show()  : $("[referCheckbox="+this.id+"]").hide()
+    });
+
+	com.post(api.ds.payment, {}, function(res){
 		$("#advanceType").bindData(res.advanceType, 'key', 'value');
 
 		for(var i=0;i<res.materialPaymentType.length;i++){
@@ -373,7 +368,7 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnPrint.click(function(){
-				if(v.collectUserName!=params.userInfo.user.userName){
+				if(v.collectUserId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
@@ -433,6 +428,9 @@ jQuery(function($) {
 	});
 
 	$('a[name="collects"]', '#pagenation').click(function(){
+
+		$("#saveBtn").removeClass("hide");
+		$("#saveRefundBtn").addClass("hide");
 
 		var $inputs = $('input[name="mpIds"]:checked');
 
@@ -495,19 +493,6 @@ jQuery(function($) {
 					_paymentTypeFlag = 3;
 				}
 			}
-
-//			if(row.paymentType == 4 || row.paymentType == 5 || row.paymentType == 6 || row.paymentType == 7){
-//				sumMoney = utils.accSub(sumMoney, parseFloat(row.referMoney));
-//				if(_paymentType != 4 || _paymentType != 5 || _paymentType != 6){
-//					_paymentTypeFlag = true;
-//				}
-//			}else{
-//				sumMoney = utils.accAdd(sumMoney, parseFloat(row.referMoney));
-//				if(_paymentType == 4 || _paymentType == 5 || _paymentType == 6 || row.paymentType == 7){
-//					_paymentTypeFlag = true;
-//				}
-//			}
-
 			materialPaymentPostData.paymentInfo.push(row);
 		});
 
@@ -590,79 +575,36 @@ jQuery(function($) {
 
 	function dialogPayment(payment){
 
+        com.cleanItems(materialPayment.items);
+
 		materialPaymentPostData.orderId = payment.orderId;
 		materialPaymentPostData.customerId = payment.customerId;
 
 		if([1, 2, 3].indexOf(payment.paymentType) != -1){ // 预付款、订金、全款
-
 			initBaseModal();
+			$("#myModalLabel").text("付款信息");
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-			$("#checkvBankName").find("option").eq(0).attr("selected","selected");
-			$("#installmentBankName").find("option").eq(0).attr("selected","selected");
-			$("#accountsBankName").find("option").eq(0).attr("selected","selected");
-//			var options = {
-//				"decorationOrder.orderId": payment.orderId,
-//			}
-//			
-//			com.post(api.decoration.queryDecorationActivityItemForCouponAVaildByOrderId, options, function(res){
-//				var decorationActivityItems = res.decorationActivityItems;
-//				
-//				var couponInfos = [];
-//				
-//				for(var i=0;i<decorationActivityItems.length;i++){
-//					
-//					var _ = decorationActivityItems[i];
-//					
-//					couponInfos.push({"key": _.daiId, "value":_.activityItemName + ",金额:" + _.money + ",数量:" + _.num});
-//				}
-//				
-//				materialPayment.items.couponType.chosen("destroy");
-//				materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-//				materialPayment.items.couponType.bindData(couponInfos, 'key', 'value');
-//				materialPayment.items.couponType.trigger("chosen:updated");
-//			});
+            $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+			$("#saveBtn").removeClass("hide");
+			$("#saveRefundBtn").addClass("hide");
 
-			materialPayment.items.couponType.chosen("destroy");
-			materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-			materialPayment.items.couponType.bindData(materialPayment.couponType, 'key', 'name');
-			materialPayment.items.couponType.trigger("chosen:updated");
-
-			materialPayment.baseModal.modal("show");
 		}else if([4, 5, 6, 7].indexOf(payment.paymentType) != -1){ // 退款
-			initRefundModal();
-			$("#refundSum").val(payment.referMoney).attr("disabled", "disabled");
-			$("#refundCouponDiv").addClass("hide");
-			
-			com.post(api.payment.queryMaterialPaymentForCouponByMsoId, {"materialPayment.msoId":payment.msoId}, function(res){
-				if(res.coupon != 0){
-					$("#refundCouponDiv").removeClass("hide");
-					$("#couponValue").attr("disabled", "disabled");
-					$("#couponValue").val(res.materialPayment.coupon);
-				}
-			});
-
-			materialPayment.refundModal.modal("show");
+			initBaseModal();
+			$("#myModalLabel").text("退款信息");
+			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
+			$('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
+			$("#saveBtn").addClass("hide");
+			$("#saveRefundBtn").removeClass("hide");
 		}
+
+        com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": materialPaymentPostData.customerId},function(res){
+            $("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
+            $("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
+        });
 
 		materialPaymentPostData.paymentInfo = [payment];
 
 		materialPayment.editFlg =  false;
-	}
-
-	function initRefundModal(){
-		$("#refundBankCardDiv").addClass("hide");
-		$("#refundBankCard").removeAttr("checked","checked");
-		$("#refundBankName").removeClass("v_required");
-		$("#refundCash").attr("checked","checked");
-
-		$("#refundSum").val("");
-		$("#refundBankName").val("");
-		$("#refundContent").val("");
-
-		$("#refundCouponType").chosen("destroy");
-		$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
-		$("#refundCouponType").bindData(materialPayment.couponType, 'key', 'name');
-		$("#refundCouponType").trigger("chosen:updated");
 	}
 
 	function initBaseModal(){
@@ -679,7 +621,7 @@ jQuery(function($) {
 				_selectId = "#" + _name + "Name";
 			}
 
-			$(_divId).addClass("hide");
+			//$(_divId).addClass("hide");
 			$(_checkboxId).removeAttr("checked").removeAttr("disabled");
 
 			$(_inputId).val("");
@@ -697,6 +639,17 @@ jQuery(function($) {
 		}
 
 		$("des").val("");
+
+		$("#checkvBankName option:first").prop("selected", 'selected');
+		$("#installmentBankName option:first").prop("selected", 'selected');
+		$("#accountsBankName option:first").prop("selected", 'selected');
+
+		materialPayment.items.couponType.chosen("destroy");
+		materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
+		materialPayment.items.couponType.bindData(materialPayment.couponType, 'key', 'name');
+		materialPayment.items.couponType.trigger("chosen:updated");
+
+		materialPayment.baseModal.modal("show");
 	}
 
 	function addBankDiv(index){
@@ -731,7 +684,6 @@ jQuery(function($) {
 		var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
 		var bankTimeInput =  $('<input></input>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 
-//		bankTimeInput.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
 	}
 
 	function payment(){
@@ -924,65 +876,134 @@ jQuery(function($) {
 
 		var url = "";
 		var options = {};
-		var type = "";
-		var referPayment = $("#sumMoneyShow").text();
-		var refundSum = $("#refundSum").val();
-		var mpIds = "";
+		var args = {};
+		var referPayment = $("#referMoney").val();
+		var realPayment = 0;
+		var couponCount = 0;
+		var _paymentInfo = "#paymentInfo";
 
-		if($("#refundCash").prop("checked")){
-			type = "cash";
-		}else{
-			type = "bank";
+		$(_paymentInfo).text("");
+
+		for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
+
+			var _paymentName = materialPayment.paymentModelNameData[i];
+			var _checkboxId = "#" + _paymentName + "Checkbox";
+			var _inputId = _paymentName;
+			var _selectId = "";
+
+			if(_paymentName == "coupon" || _paymentName == "advance"){
+				_selectId = _paymentName + "Type";
+			}else if(_paymentName != "bank"){
+				_selectId = _paymentName + "BankName";
+			}else{
+				_selectId = _paymentName + "Name";
+			}
+
+			$(_checkboxId).on("change", function(){
+				$(_paymentInfo).text("");
+			});
+
+			$("#"+_selectId).on("change", function(){
+				$(_paymentInfo).text("");
+			});
+
+			$("#"+_paymentName).on("keydown", function(){
+				$(_paymentInfo).text("");
+			});
+
+			if($(_checkboxId).prop("checked")){
+
+				var _payment = 0;
+
+				if(_paymentName == "cash"){
+					args["cash"] = $("#cash").val();
+					args["cashInfo"] = $("#cashInfo").val();
+
+					_payment = $("#cash").val();
+				}else if(_paymentName == "bank"){
+					var _bank = 0;
+					var _bankInfo = "#";
+
+					var bankAdd = $("#bankAdd");
+					var num = parseInt(bankAdd.attr("num"));
+					for(var j=0;j<num;j++){
+						var index = j + 1;
+						var bankName = $("#bankName_"+index).val();
+						var bankMoney = $("#bank_"+index).val();
+						var bankDate = $("#bankDate_"+index).val();
+						var bankTime = $("#bankTime_"+index).val();
+
+						_bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
+
+						_bank = utils.accAdd(parseFloat(bankMoney), _bank);
+					}
+
+					args["bank"] = _bank;
+					args["bankInfo"] = _bankInfo;
+
+					_payment = _bank;
+				}else if(_paymentName == "coupon"){
+					var _coupon = 0;
+					var _couponInfo = "#";
+
+					$("[class='search-choice']", $("#couponType_chosen")).each(function(i, e){
+
+						var _ = $(e);
+
+						_couponVal = _.children('span').children('input').val();
+						_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
+						_couponInfo += _.children('span').text() + ":" + _couponVal + "#";
+
+						couponCount++;
+					});
+
+					args["coupon"] = _coupon;
+					args["couponInfo"] = _couponInfo;
+
+					_payment = _coupon;
+				}else{
+					args[_inputId] = $("#" + _inputId).val();
+					_payment = $("#" + _inputId).val();
+				}
+
+				if($(_checkboxId).attr("select") == "1"){
+					args[_selectId] = $("#" + _selectId).val();
+				}
+
+				realPayment = utils.accAdd(realPayment, parseFloat(_payment));
+			}
+		}
+
+		if(referPayment != realPayment){
+			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+			return false;
+		}
+
+		if($.isEmptyObject(args)){
+			com.showAlert(com.warning, "无收款方式信息");
+			return false;
 		}
 
 		url = api.payment.collectMaterialPaymentForRefund;
 
 		var _info = materialPaymentPostData.paymentInfo[0];
 
-		var referMoney = _info.referMoney;
-
 		options["materialPayment.mpId"] = _info.mpId;
 		options["materialPayment.msoId"] = _info.msoId;
 
-		mpIds += "&mpIds[0]="+_info.mpId;
-
-		var _coupon = 0;
-		var _couponInfo = "#";
-
-		$("[class='search-choice']", $("#refundCouponType_chosen")).each(function(i,e){
-			_couponVal = $(e).children('span').children('input').val();
-			_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-			_couponInfo += $(e).children('span').text()+":"+_couponVal+"#";
-		});
-
-		if(_coupon > 0){
-			if(_coupon > referMoney){
-				com.showAlert(com.error, "全退款不能操作退款金额");
-				return false;
-			}
-
-			options["materialPayment.coupon"] = _coupon;
-			options["materialPayment.couponInfo"] = _couponInfo;
-			referMoney = utils.accSub(referMoney, _coupon);
+		for(var arg in args){
+			options["materialPayment."+arg] = args[arg];
 		}
 
-		if(referMoney > 0){
-			if(type == "cash"){
-				options["materialPayment.cash"] = referMoney;
-				options["materialPayment.cashInfo"] = $("#refundCashInfo").val();
-				options["materialPayment.bank"] = 0;
-				options["materialPayment.bankInfo"] = "";
-			}else{
-				options["materialPayment.cash"] = 0;
-				options["materialPayment.cashInfo"] = "";
-				options["materialPayment.bank"] = referMoney;
-				options["materialPayment.bankInfo"] = $("#refundBankName").val();
-			}
-		}
+		options["materialPayment.des"] = $("#des").val();
 
-		options["materialPayment.des"] = $("#refundContent").val();
+		options["materialSubOrder.orderId"] = materialPaymentPostData.orderId;
 
 		com.post(url, options, function(res){
+
+			searcher.doSearch();
+
+			materialPayment.historyFlag = false;
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
@@ -991,11 +1012,9 @@ jQuery(function($) {
 					},null,true);
 				}
 			});
-
-			searcher.doSearch();
 		});
 
-		materialPayment.refundModal.modal("hide");
+		materialPayment.baseModal.modal("hide");
 
 		materialPaymentPostData.paymentInfo = []
 	}

@@ -46,7 +46,7 @@ public class ConstructionAction extends BaseListAction{
 	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
 		
-		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), null, queryCompany());
+		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -79,38 +79,6 @@ public class ConstructionAction extends BaseListAction{
 	public String updateConstructionByOrderId(){
 		
 		constructionService.saveOrUpdateConstructionByOrderId(construction);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkConstructionForChanStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkConstructionForChanStatus() throws FLException{
-		
-		constructionService.checkConstructionForChanStatus(construction);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkFirstPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkFirstPayment() throws FLException{
-		
-		constructionService.checkFirstPayment(construction);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkSecondPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkSecondPayment() throws FLException{
-		
-		constructionService.checkSecondPayment(construction);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkFinalyPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkFinalyPayment() throws FLException{
-		
-		constructionService.checkFinalyPayment(construction, queryUserId());
 		
 		return SUCCESS;
 	}

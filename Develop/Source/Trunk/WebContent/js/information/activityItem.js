@@ -11,7 +11,7 @@ jQuery(function($) {
 	activityItemPostData.aid = params.aid;
 	activityItemPostData.activityName = params.activityName;
 	
-	com.post(api.ds.activityInfo, {"timestamp": new Date().getTime()}, function(res){
+	com.post(api.ds.information, {"timestamp": new Date().getTime()}, function(res){
 		activityItem.activityItemType = res.activityItemType;
 	}, null, false);
 	

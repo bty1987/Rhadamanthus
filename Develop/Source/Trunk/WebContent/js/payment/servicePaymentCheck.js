@@ -141,7 +141,7 @@ jQuery(function($) {
 	//查询服务款未确认信息
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "designer", "village"], "condList", api.payment.pageServicePaymentForCollect, function(data){
+	searcher.init(["orderId", "designer", "village", "collectTimeDateRange"], "condList", api.payment.pageServicePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "pageServicePaymentForCollectData", null, false, null, function(){
 
@@ -280,7 +280,7 @@ jQuery(function($) {
 	//查询服务款已确认信息
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId", "designer", "village"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
+	hsearcher.init(["orderId", "designer", "village", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentForConfirmPostData", null, false, null, function(){}, "hresultList");
 

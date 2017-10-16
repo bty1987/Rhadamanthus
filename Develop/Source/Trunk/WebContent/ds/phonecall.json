@@ -1,0 +1,26 @@
+{
+  "stopReason": [
+    {"key":"1","value":"主叫挂断"},
+    {"key":"2","value":"被叫挂断"},
+    {"key":"3","value":"呼叫不可及"},
+    {"key":"5","value":"超时未接"},
+    {"key":"6","value":"拒接或超时"},
+    {"key":"7","value":"网络问题"},
+    {"key":"9","value":"API请求挂断"},
+    {"key":"10","value":"余额不足"},
+    {"key":"11","value":"呼叫失败，系统错误"},
+    {"key":"12","value":"被叫拒接"},
+    {"key":"13","value":"被叫无人接听"},
+    {"key":"14","value":"被叫正忙"},
+    {"key":"15","value":"被叫不在线"},
+    {"key":"16","value":"呼叫超过最大呼叫时间"}
+  ],
+  "recordType":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"本地"},
+    {"key":"2","value":"线上"},
+    {"key":"3","value":"失败"}
+  ],
+  "errorCode": 0,
+  "errorMsg": null
+}

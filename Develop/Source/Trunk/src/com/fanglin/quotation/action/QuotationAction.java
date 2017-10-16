@@ -71,7 +71,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "queryQuotationForConfig", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationForConfig() throws FLException{
 		
-		configs = quotationService.queryQuotationForConfig();
+		configs = quotationService.queryQuotationForConfig(queryCompany());
 	    
 		return SUCCESS;
 	}

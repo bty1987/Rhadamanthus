@@ -1,6 +1,4 @@
 jQuery(function($) {
-
-	var workerAllocationDetailPostData = {};
 	var constructionNode = {};
 	var workerAllocationDetail = {
 
@@ -84,10 +82,9 @@ jQuery(function($) {
 		var stepnum = constructionSchedule[0].schedule;
 		initWizardSept(workerAllocationDetail.operateDict[stepnum], stepnum);
 
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
+		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
 			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
-
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
 			var sd = stepId.substring(4);
 			if(!workerAllocationDetail.wizardSept[sd]){
@@ -239,7 +236,6 @@ jQuery(function($) {
 					}
 
 					com.post(api.construction.addConstructer, args, function(res){
-							workerAllocationDetailPostData["constructer.csId"] = res.constructer.csId;
 							setWorkerUrl(operate, res);
 					});
 					return false;
@@ -286,7 +282,6 @@ jQuery(function($) {
 					}
 
 					com.post(api.construction.addConstructer, args, function(res){
-							workerAllocationDetailPostData["constructer.csId"] = res.constructer.csId;
 							setWorkerUrl(operate, res);
 						});
 					return false;
@@ -564,7 +559,8 @@ jQuery(function($) {
 		var paneWorkerGroupSe = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
 		var paneWorkerEnter = $("<div></div>").attr("id", name + "WorkerEnter").appendTo(paneWorkerGroupSe);
 		var paneWorkerEnlab = $("<lable></lable>").addClass("col-sm-1 control-label").attr("for", name + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);
-		var paneWorkerSel = $("<select></select>").attr("id", name + "WorkerName").addClass("chosen-select col-sm-2 v_required").attr("data-placeholder","请输入工人名称").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(paneWorkerEnter);
+		var paneWorkerSelDiv = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerEnter);
+		var paneWorkerSel = $("<select></select>").attr("id", name + "WorkerName").addClass("chosen-select col-sm-2 v_required").attr("data-placeholder","请输入工人名称").attr("data-toggle","popover").attr("data-trigger","manual").appendTo(paneWorkerSelDiv);
 		var paneWorkerOp = $("<option></option>").attr("value","").html("&nbsp;").appendTo(paneWorkerSel);
 
 		var paneWorkerGroupEi = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);

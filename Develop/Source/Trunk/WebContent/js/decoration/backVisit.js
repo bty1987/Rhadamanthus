@@ -34,7 +34,7 @@ $(function(){
                 var $bbody = $('<div></div>').addClass('widget-body');
                 var $bmain = $('<div></div>').addClass('widget-main').html(v.content);
                 
-                com.showImg($infoImg, v.senderPhoto, 32, 32, v.sender, 'assets/images/avatar2.png');
+                com.showImg($infoImg, v.senderPhoto, 32, 32, v.sender, 'assets/ace/images/avatar2.png');
 
                 $info.append($infoImg);
                 $bheader.append($name).append($time);

@@ -1,0 +1,41 @@
+<div>
+    <div class="flex-wrap" id="form">
+        <div class="stay-bottom">
+
+             <button class="btn btn-yellow" id="addoutsourceItem" >添加一条外协单</button>
+            <button id="submitoutsourceItem" class="btn btn-info" data-loading-text="提交中..." type="submit"><i class="icon-ok"></i>保存</button>
+
+        </div>
+    </div>
+
+    <ul class="flex-table">
+        <li class="line table-title">
+            <div class="line-wrap order">
+                <div class="cell index"></div>
+            </div>
+            <div class="line-wrap content col9">
+                <div class="cell">名称</div>
+                <div class="cell">高</div>
+                <div class="cell">宽</div>
+                <div class="cell">厚</div>
+                <div class="cell">造型</div>
+                <div class="cell">单价</div>
+                <div class="cell">数量</div>
+                <div class="cell">总价</div>
+                <div class="cell">说明</div>
+            </div>
+            <div class="line-wrap action">
+                <div class="cell option">操作</div>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="flex-table" id="List"></ul>
+
+</div>
+
+<script>
+    $(function(){
+        $.getScript('js/production/addoutsourceItem.js');
+    });
+</script>

@@ -22,4 +22,12 @@ public class ProductionWorkPlanDaoImpl extends DaoImpl<ProductionWorkPlanPO> imp
 		.add(Restrictions.eq(ProductionWorkPlanPO.COLUMN_PPID_STR, ppid)).list();
 	}
 
+	@Override
+	public ProductionWorkPlanPO queryProductionWorkPlanByPpidAWpid(long ppid,long wpid) {
+		
+		return (ProductionWorkPlanPO) session().createCriteria(ProductionWorkPlanPO.class)
+				.add(Restrictions.eq(ProductionWorkPlanPO.COLUMN_PPID_STR, ppid))
+				.add(Restrictions.eq(ProductionWorkPlanPO.COLUMN_WFID_STR, wpid)).uniqueResult();
+	}
+
 }

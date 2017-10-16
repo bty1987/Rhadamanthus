@@ -17,12 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.Department;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
@@ -36,14 +40,24 @@ public class DepartmentService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 	
-	public  List<Department> queryDepartment(long did,Integer company){
+	@Autowired
+	private CompanyDao companyDao;
+	
+	public  List<Department> queryDepartment(Integer company) throws FLException{
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 		
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-		
-		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, did);
 	
+		CompanyPO companyPO = companyDao.get(company);
+		
+		 if(companyPO == null){
+			   
+			   throw new FLException(230015 , "公司不存在");
+		   }
+		
+		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, companyPO.getNo());
+		
 		JSONObject json = HttpHelper.httpGet(url);
 	
 		return JSON.parseArray(json.getJSONArray("department").toJSONString(), Department.class);

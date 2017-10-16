@@ -18,8 +18,10 @@ jQuery(function($) {
 		baseModal: null,
 		addOrReduceModal:null,
 		refundModal:null,
+		refundDecorationPaymentModal:null,
 		decorationPaymentItems: {},
 		addReduceDetail:null,
+		paymentId:null,
 		
 		items: {},
 		
@@ -32,39 +34,45 @@ jQuery(function($) {
 		paymentType:"增项款",
 		orderId:null,
 	};
-	
+
+    decorationPayment.items.cashCheckbox = $("#cashCheckbox");
+    decorationPayment.items.bankCheckbox = $("#bankCheckbox");
+    decorationPayment.items.checkvCheckbox = $("#checkvCheckbox");
+    decorationPayment.items.installmentCheckbox = $("#installmentCheckbox");
+    decorationPayment.items.accountsCheckbox = $("#accountsCheckbox");
+    decorationPayment.items.advanceCheckbox = $("#advanceCheckbox");
+    decorationPayment.items.couponCheckbox = $("#couponCheckbox");
+
+	decorationPayment.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
+
 	decorationPayment.baseModal = $("#baseItemModal").on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#advancePayment", true);
-	});
-	
-	decorationPayment.refundModal = $("#refundModal").on('show.bs.modal',function(e){
-		com.clearValidator();
 	});
 	
 	decorationPayment.addReduceDetail = $("#addReduceDetail");
 	
 	decorationPayment.items.couponType = $("#couponType");
 	
-	$("#collectBtn").on('click', payment);
-	$("#saveRefundBtn").on('click', refund);
+	$("#collectBtn").bindClick(payment);
+	$("#saveRefundBtn").bindClick(refund);
 	
 	$("#refundBankCard").on("click",function(e) {
 		$("#refundCashInfoDiv").addClass("hide");
-		
+
 		$("#refundBankCardDiv").removeClass("hide");
 		$("#refundBankName").addClass("v_required");
 		$("#refundBankName").get(0).selectedIndex = 0;
 	});
-	
+
 	$("#refundCash").on("click",function(e) {
 		$("#refundCashInfoDiv").removeClass("hide");
-		
+
 		$("#refundBankCardDiv").addClass("hide");
 		$("#refundBankName").removeClass("v_required");
 	});
-	
-	for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
+
+	/*for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
 		$("#" + decorationPayment.paymentModelNameData[i] + "Checkbox").on("click",function(e) {
 			var _name = $(this).attr("key");
 			var _checkboxId = "#" + _name + "Checkbox";
@@ -85,7 +93,11 @@ jQuery(function($) {
 				$(_checkboxId).removeAttr("checked","checked");
 			}
 		});
-	}
+	}*/
+    $("#baseItemModal :checkbox").on("change", function(){
+        $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show() : $("[referCheckbox="+this.id+"]").hide()
+    });
+
 	
 	$("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
 	
@@ -262,7 +274,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
+			var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 
             var propertyArr = [
@@ -310,13 +322,25 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulStyle);
 			});
-           
-            $divBtnWrap.append($btnPrint).appendTo($h3);
+
+			if(v.paymentStatus == "已确认" && v.oneType == 0){
+				$divBtnWrap.append($btnPrint).append($btnRefund).appendTo($h3);
+			}else{
+				$divBtnWrap.append($btnPrint).appendTo($h3);
+			}
+
            
             $liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			$btnRefund.click(function(){
+				decorationPayment.paymentId = v.autoId;
+				approvalUtils.initqueryApprovalUser("refundApproveManSel",5);
+				$("#referMoneyApproval").val(v.referMoney);
+				decorationPayment.refundDecorationPaymentModal.modal("show");
+			});
             
             $btnPrint.click(function(){
-				if(v.collectUser!=params.userInfo.user.userName){
+				if(v.collectUserId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
@@ -341,6 +365,38 @@ jQuery(function($) {
             }
         }
     })();
+
+	$("#saveRefundMoneyBtn").on('click', function(){
+
+		if(com.validate("refundDecorationPaymentModal")){
+			return;
+		}
+
+		var receiverId = $("#refundApproveManSel").find('input:checked').attr('userid');
+
+		if(receiverId == null || receiverId == ""){
+			com.showAlert(com.error,"请选择审批人!");
+			return;
+		}
+
+		var options = {
+			"approval.receiverId": receiverId,
+			"approval.comment": $("#changeReason").val(),
+			"approvalDecorationRefund.paymentId": decorationPayment.paymentId,
+		};
+
+		bootbox.confirm("确认要提交退款申请吗?", function(res) {
+			if(res){
+				com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
+					com.showAlert(com.info, "提交成功");
+				});
+			}
+
+			decorationPayment.refundDecorationPaymentModal.modal("hide");
+		});
+
+
+	});
 	
 	var hsearcher = new Searcher();
 	
@@ -358,55 +414,38 @@ jQuery(function($) {
 	function dialogPayment(payment){
 		
 		decorationPaymentPostData.paymentInfo = payment;
+
+        com.cleanItems(decorationPayment.items);
 		
 		$("#paymentInfo").text("");
 		$("#collectDes").val("");
 		
 		if(payment.paymentType.search('退款') != -1 || payment.paymentType == "减项款"){ // 退款
-			initRefundModal();
-			$("#refundSum").val(payment.referMoney).attr("disabled", "disabled");
-			$("#refundCouponDiv").addClass("hide");
-			
-			decorationPayment.refundModal.modal("show");
-		}else{ // 定金,设计费,首付款,首付二期款,二期款,尾款
 			initBaseModal();
+			$("#myModalPayLabel").text("退款信息");
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-			$("#checkvBankName").find("option").eq(0).attr("selected","selected");
-			$("#installmentBankName").find("option").eq(0).attr("selected","selected");
-			$("#accountsBankName").find("option").eq(0).attr("selected","selected");
+			$('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
 			decorationPaymentPostData.orderId = payment.orderId;
 			decorationPaymentPostData.customerId = payment.customerId;
-			
-//			var options = {
-//				"decorationOrder.orderId": payment.orderId
-//			}
-//			
-//			com.post(api.decoration.queryDecorationActivityItemForCouponAVaildByOrderId, options, function(res){
-//				var decorationActivityItems = res.decorationActivityItems;
-//				
-//				var couponInfos = [];
-//				
-//				for(var i=0;i<decorationActivityItems.length;i++){
-//					
-//					var _ = decorationActivityItems[i];
-//					
-//					couponInfos.push({"key": _.daiId, "value":_.activityItemName + ",金额:" + _.money + ",数量:" + _.num});
-//				}
-//				
-//				decorationPayment.items.couponType.chosen("destroy");
-//				decorationPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-//				decorationPayment.items.couponType.bindData(couponInfos, 'key', 'value');
-//				decorationPayment.items.couponType.trigger("chosen:updated");
-//			});
-			
-			decorationPayment.items.couponType.chosen("destroy");
-			decorationPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-			decorationPayment.items.couponType.bindData(decorationPayment.couponType, 'key', 'name');
-			decorationPayment.items.couponType.trigger("chosen:updated");
-			
-			decorationPayment.baseModal.modal("show");
+            $("#collectBtn").addClass("hide");
+            $("#saveRefundBtn").removeClass("hide");
+
+		}else{
+			initBaseModal();
+			$("#myModalPayLabel").text("付款信息");
+			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
+            $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+			decorationPaymentPostData.orderId = payment.orderId;
+			decorationPaymentPostData.customerId = payment.customerId;
+            $("#collectBtn").removeClass("hide");
+            $("#saveRefundBtn").addClass("hide");
 		}
-		
+
+        com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": decorationPaymentPostData.customerId},function(res){
+            $("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
+            $("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
+        });
+
 		decorationPayment.editFlg =  false;
 	}
 	
@@ -423,7 +462,7 @@ jQuery(function($) {
 				_selectId = "#" + _name + "Name";
 			}
 			
-			$(_divId).addClass("hide");
+			//$(_divId).addClass("hide");
 			$(_checkboxId).removeAttr("checked").removeAttr("disabled");
 			
 			$(_inputId).val("");
@@ -435,30 +474,20 @@ jQuery(function($) {
 			}
 		}
 		
-		$("#des").val("");
+		$("#collectDes").val("");
+
+
+		$("#checkvBankName option:first").prop("selected", 'selected');
+		$("#installmentBankName option:first").prop("selected", 'selected');
+		$("#accountsBankName option:first").prop("selected", 'selected');
+
+		decorationPayment.items.couponType.chosen("destroy");
+		decorationPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
+		decorationPayment.items.couponType.bindData(decorationPayment.couponType, 'key', 'name');
+		decorationPayment.items.couponType.trigger("chosen:updated");
+		decorationPayment.baseModal.modal("show");
 	}
 	
-	function initRefundModal(){
-		
-		$("#refundCash").attr("checked","checked");
-		
-		$("#refundCashInfo").removeClass("hide");
-		
-		$("#refundBankCardDiv").addClass("hide");
-		$("#refundBankCard").removeAttr("checked","checked");
-		$("#refundBankName").removeClass("v_required");
-		
-		$("#refundSum").val("");
-		$("#refundBankName").get(0).selectedIndex=0;
-		$("#refundContent").val("");
-		
-		$("#refundCouponType").chosen("destroy");
-		$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
-		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'name');
-		$("#refundCouponType").trigger("chosen:updated");
-	}
-
-    
     function addBankDiv(index){
     	
     	var d = new Date();
@@ -494,6 +523,8 @@ jQuery(function($) {
     }
 
     function addReduceDetail(decorationPaymentId, paymentType, orderId){
+
+        com.cleanItems(decorationPayment.items);
     	
     	decorationPayment.orderPaymentId = decorationPaymentId;
     	decorationPayment.paymentType = paymentType;
@@ -725,7 +756,7 @@ jQuery(function($) {
     			}
     		});
     	});
-    	
+
     	decorationPaymentPostData.paymentInfo = null;
     }
 
@@ -734,94 +765,151 @@ jQuery(function($) {
     	if(com.validate()){
     		return;
     	}
-    	
-    	var url = api.payment.collectDecorationPaymentForRefund;
-    	var options = {};
-    	var type = "";
-    	var referPayment = $("#sumMoneyShow").text();
-    	var refundSum = $("#refundSum").val();
-    	
-    	$("#refundCoupon").on("keydown", function(){
-    		$("#refundInfo").text("");
-    	});
-    	
-    	$("#refundCash").on("change", function(){
-    		$("#refundInfo").text("");
-    	});
-    	
-    	$("#refundBankCard").on("change", function(){
-    		$("#refundInfo").text("");
-    	});
-    	
-    	if(refundSum != Math.abs(referPayment)){
-    		console.log("当前实收款项总数与应收款项不等,请核实再进行提交!");
-    	}
-    	
-    	if($("#refundCash").prop("checked")){
-    		type = "cash";
-    	}else{
-    		type = "bank";
-    	}
-    	
-    	var _info = decorationPaymentPostData.paymentInfo;
-    	
-    	var orderId = _info.orderId;
-    	var referMoney = _info.referMoney;
-    	
-    	options["decorationPayment.autoId"] = _info.autoId;
-    	
-    	var _coupon = 0;
-    	var _couponInfo = "#";
-    	
-    	$("[class='search-choice']", $("#refundCouponType_chosen")).each(function(i,e){
-    		_couponVal = $(e).children('span').children('input').val();
-    		_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-    		_couponInfo += $(e).children('span').text()+":"+_couponVal+"#";
-    	});
-    	
-    	if(_coupon > 0){
-    		if(_coupon > referMoney){
-    			com.showAlert(com.error, "全退款不能操作退款金额");
-    			return false;
-    		}
-    		
-    		options["decorationPayment.coupon"] = _coupon;
-    		options["decorationPayment.couponInfo"] = _couponInfo;
-    		referMoney = utils.accSub(referMoney, _coupon);
-    	}
-    	
-    	if(referMoney > 0){
-    		if(type == "cash"){
-    			options["decorationPayment.cash"] = referMoney;
-    			options["decorationPayment.cashInfo"] = $("#refundCashInfo").val();
-    		}else{
-    			var _ = new Date();
-    			var currentDate = _.getFullYear() + "-" + (_.getMonth() + 1) + "-" + _.getDate() + " " + _.getHours() + ":" + _.getMinutes() + ":" + _.getSeconds();
-    			
-    			options["decorationPayment.bank"] = referMoney;
-    			options["decorationPayment.bankInfo"] = $("#refundBankName").val();
-    			options["decorationPayment.bankInfo"] = "#" + $("#refundBankName").val() + "|" + referMoney + "|" + currentDate + "#"
-    		}
-    	}
-    	
-    	options["decorationPayment.des"] = $("#refundContent").val();
-    	
-    	com.post(url, options, function(res){
-    		
-    		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-    			if(result){
-					com.popup("专用收款收据__订单编号：" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "&decorationReceipt.drId=" + res.decorationPayment.drId + "&time=" + parent.params.loginTime,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true);
-    			}
-    		});
-    		
-    		searcher.doSearch();
-    	});
-    	
-    	decorationPayment.refundModal.modal("hide");
-    	
-    	decorationPaymentPostData.paymentInfo = null;
+        var url = "";
+        var options = {};
+        var args = {};
+        var referPayment = $("#referMoney").val();
+        var realPayment = 0;
+
+        var autoIds = "";
+        var orderId = "";
+        var _paymentInfo = "#paymentInfo";
+        var couponCount = 0;
+
+        $(_paymentInfo).text("");
+
+        for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
+
+            var _paymentName = decorationPayment.paymentModelNameData[i];
+            var _checkboxId = "#" + _paymentName + "Checkbox";
+            var _inputId = _paymentName;
+            var _selectId = "";
+
+            if(_paymentName == "coupon" || _paymentName == "advance"){
+                _selectId = _paymentName + "Type";
+            }else if(_paymentName != "bank"){
+                _selectId = _paymentName + "BankName";
+            }else{
+                _selectId = _paymentName + "Name";
+            }
+
+            $(_checkboxId).on("change", function(){
+                $(_paymentInfo).text("");
+            });
+
+            $("#"+_selectId).on("change", function(){
+                $(_paymentInfo).text("");
+            });
+
+            $("#"+_paymentName).on("keydown", function(){
+                $(_paymentInfo).text("");
+            });
+
+            if($(_checkboxId).prop("checked")){
+
+                var _payment = 0;
+
+                if(_paymentName == "cash"){
+                    args["cash"] = $("#cash").val();
+                    args["cashInfo"] = $("#cashInfo").val();
+
+                    _payment = $("#cash").val();
+                }else if(_paymentName == "bank"){
+                    var _bank = 0;
+                    var _bankInfo = "#";
+
+                    var bankAdd = $("#bankAdd");
+                    var num = parseInt(bankAdd.attr("num"));
+                    for(var j=0;j<num;j++){
+                        var index = j + 1;
+                        var bankName = $("#bankName_"+index).val();
+                        var bankMoney = $("#bank_"+index).val();
+                        var bankDate = $("#bankDate_"+index).val();
+                        var bankTime = $("#bankTime_"+index).val();
+
+                        _bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
+
+                        _bank = utils.accAdd(parseFloat(bankMoney), _bank);
+                    }
+
+                    args["bank"] = _bank;
+                    args["bankInfo"] = _bankInfo;
+
+                    _payment = _bank;
+                }else if(_paymentName == "coupon"){
+                    var _coupon = 0;
+                    var _couponInfo = "#";
+
+                    $("[class='search-choice']", $("#couponType_chosen")).each(function(i,e){
+
+                        var _ = $(e);
+
+                        _couponVal = $(e).children('span').children('input').val();
+                        _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
+                        _couponInfo += $(e).children('span').text()+":"+_couponVal+"#";
+
+                        couponCount++;
+                    });
+
+                    args["coupon"] = _coupon;
+                    args["couponInfo"] = _couponInfo;
+
+                    _payment = _coupon;
+                }else{
+                    args[_inputId] = $("#"+_inputId).val();
+                    _payment = $("#"+_inputId).val();
+                }
+
+                if($(_checkboxId).attr("select") == "1"){
+                    args[_selectId] = $("#"+_selectId).val();
+                }
+
+                realPayment = utils.accAdd(realPayment, parseFloat(_payment));
+            }
+        }
+
+        if(referPayment != realPayment){
+            $("#paymentInfo").text("当前实收款项总数与应收款项不等,请核实再进行提交!");
+            return false;
+        }
+
+
+        if($.isEmptyObject(args)){
+            com.showAlert(com.warning, "无退款方式信息");
+            return false;
+        }
+
+        var _info = decorationPaymentPostData.paymentInfo;
+
+        url = api.payment.collectDecorationPaymentForRefund;
+
+        for(var arg in args){
+            options["decorationPayment."+arg] = args[arg];
+        }
+        orderId = _info.orderId;
+        autoIds += "&paymentIds["+0+"]="+_info.autoId;
+
+        options["decorationPayment.autoId"] = _info.autoId;
+        options["decorationPayment.des"] = $("#collectDes").val();
+
+        com.post(url, options, function(result){
+
+            searcher.doSearch();
+
+            decorationPayment.baseModal.modal("hide");
+
+            var args = "&decorationReceipt.drId=" + result.decorationPayment.drId;
+
+            bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
+                if(result){
+                    com.popup("专用收款收据__订单编号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url + "?decorationOrder.orderId=" + orderId + "&decorationPayment.orderId=" + orderId + "" + args + "&time=" + parent.params.loginTime,function () {
+                        parent.layer.getFrameIndex(window.name);
+                    },null,true);
+                }
+            });
+        });
+
+        decorationPaymentPostData.paymentInfo = null;
     }
     
     $('a[name="import"]', '#hpagenation').click(function () {

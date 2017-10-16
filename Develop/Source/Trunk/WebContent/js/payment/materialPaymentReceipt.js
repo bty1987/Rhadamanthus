@@ -27,7 +27,7 @@ jQuery(function($) {
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
 	queryMaterialPaymentForNotInitByMrId.url = queryMaterialPaymentForNotInitByMrId.url + "?" + args;
 	
-	com.post(api.ds.materialInfo, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		$("#advanceType").bindData(res.advanceType, 'key', 'value');
 		
 		for(var i=0;i<res.advanceType.length;i++){

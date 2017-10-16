@@ -14,7 +14,7 @@
 			<div id="pagenation" class="fl-page-wrap clearfix"></div>
 		</div>
 	</div>
-
+</div>
 	<div class="modal fade" id="noticeModal" tabindex="-1">
 		<div class="modal-dialog" style="width: 800px">
 			<div class="modal-content">
@@ -61,8 +61,8 @@
 									<span class="input-group-addon">
 										<i class="icon-calendar bigger-110"></i>
 									</span>
+									<span class='star'></span>
 								</div>
-								<span class='star'></span>
 							</div>
 						</div>
 
@@ -74,8 +74,8 @@
 									<span class="input-group-addon">
 										<i class="icon-calendar bigger-110"></i>
 									</span>
+									<span class='star'></span>
 								</div>
-								<span class='star'></span>
 							</div>
 						</div>
 
@@ -89,7 +89,6 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="attachment">上传附件</label>
 							<div class="col-sm-3 col-xs-4">
-								<!-- <input type="file" name='uploadify' id="attachment" />  -->
 								<div id="attachment"></div>
 								<input type="text" class="hidden" id="filePath"/>
 							</div>
@@ -109,65 +108,25 @@
   		</div>
   	</div>
 
-	<div class="modal fade" id="managements" tabindex="-1">
-	<div class="modal-dialog" style="width: 800px;">
+
+<div class="modal fade" id="managements" tabindex="-1">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">管理部门是否可见</h4>
+				<h4 class="modal-title">管理部门是否可见</h4>
 			</div>
-			<div class="page-content">
-				<div class="row">
-					<div class="col-sm-3 widget-container-span" id="aaaa" style="width:100% !important">
-						<div class="widget-box transparent">
-							<div class="widget-header">
-								<h4 class="lighter">部门结构</h4>
-							</div>
+			<div class="modal-body">
 
-							<div class="widget-body">
-								<div class="widget-main padding-6 no-padding-left no-padding-right">
-									<div id="tree3" class="tree">
-
-										<div id="treecheck"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!--<div class="col-sm-9 widget-container-span" style="width:70% !important;">
-						<div class="widget-box transparent">
-							<div class="widget-header">
-								<h4 class="lighter">部门列表</h4>
-							</div>
-
-							<div class="widget-body">
-								<div class="widget-main padding-12 no-padding-left no-padding-right">
-									<div id="condListUser" class="fl_search clearfix"></div> &lt;!&ndash;&lt;!&ndash; 查询条件&ndash;&gt;&ndash;&gt;
-									<div id="resultListUser" class="clearfix tab-pane active"></div> &lt;!&ndash;&lt;!&ndash;查询结果&ndash;&gt;&ndash;&gt;
-									<div id="pagenationUser" class="fl-page-wrap clearfix"></div>&lt;!&ndash;&lt;!&ndash;分页&ndash;&gt;&ndash;&gt;
-								</div>
-							</div>
-						</div>
-					</div>-->
-				</div>
 			</div>
-			<div class="modal-footer">
+
+			<div class="modal-footer ">
 				<button type="button" id="manageBtn" class="btn btn-primary">保存</button>
-				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="canceBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
 		</div>
 	</div>
-	</div>
 </div>
-
-
-
-<!--<script type="text/javascript">-->
-	<!--$.getScript('assets/js/jquery.hotkeys.min.js?version=' + versionCode);-->
-	<!--$.getScript('assets/js/bootstrap-wysiwyg.min.js?version=' + versionCode);-->
-	<!--$.getScript('js/information/noticeMng.js?version=' + versionCode);-->
-<!--</script>-->
 
 <script src="assets/js/jquery.hotkeys.min.js"></script>
 <script src="assets/js/bootstrap-wysiwyg.min.js"></script>

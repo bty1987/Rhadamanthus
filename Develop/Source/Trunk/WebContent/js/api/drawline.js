@@ -5,10 +5,6 @@ $.extend(api.index, {
     drawLinePersonInfoIndex: {url: "/views/drawLine/drawLinePersonInfo.html"}
 });
 
-$.extend(api.ds, {
-    drawLineInfo: {url: "ds/drawLineInfo.json", demo: true}
-});
-
 $.extend(api, {drawline: {
 	pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true},
     pageDrawLineForAssign: {url: "pageDrawLineForAssign.do"},

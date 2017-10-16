@@ -1,0 +1,113 @@
+<div class="page-content" style="padding: 40px 20px">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="clearfix relative" id="form">
+
+                <div class="inline">
+                    <button class="btn btn-yellow" id="addSaleOrder">添加一条调拨信息</button>
+
+                    <button id="submitSaleOrder" class="btn btn-info" data-loading-text="提交中..." type="submit"><i
+                            class="icon-ok"></i>提交
+                    </button>
+
+                </div>
+
+                <div class="pull-right" style="margin-bottom: 1%;width: 25%">
+
+                    <div class="inline">
+
+                        <label>单据日期</label>
+                        <div class="inline">
+                            <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
+                                   value=""/>
+                        </div>
+
+                    </div>
+
+                    <!--<div class="inline-group">-->
+
+                    <!--<label>审批人</label>-->
+                    <!--<div class="item">-->
+                    <!--<input name="receiverId" class="m-wrap m-ctrl-medium" size="16" type="text" value="" />-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+
+
+                    <!--<div class="inline-group">-->
+
+                    <!--<div class="item">-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+
+                </div>
+                <div class="devide-line"></div>
+            </div>
+
+
+            <ul class="flex-table">
+                <li class="line table-title">
+                    <div class="line-wrap order">
+                        <div></div>
+                    </div>
+                    <div class="line-wrap content col10">
+                        <div class="cell">商品编号</div>
+                        <div class="cell">名称</div>
+                        <div class="cell">颜色</div>
+                        <div class="cell">规格</div>
+                        <div class="cell">单位</div>
+                        <div class="cell">进货仓库</div>
+                        <div class="cell">出货仓库</div>
+                        <div class="cell">数量</div>
+                        <div class="cell">件数</div>
+                        <div class="cell">备注</div>
+                    </div>
+                    <div class="line-wrap action">
+                        <div class="cell option">操作</div>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="flex-table" id="list"></ul>
+
+            <div style="margin-top: 15px;">
+
+
+                <div class="inline-group">
+
+                    <label>备注</label>
+                    <div class="item long">
+                        <input type="text" id="comment">
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!--审批调拨提交弹窗-->
+            <div id="layerSubmit" style="padding: 40px 0;display: none">
+                <div class="row-fluid">
+
+                    <form class="form-horizontal">
+
+
+                        <div class="form-group" style="margin-right: 0">
+                            <label class="col-xs-3 control-label " for="approver">审批人</label>
+                            <div class="col-xs-9 controls" id="approver">
+
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="space5"></div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/manifest/alloting.js"></script>
+<script src="js/utils/approvalUtils.js"></script>

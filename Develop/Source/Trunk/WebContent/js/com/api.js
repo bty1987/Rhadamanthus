@@ -42,6 +42,8 @@ var Api = function(){
             fillApi(path + 'system.js');
 			fillApi(path + 'upgrade.js');
 			fillApi(path + 'member.js');
+			fillApi(path + 'production.js');
+            fillApi(path + 'ds.js');
             
             return dtd.promise();
         }

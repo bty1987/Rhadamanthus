@@ -57,6 +57,7 @@ public class ProductionWorkFlowServiceImpl  implements ProductionWorkFlowService
 	@Override
 	public ProductionWorkFlowVO queryProductionWorkFlowByPwpidAWfid(ProductionWorkFlowVO productionworkflowVO) throws FLException {
 		ProductionWorkFlowPO productionWorkFlowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionworkflowVO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
+		
 		if(productionWorkFlowPO == null){
 			throw new FLException(220012, "计划工序不存在");
 		}
@@ -70,9 +71,10 @@ public class ProductionWorkFlowServiceImpl  implements ProductionWorkFlowService
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int operateProductionWorkFlow(String no,long uid,ProductionWorkFlowVO productionworkflowVO) throws FLException{
+	public int operateProductionWorkFlow(String no,int uid,ProductionWorkFlowVO productionworkflowVO) throws FLException{
 		
 		ProductionPlanPO productionPlanPO = productionPlanDao.queryProductionPlanByNo(no);
+		
 		if(productionPlanPO == null){
 			throw new FLException(220008, "计划单不存在");		
 		}
@@ -86,8 +88,8 @@ public class ProductionWorkFlowServiceImpl  implements ProductionWorkFlowService
 			}
 			
 			ProductionUserWorkFlowPO productionUserWorkFlowPO = new ProductionUserWorkFlowPO(new ProductionWorkFlowPO(),new UserPO());
-			productionUserWorkFlowPO.setPwfid(productionworkflowPO);
-			productionUserWorkFlowPO.setOuid(userDao.get(uid));
+			productionUserWorkFlowPO.setProductionworkflow(productionworkflowPO);
+			productionUserWorkFlowPO.setOperator(userDao.get(uid));
 			productionUserWorkFlowPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			productionUserWorkFlowDao.save(productionUserWorkFlowPO);

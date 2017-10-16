@@ -47,7 +47,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 			}
 		}
 		
-		query.desc("status");
+		query.asc("status");
 		query.desc("createTime");
 		
 		return query.list();
@@ -71,20 +71,20 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 		
 		String sql = "select count(*) from information.message where receiverId = :receiverId and status = :status and company = :company";
 	
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setString("receiverId", userId).setInteger("company", company).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setString("receiverId", userId).setInteger("company", company).uniqueResult();
 		
 		return count.intValue();
 	}
 	
 	@Override
-	public int updateMessageForRead(List<Integer> messageIds) {
-		
-		String sql = "update information.message set status = :status where messageId in :messageIds";
-		session().createSQLQuery(sql).setString("status", MessagePO.MESSAGE_STATUS_READED_STR).setParameterList("messageIds", messageIds).executeUpdate();
+	public int updateMessageForRead(List<Integer> mids) {
+
+		String sql = "update information.message set status = :status where mid in :mids";
+		session().createSQLQuery(sql).setInteger("status", MessagePO.MESSAGE_STATUS_READED_STR).setParameterList("mids", mids).executeUpdate();
 		
 		return 0;
 	}
-
+	
 	@Override
 	public void updateApproveMsgSerial(String msgSerial){
 		String sql = "update information.message set args = null where args like :args";
@@ -92,11 +92,11 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	}
 
 	@Override
-	public int deleteMessageByIdAStatusAUnType(List<Integer> messageIds, String status, List<String> unTypes) {
+	public int deleteMessageByIdAStatusAUnType(List<Integer> messageIds, short status, List<String> unTypes) {
 		
 		String sql = "delete from information.message where messageId in :messageIds and status = :stauts and type not in :untypes";
 		
-		session().createSQLQuery(sql).setParameterList("messageIds", messageIds).setString("status", status).setParameterList("untypes", unTypes).executeUpdate();
+		session().createSQLQuery(sql).setParameterList("messageIds", messageIds).setInteger("status", status).setParameterList("untypes", unTypes).executeUpdate();
 		
 		return 0;
 	}

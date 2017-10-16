@@ -3,9 +3,6 @@ $.extend(api.index, {
     
 });
 
-$.extend(api.ds, {
-    
-});
 
 $.extend(api, {right: {
     queryDecorationOrderDesignDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do", demo: true},
@@ -15,4 +12,8 @@ $.extend(api, {right: {
     updateDecorationOrderDesignDepartmentRight: {url: "updateDecorationOrderDesignDepartmentRight.do"},
     updateDecorationOrderSalesmanDepartmentRight: {url: "updateDecorationOrderSalesmanDepartmentRight.do"},
     updateDecorationOrderStatusRight: {url: "updateDecorationOrderStatusRight.do"},
+    
+    queryRoleChainPageByRid: {url:"queryRoleChainPageByRid.do"},
+    updateRoleChainPage: {url:"updateRoleChainPage.do"},
+
 }});

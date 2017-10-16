@@ -32,7 +32,7 @@ public class OutsourceItemAction extends BaseListAction{
 	@Action(value = "pageOutsourceItemByOid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String pageOutsourceItemByOid (){
 	
-		outsourceItems = outsourceItemService.pageOutsourceItemByOid(outsourceItem);
+		outsourceItemService.pageOutsourceItemByOid(getPaging(), getFilters(),outsourceItem);
 		
 		return  SUCCESS;
 	}
@@ -40,7 +40,7 @@ public class OutsourceItemAction extends BaseListAction{
 	@Action(value = "addOutsourceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public  String addOutsourceItem() throws FLException{
 	
-		outsourceItemService.addOutsourceItem(outsourceItem,outsource);
+		outsourceItemService.addOutsourceItem(outsourceItems,outsource);
 		
 		return  SUCCESS;
 	}

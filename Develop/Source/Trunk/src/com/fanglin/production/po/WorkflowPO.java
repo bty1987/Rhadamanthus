@@ -14,11 +14,11 @@ public class WorkflowPO implements Serializable{
 	
 	private static final long serialVersionUID = -6551143213986337841L;
 
-	public  static final String	COLUMN_WFID_STR = "wfid";
+	public static final String	COLUMN_WFID_STR = "wfid";
 	
-	public  static final short	COLUMN_STATUS_STR = 0;
+	public static final short COLUMN_STATUS_STR = 0;
 	
-	public  static final String	COLUMN_NAME_STR = "name";
+	public static final String	COLUMN_NAME_STR = "name";
 
 	private long wfid; 
 	

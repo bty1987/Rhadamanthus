@@ -26,10 +26,10 @@ import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.QuotationVersionService;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("quotationVersionService")
 @Transactional(readOnly=true)
@@ -40,6 +40,9 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	
 	@Autowired
 	private CountingService countingService;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company){
@@ -104,8 +107,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
 		StringBuffer versionId = new StringBuffer();
-		versionId.append(SystemConfig.getString("companyIdent", ""));
-		versionId.append(SystemConfig.getString("quotationVersionIdent", "QV_"));
+		versionId.append(systemConfigDao.querySystemConfig("quotationVersionIdent").getValue());
 		versionId.append(FormatUtil.fillZero(count, "000"));
 		quotationVersionPO.setVersionId(versionId.toString());
 		quotationVersionPO.setCompany(company);

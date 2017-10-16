@@ -171,7 +171,6 @@ public class BrandServiceImpl implements BrandService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BRAND_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
 		StringBuffer brandId = new StringBuffer();
-		brandId.append(SystemConfig.getString("companyIdent", ""));
 		brandId.append(SystemConfig.getString("brandIdent", "B_"));
 		brandId.append(FormatUtil.fillZero(count, "000"));
 		

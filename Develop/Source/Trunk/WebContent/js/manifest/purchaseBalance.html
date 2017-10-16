@@ -1,0 +1,135 @@
+
+<div id="purchaseBalancePageContent" class="page-content">
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <div id="condList" class="fl_search clearfix"></div>
+
+            <div class="clearfix" id="resultList"></div>
+
+            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+<!--查看采购单-->
+<div id="layerAdd" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">采购单编号<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="pid" name="pid" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">创建人<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="user.name" name="user.name" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">创建时间<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input id="createTime" name="createTime" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text" value="" data-required="1" data-toggle="popover" data-trigger='manual' >
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">结算时间<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input id="balanceTime" name="balanceTime" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text" value="" data-required="1" data-toggle="popover" data-trigger='manual' >
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">入库状态<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="status" name="status" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">结算状态<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="balanceStatus" name="balanceStatus" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">说明<span class="required star"></span></label>
+
+                            <div class="col-md-8">
+
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="comment" name="comment" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+
+</div>
+<!--查看配置弹窗-->
+<div id="viewPopUp" class="portlet box"></div>
+<!--修改配置弹窗-->
+<div id="editPopUp"  class="portlet box"></div>
+<!--入库配置弹窗-->
+<div id="warehousingPopUp"  class="portlet box"></div>
+<!--批量入库配置弹窗-->
+<div id="viewPurchaseItemsPopUp"  class="portlet box"></div>
+
+
+<script>
+    $(function(){
+        $.getScript('js/manifest/purchaseBalance.js');
+    });
+</script>
+

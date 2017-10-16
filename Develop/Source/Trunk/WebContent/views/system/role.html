@@ -39,8 +39,8 @@
 		      		<form class="form-horizontal">
 			      		<div class="form-group">
 				      		<div class="block clearfix">
-								<label for="roleId" class="col-md-3 control-label" >角色编号</label>
-								<span class="col-md-9 block no-padding-right  ">
+								<label for="roleId" class="col-sm-3 control-label no-padding-right" >角色编号</label>
+								<span class="col-md-9 block   ">
 									<input type="text" id="roleId" class="col-xs-10 col-sm-5 v_required v_roleId"  data-toggle="popover" data-trigger='manual' maxlength="4"/>
 								</span>
 							</div>
@@ -70,6 +70,43 @@
     		</div>
   		</div>
   	</div>
+
+	<!--外链配置-->
+	<div class="modal fade" id="chainPageModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">外链配置</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="currentchainPage">现有外链</label>
+							<div class="col-sm-9">
+								<div class="tags" style="border: 0px" id="currentchainPage"></div>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group" >
+							<label class="col-sm-3 control-label no-padding-right" for="chainPage">外链</label>
+							<div class="col-sm-9">
+								<select multiple="multiple" class="col-sm-7 col-xs-10 chosen-select tag-input-style v_required" id="chainPage" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer ">
+					<button type="button" name="saveChainPageBtn" class="btn btn-primary">保存</button>
+					<button type="button" name="cancelCompanyBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
 
 	<!--操作配置-->
 	<div class="modal fade" id="operationModal" tabindex="-1">

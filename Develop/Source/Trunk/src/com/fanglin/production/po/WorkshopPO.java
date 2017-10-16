@@ -18,6 +18,8 @@ public class WorkshopPO implements Serializable{
 	
 	public static final String COLUMN_COMPANY_STR = "company";
 	
+	public static final short STATUS_ENABLE_SHORT = 0;
+	
 	private long wsid;
 	
 	private String name;

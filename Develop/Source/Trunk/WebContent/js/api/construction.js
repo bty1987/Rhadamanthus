@@ -31,12 +31,6 @@ $.extend(api.index, {
     workerAllocationDetailIndex: {url: "/views/construction/workerAllocationDetail.html"}
 });
 
-$.extend(api.ds, {
-    constructionInfo: {url: "ds/constructionInfo.json", demo: true},
-    workType: {url: "ds/workType.json", demo: true},
-    salaryType: {url: "ds/salaryType.json", demo: true}
-});
-
 $.extend(api, {construction: {
     queryAcceptance: {url: "queryAcceptance.do", demo: true},
     updateAcceptance: {url: "updateAcceptance.do"},
@@ -48,10 +42,6 @@ $.extend(api, {construction: {
     queryConstructionForWorkerNameByOrderId: {url: "queryConstructionForWorkerNameByOrderId.do", demo: true},
     updateConstructionByOrderId: {url: "updateConstructionByOrderId.do"},
     nextConstructionByOrderId: {url: "nextConstructionByOrderId.do"},
-    checkConstructionForChanStatus: {url: "checkConstructionForChanStatus.do"},
-    checkFirstPayment: {url: "checkFirstPayment.do"},
-    checkSecondPayment: {url: "checkSecondPayment.do"},
-    checkFinalyPayment: {url: "checkFinalyPayment.do"},
 
     queryConstructionScheduleByOrderId: {url: "queryConstructionScheduleByOrderId.do"},
     queryConstructionScheduleByCid: {url: "queryConstructionScheduleByCid.do"},

@@ -10,6 +10,7 @@
 
 <script type="text/javascript">
 	$.getScript('js/approval/approvalTrack.js?version=' + versionCode);
+    $.getScript('js/utils/approvalUtils.js?version=' + versionCode);
 </script>
 
 <div class="modal fade" id="msoiModel" tabindex="-1"  >
@@ -20,7 +21,7 @@
             <span>&times;</span>
             <span class="sr-only">Close</span>
           </button>
-          <h4 class="modal-title" id="materialInfo">主材信息</h4>
+          <h4 class="modal-title" id="materialInfo"></h4>
         </div>
         
         <div class="modal-body" id="materialInfoList">

@@ -38,11 +38,6 @@ $.extend(api.index, {
     decorationFinalSettlementIndex : {url:"/views/decoration/decorationFinalSettlement.html"}
 });
 
-$.extend(api.ds, {
-    decorationInfo: {url: "ds/decorationInfo.json", demo: true},
-    auditInfo: {url: "ds/audit.json", demo: true}
-});
-
 $.extend(api, {decoration: {
     pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
     queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do", demo: true},

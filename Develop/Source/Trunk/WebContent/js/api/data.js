@@ -7,10 +7,6 @@ $.extend(api.index, {
 	PaymentScale: {url: "/views/data/paymentScale.html"}
 });
 
-$.extend(api.ds, {
-    customerInfo: {url: "ds/customerInfo.json", demo: true}
-});
-
 $.extend(api, {data: {
     
     pageSupplier: {url: "pageSupplier.do", demo: true},
@@ -77,12 +73,21 @@ $.extend(api, {data: {
     pageConstructionNode:{url:"pageConstructionNode.do"},
     queryConstructionNode:{url:"queryConstructionNode.do"},
     queryConstructionNodeByCid:{url:"queryConstructionNodeByCid.do"},
-    addConstructionNode:{url:"addConstructionNode.do", server: "communion"},
-    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do", server: "communion"},
-    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do", server: "communion"},
+    addConstructionNode:{url:"addConstructionNode.do"},
+    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
+    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do"},
 	
-	queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
+    queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
     addPaymentScale: {url:"addPaymentScale.do"},
     deletePaymentScale: {url:"deletePaymentScale.do"},
+    queryPaymentScaleItemByPsid:{url:"queryPaymentScaleItemByPsid.do"},
+    addPaymentScaleItem:{url:"addPaymentScaleItem.do"},
+    deletePaymentScaleItem:{url:"deletePaymentScaleItem.do"},
+
+    
+    queryChainPage: {url:"queryChainPage.do"},
+    queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
+    addChainPage: {url:"addChainPage.do"},
+    deleteChainPage: {url:"deleteChainPage.do"}
 
 }});

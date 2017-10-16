@@ -13,11 +13,6 @@ $.extend(api.index, {
     workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"}
 });
 
-$.extend(api.ds, {
-    salaryType: {url: "ds/salaryType.json", demo: true},
-    workType: {url: "ds/workType.json", demo: true},
-});
-
 $.extend(api, {salary: {
     pageDesignerSalary: {url: "pageDesignerSalary.do"},
     pageDesignerSalaryForInit: {url: "pageDesignerSalaryForInit.do"},

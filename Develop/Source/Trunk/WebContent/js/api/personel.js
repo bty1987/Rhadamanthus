@@ -6,10 +6,6 @@ $.extend(api.index, {
     userExperienceIndex: {url: "/views/personnel/userExperience.html"}
 });
 
-$.extend(api.ds, {
-    personInfo: {url: "ds/personInfo.json", demo: true}
-});
-
 $.extend(api, {personel: {
     pageUser: {url: "pageUser.do", demo: true},
     queryUserByLoginId: {url: "queryUserByLoginId.do"},
@@ -25,7 +21,7 @@ $.extend(api, {personel: {
     queryUserForNameByDutysAO: {url: "queryUserForNameByDutysAO.do"},
     queryUserForNameByDutysAODept: {url: "queryUserForNameByDutysAODept.do"},
     addUser: {url: "addUser.do", server: "communion"},
-    saveUserForBaseInfo: {url: "saveUserForBaseInfo.do", server: "communion"},
+    updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
   
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},

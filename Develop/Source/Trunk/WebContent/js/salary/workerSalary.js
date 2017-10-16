@@ -31,8 +31,7 @@ jQuery(function ($) {
 
     $.extend(com.validator, salary.validator);
 
-    com.post(api.ds.salaryType,{},function (data) {
-
+    com.post(api.ds.salary,{},function (data) {
         var SalaryType = data.SalaryType;
 
         $.each(SalaryType,function (i,y) {
@@ -135,7 +134,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['orderId', 'jober', 'salaryWorkduty' ,'salarystatus','cerateTime', 'approveTime'];
+    var _condArr = ['orderId','salaryWorkduty', 'jober','salarystatus','cerateTime', 'approveTime'];
 
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
@@ -271,12 +270,12 @@ jQuery(function ($) {
 
     });
 
-    com.post(api.ds.salaryType, {}, function (data) {
+    com.post(api.ds.salary, {}, function (data) {
         var SalaryType = data.SalaryType;
 
         if (SalaryType && SalaryType.length) {
             $.each(SalaryType, function (i, v) {
-                $('<option></option>').attr("value", v.key).html(v.name).appendTo("#workersalarySubtype");
+                $('<option></option>').attr("value", v.key).html(v.name).appendTo($("#workersalarySubtype"));
             });
         }
     }, null, false);

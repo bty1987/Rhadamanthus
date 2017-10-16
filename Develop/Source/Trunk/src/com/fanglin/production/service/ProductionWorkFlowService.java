@@ -11,5 +11,5 @@ public interface ProductionWorkFlowService {
 	
 	public ProductionWorkFlowVO queryProductionWorkFlowByPwpidAWfid(ProductionWorkFlowVO productionworkflowVO) throws FLException;
 	
-	public int operateProductionWorkFlow(String no,long uid,ProductionWorkFlowVO productionWorkFlowVO) throws FLException;
+	public int operateProductionWorkFlow(String no,int uid,ProductionWorkFlowVO productionWorkFlowVO) throws FLException;
 }

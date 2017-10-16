@@ -11,11 +11,10 @@
 
 package com.fanglin.decoration.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,7 @@ import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.AddReduceDao;
@@ -86,6 +86,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException{
 		
 		String orderId = decorationContractVO.getOrderId();
+		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR,DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR,DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
 		
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
 		
@@ -93,13 +94,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO);
 		}
 		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForBaseByOrderId(orderId);
-		Map<String, String> payments = new HashMap<String, String>();
-		
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			payments.put(decorationPaymentPO.getPaymentType(), Float.valueOf(decorationPaymentPO.getReferMoney()).toString());
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId,paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentVO> payments = new ArrayList<DecorationPaymentVO>();
+
+		for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
+			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
+			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO);
+
+			payments.add(_decorationPaymentVO);
 		}
-		
 		decorationContractVO.setPayments(payments);
 		decorationContractVO.setPaymentRates(Arrays.asList(SystemConfig.getInt("firstRate"), SystemConfig.getInt("firstSecondRate"), SystemConfig.getInt("secondRate"), SystemConfig.getInt("lastRate")));
 		
@@ -169,7 +172,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException{
 		
 		List<String> noUpdateStatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_COMPLETED_STR, DecorationOrderPO.STATUS_WASTE_STR, DecorationOrderPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
-		List<Object> noPaymentStatus = Arrays.asList(new Object[]{null, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR});
+		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
 		
 		boolean resignFlag = false;
 		String orderId = decorationContractVO.getOrderId();
@@ -185,7 +188,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140005, "订单合同不能修改");
 		}
 		
-		if(noPaymentStatus.contains(decorationOrderPO.getPaymentStatus())){
+		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationOrderPO.getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);		
+		
+		if(decorationPayments == null || decorationPayments.size() == 0){
 			throw new FLException(140006, "订单没有进行款项交付,不能签订合同");
 		}
 		

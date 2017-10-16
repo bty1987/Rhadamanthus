@@ -21,7 +21,7 @@ CREATE TABLE `materialinside` (
   `des` varchar(256) NOT NULL DEFAULT '',
   `orderId` varchar(15) NOT NULL,
   PRIMARY KEY (`miId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ≥°ƒ⁄–≈œ¢';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂú∫ÂÜÖ‰ø°ÊÅØ';
 
 
 CREATE TABLE `materialoutside` (
@@ -45,7 +45,7 @@ CREATE TABLE `materialoutside` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `des` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`moId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ≥°Õ‚–≈œ¢';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂú∫Â§ñ‰ø°ÊÅØ';
 
 
 CREATE TABLE `materialsuborder` (
@@ -75,26 +75,26 @@ CREATE TABLE `materialsuborder` (
   `preBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `postBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `msoType` tinyint(4) DEFAULT '0',
-  `status` tinyint(4) DEFAULT '0' COMMENT '≥ı º, …æ≥˝',
+  `status` tinyint(4) DEFAULT '0' COMMENT 'ÂàùÂßã, Âà†Èô§',
   `depositPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `depositStatus` tinyint(4) NOT NULL DEFAULT '0',
   `fullPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `fullStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `deliveryStatus` tinyint(4) DEFAULT '0' COMMENT 'ÀÕªı◊¥Ã¨',
+  `deliveryStatus` tinyint(4) DEFAULT '0' COMMENT 'ÈÄÅË¥ßÁä∂ÊÄÅ',
   `balanceStatus` tinyint(4) NOT NULL DEFAULT '0',
   `base` decimal(10,3) NOT NULL DEFAULT '0.000',
   `point` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `distotal` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '’€ø€◊‹º€',
+  `distotal` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT 'ÊäòÊâ£ÊÄª‰ª∑',
   `maling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `venderMaling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
   `couponInfo` varchar(64) NOT NULL DEFAULT '',
   `des` varchar(256) NOT NULL DEFAULT '',
   `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `deliveryTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `deliveryTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deliveryUserId` varchar(15) NOT NULL DEFAULT '',
-  `fullCollectTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `fullCollectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `postProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
   `custProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
   `otherStatus` int(11) NOT NULL DEFAULT '0',
@@ -106,7 +106,7 @@ CREATE TABLE `materialsuborder` (
   KEY `indexfor` (`orderAddr`),
   KEY `indexfiv` (`salesmanName`),
   KEY `indexsix` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïË°®';
 
 
 CREATE TABLE `materialsuborderbalance` (
@@ -115,13 +115,13 @@ CREATE TABLE `materialsuborderbalance` (
   `createrId` varchar(15) NOT NULL,
   `instorerId` varchar(15) DEFAULT NULL,
   `posterId` varchar(15) DEFAULT NULL,
-  `balanceTime` timestamp NULL DEFAULT NULL COMMENT '‘§Ω·À„ ±º‰',
+  `balanceTime` timestamp NULL DEFAULT NULL COMMENT 'È¢ÑÁªìÁÆóÊó∂Èó¥',
   `balance` decimal(10,3) NOT NULL DEFAULT '0.000',
   `difference` decimal(10,3) NOT NULL DEFAULT '0.000',
   `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `vbalanceTime` timestamp NULL DEFAULT NULL COMMENT '≥ß…ÃΩ·À„ ±º‰',
+  `vbalanceTime` timestamp NULL DEFAULT NULL COMMENT 'ÂéÇÂïÜÁªìÁÆóÊó∂Èó¥',
   `post` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `postTime` timestamp NULL DEFAULT NULL COMMENT 'Ω·À„ ±º‰',
+  `postTime` timestamp NULL DEFAULT NULL COMMENT 'ÁªìÁÆóÊó∂Èó¥',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL DEFAULT '0',
@@ -130,7 +130,7 @@ CREATE TABLE `materialsuborderbalance` (
   PRIMARY KEY (`msobId`),
   KEY `indexone` (`msoId`),
   KEY `indextwo` (`instorerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•Ω·À„±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïÁªìÁÆóË°®';
 
 
 CREATE TABLE `materialsuborderitem` (
@@ -160,9 +160,8 @@ CREATE TABLE `materialsuborderitem` (
   `rawPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
   `des` varchar(256) DEFAULT '',
   PRIMARY KEY (`msoiId`),
-  KEY `indexone` (`mpId`),
   KEY `indextwo` (`msoId`,`status`,`refundStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•œÓ±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïÈ°πË°®';
 
 
 CREATE TABLE `materialsuborderpostbalance` (
@@ -176,7 +175,7 @@ CREATE TABLE `materialsuborderpostbalance` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`msopobId`),
   KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•Ω·À„±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïÁªìÁÆóË°®';
 
 
 CREATE TABLE `materialsuborderprebalance` (
@@ -190,7 +189,7 @@ CREATE TABLE `materialsuborderprebalance` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`msoprbId`),
   KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•‘§Ω·À„±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïÈ¢ÑÁªìÁÆóË°®';
 
 
 CREATE TABLE `materialsuborderrefund` (
@@ -224,4 +223,4 @@ CREATE TABLE `materialsuborderrefund` (
   PRIMARY KEY (`msorId`),
   KEY `indexone` (`msoId`,`status`),
   KEY `indextwo` (`mpId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='÷˜≤ƒ◊”∂©µ•ÕÀøÓ–≈œ¢±Ì';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='‰∏ªÊùêÂ≠êËÆ¢ÂçïÈÄÄÊ¨æ‰ø°ÊÅØË°®';

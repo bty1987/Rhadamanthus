@@ -27,7 +27,7 @@ public interface DrawLineService {
 	
 	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company);
 
-	public int applayDrawLine(DrawLineVO drawLine, String userId, Integer company) throws FLException;
+	public int applayDrawLine(DrawLineVO drawLine, String userId) throws FLException;
 
 	public int resetDrawLine(DrawLineVO drawLine, Integer company) throws FLException;
 

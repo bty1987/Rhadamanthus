@@ -20,27 +20,31 @@ public class MessageVO implements Serializable {
 
 	private static final long serialVersionUID = -6328343602972691168L;
 
-	private Integer messageId;
+	private int mid;
 	
 	private UserVO receiver;
 	
 	private UserVO sender;
 	
-	private String type;
+	private short type;
 	
 	private String contents;
 	
 	private Timestamp createTime;
 	
-	private String status;
+	private short status;
 	
 	private String args;
+	
+	private int company;
+	
+	private short dresult;
 	
 	public MessageVO(){
 		super();
 	}
 	
-	public MessageVO(String receiverId, String senderId, String type, String contents) {
+	public MessageVO(String receiverId, String senderId, short type, String contents) {
 		super();
 		this.receiver = new UserVO(receiverId);
 		this.sender = new UserVO(senderId);
@@ -48,69 +52,85 @@ public class MessageVO implements Serializable {
 		this.contents = contents;
 	}
 
-	public Integer getMessageId(){
-		return messageId;
+	public int getMid() {
+		return mid;
 	}
 
-	public void setMessageId(Integer MessageId){
-		this.messageId = MessageId;
+	public void setMid(int mid) {
+		this.mid = mid;
 	}
-	
-	public UserVO getReceiver(){
+
+	public UserVO getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(UserVO receiver){
+	public void setReceiver(UserVO receiver) {
 		this.receiver = receiver;
 	}
 
-	public UserVO getSender(){
+	public UserVO getSender() {
 		return sender;
 	}
 
-	public void setSender(UserVO sender){
+	public void setSender(UserVO sender) {
 		this.sender = sender;
 	}
 
-	public String getType(){
+	public short getType() {
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(short type) {
 		this.type = type;
 	}
 
-	public String getContents(){
+	public String getContents() {
 		return contents;
 	}
 
-	public void setContents(String contents){
+	public void setContents(String contents) {
 		this.contents = contents;
 	}
-
+	
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getCreateTime(){
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public String getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
-	public String getArgs(){
+	public String getArgs() {
 		return args;
 	}
 
-	public void setArgs(String args){
+	public void setArgs(String args) {
 		this.args = args;
+	}
+
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	public short getDresult() {
+		return dresult;
+	}
+
+	public void setDresult(short dresult) {
+		this.dresult = dresult;
 	}
 
 }

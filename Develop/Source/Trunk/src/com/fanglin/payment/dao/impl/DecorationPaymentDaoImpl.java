@@ -15,14 +15,9 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -52,22 +47,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("autoId", ids)).list();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentForBaseByOrderId(String orderId){
-		
-		Criteria query = createCriteria(DecorationPaymentPO.class);
-		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_DEPOSIT_STR, DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-		
-		query.add(Restrictions.eq("decorationOrderPO.orderId", orderId));
-		query.add(Restrictions.in("paymentType", paymentTypes));
-		query.add(Restrictions.not(Restrictions.ilike("paymentType", DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, MatchMode.ANYWHERE)));
-		query.addOrder(Order.asc("autoId"));
-		
-		return query.list();
-	}
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds) {
@@ -113,15 +92,21 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(	String orderId, String paymentType){
+	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType){
 		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, String[] paymentStatus, short oneType, short twoType){
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId) {
 		
-		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR, DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
+		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
 		
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drId", drId)).add(Restrictions.not(Restrictions.in("paymentStatus", paymentStatus))).list();
 	}
@@ -141,15 +126,13 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		
 		return 0;
 	}
-
+	
 	@Override
 	public int deleteDecorationPaymentForBase(String orderId){
 		
-		List<String> paymentTypes = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_FIRST_STR, DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_SECOND_STR, DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-
-		String sql = "delete from payment.decorationpayment where orderId=:orderId and paymentType in :paymentTypes";
+		String sql = "delete from payment.decorationpayment where orderId=:orderId and paymentType <> :paymentTypes and onetype = :onetype and twotype = :twotype";
 	    
-	    return session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentTypes", paymentTypes).executeUpdate();
+	    return session().createSQLQuery(sql).setString("orderId", orderId).setString("paymentTypes", DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
 	}
 
 	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){

@@ -15,7 +15,7 @@ public class ProductionUserWorkFlowDaoImpl extends DaoImpl<ProductionUserWorkFlo
 	@SuppressWarnings("unchecked")
 	public List<ProductionUserWorkFlowPO> queryProductionUserWorkFlowByPwfid(long pwfid) {
 		return session().createCriteria(ProductionUserWorkFlowPO.class)
-				.add(Restrictions.eq("productionuserworkflow.pwfid", pwfid)).list();
+				.add(Restrictions.eq("productionworkflow.pwfid", pwfid)).list();
 	}
 	
 }

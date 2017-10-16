@@ -15,10 +15,11 @@ public interface MessageDao extends Dao<MessagePO> {
 	//获取用户信息总数
 	public int queryMessageCount(String userId,int company);
 	//修改为未读的消息为已读
-	public int updateMessageForRead(List<Integer> messageIds);
+	public int updateMessageForRead(List<Integer> mids);
+	
 	//修改
 	public void updateApproveMsgSerial(String msgSerial);
 	//删除多条方法
-	public int deleteMessageByIdAStatusAUnType(List<Integer> messageIds, String status, List<String> unTypes);
+	public int deleteMessageByIdAStatusAUnType(List<Integer> messageIds, short status, List<String> unTypes);
 	
 }

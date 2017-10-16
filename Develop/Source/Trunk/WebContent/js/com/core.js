@@ -49,7 +49,10 @@ com = {
         	server = config.platform;
         }else if(url.server && url.server == "inventory"){
             server = config.inventory;
-        }else{
+        }else if(url.server && url.server == "production"){
+        	server = config.production;
+        }
+        else{
             server = config.server;
         }
 		
@@ -410,7 +413,7 @@ com = {
 
 					var divM = $("<div></div>");
 					var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title);
-					var div2 = $(".layui-layer-btn").css({"float":"right","width":"67%"});
+					var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"});
 
 					divM.append(div1,div2).appendTo($('.layui-layer-title'));
 
@@ -542,7 +545,7 @@ $.extend($, {
 		});
 	};
     
-    $.fn.bindClick = function(callback){
+    $.fn.bindClick = function(callback, delayTime){
         
         var dfd = $.Deferred(); 
         
@@ -556,7 +559,7 @@ $.extend($, {
             
             setTimeout(function () {
                 that.button('reset')
-            }, 1000)
+            }, typeof(delayTime) == "number" ? delayTime : 1000);
         });
         
         return dfd.promise();

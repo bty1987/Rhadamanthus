@@ -50,7 +50,7 @@ public class WorkplanDaoImpl extends DaoImpl<WorkplanPO> implements WorkplanDao 
 	@SuppressWarnings("unchecked")
 	public List<WorkplanPO> queryWorkplan(int company) {
 		
-		return session().createCriteria(WorkplanPO.class).add(Restrictions.eq(WorkplanPO.COLUMN_COMPANY_STR, company)).list();
+		return session().createCriteria(WorkplanPO.class).add(Restrictions.eq(WorkplanPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq("status",WorkplanPO.COLUMN_STATUS_SHORT)).list();
 	    
 	}
 }

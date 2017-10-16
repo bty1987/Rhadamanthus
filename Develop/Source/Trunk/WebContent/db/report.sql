@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `report`;
+﻿CREATE DATABASE  IF NOT EXISTS `report`;
 USE `report`;
 
 DROP TABLE IF EXISTS `checkwork`;
@@ -71,6 +71,49 @@ CREATE TABLE `ddepartmentcountdetail` (
   KEY `indextwo` (`sdId`,`createDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='尺源部门统计详细';
 
+DROP TABLE IF EXISTS `decorationdesignerdepartmentrank`;
+CREATE TABLE `decorationdesignerdepartmentrank` (
+  `dddrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`dddrId`),
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
+
+DROP TABLE IF EXISTS `decorationdesignerrank`;
+CREATE TABLE `decorationdesignerrank` (
+  `ddrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`ddrId`),
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
+
+DROP TABLE IF EXISTS `decorationdesignerregionrank`;
+CREATE TABLE `decorationdesignerregionrank` (
+  `ddrrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`ddrrId`),
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
+
+
 DROP TABLE IF EXISTS `dregioncountdetail`;
 CREATE TABLE `dregioncountdetail` (
   `drcdId` int(11) NOT NULL AUTO_INCREMENT,
@@ -100,6 +143,101 @@ CREATE TABLE `dusercountdetail` (
   KEY `indexone` (`duId`,`createDate`),
   KEY `indextwo` (`suId`,`createDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='尺源人员统计详细';
+
+DROP TABLE IF EXISTS `materialdepartmentcount`;
+CREATE TABLE `materialdepartmentcount` (
+  `mdcId` int(11) NOT NULL AUTO_INCREMENT,
+  `materialDeptId` varchar(10) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`mdcId`),
+  UNIQUE KEY `uniqueone` (`materialDeptId`,`createTime`) USING BTREE,
+  KEY `indexone` (`materialDeptId`,`createTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
+
+DROP TABLE IF EXISTS `materialdesignercount`;
+CREATE TABLE `materialdesignercount` (
+  `mdcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `designerDepartmentId` varchar(15) NOT NULL,
+  `designerDepartmentName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`mdcId`),
+  UNIQUE KEY `uniqueone` (`designerId`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerId`,`createTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2366 DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
+
+DROP TABLE IF EXISTS `materialdesignerdepartmentcount`;
+CREATE TABLE `materialdesignerdepartmentcount` (
+  `mddcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`mddcId`),
+  UNIQUE KEY `uniqueone` (`designerDeptId`,`designerRegionId`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerDeptId`,`createTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=791 DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
+
+DROP TABLE IF EXISTS `materialdesignerdepartmentrank`;
+CREATE TABLE `materialdesignerdepartmentrank` (
+  `mddrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`mddrId`),
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
+
+DROP TABLE IF EXISTS `materialdesignerrank`;
+CREATE TABLE `materialdesignerrank` (
+  `mdrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`mdrId`),
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
+
+DROP TABLE IF EXISTS `materialdesignerregioncount`;
+CREATE TABLE `materialdesignerregioncount` (
+  `mdrcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`mdrcId`),
+  UNIQUE KEY `uniqueone` (`designerRegionId`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerRegionId`,`createTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=421 DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
+
+DROP TABLE IF EXISTS `materialdesignerregionrank`;
+CREATE TABLE `materialdesignerregionrank` (
+  `mdrrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`mdrrId`),
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
 
 DROP TABLE IF EXISTS `regioncountdetail`;
 CREATE TABLE `regioncountdetail` (
@@ -159,3 +297,90 @@ CREATE TABLE `villagecountdetail` (
   UNIQUE KEY `uniqueone` (`vId`,`createDate`),
   KEY `indexone` (`vId`,`createDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='楼盘统计详细';
+
+DROP TABLE IF EXISTS `zaterialdesignercount`;
+CREATE TABLE `zaterialdesignercount` (
+  `zdcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `designerDepartmentId` varchar(15) NOT NULL,
+  `designerDepartmentName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zdcId`),
+  UNIQUE KEY `uniqueone` (`designerId`,`materialBrand`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerId`,`createTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerdepartmentcount`;
+CREATE TABLE `zaterialdesignerdepartmentcount` (
+  `zddcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zddcId`),
+  UNIQUE KEY `uniqueone` (`designerDeptId`,`materialBrand`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerDeptId`,`createTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerdepartmentrank`;
+CREATE TABLE `zaterialdesignerdepartmentrank` (
+  `zddrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zddrId`),
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
+
+DROP TABLE IF EXISTS `zaterialdesignerrank`;
+CREATE TABLE `zaterialdesignerrank` (
+  `zdrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zdrId`),
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
+
+DROP TABLE IF EXISTS `zaterialdesignerregioncount`;
+CREATE TABLE `zaterialdesignerregioncount` (
+  `zdrcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zdrcId`),
+  UNIQUE KEY `uniqueone` (`designerRegionId`,`materialBrand`,`createTime`) USING BTREE,
+  KEY `indexone` (`designerRegionId`,`createTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计分区业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerregionrank`;
+CREATE TABLE `zaterialdesignerregionrank` (
+  `zdrrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zdrrId`),
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';

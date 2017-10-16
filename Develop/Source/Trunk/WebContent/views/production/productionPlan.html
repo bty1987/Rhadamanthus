@@ -1,0 +1,91 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+
+            <div class="clearfix" id="resultList"></div>
+
+            <div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+        </div>
+    </div>
+
+</div>
+<!--添加计划单弹窗-->
+<div id="layerAdd" style="padding: 40px 0; display:none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-right">投料时间</label>
+                            <div class="controls col-xs-8">
+                                <input name="startTime" class="m-wrap m-ctrl-medium date-picker col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="startTime" style="margin-bottom: 20px"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+
+                        <div class="space5"></div>
+
+                        <div class="form-group" style="margin-bottom: 20px">
+                            <label class="control-label col-xs-4 no-padding-right">出货时间</label>
+                            <div class="controls col-xs-8">
+                                <input name="endTime" class="m-wrap m-ctrl-medium date-picker col-xs-7" rules="{required:true}" size="16" type="text" value="" id="endTime" style="margin-bottom: 20px"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-right">备注</label>
+                            <div class="controls col-xs-8">
+                                <input name="comment" class="m-wrap col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="comment"/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
+<div id="layerImport" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form2">
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+
+                            <div class="row-fluid">
+                                <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%" id="download">
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%" id="importProductionPlanExcel"></div>
+                        </div>
+                        <div class="space5"></div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.getScript('js/production/productionPlan.js');
+        $.getScript('js/production/productionUtils.js');
+    });
+</script>

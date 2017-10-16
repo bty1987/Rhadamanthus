@@ -1,0 +1,57 @@
+<div class="page-content">
+<div class="row">
+	<div class="col-xs-12">
+		<div id="condList" class="fl_search clearfix"></div>
+
+		<div class="clearfix" id="resultList"></div>
+
+		<div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+	</div>
+</div>
+
+</div>
+
+<!--查看 工序组--工序 弹窗-->
+<div id="checkWorkflow" class="portlet box"></div>
+
+<div id="layerAdd" style="padding: 40px 0; display: none;">
+	<div class="row-fluid">
+		<form class="form-horizontal" novalidate="novalidate" id="form1">
+			<div class="widget-main">
+				<div class="row" style="margin-right:0px">
+					<div class="col-xs-12">
+
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding-right">名称<i class="icon-asterisk"></i></label>
+							<div class="controls col-xs-8">
+								<input type="text" class=" m-wrap col-xs-8" name="name" rules="{required:true}">
+							</div>
+						</div>
+						<div class="space5"></div>
+
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding-right">车间<i class="icon-asterisk"></i></label>
+							<div class="controls col-xs-8">
+								<select type="text" class="col-xs-8 m-wrap" name="workshop" rules="{required:true}"></select>
+							</div>
+						</div>
+						<div class="space5"></div>
+
+						<div class="form-group">
+							<label class="control-label col-xs-3 no-padding-right">备注</label>
+							<div class="controls col-xs-8">
+								<input type="text" class=" m-wrap col-xs-8" name="comment" rules="{required:true}">
+							</div>
+						</div>
+						<div class="space5"></div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="js/production/workplan.js"></script>
+<script src="js/production/productionUtils.js"></script>
+

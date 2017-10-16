@@ -1,12 +1,15 @@
 
 jQuery(function($) {
-	
+	var $decorationType;
 	var addReduceDetail = {
 		addReduceDetails: null,
-		addItems: [],
-		reduceItems: [],
+		addItems: {},
+		reduceItems: {},
 	};
-	
+	var reduceNums = {};
+	var $addReduceItems = {};
+	var _addReduceIds = [];
+	var _orderId = null;
 	Api().init('../../js/api/');
     
     params.server = window.server;
@@ -18,18 +21,37 @@ jQuery(function($) {
 		params.loginTime = parent.params.loginTime;
 	}
 
+	$.each(p.split('&'), function(i, v){
+		if(v.indexOf('orderType=') != -1){
+			$decorationType = v.substring(v.indexOf('orderType=')).split('=')[1];
+		}
+		if(v.indexOf('addReduceIds[' + i + ']=') != -1){
+			_addReduceIds.push(parseInt(v.substring(v.indexOf('addReduceIds[' + i + ']=')).split('=')[1]));
+		}
+		if(v.indexOf('quotation.orderId=') != -1){
+			_orderId = v.substring(v.indexOf('quotation.orderId=')).split('=')[1];
+		}
+	});
 	var url = api.quotation.queryQuotationForDefaultByOrderId;
 	url.url = url.url + "?" + p;
 	
 	com.post(url, {}, function(res){
 		addReduceDetail.quotation = res.quotation;
 	}, null ,false);
-	
+
+
+	var $addReduceIds = {};
+	url = api.addReduce.queryAddReduceByOrderId;
+	com.post(url, {"addReduce.orderId":_orderId}, function (res) {
+		var addReduces = res.addReduces;
+		$.each(addReduces, function (i, v) {
+			$addReduceIds["addReduceIds[" + i + "]"] = v.arId;
+		});
+	}, null, false);
+
 	url = api.addReduce.queryAddReduceItemByAddReduceIds;
-	url.url = url.url + "?" + p;
-	
-	com.post(url, {}, function(res){
-		addReduceDetail.addReduceItems = res.addReduceItems;
+	com.post(url, $addReduceIds, function (res) {
+		$addReduceItems = res.addReduceItems;
 	}, null, false);
 	
 	calAddReduceSum();
@@ -40,74 +62,104 @@ jQuery(function($) {
 	}
 	
 	function calAddReduceSum(){
-		
-		var addReduceItems = addReduceDetail.addReduceItems;
+
+		var addReduceItems = $addReduceItems;
 		var addReduceItemLength = addReduceItems.length;
-		
+
 		var discount = addReduceDetail.quotation.discount;
-		
-		var sumAdd = 0;
-		var sumReduce = 0;
-		
+
 		for(var i=0;i<addReduceItemLength;i++){
 			
 			var addReduceItem = addReduceItems[i];
-			
-			var _u = Math.round(parseFloat(addReduceItem.unitPrice) * (addReduceItem.discount == 0 ? 1 : utils.accDiv(discount, 10)) * 100) / 100;
-			var _t = Math.round(_u * parseFloat(addReduceItem.num) * 100) / 100;
-			
-			addReduceItem.unitPrice = _u;
-			addReduceItem.total = _t;
-			
-			if(addReduceItem.type == 0 || addReduceItem.type == 2){ // 增项
-				sumAdd = utils.accAdd(sumAdd, _t);
-				
-				addReduceDetail.addItems.push(addReduceItem);
-			}else{ // 减项
-				sumReduce = utils.accAdd(sumReduce, _t);
-				
-				addReduceDetail.reduceItems.push(addReduceItem);
+			if ([4].indexOf(addReduceItem.type) != -1) {
+				if (reduceNums[addReduceItem.quoteItemId]) {
+					reduceNums[addReduceItem.quoteItemId] = utils.accAdd(reduceNums[addReduceItem.quoteItemId], addReduceItem.num);
+				} else {
+					reduceNums[addReduceItem.quoteItemId] = addReduceItem.num;
+				}
+			}
+			var _dcp = utils.changeTwoDecimal(addReduceItem.unitPrice);
+
+			if([1, 3].indexOf(addReduceItem.type) != -1){
+				_dcp = utils.changeTwoDecimal(utils.accMul( _dcp, (addReduceItem.discount == 1 || $decorationType == 2 ? utils.accDiv(discount, 10) : 1)));
+			}else if([0, 2, 4].indexOf(addReduceItem.type) != -1 && $decorationType == 2){
+				_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
+			}
+
+			/*if(addReduceItem.quotationFunctionAreaType == 3 && [3].indexOf(addReduceItem.type) != -1){
+				_dcp = 0;
+			}*/
+			var total = utils.changeTwoDecimal(utils.accMul(addReduceItem.num ,  _dcp));
+
+			addReduceItem.dcp = _dcp;
+			addReduceItem.total = total;
+
+			if(_addReduceIds.indexOf(addReduceItem.arId) != -1) {
+
+				if (addReduceItem.type == 0 || addReduceItem.type == 2) { // 增项
+					if(!addReduceDetail.addItems[addReduceItem.arId+'-工程增项']){
+						addReduceDetail.addItems[addReduceItem.arId+'-工程增项'] = [];
+					}
+
+					addReduceDetail.addItems[addReduceItem.arId+'-工程增项'].push(addReduceItem);
+
+				} else { // 减项
+					if(!addReduceDetail.addItems[addReduceItem.arId+'-工程减项']){
+						addReduceDetail.addItems[addReduceItem.arId+'-工程减项'] = [];
+					}
+
+					addReduceDetail.addItems[addReduceItem.arId+'-工程减项'].push(addReduceItem);
+				}
 			}
 		}
-		
-		addReduceDetail.sumAdd = sumAdd;
-		addReduceDetail.sumReduce = sumReduce;
+
 	}
 
-	function generateAddReduceItem(name, addReduceItems, total, html){
-		
+	function generateAddReduceItem(addReduceItems){
+		var addReduceTotalPrice = 0;
 		var html = "";
-		
-		html += name;
-		html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
-		html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
-		html += '<td width="40%">项目名称</td>';
-		html += '<td width="14%">功能区</td>';
-		html += '<td width="10%">单位</td>';
-		html += '<td width="13%">数量</td>';
-		html += '<td width="13%">单价</td>';
-		html += '<td width="10%">金额</td>';
-		html += '</tr>';
-		
-		var itemLength = addReduceItems.length;
-		
-		for(var i=0;i<itemLength;i++){
-			var item = addReduceItems[i];
-			
-			html += '<tr align="center">';
-			html += '<td>'+item.itemName+'</td>';
-			html += '<td>'+item.quotationFunctionAreaName+'</td>';
-			html += '<td>'+item.measurementUnit+'</td>';
-			html += '<td>'+item.num+'</td>';
-			html += '<td>'+item.unitPrice+'</td>';
-			html += '<td>'+item.total+'</td>';
+		$.each(addReduceItems, function (i, v) {
+			var addReduceType = i.split('-')[1];
+			var addReduceTotal = 0;
+			var index = 1;
+			html += addReduceType;
+			html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
+			html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
+			html += '<td width="5%">序号</td>';
+			html += '<td width="40%">项目名称</td>';
+			html += '<td width="14%">功能区</td>';
+			html += '<td width="10%">单位</td>';
+			html += '<td width="8%">数量</td>';
+			html += '<td width="10%">单价</td>';
+			html += '<td width="13%">金额</td>';
 			html += '</tr>';
-		}
-		
-		html += '</tbody></table>';
-		html += name + '金额:' + Math.round(total * 100) / 100 + '元';
-		html += '<hr><p>';
-		
+
+			$.each(v, function (j, qv) {
+
+				if (reduceNums[qv.ariId]) {
+					qv.num = utils.changeThrDecimal(utils.accAdd(qv.num, reduceNums[qv.ariId]));
+					qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
+				}
+
+
+				html += '<tr align="center">';
+				html += '<td>' + index+++ '</td>';
+				html += '<td>' + qv.itemName + '</td>';
+				html += '<td>' + qv.quotationFunctionAreaName + '</td>';
+				html += '<td>' + qv.measurementUnit + '</td>';
+				html += '<td>' + qv.num + '</td>';
+				html += '<td>' + qv.unitPrice + '</td>';
+				html += '<td>' + qv.total + '</td>';
+				html += '</tr>';
+				addReduceTotal = utils.changeThrDecimal(utils.accAdd(qv.total, addReduceTotal));
+			})
+
+			html += '</tbody></table>';
+			html += addReduceType + '金额:' + utils.changeThrDecimal(addReduceTotal)  + '元';
+			html += '<hr><p>';
+			addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '工程减项' ? utils.changeThrDecimal(-addReduceTotal) : utils.changeThrDecimal(addReduceTotal),addReduceTotalPrice));
+		})
+		$("#labSumMoney").html("工程最终增减合计金额:" + utils.changeThrDecimal(addReduceTotalPrice) + "元");
 		return html;
 	}
 
@@ -116,20 +168,13 @@ jQuery(function($) {
 		
 		$("#orderId").html("订单编号:" + addReduceDetail.quotation.orderId);
 		$("#orderAddr").html("楼盘地址:" + addReduceDetail.quotation.orderAddr);
-		$("#supervisor").html("监理:" + addReduceDetail.quotation.supervisorName);
-		$("#designer").html("设计师:" + addReduceDetail.quotation.designerName);
-		$("#labSumMoney").html("工程最终增减合计金额:" + Math.round(utils.accSub(addReduceDetail.sumAdd, addReduceDetail.sumReduce) * 100) / 100 + "元");
-		
-		if(addReduceDetail.sumAdd > 0){
-			html += generateAddReduceItem("工程增项", addReduceDetail.addItems, addReduceDetail.sumAdd);
-		}
-		
-		if(addReduceDetail.sumReduce > 0){
-			html += generateAddReduceItem("工程减项", addReduceDetail.reduceItems, addReduceDetail.sumReduce);
-		}
+		$("#supervisor").html("监理:" + addReduceDetail.quotation.supervisorName ? addReduceDetail.quotation.supervisorName : "-");
+		$("#designer").html("设计师:" + addReduceDetail.quotation.designerName ? addReduceDetail.quotation.designerName : "-");
+
+		html += generateAddReduceItem(addReduceDetail.addItems);
+
 		
 		$("#content").html(html);
 	}
-	
 });
 

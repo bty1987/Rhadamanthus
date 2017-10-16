@@ -61,7 +61,7 @@ public class DecorationDesignerRankDaoImpl extends DaoImpl<DecorationDesignerRan
 		
 		int status = DecorationDesignerRankPO.STATUS_TYPE_INIT_INT;
 		
-		String sql = "select b.rank, (select count(1)+1 from platform.decorationdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank and a.company =:companyA and b.company =:companyB) place from platform.decorationdesignerrank b where b.status =:statusC and b.designerId =:designerId and b.company =:companyC";
+		String sql = "select b.rank, (select count(1)+1 from report.decorationdesignerrank a where a.status =:statusA and b.status =:statusB and a.rank > b.rank and a.company =:companyA and b.company =:companyB) place from report.decorationdesignerrank b where b.status =:statusC and b.designerId =:designerId and b.company =:companyC";
 		
 		return session().createSQLQuery(sql).setInteger("statusA", status).setInteger("statusB", status).setInteger("statusC", status).setInteger("companyA", company).setInteger("companyB", company).setInteger("companyC", company).setString("designerId", designerId).list();
 	}

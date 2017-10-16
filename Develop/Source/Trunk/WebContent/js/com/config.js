@@ -26,4 +26,6 @@ var config = {
     media: '',
     dmedia: '',
     communion: '',
+	inventory: '',
+	production: '',
 };

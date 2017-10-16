@@ -28,7 +28,7 @@ import com.fanglin.decoration.po.BackVisitPO;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.BackVisitService;
 import com.fanglin.decoration.vo.BackVisitVO;
-import com.fanglin.dingding.service.MessageService;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -131,8 +131,8 @@ public class BackVisitServiceImpl implements BackVisitService {
 			
 			List<String> receivers = backVisitVO.getReceivers();
 			
-			for(String receiverId: receivers){
-				messageService.sendMessageForBackVisit(receiverId.trim(), String.format("%s的回访", userPO.getCurrentName()), orderId, backVisitVO.getContent(), company);
+			for(String receiverId: receivers){	
+				messageService.sendMessage(receiverId.trim(),userPO.getUserId(),backVisitVO.getContent(),(short) 5,company);
 				receiverIds.append(String.format("%s,", receiverId));
 			}
 		}

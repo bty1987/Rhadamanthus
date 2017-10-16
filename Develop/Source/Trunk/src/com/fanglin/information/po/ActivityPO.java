@@ -43,6 +43,8 @@ public class ActivityPO implements java.io.Serializable {
 	private Timestamp endTime;
 	
 	private String content;
+	
+	private int company;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -125,6 +127,15 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

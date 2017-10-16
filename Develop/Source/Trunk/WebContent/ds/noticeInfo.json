@@ -12,6 +12,19 @@
   {"key":"0","value":"公开"},
   {"key":"1","value":"部门公开"}
 ],
+  "messageType":[
+    {"key":"0","value":"款项消息"},
+    {"key":"1","value":"审批消息"},
+    {"key":"2","value":"归属消息"},
+    {"key":"3","value":"工程消息"},
+    {"key":"4","value":"个人消息"},
+    {"key":"5","value":"回访消息"}
+
+  ],
+  "messageStatus" : [
+    {"key":"0","value":"未读"},
+    {"key":"1","value":"已读"}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

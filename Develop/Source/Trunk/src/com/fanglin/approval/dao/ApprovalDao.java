@@ -24,7 +24,7 @@ public interface ApprovalDao extends Dao<ApprovalPO> {
 	
 	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company);
 	
-	public ApprovalPO queryApprovalForInitByTypeAIdent(short type, String ident);
+	public ApprovalPO queryApproval(short status,short type, String ident);
 	
 	public int countApprovalForInitByIdent(String ident);
 	

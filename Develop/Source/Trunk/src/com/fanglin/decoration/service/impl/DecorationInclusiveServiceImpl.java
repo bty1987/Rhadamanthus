@@ -19,6 +19,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.DecorationInclusiveService;
 import com.fanglin.decoration.vo.DecorationInclusiveVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
@@ -45,6 +46,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
+	
+	@Autowired
+	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
@@ -94,12 +98,16 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		String orderId = decorationInclusiveVO.getDecorationOrder().getOrderId();
 		
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
-		List<String> paymentType = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_FIRST_STR,DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR,DecorationPaymentPO.PAYMENTTYPE_SECOND_STR,DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-
+		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
+			
 		if(decorationInclusivePO != null){
-			if(paymentType.contains(decorationInclusivePO.getDecorationOrder().getPaymentStatus())){
+			
+			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationInclusiveVO.getDecorationOrder().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			
+			if(decorationPayments != null && decorationPayments.size() > 0){
 				throw new FLException(140043,"订单整装信息不可更新");
 			}
+			
 		}else{
 			decorationInclusivePO = new DecorationInclusivePO(new DecorationOrderPO());
 		}

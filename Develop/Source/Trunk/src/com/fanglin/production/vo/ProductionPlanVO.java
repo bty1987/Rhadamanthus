@@ -3,6 +3,8 @@ package com.fanglin.production.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 public class ProductionPlanVO implements Serializable{
 
 	private static final long serialVersionUID = 4559894231877224250L;
@@ -21,6 +23,7 @@ public class ProductionPlanVO implements Serializable{
 	
 	private Short status;
 	
+	private String comment;
 	
 	public ProductionPlanVO() {
 		super();
@@ -62,7 +65,7 @@ public class ProductionPlanVO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-
+	@JSON(format="yyyy-MM-dd")
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -70,7 +73,7 @@ public class ProductionPlanVO implements Serializable{
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
-
+	@JSON(format="yyyy-MM-dd")
 	public Timestamp getEndTime() {
 		return endTime;
 	}
@@ -86,6 +89,17 @@ public class ProductionPlanVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+	
 	
 
 }

@@ -59,6 +59,17 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	public SalesPO querySalesBySid(Long sid) {
 		return (SalesPO) createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_SID_STR, sid)).uniqueResult();
 	}
+	
+	@Override
+	public SalesPO querySalesByNo(String no) {
+		return (SalesPO) createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_NO_STR, no)).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SalesPO> querySalesByOrderId(String orderId) {
+		return createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_ORDERID_STR, orderId)).list();
+	}
 
 	private void queryFilterExcute(PagingQuery<SalesPO> query,List<Filter> filters) {
 		if(filters != null){

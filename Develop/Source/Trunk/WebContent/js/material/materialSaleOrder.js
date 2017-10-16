@@ -72,7 +72,7 @@ jQuery(function($) {
 
 		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 
-		com.post(api.ds.materialInfo, {}, function(res){
+		com.post(api.ds.payment, {}, function(res){
 			materialSaleOrder.materialOrderType = res.materialOrderType;
 
 			materialSaleOrder.materialSaleOrderItems.msoType.bindData(materialSaleOrder.materialOrderType, "key", "value");

@@ -12,6 +12,4 @@ public interface WorkflowDao extends Dao<WorkflowPO> {
 	
 	public 	List<WorkflowPO> queryWorkflow(int Company);
 	
-	public 	WorkflowPO queryWorkflowBywfid(Long wfid);
-	
 }

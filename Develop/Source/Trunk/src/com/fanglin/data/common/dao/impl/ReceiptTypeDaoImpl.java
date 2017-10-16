@@ -30,9 +30,10 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	}
 
 	@Override
-	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters) {
+	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<ReceiptTypePO> query = pagingQuery(paging, ReceiptTypePO.class);
+		query.add(Restrictions.eq("company", company));
 		
 		queryFilterExcute(query, filters);
 		
@@ -41,19 +42,19 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ReceiptTypePO> queryReceiptType() {
-		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("status", ReceiptTypePO.STATUS_ENABLE_INT)).list();
+	public List<ReceiptTypePO> queryReceiptType(int company) {
+		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", ReceiptTypePO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type) {
-		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type)).list();
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type,int company) {
+		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type)).list();
 	}
 	
 	@Override
-	public ReceiptTypePO queryReceiptTypeByKey(String key) {
-		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq(ReceiptTypePO.COLUMN_KEY_STR, key)).uniqueResult();
+	public ReceiptTypePO queryReceiptTypeByKey(String key,int company) {
+		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_KEY_STR, key)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

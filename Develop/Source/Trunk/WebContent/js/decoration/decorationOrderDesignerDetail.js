@@ -148,11 +148,6 @@ jQuery(function($) {
 	decorationOrderDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
 	decorationOrderDetail.otherPaymentModal = $("#otherPaymentModal");
 
-	// com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
-	//com.initChosen('refundApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 5}, "autoFillKeyValue", "key", "value");
-	//com.initChosen('approveActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
-	//com.initChosen('approveSpecialActivityItemManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 8}, "autoFillKeyValue", "key", "value");
-	//com.initChosen('vApproveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 2}, "autoFillKeyValue", "key", "value");
 	com.initChosen('villageSel', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", 'key', 'value').on('change', function(e){
 		if ($("#villageSel").val() == null || $("#villageSel").val() == ""){
 			return;
@@ -165,7 +160,7 @@ jQuery(function($) {
 			$("#buildingRuleContent").html("说明："+res.village.buildingNameRule.ruleContent+";eg."+res.village.buildingNameRule.ruleExample);
 		});
 	});
-	com.post(api.ds.decorationInfo,{},function (res) {
+	com.post(api.ds.decoration,{},function (res) {
 		$('#houseClass').bindData(res.houseClass,"key","value");
 
 	},null,false);
@@ -184,7 +179,7 @@ jQuery(function($) {
 	$("#btnSetDecorationPaymentInfo").on('click', function(res) {
 		com.clearValidator();
 
-		com.post(api.ds.decorationInfo,{},function (res) {
+		com.post(api.ds.decoration,{},function (res) {
 			$('#decorationOrderDiscount').bindData(res.machingType,"key","value");
 
 		});
@@ -211,10 +206,11 @@ jQuery(function($) {
 					$input.attr('checked','true');
 				}
 
-				var $span = $('<span></span>').addClass('lbl').html($('<label></label>').attr('style', 'display:inline-block;width:47px;text-align-last:justify;margin-left:10px').text(v.name));
-				var $comment = $('<span></span>').addClass("lbl").text(v.comment == null ? " " : v.comment).attr("style", "margin-left:15px");
+				var $span = $('<span></span>').addClass('lbl').html($('<label></label>').attr('style', 'display:inline-block;width:105px;margin-left:10px').text(v.name));
+				var $comment = $('<span></span>').addClass("lbl").text(v.comment == null ? " " : v.comment).attr("style", "margin-left:27px");
 				$input.appendTo($approvaler);
 				$span.appendTo($approvaler);
+				$('<br/>').appendTo($approvaler)
 				$comment.appendTo($approvaler);
 				$approvaler.appendTo($div);
 				$div.appendTo($("#paymentScale"));
@@ -227,57 +223,10 @@ jQuery(function($) {
 		
 	});
 	
-	$("#btnRebackPayment").on('click', function(res){
-		decorationPayment.editFlag = 0;
-		com.clearValidator();
-		com.post(api.payment.queryDecorationPaymentForBaseByOrderId, decorationPayment.postParam, function(res){
-			decorationPayment.refundType = [{"key":"", "value":"", "money":0}];
-			decorationPayments = res.decorationPayments;
-
-			var options = {};
-			
-			for(var i=0;i<decorationPayments.length;++i){
-				
-				var _decorationPayment = decorationPayments[i];
-				
-				if(_decorationPayment.paymentStatus != "已确认") continue;
-				
-				var option = {"key":_decorationPayment.paymentType + "退款", "value":_decorationPayment.paymentType + "退款", "money":_decorationPayment.paymentBlance, "paymentId":_decorationPayment.autoId};
-				
-				options[_decorationPayment.paymentType] = option;
-			}
-
-			if(options["尾款"]){
-				decorationPayment.refundType.push(options["尾款"]);
-			}else if(options["二期款"]){
-				decorationPayment.refundType.push(options["二期款"]);
-			}else if(options["首付二期款"]){
-				decorationPayment.refundType.push(options["首付二期款"]);
-			}else if(options["首付款"]){
-				decorationPayment.refundType.push(options["首付款"]);
-			}
-			
-			$("#paymentType").bindData(decorationPayment.refundType, 'key', 'value');
-
-			$("#paymentType").attr("disabled",false);
-			$("#paymentType").get(0).selectedIndex = 0;
-			$("#referMoney").attr("disabled",false);
-			$("#autoId").val("");
-			$("#referMoney").val("");
-			$("#refundApprove").removeClass("hide");
-			$("#changeReason").addClass("v_required");
-			$("#changeReason").val("");
-
-			approvalUtils.initqueryApprovalUser("refundApproveManSel",5);
-			
-			decorationOrderDetail.refundDecorationPaymentModal.modal("show");
-		});
-	});
-	
 	$("#btnOtherPayment").on('click', function(res){
 		com.clearValidator();
 		
-		com.post(api.ds.decorationInfo, {}, function(res){
+		com.post(api.ds.decoration, {}, function(res){
 			decorationOrderDetail.otherPaymentType.bindData(res.paymentType, "key", "value", false);
 		});
 		
@@ -356,7 +305,7 @@ jQuery(function($) {
 				var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(res.servicePaidup == null? 0:res.servicePaidup,res.servicePrice)),100);
 				$('#servicePercent').html(servicePercent > 100 ? 100:servicePercent + "%");
 
-				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 
 			},function (e) {
 				com.showAlert(com.error,e.errorMsg);
@@ -382,13 +331,13 @@ jQuery(function($) {
 				$('#managePrice').html(res.managePrice);
 				$('#materialPaidup').html(res.materialPaidup);
 
-				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 			},function (e) {
 				com.showAlert(com.error,e.errorMsg);
 			})
 		}else {
 			com.post(api.payment.makeDecorationPayment, options, function(res){
-				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 			});
 		}
 
@@ -408,7 +357,7 @@ jQuery(function($) {
 		}
 		
 		com.post(api.payment.updateDecorationPaymentForReferMoney, options, function(res){
-			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 		});
 		
 		decorationOrderDetail.decorationPaymentModal.modal("hide");
@@ -432,20 +381,22 @@ jQuery(function($) {
 			var options = {
 				"approval.receiverId": receiverId,
 				"approval.comment": $("#changeReason").val(),
-				"approvalDecorationRefund.paymentId": decorationOrderDetail.paymentId,
+				"approvalDecorationRefund.paymentId": $('#autoId').val(),
 			}
 			
 			bootbox.confirm("确认要提交退款申请吗?", function(res) {
 				if(res){
 					com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
 						com.showAlert(com.info, "提交成功");
-						decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+						decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 					});
 				}
 				
 				decorationOrderDetail.refundDecorationPaymentModal.modal("hide");
 			});
 		}
+
+		$('#changeReason').val("")
 	});
 	
 	$("#saveOtherPaymentBtn").on("click", function(res){
@@ -455,13 +406,14 @@ jQuery(function($) {
 		
 		var options = {
 			"decorationPayment.orderId": decorationOrderDetail.decorationOrderId,
-			"decorationPayment.paymentType": decorationOrderDetail.otherPaymentType.val(),
+			"decorationPayment.paymentType": decorationOrderDetail.otherPaymentType.find("option:selected").text(),
+			"decorationPayment.twoType": decorationOrderDetail.otherPaymentType.val(),
 			"decorationPayment.referMoney": decorationOrderDetail.otherPayment.val()
 		}
 		
 		com.post(api.payment.addDecorationPayment, options, function(res){
 			
-			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+			decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 			
 			decorationOrderDetail.otherPaymentModal.modal("hide");
 		})
@@ -723,12 +675,12 @@ jQuery(function($) {
 	$("#applyActivityItemBtn").on("click", function(){
 		
 		decorationOrderDetail.activity.things.chosen("destroy");
-		decorationOrderDetail.activity.things.chosen({width: "216px"});
+		decorationOrderDetail.activity.things.chosen({width: "42%"});
 		decorationOrderDetail.activity.things.bindData([{aid:-1, activityName: ""}], "aid", "activityName");
 		decorationOrderDetail.activity.things.trigger("chosen:updated");
 		
 		decorationOrderDetail.activity.coupons.chosen("destroy");
-		decorationOrderDetail.activity.coupons.chosen({width: "216px", multi_type: "input"});
+		decorationOrderDetail.activity.coupons.chosen({width: "42%", multi_type: "input"});
 		decorationOrderDetail.activity.coupons.bindData([{aid:-1, activityName: ""}], "aid", "activityName");
 		decorationOrderDetail.activity.coupons.trigger("chosen:updated");
 		
@@ -758,7 +710,7 @@ jQuery(function($) {
 	
 	$("#applySpecialActivityItemBtn").on("click", function(){
 		
-		com.post(api.ds.activityInfo, {}, function(res){
+		com.post(api.ds.information, {}, function(res){
 			decorationOrderDetail.activityItemType = res.activityItemType;
 			
 			decorationOrderDetail.activity.activityType.bindData(decorationOrderDetail.activityItemType, "key", "value");
@@ -958,7 +910,7 @@ jQuery(function($) {
 		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
-	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
+	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, true);
 	
 	decorationUtils.loadHuploadify("designPictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
 		decorationUtils.addDecorationPicture(data, 1, "designPictures");
@@ -972,70 +924,6 @@ jQuery(function($) {
 		decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
 	}, "btn btn-warning");
 });
-
-function submintPayment(paymentId, paymentType){
-	
-	bootbox.confirm("确认要提交" + paymentType + "吗?", function(result){
-		if(result){
-			com.post(api.payment.submitDecorationPayment, {"decorationPayment.autoId":paymentId}, function(res){
-				decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, editPayment, submintPayment, editRefundPayment);
-			});
-		}
-	});
-}
-
-function editPayment(paymentId, oldmoney) {
-
-	com.clearValidator();
-	
-	decorationOrderDetail.decorationPaymentId = paymentId;
-	
-	decorationPayment.editFlag = 1;
-	decorationPayment.decorationPayment.val(oldmoney);
-	
-	decorationOrderDetail.decorationPaymentModal.modal("show");
-}
-
-function editRefundPayment(paymentId, oldmoney, paymentType) {
-
-	decorationPayment.editFlag = 2;
-	com.clearValidator();
-	
-	com.post(api.payment.queryBaseConfirmDecorationPaymentsByOrderId, decorationPayment.postParam, function(res){
-		decorationPayment.refundType = [{"key":"其他退款", "value":"其他退款", "money":""}];
-		decorationPayments = res.decorationPayments;
-		
-		for(var i=0;i<decorationPayments.length;++i){
-			var _ = {"key":decorationPayments[i].paymentType+"退款","value":decorationPayments[i].paymentType+"退款","money":decorationPayments[i].paymentBlance};
-			decorationPayment.refundType.push(_);
-		}
-		
-		$("#paymentType").bindData(decorationPayment.refundType, 'key', 'value');
-		
-		$("#refundApprove").removeClass("hide");
-		$("#paymentType").attr("disabled",false);
-		$("#referMoney").attr("disabled",false);
-		$("#changeReason").addClass("v_required");
-		$("#refundApproveManSel").addClass("v_required");
-		$("#autoId").val(paymentId);
-		$("#referMoney").val(oldmoney);
-		$("#paymentType").val(paymentType);
-		
-		if($("#paymentType").val() == null){
-			$("#paymentType").prepend("<option value='"+paymentType+"'>"+paymentType+"</option>");
-			$("#paymentType").val(paymentType);
-		}
-		
-		$("#paymentType").attr("disabled",true);
-		if($("#paymentType").val() != '其他退款'){
-			$("#referMoney").attr("disabled",true);
-		}else{
-			$("#referMoney").attr("disabled",false);
-		}
-
-		decorationOrderDetail.refundDecorationPaymentModal.modal("show");
-	});
-}
 
 function initWizard() {
 	$('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {

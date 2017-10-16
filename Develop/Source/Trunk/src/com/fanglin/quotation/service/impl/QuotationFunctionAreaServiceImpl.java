@@ -179,6 +179,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				if(functionAreaItemPO.getQuotationItem().getQuotationType().getId() == 2){
 					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_MATERIAL_INT;
 				}
+				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
 				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getItemName());
 				quotationFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());

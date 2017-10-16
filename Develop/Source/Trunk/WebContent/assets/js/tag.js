@@ -185,7 +185,7 @@
                         return
                     }
                 }
-                this.values.push(g);
+                if(f.options.isStaticResource) this.values.push(g);
                 this.createBadge(g);
                 this.element.val(this.values.join(", "));
                 this.element.trigger("added", [g])

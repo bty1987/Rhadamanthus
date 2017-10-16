@@ -24,7 +24,6 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("constructionDao")
 public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements ConstructionDao {
@@ -169,15 +168,6 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 					}else{
 						query.add(query.getCriterion("decorationOrderPO.projectStatus", "已完工", "eq"));
 					}
-				}else if("villageSeat".equals(field)){
-					
-					double x = Double.parseDouble(data.split(":")[0]);
-					double y =  Double.parseDouble(data.split(":")[1]);
-					
-					double seatRang = SystemConfig.getDouble("seatRang");
-					
-					query.add(Restrictions.between("village.x", (x - seatRang), (x + seatRang)));
-					query.add(Restrictions.between("village.y", (y - seatRang), (y + seatRang)));
 				}
 			}
 		}

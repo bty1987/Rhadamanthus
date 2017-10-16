@@ -48,6 +48,12 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids) {		
+		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).list();
+	}
 
 	@Override
 	public List<SalesPaymentPO> pageSalesPaymentForConfirm(Paging paging, List<Filter> filters) {
@@ -147,5 +153,6 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 			}
 		}
 	}
+
 
 }

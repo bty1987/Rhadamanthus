@@ -38,7 +38,6 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -88,7 +87,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 		String orderId = approvalOrderBelongVO.getOrderId();
 		String belongType = approvalOrderBelongVO.getBelongType();
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -186,11 +185,9 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			approvalOrderBelongItemDao.save(approvalOrderBelongItemPO);
 		}
-		
-		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
-		
-		messageService.sendMessage(messageVO,company);
-		
+
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
+
 		return 0;
 	}
 

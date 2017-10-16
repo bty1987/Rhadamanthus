@@ -70,9 +70,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			
 			filters.add(new Filter(QuotationItemPO.COLUMN_STATUS_STR, String.valueOf(QuotationItemPO.STATUS_ENABLE_INT), "eq"));
 			filters.add(new Filter("versionId", quotationItemVO.getVersionId(), "eq"));
-			if(quotationItemVO.getQuotationTypeId()!=null && quotationItemVO.getQuotationTypeId()!=0){
-				filters.add(new Filter("quotationTypeId", String.valueOf(quotationItemVO.getQuotationTypeId()), "eq"));
-			}
+		
 			List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 			
 			for(QuotationItemPO quotationItemPO: quotationItemPOs){

@@ -20,12 +20,12 @@ import com.fanglin.utils.Paging;
 
 public interface ReceiptTypeService {
 	
-	public void pageReceiptType(Paging paging, List<Filter> filters);
+	public void pageReceiptType(Paging paging, List<Filter> filters, int company);
 	
-	public List<ReceiptTypeVO> queryReceiptType();
+	public List<ReceiptTypeVO> queryReceiptType(int company);
 	
-	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO);
+	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO,int company);
 	
-	public int addReceiptType(ReceiptTypeVO receiptTypeVO) throws FLException;
+	public int addReceiptType(ReceiptTypeVO receiptTypeVO,int company) throws FLException;
 	
 }
