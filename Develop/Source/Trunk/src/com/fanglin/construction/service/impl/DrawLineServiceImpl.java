@@ -40,9 +40,7 @@ import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.BeanUtil;
@@ -284,7 +282,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int applayDrawLine(DrawLineVO drawLineVO, String userId, Integer company) throws FLException{
+	public int applayDrawLine(DrawLineVO drawLineVO, String userId) throws FLException{
 
 		String orderId = drawLineVO.getOrderId();
 
@@ -321,8 +319,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawlineDao.saveOrUpdate(newDrawLine);
 
 		//设置装修订单的初始进度
-		List<ConstructionNodeCompanyPO> nodeList = constructionNodeDao.queryConstructionNodeCompanyByCid(company);
-		String nodeName = nodeList.get(0).getConstructionNode().getName();
+		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(decorationOrderPO.getCompany());
+		String nodeName = constructionNodeCompanyPOs.get(0).getConstructionNode().getName();
 		decorationOrderPO.setProjectStatus(nodeName);
 
 		decorationOrderDao.update(decorationOrderPO);
@@ -334,14 +332,12 @@ public class DrawLineServiceImpl implements DrawLineService {
 			
 			constructionPO = new ConstructionPO();
 			constructionPO.setDecorationOrderPO(new DecorationOrderPO(orderId));
-			constructionPO.setSchedule((int)nodeList.get(0).getConstructionNode().getCnid());
+			constructionPO.setSchedule((int)constructionNodeCompanyPOs.get(0).getConstructionNode().getCnid());
 			constructionDao.save(constructionPO);
 			
 			long cid = constructionPO.getCid();
 			
-			List<ConstructionNodeCompanyPO> ConstructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(decorationOrderPO.getCompany());
-			
-			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : ConstructionNodeCompanyPOs) {				
+			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {				
 				
 				if(constructionNodeCompanyPO.getConstructionNode().getCnid() == 1 || constructionNodeCompanyPO.getConstructionNode().getCnid() == 2){
 					
@@ -392,7 +388,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		DrawLineGroupPO drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGid());
 		
 		if(drawLineGroupPO == null){
-			throw new FLException(120014, "不存在该放线信息");
+			throw new FLException(120016, "不存在放线小组");
 		}
 		
 		drawLinePO.setStatus("申请放线");
@@ -412,10 +408,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
 
-		MessageVO message = new MessageVO();
-
 		if(drawLinePO == null){
-			throw new FLException(120016, "不存在该放线信息");
+			throw new FLException(120014, "不存在该放线信息");
 		}
 
 		String statusForPO = drawLinePO.getStatus();
@@ -431,18 +425,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLinePO.setStatus(statusForVO);
 	
 			if(statusForVO.equals("放线失败")){
-				
-				message.setSender(new UserVO(userId));
-				
-				message.setReceiver(new UserVO(drawLinePO.getDecorationOrderPO().getDesignerPO().getUserId()));
-				
-				message.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				
-				message.setType(MessagePO.MESSAGE_TYPE_DELIVER_STR);
-			
-				message.setContents(String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecorationOrderPO().getOrderId()));
-				
-				messageService.sendMessage(message, company);
+				messageService.sendMessage(drawLinePO.getDecorationOrderPO().getDesignerPO().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecorationOrderPO().getOrderId())), MessagePO.MESSAGE_TYPE_SEND_CONSTRUCTION_STR, company);
 			}
 		
 		}else{

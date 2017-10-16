@@ -1,17 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `platform`;
 USE `platform`;
 
-DROP TABLE IF EXISTS `actionlog`;
-CREATE TABLE `actionlog` (
-  `alId` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(32) DEFAULT NULL COMMENT '主键',
-  `actionName` varchar(128) NOT NULL,
-  `createUserId` varchar(15) DEFAULT NULL COMMENT '操作人',
-  `createTime` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `runTime` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`alId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
-
 DROP TABLE IF EXISTS `audit`;
 CREATE TABLE `audit` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,6 +49,15 @@ CREATE TABLE `backvisit` (
   PRIMARY KEY (`bvid`),
   KEY `indexone` (`orderId`,`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师回访记录表';
+
+DROP TABLE IF EXISTS `chainpage`;
+CREATE TABLE `platform`.`chainpage` (
+  `cpid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `url` varchar(512) NOT NULL,
+  `comment` varchar(256) NOT NULL,
+  PRIMARY KEY (`cpid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='外链';
 
 DROP TABLE IF EXISTS `decorationactivity`;
 CREATE TABLE `decorationactivity` (
@@ -518,6 +516,24 @@ CREATE TABLE `orderbelonginfo` (
   KEY `indexone` (`orderId`,`belongType`,`belongUserId`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
 
+DROP TABLE IF EXISTS `paymentscale`;
+CREATE TABLE `platform`.`paymentscale` (
+  `psid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `comment` varchar(128),
+  PRIMARY KEY (`psid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例';
+
+DROP TABLE IF EXISTS `paymentscaleitem`;
+CREATE TABLE `platform`.`paymentscaleitem` (
+  `psiid` int(11) NOT NULL AUTO_INCREMENT,
+  `psid` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `scale` int(3) NOT NULL,
+  PRIMARY KEY (`psiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例项';
+
 DROP TABLE IF EXISTS `quotationmaterialitem`;
 CREATE TABLE `quotationmaterialitem` (
   `qmiId` int(11) NOT NULL AUTO_INCREMENT,
@@ -534,6 +550,14 @@ CREATE TABLE `quotationmaterialitem` (
   PRIMARY KEY (`qmiId`),
   KEY `indexone` (`qid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价主材项';
+
+DROP TABLE IF EXISTS `rolechainpage`;
+CREATE TABLE `rolechainpage` (
+  `rcpid` int(11) NOT NULL AUTO_INCREMENT,
+  `rId` int(11) NOT NULL,
+  `cpid` int(11) NOT NULL,
+  PRIMARY KEY (`rcpid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色-外链';
 
 DROP TABLE IF EXISTS `servicerecord`;
 CREATE TABLE `servicerecord` (
@@ -680,13 +704,3 @@ CREATE TABLE `zaterialdesignerregionrank` (
   PRIMARY KEY (`zdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';
-
-DROP TABLE IF EXISTS `paymentscale`;
-CREATE TABLE `platform`.`paymentscale` (
-  `psid` int(11) NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `scale` varchar(32) NOT NULL,
-  `comment` varchar(128),
-  PRIMARY KEY (`psid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例';

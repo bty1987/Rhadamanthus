@@ -86,7 +86,7 @@ CREATE TABLE `functionareaquoteitem` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
 
 CREATE TABLE `quotation` (
-  `qId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `qid` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `quotationName` varchar(64) NOT NULL,
   `decorationStyle` varchar(10) DEFAULT NULL,
@@ -99,16 +99,11 @@ CREATE TABLE `quotation` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1、默认',
   `saveStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 autoSave 1 cofirmSave',
   `calFlag` int(11) NOT NULL DEFAULT '1',
-  `latexCut` decimal(10,3) DEFAULT '0.000',
   `managePrice` decimal(10,3) DEFAULT '0.000',
   `manageRate` decimal(10,3) DEFAULT '0.000',
   `trafficPrice` decimal(10,3) DEFAULT '0.000',
   `trafficRate` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '车运费比例',
-  `basicPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `setpackage` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `qdiff` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `mdiff` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`qId`),
+  PRIMARY KEY (`qid`),
   KEY `indexone` (`orderId`,`createTime`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价表';
 

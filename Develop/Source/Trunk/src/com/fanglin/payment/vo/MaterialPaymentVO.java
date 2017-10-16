@@ -68,6 +68,8 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private Float referMoney;
 	
+	private Float realMoney;
+	
 	private Float cash;
 	
 	private String cashInfo;
@@ -186,6 +188,14 @@ public class MaterialPaymentVO implements Serializable{
 
 	public void setReferMoney(Float referMoney){
 		this.referMoney = referMoney;
+	}
+	
+	public Float getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Float realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Float getCash(){

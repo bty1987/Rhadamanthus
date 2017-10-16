@@ -140,8 +140,6 @@ public class DecorationOrderPO implements Serializable {
 	
 	private String projectStatus;
 	
-	private String paymentStatus;
-	
 	private int otherStatus;
 	
 	private QuotationVersionPO versionPO;
@@ -379,14 +377,6 @@ public class DecorationOrderPO implements Serializable {
 
 	public void setProjectStatus(String projectStatus){
 		this.projectStatus = projectStatus;
-	}
-
-	public String getPaymentStatus(){
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(String paymentStatus){
-		this.paymentStatus = paymentStatus;
 	}
 
 	public void setNotSalesmanName(String notSalesmanName){

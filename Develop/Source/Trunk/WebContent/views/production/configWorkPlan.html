@@ -1,0 +1,38 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="flex-wrap" id="form">
+
+                <div class="stay-bottom">
+                    <button class="btn btn-yellow" id="addItem">添加一条工序组</button>
+                </div>
+
+            </div>
+
+            <ul class="flex-table">
+                <li class="line table-title">
+                    <div class="line-wrap order">
+                        <div class="cell index"></div>
+                    </div>
+                    <div class="line-wrap content col3">
+                        <div class="cell col-xs-6">工序组名称</div>
+                        <div class="cell col-xs-6">状态</div>
+                    </div>
+                    <div class="line-wrap action">
+                        <div class="cell option">操作</div>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="flex-table" id="list"></ul>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function(){
+        $.getScript('js/production/configWorkPlan.js');
+    });
+</script>

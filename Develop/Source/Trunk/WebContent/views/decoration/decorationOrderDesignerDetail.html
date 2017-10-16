@@ -360,15 +360,31 @@
 
                                     <div class="step-pane active" id="step4">
                                         <div class="row">
-                                            <div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
-                                                <div class="widget-box transparent">
-                                                    <div class="widget-header">
-                                                        <h5>
-                                                            <strong>详细款项</strong>
-                                                        </h5>
-                                                    </div>
-                                                    <div class="widget-body">
-                                                        <div class="widget-body-inner" id="materialPayment"></div>
+                                            <div class="col-xs-6 col-md-6 widget-container-span ui-sortable " >
+                                                <div class="tabbable">
+                                                    <ul class="nav nav-tabs" id="myTab" style="margin-top: 7px;">
+                                                        <li class="active">
+                                                            <a data-toggle="tab" href="#fanglinMaterialPayment" style="color: #4383b4">
+                                                                <strong>主材款项</strong>
+                                                            </a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a data-toggle="tab" href="#salesMaterialPayment" style="color: #4383b4">
+                                                                <strong>销售款项</strong>
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+
+                                                    <div class="tab-content">
+                                                        <div id="fanglinMaterialPayment" class="tab-pane in active" style="margin-left: -12px;">
+
+                                                        </div>
+
+                                                        <div id="salesMaterialPayment" class="tab-pane" style="margin-left: -12px;">
+
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -464,9 +480,6 @@
                                                 <button class="btn btn-info" type="button"
                                                         id="btnSetDecorationPaymentInfo">
                                                     <i class="icon-cog bigger-110"></i>生成款项
-                                                </button>
-                                                <button class="btn btn-info" type="button" id="btnRebackPayment">
-                                                    <i class="icon-cog bigger-110"></i>退款
                                                 </button>
                                                 <button class="btn btn-info" type="button" id="btnOtherPayment">
                                                     <i class="icon-cog bigger-110"></i>其他款项
@@ -612,7 +625,7 @@
                                    for="decorationOrderTotalMoney">金额</label>
                             <div class="col-md-8">
                                 <!-- select class="form-control v_required" id="decorationOrderTotalMoney" data-toggle="popover" data-trigger='manual' ></select-->
-                                <input type='text' class="col-md-6 v_required v_float" id="decorationOrderTotalMoney"
+                                <input type='text' class="col-md-6 v_required v_number" id="decorationOrderTotalMoney"
                                        maxlength='15'/>
                             </div>
                         </div>
@@ -692,14 +705,6 @@
 
                         <div id="refundApprove">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="paymentType">退款类型</label>
-                                <div class="col-sm-9">
-                                    <select class='col-xs-10 col-sm-5 v_required' id='paymentType' data-toggle="popover"
-                                            data-trigger='manual'></select>
-                                </div>
-                            </div>
-                            <div class="space-4"></div>
-                            <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="changeReason">审批备注</label>
                                 <div class="col-sm-9">
                                     <textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required"
@@ -725,7 +730,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="autoId" class="hide"/>
                                 <input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float"
-                                       data-toggle="popover" data-trigger='manual' maxlength='6'/>
+                                       data-toggle="popover" data-trigger='manual' maxlength='6' readonly/>
                                 <span class='star'></span>
                             </div>
                         </div>
@@ -1012,7 +1017,7 @@
                             <label for="approveActivityItemManSel"
                                    class="col-sm-3 control-label no-padding-right">审批人</label>
                             <div class="col-sm-9">
-                                <div id="approveActivityItemManSel"class="col-xs-10 col-sm-6 ">
+                                <div id="approveActivityItemManSel" class="col-xs-10 col-sm-6 ">
                                 </div>
                             </div>
                         </div>
@@ -1083,7 +1088,7 @@
                             <label for="approveSpecialActivityItemManSel"
                                    class="col-sm-3 control-label no-padding-right">审批人</label>
                             <div class="col-sm-9">
-                                <div id="approveSpecialActivityItemManSel"class="col-xs-10 col-sm-6 " >
+                                <div id="approveSpecialActivityItemManSel" class="col-xs-10 col-sm-6 " >
                                 </div>
                             </div>
                         </div>

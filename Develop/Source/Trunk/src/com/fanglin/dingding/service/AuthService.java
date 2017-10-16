@@ -17,6 +17,7 @@ import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
 
 @Service("authDDService")
 @Transactional(readOnly = true)
@@ -108,7 +109,7 @@ public class AuthService {
 			logger.error(e.getMessage());
 		}
 		
-		SystemConfigPO corpId = systemConfigDao.querySystemConfig("corpId");
+		SystemConfigPO corpId = systemConfigDao.querySystemConfig("corpId", FormatUtil.decodeCompany(company));
 	
 		return "({signature:'" + signature + "',nonceStr:'" + nonceStr + "',timeStamp:'" + timeStamp + "',corpId:'" + corpId.getValue() + "'})";
 	}

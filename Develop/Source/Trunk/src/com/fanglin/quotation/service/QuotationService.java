@@ -26,7 +26,7 @@ public interface QuotationService {
 	
 	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
 	
-	public Map<String, List<String>> queryQuotationForConfig();
+	public Map<String, List<String>> queryQuotationForConfig(int company);
 	
 	public int checkQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO, boolean priceFlag) throws FLException;
 	

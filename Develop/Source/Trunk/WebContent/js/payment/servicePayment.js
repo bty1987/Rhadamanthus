@@ -32,6 +32,12 @@ jQuery(function($) {
 		orderId:null,
 	};
 
+    servicePayment.items.cashCheckbox = $("#cashCheckbox");
+    servicePayment.items.bankCheckbox = $("#bankCheckbox");
+    servicePayment.items.checkvCheckbox = $("#checkvCheckbox");
+    servicePayment.items.installmentCheckbox = $("#installmentCheckbox");
+    servicePayment.items.accountsCheckbox = $("#accountsCheckbox");
+
 	//收款弹窗
 	servicePayment.baseModal = $("#baseItemModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -52,7 +58,7 @@ jQuery(function($) {
 		$("#refundBankName").removeClass("v_required");
 	});
 
-	for(var i=0;i<servicePayment.paymentModelNameData.length;i++){
+	/*for(var i=0;i<servicePayment.paymentModelNameData.length;i++){
 		$("#" + servicePayment.paymentModelNameData[i] + "Checkbox").on("click",function(e) {
 			var _name = $(this).attr("key");
 			var _checkboxId = "#" + _name + "Checkbox";
@@ -73,9 +79,11 @@ jQuery(function($) {
 				$(_checkboxId).removeAttr("checked","checked");
 			}
 		});
-	}
+	}*/
 
-
+    $("#baseItemModal :checkbox").on("change", function(){
+        $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show() : $("[referCheckbox="+this.id+"]").hide()
+    });
 
 	//查询付款银行信息
 	com.post(api.common.queryReceiptType, {}, function(res){
@@ -280,7 +288,7 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				if(v.collecter.currentName!=params.userInfo.user.userName){
+				if(v.collecter.userId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
@@ -309,7 +317,7 @@ jQuery(function($) {
     //查询服务款已收款信息
     var hsearcher = new Searcher();
 
-    hsearcher.init(["orderId", "designer", "village"], "hcondList", api.payment.pageServicePaymentForCollect, function(data){
+    hsearcher.init(["orderId", "designer", "village", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForCollect, function(data){
     	hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "servicePaymentPostData", null, false, null, function(){
 		var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
@@ -385,7 +393,7 @@ jQuery(function($) {
 				_selectId = "#" + _name + "Name";
 			}
 
-			$(_divId).addClass("hide");
+			//$(_divId).addClass("hide");
 			$(_checkboxId).removeAttr("checked").removeAttr("disabled");
 
 			$(_inputId).val("");
@@ -402,6 +410,8 @@ jQuery(function($) {
 
 	//收款弹窗
 	function dialogPayment(v){
+
+        com.cleanItems(servicePayment.items);
 
 		initBaseModal();
         if(servicePayment.baseModal.attr("ChargeType")==1){
@@ -427,18 +437,16 @@ jQuery(function($) {
 			$("#collectDes").val("");
         }
 
-
 		servicePayment.baseModal.modal("show");
 
 		servicePayment.moreMsg[0]=$.extend({},v);
 
 	}
 
-	$("#collectBtn").on('click', payment);
+	$("#collectBtn").bindClick(payment);
 
     //收款触发事件
 	function payment(){
-
 		var v = servicePayment.moreMsg[0];
 
 		var referMoney = $("#referMoney").val();

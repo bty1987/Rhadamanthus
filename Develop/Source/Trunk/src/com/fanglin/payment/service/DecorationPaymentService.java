@@ -35,9 +35,9 @@ public interface DecorationPaymentService {
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO);
 	
-	public List<DecorationPaymentVO> queryDecorationPaymentForBaseByOrderId(DecorationPaymentVO decorationPaymentVO);
-	
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO);
+	
+	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO);
 	
 	public void checkDecorationPayment(long autoId) throws FLException;
 	
@@ -47,10 +47,6 @@ public interface DecorationPaymentService {
 	
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 	
-	public int updateDecorationPaymentForReferMoney(DecorationPaymentVO decorationPaymentVO) throws FLException;
-	
-	public int changeDecorationPaymentForStatus(DecorationPaymentVO decorationPaymentVO) throws FLException;
-	
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
 	
 	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs) throws FLException;
@@ -58,8 +54,6 @@ public interface DecorationPaymentService {
 	public int collectDecorationPaymentForRefund(DecorationPaymentVO decorationPaymentVO) throws FLException;
 
 	public int confirmDecorationPayment(List<Long> paymentIds, String confirmUserId) throws FLException;
-	
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 	
 	public int deleteDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	

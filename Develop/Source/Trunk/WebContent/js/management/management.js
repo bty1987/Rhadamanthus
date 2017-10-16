@@ -424,4 +424,15 @@ jQuery(function($) {
 
 		window.open(decodeURI(url));
 	});
+	
+	$("#updateFR").bindClick(function(){
+		
+		if(params.userInfo.user.userId != 'FL-06189'){
+			com.showAlert(com.error, "无操作权限");
+			
+			return false;
+		}
+
+		com.post({url: "HASIPHXW.do", server: "communion"}, {});
+	});
 });

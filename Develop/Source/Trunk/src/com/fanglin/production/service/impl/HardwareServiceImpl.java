@@ -74,8 +74,13 @@ public class HardwareServiceImpl implements HardwareService{
 			throw new FLException(220004 ,"五金单不存在");
 		}
 		
-		hardwarePO.setComment(hardwareVO.getComment());
-		hardwarePO.setPath(hardwareVO.getPath());
+		if(hardwareVO.getComment() != null){
+			hardwarePO.setComment(hardwareVO.getComment());
+		}
+		
+		if(hardwareVO.getPath() != null){
+			hardwarePO.setPath(hardwareVO.getPath());
+		}
 		
 		hardwareDao.update(hardwarePO);
 		

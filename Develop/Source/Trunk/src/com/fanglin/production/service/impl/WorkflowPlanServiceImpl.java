@@ -6,10 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fanglin.production.dao.WorkflowDao;
+
 import com.fanglin.production.dao.WorkflowPlanDao;
-import com.fanglin.production.dao.WorkplanDao;
+import com.fanglin.production.po.WorkflowPO;
 import com.fanglin.production.po.WorkflowPlanPO;
+import com.fanglin.production.po.WorkplanPO;
 import com.fanglin.production.service.WorkFlowPlanService;
 import com.fanglin.production.vo.WorkflowPlanVO;
 import com.fanglin.production.vo.WorkflowVO;
@@ -23,12 +24,6 @@ public class WorkflowPlanServiceImpl implements WorkFlowPlanService {
 
 	@Autowired 
 	private  WorkflowPlanDao workflowPlanDao;
-	
-	@Autowired
-	private WorkplanDao workplanDao ;
-	
-	@Autowired
-	private WorkflowDao workflowDao ;
 	
 	@Override
 	public List<WorkflowPlanVO> queryWorkflowPlanByWfid(WorkflowPlanVO workflowPlanVO) {
@@ -72,31 +67,16 @@ public class WorkflowPlanServiceImpl implements WorkFlowPlanService {
 		@Override
 		@Transactional(rollbackFor = Exception.class)
 		public int updateWorkflowPlan(WorkflowPlanVO workflowPlanVO,List<Long> wfids)throws Exception {
-			int flag = 0;
-			Long wpid = workflowPlanVO.getWorkplan().getWpid();
-			List<WorkflowPlanPO> workflowPlanPOs = workflowPlanDao.queryWorkflowPlanByWpid(wpid);
-            if(workflowPlanPOs.size() == 0 && wfids.size() > 0){
-            	for(Long wfid : wfids){
-                	WorkflowPlanPO workflowplanPO = new WorkflowPlanPO(workflowDao.get(wfid), workplanDao.get(wpid));
-                	workflowPlanDao.save(workflowplanPO);
-            	}
-            }else if(workflowPlanPOs.size() != 0 && wfids.size() > 0){
-            	for(Long wfid : wfids){
-            		for(WorkflowPlanPO workflowPlan : workflowPlanPOs){
-            			if(workflowPlan.getWorkflow().getWfid() == wfid){
-            				workflowPlanDao.delete(workflowPlan);
-            				flag = 1;
-            			}
-            		}
-            		if(flag == 0){
-                		WorkflowPlanPO workflowplanPO = new WorkflowPlanPO(workflowDao.get(wfid), workplanDao.get(wpid));
-                    	workflowPlanDao.save(workflowplanPO);
-            		}
-            		flag = 0;
-            	}
-            }
-				return 0;
+			long wpid = workflowPlanVO.getWorkplan().getWpid();
 
+			workflowPlanDao.deleteWorkflowPlan(wpid);
+			
+			if(wfids !=null){
+				for(long wfid: wfids) {
+					workflowPlanDao.save(new WorkflowPlanPO(new WorkflowPO(wfid),new WorkplanPO(wpid)));
+				}
+			}	
+				return 0;
 		}
 
 }

@@ -26,14 +26,14 @@ public class ProductionUserWorkFlowAction extends BaseAction{
 	
 	private List<ProductionUserWorkFlowVO> ProductionUserWorkFlows;
 	
-	private ProductionUserWorkFlowVO productionUserWorkFlowVO;
+	private ProductionUserWorkFlowVO productionUserWorkFlow;
 	
 	@Action(value = "queryProductionUserWorkFlowByPwfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionUserWorkFlowByPwfid() throws FLException{
-		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowByPwfid(productionUserWorkFlowVO);
+		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowByPwfid(productionUserWorkFlow);
 		return SUCCESS;
 	}
-
+ 
 	public List<ProductionUserWorkFlowVO> getProductionUserWorkFlows() {
 		return ProductionUserWorkFlows;
 	}
@@ -43,14 +43,16 @@ public class ProductionUserWorkFlowAction extends BaseAction{
 		ProductionUserWorkFlows = productionUserWorkFlows;
 	}
 
-	public ProductionUserWorkFlowVO getProductionUserWorkFlowVO() {
-		return productionUserWorkFlowVO;
+	public ProductionUserWorkFlowVO getProductionUserWorkFlow() {
+		return productionUserWorkFlow;
 	}
 
-	public void setProductionUserWorkFlowVO(
-			ProductionUserWorkFlowVO productionUserWorkFlowVO) {
-		this.productionUserWorkFlowVO = productionUserWorkFlowVO;
+	public void setProductionUserWorkFlow(
+			ProductionUserWorkFlowVO productionUserWorkFlow) {
+		this.productionUserWorkFlow = productionUserWorkFlow;
 	}
+
+
 	
 	
  

@@ -40,7 +40,7 @@ public class FormatUtil {
 	
 	public static void main(String[] args){
 		System.out.println(fillZero(offset(3), "0000"));
-		System.out.println(encodeCompany(10));
-		System.out.println(decodeCompany(String.valueOf(encodeCompany(1))));
+		System.out.println(encodeCompany(11));
+		System.out.println(decodeCompany(String.valueOf(encodeCompany(6))));
 	}
 }

@@ -10,5 +10,5 @@ $.extend(api, {member: {
 	addMemberDetail: {url: "addMemberDetail.do"},
 	pageMemberDetail: {url: "pageMemberDetail.do"},
     
-	turnPointsForMemberCard:{url:"turnPointsForMemberCard.do"}
+	tranMemberCard:{url:"tranMemberCard.do"}
 }});

@@ -100,7 +100,9 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 		if(productionPlanVO.getEndTime()!=null){
 			productionPlanPO.setEndTime(productionPlanVO.getEndTime());
 		}
-			
+		if(productionPlanVO.getComment()!=null){
+			productionPlanPO.setComment(productionPlanVO.getComment());
+		}
 		productionPlanDao.update(productionPlanPO);
 		return 0;
 	}

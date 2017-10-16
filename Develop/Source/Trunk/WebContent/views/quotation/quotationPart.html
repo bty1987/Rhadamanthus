@@ -73,7 +73,7 @@
 					<div class="col-md-12 space-8"></div>
 					<div class="col-md-12">
 						<div class="ui-pg-div">
-							<button id="saveQuotationBtn" class="btn btn-minier btn-inverse col-md-3">
+							<button id="saveQuotationBtn" class="btn btn-minier btn-inverse col-md-3" data-loading-text="Loading...">
 								<i class="icon-save"></i>保存
 							</button>
 							<a id="printFinanceBtn" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;" target="_blank">
@@ -165,7 +165,7 @@
 							<button type="button" class="close" data-dismiss="modal">
 								<span>&times;</span><span class="sr-only">Close</span>
 							</button>
-							<h4 class="modal-title" id="quotationItemDialog">工程报价项</h4>
+							<h4 class="modal-title" id="quotationItemDialog">报价项</h4>
 						</div>
 						<div class="modal-body">
 							<input type="text" id="addItemFunctionAreaIndex" class="hide" />
@@ -185,32 +185,6 @@
 				</div>
 			</div>
 
-			<div class="modal fade" id="quotationItemMaterialModal" tabindex="-1" data-backdrop="static">
-				<div class="modal-dialog" style="width:900px;">
-					<div class="modal-content col-md-12">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">
-								<span>&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 class="modal-title" id="quotationItemMaterial">主材报价项</h4>
-						</div>
-						<div class="modal-body">
-							<input type="text" id="addItemFunctionAreaMaterialIndex" class="hide" />
-							<div id="quotationItemMaterialSearchDiv"></div>
-							<div class="row">
-								<div id="condListMaterial" class="fl_search clearfix"></div> <!-- 查询条件-->
-								<div id="resultListMaterial" class="clearfix tab-pane active"></div> <!--查询结果-->
-								<div id="pagenationMaterial" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div> <!--分页-->
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" id="addFunctionAreaItemsBtnMaterial" class="btn btn-primary">保存</button>
-							<button type="button" id="addCustomFunctionAreaItemsBtnMaterial" class="btn btn-primary icon-add" style="display: none;">自定义</button>
-							<button type="button" id="cancelAddFunctionAreaItemsBtnMaterial" class="btn btn-default" data-dismiss="modal">取消</button>
-						</div>
-					</div>
-				</div>
-			</div>
 
 			<div class="modal fade" id="historyQuotationItemModal" tabindex="-1" data-backdrop="static">
 				<div class="modal-dialog" style="width:900px;">
@@ -219,7 +193,7 @@
 							<button type="button" class="close" data-dismiss="modal">
 								<span>&times;</span><span class="sr-only">Close</span>
 							</button>
-							<h4 class="modal-title" id="historyQuotationItemDialog">报价项</h4>
+							<h4 class="modal-title" id="historyQuotationItemDialog">历史报价项</h4>
 						</div>
 						<div class="modal-body">
 							<div class="row">

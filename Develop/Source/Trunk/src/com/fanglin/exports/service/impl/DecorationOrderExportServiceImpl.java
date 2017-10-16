@@ -29,10 +29,7 @@ import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.exports.service.DecorationOrderExportService;
 import com.fanglin.exports.vo.DecorationOrderExportVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
-import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
-import com.fanglin.payment.po.DecorationPaymentPO;
-import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
@@ -50,9 +47,6 @@ public class DecorationOrderExportServiceImpl implements DecorationOrderExportSe
 	
 	@Autowired
 	private QuotationDao quotationDao;
-	
-	@Autowired
-	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
 	private DecorationBelongDao decorationBelongDao;
@@ -115,7 +109,6 @@ public class DecorationOrderExportServiceImpl implements DecorationOrderExportSe
 			DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(quotationPO.getDecorationOrder().getOrderId());
 			
 			decorationOrderExportVO.setDiscount(quotationPO.getDiscount());
-			decorationOrderExportVO.setLatexCut(quotationPO.getLatexCut());
 			decorationOrderExportVO.setManageRate(quotationPO.getManageRate());
 			decorationOrderExportVO.setManagePrice(quotationPO.getManagePrice());
 			decorationOrderExportVO.setTrafficPrice(quotationPO.getTrafficPrice());
@@ -126,61 +119,6 @@ public class DecorationOrderExportServiceImpl implements DecorationOrderExportSe
 			}else{
 				decorationOrderExportVO.setNotSalesmanCut((float) Arith.mul(Arith.div(quotationPO.getManagePrice(), quotationPO.getManageRate()), decorationOrderExportVO.getNotSalesmanRate()));
 				decorationOrderExportVO.setAchievement(Arith.sub(decorationOrderExportVO.getContractPrice(), decorationOrderExportVO.getNotSalesmanCut()));
-			}
-		}
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIds(orderIds);
-		
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationOrderExportVO decorationOrderExportVO = decorationOrderExportMap.get(decorationPaymentPO.getDecorationOrderPO().getOrderId());
-			
-			DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-			
-			if(DecorationPaymentPO.PAYMENTTYPE_FIRST_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setFirstPayment(decorationPaymentPO.getReferMoney());
-				
-				if(decorationReceiptPO != null){
-					decorationOrderExportVO.setFirstCollectTime(decorationReceiptPO.getCollectTime());
-	
-					if(decorationReceiptPO.getCollectTime() != null){
-						decorationOrderExportVO.setUnpayPayment(Arith.sub(decorationOrderExportVO.getUnpayPayment(), decorationPaymentPO.getReferMoney()));
-					}
-				}
-			}else if(DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setFirstSecondPayment(decorationPaymentPO.getReferMoney());
-				
-				if(decorationReceiptPO != null){
-					decorationOrderExportVO.setFirstSecondCollectTime(decorationReceiptPO.getCollectTime());
-					
-					if(decorationReceiptPO.getCollectTime() != null){
-						decorationOrderExportVO.setUnpayPayment(Arith.sub(decorationOrderExportVO.getUnpayPayment(), decorationPaymentPO.getReferMoney()));
-					}
-				}
-			}else if(DecorationPaymentPO.PAYMENTTYPE_SECOND_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setSecondPayment(decorationPaymentPO.getReferMoney());
-				
-				if(decorationReceiptPO != null){
-					decorationOrderExportVO.setSecondCollectTime(decorationReceiptPO.getCollectTime());
-					
-					if(decorationReceiptPO.getCollectTime() != null){
-						decorationOrderExportVO.setUnpayPayment(Arith.sub(decorationOrderExportVO.getUnpayPayment(), decorationPaymentPO.getReferMoney()));
-					}
-				}
-			}else if(DecorationPaymentPO.PAYMENTTYPE_FINAL_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setThirdPayment(decorationPaymentPO.getReferMoney());
-				
-				if(decorationReceiptPO != null){
-					decorationOrderExportVO.setThirdCollectTime(decorationReceiptPO.getCollectTime());
-					
-					if(decorationReceiptPO.getCollectTime() != null){
-						decorationOrderExportVO.setUnpayPayment(Arith.sub(decorationOrderExportVO.getUnpayPayment(), decorationPaymentPO.getReferMoney()));
-					}
-				}
-			}else if(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setPenalty(decorationPaymentPO.getReferMoney());
-			}else if(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR.equals(decorationPaymentPO.getPaymentType())){
-				decorationOrderExportVO.setDesignPayment(decorationPaymentPO.getReferMoney());
-				decorationOrderExportVO.setDesignPaymentStatus(decorationPaymentPO.getPaymentStatus());
 			}
 		}
 		

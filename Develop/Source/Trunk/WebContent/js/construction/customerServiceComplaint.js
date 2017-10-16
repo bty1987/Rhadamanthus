@@ -27,6 +27,7 @@ jQuery(function($) {
 	complaint.complaintItems.complaintLevel = $("#complaintLevel");
 	complaint.complaintItems.complaintTime = $("#complaintTime");
 	complaint.complaintItems.complaintDes = $("#complaintDes");
+	complaint.complaintItems.complaintType = $("#complaintType");
 	
 	complaint.complaintItems.handleOrderId = $("#handleOrderId");
 	complaint.complaintItems.handleCustomerName = $("#handleCustomerName");
@@ -176,6 +177,7 @@ jQuery(function($) {
 			"customerServiceComplaint.level": complaint.complaintItems.complaintLevel.val(),
 			"customerServiceComplaint.createTime": complaint.complaintItems.complaintTime.val(),
 			"customerServiceComplaint.des": complaint.complaintItems.complaintDes.val(),
+			"customerServiceComplaint.type": complaint.complaintItems.complaintType.val(),
 		};
 
 		if(complaint.editFlag){

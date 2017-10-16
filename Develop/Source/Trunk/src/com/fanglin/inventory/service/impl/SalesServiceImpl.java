@@ -165,11 +165,34 @@ public class SalesServiceImpl implements SalesService {
 		
 		SalesPO salesPO = salesDao.querySalesBySid(salesVO.getSid());
 		
-		
 		if(salesPO == null){
 			throw new FLException(260021, "销售单不存在");
 		}
 		
+		salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
+		
+		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
+		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
+		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
+		BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
+		BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesPO.getVillage(), salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
+		BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
+		
+		return salesVO;
+	}
+	
+	@Override
+	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException {
+
+		SalesPO salesPO = salesDao.querySalesByNo(salesVO.getNo());
+		
+		if(salesPO == null){
+			throw new FLException(260021, "销售单不存在");
+		}
+
 		salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
 		
 		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));

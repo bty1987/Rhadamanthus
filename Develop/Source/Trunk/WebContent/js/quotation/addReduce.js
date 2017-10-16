@@ -82,10 +82,10 @@ jQuery(function($) {
 		};
 	})();
 
-	var _condArr = ['addReduceType'];
+
 
 	var search = new Searcher();
-	search.init( _condArr, "condList", api.addReduce.queryAddReduceByOrderId, function(data){
+	search.init( "", "condList", api.addReduce.queryAddReduceByOrderId, function(data){
 		displayFunc.init('resultList', data);
 	}, null, "addReducePostData", extraParams, true, "addReduces");
 
@@ -126,7 +126,7 @@ jQuery(function($) {
 			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
 		});
 		
-		url += "quotation.orderId=" + params.decorationOrderId + "&quotation.type=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
+		url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
 		
 		com.popup("增减项打印",url,null,null,true)
 	});

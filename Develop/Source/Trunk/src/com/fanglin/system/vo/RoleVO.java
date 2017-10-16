@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class RoleVO implements Serializable {
 
 	private static final long serialVersionUID = 9045008682677539729L;
+	
+	private Integer rId;
 
 	private String roleId;
 	
@@ -14,6 +16,14 @@ public class RoleVO implements Serializable {
 	
 	public RoleVO(){
 		super();
+	}
+
+	public Integer getrId() {
+		return rId;
+	}
+
+	public void setrId(Integer rId) {
+		this.rId = rId;
 	}
 
 	public RoleVO(String roleId){

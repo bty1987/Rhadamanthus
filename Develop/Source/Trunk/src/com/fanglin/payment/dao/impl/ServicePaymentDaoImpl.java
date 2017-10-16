@@ -1,6 +1,8 @@
 package com.fanglin.payment.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -9,6 +11,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
 import com.fanglin.payment.dao.ServicePaymentDao;
 import com.fanglin.payment.po.ServicePaymentPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("servicePaymentDao")
@@ -70,6 +73,7 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 				query.alias("decorationOrder", "decorationOrder");
 				query.alias("decorationOrder.villagePO", "village");
 				query.alias("decorationOrder.designerPO", "designer");
+				query.alias("serviceReceipt", "servicereceipt");
 				
 				if("orderId".equals(field)){
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));
@@ -79,6 +83,24 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_VILLAGE_STR, data, op));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion(field, Short.valueOf(data), op));
+				}else if("collectTime".equals(filter.getField())){
+					
+					if("between".equals(filter.getOp())){
+						
+						String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						
+						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+						
+						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+						
+						query.add(query.getCriterion("servicereceipt.collectTime", eTimestamp, "le"));
+						query.add(query.getCriterion("servicereceipt.collectTime", sTimestamp, "ge"));
+					}else{
+						query.add(query.getCriterion("servicereceipt.collectTime", filter.getData(), filter.getOp()));
+					}
 				}
 				
 			}

@@ -38,21 +38,13 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
 	}
 	
-	@Override
-	public int countWorkerSalary(Long cid, String userId) {
+	public int countWorkerSalary(Long cid, String userId){
 		
-		String sql = "select count(*) from platform.workerSalary where cid = :cid and userId = :userId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setString("userId", userId).uniqueResult();
-		
-		return count.intValue();
-	}
-
-	@Override
-	public void deleteWorkerSalary(Long wsid) {
-		
-		String sql = "delete from platform.workersalary where wsid = :wsid";
-		session().createSQLQuery(sql).setLong("wsid", wsid).executeUpdate();
-	}
+	    String sql = "select count(*) from salary.workerSalary where cid = :cid and userId = :userId";
+	    BigInteger count = (BigInteger)session().createSQLQuery(sql).setLong("cid", cid.longValue()).setString("userId", userId).uniqueResult();
+	    
+	    return count.intValue();
+	  }
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		

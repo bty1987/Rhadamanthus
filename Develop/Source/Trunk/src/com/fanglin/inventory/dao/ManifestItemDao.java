@@ -20,9 +20,6 @@ public interface ManifestItemDao extends Dao<ManifestItemPO> {
 	
 	public List<ManifestItemPO> queryManifestItemByMId(long mId);
 	
-	public List<ManifestItemPO> queryManifestItemBySiid(long siid);
-	
 	public List<ManifestItemPO> queryManifestItemBySiids(List<Long> siids);
 	
-
 }

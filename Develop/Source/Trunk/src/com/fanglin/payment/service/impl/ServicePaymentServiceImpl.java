@@ -244,31 +244,33 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		//查询该客户是否有记录,如有进行更新,否则添加
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrder.getCustomerPO().getCustomerId(),decorationOrder.getCompany());
-		AdvancePaymentPO advancePayment = new AdvancePaymentPO(new CustomerPO());
 		if(advancePaymentPO != null){
 			//如果有记录,需要将materialBalance – 原有主材预付款金额 + 新的主材预付款金额 ;然后更新
 			advancePaymentPO.setMaterialBalance(Arith.add(advancePaymentPO.getMaterialBalance(), servicePaymentPO.getAdvanceMoney()));
 			advancePaymentDao.update(advancePaymentPO);
 		}else{
 			//生成advancePayment表中的materialBalance – 主材预付款金额
-			BeanUtil.copyProperties(decorationOrder.getCustomerPO(), advancePayment.getCustomer());
-			advancePayment.setBalance(0f);
-			advancePayment.setProjectBalance(0f);
-			advancePayment.setMaterialBalance(servicePaymentPO.getAdvanceMoney());
-			advancePayment.setZhenglinBalance(0f);
-			advancePaymentDao.save(advancePayment);
+			advancePaymentPO = new AdvancePaymentPO(new CustomerPO());
+			BeanUtil.copyProperties(decorationOrder.getCustomerPO(), advancePaymentPO.getCustomer());
+			advancePaymentPO.setBalance(0f);
+			advancePaymentPO.setProjectBalance(0f);
+			advancePaymentPO.setMaterialBalance(servicePaymentPO.getAdvanceMoney());
+			advancePaymentPO.setZhenglinBalance(0f);
+			advancePaymentPO.setCompany(decorationOrder.getCompany());
+			advancePaymentDao.save(advancePaymentPO);
 		}
 
 		//生成payment预付款记录
 		PaymentPO payment = new PaymentPO(new CustomerPO(), new AdvanceReceiptPO());
 		BeanUtil.copyProperties(decorationOrder.getCustomerPO(), payment.getCustomer());
-		payment.setBalance(advancePayment.getMaterialBalance());
+		payment.setBalance(advancePaymentPO.getMaterialBalance());
 		payment.setRecharge(servicePaymentPO.getAdvanceMoney());
 		payment.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_STR);
 		payment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR);
 		payment.setDes(servicePaymentPO.getDes());
 		payment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		payment.setOrderId(servicePaymentPO.getDecorationOrder().getOrderId());
+		payment.setCompany(decorationOrder.getCompany());
 		//生成payment预付款款项收据
 		advanceReceiptVO.setRealMoney(servicePaymentPO.getAdvanceMoney());
 		AdvanceReceiptPO advanceReceiptPO = addAdvanceReceipt(advanceReceiptVO,cuid);

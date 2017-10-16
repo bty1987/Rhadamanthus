@@ -1,0 +1,57 @@
+{
+  "activityItemType": [
+    {"key":"","value":""},
+    {"key":"0","value":"券"},
+    {"key":"1","value":"物品"}
+  ],
+  "noticeType": [
+    {"key":"1","value":"通知"},
+    {"key":"2","value":"活动"}
+  ],
+  "noticePriority": [
+    {"key":"0","value":"普通"},
+    {"key":"1","value":"重要"},
+    {"key":"2","value":"紧急"}
+  ],
+  "noticeIsPublic": [
+    {"key":"0","value":"公开"},
+    {"key":"1","value":"部门公开"}
+  ],
+  "messageType":[
+    {"key":"0","value":"款项消息"},
+    {"key":"1","value":"审批消息"},
+    {"key":"2","value":"归属消息"},
+    {"key":"3","value":"工程消息"},
+    {"key":"4","value":"个人消息"},
+    {"key":"5","value":"回访消息"}
+
+  ],
+  "messageStatus" : [
+    {"key":"0","value":"未读"},
+    {"key":"1","value":"已读"}
+  ],
+  "stopReason": [
+    {"key":"1","value":"主叫挂断"},
+    {"key":"2","value":"被叫挂断"},
+    {"key":"3","value":"呼叫不可及"},
+    {"key":"5","value":"超时未接"},
+    {"key":"6","value":"拒接或超时"},
+    {"key":"7","value":"网络问题"},
+    {"key":"9","value":"API请求挂断"},
+    {"key":"10","value":"余额不足"},
+    {"key":"11","value":"呼叫失败，系统错误"},
+    {"key":"12","value":"被叫拒接"},
+    {"key":"13","value":"被叫无人接听"},
+    {"key":"14","value":"被叫正忙"},
+    {"key":"15","value":"被叫不在线"},
+    {"key":"16","value":"呼叫超过最大呼叫时间"}
+  ],
+  "recordType":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"本地"},
+    {"key":"2","value":"线上"},
+    {"key":"3","value":"失败"}
+  ],
+  "errorCode": 0,
+  "errorMsg": null
+}

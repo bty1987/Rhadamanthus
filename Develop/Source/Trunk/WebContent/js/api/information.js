@@ -4,12 +4,8 @@ $.extend(api.index, {
     moreNoticesIndex: {url: "/views/information/moreNotices.html"},
     noticeIndex: {url: "/views/information/noticeMng.html"},
     activityIndex: {url: "/views/information/activity.html"},
-    activityItemIndex: {url: "/views/information/activityItem.html"}
-});
-
-$.extend(api.ds, {
-    activityInfo: {url: "ds/activityInfo.json", demo: true},
-    noticeInfo:{url:"ds/noticeInfo.json", demo: true}
+    activityItemIndex: {url: "/views/information/activityItem.html"},
+    phoneCallIndex: {url: "/views/information/phoneCall.html"}
 });
 
 $.extend(api, {information: {
@@ -43,5 +39,10 @@ $.extend(api, {information: {
 
     queryEvent: {url: "queryEvent.do", demo:true},
     addEvent: {url: "addEvent.do"},
-    deleteEvent: {url: "deleteEvent.do"}
+    deleteEvent: {url: "deleteEvent.do"},
+
+    pagePhoneCall:{url:"pagePhoneCall.do"},
+    phoneCall:{url:"phoneCall.do"},
+    updatePhoneCallForInfo:{url:"updatePhoneCallForInfo.do"},
+    updatePhoneCallForRecord:{url:"updatePhoneCallForRecord.do"}
 }});

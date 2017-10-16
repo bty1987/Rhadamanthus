@@ -38,11 +38,11 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void pageActivity(Paging paging, List<Filter> filters, String userId) {
+	public void pageActivity(Paging paging, List<Filter> filters, String userId,int company) {
 		
 		filters.add(new Filter(ActivityPO.COLUMN_CREATEUSERID_STR, userId, "eq"));
 		
-		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters);
+		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters,company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 		
 		for(ActivityPO activityPO: activityPOs){
@@ -61,9 +61,9 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public List<ActivityVO> queryActivityForValid() {
+	public List<ActivityVO> queryActivityForValid(int company) {
 		
-		List<ActivityPO> activityPOs = activityDao.queryActivityForValid();
+		List<ActivityPO> activityPOs = activityDao.queryActivityForValid(company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 		
 		for(ActivityPO activityPO: activityPOs){
@@ -82,7 +82,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addActivity(ActivityVO activityVO, String userId, String userName){
+	public void addActivity(ActivityVO activityVO, String userId, String userName,int company){
 		
 		ActivityPO activityPO = new ActivityPO();
 		BeanUtil.copyProperties(activityVO, activityPO);
@@ -90,6 +90,7 @@ public class ActivityServiceImpl implements ActivityService {
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		activityPO.setCreateUserId(userId);
 		activityPO.setCreateUserName(userName);
+		activityPO.setCompany(company);
 		
 		activityDao.save(activityPO);
 	}

@@ -54,7 +54,9 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private short type;
 	
 	private short status;
-
+	
+	private int company;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "rtId")
@@ -147,6 +149,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 		this.status = status;
 	}
 	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
 	public SubjectPO toSubjectPO(){
 		return new SubjectPO(this.oneCode, this.twoCode, this.thrCode, this.subjectName, this.direction);
 	}

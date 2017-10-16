@@ -19,6 +19,7 @@ import com.fanglin.decoration.po.DecorationOrderPO;
 import com.fanglin.decoration.service.DecorationHolonomyService;
 import com.fanglin.decoration.vo.DecorationHolonomyVO;
 import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
@@ -37,6 +38,9 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	
 	@Autowired
 	private DecorationOrderDao decorationOrderDao;
+	
+	@Autowired
+	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
@@ -88,13 +92,16 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		String orderId = decorationHolonomyVO.getDecorationOrder().getOrderId();
 		
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
-		List<String> paymentType = Arrays.asList(new String[]{DecorationPaymentPO.PAYMENTTYPE_FIRST_STR,DecorationPaymentPO.PAYMENTTYPE_FIRST_SECOND_STR,DecorationPaymentPO.PAYMENTTYPE_SECOND_STR,DecorationPaymentPO.PAYMENTTYPE_FINAL_STR});
-
+		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
+		
 		if(decorationHolonomyPO != null){
 			if(decorationHolonomyPO.getStatus() != DecorationHolonomyPO.STATUS_INIT_SHORT || !Float.valueOf(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT).equals(decorationHolonomyPO.getServicePaidup())){
 				throw new FLException(140043,"订单半价信息不可更新");
 			}
-			if(paymentType.contains(decorationHolonomyPO.getDecorationOrder().getPaymentStatus())){
+			
+			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationHolonomyVO.getDecorationOrder().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			
+			if(decorationPayments != null && decorationPayments.size() > 0){
 				throw new FLException(140043,"订单半价信息不可更新");
 			}
 			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decorationOrder","dhid"));

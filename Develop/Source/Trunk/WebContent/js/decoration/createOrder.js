@@ -49,7 +49,7 @@ jQuery(function($) {
 	
 	$.extend(com.validator, orderEntry.validator);
 	
-	com.post(api.ds.decorationInfo, {}, function(res){
+	com.post(api.ds.decoration, {}, function(res){
 		orderEntry.salesmanType = res.salesmanType;
 		orderEntry.orderItems.salesmanType.bindData(orderEntry.salesmanType, 'key', 'value');
 		

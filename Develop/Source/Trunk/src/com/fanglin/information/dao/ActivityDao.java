@@ -20,8 +20,8 @@ import com.fanglin.utils.Paging;
 
 public interface ActivityDao extends Dao<ActivityPO> {
 	
-	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters);
+	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters,int company);
 	
-	public List<ActivityPO> queryActivityForValid();
+	public List<ActivityPO> queryActivityForValid(int company);
 	
 }

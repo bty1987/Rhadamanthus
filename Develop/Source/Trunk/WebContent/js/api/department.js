@@ -9,10 +9,6 @@ $.extend(api.index, {
     dutyDeptIndex: {url: "/views/department/dutyDept.html"}
 });
 
-$.extend(api.ds, {
-    departmentInfo: {url: "ds/departmentInfo.json", demo: true}
-});
-
 $.extend(api, {department: {
     pageDepartment: {url: "pageDepartment.do", demo: true},
     queryDepartment: {url: "queryDepartment.do", demo: true},

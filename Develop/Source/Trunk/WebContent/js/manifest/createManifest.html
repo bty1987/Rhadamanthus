@@ -1,0 +1,107 @@
+
+
+
+<div class="page-content" style="padding: 40px 20px">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="clearfix relative" id="form">
+
+                <div class="inline">
+                    <button class="btn btn-yellow" id="addSaleOrder">添加一条主材信息</button>
+
+                    <button id="submitSaleOrder" class="btn btn-info" data-loading-text="提交中..." type="submit"><i
+                            class="icon-ok"></i>保存
+                    </button>
+
+                </div>
+
+                <div class="pull-right" style="margin-bottom: 1%">
+
+                    <div class="inline">
+
+                        <label>单据类型</label>
+                        <div class="inline">
+                            <select class="m-ctrl-medium" name="mtype"></select>
+                        </div>
+
+                    </div>
+
+                    <div class="inline">
+
+                        <label>单据日期</label>
+                        <div class="inline">
+                            <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
+                                   value=""/>
+                        </div>
+
+                    </div>
+                    <div class="inline">
+
+                        <label>选择模板</label>
+                        <div class="inline">
+                            <select class="m-ctrl-medium" name="manifest"></select>
+
+                        </div>
+                        <div class="inline" id="addManifestStyle">
+                            <a href="javascript:void(0);" class="btn btn-xs pull-left" name="addQuotationVersion" >添加</a>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="devide-line"></div>
+
+            </div>
+            <ul class="flex-table">
+                <li class="line table-title">
+                    <div class="line-wrap order">
+                        <div class="cell index"></div>
+                    </div>
+                    <div class="line-wrap content col10">
+                        <div class="cell">商品编号</div>
+                        <div class="cell">名称</div>
+                        <div class="cell">条形码</div>
+                        <div class="cell">颜色</div>
+                        <div class="cell">规格</div>
+                        <div class="cell">单位</div>
+                        <div class="cell">仓库</div>
+                        <div class="cell">数量</div>
+                        <div class="cell">采购金额</div>
+                        <div class="cell">备注</div>
+                    </div>
+                    <div class="line-wrap action">
+                        <div class="cell option">操作</div>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="flex-table" id="list"></ul>
+
+            <div style="margin-top: 15px;">
+
+
+                <div class="inline-group">
+
+                    <label>备注</label>
+                    <div class="item long">
+                        <input type="text" id="comment">
+                    </div>
+                </div>
+
+
+                <div style="margin-top: 10px" class="col-sm-1 pull-right inline">
+                    <span>总价:</span><span id="totalSpan">0</span>
+                </div>
+            </div>
+
+            <!--查看配置弹窗-->
+            <div id="viewDecoration" class="portlet box"></div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="js/manifest/createManifest.js"></script>

@@ -57,6 +57,30 @@ public class ConstructionNodeAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "addConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addConstructionNode() throws FLException{
+		
+		constructionNodeService.addConstructionNode(constructionNode);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateConstructionNodeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionNodeForStatus() throws FLException{
+		
+		constructionNodeService.updateConstructionNodeForStatus(constructionNode);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateConstructionNodeCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionNodeCompany() throws FLException{
+		
+		constructionNodeService.updateConstructionNodeCompany(constructionNodeCompany, cnids);
+		
+		return SUCCESS;
+	}
+	
 	public ConstructionNodeService getConstructionNodeService() {
 		return constructionNodeService;
 	}

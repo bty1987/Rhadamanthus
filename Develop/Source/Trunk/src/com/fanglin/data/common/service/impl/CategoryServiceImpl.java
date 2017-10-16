@@ -103,7 +103,6 @@ public class CategoryServiceImpl implements CategoryService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CATEGORY_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
 		StringBuffer categoryId = new StringBuffer();
-		categoryId.append(SystemConfig.getString("companyIdent", ""));
 		categoryId.append(SystemConfig.getString("categoryIdent", "C_"));
 		categoryId.append(FormatUtil.fillZero(count, "000"));
 		

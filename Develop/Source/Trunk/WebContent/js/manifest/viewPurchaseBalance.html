@@ -1,0 +1,60 @@
+
+<div id="goodsPageContent" class="page-content">
+
+    <div class="row" style="margin-left:30px;margin-right:30px">
+        <div id="list" style="margin-left:10px"></div>
+        <div>
+            <h3 class="clearfix" >
+                <a  class="btn btn-minier btn-warning pull-left" id="importBtn" style="margin-top: -2px;"><i class="icon-download-alt bigger-110 "></i>导出</a>
+                <a  class="btn btn-mini pull-left hide" id="refundCommitBtn"><i class="icon-ok "></i>确认</a>
+                <a  class="btn btn-mini pull-left hide" id="refundCancelBtn"><i class="icon-remove  "></i>取消</a>
+                <a class="btn btn-minier btn-success pull-left" id="addBtn" style="margin-top: -2px; margin-left: 4px;">
+                    <i class="icon-plus bigger-110"></i>
+                    添加
+                </a>
+                <a class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin-top: -2px; margin-left: 4px;">
+                    <i class="icon-mail-forward "></i>返回
+                </a>
+            </h3>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="layerEdit" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right" for="balance">结算值</label>
+                            <div class="col-md-8">
+                                <input type="text" id="balance" class="col-xs-10 col-sm-5" />
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right" for="comment">说明</label>
+                            <div class="col-md-8">
+                                <textarea maxlength="128" id="comment" class="col-xs-10 col-sm-5" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>
+
+
+<script src="js/manifest/viewPurchaseBalance.js"></script>

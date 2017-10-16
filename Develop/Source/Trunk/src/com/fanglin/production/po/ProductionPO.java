@@ -80,7 +80,7 @@ public class ProductionPO implements Serializable{
 	
 	private float timeLimit;
 	
-	private long spid;
+	private String spid;
 	
 	private short type;
 	
@@ -230,11 +230,11 @@ public class ProductionPO implements Serializable{
 	}
 
 	@Column(name="spid")
-	public long getSpid() {
+	public String getSpid() {
 		return spid;
 	}
 
-	public void setSpid(long spid) {
+	public void setSpid(String spid) {
 		this.spid = spid;
 	}
 

@@ -102,9 +102,7 @@ $(function(){
 		}
 
 		var constructionNodes = {};
-		var names = [];
 		var cnids = [];
-		var newConstructionNodeNames=[];
 
 		//工程节点
 		com.post(api.data.queryConstructionNodeByCid, options, function(res){
@@ -112,7 +110,6 @@ $(function(){
 
 			$.each(constructionNodes,function(i,v){
 				cnids.push(v.cnid);
-				names.push(v.name);
 			});
 		}, null, false);
 
@@ -133,8 +130,7 @@ $(function(){
 			var newcnids=[];
 
 			$.each(constructionNodeCompany.constructionNodeCompanyItems.nodeName.val().splice(','),function(i,value){
-				newcnids.push(value)
-				newConstructionNodeNames.push(constructionNodeCompany.nodeNames[value-1].name);
+				newcnids.push(value);
 			});
 
 			var params={

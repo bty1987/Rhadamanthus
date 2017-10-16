@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "zaterialdesignerregionrank", catalog = "platform")
+@Table(name = "zaterialdesignerregionrank", catalog = "report")
 public class ZaterialDesignerRegionRankPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1564444494355563850L;

@@ -99,8 +99,6 @@ public class DecorationOrderVO implements Serializable {
 	
 	private String projectStatus;
 	
-	private String paymentStatus;
-	
 	private Integer otherStatus;
 	
 	private String versionId;
@@ -355,14 +353,6 @@ public class DecorationOrderVO implements Serializable {
 
 	public void setProjectStatus(String projectStatus){
 		this.projectStatus = projectStatus;
-	}
-
-	public String getPaymentStatus(){
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(String paymentStatus){
-		this.paymentStatus = paymentStatus;
 	}
 
 	public void setNotSalesmanName(String notSalesmanName){

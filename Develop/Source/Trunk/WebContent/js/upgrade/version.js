@@ -296,22 +296,6 @@ $(function () {
 
         var flag = true;
 
-        var no = $('#versionNo');
-        var noRex = /^(v[0-9]\.[0-9]{1,2}\.[0-9]{1,3}|v[0-9]\.[0-9]{1,2}\.[0-9]{1,3} [A-Za-z]\-[A-Za-z0-9]{9})$/;
-        if (!((no.val() != "" || no.val() != null) && (noRex.test(no.val())))) {
-            no.focus().select();
-            no.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "版本号输入不正确!"
-            }).popover('show');
-            flag = false;
-        } else {
-            no.popover('destroy');
-        }
-
         var createTime = $('#createTime');
         var createTimeRex = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
 

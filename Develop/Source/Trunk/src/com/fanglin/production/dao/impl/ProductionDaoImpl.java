@@ -46,8 +46,9 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 					query.add(query.getCriterion(field, Long.parseLong(data), op));
 				}else if(ProductionPO.COLUMN_STATUS_STR.equals(field)){
 					query.add(query.getCriterion(field, Short.parseShort(data), op));
+				}else if(ProductionPO.COLUMN_PNO_STR.equals(field)){
+					query.add(query.getCriterion(field, data, op));
 				}
-				
 				
 				
 			}

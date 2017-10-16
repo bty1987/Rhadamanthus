@@ -27,6 +27,8 @@ public class WorkplanPO  implements Serializable{
 	
 	public static final String COLUMN_COMPANY_STR = "company";
 	
+	public static final short COLUMN_STATUS_SHORT = 0;
+	
 	private long wpid;
 	
 	private String name;
@@ -38,6 +40,16 @@ public class WorkplanPO  implements Serializable{
 	private WorkshopPO workshop ;
 	
 	private int company;
+
+
+	
+	public WorkplanPO(long wpid) {
+		super();
+		this.wpid = wpid ;
+	}
+	public WorkplanPO (){
+		super();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

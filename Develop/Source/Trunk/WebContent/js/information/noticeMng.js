@@ -23,7 +23,7 @@ $(function(){
         repeatFlg: !1
     };
 
-    com.post(api.ds.noticeInfo, {}, function(res){
+    com.post(api.ds.information, {}, function(res){
         $("#prioritySel").bindData(res.noticePriority, "key", "value");
         $("#typeSel").bindData(res.noticeType, "key", "value");
         $.each(res.noticeType,function (i,v) {
@@ -113,6 +113,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
 
             });
+
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
                 //插入btnDown
             	$divBtnWrap.append($btnDown);
@@ -141,7 +142,7 @@ $(function(){
 
             $management.unbind().bind('click',function(){
                      showDepaermentModal()
-                   $('#moduleModal').modal('show');
+                   $('#managements').modal('show');
                      var noticedids=[];
                       com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
                           $.each(res.noticeDepartments,function(i,val){
@@ -149,9 +150,8 @@ $(function(){
                                  $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
                          })
                       });
-                      $("#saveCompanyBtn").unbind().bind('click',function(){
-                        $('#moduleModal').modal("hide");
-                          var list = $('input[name="module"]:checked', $('#moduleModal'));
+                      $("#manageBtn").unbind().bind('click',function(){
+                          var list = $('input[name="module"]:checked', $('#managements'));
                           var params = {"notice.nid": v.nid};
                           list.length && (
                               $.each(list, function(i, v){
@@ -160,9 +160,8 @@ $(function(){
                                   if($v == -1 || $v == '全部') return false;
                               })
                           );
-                          console.log(params)
                          com.post(api.information.updateNoticeDepartment, params,function(res){
-                             console.log("更新成功"+res)
+                             $('#managements').modal("hide");
                             },null,false)
                 });
             });
@@ -368,7 +367,7 @@ $(function(){
 
 
     function showDepaermentModal() {
-        $wrap = $('#moduleModal').find('.modal-body').empty();
+        $wrap = $('#managements').find('.modal-body').empty();
         com.post(api.department.queryDepartment, {"dept.type": "all"}, function (res) {
             var treeData = res.deptList;
             if (!treeData || !treeData.length) {
@@ -436,8 +435,8 @@ $(function(){
                     $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
                     if (!$parent.children('button').length) {
                         var $title = $parent.children('div');
-                        $('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
-                        $('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
+                        $('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+                        $('<button type="button" data-action="expand" class=" plus">Expand</button>').insertBefore($title);
                     }
 
                     var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
@@ -474,6 +473,8 @@ $(function(){
                 var $this = $(this);
                 $this.siblings('ol').addClass('hide');
                 $this.parent().find('.plus').toggleClass('hide');
+                $this.parent().find('.minus').removeClass('hide');
+                $this.siblings('ol').find('.dd-list').addClass('hide');
                 $this.toggleClass('hide');
             });
 
@@ -481,6 +482,7 @@ $(function(){
                 var $this = $(this);
                 $this.siblings('ol').removeClass('hide');
                 $this.parent().find('.minus').toggleClass('hide');
+                $this.parent().find('.plus').removeClass('hide');
                 $this.toggleClass('hide');
             });
 

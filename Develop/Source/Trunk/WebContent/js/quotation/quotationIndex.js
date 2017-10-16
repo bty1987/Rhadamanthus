@@ -102,7 +102,7 @@ jQuery(function($) {
 
 	});
 	
-	$("#replicaBtn").on(ace.click_event, function(){
+	$("#replicaBtn").bindClick(function(){
 		
 		if(com.validate()){
 			return;
@@ -112,16 +112,14 @@ jQuery(function($) {
 			"quotation.qid":decorationQuotation.quotationItems.quotationNames.val(),
 			"quotation.orderId":decorationQuotation.decorationOrderId,
 		};
-		
-		van = $(this).button('loading');
-		
+
 		com.post(api.quotation.replicaQuotation, options, function(res){
 			com.showAlert(com.info, "操作成功");
 			initQuotationList();
 		}, null, false);
 
 		decorationQuotation.replicaQuotationModal.modal("hide");
-	});
+	},5000);
 	
 	$('#btnBack').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationOrderDesignerIndex.url);

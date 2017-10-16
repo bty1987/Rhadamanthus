@@ -1,0 +1,76 @@
+<div  class="page-content">
+
+    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>相关销售单信息</small></h1></div></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div id="resultList" class="clearfix tab-pane active"></div>
+
+            <div>
+                <a id="bindBtn" class="btn btn-minier btn-info pull-left" style="margin-top: 7px;margin-left: 20px"><i
+                        class="icon-plus bigger-110"></i>绑定</a>
+            </div>
+            <div>
+                <a id="backBtn" class="btn btn-minier  pull-left" style="margin-top: 7px;margin-left: 20px"><i
+                        class="icon-mail-forward bigger-110"></i>返回</a>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<div id="layerBind" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4">订单类型</label>
+                            <div class="controls col-xs-8">
+
+                                <select type="select" class="col-xs-8 m-wrap" name="salesType" rules="{required:false}">
+                                    <option value="0">主材单</option>
+                                    <option value="1">销售单</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4">单据编号</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="span6 m-wrap col-xs-8" name="saleNo"
+                                       rules="{required:true}">
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4">品类品牌</label>
+                            <div class="controls col-xs-8">
+                                <input type="text" class="span6 m-wrap col-xs-8" name="brand"
+                                       rules="{required:true}" readonly>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script src="js/production/productionSales.js"></script>
+<script src="js/production/productionUtils.js"></script>

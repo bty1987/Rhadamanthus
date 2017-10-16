@@ -27,7 +27,7 @@ import javax.persistence.Table;
 import com.fanglin.decoration.po.DecorationOrderPO;
 
 @Entity
-@Table(name = "putlineconstructionschedule", catalog = "platform")
+@Table(name = "putlineconstructionschedule", catalog = "report")
 public class PutlinePO implements Serializable {
 
 	private static final long serialVersionUID = 7964248933414074995L;

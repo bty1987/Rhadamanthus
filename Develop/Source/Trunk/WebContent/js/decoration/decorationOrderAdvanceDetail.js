@@ -84,7 +84,7 @@ jQuery(function($) {
 	decorationOrderDetail.activitys = $("#activitys");
 	decorationOrderDetail.activityItems = $("#activityItems");
 	
-	com.post(api.ds.decorationInfo, {}, function(res){
+	com.post(api.ds.decoration, {}, function(res){
 		decorationOrderDetail.items.orderType.bindData(res.type, 'key', 'value');
 		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
 		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
@@ -328,7 +328,7 @@ jQuery(function($) {
 		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
 	
-	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId, null, null, null);
+	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId,false);
 });
 
 function initWizard(){

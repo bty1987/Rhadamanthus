@@ -8,4 +8,6 @@ import com.fanglin.production.po.ProductionWorkPlanPO;
 public interface ProductionWorkPlanDao extends Dao<ProductionWorkPlanPO>{
 	
 	public List<ProductionWorkPlanPO> queryProductionWorkPlanByPpid(long ppid);
+	
+	public ProductionWorkPlanPO queryProductionWorkPlanByPpidAWpid(long ppid,long wpid);
 }

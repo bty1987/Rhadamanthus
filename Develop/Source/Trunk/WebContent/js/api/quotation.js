@@ -15,10 +15,6 @@ $.extend(api.index, {
     extensionDetailIndex: {url: "/views/quotation/extensionDetail.html"},
 });
 
-$.extend(api.ds, {
-    quotationInfo: {url: "ds/quotationInfo.json", demo: true}
-});
-
 $.extend(api, {quotation: {
     queryQuotationClassification: {url: "queryQuotationClassification.do", demo: true},
     queryQuotationBigCategory: {url: "queryQuotationBigCategory.do", demo: true},

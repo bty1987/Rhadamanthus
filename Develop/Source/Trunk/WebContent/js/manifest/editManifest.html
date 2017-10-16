@@ -1,0 +1,68 @@
+<div class="portlet-body">
+
+    <div class="flex-wrap" id="form">
+
+        <div class="stay-bottom">
+            <button class="btn yellow" id="addSaleOrder" >添加一条主材信息</button>
+<!---->
+        </div>
+
+        <div style="text-align: right">
+
+            <div class="inline-group">
+
+
+            </div>
+
+
+            <div class="devide-line"></div>
+
+        </div>
+    </div>
+
+    <ul class="flex-table" id="title">
+        <li class="line table-title">
+            <div class="line-wrap order">
+                <div class="cell index"></div>
+            </div>
+            <div class="line-wrap content col10">
+                <div class="cell">商品编号</div>
+                <div class="cell">名称</div>
+                <div class="cell">颜色</div>
+                <div class="cell">规格</div>
+                <div class="cell">单位</div>
+                <div class="cell">仓库</div>
+                <div class="cell">数量</div>
+                <div class="cell">件数</div>
+                <div class="cell">采购金额</div>
+                <div class="cell">备注</div>
+            </div>
+            <div class="line-wrap action">
+                <div class="cell option">操作</div>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="flex-table" id="list"></ul>
+
+    <div style="margin-top: 15px;">
+
+
+        <div class="inline-group">
+
+            <label>备注</label>
+            <div class="item long">
+                <input type="text" id="comment">
+            </div>
+        </div>
+
+
+
+        <div style="margin-top: 10px" class="col-sm-1 pull-right inline">
+            <span>总价:</span><span id="totalSpan">0</span>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/manifest/editManifest.js"></script>

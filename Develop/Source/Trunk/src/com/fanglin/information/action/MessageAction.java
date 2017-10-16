@@ -27,26 +27,14 @@ public class MessageAction extends BaseListAction {
 	
 	private MessageVO message;
 	
-	private List<MessageVO> messageList;
-	
-	private List<Integer> messageIds;
+	private List<Integer> mids;
 	
 	private int messageCount;
-	
-	private String approveParams;
 	
 	@Action(value="pageMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMessage() throws FLException{
 		
 		messageService.pageMessage(getPaging(), getFilters(), queryUserId(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMessageForUnRead", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMessageForUnRead() throws FLException{
-		
-		messageList = messageService.queryMessageForUnRead(queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -72,26 +60,11 @@ public class MessageAction extends BaseListAction {
 	@Action(value="updateMessageForRead", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateMessageForRead(){
 		
-		messageService.updateMessageForRead(getMessageIds());
+		messageService.updateMessageForRead(mids);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="deleteMessageById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteMessageById() throws FLException{
-		
-		messageService.deleteMessageById(message);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteMessageByIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteMessageByIds(){
-		
-		messageService.deleteMessageByIds(messageIds);
-		
-		return SUCCESS;
-	}
 	
 	public MessageVO getMessage(){
 		return message;
@@ -99,22 +72,6 @@ public class MessageAction extends BaseListAction {
 
 	public void setMessage(MessageVO message){
 		this.message = message;
-	}
-
-	public List<Integer> getMessageIds(){
-		return messageIds;
-	}
-
-	public void setMessageIds(List<Integer> messageIds){
-		this.messageIds = messageIds;
-	}
-
-	public List<MessageVO> getMessageList(){
-		return messageList;
-	}
-
-	public void setMessageList(List<MessageVO> messageList){
-		this.messageList = messageList;
 	}
 
 	public int getMessageCount(){
@@ -125,12 +82,14 @@ public class MessageAction extends BaseListAction {
 		this.messageCount = messageCount;
 	}
 
-	public String getApproveParams(){
-		return approveParams;
+	public List<Integer> getMids() {
+		return mids;
 	}
 
-	public void setApproveParams(String approveParams){
-		this.approveParams = approveParams;
+	public void setMids(List<Integer> mids) {
+		this.mids = mids;
 	}
 
+
+	
 }

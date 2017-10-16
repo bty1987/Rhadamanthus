@@ -109,6 +109,8 @@ public class FinanceServiceImpl implements FinanceService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
+		int company = decorationOrderPO.getCompany();
+		
 		String orderId = decorationOrderPO.getOrderId();
 		String orderAddr = decorationOrderPO.getVillagePO().getVillageName() + " " + decorationOrderPO.getHouseNumber();
 		
@@ -192,7 +194,7 @@ public class FinanceServiceImpl implements FinanceService {
 		if(cash != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCashInfo(), cash);
+			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCashInfo(), cash, company);
 		}
 		
 		if(bank != 0f){
@@ -204,26 +206,26 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				accountVO.setSaId(subAccountId++);
 				
-				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]));
+				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]), company);
 			}
 		}
 		
 		if(checkv != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCheckvBankName(), checkv);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCheckvBankName(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getInstallmentBankName(), installment);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getInstallmentBankName(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getAccountsBankName(), accounts);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getAccountsBankName(), accounts, company);
 		}
 		
 		handleSubjectBalance(subjectBalances);
@@ -249,6 +251,8 @@ public class FinanceServiceImpl implements FinanceService {
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
+		
+		int company = decorationOrderPO.getCompany();
 		
 		String orderId = decorationOrderPO.getOrderId();
 		String orderAddr = decorationOrderPO.getVillagePO().getVillageName() + " " + decorationOrderPO.getHouseNumber();
@@ -341,7 +345,7 @@ public class FinanceServiceImpl implements FinanceService {
 		if(cash != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCashInfo(), cash);
+			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCashInfo(), cash, company);
 		}
 		
 		if(bank != 0f){
@@ -353,7 +357,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				accountVO.setSaId(subAccountId++);
 				
-				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]));
+				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]), company);
 			}
 		}
 		
@@ -361,19 +365,19 @@ public class FinanceServiceImpl implements FinanceService {
 			
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCheckvBankName(), checkv);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCheckvBankName(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getInstallmentBankName(), installment);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getInstallmentBankName(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getAccountsBankName(), accounts);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getAccountsBankName(), accounts, company);
 		}
 		
 		if(advance != 0f){
@@ -404,7 +408,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				accountVO.setSaId(subAccountId++);
 				
-				convertCouponToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, info[0], Float.valueOf(info[1]));
+				convertCouponToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, info[0], Float.valueOf(info[1]), company);
 			}
 		}
 		
@@ -431,6 +435,8 @@ public class FinanceServiceImpl implements FinanceService {
 		if(materialSubOrderPO == null){
 			throw new FLException(180001, "主材订单不存在");
 		}
+		
+		int company = materialSubOrderPO.getCompany();
 		
 		String orderId = materialSubOrderPO.getOrderId();
 		String orderAddr = materialSubOrderPO.getOrderAddr();
@@ -544,7 +550,7 @@ public class FinanceServiceImpl implements FinanceService {
 		if(cash != 0f){
 			AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 			
-			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, materialReceiptPO.getCashInfo(), cash);
+			convertCashToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, materialReceiptPO.getCashInfo(), cash, company);
 		}
 		
 		if(bank != 0f){
@@ -556,26 +562,26 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				accountVO.setSaId(subAccountId++);
 				
-				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]));
+				convertBankToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, info[0], Float.valueOf(info[1]), company);
 			}
 		}
 		
 		if(checkv != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getCheckvBankName(), checkv);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getCheckvBankName(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getInstallmentBankName(), installment);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getInstallmentBankName(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getAccountsBankName(), accounts);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getAccountsBankName(), accounts, company);
 		}
 		
 		if(advance != 0f){
@@ -608,7 +614,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				accountVO.setSaId(subAccountId++);
 				
-				convertCouponToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, info[0], Float.valueOf(info[1]));
+				convertCouponToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, info[0], Float.valueOf(info[1]), company);
 			}
 		}
 		
@@ -631,9 +637,9 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCashToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float cash){
+	private void convertCashToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float cash, int company){
 		
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			
@@ -644,8 +650,8 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertBankToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float bank){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+	private void convertBankToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float bank, int company){
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			
@@ -656,8 +662,8 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCheckvToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float checkv){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+	private void convertCheckvToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float checkv, int company){
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			
@@ -668,8 +674,8 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertInstallmentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float installment){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+	private void convertInstallmentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float installment, int company){
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			
@@ -680,8 +686,8 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertAccountsToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float accounts){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+	private void convertAccountsToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float accounts, int company){
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			
@@ -713,9 +719,9 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private void convertCouponToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float coupon){
+	private void convertCouponToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float coupon, int company){
 		
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId).toSubjectPO();
+		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByKey(sId, company).toSubjectPO();
 		
 		if(subjectPO != null){
 			

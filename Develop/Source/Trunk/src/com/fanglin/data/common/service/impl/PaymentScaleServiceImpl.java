@@ -49,7 +49,6 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 			 paymentScaleVO.setCid(company);
 			 paymentScaleVO.setName(paymentScalePO.getName());
 			 paymentScaleVO.setPsid(paymentScalePO.getPsid());
-			 paymentScaleVO.setScale(paymentScalePO.getScale());
 			 paymentScaleVO.setComment(paymentScalePO.getComment());
 			 
 			 paymentScaleVOS.add(paymentScaleVO);
@@ -73,7 +72,6 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 			 
 			 paymentScalePO.setCid(company);
 			 paymentScalePO.setName(paymentScale.getName());
-			 paymentScalePO.setScale(paymentScale.getScale());
 			 paymentScalePO.setComment(paymentScale.getComment());
 		
 			 PaymentScaledao.save(paymentScalePO);

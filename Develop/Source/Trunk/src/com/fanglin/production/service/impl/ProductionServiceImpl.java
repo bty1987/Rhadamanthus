@@ -108,18 +108,21 @@ public class ProductionServiceImpl implements ProductionService {
 			throw new FLException(220001,"生产单不存在");
 		}
 		
-		if(productionPO.getStatus() == ProductionPO.STATUS_DESTORY_SHORT){
+		if(productionPO.getStatus() == ProductionPO.STATUS_DESTORY_SHORT || productionPO.getStatus() == ProductionPO.STATUS_END_SHORT){
 			throw new FLException(220002,"生产单状态不可操作");
 		}
 		
 		if(productionVO.getStatus() == ProductionPO.STATUS_CONFIRM_SHORT){
-			
 			productionPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+		
+		if(productionVO.getStatus() == ProductionPO.STATUS_PRODUCT_SHORT ){
 			
-		}else if(productionVO.getStatus() == ProductionPO.STATUS_PRODUCT_SHORT){
+			if(productionPO.getStatus() != 2){
+				throw new FLException(220002,"生产单状态不可操作");
+			}
 			
 			productionPO.setDivideTime(DateUtil.getDateToTimestamp(new Date()));
-			
 		}
 		
 		productionPO.setStatus(productionVO.getStatus());

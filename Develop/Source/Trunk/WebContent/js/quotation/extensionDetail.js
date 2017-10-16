@@ -21,6 +21,7 @@ var ExtensionDetail = (function(){
             that.$modals = {
                 //普通报价项弹窗
                 addNormalItemModal : $('#addNormalItemModal').on("show.bs.modal", function(a) {
+                    $('#addNormalItemModal').attr("style","display: block;overflow-x: hidden;overflow-y: auto;");
                     $('input[name="modalQuots"]:checked').removeAttr('checked');
                 }),
                 //自定义添加
@@ -253,6 +254,7 @@ var ExtensionDetail = (function(){
                     "num" : $("#num").val(),//工程预算量
                     "itemName" : $("#itemName").val(),//名称
                     "quotationFunctionAreaId" : $("#quotationFunctionAreaId").val(),//功能区
+                    "quotationFunctionAreaName" : $("#addQuotationFunctionAreaId").find('option:selected').text(),
                     "measurementUnit" : $("#measurementUnit").val(),//单位
                     "unitPrice" : $("#unitPrice").val(),//单价(折后单价、总价为计算值)
                     "workType" : $("#workType").val(),//工种
@@ -605,7 +607,7 @@ var ExtensionDetail = (function(){
                 ["unit", qv.measurementUnit],//单位
                 ["price unitprice", qv.unitPrice],//单价
                 ["price discountprice", _dcp, ["data-discount","0"]],//折后单价
-                ["price totalprice-discount",  utils.changeTwoDecimal(total)],//总价
+                ["price totalprice-discount",  utils.changeTwoDecimal(total),["style", "white-space:nowrap"]],//总价
             ];
 
             var $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo;

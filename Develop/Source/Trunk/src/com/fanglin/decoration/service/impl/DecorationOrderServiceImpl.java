@@ -51,8 +51,10 @@ import com.fanglin.decoration.vo.DecorationOrderVO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
+import com.fanglin.payment.dao.DecorationReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.service.impl.AdvancePaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -131,6 +133,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Autowired
 	private AuditDao auditDao;
+	
+	@Autowired
+	private DecorationReceiptDao decorationReceiptDao;
 	
 	@Override
 	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, Authentication authentication){
@@ -958,24 +963,8 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setHouseArea(decorationOrderVO.getHouseArea());
 		decorationOrderPO.setFreeArea(decorationOrderVO.getFreeArea());
 		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
-		
-		if(decorationOrderVO.getType() != decorationOrderPO.getType()){
-			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
-			
-			if(quotationPO == null){
-				throw new FLException(200003, "报价不存在");
-			}
-			
-			if(QuotationPO.TYPE_PART_INT == decorationOrderPO.getType()){
-				decorationOrderPO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}else if(QuotationPO.TYPE_WHOLE_INT == decorationOrderPO.getType()){
-				decorationOrderPO.setOrderTotalPrice(Arith.add(quotationPO.getBasicPrice(), Arith.add(quotationPO.getQdiff(), quotationPO.getMdiff())));
-			}
-			
-			decorationOrderPO.setType(type);
-		}
-		
+		decorationOrderPO.setType(type);
+	
 		if(decorationOrderVO.getNotSalesmanRate() != null){
 			decorationOrderPO.setNotSalesmanRate(decorationOrderVO.getNotSalesmanRate());
 		}
@@ -1269,15 +1258,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		decorationBelongDao.save(belongsalesmanInfo);
 		
-		DecorationPaymentPO designFee = new DecorationPaymentPO();
-		
-		designFee.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		designFee.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR);
-		designFee.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
-		designFee.setDecorationOrderPO(decorationOrderPO);
-		
-		decorationPaymentDao.save(designFee);
-		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 		decorationOperatePO.setDecorationOrder(decorationOrderPO);
 		decorationOperatePO.setOperater(userDao.queryUserByUserId(decorationOrderVO.getCreateUserId()));
@@ -1371,20 +1351,33 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
+			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
 			decorationPaymentPO.setReferMoney(refundValue);
 			decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
 			
 			decorationPaymentDao.save(decorationPaymentPO);
-			
+
 			if(refundValue < paymentValue){
 				DecorationPaymentPO penalty = new DecorationPaymentPO();
+				DecorationReceiptPO decorationReceipt = new DecorationReceiptPO();
+				
+				decorationReceipt.setDes(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+				decorationReceipt.setReceiptType(DecorationReceiptPO.RECEIPT_TYPE_COLLECT_INT);
+				decorationReceipt.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+				decorationReceipt.setCollectUserPO(userDao.queryUserByUserId(userId));
+				
+				decorationReceiptDao.save(decorationReceipt);
 				
 				penalty.setCreateUserPO(userDao.queryUserByUserId(userId));
 				penalty.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 				penalty.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
 				penalty.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
+				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
 				penalty.setReferMoney(Arith.sub(paymentValue, refundValue));
 				penalty.setDecorationOrderPO(decorationOrderPO);
+				penalty.setDecorationReceipt(decorationReceipt);
 				
 				decorationPaymentDao.save(penalty);
 			}

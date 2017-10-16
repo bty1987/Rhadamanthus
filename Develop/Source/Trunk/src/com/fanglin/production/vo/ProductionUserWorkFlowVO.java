@@ -3,6 +3,8 @@ package com.fanglin.production.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserVO;
 
 public class ProductionUserWorkFlowVO implements Serializable{
@@ -11,21 +13,21 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	
 	private Long puwfid;
 	
-	private ProductionWorkFlowVO pwfid;
+	private ProductionWorkFlowVO productionworkflow;
 	
-	private UserVO ouid;
+	private UserVO operator;
 	
 	private Timestamp operateTime;
 
 	public ProductionUserWorkFlowVO() {
 		super();
-
 	}
 
-	public ProductionUserWorkFlowVO(ProductionWorkFlowVO pwfid, UserVO ouid) {
+	public ProductionUserWorkFlowVO(ProductionWorkFlowVO productionworkflow,
+			UserVO operator) {
 		super();
-		this.pwfid = pwfid;
-		this.ouid = ouid;
+		this.productionworkflow = productionworkflow;
+		this.operator = operator;
 	}
 
 	public Long getPuwfid() {
@@ -36,22 +38,22 @@ public class ProductionUserWorkFlowVO implements Serializable{
 		this.puwfid = puwfid;
 	}
 
-	public ProductionWorkFlowVO getPwfid() {
-		return pwfid;
+	public ProductionWorkFlowVO getProductionworkflow() {
+		return productionworkflow;
 	}
 
-	public void setPwfid(ProductionWorkFlowVO pwfid) {
-		this.pwfid = pwfid;
+	public void setProductionworkflow(ProductionWorkFlowVO productionworkflow) {
+		this.productionworkflow = productionworkflow;
 	}
 
-	public UserVO getOuid() {
-		return ouid;
+	public UserVO getOperator() {
+		return operator;
 	}
 
-	public void setOuid(UserVO ouid) {
-		this.ouid = ouid;
+	public void setOperator(UserVO operator) {
+		this.operator = operator;
 	}
-
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
@@ -59,6 +61,10 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
+	
+	
+
+
 	
 	
 

@@ -4,7 +4,7 @@ jQuery(function($) {
 		postParam : {},
 	};
 
-	com.post(api.ds.approvalType, {
+	com.post(api.ds.approval, {
 		"timestamp" : new Date().getTime()
 	}, function(res) {
 		approvalTrack.approvalType = res.approvalType;
@@ -40,9 +40,7 @@ jQuery(function($) {
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(approvalTrack.approvalTypeData[v.type]));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons')
 			// 查看主材退款,主材详细信息按钮
 			var $btnDetails = $('<a></a>').addClass('btn btn-minier btn-primary').html('详情');
 			var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过').prepend($('<i></i>'));
@@ -69,7 +67,7 @@ jQuery(function($) {
 			var typeName = v.type;
 
 			if (v.status == 0) {
-				if (typeName == "6") {
+				if (typeName == "6"||typeName == "10") {
 					$divBtnWrap.append($btnDetails).append($btnPass).append($btnRefuse).appendTo($h3);
 				}
 				$divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
@@ -78,7 +76,6 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty).append($content);
 			var $sign=$('<i></i>').addClass("icon-spinner icon-spin white bigger-125");
 			$btnPass.bindClick(function() {
-
 				approveApproval(v.aid);
 			});
 
@@ -87,9 +84,9 @@ jQuery(function($) {
 				refuseApproval(v.aid);
 			});
 
-			// 主材详细信息按钮
+			// 详细信息按钮
 			$btnDetails.bindClick(function() {
-				queryMaterialSubOrder(v.aid);
+				queryMaterialSubOrder(v.aid, v.type);
 			});
 			return $liLine;
 		};
@@ -134,47 +131,45 @@ jQuery(function($) {
 		},null,false);
 	}
 
-	function queryMaterialSubOrder(aId,$this) {
+	function queryMaterialSubOrder(aId,type,$this) {
 
 		if ($('#materialInfoList').children()) {
 			$('#materialInfoList').empty();
 		}
-
-		com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
-
-			$.each(res.approvalMaterialRefundItems, function(i, v) {
-
-				$('#materialInfoList')
-					.append(addspan('10', '型号  : ', v.materialSubOrderItem.materialModelName))
-					.append(addspan('40', '品类  : ', v.materialSubOrderItem.materialTypeName))
-					.append(addspan('40', '品牌  : ', v.materialSubOrderItem.materialBrandName))
-					.append('<br/>')
-					.append(addspan('10', '售价  : ', v.materialSubOrderItem.price))
-					.append(addspan('40', '退货数量  : ', v.num))
-					.append(addspan('40', '退货金额  : ', v.total))
-					.append('<hr/>');
-			})
-			$('#msoiModel').modal("show");
-		}, null, false);
+		if(type=="6"){
+			com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
+				$("#materialInfo").html("主材信息");
+				$.each(res.approvalMaterialRefundItems, function(i, v) {
+					$('#materialInfoList')
+						.append(approvalUtils.addspan('10', '型号  : ', v.materialSubOrderItem.materialModelName))
+						.append(approvalUtils.addspan('40', '品类  : ', v.materialSubOrderItem.materialTypeName))
+						.append(approvalUtils.addspan('40', '品牌  : ', v.materialSubOrderItem.materialBrandName))
+						.append('<br/>')
+						.append(approvalUtils.addspan('10', '售价  : ', v.materialSubOrderItem.price))
+						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
+						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
+						.append('<hr/>');
+				})
+				$('#msoiModel').modal("show");
+			}, null, false);
+		}
+		if(type=="10"){
+			com.post(api.approval.queryApprovalSalesRefundItem,{"approval.aid" : aId}, function(res) {
+				$("#materialInfo").html("销售信息");
+				$.each(res.approvalSalesRefundItem, function(i, v) {
+					$('#materialInfoList')
+						.append(approvalUtils.addspan('0', '名称  : ', v.salesItem.goods.name))
+						.append('<br/>')
+						.append(approvalUtils.addspan('10', '颜色  : ', v.salesItem.color.name))
+						.append(approvalUtils.addspan('40', '规格  : ', v.salesItem.format.info))
+						.append(approvalUtils.addspan('10', '数量  : ', v.num))
+						.append(approvalUtils.addspan('40', '总价  : ', v.total))
+						.append('<hr/>');
+				})
+				$('#msoiModel').modal("show");
+			}, null, false);
+		}
 	}
 
 });
 
-function addspan(px, name, value) {
-	var $10pxdiv = $('<div></div>').css({
-		'display' : 'inline-block',
-		'margin-left' : '10px'
-	});
-	var $40pxdiv = $('<div></div>').css({
-		'display' : 'inline-block',
-		'margin-left' : '40px'
-	});
-	var $nameSpan = $('<b></b>').html(name);
-	var $valueSpan = $('<span></span>').text(value);
-
-	if (px == '40') {
-		return $40pxdiv.append($nameSpan).append($valueSpan);
-	} else if (px == '10') {
-		return $10pxdiv.append($nameSpan).append($valueSpan);
-	}
-}

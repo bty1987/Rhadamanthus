@@ -28,6 +28,7 @@ import com.fanglin.production.po.WorkplanPO;
 import com.fanglin.production.service.ProductionWorkPlanService;
 import com.fanglin.production.vo.ProductionWorkPlanVO;
 import com.fanglin.production.vo.WorkplanVO;
+import com.fanglin.production.vo.WorkshopVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -56,10 +57,11 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		List<ProductionWorkPlanVO> ProductionWorkPlanVOs = new ArrayList<ProductionWorkPlanVO>();
 		
 		for(ProductionWorkPlanPO productionWorkPlanPO : ProductionWorkPlanPOs){
-			ProductionWorkPlanVO productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(), new UserVO());
+			ProductionWorkPlanVO productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(new WorkshopVO()), new UserVO());
 			
 			BeanUtil.copyProperties(productionWorkPlanPO, productionWorkPlanVO, Arrays.asList("workplan","creater"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan(), productionWorkPlanVO.getWorkplan(),Arrays.asList("workshop"));
+			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan().getWorkshop(), productionWorkPlanVO.getWorkplan().getWorkshop(), "");
 			BeanUtil.copyProperties(productionWorkPlanPO.getCreater(), productionWorkPlanVO.getCreater(), Arrays.asList("role","dept","contracts","experiences"));
 			ProductionWorkPlanVOs.add(productionWorkPlanVO);
 		}
@@ -73,6 +75,11 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		ProductionPlanPO productionPlanPO = productionplanDao.get(productionWorkPlanVO.getPpid());
 		if(productionPlanPO == null){
 			throw new FLException(220008, "生产计划单不存在");
+		}
+		
+		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
+		if(productionworkplanPO != null){
+			throw new FLException(220010, "该工序组已存在");
 		}
 		
 		ProductionWorkPlanPO productionWorkPlanPO = new ProductionWorkPlanPO(new WorkplanPO(),new UserPO());
@@ -99,19 +106,23 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteProductionWorkPlan(ProductionWorkPlanVO productionWorkPlanVO) throws FLException {
-		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.get(productionWorkPlanVO.getPwpid());
-		
+	
+		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
+		if(productionworkplanPO == null){
+			throw new FLException(220014, "计划工序组不存在");
+		}
 		if(productionworkplanPO.getStatus() == ProductionWorkPlanPO.STATUS_OPERATED_INT){
 			throw new FLException(220011, "计划工序组状态不可操作");
-		}	
-		productionWorkPlanDao.delete(productionworkplanPO);
-		//删除计划工序
-		List<ProductionWorkFlowPO> productionWorkFlowPOs = productionworkflowDao.queryProductionWorkFlowByPwpid(productionWorkPlanVO.getPwpid());
+		}
+		//删除工序
+		List<ProductionWorkFlowPO> productionWorkFlowPOs = productionworkflowDao.queryProductionWorkFlowByPwpid(productionworkplanPO.getPwpid());
 		if(productionWorkFlowPOs.size() != 0){
 			for(ProductionWorkFlowPO productionWorkFlowPO : productionWorkFlowPOs){
 				productionworkflowDao.delete(productionWorkFlowPO);
 			}
 		}
+		//最后删除工序组
+		productionWorkPlanDao.delete(productionworkplanPO);
 		
 		return 0;
 	}

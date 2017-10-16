@@ -22,6 +22,8 @@ public class ProductionWorkPlanPO implements Serializable{
 	
 	public static final String COLUMN_PPID_STR = "ppid";
 	
+	public static final String COLUMN_WFID_STR = "workplan.wpid";
+	
 	public static final String COLUMN_STATUS_STR = "status";
 	
 	public static final Short STATUS_INIT_INT = 0;

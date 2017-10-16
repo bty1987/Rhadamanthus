@@ -126,7 +126,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		long sid = approvalSalesRefundVO.getSid();
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
 		
 		if(approvalPO != null){
 			if(approvalPO.getStatus() == 0){

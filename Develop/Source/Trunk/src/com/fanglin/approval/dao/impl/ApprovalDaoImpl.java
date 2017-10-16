@@ -43,7 +43,7 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		query.add(Restrictions.eq("company", company));
 		
 		if(filters != null){
-			approvalQuery(filters, query);
+			queryFilterExcute(filters, query);
 		}
 		
 		query.asc("status");
@@ -62,17 +62,35 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		query.add(Restrictions.eq("company", company));
 		
 		if(filters != null){
-			approvalQuery(filters, query);
+			queryFilterExcute(filters, query);
 		}
 		
 		query.asc("status");
 		query.desc("createTime");
 		
 		return query.list();
-	}	
+	}
 	
+//	通过类型识别初始化查询审批
+	@Override
+	public ApprovalPO queryApproval(short status,short type, String ident) {
+		
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
+				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
+				.add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status))
+				.uniqueResult();
+	}
 
-	public void approvalQuery( List<Filter> filters,PagingQuery<ApprovalPO> query){
+	@Override
+	public int countApprovalForInitByIdent(String ident) {
+		
+		String sql = "select count(*) from approval.approval where ident = :ident and status = 0";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
+		
+		return count.intValue();
+	}
+	
+	public void queryFilterExcute( List<Filter> filters,PagingQuery<ApprovalPO> query){
 
 		for(Filter filter: filters){
 			if("status".equals(filter.getField())){
@@ -128,22 +146,5 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	
 	}
 	
-//	通过类型识别初始化查询审批
-	@Override
-	public ApprovalPO queryApprovalForInitByTypeAIdent(short type, String ident) {
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
-				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
-				.add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, ApprovalPO.APPROVAL_STATUS_INIT_INT))
-				.uniqueResult();
-	}
-
-	@Override
-	public int countApprovalForInitByIdent(String ident) {
-		
-		String sql = "select count(*) from approval.approval where ident = :ident and status = 0";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
-		
-		return count.intValue();
-	}
 	
 }

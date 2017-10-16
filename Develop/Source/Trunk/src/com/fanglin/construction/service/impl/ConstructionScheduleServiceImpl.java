@@ -107,8 +107,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 					if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_SUCCESS_INT){
 						drawLinePO.setStatus("放线成功");
 						
-						List<String> dutys = new ArrayList<String>();
-						dutys.add("前台咨询师");
+						//List<String> dutys = new ArrayList<String>();
+						//dutys.add("前台咨询师");
 					}else if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
 						drawLinePO.setStatus("放线失败");
 					}

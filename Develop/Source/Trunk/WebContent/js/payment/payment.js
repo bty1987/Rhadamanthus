@@ -12,7 +12,7 @@ jQuery(function($) {
 		
 	};
 	
-	payment.saveBtn = $("#collectBtn").on("click", saveData);
+	payment.saveBtn = $("#collectBtn").bindClick(saveData);
 	payment.cancelBtn = $("#cancelBtn");
 	payment.modal = $("#paymentModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -258,7 +258,7 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty).append($ulStyle);
             
 			$btnPrint.click(function(){
-				if(v.collectUser.userName!=params.userInfo.user.userName){
+				if(v.collectUser.userId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
@@ -522,11 +522,11 @@ jQuery(function($) {
 			com.showAlert(com.warning, "收款金额需要大于零!");
 			return false;
 		}
-		
+
 		com.post(url, options, function(res){
-			
+
 			searcher.doSearch();
-			
+
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
 				if(result){
 					com.popup("专用收款收据__订单编号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + parent.params.loginTime,function () {

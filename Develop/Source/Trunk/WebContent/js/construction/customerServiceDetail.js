@@ -48,7 +48,7 @@ jQuery(function($) {
 		var stepnum = constructionSchedule[0].schedule;
 		initWizardSept(stepnum);
 
-		$('#fuelux-wizard').ace_wizard({status:true, currentStep: stepnum}).on('finished', function(e) {
+		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
 			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
 		}).on('stepclick', function(e, info){
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
@@ -89,9 +89,9 @@ jQuery(function($) {
 				if(constructers.length != 0 ){
 					for(var i=0;i<constructers.length;i++){
 						var workerInfo =  constructers[i];
-						var profileDiv = $('<div class="profile-picture col-sm-4" style="padding: 5px;"></div>');
+						var profileDiv = $('<div class="profile-picture col-sm-4" style="padding-top: 10px;"></div>');
 
-						var imgDiv = $('<div class="col-sm-6 workerImg"></div>').appendTo(profileDiv);
+						var imgDiv = $('<div class="col-sm-6 workerImg"></div>').css("width", "49%").appendTo(profileDiv);
 						var img = $('<img />').attr("alt", workerInfo.user.userId +"'s photo").attr("id", workerInfo.user.userId +"WorkerImg").appendTo(imgDiv);
 
 						if(workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != ""){
@@ -122,7 +122,9 @@ jQuery(function($) {
 				}
 
 				$("#btnSave").click(function(){
+					var successFlag = false;
 					for(var i=0;i<workerIdsData.length;i++){
+						successFlag = false;
 						var options = {};
 						options["constructer.crid"] = workerIdsData[i];
 						options["constructer.rate"] = $("#"+workerIdsData[i] + "workerRaty-score").val();
@@ -130,9 +132,13 @@ jQuery(function($) {
 
 						if(commitFlag){
 							com.post(api.construction.updateConstructerForRate, options, function(res){
-								com.showAlert(com.info, "保存成功!");
-							});
+								successFlag = true;
+							}, null, false);
 						}
+					}
+					
+					if(successFlag){
+						com.showAlert(com.info, "保存成功!");
 					}
 				});
 			}
@@ -154,7 +160,7 @@ jQuery(function($) {
 
 	function setWorkerRaty(id, raty){
 		$(id).raty({
-			path: './assets/images/',
+			path: './assets/altogether/images/',
 			start: raty,
 		});
 	}

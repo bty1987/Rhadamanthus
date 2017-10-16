@@ -1,0 +1,12 @@
+{
+    "manifestTypes": [
+        {"key":"1","value":"进货"},
+        {"key":"3","value":"出货"}
+    ],
+    "priceTypes": [
+        {"key":"0","value":"底价"},
+        {"key":"1","value":"点位"}
+     ],
+    "errorCode": 0,
+    "errorMsg": null
+}

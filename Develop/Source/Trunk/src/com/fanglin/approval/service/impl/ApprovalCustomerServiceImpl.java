@@ -30,7 +30,6 @@ import com.fanglin.data.po.CustomerPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.AssassinService;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -64,7 +63,7 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		
 		int customerId = approvalCustomerVO.getCustomerId();
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, String.valueOf(customerId));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, String.valueOf(customerId));
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -101,12 +100,9 @@ public class ApprovalCustomerServiceImpl implements ApprovalCustomerService {
 		approvalCustomerPO.setOldCustomerName(customerName);
 		approvalCustomerPO.setOldCustomerPhone(phone);
 		
-		approvalCustomerDao.save(approvalCustomerPO);
+		approvalCustomerDao.save(approvalCustomerPO);	 
 		
-		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
-		
-		messageService.sendMessage(messageVO,company);
-		
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
 		
 		return 0;
 	}

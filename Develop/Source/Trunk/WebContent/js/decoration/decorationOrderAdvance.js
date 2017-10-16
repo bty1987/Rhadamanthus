@@ -203,17 +203,22 @@ $(function(){
 			if(com.validate("refundContractModal")){
 				return;
 			}
+			var refundValue = $("#refundValue").val();
 			
 			var options = {
 				"decorationOrder.orderId": decorationOrderPostData["decorationOrder.orderId"],
-				"refundValue": $("#refundValue").val(),
+				"refundValue": refundValue,
 				"paymentValue": order.paymentValue,
 			};
-			
-			com.post(api.decoration.terminalDecorationOrder, options, function(res){
-				com.showAlert(com.info, "申请成功");
-				
-				$("#" + decorationOrderPostData["decorationOrder.rowId"] + "_terminalBtn").css("display", "none");
+
+			bootbox.confirm("退款金额大于已付款金额!", function(result) {
+				if(result){
+					com.post(api.decoration.terminalDecorationOrder, options, function(res){
+						com.showAlert(com.info, "申请成功");
+						searcher.doSearch();
+						$("#" + decorationOrderPostData["decorationOrder.rowId"] + "_terminalBtn").css("display", "none");
+					});
+				}
 			});
 			
 			order.refundContractModal.modal("hide");	
@@ -329,41 +334,41 @@ $(function(){
 	    }
 	    
 	    function terminalOrder(decorationOrderId, rowId){
-	    	
-	    	decorationOrderPostData["decorationOrder.orderId"] = decorationOrderId;
-	    	decorationOrderPostData["decorationOrder.rowId"] = rowId;
-	    	
-	    	com.post(api.payment.queryDecorationPaymentForBaseByOrderId, {"decorationPayment.orderId":decorationOrderId}, function(res){
 
-	    		var refundValue = 0;
-	    		var decorationPaymentInfo = "";
-	    		var decorationPayments = res.decorationPayments;
-	    		
-	    		for(var i=0;i<decorationPayments.length;i++){
-	    			
-	    			var decorationPayment = decorationPayments[i];
-	    			var paymentType = decorationPayment.paymentType;
-	    			var paymentStatus = decorationPayment.paymentStatus;
-	    			var referMoney = decorationPayment.referMoney;
-	    			
-	    			if(paymentStatus == "已付款" || paymentStatus == "已确认"){
-	    				decorationPaymentInfo += paymentType + ":" + referMoney + "<br/>";
-	    				refundValue = utils.accAdd(refundValue, referMoney);
-	    			}
-	    		}
-	    		
-	    		if(decorationPaymentInfo == ""){
-	    			decorationPaymentInfo == "无付款信息";
-	    		}
-	    		
-	    		$("#decorationPaymentInfo").html(decorationPaymentInfo);
-	    		$("#refundValue").val(refundValue);
-	    		$("#paymentValue").val(refundValue);
-	    		order.paymentValue = refundValue;
-	    		
-	    		com.clearValidator();
-	    		
-	    		order.refundContractModal.modal("show");	
+			decorationOrderPostData["decorationOrder.orderId"] = decorationOrderId;
+			decorationOrderPostData["decorationOrder.rowId"] = rowId;
+
+			com.post(api.payment.queryDecorationPaymentForContractByOrderId, {"decorationPayment.orderId":decorationOrderId}, function(res){
+
+				var refundValue = 0;
+				var decorationPaymentInfo = "";
+				var decorationPayments = res.decorationPayments;
+
+				for(var i=0;i<decorationPayments.length;i++){
+
+					var decorationPayment = decorationPayments[i];
+					var paymentType = decorationPayment.paymentType;
+					var paymentStatus = decorationPayment.paymentStatus;
+					var referMoney = decorationPayment.referMoney;
+
+					if(paymentStatus == "已付款" || paymentStatus == "已确认"){
+						decorationPaymentInfo += paymentType + ":" + referMoney + "<br/>";
+						refundValue = utils.accAdd(refundValue, referMoney);
+					}
+				}
+
+				if(decorationPaymentInfo == ""){
+					decorationPaymentInfo == "无付款信息";
+				}
+
+			$("#decorationPaymentInfo").html(decorationPaymentInfo);
+			$("#refundValue").val(refundValue);
+			$("#paymentValue").val(refundValue);
+			order.paymentValue = refundValue;
+
+			com.clearValidator();
+
+			order.refundContractModal.modal("show");
 	    	});
 	    }
 	    

@@ -175,7 +175,7 @@ jQuery(function ($) {
                 return false;
             }
 
-            com.post(api.member.turnPointsForMemberCard, option, function () {
+            com.post(api.member.tranMemberCard, option, function () {
                 com.showAlert(com.info, '添加成功');
                 searcher.doSearch();
                 empty();

@@ -33,7 +33,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 	private UserDao userDao;
 	
 	@Autowired
-	private ConstructionDao constructionScheduleDao;
+	private ConstructionDao constructionDao;
 	
 	@Autowired
 	private WorkerSalaryDao workerSalaryDao;
@@ -81,10 +81,10 @@ public class ConstructerServiceImpl implements ConstructerService {
 	@Transactional(rollbackFor=Exception.class)
 	public void addConstructer(ConstructerVO constructerVO, String createrId) throws FLException {
 		//判断工程是否存在
-		long constructionScheduleId = constructerVO.getCid();
-		ConstructionPO constructionSchedulePO = constructionScheduleDao.queryConstructionByCid(constructionScheduleId);
+		long constructionId = constructerVO.getCid();
+		ConstructionPO constructionPO = constructionDao.queryConstructionByCid(constructionId);
 
-		if(constructionSchedulePO == null){
+		if(constructionPO == null){
 			throw new FLException(120020, "工程信息不存在");
 		}
 		
@@ -107,7 +107,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));
 		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept"));
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		constructerPO.setOrderId(constructionSchedulePO.getDecorationOrderPO().getOrderId());
+		constructerPO.setOrderId(constructionPO.getDecorationOrderPO().getOrderId());
 		constructerDao.save(constructerPO);
 		constructerVO.setCrid(constructerPO.getCrid());
 		constructerVO.setUser(new UserVO().setBaseInfo(userPO));

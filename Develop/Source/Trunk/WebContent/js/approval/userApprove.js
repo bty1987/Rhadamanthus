@@ -16,7 +16,7 @@ jQuery(function($) {
 	approve.modal = $("#approveModal");
 	approve.items.userSel = $("#userSel");
 	approve.items.comment = $("#comment");
-	com.post(api.ds.approvalType, {"timestamp": new Date().getTime()}, function(res){
+	com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
 		approve.approvalType = res.approvalType;
 		
 		approve.approvalTypeData = {};

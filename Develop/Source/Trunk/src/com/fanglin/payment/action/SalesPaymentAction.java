@@ -98,6 +98,14 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "querySalesPaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesPaymentByOrderId(){
+		
+		salesPayments = salesPaymentService.querySalesPaymentByOrderId(sales);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "querySalesPaymentBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesPaymentBySid(){
 		

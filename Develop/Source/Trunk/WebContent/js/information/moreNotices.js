@@ -2,7 +2,7 @@ $(function(){
 	var noticeType = {};
 	var  noticePriority={};
 	var noticeIsPublic={};
-	com.post(api.ds.noticeInfo, {}, function(res){
+	com.post(api.ds.information, {}, function(res){
 
 		$.each(res.noticeType,function (i,v) {
 			noticeType[v.key] = v.value;//类型

@@ -260,7 +260,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 	@Transactional(rollbackFor=Exception.class)
 	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException{
 		
-		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR, DecorationPaymentPO.PAYMENTSTATUS_UNSUBMIT_STR);
+		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
 		List<Integer> status = Arrays.asList(new Integer[]{AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT});
 		
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
@@ -293,7 +293,13 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		decorationPaymentPO.setPaymentStatus("未付款");
 		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
-		
+		if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
+			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_INT);
+		}else{
+			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_REDUCE_INT);
+		}
 		decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
 		decorationPaymentPO.setCreateUserPO(userDao.queryUserByUserId(userId));
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

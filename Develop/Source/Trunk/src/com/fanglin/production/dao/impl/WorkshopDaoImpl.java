@@ -34,7 +34,7 @@ public class WorkshopDaoImpl extends DaoImpl<WorkshopPO> implements WorkshopDao{
 	@Override
 	public List<WorkshopPO> queryWorkshop(int company) {
 		
-		return createCriteria(WorkshopPO.class).add(Restrictions.eq(WorkshopPO.COLUMN_COMPANY_STR, company)).list();
+		return createCriteria(WorkshopPO.class).add(Restrictions.eq(WorkshopPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq("status", WorkshopPO.STATUS_ENABLE_SHORT)).list();
 
 	}
 
@@ -55,14 +55,4 @@ public class WorkshopDaoImpl extends DaoImpl<WorkshopPO> implements WorkshopDao{
 		
 	}
 
-	
-
-	
-	
-	
-
-	
-
-	
-	
 }

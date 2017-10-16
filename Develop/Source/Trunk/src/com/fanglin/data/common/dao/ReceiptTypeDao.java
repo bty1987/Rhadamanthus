@@ -20,12 +20,12 @@ import com.fanglin.utils.Paging;
 
 public interface ReceiptTypeDao extends Dao<ReceiptTypePO> {
 	
-	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters);
+	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters,int company);
 	
-	public List<ReceiptTypePO> queryReceiptType();
+	public List<ReceiptTypePO> queryReceiptType(int company);
 	
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type);
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type,int company);
 	
-	public ReceiptTypePO queryReceiptTypeByKey(String key);
+	public ReceiptTypePO queryReceiptTypeByKey(String key,int company);
 	
 }

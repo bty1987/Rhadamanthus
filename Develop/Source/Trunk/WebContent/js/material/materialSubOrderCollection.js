@@ -71,7 +71,7 @@ jQuery(function($) {
 		$("#couponType").bindData(materialSubOrderCollection.couponType, 'key', 'value');
 	}, null, false);
 	
-	com.post(api.ds.materialInfo, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		for(var i=0;i<res.materialPaymentType.length;i++){
 			var paymentType = res.materialPaymentType[i];
 			materialSubOrderCollection.materialPaymentTypeData[paymentType.key] = paymentType.value;

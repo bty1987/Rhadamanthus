@@ -35,18 +35,6 @@ public interface UserDao extends Dao<UserPO> {
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident);
 	
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty);
-	
-	public List<UserPO> queryUserByDutys(List<String> dutys);
-	
-	public List<UserPO> pageUserForNameByPinyinNameADutys(Paging paging, String pinyinName, List<String> dutys,Integer company);
-	
-	public List<UserPO> pageUserForNameByPinyinNameADutyADeptId(Paging paging, String pinyinName, String duty, String deptId,Integer  company);
-
-	public List<UserPO> pageUserForNameByPinyinNameADutysADeptId(Paging paging, String pinyinName, List<String> dutys, String deptId,Integer  company);
-	
-	public List<UserPO> pageUserForNameByPinyinNameADutysAODeptId(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO, String deptId,Integer  company);
-	
-	public List<UserPO> pageUserForNameByPinyinNameADeptType(Paging paging, String pinyinName, String deptType,Integer company);
 
 	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters,Integer company);
 

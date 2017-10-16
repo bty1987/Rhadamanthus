@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.MessageDao;
@@ -19,17 +20,20 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.MessageUtil;
 import com.fanglin.utils.Paging;
 
 @Service("messageService")
 @Transactional(readOnly = true)
-public class MessageServiceImpl implements MessageService {
+public class MessageServiceImpl implements MessageService{
 
 	@Autowired
 	private MessageDao messageDao;
+	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private  com.fanglin.dingding.service.MessageService  messageDDService;
 	
 	@Override
 	public void pageMessage(Paging paging, List<Filter> filters, String userId,int company){
@@ -44,6 +48,11 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
+	public int countMessage(String userId,int company){
+		return messageDao.queryMessageCount(userId,company);
+	}
+	
+	@Override
 	public List<MessageVO> queryMessageForUnRead(String userId,int company){
 		List<MessagePO> messagePOs = messageDao.queryMessageForUnreadByUserId(userId,company);
 		List<MessageVO> messageVOs = new ArrayList<MessageVO>();
@@ -54,107 +63,104 @@ public class MessageServiceImpl implements MessageService {
 		
 		return messageVOs;
 	}
-	
-	@Override
-	public int countMessage(String userId,int company){
-		return messageDao.queryMessageCount(userId,company);
-	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void sendMessage(MessageVO messageVO,int company) throws FLException{
 		
-		messageVO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		saveMessage(messageVO,company);
-	}
-	
-	@Override
-    @Transactional(rollbackFor=Exception.class)
-    public void saveMessage(MessageVO messageVO,int company){
-		
-		if(messageVO.getArgs() != null){
-			Map<String, String> args = MessageUtil.getMapFromStr(messageVO.getArgs());
-			String msgSerial = args.get("msgSerial");
-			messageDao.updateApproveMsgSerial("msgSerial:" + msgSerial);
-		}
-		
 	    MessagePO messagePO = new MessagePO();
 	    
-        BeanUtil.copyProperties(messageVO, messagePO, Arrays.asList("receiver", "sender"));
-        
-        String receiverID = messageVO.getReceiver().getUserId();
-        String senderID = messageVO.getSender().getUserId();
-        UserPO receiver = userDao.queryUserByUserId(receiverID);
-        UserPO sender = userDao.queryUserByUserId(senderID);
-        messagePO.setCompany(company);
-        messagePO.setReceiver(receiver);
-        messagePO.setSender(sender);
-        
+        messagePO.setReceiver(userDao.queryUserByUserId(messageVO.getReceiver().getUserId()));
+        messagePO.setType(messageVO.getType());
+        messagePO.setContents(messageVO.getContents());
+        messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
         messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
+        messagePO.setCompany(company);
+        
+        int error;
+        short errorCode = MessagePO.MESSAGE_DRESULT_FAIL_STR;
+        
+        if(messageVO.getSender() != null){
+        	 UserPO send = userDao.queryUserByUserId(messageVO.getSender().getUserId());
+        	 messagePO.setSender(send);
+        	 error = messageDDService.sendMessage(messageVO.getReceiver().getUserId(), send.getUserName(), messageVO.getContents(), company);
+        }else{
+        	 error = messageDDService.sendMessage(messageVO.getReceiver().getUserId(), "",  messageVO.getContents(), company);
+        }
+        
+        if(error == 0 ){
+        	errorCode = MessagePO.MESSAGE_DRESULT_SUCCESS_STR;
+        }
+        
+        messagePO.setDresult(errorCode);
         
         messageDao.save(messagePO);
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public void sendMessage(String receiver,String sender,String contents,short type,int company) throws FLException{
+		
+	    MessagePO messagePO = new MessagePO();
+	    
+        messagePO.setReceiver(userDao.queryUserByUserId(receiver));
+        messagePO.setType(type);
+        messagePO.setContents(contents);
+        messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+        messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
+        messagePO.setCompany(company);
+        
+        int error;
+        String userName = "";
+        short errorCode = MessagePO.MESSAGE_DRESULT_FAIL_STR;
+        UserPO userPO = userDao.queryUserByUserId(sender);
+        
+        if(userPO != null){
+        	userName = userPO.getUserName();
+        	messagePO.setSender(userPO);
+        }
+        
+        error = messageDDService.sendMessage(receiver, userName, contents, company);
+        
+        if(error == 0 ){
+        	errorCode = MessagePO.MESSAGE_DRESULT_SUCCESS_STR;
+        }
+        
+        messagePO.setDresult(errorCode);
+        messageDao.save(messagePO);
+	}
+	
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public void updateMessageForRead(List<Integer> ids){
+		
 		messageDao.updateMessageForRead(ids);
 	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteMessageById(MessageVO messageVO) throws FLException {
 		
-		List<String> unTypes = Arrays.asList(MessagePO.MESSAGE_TYPE_RETURN_STR, MessagePO.MESSAGE_TYPE_APPROVAL_STR, MessagePO.MESSAGE_TYPE_BUDGET_AUDIT_STR);
-		
-		MessagePO messagePO = messageDao.get(messageVO.getMessageId());
-		
-		if(messagePO != null){
-			if(messagePO.getStatus() == MessagePO.MESSAGE_STATUS_UNREAD_STR){
-				throw new FLException(160009, "消息未读,不能删除");
-			}
-			
-			if(unTypes.contains(messagePO.getType())){
-				throw new FLException(160010, "消息所属类型,不能删除");
-			}
-			
-			messageDao.delete(messagePO);
-		}
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteMessageByIds(List<Integer> ids){
-		
-		List<String> unTypes = Arrays.asList(MessagePO.MESSAGE_TYPE_RETURN_STR, MessagePO.MESSAGE_TYPE_APPROVAL_STR, MessagePO.MESSAGE_TYPE_BUDGET_AUDIT_STR);
-		
-		if(ids.size() > 0){
-			messageDao.deleteMessageByIdAStatusAUnType(ids, MessagePO.MESSAGE_STATUS_READED_STR, unTypes);
-		}
-	}
-	
 	private MessageVO convertBean(MessagePO messagePO){
 		MessageVO messageVO = new MessageVO();
 		
 		BeanUtil.copyProperties(messagePO, messageVO, Arrays.asList("receiver", "sender"));
 		
 		UserVO receiver = new UserVO();
-		UserVO sender = new UserVO();
-		//取得实体类中的外键.先添加主键
+		
 		UserPO _receiver = messagePO.getReceiver();
-		UserPO _sender = messagePO.getSender();
-		//vo类对象的set值是po的对象
+		
 		receiver.setUserName(_receiver.getUserName());
 		receiver.setCurrentName(_receiver.getCurrentName());
 		receiver.setUserId(_receiver.getUserId());
 		
-		sender.setUserName(_sender.getUserName());
-		sender.setCurrentName(_sender.getCurrentName());
-		sender.setUserId(_sender.getUserId());
-		//保存获得的对象
 		messageVO.setReceiver(receiver);
-		messageVO.setSender(sender);
+		
+		UserVO sender = new UserVO();
+		if(messagePO.getSender() != null){
+			UserPO _sender = messagePO.getSender();
+			sender.setUserName(_sender.getUserName());
+			sender.setCurrentName(_sender.getCurrentName());
+			sender.setUserId(_sender.getUserId());
+			messageVO.setSender(sender);
+		}
 		
 		return messageVO;
 	}

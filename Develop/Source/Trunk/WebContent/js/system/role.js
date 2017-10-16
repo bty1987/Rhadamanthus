@@ -14,7 +14,7 @@ jQuery(function($) {
 		validator: {
 			roleId: {
 				type: "v_roleId", 
-				regex: /^[\w-_]+$/, 
+				regex: /^[\w-_]+$/,
 				errorMsg: "请输入数字字母或下划线中划线."
 			}
 		},
@@ -47,7 +47,12 @@ jQuery(function($) {
 	role.roleItems.roleId = $("#roleId");
 	role.roleItems.roleDes = $("#roleDes");
 	role.roleItems.roleName = $("#roleName");
-	
+	role.chainPageModal = $("#chainPageModal");
+	role.roleItems.currentchainPage = $("#currentchainPage");
+	role.roleItems.chainPage = $("#chainPage").chosen({
+		width: "200px"
+	});
+
 	role.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#roleName", true);
@@ -227,6 +232,9 @@ jQuery(function($) {
 			}
 		}, null, false);
 	}
+	com.post(api.data.queryChainPage,{},function(res){
+		role.chainPage = res.chainPages ;
+	}, null, false);
 
 	var displayFunc  = (function(){
 
@@ -245,6 +253,7 @@ jQuery(function($) {
             }
         };
 
+
         var creatLine = function(v){
         	
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
@@ -256,7 +265,7 @@ jQuery(function($) {
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
-
+			var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
             var propertyArr = [
                ["编号:", v.roleId, "grey"],
                ["描述:", v.roleDes, "grey"],
@@ -269,7 +278,7 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($btnModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($chainPage).append($btnModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
 
@@ -283,14 +292,67 @@ jQuery(function($) {
             	role.operationModal.attr('data-roleid', v.roleId).modal('show');
             });
             
-            $btnEdit.click(function(){
+            $btnEdit.unbind().bind('click',function(){
             	editRole(v.roleId, v.roleName, v.roleDes);
             });
             
             $btnDel.click(function(){
             	deleteRole(v.roleId);
             });
-            
+
+			$chainPage.click(function(){
+				role.chainPageModal.modal("show");
+				var options = {
+					"roleChainPage.rid": v.rId,
+				}
+				var chainPages=[];
+				var cpids=[];
+				var chainPage=[];
+				role.roleItems.chainPage.bindData(role.chainPage , "cpid", "name");
+				role.roleItems.chainPage.trigger("chosen:updated");
+				com.post(api.right.queryRoleChainPageByRid,options, function(res){
+					chainPages = res.chainPages;
+					$.each(chainPages,function(i,v){
+						chainPage.push(v.name)
+					});
+				}, null, false);
+
+				role.roleItems.currentchainPage.html("");
+				chainPage && chainPage.length && $.each(chainPage, function(i, v){
+					var $div=$('<div></div>');
+					var $span=$('<span class="tag"></span>').html(v).appendTo($div);
+					role.roleItems.currentchainPage.append($div);
+				});
+
+
+
+
+				$('button[name="saveChainPageBtn"]').unbind().bind('click',function(){
+					var newcids=[];
+					role.chainPageModal.modal("hide");
+					var params={
+						"roleChainPage.rid":  v.rId,
+					};
+					if(role.roleItems.chainPage.val() != null){
+						$.each(role.roleItems.chainPage.val().splice(','),function(i,value){
+
+							newcids.push(value);
+						});
+						$.each(newcids, function(i, val){
+							params["cpids" + "[" + i + "]"] = val;
+						});
+						com.post(api.right.updateRoleChainPage, params,function (res) {
+						},null,false);
+					}else{
+						params["cpids"]=[];
+						com.post(api.right.updateRoleChainPage, params,function (res) {
+						},null,false);
+					}
+				});
+
+
+			});
+
             return $liLine;
         };
       

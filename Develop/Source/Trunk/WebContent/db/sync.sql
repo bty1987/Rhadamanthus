@@ -16,4 +16,14 @@ select * from communion.user where uid = 34;
 
 select count(*) from communion.user;
 
-select max(qfaiId) from platform.quotationfunctionareaitem;
+select count(*) from quotation.quotationfunctionarea;
+select count(*) from quotation.quotationfunctionareaitem;
+
+select count(*) from platform.decorationorder;
+
+select count(*) from payment.decorationpayment;
+select count(*) from payment.materialpayment;
+select count(*) from payment.payment;
+
+select count(*) from construction.construction;
+select count(*) from construction.constructionschedule;

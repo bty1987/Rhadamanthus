@@ -34,7 +34,7 @@ jQuery(function($) {
 	};
 	$("#orderSearchDiv").flSearch(orderSearchOpts);
 	
-	com.post(api.ds.houseInfo, {}, function(res){
+	com.post(api.ds.decoration, {}, function(res){
 		order.houseClass = res.houseClass;
 		$("#searchHouseClass").bindData(order.houseClass, 'key', 'value', true);
 	});

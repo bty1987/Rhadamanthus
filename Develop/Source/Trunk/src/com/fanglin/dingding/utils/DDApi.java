@@ -13,10 +13,9 @@ package com.fanglin.dingding.utils;
 
 public interface DDApi {
 	
-//	public static final String DDAPI_GET_TOKEN_STR = "%s/gettoken?corpid=%s&corpsecret=%s";
+
 	public static final String DDAPI_GET_TOKEN_STR = "%s/queryDAccessTokenForNew.do?company=%s";
-	
-//	public static final String DDAPI_GET_JSAPI_TICKET_STR = "%s/get_jsapi_ticket?type=jsapi&access_token=%s";
+
 	public static final String DDAPI_GET_JSAPI_TICKET_STR = "%s/queryDJsapiTicketForNew.do?company=%s"; 
 	
 	public static final String DDAPI_SIGN_STR = "jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s";
@@ -30,12 +29,14 @@ public interface DDApi {
 	public static final String DDAPI_ADD_USER_STR = "%s/user/create?access_token=%s";//post
 	
 	public static final String DDAPI_LIST_DEPARTMENT_STR = "%s/department/list?access_token=%s&id=%s";
-	//后加的
+
 	public static final String DDAPI_UPDATE_USER_STR="%s/user/update?access_token=%s";//post
 	public static final String DDAPI_DELETE_USER_STR="%s/user/delete?access_token=%s&userid=%s";//get
 	public static final String DDAPI_BATCHDELETE_USER_STR="%s/user/batchdelete?access_token=%s";//post
 	public static final String DDAPI_SIMPLELIST_USER_STR="user/simplelist?access_token=%s&department_id=%d"; //get
 	public static final String DDAPI_GET_ADMIN_USER_STR="%s/user/get_admin?access_token=%s";//get	
+	
+	public static final String DDAPI_GET_DEPARTMENT_LIST_STR="%s/department/list_parent_depts?access_token=%s&userId=%s";
 
 
 }

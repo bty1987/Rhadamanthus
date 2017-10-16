@@ -1,0 +1,8 @@
+{
+    "types": [
+    	{"key":"0","value":"底价"},
+		{"key":"1","value":"点位"}
+    ],
+    "errorCode": 0,
+    "errorMsg": null
+}

@@ -45,7 +45,7 @@ public class OutsourceImpl implements OutsourceService{
 	@Transactional(rollbackFor = Exception.class)
 	public void addOutsource(OutsourceVO outsourceVO) {
 		
-		OutsourcePO   outsourcePO = new OutsourcePO();
+		OutsourcePO outsourcePO = new OutsourcePO();
 		outsourcePO.setPid(outsourceVO.getPid());
 		outsourcePO.setComment(outsourceVO.getComment());
 		outsourcePO.setStatus(OutsourcePO.COLMU_STATUS);
@@ -59,19 +59,19 @@ public class OutsourceImpl implements OutsourceService{
 	@Transactional(rollbackFor = Exception.class)
 	public int updateOutsource(OutsourceVO outsource) throws FLException {
 		
-		
-		
-		
-		/*OutsourcePO	 outsourcePO = outsourceDao.get(outsource.getOid());
+		OutsourcePO	 outsourcePO = outsourceDao.get(outsource.getOid());
 		
 		if (outsourcePO == null){
 			throw new FLException(220006, "外协单不存在");
 		}
-		
-		outsourcePO.setPath(outsource.getPath());	
-		outsourcePO.setComment(outsource.getComment());	
-		
-		outsourceDao.update(outsourcePO);*/
+		if(outsource.getPath() != null){
+			outsourcePO.setPath(outsource.getPath());	
+		}
+		if(outsource.getComment() != null){
+			outsourcePO.setComment(outsource.getComment());
+		}
+									
+		outsourceDao.update(outsourcePO);
 		return 0;
 	}
 
@@ -79,7 +79,7 @@ public class OutsourceImpl implements OutsourceService{
 	@Transactional(rollbackFor = Exception.class)
 	public int updateOutsourceForStatus(OutsourceVO outsource)throws FLException {
 		
-		OutsourcePO	 outsourcePO = outsourceDao.get(outsource.getOid());
+		OutsourcePO outsourcePO = outsourceDao.get(outsource.getOid());
 		
 		if (outsourcePO == null){
 			throw new FLException(220006, "外协单不存在");

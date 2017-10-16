@@ -30,8 +30,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.dingding.service.MessageService;
+import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.AssassinService;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.po.UserExperiencePO;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
 	private AssassinService  assassinService;
 	
 	@Autowired
-	private  MessageService  messageDDService;
+	private  MessageService  messageService;
 
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException{
@@ -286,7 +287,6 @@ public class UserServiceImpl implements UserService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
 		StringBuffer _userId = new StringBuffer();
-		_userId.append(SystemConfig.getString("companyIdent", ""));
 		_userId.append(SystemConfig.getString("userIdent", "FL-"));
 		_userId.append(FormatUtil.fillZero(count, "00000"));
 		
@@ -307,8 +307,8 @@ public class UserServiceImpl implements UserService {
 		
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getUserName());
 		
-		userPO.setUserNamePinYin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
-	
+		userPO.setUserNamePinYin(pinyins.get(0));
+		
 		userDao.save(userPO);
 		
 		userVO.setUid(userPO.getUid());
@@ -357,15 +357,11 @@ public class UserServiceImpl implements UserService {
 		String oldduty = userPO.getDuty();
 		
 		userVO.setUid(userPO.getUid());
-
+		
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "uId", "userId", "userName","loginId", "password", "role", "isLogin", "company", "extranet"));
 		userPO.setDept(new DepartmentPO(userVO.getDept().getDeptId()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "cityProper"));
-		
-		List<String> pinyins = PinYin4Util.getPinyin(userVO.getUserName());
-		
-		userPO.setUserNamePinYin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
 		
 		userDao.update(userPO);
 		
@@ -545,8 +541,8 @@ public class UserServiceImpl implements UserService {
 		String content = String.format("修改密码用户的id为:%s&密码明文=%s&密码密文=%s",userId,newPassword,EncryptPassword);
 		
 		assassinService.proxy("communion", api, params, content, userPO);
-		
-		messageDDService.sendMessage(userId, "", "修改密码为"+newPassword, company);
+
+		messageService.sendMessage(userId,"", "修改密码为:"+newPassword,MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR,company);
 		
 		return 0;
 	}

@@ -1,0 +1,77 @@
+
+<div class="hide" id="split">
+    <div style="width: 96%;margin: 10px auto;">
+        <ul class="flex-table">
+            <li class="line table-title">
+                <div class="line-wrap order">
+                    <div class="cell index"></div>
+                </div>
+                <div class="line-wrap content col12">
+                    <div class="cell">商品名称</div>
+                    <div class="cell">商品编号</div>
+                    <div class="cell">条形码</div>
+                    <div class="cell">品类</div>
+                    <div class="cell">品牌</div>
+                    <div class="cell">颜色</div>
+                    <div class="cell">规格</div>
+                    <div class="cell">单位</div>
+                    <div class="cell">件数</div>
+                    <div class="cell">数量</div>
+                    <div class="cell">所在仓库</div>
+                    <div class="cell">拆分数量</div>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="flex-table" id="splitList"></ul>
+    </div>
+
+    <div style="font-weight: bold;font-size: 16px;font-family: 微软雅黑;margin-left: 2%;margin-top: 3%;">套餐绑定商品如下所示:</div>
+
+    <div id="showSplit">
+        <div id="condListSplit" class="fl_search clearfix"></div>
+
+        <div class="clearfix" id="resultListSplit"></div>
+
+        <div class="fl-page-wrap clearfix pagination" id="pagenationSplit" style="display: block;"></div>
+    </div>
+</div>
+
+<div class="hide" id="merge">
+    <div style="width: 96%;margin: 10px auto;">
+        <ul class="flex-table">
+            <li class="line table-title">
+                <div class="line-wrap order">
+                    <div class="cell index"></div>
+                </div>
+                <div class="line-wrap content col12">
+                    <div class="cell">商品名称</div>
+                    <div class="cell">商品编号</div>
+                    <div class="cell">条形码</div>
+                    <div class="cell">品类</div>
+                    <div class="cell">品牌</div>
+                    <div class="cell">颜色</div>
+                    <div class="cell">规格</div>
+                    <div class="cell">单位</div>
+                    <div class="cell">件数</div>
+                    <div class="cell">数量</div>
+                    <div class="cell">所在仓库</div>
+                    <div class="cell">合并数量</div>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="flex-table" id="mergeList"></ul>
+    </div>
+
+    <div style="font-weight: bold;font-size: 16px;font-family: 微软雅黑;margin-left: 2%;margin-top: 3%;">套餐绑定商品如下所示:</div>
+    <div id="showMerge">
+        <div id="condListMerge" class="fl_search clearfix"></div>
+
+        <div class="clearfix" id="resultListMerge"></div>
+
+        <div class="fl-page-wrap clearfix pagination" id="pagenationMerge" style="display: block;"></div>
+    </div>
+</div>
+
+<script src="js/manifest/splitAndMerge.js"></script>

@@ -37,9 +37,10 @@ jQuery(function($) {
 		var creatLine = function(v){
 			var that = this;
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html());
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			//var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html());
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '2px');
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-6').css('padding-top', '2px');
+
 
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("图纸");
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
@@ -58,9 +59,8 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($h3);
-
-			$liLine.append($h3).append($ulProperty);
+			$liLine.append($ulProperty);
+			$divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($liLine);
 
 			$btnView.click(function(){
 				viewSupervisionReworkDrawingIndex(v.rwId);

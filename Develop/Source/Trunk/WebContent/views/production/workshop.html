@@ -1,0 +1,47 @@
+<div class="page-content">
+    <div class="row">
+		<div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div>
+
+            <div class="clearfix" id="resultList"></div>
+
+            <div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div id="layerAdd" style="padding: 40px 0; display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">名称<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="col-xs-6 m-wrap" data-required="1" name="name" id="workshopName" rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!--查看配置弹窗-->
+<div id="viewPopUp" class="portlet box"></div>
+
+<script>
+    $(function(){
+        $.getScript('js/production/workshop.js');
+    });
+</script>

@@ -58,8 +58,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designers = materialReportService.reportMaterialDesignerCount(getFilters());
-		}else if(reportType == 2){
-			designers = materialReportService.reportZaterialDesignerCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
@@ -72,8 +70,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designerDepartments = materialReportService.reportMaterialDesignerDepartmentCount(getFilters());
-		}else if(reportType == 2){
-			designerDepartments = materialReportService.reportZaterialDesignerDepartmentCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
@@ -86,8 +82,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designerRegions = materialReportService.reportMaterialDesignerRegionCount(getFilters());
-		}else if(reportType == 2){
-			designerRegions = materialReportService.reportZaterialDesignerRegionCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
@@ -100,8 +94,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designers = materialReportService.countMaterialDesignerCount(getFilters());
-		}else if(reportType == 2){
-			designers = materialReportService.countZaterialDesignerCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
@@ -114,8 +106,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designerDepartments = materialReportService.countMaterialDesignerDepartmentCount(getFilters());
-		}else if(reportType == 2){
-			designerDepartments = materialReportService.countZaterialDesignerDepartmentCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}
@@ -128,8 +118,6 @@ public class MaterialReportAction extends BaseListAction {
 		
 		if(reportType == 1){
 			designerRegions = materialReportService.countMaterialDesignerRegionCount(getFilters());
-		}else if(reportType == 2){
-			designerRegions = materialReportService.countZaterialDesignerRegionCount(getFilters());
 		}else{
 			throw new FLException(210001, "报表类型错误");
 		}

@@ -1,0 +1,96 @@
+<div class="page-content">
+    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>生产计划单</small></h1></div></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+
+            <div class="clearfix" id="resultList"></div>
+
+            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+        </div>
+    </div>
+</div>
+
+<div id="layerAddItem" style="padding: 40px 0;display:none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="typeno" >类型编号</label>
+                            <div class="controls col-xs-8">
+                                <input name="date" class="m-wrap m-ctrl-medium col-xs-7"  size="16" type="text" value="" id="typeno"/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="itemname" >名称</label>
+                            <div class="controls col-xs-8">
+                                <input name="name" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="itemName"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="height" >高</label>
+                            <div class="controls col-xs-8">
+                                <input name="height" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="height"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="width" >宽</label>
+                            <div class="controls col-xs-8">
+                                <input name="width" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="width"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="thick" >厚</label>
+                            <i class="icon-asterisk"></i>
+                            <div class="controls col-xs-8">
+                                <input name="thick" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="thick"/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="color" >颜色</label>
+                            <div class="controls col-xs-8">
+                                <input name="color" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="color"/>
+                            </div>
+                        </div>
+                        
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="num" >数量</label>
+                            <div class="controls col-xs-8">
+                                <input name="num" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="num"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                       
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
+                            <div class="controls col-xs-8">
+                                <input name="comment" class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.getScript('js/production/productionPlanItem.js');
+    });
+</script>

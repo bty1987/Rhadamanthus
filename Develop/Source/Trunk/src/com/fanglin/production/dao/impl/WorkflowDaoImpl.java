@@ -31,15 +31,10 @@ public class WorkflowDaoImpl  extends DaoImpl<WorkflowPO> implements WorkflowDao
 	@Override
 	public List<WorkflowPO> queryWorkflow(int Company) {
 
-		return session().createCriteria(WorkflowPO.class).add(Restrictions.eq("company",Company)).list();
+		return session().createCriteria(WorkflowPO.class).add(Restrictions.eq("company",Company)).add(Restrictions.eq("status",WorkflowPO.COLUMN_STATUS_STR)).list();
 
 	}
 
-	public WorkflowPO queryWorkflowBywfid(Long wfid) {
-		
-		return (WorkflowPO) session().createCriteria(WorkflowPO.class).add(Restrictions.eq(WorkflowPO.COLUMN_WFID_STR, wfid)).uniqueResult();
-	}
-	
 	private void queryFilterExcute(PagingQuery<WorkflowPO> query,List<Filter> filter) {
 		
 		if (filter != null) {

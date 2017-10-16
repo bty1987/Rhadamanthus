@@ -30,10 +30,11 @@ import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 import com.fanglin.data.quotation.service.FunctionAreaService;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
+
 
 @Service("functionAreaService")
 @Transactional(readOnly=true)
@@ -44,6 +45,9 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	
 	@Autowired
 	private FunctionAreaItemDao functionAreaItemDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Autowired
 	private CountingService countingService;
@@ -128,8 +132,8 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_FUNCTION_AREA_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
 		StringBuffer functionAreaId = new StringBuffer();
-		functionAreaId.append(SystemConfig.getString("companyIdent", ""));
-		functionAreaId.append(SystemConfig.getString("quotationFunctionAreaIdent", "D_"));
+		
+		functionAreaId.append(systemConfigDao.querySystemConfig("quotationFunctionAreaIdent").getValue());
 		functionAreaId.append(FormatUtil.fillZero(count, "000"));
 		
 		functionAreaPO.setFunctionAreaId(functionAreaId.toString());

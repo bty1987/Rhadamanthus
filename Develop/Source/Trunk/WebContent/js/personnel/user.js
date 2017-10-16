@@ -1,7 +1,5 @@
 $(function(){
 
-
-
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -44,14 +42,13 @@ $(function(){
 
                     //添加点击事件
                     $addDD.unbind().bind('click',function(){
+                        $('#ddModal').modal('show');
 
                         $('#tree3').html("");
-                        $('#ddModal').modal('show');
                         $("#tree3").removeData("tree");
                         $("#tree3").unbind('click');
-
                         var deptList = null;
-                        com.post(api.dd.queryDDDepartment, {"department.id": 1}, function(res){
+                        com.post(api.dd.queryDDDepartment, {}, function(res){
                             deptList = res.departments;
                         }, null, false);
                         if(deptList == null ){
@@ -59,12 +56,13 @@ $(function(){
                         }
                         var deptObj = {
                             '1' : {
-                                name: '1',
+                                name:params.company.name,
                                 type : 'folder',
-
-                                id : 1
+                                id : params.company.no
                             }
                         }, didList = [];
+                        
+                        //获取所有叶子节点
                         $.each(deptList, function(i, v){
                             didList.push(v.id);
                         });
@@ -73,18 +71,20 @@ $(function(){
                                 didList.splice(didList.indexOf(v.parentid),1);
                             }
                         });
+
                         $('#tree3').ace_tree({
                             dataSource: {
                                 data : function(options, callback) {
                                     var $data = null;
-                                    if(!("name" in options) && !("type" in options)){
+                                    if( !("type" in options)){
                                         $data = deptObj;//the root tree
                                         callback({ data: $data });
                                         return;
                                     }
                                     else if("type" in options && options.type == "folder") {
-                                        if("children" in options)
+                                        if("children" in options){
                                             $data = options.children;
+                                        }
                                         else {
                                             $data = getDeptByDid(options.id);
                                         }
@@ -96,14 +96,15 @@ $(function(){
                             loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
                             'open-icon' : 'icon-minus',
                             'close-icon' : 'icon-plus',
-                            'selectable' : true,
-                            'multiSelect' : true,
+                            'selectable' : true,//可选
+                            'multiSelect' : true, //多选
                             'selected-icon' : null,
                             'unselected-icon' : null,
                             folderSelect : true,
                             cacheItems : false
                         }).on('selected', function (evt, opt) {
                         });
+
                         var getDeptByDid = function(did){
                             var depts = {};
                             $.each(deptList, function(i, v){
@@ -117,33 +118,9 @@ $(function(){
                             });
                             return depts;
                         };
-                        function getSelectedDeptTree(id){
-                            var flag = true;
-                            var chain = '';
-                            while(flag){
-                                $.each(deptList, function(i, v){
-                                    if(v.id == id){
-                                        chain = chain ? v.name + '-' + chain : v.name + chain;
-                                        if(v.parentid != 1){
-                                            id = v.parentid
-                                        }else{
-                                            flag = false;
-                                        }
-                                        return false;
-                                    }else return true;
-                                });
-                            }
-                            return chain;
-                        }
-                        $('#save').unbind().bind('click',function(){
+                        $('#savebtn').unbind().bind('click',function(){
                             var items = $('#tree3' ).tree('selectedItems' );
                             var length = items.length;
-                            var depts = [];
-                            if(length){
-                                for(var i =0; i<length; i++){
-                                    depts.push(getSelectedDeptTree(items[i].id));
-                                }
-                            }
                             $('#ddModal').modal("hide");
                             var params = {
                                 "user.userid" : v.userId,
@@ -151,6 +128,7 @@ $(function(){
                                 "user.Mobile":v.phone,
                                 "user.Position":v.duty,
                             };
+
                             if(length){
                                 for(var i =0; i<length; i++){
                                     params["dids" + "[" + i + "]"]=items[i].id;
@@ -187,8 +165,10 @@ $(function(){
 //同步钉钉信息
                     $updateDD.click(function(){
                        var  selectedDepts=[];
+                        var phone;
                         com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function(res){
                             selectedDepts = res.user.department;
+                            phone = res.user.mobile
                             if(selectedDepts == null){
                                 com.showAlert(com.error,"该员工还没有添加到钉钉部门");
                                 return;
@@ -196,7 +176,7 @@ $(function(){
                             var params = {
                                 "user.userid" : v.userId,
                                 "user.name":v.currentName,
-                                "user.Mobile":v.phone,
+                                "user.Mobile":phone,
                                 "user.Position":v.duty,
                                  "dids":selectedDepts
                             }
@@ -247,7 +227,6 @@ $(function(){
                         $('#userExpModal').modal('show');
                         $('#userException').html("");
 
-                        var $divgroup=$('<div></div>').addClass('form-group');
                         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
                        
                         var  userExperiences=null;
@@ -261,7 +240,6 @@ $(function(){
                             $.each(userExperiences,function(ind,val){
                                 var $liLi = $('<li></li>').addClass('item-blue clearfix');
                                 var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                                var $divw = $('<div></div>').addClass('pull-right action-buttons');
                                 var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
 
                                 var ecperienceArr = [
@@ -276,12 +254,11 @@ $(function(){
                                     $liPro.appendTo($ulPro);
                                 });
 
-                                $divw.appendTo($h2);
                                 $liLi.append($h2).append($ulPro).appendTo($uli)
                             })
                         }
 
-                            $uli.append($divgroup).appendTo($('#userException'));
+                            $uli.appendTo($('#userException'));
                     });
 
                     $divBtnWrap.append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);

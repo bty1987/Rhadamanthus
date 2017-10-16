@@ -61,7 +61,7 @@ public class ApprovalActivityServiceImpl implements ApprovalActivityService {
 		
 		String orderId = approvalActivityVO.getOrderId();
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");

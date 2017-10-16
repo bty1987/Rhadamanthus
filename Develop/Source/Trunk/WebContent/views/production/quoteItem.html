@@ -1,0 +1,102 @@
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+
+            <div class="clearfix" id="resultList"></div>
+
+            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layerAdd" style="padding: 40px 0; display: none">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right:0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">名称<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="col-xs-6 m-wrap" name="name"  rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">型号<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="col-xs-6 m-wrap" name="format"  rules="{required:true}" >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">单位<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="col-xs-6 m-wrap" name="measureunit"  rules="{required:true}">
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">单价<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+
+                                <input type="text" class="col-xs-6 m-wrap" name="unitprice"   rules="{required:true}">
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-xs-4 no-padding-right">类型<i class="icon-asterisk"></i></label>
+
+                            <div class="controls col-xs-8">
+                                <select name="quoteType" class="col-xs-6 m-wrap" rules="{required:true}"></select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!--<div id="goodsSuitPopUp" class="portlet box"></div>
+
+<div id="goodsColorPopUp" class="portlet box"></div>
+
+<div id="goodsFormatPopUp" class="portlet box"></div>
+
+<div id="goodsPricePopUp" class="portlet box"></div>-->
+
+
+
+<script>
+    $(function(){
+        $.getScript('js/production/quoteItem.js');
+    });
+</script>
+

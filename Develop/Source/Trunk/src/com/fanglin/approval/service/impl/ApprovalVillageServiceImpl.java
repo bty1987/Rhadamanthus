@@ -29,10 +29,8 @@ import com.fanglin.data.common.dao.VillageDao;
 import com.fanglin.data.po.VillagePO;
 import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationOrderPO;
-
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
@@ -58,9 +56,6 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 	private MessageService messageService;
 	
 	@Autowired
-	private com.fanglin.dingding.service.MessageService messageDDService;
-	
-	@Autowired
 	private UserDao userDao;
 	
 	@Override
@@ -70,7 +65,7 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		String orderId = approvalVillageVO.getOrderId();
 		String villageId = approvalVillageVO.getNewVillageId();
 		
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_VILLAGE_INT, String.valueOf(approvalVillageVO.getOrderId()));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_VILLAGE_INT, String.valueOf(approvalVillageVO.getOrderId()));
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -113,11 +108,8 @@ public class ApprovalVillageServiceImpl implements ApprovalVillageService {
 		
 		approvalVillageDao.save(approvalVillagePO);
 		
-		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
 		
-		messageService.sendMessage(messageVO,company);
-		
-		messageDDService.sendMessageForApproval(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserName(), approvalPO.getAid(), "订单楼盘信息修改审批", approvalPO.getContents(),company);
 		return 0;
 	}
 

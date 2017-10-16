@@ -13,10 +13,6 @@ $(function(){
 			receiver : $("#receiver"),
 			contents : $("#contents")
 		},
-
-		READED: "已读",
-		UNREAD: "未读",
-
 		currMessageId: "",
 
 		editFlag: false,
@@ -25,45 +21,6 @@ $(function(){
 	
 	com.initChosen('receiver', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
-	$("#performanceSaveBtn").on("click", function(){
-		var isPerformance = com.isOrNotType[message.isPerformance.prop("checked")];
-		var options = {'message.messageId': message.currMessageId, 'approveParams': "pass"};
-
-		if(isPerformance == "是"){
-			options['approveParams'] += "-1";
-		}else{
-			options['approveParams'] += "-0";
-		}
-
-		com.post(api.information.approveMessage, options, function(){
-			$("#discountModal").modal("hide");
-			$(".approve-btn").prop("disabled", true);
-
-			com.showAlert(com.info, "操作成功");
-		});
-	});
-
-	$(".approve-btn").on("click", function(){
-		var passCard = this.id == "passBtn" ? "pass" : "refuse";
-
-		if(this.id == "passBtn" && message.currArgs.type == "orderDiscountApprove" && parseFloat(message.currArgs.newDiscount) < 7.5){
-			$("#discountModal").modal("show");
-			message.isPerformance.prop('checked', com.isOrNotType["否"]);
-
-			return false;
-		}
-
-		var options = {
-			'message.messageId': message.currMessageId,
-			'approveParams': passCard
-		};
-
-		com.post(api.information.approveMessage, options, function(){
-			$(".approve-btn").prop("disabled", true);
-			com.showAlert(com.info, "操作成功");
-		});
-	});
-
 	$("#returnBtn").on("click", function(){
 		$(".sysMessage").text("系统消息");
 		
@@ -71,6 +28,19 @@ $(function(){
 		
 		message.messageDetail.hide();
 	});
+	var status={};
+	var messageType={} ;
+	com.post(api.ds.information,{},function(res){
+
+		$.each(res.messageStatus,function (i,va) {
+			status[va.key] = va.value;
+		});
+		$.each(res.messageType,function (i,v) {
+			messageType[v.key] = v.value;
+		});
+	},null,false);
+
+
 
 	var displayFunc  = (function(){
 
@@ -99,13 +69,13 @@ $(function(){
 				"type": "checkbox",
 				"name": "mmids",
 				"class": "ace ace-checkbox-2",
-			}).val(v.messageId);
+			}).val(v.mid);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.contents);
 
 			var propertyArr = [
-				["消息分类:", v.type, "grey"],
-				["状态:", v.status, "red"],
-				["发送人:", v.sender.userName, "grey"],
+				["消息分类:",messageType[v.type], "grey"],
+				["状态:", status[v.status], "red"],
+				["发送人:", v.sender ? v.sender.userName :"", "grey"],
 				["时间:", v.createTime, "grey"],
 			];
 
@@ -137,6 +107,7 @@ $(function(){
 	var searcher = new Searcher();
 	searcher.init( [], "condList", api.information.pageMessage, function(list){
 		displayFunc.init('resultList', list);
+		
 	}, "pagenation", "messageMngPostData", null, false, null, function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
@@ -145,7 +116,7 @@ $(function(){
 
 		$adda.click(function(){
 			message.editFlg = false;
-			
+
 			com.cleanItems(message.messageItems);
 
 			com.updateChosen('receiver', '', '');
@@ -164,9 +135,8 @@ $(function(){
 			}
 			var options = {};
 			$.each(nums, function(i, v){
-				options["messageIds["+i+"]"] = $(v).val();
+				options["mids["+i+"]"] = $(v).val();
 			});
-
 			com.post(api.information.updateMessageForRead, options, successCallback);
 		});
 
@@ -181,7 +151,7 @@ $(function(){
 		var options = {
 			"message.receiver.userId": message.messageItems.receiver.val(),
 			"message.contents": message.messageItems.contents.val(),
-			"message.type": "个人消息",
+			"message.type": 4,
 		};
 
 		com.post(api.information.sendMessage, options, function(){

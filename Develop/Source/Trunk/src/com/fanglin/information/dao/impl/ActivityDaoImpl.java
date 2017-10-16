@@ -30,9 +30,11 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 	}
 
 	@Override
-	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters) {
+	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<ActivityPO> query = pagingQuery(paging, ActivityPO.class);
+		query.add(Restrictions.eq("company", company));
+		
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -44,14 +46,14 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 				}
 			}
 		}
-		
+		query.asc("status");
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ActivityPO> queryActivityForValid() {
-		return session().createCriteria(ActivityPO.class).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).list();
+	public List<ActivityPO> queryActivityForValid(int company) {
+		return session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).list();
 	}
 	
 }

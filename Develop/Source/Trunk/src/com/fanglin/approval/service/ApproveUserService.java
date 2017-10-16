@@ -15,7 +15,6 @@ import com.fanglin.approval.vo.ApproveUserVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
 public interface ApproveUserService {
@@ -24,8 +23,6 @@ public interface ApproveUserService {
 	
 	public List<ApproveUserVO> queryApprovalUserByType(ApproveUserVO userApproveVO,int company);
 	
-	public List<ApproveUserVO> queryApproveUserForNameByType(UserVO userVO, ApproveUserVO userApproveVO,int company);
-
 	public int addApproveUser(ApproveUserVO userApproveVO) throws FLException;
 
 	public void deleteApproveUser(List<Integer> ids);

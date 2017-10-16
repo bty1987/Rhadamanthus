@@ -49,7 +49,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		long sid = approvalSalesDiscountVO.getSid();
 
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT,String.valueOf(sid));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT,String.valueOf(sid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -118,7 +118,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		int fullStatus = salesPO.getFullpayStatus();
 
 		if (fullStatus != SalesPO.FULLPAYSTATUS_INIT_SHORT&& fullStatus != (short)3) {
-			throw new FLException(180017, "主材订单当前状态不能提交补款");
+			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 
 		UserPO sender = approvalPO.getSender();

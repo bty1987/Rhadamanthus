@@ -124,7 +124,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		manifestVO = new ManifestVO(new UserVO());
 		
-		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser"));
+		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser","quoteManifest"));
 		manifestVO.getCreateUser().setBaseInfo(manifestPO.getCreateUser());
 		
 		return manifestVO;

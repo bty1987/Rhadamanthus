@@ -26,7 +26,6 @@ import com.fanglin.approval.service.ApprovalCustomerService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
-import com.fanglin.approval.service.ApprovalMaterialOutsideRefundService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
 import com.fanglin.approval.service.ApprovalOrderBelongService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
@@ -59,9 +58,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Autowired
 	private ApprovalMaterialFullPaymentService approvalMaterialFullPaymentService;
-	
-	@Autowired
-	private ApprovalMaterialOutsideRefundService approvalMaterialOutsideRefundService;
 	
 	@Autowired
 	private ApprovalMaterialRefundService approvalMaterialRefundService;
@@ -158,9 +154,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		short type = approvalPO.getType();
 		
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
-		
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT://1
 				approvalCustomerService.approvalForCustomer(approvalPO);
@@ -180,9 +173,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT://6
 				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_OUTSIDE_REFUND_INT://7
-				approvalMaterialOutsideRefundService.approvalForMaterialOutsideRefund(approvalPO);
-				break;
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT://8
 				approvalActivityService.approvalForDecorationActivity(approvalPO);
 				break;
@@ -201,6 +191,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			default:
 				break;
 		}
+
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
 		
 		approvalDao.update(approvalPO);
 		

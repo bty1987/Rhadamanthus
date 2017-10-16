@@ -61,6 +61,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "querySalesByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesByNo() throws FLException{
+		
+		sales = salesService.querySalesByNo(sales);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSales() throws FLException{
 		
@@ -113,6 +121,14 @@ public class SalesAction extends BaseListAction {
 	public String updateSalesItem() throws FLException{
 		
 		salesItemService.updateSalesItem(salesItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateSalesItemForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesItemForBalance() throws FLException{
+		
+		salesItemService.updateSalesItemForBalance(salesItem);
 		
 		return SUCCESS;
 	}

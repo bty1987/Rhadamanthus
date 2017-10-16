@@ -73,7 +73,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateWorkflow(WorkflowVO workflow) throws FLException {
 	
-		WorkflowPO workflowPO = workflowDao.queryWorkflowBywfid(workflow.getWfid());
+		WorkflowPO workflowPO = workflowDao.get(workflow.getWfid());
 		
 		if (workflowPO == null){
 			throw new FLException (210017,"工序不存在");
@@ -90,7 +90,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateWorkflowForStatus(WorkflowVO workflow) throws FLException {
 		
-		WorkflowPO WorkflowPO = workflowDao.queryWorkflowBywfid(workflow.getWfid());
+		WorkflowPO WorkflowPO = workflowDao.get(workflow.getWfid());
 		
 		if (WorkflowPO == null){
 			throw new FLException (210017,"工序不存在");

@@ -3,8 +3,8 @@ var decorationOrderDetail = {
 	
 	customer:{},
 	village:{},
-	
-	quotationDetail:null,
+	quotationData:{},
+	quotationDetail:{},
 	decorationOrder:null,
 	decorationOrderQuotationItemData:[]
 };
@@ -41,7 +41,7 @@ function printHeader(headStr){
 }
 
 function printProjectTable(){
-	
+	var index = 0;
 	var discount = decorationOrderDetail.quotation.discount;
 	
 	var contentHtml = '';
@@ -58,73 +58,41 @@ function printProjectTable(){
 	contentHtml += '</tr>';
 	contentHtml += '</tbody></table>';
 	
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreas;
-	var quotationFunctionAreaLength = quotationFunctionAreas.length;
+	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+
 	
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
 	contentHtml += '<tbody>';
-	
-	for(var i=0;i<quotationFunctionAreaLength;++i){
-		
-		var quotationFunctionArea = quotationFunctionAreas[i];
-		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-		
-		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
-			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
-		}
-		
-		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
-		
+
+	$.each(quotationFunctionAreas, function (i, v){
+
 		contentHtml += '<tr bgcolor="#CCCCCC">';
 		contentHtml += '<td colspan="1">';
-		contentHtml += '<div align="center">' + utils.getBigNumber(i+1) + '</div></td>';
+		contentHtml += '<div align="center">' + utils.getBigNumber(index+1) + '</div></td>';
 		contentHtml += '<td colspan="8">';
-		contentHtml += '<div align="left">' + quotationFunctionArea.functionAreaName + '';
+		contentHtml += '<div align="left">' + i.split('-')[1] + '';
 		contentHtml += '</div>';
 		contentHtml += '</td>';
 		contentHtml += '</tr>';
-		
-		for(var j=0;j<quotationFunctionAreaItemLength;++j){
-			
-			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-			
-			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
-			
-			if(decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]){
-				quotationFunctionAreaItem.num = utils.accAdd(quotationFunctionAreaItem.num, decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]);
-			}
-			
-			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
-			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
-			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
-			
-			if(quotationFunctionAreaItem.type == 2){
-				
-				var $value = decorationOrderDetail.quotation.trafficPrice;
-				
-				_discountUnitPrice = $value;
-				_sum = $value;
-			}else if(quotationFunctionAreaItem.type == 3){
-				var $value = decorationOrderDetail.quotation.managePrice;
-				
-				_discountUnitPrice = $value;
-				_sum = $value;
-			}
-			
+
+		$.each(v, function (j, qv){
+
+
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
-			contentHtml += '<td width="18%" align="left">' + quotationFunctionAreaItem.itemName + '</td>';
-			contentHtml += '<td width="5%" align="center">' + quotationFunctionAreaItem.measurementUnit + '</td>';
-			contentHtml += '<td width="5%" align="center">' + quotationFunctionAreaItem.num + '</td>';
-			contentHtml += '<td width="5%" align="center">' + _discountUnitPrice + '</td>';
-			contentHtml += '<td width="5%" align="center"> ' + _sum + '</td>';
-			contentHtml += '<td width="52%" align="left">' + quotationFunctionAreaItem.content + '</td>';
+			contentHtml += '<td width="18%" align="left">' + qv.itemName+"("+qv.typestr+")" + '</td>';
+			contentHtml += '<td width="5%" align="center">' + qv.measurementUnit + '</td>';
+			contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
+			contentHtml += '<td width="5%" align="center">' + qv.dcp + '</td>';
+			contentHtml += '<td width="5%" align="center"> ' + qv.dcpt + '</td>';
+			contentHtml += '<td width="52%" align="left">' + (qv.content ? qv.content : '-') + '</td>';
 			contentHtml += '</tr>';
-		}
-	}
+		})
+		index++;
+	})
 	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="11" align="left">工程总价:' + decorationOrderDetail.quotation.totalPrice + '元</td>';
+	contentHtml += '<td colspan="11" align="left">工程总价:' + decorationOrderDetail.quotationData.UndisPrice + '元</td>';
 	contentHtml += '</tr>';
 	
 	contentHtml += '</tbody>';
@@ -146,12 +114,12 @@ function printProjectTable(){
 }
 
 function printFinanceTable(){
-	
+	var index = 0;
 	var discount = decorationOrderDetail.quotation.discount;
 	var totalPrice = decorationOrderDetail.quotation.totalPrice;
-	
+
 	var contentHtml = '';
-	
+
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
 	contentHtml += '<tbody>';
 	contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
@@ -165,103 +133,58 @@ function printFinanceTable(){
 	contentHtml += '<td width="8%"><strong>折后单价</strong></td>';
 	contentHtml += '<td width="10%"><strong>折后金额(元)</strong></td>';
 	contentHtml += '</tr>';
-	
+
 	var discountPrice = 0.0;
 	var preDiscountPrice = 0.0;
-	
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreas;
-	var quotationFunctionAreaLength = quotationFunctionAreas.length;
-	
-	for(var i=0;i<quotationFunctionAreaLength;++i){
-		
-		var quotationFunctionArea = quotationFunctionAreas[i];
-		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-		
-		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
-			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
-		}
-		
-		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
-		
-		var discountUnitPrice = 0.0;
+
+	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+
+
+
+	$.each(quotationFunctionAreas, function (i, v){
+
+
 		var sum = 0.0;
 		var preSum = 0.0;
-		
-		var _manageRate = 0;
-		var _tranRate = 0;
-		
+
 		contentHtml += '<tr bgcolor="#CCCCCC">';
-		contentHtml += '<td><div align="center">' + utils.getBigNumber(i+1) + '</div></td>';
+		contentHtml += '<td><div align="center">' + utils.getBigNumber(index+1) + '</div></td>';
 		contentHtml += '<td colspan="8">';
-		contentHtml += '<div align="left"> ' + quotationFunctionArea.functionAreaName + '</div>';
+		contentHtml += '<div align="left"> ' + i.split('-')[1] + '</div>';
 		contentHtml += '</td>';
 		contentHtml += '</tr>';
-		
-		for(var j=0;j<quotationFunctionAreaItemLength;++j){
-			
-			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-			
-			var _discount = quotationFunctionAreaItem.discount == 0 ? 1 : utils.accDiv(discount, 10);
-			
-			if(decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]){
-				quotationFunctionAreaItem.num = utils.accAdd(quotationFunctionAreaItem.num, decorationOrderDetail.reduceNums[quotationFunctionAreaItem.qfaiId]);
-			}
-			
-			var _discountUnitPrice = utils.changeThrDecimal(utils.accMul(parseFloat(quotationFunctionAreaItem.unitPrice), _discount));
-			var _sum = utils.changeThrDecimal(utils.accMul(_discountUnitPrice, quotationFunctionAreaItem.num));
-			var _preSum = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.num));
-			
-			if(quotationFunctionAreaItem.type == 2){
-				
-				var $value = decorationOrderDetail.quotation.trafficPrice;
-				
-				_discountUnitPrice = $value;
-				_sum = $value;
-				_preSum = 0;
-				
-				_tranRate = quotationFunctionAreaItem.unitPrice;
-				
-				quotationFunctionAreaItem.unitPrice = $value;
-			}else if(quotationFunctionAreaItem.type == 3){
-				var $value = decorationOrderDetail.quotation.managePrice;
-				
-				_discountUnitPrice = $value;
-				_sum = $value;
-				_preSum = 0;
-				
-				_manageRate = utils.accAdd(quotationFunctionAreaItem.unitPrice, decorationOrderDetail.quotation.notSalesmanRate);
-				
-				quotationFunctionAreaItem.unitPrice = $value;
-			}
-			
+		$.each(v, function (j, qv){
+
+
 			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
 			contentHtml += '<td>' + (j+1) + '</td> ';
-			contentHtml += '<td>' + quotationFunctionAreaItem.itemName + '</td>';
-			contentHtml += '<td>' + quotationFunctionAreaItem.measurementUnit + '</td>';
-			contentHtml += '<td>' + quotationFunctionAreaItem.num + '</td>';
-			contentHtml += '<td>' + quotationFunctionAreaItem.unitPrice + '</td>';
-			contentHtml += '<td>' + _preSum + '</td>';
-			
-			if(quotationFunctionAreaItem.discount == 0){
+			contentHtml += '<td>' + qv.itemName+"("+qv.typestr+")" + '</td>';
+			contentHtml += '<td>' + qv.measurementUnit + '</td>';
+			contentHtml += '<td>' + qv.num + '</td>';
+			contentHtml += '<td>' + qv.unitPrice + '</td>';
+			contentHtml += '<td>' + qv.quotationTotalPrice + '</td>';
+
+			if((qv.discount == 0 && decorationOrderDetail.orderType != 2) || (qv.type == 3 && decorationOrderDetail.orderType == 2)){
 				contentHtml += '<td>10</td>';
 			}else{
 				contentHtml += '<td>' + discount + '</td>';
 			}
-			
-			contentHtml += '<td>' + _discountUnitPrice + '</td>';
-			contentHtml += '<td>' + _sum + '</td>';
+
+			contentHtml += '<td>' + qv.dcp + '</td>';
+			contentHtml += '<td>' + qv.dcpt + '</td>';
 			contentHtml += '</tr>';
-			
-			sum = sum + _sum;
-			discountPrice = discountPrice + _sum;
-			preSum = preSum + _preSum;
-			
-			preDiscountPrice = preDiscountPrice + _preSum;
-		}
-		
+
+			sum = sum + qv.dcpt;
+			discountPrice = discountPrice + qv.dcpt;
+			preSum = preSum + qv.quotationTotalPrice;
+
+			preDiscountPrice = preDiscountPrice + qv.quotationTotalPrice;
+
+		})
+
 		contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
 		contentHtml += '<td>&nbsp;</td>';
-		contentHtml += '<td><span class="STYLE1">&lt;' + quotationFunctionArea.functionAreaName + '&gt;小计</span></td>';
+		contentHtml += '<td><span class="STYLE1">&lt;' + i.split('-')[1] + '&gt;小计</span></td>';
 		contentHtml += '<td>&nbsp;</td>';
 		contentHtml += '<td>&nbsp;</td>';
 		contentHtml += '<td>&nbsp;</td>';
@@ -271,24 +194,21 @@ function printFinanceTable(){
 		contentHtml += '<td><span class="STYLE2"><strong>' + Math.round(sum * 1000) / 1000 + '</strong></span></td>';
 		contentHtml += '</tr>';
 		contentHtml += '';
-	}
-	
-	var _transfee =  utils.changeThrDecimal(utils.accMul(preDiscountPrice, _tranRate));
-	var _managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(preDiscountPrice, _transfee), _manageRate));
-	
-	preDiscountPrice = utils.changeThrDecimal(utils.accAdd(preDiscountPrice, utils.accAdd(_transfee, _managefee)));
-	
+		index++;
+	})
+
+
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + preDiscountPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + totalPrice + '</strong></td>';
+	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + decorationOrderDetail.quotationData.TotalPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + decorationOrderDetail.quotationData.UndisPrice + '</strong></td>';
 	contentHtml += '</tr>';
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
-	
+
 	return contentHtml;
 }
 
 function printCustomerTable(){
-	
+	var index = 0;
 	var contentHtml = '';
 	
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="0" cellspacing="0">';
@@ -300,44 +220,34 @@ function printCustomerTable(){
 	contentHtml += '<td width="3%"><strong>数量</strong></td>';
 	contentHtml += '<td width="72%"><strong>工艺做法及材料说明</strong></td>';
 	contentHtml += '</tr>';
-	
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreas;
-	var quotationFunctionAreaLength = quotationFunctionAreas.length;
-	
-	for(var i=0;i<quotationFunctionAreaLength;++i){
-		
-		var quotationFunctionArea = quotationFunctionAreas[i];
-		var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-		
-		if(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]){
-			quotationFunctionAreaItems = quotationFunctionAreaItems.concat(decorationOrderDetail.addReduceAreas[quotationFunctionArea.qfaId]);
-		}
-		
-		var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
-		
+
+	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+
+
+	$.each(quotationFunctionAreas, function (i, v){
+
 		contentHtml += '<tr bgcolor="#CCCCCC">';
 		contentHtml += '<td colspan="1">';
-		contentHtml += '<div align="center">' + utils.getBigNumber(i+1) + '</div></td>';
+		contentHtml += '<div align="center">' + utils.getBigNumber(index+1) + '</div></td>';
 		contentHtml += '<td colspan="8">';
-		contentHtml += '<div align="left"> ' + quotationFunctionArea.functionAreaName + '';
+		contentHtml += '<div align="left"> ' + i.split('-')[1] + '';
 		contentHtml += '</div>';
 		contentHtml += '</td>';
 		contentHtml += '</tr>';
-		
-		for(var j=0;j<quotationFunctionAreaItemLength;++j){
-			
-			var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-			
+
+		$.each(v, function (j, qv){
+
 			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
 			contentHtml += '<td>' + (j+1) + '</td>';
-			contentHtml += '<td align="left">' + quotationFunctionAreaItem.itemName + '</td>';
+			contentHtml += '<td align="left">' + qv.itemName+"("+qv.typestr+")" + '</td>';
 			contentHtml += '<td>项</td>';
 			contentHtml += '<td>1</td>';
-			contentHtml += '<td align="left">' + quotationFunctionAreaItem.content + '</td>';
+			contentHtml += '<td align="left">' + (qv.content ? qv.content : "-") + '</td>';
 			contentHtml += '</tr>';
-		}
+		})
+		index++;
 		
-	}
+	})
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
 	
@@ -413,13 +323,13 @@ function printCustomerTable(){
 }
 
 jQuery(function($) {
-	
+
 	Api().init('../../js/api/');
 	
 	params.server = window.server;
 	params.authentication = window.authentication;
 	
-	var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项"};
+	var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
 	
 	var type, p = window.location.search.substr(1);
 	
@@ -432,7 +342,13 @@ jQuery(function($) {
 			type = v.substring(v.indexOf('type=')).split('=')[1];
 		}
 	});
-	
+
+	$.each(p.split('&'), function(i, v){
+		if(v.indexOf('orderType=') != -1){
+			decorationOrderDetail.orderType = v.substring(v.indexOf('orderType=')).split('=')[1];
+		}
+	});
+
 	var url = api.quotation.queryQuotationById;
 	
 	url.url = url.url+"?"+p;
@@ -449,54 +365,42 @@ jQuery(function($) {
 		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
 
+	url = api.quotation.queryExtensionByOrderId;
+	var extensionItemIDs = {};
+	com.post(url,{"extension.orderId": decorationOrderDetail.quotation.orderId}, function (res) {
+		var extensions = res.extensions;
+		$.each(extensions, function (i, v) {
+			extensionItemIDs["extensionItemIDs[" + i + "]"] = v.eid;
+		});
+	}, null, false);
+
+	com.post(api.quotation.queryExtensionItemByEids, extensionItemIDs, function (res) {
+		decorationOrderDetail.quotationDetail.extensions = res.extensionItems;
+	}, null, false);
+
 	url = api.addReduce.queryAddReduceByOrderId;
 //	url = api.addReduce.queryAddReduceForPayedByOrderId;
 	
 	var addReduceIds = {};
-	var addReduceAreas = {};
-	var reduceNums = {};
-	
+
 	com.post(url, {'addReduce.orderId': decorationOrderDetail.quotation.orderId}, function(res){
 		$.each(res.addReduces, function(i, v){
 			addReduceIds['addReduceIds[' + i + ']'] = v.arId;
 		});
 	}, null, false);
-	
+
 	com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function(res){
-		
-		$.each(res.addReduceItems, function(i, v){
-			
-			if([0, 2].indexOf(v.type) != -1){
-				v.itemName = v.itemName + "(增项" + addReduceItemtypeDict[v.type] + ")";
-			}else{
-				
-				if(reduceNums[v.quoteItemId]){
-					reduceNums[v.quoteItemId] = utils.accAdd(reduceNums[v.quoteItemId], v.num);
-				}else{
-					reduceNums[v.quoteItemId] = v.num;
-				}
-				
-				v.num = -v.num;
-				v.itemName = v.itemName + "(减项" + addReduceItemtypeDict[v.type] + ")";
-			}
-			
-			v.type = -1;
-			
-			if(addReduceAreas[v.quotationFunctionAreaId]){
-				addReduceAreas[v.quotationFunctionAreaId].push(v);
-			}else{
-				addReduceAreas[v.quotationFunctionAreaId] = [v];
-			}
-		});
-		
-		decorationOrderDetail.addReduceAreas = addReduceAreas;
-		decorationOrderDetail.reduceNums = reduceNums;
-		
-		console.log(addReduceAreas);
-		console.log(reduceNums);
-		
+		decorationOrderDetail.quotationDetail.addReduceItems = res.addReduceItems;
 	}, null, false);
-	
+
+	quotationUtils.statisticalQuotationItem(decorationOrderDetail.quotationFunctionAreas,decorationOrderDetail.quotationDetail.addReduceItems,decorationOrderDetail.quotationDetail.extensions);
+
+	quotationUtils.initQuotationDetailItem(decorationOrderDetail.quotation,decorationOrderDetail.quotationFunctionAreas,decorationOrderDetail.quotationDetail.addReduceItems,decorationOrderDetail.quotationDetail.extensions);
+
+	decorationOrderDetail.quotationData.UndisPrice = quotationUtils.quotationCalculator(decorationOrderDetail.quotation.discount,decorationOrderDetail.orderType);
+
+	decorationOrderDetail.quotationData.TotalPrice = quotationUtils.quotationTotal();
+
 	generatePrintPage(type);
 });
 

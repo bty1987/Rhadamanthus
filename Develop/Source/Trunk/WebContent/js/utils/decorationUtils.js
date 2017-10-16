@@ -1,14 +1,17 @@
 var decorationUtils = {
 	initMaterial: function (orderId) {
 
-		var $material = $('#materialPayment').html("");
+		var $fanglinMaterial = $('#fanglinMaterialPayment').html("");
+		var $salesMaterialPayment = $('#salesMaterialPayment').html("");
 		var $brand = $('#materialPaymentBrand').html("");
 
-		var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($material);
+		var $ulfanglin = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($fanglinMaterial);
+		var $ulsales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesMaterialPayment);
 		var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
 
 		var $total = 0;
 		var materialPayments = null;
+		var salesPayments = null;
 
 		com.post(api.payment.queryMaterialPaymentByOrderId, {"materialPayment.orderId": orderId}, function (res) {
 			materialPayments = res.materialPayments;
@@ -68,7 +71,7 @@ var decorationUtils = {
 					$liProperty.appendTo($ulStyle);
 				});
 
-				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ul);
+				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulfanglin);
 
 				var $materialBrands = $("[name='" + v.materialBrand + "']");
 
@@ -103,23 +106,128 @@ var decorationUtils = {
 			});
 		}
 
-		if ($ul.children("li").length == 0) {
-			var $resultList = $('#materialPayment').html('');
-			var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-			var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-			var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+		com.post(api.payment.querySalesPaymentByOrderId,{"sales.orderId":orderId},function (res) {
+			salesPayments = res.salesPayments;
+		}, null, false)
 
-			var $resultList = $('#materialPaymentBrand').html('');
+		if (salesPayments && salesPayments.length) {
+			$.each(salesPayments, function (i, v) {
+				var salesReceipt = v.salesReceipt;
+				if (v.status == 0) return true;
+
+				var $liLine = $('<li></li>').addClass('item-orange clearfix');
+				var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.no + " " + materialUtils.materialPaymentTypeData[v.type]));
+				var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+				var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+				var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+				var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+				var propertyArr = [
+					["品类:", v.category, "grey"],
+					["品牌:", v.brand, "grey"],
+					["应收额:", v.referMoney, "grey"],
+					["实收额:", salesReceipt.realMoney, "grey"],
+					["收款时间:", salesReceipt.collectTime, "grey"],
+					["状态:", materialUtils.paymentStatusInit(v.status), "red"]
+				];
+
+				$.each(propertyArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulProperty);
+				});
+
+				var styleArr = [];
+
+				salesReceipt.cash != null && salesReceipt.cash != "0" ? styleArr.push(["现金:", salesReceipt.cash, "grey"]) : true;
+				salesReceipt.bank != null && salesReceipt.bank != "0" ? styleArr.push(["银行:", (function (bank, bankInfo) {
+					var info = bank + ", ";
+					var _s = bankInfo.split('#');
+					for (var i = 1; i < _s.length - 1; i++) {
+						var _i = _s[i].split('|');
+						info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+					}
+
+					return info
+				})(salesReceipt.bank, salesReceipt.bankInfo), "grey"]) : true;
+				salesReceipt.checkv != null && salesReceipt.checkv != "0" ? styleArr.push(["转账:", salesReceipt.checkv, "grey"]) : true;
+				salesReceipt.installment != null && salesReceipt.installment != "0" ? styleArr.push(["分期:", salesReceipt.installment, "grey"]) : true;
+				salesReceipt.accounts != null && salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", salesReceipt.accounts, "grey"]) : true;
+				salesReceipt.advance != null && salesReceipt.advance != "0" ? styleArr.push(["预付款:", salesReceipt.advance, "grey"]) : true;
+				salesReceipt.coupon != null && salesReceipt.coupon != "0" ? styleArr.push(["优惠券:", salesReceipt.coupon + salesReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
+
+				$.each(styleArr, function (index, value) {
+					var $liProperty = $('<li></li>');
+					$('<strong></strong>').html(value[0]).appendTo($liProperty);
+					$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+					$liProperty.appendTo($ulStyle);
+				});
+
+				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulsales);
+
+				var $salesBrands = $("[name='" + v.brand + "']");
+
+				if ($salesBrands.length > 0) {
+
+					var $salesBrand = $($salesBrands[0]);
+					var $brandTotal = $($salesBrand.find("[name='total']")[0]);
+
+					var _value = parseFloat($brandTotal.attr('value'));
+					var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
+					var _total = utils.changeThrDecimal(_value + _refer);
+
+					$brandTotal.attr("value", _total);
+					$brandTotal.html(_total);
+
+					$total = utils.changeThrDecimal($total + _refer);
+				} else {
+					var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
+					var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
+					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+					var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
+
+					$('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
+					$('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+
+					$liLine.append($h4).append($ulProperty).appendTo($ulbrand);
+
+					$total = utils.changeThrDecimal($total + _refer);
+				}
+			});
+		}
+
+		if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0) {
+			noData("fanglinMaterialPayment");
+			noData("salesMaterialPayment");
+			noData("materialPaymentBrand");
+		} else if($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0){
+			noData("salesMaterialPayment");
+			totalData();
+		} else if($ulfanglin.children("li").length == 0 && $ulsales.children("li").length != 0){
+			noData("fanglinMaterialPayment");
+			totalData();
+		} else {
+			totalData();
+		}
+
+		decorationOrderDetail.materialTotal = $total;
+
+		function noData(div) {
+			var $resultList = $('#' + div).html('');
 			var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
 			var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
 			var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-		} else {
+		}
+
+		function totalData() {
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
 
 			$liLine.append($h4).appendTo($ulbrand);
 		}
-		decorationOrderDetail.materialTotal = $total;
 
 	}, decorationActivityInfo: function (activitys, uiBtnMethod, orderId) {
 
@@ -213,9 +321,8 @@ var decorationUtils = {
 		if (uiBtnMethod != null) {
 			uiBtnMethod(uiPgDiv, _activityItem);
 		}
-	}, initPayment: function (orderId, editFunc, submitFunc, refundFunc) {
+	}, initPayment: function (orderId, isDesign) {
 
-		var baseTypes = ["定金", "设计费", "首付款", "首付二期款", "二期款", "尾款"];
 		var totalMoney = 0;
 		var receiveMoney = 0;
 		var addMoney = 0;
@@ -293,50 +400,47 @@ var decorationUtils = {
 				var $paymentType = v.paymentType;
 				var $paymentStatus = v.paymentStatus;
 
-				var $btnEdit = editFunc ? $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑').click(function () {
-					editFunc(v.autoId, v.referMoney);
-				}) : $('<a></a>');
+				var $refundBtn = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
-				var $btnSubmit = submitFunc ? $('<a></a>').addClass('btn btn-minier btn-primary').html('提交').click(function () {
-					submitFunc(v.autoId, $paymentType);
-				}) : $('<a></a>');
+				$refundBtn.click(function () {
+					approvalUtils.initqueryApprovalUser("refundApproveManSel",5);
+					$('#autoId').val(v.autoId);
+					$('#referMoney').val(v.referMoney);
+					decorationOrderDetail.refundDecorationPaymentModal.modal("show");
+				});
 
-				var $btnRefund = refundFunc ? $('<a></a>').addClass('btn btn-minier btn-danger').html('编辑').click(function () {
-					refundFunc(v.autoId, v.referMoney, $paymentType);
-				}) : $('<a></a>');
+				if(isDesign){
 
-				if ($paymentType != "定金") {
-					if ($paymentStatus == '未提交') {
-						$paymentType == "设计费" ? $divBtnWrap.append($btnEdit).append($btnSubmit) : true;
-						baseTypes.indexOf($paymentType) != -1 ? $divBtnWrap.append($btnSubmit) : true;
-						v.paymentType.search('退款') != -1 || v.paymentType == '违约金' ? $divBtnWrap.append($btnSubmit) : true;
-					} else if ($paymentStatus == '未付款') {
-						$paymentType == "设计费" ? $divBtnWrap.append($btnEdit) : true;
-					} else if ($paymentStatus == '申请审批' || $paymentStatus == '审批未通过') {
-						baseTypes.indexOf($paymentType) == -1 ? $divBtnWrap.append($btnRefund) : true;
+					if(v.paymentStatus == "已确认" && v.oneType == 0){
+						$divBtnWrap.append($refundBtn);
 					}
+
 				}
 
 				$divBtnWrap.appendTo($h4);
 
 				$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 
-				if (baseTypes.indexOf($paymentType) != -1){
+				if (v.oneType == 0 && (v.twoType == 0 || v.twoType == 1)){
 					$liLine.appendTo($baseul);
-					if($paymentType != "定金" && $paymentType != "设计费"){
+					if(v.twoType == 1){
 						totalMoney += v.referMoney;
 						if($paymentStatus == '已确认'){
-
-								receiveMoney += v.realMoney;
+							receiveMoney += v.realMoney;
 						}
 					}
 				}else {
 					$liLine.appendTo($otherul);
 					if($paymentStatus == '已确认'){
-						if($paymentType == '增项款'){
-							addMoney += v.realMoney;
-						}else if($paymentType == '减项款'){
-							reduceMoney += v.referMoney;
+						if(v.twoType == 2){
+							if(v.oneType == 0){
+								addMoney += v.realMoney;
+							}
+						}
+						if(v.twoType == 3){
+							if(v.oneType == 1){
+								reduceMoney += v.referMoney;
+							}
 						}
 					}
 

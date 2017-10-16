@@ -21,34 +21,20 @@ public class PurchaseItemDaoImpl extends DaoImpl<PurchaseItemPO> implements Purc
 		return session().createCriteria(PurchaseItemPO.class).add(Restrictions.eq(PurchaseItemPO.COLUMN_PID_STR, pid)).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<PurchaseItemPO> queryPurchaseItemByPids(List<Long> pids) {
 
-		List<PurchaseItemPO> purchaseItemPOs = new ArrayList<PurchaseItemPO>();
-
-		for(Long pid : pids){
-			purchaseItemPOs.addAll(queryPurchaseItemByPid(pid));
-		}
-
-		return purchaseItemPOs;
+		return session().createCriteria(PurchaseItemPO.class).add(Restrictions.in(PurchaseItemPO.COLUMN_PID_STR, pids)).list();
+		
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PurchaseItemPO> queryPurchaseItemBySiid(long siid) {
-		return  session().createCriteria(PurchaseItemPO.class).add(Restrictions.eq(PurchaseItemPO.COLUMN_SIID_STR, siid)).list();
-	}
-
-	@Override
 	public List<PurchaseItemPO> queryPurchaseItemBySiids(List<Long> siids) {
 		
-		List<PurchaseItemPO> purchaseItemPOs = new ArrayList<PurchaseItemPO>();
-
-		for(Long siid : siids){
-			purchaseItemPOs.addAll(queryPurchaseItemBySiid(siid));
-		}
-
-		return purchaseItemPOs;
+		return session().createCriteria(PurchaseItemPO.class).add(Restrictions.in(PurchaseItemPO.COLUMN_SIID_STR, siids)).list();
+		
 	}
 
 }

@@ -33,7 +33,6 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.information.vo.MessageVO;
 import com.fanglin.material.dao.MaterialSubOrderBalanceDao;
 import com.fanglin.material.dao.MaterialSubOrderDao;
 import com.fanglin.material.dao.MaterialSubOrderItemDao;
@@ -144,7 +143,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		List<String> packageNames = new ArrayList<String>();//新建套餐数组
 		
 		// 通过主材订单编号,查出主材退货审批单
-		ApprovalPO approvalPO = approvalDao.queryApprovalForInitByTypeAIdent(ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(msoId));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(msoId));
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -234,10 +233,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			}
 		}
 		materialSubOrderPO.setDistotal(Arith.sub(materialSubOrderPO.getDistotal(), disTotal));
-		MessageVO messageVO = new MessageVO(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), MessagePO.MESSAGE_TYPE_APPROVAL_STR, "新增一条审批信息,请查收.");
-		
-		messageService.sendMessage(messageVO,company);
-		
+
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
+
 		return 0;
 	}
 

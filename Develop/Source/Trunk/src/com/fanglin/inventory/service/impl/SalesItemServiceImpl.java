@@ -178,7 +178,25 @@ public class SalesItemServiceImpl implements SalesItemService {
 		
 		return 0;
 	}
-
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateSalesItemForBalance(SalesItemVO salesItemVO) throws FLException {
+		
+		SalesItemPO salesItemPO = salesItemDao.querySalesItemBySiid(salesItemVO.getSiid());
+		
+		if(salesItemPO == null){
+			throw new FLException(260023, "销售项不存在");
+		}
+		
+		salesItemPO.setCtype(salesItemVO.getCtype());
+		salesItemPO.setCvalue(salesItemVO.getCvalue());
+		
+		salesItemDao.update(salesItemPO);
+		
+		return 0;
+	}
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteSalesItem(SalesItemVO salesItemVO)throws FLException {

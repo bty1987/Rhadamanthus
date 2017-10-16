@@ -211,7 +211,6 @@ jQuery(function($) {
 		$('#calendar').fullCalendar('today');
 
 		$('#calendar').fullCalendar({
-			//
 			buttonText: {
 	            today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
 			},

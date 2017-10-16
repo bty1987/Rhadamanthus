@@ -17,6 +17,8 @@ public interface SalesService {
 	
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 	
+	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException;
+	
 	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException;
 	
 	public int updateSalesForCoupon(SalesVO salesVO) throws FLException;

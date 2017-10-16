@@ -38,17 +38,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTTYPE_ADVANCE_STR = "预付款";
 	
-	public static final String PAYMENTTYPE_DEPOSIT_STR = "定金";
-	
 	public static final String PAYMENTTYPE_DESIGN_STR = "设计费";
-	
-	public static final String PAYMENTTYPE_FIRST_STR = "首付款";
-	
-	public static final String PAYMENTTYPE_FIRST_SECOND_STR = "首付二期款";
-	
-	public static final String PAYMENTTYPE_SECOND_STR = "二期款";
-	
-	public static final String PAYMENTTYPE_FINAL_STR = "尾款";
 	
 	public static final String PAYMENTTYPE_ADD_STR = "增项款";
 	
@@ -64,8 +54,6 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTTYPE_OTHER_STR = "其他退款";
 	
-	public static final String PAYMENTSTATUS_UNSUBMIT_STR = "未提交";
-	
 	public static final String PAYMENTSTATUS_UNPAY_STR = "未付款";
 	
 	public static final String PAYMENTSTATUS_PAY_STR = "已付款";
@@ -80,7 +68,23 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTSTATUS_REFUND_STR = "申请退款";
 	
-	public static final int CHARSCALE_COUNT_INT = 4;
+	public static final int CHARSCALE_COUNT_INT = 0;
+	
+	public static final short ONETYPE_ADD_INT = 0;         //收款
+	
+	public static final short ONETYPE_REFUND_INT = 1;      //退款
+	
+	public static final short ONETYPE_HISTORY_INT = 2;     //历史
+	
+	public static final short TWOTYPE_BASE_INT = 0;        //基础
+	
+	public static final short TWOTYPE_DEAL_INT = 1;        //合同
+	
+	public static final short TWOTYPE_ADD_INT = 2;   	   //增项
+	
+	public static final short TWOTYPE_REDUCE_INT = 3;      //减项
+	
+	public static final short TWOTYPE_OTHER_INT = 4;       //其他
 
 	private long autoId;
 	
@@ -105,6 +109,10 @@ public class DecorationPaymentPO implements Serializable {
 	private float paymentBlance =  0f;
 	
 	private float other =  0f;
+	
+	private short oneType;
+	
+	private short twoType;
 	
 	public DecorationPaymentPO() {
 		super();
@@ -213,6 +221,24 @@ public class DecorationPaymentPO implements Serializable {
 
 	public void setRealMoney(float realMoney){
 		this.realMoney = realMoney;
+	}
+
+	@Column(name = "onetype")
+	public short getOneType() {
+		return oneType;
+	}
+
+	public void setOneType(short oneType) {
+		this.oneType = oneType;
+	}
+
+	@Column(name = "twotype")
+	public short getTwoType() {
+		return twoType;
+	}
+
+	public void setTwoType(short twoType) {
+		this.twoType = twoType;
 	}
 
 }

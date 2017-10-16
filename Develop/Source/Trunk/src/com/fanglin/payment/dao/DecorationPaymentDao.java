@@ -30,13 +30,13 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds);
 	
-	public List<DecorationPaymentPO> queryDecorationPaymentForBaseByOrderId(String orderId);
-	
 	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<Filter> filters);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId);
 	
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType);
+	
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, String[] paymentStatus, short oneType, short twoType);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId);
 	
@@ -45,5 +45,5 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId);
 	
 	public int deleteDecorationPaymentForBase(String orderId);
-
+	
 }

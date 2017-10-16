@@ -9,5 +9,5 @@ public interface WorkflowPlanDao extends Dao<WorkflowPlanPO> {
 	public List<WorkflowPlanPO> queryWorkflowPlanByWfid(Long wfid);
 	
 	public List<WorkflowPlanPO> queryWorkflowPlanByWpid(Long wpid);
-	
+	public int deleteWorkflowPlan(Long wpid);
 }

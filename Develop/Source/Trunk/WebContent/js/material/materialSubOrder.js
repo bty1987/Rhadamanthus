@@ -64,15 +64,12 @@ jQuery(function($) {
 	materialSubOrderPostData["materialSubOrder.designerId"] = params.designerId;
 	materialSubOrderPostData["materialSubOrder.designerName"] = params.designerName;
 
-	com.post(api.ds.couponType, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		materialSubOrder.couponType = res.materialCouponTypes;
+        materialSubOrder.materialStatus = res.materialStatus;
 		$("#couponType").bindData(materialSubOrder.couponType, 'key', 'value', false);
 	}, null, false);
 	
-	com.post(api.ds.materialInfo, {}, function(res){
-		materialSubOrder.materialStatus = res.materialStatus;
-	}, null, false);
-
 	//com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value");
 	
 	materialSubOrder.approveSaveBtn = $("#approveSaveBtn").on("click", function(){

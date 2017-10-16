@@ -42,7 +42,7 @@ public class ProductionVO implements Serializable {
 	
 	private Float timeLimit;
 	
-	private Long spid;
+	private String spid;
 	
 	private Short type;
 	
@@ -166,11 +166,11 @@ public class ProductionVO implements Serializable {
 		this.timeLimit = timeLimit;
 	}
 
-	public Long getSpid() {
+	public String getSpid() {
 		return spid;
 	}
 
-	public void setSpid(Long spid) {
+	public void setSpid(String spid) {
 		this.spid = spid;
 	}
 

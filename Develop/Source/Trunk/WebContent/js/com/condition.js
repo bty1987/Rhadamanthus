@@ -93,7 +93,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.ds.constructionInfo,
+                url: api.ds.construction,
                 postData: {"timestamp": (new Date).getTime()},
                 listPath: "constructionSchedule",
                 keyPath: "key",
@@ -335,23 +335,6 @@ var Condition = function (api) {
                 valuePath: "value" // 用来在页面显示的字段的json路径
             }
         },
-        //-------增减项查询条件
-        addReduceType: {
-            label: "类型",
-            type: "select",
-            submitConfig: {
-                name: "addReduceType",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {//从后台取数据的各种配置
-                url: null,
-                postData: null,
-                listPath: [{"key": "0", "value": "增项"}, {"key": "1", "value": "减项"}, {"key": "2", "value": "漏项"}],
-                keyPath: "key",
-                valuePath: "value"
-            }
-        },
         //-------数据-报价-报价版本
         versionName: {
             label: "版本名称",
@@ -404,38 +387,6 @@ var Condition = function (api) {
                 valuePath: "name"
             }
         },
-        quotationBigCategoryEngineering: {
-            label: "大类",
-            type: "select",
-            submitConfig: {
-                name: "quotationBigCategoryId",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {//从后台取数据的各种配置
-                url: api.quotation.queryQuotationBigCategory,
-                postData: {"quotationBigCategory.qtid":1},
-                listPath: "quotationBigCategorys",
-                keyPath: "id",
-                valuePath: "name"
-            }
-        },
-        quotationBigCategoryMaterial: {
-            label: "大类",
-            type: "select",
-            submitConfig: {
-                name: "quotationBigCategoryId",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {//从后台取数据的各种配置
-                url: api.quotation.queryQuotationBigCategory,
-                postData: {"quotationBigCategory.qtid":2},
-                listPath: "quotationBigCategorys",
-                keyPath: "id",
-                valuePath: "name"
-            }
-        },
         quotationBigCategoryId: {
             label: "大类",
             type: "select",
@@ -463,38 +414,6 @@ var Condition = function (api) {
             dataSource: {//从后台取数据的各种配置
                 url: api.quotation.queryQuotationSmallCategory,
                 postData: {},
-                listPath: "quotationSmallCategorys",
-                keyPath: "id",
-                valuePath: "name"
-            }
-        },
-        quotationSmallCategoryEngineering: {
-            label: "小类",
-            type: "select",
-            submitConfig: {
-                name: "quotationSmallCategoryId",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {//从后台取数据的各种配置
-                url: api.quotation.queryQuotationSmallCategory,
-                postData: {"quotationSmallCategory.qtid":1},
-                listPath: "quotationSmallCategorys",
-                keyPath: "id",
-                valuePath: "name"
-            }
-        },
-        quotationSmallCategoryMaterial: {
-            label: "小类",
-            type: "select",
-            submitConfig: {
-                name: "quotationSmallCategoryId",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {//从后台取数据的各种配置
-                url: api.quotation.queryQuotationSmallCategory,
-                postData: {"quotationSmallCategory.qtid":2},
                 listPath: "quotationSmallCategorys",
                 keyPath: "id",
                 valuePath: "name"
@@ -778,7 +697,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.departmentInfo,
+                url: api.ds.department,
                 postData: {},
                 listPath: "deptType",
                 keyPath: null,
@@ -811,7 +730,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.ds.personInfo,
+                url: api.ds.personel,
                 postData: {},
                 listPath: "statusType",
                 keyPath: null,
@@ -886,7 +805,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.ds.customerInfo,
+                url: api.ds.data,
                 postData: {},
                 listPath: "relationshipType",
                 keyPath: "key",
@@ -993,7 +912,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.decorationInfo,
+                url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "houseClass",
                 keyPath: "key",
@@ -1025,7 +944,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.auditInfo,
+                url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "auditStatus",
                 keyPath: "key",
@@ -1041,7 +960,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.decorationInfo,
+                url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "decorationOrderStatus",
                 keyPath: "key",
@@ -1057,7 +976,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.decorationInfo,
+                url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "orderType",
                 keyPath: "key",
@@ -1073,7 +992,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.decorationInfo,
+                url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "salesmanType",
                 keyPath: "key",
@@ -1089,14 +1008,14 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.approvalType,
+                url: api.ds.approval,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "approvalType",
                 keyPath: "key",
                 valuePath: "value"
             }
         },
-        createTime: {
+        approvalcreateTime: {
             label: "提交时间",
             type: "dateRangePicker",
             submitConfig: {
@@ -1162,7 +1081,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: {url: 'ds/materialInfo.json'},
+                url: api.ds.payment,
                 postData: {},
                 listPath: "balanceStatus",
                 keyPath: "key",
@@ -1177,7 +1096,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: {url: 'ds/materialInfo.json'},
+                url: api.ds.payment,
                 postData: {},
                 listPath: "balanceType",
                 keyPath: "key",
@@ -1439,7 +1358,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.ds.workType,
+                url: api.ds.construction,
                 postData: {},
                 listPath: "workType",
                 keyPath: "value",
@@ -1470,7 +1389,677 @@ var Condition = function (api) {
                 op: "between",
                 validate: null
             }
-        }
+        },
+
+
+        //jinxiaocun
+        goodsNo: {
+            label: "商品编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        goodsName: {
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        goodName: {
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "goods.name",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        goodsBarcode: {
+            label: "条形码",
+            type: "text",
+            submitConfig: {
+                name: "barcode",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        goodsGid: {
+            label: "商品ID",
+            type: "text",
+            submitConfig: {
+                name: "gid",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        storehouseNumber: {
+            label: "编号",
+            type: "text",
+            submitConfig: {
+                name: "code",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        storehouseName: {
+            label: "仓库名",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        manifestTemplateName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        workTypeName: {
+            label: "工种",
+            type: "select",
+            submitConfig: {
+                name: "workTypeName",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {// 从后台取数据的各种配置
+                url: api.common.queryWorkType,
+                postData: {},
+                listPath: "workTypes",
+                keyPath: "name",
+                valuePath: "name"
+            }
+        },
+        manifestCode: {
+            label: "货单编号",
+            type: "text",
+            submitConfig: {
+                name: "code",
+                op: "eq",
+                validata: null
+            }
+        },
+        manifestTime: {
+            label: "创建时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "manifestTime",
+                op: "between",
+                validata: null
+            }
+        },
+        CheckListGoodsName: {
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "goodsName",
+                op: "cn",
+                validate: null
+            }
+        },
+        goodsBrand: {
+            label: "商品品牌",
+            type: "text",
+            submitConfig: {
+                name: "brand",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        purchaseUserName: {
+            label: "创建人",
+            type: "text",
+            submitConfig: {
+                name: "purchaseUserName",
+                op: "cn",
+                validate: null
+            }
+        },
+        purchaseNo: {
+            label: "编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "cn",
+                validate: null
+            }
+        },
+        purchaseTime: {
+            label: "创建时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validate: null
+            }
+        },
+        createrName: {
+            label: "创建人",
+            type: "text",
+            submitConfig: {
+                name: "createrName",
+                op: "cn",
+                validate: null
+            }
+        },
+        approverName: {
+            label: "审批人",
+            type: "text",
+            submitConfig: {
+                name: "approverName",
+                op: "cn",
+                validate: null
+            }
+        },
+        createTime: {
+            label: "创建时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validate: null
+            }
+        },
+        approverTime: {
+            label: "审批时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "approverTime",
+                op: "between",
+                validate: null
+            }
+        },
+
+        no : {
+            label:"销售单号",
+            type:"text",
+            submitConfig : {
+                name : "no",
+                op : "eq",
+                validate:{
+                    "reg" : /^[0-9]*$/,
+                    "msg" : "请输入数字"
+                }
+            }
+        },
+
+        instorerId : {
+            label: "驻店员",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "currentName",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData: {"duty" : "驻店导购"},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+
+        salesmanId : {
+            label: "渠道",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "userName",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData: { "duty" : "设计师"},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+
+        fullpayTimeRange : {
+            label:"补款时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "fullpayTimeRange",
+                op : "between",
+                validate:null
+            }
+        },
+
+        salesPaymentOrderId:{
+            label:"订单编号",
+            type:"text",
+            submitConfig : {
+                name : "sid",
+                op : "eq",
+                validate:{
+                    "reg" : /^[0-9]*$/,
+                    "msg" : "请输入数字"
+                }
+            }
+        },
+        salesPaymentNo:{
+            label:"销售单号",
+            type:"text",
+            submitConfig : {
+                name : "no",
+                op : "eq",
+                validate:{
+                    "reg" : /^[0-9]*$/,
+                    "msg" : "请输入数字"
+                }
+            }
+        },
+        salesPaymentUserName : {
+            label: "设计师",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "userName",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData: { "duty" : "设计师"},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        salesPaymentVillage: {
+            label: "楼盘",
+            type: "autofill",
+            submitConfig: {
+                name: "villageName",
+                op: "cn",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryVillageForNameByPinyin,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        salesReceiptCollectTime:{
+            label:"收款时间",
+            type:"datePicker",
+            submitConfig:{
+                name:"collectTime",
+                op:"between",
+                validate:null
+            }
+        },
+        salesReceiptConfirmTime:{
+            label:"确认时间",
+            type:"datePicker",
+            submitConfig:{
+                name:"confirmTime",
+                op:"between",
+                validate:null
+            }
+        },
+        roleName:{
+            label:"角色名称",
+            type:"text",
+            submitConfig:{
+                name:"roleName",
+                op:"cn",
+                validate:null
+            }
+        },
+        approvalUserName : {
+            label : "姓名",
+            type : "autofill",
+            submitConfig : {
+                name : "userName",
+                op : "cn",
+                validate: null
+            },
+            dataSource : {
+                url : api.personel.queryUserForNameByPinyinName,
+                postData:{},
+                listPath: "autoFillKeyValue",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
+        salesDeptName: {
+            label: "部门",
+            type: "select",
+            submitConfig: {
+                name: "dept.deptName",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {// 从后台取数据的各种配置
+                url: api.department.queryDepartment,
+                postData: {"dept.type" : "设计部"},
+                listPath: "deptList",
+                keyPath: "deptName",
+                valuePath: "deptName"
+            }
+        },
+        fullpayTime: {
+            label: "补款时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "fullpayTime",
+                op: "between",
+                validata: null
+            }
+        },
+        salesBalanceOrderId:{
+            label: "订单编号",
+            type: "text",
+            submitConfig: {
+                name: "sales.orderId",
+                op: "eq",
+                validata: null
+            }
+        },
+        salesBalanceNo:{
+            label: "销售单号",
+            type: "text",
+            submitConfig: {
+                name: "sales.no",
+                op: "eq",
+                validata: null
+            }
+        },
+        salesBalanceBrand:{
+            label: "品牌",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "sales.brand",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                postData: {},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        salesBalanceVillage:{
+            label: "楼盘",
+            type: "autofill",
+            submitConfig: {
+                name: "village.villageName",
+                op: "cn",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryVillageForNameByPinyin,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        salesBalanceRegion:{
+            label: "大区名称",
+            type: "text",
+            submitConfig: {
+                name: "region.deptName",
+                op: "cn",
+                validata: null
+            }
+        },
+        salesBalanceDept:{
+            label: "归属部门",
+            type: "text",
+            submitConfig: {
+                name: "dept.deptName",
+                op: "cn",
+                validata: null
+            }
+        },
+        salesBalanceStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.payment,
+                postData: {},
+                listPath: "balanceStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        salesBalanceType:{
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.payment,
+                postData: {},
+                listPath: "balanceType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        salesBalanceFullpayTime:{
+            label: "补款时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "sales.fullpayTime",
+                op: "between",
+                validate: null
+            }
+        },
+        salesBalanceCreateTime:{
+            label: "预结算时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validate: null
+            }
+        },
+        salesBalanceVenderTime:{
+            label: "厂商结算时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "venderTime",
+                op: "between",
+                validate: null
+            }
+        },
+        salesBalancePostTiem:{
+            label: "结算时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "postTime",
+                op: "between",
+                validate: null
+            }
+        },
+		
+		quoteItemName:{
+            label: "报价名称",
+            type: "text",
+            submitConfig:{
+                name : "name",
+                op: "cn",
+                validata: null
+            }
+        },
+
+        quotetype: {
+            label: "报价类型",
+            type: "select",
+            submitConfig: {
+                name: "quoteType.name",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {// 从后台取数据的各种配置
+                url: api.production.queryQuoteType,
+                postData: {},
+                listPath: "quoteTypes",
+                keyPath: "name",
+                valuePath: "name"
+            }
+        },
+        WorkplanName: {
+            label: "工序组名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        workflowName : {
+            label : "工序名称",
+            type : "autofill",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate: null
+            }
+        },
+        workshopName: {
+            label: "车间名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        startTime:{
+            label:"投料时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"startTime",
+                op:"between",
+                validate:null
+            }
+        },
+        endTime:{
+            label:"出货时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"endTime",
+                op:"between",
+                validate:null
+            }
+        },
+        productionPlanStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : null,
+                postData : null,
+                listPath : [
+                    {key: 0, value: "初始"},
+					{key: 3, value: "生产中"},
+                    {key: 1, value: "入库"},
+                    {key: 2, value: "送货"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
+        quoteTypeName: {
+            label: "报价类型",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validata: null
+            },
+        },
+
+        orderId : {
+            label:"订单编号",
+            type:"text",
+            submitConfig : {
+                name : "orderId",
+                op : "eq",
+                validate:{
+                    "reg" : /^[0-9]*$/,
+                    "msg" : "请输入数字"
+                }
+            },
+        },
+
+        productionStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : null,
+                postData : null,
+                listPath : [
+                    {key: 0, value: "初始"},
+                    {key: 1, value: "签约"},
+                    {key: 2, value: "已审核"},
+                    {key: 3, value: "生产"},
+                    {key: 4, value: "废单"},
+                    {key: 5, value: "完结"}
+                ],
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+
+        productionPNo:{
+            label: "生产单编号",
+            type: "text",
+            submitConfig: {
+                name: "pno",
+                op: "eq",
+                validate: null}
+        },
+
+
+
+
     };
     return {
         getRuleByCondName: function (condName) {

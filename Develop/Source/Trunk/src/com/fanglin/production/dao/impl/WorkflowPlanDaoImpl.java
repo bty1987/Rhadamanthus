@@ -10,7 +10,10 @@ import com.fanglin.production.po.WorkflowPlanPO;
 @Repository("workflowPlanDao")
 public class WorkflowPlanDaoImpl  extends DaoImpl<WorkflowPlanPO> implements WorkflowPlanDao{
 
-
+	public WorkflowPlanDaoImpl (){
+		super (WorkflowPlanPO.class);
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<WorkflowPlanPO> queryWorkflowPlanByWfid(Long wfid) {
@@ -25,10 +28,12 @@ public class WorkflowPlanDaoImpl  extends DaoImpl<WorkflowPlanPO> implements Wor
 		return session().createCriteria(WorkflowPlanPO.class).add(Restrictions.eq(WorkflowPlanPO.WORKFLOWPLAN_WPID, wpid)).list();
 		
 	}
-
-
-	public WorkflowPlanDaoImpl (){
-		super (WorkflowPlanPO.class);
+	
+	@Override
+	public int deleteWorkflowPlan(Long wpid) {
+		String sql="delete from production.workflowplan where wpid= :wpid";
+		session().createSQLQuery(sql).setLong("wpid", wpid).executeUpdate();
+		return 0;
 	}
 
 }

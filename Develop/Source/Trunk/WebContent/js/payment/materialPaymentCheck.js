@@ -54,7 +54,7 @@ jQuery(function($) {
 		});
 	}, null, false);
 	
-	com.post(api.ds.materialInfo, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		for(var i=0;i<res.materialPaymentType.length;i++){
 			var paymentType = res.materialPaymentType[i];
 			materialPaymentCheck.materialPaymentTypeData[paymentType.key] = paymentType.value;
@@ -62,7 +62,7 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	com.post(api.ds.couponType, {}, function(res){
+	com.post(api.ds.payment, {}, function(res){
 		materialPaymentCheck.couponType = res.couponTypes;
 		$("#couponType").bindData(res.couponTypes, 'key', 'value');
 	});

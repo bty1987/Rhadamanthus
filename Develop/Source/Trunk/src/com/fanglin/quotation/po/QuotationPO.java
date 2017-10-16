@@ -33,10 +33,6 @@ public class QuotationPO implements Serializable {
 	private static final long serialVersionUID = 3361405245563596740L;
 
 	public static final int STATUS_DEFAULT_INT = 1;
-	
-	public static final short TYPE_PART_INT = 0;
-	
-	public static final short TYPE_WHOLE_INT = 1;
 
 	private long qid;
 	
@@ -60,19 +56,9 @@ public class QuotationPO implements Serializable {
 	
 	private int status;
 	
-	private float basicPrice;
-	
-	private float setpackage;
-	
-	private float qdiff;
-	
-	private float mdiff;
-
 	private int saveStatus;
 	
 	private int calFlag = 1;
-	
-	private float latexCut;
 	
 	private float managePrice;
 	
@@ -201,15 +187,6 @@ public class QuotationPO implements Serializable {
 		this.calFlag = calFlag;
 	}
 	
-	@Column(name = "latexCut")
-	public float getLatexCut() {
-		return latexCut;
-	}
-
-	public void setLatexCut(float latexCut) {
-		this.latexCut = latexCut;
-	}
-	
 	@Column(name = "managePrice")
 	public float getManagePrice() {
 		return managePrice;
@@ -235,42 +212,6 @@ public class QuotationPO implements Serializable {
 
 	public void setTrafficPrice(float trafficPrice) {
 		this.trafficPrice = trafficPrice;
-	}
-	
-	@Column(name = "setpackage")
-	public float getSetpackage() {
-		return setpackage;
-	}
-
-	public void setSetpackage(float setpackage) {
-		this.setpackage = setpackage;
-	}
-	
-	@Column(name = "basicPrice")
-	public float getBasicPrice() {
-		return basicPrice;
-	}
-
-	public void setBasicPrice(float basicPrice) {
-		this.basicPrice = basicPrice;
-	}
-	
-	@Column(name = "qdiff")
-	public float getQdiff() {
-		return qdiff;
-	}
-
-	public void setQdiff(float qdiff) {
-		this.qdiff = qdiff;
-	}	
-	
-	@Column(name = "mdiff")
-	public float getMdiff() {
-		return mdiff;
-	}
-
-	public void setMdiff(float mdiff) {
-		this.mdiff = mdiff;
 	}
 	
 	@Column(name = "undisPrice")

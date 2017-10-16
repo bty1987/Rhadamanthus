@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.ReceiptTypeService;
 import com.fanglin.data.common.vo.ReceiptTypeVO;
 
@@ -39,25 +40,33 @@ public class ReceiptTypeAction extends BaseListAction {
 	private List<ReceiptTypeVO> receiptTypes;
 	
 	@Action(value="pageReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageReceiptType(){
+	public String pageReceiptType() throws FLException{
 		
-		receiptTypeService.pageReceiptType(getPaging(), getFilters());
+		receiptTypeService.pageReceiptType(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="queryReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryReceiptType(){
+	public String queryReceiptType() throws FLException{
 		
-		receiptTypes = receiptTypeService.queryReceiptType();
+		receiptTypes = receiptTypeService.queryReceiptType(queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="queryReceiptTypeByType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryReceiptTypeByType(){
+	public String queryReceiptTypeByType() throws FLException{
 		
-		receiptTypes = receiptTypeService.queryReceiptTypeByType(receiptType);
+		receiptTypes = receiptTypeService.queryReceiptTypeByType(receiptType,queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="addReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addReceiptType() throws FLException{
+		
+		 receiptTypeService.addReceiptType(receiptType,queryCompany());
 		
 		return SUCCESS;
 	}

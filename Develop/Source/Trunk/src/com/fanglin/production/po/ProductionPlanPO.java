@@ -43,6 +43,8 @@ public class ProductionPlanPO implements Serializable{
 	private Timestamp endTime;
 	
 	private short status;
+	
+	private String comment;
 
 	public ProductionPlanPO() {
 		super();
@@ -113,6 +115,14 @@ public class ProductionPlanPO implements Serializable{
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	
