@@ -833,7 +833,7 @@ jQuery(function () {
             title: "查看套餐",
             content: $popup,
             area: [ "1400px", ( $(window).height() * 0.84 < 720 ? $(window).height() * 0.84 : 720 ) + "px"],
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定'],
             success: function (layer, index) {

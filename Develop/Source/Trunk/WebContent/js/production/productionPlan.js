@@ -227,10 +227,6 @@ jQuery(function ($) {
         }
     })();
 
-    com.post(api.production.queryWorkplan,{},function (res) {
-        $('select[name = "configworkplan"]').bindData(res.workplans,"wpid","name");
-    });
-
     var searcher  = new Searcher();
 
     var _arr = ["startTime","endTime","productionPlanStatus"];
@@ -277,7 +273,7 @@ jQuery(function ($) {
             title: "新增",
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -301,7 +297,7 @@ jQuery(function ($) {
             title: "编辑",
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -373,7 +369,7 @@ jQuery(function ($) {
             title: "导入excel",
             content: $('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定'],
             zIndex: 9999,

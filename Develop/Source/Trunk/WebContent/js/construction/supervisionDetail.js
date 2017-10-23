@@ -378,7 +378,7 @@ jQuery(function($) {
 			$.each(res.workerSalarys, function(i, v) {
 				var vsubtype, vstatus;
 
-				com.post(api.ds.salaryType, {}, function(res){
+				com.post(api.ds.salary, {}, function(res){
 					vsubtype = res.SalaryType[v.subtype - 1].name;
 				},null,false);
 
@@ -421,13 +421,13 @@ jQuery(function($) {
 			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9").attr("id","salary").attr("data-toggle","popover").attr("data-trigger","manual").css("width", "320px").css("height", "30px").appendTo(salaryDivT);
 			var salaryText = $('<span><b>* 扣款项请输入负数, 如: -123 !!!</b></span>').css("color","red").css("margin-left","-50px").appendTo(salaryDiv);
 
-			var salaryDiv3 = $('<div></div>').addClass("form-group").css("height","50px").css("margin-bottom","0px");
+			var salaryDiv3 = $('<div></div>').addClass("form-group").css("height","50px").css("margin","0px");
 			var salaryDivTh = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv3);
 			var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","salaryType").appendTo(salaryDivTh);
 			var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
 			var salaryTypeS = $('<select></select>').attr("id","salaryType").css("width","320px").css("height", "30px").append('<option value="0">请选择类型...</option>').appendTo($item);
 
-			com.post(api.ds.salaryType, {}, function(data){
+			com.post(api.ds.salary, {}, function(data){
 				var constructerSalaryType = data.SalaryType;
 				if(constructerSalaryType && constructerSalaryType.length){
 					$.each(constructerSalaryType,function(i,v){
@@ -436,7 +436,7 @@ jQuery(function($) {
 				}
 			}, null, false);
 
-			var salaryDiv4 = $('<div></div>').addClass("form-group").css("height","80px");
+			var salaryDiv4 = $('<div></div>').addClass("form-group").css("height","80px").css("margin","0px 0px 15px 0px");
 			var salaryDivF = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv4);
 			var salaryBz = $('<label><b>备注</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","comment").appendTo(salaryDivF);
 			var salaryBzInp = $('<textarea></textarea>').attr("id","comment").attr("maxlength","256").css("width","320px").appendTo(salaryDivF);

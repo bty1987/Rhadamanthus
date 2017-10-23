@@ -418,6 +418,7 @@ var QuotationDetail = (function(){
 				}, quo.basicParams);
 
 				com.post(api.quotation.updateQuotationFunctionArea, _params, function(res){
+
 					var $dOrder = that.nowEditDomain.find('.widget-header em');
 					var $dname = that.nowEditDomain.find('.widget-header strong');
 					var $domains = that.nowEditDomain.siblings('.widget-box');
@@ -627,8 +628,10 @@ var QuotationDetail = (function(){
 				if(com.validate()){
 					return;
 				}
-				
+
 				var _manageId = $('#manageCost').attr('qfaiId');
+				var _qfaId = $('#manageCost').find('.cell.name').attr("data-qfaId");
+
 				var _manageRate = parseFloat($('#manageRate').val());
 				var mgrate = utils.accAdd(_manageRate, quo.notSalesmanRate);
 				
@@ -640,7 +643,7 @@ var QuotationDetail = (function(){
 				quo.calculateQuoFees();
 				quo.quoModals.$manageRateModal.modal("hide");
 
-				com.post(api.quotation.updateQuotationFunctionAreaItemForSpec, {"quotationFunctionAreaItem.qfaiId": _manageId, "quotationFunctionAreaItem.unitPrice": _manageRate}, function(res){}, null, false);
+				com.post(api.quotation.updateQuotationFunctionAreaItemForSpec, {"quotationFunctionAreaItem.qfaiId": _manageId,"quotationFunctionAreaItem.quotationFunctionAreaId":_qfaId, "quotationFunctionAreaItem.unitPrice": _manageRate}, function(res){}, null, false);
 				com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res){}, null, false);
 			});
 		},
@@ -793,6 +796,7 @@ var QuotationDetail = (function(){
 		},
 		//批量删除报价项
 		deleteQuoteInBatches : function($domain){
+
 			$domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list'));
 			var that = this;
 			// , 参数 : qfaiIds[n] , 报价项Id列表 ;
@@ -823,7 +827,7 @@ var QuotationDetail = (function(){
 				var _fee = quo.calculateDomainFees(domain.nowEditDomain);
 				$('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
 				quo.calculateQuoFees();
-				_params = $.extend({},_params, quo.basicParams);
+				_params = $.extend({},_params, quo.basicParams, {"quotationFunctionArea.qfaId": domain.nowEditDomain.attr('data-qfaid')});
 				com.post(api.quotation.deleteQuotationFunctionAreaItem, _params, function(res){
 
 				}, null, false);
@@ -846,7 +850,7 @@ var QuotationDetail = (function(){
 				var _fee = quo.calculateDomainFees(domain.nowEditDomain);
 				$('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
 				quo.calculateQuoFees();
-				_params = $.extend({}, quo.basicParams);
+				_params = $.extend({}, quo.basicParams,{"quotationFunctionArea.qfaId": domain.nowEditDomain.attr('data-qfaid')});
 				_params["qfaiIds[0]"] = _qid;
 				com.post(api.quotation.deleteQuotationFunctionAreaItem, _params, function(res){
 
@@ -1144,7 +1148,7 @@ var QuotationDetail = (function(){
 			var _lineSet = [
 				["line", linenum,["data-areaType",qv.areaType]],//编号
 				["num", qv.num],//数量
-				["name", qv.itemName],//报价名称
+				["name", qv.itemName,["data-qfaId",qv.quotationFunctionAreaId]],//报价名称
 				["type", qv.type== 0 || qv.type == 4 ? "普通" : qv.type== 1 ? "自定义" : qv.type == 5 ? "主材":"-", ["data-type", qv.type]],
 				["unit", qv.measurementUnit],//单位
 				["worktype", qv.workType],//工种

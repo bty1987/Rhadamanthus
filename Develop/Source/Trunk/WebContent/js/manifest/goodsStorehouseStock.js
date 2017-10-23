@@ -306,7 +306,7 @@ $(function () {
             title: "盘点",
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -332,7 +332,7 @@ $(function () {
             title: "添加",
             content: $('#layerAddGoodsStorehouseStock'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -367,7 +367,7 @@ $(function () {
             title: title,
             content: $PopUp,
             area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
                 $PopUp.load(url);

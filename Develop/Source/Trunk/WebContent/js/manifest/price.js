@@ -162,7 +162,7 @@ $(function () {
             }
 
             if(v.hasSelectCtype){
-                $select = $('<select style="width: 100%;margin: 0;"></select>');
+                $select = $('<select style="width: 100%;"></select>');
                 $cell.append($select);
             }
 

@@ -43,16 +43,9 @@ com = {
 		}
         
         var server = "";
-        if(url.server && url.server == "communion"){
-            server = config.communion;
-        }else if(url.server && url.server == "platform"){
-        	server = config.platform;
-        }else if(url.server && url.server == "inventory"){
-            server = config.inventory;
-        }else if(url.server && url.server == "production"){
-        	server = config.production;
-        }
-        else{
+        if(url.server && config[url.server]){
+        	server = config[url.server];
+        }else{
             server = config.server;
         }
 		

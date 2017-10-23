@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialDesignerCountDaoImpl.java
- * @Package   	: com.fanglin.material.dao.impl
- * @Version		: 1.0
- * @Date			: 2015-5-24
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.dao.impl;
 
 import java.util.ArrayList;

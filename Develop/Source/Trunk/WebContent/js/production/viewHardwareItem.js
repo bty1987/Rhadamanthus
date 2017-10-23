@@ -116,7 +116,7 @@ $(function () {
             title: "添加五金项",
             content: $popup,
             area: ["950px", ( $(window).height() * 0.84 < 600 ? $(window).height() * 0.84 : 600 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             btn: ["取消"],
             zIndex: 9999,
             success: function (layer, index) {

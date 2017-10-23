@@ -355,7 +355,7 @@ $(function () {
             title: "编辑",
             content: $('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -379,7 +379,7 @@ $(function () {
             title: "退货信息",
             content: $('#layerRefund'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['保存', '取消'],
             yes: function (index, layero) {

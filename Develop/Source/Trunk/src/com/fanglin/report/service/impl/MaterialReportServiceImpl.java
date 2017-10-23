@@ -164,7 +164,7 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 		for(MaterialDesignerCountPO materialDesignerCountPO: materialDesignerCountPOs){
 			MaterialDesignerCountVO materialDesignerCountVO = new MaterialDesignerCountVO();
 			BeanUtil.copyProperties(materialDesignerCountPO, materialDesignerCountVO);
-			
+					
 			materialDesignerCountVOs.add(materialDesignerCountVO);
 		}
 		
@@ -209,7 +209,6 @@ public class MaterialReportServiceImpl implements MaterialReportService {
 		
 		for(Object r: result){
 			Object[] materialDesignerCount = (Object[]) r;
-			
 			MaterialDesignerCountVO materialDesignerCountVO = new MaterialDesignerCountVO();
 			materialDesignerCountVO.setTotal(Float.valueOf(materialDesignerCount[0].toString()));
 			materialDesignerCountVO.setDesignerId(materialDesignerCount[1].toString());

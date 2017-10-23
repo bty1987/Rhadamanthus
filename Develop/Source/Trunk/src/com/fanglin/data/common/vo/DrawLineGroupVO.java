@@ -13,8 +13,6 @@ public class DrawLineGroupVO implements Serializable {
 	private Short status;
 	
 	private String content ;
-	
-	private Integer company;
 
 	public Long getGid() {
 		return gid;
@@ -48,12 +46,4 @@ public class DrawLineGroupVO implements Serializable {
 		this.content = content;
 	}
 
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-	
 }

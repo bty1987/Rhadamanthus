@@ -136,6 +136,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
 		
 	}
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {

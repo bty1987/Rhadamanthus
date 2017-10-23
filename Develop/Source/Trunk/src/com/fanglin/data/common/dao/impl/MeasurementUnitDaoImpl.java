@@ -13,7 +13,6 @@ package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -53,10 +52,8 @@ public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implement
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		if(filters!=null){
 			for(Filter filter:filters){
-				if(StringUtils.isNotEmpty(filter.getData())){
-					if("name".equals(filter.getField())){
-						query.add(query.getCriterion("name",(filter.getData()), filter.getOp()));
-					}
+				if("name".equals(filter.getField())){
+					query.add(query.getCriterion("name",(filter.getData()), filter.getOp()));
 				}
 			}
 		}

@@ -188,6 +188,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
 	public DecorationOrderPO getDecorationOrder() {
@@ -197,6 +198,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
 		this.decorationOrder = decorationOrder;
 	}
+	
 	@Column(name="approveTime")
 	public Timestamp getApproveTime() {
 		return approveTime;
@@ -205,6 +207,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setApproveTime(Timestamp approveTime) {
 		this.approveTime = approveTime;
 	}
+	
 	@Column(name="subtype")
 	public short getSubtype() {
 		return subtype;
@@ -213,6 +216,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setSubtype(short subtype) {
 		this.subtype = subtype;
 	}
+	
 	@Column(name="comment")
 	public String getComment() {
 		return comment;
@@ -221,6 +225,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "createrId", referencedColumnName = "userId")
 	public UserPO getCreater() {
@@ -230,6 +235,7 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "approverId", referencedColumnName = "userId")
 	public UserPO getApprover() {

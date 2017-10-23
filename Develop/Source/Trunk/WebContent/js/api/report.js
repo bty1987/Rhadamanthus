@@ -29,13 +29,6 @@ $.extend(api, {report: {
     materialDesignerDepartmentRank: {url: "materialDesignerDepartmentRank.do", demo: true},
     materialDesignerRegionRank: {url: "materialDesignerRegionRank.do", demo: true},
 
-    queryZaterialDesignerRank: {url: "queryZaterialDesignerRank.do"},
-    queryZaterialDesignerDepartmentRank: {url: "queryZaterialDesignerDepartmentRank.do"},
-    queryZaterialDesignerRegionRank: {url: "queryZaterialDesignerRegionRank.do"},
-    zaterialDesignerRank: {url: "zaterialDesignerRank.do", demo: true},
-    zaterialDesignerDepartmentRank: {url: "zaterialDesignerDepartmentRank.do", demo: true},
-    zaterialDesignerRegionRank: {url: "zaterialDesignerRegionRank.do", demo: true},
-
     materialTypeReport: {url: "materialTypeReport.do", demo: true},
     materialBrandReport: {url: "materialBrandReport.do", demo: true},
     materialDepartmentReport: {url: "materialDepartmentReport.do", demo: true},

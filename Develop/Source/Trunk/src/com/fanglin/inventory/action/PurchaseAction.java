@@ -103,6 +103,22 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updatePurchaseForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePurchaseForStatus() throws FLException{
+		
+		purchaseService.updatePurchaseForStatus(purchase);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updatePurchaseForBalanceStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePurchaseForBalanceStatus() throws FLException{
+		
+		purchaseService.updatePurchaseForBalanceStatus(purchase);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updatePurchaseItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updatePurchaseItem() throws FLException{
 		
@@ -118,6 +134,7 @@ public class PurchaseAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
 	
 	public PurchaseVO getPurchase() {
 		return purchase;

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Information Platform</title>
+
+    <meta charset="utf-8" />
+    <meta content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <!-- altogether -->
+    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <!-- altogether end -->
+
+    <script type="text/javascript">
+
+        var isF5 = false;
+        document.onkeydown = function (e) {
+            var ev = window.event || e;
+            var code = ev.keyCode || ev.which;
+            if (code == 116) {
+                isF5 = true;
+            }
+        }
+        window.onbeforeunload = onclose;
+        function onclose(){
+            if(!isF5){
+                isF5 = false;
+                return "";
+            }
+        }
+
+        var server = './'
+        var versionCode = '';
+        var cookies = document.cookie.split(";");
+
+        for(var i=0;i<cookies.length;i++){
+            var cookie = cookies[i];
+
+            if(cookie.indexOf("versionCode") != -1){
+                versionCode = cookie.split("=")[1];
+            }else if(cookie.indexOf("authentication") != -1){
+                window.authentication = cookie.split("=")[1];
+            }else if(cookie.indexOf("loginTime") != -1){
+                window.loginTime = cookie.split("=")[1];
+            }
+        }
+
+        var csses = "";
+        /* clear */
+        csses += '<link type="text/css" rel="stylesheet" href="assets/clear/css/app.css?version=' + versionCode + '"/>';
+
+        csses += '<link type="text/css" rel="stylesheet" href="assets/clear/css/bootstrap-clear.min.css?version=' + versionCode + '" />';
+
+        /* clear > vendors  */
+        csses += '<link rel="stylesheet" href="assets/clear/css/vendors/animate/animate.min.css?version=' + versionCode + '">';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/vendors/iCheck/all.css?version=' + versionCode + '"/>';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/vendors/bootstrap-switch/bootstrap-switch.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/vendors/bootstrap3-wysihtml5-bower/bootstrap3-wysihtml5.min.css?version=' + versionCode + '" />';
+
+        /* clear > custom */
+        csses += '<link rel="stylesheet" href="assets/clear/css/custom/advanced_modals.css?version=' + versionCode + '">';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/custom/datatables_custom.css?version=' + versionCode + '">';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/custom/toastr_notificatons.css?version=' + versionCode + '" />';
+
+        /* clear > simple-line-icons */
+        csses += '<link rel="stylesheet" href="assets/clear/css/simple-line-icons/simple-line-icons.css?version=' + versionCode + '" />';
+
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/chosen-clear.min.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/datepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/daterangepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/timeline.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/zTreeStyle.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/huploadify.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/fullcalendar.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/form_editors.css?version=' + versionCode + '" />';
+
+        /*  clear > toastr */
+        csses += '<link rel="stylesheet" href="assets/clear/css/toastr/toastr.min.css?version=' + versionCode + '" />';
+
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/nestable.css?version=' + versionCode + '">';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/datatable.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/jquery.gritter.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/normalize.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/colorbox.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/clear/css/custom.css?version=' + versionCode + '">';
+        /* clear end */
+
+        /* altogether */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
+        /* altogether end */
+
+        csses += '<link rel="stylesheet" href="css/clear.css?version=' + versionCode + '" />';
+
+        document.write(csses);
+
+    </script>
+
+</head>
+
+<body class="skin-default">
+
+<div class="preloader">
+    <div class="loader_img"><img src="images/loader.gif" alt="loading..." height="64" width="64"></div>
+</div>
+
+<!-- header 头部 -->
+<header class="header">
+    <nav class="navbar navbar-static-top" role="navigation">
+
+        <a href="#" class="logo title_text">
+            <!-- @Date:9.27 删除 Information Platform 字体 -->
+        </a>
+
+        <!-- Sidebar toggle button-->
+        <div>
+            <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button"> <i class="fa fa-fw ti-menu"></i>
+            </a>
+        </div>
+
+
+        <div class="navbar-right">
+            <ul class="nav navbar-nav">
+
+                <!-- 拨打电话 -->
+                <li class="dropdown hide">
+                    <a href="#" id="called" class="dropdown-toggle">
+                        <i class="fa fa-fw ti-wand black" ></i>
+                    </a>
+                </li>
+                <!-- message 消息块 -->
+                <li class="dropdown messages-menu">
+                    <a id="messageBtn" href="#" class="dropdown-toggle messageList">
+                        <i class="fa fa-fw ti-email black"></i><span class="menu-font">消息</span>
+                        <span id='messageCount' class="badge badge-pink messageCount"></span>
+                    </a>
+                </li><!-- message 消息块 end-->
+
+                <!-- 版本 -->
+                <li class="dropdown faq-menu">
+                    <a href="#" id="versionInfo" class="dropdown-toggle" id="versionInfo" data-toggle="dropdown">
+                        <i class="fa fa-fw ti-bookmark black"></i><span class="menu-font">版本</span>
+                    </a>
+                </li>
+
+                <!-- 帮助 -->
+                <li class="dropdown faq-menu">
+                    <a href="#" id="faqInfo" class="dropdown-toggle" id="faqInfo" data-toggle="dropdown">
+                        <i class="fa fa-fw ti-key black"></i><span class="menu-font">帮助</span>
+                    </a>
+                </li>
+
+                <!-- 公司 -->
+                <li class="dropdown company-menu">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <div class="riot" style="padding-left: 0px;">
+                            <div>
+                                <span class="companyinfo"><small></small><span class="companyName"></span></span>
+                                <span><i class="caret"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu" id="companysel"></ul>
+                </li>
+
+                <!-- 用户 -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle padding-user" data-toggle="dropdown">
+                        <img  alt="User Image"  src="assets/altogether/images/avatar2.png" id="userImg" width="35" class="img-circle img-responsive pull-left"
+                              height="35" alt="User Image">
+                        <div class="riot">
+                            <div>
+                                <span class="user-info-dropmenu"><small id="userId" class="float_left"></small></span>
+                                <span><i class="caret float_right margin-top-10"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- 用户图片-->
+                        <li class="user-header">
+                            <img class="img-circle" alt="User Image top"  src="assets/altogether/images/avatar2.png" width="35px" height="35px" id="userImgtop">
+                            <p class="user-name" id="userInfoId"></p>
+                        </li>
+                        <!-- 菜单 -->
+                        <li class="p-t-3"><a id="userProfile" class="userProfile" href="#">
+                            <i class="fa fa-fw ti-user"></i>个人资料</a>
+                        </li>
+                        <li role="presentation"></li>
+                        <li><a id="changePassword" class="changePassword" href="#"> <i class="fa fa-fw ti-settings"></i>修改密码</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <!-- 菜单尾部-->
+                        <li class="user-footer">
+
+                            <div class="pull-right">
+                                <a href="dlogin.html">
+                                    <i class="fa fa-fw ti-shift-right logout" id="logout"></i>
+                                    退出
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+
+                </li>
+
+                <!-- 设置皮肤 隐藏-->
+                <li class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <div class="skin-riot">
+                            <div class="clear-menu-nav">
+                                <span><i class="fa fa-fw ti-settings" data-toggle="tooltip" data-placement="bottom" title="切换皮肤"></i></span>
+                                <span><i class="caret" style="margin-top: -5px;"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="p-t-3">
+                            <a href='index.html' class="" id="aceButton">
+                                <div class="ace-skin-button"></div>ace
+                            </a>
+                        </li>
+                        <li class="p-t-3">
+                            <a href='index-metro.html' class="" id="metroButton">
+                                <div class="metro-skin-button"></div>metro
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</header><!-- header 头部 end-->
+
+<!-- 拨打电话 模态框 -->
+<div class="modal fade" id="phonecallModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">拨打电话</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="username">姓名</label>
+
+                        <div class="col-sm-9">
+                            <input id="username" type="text" class=" " data-toggle="popover" readonly data-trigger='manual' maxlength="32">
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="caller">主叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="caller" type="text" class="" data-toggle="popover" readonly data-trigger='manual' >
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="callee">被叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="callee" type="text" class=" v_required v_phone" data-toggle="popover" data-trigger='manual' maxlength="11">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer ">
+                <button class="btn btn-success" type="button" id="save"><i class="icon-phone bigger-110"></i>拨打电话</button>
+                <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 中间主体 start -->
+<div class="wrapper row-offcanvas row-offcanvas-left">
+
+    <!-- 左侧菜单 start-->
+    <aside class="left-side sidebar-offcanvas">
+
+        <section class="sidebar">
+            <div id="menu" role="navigation">
+
+                <!-- @Date:9.27 删除 nva_profile -->
+
+                <ul class="navigation nav nav-list" id="navigation">
+
+                </ul>
+
+            </div>
+        </section>
+    </aside>
+    <!-- 左侧菜单 end -->
+
+    <!-- 右侧内容 start-->
+    <aside class="right-side">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+            </script>
+            <ul class="breadcrumb">
+                <li class='nav1'><i class="icon-home"></i> 首页</li>
+                <li class='nav2' style='display:none'></li>
+                <li class="nav3 active" style='display:none'></li>
+            </ul><!-- .breadcrumb -->
+        </div>
+
+        <div id="fl-container"></div>
+        <!-- 右侧主体内容 end-->
+    </aside>
+    <!-- 右侧内容 end -->
+
+
+</div><!-- 中间主体 end -->
+
+
+<script type="text/javascript">
+
+    var jses = "";
+
+    /* altogether */
+    jses += '<script src="assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+    /* altogether end */
+
+    jses += '<script src="assets/clear/js/app.js?version=' + versionCode + '"><\/script>';
+
+
+    //jses += '<script type="text/javascript" src="assets/js/bootstrap.min.js?version='+versionCode+'"><\/script>'; app.js于bootstrap.min.js冲突
+
+
+    /* clear > bootstrap-switch */
+    jses += '<script src="assets/clear/js/bootstrap-switch/bootstrap-switch.js" type="text/javascript"><\/script>';
+
+    jses += '<script src="assets/clear/js/bootstrap-editable.min.js" type="text/javascript"><\/script>';
+    // elements
+    jses += '<script src="assets/clear/js/ace-elements.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.slimscroll.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.inputlimiter.1.3.1.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.nestable.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.maskedinput.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.raty.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/chosen.jquery.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery-ui-1.10.3.custom.min.js?version=' + versionCode + '"><\/script>';
+
+    /* clear > date-time */
+    jses += '<script src="assets/clear/js/date-time/bootstrap-datepicker.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/date-time/bootstrap-timepicker.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>'; // page specific plugin scripts
+    /* clear > date-time end */
+
+    jses += '<script src="assets/clear/js/jquery.ui.touch-punch.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/fullcalendar.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.easing.1.3.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/spin.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/typeahead-bs2.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/tag.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/base64.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/html2canvas.js?version=' + versionCode + '"><\/script>';
+
+    /* clear > ztree  */
+    jses += '<script src="assets/clear/js/ztree/jquery.ztree.core-3.5.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/ztree/jquery.ztree.excheck-3.5.min.js?version=' + versionCode + '"><\/script>';
+    /* clear > ztree end */
+
+    jses += '<script src="assets/clear/js/jquery.huploadify.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/highcharts.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.hotkeys.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/bootstrap-wysiwyg.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/time_line.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/wow.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/advanced_newsTicker/newsTicker.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/toastr/toastr.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/bootstrapvalidator/bootstrapValidator.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/clear/js/jquery.colorbox-min.js?version=' + versionCode + '"><\/script>';
+
+    /* altogether > fuelux */
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.wizard.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.spinner.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.tree.js?version=' + versionCode + '"><\/script>';
+    /* altogether > fuelux end */
+
+    /* altogether */
+    jses += '<script src="assets/altogether/js/layer.js?version=' + versionCode + '"><\/script>';
+    /* altogether end */
+
+    /* ace  @Date10.10 调用ace目录中ace.js实现折叠功能 */
+    jses += '<script src="assets/ace/js/ace.js?version=' + versionCode + '"><\/script>';
+
+
+    jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/params.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/utils.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/error.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/core.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
+
+    document.write(jses);
+
+</script>
+
+</body>
+</html>

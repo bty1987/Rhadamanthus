@@ -195,7 +195,7 @@ $(function () {
             title: "辅料订单" + no,
             content: $popup,
             area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
                 $popup.load("views/manifest/viewAssisOrderItem.html");
@@ -218,7 +218,7 @@ $(function () {
             title: "修改辅料订单" + no,
             content: $popup,
             area: ["950px", ( $(window).height() * 0.84 < 600 ? $(window).height() * 0.84 : 600 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             btn: ["确定"],
             zIndex: 9000,
             success: function (layer, index) {
@@ -242,7 +242,7 @@ $(function () {
             title: "批量出货",
             content: $popup,
             area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
                 $popup.load("views/manifest/batchAssisOrderItem.html");

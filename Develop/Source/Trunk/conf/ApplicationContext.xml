@@ -22,124 +22,59 @@
 		</property>
 	</bean>
 	
- 	<bean class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close" id="dataSource">
-	    <property name="uniqueResourceName" value="mysql/platform"></property>
-	    <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" />
-    	<property name="xaProperties">
-    		<props>
-			    <prop key="user">${jdbc.username}</prop>
-			    <prop key="password">${jdbc.password}</prop>
-			    <prop key="url">${jdbc.url}</prop>
-    		</props>
-    	</property>
-    	
-    	<property name="poolSize" value="1" />
-		<property name="reapTimeout" value="20000"/>
-		
-		<property name="testQuery" value="SELECT 1"/>
+ 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${platform.driverClassName}" />
+        <property name="jdbcUrl" value="${platform.url}" />
+        <property name="user" value="${platform.username}" />
+        <property name="password" value="${platform.password}" />
+        <!-- 指定连接数据库连接池的最大连接数 -->
+        <property name="maxPoolSize" value="40" />
+        <!-- 指定连接数据库连接池的最小连接数 -->
+        <property name="minPoolSize" value="1" />
+        <!-- 指定连接数据库连接池的初始化连接数 -->
+        <property name="initialPoolSize" value="1" />
+        <!-- 指定连接数据库连接池的连接的最大空闲时间 -->
+        <!-- property name="maxIdleTime" value="20"/ -->
     </bean>
-    
-    <bean class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close" id="communionSource">
-	    <property name="uniqueResourceName" value="mysql/communion"></property>
-	    <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" />
-	    <property name="xaProperties">
-		    <props>
-			    <prop key="user">${communion.username}</prop>
-			    <prop key="password">${communion.password}</prop>
-			    <prop key="url">${communion.url}</prop>
-		    </props>
-	    </property>
-	    
-		<property name="poolSize" value="1" />
-		<property name="reapTimeout" value="20000"/>
-		
-		<property name="testQuery" value="SELECT 1"/>
-    </bean>
-    
-    <bean class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close" id="financeSource">
-	    <property name="uniqueResourceName" value="mysql/finance"></property>
-	    <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" />
-	    <property name="xaProperties">
-		    <props>
-			    <prop key="user">${finance.username}</prop>
-			    <prop key="password">${finance.password}</prop>
-			    <prop key="url">${finance.url}</prop>
-		    </props>
-	    </property>
-	    
-		<property name="poolSize" value="1" />
-		<property name="reapTimeout" value="20000"/>
-		
-		<property name="testQuery" value="SELECT 1"/>
-    </bean>
-    
+
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-	    <property name="dataSource" ref="dataSource" />
-	    <property name="hibernateProperties">
-		    <props>
-			    <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-			    <prop key="hibernate.autoReconnect">true</prop>
-			    <prop key="hibernate.show_sql">true</prop>
-			    <prop key="hibernate.connection.autocommit">false</prop>
-			    <prop key="hibernate.connection.isolation">4</prop>
-				<prop key="hibernate.jdbc.batch_size">10</prop>
-		    </props>
-	    </property>
-	    <property name="packagesToScan" value="com.fanglin.*.po"></property>
-    </bean>
-
-    <bean id="communionSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		<property name="dataSource" ref="communionSource" />
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-			    <prop key="hibernate.autoReconnect">true</prop>
-			    <prop key="hibernate.show_sql">true</prop>
-			    <prop key="hibernate.connection.autocommit">false</prop>
-			    <prop key="hibernate.connection.isolation">4</prop>
-				<prop key="hibernate.jdbc.batch_size">10</prop>
-			</props>
-		</property>
-		<property name="packagesToScan" value="com.fanglin.*.po"></property>
-    </bean>
-    
-    <bean id="financeSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		<property name="dataSource" ref="financeSource" />
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-			    <prop key="hibernate.autoReconnect">true</prop>
-			    <prop key="hibernate.show_sql">true</prop>
-			    <prop key="hibernate.connection.autocommit">false</prop>
-			    <prop key="hibernate.connection.isolation">4</prop>
-				<prop key="hibernate.jdbc.batch_size">10</prop>
-			</props>
-		</property>
-		<property name="packagesToScan" value="com.fanglin.*.po"></property>
-    </bean>
-
-    <bean id="userTransactionService" class="com.atomikos.icatch.config.UserTransactionServiceImp" init-method="init" destroy-method="shutdownForce">
-        <constructor-arg>
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="hibernateProperties"> <!-- 注入hibernate属性 -->
             <props>
-                <prop key="com.atomikos.icatch.service">com.atomikos.icatch.standalone.UserTransactionServiceFactory</prop>
+                <prop key="hibernate.dialect">${platform.dialect}</prop>
+                <prop key="hibernate.autoReconnect">true</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.jdbc.batch_size">10</prop>
+                <prop key="hibernate.connection.isolation">4</prop>
+                <!-- <prop key="hibernate.hbm2ddl.auto">create</prop> -->
+
+                <!-- hibernate-memcache配置 -->
+                <!-- 开启二级缓存 -->
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+                <!-- 设置缓存类 -->
+                <!-- prop key="hibernate.cache.provider_class">com.googlecode.hibernate.memcached.MemcachedCacheProvider</prop -->
+                <!-- 设置memcache缓存服务器端口 -->
+                <!--prop key="hibernate.memcached.servers">localhost:11211</prop -->
+                <!-- 设置二级缓存的前缀名称 -->
+                <!--prop key="hibernate.cache.region_prefix">quality.cache.ehcache</prop -->
+                <!-- 否使用结构化的方式缓存对象 -->
+                <!--prop key="hibernate.cache.use_structured_entries">true</prop -->
+                <!-- 是否缓存查询结果 -->
+                <prop key="hibernate.cache.use_query_cache">true</prop>
             </props>
-        </constructor-arg>
-    </bean>
-
-    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
-    	<property name="forceShutdown" value="true" />
+        </property>
+        <property name="packagesToScan" value="com.fanglin.*.po"></property>
     </bean>
     
-    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
-    	<property name="transactionTimeout" value="300" />
+    <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+          <ref bean="sessionFactory" />
+        </property>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" depends-on="userTransactionService">
-	    <property name="transactionManager" ref="atomikosTransactionManager"/>
-	    <property name="userTransaction" ref="atomikosUserTransaction" />
-    </bean>
-    
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+    <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
 	
 	<!-- 自动扫描所有注解该路径 -->
 	<context:component-scan base-package="com.fanglin" />

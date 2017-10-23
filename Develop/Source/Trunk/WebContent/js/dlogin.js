@@ -5,7 +5,6 @@ jQuery(function(a){
     var QRCode = '/QRCode.do';
     var queryVode = '/queryVode.do';
     
-    $(document).attr('title', config.name + ' ' + config.ename);
     $('#icon').attr('src', config.iconImg);
     $('#name').text(config.name);
     $('#ename').text(config.ename);

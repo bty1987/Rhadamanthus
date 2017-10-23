@@ -29,8 +29,6 @@ $.extend(api.index, {
     }
 });
 
-
-
 $.extend(api, {
     inventory: {
         pageCheckList: {
@@ -273,6 +271,12 @@ $.extend(api, {
         },
         updatePurchase: {
             url: "updatePurchase.do",
+        },
+        updatePurchaseForStatus: {
+            url: "updatePurchaseForStatus.do",
+        },
+        updatePurchaseForBalanceStatus: {
+            url: "updatePurchaseForBalanceStatus.do",
         },
         updatePurchaseItem: {
             url: "updatePurchaseItem.do",

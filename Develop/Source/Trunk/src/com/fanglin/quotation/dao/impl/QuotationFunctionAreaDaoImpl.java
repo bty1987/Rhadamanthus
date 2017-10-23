@@ -33,6 +33,11 @@ public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaP
 	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId){
 		return createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).addOrder(Order.asc("functionAreaOrder")).list();
 	}
+	
+	@Override
+	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId,short type){
+		return (QuotationFunctionAreaPO) createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).add(Restrictions.eq("type",type)).uniqueResult();
+	}
 
 	@Override
 	public int deleteQuotationFunctionAreaByIds(List<Long> qfaIds){

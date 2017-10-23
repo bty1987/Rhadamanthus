@@ -5,27 +5,20 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.google.gson.annotations.SerializedName;
-
 public class LoginLogVO implements Serializable {
 	
 	private static final long serialVersionUID = -8993777631048468322L;
 	
 	private Long llId;
 
-	@SerializedName("主键")
 	private String id;
 	
-	@SerializedName("登录名")
 	private String loginId;
 
-	@SerializedName("登录时间")
 	private Timestamp loginTime;
 
-	@SerializedName("登录IP")
 	private String sourceIp;
 	
-	@SerializedName("登录结果")
 	private int successFlag;
 
 	public LoginLogVO() {

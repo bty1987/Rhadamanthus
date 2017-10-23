@@ -582,6 +582,7 @@ jQuery(function($) {
 
 		if([1, 2, 3].indexOf(payment.paymentType) != -1){ // 预付款、订金、全款
 			initBaseModal();
+			$("#des").val("");
 			$("#myModalLabel").text("付款信息");
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
             $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
@@ -590,6 +591,7 @@ jQuery(function($) {
 
 		}else if([4, 5, 6, 7].indexOf(payment.paymentType) != -1){ // 退款
 			initBaseModal();
+			$("#des").val("");
 			$("#myModalLabel").text("退款信息");
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
 			$('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
@@ -655,7 +657,7 @@ jQuery(function($) {
 	function addBankDiv(index){
 
 		var d = new Date();
-		var currentData = d.getFullYear() + "-" + (d.getMonth().toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
+		var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
 
 		var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
 

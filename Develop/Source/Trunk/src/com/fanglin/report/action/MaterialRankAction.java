@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialRankAction.java
- * @Package   	: com.fanglin.action.materialOrder
- * @Version		: 1.0
- * @Date			: 2014-11-16
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.action;
 
 import java.util.List;
@@ -84,54 +73,6 @@ public class MaterialRankAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="queryZaterialDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryZaterialDesignerRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerRankForTop(-1,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryZaterialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryZaterialDesignerDepartmentRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(queryUserId(), -1,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryZaterialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryZaterialDesignerRegionRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(queryUserId(), -1,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="zaterialDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String zaterialDesignerRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerRankForTop(10,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="zaterialDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String zaterialDesignerDepartmentRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerDepartmentRankForTop(queryUserId(), 10,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="zaterialDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String zaterialDesignerRegionRank() throws FLException{
-		
-		ranks = materialRankService.queryZaterialDesignerRegionRankForTop(queryUserId(), 10,queryCompany());
-		
-		return SUCCESS;
-	}
-
 	public List<?> getRanks(){
 		return ranks;
 	}

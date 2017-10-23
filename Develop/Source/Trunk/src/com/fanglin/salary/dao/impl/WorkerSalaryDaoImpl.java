@@ -105,5 +105,4 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			}
 		}
 	}
-	
 }

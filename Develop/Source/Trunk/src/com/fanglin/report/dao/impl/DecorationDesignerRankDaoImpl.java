@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationDesignerRankDaoImpl.java
- * @Package   	: com.fanglin.report.dao.impl
- * @Version		: 1.0
- * @Date			: 2015-6-23
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.dao.impl;
 
 import java.util.List;
@@ -32,8 +21,8 @@ public class DecorationDesignerRankDaoImpl extends DaoImpl<DecorationDesignerRan
 	@Override
 	public DecorationDesignerRankPO queryDecorationDesignerRankForInitByDesignerId(String designerId,int company) {
 		return (DecorationDesignerRankPO) session().createCriteria(DecorationDesignerRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
-				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_STATUS_STR, DecorationDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
@@ -43,9 +32,9 @@ public class DecorationDesignerRankDaoImpl extends DaoImpl<DecorationDesignerRan
 	public List<DecorationDesignerRankPO> queryDecorationDesignerRankForTop(int top,int company) {
 		
 		Criteria criteria = session().createCriteria(DecorationDesignerRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.ne(DecorationDesignerRankPO.COLUMN_DESIGNERID_STR, ""))
 				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_STATUS_STR, DecorationDesignerRankPO.STATUS_TYPE_INIT_INT))
-				.add(Restrictions.eq(DecorationDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.addOrder(Order.desc(DecorationDesignerRankPO.COLUMN_RANK_STR));
 		
 		if(top >= 0){

@@ -67,7 +67,7 @@ jQuery(function($) {
 	customer.items.address = $("#address");
 	customer.items.relationshipType = $("#relationshipType");
 	
-	com.post(api.ds.customerInfo, {}, function(res){
+	com.post(api.ds.data, {}, function(res){
 		
 		var relationshipType = [];
 		

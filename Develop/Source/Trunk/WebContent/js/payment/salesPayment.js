@@ -618,11 +618,10 @@ $(function () {
         layer.closeAll();
         var index = layer.open({
             type: 1,
-            //skin: 'layui-layer-lan',
             title: type,
             content: $('#layerAdd'),
             area: ["650px", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -661,7 +660,7 @@ $(function () {
     function addBankDiv(index){
 
         var d = new Date();
-        var currentData = d.getFullYear() + "-" + (d.getMonth().toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
+        var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
 
         var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
 

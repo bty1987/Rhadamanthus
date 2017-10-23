@@ -9,7 +9,7 @@ import com.fanglin.right.dao.RoleChainPageDao;
 import com.fanglin.right.po.RoleChainPagePO;
 
 @Repository("roleChainPageDao")
-public class RoleChainPageDaoImpl  extends DaoImpl<RoleChainPagePO> implements RoleChainPageDao{
+public class RoleChainPageDaoImpl extends DaoImpl<RoleChainPagePO> implements RoleChainPageDao{
 	
 	public RoleChainPageDaoImpl(){
 		super(RoleChainPagePO.class);
@@ -18,7 +18,6 @@ public class RoleChainPageDaoImpl  extends DaoImpl<RoleChainPagePO> implements R
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleChainPagePO> queryRoleChainPageByRid(int rid) {
-		
 		return session().createCriteria(RoleChainPagePO.class).add(Restrictions.eq(RoleChainPagePO.COLUMN_RID_STR, rid)).list();
 	}
 
@@ -32,10 +31,10 @@ public class RoleChainPageDaoImpl  extends DaoImpl<RoleChainPagePO> implements R
 	@Override
 	public int deleteRoleChainPage(int rid) {
 		
-		String sql="delete from platform.rolechainpage where rid= :rid";
+		String sql="delete from platform.rolechainpage where rid= :rid";	
 		session().createSQLQuery(sql).setInteger("rid", rid).executeUpdate();
-		
 		return 0;
 	}
+
 
 }

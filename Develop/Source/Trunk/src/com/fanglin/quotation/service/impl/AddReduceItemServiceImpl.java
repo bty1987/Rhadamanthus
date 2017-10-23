@@ -40,6 +40,7 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.service.AddReduceItemService;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
@@ -70,12 +71,16 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
-	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) {
+	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO)  throws FLException{
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(addReduceVO.getArId());
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -98,7 +103,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
 				}
 			} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+	
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId( QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 				if (quotationFunctionAreaItemPO != null) {
 					if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
@@ -129,12 +135,13 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	}
 
 	@Override
-	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds) {
+	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds) throws FLException{
 
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 
 		if (addReduceIds != null && addReduceIds.size() > 0) {
 			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceIds(addReduceIds);
+			Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 			for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -156,7 +163,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 						addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
 					}
 				} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+					
+					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 					if (quotationFunctionAreaItemPO != null) {
 						if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
@@ -212,6 +220,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO,addReducePO);
 
 		AddReduceItemPO addReduceItemPO = null;
+		
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		if (addReduceItemVO.getAriId() == null) {
 
@@ -226,7 +236,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			addReduceItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(addReduceItemVO.getQuotationFunctionAreaId()));
 
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+								
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 				if (quotationFunctionAreaItemPO == null) {
 					throw new FLException(200013, "报价项不存在");
@@ -238,7 +249,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				if (quotationFunctionAreaItemNum < addReduceItemNum) {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
-
+				
 				quotationFunctionAreaItemPO.setNum(Arith.sub(quotationFunctionAreaItemNum, addReduceItemNum));
 				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
@@ -279,7 +290,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			}
 
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 				if (quotationFunctionAreaItemPO == null) {
 					throw new FLException(200013, "报价项不存在");
@@ -379,7 +391,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		}
 
 		if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+			
+			Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+			
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 			if (quotationFunctionAreaItemPO == null) {
 				throw new FLException(200013, "报价项不存在");
@@ -389,6 +404,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			float addReduceItemNum = addReduceItemPO.getNum();
 
 			quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
+
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
 			AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
@@ -421,5 +437,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		return 0;
 	}
+	
+	
 
 }

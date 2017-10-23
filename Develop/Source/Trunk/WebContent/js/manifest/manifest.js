@@ -236,7 +236,7 @@ $(function () {
             title: "查看货单" + code,
             content: $popup,
             area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['取消'],
             success: function (layer, index) {
@@ -259,7 +259,7 @@ $(function () {
             title: "修改货单" + code,
             content: $popup,
             area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定'],
             success: function (layer, index) {
@@ -301,7 +301,7 @@ $(function () {
             title: "退货",
             content: $popup,
             area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
                 $popup.load("views/manifest/aarManifest.html");
@@ -324,7 +324,7 @@ $(function () {
             title: "进退",
             content: $popup,
             area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
                 $popup.load("views/manifest/roManifest.html");

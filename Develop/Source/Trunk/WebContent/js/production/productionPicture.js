@@ -116,7 +116,7 @@ $(function(){
             title: "导入图纸",
             content: $layerImport ,
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定'],
             zIndex: 9999,

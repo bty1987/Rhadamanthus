@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationDesignerRankDaoImpl.java
- * @Package   	: com.fanglin.report.dao.impl
- * @Version		: 1.0
- * @Date			: 2015-6-23
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.dao.impl;
 
 import java.util.List;
@@ -32,8 +21,8 @@ public class DecorationDesignerRegionRankDaoImpl extends DaoImpl<DecorationDesig
 	@Override
 	public DecorationDesignerRegionRankPO queryDecorationDesignerRegionRankForInitByRegionId(String regionId,int company) {
 		return (DecorationDesignerRegionRankPO) session().createCriteria(DecorationDesignerRegionRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, regionId))
-				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_STATUS_STR, DecorationDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
@@ -43,9 +32,9 @@ public class DecorationDesignerRegionRankDaoImpl extends DaoImpl<DecorationDesig
 	public List<DecorationDesignerRegionRankPO> queryDecorationDesignerRegionRankForTop(int top,int company) {
 		
 		Criteria criteria = session().createCriteria(DecorationDesignerRegionRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.ne(DecorationDesignerRegionRankPO.COLUMN_DESIGNERREGIONID_STR, ""))
 				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_STATUS_STR, DecorationDesignerRegionRankPO.STATUS_TYPE_INIT_INT))
-				.add(Restrictions.eq(DecorationDesignerRegionRankPO.COLUMN_COMPANY_STR, company))
 				.addOrder(Order.desc(DecorationDesignerRegionRankPO.COLUMN_RANK_STR));
 		
 		if(top >= 0){

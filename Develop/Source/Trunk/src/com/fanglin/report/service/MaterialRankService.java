@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialRankService.java
- * @Package   	: com.fanglin.service.materialOrder
- * @Version		: 1.0
- * @Date			: 2014-11-16
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.service;
 
 import java.util.List;
@@ -17,13 +6,15 @@ import com.fanglin.common.vo.TopVO;
 import com.fanglin.report.vo.MaterialDesignerDepartmentRankVO;
 import com.fanglin.report.vo.MaterialDesignerRankVO;
 import com.fanglin.report.vo.MaterialDesignerRegionRankVO;
-import com.fanglin.report.vo.ZaterialDesignerDepartmentRankVO;
-import com.fanglin.report.vo.ZaterialDesignerRankVO;
-import com.fanglin.report.vo.ZaterialDesignerRegionRankVO;
+
 
 public interface MaterialRankService {
 	
 	public List<MaterialDesignerRankVO> queryMaterialDesignerRank();
+	
+	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId,int company);
+	
+	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId,int company);
 	
 	public List<MaterialDesignerRankVO> queryMaterialDesignerRankForTop(int top,int company);
 	
@@ -32,24 +23,14 @@ public interface MaterialRankService {
 	public List<MaterialDesignerDepartmentRankVO> queryMaterialDesignerDepartmentRankForTop(String userId, int top,int company);
 	
 	public List<TopVO> queryMaterialDesignerDepartmentRank(int top,int company);
-	
+		
 	public List<MaterialDesignerRegionRankVO> queryMaterialDesignerRegionRankForTop(String userId, int top,int company);
 	
 	public List<TopVO> queryMaterialDesignerRegionRank(int top,int company);
-	
-	public List<String> queryMaterialDesignerRankForPlaceByUserId(String userId,int company);
-	
-	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top,int company);
-	
+		
 	public List<TopVO> queryZaterialDesignerRank(int top,int company);
-	
-	public List<String> queryZaterialDesignerRankForPlaceByUserId(String userId,int company);
-	
-	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top,int company);
-	
+			
 	public List<TopVO> queryZaterialDesignerDepartmentRank(int top,int company);
-	
-	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top,int company);
 	
 	public List<TopVO> queryZaterialDesignerRegionRank(int top,int company);
 	

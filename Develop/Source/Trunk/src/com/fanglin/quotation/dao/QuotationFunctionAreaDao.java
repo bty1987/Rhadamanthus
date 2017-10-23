@@ -19,6 +19,8 @@ public interface QuotationFunctionAreaDao extends Dao<QuotationFunctionAreaPO> {
 	
 	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId);
 	
+	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId,short type);
+	
 	public int deleteQuotationFunctionAreaByIds(List<Long> ids);
 	
 }

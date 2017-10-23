@@ -97,6 +97,10 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 			throw new FLException(140044 , "审批记录不存在");
 		}
 		
+		if(auditRecordPO.getStatus() != AuditRecordPO.STATUS_INIT_SHORT) {
+			throw new FLException(140045, "审批记录状态不可操作");
+		}
+		
 		List<AuditScalePO> audisScales = auditScaleDao.queryAudtiScaleByArid(auditRecord.getArid());
 		
 		if(!audisScales.isEmpty()) {

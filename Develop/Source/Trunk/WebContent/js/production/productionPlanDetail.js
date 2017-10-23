@@ -123,7 +123,7 @@ jQuery(function ($) {
             title: "查看工序",
             content: $popup,
             area:["1200px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定', '取消'],
             success: function (layer, index) {

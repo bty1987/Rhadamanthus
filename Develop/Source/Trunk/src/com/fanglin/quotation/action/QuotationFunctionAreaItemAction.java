@@ -24,6 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationFunctionAreaItemService;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
+import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 @ParentPackage("base")
@@ -42,10 +43,12 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 	
 	private QuotationFunctionAreaItemVO quotationFunctionAreaItem;
 	
+	private QuotationFunctionAreaVO quotationFunctionArea;
+	
 	private List<Long> qfaiIds;
 	
 	@Action(value = "queryQuotationFunctionAreaItemByQuotationFunctionAreaId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationFunctionAreaItemByQuotationFunctionAreaId(){
+	public String queryQuotationFunctionAreaItemByQuotationFunctionAreaId()throws FLException{
 		
 		quotationFunctionAreaItems = quotationFunctionAreaItemService.queryQuotationFunctionAreaItemByQuotationFunctionAreaId(quotationFunctionAreaItem);
 		
@@ -79,7 +82,7 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 	@Action(value = "deleteQuotationFunctionAreaItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationFunctionAreaItem() throws FLException{
 		
-		quotationFunctionAreaItemService.deleteQuotationFunctionAreaItem(qfaiIds, quotation);
+		quotationFunctionAreaItemService.deleteQuotationFunctionAreaItem(qfaiIds, quotation,quotationFunctionArea);
 		
 		return SUCCESS;
 	}
@@ -117,5 +120,15 @@ public class QuotationFunctionAreaItemAction extends BaseListAction {
 	public void setQfaiIds(List<Long> qfaiIds) {
 		this.qfaiIds = qfaiIds;
 	}
+	
+	public QuotationFunctionAreaVO getQuotationFunctionArea() {
+		return quotationFunctionArea;
+	}
+
+	public void setQuotationFunctionArea(
+			QuotationFunctionAreaVO quotationFunctionArea) {
+		this.quotationFunctionArea = quotationFunctionArea;
+	}
+
 
 }

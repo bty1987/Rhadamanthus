@@ -15,11 +15,12 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
+import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationFunctionAreaItemService {
 	
-	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO);
+	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO)throws FLException;
 	
 	public QuotationFunctionAreaItemVO updateQuotationFunctionAreaItem(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, QuotationVO quotationVO) throws FLException;
 	
@@ -27,6 +28,6 @@ public interface QuotationFunctionAreaItemService {
 	
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
 	
-	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO) throws FLException;
+	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO,QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;
 	
 }

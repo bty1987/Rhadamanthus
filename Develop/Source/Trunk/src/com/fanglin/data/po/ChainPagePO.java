@@ -65,8 +65,5 @@ public class ChainPagePO  implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-	
-	
-	
+	}	
 }

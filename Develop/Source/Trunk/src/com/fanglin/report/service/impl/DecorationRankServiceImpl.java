@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationRankServiceImpl.java
- * @Package   	: com.fanglin.report.service.impl
- * @Version		: 1.0
- * @Date			: 2015-6-23
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.service.impl;
 
 import java.util.ArrayList;
@@ -63,7 +52,6 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 			BeanUtil.copyProperties(decorationDesignerRankPO, decorationDesignerRankVO);
 			
 			decorationDesignerRankVO.setRank(top >= 0 ? (double) Math.round(decorationDesignerRankPO.getRank()) : null);
-			
 			decorationDesignerRankVOs.add(decorationDesignerRankVO);
 		}
 		

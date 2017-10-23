@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialReportService.java
- * @Package   	: com.fanglin.service.materialOrder
- * @Version		: 1.0
- * @Date			: 2014-11-15
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.service;
 
 import java.util.List;

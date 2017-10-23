@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialDesignerRankDaoImpl.java
- * @Package   	: com.fanglin.dao.impl.materialOrder
- * @Version		: 1.0
- * @Date			: 2014-11-16
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.dao.impl;
 
 import java.util.List;
@@ -32,8 +21,8 @@ public class MaterialDesignerRankDaoImpl extends DaoImpl<MaterialDesignerRankPO>
 	@Override
 	public MaterialDesignerRankPO queryMaterialDesignerRankByDesignerIdInit(String designerId,int company){
 		return (MaterialDesignerRankPO) session().createCriteria(MaterialDesignerRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_DESIGNERID_STR, designerId))
-				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_STATUS_STR, MaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.uniqueResult();
 	}
@@ -43,8 +32,8 @@ public class MaterialDesignerRankDaoImpl extends DaoImpl<MaterialDesignerRankPO>
 	public List<MaterialDesignerRankPO> queryMaterialDesignerRankForTop(int top,int company){
 		
 		Criteria criteria = session().createCriteria(MaterialDesignerRankPO.class)
+				.add(Restrictions.eq("company", company))
 				.add(Restrictions.ne(MaterialDesignerRankPO.COLUMN_DESIGNERID_STR, ""))
-				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_COMPANY_STR, company))
 				.add(Restrictions.eq(MaterialDesignerRankPO.COLUMN_STATUS_STR, MaterialDesignerRankPO.STATUS_TYPE_INIT_INT))
 				.addOrder(Order.desc(MaterialDesignerRankPO.COLUMN_RANK_STR));
 		

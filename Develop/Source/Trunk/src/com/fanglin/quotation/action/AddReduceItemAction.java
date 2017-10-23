@@ -45,7 +45,7 @@ public class AddReduceItemAction extends BaseListAction {
 	private List<Integer> addReduceIds;
 	
 	@Action(value = "queryAddReduceItemByAddReduceId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceItemByAddReduceId(){
+	public String queryAddReduceItemByAddReduceId()throws FLException{
 		
 		addReduceItems = addReduceItemService.queryAddReduceItemByAddReduceId(addReduce);
 		
@@ -53,7 +53,7 @@ public class AddReduceItemAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryAddReduceItemByAddReduceIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceItemByAddReduceIds(){
+	public String queryAddReduceItemByAddReduceIds()throws FLException{
 		
 		addReduceItems = addReduceItemService.queryAddReduceItemByAddReduceIds(addReduceIds);
 		

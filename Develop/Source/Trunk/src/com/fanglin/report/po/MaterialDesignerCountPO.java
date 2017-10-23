@@ -40,7 +40,7 @@ public class MaterialDesignerCountPO implements java.io.Serializable {
 	
 	private String createTime;
 	
-	private double total;
+	private float total;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -69,20 +69,20 @@ public class MaterialDesignerCountPO implements java.io.Serializable {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
-	}
-
-	@Column(name = "total")
-	public double getTotal() {
-		return this.total;
-	}
-
-	public void setTotal(double total) {
-		this.total = total;
-	}
+	}		
 
 	@Column(name = "designerDepartmentId")
 	public String getDesignerDepartmentId() {
 		return designerDepartmentId;
+	}
+	
+	@Column(name = "total")
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
 	}
 
 	public void setDesignerDepartmentId(String designerDepartmentId) {

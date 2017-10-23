@@ -193,6 +193,19 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 		
 		return materialSubOrderVO;
 	}
+	
+	@Override
+	public MaterialSubOrderVO queryMaterialSubOrderByMsoNo(MaterialSubOrderVO materialSubOrderVO) throws FLException {
+		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.queryMaterialSubOrderByMsoNo(materialSubOrderVO.getMsoNo());
+		
+		if(materialSubOrderPO == null){
+			throw new FLException(180001, "主材订单不存在");
+		}
+		
+		BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
+		
+		return materialSubOrderVO;
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

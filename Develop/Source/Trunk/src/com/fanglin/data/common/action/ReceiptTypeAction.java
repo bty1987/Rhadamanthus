@@ -1,14 +1,3 @@
-/**
- * @File Name		: ReceiptTypeAction.java
- * @Package   	: com.fanglin.common.action
- * @Version		: 1.0
- * @Date			: 2016-5-25
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.data.common.action;
 
 import java.util.List;

@@ -13,20 +13,9 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 
-@Entity
-@Table(name = "quotationfunctionareaitem", catalog = "quotation")
 public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private static final long serialVersionUID = 3077313706873385773L;
@@ -81,9 +70,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.content = content;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "qfaiId") 
 	public long getQfaiId() {
 		return qfaiId;
 	}
@@ -92,7 +78,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.qfaiId = qfaiId;
 	}
 	
-	@Column(name = "itemName")
 	public String getItemName() {
 		return itemName;
 	}
@@ -101,7 +86,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.itemName = itemName;
 	}
 
-	@Column(name = "measurementUnit")
 	public String getMeasurementUnit() {
 		return measurementUnit;
 	}
@@ -110,7 +94,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 
-	@Column(name = "workType")
 	public String getWorkType() {
 		return workType;
 	}
@@ -119,7 +102,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.workType = workType;
 	}
 
-	@Column(name = "unitPrice")
 	public float getUnitPrice() {
 		return unitPrice;
 	}
@@ -128,7 +110,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name = "num")
 	public float getNum(){
 		return num;
 	}
@@ -137,7 +118,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.num = num;
 	}
 
-	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -154,8 +134,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.discount = discount;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
 	public QuotationFunctionAreaPO getQuotationFunctionArea(){
 		return quotationFunctionArea;
 	}
@@ -164,8 +142,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "quotationItemId", referencedColumnName = "qiId")
 	public QuotationItemPO getQuotationItem(){
 		return quotationItem;
 	}
@@ -174,7 +150,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.quotationItem = quotationItem;
 	}
 
-	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -182,5 +157,42 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
+	
+	
+	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId,Integer div) {
+		
+		int index = (int)(quotationFunctionAreaId/div);
+		
+		String qfaItem = "QuotationFunctionAreaItemPO";
+		
+		String quotationFunctionAreaItemTable = qfaItem+index;
+		
+		return quotationFunctionAreaItemTable;
+	}
+	
+	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Integer div)throws FLException{
+		
+		try {
+			int index = (int)(quotationFunctionAreaId/div);
+			
+			Class<?> clazz = Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
+			
+			return (QuotationFunctionAreaItemPO) clazz.newInstance();
+		} catch (Exception e) {
+			throw new FLException(200029, "报价项存储对象错误");
+		}
+		
+	}
+	
+	public static Class<?> factoryToClazz(Long quotationFunctionAreaId, Integer div)throws FLException{
+		
+		try {
+			int index = (int)(quotationFunctionAreaId/div);
+			
+			return Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
+		} catch (Exception e) {
+			throw new FLException(200029, "报价项存储对象错误");
+		}
+	}
+	
 }
