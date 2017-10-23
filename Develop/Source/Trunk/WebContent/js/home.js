@@ -24,7 +24,7 @@ jQuery(function(){
         id: 'LAY_layuipro',
         btn: ['了解了'],
         moveType: 1,
-        content: '<div style="padding:50px;line-height:22px;background-color:#393D49;color:#fff;font-weight:300;text-align:center;"><span style="font-size:20px;">求关注</span><br><span style="font-size:15px;">全新家装体验</span><img src="/images/publicsubscriptio.png" style="height: 200px;padding-top: 15px;"></div>',
+        content: '<div style="padding:50px;line-height:22px;background-color:#136194;color:#fff;font-weight:300;text-align:center;"><span style="font-size:20px;">关注我</span><br><span style="font-size:15px;">全新家装体验</span><img src="/images/publicsubscriptio.png" style="height: 200px;padding-top: 15px;"></div>',
         success: function(layero){
             layero.find('.layui-layer-btn').css('text-align', 'center');
         }

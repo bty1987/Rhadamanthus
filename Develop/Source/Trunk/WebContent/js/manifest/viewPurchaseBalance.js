@@ -66,9 +66,14 @@ $(function () {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if (v.status != 1) {
-                    $btnDiv.append($btnEdit).append($btnUpdate);
+                if(params.balanceStatus != 2){
+                    if (v.status == 0) {
+                        $btnDiv.append($btnEdit).append($btnUpdate);
+                    }
+                }else if(params.balanceStatus == 2){
+                    addBtn.addClass("hide");
                 }
+
 
                 $btnDiv.appendTo($h3);
 
@@ -168,7 +173,7 @@ $(function () {
             title: "编辑",
             content: $('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -192,7 +197,7 @@ $(function () {
             title: "添加",
             content: $('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {

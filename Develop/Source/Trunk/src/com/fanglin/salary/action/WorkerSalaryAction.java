@@ -16,88 +16,93 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WorkerSalaryAction extends BaseListAction{
 	
-  private static final long serialVersionUID = -2156391594302027307L;
+	private static final long serialVersionUID = -2156391594302027307L;
   
-  @Autowired 
-  private WorkerSalaryService workerSalaryService;
+	@Autowired 
+	private WorkerSalaryService workerSalaryService;
   
-  private WorkerSalaryVO workerSalary;
+	private WorkerSalaryVO workerSalary;
   
-  private List<WorkerSalaryVO> workerSalarys; 
+	private List<WorkerSalaryVO> workerSalarys; 
   
-  @Action(value="pageWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String pageWorkerSalary() throws FLException{
+	@Action(value="pageWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.pageWorkerSalary(getPaging(), getFilters(), queryCompany());
+		workerSalaryService.pageWorkerSalary(getPaging(), getFilters(), queryCompany());
     
-    return "success";
-  }
+		return "success";
+	}
   
-  @Action(value="queryWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String queryWorkerSalary() throws FLException{
+	@Action(value="queryWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryWorkerSalary() throws FLException{
 	  
-	  workerSalarys = this.workerSalaryService.queryWorkerSalary(this.workerSalary);
+		workerSalarys = this.workerSalaryService.queryWorkerSalary(workerSalary);
     
-    return "success";
+		return "success";
   }
   
-  @Action(value="addWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String addWorkerSalary() throws FLException{
+	@Action(value="addWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.addWorkerSalary(this.workerSalary, queryUserId());
+	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId());
     
-    return "success";
-  }
+	  return "success";
+	}
   
-  @Action(value="updateWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String updateWorkerSalary()throws FLException{
+	@Action(value="updateWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateWorkerSalary()throws FLException{
 	  
-	  workerSalaryService.updateWorkerSalary(this.workerSalary);
+	  workerSalaryService.updateWorkerSalary(workerSalary);
     
-    return "success";
-  }
+	  return "success";
+	}
   
-  @Action(value="adoptWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String adoptWorkerSalary() throws FLException{
+	@Action(value="adoptWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String adoptWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.adoptWorkerSalary(this.workerSalarys, queryUserId());
+	  workerSalaryService.adoptWorkerSalary(workerSalarys, queryUserId());
     
-    return "success";
-  }
+	  return "success";
+	}
   
-  @Action(value="rejectWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String rejectWorkerSalary()throws FLException{
+	@Action(value="rejectWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String rejectWorkerSalary()throws FLException{
 	  
-	  workerSalaryService.rejectWorkerSalary(this.workerSalarys, queryUserId());
-    
-    return "success";
-  }
-  
-  @Action(value="deleteWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-  public String deleteWorkerSalary()throws FLException{
+		workerSalaryService.rejectWorkerSalary(this.workerSalarys, queryUserId());
 	  
-	  workerSalaryService.deleteWorkerSalary(this.workerSalary);
+		return "success";
+	}
+  
+	@Action(value="deleteWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deleteWorkerSalary()throws FLException{
+	  
+		workerSalaryService.deleteWorkerSalary(this.workerSalary);
     
-    return "success";
-  }
-  
-  public WorkerSalaryVO getWorkerSalary()
-  {
-    return this.workerSalary;
-  }
-  
-  public void setWorkerSalary(WorkerSalaryVO workerSalary)
-  {
-    this.workerSalary = workerSalary;
-  }
-  
-  public List<WorkerSalaryVO> getWorkerSalarys()
-  {
-    return this.workerSalarys;
-  }
-  
-  public void setWorkerSalarys(List<WorkerSalaryVO> workerSalarys)
-  {
-    this.workerSalarys = workerSalarys;
-  }
+		return "success";
+	}
+
+	public WorkerSalaryService getWorkerSalaryService() {
+		return workerSalaryService;
+	}
+
+	public void setWorkerSalaryService(WorkerSalaryService workerSalaryService) {
+		this.workerSalaryService = workerSalaryService;
+	}
+
+	public WorkerSalaryVO getWorkerSalary() {
+		return workerSalary;
+	}
+
+	public void setWorkerSalary(WorkerSalaryVO workerSalary) {
+		this.workerSalary = workerSalary;
+	}
+
+	public List<WorkerSalaryVO> getWorkerSalarys() {
+		return workerSalarys;
+	}
+
+	public void setWorkerSalarys(List<WorkerSalaryVO> workerSalarys) {
+		this.workerSalarys = workerSalarys;
+	}
+	
 }

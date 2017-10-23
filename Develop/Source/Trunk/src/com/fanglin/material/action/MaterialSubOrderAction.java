@@ -86,6 +86,14 @@ public class MaterialSubOrderAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value="queryMaterialSubOrderByMsoNo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialSubOrderByMsoNo() throws FLException{
+		
+		materialSubOrder = materialSubOrderService.queryMaterialSubOrderByMsoNo(materialSubOrder);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="queryMaterialSubOrderItemByMsoId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialSubOrderItemByMsoId(){
 		

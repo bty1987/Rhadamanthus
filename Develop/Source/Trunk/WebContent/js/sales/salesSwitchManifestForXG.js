@@ -180,7 +180,7 @@ $(function () {
 
         displayFunc.init('resultList', data)
     }, 'pagenation', 'salesSwitchManifestForXGPostData', null, false, null, function () {
-        var $adda = $('<a></a>').addClass('btn btn-minier blue pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量转出库单').appendTo($adda);
 
@@ -445,7 +445,7 @@ $(function () {
             title: title,
             content: $('#layerAdd'),
             area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {

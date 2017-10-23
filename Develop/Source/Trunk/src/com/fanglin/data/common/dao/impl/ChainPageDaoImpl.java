@@ -8,6 +8,7 @@ import com.fanglin.data.po.ChainPagePO;
 
 @Repository("chainPageDao")
 public class ChainPageDaoImpl extends DaoImpl<ChainPagePO> implements  ChainPageDao{
+
 	public ChainPageDaoImpl(){
 		super(ChainPagePO.class);
 	}

@@ -17,18 +17,17 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 
 public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaItemPO> {
+	
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQfaiId(Class<?> clazz, long qfaiId);
+	
+	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(Class<?> clazz, long functionAreaId);
 
-	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId);
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type);
 	
-	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaIds(List<Long> functionAreaIds);
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz,Long quotationFunctionAreaId, Short type);
 	
-	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(long qId, short type);
+	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String clazz, long functionAreaId);
 	
-	public int updateQuotationFunctionAreaItemForNum(long qfaiId, float num);
-	
-	public int deleteQuotationFunctionAreaItemByFunctionAreaId(long functionAreaId);
-	
-	public int deleteQuotationFunctionAreaItemByFunctionAreaIds(List<Long> functionAreaIds);
-	
-	public int deleteQuotationFunctionAreaItemByQfaiIds(List<Long> qfaiIds);
+	public int deleteQuotationFunctionAreaItemByQfaiIds(String table,List<Long> qfaiIds);
+
 }

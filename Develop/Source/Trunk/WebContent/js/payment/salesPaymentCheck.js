@@ -176,7 +176,7 @@ $(function () {
                 $liLine.append($h3).append($ulProperty).append($ulStyle);
 
                 $btnPrint.click(function () {
-                    printPayment(v.sales.orderId,v.salesReceipt.srId);
+                    printPayment(v.sales.orderId,v.salesReceipt.srId,v);
                 });
 
                 return $liLine;
@@ -298,7 +298,7 @@ $(function () {
                 $liLine.append($h3).append($ulProperty).append($ulStyle);
 
                 $btnPrint1.click(function () {
-                    printPayment(v.sales.orderId,v.salesReceipt.srId);
+                    printPayment(v.sales.orderId,v.salesReceipt.srId,v);
                 });
 
                 return $liLine;
@@ -483,12 +483,15 @@ $(function () {
 
     }
 
-    function printPayment(orderId,srId){
-
-        com.popup("专用收款收据__订单编号：" + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
-            parent.layer.getFrameIndex(window.name);
-        },null,true);
-
+    function printPayment(orderId,srId,v){
+        if(v.salesReceipt.collecter.userId!=params.userInfo.user.userId){
+            com.showAlert(com.warning, "收款人不匹配，不能打印");
+            return false;
+        }else{
+            com.popup("专用收款收据__订单编号：" + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
+                parent.layer.getFrameIndex(window.name);
+            },null,true);
+        }
     };
 
 });

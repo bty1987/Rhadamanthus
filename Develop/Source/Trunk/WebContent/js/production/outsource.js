@@ -235,7 +235,7 @@ $(function(){
             skin: 'layui-layer-lan',
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -259,7 +259,7 @@ $(function(){
             title: "修改",
             content: $('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -318,7 +318,7 @@ $(function(){
             title: "导入excel",
             content: $('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             btn: ['确定'],
             zIndex: 9999,

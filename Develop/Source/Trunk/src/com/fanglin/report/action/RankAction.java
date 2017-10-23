@@ -1,14 +1,3 @@
-/**
- * @File Name		: RankAction.java
- * @Package   	: com.fanglin.report.action
- * @Version		: 1.0
- * @Date			: 2015-6-23
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.action;
 
 import java.util.List;
@@ -46,10 +35,6 @@ public class RankAction extends BaseListAction {
 	
 	private String materialPlace;
 	
-	private String zaterialRank;
-	
-	private String zaterialPlace;
-	
 	@Action(value="queryRankForPlace", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryRankForPlace() throws FLException{
 		
@@ -57,16 +42,12 @@ public class RankAction extends BaseListAction {
 		
 		List<String> decoration = decorationRankService.queryDecorationDesignerForPlaceByUserId(userId,queryCompany());
 		List<String> material = materialRankService.queryMaterialDesignerRankForPlaceByUserId(userId,queryCompany());
-		List<String> zaterial= materialRankService.queryZaterialDesignerRankForPlaceByUserId(userId,queryCompany());
 		
 		decorationRank = decoration.get(0);
 		decorationPlace = decoration.get(1);
 		
 		materialRank = material.get(0);
 		materialPlace = material.get(1);
-		
-		zaterialRank = zaterial.get(0);
-		zaterialPlace = zaterial.get(1);
 		
 		return SUCCESS;
 	}
@@ -101,22 +82,6 @@ public class RankAction extends BaseListAction {
 
 	public void setMaterialPlace(String materialPlace) {
 		this.materialPlace = materialPlace;
-	}
-
-	public String getZaterialRank() {
-		return zaterialRank;
-	}
-
-	public void setZaterialRank(String zaterialRank) {
-		this.zaterialRank = zaterialRank;
-	}
-
-	public String getZaterialPlace() {
-		return zaterialPlace;
-	}
-
-	public void setZaterialPlace(String zaterialPlace) {
-		this.zaterialPlace = zaterialPlace;
 	}
 
 }

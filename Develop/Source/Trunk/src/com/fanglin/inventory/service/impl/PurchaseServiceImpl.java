@@ -164,4 +164,42 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		return 0;
 	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updatePurchaseForStatus(PurchaseVO purchaseVO) throws FLException {
+		
+		PurchasePO purchasePO = purchaseDao.get(purchaseVO.getPid());
+		
+		if(purchasePO == null){
+			throw new FLException(260017, "采购单不存在");
+		}
+		
+		if(purchasePO.getStatus() == 2){
+			throw new FLException(260018, "采购单状态不可操作");
+		}
+		
+		purchasePO.setPid(purchaseVO.getPid());
+		purchasePO.setStatus(PurchasePO.COLUMN_TOTALSTATUS_STR);
+		
+		purchaseDao.update(purchasePO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updatePurchaseForBalanceStatus(PurchaseVO purchaseVO) throws FLException {
+		
+		PurchasePO purchasePO = purchaseDao.get(purchaseVO.getPid());
+		
+		if(purchasePO == null){
+			throw new FLException(260017, "采购单不存在");
+		}
+		
+		purchasePO.setPid(purchaseVO.getPid());
+		purchasePO.setBalanceStatus(PurchasePO.COLUMN_ALLDONEBALANCESTATUS_STR);
+		
+		return 0;
+	}
 }

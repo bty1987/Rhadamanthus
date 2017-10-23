@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialRankServiceImpl.java
- * @Package   	: com.fanglin.service.impl.materialOrder
- * @Version		: 1.0
- * @Date			: 2014-11-16
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.report.service.impl;
 
 import java.util.ArrayList;
@@ -38,9 +27,6 @@ import com.fanglin.report.service.MaterialRankService;
 import com.fanglin.report.vo.MaterialDesignerDepartmentRankVO;
 import com.fanglin.report.vo.MaterialDesignerRankVO;
 import com.fanglin.report.vo.MaterialDesignerRegionRankVO;
-import com.fanglin.report.vo.ZaterialDesignerDepartmentRankVO;
-import com.fanglin.report.vo.ZaterialDesignerRankVO;
-import com.fanglin.report.vo.ZaterialDesignerRegionRankVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -222,24 +208,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<ZaterialDesignerRankVO> queryZaterialDesignerRankForTop(int top,int company){
-		
-		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top,company);
-		List<ZaterialDesignerRankVO> zaterialDesignerRankVOs = new ArrayList<ZaterialDesignerRankVO>();
-		
-		for(ZaterialDesignerRankPO zaterialDesignerRankPO: zaterialDesignerRankPOs){
-			ZaterialDesignerRankVO zaterialDesignerRankVO = new ZaterialDesignerRankVO();
-			BeanUtil.copyProperties(zaterialDesignerRankPO, zaterialDesignerRankVO);
-			
-			zaterialDesignerRankVO.setRank(top >= 0 ? (double) Math.round(zaterialDesignerRankPO.getRank()) : null);
-			
-			zaterialDesignerRankVOs.add(zaterialDesignerRankVO);
-		}
-		
-		return zaterialDesignerRankVOs;
-	}
-	
-	@Override
 	public List<TopVO> queryZaterialDesignerRank(int top,int company){
 		
 		List<ZaterialDesignerRankPO> zaterialDesignerRankPOs = zaterialDesignerRankDao.queryZaterialDesignerRankForTop(top,company);
@@ -290,24 +258,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 	}
 
 	@Override
-	public List<ZaterialDesignerDepartmentRankVO> queryZaterialDesignerDepartmentRankForTop(String userId, int top,int company){
-		
-		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(10,company);
-		List<ZaterialDesignerDepartmentRankVO> zaterialDesignerDepartmentRankVOs = new ArrayList<ZaterialDesignerDepartmentRankVO>();
-		
-		for(ZaterialDesignerDepartmentRankPO zaterialDesignerDepartmentRankPO: zaterialDesignerDepartmentRankPOs){
-			ZaterialDesignerDepartmentRankVO zaterialDesignerDepartmentRankVO = new ZaterialDesignerDepartmentRankVO();
-			BeanUtil.copyProperties(zaterialDesignerDepartmentRankPO, zaterialDesignerDepartmentRankVO);
-			
-			zaterialDesignerDepartmentRankVO.setRank(null);
-			
-			zaterialDesignerDepartmentRankVOs.add(zaterialDesignerDepartmentRankVO);
-		}
-		
-		return zaterialDesignerDepartmentRankVOs;
-	}
-	
-	@Override
 	public List<TopVO> queryZaterialDesignerDepartmentRank(int top,int company){
 		
 		List<ZaterialDesignerDepartmentRankPO> zaterialDesignerDepartmentRankPOs = zaterialDesignerDepartmentRankDao.queryZaterialDesignerDepartmentRankForTop(top,company);
@@ -326,24 +276,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 		}
 		
 		return topVOs;
-	}
-
-	@Override
-	public List<ZaterialDesignerRegionRankVO> queryZaterialDesignerRegionRankForTop(String userId, int top,int company){
-		
-		List<ZaterialDesignerRegionRankPO> zaterialDesignerRegionRankPOs = zaterialDesignerRegionRankDao.queryZaterialDesignerRegionRankForTop(10,company);
-		List<ZaterialDesignerRegionRankVO> zaterialDesignerRegionRankVOs = new ArrayList<ZaterialDesignerRegionRankVO>();
-		
-		for(ZaterialDesignerRegionRankPO zaterialDesignerRegionRankPO: zaterialDesignerRegionRankPOs){
-			ZaterialDesignerRegionRankVO zaterialDesignerRegionRankVO = new ZaterialDesignerRegionRankVO();
-			BeanUtil.copyProperties(zaterialDesignerRegionRankPO, zaterialDesignerRegionRankVO);
-			
-			zaterialDesignerRegionRankVO.setRank(null);
-			
-			zaterialDesignerRegionRankVOs.add(zaterialDesignerRegionRankVO);
-		}
-		
-		return zaterialDesignerRegionRankVOs;
 	}
 
 	@Override

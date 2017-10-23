@@ -191,7 +191,7 @@ jQuery(function($) {
             title: "调拨",
             content: $layerSubmit,
             area: ( $(window).width() * 0.6 < 600 ? $(window).height() * 0.6 : 600 ) + "px",
-            maxmin: true,
+            maxmin: false,
             zIndex: 9000,
             btn: ['提交', '取消'],
             yes: function (index, layero) {

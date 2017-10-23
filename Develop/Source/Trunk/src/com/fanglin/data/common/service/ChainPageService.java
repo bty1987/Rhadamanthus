@@ -7,9 +7,9 @@ import com.fanglin.data.common.vo.ChainPageVO;
 
 public  interface ChainPageService {
 	
-	public List<ChainPageVO> queryChainPage();
+	public List<ChainPageVO> queryChainPage()throws FLException ;
 	
-	public List<ChainPageVO> queryChainPageForSelf(String roleId)throws FLException ;
+	public List<ChainPageVO> queryChainPageForSelf(String roleId,int company)throws FLException ;
 
 	public void addChainPage(ChainPageVO chainPageVO) throws FLException;
 	

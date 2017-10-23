@@ -4,7 +4,7 @@ var designReport = {
 	swith: null,
 };
 
-var reportTypeData = [{"id":"1", "name":"主材"}, {"id":"2", "name":"正林"}];
+var reportTypeData = [{"id":"1", "name":"主材"}];
 
 $(function() {
 	

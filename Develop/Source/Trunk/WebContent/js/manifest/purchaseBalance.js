@@ -1,4 +1,4 @@
-
+﻿
 $(function(){
 
     if (jQuery().datepicker) {
@@ -87,7 +87,7 @@ $(function(){
                 v.balanceTime,
                 v.deliveryTime,
                 v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库") ,
-                v.balanceStatus == "0" ? "初始" :  "已结算",
+                v.balanceStatus == "0" ? "初始" :  (v.balanceStatus == "1" ? "已结算" : "已完结"),
                 v.comment
             ];
 
@@ -109,13 +109,17 @@ $(function(){
             //var $btnEdit = $('<li></li>').append($('<a></a>').html('修改')) ;
             //var $btnWarehousing = $('<li></li>').append($('<a></a>').html('入库')) ;
             var $btnBalance = $('<li></li>').append($('<a></a>').html('结算'));
-
+            var $btnAllBalance = $('<li></li>').append($('<a></a>').html('完结'));
 
             $btnUl
                 .append($btnView)
                 //.append($btnEdit)
                 //.append($btnWarehousing)
                 .append($btnBalance);
+
+            if(v.balanceStatus != 2){
+                $btnUl.append($btnAllBalance);
+            }
 
             $btnGroup
                 .append($btn)
@@ -166,7 +170,17 @@ $(function(){
             $btnBalance.click(function(){
                 params["pid"] = v.pid;
                 params["status"] = v.status;
+                params["balanceStatus"] = v.balanceStatus;
                 com.switchPage(api.index.viewPurchaseBalanceIndex.url);
+            });
+
+            $btnAllBalance.click(function(e){
+                e.stopPropagation();
+                if(v.balanceStatus == 2){
+                    layer.msg('该采购单已结算完结',{icon:2});
+                }else{
+                    updatePurchaseForBalanceStatus(v.pid);
+                }
             });
 
             return $liLine;
@@ -222,7 +236,7 @@ $(function(){
             title:"查看__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             btn: ['导出','取消'],
             btn1:function(){
@@ -251,7 +265,7 @@ $(function(){
             title:"修改__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/editPurchase.html");
@@ -276,7 +290,7 @@ $(function(){
             title:"入库__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/warehousingPurchase.html");
@@ -300,7 +314,7 @@ $(function(){
             title:"采购单批量入库",
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.87 : 1200 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/viewPurchaseItems.html");
@@ -378,7 +392,7 @@ $(function(){
         com.post(api.inventory.pagePurchase, $.extend({}, params.purchasePostData, {"paging.noPage": 1}), function (res) {
 
             $.each(res.paging.data,function(i,v){
-                v.balanceStatus = (v.balanceStatus == "0" ? "初始" : "已结算");
+                v.balanceStatus = (v.balanceStatus == "0" ? "初始" : (v.balanceStatus == "1" ? "已结算" : "已完结"));
                 v.status = (v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库") );
             });
 
@@ -424,6 +438,22 @@ $(function(){
         });
     };
 
+    function updatePurchaseForBalanceStatus(pid){
+        layer.confirm('确认该采购单结算已完结？', {
+            btn: ['确定','取消'] //按钮
+        }, function(indexo, layero){
+            com.post(api.inventory.updatePurchaseForBalanceStatus, {"purchase.pid": pid, "purchase.balanceStatus": 2}, function(res){
+                goodsSeacher.doSearch();
+            }, function(e){
+                com.showAlert(com.error, e.errorMsg);
+            })
+
+            layer.close(indexo);
+
+        }, function(){
+
+        });
+    }
 
 });
 

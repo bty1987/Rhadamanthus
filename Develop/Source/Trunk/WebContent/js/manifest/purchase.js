@@ -103,12 +103,18 @@ $(function(){
             var $btnView = $('<li></li>').append($('<a></a>').html('查看')) ;
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改')) ;
             var $btnWarehousing = $('<li></li>').append($('<a></a>').html('入库')) ;
+            var $btnAllWarehousing = $('<li></li>').append($('<a></a>').html('全部入库'));
 
 
             $btnUl
-                .append($btnView)
-                .append($btnEdit)
-                .append($btnWarehousing);
+                .append($btnView);
+
+            if(v.status != 2){
+                $btnUl
+                    .append($btnEdit)
+                    .append($btnWarehousing)
+                    .append($btnAllWarehousing);
+            }
 
             $btnGroup
                 .append($btn)
@@ -126,15 +132,15 @@ $(function(){
             });
 
             $btnEdit.click(function(){
-            	
+            	var flagEdit = true;
             	com.post(api.inventory.queryPurchaseItemByPid,{
                     "purchase.pid": v.pid
                 },function(res){
                     $.each(res.purchaseItems,function(i,v){
                         if(v.siid == 0){
-                            flagSiid = true;
+                            flagEdit = true;
                         }else{
-                            flagSiid = false;
+                            flagEdit = false;
                         }
 
                     });
@@ -143,9 +149,9 @@ $(function(){
                 
                 if(v.status!=0){
                     layer.msg("当前订单已部分入库不允许修改！",{time:3000});
-                }else if(flagSiid==false){
+                }else if(flagEdit==false){
                     layer.msg("当前订单已绑定销售单,不可修改！",{time:3000});
-                }else if (v.status==0 && flagSiid==true){
+                }else if (v.status==0 && flagEdit==true){
 
                     editPurchase(v.pid,v.no);
                 }
@@ -154,6 +160,11 @@ $(function(){
 
             $btnWarehousing.click(function(){
                 warehousingPurchase(v.pid,v.no, v.type);
+            });
+
+            $btnAllWarehousing.click(function(e){
+                e.stopPropagation();
+                allWarehousingPurchase(v.pid);
             });
 
             return $liLine;
@@ -179,9 +190,10 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function(){
 
-        var $batchs = $('<a></a>').addClass('btn btn-minier btn-info').attr('name', 'addBatch').css('margin-top','-2px').html('批量入库');
-
-        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+        var $batchs = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'addBatch').css({'margin-top':'-2px','margin-left':'4px'});
+        var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($batchs);
+        var $addaGoodspan = $('<span></span>').text('批量入库').appendTo($batchs);
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin-top','-2px');
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
@@ -195,7 +207,7 @@ $(function(){
             ItemsClick();
         });
 
-        return [$batchs,$impa];
+        return [$impa,$batchs];
     },'resultList');
 
     //查看采购单
@@ -209,7 +221,7 @@ $(function(){
             title:"查看__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             btn: ['导出','取消'],
             btn1:function(){
@@ -238,7 +250,7 @@ $(function(){
             title:"修改__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/editPurchase.html");
@@ -263,7 +275,7 @@ $(function(){
             title:"入库__采购单编号：" + no,
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.7 : 1000 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/warehousingPurchase.html");
@@ -287,7 +299,7 @@ $(function(){
             title:"采购单批量入库",
             content: $popup,
             area: [( $(window).width()*0.7 < 1000 ?  $(window).width()*0.87 : 1200 )+"px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex:9000,
             success: function(layer, index){
                 $popup.load("views/manifest/viewPurchaseItems.html");
@@ -323,30 +335,31 @@ $(function(){
                 flag = false;
             }
         });
-        
+        console.log(_params["pids[0]"]);
         if(_params["pids[0]"]){
         	
         	 com.post(api.inventory.queryPurchaseItemByPids,_params,function(res){
                  $.each(res.purchaseItems,function(i,v){
                      if(v.siid == 0){
+                         console.log(123123123)
                          flagSiid = true;
                      }else{
+                         console.log(32165498)
                          flagSiid = false;
                      }
                  });
              });
         	 
         }
-       
-        if($menus.length>0 && flag == true && flagSiid ==true){
+        console.log(flag);
+        console.log(flagSiid);
+        if($menus.length>0 && flag == true){
             params.pids = _params;
             viewPurchaseItems(6);
         }else if($menus.length==0 && flag == true){
             layer.msg('请选择需要入库的采购单!', {time:2e3});
         }else if($menus.length>0 && flag == false){
             layer.msg('请选择入库状态为：初始的采购单!', {time:2e3});
-        }else if(flagSiid==false){
-            layer.msg('当前订单已绑定销售单,不可修改!', {time:2e3});
         }
     }
 
@@ -411,6 +424,20 @@ $(function(){
             });
         };
 
+    function allWarehousingPurchase(pid){
+        layer.confirm('是否确认全部入库？', {
+            btn: ['确定', '取消']
+        }, function (indexo, layero){
+            com.post(api.inventory.updatePurchaseForStatus, {"purchase.pid": pid,"purchase.status": "2"}, function(res){
+                goodsSeacher.doSearch();
+            }, function(e){
+                com.showAlert(com.error, e.errorMsg);
+            });
+
+            layer.close(indexo);
+
+        });
+    }
 
 });
 

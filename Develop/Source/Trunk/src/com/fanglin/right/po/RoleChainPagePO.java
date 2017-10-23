@@ -54,9 +54,9 @@ public class RoleChainPagePO implements java.io.Serializable {
 	public void setRid(int rid) {
 		this.rid = rid;
 	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cpid", referencedColumnName = "cpid")
-	
 	public ChainPagePO getChainPage() {
 		return chainPage;
 	}

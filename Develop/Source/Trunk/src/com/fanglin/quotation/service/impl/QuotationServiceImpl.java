@@ -260,12 +260,15 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationFunctionAreaDao.save(autogeneration);
 		
-		QuotationFunctionAreaItemPO trafficPrice = new QuotationFunctionAreaItemPO("车运费", "", "其他", quotationVersionPO.getTrafficRate(), 0f, (short) 2, quotationVersionPO.getTrafficDiscount(), autogeneration, "");
-		QuotationFunctionAreaItemPO managePrice = new QuotationFunctionAreaItemPO("管理费", "", "其他", quotationVersionPO.getManageRate(), .0f, (short) 3, quotationVersionPO.getManageDiscount(), autogeneration, "");
-		
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+		QuotationFunctionAreaItemPO trafficPrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
+		convertQuotationPOForAdvance(trafficPrice,"车运费", "", "其他", quotationVersionPO.getTrafficRate(), 0f, (short) 2, quotationVersionPO.getTrafficDiscount(), autogeneration, "");
+		QuotationFunctionAreaItemPO managePrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
+		convertQuotationPOForAdvance(managePrice,"管理费", "", "其他", quotationVersionPO.getManageRate(), .0f, (short) 3, quotationVersionPO.getManageDiscount(), autogeneration, "");
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);
-		
+	
 		
 		return 0;
 	}
@@ -480,27 +483,29 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	private int copyQuotation(long quotationId, long newQuotationId){
+	private int copyQuotation(long quotationId, long newQuotationId)throws FLException{
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationId);
+		
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 		
 		for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreaPOs){
 			
 			QuotationFunctionAreaPO _quotationFunctionAreaPO = new QuotationFunctionAreaPO();
 			BeanUtil.copyProperties(quotationFunctionAreaPO, _quotationFunctionAreaPO, Arrays.asList("qfaId"));
-			_quotationFunctionAreaPO.setQuotation(new QuotationPO(newQuotationId));
+			_quotationFunctionAreaPO.setQuotation(new QuotationPO(newQuotationId));		
 			
-			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor),quotationFunctionAreaPO.getQfaId());
 			
 			quotationFunctionAreaDao.save(_quotationFunctionAreaPO);
 			
 			for(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO: quotationFunctionAreaItemPOs){
-				QuotationFunctionAreaItemPO _quotationFunctionAreaItemPO  = new QuotationFunctionAreaItemPO();
-				BeanUtil.copyProperties(quotationFunctionAreaItemPO, _quotationFunctionAreaItemPO, Arrays.asList("qfaiId"));
 				
-				_quotationFunctionAreaItemPO.setQuotationFunctionArea(_quotationFunctionAreaPO);
-				
-				quotationFunctionAreaItemDao.save(_quotationFunctionAreaItemPO);
+				QuotationFunctionAreaItemPO clazz = QuotationFunctionAreaItemPO.factoryToInstance(_quotationFunctionAreaPO.getQfaId(), divisor);
+
+				BeanUtil.copyProperties(quotationFunctionAreaItemPO, clazz, Arrays.asList("qfaiId"));
+				clazz.setQuotationFunctionArea(_quotationFunctionAreaPO);
+				quotationFunctionAreaItemDao.save(clazz);
 			}
 		}
 		
@@ -526,11 +531,11 @@ public class QuotationServiceImpl implements QuotationService {
 				}
 			}
 		}
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 		for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreas){
-			
 			long quotatoinFunctionAreaId = quotationFunctionAreaPO.getQfaId();
-			
-			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(quotatoinFunctionAreaId); // 删除报价项
+			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(),divisor);
+			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(tableName,quotatoinFunctionAreaId); // 删除报价项
 			quotationFunctionAreaDao.deleteById(quotatoinFunctionAreaId); // 删除功能区
 		}
 		
@@ -547,6 +552,17 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
 		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
 		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
+	}
+	private void convertQuotationPOForAdvance(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO,String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content){
+		quotationFunctionAreaItemPO.setItemName(itemName);
+		quotationFunctionAreaItemPO.setMeasurementUnit(measurementUnit);
+		quotationFunctionAreaItemPO.setWorkType(workType);
+		quotationFunctionAreaItemPO.setUnitPrice(unitPrice);
+		quotationFunctionAreaItemPO.setNum(num);
+		quotationFunctionAreaItemPO.setType(type);
+		quotationFunctionAreaItemPO.setDiscount(discount);
+		quotationFunctionAreaItemPO.setQuotationFunctionArea(quotationFunctionArea);
+		quotationFunctionAreaItemPO.setContent(content);
 	}
 	
 }

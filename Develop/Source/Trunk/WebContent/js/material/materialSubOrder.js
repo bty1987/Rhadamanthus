@@ -313,7 +313,7 @@ jQuery(function($) {
 				}
 				
 				if(materialSubOrderPostData["materialSubOrder.depositStatus"] == 2 && materialSubOrderPostData["materialSubOrder.fullStatus"] == 0){
-					//materialSubOrder.materialSubOrderItems.depositRefundBtn.css("display", "inline"); // inline
+					materialSubOrder.materialSubOrderItems.depositRefundBtn.css("display", "inline"); // inline
                     //
 				}
 

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<head>
+
+    <meta charset="utf-8"/>
+
+    <title>Information Platform</title>
+    <meta charset="utf-8"/>
+    <meta content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <!-- altogether -->
+    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <!-- altogether end -->
+
+    <script type="text/javascript">
+
+        var isF5 = false;
+        document.onkeydown = function (e) {
+            var ev = window.event || e;
+            var code = ev.keyCode || ev.which;
+            if (code == 116) {
+                isF5 = true;
+            }
+        }
+        window.onbeforeunload = onclose;
+        function onclose() {
+            if (!isF5) {
+                isF5 = false;
+                return "";
+            }
+        }
+
+        var server = './'
+        var versionCode = '';
+        var cookies = document.cookie.split(";");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+
+            if (cookie.indexOf("versionCode") != -1) {
+                versionCode = cookie.split("=")[1];
+            } else if (cookie.indexOf("authentication") != -1) {
+                window.authentication = cookie.split("=")[1];
+            } else if (cookie.indexOf("loginTime") != -1) {
+                window.loginTime = cookie.split("=")[1];
+            }
+        }
+    </script>
+
+    <link href="assets/metro/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+   <link href="assets/metro/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+    <!-- altogether -->
+    <link href="assets/altogether/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/altogether/css/iconfont.css" rel="stylesheet" type="text/css"/>'; <!--  iconfont  -->
+    <!-- altogether end -->
+
+    <link href="assets/metro/css/style-metro.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/daterangepicker.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/datepicker.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/jqvmap.css" rel="stylesheet" type="text/css" media="screen"/>
+
+    <link href="assets/metro/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+    <link href="assets/metro/css/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+
+    <!--<link href="assets/metro/css/chosen-metro.min.css" rel="stylesheet" type="text/css"/>-->
+    <link rel="stylesheet" href="assets/metro/css/chosen.min.css" />
+
+    <link href="assets/metro/css/huploadify.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/timeline.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/nestable.css" rel="stylesheet" type="text/css"/>
+
+    <link href="assets/metro/css/style.css" rel="stylesheet" type="text/css"/>
+
+    <link href="css/metro.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body class="page-header-fixed">
+
+<div class="header navbar navbar-inverse navbar-fixed-top">
+
+    <div class="navbar-inner">
+
+        <div class="container-fluid">
+
+            <a href="#" id="name" alt="logo" class="brand logo">
+                <!-- @Date:9.27 删除 Information Platform 字体 -->
+            </a>
+
+
+            <a href="javascript:;" class="btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+
+                <img src="assets/metro/image/menu-toggler.png" alt=""/>
+
+            </a>
+            <ul class="nav pull-right">
+
+                <li class="dropdown hide"><!-- 拨打电话 -->
+
+                    <a href="#" id="called" class="dropdown-toggle">
+
+                        <i class="icon-phone" ></i>
+
+                    </a>
+
+                </li>
+
+                <li class="dropdown" id="header_notification_bar"><!-- 消息 -->
+
+                    <a id="messageBtn" href="#" class="dropdown-toggle messageList">
+
+                        <i class="icon-envelope"></i>
+
+                        <span id='messageCount' class="badge messageCount"></span>消息
+                    </a>
+
+                </li>
+
+                <li class="dropdown" id="header_inbox_bar"><!-- 版本 -->
+
+                    <a href="#" id="versionInfo" class="dropdown-toggle" data-toggle="dropdown">
+
+                        <i class="icon-bookmark"></i>版本
+
+                    </a>
+
+                </li>
+
+                <li class="dropdown" id="header_task_bar"><!-- 帮助 -->
+
+                    <a href="#" id="faqInfo" class="dropdown-toggle" data-toggle="dropdown">
+
+                        <i class="icon-key"></i>帮助
+
+                    </a>
+
+                </li>
+
+                <li class="dropdown"><!-- 公司 -->
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+
+                        <span class="companyinfo"><small></small><span class="companyName"></span></span>
+
+                        <i class="icon-angle-down"></i>
+
+                    </a>
+                    <ul class="dropdown-menu" id="companysel"></ul>
+                </li>
+
+
+                <li class="dropdown user"><!-- 用户 -->
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
+
+                        <img alt="" src="assets/altogether/images/avatar2.png" id="userImg">
+
+                        <span class="user-name"></span>
+
+                        <i class="icon-angle-down"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu">
+
+                        <li><a href="#" class='userProfile' id="userProfile"><i class="icon-user"></i>个人资料</a></li>
+
+                        <li><a href="#" class="changePassword" id="changePassword"><i class="icon-lock"></i> 修改密码</a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li><a href="#" class='logout' id="logout"><i class="icon-key"></i>退出</a></li>
+
+                    </ul>
+
+                </li>
+
+                <li class="dropdown hide"><!-- 皮肤 -->
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                        <i class="icon-sun" style="font-size: 20px;"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu">
+
+                        <li>
+                            <a href='index.html' class="font-15" id="aceButton">
+                                <i class="icon-star menu-ace"></i>ace
+                            </a>
+                        </li>
+                        <li>
+                            <a href='index-clear.html' class="font-15" id="metroButton">
+                                <i class="icon-heart menu-clear"></i> clear
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="page-container row-fluid">
+
+
+    <div class="page-sidebar nav-collapse collapse">
+
+        <ul class="page-sidebar-menu nav-list" id="sidebar">
+            <!-- 菜单 -->
+        </ul>
+
+    </div>
+
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+
+            <ul class="breadcrumb">
+                <li class='nav1'><i class="icon-home home-icon"></i> 首页</li>
+                <li class='nav2' style='display:none'></li>
+                <li class="nav3 active" style='display:none'></li>
+            </ul><!-- .breadcrumb -->
+        </div>
+
+        <div id="fl-container"></div>
+    </div>
+
+</div>
+
+
+<!-- 拨打电话 模态框 -->
+<div class="modal fade" id="phonecallModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">拨打电话</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="username">姓名</label>
+
+                        <div class="col-sm-9">
+                            <input id="username" type="text" class=" " data-toggle="popover" readonly data-trigger='manual' maxlength="32">
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="caller">主叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="caller" type="text" class="" data-toggle="popover" readonly data-trigger='manual' >
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="callee">被叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="callee" type="text" class=" v_required v_phone" data-toggle="popover" data-trigger='manual' maxlength="11">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer ">
+                <button class="btn btn-success" type="button" id="save"><i class="icon-phone bigger-110"></i>拨打电话</button>
+                <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+        <!-- altogether -->
+        <script src="assets/altogether/js/jquery-2.0.3.min.js" type="text/javascript"></script>
+        <!-- altogether end -->
+
+        <!--应用迁移辅助插件,用于将jquery1.9以上的版本像之前版本兼容-->
+        <script src="assets/metro/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+
+        <!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+        <!--JavaScript 网页用户界面代码库。包含底层用户交互、动画、特效和可更换主题的可视控件。可以直接用它来构建具有很好交互性的web应用程序-->
+        <script src="assets/metro/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/bootstrap.min.js"></script>
+
+        <script src="assets/metro/js/bootstrap-editable.min.js"></script>
+
+        <!--对于低版本IE6,7,8，则使用excanvas.js来模拟canvas。-->
+        <script src="assets/metro/js/excanvas.min.js"></script>
+        <!-- 为 IE6-8 以及其它不支持 CSS3 Media Queries 的浏览器提供媒体查询的 min-width 和 max-width 特性，实现响应式网页设计（Responsive Web Design）。-->
+        <script src="assets/metro/js/respond.min.js"></script>
+
+        <!--jquery的滚动条插件-->
+        <script src="assets/metro/js/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <!--simulate synchronous behavior when using AJAX, without locking the browser[1]. When activated, it will prevent user activity with the page (or part of the page) until it is deactivated. BlockUI adds elements to the DOM to give it both the appearance and behavior of blocking user interaction.-->
+        <script src="assets/metro/js/jquery.blockui.min.js" type="text/javascript"></script>
+        <!--轻量级的cookie插件，可以读取、写入、删除cookie。-->
+        <script src="assets/metro/js/jquery.cookie.min.js" type="text/javascript"></script>
+        <!--jQuery表单美化插件-->
+        <script src="assets/metro/js/jquery.uniform.min.js" type="text/javascript"></script>
+
+        <!-- END CORE PLUGINS -->
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <!--基于jQuery的矢量地图生成插件-->
+        <script src="assets/metro/js/jquery.vmap.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.russia.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.world.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.europe.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.germany.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.usa.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.vmap.sampledata.js" type="text/javascript"></script>
+        <!--Jquery下图表插件，是一个基于Javascript和Jquery纯客端户的脚本库-->
+        <script src="assets/metro/js/jquery.flot.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/jquery.flot.resize.js" type="text/javascript"></script>
+        <!--The pulsate effect hides or shows an element by pulsing it in or out.-->
+        <script src="assets/metro/js/jquery.pulsate.min.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/date.js" type="text/javascript"></script>
+
+        <script src="assets/metro/js/daterangepicker.js" type="text/javascript"></script>
+        <!--Gritter 是一个小型的 jQuery 消息通知插件-->
+        <script src="assets/metro/js/jquery.gritter.js" type="text/javascript"></script>
+        <!--日历插件-->
+        <script src="assets/metro/js/fullcalendar.min.js" type="text/javascript"></script>
+        <!--渲染和制作漂亮的饼图及动画效果，基于与HTML5的canvas元素。-->
+        <script src="assets/metro/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
+        <!--在页面中生成静态或动态波谱图表效果基本的线图，柱图，饼图等等。-->
+        <script src="assets/metro/js/jquery.sparkline.min.js" type="text/javascript"></script>
+
+
+        <script src="assets/metro/js/jquery.slimscroll.min.js"></script>
+
+        <!-- altogether > fuelux -->
+        <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>';
+
+        <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>';
+
+        <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>';
+        <!-- altogether > fuelux end-->
+
+        <script src="assets/metro/js/jquery.inputlimiter.1.3.1.min.js"></script>
+
+        <script src="assets/metro/js/jquery.nestable.min.js"></script>
+
+        <script src="assets/metro/js/jquery.maskedinput.min.js"></script>
+
+        <script src="assets/metro/js/jquery.gritter.min.js"></script>
+
+        <script src="assets/metro/js/jquery.raty.min.js"></script>
+
+        <script src="assets/metro/js/jquery-ui-1.10.3.custom.min.js"></script>
+
+        <script src="assets/metro/js/jquery.colorbox-min.js"></script>
+
+        <script src="assets/metro/js/chosen.jquery.min.js"></script>
+
+        <!-- metro > date-time -->
+        <script src="assets/metro/js/date-time/bootstrap-datepicker.min.js"></script>
+
+        <script src="assets/metro/js/date-time/bootstrap-timepicker.min.js"></script>
+
+        <script src="assets/metro/js/date-time/daterangepicker.min.js"></script>
+
+        <script src="assets/metro/js/date-time/moment.min.js"></script>
+        <!-- metro > date-time end -->
+
+        <script src="assets/metro/js/jquery.ui.touch-punch.min.js"></script>
+
+        <script src="assets/metro/js/fullcalendar.min.js"></script>
+
+        <script src="assets/metro/js/jquery.easing.1.3.min.js"></script>
+
+        <script src="assets/metro/js/bootbox.min.js"></script>
+
+        <script src="assets/metro/js/spin.min.js"></script>
+
+        <script src="assets/metro/js/typeahead-bs2.min.js"></script>
+
+        <script src="assets/metro/js/tag.js"></script>
+
+        <script src="assets/metro/js/base64.js "></script>';
+
+        <script src="assets/metro/js/html2canvas.js"></script>';
+
+        <!-- metro > ztree -->
+        <script src="assets/metro/js/ztree/jquery.ztree.core-3.5.min.js"></script>
+
+        <script src="assets/metro/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+        <!-- metro > ztree end -->
+
+        <script src="assets/metro/js/jquery.huploadify.js"></script>
+
+        <script src="assets/metro/js/highcharts.js"></script>
+
+        <script src="assets/metro/js/jquery.hotkeys.min.js"></script>
+
+        <script src="assets/metro/js/bootstrap-wysiwyg.min.js"></script>
+
+        <script src="assets/metro/js/ace-elements.js"></script>
+
+        <script src="assets/metro/js/ace-extra.min.js"></script>
+
+        <script src="assets/metro/js/app.js" ></script>
+
+        <script src="assets/metro/js/bootbox.min.js"></script>
+
+        <script src="assets/metro/js/ace-elements.js"></script>
+
+        <!-- altogether -->
+        <script src="assets/altogether/js/layer.js"></script>
+        <!-- altogether end -->
+
+        <!-- ace  @Date10.10 调用ace目录中ace.js实现折叠功能-->
+        <script src="assets/ace/js/ace.js"></script>
+
+
+        <script src="js/com/api.js"></script>
+
+        <script src="js/com/condition.js"></script>
+
+        <script src="js/com/config.js"></script>
+
+        <script src="js/com/core.js"></script>
+
+        <script src="js/com/error.js"></script>
+
+        <script src="js/com/exporter.js"></script>
+
+        <script src="js/com/params.js"></script>
+
+        <script src="js/com/searcher.js"></script>
+
+        <script src="js/com/server.js"></script>
+
+        <script src="js/com/utils.js"></script>
+
+        <script src="js/index.js"></script>
+
+
+        <script>
+
+            jQuery(document).ready(function () {
+
+                App.init();
+
+            });
+
+        </script>
+
+</html>

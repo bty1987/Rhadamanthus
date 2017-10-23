@@ -152,7 +152,7 @@ $(function(){
                 title:"添加",
                 content: $popup,
                 area: ["1100px",( $(window).height()*0.84 < 720 ?  $(window).height()*0.84 : 720 )+"px"],
-                maxmin: true,
+                maxmin: false,
                 zIndex:9000,
 
                 success: function(){

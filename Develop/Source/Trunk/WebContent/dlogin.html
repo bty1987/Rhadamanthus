@@ -22,11 +22,14 @@
 		}
 
 		var csses = "";
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/shaking.css" />';
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/bootstrap.min.css" />'; // basic styles
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/font-awesome.min.css" />';
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/jquery-ui-1.10.3.full.min.css" />'; // page specific plugin styles
-		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/css/ace.css" />'; // ace styles
+		/* ace */
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/shaking.css" />';
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/bootstrap.min.css" />'; // basic styles
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/font-awesome.min.css" />';
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/iconfont.css" />'; /* iconfont */
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/jquery-ui-1.10.3.full.min.css" />'; // page specific plugin styles
+		csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/ace.css" />'; // ace styles
+        /* ace end */
 
 		csses += '<link rel="stylesheet" href="' + hostServer + 'css/main.css" />';
 
@@ -129,20 +132,24 @@
 	var jses = "";
 
 	if(!window.jQuery){
-		jses += '<script src="' + hostServer + 'assets/js/jquery-2.0.3.min.js"><\/script>';
+	    /* altogether */
+		jses += '<script src="' + hostServer + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
 	}
 
 	if("ontouchend" in document){
-		jses += '<script src="' + hostServer + 'assets/js/jquery.mobile.custom.min.js"><\/script>';
+	    /* ace */
+		jses += '<script src="' + hostServer + 'assets/ace/js/jquery.mobile.custom.min.js"><\/script>';
 	}
 
-	jses += '<script src="' + hostServer + 'assets/js/bootstrap.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/ace.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/ace-elements.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/ace-extra.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/jquery.fullscreenBackground.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/cav.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/js/shaking.js"><\/script>';
+    /* ace */
+	jses += '<script src="' + hostServer + 'assets/ace/js/bootstrap.min.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/ace.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/ace-elements.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/ace-extra.min.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/cav.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/shaking.js"><\/script>';
+	/* ace end */
 
 	jses += '<script src="' + hostServer + 'js/com/api.js"><\/script>';
 	jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';

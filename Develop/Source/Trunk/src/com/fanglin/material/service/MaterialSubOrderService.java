@@ -37,6 +37,8 @@ public interface MaterialSubOrderService {
 	
 	public MaterialSubOrderVO queryMaterialSubOrderByMsoId(MaterialSubOrderVO materialSubOrderVO);
 	
+	public MaterialSubOrderVO queryMaterialSubOrderByMsoNo(MaterialSubOrderVO materialSubOrderVO) throws FLException;
+	
 	public int addMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, List<MaterialSubOrderItemVO> materialSubOrderItemVOs, String userId,int company) throws FLException;
 	
 	public void updateMaterialSubOrderForPreBalancePT(MaterialSubOrderVO materialSubOrderVO, int caclType);

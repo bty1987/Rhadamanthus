@@ -27,3 +27,8 @@ select count(*) from payment.payment;
 
 select count(*) from construction.construction;
 select count(*) from construction.constructionschedule;
+
+set global slow_query_log=ON;
+set global slow_launch_time=5;
+
+show variables like "%slow%";

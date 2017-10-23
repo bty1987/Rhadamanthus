@@ -29,7 +29,7 @@ public class ChainPageAction  extends BaseListAction{
 	private List<ChainPageVO> chainPages;
 	
 	@Action(value = "queryChainPage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryChainPage(){
+	public String queryChainPage()throws FLException{
 		
 		chainPages=chainPageService.queryChainPage();
 		
@@ -39,7 +39,7 @@ public class ChainPageAction  extends BaseListAction{
 	@Action(value = "queryChainPageForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryChainPageForSelf() throws FLException{
 		
-		chainPages=chainPageService.queryChainPageForSelf(queryRoleId());
+		chainPages=chainPageService.queryChainPageForSelf(queryRoleId(),queryCompany());
 		
 		return SUCCESS;
 	}

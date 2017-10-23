@@ -21,7 +21,7 @@ $(function(){
                     title:"仓库权限配置",
                     content: $popup,
                     area: ["800px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-                    maxmin: true,
+                    maxmin: false,
                     zIndex:9999,
                     success: function(){
                         params["promissionUser"] = user ;

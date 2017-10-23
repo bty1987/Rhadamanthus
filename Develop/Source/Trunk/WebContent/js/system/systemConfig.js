@@ -7,9 +7,7 @@
         config:{},
         
         scid: null,
-    }
-
-    var company = {};
+    };
 
     system.saveBtn = $('#saveBtn').on("click",saveData);
     system.cancellBtn = $("#cancelBtn");
@@ -18,11 +16,6 @@
     system.config.value = $("#value");
     system.config.comment = $("#comment");
 
-    com.post(api.system.queryCompany,{},function (res) {
-        $.each(res.companys,function(i,v){
-            company[v.cid] = v.name;
-        })
-    },null,false);
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -51,14 +44,13 @@
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-info').html('更新');
-
+          
             var propertyArr = [
                 ["创建人:", v.createName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
-                ["说明:", v.comment, "grey"],
-                ["公司:", company[v.company] , "grey"],
+                ["说明:", v.comment, "grey"],  
             ];
-
+            
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);

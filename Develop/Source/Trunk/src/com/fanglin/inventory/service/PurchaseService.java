@@ -19,4 +19,8 @@ public interface PurchaseService {
 	
 	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
 	
+	public int updatePurchaseForStatus(PurchaseVO purchaseVO) throws FLException;
+	
+	public int updatePurchaseForBalanceStatus(PurchaseVO purchaseVO) throws FLException;
+	
 }

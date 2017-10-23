@@ -3,15 +3,17 @@
 <head>
 
     <title>Information Platform</title>
-    
+
     <meta charset="utf-8" />
     <meta content="no-cache"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="assets/css/pace.min.css" />
-    <script type="text/javascript" src='assets/js/pace.min.js'></script>
+    <!-- altogether -->
+    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <!-- altogether end -->
 
     <script type="text/javascript">
 
@@ -48,22 +50,38 @@
         }
 
         var csses = "";
-        csses += '<link rel="stylesheet" href="assets/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
-        csses += '<link rel="stylesheet" href="assets/css/font-awesome.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/jquery.gritter.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/jquery-ui-1.10.3.full.min.css?version=' + versionCode + '" />'; // page specific plugin styles
+        /* ace */
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
 
-        csses += '<link rel="stylesheet" href="assets/css/fullcalendar.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/chosen.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/datepicker.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/daterangepicker.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
-        csses +=
-        csses += '<link rel="stylesheet" href="assets/css/huploadify.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/colorbox.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/css/layer.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
 
-        csses += '<link rel="stylesheet" href="assets/css/ace.css?version=' + versionCode + '" />'; // ace styles
+        csses += '<link rel="stylesheet" href="assets/ace/css/jquery.gritter.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/jquery-ui-1.10.3.full.min.css?version=' + versionCode + '" />'; // page specific plugin styles
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/chosen.min.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/datepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/daterangepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/colorbox.css?version=' + versionCode + '" />';
+
+        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css?version=' + versionCode + '" />';
+        /* ace end */
+
+        /* altogether */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
+        /* altogether end */
+
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
 
         document.write(csses);
@@ -71,7 +89,7 @@
         var jses = "";
 
         if(!window.jQuery){
-            jses += '<script src="' + server + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
         }
 
         document.write(jses);
@@ -80,18 +98,49 @@
 </head>
 
 <body class="navbar-fixed">
-<div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;'>
+<div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
     <script type="text/javascript">
         try{ace.settings.check('navbar' , 'fixed')}catch(e){}
     </script>
 
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
-            <a href="#" class="navbar-brand" id="name">Information Platform</a>
+            <!-- @Date:9.27 删除 Information Platform 字体 -->
+        </div>
+
+        <!-- 设置皮肤 隐藏-->
+        <div class="navbar-header pull-right hide">
+            <ul style="margin: 0px 10px">
+                <li class="dropdown" style="height: 45px;">
+                    <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" id="clearButton" href="#">
+                        <i class="icon-cog"></i>
+                    </a>
+                    <ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li>
+                            <a href="index-clear.html">
+                                <span class="mail-tag badge badge-grey"></span>
+                                clear
+                            </a>
+                        </li>
+                        <li>
+                            <a href="index-metro.html">
+                                <span class="mail-tag badge badge-danger"></span>
+                                metro
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
 
         <div class="navbar-header pull-right">
             <ul class="nav ace-nav">
+                <li class="purple hide ">
+                    <a href="#" id="called">
+                        <i class="icon-phone" ></i>
+                        <span class="dropdown-toggle">拨打电话</span>
+                    </a>
+                </li>
                 <li class="dark">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <span class="companyinfo"><small></small><span class="companyName"></span></span>
@@ -113,7 +162,7 @@
                 </li>
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" alt="" src="assets/images/avatar2.png" id="userImg">
+                        <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
                         <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
                         <i class="icon-caret-down"></i>
                     </a>
@@ -128,6 +177,55 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="phonecallModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">拨打电话</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="username">姓名</label>
+
+                        <div class="col-sm-9">
+                            <input id="username" type="text" class=" " data-toggle="popover" readonly data-trigger='manual' maxlength="32">
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="caller">主叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="caller" type="text" class="" data-toggle="popover" readonly data-trigger='manual' >
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="callee">被叫号码</label>
+
+                        <div class="col-sm-9">
+                            <input id="callee" type="text" class=" v_required v_phone" data-toggle="popover" data-trigger='manual' maxlength="11">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer ">
+                <button class="btn btn-success" type="button" id="save"><i class="icon-phone bigger-110"></i>拨打电话</button>
+                <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="main-container" id="main-container" style='display:none;'>
     <script type="text/javascript">
@@ -209,54 +307,67 @@
     var jses = "";
 
     if(!window.jQuery){
-        jses += '<script src="' + server + 'assets/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+        /* altogether */
+        jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
     }
 
     if("ontouchend" in document){
-        jses += '<script src="' + server + 'assets/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
+        /* ace */
+        jses += '<script src="' + server + 'assets/ace/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
     }
 
-    jses += '<script src="assets/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.slimscroll.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/fuelux/fuelux.wizard.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/fuelux/fuelux.spinner.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/fuelux/fuelux.tree.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.inputlimiter.1.3.1.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.nestable.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.maskedinput.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.raty.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery-ui-1.10.3.custom.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.colorbox-min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/chosen.jquery.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/date-time/bootstrap-datepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/date-time/bootstrap-timepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.ui.touch-punch.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/fullcalendar.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/jquery.easing.1.3.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/spin.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.slimscroll.min.js?version=' + versionCode + '"><\/script>';
 
-    jses += '<script src="assets/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>'; // page specific plugin scripts
-    jses += '<script src="assets/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/typeahead-bs2.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/tag.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/base64.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/html2canvas.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.inputlimiter.1.3.1.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.nestable.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.maskedinput.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.raty.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery-ui-1.10.3.custom.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.colorbox-min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/chosen.jquery.min.js?version=' + versionCode + '"><\/script>';
 
-    jses += '<script src="assets/js/ztree/jquery.ztree.core-3.5.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/ztree/jquery.ztree.excheck-3.5.min.js?version=' + versionCode + '"><\/script>';
+    /* ace > date-time */
+    jses += '<script src="assets/ace/js/date-time/bootstrap-datepicker.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/date-time/bootstrap-timepicker.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>'; // page specific plugin scripts
+    /* ace > date-time end */
 
-    jses += '<script src="assets/js/jquery.huploadify.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/highcharts.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.ui.touch-punch.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/fullcalendar.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/jquery.easing.1.3.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/spin.min.js?version=' + versionCode + '"><\/script>';
 
-    jses += '<script src="assets/js/jquery.hotkeys.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/bootstrap-wysiwyg.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/typeahead-bs2.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/tag.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/base64.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/html2canvas.js?version=' + versionCode + '"><\/script>';
 
-    jses += '<script src="assets/js/ace.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/ace-elements.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/ace-extra.min.js?version=' + versionCode + '"><\/script>';
+    /* ace > ztree */
+    jses += '<script src="assets/ace/js/ztree/jquery.ztree.core-3.5.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/ztree/jquery.ztree.excheck-3.5.min.js?version=' + versionCode + '"><\/script>';
+    /* ace > ztree */
+
+    jses += '<script src="assets/ace/js/jquery.huploadify.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/highcharts.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/ace/js/jquery.hotkeys.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/bootstrap-wysiwyg.min.js?version=' + versionCode + '"><\/script>';
+
+    jses += '<script src="assets/ace/js/ace.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/ace-elements.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/ace/js/ace-extra.min.js?version=' + versionCode + '"><\/script>';
+    /* ace end */
+
+    /* altogether */
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.wizard.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.spinner.min.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/altogether/js/fuelux/fuelux.tree.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/altogether/js/layer.js?version=' + versionCode + '"><\/script>';
+    /* altogether end */
 
     jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
@@ -268,7 +379,7 @@
     jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/js/layer.js?version=' + versionCode + '"><\/script>';
+
     jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
     document.write(jses);

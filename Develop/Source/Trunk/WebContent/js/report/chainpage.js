@@ -46,7 +46,7 @@ $(function () {
                 });
 
             $btnDel.click(function () {
-                DeleChainPage(v.url);
+                DeleChainPage(v.name,v.url);
             });
 
         };
@@ -70,9 +70,8 @@ $(function () {
         }, null, false);
     }
 
-     function DeleChainPage(url) {
-
-         com.popup("外链",url,null,null,false)
+     function DeleChainPage(name,url) {
+         com.popup(name,url,null,null,false)
     }
 
     $("#addBtn").click(function () {

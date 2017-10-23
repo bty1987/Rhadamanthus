@@ -78,10 +78,9 @@ jQuery(function($) {
 						'data-oid' : v.oid
 					}).addClass('ace').val(v.oid);
 
-					var $indexCheck = $('<div></div>').addClass('checkbox col-xs-4');
-					var $label = $('<label></label>').append($indexInput).append('<span class="lbl">' + v.name +'</span>');
+					var $label = $('<label style="margin-right:20px;display: inline-block;min-width: 25%;"></label>').append($indexInput).append('<span class="lbl">' + v.name +'</span>');
 
-					$indexCheck.append($label).appendTo($wrap);
+							$label.appendTo($wrap);
 				});
 			}
 		}, null, false);

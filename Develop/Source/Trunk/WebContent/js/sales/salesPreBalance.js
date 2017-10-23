@@ -291,7 +291,7 @@ $(function () {
             title: "预结算销售单号" + no,
             content: $popup,
             area: ["1400px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             success: function (layer, index) {
                 $popup.load("views/sales/viewSalesItemPreBalance.html");

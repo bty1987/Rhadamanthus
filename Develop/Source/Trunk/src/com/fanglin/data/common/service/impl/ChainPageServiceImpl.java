@@ -1,8 +1,8 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.List;       
+import sun.misc.BASE64Encoder;   
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +32,13 @@ public class ChainPageServiceImpl implements ChainPageService{
 	private RoleDao roleDao;
 	
 	@Override
-	public List<ChainPageVO> queryChainPage() {
+	public List<ChainPageVO> queryChainPage() throws FLException {
 		List<ChainPagePO> chainPagePOs = chainPageDao.list();
 		List<ChainPageVO> chainPageVOs = new ArrayList<ChainPageVO>();
 		for (ChainPagePO chainPagePO : chainPagePOs) {
 			ChainPageVO chainPageVO = new ChainPageVO();
 			BeanUtil.copyProperties(chainPagePO,chainPageVO);
+			
 			chainPageVOs.add(chainPageVO);
 		}
 		
@@ -45,15 +46,21 @@ public class ChainPageServiceImpl implements ChainPageService{
 	}
 
 	@Override
-	public List<ChainPageVO> queryChainPageForSelf(String roleId) throws FLException {
+	public List<ChainPageVO> queryChainPageForSelf(String roleId,int company) throws FLException {
+		
+		BASE64Encoder encoder = new BASE64Encoder();  
+		String encode = encoder.encode(String.valueOf(company).getBytes());
+		String url= "&company="+encode+"&op=view";
+		
 		RolePO rolePO = roleDao.get(roleId);
+	
 		List<RoleChainPagePO> roleChainPagePOs =roleChainPageDao.queryRoleChainPageByRid(rolePO.getrId());
 		List<ChainPageVO> chainPageVOs = new ArrayList<ChainPageVO>();
+
 		for (RoleChainPagePO roleChainPagePO : roleChainPagePOs) {
 			ChainPageVO chainPageVO = new ChainPageVO();
-			
 			BeanUtil.copyProperties(roleChainPagePO.getChainPage(),chainPageVO);
-			
+			chainPageVO.setUrl(roleChainPagePO.getChainPage().getUrl()+url);
 			chainPageVOs.add(chainPageVO);
 		}
 		
@@ -74,7 +81,7 @@ public class ChainPageServiceImpl implements ChainPageService{
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteChainPage(ChainPageVO chainPageVO) throws FLException {
 		
-		ChainPagePO chainPagePO = chainPageDao.get(chainPageVO.getCpid());//错的
+		ChainPagePO chainPagePO = chainPageDao.get(chainPageVO.getCpid());
 		
 		List<RoleChainPagePO> RoleChainPagePOs = roleChainPageDao.queryRoleChainPageByCpid(chainPageVO.getCpid());
 		for (RoleChainPagePO roleChainPagePO : RoleChainPagePOs) {

@@ -61,6 +61,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.report.service.DecorationRankService;
@@ -70,6 +71,7 @@ import com.fanglin.right.dao.DecorationOrderStatusRightDao;
 import com.fanglin.right.po.DecorationOrderDesignDepartmentRightPO;
 import com.fanglin.right.po.DecorationOrderSalesmanDepartmentRightPO;
 import com.fanglin.right.po.DecorationOrderStatusRightPO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -81,7 +83,7 @@ import com.fanglin.utils.SystemConfig;
 
 @Service("quotationOrderService")
 @Transactional(readOnly=true)
-public class DecorationOrderServiceImpl implements DecorationOrderService {
+public class DecorationOrderServiceImpl implements DecorationOrderService {	
 
 	@Autowired
 	private CountingService countingService;
@@ -136,6 +138,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageDecorationOrderForGeneral(Paging paging, List<Filter> filters, Authentication authentication){
@@ -1005,11 +1010,15 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderPO.setVersionPO(new QuotationVersionPO(versionId));
 			
 			List<QuotationPO> quotationPOs = quotationDao.queryQuotationByOrderId(orderId);
+			Integer divisor = Integer.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+			
 			for(QuotationPO quotationPO: quotationPOs){
 				List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid());
 				
 				for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreaPOs){
-					quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+					
+					String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(),divisor);
+					quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(tableName,quotationFunctionAreaPO.getQfaId());
 					
 					quotationFunctionAreaDao.delete(quotationFunctionAreaPO);
 				}

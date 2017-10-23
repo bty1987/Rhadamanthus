@@ -181,7 +181,7 @@ var flag = 0;
             title: "查看工序",
             content: $popup,
             area:["800px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: true,
+            maxmin: false,
             zIndex: 9999,
             success: function (layer, index) {
                 params["wpid"] = wpid ;
@@ -201,7 +201,7 @@ var flag = 0;
             title:"添加",
             content: $('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: true,
+            maxmin: false,
             zIndex:9999,
             btn: ['确定', '取消'],
             yes: function(index, layero){

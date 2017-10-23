@@ -35,6 +35,7 @@ import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.vo.AddReduceVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -61,6 +62,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
@@ -218,10 +222,13 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
 		
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
 		for(AddReduceItemPO addReduceItemPO: addReduceItemPOs){
 			
 			if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT){
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.get(addReduceItemPO.getQuoteItemId());
+				
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor), addReduceItemPO.getQuoteItemId());
 				
 				if(quotationFunctionAreaItemPO == null){
 					throw new FLException(200013, "报价项不存在");
@@ -229,7 +236,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 				
 				float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
 				float addReduceItemNum = addReduceItemPO.getNum();
-				
+
 				quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
 				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 			}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT){

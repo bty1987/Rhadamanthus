@@ -340,7 +340,7 @@ $(function () {
             title: "厂商结算值",
             content: $('#vbalanceValue'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -367,7 +367,7 @@ $(function () {
             title: "结算值",
             content: $('#pbalanceValue'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
@@ -400,7 +400,7 @@ $(function () {
             title: title,
             content: _popUp,
             area: ["1400px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
-            maxmin: true,
+            //maxmin: true,
             zIndex: 9000,
             btn: ['确定'],
             success: function (layers, index) {
