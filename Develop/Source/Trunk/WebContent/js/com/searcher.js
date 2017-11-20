@@ -359,7 +359,7 @@ var Searcher = function(){
                 	
                 	(_p <= _pagenation.nowPage["paging.totalPage"] && _p >= 1) && (
                         _params = _pagenation.getParams(),
-                        _params && (_params["paging.page"] = _p, _pagenation.getDataByPage(_params))
+                        _params && (_params["paging.page"] = parseInt(_p), _pagenation.getDataByPage(_params))
                     );
             	}
             });

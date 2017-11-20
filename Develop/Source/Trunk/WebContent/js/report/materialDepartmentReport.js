@@ -15,7 +15,8 @@ $(function() {
 	});
 	$("#dateRangeSearch").attr("readonly", "readonly");
 	
-	com.post(api.department.queryDepartment, {"dept.type": "主材部"}, function(res){
+	com.post(api.department.queryDepartment, {"dept.type.name":"主材部"}, function(res){
+
 		var deptList = res.deptList;
 		
 		for(var i=0;i<deptList.length;i++){

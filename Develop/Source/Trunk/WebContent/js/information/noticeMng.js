@@ -368,7 +368,7 @@ $(function(){
 
     function showDepaermentModal() {
         $wrap = $('#managements').find('.modal-body').empty();
-        com.post(api.department.queryDepartment, {"dept.type": "all"}, function (res) {
+        com.post(api.department.queryDepartment, {}, function (res) {
             var treeData = res.deptList;
             if (!treeData || !treeData.length) {
                 return;
@@ -384,16 +384,13 @@ $(function(){
                 level3 : {},
             };
             var $tree = $('<ol class="dd-list"></ol>');
-            var arr=[];
+            
             $wrap.append($tree);
 
             menuArr.level1=[{did: -1, deptName: "全部"}];
 
-            $.each(treeData, function(i, v){
-                arr.push(v.did);
-            });
             $.each(treeData,function(i,v){
-                if(v.fatherDept == null){
+                if(v.fatherDept.did == null || v.fatherDept.did == 0){
                     menuArr.level2.push(v)
                 }
             })
@@ -401,7 +398,7 @@ $(function(){
             $.each(menuArr.level2,function(i,v){
                 $.each(treeData,function(index,value){
                     if(value.fatherDept != null) {
-                        if (value.fatherDept.deptId == v.deptId) {
+                        if (value.fatherDept.did == v.did) {
                             menuArr.level3.push(value)
                         }
                     }

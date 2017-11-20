@@ -335,24 +335,19 @@ $(function(){
                 flag = false;
             }
         });
-        console.log(_params["pids[0]"]);
         if(_params["pids[0]"]){
         	
         	 com.post(api.inventory.queryPurchaseItemByPids,_params,function(res){
                  $.each(res.purchaseItems,function(i,v){
                      if(v.siid == 0){
-                         console.log(123123123)
                          flagSiid = true;
                      }else{
-                         console.log(32165498)
                          flagSiid = false;
                      }
                  });
              });
         	 
         }
-        console.log(flag);
-        console.log(flagSiid);
         if($menus.length>0 && flag == true){
             params.pids = _params;
             viewPurchaseItems(6);

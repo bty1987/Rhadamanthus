@@ -5,15 +5,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.information.dao.PhoneCallDao;
+import com.fanglin.information.dao.PhoneCallRecordDao;
 import com.fanglin.information.po.PhoneCallPO;
+import com.fanglin.information.po.PhoneCallRecordPO;
 import com.fanglin.information.service.PhoneCallService;
 import com.fanglin.information.vo.PhoneCallVO;
 import com.fanglin.personel.dao.UserDao;
@@ -33,6 +37,9 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 	private PhoneCallDao phoneCallDao;
 	
 	@Autowired
+	private PhoneCallRecordDao phoneCallRecordDao;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	@Autowired
@@ -44,10 +51,10 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		List<PhoneCallPO> phoneCallPOs = phoneCallDao.pagePhoneCall(paging, filters);
 		
 		List<PhoneCallVO> phoneCallVOs = new ArrayList<PhoneCallVO>();
-		
-		for(PhoneCallPO phoneCallPO: phoneCallPOs){
-			
-			phoneCallVOs.add(convertBean(phoneCallPO));
+				
+		 for(PhoneCallPO phoneCallPO: phoneCallPOs){
+        		
+        	phoneCallVOs.add(convertBean(phoneCallPO));
 		}
 		
 		paging.setData(phoneCallVOs);
@@ -75,13 +82,43 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		
 		phoneCallPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		phoneCallDao.save(phoneCallPO);
+		phoneCallDao.save(phoneCallPO);					
 		
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 		
 		String url = String.format(PhoneCallPO.PHONECALLPO_PHONECALLBACK_STR,isv.getValue(),"86"+phoneCall.getCaller(),"86"+phoneCall.getCallee(),phoneCallPO.getPcid());
 		
-		HttpHelper.httpGet(url);
+		JSONObject json = HttpHelper.httpGet(url);
+		
+		if(json != null && json.get("phoneCallback") != null){
+			
+			JSONObject result = (JSONObject)json.get("phoneCallback");
+			
+			String callbackId = result.getString("callbackId");
+			
+			PhoneCallPO phonecallPO = phoneCallDao.get(phoneCallPO.getPcid());
+			
+			phonecallPO.setCallbackId(callbackId);
+			
+			phoneCallDao.update(phonecallPO);
+		}
+		
+		PhoneCallRecordPO phoneCallRecord = new PhoneCallRecordPO();
+		
+		phoneCallRecord.setPcid(phoneCallPO.getPcid());
+		
+		if(phoneCall.getRecordType() == null){
+		
+		    phoneCallRecord.setRecordType(0);
+		
+		}else{
+			
+			phoneCallRecord.setRecordType(phoneCall.getRecordType());	
+		};
+		
+		phoneCallRecord.setRecordUrl(phoneCall.getRecordUrl());
+		
+		phoneCallRecordDao.save(phoneCallRecord);
 		
 		return 0;
 	}
@@ -93,12 +130,12 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		PhoneCallPO phoneCallPO = phoneCallDao.queryPhoneCallByCallBackId(phoneCall.getCallbackId());
 		
 		if(phoneCallPO == null){
-			throw new FLException(190005, "人员不存在");
+			throw new FLException(160024, "电话回拨信息不存在");
 		}
 	
-		phoneCallPO.setStartTime(DateUtil.getDateToTimestamp(phoneCall.getStartTime()));
+		phoneCallPO.setStartTime(phoneCall.getStartTime());
 		
-		phoneCallPO.setEndTime(DateUtil.getDateToTimestamp(phoneCall.getEndTime()));
+		phoneCallPO.setEndTime(phoneCall.getEndTime());
 		
 		phoneCallPO.setStopReason(phoneCall.getStopReason());
 	
@@ -116,14 +153,16 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		PhoneCallPO phoneCallPO = phoneCallDao.queryPhoneCallByCallBackId(phoneCall.getCallbackId());
 		
 		if(phoneCallPO == null){
-			throw new FLException(190005, "人员不存在");
+			throw new FLException(160024, "电话回拨信息不存在");
 		}
 		
-		phoneCallPO.setRecordType(phoneCall.getRecordType());
+		PhoneCallRecordPO phoneCallRecordPO = phoneCallRecordDao.queryPhoneCallRecordByPcId(phoneCallPO.getPcid());
 		
-		phoneCallPO.setRecordUrl(phoneCall.getRecordUrl());
+		phoneCallRecordPO.setRecordType(phoneCall.getRecordType());
+		
+		phoneCallRecordPO.setRecordUrl(String.format("%s&token=%s", phoneCall.getRecordUrl(), phoneCall.getToken()));
 
-		phoneCallDao.update(phoneCallPO);
+		phoneCallRecordDao.update(phoneCallRecordPO);
 	
 		return 0;
 	}
@@ -134,7 +173,13 @@ public class PhoneCallServiceImpl implements PhoneCallService {
 		
 		BeanUtil.copyProperties(phoneCallPO, phoneCallVO, Arrays.asList("operater"));
 
-		BeanUtil.copyProperties(phoneCallPO.getOperater(), phoneCallVO.getOperater(), Arrays.asList("role", "dept"));
+		BeanUtil.copyProperties(phoneCallPO.getOperater(), phoneCallVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+		
+		PhoneCallRecordPO phoneCallRecordPO = phoneCallRecordDao.queryPhoneCallRecordByPcId(phoneCallPO.getPcid());
+		
+		phoneCallVO.setRecordType(phoneCallRecordPO.getRecordType());
+		
+		phoneCallVO.setRecordUrl(phoneCallRecordPO.getRecordUrl());
 		
 		return phoneCallVO;
 	}

@@ -143,20 +143,7 @@ public class GoodsAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	@Action(value = "bindGoodsForPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String bindGoodsForPackage() throws FLException{
-		
-		goodsPackageService.bindGoodsForPackage(goodsPackage);
-		
-		return SUCCESS;
-	}
-	@Action(value = "deleteGoodsForPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteGoodsForPackage() throws FLException{
-		
-		goodsPackageService.deleteGoodsForPackage(goodsPackage);
-		
-		return SUCCESS;
-	}
+	
 
 	public List<GoodsVO> getGoodes() {
 		return goodes;

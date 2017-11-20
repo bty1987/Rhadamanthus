@@ -8,14 +8,13 @@
 		{"key":"跃层", "value":"跃层"},
 		{"key":"二手房", "value":"二手房"}
 	], "status": [
-		{"key":"咨询", "value":"咨询"},
-		{"key":"量房", "value":"量房"}
+		{"key":"0", "value":"咨询"},
+		{"key":"1", "value":"量房"}
 	], "houseType": [
 		{"key": "期房", "value":"期房"},
 		{"key": "现房", "value":"现房"}
 	], "decorationOrderStatus": [
-		{"key":"咨询", "value":"咨询"},
-		{"key":"量房", "value":"量房"},
+		{"key":"初始", "value":"初始"},
 		{"key":"已报价", "value":"已报价"},
 		{"key":"定金", "value":"定金"},
 		{"key":"重签合同", "value":"重签合同"},

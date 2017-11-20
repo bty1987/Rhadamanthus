@@ -86,12 +86,18 @@ public class DrawLineGroupServiceImpl  implements DrawLineGroupService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateDrawLineGroup(DrawLineGroupVO drawLineGroupVO)throws FLException {
+	public void updateDrawLineGroup(DrawLineGroupVO drawLineGroupVO, int company)throws FLException {
 		
 		DrawLineGroupPO  drawLineGroupPOs = drawLineGroupDao.queryDrawLineGroupById(drawLineGroupVO.getGid());
 		
+		DrawLineGroupPO  DrawLineGroupName =drawLineGroupDao.queryDrawLineGroupByName(drawLineGroupVO.getName(), company);
+		
 		if(drawLineGroupPOs == null){
 			throw new FLException(130008, "放线小组不存在");
+		}
+		
+		if(DrawLineGroupName != null ){
+			throw new FLException(130009, "放线小组已存在");
 		}
 		
 		drawLineGroupPOs.setName(drawLineGroupVO.getName());

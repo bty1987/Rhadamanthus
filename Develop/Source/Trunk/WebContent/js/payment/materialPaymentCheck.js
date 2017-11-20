@@ -37,19 +37,19 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialPaymentCheck.cash.push(v);
-				materialPaymentCheck.cashInfo[v.key] = v.name;
+				materialPaymentCheck.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				materialPaymentCheck.bank.push(v);
-				materialPaymentCheck.bankInfo[v.key] = v.name;
+				materialPaymentCheck.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				materialPaymentCheck.checkBank.push(v);
-				materialPaymentCheck.checkBankInfo[v.key] = v.name;
+				materialPaymentCheck.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				materialPaymentCheck.accounts.push(v);
-				materialPaymentCheck.accountsInfo[v.key] = v.name;
+				materialPaymentCheck.accountsInfo[v.no] = v.name;
 			}else if(v.type == 5){
 				materialPaymentCheck.couponType.push(v);
-				materialPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
+				materialPaymentCheck.couponTypeData[v.no] = [v.no, v.name];
 			}
 		});
 	}, null, false);

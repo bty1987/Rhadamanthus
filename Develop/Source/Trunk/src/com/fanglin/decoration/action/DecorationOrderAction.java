@@ -98,7 +98,39 @@ public class DecorationOrderAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "pageDecorationOrderForQuoter", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationOrderForQuoter() throws FLException{
 
+		decorationOrderService.pageDecorationOrderForQuoter(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageDecorationOrderForEscorter", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationOrderForEscorter() throws FLException{
+
+		decorationOrderService.pageDecorationOrderForEscorter(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageDecorationOrderForDesignerManager", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationOrderForDesignerManager() throws FLException{
+
+		decorationOrderService.pageDecorationOrderForDesignerManager(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageDecorationOrderForSalesmanManager", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationOrderForSalesmanManager() throws FLException{
+
+		decorationOrderService.pageDecorationOrderForSalesmanManager(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryDecorationOrderByVillageIdAHouseNumber", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationOrderByVillageIdAHouseNumber() throws FLException{
 
@@ -112,14 +144,6 @@ public class DecorationOrderAction extends BaseListAction {
 
 		decorationOrders = decorationOrderService.queryDecorationOrderByCustomerId(decorationOrder, authentication());
 
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryDecorationOrderForCondition", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationOrderForCondition() throws FLException{
-		
-		conditions = decorationOrderService.queryDecorationOrderForCondition(queryUserId());
-		
 		return SUCCESS;
 	}
 	

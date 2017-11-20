@@ -1,3 +1,13 @@
+/**
+ * @File Name		: DecorationRankServiceImpl.java
+ * @Package   	: com.fanglin.report.service.impl
+ * @Version		: 1.0
+ * @Date			: 2015-6-23
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
 package com.fanglin.report.service.impl;
 
 import java.util.ArrayList;
@@ -168,9 +178,6 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = decorationDesignerRankDao.queryDecorationDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
@@ -180,7 +187,6 @@ public class DecorationRankServiceImpl implements DecorationRankService {
 				result.set(0, infos[0].toString());
 				result.set(1, infos[1].toString());
 			}
-		}
 		
 		return result;
 	}

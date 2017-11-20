@@ -183,7 +183,7 @@ $(function(){
     });
     //绑定
     $('#bindBtn').click(function () {
-
+        com.clearValidator();
         productionUtils.clearForm('form1');
         productionSalesPostData = {};
         openBindlayer(function (index, layero) {
@@ -284,7 +284,7 @@ $(function(){
 
     //绑定调用方法
     function bindSales(callback){
-        if(checkBindValue()){
+        if(!com.validate("layerBind",null)){
             productionSalesPostData["productionSales.pid"] = productionSalesPid;
 
             com.post(api.production.bindProductionSales,productionSalesPostData,function(data){
@@ -297,43 +297,6 @@ $(function(){
                 layer.msg('绑定失败', {icon: 2, time: 2e3});
             });
         }
-    };
-
-    //校验
-    function checkBindValue(){
-        var flag = true;
-        //绑定时销售单或主材单号不能为空
-        var $saleNo = $layerBind.find('input[name="saleNo"]');
-        if(!$saleNo.val()){
-            flag = false;
-            $saleNo.focus().select();
-            $saleNo.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "订单编号不能为空"
-            }).popover('show');
-        }else{
-            $saleNo.popover('destroy');
-        }
-        //绑定时销售单或主材单的品类品牌不能为空
-        var $brand = $layerBind.find('input[name="brand"]');
-        if(!$brand.val()){
-            flag = false;
-            $brand.focus().select();
-            $brand.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "品类品牌不能为空"
-            }).popover('show');
-        }else{
-            $brand.popover('destroy');
-        }
-
-        return flag;
     }
 
 });

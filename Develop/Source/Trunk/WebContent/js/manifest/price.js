@@ -10,6 +10,22 @@ $(function () {
      */
     var goodsPricePopUp = $('#goodsPricePopUp')
 
+    var validator = {
+        num: {
+            type: "v_num",
+            regex: /^(\d+|\d+\.[0-9]{1,4})$/,
+            errorMsg: "数量输入内容格式错误"
+        },
+        priceType: {
+            type: "v_priceType",
+            regex: /^(0([\.]?\d*[0-9]+)|0|1)$/,
+            errorMsg: "结算值在0-1之间"
+        }
+    };
+
+    $.extend(com.validator, validator);
+
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -157,13 +173,15 @@ $(function () {
             var $select;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).attr('data-toggle','popover').attr('data-placement','bottom').addClass('editable v_required');
                 $cell.append($input);
             }
-
             if(v.hasSelectCtype){
                 $select = $('<select style="width: 100%;"></select>');
                 $cell.append($select);
+            }
+            if(v.cellClass == "purchase" || v.cellClass == "selling"){
+                $input.addClass('v_float');
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -179,8 +197,16 @@ $(function () {
         });
 
         $btncheck.click(function (e) {
-
             e.stopPropagation();
+            if($lineInfoWrap.find('.ctype select').val() == 0){
+                $lineInfoWrap.find('.cvalue input').removeClass('v_priceType').addClass('v_float');
+            }else if($lineInfoWrap.find('.ctype select').val() == 1){
+                $lineInfoWrap.find('.cvalue input').removeClass('v_float').addClass('v_priceType');
+            }
+
+            if(com.validate('addPrice','bottom')){
+                return;
+            }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var options = {
                 "price.gid":goodsPricePopUp.attr('data-gid'),
@@ -190,7 +216,9 @@ $(function () {
                 "price.ctype": $lineInfoWrap.find('.ctype select').val(),
                 "price.cvalue": $lineInfoWrap.find('.cvalue input').val()
             };
-            if(checkRowValue($line)){
+
+
+            //if(checkRowValue($line)){
                 com.post(api.inventory.addPrice,options,function(){
                     $('#list').empty();
                     addline(1).addClass('current').appendTo('#list');
@@ -203,7 +231,7 @@ $(function () {
                 },function(e){
                     com.showAlert(com.info, e.errorMsg);
                 })
-            }
+            //}
 
         })
 
@@ -318,7 +346,6 @@ $(function () {
             flag =  false;
         }else{
             cvalue.popover('destroy');
-            flag = true;
         }
 
         //if(!checkNumFormat(cvalue,'结算值格式错误')){

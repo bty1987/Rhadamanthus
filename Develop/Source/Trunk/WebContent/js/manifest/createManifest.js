@@ -21,8 +21,22 @@ jQuery(function($) {
             des : $("#comment"),
         },
         record: {},
+        validator: {
+            num: {
+                type: "v_num",
+                regex: /^[0-9]*[1-9][0-9]*$/,
+                errorMsg: "数量输入内容格式错误"
+            },
+            selling: {
+                type: "v_selling",
+                regex: /^\d{1,8}(\.\d{1,2})?$/,
+                errorMsg: "售价输入内容格式错误"
+            }
 
+        }
     };
+
+    $.extend(com.validator, manifest.validator);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function(res){
         var storehousesStatus = [];
@@ -55,15 +69,15 @@ jQuery(function($) {
     addline(1).addClass('current').appendTo('#list');
     
     $('#addSaleOrder').click(function(){
+        if(com.validate('list','bottom')){
+            return;
+        }
         var num = $('.line', '#list').length;
         var returnFlag = false;
         var $lines = $('.line', '#list');
         $lines.each(function(){
             var $this = $(this);
-            if(!checkRowValue($this)){
-                returnFlag = true;
-                return false;
-            };
+
         });
 
         if(returnFlag) return;
@@ -74,7 +88,9 @@ jQuery(function($) {
     });
 
     $('#submitSaleOrder').click(function(){
-
+        if(com.validate('list','bottom')){
+            return;
+        }
         var options = {};
 
         var $lines = $('li.line', '#list');
@@ -90,11 +106,7 @@ jQuery(function($) {
         $lines.each(function(){
 
             var $this = $(this);
-            if(!checkRowValue($this)){
 
-                returnFlag = true;
-                return false;
-            };
         });
 
         if(returnFlag) return;
@@ -153,6 +165,7 @@ jQuery(function($) {
                 $('[name="orderid"]','#form').val(null);
                 $('[name="customer"]','#form').val(null);
                 $('#comment').val(null);
+                $("#totalSpan").text(0);
 
                 //添加一条空行
                 addline(1).addClass('current').appendTo('#list');
@@ -171,13 +184,14 @@ jQuery(function($) {
                 $('[name="orderid"]','#form').val(null);
                 $('[name="customer"]','#form').val(null);
                 $('#comment').val(null);
+                $("#totalSpan").text(0);
 
                 //添加一条空行
                 addline(1).addClass('current').appendTo('#list');
                 
             }, function(e){
                 btn.button('reset');
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             });
         }
 
@@ -213,20 +227,32 @@ jQuery(function($) {
             var $cell = $('<div></div>').addClass('cell '+ v.cellClass);
             if(v.hasInput){
                 $input = $('<input>').prop({'type' : 'text', 'autocomplete' : 'off'}).addClass('editable');
+                if(v.cellClass == "name"){
+                    $input.addClass('v_required');
+                }
+                if(v.cellClass == "number"){
+                    $input.addClass('v_num');
+                }
+                if(v.cellClass == "price"){
+                    $input.addClass('v_selling');
+                }
+                if(v.cellClass == "des"){
+                    $input.attr('maxlength', '128');
+                }
                 $cell.append($input);
             }
 
             if(v.hasSelect){
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $select.bindData(manifest.storehouses,"shId","name");
                 $cell.append($select);
             }
             if(v.hasSelectColor){
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             if(v.hasSelectFormat){
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             $cell.appendTo($lineInfoWrap);
@@ -281,9 +307,12 @@ jQuery(function($) {
 
          $btncheck.click(function(e){
              e.stopPropagation();
-             if(checkRowValue($line)){
-                cyclTotal();
+             if(com.validate('list', 'bottom')){
+                 return;
              }
+
+                cyclTotal();
+
          });
 
          $btndel.click(function(e){
@@ -295,142 +324,6 @@ jQuery(function($) {
 
         return $line;
 
-    }
-
-
-    function checkRowValue($line){
-
-        var flag = true;
-
-        var name = $line.find('.name input');
-        if(!name.val()){
-            name.focus().select();
-
-            name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写主材名称"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            name.popover('destroy');
-        }
-
-
-        var storehouse = $line.find('.storehouse select');
-        if(!storehouse.val()){
-            storehouse.focus().select();
-
-            storehouse.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写仓库名称"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            storehouse.popover('destroy');
-        }
-
-
-        var num = $line.find('.number input');
-        var numRex = /^\d+$/;
-        if(!(numRex.test(num.val()) && parseFloat(num.val()) > 0)){
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "数量输入内容格式错误!"
-            }).popover('show');
-            flag =  false;
-        }else{
-            num.popover('destroy');
-        }
-
-
-
-        var price = $line.find('.price input');
-        var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
-        if(!(priceRex.test(price.val()) && parseFloat(price.val()) > 0)){
-            price.focus().select();
-            price.addClass('tooltip-info').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "售价输入内容格式错误!"
-
-            }).popover('show');
-            flag =  false;
-        }else{
-            price.popover('destroy');
-        }
-
-
-        var des = $line.find('.des input');
-        if(des.val() && des.val().length > 128){
-            des.focus().select();
-            des.addClass('tooltip-info').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "备注信息长度需要小于128!"
-            }).popover('show');
-            flag =  false;
-        }else{
-            des.popover('destroy');
-        }
-
-        //对颜色判断
-        var color = $line.find('.color select');
-        if(!color.val()){
-            color.focus().select();
-
-            color.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请选择颜色信息"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            color.popover('destroy');
-        }
-
-        //对规格判断
-        var format = $line.find('.format select');
-        if(!format.val()){
-            format.focus().select();
-
-            format.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请选择规格信息"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            format.popover('destroy');
-        }
-
-
-        return flag;
     }
 
     //选择模板添加

@@ -15,8 +15,8 @@
 						<div class="form-group">
 							<label for="name" class="col-sm-3 control-label no-padding-right">报价名</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="name" placeholder="请输入报价项名称">
+								<input type="text" class="col-xs-10 col-sm-10 v_required" data-toggle="popover"
+									    data-trigger="click" id="name" placeholder="请输入报价项名称">
 								<i class="icon-asterisk"></i>
 							</div>
 						</div>
@@ -24,7 +24,7 @@
 							<label for="brand" class="col-sm-3 control-label no-padding-right">类型</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="brand"  readonly>
+									    data-trigger="click" id="brand"  readonly>
 
 							</div>
 						</div>
@@ -32,7 +32,7 @@
 							<label for="measurementunit" class="col-sm-3 control-label no-padding-right">单位</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="measurementunit"  readonly>
+									    data-trigger="click" id="measurementunit"  readonly>
 
 							</div>
 						</div>
@@ -40,54 +40,54 @@
 							<label for="format1" class="col-sm-3 control-label no-padding-right">规格</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="format1"  >
+									    data-trigger="click" id="format1"  >
 
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="height" class="col-sm-3 control-label no-padding-right">长度</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="height" placeholder="米" >
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="height" placeholder="米" >
 								<i class="icon-asterisk"></i>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="width" class="col-sm-3 control-label no-padding-right">宽度</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="width" placeholder="米" >
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="width" placeholder="米" >
 								<i class="icon-asterisk"></i>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="thick" class="col-sm-3 control-label no-padding-right">厚度</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="thick" placeholder="米" >
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="thick" placeholder="米" >
 								<i class="icon-asterisk"></i>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="thick" class="col-sm-3 control-label no-padding-right">面积</label>
+							<label class="col-sm-3 control-label no-padding-right">面积</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="area" placeholder="平米" readonly>
+									    data-trigger="click" id="area" placeholder="平米" readonly>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="unitprice" class="col-sm-3 control-label no-padding-right">售价</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="unitprice"  >
-
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_price" data-toggle="popover"
+									    data-trigger="click" id="unitprice"  >
+								<i class="icon-asterisk"></i>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="num" class="col-sm-3 control-label no-padding-right">数量</label>
 							<div class="col-sm-9">
-								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="num"  >
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="num"  >
 								<i class="icon-asterisk"></i>
 							</div>
 						</div>
@@ -95,7 +95,7 @@
 							<label for="total" class="col-sm-3 control-label no-padding-right">总价</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="total"  readonly>
+									    data-trigger="click" id="total"  readonly>
 
 							</div>
 						</div>
@@ -103,7 +103,7 @@
 							<label for="remark" class="col-sm-3 control-label no-padding-right">备注</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="remark"  >
+									    data-trigger="click" id="remark"  >
 
 							</div>
 						</div>
@@ -111,7 +111,7 @@
 							<label for="specil" class="col-sm-3 control-label no-padding-right">特型</label>
 							<div class="col-sm-9">
 								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
-									   data-trigger="manual" id="specil"  >
+									    data-trigger="click" id="specil"  >
 
 							</div>
 						</div>

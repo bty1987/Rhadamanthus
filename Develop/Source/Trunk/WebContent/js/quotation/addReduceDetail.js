@@ -83,7 +83,10 @@ var AddReduceDetail = (function(){
 					$ul.appendTo($tableWrap);
 				}
 			}, "pagenationn", "addNormalItemModalPostDatan", extraParams);
-
+			//初始化自定义报价中的类型
+			com.post(api.quotation.queryQuotationType, {},function(res) {
+				$("#quotationType").bindData(res.quotationTypes,"id", "name");
+			});
 			//新增报价项select初始化
             //单位
 			com.post(api.common.queryMeasurementUnit,{},function(res){
@@ -291,7 +294,7 @@ var AddReduceDetail = (function(){
 				}else if(that.showingModalName == 'extensionItemModal'){
 					var index = 0;
 					var eids = {};
-					com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": addReduceDetail.orderid}, function(res){
+					com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": addReduceDetail.orderid,"extension.type": 0}, function(res){
 						$.each(res.extensions, function(i, v){
 							eids['extensionItemIDs[' + index + ']'] = v.eid;
 							index++;
@@ -369,6 +372,7 @@ var AddReduceDetail = (function(){
 					"unitPrice" : $("#unitPrice").val(),//单价(折后单价、总价为计算值)
 					"workType" : $("#workType").val(),//工种
 					"content" : $("#quotationItemDes").val(),//工艺说明
+					"subtype" : $("#quotationType").val(),
 					"type" : 2,//类型(隐藏属性)
 					"discount" : 0,
 					//"ariId" : "",//增减项中报价项的id
@@ -388,13 +392,14 @@ var AddReduceDetail = (function(){
 					"addReduceItem.ariId" : "",//增减项报价项Id , 新建无此参数;
 					"addReduceItem.itemName" : addRow.itemName,//项目名;
 					"addReduceItem.type" : addRow.type,//增减项类型 , 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
+					"addReduceItem.subtype" : addRow.subtype,//1工程,2主材
 					"addReduceItem.measurementUnit" : addRow.measurementUnit,//单位 ;
 					"addReduceItem.workType" : addRow.workType,//工种 ;
 					"addReduceItem.unitPrice" : addRow.unitPrice,//单价 ;
 					"addReduceItem.num" : addRow.num,//工程量 ;
 					"addReduceItem.quotationFunctionAreaId" : addRow.quotationFunctionAreaId,//所属功能区Id ;
 					"addReduceItem.quotationFunctionAreaName" : $("#addQuotationFunctionAreaId").find('option:selected').text(),//所属功能区name ;
-					"quotationFunctionAreaItem.content" : addRow.content,
+					"addReduceItem.content" : addRow.content,
 				};
 				var _index = $('.fl-quo-item', '#addReduceItemDiv').length;
 				var $item = painter.createQuote(_index + 1, addRow).appendTo($('#addReduceItemDiv > ul'));
@@ -493,6 +498,7 @@ var AddReduceDetail = (function(){
 					"workType" : $li.find("li .workType").text(),//工种
 					"quotationFunctionAreaType" : $this.attr('quotationFunctionAreaType'),
 					"type" : type,//类型(隐藏属性)
+					"subtype" :$this.attr("data-quotationType") ,
 					"ariId" : "",//增减项中报价项的id
 					"quoteItemId" : $this.val(),//id(隐藏属性)
 					"discount" : $this.attr('data-discount-flag'),
@@ -540,18 +546,17 @@ var AddReduceDetail = (function(){
 					addReduceItem.quoteItemId , 引用报价项Id , type类型为0, 1, 3需要传递该参数 , 同时分别传递普通报价项id , 系统定义项id , 报价中报价项Id ;
 					addReduceItem.content , 说明信息 , type类型为2需要传递该参数 .
 				*/
-
 				var args = {
 					"addReduceItem.discount" : that.$nowLine.find('.discountprice').attr("data-discount"),//是否打折
 					"addReduceItem.ariId" : that.$nowLine.find('input[name="ariid"]').val(),//增减项报价项Id , 新建无此参数;
 					"addReduceItem.itemName" : that.$nowLine.find('.name .cell-wrap').text(),//项目名;
 					"addReduceItem.type" : _type,//增减项类型 , 0表示普通报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
+					"addReduceItem.subtype" : that.$nowLine.find('.subtypedict').attr('data-subtype'),
 					"addReduceItem.measurementUnit" : that.$nowLine.find('.unit .cell-wrap').text(),//单位 ;
 					"addReduceItem.workType" : that.$nowLine.find('.worktype .cell-wrap').text(),//工种 ;
 					"addReduceItem.unitPrice" : that.$nowLine.find('.unitprice .cell-wrap').text(),//单价 ;
 					"addReduceItem.num" : that.$nowLine.find('.num .cell-wrap').text(),//工程量 ;
 					"addReduceItem.quotationFunctionAreaId" : that.$nowLine.find('.quotationFunctionArea').attr('data-quotationfunctionareaid'),//所属功能区Id ;
-
 				};
 
 				if(_type != 2){
@@ -666,6 +671,7 @@ var AddReduceDetail = (function(){
 				"name" : "modalQuots",
 				"class" : "ace ace-checkbox-2",
 				"data-discount-flag" : v.discount,
+				"data-quotationType" : v.quotationTypeId ? v.quotationTypeId : v.subtype,
 				"quotationFunctionAreaType" : $('#quotationFunctionAreaId').find('option:selected').attr("other"),
 				//功能区
 			}).val(v[idname]);
@@ -710,7 +716,7 @@ var AddReduceDetail = (function(){
 		createQuote : function(linenum, qv){
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
 			var typeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
-
+			var _subtype = {"1" : "工程","2" : "主材"};
 			var _dcp = utils.changeTwoDecimal(qv.unitPrice);
 
 			if([1, 3].indexOf(qv.type) != -1){
@@ -725,9 +731,9 @@ var AddReduceDetail = (function(){
 
 			var _lineSet = [
 				["line", linenum,['quotationFunctionAreaType',qv.quotationFunctionAreaType]],
-				["num", qv.num],//工程预算量
+				["num subtypedict", qv.num,['data-subtype',qv.subtype]],//工程预算量
 				["name", qv.itemName],//名称
-				["type typedict", typeDict[qv.type], ['data-type', qv.type]],//类型
+				["type typedict",typeDict[qv.type], ['data-type', qv.type]],//类型
 				["worktype", qv.workType],//工种
 				["type quotationFunctionArea", qv.quotationFunctionAreaName ? qv.quotationFunctionAreaName : "---", ["data-quotationFunctionAreaId", qv.quotationFunctionAreaId]],//功能区
 				["unit", qv.measurementUnit],//单位

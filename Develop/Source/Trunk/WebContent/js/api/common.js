@@ -24,6 +24,9 @@ $.extend(api, {common: {
     queryReceiptType: {url: "queryReceiptType.do", demo: true},
     queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
     addReceiptType: {url: "addReceiptType.do"},
+	updateReceiptType: {url: "updateReceiptType.do"},
+    updateReceiptTypeForStatus: {url: "updateReceiptTypeForStatus.do"},
+  
     
     
     

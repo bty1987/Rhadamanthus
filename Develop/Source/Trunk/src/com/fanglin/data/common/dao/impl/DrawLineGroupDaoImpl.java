@@ -61,4 +61,5 @@ public class DrawLineGroupDaoImpl extends DaoImpl<DrawLineGroupPO> implements Dr
 			}				
 		}	
 	}
+
 }

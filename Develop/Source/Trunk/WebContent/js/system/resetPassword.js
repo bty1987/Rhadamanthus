@@ -31,7 +31,7 @@ jQuery(function($) {
                 ["编号:", v.userId, "grey"],
                 ["用户名:", v.loginId, "grey"],
                 ["部门:", v.dept.deptName, "grey"],
-                ["职位:", v.duty, "grey"],
+                ["职位:", v.duty.name, "grey"],
                 ["角色:", v.role.roleName, "grey"],
                 ["电话:", v.phone, "red"]
             ];

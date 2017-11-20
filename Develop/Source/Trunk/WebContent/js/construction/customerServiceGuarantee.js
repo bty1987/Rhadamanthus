@@ -160,7 +160,7 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		if(com.validate()|| guarantee.repeatFlg)
+		if(com.validate("guaranteeModal")|| guarantee.repeatFlg)
 			return;
 
 		var url;

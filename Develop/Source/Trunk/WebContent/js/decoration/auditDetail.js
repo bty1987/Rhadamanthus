@@ -63,11 +63,20 @@ jQuery(function($) {
     }, null, false);
 
     $('#customerInfosBtn').on(ace.click_event, function(){
-        $.gritter.add({
-            title: '客户敏感信息',
-            text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
-            class_name: 'gritter-info gritter-center gritter-light'
-        });
+        if (decorationOrderDetail.showCustomerInfoFlag == undefined || decorationOrderDetail.showCustomerInfoFlag == 0) {
+            com.post(api.data.queryCustomerById,{ "customer.id": decorationOrderDetail.customer.id},function (res) {
+                decorationOrderDetail.customer = res.customer;
+                $.gritter.add({
+                    title: '客户敏感信息',
+                    text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
+                    class_name: 'gritter-info gritter-center gritter-light',
+                    after_close: function(e, manual_close){
+                        decorationOrderDetail.showCustomerInfoFlag = 0;
+                    }
+                });
+            })
+            decorationOrderDetail.showCustomerInfoFlag = 1;
+        }
 
         return false;
     });
@@ -88,7 +97,7 @@ jQuery(function($) {
 
     decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 
-        var statuses = ["咨询", "量房", "已报价", "定金"];
+        var statuses = ["初始", "已报价", "定金"];
 
         if(statuses.indexOf(decorationOrder.status)){
             $("#houseType").prop("disabled", false);
@@ -154,7 +163,7 @@ function initWizard(){
         }else if(curstep == 7){
             decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
         }else if(curstep == 8){
-            addReduce(params.decorationOrderId);
+            decorationUtils.initAddreduce(params.decorationOrderId,decorationOrderDetail.type);
         }
     }).on('finished', function(e) {
         com.switchPage(api.index.auditIndex.url);
@@ -172,7 +181,7 @@ function initWizard(){
         }else if(info.step == 7){
             decorationUtils.initDecorationBelong(decorationOrderDetail.decorationOrderId);
         }else if(info.step == 8){
-            addReduce(params.decorationOrderId);
+            decorationUtils.initAddreduce(params.decorationOrderId,decorationOrderDetail.type);
         }
     });
 }
@@ -189,90 +198,4 @@ function quotationItemDesFormatter(cellvalue, options, rowObject){
 
 function quotationItemDesUnformat(cellvalue, options, cell){
     return $('input', cell).val();
-}
-function addReduce(orderId) {
-    var $resList = $('#resLists').html('');
-    var $table = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable ');
-
-    $resList.append($table);
-    var discount = null;
-    var qid = null;
-    var versionid = null;
-
-    com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': orderId}, function (data) {
-        com.post(api.quotation.queryQuotationForDefaultByOrderId,
-            {
-                "quotation.orderId": params.decorationOrderId,
-                "quotation.type": params.orderType
-            }, function (res) {
-                discount = res.quotation.discount;
-                qid = res.quotation.qid;
-                versionid = res.quotation.versionId;
-            }, null, false);
-
-        if (data.addReduces && data.addReduces.length) {
-            $.each(data.addReduces, function (i, v) {
-                var typeDict = {"0": "增项", "1": "减项", "2": "漏项"};
-                var statusDict = {"0": "未提交", "1": "未付款", "2": "已付款", "3": "已确认"};
-                var type = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项"};
-                var $div = $('<li style="margin-bottom: 0px;"></li>').addClass('widget-box  collapsed item-orange clearfix');
-
-
-                var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.content));
-                var $ulProperty = $('<ul style="margin-bottom: 10px;"></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons widget-toolbar no-border');
-
-                var $a = $('<a href="#" data-action="collapse"></a>').append($('<i class="icon-chevron-down"></i>'));
-
-                var $divv = $('<div style="border: 0px solid transparent;"></div>').addClass('widget-body');
-                var $divvv = $('<div style="display: block;"></div>').addClass('widget-body-inner');
-
-                var propertyArr = [
-                    ["总价:", v.total, "red"],
-                    ["类别:", typeDict[v.type + ''], "red"],
-                    ["状态:", statusDict[v.status], "red"],
-                    ["添加时间:", v.createTime, "red"],
-                    ["折扣:", discount, "red"],
-                ];
-
-                $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-                var $uul = $('<table></table>').addClass('table').appendTo($divvv).appendTo($divv);
-                var $thead = $('<thead><tr><th>序号</th><th>工程预算量</th><th>名称</th><th>类型</th><th>工种</th><th>功能区</th><th>单位</th><th>' +
-                    '单价</th><th>总价</th></tr></thead>')
-
-                var $tbody = $('<tbody></tbody>');
-                $uul.append($thead).append($tbody);
-
-                com.post(api.addReduce.queryAddReduceItemByAddReduceId, {"addReduce.arId": v.arId}, function (ress) {
-
-                    if (ress.addReduceItems && ress.addReduceItems.length) {
-                        $.each(ress.addReduceItems, function (j, r) {
-                            var index = j + 1;
-                            var $tr = $('<tr><th scope="row">' + index + '</th><th>' + r.num + '</th><th>' + r.itemName + '</th><th>' + (type[r.type]) + '</th>' +
-                                '<th>' + r.workType + '</th><th>' + (r.quotationFunctionAreaName ? r.quotationFunctionAreaName : "---") + '</th>' +
-                                '<th>' + r.measurementUnit + '</th><th>' + r.unitPrice + '</th><th>'
-                                + (Math.round((r.unitPrice)*(r.num))) + '</th></tr>');
-
-                            $tbody.append($tr);
-                        });
-                    }
-                })
-                $divBtnWrap.append($a).appendTo($h3);
-
-                $div.append($h3).append($ulProperty).append($divv);
-
-                $table.append($div);
-            });
-        } else {
-            $resList.html('');
-            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resList);
-            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-            $mesg.append($('<span></span>').text('无可用数据提供'));
-        }
-    })
 }

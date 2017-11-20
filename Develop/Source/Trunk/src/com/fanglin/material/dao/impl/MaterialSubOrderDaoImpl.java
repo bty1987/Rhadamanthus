@@ -48,14 +48,24 @@ public class MaterialSubOrderDaoImpl extends DaoImpl<MaterialSubOrderPO> impleme
 	}
 
 	@Override
-	public List<MaterialSubOrderPO> pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId){
+	public List<MaterialSubOrderPO> pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId,String userId){
 		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
 		
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_STATUS_STR, MaterialSubOrderPO.STATUS_TYPE_DELETE_INT, "ne"));
+		query.add(Restrictions.or(Restrictions.or(query.getCriterion(MaterialSubOrderPO.COLUMN_SALESMANID_STR,userId,"eq"),query.getCriterion(MaterialSubOrderPO.COLUMN_INSTOREID_STR,userId,"eq")),query.getCriterion(MaterialSubOrderPO.COLUMN_MATERIALID_STR,userId,"eq")));
 		
 		queryFilterExcute(query, filters);
 		
+		return query.list();
+	}
+	
+	@Override
+	public List<MaterialSubOrderPO> pageMaterialSubOrderForAdvance(Paging paging, List<Filter> filters, String orderId) {
+		PagingQuery<MaterialSubOrderPO> query = pagingQuery(paging, MaterialSubOrderPO.class);
+		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_ORDERID_STR, orderId, "eq"));
+		query.add(query.getCriterion(MaterialSubOrderPO.COLUMN_STATUS_STR, MaterialSubOrderPO.STATUS_TYPE_DELETE_INT, "ne"));
+		queryFilterExcute(query, filters);
 		return query.list();
 	}
 

@@ -26,8 +26,6 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 	private float oldDiscount;
 	
 	private float newDiscount;
-	
-	private short level;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -84,14 +82,4 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 	public void setNewDiscount(float newDiscount) {
 		this.newDiscount = newDiscount;
 	}
-
-	@Column(name = "level")
-	public short getLevel() {
-		return level;
-	}
-
-	public void setLevel(short level) {
-		this.level = level;
-	}
-
 }

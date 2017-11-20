@@ -6,8 +6,8 @@ var receipt = {
 jQuery(function($) {
 	Api().init('../../js/api/');
 	params.server = window.server;
-	params.authentication = window.authentication;
-	
+	params.authentication = parent.params.authentication;
+
 	var args = window.location.search.substr(1);
 	
 	if(args.indexOf('time=') != -1){
@@ -146,9 +146,6 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 			var salesmanNameTd = $('<td style="width: 33%"></td>').html('').appendTo(orderReceiptTr);
 			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + ($order.supervisor == null ? "" : $order.supervisor) + " " + ($order.supervisorPhone == null ? "" : $order.supervisorPhone)).appendTo(orderReceiptTr);
 		}
-		
-//		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-//		var addrReceiptTd = $('<td colspan="3"></td>').text('客户地址: ' + commonInfo["orderAddr"]).appendTo(addrReceiptTr);
 		
 		var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var typeReceiptTd = $('<td style="width: 33%; text-align: center;"></td>').html('<strong>收款类型</strong>').appendTo(receReceiptTr);

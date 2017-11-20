@@ -36,7 +36,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="queryWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryWorkerSalary() throws FLException{
 	  
-		workerSalarys = this.workerSalaryService.queryWorkerSalary(workerSalary);
+		workerSalarys = workerSalaryService.queryWorkerSalary(workerSalary);
     
 		return "success";
   }
@@ -44,7 +44,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="addWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId());
+	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId(),queryCompany());
     
 	  return "success";
 	}
@@ -68,7 +68,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="rejectWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String rejectWorkerSalary()throws FLException{
 	  
-		workerSalaryService.rejectWorkerSalary(this.workerSalarys, queryUserId());
+		workerSalaryService.rejectWorkerSalary(workerSalarys, queryUserId());
 	  
 		return "success";
 	}
@@ -76,17 +76,9 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="deleteWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteWorkerSalary()throws FLException{
 	  
-		workerSalaryService.deleteWorkerSalary(this.workerSalary);
+		workerSalaryService.deleteWorkerSalary(workerSalary);
     
 		return "success";
-	}
-
-	public WorkerSalaryService getWorkerSalaryService() {
-		return workerSalaryService;
-	}
-
-	public void setWorkerSalaryService(WorkerSalaryService workerSalaryService) {
-		this.workerSalaryService = workerSalaryService;
 	}
 
 	public WorkerSalaryVO getWorkerSalary() {

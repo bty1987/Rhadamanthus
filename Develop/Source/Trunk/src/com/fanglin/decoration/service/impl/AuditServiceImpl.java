@@ -53,7 +53,7 @@ public class AuditServiceImpl implements AuditService{
 				
 				auditVO.setAuditer(new UserVO());			
 				
-				BeanUtil.copyProperties(auditPO.getAuditer(), auditVO.getAuditer(),Arrays.asList("role","dept"));
+				BeanUtil.copyProperties(auditPO.getAuditer(), auditVO.getAuditer(),Arrays.asList("role","dept","duty"));
 				
 			}
 			
@@ -80,14 +80,6 @@ public class AuditServiceImpl implements AuditService{
 			auditVO.getDecorationOrder().setDesignerPhone(designer.getPhone());
 			auditVO.getDecorationOrder().setDesignDepartment(designer.getDept().getDeptName());
 			auditVO.setDeptId(designer.getDept().getDeptId());
-			List<UserPO> duty = userDao.queryUserByDeptIdADuty(designer.getDept().getDeptId(),"设计部经理");
-			
-			if(!duty.isEmpty()){
-				
-				auditVO.setDeptDutyUId(duty.get(0).getUid());
-				auditVO.setDeptDutyName(duty.get(0).getCurrentName());
-			}
-				
 			
 			AuditVOs.add(auditVO);
 		}

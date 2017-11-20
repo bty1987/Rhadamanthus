@@ -13,7 +13,6 @@ $(function(){
             if(listData && listData.length){
 
                 var $ulTitle = createTableTitle();
-                var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
@@ -102,10 +101,11 @@ $(function(){
 
             $btnEdit.click(function(){
                 $workshopName.val(v.name);
-               $('#layerAdd').attr('test-wsid', v.wsid);
+                $('#layerAdd').attr('test-wsid', v.wsid);
+                com.clearValidator();
                 openlayer(function(){
                     var id = $('#layerAdd').attr('test-wsid');
-                    if(submitValidate()){
+                    if(!com.validate("layerAdd",null)){
                         saveData(id, function(){
                             layer.closeAll();
                             $workshopName.val("");
@@ -183,8 +183,9 @@ $(function(){
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
         $adda.click(function(){
+            com.clearValidator();
             openlayer(function(index, layero){
-                if(submitValidate()){
+                if(!com.validate("layerAdd",null)){
                     saveData(null, function(){
                         layer.closeAll();
                         $workshopName.val("");
@@ -262,27 +263,6 @@ $(function(){
             });
         }
     }
-
-
-    function submitValidate() {
-        var flag = true;
-        if(!$workshopName.val()){
-            $workshopName.focus().select();
-            $workshopName.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写车间名称"
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            $workshopName.popover('destroy');
-        }
-        return flag;
-    }
-
 
     function saveData(id,callback){
         var name = $workshopName.val();

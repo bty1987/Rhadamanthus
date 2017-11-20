@@ -92,19 +92,29 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 	@Override
 	public void pageMaterialSubOrderByUserId(Paging paging, List<Filter> filters, String orderId, String userId){
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
+		pageMaterialSubOrderByOrderId(paging, filters, orderId,userId);
 		
-		if("驻店导购".equals(userPO.getDuty())){
-			pageMaterialSubOrderByOrderIdInstoreId(paging, filters, orderId, userId);
-		}else{
-			pageMaterialSubOrderByOrderId(paging, filters, orderId);
-		}
 	}
 
 	@Override
-	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId){
+	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId,String userId){
 		
-		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
+		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId,userId);
+		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
+		
+		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
+			MaterialSubOrderVO materialSubOrderVO = new MaterialSubOrderVO();
+			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
+			materialSubOrderVOs.add(materialSubOrderVO);
+		}
+		
+		paging.setData(materialSubOrderVOs);
+	}
+	
+	@Override
+	public void pageMaterialSubOrderForAdvance(Paging paging, List<Filter> filters, String orderId) {
+
+		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderForAdvance(paging, filters, orderId);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
 		
 		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
@@ -124,24 +134,7 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 			filters.add(new Filter(MaterialSubOrderPO.COLUMN_MATERIALDEPTID_STR, userPO.getDept().getDeptId(), "eq"));
 		}
 		
-		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
-		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
-		
-		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
-			MaterialSubOrderVO materialSubOrderVO = new MaterialSubOrderVO();
-			BeanUtil.copyProperties(materialSubOrderPO, materialSubOrderVO);
-			materialSubOrderVOs.add(materialSubOrderVO);
-		}
-		
-		paging.setData(materialSubOrderVOs);
-	}
-
-	@Override
-	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<Filter> filters, String orderId, String userId){
-		
-		filters.add(new Filter(MaterialSubOrderPO.COLUMN_INSTOREID_STR, userId, "eq"));
-		
-		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId);
+		List<MaterialSubOrderPO> materialSubOrderPOs = materialSubOrderDao.pageMaterialSubOrderByOrderId(paging, filters, orderId,userId);
 		List<MaterialSubOrderVO> materialSubOrderVOs = new ArrayList<MaterialSubOrderVO>();
 		
 		for(MaterialSubOrderPO materialSubOrderPO: materialSubOrderPOs){
@@ -242,13 +235,9 @@ public class MaterialSubOrderServiceImpl implements MaterialSubOrderService {
 		
 		if(userPO != null){
 			materialSubOrderPO.setSalesmanName(userPO.getCurrentName());
-			if(userPO.getDuty().contains("设计师")){
-				materialSubOrderPO.setDesignerFlag(MaterialSubOrderPO.DESIGNERFLAG_TYPE_DESIGNER_INT);
-			}else if(userPO.getDuty().contains("业务员")){
-				materialSubOrderPO.setDesignerFlag(MaterialSubOrderPO.DESIGNERFLAG_TYPE_SALESMAN_INT);
-			}
+			
 			if(userPO.getDept().getFatherDept() != null){
-				materialSubOrderPO.setRegionId(userPO.getDept().getFatherDept().getDeptId());
+				materialSubOrderPO.setRegionId(String.valueOf(userPO.getDept().getFatherDept().getDeptId()));
 				materialSubOrderPO.setRegionName(userPO.getDept().getFatherDept().getDeptName());
 			}else{
 				materialSubOrderPO.setRegionId("");

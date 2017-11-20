@@ -38,6 +38,12 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId,Short type) {
+		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ExtensionPO.COLUMN_TYPE_STR, type)).list();
+	}
+	
+	@Override
 	public float sumExtensionByOrderId(String orderId,short type){
 		String sql = "select if(sum(quotation.extension.total) is null,0,sum(quotation.extension.total)) from quotation.extension where orderId = :orderId and quotation.extension.type = :type";
 		BigDecimal sum = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).uniqueResult();

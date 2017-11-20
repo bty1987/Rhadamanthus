@@ -18,13 +18,13 @@ public class DepartmentVO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
 	
-	private Integer did;
+	private int did;
 
 	private String deptId;
 	
 	private String deptName;
 	
-	private String type;
+	private DepartmentTypeVO type;
 	
 	private String subType;
 	
@@ -42,15 +42,25 @@ public class DepartmentVO implements Serializable {
 	
 	private Short status;
 	
+	
+	
 	public DepartmentVO(){
 		super();
 	}
 
-	public Integer getDid() {
+	
+	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept,CityProperVO cityProper) {
+		this.type = type;
+		this.fatherDept = fatherDept;
+		this.cityProper = cityProper;
+	}
+
+
+	public int getDid() {
 		return did;
 	}
 
-	public void setDid(Integer did) {
+	public void setDid(int did) {
 		this.did = did;
 	}
 
@@ -70,11 +80,11 @@ public class DepartmentVO implements Serializable {
 		this.deptName = deptName;
 	}
 
-	public String getType(){
+	public DepartmentTypeVO getType(){
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(DepartmentTypeVO type){
 		this.type = type;
 	}
 
@@ -110,16 +120,28 @@ public class DepartmentVO implements Serializable {
 		this.contractPrefix = contractPrefix;
 	}
 
-	public DepartmentVO getFatherDept(){
-		return fatherDept;
-	}
 
-	public void setFatherDept(DepartmentVO fatherDept){
-		this.fatherDept = fatherDept;
-	}
+//	public DepartmentTypeVO getFatherDept() {
+//		return fatherDept;
+//	}
+//
+//	public void setFatherDept(DepartmentTypeVO fatherDept) {
+//		this.fatherDept = fatherDept;
+//	}
+	
+	
+	
 
 	public CityProperVO getCityProper(){
 		return cityProper;
+	}
+
+	public DepartmentVO getFatherDept() {
+		return fatherDept;
+	}
+
+	public void setFatherDept(DepartmentVO fatherDept) {
+		this.fatherDept = fatherDept;
 	}
 
 	public void setCityProper(CityProperVO cityProper){

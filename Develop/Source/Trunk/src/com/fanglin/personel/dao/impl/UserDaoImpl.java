@@ -81,18 +81,20 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
+		query.alias("duty", "duty");
+		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			
 			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
 				
 		}
 
-		query.add(Restrictions.like("duty", duty, MatchMode.START));
+		query.add(Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE));
 		
 		query.add(Restrictions.eq("status", "在职"));
 		
 		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
-		
+
 		return query.list();
 	}
 	
@@ -101,6 +103,8 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
+		query.alias("duty", "duty");
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			
@@ -113,9 +117,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(dutysA != null){
 			for(String duty: dutysA){
 				if(criterionA == null){
-					criterionA = Restrictions.like("duty", duty, MatchMode.START);
+					criterionA = Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE);
 				} else {
-					criterionA = Restrictions.and(Restrictions.like("duty", duty, MatchMode.START), criterionA);
+					criterionA = Restrictions.and(Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE), criterionA);
 				}
 			}
 		}
@@ -125,9 +129,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(dutysO != null){
 			for(String duty: dutysO){
 				if(criterionO == null){
-					criterionO = Restrictions.like("duty", duty, MatchMode.START);
+					criterionO = Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE);
 				} else {
-					criterionO = Restrictions.or(Restrictions.like("duty", duty, MatchMode.START), criterionO);
+					criterionO = Restrictions.or(Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE), criterionO);
 				}
 			}
 		}
@@ -157,22 +161,12 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty){
-		return createCriteria(UserPO.class).add(Restrictions.eq("duty", duty)).add(Restrictions.eq("dept.deptId", deptId)).list();
-	}
-	
-	@Override
-	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters,Integer company){
 		
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		String sql="select * from communion.user ,communion.duty where uid= :uid and duty.name= :duty";
+		List<UserPO>  userPOs = session().createSQLQuery(sql).setString("deptId", deptId).setString("duty.name", duty).list();
 		
-		queryFilterExcute(query, filters);
-		
-		query.add(Restrictions.eq("company", company));
-		
-		query.add(Restrictions.eq("status", "在职"));
-		
-		return query.list();
-	}
+		return userPOs;
+		}
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -199,7 +193,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(filters != null){
 			query.alias("dept", "dept");
 			query.alias("role", "role");
-			
+			query.alias("duty", "duty");
 			for(Filter filter: filters){
 				
 				String field = filter.getField();
@@ -210,14 +204,14 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 					query.add(query.getCriterion("currentName", filter));
 				}else if("roleId".equals(field)){
 					query.add(query.getCriterion("role.roleId", filter));
-				}else if("deptType".equals(field)){
-					query.add(query.getCriterion("dept.type", filter));
+				}else if("dtid".equals(field)){
+					query.add(query.getCriterion("dtid", filter));
 				}else if("deptId".equals(field)){
 					query.add(query.getCriterion("dept.deptId", filter));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion("status", filter));
 				}else if("duty".equals(field)){
-					query.add(query.getCriterion("duty", filter));
+					query.add(query.getCriterion("duty.did", filter));
 				}else if("identity".equals(field)){
 					query.add(query.getCriterion("identity", filter));
 				}

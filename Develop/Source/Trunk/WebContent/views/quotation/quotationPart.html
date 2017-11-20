@@ -230,6 +230,14 @@
 								<div class="space-4"></div>
 
 								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="quotationType">类型</label>
+									<div class="col-sm-3">
+										<select class="form-control v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
 									<div class="col-sm-3">
 										<select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
@@ -262,9 +270,17 @@
 								<div class="space-4"></div>
 
 								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="formula">计算公式</label>
+									<div class="col-sm-9">
+										<input type="text" id="formula" class="col-xs-10 col-sm-5 v_required" maxlength="16" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="num">数量</label>
 									<div class="col-sm-9">
-										<input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="9"/>
+										<input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_float" readonly  data-toggle="popover" data-trigger='manual' maxlength="9"/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -401,6 +417,47 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="modal fade" id="customerApproveModal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">折扣修改申请</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="customerDes">审批说明</label>
+									<div class="col-sm-9">
+										<textarea id="customerDes" maxlength="128" class="col-xs-10 col-sm-6 v_required"
+											  rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+										<span class='star'></span>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
+									<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
+									<div class="col-sm-9">
+										<div id="approveManSel" class="control-group col-xs-10 col-sm-6">
+
+										</div>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" id="cApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button type="button" id="cApproveSaveBtn" class="btn btn-primary">修改申请</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -415,7 +472,7 @@
 <!--<script type="text/javascript">
 		$.getScript('js/quotation/quotationDetail.js?version=' + versionCode);
 </script>-->
-
+<script src="js/utils/approvalUtils.js"></script>
 <script src="js/quotation/quotationPart.js"></script>
 
 

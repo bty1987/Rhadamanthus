@@ -12,6 +12,10 @@ public class ExtensionItemVO implements Serializable{
 	
 	private Long eid;
 	
+	private Short type;
+	
+	private Short subtype;
+	
 	private String itemName;
 	
 	private String measurementUnit;
@@ -46,6 +50,22 @@ public class ExtensionItemVO implements Serializable{
 
 	public void setEid(Long eid) {
 		this.eid = eid;
+	}
+	
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(Short subtype) {
+		this.subtype = subtype;
 	}
 
 	public String getMeasurementUnit() {

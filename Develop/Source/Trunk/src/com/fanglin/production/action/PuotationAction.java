@@ -31,7 +31,7 @@ public class PuotationAction  extends BaseListAction {
 	
 	private PuotationItemVO puotationItem;
 
-	private List<PuotationItemVO> puotationItems ;
+	private List<PuotationItemVO> puotationItems;
 	
 	
 	@Action(value = "queryPuotationByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -53,11 +53,11 @@ public class PuotationAction  extends BaseListAction {
 	@Action(value = "addPuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPuotation() throws FLException{
 		
-		puotationService.addPuotation(puotation,queryUserId());
+		puotationService.addPuotation(puotation, puotationItems, queryUserId());
 
 		return SUCCESS;
 	}
-
+	
 	@Action(value = "addPuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPuotationItem() throws FLException{
 		
@@ -65,7 +65,7 @@ public class PuotationAction  extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updatePuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updatePuotation() throws FLException{
 		
@@ -105,12 +105,21 @@ public class PuotationAction  extends BaseListAction {
 		
 		return SUCCESS;
 	}
+
 	public PuotationVO getPuotation() {
 		return puotation;
 	}
 
 	public void setPuotation(PuotationVO puotation) {
 		this.puotation = puotation;
+	}
+
+	public List<PuotationVO> getPuotations() {
+		return puotations;
+	}
+
+	public void setPuotations(List<PuotationVO> puotations) {
+		this.puotations = puotations;
 	}
 
 	public PuotationItemVO getPuotationItem() {
@@ -121,19 +130,13 @@ public class PuotationAction  extends BaseListAction {
 		this.puotationItem = puotationItem;
 	}
 
-	public List<PuotationVO> getpuotations() {
-		return puotations;
-	}
-
-	public void setpuotations(List<PuotationVO> puotations) {
-		this.puotations = puotations;
-	}
-
-	public List<PuotationItemVO> getpuotationItems() {
+	public List<PuotationItemVO> getPuotationItems() {
 		return puotationItems;
 	}
 
-	public void setpuotationItems(List<PuotationItemVO> puotationItems) {
+	public void setPuotationItems(List<PuotationItemVO> puotationItems) {
 		this.puotationItems = puotationItems;
-	}	
+	}
+	
+	
 }

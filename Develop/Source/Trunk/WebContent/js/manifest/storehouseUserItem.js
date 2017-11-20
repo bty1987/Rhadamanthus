@@ -40,7 +40,7 @@ var OptionManagement = (function(){
             var _user = params["promissionUser"];
             var $wrapper = this.settings.wrapper;
             $('div[name="infowrap"] strong', $wrapper).html(_user.userId + " " + _user.userName);
-            $('div[name="infowrap"] span', $wrapper).html(_user.currentName+ " " + _user.duty);
+            $('div[name="infowrap"] span', $wrapper).html(_user.currentName+ " " + _user.duty.name);
 
 
             _list.length && ($.each(_list, function(i, v){

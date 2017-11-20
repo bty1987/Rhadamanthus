@@ -84,7 +84,7 @@ jQuery(function($) {
 
 	searcher.init(["companyName"], "condList", api.data.pageConstructionNode, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "designRegionPostData",null, false, null, function(){
+	}, "pagenation", "constructionNodePostData",null, false, null, function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addConstructionNode').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);

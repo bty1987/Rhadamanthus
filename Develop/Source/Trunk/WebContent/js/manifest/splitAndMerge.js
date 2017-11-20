@@ -10,6 +10,15 @@ $(function(){
     splitAndMergePopUp.attr('data-title')=="拆分"? $('#split').removeClass('hide'):$('#merge').removeClass('hide');
     var _goodsStorehouseStock = params['goodsStorehouseStock'];
     var $list = splitAndMergePopUp.attr('data-title')=="拆分"?$('#splitList'):$('#mergeList');
+    var validator = {
+        splitAndMerge: {
+            type: "v_splitAndMerge",
+            regex: /^[0-9]*[1-9][0-9]*$/,
+            errorMsg: "数量填写不正确"
+        }
+    };
+
+    $.extend(com.validator, validator);
 
     var $btnConfirm = $('<a></a>').addClass('btn btn-primary mgr-10').attr({
         'name': 'subbtn',
@@ -172,7 +181,7 @@ $(function(){
             var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass).text(v.value);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).attr('data-toggle','popover').attr('data-placement','bottom').addClass('editable v_required v_splitAndMerge');
                 $cell.append($input);
             }
 
@@ -243,8 +252,13 @@ $(function(){
 
     $('.layui-layer-content').css('overflow','hidden');
 
-    $btnConfirm.click(function(){
-        if(checkRowValue($list,$btnConfirm.text())){
+    $btnConfirm.click(function(e){
+        e.stopPropagation();
+        if(com.validate('splitList','bottom') || com.validate('mergeList','bottom')){
+            return;
+        }
+
+        //if(checkRowValue($list,$btnConfirm.text())){
 
             var gid = _goodsStorehouseStock.goods.gid;
             var cid =_goodsStorehouseStock.color.cid;
@@ -276,7 +290,7 @@ $(function(){
                     layer.msg('合并成功')
                 })
             }
-        }
+        //}
     })
 
 });

@@ -151,7 +151,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
 			throw new FLException(240001, "不能重复审批");
 		}
-		
+
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
+
 		short type = approvalPO.getType();
 		
 		switch (type) {
@@ -192,11 +195,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 		}
 
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
-		
 		approvalDao.update(approvalPO);
-		
 		return 0;
 	}
 	

@@ -13,7 +13,7 @@ $(function(){
                     var $liLine = $('<li></li>').addClass('clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
                     var $h3 = $('<h3></h3>').addClass('siid')
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right')
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').css('font-size','14px');
 
                     var $selectCtype = $('<select></select>').css({'margin-right':'5px'}).addClass('hide');
 
@@ -21,7 +21,7 @@ $(function(){
                         $selectCtype.bindData(res.priceTypes,'key','value');
                     })
 
-                    var $btnInput = $('<input></input>').css({'width':'100px','height':'26px','margin-right':'5px'}).addClass('hide');
+                    var $btnInput = $('<input></input>').css({'width':'100px','height':'26px','margin-right':'5px'}).addClass('hide v_required').attr({'data-rel':'popover','data-placement':'top'});
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info hide').html('确定');
                     var $btnQCheck = $('<a></a>').addClass('btn btn-minier hide').html('取消');
                     var $btnCtype = $('<a></a>').addClass('btn btn-minier btn-success').html(v.ctype==0?"底价":"点位");
@@ -69,7 +69,13 @@ $(function(){
                         var cvalue = $btnInput.val()
                         var ctype = $selectCtype.find('option:selected').val()
 
-                       if(checkCvalaue($btnInput,$selectCtype.find('option:selected'))){
+                        if(ctype==0){
+                            $btnInput.removeClass('v_discount').addClass('v_float')
+                        }else if(ctype==1){
+                            $btnInput.removeClass('v_float').addClass('v_discount')
+                        }
+
+                       if(com.validate('viewPopUp','top')==false){
 
                            var _option = {
                                "salesItem.siid":v.siid,
@@ -132,74 +138,6 @@ $(function(){
             initList.init('resultList1', res.salesItems);
 
         })
-    }
-
-    function checkCvalaue(cvalue,ctype){
-
-        var flag = true;
-
-        if(cvalue.val() == null || cvalue.val() == ""){
-            cvalue.focus().select();
-
-            cvalue.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写结算值"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            cvalue.popover('destroy');
-            flag = true;
-        }
-
-        if(ctype.val() == 0){
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-            if(!numRex.test(cvalue.val())){
-                cvalue.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "top",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "结算值格式错误"
-
-                }).popover('show');
-
-                return false;
-
-            }else{
-
-                cvalue.popover('destroy');
-
-            }
-        }else if(ctype.val() == 1){
-            var reg = /^(0([\.]?\d*[0-9]+)|0|1)$/;
-            var value = cvalue.val();
-            if(!reg.test(value)){
-                cvalue.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "top",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "结算值在0-1之间"
-
-                }).popover('show');
-
-                return false;
-
-            }else{
-
-                cvalue.popover('destroy');
-
-            }
-
-        }
-
-        return flag;
     }
 
 })

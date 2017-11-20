@@ -60,7 +60,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_USER_USERNAME = "user.userName";
 	
-	public static final String COLUMN_USER_USERDUTY = "user.duty";
+	public static final String COLUMN_USER_USERDUTY = "user.duty.name";
 	
 	private long wsId;
 	
@@ -89,6 +89,8 @@ public class WorkerSalaryPO  implements Serializable{
 	private short status;
 	
 	private String comment ;
+	
+	private int company;
 
 	public WorkerSalaryPO() {
 		super();
@@ -244,6 +246,15 @@ public class WorkerSalaryPO  implements Serializable{
 
 	public void setApprover(UserPO approver) {
 		this.approver = approver;
+	}
+	
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

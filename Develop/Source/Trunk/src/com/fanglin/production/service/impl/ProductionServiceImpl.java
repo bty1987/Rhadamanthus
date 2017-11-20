@@ -60,8 +60,8 @@ public class ProductionServiceImpl implements ProductionService {
 			
 			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("village","creater","designer"));
 			BeanUtil.copyProperties(productionPO.getVillage(), productionVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
-			BeanUtil.copyProperties(productionPO.getCreater(), productionVO.getCreater(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(productionPO.getCreater(), productionVO.getCreater(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(),Arrays.asList("role","dept","duty"));
 			
 			productionVOs.add(productionVO);
 		}
@@ -86,8 +86,8 @@ public class ProductionServiceImpl implements ProductionService {
 		VillagePO village = villageDao.get(productionVO.getVillage().getVillageId());
 		
 		BeanUtil.copyProperties(productionVO, productionPO, Arrays.asList("village","creater","designer"));
-		BeanUtil.copyProperties(designer, productionPO.getDesigner(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(creater, productionPO.getCreater(),Arrays.asList("role","dept","contracts","experiences"));
+		BeanUtil.copyProperties(designer, productionPO.getDesigner(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(creater, productionPO.getCreater(),Arrays.asList("role","dept","duty"));
 		BeanUtil.copyProperties(village, productionPO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 		productionPO.setCompany(company);
 		productionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

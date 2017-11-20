@@ -67,17 +67,17 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 			
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales","refunds","creater","poster"));
 			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getVillage(), salesBalanceVO.getSales().getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getCustomer(), salesBalanceVO.getSales().getCustomer());
 			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
-			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("role","dept","duty"));
+			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("role","dept","duty"));
 			
 			salesBalanceVOs.add(salesBalanceVO);
 		}

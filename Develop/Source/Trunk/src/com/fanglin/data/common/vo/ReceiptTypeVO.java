@@ -8,17 +8,7 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	
 	private String name;
 	
-	private String key;
-	
-	private String subjectName;
-	
-	private String oneCode;
-	
-	private String twoCode;
-	
-	private String thrCode;
-	
-	private Short direction;
+	private String no;
 	
 	private Short type;
 	
@@ -40,52 +30,12 @@ public class ReceiptTypeVO implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public String getKey() {
-		return this.key;
+	public String getNo() {
+		return no;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public String getSubjectName() {
-		return this.subjectName;
-	}
-
-	public void setSubjectName(String subjectName) {
-		this.subjectName = subjectName;
-	}
-
-	public String getOneCode() {
-		return this.oneCode;
-	}
-
-	public void setOneCode(String oneCode) {
-		this.oneCode = oneCode;
-	}
-
-	public String getTwoCode() {
-		return this.twoCode;
-	}
-
-	public void setTwoCode(String twoCode) {
-		this.twoCode = twoCode;
-	}
-
-	public String getThrCode() {
-		return this.thrCode;
-	}
-
-	public void setThrCode(String thrCode) {
-		this.thrCode = thrCode;
-	}
-
-	public Short getDirection() {
-		return this.direction;
-	}
-
-	public void setDirection(Short direction) {
-		this.direction = direction;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public Short getType() {

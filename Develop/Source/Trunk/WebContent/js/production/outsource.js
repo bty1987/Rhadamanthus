@@ -96,15 +96,15 @@ $(function(){
 
                         productionUtils.clearForm('form1');
                         var comment = $("#layerEdit").find('input[name="comment"]').val(v.comment);
-
+                        com.clearValidator();
                         $("#layerEdit").attr("attr-oid",v.oid);
                         openlayerEdit(function (index, layero) {
-
-                            id =  $("#layerEdit").attr("attr-oid");
-                            saveData(id,function () {
-                                layer.closeAll();
-                            });
-
+                            var id =  $("#layerEdit").attr("attr-oid");
+                            if (!com.validate("layerEdit",null)) {
+                                saveData(id,function () {
+                                    layer.closeAll();
+                                });
+                            }
                         });
                     });
 
@@ -180,8 +180,9 @@ $(function(){
 
         $adda.click(function () {
             productionUtils.clearForm('form3');
+            com.clearValidator();
             openlayer(function (index, layero) {
-                if (checkValue()) {
+                if (!com.validate("layerAdd",null)) {
                     saveData(null, function () {
                     });
                 }
@@ -351,26 +352,6 @@ $(function(){
         $box.append($iconGrouop).append($dataGrouop);
         $line.append($box)
 
-    }
-
-    function checkValue(){
-        var _flag = true;
-        //判断五金单说明是否输入正确
-        var $comment = $layerAdd.find("input[name='comment']");
-        if(!$comment.val()){
-            _flag = false;
-            $comment.focus().select();
-            $comment.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "说明不能为空"
-            }).popover('show');
-        }else{
-            $comment.popover('destroy');
-        }
-        return _flag;
     }
 
     function updateoutsourcePath(data,oid){

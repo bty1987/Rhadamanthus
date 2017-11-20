@@ -1,3 +1,14 @@
+/**
+ * @File Name		: DecorationRankAction.java
+ * @Package   	: com.fanglin.report.action
+ * @Version		: 1.0
+ * @Date			: 2015-6-23
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
+
 package com.fanglin.report.action;
 
 import java.util.List;

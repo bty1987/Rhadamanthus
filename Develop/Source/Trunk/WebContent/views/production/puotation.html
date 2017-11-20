@@ -63,7 +63,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-4 ">折让</label>
                             <div class="controls col-xs-8">
-                                <input type="text" class="m-wrap col-xs-6" name="dis" id="dis"
+                                <input type="text" class="m-wrap col-xs-6 v_required v_discount" name="dis" id="dis"
                                        rules="{required:true}">
                             </div>
                         </div>
@@ -72,8 +72,8 @@
                         <div class="form-group">
                             <label class="control-label col-xs-4 ">总价</label>
                             <div class="controls col-xs-8">
-                                <input type="text" class="m-wrap col-xs-6" name="total" id="total"
-                                       rules="{required:true}">
+                                <input type="text" class="m-wrap col-xs-6 v_required v_float" name="total" id="total"
+                                       rules="{required:true}" readonly>
                             </div>
                         </div>
                         <div class="space5"></div>

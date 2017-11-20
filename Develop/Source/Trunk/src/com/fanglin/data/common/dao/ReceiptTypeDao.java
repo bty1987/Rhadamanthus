@@ -8,7 +8,6 @@
  * @Email			: bty1987@163.com
  * @Describing	: 
  */
-
 package com.fanglin.data.common.dao;
 
 import java.util.List;
@@ -26,6 +25,6 @@ public interface ReceiptTypeDao extends Dao<ReceiptTypePO> {
 	
 	public List<ReceiptTypePO> queryReceiptTypeByType(short type,int company);
 	
-	public ReceiptTypePO queryReceiptTypeByKey(String key,int company);
+	public ReceiptTypePO queryReceiptTypeByNo(String no,int company);
 	
 }

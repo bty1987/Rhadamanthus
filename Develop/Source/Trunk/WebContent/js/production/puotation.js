@@ -120,11 +120,10 @@ $(function () {
                     $('#layerAdd').attr('data-qid', v.qid);
                     openlayer(function(){
                         var id = $('#layerAdd').attr('data-qid');
-                        if(checkValue()){
-                            saveData(id, function(){
-                                layer.closeAll();
-                            });
-                        }
+                        saveData(id, function(){
+                            layer.closeAll();
+                        });
+
                     });
                 });
 
@@ -134,9 +133,11 @@ $(function () {
                     var total = $('#layerAdd2').find('input[name="total"]').val(v.total);
                     tot = v.total;
                     $('#layerAdd2').attr('data-qid', v.qid);
+                    com.clearValidator();
+
                     openlayer2(function(){
                         var id = $('#layerAdd2').attr('data-qid');
-                        if(checkDisValue()){
+                        if(!com.validate("layerAdd2",null)){
                             saveDis(id, function(){
                                 layer.closeAll();
                             });
@@ -227,17 +228,18 @@ $(function () {
     }
 
     $('#dis').on("change",function () {
-
-        if(checkDisValue()) {
+        com.clearValidator();
+        if(!com.validate("layerAdd2",null)) {
             $('#total').val(utils.accMul(utils.accDiv(parseFloat(tot),parseFloat(discount)), parseFloat($('#dis').val())));
         }
     });
 
-    $('#total').on("change",function () {
-        if(checkDisValue()) {
-            $('#dis').val(utils.accDiv( parseFloat($('#total').val()),utils.accDiv(parseFloat(tot),parseFloat(discount))).toFixed(2));
-        }
-    });
+    //$('#total').on("change",function () {
+    //    com.clearValidator();
+    //    if(!com.validate("layerAdd2",null)) {
+    //        $('#dis').val(utils.accDiv( parseFloat($('#total').val()),utils.accDiv(parseFloat(tot),parseFloat(discount))).toFixed(2));
+    //    }
+    //});
 
     function saveDis(id,callback){
         var $layer = $('#layerAdd2');
@@ -252,48 +254,6 @@ $(function () {
                $('#list ul.item-list').remove();
                 queryPuotationByPid(pid);
             });   
-    }
-
-    function checkValue(){
-        var _flag = true;
-
-        var $name = $("#layerAdd").find("input[name='name']");
-        if(!$name.val()){
-            _flag = false;
-            $name.focus().select();
-            $name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "说明不能为空"
-            }).popover('show');
-        }else{
-            $name.popover('destroy');
-        }
-        return _flag;
-    }
-
-    function checkDisValue() {
-        var flag = true;
-        var $dis = $("#layerAdd2").find("input[name='dis']");
-
-        var numRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-
-        if (!numRex.test($dis.val()) || parseFloat($dis.val()) > 1) {
-            $dis.focus().select();
-            $dis.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折扣输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            $dis.popover('destroy');
-        }
-        return flag;
     }
 
 });

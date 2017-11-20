@@ -207,7 +207,7 @@ $(function(){
             var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
                 $cell.append($input);
             }
 
@@ -221,25 +221,28 @@ $(function(){
 
         $btncheck.click(function (e) {
             e.stopPropagation();
+            if(com.validate('addColor','bottom')){
+                return;
+            }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var options = {
                 "color.gid":goodsColorPopUp.attr('data-gid'),
                 "color.name": $lineInfoWrap.find('.name input').val()
             };
-            if(checkRowValue($line)){
-                com.post(api.inventory.addColor,options,function(){
-                    $('#list').empty();
-                    addline(1).addClass('current').appendTo('#list');
-                    com.post(api.inventory.queryColorByGid,{
-                        "color.gid":goodsColorPopUp.attr('data-gid')
-                    },function(data){
-                        displayFunc.init('resultListColor',data.colors)
-                        doSearcher();
-                    })
-                },function(e){
-                    com.showAlert(com.info, e.errorMsg);
+
+            com.post(api.inventory.addColor,options,function(){
+                $('#list').empty();
+                addline(1).addClass('current').appendTo('#list');
+                com.post(api.inventory.queryColorByGid,{
+                    "color.gid":goodsColorPopUp.attr('data-gid')
+                },function(data){
+                    displayFunc.init('resultListColor',data.colors)
+                    doSearcher();
                 })
-            }
+            },function(e){
+                com.showAlert(com.info, e.errorMsg);
+            })
+
 
         })
 
@@ -255,34 +258,6 @@ $(function(){
 
     }
     addline(1).addClass('current').appendTo('#list');
-
-    function checkRowValue($line){
-
-        var flag = true;
-
-        var name = $line.find('.name input');
-        if(!name.val()){
-            name.focus().select();
-
-            name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写颜色名称"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            name.popover('destroy');
-        }
-
-
-
-        return flag;
-    }
-
 
     $('.layui-layer-content').css('overflow','hidden');
     $('#showColor').css('height','560px');

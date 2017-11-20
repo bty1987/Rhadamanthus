@@ -71,7 +71,7 @@ public class WorkplanAction extends BaseListAction{
 	}
 	
 	@Action(value = "updateWorkplanForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDutyForStatus() throws FLException{
+	public String updateWorkplanForStatus() throws FLException{
 		
 		workplanService.updateWorkplanForStatus(workplan);
 		

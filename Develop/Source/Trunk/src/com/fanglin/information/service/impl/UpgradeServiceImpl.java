@@ -71,21 +71,24 @@ public class UpgradeServiceImpl implements UpgradeService {
 		
 		List<UpgradePO> upgradePOs = upgradeDao.matchUpgrade(upgradeVO.getTrialno());
 		
-		Collections.sort(upgradePOs, new Comparator<UpgradePO>() {
-			@Override
-			public int compare(UpgradePO upgrade1, UpgradePO upgrade2) {
-				
-				String upgradeNumber1 = upgrade1.getNo();
-				String upgradeNumber2 = upgrade2.getNo();
-				
-				return upgradeNumber2.compareTo(upgradeNumber1);
-			}
+		if(upgradePOs.size()!=0){
 			
-		});
-		
-		UpgradePO upgradePO = upgradePOs.get(0);
-		BeanUtil.copyProperties(upgradePO, upgradeVO);
-		
+			Collections.sort(upgradePOs, new Comparator<UpgradePO>() {
+				@Override
+				public int compare(UpgradePO upgrade1, UpgradePO upgrade2) {
+					
+					String upgradeNumber1 = upgrade1.getNo();
+					String upgradeNumber2 = upgrade2.getNo();
+					
+					return upgradeNumber2.compareTo(upgradeNumber1);
+				}
+				
+			});
+			
+			UpgradePO upgradePO = upgradePOs.get(0);
+			BeanUtil.copyProperties(upgradePO, upgradeVO);
+		}
+	
 		return upgradeVO;
 	}
 	

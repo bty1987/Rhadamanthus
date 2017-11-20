@@ -19,6 +19,6 @@ import com.fanglin.utils.Paging;
 
 public interface CheckListService {
 	
-	public void pageCheckList(Paging paging, List<Filter> filters);
+	public void pageCheckList(Paging paging, List<Filter> filters, String userId);
 
 }

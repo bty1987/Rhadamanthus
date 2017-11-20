@@ -67,36 +67,7 @@ jQuery(function($) {
         }
     })();
 	
-	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType'];
-
-	com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
-		var condition = res.conditions;
-
-		if((condition & 4) == 4){ // 设计中心
-			_condArr.push('designerRegionId');
-
-		}
-		if((condition & 8) == 8){ // 设计部
-			_condArr.push('designerDepartmentId');
-
-		}
-		if((condition & 16) == 16){ // 业务中心
-			_condArr.push('salesmanRegionId');
-
-		}
-		if((condition & 32) == 32){ // 业务部
-			_condArr.push('salesmanDepartmentId');
-
-		}
-		if((condition & 64) == 64){ // 量尺时间
-			_condArr.push('createTimeDateRange');
-
-		}
-		if((condition & 128) == 128){ // 签单时间
-			_condArr.push('signTimeDateRange');
-
-		}
-	}, null, false);
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','createTimeDateRange','signTimeDateRange'];
 
 	_condArr.push('houseClass');
 	_condArr.push('status');

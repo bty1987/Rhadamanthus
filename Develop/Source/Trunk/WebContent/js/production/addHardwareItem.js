@@ -11,10 +11,10 @@ jQuery(function ($) {
         var returnFlag = false;
         var num = $('.line', '#list').length;
         var $lines = $('.line', '#list');
-
+        com.clearValidator();
         $lines.each(function(){
             var $this = $(this);
-            if(!checkRowValue($this)){
+            if(com.validate("addPopUp","top")){
                 returnFlag = true;
                 return false;
             }
@@ -34,12 +34,12 @@ jQuery(function ($) {
         var $optWrap = $('<div></div>').addClass('line-wrap action');
 
         var _lineInfoSet = [
-            {cellClass: "name", hasInput: !0},      //名称
-            {cellClass: "unitPrice",},              //单价
-            {cellClass: "hardNum", hasInput: !0},  //数量
-            {cellClass: "measurementUnit"},        //单位
-            {cellClass: "total"},                   //总价
-            {cellClass: "comment", hasInput: !0},  //说明
+            {cellClass: "name", hasInput: !0, validate:"v_required"},      //名称
+            {cellClass: "unitPrice"},                                          //单价
+            {cellClass: "hardNum", hasInput: !0, validate:"v_required v_float"},  //数量
+            {cellClass: "measurementUnit"},                                     //单位
+            {cellClass: "total"},                                               //总价
+            {cellClass: "comment", hasInput: !0, validate:""},  //说明
         ];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -50,7 +50,7 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass +" col-xs-2");
 
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable '+v.validate+'');
                 $cell.append($input);
             }
 
@@ -91,7 +91,8 @@ jQuery(function ($) {
 
 
         $lineInfoWrap.find(".hardNum input").on("change",function(){
-            if(!checkRowValue($line)){
+            com.clearValidator();
+            if(com.validate("addPopUp","top")){
                 return false;
             }
             calcTotal($lineInfoWrap);
@@ -102,8 +103,8 @@ jQuery(function ($) {
 
         $btncheck.click(function (e) {
             e.stopPropagation();
-
-            if(!checkRowValue($line)){
+            com.clearValidator();
+            if(com.validate("addPopUp","top")){
                 return false;
             }
 
@@ -125,11 +126,11 @@ jQuery(function ($) {
         var options = {};
         var $lines = $('.line', '#list');
         var returnFlag = false;
-
+        com.clearValidator();
         $lines.each(function (i) {
             var $this = $(this);
 
-            if (!checkRowValue($this)) {
+            if (com.validate("addPopUp","top")) {
                 returnFlag = true;
             }
 
@@ -155,45 +156,6 @@ jQuery(function ($) {
         })
 
     })
-
-
-
-    function checkRowValue($line) {
-        var flag = true;
-        var numRex = /^\d+$/;
-
-        var num = $line.find('.hardNum input');
-        if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 1)) {
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-        var name = $line.find('.name input');
-
-        if (!name.val()) {
-            name.focus().select();
-            name.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "名称输入不能为空!"
-            }).popover('show');
-            flag = false;
-        } else {
-            name.popover('destroy');
-        }
-        return flag;
-    }
 
     function calcTotal($lineInfoWrap){
         var _num = $lineInfoWrap.find('.hardNum input').val();

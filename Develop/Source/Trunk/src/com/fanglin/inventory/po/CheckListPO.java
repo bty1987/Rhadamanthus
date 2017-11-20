@@ -32,6 +32,8 @@ public class CheckListPO implements java.io.Serializable {
 	
 	public static final String COLUMN_BRAND_STR = "goods.brand";
 	
+	public static final String COLUMN_STOREHOUSE_SHID_STR = "storehouse.shId";
+	
 	private long clId;
 	
 	private GoodsPO goods;

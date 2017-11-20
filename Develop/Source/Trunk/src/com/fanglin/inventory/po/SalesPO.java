@@ -80,6 +80,10 @@ public class SalesPO implements Serializable {
 	
 	public static final String COLUMN_SALESMANID_STR = "salesman.uid";
 	
+	public static final String COLUMN_GUID_STR = "guider.uid";
+	
+	public static final String COLUMN_ISID_STR = "instorer.uid";
+	
 	public static final String COLUMN_GUIDERID_STR = "guider.userName";
 	
 	public static final String COLUMN_SALESMANNAME_STR = "salesman.userName";

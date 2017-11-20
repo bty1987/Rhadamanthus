@@ -14,8 +14,17 @@ jQuery(function ($) {
             des: $("#comment"),
         },
         record: {},
+        validator: {
+            num: {
+                type: "v_num",
+                regex: /^[0-9]*[1-9][0-9]*$/,
+                errorMsg: "数量输入内容格式错误"
+            }
+        }
 
     };
+
+    $.extend(com.validator, assisOrderItem.validator);
 
     $('#addSaleOrder').click(function () {
         var num = $('.line', '#list').length;
@@ -46,7 +55,10 @@ jQuery(function ($) {
             var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
+                if(v.cellClass == "number"){
+                    $input.addClass('v_num');
+                }
                 $cell.append($input);
             }
             $cell.appendTo($lineInfoWrap);
@@ -92,6 +104,11 @@ jQuery(function ($) {
 
         $btncheck.click(function (e) {
             e.stopPropagation();
+
+            if(com.validate('list','bottom')){
+                return;
+            }
+
             var options = {};
             var aoiid = $line.attr('data-aoiid');
             var flag = true;

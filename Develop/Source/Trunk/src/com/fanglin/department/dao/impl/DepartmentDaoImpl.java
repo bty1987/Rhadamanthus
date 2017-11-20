@@ -12,6 +12,7 @@ package com.fanglin.department.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -22,6 +23,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.department.po.DepartmentTypePO;
 import com.fanglin.utils.Paging;
 
 @Repository("departmentDaoImpl")
@@ -33,7 +35,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
     @Override
     public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters,int company){
-
+    	
         PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
         query.add(Restrictions.eq("company", company));
         queryFilterExcute(query, filters);
@@ -42,7 +44,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     }
     
     @Override
-	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, String type) {
+	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, int type) {
 		
 		PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
 		
@@ -52,7 +54,8 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 			query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
         }
 		
-		if(type != null){
+		if(type != 0){
+			query.alias("type", "type");
 			query.add(Restrictions.eq(DepartmentPO.COLUMN_TYPE_STR, type));
 		}
 		
@@ -60,14 +63,14 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	}
 
 	@Override
-    @SuppressWarnings("unchecked")
-    public List<DepartmentPO> queryDepartment(String type, Integer company){
+    @SuppressWarnings({ "unchecked", "deprecation" })
+    public List<DepartmentPO> queryDepartment(int type, Integer company){
         Criteria criteria = session().createCriteria(DepartmentPO.class);
         
         criteria.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
         
-        if(!type.equals("all")){
-            criteria = criteria.add(Restrictions.eq("type", type));
+        if(type != 0){
+            criteria = criteria.add(Restrictions.sqlRestriction("type = ? ", String.valueOf(type), Hibernate.STRING));
         }
         
         if(company != null){
@@ -91,15 +94,51 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
     
     private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
     	if(filters != null){
+    		query.alias("type", "type");
             for(Filter filter: filters){
-                if("type".equals(filter.getField())){
-                    query.add(query.getCriterion("type", filter));
+                if("deptType".equals(filter.getField())){
+                	  query.add(query.getCriterion("type.dtid", Integer.valueOf(filter.getData()),filter.getOp()));
                 }else if("deptName".equals(filter.getField())){
                     query.add(query.getCriterion("deptName", filter));
                 }else if("company".equals(filter.getField())){
                 	query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
+                }else if("type".equals(filter.getField())){
+                	
+                	query.add(query.getCriterion("type.dtid", Integer.valueOf(filter.getData()), filter.getOp()));
                 }
             }
         }
     }
+    
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DepartmentTypePO> queryDepartmentType() {		
+		
+		return session().createCriteria(DepartmentTypePO.class).list();
+				
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public List<DepartmentPO> queryDepartmentBytype(String type , Integer company) {
+		
+		 return session().createCriteria(DepartmentPO.class).add(Restrictions.sqlRestriction("type = ? ", String.valueOf(type), Hibernate.STRING)).add(Restrictions.eq("company", company)).list();
+		
+	}
+	
+	@Override
+   public DepartmentTypePO queryTypeNamebydtid(Integer dtid){
+	  
+	  return (DepartmentTypePO)session().createCriteria(DepartmentTypePO.class).add(Restrictions.eq("dtid",dtid)).uniqueResult();
+		
+   }
+	 @Override
+	  public DepartmentPO queryDepartmentByDeptId(String deptId){
+		 
+	     return (DepartmentPO) createCriteria(DepartmentPO.class).add(Restrictions.eq("deptId",deptId)).uniqueResult();
+	  }
+	
+	
+	
+	
 }

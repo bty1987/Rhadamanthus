@@ -1,19 +1,19 @@
 jQuery(function($) {
 
-	var approvalTrack = {
+	var approvalTrackSender = {
 		postParam : {},
 	};
 
 	com.post(api.ds.approval, {
 		"timestamp" : new Date().getTime()
 	}, function(res) {
-		approvalTrack.approvalType = res.approvalType;
+		approvalTrackSender.approvalType = res.approvalType;
 
-		approvalTrack.approvalTypeData = {};
+		approvalTrackSender.approvalTypeData = {};
 
-		for ( var i = 0; i < approvalTrack.approvalType.length; i++) {
-			var _ = approvalTrack.approvalType[i];
-			approvalTrack.approvalTypeData[_["key"]] = _["value"];
+		for ( var i = 0; i < approvalTrackSender.approvalType.length; i++) {
+			var _ = approvalTrackSender.approvalType[i];
+			approvalTrackSender.approvalTypeData[_["key"]] = _["value"];
 		}
 	}, null, false);
 
@@ -38,7 +38,7 @@ jQuery(function($) {
 		var creatLine = function(v) {
 
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(approvalTrack.approvalTypeData[v.type]));
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(approvalTrackSender.approvalTypeData[v.type]));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -88,7 +88,7 @@ jQuery(function($) {
 			drawLine : function(v) {
 				return creatLine(v);
 			}
-		}
+		};
 	})();
 
 	var searcher = new Searcher();
@@ -97,8 +97,6 @@ jQuery(function($) {
 			api.approval.pageApprovalBySenderId, function(data) {
 				displayFunc.init('resultList', data);
 			}, "pagenation", "approvalSenderTrackPostData");
-
-
 
 	function queryMaterialSubOrder(aId,type,$this) {
 
@@ -118,7 +116,7 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
 						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');
-				})
+				});
 				$('#msoiModel').modal("show");
 			}, null, false);
 		}
@@ -134,13 +132,10 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('10', '数量  : ', v.num))
 						.append(approvalUtils.addspan('40', '总价  : ', v.total))
 						.append('<hr/>');
-				})
+				});
 				$('#msoiModel').modal("show");
 			}, null, false);
 		}
-
-
 	}
-
 });
 

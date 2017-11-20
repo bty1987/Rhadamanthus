@@ -76,7 +76,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init(['orderId', 'village', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForSupervisionByUserId, function(list){
+	searcher.init(['orderId', 'village', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "workerAllocationSeacherPostData");
 	

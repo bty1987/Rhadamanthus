@@ -7,6 +7,11 @@ $.extend(api.index, {
 
     decorationOrderSalesmanIndex: {url: "/views/decoration/decorationOrderSalesman.html"},
 
+    decorationOrderDesignerManagerIndex: {url: "/views/decoration/decorationOrderDesignerManager.html"},
+    decorationOrderDesignerManagerDetailIndex: {url: "/views/decoration/decorationOrderDesignerManagerDetail.html"},
+
+    decorationOrderSalesmanManagerIndex: {url: "/views/decoration/decorationOrderSalesmanManager.html"},
+
     decorationOrderCommonIndex: {url: "/views/decoration/decorationOrderCommon.html"},
     decorationOrderCommonDetailIndex: {url: "/views/decoration/decorationOrderCommonDetail.html"},
 
@@ -25,6 +30,12 @@ $.extend(api.index, {
 
     decorationOrderApproveIndex: {url: "/views/decoration/decorationOrderApprove.html"},
     decorationOrderApproveDetailIndex: {url: "/views/decoration/decorationOrderApproveDetail.html"},
+
+    decorationOrderPlanIndex: {url: "/views/decoration/decorationOrderPlan.html"},
+    decorationOrderPlanDetailIndex: {url: "/views/decoration/decorationOrderPlanDetail.html"},
+
+    decorationOrderQuoterIndex: {url: "/views/decoration/decorationOrderQuoter.html"},
+    decorationOrderQuoterDetailIndex: {url: "/views/decoration/decorationOrderQuoterDetail.html"},
 
     decorationOrderTimelineIndex: {url: "/views/decoration/decorationOrderTimeline.html"},
     decorationOrderBackVisitIndex: {url: "/views/decoration/decorationOrderBackVisit.html"},
@@ -63,11 +74,14 @@ $.extend(api, {decoration: {
     pageDecorationOrderForDesigner: {url: "pageDecorationOrderForDesigner.do", demo: true},
     pageDecorationOrderForSalesman: {url: "pageDecorationOrderForSalesman.do", demo: true},
     pageDecorationOrderForMaterial: {url: "pageDecorationOrderForMaterial.do", demo: true},
+    pageDecorationOrderForQuoter: {url: "pageDecorationOrderForQuoter.do", demo: true},
+    pageDecorationOrderForEscorter: {url: "pageDecorationOrderForEscorter.do", demo: true},
     pageDecorationOrderForBelong: {url: "pageDecorationOrderForBelong.do", demo: true},
     pageDecorationOrderForAdvance: {url: "pageDecorationOrderForAdvance.do", demo: true},
+    pageDecorationOrderForDesignerManager: {url: "pageDecorationOrderForDesignerManager.do", demo: true},
+    pageDecorationOrderForSalesmanManager: {url: "pageDecorationOrderForSalesmanManager.do", demo: true},
     queryDecorationOrderByVillageIdAHouseNumber: {url: "queryDecorationOrderByVillageIdAHouseNumber.do"},
     queryDecorationOrderByCustomerId: {url: "queryDecorationOrderByCustomerId.do"},
-    queryDecorationOrderForCondition: {url: "queryDecorationOrderForCondition.do", demo: true},
     queryDecorationOrderForDesignerByOrderId: {url: "queryDecorationOrderForDesignerByOrderId.do", demo: true},
     queryDecorationOrderForCommonByOrderId: {url: "queryDecorationOrderForCommonByOrderId.do", demo: true},
     createDecorationOrder: {url: "createDecorationOrder.do"},

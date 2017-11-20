@@ -163,7 +163,7 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		if(com.validate()|| backVisit.repeatFlg)
+		if(com.validate("backVisitModal")|| backVisit.repeatFlg)
 			return;
 
 		var url;

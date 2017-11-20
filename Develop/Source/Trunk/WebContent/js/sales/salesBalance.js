@@ -18,19 +18,19 @@ $(function () {
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
                 salesPaymentForStatus.cash.push(v);
-                salesPaymentForStatus.cashInfo[v.key] = v.name;
+                salesPaymentForStatus.cashInfo[v.no] = v.name;
             } else if (v.type == 2) {
                 salesPaymentForStatus.bank.push(v);
-                salesPaymentForStatus.bankInfo[v.key] = v.name;
+                salesPaymentForStatus.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
                 salesPaymentForStatus.checkBank.push(v);
-                salesPaymentForStatus.checkBankInfo[v.key] = v.name;
+                salesPaymentForStatus.checkBankInfo[v.no] = v.name;
             } else if (v.type == 4) {
                 salesPaymentForStatus.accounts.push(v);
-                salesPaymentForStatus.accountsInfo[v.key] = v.name;
+                salesPaymentForStatus.accountsInfo[v.no] = v.name;
             } else if (v.type == 5) {
                 salesPaymentForStatus.couponType.push(v);
-                salesPaymentForStatus.couponTypeData[v.key] = [v.key, v.name];
+                salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
             }
         });
 
@@ -151,7 +151,7 @@ $(function () {
 
                             var _vBalance = $('#vbalanceValue').find('input[name="vbalanceValue"]').val();
 
-                            if (checkRowValue($('#vbalanceValue'))) {
+                            if (com.validate('vbalanceValue','right')==false) {
 
                                 com.post(api.inventory.updateSalesBalanceForVBalance, {
                                     "salesBalance.sbid": v.sbid,
@@ -214,7 +214,7 @@ $(function () {
 
                             var _pBalance = $('#pbalanceValue').find('input[name="pbalanceValue"]').val();
 
-                            if (checkRowValue($('#pbalanceValue'))) {
+                            if (com.validate('pbalanceValue','right')==false) {
 
                                 com.post(api.inventory.updateSalesBalanceForPBalance, {
                                     "salesBalance.sbid": v.sbid,
@@ -348,10 +348,12 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator()
                 clearinput($line)
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator()
                 clearinput($line)
             }
         });
@@ -375,10 +377,12 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator()
                 clearinput($line)
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator()
                 clearinput($line)
             }
         });
@@ -412,60 +416,6 @@ $(function () {
             }
         });
     }
-
-
-    //输入框校验规则
-    function checkRowValue($line) {
-
-        var flag = true;
-
-        if ($line.find('input[name="vbalanceValue"]').length!=0) {
-
-            var _vbalanceValue = $line.find('input[name="vbalanceValue"]');
-            var _vbalanceValueRex = /^(\d{0,8}|\d{0,8}\.[0-9]{1,2})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,2})$/;
-
-            if (!(_vbalanceValueRex.test(_vbalanceValue.val())&&_vbalanceValue.val()!="")) {
-                _vbalanceValue.focus().select();
-                _vbalanceValue.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "厂商结算值输入错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                _vbalanceValue.popover('destroy');
-            }
-        }
-
-        if ($line.find('input[name="pbalanceValue"]').length!=0) {
-
-            var _pbalanceValue = $line.find('input[name="pbalanceValue"]');
-            var _pbalanceValueRex = /^(\d{0,8}|\d{0,8}\.[0-9]{1,2})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,2})$/;
-
-            if (!(_pbalanceValueRex.test(_pbalanceValue.val())&&_pbalanceValue.val()!="")) {
-                _pbalanceValue.focus().select();
-                _pbalanceValue.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "结算值输入错误!"
-                }).popover('show');
-
-                flag = false;
-
-            } else {
-                _pbalanceValue.popover('destroy');
-            }
-
-        }
-
-
-        return flag;
-    }
-
 
     //清空弹窗输入框的值
     function clearinput($line) {

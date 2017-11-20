@@ -27,8 +27,8 @@ public class SalesReceiptServiceImpl implements SalesReceiptService {
 		salesReceiptVO = new SalesReceiptVO(new UserVO(),new UserVO());
 		
 		BeanUtil.copyProperties(salesReceiptPO, salesReceiptVO, Arrays.asList("collecter","confirmer"));
-		BeanUtil.copyProperties(salesReceiptPO.getCollecter(), salesReceiptVO.getCollecter(), Arrays.asList("role","dept"));
-		BeanUtil.copyProperties(salesReceiptPO.getConfirmer(), salesReceiptVO.getConfirmer(), Arrays.asList("role","dept"));
+		BeanUtil.copyProperties(salesReceiptPO.getCollecter(), salesReceiptVO.getCollecter(), Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesReceiptPO.getConfirmer(), salesReceiptVO.getConfirmer(), Arrays.asList("role","dept","duty"));
 		
 		return salesReceiptVO;
 		

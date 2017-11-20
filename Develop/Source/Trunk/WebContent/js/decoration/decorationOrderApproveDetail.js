@@ -63,11 +63,20 @@ jQuery(function($) {
 	}, null, false);
 
 	$('#customerInfosBtn').on(ace.click_event, function(){
-		$.gritter.add({
-			title: '客户敏感信息',
-			text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
-			class_name: 'gritter-info gritter-center gritter-light'
-		});
+		if (decorationOrderDetail.showCustomerInfoFlag == undefined || decorationOrderDetail.showCustomerInfoFlag == 0) {
+			com.post(api.data.queryCustomerById,{ "customer.id": decorationOrderDetail.customer.id},function (res) {
+				decorationOrderDetail.customer = res.customer;
+				$.gritter.add({
+					title: '客户敏感信息',
+					text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
+					class_name: 'gritter-info gritter-center gritter-light',
+					after_close: function(e, manual_close){
+						decorationOrderDetail.showCustomerInfoFlag = 0;
+					}
+				});
+			})
+			decorationOrderDetail.showCustomerInfoFlag = 1;
+		}
 
 		return false;
 	});
@@ -84,7 +93,7 @@ jQuery(function($) {
 
 	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 		
-		var statuses = ["咨询", "量房", "已报价", "定金"];
+		var statuses = ["初始", "已报价", "定金"];
 		
 		if(statuses.indexOf(decorationOrder.status)){
 			$("#houseType").prop("disabled", false);

@@ -72,28 +72,6 @@ jQuery(function($) {
 		$("#refundBankName").removeClass("v_required");
 	});
 
-	/*for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
-		$("#" + decorationPayment.paymentModelNameData[i] + "Checkbox").on("click",function(e) {
-			var _name = $(this).attr("key");
-			var _checkboxId = "#" + _name + "Checkbox";
-			var _divId = "#" + _name + "Div";
-			
-			if($(_checkboxId).attr("checked") != "checked"){
-				$(_divId).removeClass("hide");
-				$(_checkboxId).attr("checked","checked");
-				
-				if(_name == "advance"){
-					com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": decorationPaymentPostData.customerId},function(res){
-						$("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
-						$("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
-					});
-				}
-			}else{
-				$(_divId).addClass("hide");
-				$(_checkboxId).removeAttr("checked","checked");
-			}
-		});
-	}*/
     $("#baseItemModal :checkbox").on("change", function(){
         $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show() : $("[referCheckbox="+this.id+"]").hide()
     });
@@ -121,36 +99,36 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				decorationPayment.cash.push(v);
-				decorationPayment.cashInfo[v.key] = v.name;
+				decorationPayment.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				decorationPayment.bank.push(v);
-				decorationPayment.bankInfo[v.key] = v.name;
+				decorationPayment.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				decorationPayment.checkBank.push(v);
-				decorationPayment.checkBankInfo[v.key] = v.name;
+				decorationPayment.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				decorationPayment.accounts.push(v);
-				decorationPayment.accountsInfo[v.key] = v.name;
+				decorationPayment.accountsInfo[v.no] = v.name;
 			}else if(v.type == 5){
 				decorationPayment.couponType.push(v);
-				decorationPayment.couponTypeData[v.key] = [v.key, v.name];
+				decorationPayment.couponTypeData[v.no] = [v.no, v.name];
 			}
 		});
 
-		$("#cashInfo").bindData(decorationPayment.cash, 'key', 'name');
-		$("#refundCashInfo").bindData(decorationPayment.cash, 'key', 'name');
+		$("#cashInfo").bindData(decorationPayment.cash, 'no', 'name');
+		$("#refundCashInfo").bindData(decorationPayment.cash, 'no', 'name');
 
-		$("#installmentBankName").bindData(decorationPayment.bank, 'key', 'name');
-		$("#refundBankName").bindData(decorationPayment.bank, 'key', 'name');
+		$("#installmentBankName").bindData(decorationPayment.bank, 'no', 'name');
+		$("#refundBankName").bindData(decorationPayment.bank, 'no', 'name');
 
-		$("#checkvBankName").bindData(decorationPayment.checkBank, 'key', 'name');
+		$("#checkvBankName").bindData(decorationPayment.checkBank, 'no', 'name');
 
-		$("#accountsBankName").bindData(decorationPayment.accounts, 'key', 'name');
+		$("#accountsBankName").bindData(decorationPayment.accounts, 'no', 'name');
 
-		$("#couponType").bindData(decorationPayment.couponType, 'key', 'key');
+		$("#couponType").bindData(decorationPayment.couponType, 'no', 'no');
 		$("#couponType").trigger("chosen:updated");
 
-		$("#refundCouponType").bindData(decorationPayment.couponType, 'key', 'key');
+		$("#refundCouponType").bindData(decorationPayment.couponType, 'no', 'no');
 		$("#refundCouponType").trigger("chosen:updated");
 	}, null,false);
 
@@ -462,7 +440,6 @@ jQuery(function($) {
 				_selectId = "#" + _name + "Name";
 			}
 			
-			//$(_divId).addClass("hide");
 			$(_checkboxId).removeAttr("checked").removeAttr("disabled");
 			
 			$(_inputId).val("");
@@ -483,7 +460,7 @@ jQuery(function($) {
 
 		decorationPayment.items.couponType.chosen("destroy");
 		decorationPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-		decorationPayment.items.couponType.bindData(decorationPayment.couponType, 'key', 'name');
+		decorationPayment.items.couponType.bindData(decorationPayment.couponType, 'no', 'name');
 		decorationPayment.items.couponType.trigger("chosen:updated");
 		decorationPayment.baseModal.modal("show");
 	}
@@ -497,7 +474,7 @@ jQuery(function($) {
     	
     	var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
     	var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-    	var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(decorationPayment.bank, 'key', 'name').appendTo(bankNameDiv);
+    	var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(decorationPayment.bank, 'no', 'name').appendTo(bankNameDiv);
     	var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
     	var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
     		$("#bankDiv_"+$(this).attr("index")).remove();
@@ -509,7 +486,7 @@ jQuery(function($) {
     	
     	var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
     	var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-    	var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_price").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
+    	var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
     	
     	var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
     	var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
@@ -585,6 +562,7 @@ jQuery(function($) {
     }
 
     function payment(){
+
     	if(com.validate()){
     		return;
     	}
@@ -672,14 +650,6 @@ jQuery(function($) {
     					_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
     					_couponInfo += $(e).children('span').text()+":"+_couponVal+"#";
     					
-//    					options["decorationActivityItems[" + couponCount + "].daiId"] = $(e).attr("index");
-//    					options["decorationActivityItems[" + couponCount + "].num"] = _.children('span').children('input').val();
-    					
-//    					var num = _.children('span').children('input').val();
-//    					var money = _.children('span').text().split(",")[1].split(':')[1]
-    					
-//    					_coupon = utils.accAdd(parseFloat(_coupon), utils.accMul(parseFloat(num), parseFloat(money)));
-    					
     					couponCount++;
     				});
     				
@@ -726,7 +696,7 @@ jQuery(function($) {
 			com.showAlert(com.warning, "无收款方式信息");
 			return false;
 		}
-    	
+
     	var _info = decorationPaymentPostData.paymentInfo;
     	
 		url = api.payment.collectDecorationPayment;
@@ -734,6 +704,7 @@ jQuery(function($) {
 		for(var arg in args){
 			options["decorationPayment."+arg] = args[arg];
 		}
+
 		orderId = _info.orderId;
 		autoIds += "&paymentIds["+0+"]="+_info.autoId;
 		
@@ -747,6 +718,8 @@ jQuery(function($) {
     		decorationPayment.baseModal.modal("hide");
     		
     		var args = "&decorationReceipt.drId=" + result.decorationPayment.drId;
+
+			decorationPaymentPostData.paymentInfo = null;
     		
     		bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
     			if(result){
@@ -757,7 +730,6 @@ jQuery(function($) {
     		});
     	});
 
-    	decorationPaymentPostData.paymentInfo = null;
     }
 
     function refund(){

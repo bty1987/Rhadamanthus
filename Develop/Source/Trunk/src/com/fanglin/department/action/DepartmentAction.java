@@ -9,7 +9,6 @@
 
 package com.fanglin.department.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -23,6 +22,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.department.service.DepartmentService;
 import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.department.vo.DepartmentTypeVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -40,6 +40,10 @@ public class DepartmentAction extends BaseListAction {
 	
 	private List<String> deptIds;
 	
+	private List<String> deptType;
+	
+	private List<DepartmentTypeVO> depttypelist;
+
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDepartment() throws FLException{
 		
@@ -50,14 +54,14 @@ public class DepartmentAction extends BaseListAction {
 	
 	@Action(value = "queryDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartment() throws FLException{
-		
-		deptList = departmentService.queryDepartment(dept.getType(), queryCompany());
+	
+		deptList = departmentService.queryDepartment(dept, queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryDepartmentById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDepartmentById(){
+	public String queryDepartmentById() throws FLException{
 		
 		dept = departmentService.queryDepartmentById(dept.getDeptId());
 		
@@ -72,6 +76,15 @@ public class DepartmentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryDepartmentByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDepartmentByDtid() throws FLException{
+				
+		deptList=departmentService.queryDepartmentByDtid(dept,queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	
 	public DepartmentVO getDept() {
 		return dept;
 	}
@@ -80,22 +93,36 @@ public class DepartmentAction extends BaseListAction {
 		this.dept = dept;
 	}
 
-	public List<DepartmentVO> getDeptList(){
-		if(deptList == null){
-			deptList = new ArrayList<DepartmentVO>();
-		}
+	public List<DepartmentVO> getDeptList() {
 		return deptList;
 	}
 
-	public void setDeptList(List<DepartmentVO> deptList){
+	public void setDeptList(List<DepartmentVO> deptList) {
 		this.deptList = deptList;
 	}
 
-	public List<String> getDeptIds(){
+	public List<String> getDeptIds() {
 		return deptIds;
 	}
 
-	public void setDeptIds(List<String> deptIds){
+	public void setDeptIds(List<String> deptIds) {
 		this.deptIds = deptIds;
 	}
+
+	public List<String> getDeptType() {
+		return deptType;
+	}
+
+	public void setDeptType(List<String> deptType) {
+		this.deptType = deptType;
+	}
+
+	public List<DepartmentTypeVO> getDepttypelist() {
+		return depttypelist;
+	}
+
+	public void setDepttypelist(List<DepartmentTypeVO> depttypelist) {
+		this.depttypelist = depttypelist;
+	}
+	
 }

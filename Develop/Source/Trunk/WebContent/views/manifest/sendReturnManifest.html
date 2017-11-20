@@ -9,7 +9,7 @@
             <div class="line-wrap order">
                 <div class="cell index"></div>
             </div>
-            <div class="line-wrap content col10">
+            <div class="line-wrap content col9">
                 <div class="cell">商品编号</div>
                 <div class="cell">名称</div>
                 <div class="cell">颜色</div>
@@ -17,8 +17,7 @@
                 <div class="cell">单位</div>
                 <div class="cell">仓库</div>
                 <div class="cell">数量</div>
-                <div class="cell">件数</div>
-                <div class="cell">退货数量</div>
+                <div class="cell">出返数量</div>
                 <div class="cell">备注</div>
             </div>
         </li>
@@ -29,7 +28,7 @@
         <div class="inline-group">
 
             <label>备注</label>
-            <div class="inline">
+            <div class="item long">
                 <input type="text" id="comment">
             </div>
         </div>
@@ -39,6 +38,6 @@
 </div>
 <script>
     $(function(){
-        $.getScript('js/manifest/aarManifest.js');
+        $.getScript('js/manifest/sendReturnManifest.js');
     });
 </script>

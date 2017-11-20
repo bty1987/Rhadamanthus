@@ -101,7 +101,7 @@ public class LogServiceImpl implements LogService {
 		BeanUtil.copyProperties(actionLogPO, logVO);
 		logVO.setCreateUserId(actionLogPO.getCreateUserPO().getUserId());
 		logVO.setCreateUserName(actionLogPO.getCreateUserPO().getCurrentName());
-		logVO.setDuty(actionLogPO.getCreateUserPO().getDuty());
+		logVO.setDuty(actionLogPO.getCreateUserPO().getDuty().getName());
 		logVO.setRoleId(actionLogPO.getCreateUserPO().getRole().getRoleId());
 		logVO.setRoleName(actionLogPO.getCreateUserPO().getRole().getRoleName());
 		

@@ -18,14 +18,15 @@ import com.fanglin.utils.Paging;
 
 public interface DepartmentService {
 	
+	
 	public void pageDepartment(Paging paging, List<Filter> filters, DepartmentVO departmentVO, int company) throws FLException;
 	
-	public List<DepartmentVO> queryDepartment(String type, Integer company) throws FLException;
+	public List<DepartmentVO> queryDepartment(DepartmentVO departmentVO, Integer company) throws FLException;
 
 	public DepartmentVO queryDepartmentById(String id);
 	
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company);
-
+	
 	public void addDepartment(DepartmentVO departmentVO, String userId,int company) throws FLException;
 
 	public void updateDepartment(DepartmentVO departmentVO) throws FLException;
@@ -33,5 +34,9 @@ public interface DepartmentService {
 	public void updateDepartmentForStatus(DepartmentVO departmentVO) throws FLException;
 
 	public void deleteDepartment(DepartmentVO departmentVO) throws FLException;
+	
+	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO,int Company);
+	
+	
 
 }

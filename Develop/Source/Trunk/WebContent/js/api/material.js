@@ -35,6 +35,7 @@ $.extend(api, {material: {
     updateMaterialBrandRight: {url: "updateMaterialBrandRight.do"},
 
     pageMaterialModel: {url: "pageMaterialModel.do", demo: true},
+    pageMaterialModelForAdvance:{url: "pageMaterialModelForAdvance.do", demo: true},
     queryMaterialModel: {url: "queryMaterialModel.do"},
     queryMaterialModelById: {url: "queryMaterialModelById.do", demo: true},
     queryMaterialModelByNo: {url: "queryMaterialModelByNo.do"},
@@ -91,6 +92,7 @@ $.extend(api, {material: {
     queryMaterialTypeById: {url: "queryMaterialTypeById.do"},
     addMaterialType: {url: "addMaterialType.do"},
     updateMaterialType: {url: "updateMaterialType.do"},
-    deleteMaterialTypeByIds: {url: "deleteMaterialTypeByIds.do"}
+    deleteMaterialTypeByIds: {url: "deleteMaterialTypeByIds.do"},
+    pageMaterialSubOrderForAdvance: {url: "pageMaterialSubOrderForAdvance.do"}
 }});
 

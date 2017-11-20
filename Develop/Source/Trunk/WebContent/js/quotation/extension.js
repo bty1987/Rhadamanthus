@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     var extraParams = {"extension.orderId" : params.decorationOrderId};
-    var typeDict = {"0":"工程", "1":"主材"};
+    var typeDict = {"0":"增项", "1":"减项"};
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){

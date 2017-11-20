@@ -1,4 +1,4 @@
-#Mon Oct 23 16:06:14 CST 2017
+#Wed Nov 15 17:05:53 CST 2017
 eclipse.preferences.version=1
 encoding//WebContent/backup/decorationOrderDesigner.html=UTF-8
 encoding//WebContent/backup/quotationDetail.html=UTF-8
@@ -55,13 +55,6 @@ encoding//WebContent/views/decoration/decorationOrderSalesman.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderStage.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderStageDetail.html=UTF-8
 encoding//WebContent/views/decoration/decorationOrderTimeline.html=UTF-8
-encoding//WebContent/views/department/businessDept.html=UTF-8
-encoding//WebContent/views/department/businessRegion.html=UTF-8
-encoding//WebContent/views/department/designDept.html=UTF-8
-encoding//WebContent/views/department/designRegion.html=UTF-8
-encoding//WebContent/views/department/dutyDept.html=UTF-8
-encoding//WebContent/views/department/engineeringDept.html=UTF-8
-encoding//WebContent/views/department/materialDept.html=UTF-8
 encoding//WebContent/views/drawLine/drawLineApply.html=UTF-8
 encoding//WebContent/views/drawLine/drawLineDeployment.html=UTF-8
 encoding//WebContent/views/drawLine/drawLinePersonInfo.html=UTF-8

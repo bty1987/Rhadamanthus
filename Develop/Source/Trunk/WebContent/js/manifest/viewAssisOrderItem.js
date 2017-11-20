@@ -75,6 +75,9 @@ jQuery(function ($) {
     $div.append($btnConfirm).append($btnRefuse).append($btnCancel).appendTo($condList1);
 
     $btnConfirm.click(function () {
+        if(com.validate('list','bottom')){
+            return;
+        }
         var $lines = $('li.line', '#list');
         var flag = true;
         if (!$lines.length) {
@@ -114,16 +117,8 @@ jQuery(function ($) {
             options["manifestItems[" + i + "].unitPrice"] = "0";//– 进货价
             options["manifestItems[" + i + "].comment"] = $this.find('.des input').val();// – 说明
 
-            if ($this.find('.color select').val() == null || $this.find('.format select').val() == null || $this.find('.storehouse select').val() == null) {
-                flag = false
-            }
 
         });
-
-        if (flag == false) {
-            layer.msg("颜色.规格.仓库不能为空");
-            return
-        }
 
         com.post(api.inventory.addManifestForAS, options, function (data) {
             layer.closeAll();
@@ -176,21 +171,24 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
                 $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                if(v.cellClass == "des"){
+                    $input.attr('maxlength', '128');
+                }
                 $cell.append($input);
             }
 
             if (v.hasSelect) {
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $select.bindData(assisOrder.storehouses, "shId", "name");
                 $cell.append($select);
             }
 
             if (v.hasColorSelect) {
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             if (v.hasFormatSelect) {
-                var $select = $('<select></select>');
+                var $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
 

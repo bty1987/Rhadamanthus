@@ -12,9 +12,13 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 	
 	private Float unitPrice;
 	
+	private String formula;
+	
 	private Float num;
 	
 	private Short type;
+	
+	private Short subtype;
 	
 	private String measurementUnit;
 	
@@ -52,6 +56,14 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.unitPrice = unitPrice;
 	}
 
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
+
 	public Float getNum() {
 		return num;
 	}
@@ -66,6 +78,14 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(Short subtype) {
+		this.subtype = subtype;
 	}
 
 	public String getMeasurementUnit() {

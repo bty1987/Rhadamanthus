@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.production.service.ProductionUserWorkFlowService;
 import com.fanglin.production.vo.ProductionUserWorkFlowVO;
 
@@ -28,9 +27,9 @@ public class ProductionUserWorkFlowAction extends BaseAction{
 	
 	private ProductionUserWorkFlowVO productionUserWorkFlow;
 	
-	@Action(value = "queryProductionUserWorkFlowByPwfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionUserWorkFlowByPwfid() throws FLException{
-		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowByPwfid(productionUserWorkFlow);
+	@Action(value = "queryProductionUserWorkFlowsByPwfids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryProductionUserWorkFlowByPwfid(){
+		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowsByPwfids(ProductionUserWorkFlows);
 		return SUCCESS;
 	}
  

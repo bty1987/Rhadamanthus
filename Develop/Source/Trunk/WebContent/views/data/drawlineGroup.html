@@ -8,7 +8,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -21,30 +20,17 @@
 
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <div class="form-group"></div>
-                        <div class="form-group"></div>
-                        <div class="form-group"></div>
+                      
                         <div class="form-group">
+                        
                             <label class="col-sm-3 control-label no-padding-right" for="drawLineGroup" >放线小组</label>
-                            <div class="col-sm-9 controls">
-                                <input type="text" class="hide" id="gid" />
-                                <input class='col-xs-10 col-sm-6 span6 m-wrap popovers' id='drawLineGroup' placeholder="请输入放线小组" data-toggle="popover"
-                                       data-content="
-									   		<ol>
-									   				<li>放线小组全部为中文</li>
-									   				<li>放线小组不能重复</li>
-									   				<li>严格按照以下格式输入
-									   					<ul>
-									   						<li>xx放线小组</li>
-															<li>放线x组</li>
-														</ul>
-													</li>
-											</ol>"
-                                       data-original-title="<div class='text-center' >放线小组输入规则</div>" >
+                            <div class="col-sm-9 controls" id="gid">                              
+                                <input  type="text" class='col-xs-10 col-sm-6 span6 m-wrap popovers v_drawlingroup' id='drawLineGroup' placeholder="请输入放线小组" data-toggle="popover"/> 	                                                                           
                             </div>
                         </div>
 
                         <div class="form-group">
+                        
                             <label class="col-sm-3 control-label no-padding-right" for="contentadd">说明</label>
                             <div class="col-sm-9">
                                 <textarea id="contentadd" maxlength="125" class="col-xs-10 col-sm-6" rows="3" style="resize: none"></textarea>
@@ -63,22 +49,7 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
 </div>
-
-
-
-
-
 
 <script type="text/javascript">
     $.getScript('js/data/drawlineGroup.js?version=' + versionCode);

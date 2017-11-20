@@ -68,9 +68,12 @@ jQuery(function($) {
 	decorationOrderDetail.items.notSalesmanContent = $('#notSalesmanContent');
 	
 	decorationOrderDetail.items.salesmanType = $('#salesmanType');
+
+	decorationOrderDetail.items.quoterId = $('#quoterId');
+	decorationOrderDetail.items.escorterId = $('#escorterId');
 	
 	decorationUtils.init();
-	
+
 	decorationOrderDetail.decorationOrderId = params.decorationOrderId;
 	decorationOrderDetail.orderType = params.type;
 
@@ -89,7 +92,10 @@ jQuery(function($) {
 		decorationOrderDetail.items.houseType.bindData(res.houseType, 'key', 'value');
 		decorationOrderDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
 	}, null, false);
-	
+
+	com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+
 	$("#btnPrintDefaultQuotationInfo").on('click',function(res){
 		decorationOrderDetail.printQuotationModal.modal("show");
 	});
@@ -113,15 +119,18 @@ jQuery(function($) {
 
 	$('#customerInfosBtn').on(ace.click_event, function(){
 		if(decorationOrderDetail.showCustomerInfoFlag==undefined || decorationOrderDetail.showCustomerInfoFlag==0 ){
-			$.gritter.add({
-				title: '客户敏感信息',
-				text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
-				class_name: 'gritter-info gritter-center gritter-light',
-				after_close: function(e, manual_close){
-					decorationOrderDetail.showCustomerInfoFlag = 0;
-				}
-			});
-			decorationOrderDetail.showCustomerInfoFlag = 1;
+			com.post(api.data.queryCustomerById,{ "customer.id": decorationOrderDetail.customer.id},function (res) {
+				decorationOrderDetail.customer = res.customer;
+				$.gritter.add({
+					title: '客户敏感信息',
+					text: '邮箱 :'+decorationOrderDetail.customer.email+'<br /> QQ:'+decorationOrderDetail.customer.qq+'<br /> 微信:'+decorationOrderDetail.customer.wechat+'<br />  电话 :'+decorationOrderDetail.customer.phone+'<br />  客户类型:'+decorationOrderDetail.customer.relationshipType+'<br /> ',
+					class_name: 'gritter-info gritter-center gritter-light',
+					after_close: function(e, manual_close){
+						decorationOrderDetail.showCustomerInfoFlag = 0;
+					}
+				});
+				decorationOrderDetail.showCustomerInfoFlag = 1;
+			})
 		}
 
 		return false;
@@ -147,7 +156,7 @@ jQuery(function($) {
 					var count = customerIds.length;
 					if(count == 1){
 						if(customerIds[0] != decorationOrderDetail.customer.id){
-							com.showTips($this, "该联系方式已存在", true);
+							com.showPopover($this, {errorMsg:"该联系方式已存在"}, "right");
 							decorationOrderDetail.cRepeatFlg = true;
 						}else{
 							com.clearValidator("#customerPhone", true);
@@ -155,7 +164,7 @@ jQuery(function($) {
 						}
 							
 					}else if(count > 1){
-						com.showTips($this, "该联系方式已存在", true);
+						com.showPopover($this, {errorMsg:"该联系方式已存在"}, "right");
 						decorationOrderDetail.cRepeatFlg = true;
 					}else{
 						com.clearValidator("#customerPhone", true);
@@ -224,7 +233,7 @@ jQuery(function($) {
 		
 		com.post(api.decoration.queryDecorationOrderByVillageIdAHouseNumber, {"decorationOrder.village.villageId":$("#villageSel").val(),"decorationOrder.houseNumber":$("#houseNumber").val()}, function(res){
 			if(res.decorationOrder&&res.decorationOrder.orderId){
-					com.showTips($("#houseNumber"), "订单已存在：订单号："+res.decorationOrder.orderId+" 订单所属设计师:"+res.decorationOrder.designer, true);
+					com.showPopover($("#houseNumber"), "订单已存在：订单号："+res.decorationOrder.orderId+" 订单所属设计师:"+res.decorationOrder.designer, true);
 					decorationOrderDetail.vRepeatFlg = true;
 			}else{
 				com.clearValidator("#houseNumber", true);
@@ -273,10 +282,10 @@ jQuery(function($) {
 	});
 	
 	initWizard();
-	
+
 	decorationUtils.initBaseInfo(decorationOrderDetail.decorationOrderId, api.decoration.queryDecorationOrderForCommonByOrderId, function(decorationOrder){
 		
-		var statuses = ["咨询", "量房", "已报价", "定金"];
+		var statuses = ["初始", "已报价", "定金"];
 		
 		if(statuses.indexOf(decorationOrder.status)){
 			decorationOrderDetail.items.houseType.prop("disabled", false);
@@ -309,6 +318,8 @@ jQuery(function($) {
 		decorationOrderDetail.items.notSalesmanContent.val(decorationOrder.notSalesmanContent);
 		
 		decorationOrderDetail.items.salesmanType.val(decorationOrder.salesmanType);
+		com.updateChosen('quoterId',decorationOrder.quoterId == null ? "": decorationOrder.quoterId, decorationOrder.quoter == null ? "":decorationOrder.quoter);
+		com.updateChosen('escorterId', com.checkNull(decorationOrder.escorterId,""),com.checkNull(decorationOrder.escorter,""));
 		
         decorationOrderDetail.customer.id = decorationOrder.customer.id;
 		decorationOrderDetail.customer.phone = decorationOrder.customer.phone;
@@ -327,7 +338,7 @@ jQuery(function($) {
 		
 		decorationOrderDetail.decorationOrder.type = decorationOrder.type;
 	});
-	
+
 	decorationUtils.initPayment(decorationOrderDetail.decorationOrderId,false);
 });
 
@@ -392,6 +403,8 @@ function saveBaseDecorationOrderInfo(){
 				"decorationOrder.notSalesmanName": decorationOrderDetail.items.notSalesmanName.val(),
 				"decorationOrder.notSalesmanPhone": decorationOrderDetail.items.notSalesmanPhone.val(),
 				"decorationOrder.notSalesmanContent": decorationOrderDetail.items.notSalesmanContent.val(),
+				"decorationOrder.quoterId": decorationOrderDetail.items.quoterId.val(),
+				"decorationOrder.escorterId": decorationOrderDetail.items.escorterId.val(),
 			};
 			
 			com.post(api.decoration.changeDecorationOrderForAdvance, options, function(){

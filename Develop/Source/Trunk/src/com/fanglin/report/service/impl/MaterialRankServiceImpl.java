@@ -1,3 +1,13 @@
+/**
+ * @File Name		: MaterialRankServiceImpl.java
+ * @Package   	: com.fanglin.service.impl.materialOrder
+ * @Version		: 1.0
+ * @Date			: 2014-11-16
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
 package com.fanglin.report.service.impl;
 
 import java.util.ArrayList;
@@ -190,9 +200,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 		
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = materialDesignerRankDao.queryMaterialDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
@@ -202,7 +209,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 				result.set(0, infos[0].toString());
 				result.set(1, infos[1].toString());
 			}
-		}
 		
 		return result;
 	}
@@ -240,9 +246,6 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 
 		List<String> result = Arrays.asList(new String[]{"0", "0"});
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO != null && "设计师".equals(userPO.getDuty())){
 			List<?> _ = zaterialDesignerRankDao.queryZaterialDesignerRankForPlaceByDesignerId(userId,company);
 			
 			if(_.size() > 0){
@@ -252,7 +255,7 @@ public class MaterialRankServiceImpl implements MaterialRankService {
 				result.set(0, infos[0].toString());
 				result.set(1, infos[1].toString());
 			}
-		}
+		
 		
 		return result;
 	}

@@ -99,7 +99,7 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<String> unstatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> unstatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		List<String> belongTypes = Arrays.asList(new String[]{DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR, DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR});
 		
 		if(!unstatus.contains(decorationOrderPO.getStatus())){
@@ -127,10 +127,6 @@ public class ApprovalOrderBelongServiceImpl implements ApprovalOrderBelongServic
 			
 			if(userPO == null){
 				throw new FLException(190005 , "人员不存在");
-			}
-			
-			if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) && !userPO.getDuty().contains("设计师")){
-				throw new FLException(140015, "订单设计归属人员职位需为设计师");
 			}
 			
 			newBelongUserName.append(userPO.getCurrentName());

@@ -1,4 +1,4 @@
-$(function(){
+﻿$(function(){
 
     var displayFunc  = (function(){
 
@@ -23,7 +23,7 @@ $(function(){
                         ["员工编号:", v.userId, "grey"],
                         ["用户名:", v.loginId, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
-                        ["职位:", v.duty, "grey"],
+                        ["职位:", v.duty.name, "grey"],
                         ["角色:", v.role.roleName, "grey"],
                         ["联系方式:", v.phone, "grey"]
                     ];
@@ -61,7 +61,6 @@ $(function(){
                                 id : params.company.no
                             }
                         }, didList = [];
-                        
                         //获取所有叶子节点
                         $.each(deptList, function(i, v){
                             didList.push(v.id);
@@ -71,7 +70,7 @@ $(function(){
                                 didList.splice(didList.indexOf(v.parentid),1);
                             }
                         });
-
+                        //splice为删除了父类的id,余下的在didlist中的id为子节点的id
                         $('#tree3').ace_tree({
                             dataSource: {
                                 data : function(options, callback) {
@@ -154,6 +153,7 @@ $(function(){
                                 }
                             }, null, false);
                         });
+                        //removeData() 方法删除之前通过 data() 方法设置的数据。 $(selector).removeData(name)
                         $('#cancel').click(function(){
                             $("#tree3").removeData("tree");
                         });

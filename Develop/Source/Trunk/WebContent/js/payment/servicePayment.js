@@ -58,29 +58,6 @@ jQuery(function($) {
 		$("#refundBankName").removeClass("v_required");
 	});
 
-	/*for(var i=0;i<servicePayment.paymentModelNameData.length;i++){
-		$("#" + servicePayment.paymentModelNameData[i] + "Checkbox").on("click",function(e) {
-			var _name = $(this).attr("key");
-			var _checkboxId = "#" + _name + "Checkbox";
-			var _divId = "#" + _name + "Div";
-
-			if($(_checkboxId).attr("checked") != "checked"){
-				$(_divId).removeClass("hide");
-				$(_checkboxId).attr("checked","checked");
-
-				if(_name == "advance"){
-					com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.customerId": servicePaymentPostData.customerId},function(res){
-						$("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
-						$("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
-					});
-				}
-			}else{
-				$(_divId).addClass("hide");
-				$(_checkboxId).removeAttr("checked","checked");
-			}
-		});
-	}*/
-
     $("#baseItemModal :checkbox").on("change", function(){
         $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show() : $("[referCheckbox="+this.id+"]").hide()
     });
@@ -101,26 +78,26 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				servicePayment.cash.push(v);
-				servicePayment.cashInfo[v.key] = v.name;
+				servicePayment.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				servicePayment.bank.push(v);
-				servicePayment.bankInfo[v.key] = v.name;
+				servicePayment.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				servicePayment.checkBank.push(v);
-				servicePayment.checkBankInfo[v.key] = v.name;
+				servicePayment.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				servicePayment.accounts.push(v);
-				servicePayment.accountsInfo[v.key] = v.name;
+				servicePayment.accountsInfo[v.no] = v.name;
 			}
 		});
 
-		$("#cashInfo").bindData(servicePayment.cash, 'key', 'name');
+		$("#cashInfo").bindData(servicePayment.cash, 'no', 'name');
 
-		$("#installmentBankName").bindData(servicePayment.bank, 'key', 'name');
+		$("#installmentBankName").bindData(servicePayment.bank, 'no', 'name');
 
-		$("#checkvBankName").bindData(servicePayment.checkBank, 'key', 'name');
+		$("#checkvBankName").bindData(servicePayment.checkBank, 'no', 'name');
 
-		$("#accountsBankName").bindData(servicePayment.accounts, 'key', 'name');
+		$("#accountsBankName").bindData(servicePayment.accounts, 'no', 'name');
 	}, null, false);
 
 	//添加银行卡
@@ -447,6 +424,11 @@ jQuery(function($) {
 
     //收款触发事件
 	function payment(){
+
+		if(com.validate()){
+			return;
+		}
+
 		var v = servicePayment.moreMsg[0];
 
 		var referMoney = $("#referMoney").val();
@@ -605,7 +587,7 @@ jQuery(function($) {
 
 		var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
 		var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(servicePayment.bank, 'key', 'name').appendTo(bankNameDiv);
+		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(servicePayment.bank, 'no', 'name').appendTo(bankNameDiv);
 		var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
 		var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
 			$("#bankDiv_"+$(this).attr("index")).remove();
@@ -617,7 +599,7 @@ jQuery(function($) {
 
 		var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
 		var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_price").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
+		var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
 
 		var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
 		var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);

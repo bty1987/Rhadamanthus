@@ -15,7 +15,7 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6777289778875951609L;
 	
-	public static final String COLUMN_KEY_STR = "key";
+	public static final String COLUMN_NO_STR = "no";
 	
 	public static final String COLUMN_TYPE_STR = "type";
 	
@@ -35,11 +35,13 @@ public class ReceiptTypePO implements java.io.Serializable {
 	
 	public static final short STATUS_ENABLE_INT = 1;
 	
+	public static final short COLUMN_DIRECTION_INT = 1;
+	
 	private int rtId;
 	
 	private String name;
 	
-	private String key;
+	private String no;
 	
 	private String subjectName;
 	
@@ -75,15 +77,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}	
+	
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	@Column(name = "key")
-	public String getKey() {
-		return this.key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	@Column(name = "subjectName")
@@ -149,6 +151,7 @@ public class ReceiptTypePO implements java.io.Serializable {
 		this.status = status;
 	}
 	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

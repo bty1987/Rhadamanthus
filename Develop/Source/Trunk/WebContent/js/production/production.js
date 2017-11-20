@@ -165,7 +165,7 @@ $(function(){
 
                         });
 
-                    })
+                    });
 
 
                     $btnBind.click(function () {
@@ -223,6 +223,7 @@ $(function(){
 
                         productionUtils.clearForm('form1');
                         var productionOptions = {};
+                        com.clearValidator();
 
                         $layerAdd.find("input[name = 'orderId']").val(v.orderId);
                         $layerAdd.find("input[name = 'designer']").val(v.designer.userName);
@@ -241,7 +242,7 @@ $(function(){
                         
                         openlayer(function (index, layero) {
                             
-                            if(checkValue()){
+                            if(!com.validate("layerAdd",null)){
 
                                 productionOptions["production.orderId"] = v.orderId;
                                 productionOptions["production.houseNumber"] = v.houseNumber;
@@ -353,7 +354,7 @@ $(function(){
 
         $adda.click(function (){
             productionUtils.clearForm("form1");
-
+            com.clearValidator();
             productionPostData = {};
             openlayer(function (index, layero) {
                     saveData(function () {
@@ -442,7 +443,7 @@ $(function(){
 
     function saveData(callback){
 
-        if(checkAddValue()){
+        if(!com.validate("layerAdd",null)){
 
             productionPostData["production.type"] = 0;
             productionPostData["production.spid"] = 0;
@@ -458,107 +459,6 @@ $(function(){
                         layer.msg('添加失败', {icon: 2, time: 2e3});
                     });
         }
-    }
-
-    function checkAddValue(){
-            var flag = true;
-            var numRex = /^\d+$/;
-
-            //判断工期是否输入正确
-            var $timeLimit = $layerAdd.find("input[name='timeLimit']");
-
-            if(!numRex.test($timeLimit.val()) ||$timeLimit.val()=="" ){
-
-                $timeLimit.focus().select();
-                $timeLimit.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "right",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "工期格式输入错误"
-                }).popover('show');
-                flag= false;
-            }else{
-                $timeLimit.popover('destroy');
-            }
-
-            //判断设计师是否输入正确
-            var $designer = $layerAdd.find("input[name='designer']");
-
-            if(!$designer.val()){
-                flag = false;
-                $designer.focus().select();
-                $designer.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "right",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "设计师不能为空"
-                }).popover('show');
-            }else{
-                $designer.popover('destroy');
-            }
-
-            //判断楼盘地址是否输入正确
-            var $orderAddr = $layerAdd.find("input[name='orderAddr']");
-
-            if(!$orderAddr.val()){
-                flag = false;
-                $orderAddr.focus().select();
-                $orderAddr.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "right",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "楼盘地址不能为空"
-                }).popover('show');
-            }else{
-                $orderAddr.popover('destroy');
-            }
-
-            //判断订单编号是否输入正确
-            var $orderId = $layerAdd.find("input[name='orderId']");
-
-            if(!$orderId.val()){
-                flag = false;
-                $orderId.focus().select();
-                $orderId.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "right",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "订单编号不能为空"
-                }).popover('show');
-            }else{
-                $orderId.popover('destroy');
-            }
-
-            return flag;
-        }
-
-    function checkValue(){
-        var _flag = true;
-        var numRex = /^\d+$/;
-
-        //判断工期是否输入正确
-        var $timeLimit = $layerAdd.find("input[name='timeLimit']");
-
-        if(!numRex.test($timeLimit.val()) ||$timeLimit.val()=="" ){
-            _flag = false;
-
-            $timeLimit.focus().select();
-            $timeLimit.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "工期格式输入错误"
-            }).popover('show');
-
-        }else{
-            $timeLimit.popover('destroy');
-        }
-        return _flag;
     }
 
 });

@@ -17,7 +17,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "设计师"},//获取数据时的请求参数
+                postData: {"duty":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -47,7 +47,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.department.queryDepartment,
-                postData: {"dept.type": "设计大区"},
+                postData: {"dept.type.name": "设计大区"},
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
@@ -697,11 +697,11 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.department,
+                url: api.department.queryDepartmentType,
                 postData: {},
-                listPath: "deptType",
-                keyPath: null,
-                valuePath: null
+                listPath: "departmentTypes",
+                keyPath: "dtid",
+                valuePath: "name"
             }
         },
         deptId: {
@@ -714,7 +714,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.department.queryDepartment,
-                postData: {"dept.type": "all"},
+                postData: {},
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
@@ -822,7 +822,39 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "业务"},//获取数据时的请求参数
+                postData: {"duty": ""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+		quoter: {
+            label: "报价员",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "quoter",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData: {"duty": ""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+		escorter: {
+            label: "跟单员",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "escorter",//接口中的参数名
+                op: "cn",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                postData: {"duty": ""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -838,7 +870,7 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.department.queryDepartment,
-                postData: {"dept.type": "设计部"},
+                postData: {"dept.type.name": "设计部"},
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
@@ -854,7 +886,7 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.department.queryDepartment,
-                postData: {"dept.type": "业务大区"},
+                postData: {"dept.type.name": "业务大区"},
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
@@ -870,7 +902,7 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.department.queryDepartment,
-                postData: {"dept.type": "all"},
+                postData: {},
                 listPath: "deptList",
                 keyPath: "deptId",
                 valuePath: "deptName"
@@ -1122,7 +1154,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "设计师"},//获取数据时的请求参数
+                postData: {"duty": ""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1168,7 +1200,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
+                url: api.personel.queryUserForNameByPinyinName,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1270,7 +1302,7 @@ var Condition = function (api) {
                 validate: null
             }
         }, loginTime: {
-            label: "收款时间",
+            label: "登录时间",
             type: "dateRangePicker",
             submitConfig: {
                 name: "loginTime",
@@ -1629,7 +1661,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: { "duty" : "设计师"},//获取数据时的请求参数
+                postData: { "duty" : ""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1680,7 +1712,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: { "duty" : "设计师"},//获取数据时的请求参数
+                postData: { "duty" : ""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1756,7 +1788,7 @@ var Condition = function (api) {
             },
             dataSource: {// 从后台取数据的各种配置
                 url: api.department.queryDepartment,
-                postData: {"dept.type" : "设计部"},
+                postData: {},
                 listPath: "deptList",
                 keyPath: "deptName",
                 valuePath: "deptName"

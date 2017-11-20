@@ -24,11 +24,13 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.department.dao.DepartmentDao;
+import com.fanglin.department.dao.DepartmentTypeDao;
 import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.department.po.DepartmentTypePO;
 import com.fanglin.department.service.DepartmentService;
+import com.fanglin.department.vo.DepartmentTypeVO;
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
@@ -38,7 +40,6 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
-import com.fanglin.utils.SystemConfig;
 
 @Service("departmentService")
 @Transactional(readOnly = true)
@@ -48,19 +49,20 @@ public class DepartmentServiceImpl implements DepartmentService {
 	private DepartmentDao departmentDao;
 	
 	@Autowired
-	private UserDao userDao;
-	
-	
-	@Autowired
 	private CountingService countingService;
 	
+	@Autowired
+	private CityProperDao cityProperDao;
+	
+	@Autowired
+	private DepartmentTypeDao departmentTypeDao;
+
 	@Override
 	public void pageDepartment(Paging paging, List<Filter> filters, DepartmentVO departmentVO, int company) throws FLException{
-		
 		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		if(departmentVO != null && departmentVO.getType() != null){
-			filters.add(new Filter("type", departmentVO.getType(), "eq"));
+			filters.add(new Filter("type", String.valueOf(departmentVO.getType().getDtid()), "eq"));
 		}
 		
 		List<DepartmentPO> departmentPOs = departmentDao.pageDepartment(paging, filters, company);
@@ -72,20 +74,28 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 		
 		paging.setData(departmentVOs);
-		
- 
 	}
 	
 	@Override
-	public List<DepartmentVO> queryDepartment(String type, Integer company) throws FLException{
+	public List<DepartmentVO> queryDepartment(DepartmentVO departmentVO, Integer company) throws FLException{
 		
-	
-		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(type, company);
+		List<DepartmentPO> departmentPOs;
+		
+		if(departmentVO != null && departmentVO.getType() != null){
+			String name = departmentVO.getType().getName();
+			int dtid = departmentVO.getType().getDtid();
+			if(name != null && !name.equals("")){
+				departmentPOs = departmentDao.queryDepartment(departmentTypeDao.queryDepartmentTypeByName(name).getDtid(), company);
+			}else{
+				departmentPOs = departmentDao.queryDepartment(dtid, company);
+			}
+		}else{
+			departmentPOs = departmentDao.queryDepartment(0, company);
+		}
+
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		Map<Integer, Integer> companys = new HashMap<Integer, Integer>(); 
-		
-		DepartmentVO departmentVO;
 		
 		for(DepartmentPO departmentPO: departmentPOs){
 			
@@ -120,7 +130,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 		
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), company, departmentVO.getType());
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getDeptName(), company, departmentVO.getType().getDtid());
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 		
 		for(DepartmentPO departmentPO: departmentPOs){
@@ -129,13 +139,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 		return departmentVOs;
 	}
- 
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void addDepartment(DepartmentVO departmentVO, String userId,int company) throws FLException{
-		
 		if(departmentVO.getCreateTime() == null || departmentVO.getCreateTime().trim().equals("")){
+			
 			departmentVO.setCreateTime(DateUtil.current());
 		}
 		
@@ -143,65 +152,63 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 		int count = countingService.queryCountingByTypeDate(departmentVO.getIdent(), CountingPO.COUNTING_DATE_SILNLE_STR);
 		
-		StringBuffer deptId = new StringBuffer();
-		deptId.append(SystemConfig.getString("companyIdent", ""));
-		deptId.append(SystemConfig.getString("departmentIdent", "FL_"));
-		deptId.append(departmentVO.getDeptId());
-		deptId.append(FormatUtil.fillZero(count, "00"));
+		departmentPO.setDeptId(String.format("FL_D_%s", FormatUtil.fillZero(count, "000")));
 		
-		departmentPO.setDeptId(deptId.toString());
+		BeanUtil.copyProperties(departmentVO,departmentPO, Arrays.asList( "dId","deptId","fatherDept", "cityProper", "type", "company"));
+		if(departmentVO.getType() != null ){
+			departmentPO.setType(new DepartmentTypePO());
 		
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("dId", "deptId", "fatherDept", "cityProper", "company"));
+			BeanUtil.copyProperties(departmentVO.getType(), departmentPO.getType());
+		}
 		
-		if(departmentVO.getFatherDept() != null){
+		if(departmentVO.getFatherDept() != null ){
 			departmentPO.setFatherDept(new DepartmentPO());
 			BeanUtil.copyProperties(departmentVO.getFatherDept(), departmentPO.getFatherDept());
 		}
-		
+				
 		if(departmentVO.getCityProper() != null){
 			departmentPO.setCityProper(new CityProperPO());
 			BeanUtil.copyProperties(departmentVO.getCityProper(), departmentPO.getCityProper());
 		}
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
-		}
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company); 
 		
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getDeptName());
 		departmentPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
-
-		departmentDao.save(departmentPO);
+		
+		departmentDao.save(departmentPO); 
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void updateDepartment(DepartmentVO departmentVO) throws FLException {
 		
-		DepartmentPO departmentPO = departmentDao.get(departmentVO.getDeptId());
+		DepartmentPO departmentPO = departmentDao.get(departmentVO.getDid());
 		
 		if(departmentPO == null){
 			throw new FLException(310001, "部门不存在");
 		}
 		
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("deptId", "fatherDept", "cityProper", "did", "company"));
+		BeanUtil.copyProperties(departmentVO,departmentPO, Arrays.asList( "deptId","fatherDept", "cityProper", "type", "company"));
 		
-		if(departmentVO.getFatherDept() != null){
-			departmentPO.setFatherDept(new DepartmentPO());
-			BeanUtil.copyProperties(departmentVO.getFatherDept(), departmentPO.getFatherDept());
+		if(departmentVO.getType() != null ){
+			departmentPO.setType(new DepartmentTypePO());
+			BeanUtil.copyProperties(departmentVO.getType(), departmentPO.getType());
 		}
 		
+		if(departmentVO.getFatherDept() != null ){
+			departmentPO.setFatherDept(new DepartmentPO());
+			BeanUtil.copyProperties(departmentVO.getFatherDept(), departmentPO.getFatherDept(),Arrays.asList( "fatherDept", "cityProper", "type"));
+		}
+				
 		if(departmentVO.getCityProper() != null){
 			departmentPO.setCityProper(new CityProperPO());
-			BeanUtil.copyProperties(departmentVO.getCityProper(), departmentPO.getCityProper());
+			BeanUtil.copyProperties(cityProperDao.get(departmentVO.getCityProper().getCityProperId()), departmentPO.getCityProper(),Arrays.asList( "city"));
 		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getDeptName());
 		departmentPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
-		
 		departmentDao.update(departmentPO);
 	}
 	
@@ -209,7 +216,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Transactional(rollbackFor=Exception.class)
 	public void updateDepartmentForStatus(DepartmentVO departmentVO) throws FLException {
 		
-		DepartmentPO departmentPO = departmentDao.get(departmentVO.getDeptId());
+		DepartmentPO departmentPO = departmentDao.queryDepartmentByDeptId(departmentVO.getDeptId());
 		
 		if(departmentPO == null){
 			throw new FLException(310001, "部门不存在");
@@ -224,7 +231,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteDepartment(DepartmentVO departmentVO) throws FLException{
 		 
-		DepartmentPO departmentPO = departmentDao.get(departmentVO.getDid());
+		DepartmentPO departmentPO = departmentDao.queryDepartmentByDeptId(departmentVO.getDeptId());
 		
 		if(departmentPO == null){
 			throw new FLException(310001, "部门不存在");
@@ -236,13 +243,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	public DepartmentVO convertBean(DepartmentPO departmentPO){
-		DepartmentVO departmentVO = new DepartmentVO();
-		BeanUtil.copyProperties(departmentPO, departmentVO, Arrays.asList("fatherDept", "cityProper"));
 		
-		if(departmentPO.getFatherDept() != null){
-			departmentVO.setFatherDept(new DepartmentVO());
-			BeanUtil.copyProperties(departmentPO.getFatherDept(), departmentVO.getFatherDept());
-		}
+		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new CityProperVO());
+		BeanUtil.copyProperties(departmentPO, departmentVO, Arrays.asList("fatherDept","cityProper","type"));
 		
 		if(departmentPO.getCityProper() != null){
 			departmentVO.setCityProper(new CityProperVO());
@@ -254,7 +257,33 @@ public class DepartmentServiceImpl implements DepartmentService {
 			departmentVO.getCityProper().getCity().setRegion(new RegionVO());
 			BeanUtil.copyProperties(departmentPO.getCityProper().getCity().getRegion(), departmentVO.getCityProper().getCity().getRegion());
 		}
+		if(departmentPO.getType()!= null ){
+			departmentVO.setType(new DepartmentTypeVO());
+			BeanUtil.copyProperties(departmentPO.getType(), departmentVO.getType());
+		}
 		
+		if(departmentPO.getFatherDept() != null ){
+			departmentVO.setFatherDept(new DepartmentVO());
+			BeanUtil.copyProperties(departmentPO.getFatherDept(), departmentVO.getFatherDept(),Arrays.asList("fatherDept","cityProper","type"));
+		}
 		return departmentVO;
 	}
+
+	@Override
+	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO,int Company) {
+		
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartmentBytype(String.valueOf(departmentVO.getType().getDtid()),Company);
+		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
+	
+		for(DepartmentPO departmentPO: departmentPOs){
+			departmentVO = new DepartmentVO();					
+			departmentVO = convertBean(departmentPO);
+		 			
+			departmentVOs.add(departmentVO);
+		}
+		
+		
+		return departmentVOs;
+	}
+	
 }

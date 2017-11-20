@@ -54,7 +54,7 @@ public class DrawLineGroupAction extends BaseListAction {
 	@Action(value="updateDrawlineGroup", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateDrawLineGroup() throws FLException{
 		
-		  drawLineGroupService.updateDrawLineGroup(drawLineGroup);
+		  drawLineGroupService.updateDrawLineGroup(drawLineGroup,queryCompany());
 		
 		return SUCCESS;
 	}

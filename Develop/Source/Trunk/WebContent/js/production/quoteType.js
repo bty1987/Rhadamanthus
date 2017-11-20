@@ -1,10 +1,6 @@
 
 $(function(){
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
+
     var $layerAdd = $('#layerAdd');
     var $quoteTypeName = $('#quoteTypeName');
     var displayFunc  = (function(){
@@ -93,12 +89,11 @@ $(function(){
             //编辑点击事件
             $btnEdit.click(function () {
                 var layerType = "编辑";
-
                 $quoteTypeName.attr("data-qtid", v.qtid);
                 $quoteTypeName.val(v.name);
-
+                com.clearValidator();
                 openlayer(layerType,function () {
-                    if (submitValidate()) {
+                    if (!com.validate("layerAdd",null)) {
                         com.post(api.production.updateQuoteType,{
                             "quoteType.qtid": v.qtid,
                             "quoteType.name": $quoteTypeName.val()
@@ -182,9 +177,10 @@ $(function(){
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
             $adda.click(function () {
-                var layerType = "添加";//1为添加类型
+                var layerType = "添加";
+                com.clearValidator();
                 openlayer(layerType,function (index, layero) {
-                    if (submitValidate()) {
+                    if (!com.validate("layerAdd",null)) {
                         saveData(function(){
                             layer.closeAll();
                             $quoteTypeName.val("");
@@ -225,27 +221,6 @@ $(function(){
 
             }
         });
-    }
-
-    /*表单校验*/
- function submitValidate() {
-        var flag = true;
-        if(!$quoteTypeName.val()){
-            $quoteTypeName.focus().select();
-            $quoteTypeName.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写报价类型"
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            $quoteTypeName.popover('destroy');
-
-        }
-        return flag;
     }
 
     //添加数据

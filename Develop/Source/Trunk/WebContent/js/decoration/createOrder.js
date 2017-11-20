@@ -43,7 +43,9 @@ jQuery(function($) {
 	orderEntry.orderItems.backOrderName = $("#backOrderName");
 	orderEntry.orderItems.backOrderPhone = $("#backOrderPhone");
 	orderEntry.orderItems.backOrderContent = $("#backOrderContent");
-	orderEntry.orderItems.status= $("#status");
+	orderEntry.orderItems.status = $("#status");
+	orderEntry.orderItems.quoterId = $("#quoterId");
+	orderEntry.orderItems.escorterId = $("#escorterId");
 	orderEntry.saveBtn = $("#saveBtn").on("click", createOrder);
 	orderEntry.cancelBtn = $("#cancelBtn").on("click", initCreate);
 	
@@ -100,9 +102,11 @@ jQuery(function($) {
 		}, null, false);
 	});
 	
-	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "设计师"}, "autoFillKeyValue", "key", "value");
+	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
 	com.initChosen('salesmanId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-	
+	com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+
 	$("#houseNumber").on("blur", function(e){
 		if($(this).val() == "" || $("#villageId").val() == ""){
 			return;
@@ -217,9 +221,11 @@ jQuery(function($) {
 			"decorationOrder.backOrderName": orderEntry.orderItems.backOrderName.val(),
 			"decorationOrder.backOrderPhone": orderEntry.orderItems.backOrderPhone.val(),
 			"decorationOrder.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
-			"decorationOrder.status": orderEntry.orderItems.status.val(),
+			"decorationOrder.resourceType": orderEntry.orderItems.status.val(),
 			"decorationOrder.approveStatus": 0,
 			"decorationOrder.type": orderEntry.orderItems.orderType.val(),
+			"decorationOrder.quoterId": orderEntry.orderItems.quoterId.val(),
+			"decorationOrder.escorterId": orderEntry.orderItems.escorterId.val()
 		};
 		
 		if(com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)

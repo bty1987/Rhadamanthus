@@ -28,7 +28,7 @@ jQuery(function ($) {
                         ["宽:",v.width,"grey"],
                         ["厚:",v.thick,"grey"],
                         ["面积(平方米):",utils.accMul(parseFloat(utils.accDiv(v.height,100)),parseFloat(utils.accDiv(v.width,100))),"grey"],
-                        //["颜色:",v.color,"grey"],
+                        ["颜色:",v.color,"grey"],
                         //["单价:",v.unitprice,"grey"],
                         ["数量:",v.num,"grey"],
                         //["总价:",v.total,"grey"],
@@ -81,8 +81,9 @@ jQuery(function ($) {
 
         $adda.click(function () {
         	 $('#layerAddItem').find('input').val("");
+            com.clearValidator();
             addProductionPlanItem(function (index,lyero) {
-                if(submitValidate() && checkFormat()){
+                if(!com.validate("layerAddItem",null)){
                     addItem();
                     layer.closeAll();
                 }
@@ -99,81 +100,7 @@ jQuery(function ($) {
 
     });
 
-    function submitValidate() {
-        var flag = true;
-        var $name = $('#itemName');
-        var $height = $('#height');
-        var $width = $('#width');
-        var $thick = $('#thick');
-        var $num = $('#num');
 
-        if(!$name.val()){
-            $name.focus().select();
-            $name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写名称"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $name.popover('destroy');
-        }
-        if(!$height.val()){
-            $height.focus().select();
-            $height.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写高"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $height.popover('destroy');
-        }
-        if(!$width.val()){
-            $width.focus().select();
-            $width.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写宽"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $width.popover('destroy');
-        }
-        if(!$thick.val()){
-            $thick.focus().select();
-            $thick.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写厚"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $thick.popover('destroy');
-        }
-        if(!$num.val()){
-            $num.focus().select();
-            $num.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写数量"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $num.popover('destroy');
-        }
-        return flag;
-    }
 
     function addProductionPlanItem(callback){
         layer.closeAll();
@@ -232,75 +159,6 @@ jQuery(function ($) {
             layer.msg("添加失败");
         })
 
-    }
-
-    function checkFormat(){
-        var flag = true;
-        ////检验长宽高
-        var $height = $('#height');
-        var heightRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if(!heightRex.test($height.val()) || parseFloat($height.val())<0){
-        	$height.focus().select();
-        	$height.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "高 格式输入错误"
-            }).popover('show');
-            flag= false;
-        }else{
-        	$height.popover('destroy');
-        }
-
-        var $width = $('#width');
-        var widthRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if(!widthRex.test($width.val()) || parseFloat($width.val())<0){
-        	$width.focus().select();
-        	$width.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "宽 格式输入错误"
-            }).popover('show');
-            flag= false;
-        }else{
-        	$width.popover('destroy');
-        }
-
-        var $thick = $('#thick');
-        var thickRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if(!thickRex.test($thick.val()) || parseFloat($thick.val())<0){
-        	$thick.focus().select();
-        	$thick.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "厚 格式输入错误"
-            }).popover('show');
-            flag= false;
-        }else{
-        	$thick.popover('destroy');
-        }
-
-        var $num = $('#num');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if(!numRex.test($num.val()) || parseFloat($num.val())<0){
-        	$num.focus().select();
-        	$num.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "数量格式输入错误"
-            }).popover('show');
-            flag= false;
-        }else{
-        	$num.popover('destroy');
-        }
-        return flag;
     }
 
     function hidBtn(btnId,otherStatus){

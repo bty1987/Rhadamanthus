@@ -73,23 +73,9 @@ public class SalesServiceImpl implements SalesService {
 		
 		if(userPO == null) return;
 		
-		String duty = userPO.getDuty();
+		Integer id = userPO.getUid();
 		
-		String id = Integer.toString(userPO.getUid());
-		if(!"管理员".equals(duty)){
-			if(filter.size() == 0) return;
-		}
-		if("驻店导购".equals(duty)){
-			filter.add(new Filter(SalesPO.COLUMN_INSTORERID_STR, id, "eq") );
-		}else if("主材导购".equals(duty)){
-			filter.add(new Filter(SalesPO.COLUMN_GUIDERID_STR, id, "eq") );
-		}else if("管理员".equals(duty)){
-			
-		}else {
-			filter.add(new Filter(SalesPO.COLUMN_SALESMANID_STR, id, "eq") );
-		}
-		
-		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter,company);
+		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter,company,id);
 		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
 		
 		for(SalesPO salesPO:salesPOs){
@@ -97,12 +83,43 @@ public class SalesServiceImpl implements SalesService {
 			SalesVO _salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
 			
 			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
-			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getVillage(), _salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
+			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
+			
+			salesVOs.add(_salesVO);
+		}
+		
+		paging.setData(salesVOs); 
+
+	}
+	
+	@Override
+	public void pageSalesForAdvance(Paging paging, List<Filter> filter,String userId,int company) {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		List<SalesPO> salesPOs = salesDao.pageSalesForAdvance(paging, filter, company);
+		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
+		
+		for(SalesPO salesPO:salesPOs){
+			
+			SalesVO _salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
+			
+			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
+			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 			BeanUtil.copyProperties(salesPO.getVillage(), _salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
 			
@@ -120,22 +137,6 @@ public class SalesServiceImpl implements SalesService {
 		
 		if(userPO == null) return;
 		
-		String duty = userPO.getDuty();
-		
-		String id = Integer.toString(userPO.getUid());
-		if(!"管理员".equals(duty)){
-			if(filter.size() == 0) return;
-		}
-		if("驻店导购".equals(duty)){
-			filter.add(new Filter(SalesPO.COLUMN_INSTORERID_STR, id, "eq") );
-		}else if("主材导购".equals(duty)){
-			filter.add(new Filter(SalesPO.COLUMN_GUIDERID_STR, id, "eq") );
-		}else if("管理员".equals(duty)){
-			
-		}else {
-			filter.add(new Filter(SalesPO.COLUMN_SALESMANID_STR, id, "eq") );
-		}
-		
 		List<SalesPO> salesPOs = salesDao.pageSalesForBalance(paging, filter,company);
 		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
 		
@@ -144,12 +145,12 @@ public class SalesServiceImpl implements SalesService {
 			SalesVO _salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
 			
 			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
-			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
-			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 			BeanUtil.copyProperties(salesPO.getVillage(), _salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
 			
@@ -172,12 +173,12 @@ public class SalesServiceImpl implements SalesService {
 		salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
 		
 		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
-		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 		BeanUtil.copyProperties(salesPO.getVillage(), salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 		BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
 		
@@ -196,12 +197,12 @@ public class SalesServiceImpl implements SalesService {
 		salesVO = new SalesVO(new VillageVO(),new CustomerVO(),new UserVO(),new DepartmentVO(),new DepartmentVO(),new UserVO(),new DepartmentVO(),new UserVO());
 		
 		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer"));
-		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 		BeanUtil.copyProperties(salesPO.getVillage(), salesVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 		BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
 		
@@ -239,12 +240,12 @@ public class SalesServiceImpl implements SalesService {
 		
 			
 		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","village","customer","maling","venderMaling"));
-		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","cityProper"));
-		BeanUtil.copyProperties(instorer, salesPO.getInstorer(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(guider, salesPO.getGuider(),Arrays.asList("role","dept","contracts","experiences"));
-		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","cityProper"));
+		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(instorer, salesPO.getInstorer(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(guider, salesPO.getGuider(),Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
 		BeanUtil.copyProperties(villageDao.get(salesVO.getVillage().getVillageId()), salesPO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
 		BeanUtil.copyProperties(customerDao.queryCustomerByCustomerId(salesVO.getCustomer().getCustomerId()), salesPO.getCustomer());
 		salesPO.setMaling(0);

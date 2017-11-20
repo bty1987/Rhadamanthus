@@ -116,26 +116,26 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				servicePaymentCheck.cash.push(v);
-				servicePaymentCheck.cashInfo[v.key] = v.name;
+				servicePaymentCheck.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				servicePaymentCheck.bank.push(v);
-				servicePaymentCheck.bankInfo[v.key] = v.name;
+				servicePaymentCheck.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				servicePaymentCheck.checkBank.push(v);
-				servicePaymentCheck.checkBankInfo[v.key] = v.name;
+				servicePaymentCheck.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				servicePaymentCheck.accounts.push(v);
-				servicePaymentCheck.accountsInfo[v.key] = v.name;
+				servicePaymentCheck.accountsInfo[v.no] = v.name;
 			}
 		});
 
-		$("#cashInfo").bindData(servicePaymentCheck.cash, 'key', 'name');
+		$("#cashInfo").bindData(servicePaymentCheck.cash, 'no', 'name');
 
-		$("#installmentBankName").bindData(servicePaymentCheck.bank, 'key', 'name');
+		$("#installmentBankName").bindData(servicePaymentCheck.bank, 'no', 'name');
 
-		$("#checkvBankName").bindData(servicePaymentCheck.checkBank, 'key', 'name');
+		$("#checkvBankName").bindData(servicePaymentCheck.checkBank, 'no', 'name');
 
-		$("#accountsBankName").bindData(servicePaymentCheck.accounts, 'key', 'name');
+		$("#accountsBankName").bindData(servicePaymentCheck.accounts, 'no', 'name');
 	}, null, false);
 
 	//查询服务款未确认信息

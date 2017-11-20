@@ -54,5 +54,13 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 		return session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR,DutyPO.COLUMN_STATUS_INT)).list();
 	}
-
+	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DutyPO> queryDutyByDtid(Integer dtid) {
+		
+		return session().createCriteria(DutyPO.class).add(Restrictions.eq("departmentType.dtid", dtid)).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR,DutyPO.COLUMN_STATUS_INT)).list();
+	}
+	
 }

@@ -220,29 +220,29 @@ $(function(){
 
 
     /*登录表单校验*/
-    var submitValidate = function(){
-        $("#form1 .alert-error").hide();
-
-        var validator = com.validate("form1",{
-            //一些校验规则
-            messages: {
-                code: {
-                    required: "请输入编号."
-                },
-                name: {
-                    required: "请输入仓库名."
-                }
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    };
+    //var submitValidate = function(){
+    //    $("#form1 .alert-error").hide();
+    //
+    //    var validator = com.validate("form1",{
+    //        //一些校验规则
+    //        messages: {
+    //            code: {
+    //                required: "请输入编号."
+    //            },
+    //            name: {
+    //                required: "请输入仓库名."
+    //            }
+    //        },
+    //        success: function (label) {
+    //            label.closest('.control-group').removeClass('error');
+    //            label.remove();
+    //        },
+    //        errorPlacement: function (error, element) {
+    //            error.addClass('help-small no-left-padding').insertAfter(element);
+    //        }
+    //    });
+    //    return validator;
+    //};
 
 
     /*状态信息验证*/
@@ -284,7 +284,6 @@ $(function(){
         var $layer = $('#layerAdd');
         var code = $layer.find('input[name="code"]').val();
         var name = $layer.find('input[name="name"]').val();
-        console.log("添加成功");
         if(!id){
 
             com.post(api.inventory.addStorehouse, {

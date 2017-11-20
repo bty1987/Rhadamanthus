@@ -39,6 +39,8 @@ public class SystemDefineItemVO implements Serializable{
 
 	private Float unitPrice;
 	
+	private int quotationTypeId;
+	
 	private Short status;
 	
 	private Short discount;
@@ -129,6 +131,14 @@ public class SystemDefineItemVO implements Serializable{
 
 	public void setUnitPrice(Float unitPrice){
 		this.unitPrice = unitPrice;
+	}
+
+	public int getQuotationTypeId() {
+		return quotationTypeId;
+	}
+
+	public void setQuotationTypeId(int quotationTypeId) {
+		this.quotationTypeId = quotationTypeId;
 	}
 
 	public Short getStatus() {

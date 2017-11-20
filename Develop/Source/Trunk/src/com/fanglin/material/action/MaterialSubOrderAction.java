@@ -61,11 +61,19 @@ public class MaterialSubOrderAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
+	
+	@Action(value="pageMaterialSubOrderForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialSubOrderForAdvance() throws FLException{
+		
+		materialSubOrderService.pageMaterialSubOrderForAdvance(getPaging(), getFilters(), materialSubOrder.getOrderId());
+		
+		return SUCCESS;
+	}
 
 	@Action(value="pageMaterialSubOrderByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialSubOrderByOrderId(){
+	public String pageMaterialSubOrderByOrderId() throws FLException{
 		
-		materialSubOrderService.pageMaterialSubOrderByOrderId(getPaging(), getFilters(), materialSubOrder.getOrderId());
+		materialSubOrderService.pageMaterialSubOrderByOrderId(getPaging(), getFilters(), materialSubOrder.getOrderId() ,queryUserId());
 		
 		return SUCCESS;
 	}

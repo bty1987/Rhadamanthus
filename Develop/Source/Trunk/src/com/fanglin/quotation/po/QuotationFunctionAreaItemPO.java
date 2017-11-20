@@ -29,8 +29,6 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public static final short TYPE_QUOTATION_MANAGE_INT = 3;
 	
 	public static final short TYPE_QUOTATION_FIX_INT = 4;
-	
-	public static final short TYPE_QUOTATION_MATERIAL_INT = 5;
 
 	private long qfaiId;
 
@@ -42,9 +40,13 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private float unitPrice;
 	
+	private String formula;
+	
 	private float num;
 	
 	private short type;
+	
+	private short subtype;
 	
 	private short discount;
 	
@@ -110,6 +112,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.unitPrice = unitPrice;
 	}
 
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
+
 	public float getNum(){
 		return num;
 	}
@@ -124,6 +134,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
 	}
 
 	public short getDiscount() {

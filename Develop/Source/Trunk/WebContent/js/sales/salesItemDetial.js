@@ -43,27 +43,6 @@ $(function () {
         refund.popover('destroy');
     });
 
-    /*approver.typeahead({
-        url: api.system.queryApproveUserForNameByType,//获取下拉列表的接口
-        list: [],
-        postData: {
-            "approveUser.type": 10
-        },//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({"user.userNamePinYin": query}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });*/
-
     backBtn.click(function () {
         com.switchPage(api.index.querySalesIndex.url);
     });
@@ -99,7 +78,11 @@ $(function () {
 
                 var radios = _approval.find('input:checked').attr('userid');
 
-                if (checkNum(refund, "退货金额错误", "right") && checkApproval(refundDes, "备注不能为空", "right")) {
+                if (com.validate('layerRefund','right')==false) {
+
+                    if(!checkNum(refund, "退货金额错误", "right")){
+                        return false;
+                    }
 
                     if (radios == null || radios == "") {
                         layer.msg('请选择审批人', {time: 3e3});
@@ -158,7 +141,11 @@ $(function () {
             creatapprovalSalesRefundPostData("2");
             createApprovalPostData();
 
-            if (checkNum(refund, "退货金额错误", "right") && checkApproval(refundDes, "备注不能为空", "right")) {
+            if (com.validate('layerRefund','right')==false) {
+
+                if(!checkNum(refund, "退货金额错误", "right")){
+                    return false;
+                }
 
                 com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
                     function () {
@@ -204,7 +191,12 @@ $(function () {
             creatapprovalSalesRefundPostData("3");
             createApprovalPostData();
 
-            if (checkNum(refund, "退货金额错误", "right") && checkApproval(refundDes, "备注不能为空", "right")) {
+            if (com.validate('layerRefund','right')) {
+
+                if(!checkNum(refund, "退货金额错误", "right")){
+                    return false;
+                }
+
                 com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
                     function () {
                         status = 3;
@@ -298,7 +290,7 @@ $(function () {
                     $('#comment').val(v.comment);
 
                     $('#num').on('change', function () {
-                        if(checkRowValue()){
+                        if(com.validate('layerEdit','right') == false){
                             $('#total').val(parseFloat($('#num').val()) * parseFloat(v.price));
                         }
                     });
@@ -315,7 +307,7 @@ $(function () {
                             "salesItem.comment": comment
                         };
 
-                        if(checkRowValue()){
+                        if(com.validate('layerEdit','right')==false){
                             com.post(api.inventory.updateSalesItem, editArr, function () {
                                 $('#list ul.item-list').remove();
                                 querySalesItemBySid(v.sid);
@@ -364,9 +356,11 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator()
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator()
             }
         });
     }
@@ -388,12 +382,14 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator()
                 closeRefundlayer();
                 $('#approver').empty();
 
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator()
                 closeRefundlayer();
                 $('#approver').empty();
             }
@@ -412,31 +408,8 @@ $(function () {
     function checkNum($input, message, position) {
 
         var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
-        
+
         if ($input.attr('max') < parseFloat($input.val()) || $input.attr('min') > $input.val() || $input.val()< 0||!priceRex.test($input.val())) {
-
-            $input.focus().select();
-
-            $input.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": position,
-                "data-original-title": "",
-                "title": "",
-                "data-content": message
-
-            }).popover('show');
-
-            return false;
-        } else {
-            $input.popover('destroy');
-
-            return true;
-        }
-    }
-
-    function checkApproval($input, message, position) {
-
-        if ($input.val() == "" || $input.val() == null) {
 
             $input.focus().select();
 
@@ -517,7 +490,6 @@ $(function () {
         }
 
         $('#refundTotal').val(total);
-        //refund.attr('max', total);
 
         return flag;
     }
@@ -610,28 +582,5 @@ $(function () {
 
 
     });
-
-    function checkRowValue() {
-
-        var flag = true;
-
-        var num = $('#num');
-        var numRex = /^\d+$/;
-        if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-        return flag;
-    }
 
 });

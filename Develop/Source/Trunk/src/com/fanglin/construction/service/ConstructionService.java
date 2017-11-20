@@ -27,7 +27,7 @@ public interface ConstructionService {
 	
 	public ConstructionVO queryConstructionById(int cid);
 	
-	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO, String userId);
+	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO);
 	
 	public ConstructionVO queryConstructionForWorkerNameByOrderId(ConstructionVO constructionVO);
 	

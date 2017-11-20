@@ -1,6 +1,6 @@
 
 $(function () {
-    
+    com.sealJournal("info",params)
     var auditRecord = {
         arid:0,
         aid:0,
@@ -208,14 +208,8 @@ $(function () {
         };
         //生成人员扣款
         var makeAuditRecord = function (total,arid) {
-
-            if(auditRecord.managerId == null ){
-                com.showAlert(com.error,"设计师无对应部门经理");
-                return;
-            }
-
-            com.post(api.decoration.makeAuditScale,$.extend(makeAuditScalesPostdata(0,arid,auditRecord.designerId,auditRecord.deptId,((utils.accMul(total,perCharge["designer"]))/10),0),
-                makeAuditScalesPostdata(1,arid,auditRecord.managerId,auditRecord.deptId,((utils.accMul(total,perCharge["manager"]))/10),1)),function (res) {
+            com.sealJournal("info",auditRecord)
+            com.post(api.decoration.makeAuditScale,makeAuditScalesPostdata(0,arid,auditRecord.designerId,auditRecord.deptId,((utils.accMul(total,perCharge["designer"]))/10),0),function (res) {
                 com.showAlert(com.info,"生成人员成功");
                 initPage();
                 initPages(arid);

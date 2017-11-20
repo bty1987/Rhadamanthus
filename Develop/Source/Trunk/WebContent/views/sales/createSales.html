@@ -16,7 +16,7 @@
                         <div class="form-group">
                             <label for="goodsName" class="col-sm-3 control-label no-padding-right">商品名</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                                <input type="text" class="col-xs-10 col-sm-10 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                         <div class="form-group">
                             <label for="discount" class="col-sm-3 control-label no-padding-right">折扣</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="discount" readonly>
+                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="discount" readonly>
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                         <div class="form-group">
                             <label for="disPrice" class="col-sm-3 control-label no-padding-right">折扣价</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="disPrice">
+                                <input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="disPrice">
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label for="postDis" class="col-sm-3 control-label no-padding-right">折让</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="postDis">
+                                <input type="text" class="col-xs-10 col-sm-10 v_required v_discount" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="postDis">
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                         <div class="form-group">
                             <label for="selling" class="col-sm-3 control-label no-padding-right">折让价</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="selling">
+                                <input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="selling">
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -103,11 +103,10 @@
                         <div class="form-group">
                             <label for="num" class="col-sm-3 control-label no-padding-right">数量</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-xs-10 col-sm-10" data-toggle="popover" data-trigger="manual" id="num">
+                                <input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="num">
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label for="total" class="col-sm-3 control-label no-padding-right">总价</label>
                             <div class="col-sm-9">
@@ -115,6 +114,7 @@
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <label for="remark" class="col-sm-3 control-label no-padding-right">备注</label>
@@ -162,8 +162,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="orderId" class="col-sm-3 control-label no-padding-right">订单号</label>
                                     <div class="col-sm-9">
-                                        <input id="orderId" type="text" class="order_inputinfo col-xs-10 col-sm-10"
-                                               placeholder="请输入订单号"/>
+                                        <input id="orderId" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required" placeholder="请输入订单号"/>
                                         <i class="icon-asterisk"></i>
                                     </div>
 
@@ -171,7 +170,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="customerName" class="col-sm-3 control-label no-padding-right">客户姓名</label>
                                     <div class="col-sm-9">
-                                        <input id="customerName" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly/>
+                                        <input id="customerName" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required" readonly/>
                                         <i class="icon-asterisk"></i>
                                     </div>
 
@@ -179,7 +178,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="salesmanName" class="col-sm-3 control-label no-padding-right">渠道</label>
                                     <div class="col-sm-9">
-                                        <input id="salesmanName" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <input id="salesmanName" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
                                         <i class="icon-asterisk"></i>
                                     </div>
 
@@ -189,7 +188,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="instorer" class="col-sm-3 control-label no-padding-right">驻店</label>
                                     <div class="col-sm-9">
-                                        <input id="instorer" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <input id="instorer" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
                                         <i class="icon-asterisk"></i>
                                     </div>
 
@@ -197,7 +196,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="guider" class="col-sm-3 control-label no-padding-right">导购</label>
                                     <div class="col-sm-9">
-                                        <input id="guider" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <input id="guider" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
                                         <i class="icon-asterisk"></i>
                                     </div>
 
@@ -205,7 +204,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="brand" class="col-sm-3 control-label no-padding-right">品牌</label>
                                     <div class="col-sm-9">
-                                        <input id="brands" type="text" class="order_inputinfo col-xs-10 col-sm-10"/>
+                                        <input id="brands" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required"/>
                                         <i class="icon-asterisk"></i>
                                     </div>
                                 </div>
@@ -242,7 +241,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="orderAddr" class="col-sm-3 control-label no-padding-right">楼盘地址</label>
                                     <div class="col-sm-9">
-                                        <input id="orderAddr" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly/>
+                                        <input id="orderAddr" type="text" class="order_inputinfo col-xs-10 col-sm-10 v_required" readonly/>
                                     </div>
                                 </div>
                                 <div class="lable_input col-xs-4">

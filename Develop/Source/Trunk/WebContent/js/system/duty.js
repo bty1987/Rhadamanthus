@@ -105,16 +105,22 @@
 	duty.modal = $("#addItemModal");
 	duty.dutyItems.did = $("#did");
 	duty.dutyItems.name = $("#dutyName");
-
+	duty.dutyItems.lead = $("#lead");
+	duty.dutyItems.depttype = $("#depttype");
 	$.extend(com.validator, duty.validator); //将多个对象合并成一个对象
+
+
+	com.post(api.department.queryDepartmentType,{}, function(res){
+		duty.dutyItems.depttype.bindData(res.departmentTypes ,"dtid","name", false);
+	});
 
     //编辑
     function edit(row){
     	//给页面标签赋值
-
 		duty.editFlg=true;
 		duty.repeatFlg=false;
-
+		duty.dutyItems.depttype.val(row.departmentType.dtid);
+		duty.dutyItems.lead.val(row.lead);
 		duty.dutyItems.did.val(row.did);
 		duty.dutyItems.name.val(row.name);
 		duty.modal.modal("show"); //弹出弹层
@@ -123,12 +129,13 @@
     function saveData(){
     	if(com.validate()|| duty.repeatFlg)
     		return;
-    	
     	var url;
     	var options = {
     		"duty.name": duty.dutyItems.name.val(),
+			"duty.lead":duty.dutyItems.lead.val(),
+			"duty.departmentType.dtid":duty.dutyItems.depttype.val(),
+			"duty.type":0,
     	};
-
     	if(duty.editFlg) {
     		url = api.system.updateDuty;
     		options["duty.did"] = duty.dutyItems.did.val();
@@ -143,7 +150,7 @@
     //添加
     $('[name="addDuty"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
 		duty.editFlg = false;
-	
+
 		com.cleanItems(duty.dutyItems);
 		duty.modal.modal("show");
     });

@@ -12,8 +12,22 @@ jQuery(function ($) {
         purchaseItems: {
             pid: $("#pId")
         },
-        record: {}
+        record: {},
+        validator: {
+            num: {
+                type: "v_num",
+                regex: /^[0-9]*[1-9][0-9]*$/,
+                errorMsg: "数量输入内容格式错误"
+            },
+            selling: {
+                type: "v_selling",
+                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
+                errorMsg: "单价输入内容格式错误"
+            }
+        }
     };
+
+    $.extend(com.validator, purchase.validator);
 
     var $btnSave = $('<a></a>').addClass('btn btn-info').attr({
         'name': 'subbtn',
@@ -72,16 +86,14 @@ jQuery(function ($) {
 
     //添加一条空行
     $('#addPurchase').click(function () {
+        if(com.validate('list')){
+            return;
+        }
         var num = $('ul#list .line').length;
         var returnFlag = false;
         var $lines = $('.line', '#list');
         $lines.each(function () {
             var $this = $(this);
-            if (!checkRowValue($this)) {
-                returnFlag = true;
-                return false;
-            }
-            ;
         });
         if (returnFlag) return;
 
@@ -98,7 +110,9 @@ jQuery(function ($) {
 
     //表单提交
     $btnSave.click(function () {
-
+        if(com.validate('list')){
+            return;
+        }
         var options = {};
 
         var $lines = $('li.line', '#list');
@@ -110,14 +124,7 @@ jQuery(function ($) {
 
         var returnFlag = false;
         $lines.each(function () {
-
             var $this = $(this);
-            if (!checkRowValue($this)) {
-
-                returnFlag = true;
-                return false;
-            }
-            ;
         });
 
         if (returnFlag) return;
@@ -208,15 +215,24 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
                 $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                if(v.cellClass == "name"){
+                    $input.addClass('v_required');
+                }
+                if(v.cellClass == "unitPrice"){
+                    $input.addClass('v_selling');
+                }
+                if(v.cellClass == "number"){
+                    $input.addClass('v_num');
+                }
                 $cell.append($input);
             }
 
             if (v.hasSelectColor) {
-                $select = $('<select></select>');
+                $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             if (v.hasSelectFormat) {
-                $select = $('<select></select>');
+                $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             $cell.appendTo($lineInfoWrap);
@@ -278,15 +294,18 @@ jQuery(function ($) {
 
         $btncheck.click(function (e) {
             e.stopPropagation();
+            if(com.validate('list','bottom')){
+                return;
+            }
             var dataDivDom = $(this).parent().parent().prev()[0];
             //校验新增输入
-            if (checkRowValue($line)) {
+            //if (checkRowValue($line)) {
                 //插入新采购项后，改变新增采购项单元格样式
-                var btn = $(this);
-                if ($(dataDivDom.childNodes[1]).find("input").length != 0) {
-                    addPurchaseItem($line, dataDivDom, btn);
-                }
+            var btn = $(this);
+            if ($(dataDivDom.childNodes[1]).find("input").length != 0) {
+                addPurchaseItem($line, dataDivDom, btn);
             }
+
         });
 
 
@@ -340,6 +359,12 @@ jQuery(function ($) {
                     'autocomplete': 'off'
                 }).addClass('editable').val(v.value ? v.value : null);
                 v.readonly && $input.attr('readonly', true);
+                if(v.cellClass == "unitPrice"){
+                    $input.addClass('v_selling');
+                }
+                if(v.cellClass == "number"){
+                    $input.addClass('v_num');
+                }
                 $cell.append($input);
             }
 
@@ -421,10 +446,13 @@ jQuery(function ($) {
 
             $btncheck.click(function (e) {
                 e.stopPropagation();
-                if (checkRowValue($line)) {
-                    var btn = $(this);
-                    updatePurchaseItem($line, btn);
+                if(com.validate('list','bottom')){
+                    return;
                 }
+
+                var btn = $(this);
+                updatePurchaseItem($line, btn);
+
             });
 
             $btndel.click(function (e) {
@@ -513,46 +541,6 @@ jQuery(function ($) {
         } else {
             des.popover('destroy');
         }
-
-        if($line.find('.name input').length!=0){
-            var color = $line.find('.color select');
-            if (!color.val()) {
-                color.focus().select();
-
-                color.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "请选择颜色信息"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                color.popover('destroy');
-            }
-
-
-            var format = $line.find('.format select');
-            if (!format.val()) {
-                format.focus().select();
-
-                format.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "请选择规格信息"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                format.popover('destroy');
-            }
-        }
-
         return flag;
     }
 
@@ -599,7 +587,9 @@ jQuery(function ($) {
             "purchaseItem.num": $line.find('.number input').val(),
             "purchaseItem.unitPrice": $line.find('.unitPrice input').val()
         };
-
+        if(com.validate('list', 'bottom')){
+            return;
+        }
         com.post(api.inventory.updatePurchaseItem, params, function (res) {
             btn.button('reset');
             layer.msg('修改成功', {icon: 1, time: 800});

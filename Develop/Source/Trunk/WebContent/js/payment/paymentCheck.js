@@ -19,16 +19,16 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				paymentCheck.cash.push(v);
-				paymentCheck.cashInfo[v.key] = v.name;
+				paymentCheck.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				paymentCheck.bank.push(v);
-				paymentCheck.bankInfo[v.key] = v.name;
+				paymentCheck.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				paymentCheck.checkBank.push(v);
-				paymentCheck.checkBankInfo[v.key] = v.name;
+				paymentCheck.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				paymentCheck.accounts.push(v);
-				paymentCheck.accountsInfo[v.key] = v.name;
+				paymentCheck.accountsInfo[v.no] = v.name;
 			}
 		});
 	}, null, false);

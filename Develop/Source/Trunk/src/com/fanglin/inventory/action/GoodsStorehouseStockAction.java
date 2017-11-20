@@ -45,9 +45,9 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 	private Float nums;
 	
 	@Action(value = "pageGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageGoodsStorehouseStock(){
+	public String pageGoodsStorehouseStock() throws FLException{
 		
-		goodsStorehouseStockService.pageGoodsStorehouseStock(getPaging(), getFilters());
+		goodsStorehouseStockService.pageGoodsStorehouseStock(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}

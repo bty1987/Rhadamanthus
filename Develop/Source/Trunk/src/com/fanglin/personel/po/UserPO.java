@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.DutyPO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.system.po.RolePO;
 
@@ -68,9 +69,9 @@ public class UserPO implements Serializable {
 	
 	private String status;
 	
-	private String deptType;
+	private int dtid;
 	
-	private String duty;
+	private DutyPO duty;
 	
 	private String gender;
 	
@@ -101,6 +102,11 @@ public class UserPO implements Serializable {
 		this.userId = userId;
 	}
 	
+	public UserPO(DutyPO duty) {
+		super();
+		this.duty = duty;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "uId") 
@@ -204,21 +210,22 @@ public class UserPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name = "deptType")
-    public String getDeptType(){
-        return deptType;
-    }
-    
-    public void setDeptType(String deptType){
-        this.deptType = deptType;
-    }
-    
-    @Column(name = "duty")
-	public String getDuty(){
+	@Column(name = "dtid")
+    public int getDtid() {
+		return dtid;
+	}
+
+	public void setDtid(int dtid) {
+		this.dtid = dtid;
+	}
+
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName = "did", nullable = false)
+	public DutyPO getDuty(){
 		return duty;
 	}
 
-	public void setDuty(String duty){
+	public void setDuty(DutyPO duty){
 		this.duty = duty;
 	}
 

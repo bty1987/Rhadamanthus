@@ -23,6 +23,7 @@ import com.fanglin.approval.service.ApproveUserService;
 import com.fanglin.approval.vo.ApproveUserVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -47,17 +48,17 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 
 		for (ApproveUserPO approveUserPO : approveUserPOs) {
 	
-			ApproveUserVO approveUserVO = new ApproveUserVO(new UserVO());
+			ApproveUserVO approveUserVO = new ApproveUserVO(new UserVO(new DutyVO()));
+			
 			BeanUtil.copyProperties(approveUserPO, approveUserVO,Arrays.asList("user"));
 
-			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept"));
-
+			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept","duty"));
+			BeanUtil.copyProperties(approveUserPO.getUser().getDuty(),approveUserVO.getUser().getDuty(), Arrays.asList("departmentType"));
+			
 			approveUserVOs.add(approveUserVO);
 			}
-
 		paging.setData(approveUserVOs);
 	}
-
 	@Override
 	public List<ApproveUserVO> queryApprovalUserByType(ApproveUserVO userApproveVO, int company) {
 
@@ -70,7 +71,7 @@ public class ApproveUserServiceImpl implements ApproveUserService {
 			ApproveUserVO approveUserVO = new ApproveUserVO();
 			BeanUtil.copyProperties(approveUserPO,approveUserVO,Arrays.asList("user"));
 			approveUserVO.setUser(new UserVO());
-			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(approveUserPO.getUser(),approveUserVO.getUser(), Arrays.asList("role", "dept","duty"));
 			
 			approveUserVOs.add(approveUserVO);
 		}

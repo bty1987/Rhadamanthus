@@ -53,8 +53,13 @@ public class ExtensionServiceImpl implements ExtensionService{
 	
 	@Override
 	public List<ExtensionVO> queryExtensionByOrderId(ExtensionVO extensionVO) {
+		List<ExtensionPO> extensionPOs = null;
+		if(extensionVO.getType()!=null){
+			extensionPOs	 = extensionDao.queryExtensionForTypeByOrderId(extensionVO.getOrderId(),extensionVO.getType());
+		}else{
+			extensionPOs	 = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
+		}
 		
-		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
 		for(ExtensionPO extensionPO: extensionPOs){
 			ExtensionVO _extensionVO = new ExtensionVO();

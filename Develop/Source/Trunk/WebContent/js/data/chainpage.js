@@ -10,6 +10,7 @@
     chainPage.items.names = $("#names");
     chainPage.items.url = $("#url");
     chainPage.items.comment = $("#comment");
+    chainPage.items.companymark = $("#companymark");
 
     var displayFunc = (function () {
 
@@ -88,10 +89,13 @@
     	if(com.validate()){
 			return;
 		}
+
         com.post(api.data.addChainPage, {
             "chainPage.name": chainPage.items.names.val(),
             "chainPage.url": chainPage.items.url.val(),
-            "chainPage.comment": chainPage.items.comment.val()
+            "chainPage.comment": chainPage.items.comment.val(),
+            "chainPage.companymark": chainPage.items.companymark.prop("checked") ? 0 : 1
+
         }, function () {
             $("#resultList").empty();
             search();

@@ -85,7 +85,10 @@ jQuery(function($) {
 		params.orderAddr = v.village.villageName + " " + v.houseNumber;
 		params.designerId = v.designerId;
 		params.designerName = v.designer;
-		
+		params.materialSubOrderUrl = api.material.pageMaterialSubOrderByUserId;
+		if(params['urlLoadParams'].type == 'advance'){
+			params.materialSubOrderUrl = api.material.pageMaterialSubOrderForAdvance;
+		}
 		com.switchPage(api.index.materialSubOrderIndex.url);
 	}
 

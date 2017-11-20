@@ -27,8 +27,12 @@ import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.DutyDao;
+import com.fanglin.data.common.vo.DutyVO;
+import com.fanglin.data.po.DutyPO;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.department.vo.DepartmentTypeVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.AssassinService;
@@ -72,6 +76,9 @@ public class UserServiceImpl implements UserService {
 	private DepartmentDao departmentDao;
 	
 	@Autowired
+	private DutyDao dutyDao;
+	
+	@Autowired
 	private CountingService countingService;
 	
 	@Autowired
@@ -84,7 +91,8 @@ public class UserServiceImpl implements UserService {
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException{
 		
 		if(userVO != null && userVO.getDuty() != null){
-			filters.add(new Filter("duty", userVO.getDuty(), "eq"));
+		
+			filters.add(new Filter("duty.name", userVO.getDuty().getName(), "eq"));
 		}
 
 		List<UserPO> userPOs = userDao.pageUser(paging, filters,company);
@@ -226,7 +234,7 @@ public class UserServiceImpl implements UserService {
 		List<UserVO> userVOs = new ArrayList<UserVO>();
 
 		Paging paging = new Paging(0, 10);
-
+	
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADuty(paging, pinyinName, duty);
 		for(UserPO userPO: userPOs){
 			userVOs.add(convertBean(userPO));
@@ -245,6 +253,7 @@ public class UserServiceImpl implements UserService {
 		for(UserPO userPO: userPOs){
 			userVOs.add(convertBean(userPO));
 		}
+		
 		return userVOs;
 	}
 	
@@ -257,9 +266,9 @@ public class UserServiceImpl implements UserService {
 		if(userPO != null){
 			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getStatus().equals("离职")){
 				
-				userVO = new UserVO(new RoleVO(), new DepartmentVO());
+				userVO = new UserVO(new RoleVO(), new DepartmentVO(),new DutyVO());
 				
-				BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "password", "identity","company"));
+				BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept","duty", "password", "identity","company"));
 
 				BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
 				
@@ -299,11 +308,13 @@ public class UserServiceImpl implements UserService {
 		userPO.setIsLogin((short) 0);
 		userPO.setCompany(company);
 		
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
 		
-		DepartmentPO departmentPO =departmentDao.get(userVO.getDept().getDeptId());
+		DepartmentPO departmentPO =departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId());
 		
 		userPO.setDept(departmentPO);
+		
+		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
 		
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getUserName());
 		
@@ -328,7 +339,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getDeptName(), userPO.getDuty()));
+		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getDeptName(), userPO.getDuty().getName()));
 	
 		userExperienceDao.save(userExperiencePO);
 	}
@@ -353,22 +364,28 @@ public class UserServiceImpl implements UserService {
 		String newdeptId = userVO.getDept().getDeptId();
 		String olddeptId = userPO.getDept().getDeptId();
 		
-		String newduty = userVO.getDuty();
-		String oldduty = userPO.getDuty();
+		String newduty = dutyDao.get(userVO.getDuty().getDid()).getName();
+
+		String oldduty = userPO.getDuty().getName();
 		
 		userVO.setUid(userPO.getUid());
 		
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "uId", "userId", "userName","userNamePinYin","loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty","uId", "userId", "userName","userNamePinYin","loginId", "password", "role", "isLogin", "company", "extranet"));
+		
 		userPO.setDept(new DepartmentPO(userVO.getDept().getDeptId()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "cityProper"));
+		
+		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
+		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("departmentType"));
 		
 		userDao.update(userPO);
 		
 		if(!newstatus.equals(oldstatus) || !newdeptId.equals(olddeptId) || !oldduty.equals(newduty)){
 			
-			DepartmentPO ndept = departmentDao.get(newdeptId);
-			DepartmentPO odept = departmentDao.get(olddeptId);
+			DepartmentPO ndept = departmentDao.queryDepartmentByDeptId(newdeptId);
+		
+			DepartmentPO odept = departmentDao.queryDepartmentByDeptId(olddeptId);
 			
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 			
@@ -380,7 +397,6 @@ public class UserServiceImpl implements UserService {
 			userExperienceDao.save(userExperiencePO);
 		}
 	}
-
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -405,8 +421,8 @@ public class UserServiceImpl implements UserService {
 		
 		userPO.setPhone(userVO.getPhone());
 		userPO.setUserPhoto(userVO.getUserPhoto());
-		
-		userDao.update(userPO);
+	
+	    userDao.update(userPO);
 	}
 	
 	@Override
@@ -476,7 +492,7 @@ public class UserServiceImpl implements UserService {
 		}
 		userPO.setRole(new RolePO(userVO.getRole().getRoleId()));
 		userPO.setExtranet(userVO.getExtranet());
-		
+
 		userDao.update(userPO);
 		
 		if(oldCompany != userPO.getCompany()){
@@ -548,17 +564,31 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private UserVO convertBean(UserPO userPO) throws FLException{
-		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO());
+		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(),new DutyVO());
 		
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "password", "identity","company"));
+		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept","duty", "password", "identity","company"));
+		
+		BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(),Arrays.asList("departmentType"));
 
-		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "cityProper"));
+		if(userPO.getDuty().getDepartmentType() != null){
+			userVO.getDuty().setDepartmentType(new DepartmentTypeVO());
+			BeanUtil.copyProperties(userPO.getDuty().getDepartmentType(), userVO.getDuty().getDepartmentType());
+		}
 		
-		if(userPO.getDept().getFatherDept() != null){
+		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
+		
+		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "cityProper","type"));
+
+		if(userPO.getDept().getFatherDept() != null ){
 			userVO.getDept().setFatherDept(new DepartmentVO());
 			
-			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "cityProper"));
+			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "cityProper","type"));
+		}
+		
+		if(userPO.getDept().getType() != null){
+			userVO.getDept().setType(new DepartmentTypeVO());
+			
+			BeanUtil.copyProperties(userPO.getDept().getType(), userVO.getDept().getType());
 		}
 		
 		return userVO;

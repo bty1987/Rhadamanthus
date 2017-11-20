@@ -8,78 +8,111 @@ var $wrap=null;
 jQuery(function($) {
 
 	function showDepaermentModal() {
-		 $wrap = $('#moduleModal').find('.modal-body').empty();
-		com.post(api.department.queryDepartment, {"dept.type": "all"}, function (res) {
-			var treeData = res.deptList;
-			if (!treeData || !treeData.length) {
-				return;
-			}
-			var menuArr = {
-				level1 : [],
-				level2 : [],
-				level3 : [],
-			};
-			var menuObj = {
-				level1:{},
-				level2 : {},
-				level3 : {},
-			};
-			var $tree = $('<ol class="dd-list"></ol>');
-			$wrap.append($tree);
-			menuArr.level1=[{did: -1, deptName: "全部"}];
-			$.each(treeData,function(i,va){
-				if(va.fatherDept == null){
-					menuArr.level2.push(va)
+
+			$wrap = $('#moduleModal').find('.modal-body').empty();
+
+			com.post(api.department.queryDepartment, {}, function (res) {
+				var tree = res.deptList;
+
+				var childtree=[];
+				if (!tree || !tree.length) {
+					return;
 				}
-			})
-			$.each(menuArr.level2,function(i,va){
-				$.each(treeData,function(index,value){
-					if(value.fatherDept != null) {
+				var menuArr = {
+					level1 : [],
+					level2 : [],
+					level3 : [],
+				};
+				var menuObj = {
+					level1:{},
+					level2 : {},
+					level3 : {},
+				};
+				var $tree = $('<ol class="dd-list"></ol>');
+				$wrap.append($tree);
+				menuArr.level1=[{did: -1, deptName: "全部"}];
+
+				$.each(tree,function(i, va){
+					var aa = true ;
+					if(menuArr.level2.length>0) {
+						$.each(menuArr.level2, function (j, vl) {
+							if(va.fatherDept.deptId == vl.deptId){
+								aa = false;
+								return false;
+							}
+						})
+					}else {
+						aa = false;
+						menuArr.level2.push(va.fatherDept);
+					}
+					if(aa){
+						if(va.fatherDept.did != null&& va.fatherDept.did !=0)
+ 						menuArr.level2.push(va.fatherDept);
+					}
+					if(va.fatherDept.did == null || va.fatherDept.did ==0){
+						childtree.push(va)
+					}
+				})
+
+				$.each(childtree, function (j, vb) {
+					var bb = true ;
+					$.each(menuArr.level2, function (j, vl) {
+						if(vb.deptId == vl.deptId){
+							bb = false;
+							return false;
+						}
+					})
+					if(bb){
+							menuArr.level2.push(vb);
+					}
+
+				})
+
+				$.each(menuArr.level2,function(i,va){
+					$.each(tree,function(index,value){
 						if (value.fatherDept.deptId == va.deptId) {
 							menuArr.level3.push(value)
 						}
-					}
+					})
 				})
-			})
+				if (menuArr.level1.length) {
+					$.each(menuArr.level1, function (i, va) {
+						var $li = $('<li></li>').addClass('dd-item');
+						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
+						var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
+						var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+						var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+						$indexCheck.append($label).appendTo($div);
+						$li.append($div).appendTo($tree);
+						menuObj.level1[va.did] = $li;
+					});
+				}
 
-			if (menuArr.level1.length) {
-				$.each(menuArr.level1, function (i, va) {
-					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
-					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-					$indexCheck.append($label).appendTo($div);
-					$li.append($div).appendTo($tree);
-					menuObj.level1[va.did] = $li;
-				});
-			}
+				if (menuArr.level2.length) {
+					$.each(menuArr.level2, function (i, va) {
+						var $li = $('<li></li>').addClass('dd-item');
+						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
+						var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+						var $label = $('<label></label>').append('<span class="lbl"></span>');
+						$indexCheck.append($label).appendTo($div);
+						menuObj.level2[va.did] = $li;
+						$li.append($div);
 
-			if (menuArr.level2.length) {
-				$.each(menuArr.level2, function (i, va) {
-					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-					var $label = $('<label></label>').append('<span class="lbl"></span>');
-					$indexCheck.append($label).appendTo($div);
-					menuObj.level2[va.did] = $li;
-					$li.append($div);
+						var $parent = menuObj.level1[-1]
+						$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+						if (!$parent.children('button').length) {
+							var $title = $parent.children('div');
+							$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+							$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+						}
 
-					var $parent = menuObj.level1[-1]
-					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-					if (!$parent.children('button').length) {
-						var $title = $parent.children('div');
-						$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
-						$('<button type="button" data-action="expand" class=" plus">Expand</button>').insertBefore($title);
-					}
+						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","one");
+						$li.appendTo($pol);
+					});
+				}
 
-					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
-					$li.appendTo($pol);
-				});
-			}
-
-			if (menuArr.level3.length) {
-				$.each(menuArr.level3, function (i, va) {
+				if (menuArr.level3.length) {
+					$.each(menuArr.level3, function (i, va) {
 						var $li = $('<li></li>').addClass('dd-item');
 						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
 						var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did)
@@ -93,40 +126,42 @@ jQuery(function($) {
 						$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
 						if (!$parent.children('button').length) {
 							var $title = $parent.children('div');
+							// 减号
 							$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
+
 							$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
 						}
 
-						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent);
+						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","two");
 						$li.appendTo($pol);
+					});
+				}
+				$('button[data-action="collapse"]').click(function () {
+					var $this = $(this);
+					$this.siblings('ol').addClass('hide');
+					$this.parent().find('.plus').toggleClass('hide');
+					$this.parent().find('.minus').removeClass('hide');
+					$this.siblings('ol').find('.dd-list').addClass('hide');
+					$this.toggleClass('hide');
 				});
-			}
-			$('button[data-action="collapse"]').click(function () {
-				var $this = $(this);
-				$this.siblings('ol').addClass('hide');
-				$this.parent().find('.plus').toggleClass('hide');
-				$this.parent().find('.minus').removeClass('hide');
-				$this.siblings('ol').find('.dd-list').addClass('hide');
-				$this.toggleClass('hide');
-			});
-			
-			$('button[data-action="expand"]').click(function () {
-				var $this = $(this);
-				$this.siblings('ol').removeClass('hide');
-				$this.parent().find('.minus').toggleClass('hide');
-				$this.parent().find('.plus').removeClass('hide');
-				$this.toggleClass('hide');
-			});
+				$('button[data-action="expand"]').click(function () {
+					var $this = $(this);
+					$this.siblings('ol').removeClass('hide');
+					$this.parent().find('.minus').toggleClass('hide');
+					$this.parent().find('.plus').removeClass('hide');
+					$this.toggleClass('hide');
+				});
 
-		}, null, false);
+			}, null, false);
 
-	}
+		}
 
 	function showDesignDepartment(){
 		$wrap = $('#moduleModal').find('.modal-body').empty();
 
-		com.post(api.department.queryDepartment, {"dept.type": "设计部"}, function (res) {
+		com.post(api.department.queryDepartment, {"dept.type.name": "设计部"}, function (res) {
 			var tree = res.deptList;
+			var childtree=[];
 			if (!tree || !tree.length) {
 				return;
 			}
@@ -158,8 +193,27 @@ jQuery(function($) {
 						menuArr.level2.push(va.fatherDept);
 					}
 					if(aa){
-						menuArr.level2.push(va.fatherDept);
+						if(va.fatherDept.did != null && va.fatherDept.did !=0)
+							menuArr.level2.push(va.fatherDept);
 					}
+
+					if(va.fatherDept.did == null || va.fatherDept.did ==0){
+						childtree.push(va)
+					}
+			})
+
+			$.each(childtree, function (j, vb) {
+				var bb = true ;
+				$.each(menuArr.level2, function (j, vl) {
+					if(vb.deptId == vl.deptId){
+						bb = false;
+						return false;
+					}
+				})
+				if(bb){
+					menuArr.level2.push(vb);
+				}
+
 			})
 
 			$.each(menuArr.level2,function(i,va){
@@ -173,7 +227,8 @@ jQuery(function($) {
 				$.each(menuArr.level1, function (i, va) {
 					var $li = $('<li></li>').addClass('dd-item');
 					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
+					var $input = $('<input>').
+					attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
 					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
 					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
 					$indexCheck.append($label).appendTo($div);
@@ -265,10 +320,6 @@ jQuery(function($) {
 	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 
-	//com.post(api.ds.department, {"timestamp": new Date().getTime()}, function(res){
-	//	userAdvance.deptType = res.deptType;
-	//}, null, false);
-
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.roleList = res.roleList;
 	}, null, false);
@@ -299,7 +350,7 @@ jQuery(function($) {
 						["员工编号:", v.userId, "grey"],
 						["用户名:", v.loginId, "grey"],
 						["部门:", v.dept.deptName, "grey"],
-						["职位:", v.duty, "grey"],
+						["职位:", v.duty.name, "grey"],
 						["角色:", v.role.roleName, "grey"],
 						["联系方式:", v.phone, "grey"]
 					];

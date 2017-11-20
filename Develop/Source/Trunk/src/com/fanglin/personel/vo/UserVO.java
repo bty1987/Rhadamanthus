@@ -11,6 +11,7 @@ package com.fanglin.personel.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.vo.RoleVO;
@@ -43,9 +44,9 @@ public class UserVO implements Serializable {
 	
 	private String status;
 	
-	private String deptType;
+	private Integer dtid;
 	
-	private String duty;
+	private DutyVO duty;
 	
 	private String gender;
 	
@@ -62,6 +63,8 @@ public class UserVO implements Serializable {
 	private Short extranet;
 	
 	private Short freedom;
+	
+	private String dutyName;
 
 	public UserVO(){
 		super();
@@ -72,6 +75,11 @@ public class UserVO implements Serializable {
 		setUserId(userId);
 	}
 
+	public UserVO(DutyVO duty) {
+		super();
+		this.duty = duty;
+	}
+
 	public UserVO(String userId, String userName, String currentName, RoleVO role) {
 		super();
 		this.userId = userId;
@@ -80,10 +88,11 @@ public class UserVO implements Serializable {
 		this.currentName = currentName;
 	}
 
-	public UserVO(RoleVO role, DepartmentVO dept) {
+	public UserVO(RoleVO role, DepartmentVO dept,DutyVO duty) {
 		super();
 		this.role = role;
 		this.dept = dept;
+		this.duty = duty;
 	}
 
 	public Integer getUid() {
@@ -174,19 +183,19 @@ public class UserVO implements Serializable {
 		this.status = status;
 	}
 
-    public String getDeptType(){
-        return deptType;
-    }
+    public Integer getDtid() {
+		return dtid;
+	}
 
-    public void setDeptType(String deptType){
-        this.deptType = deptType;
-    }
+	public void setDtid(Integer dtid) {
+		this.dtid = dtid;
+	}
 
-	public String getDuty(){
+	public DutyVO getDuty(){
 		return duty;
 	}
 
-	public void setDuty(String duty){
+	public void setDuty(DutyVO duty){
 		this.duty = duty;
 	}
 
@@ -262,6 +271,15 @@ public class UserVO implements Serializable {
 		this.companys = companys;
 	}
 	
+	
+	public String getDutyName() {
+		return dutyName;
+	}
+
+	public void setDutyName(String dutyName) {
+		this.dutyName = dutyName;
+	}
+
 	public UserVO setBaseInfo(UserPO userPO){
 			
 			if(userPO != null){
@@ -271,7 +289,7 @@ public class UserVO implements Serializable {
 				setUserName(userPO.getUserName());
 				setUserPhoto(userPO.getUserPhoto());
 				setPhone(userPO.getPhone());
-				setDuty(userPO.getDuty());
+				setDutyName(userPO.getDuty().getName());
 			}
 			
 			return this;

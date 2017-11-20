@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.DutyService;
 import com.fanglin.data.common.vo.DutyVO;
 
@@ -26,7 +25,6 @@ public class DutyAction extends BaseListAction{
 	private DutyVO duty;
 
 	private List<DutyVO> dutys;
-
 	
 	@Action(value = "pageDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDuty(){
@@ -40,34 +38,20 @@ public class DutyAction extends BaseListAction{
 	public String queryDuty(){
 		
 		dutys=dutyService.queryDuty();
+				
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "addDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDuty() throws FLException{
+	@Action(value = "queryDutyByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDutyByDtid(){
 		
-		dutyService.addDuty(duty);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updateDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDuty() throws FLException{
-		
-		dutyService.updateDuty(duty);
+		dutys=dutyService.queryDutyByDtid(duty);
+				
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateDutyForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDutyForStatus() throws FLException{
-		
-		dutyService.updateDutyForStatus(duty);
-		
-		return SUCCESS;
-	}
-
 	public DutyVO getDuty() {
 		return duty;
 	}

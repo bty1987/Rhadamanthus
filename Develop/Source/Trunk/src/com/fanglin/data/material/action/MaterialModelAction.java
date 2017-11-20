@@ -44,7 +44,15 @@ public class MaterialModelAction extends BaseExportAction{
 	@Action(value="pageMaterialModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMaterialModel() throws FLException{
 		
-		materialModelService.pageMaterialModel(getPaging(), getFilters(), queryUserId(),queryCompany());
+		materialModelService.pageMaterialModel(getPaging(), getFilters(),queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageMaterialModelForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialModelForAdvance() throws FLException{
+		
+		materialModelService.pageMaterialModelForAdvance(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}

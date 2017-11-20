@@ -50,31 +50,52 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	@Autowired
 	private MaterialBrandRightDao materialBrandRightDao;
 	
-	@Override
 	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId,int company) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		List<MaterialModelPO> materialModelPOs = null;
+		List<MaterialModelPO> materialModelPOs = new ArrayList<MaterialModelPO>();
 		
-		if("驻店导购".equals(userPO.getDuty())){
-			
-			MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(userPO.getUserId());
-			
-			if(materialBrandRightPO == null){
-				throw new FLException(180020, "无主材型号操作权限");
-			}
-			
-			if(!"".equals(materialBrandRightPO.getBrandId())){
-				List<Long> brandIDs = new ArrayList<Long>();
-				String[] brandIds = materialBrandRightPO.getBrandId().split("#");
-				for(String id : brandIds){
-					brandIDs.add(Long.parseLong(id));
-				}
-				materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, brandIDs);
-			}
-		}else{
-			materialModelPOs = materialModelDao.pageMaterialModel(paging, filters,company);
+		MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(userPO.getUserId());
+		
+		if(materialBrandRightPO == null){
+			throw new FLException(180020, "无主材型号操作权限");
 		}
+		
+		if(!"".equals(materialBrandRightPO.getBrandId())){
+			List<Long> brandIDs = new ArrayList<Long>();
+			String[] brandIds = materialBrandRightPO.getBrandId().split("#");
+			for(String id : brandIds){
+				brandIDs.add(Long.parseLong(id));
+			}
+			materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, brandIDs);
+		}
+		
+		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
+		
+		for(MaterialModelPO materialModelPO: materialModelPOs){
+			MaterialModelVO materialModelVO = new MaterialModelVO();
+			
+			BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
+			
+			BrandPO brandPO = materialModelPO.getBrand();
+			CategoryPO categoryPO = brandPO.getCategory();
+			
+			materialModelVO.setMaterialBrandId(brandPO.getBid());
+			materialModelVO.setMaterialBrandName(brandPO.getBrandName());
+			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
+			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
+			materialModelVO.setMaterialTypeId(categoryPO.getCid());
+			materialModelVO.setMaterialTypeName(categoryPO.getCategoryName());
+			
+			materialModelVOs.add(materialModelVO);
+		}
+		
+		paging.setData(materialModelVOs);
+	}
+	
+	public void pageMaterialModelForAdvance(Paging paging, List<Filter> filters, int company) throws FLException{
+		
+		List<MaterialModelPO> materialModelPOs = materialModelDao.pageMaterialModel(paging, filters,company);
 		
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
 		
