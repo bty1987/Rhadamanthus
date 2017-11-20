@@ -24,6 +24,8 @@ public class PhoneCallAction extends BaseListAction {
 	
 	private PhoneCallVO phoneCall;
 	
+	private String token;
+	
 	@Action(value="pagePhoneCall", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pagePhoneCall() throws FLException{
 		
@@ -33,31 +35,51 @@ public class PhoneCallAction extends BaseListAction {
 	}
 	
 	@Action(value="phoneCall", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String phoneCall() {
-	
+	public String phoneCall() throws FLException {
+		
 		try {
 			phoneCallService.phoneCall(phoneCall);
-			}catch (Exception e) {
-			  setErrorCode(160023);
-			  setErrorMsg("电话拨通中");
-			}
+		}catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}catch(Exception e){
+		    setErrorCode(160023);
+		    setErrorMsg("电话拨通中");
+		}
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="updatePhoneCallForInfo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updatePhoneCallForInfo() throws FLException{
+	public String updatePhoneCallForInfo() {
 	
-		phoneCallService.updatePhoneCallForInfo(phoneCall);
-		
+		try {
+			phoneCallService.updatePhoneCallForInfo(phoneCall);
+		}catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}catch(Exception e){
+		    setErrorCode(160025);
+		    setErrorMsg("电话回拨失败");
+		}
 		return SUCCESS;
 	}
 	
 	@Action(value="updatePhoneCallForRecord", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updatePhoneCallForRecord() throws FLException{
+	public String updatePhoneCallForRecord() {
 		
-		phoneCallService.updatePhoneCallForRecord(phoneCall);
-		
+		try {
+			
+			phoneCall.setToken(token);
+			
+			phoneCallService.updatePhoneCallForRecord(phoneCall);
+		}catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}catch (Exception e) {
+			setErrorCode(160025);
+			setErrorMsg("电话回拨失败");
+		}
 		return SUCCESS;
 	}
 	
@@ -67,6 +89,13 @@ public class PhoneCallAction extends BaseListAction {
 	public void setPhoneCall(PhoneCallVO phoneCall) {
 		this.phoneCall = phoneCall;
 	}
-	
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 	
 }

@@ -46,7 +46,7 @@ public class ProductionPictureServiceImpl implements ProductionPictureService {
 			_productionPictureVO = new ProductionPictureVO(new UserVO()); 
 			
 			BeanUtil.copyProperties(productionPicturePO, _productionPictureVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(productionPicturePO.getCreater(), _productionPictureVO.getCreater(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(productionPicturePO.getCreater(), _productionPictureVO.getCreater(),Arrays.asList("role","dept","duty"));
 			
 			productionPictureVOs.add(_productionPictureVO);
 			
@@ -65,7 +65,7 @@ public class ProductionPictureServiceImpl implements ProductionPictureService {
 		
 	
 		BeanUtil.copyProperties(productionPictureVO, productionPicturePO, Arrays.asList("creater"));
-		BeanUtil.copyProperties(creater, productionPicturePO.getCreater(), Arrays.asList("role","dept","contracts","experiences"));
+		BeanUtil.copyProperties(creater, productionPicturePO.getCreater(), Arrays.asList("role","dept","duty"));
 		
 		
 		productionPicturePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

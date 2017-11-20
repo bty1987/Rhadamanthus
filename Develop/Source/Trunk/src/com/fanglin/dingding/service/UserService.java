@@ -73,6 +73,7 @@ public class UserService {
 		user.setUserid(usera.getUserid());
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
+		user.setJobnumber(usera.getUserid());
 		
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 						
@@ -94,13 +95,14 @@ public class UserService {
 		user.setName(usera.getName());
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
+		user.setJobnumber(usera.getUserid());
 		
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 			
 		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(),accessToken,  user);
 			
 		JSONObject json = HttpHelper.httpPost(url, user);
-			
+	
 		int errcode=json.getInteger("errcode");
 			
 		return errcode; 

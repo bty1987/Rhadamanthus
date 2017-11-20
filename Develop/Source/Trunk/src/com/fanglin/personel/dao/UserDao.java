@@ -36,8 +36,6 @@ public interface UserDao extends Dao<UserPO> {
 	
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty);
 
-	public List<UserPO> pageUserForWorking(Paging paging, List<Filter> filters,Integer company);
-
 	public List<UserPO> queryUserByUserName(String userName);
    	
 	public List<UserPO> queryUserByUserIds(List<String> userIds);

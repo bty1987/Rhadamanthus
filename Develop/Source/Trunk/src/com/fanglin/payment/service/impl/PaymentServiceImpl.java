@@ -84,11 +84,11 @@ public class PaymentServiceImpl implements PaymentService {
 			paymentVO.setCustomerName(paymentVO.getCustomer().getCustomerName());
 
 			paymentVO.setCollectUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), paymentVO.getCollectUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), paymentVO.getCollectUser(), Arrays.asList("role", "dept", "duty"));
 			paymentVO.setCollectUserName(paymentVO.getCollectUser().getCurrentName());
 
 			paymentVO.setConfirmUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept", "duty"));
 
 			paymentVOs.add(paymentVO);
 		}
@@ -117,11 +117,11 @@ public class PaymentServiceImpl implements PaymentService {
 			_paymentVO.setCustomerName(_paymentVO.getCustomer().getCustomerName());
 
 			_paymentVO.setCollectUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), _paymentVO.getCollectUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), _paymentVO.getCollectUser(), Arrays.asList("role", "dept", "duty"));
 			_paymentVO.setCollectUserName(_paymentVO.getCollectUser().getCurrentName());
 
 			_paymentVO.setConfirmUser(new UserVO());
-			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), _paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), _paymentVO.getConfirmUser(), Arrays.asList("role", "dept", "duty"));
 
 			paymentVOs.add(_paymentVO);
 		}
@@ -157,11 +157,11 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setCustomerName(paymentVO.getCustomer().getCustomerName());
 
 		paymentVO.setCollectUser(new UserVO());
-		BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), paymentVO.getCollectUser(), Arrays.asList("role", "dept"));
+		BeanUtil.copyProperties(advanceReceiptPO.getCollectUser(), paymentVO.getCollectUser(), Arrays.asList("role", "dept", "duty"));
 		paymentVO.setCollectUserName(paymentVO.getCollectUser().getCurrentName());
 
 		paymentVO.setConfirmUser(new UserVO());
-		BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept"));
+		BeanUtil.copyProperties(advanceReceiptPO.getConfirmUser(), paymentVO.getConfirmUser(), Arrays.asList("role", "dept", "duty"));
 
 		return paymentVO;
 	}
@@ -246,7 +246,7 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setPaymentId(paymentPO.getPaymentId());
 
 		if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType)){
-			List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
+			List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
 
 			if(status.contains(decorationOrderPO.getStatus())){
 				decorationOrderPO.setStatus(DecorationOrderPO.STATUS_DEPOSIT_STR);

@@ -51,26 +51,25 @@ $(function () {
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
                 salesPaymentForStatus.cash.push(v);
-                salesPaymentForStatus.cashInfo[v.key] = v.name;
+                salesPaymentForStatus.cashInfo[v.no] = v.name;
             } else if (v.type == 2) {
                 salesPaymentForStatus.bank.push(v);
-                salesPaymentForStatus.bankInfo[v.key] = v.name;
+                salesPaymentForStatus.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
                 salesPaymentForStatus.checkBank.push(v);
-                salesPaymentForStatus.checkBankInfo[v.key] = v.name;
+                salesPaymentForStatus.checkBankInfo[v.no] = v.name;
             } else if (v.type == 4) {
                 salesPaymentForStatus.accounts.push(v);
-                salesPaymentForStatus.accountsInfo[v.key] = v.name;
+                salesPaymentForStatus.accountsInfo[v.no] = v.name;
             } else if (v.type == 5) {
                 salesPaymentForStatus.couponType.push(v);
-                salesPaymentForStatus.couponTypeData[v.key] = [v.key, v.name];
+                salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
             }
         });
 
         $.extend(com.validator, salesPaymentForStatus.validator);
 
         com.post(api.ds.payment, {}, function (res) {
-            $("#advanceType").bindData(res.advanceType, 'key', 'value');
 
             for (var i = 0; i < res.materialPaymentType.length; i++) {
                 var paymentType = res.materialPaymentType[i];

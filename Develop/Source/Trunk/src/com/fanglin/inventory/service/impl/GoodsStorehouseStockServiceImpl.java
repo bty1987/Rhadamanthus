@@ -25,6 +25,7 @@ import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.GoodsPackageDao;
 import com.fanglin.inventory.dao.GoodsStorehouseStockDao;
 import com.fanglin.inventory.dao.StorehouseDao;
+import com.fanglin.inventory.dao.StorehouseUserDao;
 import com.fanglin.inventory.po.CheckListPO;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
@@ -33,6 +34,7 @@ import com.fanglin.inventory.po.GoodsPackagePO;
 import com.fanglin.inventory.po.GoodsStorehouseStockPO;
 import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.StorehousePO;
+import com.fanglin.inventory.po.StorehouseUserPO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
 import com.fanglin.inventory.vo.CheckListVO;
@@ -65,6 +67,9 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	private StorehouseDao storehouseDao;
 	
 	@Autowired
+	private StorehouseUserDao storehouseUserDao;
+	
+	@Autowired
 	private CheckListDao checkListDao;
 	
 	@Autowired
@@ -74,26 +79,40 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	private ManifestService manifestService;
 	
 	@Override
-	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters) {
+	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters, String userId) {
 		
-		List<GoodsStorehouseStockPO> goodsStorehouseStockPOs = goodsStorehouseStockDao.pageGoodsStorehouseStock(paging, filters);
+		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(userId);
+		List<Long> shids = new ArrayList<Long>();
 		List<GoodsStorehouseStockVO> goodsStorehouseStockVOs = new ArrayList<GoodsStorehouseStockVO>();
 		
-		GoodsStorehouseStockVO goodsStorehouseStockVO;
+		if(storehouseUserPOs.size() != 0){
+			
+			for (StorehouseUserPO storehouseUserPO : storehouseUserPOs) {
+				
+				long shid = storehouseUserPO.getStorehouse().getShId();
+				
+				shids.add(shid);
+			}
+			
+			List<GoodsStorehouseStockPO> goodsStorehouseStockPOs = goodsStorehouseStockDao.pageGoodsStorehouseStock(paging, filters, shids);
 		
-		for(GoodsStorehouseStockPO goodsStorehouseStockPO: goodsStorehouseStockPOs){
+			GoodsStorehouseStockVO goodsStorehouseStockVO;
+		
+			for(GoodsStorehouseStockPO goodsStorehouseStockPO: goodsStorehouseStockPOs){
+				
+				goodsStorehouseStockVO = new GoodsStorehouseStockVO(new GoodsVO(),new ColorVO(),new FormatVO(), new StorehouseVO());
+				
+				goodsStorehouseStockVO.setGshsId(goodsStorehouseStockVO.getGshsId());
+				goodsStorehouseStockVO.setNum(goodsStorehouseStockPO.getNum());
+				
+				BeanUtil.copyProperties(goodsStorehouseStockPO.getGoods(), goodsStorehouseStockVO.getGoods(),Arrays.asList("assisType"));
+				BeanUtil.copyProperties(goodsStorehouseStockPO.getColor(), goodsStorehouseStockVO.getColor());
+				BeanUtil.copyProperties(goodsStorehouseStockPO.getFormat(), goodsStorehouseStockVO.getFormat());
+				BeanUtil.copyProperties(goodsStorehouseStockPO.getStorehouse(), goodsStorehouseStockVO.getStorehouse());
+				
+				goodsStorehouseStockVOs.add(goodsStorehouseStockVO);
+			}
 			
-			goodsStorehouseStockVO = new GoodsStorehouseStockVO(new GoodsVO(),new ColorVO(),new FormatVO(), new StorehouseVO());
-			
-			goodsStorehouseStockVO.setGshsId(goodsStorehouseStockVO.getGshsId());
-			goodsStorehouseStockVO.setNum(goodsStorehouseStockPO.getNum());
-			
-			BeanUtil.copyProperties(goodsStorehouseStockPO.getGoods(), goodsStorehouseStockVO.getGoods(),Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsStorehouseStockPO.getColor(), goodsStorehouseStockVO.getColor());
-			BeanUtil.copyProperties(goodsStorehouseStockPO.getFormat(), goodsStorehouseStockVO.getFormat());
-			BeanUtil.copyProperties(goodsStorehouseStockPO.getStorehouse(), goodsStorehouseStockVO.getStorehouse());
-			
-			goodsStorehouseStockVOs.add(goodsStorehouseStockVO);
 		}
 
 		paging.setData(goodsStorehouseStockVOs);

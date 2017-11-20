@@ -2,7 +2,7 @@ jQuery(function($) {
     Api().init('../../js/api/');
 
     params.server = window.server;
-    params.authentication = window.authentication;
+    params.authentication = parent.params.authentication;
 
     var args = window.location.search.substr(1);//mid=21
 

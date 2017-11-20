@@ -91,7 +91,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decorationOrder","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
 			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village"));
+			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
 			CustomerVO customer = new CustomerVO();
 			servicePaymentVO.getDecorationOrder().setCustomer(customer);
 			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), servicePaymentVO.getDecorationOrder().getCustomer());
@@ -130,7 +130,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decorationOrder","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
 			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village"));
+			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
 			CustomerVO customer = new CustomerVO();
 			servicePaymentVO.getDecorationOrder().setCustomer(customer);
 			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), servicePaymentVO.getDecorationOrder().getCustomer());
@@ -173,7 +173,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO(new UserVO(),new UserVO(),new UserVO(),new DecorationOrderVO(),new ServiceReceiptVO());
 			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), _servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village"));
+			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), _servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
 			CustomerVO customer = new CustomerVO();
 			_servicePaymentVO.getDecorationOrder().setCustomer(customer);
 			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), _servicePaymentVO.getDecorationOrder().getCustomer());
@@ -205,7 +205,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
+		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
@@ -297,7 +297,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
+		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
@@ -343,7 +343,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
+		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());

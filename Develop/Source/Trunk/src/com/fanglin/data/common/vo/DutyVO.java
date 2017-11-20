@@ -2,6 +2,8 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.department.vo.DepartmentTypeVO;
+
 public class DutyVO implements Serializable {
 
 	private static final long serialVersionUID = 2137362794687628843L;
@@ -11,6 +13,21 @@ public class DutyVO implements Serializable {
 	private String name;
 
 	private Short status;
+	
+	private DepartmentTypeVO departmentType;
+							 
+	private Integer type;
+	
+	private Short lead;
+	
+	public DutyVO() {
+		super();
+		
+	}
+	public DutyVO(DepartmentTypeVO departmentType) {
+		super();
+		this.departmentType = departmentType;
+	}
 
 	public Long getDid() {
 		return did;
@@ -35,4 +52,29 @@ public class DutyVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Short getLead() {
+		return lead;
+	}
+
+	public void setLead(Short lead) {
+		this.lead = lead;
+	}
+
+	public DepartmentTypeVO getDepartmentType() {
+		return departmentType;
+	}
+
+	public void setDepartmentType(DepartmentTypeVO departmentType) {
+		this.departmentType = departmentType;
+	}
+
 }

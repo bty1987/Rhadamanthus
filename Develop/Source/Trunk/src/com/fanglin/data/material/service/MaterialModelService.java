@@ -22,6 +22,8 @@ public interface MaterialModelService {
 	
 	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId,int company) throws FLException;
 	
+	public void pageMaterialModelForAdvance(Paging paging, List<Filter> filters,int company) throws FLException;
+	
 	public List<MaterialModelVO> queryMaterialModel();
 	
 	public List<MaterialModelVO> queryMaterialModel(List<Filter> filters);

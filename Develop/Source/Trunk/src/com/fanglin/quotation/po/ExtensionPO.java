@@ -18,6 +18,8 @@ public class ExtensionPO implements Serializable{
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
+	public static final String COLUMN_TYPE_STR = "type";
+	
 	public static final short STATUS_INIT_SHORT = 0;
 	
 	public static final short STATUS_SUBMIT_INT = 1;

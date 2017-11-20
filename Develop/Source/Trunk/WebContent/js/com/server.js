@@ -27,8 +27,8 @@ $(function(){
         config.media = 'http://192.168.5.21/Demeter/';
         config.dmedia = 'http://static.dingtalk.com/media/';
         config.communion = 'http://192.168.5.23/';
-		config.inventory='http://192.168.5.24/';
-		config.production='http://192.168.5.25/';
+		config.inventory='http://192.168.5.21/';
+		config.production='http://192.168.5.21/';
     }
 	
 });

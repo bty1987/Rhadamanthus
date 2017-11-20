@@ -3,14 +3,12 @@ jQuery(function () {
    // var returnBtn = $('#returnBtn');
     var puotation={
         typeahead: {
-            quoteItems: "quoteItems",
-            quoteItem :"quoteItem",
+            quoteItems : "quoteItems",
+            quoteItem : "quoteItem",
         },
         qiids:null,
         quoteTypes:null,
         flag:true,
-        puotation:{},
-        puotationItem:{},
     };
     //报价项区 自动赋值
     $('#left').find('#name').typeahead({
@@ -35,7 +33,6 @@ jQuery(function () {
             //k---qiid  v---name
             $('#left').find('input').val("");
             $('#left').find('select').empty();
-        	var priceOption = {};
             var $content = $('#left');
             puotation.qiids = k;
             //查询报价项信息
@@ -60,10 +57,11 @@ jQuery(function () {
 
     //点击添加按钮
     $("#add").click(function () {
-        if(!calctotal()){return false}
-        var $line=$('#left');
-        var _name=$('#left').find('#name').attr('data-name')
-        if(checkNum($line)==true && puotation.flag==true){
+        com.clearValidator();
+        if(!calctotal()){return false};
+        var _name=$('#left').find('#name').attr('data-name');
+
+        if(puotation.flag==true){
             var $liList = $('<li></li>').addClass('list-group-item');
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-danger _delete').html('删除'));
             var $h4 = $('<h4></h4>').html(_name).attr('data-qutoName',_name);
@@ -105,6 +103,7 @@ jQuery(function () {
             com.showAlert(com.warning,"商品信息不完善，请先完善商品信息");
         }
         $('#totals').val(cycTotals());
+
     });
 
     $('#refresh').click(function () {
@@ -126,27 +125,19 @@ jQuery(function () {
         return $span.append($b);
     }
 
-
-    $('#unitprice,#num').on("change",function () {
+    $('#unitprice,#num,#height,#width,#thick').on("change",function () {
         calctotal();
     });
 
-    $('#thick').on("blur",function () {
-        var $width = $('#left').find('#width').val();
-        var $height = $('#left').find('#height').val();
-        $('#left').find('#area').val( utils.accMul(parseFloat($width),parseFloat($height)))
-    });
-
-
     //计算报价项总价
     function calctotal(){
-
+        com.clearValidator();
         var $width = $('#left').find('#width').val();
         var $height = $('#left').find('#height').val();
         var $measurementunit = $('#left').find('#measurementunit').val();
         var $area = 1;
 
-        if(!checkValue()){return false}
+        if(com.validate("left","bottom")){return false}
 
         //根据单位变更计算方式
         if($measurementunit == "平"){
@@ -157,150 +148,8 @@ jQuery(function () {
             //$('#left').find('#area').val($area)
         }
 
-        if(checkNaN()==true) {
-            $('#total').val(utils.accMul(utils.accMul(parseFloat($('#unitprice').val()), parseFloat($('#num').val())),$area).toFixed(2));
-        }
+        $('#total').val(utils.accMul(utils.accMul(parseFloat($('#unitprice').val()), parseFloat($('#num').val())),$area).toFixed(2));
 
-        return true;
-    }
-
-    function checkValue(){
-        var flag = true;
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        var $height = $('#left').find('#height');
-        if(!numRex.test($height.val()) || parseFloat($height.val()) < 0){
-            $height.focus().select();
-            $height.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "长度输入错误"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $height.popover('destroy');
-        }
-
-        var $width = $('#left').find('#width');
-        if(!numRex.test($width.val()) || parseFloat($width.val()) < 0){
-            $width.focus().select();
-            $width.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "宽度输入错误"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $width.popover('destroy');
-        }
-
-        var $thick = $('#left').find('#thick');
-        if(!numRex.test($thick.val()) || parseFloat($thick.val()) < 0){
-            $thick.focus().select();
-            $thick.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "厚度输入错误"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $thick.popover('destroy');
-        }
-        return flag
-    }
-    //表单校验
-    function checkNum($line) {
-        var flag = true;
-        var $goodsName = $line.find('#name');
-        if($goodsName.val()==""){
-            $goodsName.focus().select();
-            $goodsName.addClass('popover-notitle').attr({
-                    "data-rel" : "popover",
-                    "data-placement" : "auto",
-                    "data-original-title" : "",
-                    "title" : "",
-                    "data-content" : "商品名称不能为空"
-                }).popover('show');
-            flag = false;
-            }else{
-                $goodsName.popover('destroy');
-            }
-
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-        var $unitprice = $line.find('#unitprice');
-        if(!numRex.test($unitprice.val()) || parseFloat($unitprice.val())<0){
-            $unitprice.focus().select();
-            $unitprice.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "auto",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "售价输入错误"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $unitprice.popover('destroy');
-        }
-        //数量校验
-        var $num = $line.find('#num');
-        if(!numRex.test($num.val()) || parseFloat($num.val())<0){
-            $num.focus().select();
-            $num.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "auto",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "数量输入错误"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $num.popover('destroy');
-        }
-        //备注校验
-        var $remark = $line.find('#remark');
-        if($remark.val().length>128){
-            $remark.focus().select();
-            $remark.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "auto",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "备注长度应在128个字符以内"
-            }).popover('show');
-            flag = false;
-        }else{
-            $remark.popover('destroy');
-        }
-
-        return flag;
-    }
-
-    function checkNaN() {
-
-        var $num = $('#num');
-        var $unitprice = $('#unitprice');
-        var $total = $('#total');
-        if($num.val()=="" || $unitprice.val()==""||$total.val()==""){
-            return false;
-        }
-        if(isNaN($num.val())){
-            com.showAlert(com.warning, "数量需要数字类型信息!");
-            return false;
-        }
-        if(isNaN($unitprice.val())){
-            com.showAlert(com.warning, "售价需要数字类型信息!");
-            return false;
-        }
-        if(isNaN($total.val())){
-            com.showAlert(com.warning, "总价需要数字类型信息!");
-            return false;
-        }
         return true;
     }
 
@@ -328,70 +177,50 @@ jQuery(function () {
     $("#totals").val("0");
     //提交
     $('#submit').click(function () {
-        var qid=null;
+        var _options = {};
         if(submitCheck()==true){
-            puotation.puotation["puotation.name"] = $('#brands').val();
-            puotation.puotation["puotation.comment"] = $('#comment').val();
-            puotation.puotation["puotation.pid"] = params["pid"];
-
-            com.post(api.production.addPuotation,puotation.puotation,function (data) {
-                com.showAlert(null,"报价添加成功");
-                qid = data.puotation.qid;
-                //清空类为order_inputinfo的input
-                $('.order_inputinfo').val(null);
-            },function (e) {
-                com.showAlert(com.error,"报价添加失败");
-            },false);
+            _options["puotation.name"] = $('#brands').val();
+            _options["puotation.comment"] = $('#comment').val();
+            _options["puotation.pid"] = params["pid"];
+            _options["puotation.total"] = $('#totals').val();
 
             $lis = $('.list-group-item');
             $.each($lis,function (i,v) {
                 var $v = $(v);
-                puotation.puotationItem["puotationItem.qid"] = qid;
-                puotation.puotationItem["puotationItem.name"] = $v.find('h4').attr('data-qutoName');
-                puotation.puotationItem["puotationItem.quoteType"] = $v.find('.s_brand').find('.b_brand').attr('adddata');
-                puotation.puotationItem["puotationItem.measurementUnit"] = $v.find('.s_unit').find('.b_unit').text();
-                puotation.puotationItem["puotationItem.unitPrice"] = parseFloat($v.find('.s_unitprice').find('.b_unitprice').text());
-                puotation.puotationItem["puotationItem.format"] = $v.find('.s_format').find('.b_format').text();
-                puotation.puotationItem["puotationItem.height"] = parseFloat($v.find('.s_height').find('.b_height').text());
-                puotation.puotationItem["puotationItem.width"] = parseFloat($v.find('.s_width').find('.b_width').text());
-                puotation.puotationItem["puotationItem.thick"] = parseFloat($v.find('.s_thick').find('.b_thick').text());
-                puotation.puotationItem["puotationItem.specil"] = $v.find('.s_specil').find('.b_specil').text();
-                puotation.puotationItem["puotationItem.num"] = parseFloat($v.find('.s_number').find('.b_number').text());
-                puotation.puotationItem["puotationItem.total"] = parseFloat($v.find('.s_total').find('.b_total').text());
-                puotation.puotationItem["puotationItem.comment"] = $v.find('.s_remark').find('.b_remark').text();
-                com.post(api.production.addPuotationItem,puotation.puotationItem,function (data) {
-                    if($lis.length-1 == i){
-                        com.showAlert(null,"报价项添加成功");
-                    }
-                    //清空销售项
-                    $('.list-group-item').remove();
-
-                },function (e) {
-                    com.showAlert(com.showAlert(com.error,"第"+(i+1)+"报价项添加失败"));
-                });
+                _options["puotationItems["+i+"].name"] = $v.find('h4').attr('data-qutoName');
+                _options["puotationItems["+i+"].quoteType"] = $v.find('.s_brand').find('.b_brand').attr('adddata');
+                _options["puotationItems["+i+"].measurementUnit"] = $v.find('.s_unit').find('.b_unit').text();
+                _options["puotationItems["+i+"].unitPrice"] = parseFloat($v.find('.s_unitprice').find('.b_unitprice').text());
+                _options["puotationItems["+i+"].format"] = $v.find('.s_format').find('.b_format').text();
+                _options["puotationItems["+i+"].height"] = parseFloat($v.find('.s_height').find('.b_height').text());
+                _options["puotationItems["+i+"].width"] = parseFloat($v.find('.s_width').find('.b_width').text());
+                _options["puotationItems["+i+"].thick"] = parseFloat($v.find('.s_thick').find('.b_thick').text());
+                _options["puotationItems["+i+"].specil"] = $v.find('.s_specil').find('.b_specil').text();
+                _options["puotationItems["+i+"].num"] = parseFloat($v.find('.s_number').find('.b_number').text());
+                _options["puotationItems["+i+"].total"] = parseFloat($v.find('.s_total').find('.b_total').text());
+                _options["puotationItems["+i+"].comment"] = $v.find('.s_remark').find('.b_remark').text();
             });
+
+            com.post(api.production.addPuotation ,_options ,function (data) {
+                com.showAlert(null,"报价添加成功");
+                //清空类为order_inputinfo的input
+                $('.order_inputinfo').val(null);
+                //清空销售项
+                $('.list-group-item').remove();
+            },function (e) {
+                com.showAlert(com.error,"报价添加失败");
+            },false);
 
         }
     });
-//检查主材品牌
+    //检查主材品牌
     function submitCheck() {
         var flag = true;
+        com.clearValidator();
         var $_brand = $('#brands');
-
         var _brand =$.trim($_brand.val());
-        if(_brand == ""){
-            flag = false;
-            $_brand.focus().select();
-            $_brand.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "bottom",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "名称不能为空"
-            }).popover('show');
-        }else{
-            $_brand.popover('destroy');
-            //判断品牌差异
+
+        if(!com.validate("right",null)){
             var $_lis = $('.list-group-item');
             $.each($_lis,function (i,v) {
                 var $v = $(v);
@@ -402,65 +231,11 @@ jQuery(function () {
                     flag = false;
                 }
             });
-        }
-
-//判断楼盘地址 是否为空
-        var $_orderAddr = $('#orderAddr');
-        if($_orderAddr.val()==""){
-            flag = false;
-            $_orderAddr.focus().select();
-            $_orderAddr.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "bottom",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "楼盘地址不能为空"
-            }).popover('show');
-
         }else{
-            $_orderAddr.popover('destroy');
-        }
-
-        var $_orderID = $('#orderId');
-        if($_orderID.val()==""){
             flag = false;
-            $_orderID.focus().select();
-            $_orderID.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "bottom",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "订单编号不能为空"
-            }).popover('show');
-        }else{
-            $_orderID.popover('destroy');
         }
         return flag;
     }
-    //取消提示信息
-    cancelProp();
-    function cancelProp() {
-        var $inputs = $('input','#left');
-        //获得右侧input焦点事件重置input为初始，进而取消提示
-        var $inputss = $('input','#searchInfo').focus(function cls(){$('input','#searchInfo').text("")});
-        $.each($inputs,function (i,v) {
-            $(this).focus(function(){
-                var $div = $(this).parent().find('.popover');
-                if($div){
-                    $div.remove();
-                }
-            });
-        });
-        $.each($inputss,function (i,v) {
-            $(this).focus(function(){
-                var $div = $(this).parent().find('.popover');
-                if($div){
-                    $div.remove();
-                }
-            });
-        });
-    }
-
 
     $('#returnBtn').click(function () {
         com.switchPage(api.index.puotationIndex.url);

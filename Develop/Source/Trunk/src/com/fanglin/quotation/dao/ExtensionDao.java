@@ -13,6 +13,8 @@ public interface ExtensionDao extends Dao<ExtensionPO>{
 	
 	public List<ExtensionPO> queryExtensionByOrderId(String  orderId);
 	
+	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId,Short type);
+	
 	public float sumExtensionByOrderId(String orderId,short type);
 	
 }

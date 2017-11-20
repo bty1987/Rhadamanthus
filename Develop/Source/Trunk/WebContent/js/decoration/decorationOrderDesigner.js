@@ -121,7 +121,7 @@ $(function(){
 					var $btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
 					var $btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
 					var $btnContract = $('<a></a>').addClass('btn btn-minier btn-danger').html('合同');
-					var $select = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
+					var $btnScal = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 					var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
 					var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
 					var $btnExtension = $('<a></a>').addClass('btn btn-minier btn-pink').html('扩展项');
@@ -179,7 +179,7 @@ $(function(){
 						viewDecorationOrderTimelineIndex(v.orderId);
 					});
 
-					$select.click(function(){
+					$btnScal.click(function(){
 						viewDecorationOrderInAudit(v.orderId);
 					})
 
@@ -193,11 +193,11 @@ $(function(){
 
 					$divBtnWrap.append($btnView).append($btnRevie).append($btnLine).appendTo($h3);
 					
-					if(["量房", "咨询", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
+					if(["初始", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnPrice);
 					}
 
-					$divBtnWrap.append($select);
+					$divBtnWrap.append($btnScal);
 
 					if(["定金", "已报价", "已签约", "重签合同", "已完工"].indexOf(v.status) != -1){
 						$divBtnWrap.append($btnContract);
@@ -235,6 +235,7 @@ $(function(){
 			decorationOrderPostData["decorationOrderId"] = decorationOrderId;
 			decorationOrderPostData["decorationOrderType"] = type;
 			params.decorationOrderType = type;
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.quotationIndex.url);
 		}
 		//回访
@@ -290,6 +291,7 @@ $(function(){
 		//时间轴
 		var viewDecorationOrderTimelineIndex = function(orderId){
 			params.decorationOrderId = orderId;
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.decorationOrderTimelineIndex.url);
 		}
 
@@ -304,6 +306,7 @@ $(function(){
 		function viewDecorationFinalSettlement(decorationOrderId,type){
 			params.decorationOrderId = decorationOrderId;
 			params.type = type;
+			params.historyOrderPage = api.index.decorationOrderDesignerIndex.url;
 			com.switchPage(api.index.decorationFinalSettlementIndex.url);
 		}
 
@@ -315,36 +318,7 @@ $(function(){
 		}
 	})();
 
-	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType','depositTimeDateRange'];
-
-	com.post(api.decoration.queryDecorationOrderForCondition, {}, function(res){
-		var condition = res.conditions;
-
-		if((condition & 4) == 4){ // 设计中心
-			_condArr.push('designerRegionId');
-
-		}
-		if((condition & 8) == 8){ // 设计部
-			_condArr.push('designerDepartmentId');
-
-		}
-		if((condition & 16) == 16){ // 业务中心
-			_condArr.push('salesmanRegionId');
-
-		}
-		if((condition & 32) == 32){ // 业务部
-			_condArr.push('salesmanDepartmentId');
-
-		}
-		if((condition & 64) == 64){ // 量尺时间
-			_condArr.push('createTimeDateRange');
-
-		}
-		if((condition & 128) == 128){ // 签单时间
-			_condArr.push('signTimeDateRange');
-
-		}
-	}, null, false);
+	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'customerPhone', 'designer', 'salesman','orderType','salesmanType','depositTimeDateRange','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','createTimeDateRange','signTimeDateRange'];
 
 	_condArr.push('houseClass');
 	_condArr.push('status');

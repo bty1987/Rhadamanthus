@@ -24,8 +24,9 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging,List<Filter> filters,int company) {
 
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
-		query.alias("user", "user");
-		query.add(query.getCriterion("user.company", Integer.valueOf(company), "eq"));
+		
+		query.add(Restrictions.eq("company", company));
+		
 		queryFilterExcute(query, filters);
 		
 		return query.list();
@@ -67,7 +68,9 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				
 				 if ("duty".equals(filet)) {
 					query.alias("user", "user");
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_USER_USERDUTY, data, op));
+					query.alias("user.duty", "duty");
+					query.add(query.getCriterion("duty.name", data, op));
+					
 				  }
 				
 				 if("status".equals(filet)){

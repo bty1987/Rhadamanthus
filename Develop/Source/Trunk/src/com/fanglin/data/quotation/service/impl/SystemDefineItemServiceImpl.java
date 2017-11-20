@@ -56,6 +56,8 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 			systemDefineItemVO.setQuotationBigCategoryId(quotationBigCategoryPO.getId());
 			systemDefineItemVO.setQuotationBigCategory(quotationBigCategoryPO.getName());
 			
+			systemDefineItemVO.setQuotationTypeId(quotationBigCategoryPO.getQtid());
+			
 			systemDefineItemVO.setMeasurementUnitId(measurementUnitPO.getId());
 			systemDefineItemVO.setMeasurementUnit(measurementUnitPO.getName());
 			
@@ -89,6 +91,7 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 		systemDefineItemVO.setMeasurementUnitId(measurementUnitPO.getId());
 		systemDefineItemVO.setMeasurementUnit(measurementUnitPO.getName());
 		
+		systemDefineItemVO.setQuotationTypeId(quotationBigCategoryPO.getQtid());
 		systemDefineItemVO.setItemWorkTypeId(workTypePO.getId());
 		systemDefineItemVO.setItemWorkType(workTypePO.getName());
 		

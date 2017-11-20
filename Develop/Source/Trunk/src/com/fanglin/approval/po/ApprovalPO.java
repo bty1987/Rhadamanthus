@@ -68,7 +68,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final String APPROVAL_CONTENTS_ORDER_BELONG_STR = "订单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s";
 
-	public static final String APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR = "订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s,等级:";
+	public static final String APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR = "订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s";
 
 	public static final String APPROVAL_CONTENTS_DECORATION_REFUND_STR = "订单号:%s,退款类型:%s,金额:%s";
 
@@ -85,10 +85,6 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "";
 	
 	public static final String APPROVAL_CONTENTS_SALES_DISCOUNT_STR ="订单号:%s,销售单号:%s,应收金额:%s";
-	
-	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT = 1;
-
-	public static final short APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT = 2;
 
 	private int aid;
 

@@ -109,7 +109,6 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				if (quotationFunctionAreaItemPO != null) {
 					if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 						addReduceItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getQuotationItemDes());
-						;
 					} else {
 						addReduceItemVO.setContent(quotationFunctionAreaItemPO.getContent());
 					}
@@ -234,9 +233,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO);
 
 			addReduceItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(addReduceItemVO.getQuotationFunctionAreaId()));
-
-			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-								
+			/*if (addReduceItemVO.getType() == AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT&& addReduceItemVO.getQuoteItemId() == null){
+				
+			}else */if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
 				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor),addReduceItemPO.getQuoteItemId());
 
 				if (quotationFunctionAreaItemPO == null) {
@@ -279,6 +278,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				if (_extensionItemNum < addReduceItemNum) {
 					throw new FLException(140039, "减项工程量大于引用项目");
 				}
+				_extensionItemPO.setSubtype(addReduceItemVO.getSubtype());
 				_extensionItemPO.setNum(Arith.sub(_extensionItemNum,addReduceItemNum));
 				extensionItemDao.update(_extensionItemPO);
 			}
@@ -371,8 +371,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO,AddReduceItemVO addReduceItemVO) throws FLException {
 
-		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT,
-				AddReducePO.STATUS_SUBMIT_INT);
+		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT,AddReducePO.STATUS_SUBMIT_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
@@ -431,6 +430,15 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		}
 
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO,addReducePO);
+		
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
+
+		if (decorationPaymentPO != null) {
+
+			decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
+
+			decorationPaymentDao.update(decorationPaymentPO);
+		}
 
 		addReduceItemDao.delete(addReduceItemPO);
 		addReduceDao.update(addReducePO);

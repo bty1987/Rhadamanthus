@@ -21,7 +21,7 @@ jQuery(function ($) {
     };
 
     var salaryType = [];
-    $.extend(com.validator, salary.validator);
+    
     salary.saveBtn = $("#saveBtn").on("click", saveData);
     salary.cancelBtn = $("#cancelBtn");
     salary.modal = $("#workersalaryModal");

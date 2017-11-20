@@ -179,6 +179,20 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		decorationOrderVO.setSalesmanId(salesman.getUserId());
 		decorationOrderVO.setSalesmanPhone(salesman.getPhone());
 		decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+		
+		UserPO quoter = decorationOrderPO.getQuoterPO();
+		
+		if(quoter != null){
+			decorationOrderVO.setQuoterId(quoter.getUserId());
+			decorationOrderVO.setQuoter(quoter.getUserName());
+		}
+		
+		UserPO escorter = decorationOrderPO.getEscorterPO();
+		
+		if(escorter != null){
+			decorationOrderVO.setEscorterId(escorter.getUserId());
+			decorationOrderVO.setEscorter(escorter.getUserName());
+		}
 	}
 
 

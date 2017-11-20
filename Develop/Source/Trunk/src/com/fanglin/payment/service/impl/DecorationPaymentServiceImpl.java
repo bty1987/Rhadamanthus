@@ -260,7 +260,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		String orderId = decorationPaymentVO.getOrderId();
 		float sumMoney = decorationPaymentVO.getReferMoney();
 
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR,DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR};
 
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
@@ -477,13 +477,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if(!DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
 			throw new FLException(150008, "款项不能进行收款");
 		}
+		
+		
 
 		//设置装修订单状态
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationPaymentPO.getDecorationOrderPO().getOrderId());
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR});
 		if(status.contains(decorationOrderPO.getStatus())){
 			decorationOrderPO.setStatus(DecorationOrderPO.STATUS_DEPOSIT_STR);
 			decorationOrderPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
@@ -573,6 +575,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 			decorationReceiptPO.setCoupon(coupon);
 			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
+			realMoney = Arith.add(coupon, realMoney);
 		}
 
 		decorationOrderDao.update(decorationOrderPO);
@@ -615,16 +618,24 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationReceiptPO.setAdvanceType(decorationPaymentVO.getAdvanceType());
 			realMoney = Arith.add(advance, realMoney);
 		}
+		
+		if(decorationPaymentPO.getReferMoney()!=realMoney){
+			throw new FLException(150008, "款项不能进行收款");
+		}
 
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCollectUserId());
 		decorationReceiptPO.setCollectUserPO(user);
 		decorationReceiptPO.setDes(decorationPaymentVO.getDes());
 
+		if(coupon != null && coupon.floatValue() != 0f){
+			//实收额赋值前，减去劵值
+			realMoney = Arith.sub(realMoney, coupon);
+		}
 		decorationPaymentPO.setRealMoney(realMoney);
 		decorationPaymentPO.setPaymentBlance(realMoney);
 		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
-
+		
 		decorationReceiptDao.save(decorationReceiptPO);
 		decorationPaymentDao.update(decorationPaymentPO);
 

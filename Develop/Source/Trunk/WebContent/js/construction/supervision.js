@@ -85,7 +85,7 @@ $(function(){
 
 	var ActivitySeacher = new Searcher();
 	
-	ActivitySeacher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule', 'projectStatusFlag'], "condList", api.construction.pageDecorationOrderForSupervisionByUserId, function(list){
+	ActivitySeacher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule', 'projectStatusFlag'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
 	

@@ -4,6 +4,17 @@ $(function () {
      * tableId ，用来显示的div的id
      * result.list 列表的json数组
      * */
+
+    var validator = {
+        goods: {
+            type: "v_goods",
+            regex: /^[0-9]*[1-9][0-9]*$/,
+            errorMsg: "数量输入内容格式错误"
+        }
+    };
+
+    $.extend(com.validator,validator);
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -665,7 +676,7 @@ $(function () {
         var pieceNum = $layer.find('input[name="pieceNum"]').val();
         var atid = $layer.find('select[name="atid"] option:selected').val();
         if (!id) {
-            if (checkRowValue($layer)) {
+            //if (checkRowValue($layer)) {
                 if(goodsType == 0){
                     com.post(api.inventory.addGoods, {
                         "goods.no": no,
@@ -695,7 +706,7 @@ $(function () {
                 }
 
 
-            }
+            //}
         } else {
             com.post(api.inventory.updateGoods, {
                 "goods.gid": id,
@@ -734,28 +745,27 @@ $(function () {
         $layerAdd.find('input[name="pieceNum"]').removeAttr('disabled');
     }
 
-    function checkRowValue($line) {
-
-        var flag = true;
-
-        var pieceNum = $line.find('input[name="pieceNum"]');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!(numRex.test(pieceNum.val()) && parseFloat(pieceNum.val()) >= 1)) {
-            pieceNum.focus().select();
-            pieceNum.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            pieceNum.popover('destroy');
-        }
-
-        return flag;
-    }
+    //function checkRowValue($line) {
+    //    var flag = true;
+    //
+    //    var pieceNum = $line.find('input[name="pieceNum"]');
+    //    var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+    //    if (!(numRex.test(pieceNum.val()) && parseFloat(pieceNum.val()) >= 1)) {
+    //        pieceNum.focus().select();
+    //        pieceNum.addClass('tooltip-info').attr({
+    //            "data-rel": "popover",
+    //            "data-placement": "right",
+    //            "data-original-title": "",
+    //            "title": "",
+    //            "data-content": "数量输入内容格式错误!"
+    //        }).popover('show');
+    //        flag = false;
+    //    } else {
+    //        pieceNum.popover('destroy');
+    //    }
+    //
+    //    return flag;
+    //}
 
 
 });

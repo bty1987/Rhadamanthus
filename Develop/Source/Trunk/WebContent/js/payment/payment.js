@@ -7,7 +7,7 @@ jQuery(function($) {
 		modal: null,
 		cashOutModal: null,
 		items: {},
-		
+		paymentTypes:null,
 		temp: [],
 		
 	};
@@ -50,9 +50,6 @@ jQuery(function($) {
 		}
 	});
 	
-	$("#cashOut_collectBtn").on("click", cashOut);
-	$("#convertBtn").on("click", convertCach);
-	
 	com.post(api.common.queryReceiptType, {}, function(res){
 		
 		payment.cash = [];
@@ -68,25 +65,25 @@ jQuery(function($) {
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				payment.cash.push(v);
-				payment.cashInfo[v.key] = v.name;
+				payment.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				payment.bank.push(v);
-				payment.bankInfo[v.key] = v.name;
+				payment.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				payment.checkBank.push(v);
-				payment.checkBankInfo[v.key] = v.name;
+				payment.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				payment.accounts.push(v);
-				payment.accountsInfo[v.key] = v.name;
+				payment.accountsInfo[v.no] = v.name;
 			}
 		});
 		
-		$("#cashInfo").bindData(payment.cash, 'key', 'name');
-		$("#installmentBankName").bindData(payment.bank, 'key', 'name');
-		$("#refundBankName").bindData(payment.bank, 'key', 'name');
-		$("#checkvBankName").bindData(payment.checkBank, 'key', 'name');
+		$("#cashInfo").bindData(payment.cash, 'no', 'name');
+		$("#installmentBankName").bindData(payment.bank, 'no', 'name');
+		$("#refundBankName").bindData(payment.bank, 'no', 'name');
+		$("#checkvBankName").bindData(payment.checkBank, 'no', 'name');
 		
-		$("#accountsBankName").bindData(payment.accounts, 'key', 'name');
+		$("#accountsBankName").bindData(payment.accounts, 'no', 'name');
 	}, null, false);
 	
 	$("#bankAdd").click(function(){
@@ -126,8 +123,7 @@ jQuery(function($) {
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
             var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-yellow').html('提款');
-            var $btnConvert = $('<a></a>').addClass('btn btn-minier btn-purple').html('转换');
-            
+
             var propertyArr = [
                ["客户:", v.customer.customerName, "grey"],
                ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
@@ -150,15 +146,13 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnCollect.click(function(){
+            	v.paymentType="收款";
             	showPaymentModal(v);
             });
             
             $btnCashout.click(function(){
-            	showCashOutModal(v);
-            });
-            
-            $btnConvert.click(function(){
-            	showConvertPaymentModal(v);
+				v.paymentType="提款";
+				showPaymentModal(v);
             });
             
             return $liLine;
@@ -296,7 +290,36 @@ jQuery(function($) {
     }, "hresultList");
 	
 	function showPaymentModal(v){
-		
+
+		if(v.paymentType.search('收款') != -1 || v.paymentType=="收款"){
+			$("#myModalLabel").text("收款信息");
+			$("#paymentMethod").text("付款方式");
+			$("#refundSumBalanceDiv").addClass("hide");
+			$("#refundSumWithdrawDiv").addClass("hide");
+			$("#collectBtn").text("收款");
+			payment.paymentTypes = v.paymentType;
+		}else{
+			$("#myModalLabel").text("提现信息");
+			$("#paymentMethod").text("提现方式");
+			$("#refund").val("");
+			$("#refundSumBalanceDiv").removeClass("hide");
+			$("#refundSumWithdrawDiv").removeClass("hide");
+			$("#paymentTypeSel").find("option:first").prop("selected", true);
+			$("#paymentTypeSel").on("change", function(){
+				if($(this).val() == "合同预付款"){
+					$("#refundSum").val(v.customer.balance);
+				}else if($(this).val() == "主材预付款"){
+					$("#refundSum").val(v.customer.materialBalance);
+				}else if($(this).val() == "工程预付款"){
+					$("#refundSum").val(v.customer.projectBalance);
+				}else if($(this).val() == "正林预付款"){
+					$("#refundSum").val(v.customer.zhenglinBalance);
+				}
+			}).trigger("change");
+			$("#collectBtn").text("提现");
+			payment.paymentTypes = v.paymentType;
+		}
+
 		params.orderId = v.orderId;
 		
 		$("#bankDivGroup").html("");
@@ -311,140 +334,8 @@ jQuery(function($) {
 		payment.temp = v;
 	}
 	
-	function showCashOutModal(v){
-		
-		params.orderId = v.orderId;
-		
-		$("#outPaymentInfo").text("");
-		$("#refund").val("");
-		
-		$("#refundCash").prop("checked", true);
-		$("#refundBankCardDiv").hide();
-		$("#refundPaymentTypeSel").find("option:first").prop("selected", true);
-		$("#refundPaymentTypeSel").on("change", function(){
-			if($(this).val() == "合同预付款"){
-				$("#refundSum").val(v.customer.balance);
-			}else if($(this).val() == "主材预付款"){
-				$("#refundSum").val(v.customer.materialBalance);
-			}else if($(this).val() == "工程预付款"){
-				$("#refundSum").val(v.customer.projectBalance);
-			}else if($(this).val() == "正林预付款"){
-				$("#refundSum").val(v.customer.zhenglinBalance);
-			}
-		}).trigger("change");
-		$("#cashOutModal").modal("show");
-		
-		payment.temp = v;
-	}
-	
-	function showConvertPaymentModal(v){
-		
-		params.orderId = v.orderId;
-		params.convertCustomerAutoId = v.id;
-		
-		com.clearValidator();
-		
-		$('#convertMsg').text("");
-		$("#convertCash").val("");
-		$("#convertLeftSel option:first").prop("selected", true);
-		$("#convertRightSel option:eq(1)").prop("selected", true);
-		
-		$(".convertTypeSel").on("change", function(){
-			$this = $(this);
-			if($this.val() == "合同预付款"){
-				$this.next().text(v.customer.balance+"元");
-			}else if($this.val() == "主材预付款"){
-				$this.next().text(v.customer.materialBalance+"元");
-			}else if($this.val() == "工程预付款"){
-				$this.next().text(v.customer.projectBalance+"元");
-			}else if($this.val() == "正林预付款"){
-				$this.next().text(v.customer.zhenglinBalance+"元");
-			}
-		}).trigger("change");
-		
-		$("#convertModal").modal("show");
-	}
-	
-	function cashOut(){
-		
-		var refund = $("#refund").val();
-		var refundSum = $("#refundSum").val();
-		
-		if(parseFloat(refund) <= 0){
-			$("#outPaymentInfo").text("提款金额需要大于零!");
-			return false;
-		}
-		
-		if(parseFloat(refundSum) < parseFloat(refund)){
-			$("#outPaymentInfo").text("提款金额不能大于余额!");
-			return false;
-		}
-		
-		var options = {
-			"payment.customer.id": payment.temp.customer.id,
-			"payment.orderId": params.orderId,
-			"payment.balance": payment.temp.balance,
-			"payment.paymentType": $("#refundPaymentTypeSel").val(),
-			"payment.des":$("#outDes").val(),
-			"payment.type": "提现",
-		};
-		
-		if($("#refundCash").prop("checked")){
-			options["payment.cash"] = $("#refund").val().trim();
-		}
-		
-		if($("#refundBankCard").prop("checked")){
-			options["payment.bank"] = $("#refund").val().trim();
-			options["payment.bankInfo"] = $("#refundBankName").val().trim();
-		}
-		
-		com.post(api.payment.withdrawPayment, options, function(){
-			searcher.doSearch();
-		});
-		$("#cashOutModal").modal("hide");
-	}
-	
-	function convertCach(){
-		
-		if(com.validate("paymentModal")){
-			return;
-		}
-		
-		var convertMsg = "";
-		var convertLeftType = $("#convertLeftSel").val();
-		var convertRightType = $("#convertRightSel").val();
-		var convertLeftCash = parseFloat($("#convertLeftSel").next().text());
-		var convertCash = $("#convertCash").val();
-		
-		if(convertLeftType == convertRightType){
-			convertMsg = "相同预付款类型不能进行转换.";
-		}else if(convertLeftCash < convertCash){
-			convertMsg = $("#convertLeftSel").val()+"转换金额不足";
-		}
-		
-		if(convertMsg != ""){
-			$('#convertMsg').text(convertMsg);
-			return;
-		}
-		
-		var options = {
-			"payment.orderId": params.orderId,
-			"payment.customer.id": params.convertCustomerAutoId,
-			"convertLeftType": convertLeftType,
-			"convertRightType": convertRightType,
-			"convertCash": convertCash
-		};
-		
-		com.post(api.payment.convertPayment, options, function(){
-			searcher.doSearch();
-		});
-		
-		$("#convertModal").modal("hide");
-	}
-	
-
-
 	function saveData(){
+
 		$('.payWayError').hide();
 		
 		if(com.validate("paymentModal")){
@@ -459,12 +350,9 @@ jQuery(function($) {
 		var url = "";
 		var total = 0;
 		var options = {};
-		
-		url = api.payment.collectPayment;
-		
+
 		options["payment.customer.id"] = payment.temp.customer.id;
 		options["payment.balance"] = payment.temp.balance;
-		options["payment.type"] = "收款";
 		options["payment.paymentType"] = $("#paymentTypeSel").val();
 		options["payment.orderId"] = params.orderId;
 		options["payment.des"] = $("#des").val().trim();
@@ -517,23 +405,49 @@ jQuery(function($) {
 			
 			total = utils.accAdd(parseFloat($("#accounts").val()), total);
 		}
-		
-		if(parseFloat(total) <= 0){
-			com.showAlert(com.warning, "收款金额需要大于零!");
-			return false;
-		}
 
+		if(payment.paymentTypes.search('收款') != -1 || payment.paymentTypes == "收款"){
+			url = api.payment.collectPayment;
+			options["payment.type"] = "收款";
+			if(parseFloat(total) <= 0){
+				com.showAlert(com.warning, "收款金额需要大于零!");
+				return false;
+			}
+		}else{
+			var refund = $("#refund").val();
+			var refundSum = $("#refundSum").val();
+
+			if(parseFloat(refund) <= 0){
+				$("#paymentInfo").text("提款金额需要大于零!");
+				return false;
+			}
+
+			if(parseFloat(refundSum) < parseFloat(refund)){
+				$("#paymentInfo").text("提款金额不能大于余额!");
+				return false;
+			}
+			if(parseFloat(total)!=parseFloat(refund)){
+				$("#paymentInfo").text("当前提款项总数与提款金额不等,请核实再进行提交!!");
+				return false;
+			}
+			url = api.payment.withdrawPayment;
+			options["payment.type"] = "提款";
+		}
+		
 		com.post(url, options, function(res){
 
 			searcher.doSearch();
 
-			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-				if(result){
-					com.popup("专用收款收据__订单编号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + parent.params.loginTime,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true)
-				}
-			});
+			if(payment.paymentTypes.search('收款') != -1 || payment.paymentTypes == "收款"){
+				bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
+					if(result){
+						com.popup("专用收款收据__订单编号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url + "?payment.paymentId=" + res.payment.paymentId + "&time=" + parent.params.loginTime,function () {
+							parent.layer.getFrameIndex(window.name);
+						},null,true)
+					}
+				});
+			}
+
 		});
 		
 		payment.modal.modal("hide");
@@ -548,7 +462,7 @@ jQuery(function($) {
 		
 		var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
 		var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(payment.bank, 'key', 'name').appendTo(bankNameDiv);
+		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(payment.bank, 'no', 'name').appendTo(bankNameDiv);
 		var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
 		var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
 			$("#bankDiv_"+$(this).attr("index")).remove();
@@ -560,7 +474,7 @@ jQuery(function($) {
 		
 		var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
 		var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_price").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
+		var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
 		
 		var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
 		var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);

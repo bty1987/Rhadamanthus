@@ -79,7 +79,7 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO,int company) throws FLException {
 		
-		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByKey(receiptTypeVO.getKey(),company);
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(receiptTypeVO.getNo(),company);
 		
 		if(receiptTypePO != null){
 			throw new FLException(130004, "收据类型键值已存在");
@@ -90,10 +90,53 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		BeanUtil.copyProperties(receiptTypeVO, receiptTypePO);
 		
 		receiptTypePO.setCompany(company);
+		receiptTypePO.setSubjectName("");
+		receiptTypePO.setOneCode("");
+		receiptTypePO.setTwoCode("");
+		receiptTypePO.setThrCode("");
+		receiptTypePO.setStatus(ReceiptTypePO.STATUS_ENABLE_INT);
+		receiptTypePO.setDirection(ReceiptTypePO.COLUMN_DIRECTION_INT);
 		
 		receiptTypeDao.save(receiptTypePO);
 		
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateReceiptType(ReceiptTypeVO receiptTypeVO,int company) throws FLException {
+		
+		ReceiptTypePO receiptTypePO = receiptTypeDao.get(receiptTypeVO.getRtId());
+		
+		ReceiptTypePO receiptTypeNO = receiptTypeDao.queryReceiptTypeByNo(receiptTypeVO.getNo(),company);
+		
+		if(receiptTypePO == null){
+			throw new FLException(130005, "收据类型不存在");
+		}
+		if(receiptTypeNO != null){
+			throw new FLException(130004, "收据类型键值已存在");
+		}
+		
+		BeanUtil.copyPropertie(receiptTypeVO, receiptTypePO);
+		receiptTypeDao.update(receiptTypePO);
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateReceiptTypeForStatus(ReceiptTypeVO receiptTypeVO)throws FLException {
+		
+		ReceiptTypePO receiptTypePO	= receiptTypeDao.get(receiptTypeVO.getRtId());
+		
+		if(receiptTypePO == null){
+			throw new FLException(130005, "收据类型不存在");
+		}
+		
+		receiptTypePO.setStatus(receiptTypeVO.getStatus());
+		
+		receiptTypeDao.update(receiptTypePO);
+		
 	}
 
 }

@@ -48,8 +48,6 @@ public class MaterialSubOrderVO implements Serializable {
 	
 	private String instoreName;
 	
-	private Integer designerFlag;
-	
 	private Integer packageFlag;
 	
 	private String materialType;
@@ -385,14 +383,6 @@ public class MaterialSubOrderVO implements Serializable {
 
 	public void setPackageFlag(Integer packageFlag){
 		this.packageFlag = packageFlag;
-	}
-
-	public Integer getDesignerFlag(){
-		return designerFlag;
-	}
-
-	public void setDesignerFlag(Integer designerFlag){
-		this.designerFlag = designerFlag;
 	}
 
 	public Float getMaling(){

@@ -163,7 +163,7 @@ $(function () {
             //货单退货
             $btnAAR.click(function(){
                 if(v.status == 1){
-                    AARManifest(v.mid, v.status);
+                    advanceRetreatManifest(v.mid, v.status);
                 }else{
                     layer.msg('订单没有确认,无法退货',{icon:2});
                 }
@@ -172,7 +172,7 @@ $(function () {
             //货单出返
             $btnRO.click(function(){
                 if(v.status == 1){
-                    ROManifest(v.mid, v.status);
+                    sendReturnManifest(v.mid, v.status);
                 }else{
                     layer.msg('订单没有确认,无法出返',{icon:2});
                 }
@@ -291,7 +291,7 @@ $(function () {
 
     }
 
-    function AARManifest(mid,status){
+    function advanceRetreatManifest(mid,status){
         var $popup = $('#AARPopUp');
         $popup.attr({'data-mid': mid,'data-status': status});
         //弹出即全屏
@@ -304,7 +304,7 @@ $(function () {
             maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
-                $popup.load("views/manifest/aarManifest.html");
+                $popup.load("views/manifest/advanceRetreatManifest.html");
             },
             end: function () {
                 $popup.attr({'data-mid': null,'data-status':null});
@@ -314,7 +314,7 @@ $(function () {
         });
     }
 
-    function ROManifest(mid,status){
+    function sendReturnManifest(mid,status){
         var $popup = $('#ROPopUp');
         $popup.attr({'data-mid': mid,'data-status': status});
         //弹出即全屏
@@ -327,7 +327,7 @@ $(function () {
             maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
-                $popup.load("views/manifest/roManifest.html");
+                $popup.load("views/manifest/sendReturnManifest.html");
             },
             end: function () {
                 $popup.attr({'data-mid': null,'data-status':null});

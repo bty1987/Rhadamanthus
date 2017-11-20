@@ -164,7 +164,7 @@ jQuery(function($) {
 	}
 	
 	function saveData(){
-		if(com.validate()){
+		if(com.validate("inspectionRecord")){
 			return;
 		}
 		

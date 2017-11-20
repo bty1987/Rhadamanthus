@@ -425,7 +425,7 @@ jQuery(function($) {
 		if(constructers.length != 0){
 			for(var i = 0; i < constructers.length; i++) {
 				var workerIf = constructers[i];
-
+				
 				var profileDiv = $('<div></div>').addClass("profile-picture col-sm-2 text-center").css("margin", "4px").attr("id", workerIf.crid);
 				var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
 				var profileImg = $('<img />').attr("alt", workerIf.user.userId+"'s Photo").appendTo(imgDiv);
@@ -435,7 +435,7 @@ jQuery(function($) {
 				}
 
 				var buttonsDiv = $('<div></div>').addClass("visible-md visible-lg hidden-sm hidden-xs action-buttons").css("padding", "5px").appendTo(profileDiv);
-				var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerIf.user.userId + "" + workerIf.user.userName + "<br/>" + workerIf.user.duty).appendTo(buttonsDiv);
+				var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerIf.user.userId + "" + workerIf.user.userName + "<br/>" + workerIf.user.duty.name).appendTo(buttonsDiv);
 				var removeBtn = $('<a></a>').addClass('red pull-left').attr('href', '#').attr("cId", workerIf.crid).click(function(){
 
 					var id = $(this).attr('cId');
@@ -464,7 +464,7 @@ jQuery(function($) {
 
 		var worker = res.constructer;
 		var workerInfo = res.constructer.user;
-
+		
 		var profileDiv = $('<div></div>').addClass("profile-picture col-sm-2 text-center").css("margin", "4px").attr("id", worker.crid);
 		var imgDiv = $('<div></div>').addClass('workerImg').appendTo(profileDiv);
 		var profileImg = $('<img />').attr("alt", workerInfo.userId + "'s Photo").appendTo(imgDiv);
@@ -474,7 +474,7 @@ jQuery(function($) {
 		}
 
 		var buttonsDiv = $('<div></div>').addClass("visible-md visible-lg hidden-sm hidden-xs action-buttons").css("padding", "5px").appendTo(profileDiv);
-		var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerInfo.userId + "" + workerInfo.userName + "<br/>" + workerInfo.duty).appendTo(buttonsDiv);
+		var buttonSpan = $('<span id="workerNameSpan" class="pull-right"></span>').html(workerInfo.userId + "" + workerInfo.userName + "<br/>" + workerInfo.dutyName).appendTo(buttonsDiv);
 		var removeBtn = $('<a></a>').addClass('red pull-left').attr('href', '#').attr("cId", workerInfo.userId).click(
 			function () {
 

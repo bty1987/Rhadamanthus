@@ -47,9 +47,9 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 			AuditScaleVO auditScaleVO = new AuditScaleVO(new UserVO(),new DepartmentVO(),new UserVO());
 			
 			BeanUtil.copyProperties(auditScalePO, auditScaleVO,Arrays.asList("belongUser","belongDepartment","creater"));
-			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("role", "dept"));
-			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("role", "dept"));
-			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "cityProper"));
+			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("role", "dept","duty"));
+			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("role", "dept","duty"));
+			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "cityProper","type"));
 			
 			auditScaleVOs.add(auditScaleVO);
 		}
@@ -62,11 +62,11 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 	@Transactional(rollbackFor = Exception.class)
 	public int makeAuditScale(List<AuditScaleVO> auditScales, String userId) throws FLException {
 		
-		if(auditScales.get(0).getAuditRecord().getArid()!=auditScales.get(1).getAuditRecord().getArid()){
+		AuditRecordPO auditRecordPO = auditRecordDao.queryAuditRecordByArid(auditScales.get(0).getAuditRecord().getArid());
+		
+		if(auditRecordPO == null){
 			throw new FLException(140044 , "审批记录不存在");
 		}
-		
-		AuditRecordPO auditRecordPO = auditRecordDao.queryAuditRecordByArid(auditScales.get(0).getAuditRecord().getArid());
 		
 		if(auditRecordPO.getStatus()!=AuditRecordPO.STATUS_INIT_SHORT){
 			throw new FLException(140045 , "审批记录状态不可操作");

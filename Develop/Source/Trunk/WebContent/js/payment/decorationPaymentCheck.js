@@ -23,15 +23,15 @@ jQuery(function($) {
 		
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
-				decorationPaymentCheck.cashInfo[v.key] = v.name;
+				decorationPaymentCheck.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
-				decorationPaymentCheck.bankInfo[v.key] = v.name;
+				decorationPaymentCheck.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
-				decorationPaymentCheck.checkBankInfo[v.key] = v.name;
+				decorationPaymentCheck.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
-				decorationPaymentCheck.accountsInfo[v.key] = v.name;
+				decorationPaymentCheck.accountsInfo[v.no] = v.name;
 			}else if(v.type == 5){
-				decorationPaymentCheck.couponTypeData[v.key] = [v.key, v.name];
+				decorationPaymentCheck.couponTypeData[v.no] = [v.no, v.name];
 			}
 		});
 	}, null, false);

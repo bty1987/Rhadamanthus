@@ -50,7 +50,7 @@ public class ChainPageServiceImpl implements ChainPageService{
 		
 		BASE64Encoder encoder = new BASE64Encoder();  
 		String encode = encoder.encode(String.valueOf(company).getBytes());
-		String url= "&company="+encode+"&op=view";
+		String url= "&company="+encode;
 		
 		RolePO rolePO = roleDao.get(roleId);
 	
@@ -60,7 +60,9 @@ public class ChainPageServiceImpl implements ChainPageService{
 		for (RoleChainPagePO roleChainPagePO : roleChainPagePOs) {
 			ChainPageVO chainPageVO = new ChainPageVO();
 			BeanUtil.copyProperties(roleChainPagePO.getChainPage(),chainPageVO);
-			chainPageVO.setUrl(roleChainPagePO.getChainPage().getUrl()+url);
+			if (roleChainPagePO.getChainPage().getCompanymark() == 0) {
+				chainPageVO.setUrl(roleChainPagePO.getChainPage().getUrl()+url);
+			};
 			chainPageVOs.add(chainPageVO);
 		}
 		

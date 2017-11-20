@@ -36,9 +36,15 @@ public interface DecorationOrderService {
 	
 	public void pageDecorationOrderForAdvance(Paging paging, List<Filter> filters, Authentication authentication);
 	
-	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO, Authentication authentication);
+	public void pageDecorationOrderForQuoter(Paging paging, List<Filter> filters, Authentication authentication);
 	
-	public int queryDecorationOrderForCondition(String userId);
+	public void pageDecorationOrderForEscorter(Paging paging, List<Filter> filters, Authentication authentication);
+	
+	public void pageDecorationOrderForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication);
+	
+	public void pageDecorationOrderForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication);
+	
+	public DecorationOrderVO queryDecorationOrderByVillageIdAHouseNumber(DecorationOrderVO decorationOrderVO, Authentication authentication);
 	
 	public DecorationOrderVO queryDecorationOrderForCommonByOrderId(DecorationOrderVO decorationOrderVO, String userId) throws FLException;
 

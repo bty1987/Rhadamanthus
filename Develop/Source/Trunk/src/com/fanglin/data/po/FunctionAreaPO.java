@@ -34,6 +34,8 @@ public class FunctionAreaPO implements Serializable {
 	
 	public static final short TYPE_WHOLE_INT = 1;
 	
+	public static final short TYPE_AI_INT = 3;
+	
 	private long faId;
 	
 	private String functionAreaId;

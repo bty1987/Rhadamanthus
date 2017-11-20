@@ -166,7 +166,6 @@ jQuery(function ($) {
         var iconok = $line.find('.green');
 
         if (status.text()=="") {
-
             iconok.focus().select();
             iconok.addClass('tooltip-info').attr({
                 "data-rel": "popover",

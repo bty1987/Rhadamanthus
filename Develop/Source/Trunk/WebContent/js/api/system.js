@@ -90,9 +90,10 @@ $.extend(api, {system: {
 
     pageDuty: {url: "pageDuty.do", demo: true},
     queryDuty: {url: "queryDuty.do"},
-    addDuty: {url: "addDuty.do"},
-    updateDuty: {url: "updateDuty.do"},
-    updateDutyForStatus: {url: "updateDutyForStatus.do"},
+    addDuty: {url: "addDuty.do", server: "communion"},
+    updateDuty: {url: "updateDuty.do", server: "communion"},
+    updateDutyForStatus: {url: "updateDutyForStatus.do", server: "communion"},
+    queryDutyByDtid: {url: "queryDutyByDtid.do"},
 
     pageCompany: {url: "pageCompany.do", demo: true},
     queryCompany: {url: "queryCompany.do"},

@@ -100,7 +100,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shid", referencedColumnName = "shid")
+	@JoinColumn(name = "shId", referencedColumnName = "shId")
 	public StorehousePO getStorehouse() {
 		return storehouse;
 	}

@@ -122,7 +122,7 @@ jQuery(function($) {
 	},5000);
 	
 	$('#btnBack').on(ace.click_event, function(){
-		com.switchPage(api.index.decorationOrderDesignerIndex.url);
+		com.switchPage(params.historyOrderPage);
 	});
 	
 	$('#createQuotation').on(ace.click_event, function(){

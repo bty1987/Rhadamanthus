@@ -17,5 +17,10 @@ $.extend(api, {department: {
     addDepartment: {url: "addDepartment.do", server: "communion"},
     updateDepartment: {url: "updateDepartment.do", server: "communion"},
     deleteDepartment: {url: "deleteDepartment.do", server: "communion"},
-    updateDepartmentForStatus : {url :"updateDepartmentForStatus.do", server: "communion"}
+    updateDepartmentForStatus : {url :"updateDepartmentForStatus.do", server: "communion"},
+
+    addDepartmentType: {url :"addDepartmentType.do", server: "communion"},
+    queryDepartmentType:{url : "queryDepartmentType.do"},
+    queryDepartmentByDtid: {url :"queryDepartmentByDtid.do"},
+    pageDepartmentType : {url: "pageDepartmentType.do", demo: true}
 }});

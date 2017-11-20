@@ -28,7 +28,7 @@ jQuery(function(a) {
         eCancelBtn: null,
         eModal: null,
         eItems: {},
-        eEditFlg: !1,
+        eEditFlg: true,
         eEditNum: null,
         experienceList: [],
         cSaveBtn: null,
@@ -37,37 +37,48 @@ jQuery(function(a) {
         cItems: {},
         cEditFlg: !1,
         cEditNum: null,
-        contractList: []
+        contractList: [],
+        loginFlag:true,
     };
-
+    a(".collapse").collapse({
+        toggle: !1
+    });
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
         com.switchPage(api.index.userIndex.url);
 
     });
-    user.items.userId = a("#userId").on("blur",function() {
-        $this = a(this);
-        void 0 != $this.val() && "" != $this.val().trim() && com.post(api.personel.queryUserByUserId, {
-            "user.userId": $this.val()
-        },function(a) {
-            a.user ? (com.showTips($this, "\u8be5\u5458\u5de5\u53f7\u5df2\u7ecf\u5b58\u5728", !0), user.repeatFlg = !0) : (com.clearValidator("#userId", !0), user.repeatFlg = !1)
-        })
-    });
+    user.items.userId = a("#userId");
     user.items.oldUserId = a("#oldUserId").on("blur",function() {
         $this = a(this);
-        void 0 != $this.val() && "" != $this.val().trim() && com.post(api.personel.queryUserByOldUserId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? ($("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy"),   user.eEditFlg = true) : com.post(api.personel.queryUserByLoginId, {
             "user.oldUserId": $this.val()
-        },function(a) {
-            a.user ? (com.showTips($this, "\u8be5\u539f\u59cb\u5de5\u53f7\u5df2\u7ecf\u5b58\u5728", !0), user.repeatFlg = !0) : (com.clearValidator("#oldUserId", !0), user.repeatFlg = !1)
-        })
+        }, function(res) {
+            user.eEditFlg = true
+            $("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy")
+        }, function(res){
+            user.eEditFlg = false
+            com.showPopover($("#oldUserId"),{errorMsg: "该原始工号已经存在"},  "right");
+
+        });
+
     });
-    //获取部门类型
-    com.post(api.ds.department, {timestamp: (new Date).getTime()},function(a) {
-        user.deptType = a.deptType
-    },null, !1);
+    user.items.loginId =a("#loginId").on("blur", function() {
+        $this = a(this);
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showPopover($("#loginId"),{errorMsg: "用户名不能为空"}, "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
+            "user.loginId": $this.val()
+        }, function(res) {
+            user.loginFlag =false
+            com.showPopover($("#loginId"),{errorMsg: "用户名已存在"}, "right");
+
+        }, function(res){
+            user.loginFlag =true
+
+            $("#loginId").css("border", "1px solid #d5d5d5").popover("destroy")
+        });
+    });
 
     com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
-        
         user.politicalType = a.politicalType;
         user.householdType = a.householdType;
         user.educationType = a.educationType;
@@ -76,7 +87,6 @@ jQuery(function(a) {
         user.employWayType = a.employWayType;
         user.employType = a.employType;
         user.experienceType = a.experienceType;
-        user.dutyTypeMap = a.dutyTypeMap
     },null, !1);
 
     user.items.userName = a("#userName");
@@ -104,35 +114,28 @@ jQuery(function(a) {
     user.items.isCarLoan = a("#isCarLoan").switchBtn("isOrNot");
     user.items.houseTypeSel = a("#houseTypeSel").bindData(user.houseType);
     user.items.lover = a("#lover");
-    user.items.loginId = a("#loginId").on("blur",
-        function() {
-            $this = a(this);
-            void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.clearValidator("#loginId", !0), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
-                "user.loginId": $this.val()
-            }, function(res) {
-                user.repeatFlg = !0
-                com.showTips($this, "\u8be5\u7528\u6237\u540d\u5df2\u7ecf\u5b58\u5728", !0);
-            }, function(res){
-                user.repeatFlg = !1
-                com.clearValidator("#loginId", !0);
-            });
-        });
-    user.items.deptSel = a("#deptSel");
-    user.items.dutySel = a("#dutySel").chosen({
-        width: "216px"
-    });
     user.items.company = a("#company");
-    user.items.deptTypeSel = a("#deptTypeSel").bindData(user.deptType).on("change",
+    //获取部门类型
+    com.post(api.department.queryDepartmentType, {},function(a) {
+        user.deptType = a.departmentTypes
+    },null, false);
+
+    user.items.deptSel = a("#deptSel");
+    user.items.dutySel = a("#dutySel");
+    user.items.deptTypeSel = a("#deptTypeSel");
+    user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
+    user.items.deptTypeSel.on("change",
         function(b, d) {
-            user.items.dutySel.bindData(user.dutyTypeMap[a(this).val()]);
-            com.post(api.department.queryDepartment, {
-                    "dept.type": a(this).val()
-                },
-                function(a) {
-                    user.items.deptSel.bindData(a.deptList, user.deptKey, user.deptValue);
+            com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :a(this).val()},function(res){
+                user.dutyTypeMap=res.dutys;
+                user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
+            },null,false)
+
+            com.post(api.department.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
+                    user.items.deptSel.bindData(res.deptList, "deptId", "deptName");
                     d && d();
-                    user.items.dutySel.trigger("chosen:updated")
-                })
+                },null,false)
+
         }).trigger("change");
     user.items.statusSel = a("#statusSel").bindData(user.statusType);
     user.items.employWaySel = a("#employWaySel").bindData(user.employWayType);
@@ -150,11 +153,10 @@ jQuery(function(a) {
     user.items.bank = a("#bank");
     user.items.bankCardNum = a("#bankCardNum");
 
-    a(".collapse").collapse({
-        toggle: !1
-    });
+
     //编辑用户，获取用户信息
     if(params.tempUserId){
+
         user.editFlg = !0;
         user.items.userId.prop("disabled", "true");
         user.items.userId.css("display", "block");
@@ -196,17 +198,13 @@ jQuery(function(a) {
                     user.items.lover.val($userInfo.lover),
                     user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
                     user.items.company.val( $user.companys),
-                    user.items.deptTypeSel.val($user.deptType).trigger("change",function() {
+
+                    user.items.deptTypeSel.val($user.dtid).trigger("change",function() {
                         user.items.deptSel.val($user.dept.deptId);
-                        user.items.dutySel.val("");
-                        user.items.dutySel.trigger("chosen:updated");
-                        var b = $user.duty.split(",");
-                        $.each(b,
-                            function(a, b) {
-                                $("[value\x3d'" + b + "']", user.items.dutySel).attr("selected", "selected")
-                            });
+                        user.items.dutySel.val($user.duty.did)
                         user.items.dutySel.trigger("chosen:updated")
                     }),
+
                     user.items.statusSel.val($user.status),
                     user.items.employWaySel.val($userInfo.employWay),
                     user.items.employTypeSel.val($userInfo.employType),
@@ -222,8 +220,8 @@ jQuery(function(a) {
                     user.items.salary.val($userInfo.salary),
                     user.items.bank.val($userInfo.bank),
                     user.items.bankCardNum.val($userInfo.bankCardNum),
-                    com.clearValidator("#loginId", !0),
-                    com.clearValidator("#userId", !0),
+                    $("#loginId").css("border", "1px solid #d5d5d5").popover("destroy"),
+                    $("#userId").css("border", "1px solid #d5d5d5").popover("destroy"),
                     com.clearValidator()
             )
         });
@@ -238,11 +236,22 @@ jQuery(function(a) {
     });
 
     function saveData() {
-        if (!com.validate() && !user.repeatFlg) {
+
+        if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
+
+        	 $("#loginId").removeAttr("data-placement").addClass('popover-notitle').attr({
+                 "data-rel":"popover",
+                 "data-placement": "right",
+                 "data-content": "用户名不能为空"
+             }).removeAttr("data-toggle").css('border', '1px red solid').popover('show');
+           user.loginFlag=false
+        }
+
+        if (!com.validate() && !user.repeatFlg && user.loginFlag && user.eEditFlg) {
             var a, b = {
                 "userInfo.user.userId": user.items.userId.val(),
                 "userInfo.user.oldUserId": user.items.oldUserId.val(),
-                "userInfo.user.userName": user.items.userName.val(),
+                "userInfo.user.userName": user.items.userName.val().trim(),
                 "userInfo.user.currentName": user.items.currentName.val(),
                 "userInfo.user.gender": com.genderType[user.items.gender.prop("checked")],
                 "userInfo.age": user.items.age.val(),
@@ -268,9 +277,9 @@ jQuery(function(a) {
                 "userInfo.houseType": user.items.houseTypeSel.val(),
                 "userInfo.lover": user.items.lover.val(),
                 "userInfo.user.loginId": user.items.loginId.val(),
-                "userInfo.user.deptType": user.items.deptTypeSel.val(),
+                "userInfo.user.dtid": user.items.deptTypeSel.val(),
                 "userInfo.user.dept.deptId": user.items.deptSel.val(),
-                "userInfo.user.duty": user.items.dutySel.val().toString(),
+                "userInfo.user.duty.did": user.items.dutySel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),
                 "userInfo.employWay": user.items.employWaySel.val(),
                 "userInfo.employType": user.items.employTypeSel.val(),
@@ -307,7 +316,6 @@ jQuery(function(a) {
             user.editFlg ? a = api.personel.updateUser: (a = api.personel.addUser);
 
             com.post(a, b, successCallback, failCallback);
-
         }
     }
 

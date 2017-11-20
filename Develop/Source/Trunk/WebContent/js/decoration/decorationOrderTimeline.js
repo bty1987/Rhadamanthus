@@ -429,7 +429,7 @@ $(function(){
 
             $body = $('<div></div>').addClass('body').css('background', '#fff'),
             $name = $('<div class="name"><span class="blue">' + v.user.userName + '</span></span></div>'),
-            $text = $('<div>'+ v.user.duty+',<a href="tel:'+ v.user.phone +'">'+ v.user.phone +'</a></div>');
+            $text = $('<div>'+ v.user.duty.name+',<a href="tel:'+ v.user.phone +'">'+ v.user.phone +'</a></div>');
 
         $user.append($userImg);
         $body.append($name).append($text);

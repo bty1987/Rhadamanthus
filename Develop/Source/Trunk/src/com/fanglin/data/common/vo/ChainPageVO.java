@@ -12,6 +12,8 @@ public class ChainPageVO  implements java.io.Serializable {
 	
 	private String comment;
 
+	private short companymark;
+	
 	public Long getCpid() {
 		return cpid;
 	}
@@ -43,6 +45,13 @@ public class ChainPageVO  implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	public short getCompanymark() {
+		return companymark;
+	}
+
+	public void setCompanymark(short companymark) {
+		this.companymark = companymark;
+	}
 	
 }

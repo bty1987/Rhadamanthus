@@ -61,15 +61,11 @@ public class DecorationOrderVO implements Serializable {
 	
 	private String supervisorPhone;
 	
-	private String inspection;
-	
 	private String designerId;
 	
 	private String salesmanId;
 	
 	private String supervisorId;
-	
-	private String inspectionId;
 	
 	private String notSalesmanName;
 	
@@ -120,6 +116,16 @@ public class DecorationOrderVO implements Serializable {
 	private Timestamp depositTime;
 
 	private String dompany;
+		
+	private String quoterId;
+	
+	private String quoter;
+	
+	private String escorterId;
+	
+	private String escorter;
+	
+	private Integer resourceType;
 	
 	public String getOrderId(){
 		return orderId;
@@ -233,14 +239,6 @@ public class DecorationOrderVO implements Serializable {
 		this.supervisorPhone = supervisorPhone;
 	}
 
-	public String getInspection(){
-		return inspection;
-	}
-
-	public void setInspection(String inspection){
-		this.inspection = inspection;
-	}
-
 	public String getDesignerId(){
 		return designerId;
 	}
@@ -263,14 +261,6 @@ public class DecorationOrderVO implements Serializable {
 
 	public void setSupervisorId(String supervisorId) {
 		this.supervisorId = supervisorId;
-	}
-
-	public String getInspectionId() {
-		return inspectionId;
-	}
-
-	public void setInspectionId(String inspectionId) {
-		this.inspectionId = inspectionId;
 	}
 
 	public String getNotSalesmanPhone(){
@@ -516,4 +506,46 @@ public class DecorationOrderVO implements Serializable {
 	public void setDompany(String dompany) {
 		this.dompany = dompany;
 	}
+
+	public Integer getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(Integer resourceType) {
+		this.resourceType = resourceType;
+	}
+
+	public String getQuoterId() {
+		return quoterId;
+	}
+
+	public void setQuoterId(String quoterId) {
+		this.quoterId = quoterId;
+	}
+
+	public String getEscorterId() {
+		return escorterId;
+	}
+
+	public void setEscorterId(String escorterId) {
+		this.escorterId = escorterId;
+	}
+
+	public String getQuoter() {
+		return quoter;
+	}
+
+	public void setQuoter(String quoter) {
+		this.quoter = quoter;
+	}
+
+	public String getEscorter() {
+		return escorter;
+	}
+
+	public void setEscorter(String escorter) {
+		this.escorter = escorter;
+	}
+
+
 }

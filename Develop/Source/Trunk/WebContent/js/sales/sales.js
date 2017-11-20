@@ -6,11 +6,19 @@ $(function () {
     var salesPaymentDic = {};
     var salesDic = {};
 
+    var url = api.inventory.pageSales;
+    var postData = "salesPostData";
+
+    if(params['urlLoadParams'].type == "advance"){
+        url = api.inventory.pageSalesForAdvance;
+        postData = "salesForAdvancePostData";
+    }
+
     var type = {
         depositPayment: 2,
         fullPayment: 3,
         depositPaymentRefund: 7,
-        fullPaymentRefund: 5
+        fullPaymentRefund: 5,
     };
 
     var salesPayment = {
@@ -279,12 +287,12 @@ $(function () {
 
     var salesSearcher = new Searcher();
 
-    salesSearcher.init(_condArr, "condList", api.inventory.pageSales, function (data) {
+    salesSearcher.init(_condArr, "condList", url, function (data) {
 
         displayFunc.init('resultList', data);
 
 
-    }, "pagenation", "salesPostData", null, false, null);
+    }, "pagenation", postData, null, false, null);
 
     initButtons();
 
@@ -333,11 +341,13 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator()
                 closefullPaymentlayer()
                 $('#approver').empty();
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator()
                 closefullPaymentlayer()
                 $('#approver').empty();
             }
@@ -455,7 +465,7 @@ $(function () {
                         var radios = _approval.find('input:checked').attr('userid');
 
                         //checkApproval(approver, "审批人不能为空", "right")
-                        if (!checkApproval(approvalComment, "备注不能为空", "right")) {
+                        if (com.validate('layerSubmit','right')) {
                             return;
                         }
 
@@ -934,32 +944,6 @@ $(function () {
 
         }
     }
-
-    function checkApproval($input, message, position) {
-
-        var flag = true;
-
-        if ($input.val() == "" || $input.val() == null) {
-
-            $input.focus().select();
-
-            $input.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": position,
-                "data-original-title": "",
-                "title": "",
-                "data-content": message
-
-            }).popover('show');
-
-            flag = false;
-        } else {
-            $input.popover('destroy');
-
-        }
-
-        return flag;
-    };
 
     function printPayment(orderId, sid) {
 

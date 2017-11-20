@@ -24,7 +24,7 @@ jQuery(function($) {
         };
 
         var creatLine = function (v) {
-
+            com.sealJournal("info",v)
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decorationOrder.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -72,7 +72,8 @@ jQuery(function($) {
             })
 
             $btnPrice.click(function(){
-                viewAuditRecord(v.decorationOrder.orderId, v.designerId,v.deptId,v.deptDutyUId);
+                com.sealJournal("info",v)
+                viewAuditRecord(v.decorationOrder.orderId, v.designerId,v.deptId);
             });
 
             $btnAddMinus.click(function(){
@@ -87,11 +88,10 @@ jQuery(function($) {
             return $liLine;
         };
 
-        var viewAuditRecord = function (aid,designerId,deptId,deptDutyUserId){
+        var viewAuditRecord = function (aid,designerId,deptId){
             params['decorationOrderId'] = aid;
             params["designerId"] = designerId;
-            params["deptId "] = deptId;
-            params["managerId"] = deptDutyUserId;
+            params["deptId"] = deptId;
             params['auditStatusType'] = 'admin';
             params['rollback'] = api.index.auditIndex.url;
             com.switchPage(api.index.auditRecordIndex.url);

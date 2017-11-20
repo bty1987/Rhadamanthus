@@ -18,7 +18,6 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.vo.ApprovalQuotationDiscountVO;
 import com.fanglin.approval.vo.ApprovalVO;
@@ -42,7 +41,7 @@ public class ApprovalQuotationDiscountAction extends BaseListAction {
 	@Action(value = "submitApprovalForQuotationDiscount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForQuotationDiscount() throws FLException{
 		
-		approvalQuotationDiscountService.submitApprovalForQuotationDiscount(approval, approvalQuotationDiscount, queryUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT,queryCompany());
+		approvalQuotationDiscountService.submitApprovalForQuotationDiscount(approval, approvalQuotationDiscount, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}

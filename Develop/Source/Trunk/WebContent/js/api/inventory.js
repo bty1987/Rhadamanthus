@@ -349,6 +349,9 @@ $.extend(api, {
         pageSales: {
             url: "pageSales.do",
         },
+        pageSalesForAdvance: {
+            url: "pageSalesForAdvance.do",
+        },
         pageSalesForBalance:{
           url:"pageSalesForBalance.do",
         },

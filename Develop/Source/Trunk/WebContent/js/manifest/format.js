@@ -177,7 +177,7 @@ $(function(){
             var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
                 $cell.append($input);
             }
 
@@ -191,25 +191,28 @@ $(function(){
 
         $btncheck.click(function (e) {
             e.stopPropagation();
+            if(com.validate('addFormat','bottom')){
+                return;
+            }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var options = {
                 "format.gid":goodsFormatPopUp.attr('data-gid'),
                 "format.info": $lineInfoWrap.find('.info input').val()
             };
-            if(checkRowValue($line)){
-                com.post(api.inventory.addFormat,options,function(){
-                    $('#list').empty();
-                    addline(1).addClass('current').appendTo('#list');
-                    com.post(api.inventory.queryFormatByGid,{
-                        "format.gid":goodsFormatPopUp.attr('data-gid')
-                    },function(data){
-                        displayFunc.init('resultListColor',data.formats)
-                        doSearcher();
-                    })
-                },function(e){
-                    com.showAlert(com.info, e.errorMsg);
+
+            com.post(api.inventory.addFormat,options,function(){
+                $('#list').empty();
+                addline(1).addClass('current').appendTo('#list');
+                com.post(api.inventory.queryFormatByGid,{
+                    "format.gid":goodsFormatPopUp.attr('data-gid')
+                },function(data){
+                    displayFunc.init('resultListColor',data.formats)
+                    doSearcher();
                 })
-            }
+            },function(e){
+                com.showAlert(com.info, e.errorMsg);
+            })
+
 
         })
 
@@ -226,32 +229,7 @@ $(function(){
     }
     addline(1).addClass('current').appendTo('#list');
 
-    function checkRowValue($line){
 
-        var flag = true;
-
-        var name = $line.find('.info input');
-        if(!name.val()){
-            name.focus().select();
-
-            name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写规格信息"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            name.popover('destroy');
-        }
-
-
-
-        return flag;
-    }
 
     /*状态信息验证*/
     function startStatus(id,status,callback){

@@ -34,9 +34,11 @@ public class DecorationOrderPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433500262L;
 	
-	public static final String STATUS_CONSULT_STR = "咨询";
+	public static final int RESOURCETYPE_CONSULT_STR = 0;
 	
-	public static final String STATUS_AMOUNT_STR = "量房";
+	public static final int RESOURCETYPE_AMOUNT_STR = 1;
+	
+	public static final String STATUS_INIT_STR = "初始";
 	
 	public static final String STATUS_QUOTATION_STR = "已报价";
 	
@@ -108,8 +110,6 @@ public class DecorationOrderPO implements Serializable {
 	
 	private UserPO supervisorPO;
 	
-	private UserPO inspectionPO;
-	
 	private String notSalesmanName;
 	
 	private String notSalesmanPhone;
@@ -155,6 +155,12 @@ public class DecorationOrderPO implements Serializable {
 	private int company;
 	
 	private int quotationTimeLimit;
+	
+	private UserPO quoterPO;
+	
+	private UserPO escorterPO;
+	
+	private int resourceType;
 	
 	public DecorationOrderPO(){}
 	
@@ -273,16 +279,6 @@ public class DecorationOrderPO implements Serializable {
 		this.supervisorPO = supervisorPO;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "inspectionId", referencedColumnName="userId")
-	public UserPO getInspectionPO(){
-		return inspectionPO;
-	}
-
-	public void setInspectionPO(UserPO inspectionPO){
-		this.inspectionPO = inspectionPO;
-	}
-
 	public String getNotSalesmanPhone(){
 		return notSalesmanPhone;
 	}
@@ -322,7 +318,7 @@ public class DecorationOrderPO implements Serializable {
 	public void setContractCode(String contractCode){
 		this.contractCode = contractCode;
 	}
-	
+
 	public String getContractUserId() {
 		return contractUserId;
 	}
@@ -379,28 +375,28 @@ public class DecorationOrderPO implements Serializable {
 		this.projectStatus = projectStatus;
 	}
 
-	public void setNotSalesmanName(String notSalesmanName){
-		this.notSalesmanName = notSalesmanName;
-	}
-
 	public String getNotSalesmanName(){
 		return notSalesmanName;
 	}
 
-	public void setBackOrderName(String backOrderName){
-		this.backOrderName = backOrderName;
+	public void setNotSalesmanName(String notSalesmanName){
+		this.notSalesmanName = notSalesmanName;
 	}
 
 	public String getBackOrderName(){
 		return backOrderName;
 	}
 
-	public void setContractTime(Timestamp contractTime){
-		this.contractTime = contractTime;
+	public void setBackOrderName(String backOrderName){
+		this.backOrderName = backOrderName;
 	}
-
+	
 	public Timestamp getContractTime(){
 		return contractTime;
+	}
+	
+	public void setContractTime(Timestamp contractTime){
+		this.contractTime = contractTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -423,36 +419,36 @@ public class DecorationOrderPO implements Serializable {
 		this.versionPO = versionPO;
 	}
 
-	public void setOrderTotalPrice(float orderTotalPrice){
-		this.orderTotalPrice = orderTotalPrice;
-	}
-
 	public float getOrderTotalPrice(){
 		return orderTotalPrice;
 	}
 	
-	public void setFreeArea(float freeArea){
-		this.freeArea = freeArea;
+	public void setOrderTotalPrice(float orderTotalPrice){
+		this.orderTotalPrice = orderTotalPrice;
 	}
 	
 	public float getFreeArea(){
 		return freeArea;
 	}
 	
-	public void setNotSalesmanRate(float notSalesmanRate){
-		this.notSalesmanRate = notSalesmanRate;
+	public void setFreeArea(float freeArea){
+		this.freeArea = freeArea;
 	}
 	
 	public float getNotSalesmanRate(){
 		return notSalesmanRate;
 	}
 	
-	public void setSalesmanType(String salesmanType){
-		this.salesmanType = salesmanType;
+	public void setNotSalesmanRate(float notSalesmanRate){
+		this.notSalesmanRate = notSalesmanRate;
 	}
-	
+
 	public String getSalesmanType(){
 		return salesmanType;
+	}
+
+	public void setSalesmanType(String salesmanType){
+		this.salesmanType = salesmanType;
 	}
 	
 	public int getOtherStatus(){
@@ -477,6 +473,34 @@ public class DecorationOrderPO implements Serializable {
 
 	public void setQuotationTimeLimit(int quotationTimeLimit) {
 		this.quotationTimeLimit = quotationTimeLimit;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "quoter", referencedColumnName="userId")
+	public UserPO getQuoterPO() {
+		return quoterPO;
+	}
+
+	public void setQuoterPO(UserPO quoterPO) {
+		this.quoterPO = quoterPO;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "escorterId", referencedColumnName="userId")
+	public UserPO getEscorterPO() {
+		return escorterPO;
+	}
+
+	public void setEscorterPO(UserPO escorterPO) {
+		this.escorterPO = escorterPO;
+	}
+	
+	public int getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(int resourceType) {
+		this.resourceType = resourceType;
 	}
 
 }

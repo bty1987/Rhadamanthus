@@ -294,9 +294,11 @@ $(function () {
             //maxmin: true,
             zIndex: 9000,
             success: function (layer, index) {
+                com.clearValidator()
                 $popup.load("views/sales/viewSalesItemPreBalance.html");
             },
             end: function () {
+                com.clearValidator()
                 $popup.attr({'data-sid': null});
                 $popup.empty();
                 salesPreBalance.doSearch();

@@ -53,9 +53,9 @@ jQuery(function ($) {
     $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
 
     $btnConfirm.click(function () {
-        if(com.validate('shipmentPopUp'))
+        if(com.validate('shipmentPopUp', 'bottom')){
             return;
-
+        }
 
         var options = {};
 
@@ -127,6 +127,9 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
                 $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                if(v.cellClass == "des"){
+                    $input.attr('maxlength', '128');
+                }
                 $cell.append($input);
             }
 

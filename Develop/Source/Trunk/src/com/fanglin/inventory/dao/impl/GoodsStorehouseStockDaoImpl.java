@@ -29,9 +29,11 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 	}
 	
 	@Override
-	public List<GoodsStorehouseStockPO> pageGoodsStorehouseStock(Paging paging, List<Filter> filters) {
+	public List<GoodsStorehouseStockPO> pageGoodsStorehouseStock(Paging paging, List<Filter> filters, List<Long> shids) {
 		
 		PagingQuery<GoodsStorehouseStockPO> query = pagingQuery(paging, GoodsStorehouseStockPO.class);
+		
+		query.alias("storehouse", "storehouse").add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_SHID_STR, shids, "in"));
 		
 		queryFilterExecute(query, filters);
 		

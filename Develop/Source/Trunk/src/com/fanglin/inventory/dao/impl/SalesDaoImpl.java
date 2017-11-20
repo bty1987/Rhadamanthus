@@ -3,8 +3,6 @@ package com.fanglin.inventory.dao.impl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
-
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -22,7 +20,23 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSales(Paging paging, List<Filter> filters,int company) {
+	public List<SalesPO> pageSales(Paging paging, List<Filter> filters,int company,int uid) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR,company,"eq"));
+		
+		query.add(Restrictions.or(Restrictions.or(query.getCriterion(SalesPO.COLUMN_GUID_STR, uid,"eq"),query.getCriterion(SalesPO.COLUMN_ISID_STR,uid,"eq")),query.getCriterion(SalesPO.COLUMN_SALESMANID_STR,uid,"eq")));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPO> pageSalesForAdvance(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 		

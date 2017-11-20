@@ -29,9 +29,11 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
+import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.vo.AddReduceVO;
@@ -50,6 +52,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
+	
+	@Autowired
+	private ExtensionItemDao extensionItemDao;
 	
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
@@ -251,6 +256,16 @@ public class AddReduceServiceImpl implements AddReduceService{
 				
 				_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, addReduceItemNum));
 				addReduceItemDao.update(_addReduceItemPO);
+			}else if(addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT){
+				ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
+				if(extensionItemPO == null){
+					throw new FLException(200027, "扩展项不存在");
+				}
+				float _extensionItemNum = extensionItemPO.getNum();
+				float addReduceItemNum = addReduceItemPO.getNum();
+				
+				extensionItemPO.setNum(Arith.add(_extensionItemNum, addReduceItemNum));
+				addReduceItemDao.update(extensionItemPO);
 			}
 			
 			addReduceItemDao.delete(addReduceItemPO);

@@ -41,9 +41,13 @@ public class QuotationFunctionAreaItemPO0 extends QuotationFunctionAreaItemPO  i
 	
 	private float unitPrice;
 	
+	private String formula;
+	
 	private float num;
 	
 	private short type;
+	
+	private short subtype;
 	
 	private short discount;
 	
@@ -99,6 +103,15 @@ public class QuotationFunctionAreaItemPO0 extends QuotationFunctionAreaItemPO  i
 	public void setUnitPrice(float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+	
+	@Column(name = "formula")
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
 
 	@Column(name = "num")
 	public float getNum(){
@@ -116,6 +129,15 @@ public class QuotationFunctionAreaItemPO0 extends QuotationFunctionAreaItemPO  i
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
 	}
 
 	public short getDiscount() {

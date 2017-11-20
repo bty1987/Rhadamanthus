@@ -86,7 +86,7 @@ $(function(){
                 v.userId,
                 v.userName,
                 v.currentName,
-                v.duty
+                v.duty.name
             ];
 
             $.each(propertyArr, function (i, v) {

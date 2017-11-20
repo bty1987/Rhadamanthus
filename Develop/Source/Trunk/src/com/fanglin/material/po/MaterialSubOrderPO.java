@@ -28,6 +28,8 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	
 	public static final String COLUMN_DESIGNERID_STR = "designerId";
 	
+	public static final String COLUMN_MATERIALID_STR = "materialerId";
+	
 	public static final String COLUMN_DESIGNERNAME_STR = "designerName";
 	
 	public static final String COLUMN_SALESMANID_STR = "salesmanId";
@@ -144,8 +146,6 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 	private String instoreId;
 	
 	private String instoreName;
-	
-	private int designerFlag;
 	
 	private int packageFlag;
 	
@@ -456,15 +456,6 @@ public class MaterialSubOrderPO implements java.io.Serializable {
 
 	public void setBase(float base){
 		this.base = base;
-	}
-
-	@Column(name = "designerFlag")
-	public int getDesignerFlag(){
-		return designerFlag;
-	}
-
-	public void setDesignerFlag(int designerFlag){
-		this.designerFlag = designerFlag;
 	}
 
 	@Column(name = "materialerId")

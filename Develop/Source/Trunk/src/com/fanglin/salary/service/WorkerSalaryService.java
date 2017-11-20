@@ -12,7 +12,7 @@ public interface WorkerSalaryService {
 	
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
 	
-	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId)throws FLException;
+	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId,int company)throws FLException;
 	
 	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO)throws FLException ;
 	

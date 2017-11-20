@@ -10,9 +10,10 @@ jQuery(function ($) {
         var num = $('.line', '#List').length;
         var returnFlag = false;
         var $lines = $('.line', '#List');
+        com.clearValidator();
         $lines.each(function(){
             var $this = $(this);
-            if(!checkRowValue($this)){
+            if(com.validate("addPopUp","top")){
                 returnFlag = true;
                 return false;
             }
@@ -31,13 +32,13 @@ jQuery(function ($) {
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col9');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass: "name",  hasInput: !0},//名称
-            {cellClass: "height",  hasInput: !0},//高
-            {cellClass: "width",  hasInput: !0},//宽
-            {cellClass: "thick",  hasInput: !0},//厚
+            {cellClass: "name",  hasInput: !0,validate:"v_required"},//名称
+            {cellClass: "height",  hasInput: !0,validate:"v_required v_float"},//高
+            {cellClass: "width",  hasInput: !0,validate:"v_required v_float"},//宽
+            {cellClass: "thick",  hasInput: !0,validate:"v_required v_float"},//厚
             {cellClass: "modelling",  hasInput: !0},//造型
 			{cellClass: "unitprice"},//单价
-            {cellClass: "outNum",  hasInput: !0},//数量
+            {cellClass: "outNum",  hasInput: !0,validate:"v_required v_float"},//数量
             {cellClass: "total"},//总价
             {cellClass: "comment",hasInput: !0},//说明
 
@@ -51,7 +52,7 @@ jQuery(function ($) {
             var $input;
             var $cell = $('<div></div>').addClass('cell '+v.cellClass);
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable '+v.validate+'');
                 $cell.append($input);
             }
             $cell.appendTo($lineInfoWrap);
@@ -64,7 +65,8 @@ jQuery(function ($) {
 
         $btncheck.click(function (e) {
             e.stopPropagation();
-            if(!checkRowValue($line)){
+            com.clearValidator();
+            if(com.validate("addPopUp","top")){
                 return;
             }
 
@@ -87,7 +89,6 @@ jQuery(function ($) {
             list: [],
             postData: {},
             source: function (query, process) {
-
                 var params = $.extend({"quoteItem.name": query, "quoteItem.pinyin": query}, this.options.postData);
                 com.post(this.options.url, params, $.proxy(this.options.callback, this));
             }, matcher: function (item) {
@@ -128,14 +129,14 @@ jQuery(function ($) {
 
 
     $("#submitoutsourceItem").click(function () {
-
+        com.clearValidator();
         var options = {};
         var $lines = $('.line', '#List');
         var returnFlag = false;
 
         $lines.each(function(i){
             var $this = $(this);
-            if(!checkRowValue($this)){
+            if(com.validate("addPopUp","top")){
                 returnFlag = true;
             };
 
@@ -163,99 +164,6 @@ jQuery(function ($) {
         })
 
     });
-
-    function checkRowValue($line) {
-
-        var flag = true;
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-        var name = $line.find('.name input');
-        if (!name.val()) {
-            name.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "名称不能为空!"
-            }).popover('show');
-            flag = false;
-        } else {
-            name.popover('destroy');
-        }
-
-        var height = $line.find('.height input');
-        if (!(numRex.test(height.val()) || parseFloat(height.val()) < 0)) {
-            height.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            height.popover('destroy');
-        }
-
-        var width = $line.find('.width input');
-        if (!(numRex.test(width.val()) || parseFloat(width.val()) < 0)) {
-            width.focus().select();
-            width.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            width.popover('destroy');
-        }
-
-        var thick = $line.find('.thick input');
-        if (!(numRex.test(thick.val()) || parseFloat(thick.val()) < 0)) {
-            thick.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            thick.popover('destroy');
-        }
-
-        var num = $line.find('.outNum input');
-        if (!(numRex.test(num.val()) || parseFloat(num.val()) <= 0)) {
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-        //var unitprice = $line.find('.unitprice input');
-        //if (!(numRex.test(unitprice.val()) || parseFloat(unitprice.val()) < 0)) {
-        //    unitprice.addClass('tooltip-info').attr({
-        //        "data-rel": "popover",
-        //        "data-placement": "bottom",
-        //        "data-original-title": "",
-        //        "title": "",
-        //        "data-content": "输入内容格式错误!"
-        //    }).popover('show');
-        //    flag = false;
-        //} else {
-        //    unitprice.popover('destroy');
-        //}
-        return flag;
-    }
-
 
 });
 

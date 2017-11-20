@@ -27,11 +27,15 @@ public class FormatUtil {
 	
 	public static int decodeCompany(String company){
 		
-		int $length = company.length();
-		int $index = Integer.parseInt(company.substring($length-2, $length-1));
-		int _index = Integer.parseInt(company.substring($length-1));
-		
-		return Integer.parseInt(company.substring($index, $index+_index));
+		try {
+			int $length = company.length();
+			int $index = Integer.parseInt(company.substring($length-2, $length-1));
+			int _index = Integer.parseInt(company.substring($length-1));
+			
+			return Integer.parseInt(company.substring($index, $index+_index));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 	
 	public static String encodeCompany(int company){

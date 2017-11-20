@@ -65,7 +65,7 @@ $(function(){
                     //编辑按钮
                     $btnEdit.click(function(){
                         productionUtils.clearForm('form1');
-
+                        com.clearValidator();
                         $layerAdd.attr('data-hid', v.hid);
                         $layerAdd.find('input[name="comment"]').val(v.comment);
 
@@ -74,7 +74,7 @@ $(function(){
 
                             var id = $layerAdd.attr('data-hid');
 
-                            if(checkValue()){
+                            if(!com.validate("layerAdd",null)){
                                 saveData(id, function(){
                                     layer.closeAll();
                                     layer.msg("修改成功",{icon:1,time:2000});
@@ -198,12 +198,12 @@ $(function(){
         hidBtn($adda,0);
 
         $adda.click(function(){
-
+            com.clearValidator();
             productionUtils.clearForm('form1');
 
             var $title = "添加五金单";
             openlayer($title,function(index, layero){
-                if(checkValue()){
+                if(!com.validate("layerAdd",null)){
                     saveData(null, function(){
                         layer.closeAll();
                         layer.msg("添加成功");
@@ -377,25 +377,7 @@ $(function(){
 
     }
 
-    function checkValue(){
-        var _flag = true;
-        //判断五金单说明是否输入正确
-        var $comment = $layerAdd.find("input[name='comment']");
-        if(!$comment.val() || $comment.val().length > 128){
-            _flag = false;
-            $comment.focus().select();
-            $comment.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "说明格式错误"
-            }).popover('show');
-        }else{
-            $comment.popover('destroy');
-        }
-        return _flag;
-    }
+
 
     //根据订单状态隐藏按钮
     function hidBtn(btnId,otherStatus){

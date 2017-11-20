@@ -62,7 +62,7 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 			BeanUtil.copyProperties(productionWorkPlanPO, productionWorkPlanVO, Arrays.asList("workplan","creater"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan(), productionWorkPlanVO.getWorkplan(),Arrays.asList("workshop"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan().getWorkshop(), productionWorkPlanVO.getWorkplan().getWorkshop(), "");
-			BeanUtil.copyProperties(productionWorkPlanPO.getCreater(), productionWorkPlanVO.getCreater(), Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(productionWorkPlanPO.getCreater(), productionWorkPlanVO.getCreater(), Arrays.asList("role","dept","duty"));
 			ProductionWorkPlanVOs.add(productionWorkPlanVO);
 		}
 		return ProductionWorkPlanVOs;

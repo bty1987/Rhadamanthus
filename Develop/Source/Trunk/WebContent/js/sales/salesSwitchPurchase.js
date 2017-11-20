@@ -158,7 +158,7 @@ $(function () {
 
     var salesSwitchPurchaseSearcher = new Searcher();
 
-    salesSwitchPurchaseSearcher.init(_condArr, 'condList', api.inventory.pageSales, function (data) {
+    salesSwitchPurchaseSearcher.init(_condArr, 'condList', api.inventory.pageSalesForAdvance, function (data) {
         $('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
         $('input[name="fullpayTime"]').attr('readonly', true);
         $('input[name="fullpayTime"]').removeAttr('placeholder');
@@ -230,7 +230,7 @@ $(function () {
     }
 
     function savePurchase() {
-        if (!checkInfo()) return;
+        if (com.validate('layerAdd','right')) return;
         var options = {
             "purchase.comment": $('#layerAdd input[name="comment"]').val(),
             "purchase.deliveryTime": $('#layerAdd input[name="deliveryTime"]').val()
@@ -414,41 +414,17 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
+                com.clearValidator();
                 $('#resultListItem').empty()
                 $('input[name="deliveryTime"]').val("")
             },
             cancel: function () {
                 //右上角关闭回调
+                com.clearValidator();
                 $('#resultListItem').empty()
                 $('input[name="deliveryTime"]').val("")
             }
         });
-    }
-
-    function checkInfo() {
-
-        var flag = true;
-
-        var date = $('[name="deliveryTime"]', '#layerAdd');
-        if (!date.val()) {
-            date.focus().select();
-
-            date.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "bottom",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请选择日期"
-
-            }).popover('show');
-
-            flag = false;
-        } else {
-            date.popover('destroy');
-        }
-
-        return flag;
-
     }
 
     function checkRowValue($line, siids) {

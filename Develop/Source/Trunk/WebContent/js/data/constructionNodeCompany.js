@@ -65,7 +65,7 @@ $(function(){
 
 	companySeacher.init( ["companyName"], "condList", api.system.pageCompany, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "companyPostDataTwo", null, false, null, null);
+	}, "pagenation", "constructionNodeCompanyPostData", null, false, null, null);
 
 	//定义全局变量  json
 	var constructionNodeCompany = {
@@ -146,9 +146,5 @@ $(function(){
 			return;
 		});
 	}
-
-	function successCallback(){
-		companySeacher.doSearch();
-	}
-
+	
 });

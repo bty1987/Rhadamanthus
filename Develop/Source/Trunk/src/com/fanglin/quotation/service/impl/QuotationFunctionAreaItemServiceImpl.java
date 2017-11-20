@@ -98,7 +98,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			if(quotationFunctionAreaItemPO == null){
 				throw new FLException(200013, "报价项不存在");
 			}
-			
+			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
 			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
 			
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
@@ -131,7 +131,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionAreaItemForSpec(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 		
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT);
 		
 		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 		
@@ -157,7 +157,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 		
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT);
 		
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.queryQuotationFunctionAreaForTypeByQuotationId(quotationVO.getQid(),QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
 		

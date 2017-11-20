@@ -12,7 +12,7 @@ public interface PuotationService {
 
 	public List<PuotationItemVO> queryPuotationItemByQid(PuotationVO puotationVO);
 	
-	public int addPuotation(PuotationVO puotationVO,String userId) throws FLException;
+	public int addPuotation(PuotationVO puotationVO,List<PuotationItemVO> puotationItems,String userId) throws FLException;
 	
 	public int addPuotationItem(PuotationItemVO puotationItemVO) throws FLException;
 	

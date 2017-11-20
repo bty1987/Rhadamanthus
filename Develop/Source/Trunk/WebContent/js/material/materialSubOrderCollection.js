@@ -52,7 +52,7 @@ jQuery(function($) {
 				materialSubOrderCollection.cash.push(v);
 			}else if(v.type == 2){
 				materialSubOrderCollection.bank.push(v);
-				materialSubOrderCollection.bankInfo[v.key] = v.name;
+				materialSubOrderCollection.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				materialSubOrderCollection.checkBank.push(v);
 			}else if(v.type == 4){
@@ -62,13 +62,13 @@ jQuery(function($) {
 			}
 		});
 		
-		$("#bankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
-		$("#checkvBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
-		$("#installmentBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
-		$("#accountsBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
-		$("#refundBankName").bindData(materialSubOrderCollection.bank, 'key', 'value');
-		$("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'key', 'value');
-		$("#couponType").bindData(materialSubOrderCollection.couponType, 'key', 'value');
+		$("#bankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		$("#checkvBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		$("#installmentBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		$("#accountsBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		$("#refundBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		$("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'no', 'value');
+		$("#couponType").bindData(materialSubOrderCollection.couponType, 'no', 'value');
 	}, null, false);
 	
 	com.post(api.ds.payment, {}, function(res){

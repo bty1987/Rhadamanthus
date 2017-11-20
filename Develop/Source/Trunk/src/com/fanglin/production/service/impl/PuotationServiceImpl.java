@@ -48,12 +48,13 @@ public class PuotationServiceImpl implements PuotationService{
 			
 			BeanUtil.copyProperties(puotationPO, puotationVO,Arrays.asList("creater"));
 			puotationVO.setCreater(new UserVO());
-			BeanUtil.copyProperties(puotationPO.getCreater(),puotationVO.getCreater(),Arrays.asList("role","dept","contracts","experiences"));
+			BeanUtil.copyProperties(puotationPO.getCreater(),puotationVO.getCreater(),Arrays.asList("role","dept","duty"));
 			
 			puotationVOs.add(puotationVO);
 		}
 		return puotationVOs;
 	}
+	
 	@Override
 	public List<PuotationItemVO> queryPuotationItemByQid(PuotationVO puotationVO) {
 		
@@ -72,7 +73,7 @@ public class PuotationServiceImpl implements PuotationService{
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addPuotation(PuotationVO puotationVO,String userId) throws FLException {
+	public int addPuotation(PuotationVO puotationVO,List<PuotationItemVO> puotationItems,String userId) throws FLException {
 
 		PuotationPO puotationPO = new PuotationPO();
 		
@@ -81,13 +82,27 @@ public class PuotationServiceImpl implements PuotationService{
 		puotationPO.setName(puotationVO.getName());
 		puotationPO.setCreater(creater);
 		puotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		puotationPO.setTotal((short)0);
+		puotationPO.setTotal(puotationVO.getTotal());
 		puotationPO.setDiscount((short)1);
 		puotationPO.setComment(puotationVO.getComment());
 		
 		puotationDao.save(puotationPO);
 		
-		puotationVO.setQid(puotationPO.getQid());
+		if(puotationItems != null && puotationItems.size()!=0){
+			
+			PuotationItemPO puotationItemPO;
+			
+			for(PuotationItemVO puotationItemVO : puotationItems){
+				
+				puotationItemPO = new PuotationItemPO();
+				puotationItemPO.setQid(puotationPO.getQid());
+				BeanUtil.copyProperties(puotationItemVO,puotationItemPO);
+
+				puotationItemDao.save(puotationItemPO);
+			
+			}
+			
+		}
 		
 		return 0;
 	}
@@ -130,6 +145,7 @@ public class PuotationServiceImpl implements PuotationService{
 		puotationDao.update(puotationPO);
 		return 0;
 	}
+	
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)

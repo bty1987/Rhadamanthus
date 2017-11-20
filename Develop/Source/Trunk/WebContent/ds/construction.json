@@ -24,12 +24,13 @@
 		{"key":"2", "value":"放线小组"}, 
 		{"key":"3", "value":"水暖工"}, 
 		{"key":"4", "value":"力工"}, 
-		{"key":"5", "value":"水电工"}, 
-		{"key":"6", "value":"瓦工"},
-		{"key":"7", "value":"地面找平"},   
-		{"key":"8", "value":"木工"}, 
-		{"key":"9", "value":"油工"},
-		{"key":"10", "value":"保洁工"}
+		{"key":"5", "value":"电工"}, 
+		{"key":"6", "value":"水电工"}, 
+		{"key":"7", "value":"瓦工"},
+		{"key":"8", "value":"地面找平"},   
+		{"key":"9", "value":"木工"}, 
+		{"key":"10", "value":"油工"},
+		{"key":"11", "value":"保洁工"}
 	],
     "errorCode": 0,
     "errorMsg": null

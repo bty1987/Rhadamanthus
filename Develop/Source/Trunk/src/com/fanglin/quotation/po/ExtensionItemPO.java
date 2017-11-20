@@ -25,6 +25,10 @@ public class ExtensionItemPO implements Serializable{
 	
 	private String itemName;
 	
+	private short type;
+	
+	private short subtype;
+	
 	private String measurementUnit;
 	
 	private String workType;
@@ -66,6 +70,24 @@ public class ExtensionItemPO implements Serializable{
 
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
 	}
 
 	@Column(name = "measurementUnit")

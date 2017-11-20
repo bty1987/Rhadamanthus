@@ -25,11 +25,11 @@ public interface MaterialSubOrderService {
 	
 	public void pageMaterialSubOrderByUserId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
-	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId);
+	public void pageMaterialSubOrderByOrderId(Paging paging, List<Filter> filters, String orderId,String userId);
+	
+	public void pageMaterialSubOrderForAdvance(Paging paging, List<Filter> filters, String orderId);
 	
 	public void pageMaterialSubOrderByOrderIdADeptId(Paging paging, List<Filter> filters, String orderId, String userId);
-	
-	public void pageMaterialSubOrderByOrderIdInstoreId(Paging paging, List<Filter> filters, String orderId, String userId);
 	
 	public void pageMaterialSubOrderForPreBalance(Paging paging, List<Filter> filters, String userId,int company);
 	
@@ -58,5 +58,7 @@ public interface MaterialSubOrderService {
 	public void postBalanceMaterialSubOrder(MaterialSubOrderVO materialSubOrderVO, String userId, String userName) throws FLException;
 	
 	public int deleteMaterialSubOrder(long msoId) throws FLException;
+	
+	
 
 }

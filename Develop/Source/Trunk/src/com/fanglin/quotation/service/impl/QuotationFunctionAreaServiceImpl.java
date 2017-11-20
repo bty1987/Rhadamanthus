@@ -134,7 +134,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			
 			BeanUtil.copyProperties(quotationFunctionAreaPO, quotationFunctionAreaVO);
 			
-			if(!"0".equals(quotationFunctionAreaVO.getFunctionAreaType())){
+			if(QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT != quotationFunctionAreaVO.getType()){
 				quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
 			}
 		}
@@ -184,10 +184,11 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				
 				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
 				
-				if(functionAreaItemPO.getQuotationItem().getQuotationType().getId() == 2){
-					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_MATERIAL_INT;
+				if(functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_AI_INT){
+					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT;
 				}
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				quotationFunctionAreaItemVO.setSubtype((short)functionAreaItemPO.getQuotationItem().getQuotationType().getId());
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
 				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getItemName());
 				quotationFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());

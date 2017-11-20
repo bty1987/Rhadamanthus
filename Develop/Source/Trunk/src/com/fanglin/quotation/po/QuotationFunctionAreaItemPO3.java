@@ -29,7 +29,7 @@ import com.fanglin.data.po.QuotationItemPO;
 @Table(name = "quotationfunctionareaitem3", catalog = "quotation")
 public class QuotationFunctionAreaItemPO3 extends QuotationFunctionAreaItemPO  implements Serializable{
 
-	private static final long serialVersionUID = -1495497405192428115L;
+	private static final long serialVersionUID = 984422681871996475L;
 
 	private long qfaiId;
 
@@ -41,9 +41,13 @@ public class QuotationFunctionAreaItemPO3 extends QuotationFunctionAreaItemPO  i
 	
 	private float unitPrice;
 	
+	private String formula;
+	
 	private float num;
 	
 	private short type;
+	
+	private short subtype;
 	
 	private short discount;
 	
@@ -99,6 +103,14 @@ public class QuotationFunctionAreaItemPO3 extends QuotationFunctionAreaItemPO  i
 	public void setUnitPrice(float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+	@Column(name = "formula")
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
 
 	@Column(name = "num")
 	public float getNum(){
@@ -116,6 +128,15 @@ public class QuotationFunctionAreaItemPO3 extends QuotationFunctionAreaItemPO  i
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
 	}
 
 	public short getDiscount() {

@@ -57,36 +57,36 @@ $(function () {
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
                 salesPayment.cash.push(v);
-                salesPayment.cashInfo[v.key] = v.name;
+                salesPayment.cashInfo[v.no] = v.name;
             } else if (v.type == 2) {
                 salesPayment.bank.push(v);
-                salesPayment.bankInfo[v.key] = v.name;
+                salesPayment.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
                 salesPayment.checkBank.push(v);
-                salesPayment.checkBankInfo[v.key] = v.name;
+                salesPayment.checkBankInfo[v.no] = v.name;
             } else if (v.type == 4) {
                 salesPayment.accounts.push(v);
-                salesPayment.accountsInfo[v.key] = v.name;
+                salesPayment.accountsInfo[v.no] = v.name;
             } else if (v.type == 5) {
                 salesPayment.couponType.push(v);
-                salesPayment.couponTypeData[v.key] = [v.key, v.name];
+                salesPayment.couponTypeData[v.no] = [v.no, v.name];
             }
         });
 
-        $("#cashInfo").bindData(salesPayment.cash, 'key', 'name');
-        $("#refundCashInfo").bindData(salesPayment.cash, 'key', 'name');
+        $("#cashInfo").bindData(salesPayment.cash, 'no', 'name');
+        $("#refundCashInfo").bindData(salesPayment.cash, 'no', 'name');
 
-        $("#installmentBankName").bindData(salesPayment.bank, 'key', 'name');
-        $("#refundBankName").bindData(salesPayment.bank, 'key', 'name');
+        $("#installmentBankName").bindData(salesPayment.bank, 'no', 'name');
+        $("#refundBankName").bindData(salesPayment.bank, 'no', 'name');
 
-        $("#checkvBankName").bindData(salesPayment.checkBank, 'key', 'name');
+        $("#checkvBankName").bindData(salesPayment.checkBank, 'no', 'name');
 
-        $("#accountsBankName").bindData(salesPayment.accounts, 'key', 'name');
+        $("#accountsBankName").bindData(salesPayment.accounts, 'no', 'name');
 
-        $("#couponType").bindData(salesPayment.couponType, 'key', 'name');
+        $("#couponType").bindData(salesPayment.couponType, 'no', 'name');
         $("#couponType").trigger("chosen:updated");
 
-        $("#refundCouponType").bindData(salesPayment.couponType, 'key', 'name');
+        $("#refundCouponType").bindData(salesPayment.couponType, 'no', 'name');
         $("#refundCouponType").trigger("chosen:updated");
     }, null, false);
 
@@ -112,7 +112,6 @@ $(function () {
 
 
     com.post(api.ds.payment, {}, function (res) {
-        // $("#advanceType").bindData(res.advanceType, 'key', 'value');
 
         for (var i = 0; i < res.materialPaymentType.length; i++) {
             var paymentType = res.materialPaymentType[i];
@@ -257,7 +256,6 @@ $(function () {
                 $layerrAdd.attr('spid', v.spid);
                 $layerrAdd.attr('sid', v.sales.sid);
                 if ($btnCollect.text() == '退款') {
-                    //$('#couponCheckbox').parent().parent().parent().addClass('hidden');
                     $('#couponCheckbox').parents('.inline').removeClass('hidden');
                     $('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
                 }
@@ -441,11 +439,6 @@ $(function () {
                 return false;
             }
 
-            /*if (_paymentTypeFlag != 0) {
-             _paymentTypeFlag != 1 ? _paymentTypeFlag != 2 ? com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款不支持不同订单间的操作");
-             return false;
-             }*/
-
             $('#referMoney').val(referMoney);
 
             openlayer($addspan.text(), function () {
@@ -625,10 +618,14 @@ $(function () {
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
+                if(com.validate('layerAdd')){
+                    return;
+                }
                 callback(index, layero);
                 salesPaymentSearcher.doSearch();
             },
             btn2: function (index, layero) {
+                com.clearValidator();
                 //按钮【按钮二】的回调
                 salesPaymentSearcher.doSearch();
                 closeLayer();
@@ -655,6 +652,7 @@ $(function () {
         $('#bankDivGroup').empty();
         $('#payAdvance').val("");
         $('.search-choice').find('input').val('');
+        $('#collectDes').val("");
     }
 
     function addBankDiv(index){
@@ -666,7 +664,7 @@ $(function () {
 
         var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
         var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(salesPayment.bank, 'key', 'name').appendTo(bankNameDiv);
+        var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(salesPayment.bank, 'no', 'name').appendTo(bankNameDiv);
         var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
         var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
             $("#bankDiv_"+$(this).attr("index")).remove();
@@ -678,7 +676,7 @@ $(function () {
 
         var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
         var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_price").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
+        var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
 
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
         var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
@@ -689,7 +687,6 @@ $(function () {
         var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
         var bankTimeInput =  $('<input></input>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 
-//		bankTimeInput.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
     }
 
     function baseClick() {
@@ -834,7 +831,7 @@ $(function () {
 
         salesPayment.items.couponType.chosen("destroy");
         salesPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-        salesPayment.items.couponType.bindData(salesPayment.couponType, 'key', 'name');
+        salesPayment.items.couponType.bindData(salesPayment.couponType, 'no', 'name');
         salesPayment.items.couponType.trigger("chosen:updated");
 
         var referMoney = parseFloat(referMoney);

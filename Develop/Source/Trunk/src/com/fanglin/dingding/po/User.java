@@ -28,6 +28,8 @@ public class User {
 	
 	private JSONObject extattr;
 	
+	private String jobnumber;
+	
 	public User() {
 	}
 	
@@ -131,4 +133,13 @@ public class User {
 	public void setExtattr(JSONObject extattr) {
 		this.extattr = extattr;
 	}
+
+	public String getJobnumber() {
+		return jobnumber;
+	}
+
+	public void setJobnumber(String jobnumber) {
+		this.jobnumber = jobnumber;
+	}
+	
 }

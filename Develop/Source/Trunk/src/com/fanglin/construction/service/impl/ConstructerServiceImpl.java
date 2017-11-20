@@ -16,6 +16,7 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.ConstructerService;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -49,9 +50,11 @@ public class ConstructerServiceImpl implements ConstructerService {
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserVO());
+			UserVO userVO = new UserVO(new DutyVO()); 
+			ConstructerVO constructerV = new ConstructerVO(userVO);
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
-			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(constructerPO.getUser().getDuty(), constructerV.getUser().getDuty(), Arrays.asList("departmentType"));
 			constructerVOs.add(constructerV);
 		}
 		
@@ -68,9 +71,11 @@ public class ConstructerServiceImpl implements ConstructerService {
 		List<ConstructerVO> constructerVOs = new ArrayList<ConstructerVO>();
 		
 		for (ConstructerPO constructerPO : constructerPOs) {
-			ConstructerVO constructerV = new ConstructerVO(new UserVO());
+			UserVO userVO = new UserVO(new DutyVO()); 
+			ConstructerVO constructerV = new ConstructerVO(userVO);
 			BeanUtil.copyProperties(constructerPO, constructerV,Arrays.asList("user","creater"));
-			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept"));
+			BeanUtil.copyProperties(constructerPO.getUser(), constructerV.getUser(),Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(constructerPO.getUser().getDuty(), constructerV.getUser().getDuty(), Arrays.asList("departmentType"));
 			constructerVOs.add(constructerV);
 		}
 		
@@ -105,7 +110,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		
 		ConstructerPO constructerPO = new ConstructerPO(userPO, userC);
 		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));
-		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept"));
+		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept", "duty"));
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		constructerPO.setOrderId(constructionPO.getDecorationOrderPO().getOrderId());
 		constructerDao.save(constructerPO);

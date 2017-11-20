@@ -22,7 +22,7 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsStorehouseStockService {
 	
-	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters);
+	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters, String userId);
 	
 	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStock);
 	

@@ -11,8 +11,9 @@ jQuery(function($) {
 		postParam: {},
 	};
 	
+	
 	approve.saveBtn = $("#saveBtn").bindClick(saveData);
-	approve.cancelBtn = $("#cancelBtn");
+	approve.cancelBtn = $("#cancelBtn");  
 	approve.modal = $("#approveModal");
 	approve.items.userSel = $("#userSel");
 	approve.items.comment = $("#comment");
@@ -60,7 +61,7 @@ jQuery(function($) {
 
             var propertyArr = [
                 ["编号:", user.userId, "grey"],
-                ["职位:", user.duty, "grey"],
+                ["职位:", user.duty.name, "grey"],
                 ["类型:", approve.approvalTypeData[v.type], "red"],
                 ["说明:", v.comment, "grey"]
             ];
@@ -110,7 +111,7 @@ jQuery(function($) {
 
 	$('a[name="addApprovalUser"]', '#pagenation').click(function(){
 		editFlg = false;
-
+		com.clearValidator();
 		com.updateChosen('userSel', '', '');
 		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
 		com.cleanItems(approve.items);
@@ -121,7 +122,7 @@ jQuery(function($) {
 		
 		var options = {
 			"approveUserIds[0]": approveId
-		}
+		};
 		
 		com.post(api.approval.deleteApproveUser, options, function(){
 			searcher.doSearch();
@@ -129,6 +130,10 @@ jQuery(function($) {
 	}
 
 	function saveData(){
+		
+		if(com.validate()){
+			return;
+			}
 		
 		var url;
 		var options = {

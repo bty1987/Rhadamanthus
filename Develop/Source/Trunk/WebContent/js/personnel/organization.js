@@ -5,7 +5,7 @@
 $(function(){
 
     var deptList = null;
-    com.post(api.department.queryDepartment, {"dept.type": "all"}, function(res){
+    com.post(api.department.queryDepartment, {}, function(res){
         deptList = res.deptList;
     }, null, false);
 
@@ -17,19 +17,21 @@ $(function(){
     $.each(deptList, function(i, v){
         didList.push(v.did);
     });
-
     $.each(deptList, function(i,v){
         if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
             didList.splice(didList.indexOf(v.fatherDept.did),1);
         }
     });
-
     //获取根节点
     $.each(deptList, function(i, v){
-        if(v.fatherDept) return true;
+
+        if(v.fatherDept !=null &&v.fatherDept.did !=null &&v.fatherDept.did !=0){
+                return true;
+            }
+
         if(!deptObj[v.company]){
             deptObj[v.company] = {
-                name: v.company,
+                name:params.company.name,
                 type : 'folder',
                 children : {}
             }
@@ -81,7 +83,7 @@ $(function(){
                         ["员工编号:", v.userId, "grey"],
                         ["用户名:", v.loginId, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
-                        ["职位:", v.duty, "grey"],
+                        ["职位:", v.duty.name, "grey"],
                         ["角色:", v.role.roleName, "grey"],
                         ["联系方式:", v.phone, "grey"]
                     ];

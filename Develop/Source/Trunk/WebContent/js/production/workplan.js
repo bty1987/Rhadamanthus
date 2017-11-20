@@ -81,9 +81,10 @@ var flag = 0;
                 var workshop = $('#layerAdd').find('select[name="workshop"]').val(v.workshop.wsid);
                 var comment = $('#layerAdd').find('input[name="comment"]').val(v.comment);
                 $('#layerAdd').attr('data-wpid', v.wpid);
+                com.clearValidator();
                 openlayer(function(){
                     var id = $('#layerAdd').attr('data-wpid');
-                    if(checkRowValue()){
+                    if(!com.validate("layerAdd",null)){
                         saveData(id, function(){
                             layer.closeAll();
                         });
@@ -157,11 +158,10 @@ var flag = 0;
          var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
-
             productionUtils.clearForm('form1');
-
+            com.clearValidator();
             openlayer(function(index, layero){
-                if(checkRowValue()){
+                if(!com.validate("layerAdd",null)){
                     saveData(null, function(){
                         layer.closeAll();
                     });
@@ -206,15 +206,12 @@ var flag = 0;
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);
-                $('#layerAdd').find('input[name="comment"]').val("");
             },
             btn2: function(index, layero){
                 //按钮【按钮二】的回调
-                $('#layerAdd').find('input[name="comment"]').val("");
             },
             cancel: function(){
                 //右上角关闭回调
-                $('#layerAdd').find('input[name="comment"]').val("");
             }
         });
     }
@@ -284,24 +281,5 @@ var flag = 0;
         }
     }
 
-    function checkRowValue(){
-        var _flag = true;
-        //判断五金单说明是否输入正确
-        var $name = $('#layerAdd').find("input[name='name']");
-        if(!$name.val()){
-            _flag = false;
-            $name.focus().select();
-            $name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "名称不能为空"
-            }).popover('show');
-        }else{
-            $name.popover('destroy');
-        }
-        return _flag;
-    }
 });
 

@@ -74,7 +74,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			}
 			
 			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decorationOrder","user","creater","approver"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(),Arrays.asList("dept", "role"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(),Arrays.asList("dept", "role","duty"));
 			WorkerSalaryVOs.add(workerSalaryVO);
 		}
 		paging.setData(WorkerSalaryVOs);
@@ -92,7 +92,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO() );
 			
 			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user","decorationOrder","creater","approver"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role","duty"));
 			workerSalarys.add(workerSalaryvo);
 		}
 		return workerSalarys;
@@ -100,7 +100,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId) throws FLException {
+	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId, int company) throws FLException {
 		
 		UserPO user = userdao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
 	
@@ -121,6 +121,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			
 		    workerSalaryPO.setCid(WorkerSalaryPO.CSID_INIT_STR);
 		}
+		workerSalaryPO.setCompany(company);
 		workerSalaryPO.setSubtype(workerSalaryVO.getSubtype());
 		workerSalaryPO.setComment(workerSalaryVO.getComment());
 	    workerSalaryPO.setType(workerSalaryVO.getType());
@@ -151,7 +152,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		}
 		
 		BeanUtil.copyProperties(workerSalaryVO, workerSalaryPO,Arrays.asList("user"));
-		BeanUtil.copyProperties(workerSalaryVO.getUser(),workerSalaryPO.getUser(), Arrays.asList("dept", "role"));
+		BeanUtil.copyProperties(workerSalaryVO.getUser(),workerSalaryPO.getUser(), Arrays.asList("dept", "role","duty"));
 		workerSalaryDao.update(workerSalaryPO);
 		
 		return 0;

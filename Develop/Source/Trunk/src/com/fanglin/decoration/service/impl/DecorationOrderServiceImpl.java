@@ -192,6 +192,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanPhone(salesman.getPhone());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
 		
@@ -289,6 +303,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
@@ -360,6 +388,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			decorationOrderVO.setHouseNumber(decorationOrderPO.getHouseNumber());
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 			if(decorationOrderPO.getSupervisorPO() != null){
 				decorationOrderVO.setSupervisor(decorationOrderPO.getSupervisorPO().getCurrentName());
 			}
@@ -370,32 +412,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		paging.setData(decorationOrderVOs);
 	}
 	
-	@Override
-	public int queryDecorationOrderForCondition(String userId){
-		
-		int condition = 0;
-		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO.getDuty().contains("设计部总监")){
-			condition = SystemConfig.getInt("majordomoCondition", 0);
-		}else if(userPO.getDuty().contains("设计部经理")){
-			condition = SystemConfig.getInt("managerCondition", 0);
-		}else if(userPO.getDuty().contains("设计师")){
-			condition = SystemConfig.getInt("designerCondition", 0);
-		}else if(userPO.getDuty().contains("总经理")){
-			condition = SystemConfig.getInt("generalCondition", 0);
-		}else if(userPO.getDuty().contains("系统工程师")){
-			condition = SystemConfig.getInt("allCondition", 0);
-		}else if(userPO.getDuty().contains("主材组长")){
-			condition = SystemConfig.getInt("materialCondition", 0);
-		}else{
-			condition = SystemConfig.getInt("commonCondition", 0);
-		}
-		
-		return condition;
-	}
-
 	@Override
 	public void pageDecorationOrderForBelong(Paging paging, List<Filter> filters, Authentication authentication){
 		
@@ -439,6 +455,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
 			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
@@ -501,6 +531,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesmanPhone(salesman.getPhone());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
 		
@@ -516,47 +560,10 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null) return;
-
-		String duty = userPO.getDuty();
 		
-		if(filters.size() == 0 && !duty.contains("设计师")) return;
-		
-		List<Integer> designDepartmentIds = null;
-		List<String> statuses = null;
-		
-		if(duty.contains("设计师")){
-			filters.add(new Filter("designerId", userPO.getUserId(), "eq"));
-		}else{
-			List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid(),company);
-			
-			designDepartmentIds = new ArrayList<Integer>();
-			
-			for(DecorationOrderDesignDepartmentRightPO decorationOrderDesignDepartmentRightPO: decorationOrderDesignDepartmentRightPOs){
-				designDepartmentIds.add(decorationOrderDesignDepartmentRightPO.getDid());
-			}
-			
-			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid(),company);
-			
-			statuses = new ArrayList<String>();
-			
-			for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
-				statuses.add(decorationOrderStatusRightPO.getStatus());
-			}
-			
-			if(statuses.size() == 0 || designDepartmentIds.size() == 0){
-				return;
-			}
-			
-			if(designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationOrderDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
-				designDepartmentIds = null;
-			}
-			
-			if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
-				statuses = null;
-			}
-		}
-		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, designDepartmentIds, statuses, company);
+		filters.add(new Filter("designerId", userPO.getUserId(), "eq"));
+	
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesign(paging, filters, company);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -602,6 +609,21 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			
 			decorationOrderVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
+			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
@@ -632,46 +654,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(userPO == null) return;
 		
-		String duty = userPO.getDuty();
+		filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
 		
-		List<Integer> salesmanDepartmentIds = null;
-		List<String> statuses = null;
-		
-		if(duty.contains("业务员")){
-			filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
-		}else{
-			List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid(),company);
-			
-			if(decoratoinOrderSalesmanDepartmentRightPOs.isEmpty()) return;
-					
-			salesmanDepartmentIds = new ArrayList<Integer>();
-			
-			for(DecorationOrderSalesmanDepartmentRightPO decorationOrderSalesmanDepartmentRightPO: decoratoinOrderSalesmanDepartmentRightPOs){
-				salesmanDepartmentIds.add(decorationOrderSalesmanDepartmentRightPO.getDid());
-			}
-			
-			List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid(),company);
-			
-			statuses = new ArrayList<String>();
-			
-			for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
-				statuses.add(decorationOrderStatusRightPO.getStatus());
-			}
-			
-			if(statuses.size() == 0 || salesmanDepartmentIds.size() == 0){
-				return;
-			}
-			
-			if(salesmanDepartmentIds.size() == 1 && salesmanDepartmentIds.get(0) == DecorationOrderSalesmanDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
-				salesmanDepartmentIds = null;
-			}
-			
-			if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
-				statuses = null;
-			}
-		}
-		
-		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesman(paging, filters, salesmanDepartmentIds, statuses, company);
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesman(paging, filters, company);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
 		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
@@ -716,6 +701,443 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
 			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
 			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
+			decorationOrderVOs.add(decorationOrderVO);
+		}
+	
+		paging.setData(decorationOrderVOs);
+	}
+
+	@Override
+	public void pageDecorationOrderForQuoter(Paging paging,List<Filter> filters, Authentication authentication) {
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		filters.add(new Filter("quoterId", userPO.getUserId(), "eq"));
+		
+		List<Integer> designDepartmentIds = null;
+		List<String> statuses = null;
+		
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else{
+			    decorationOrderVO.setOrderTotalPrice(0f);
+			}
+			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
+			VillageVO villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper", "buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			CustomerVO customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			
+			decorationOrderVO.setCustomer(customerVO);
+			
+			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
+			decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
+			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			
+			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
+			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
+			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			decorationOrderVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
+			
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
+					decorationOrderVO.setDesigner(decorationOrderVO.getDesigner() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setDesignDepartment(decorationOrderVO.getDesignDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){
+					decorationOrderVO.setSalesman(decorationOrderVO.getSalesman() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}
+			}
+			
+			decorationOrderVOs.add(decorationOrderVO);
+		}
+	
+		paging.setData(decorationOrderVOs);
+		
+	}
+
+	@Override
+	public void pageDecorationOrderForEscorter(Paging paging,List<Filter> filters, Authentication authentication) {
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		filters.add(new Filter("escorterId", userPO.getUserId(), "eq"));
+		
+		List<Integer> designDepartmentIds = null;
+		List<String> statuses = null;
+		
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrder(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else{
+			    decorationOrderVO.setOrderTotalPrice(0f);
+			}
+			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
+			VillageVO villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper", "buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			CustomerVO customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			
+			decorationOrderVO.setCustomer(customerVO);
+			
+			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
+			decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
+			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			
+			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
+			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
+			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			decorationOrderVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
+			
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
+					decorationOrderVO.setDesigner(decorationOrderVO.getDesigner() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setDesignDepartment(decorationOrderVO.getDesignDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){
+					decorationOrderVO.setSalesman(decorationOrderVO.getSalesman() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}
+			}
+			
+			decorationOrderVOs.add(decorationOrderVO);
+		}
+	
+		paging.setData(decorationOrderVOs);
+		
+	}
+	
+	@Override
+	public void pageDecorationOrderForDesignerManager(Paging paging,List<Filter> filters, Authentication authentication){
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+
+		if(filters.size() == 0 ) return;
+		
+		List<Integer> designDepartmentIds = null;
+		List<String> statuses = null;
+		
+		
+		List<DecorationOrderDesignDepartmentRightPO> decorationOrderDesignDepartmentRightPOs = decorationOrderDesignDepartmentRightDao.queryDecorationOrderDesignDepartmentRightByUId(userPO.getUid(),company);
+		
+		designDepartmentIds = new ArrayList<Integer>();
+		
+		for(DecorationOrderDesignDepartmentRightPO decorationOrderDesignDepartmentRightPO: decorationOrderDesignDepartmentRightPOs){
+			designDepartmentIds.add(decorationOrderDesignDepartmentRightPO.getDid());
+		}
+		
+		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid(),company);
+		
+		statuses = new ArrayList<String>();
+		
+		for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
+			statuses.add(decorationOrderStatusRightPO.getStatus());
+		}
+		
+		if(statuses.size() == 0 || designDepartmentIds.size() == 0){
+			return;
+		}
+		
+		if(designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationOrderDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+			designDepartmentIds = null;
+		}
+		
+		if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+			statuses = null;
+		}
+		
+		
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForDesignerManager(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else{
+			    decorationOrderVO.setOrderTotalPrice(0f);
+			}
+			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
+			VillageVO villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper", "buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			CustomerVO customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			
+			decorationOrderVO.setCustomer(customerVO);
+			
+			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
+			decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
+			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			
+			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
+			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
+			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			decorationOrderVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
+			
+			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationOrderPO.getOrderId());
+			
+			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getDesignerPO().getUserId())){
+					decorationOrderVO.setDesigner(decorationOrderVO.getDesigner() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setDesignDepartment(decorationOrderVO.getDesignDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationOrderPO.getSalesmanPO().getUserId())){
+					decorationOrderVO.setSalesman(decorationOrderVO.getSalesman() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
+					decorationOrderVO.setBusinessDepartment(decorationOrderVO.getBusinessDepartment() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+				}
+			}
+			
+			decorationOrderVOs.add(decorationOrderVO);
+		}
+		
+		paging.setData(decorationOrderVOs);
+	}
+	
+	@Override
+	public void pageDecorationOrderForSalesmanManager(Paging paging,List<Filter> filters, Authentication authentication){
+		if(filters.size() == 0) return;
+		
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		List<Integer> salesmanDepartmentIds = null;
+		List<String> statuses = null;
+		
+	
+		List<DecorationOrderSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationOrderSalesmanDepartmentRightDao.queryDecorationOrderSalesmanDepartmentRightByUId(userPO.getUid(),company);
+		
+		if(decoratoinOrderSalesmanDepartmentRightPOs.isEmpty()) return;
+				
+		salesmanDepartmentIds = new ArrayList<Integer>();
+		
+		for(DecorationOrderSalesmanDepartmentRightPO decorationOrderSalesmanDepartmentRightPO: decoratoinOrderSalesmanDepartmentRightPOs){
+			salesmanDepartmentIds.add(decorationOrderSalesmanDepartmentRightPO.getDid());
+		}
+		
+		List<DecorationOrderStatusRightPO> decorationOrderStatusRightPOs = decorationOrderStatusRightDao.queryDecorationOrderStatusRightByUId(userPO.getUid(),company);
+		
+		statuses = new ArrayList<String>();
+		
+		for(DecorationOrderStatusRightPO decorationOrderStatusRightPO: decorationOrderStatusRightPOs){
+			statuses.add(decorationOrderStatusRightPO.getStatus());
+		}
+		
+		if(statuses.size() == 0 || salesmanDepartmentIds.size() == 0){
+			return;
+		}
+		
+		if(salesmanDepartmentIds.size() == 1 && salesmanDepartmentIds.get(0) == DecorationOrderSalesmanDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+			salesmanDepartmentIds = null;
+		}
+		
+		if(statuses.size() == 1 && DecorationOrderStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+			statuses = null;
+		}
+		
+		
+		List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.pageDecorationOrderForSalesmanManager(paging, filters, salesmanDepartmentIds, statuses, company);
+		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		
+		for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+			DecorationOrderVO decorationOrderVO = new DecorationOrderVO();
+			BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
+			if(decorationOrderVO.getOrderTotalPrice() == null){
+				decorationOrderVO.setOrderTotalPrice(new Float(0));
+			}
+			
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
+			
+			if(decorationOrderPO.getOrderTotalPrice() != 0){
+			    decorationOrderVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
+			}else if(quotationPO != null){
+			    decorationOrderVO.setOrderTotalPrice(quotationPO.getTotalPrice());
+			}else{
+			    decorationOrderVO.setOrderTotalPrice(0f);
+			}
+			
+			if(quotationPO == null){
+				decorationOrderVO.setDiscount(0f);
+			}else{
+				decorationOrderVO.setDiscount(quotationPO.getDiscount());
+			}
+			
+			VillageVO villageVO = new VillageVO();
+			CityProperVO cityProperVO = new CityProperVO();
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
+			BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
+			villageVO.setCityProper(cityProperVO);
+			decorationOrderVO.setVillage(villageVO);
+			
+			CustomerVO customerVO = new CustomerVO();
+			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
+			customerVO.setConfidentialInfo();
+			decorationOrderVO.setCustomer(customerVO);
+			
+			decorationOrderVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
+			decorationOrderVO.setDesignerId(decorationOrderPO.getDesignerPO().getUserId());
+			decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
+			
+			decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
+			decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
+			decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
 			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
@@ -773,6 +1195,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			decorationOrderVO.setContractCode(startWith + decorationOrderVO.getOrderId() + "-" + decorationOrderPO.getDesignerPO().getDept().getContractPrefix());
 		}
 		
+		UserPO quoterPO = decorationOrderPO.getQuoterPO();
+		
+		if(quoterPO != null){
+			decorationOrderVO.setQuoterId(quoterPO.getUserId());
+			decorationOrderVO.setQuoter(quoterPO.getCurrentName());
+		}
+		
+		UserPO escorter = decorationOrderPO.getEscorterPO();
+		
+		if(escorter != null){
+			decorationOrderVO.setEscorterId(escorter.getUserId());
+			decorationOrderVO.setEscorter(escorter.getCurrentName());
+		}
+		
 		if(decorationOrderVO.getOrderTotalPrice() == null || decorationOrderVO.getOrderTotalPrice() == 0){
 			
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationOrderPO.getOrderId());
@@ -815,23 +1251,9 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 	
 	@Override
 	public DecorationOrderVO queryDecorationOrderForDesignerByOrderId(DecorationOrderVO decorationOrderVO, String userId) throws FLException{
-		
-		List<String> unstatus = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR, DecorationOrderPO.STATUS_TERMINATION_STR, DecorationOrderPO.STATUS_COMPLETED_STR});
-		List<String> checkInfoDutys = Arrays.asList("设计部经理", "设计师");
-		
+
 		decorationOrderVO = queryDecorationOrderById(decorationOrderVO.getOrderId());
-		
-		String status = decorationOrderVO.getStatus();
-		
-		if(!unstatus.contains(status)){
-			
-			UserPO userPO = userDao.queryUserByUserId(userId);
-			
-			if(!checkInfoDutys.contains(userPO.getDuty())){
-				decorationOrderVO.getCustomer().setConfidentialInfo();
-			}
-		}
-		
+
 		return decorationOrderVO;
 	}
 	
@@ -863,6 +1285,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		decorationOrderVO.setSalesman(decorationOrderPO.getSalesmanPO().getCurrentName());
 		decorationOrderVO.setSalesmanId(decorationOrderPO.getSalesmanPO().getUserId());
+		
+		UserPO quoter = decorationOrderPO.getQuoterPO();
+		
+		if(quoter != null){
+			decorationOrderVO.setQuoterId(quoter.getUserId());
+			decorationOrderVO.setQuoter(quoter.getCurrentName());
+		}
+		
+		UserPO escorter = decorationOrderPO.getEscorterPO();
+		
+		if(escorter != null){
+			decorationOrderVO.setEscorterId(escorter.getUserId());
+			decorationOrderVO.setEscorter(escorter.getCurrentName());
+		}
 		
 		return decorationOrderVO;
 	}
@@ -915,6 +1351,20 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 				decorationOrderVO.setSupervisorPhone(supervisor.getPhone());
 			}
 			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 			decorationOrderVOs.add(decorationOrderVO);
 		}
 		
@@ -942,6 +1392,22 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 			BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
 			customerVO.setConfidentialInfo();
 			decorationOrderVO.setCustomer(customerVO);
+			
+			
+			UserPO quoter = decorationOrderPO.getQuoterPO();
+			
+			if(quoter != null){
+				decorationOrderVO.setQuoterId(quoter.getUserId());
+				decorationOrderVO.setQuoter(quoter.getCurrentName());
+			}
+			
+			UserPO escorter = decorationOrderPO.getEscorterPO();
+			
+			if(escorter != null){
+				decorationOrderVO.setEscorterId(escorter.getUserId());
+				decorationOrderVO.setEscorter(escorter.getCurrentName());
+			}
+			
 		}
 	}
 
@@ -954,14 +1420,14 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		if(!status.contains(decorationOrderPO.getStatus())){
-			throw new FLException(140040, "订单信息不可修改");
+		if(status.contains(decorationOrderPO.getStatus()) && decorationOrderVO.getNotSalesmanRate() != null){
+			decorationOrderPO.setNotSalesmanRate(decorationOrderVO.getNotSalesmanRate());
 		}
 		
 		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
@@ -970,10 +1436,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
 		decorationOrderPO.setType(type);
 	
-		if(decorationOrderVO.getNotSalesmanRate() != null){
-			decorationOrderPO.setNotSalesmanRate(decorationOrderVO.getNotSalesmanRate());
-		}
-		
 		if(decorationOrderVO.getNotSalesmanName() != null){
 			decorationOrderPO.setNotSalesmanName(decorationOrderVO.getNotSalesmanName());
 		}
@@ -984,6 +1446,16 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		if(decorationOrderVO.getNotSalesmanContent() != null){
 			decorationOrderPO.setNotSalesmanContent(decorationOrderVO.getNotSalesmanContent());
+		}
+		
+		if(decorationOrderVO.getQuoterId() != null && !decorationOrderVO.getQuoterId().equals("")){
+			UserPO quoter = userDao.queryUserByUserId(decorationOrderVO.getQuoterId());
+			decorationOrderPO.setQuoterPO(quoter);
+		}
+		
+		if(decorationOrderVO.getEscorterId() != null && !decorationOrderVO.getEscorterId().equals("")){
+			UserPO escorter = userDao.queryUserByUserId(decorationOrderVO.getEscorterId());
+			decorationOrderPO.setEscorterPO(escorter);
 		}
 		
 		decorationOrderDao.update(decorationOrderPO);
@@ -1207,7 +1679,8 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		decorationOrderPO.setHouseClass(decorationOrderVO.getHouseClass());
 		decorationOrderPO.setHouseNumber(decorationOrderVO.getHouseNumber());
 		decorationOrderPO.setHouseType(decorationOrderVO.getHouseType());
-		decorationOrderPO.setStatus(decorationOrderVO.getStatus());
+		decorationOrderPO.setStatus(DecorationOrderPO.STATUS_INIT_STR);
+		decorationOrderPO.setResourceType(decorationOrderVO.getResourceType());
 		decorationOrderPO.setOrderTotalPrice((float) 0);
 		decorationOrderPO.setSalesmanType(decorationOrderVO.getSalesmanType());
 		decorationOrderPO.setCompany(company);
@@ -1217,6 +1690,17 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		UserPO designer = userDao.queryUserByUserId(decorationOrderVO.getDesignerId());
 		UserPO salesman = userDao.queryUserByUserId(decorationOrderVO.getSalesmanId());
+		
+		if(decorationOrderVO.getQuoterId() != null && !decorationOrderVO.getQuoterId().equals("")){
+			UserPO quoter = userDao.queryUserByUserId(decorationOrderVO.getQuoterId());
+			decorationOrderPO.setQuoterPO(quoter);
+		}
+		
+		if(decorationOrderVO.getEscorterId() != null && !decorationOrderVO.getEscorterId().equals("")){
+			UserPO escorter = userDao.queryUserByUserId(decorationOrderVO.getEscorterId());
+			decorationOrderPO.setEscorterPO(escorter);
+		}
+		
 		
 		decorationOrderPO.setDesignerPO(designer);
 		decorationOrderPO.setSalesmanPO(salesman);
@@ -1460,5 +1944,6 @@ public class DecorationOrderServiceImpl implements DecorationOrderService {
 		
 		return 0;
 	}
+
 	
 }

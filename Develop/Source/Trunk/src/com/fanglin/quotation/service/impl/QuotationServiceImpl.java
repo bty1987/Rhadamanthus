@@ -150,7 +150,7 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationOrderPO = quotationPO.getDecorationOrder();
 		}
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		
 		if(decorationOrderPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -210,7 +210,7 @@ public class QuotationServiceImpl implements QuotationService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException{
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR});
 		
 		String orderId = quotationVO.getOrderId();
 		
@@ -261,11 +261,11 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationFunctionAreaDao.save(autogeneration);
 		
 		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
+		
 		QuotationFunctionAreaItemPO trafficPrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
-		convertQuotationPOForAdvance(trafficPrice,"车运费", "", "其他", quotationVersionPO.getTrafficRate(), 0f, (short) 2, quotationVersionPO.getTrafficDiscount(), autogeneration, "");
+		convertQuotationPOForAdvance(trafficPrice,"车运费", "", "其他", quotationVersionPO.getTrafficRate(),"0" ,0f, (short) 2, quotationVersionPO.getTrafficDiscount(), autogeneration, "",(short)0);
 		QuotationFunctionAreaItemPO managePrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
-		convertQuotationPOForAdvance(managePrice,"管理费", "", "其他", quotationVersionPO.getManageRate(), .0f, (short) 3, quotationVersionPO.getManageDiscount(), autogeneration, "");
+		convertQuotationPOForAdvance(managePrice,"管理费", "", "其他", quotationVersionPO.getManageRate(),"0" ,0f, (short) 3, quotationVersionPO.getManageDiscount(), autogeneration, "",(short)0);
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);
 	
@@ -340,7 +340,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		long replicaQId = quotationVO.getQid();
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR});
 		
 		QuotationPO quotationPO = new QuotationPO();
 		
@@ -553,16 +553,18 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
 		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 	}
-	private void convertQuotationPOForAdvance(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO,String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content){
+	private void convertQuotationPOForAdvance(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO,String itemName, String measurementUnit, String workType, float unitPrice, String formula ,float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content,short subtype){
 		quotationFunctionAreaItemPO.setItemName(itemName);
 		quotationFunctionAreaItemPO.setMeasurementUnit(measurementUnit);
 		quotationFunctionAreaItemPO.setWorkType(workType);
 		quotationFunctionAreaItemPO.setUnitPrice(unitPrice);
+		quotationFunctionAreaItemPO.setFormula(formula);
 		quotationFunctionAreaItemPO.setNum(num);
 		quotationFunctionAreaItemPO.setType(type);
 		quotationFunctionAreaItemPO.setDiscount(discount);
 		quotationFunctionAreaItemPO.setQuotationFunctionArea(quotationFunctionArea);
 		quotationFunctionAreaItemPO.setContent(content);
+		quotationFunctionAreaItemPO.setSubtype(subtype);
 	}
 	
 }

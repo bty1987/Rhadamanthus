@@ -37,7 +37,6 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.SystemConfig;
 
 @Service("approvalQuotationDiscountService")
 @Transactional(readOnly=true)
@@ -63,17 +62,16 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, short level, int company) throws FLException {
+	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, int company) throws FLException {
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
 		
-		String approvalDuty = "";
 		String orderId = approvalQuotationDiscountVO.getOrderId();
 		Long quotationId = approvalQuotationDiscountVO.getQuotationId();
 		
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, String.valueOf(quotationId));
 		
-		if(approvalPO != null && level == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT){
+		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
@@ -92,28 +90,15 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
-		List<UserPO> userPOs = null;
-		UserPO userPO = decorationOrderPO.getDesignerPO();
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-		if(level == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT){
-			approvalDuty = "设计部经理";
-			
-			userPOs = userDao.queryUserByDeptIdADuty(userPO.getDept().getDeptId(), approvalDuty);
-		}else if(level == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT){
-			approvalDuty = "设计部总监";
-			
-			userPOs = userDao.queryUserByDeptIdADuty(userPO.getDept().getFatherDept().getDeptId(), approvalDuty);
-		}
-		
-		if(userPOs == null || userPOs.size() == 0){
-			throw new FLException(200008, "审批信息错误,没有" + approvalDuty);
-		}
+
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(quotationId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount(), level));
-		approvalPO.setReceiver(userPOs.get(0));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount()));
+		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
 		
@@ -124,7 +109,6 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		
 		approvalQuotationDiscountPO.setAid(approvalPO.getAid());
 		approvalQuotationDiscountPO.setOldDiscount(quotationPO.getDiscount());
-		approvalQuotationDiscountPO.setLevel(level);
 		
 		approvalQuotationDiscountDao.save(approvalQuotationDiscountPO);
 
@@ -149,36 +133,20 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<String> status = Arrays.asList(DecorationOrderPO.STATUS_CONSULT_STR, DecorationOrderPO.STATUS_AMOUNT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR);
-		
-		Float limitDiscount = SystemConfig.getFloat("defaultSecondApprovalDiscount", 8f);
+		List<String> status = Arrays.asList(DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR);
 		
 		if(!status.contains(decorationOrderPO.getStatus())){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
 			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationOrderPO.getStatus()));
 		}else{
-			if(approvalQuotationDiscountPO.getLevel() == ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_ONE_INT && approvalQuotationDiscountPO.getNewDiscount() < limitDiscount){
-				ApprovalVO approvalVO = new ApprovalVO();
-				approvalVO.setComment(approvalPO.getComment());
-				
-				ApprovalQuotationDiscountVO approvalQuotationDiscountVO = new ApprovalQuotationDiscountVO();
-				approvalQuotationDiscountVO.setOrderId(approvalQuotationDiscountPO.getOrderId());
-				approvalQuotationDiscountVO.setQuotationId(approvalQuotationDiscountPO.getQuotationId());
-				approvalQuotationDiscountVO.setNewDiscount(approvalQuotationDiscountPO.getNewDiscount());
-				
-				submitApprovalForQuotationDiscount(approvalVO, approvalQuotationDiscountVO, approvalPO.getSender().getUserId(), ApprovalPO.APPROVAL_QUOTATION_DISCOUNT_LEVEL_TWO_INT,approvalPO.getCompany());
-			}else{
 				QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
 				
 				if(quotationPO == null){
 					throw new FLException(200003, "报价不存在");
-				}
-				
+				}	
 				quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
 				quotationDao.update(quotationPO);
-			}
-		}
-		
+		}		
 		return 0;
 	}
 

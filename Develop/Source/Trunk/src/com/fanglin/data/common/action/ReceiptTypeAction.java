@@ -60,6 +60,22 @@ public class ReceiptTypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="updateReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateReceiptType() throws FLException{
+			
+		 receiptTypeService.updateReceiptType(receiptType,queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateReceiptTypeForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateDrawLineGroupForStatus() throws FLException{
+		
+		receiptTypeService.updateReceiptTypeForStatus(receiptType);
+		
+		return SUCCESS;
+	}
+	
 	public ReceiptTypeVO getReceiptType() {
 		return receiptType;
 	}

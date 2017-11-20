@@ -88,5 +88,6 @@
 	<classpathentry kind="lib" path="D:/Workspaces/Rhadamanthus/Develop/Source/Trunk/WebContent/WEB-INF/lib/xwork-core-2.3.16.3.jar"/>
 	<classpathentry kind="lib" path="D:/Workspaces/Rhadamanthus/Develop/Source/Trunk/WebContent/WEB-INF/lib/core-3.1.0.jar"/>
 	<classpathentry kind="lib" path="D:/Workspaces/Rhadamanthus/Develop/Source/Trunk/WebContent/WEB-INF/lib/javase-1.7.jar"/>
+	<classpathentry kind="lib" path="D:/Workspaces/Rhadamanthus/Develop/Source/Trunk/WebContent/WEB-INF/lib/taobao-sdk-java-auto_1479188381469-20171026.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

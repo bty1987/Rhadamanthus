@@ -19,8 +19,17 @@ $(function () {
     var approver = $('#approver');
     var refundDes = $('#refundDes');
 
+    var purchaseBalance = {
+        validator: {
+            num: {
+                type: "v_num",
+                regex: /^(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
+                errorMsg: "结算值输入内容格式错误"
+            }
+        }
+    };
 
-
+    $.extend(com.validator, purchaseBalance.validator);
 
     refund.focus(function () {
         refund.popover('destroy');
@@ -82,9 +91,6 @@ $(function () {
                     $('#balance').val(v.balance);
                     $('#comment').val(v.comment);
 
-                    $('#balance').on('change', function () {
-                        checkRowValue();
-                    });
                     openMoneylayer(function (index, layero) {
 
                         var balance = $('#balance').val();
@@ -95,8 +101,9 @@ $(function () {
                             "purchaseBalance.balance": balance,
                             "purchaseBalance.comment": comment
                         };
-
-                        if(checkRowValue()){
+                        if(com.validate('layerEdit')){
+                            return;
+                        }
 
                             if(v.status == 1){
                                 layer.alert('采购结算状态不可操作', {
@@ -113,7 +120,7 @@ $(function () {
                                     com.showAlert(com.error, e.errorMsg);
                                 }, false);
                             }
-                        }
+
 
                     });
 
@@ -231,9 +238,11 @@ $(function () {
     //添加点击事件
     addBtn.click(function(){
 
-        $('#balance').on('change', function () {
-            checkRowValue();
-        });
+
+
+        //$('#balance').on('change', function () {
+        //    checkRowValue();
+        //});
 
         $('#balance').val("");
         $('#comment').val("");
@@ -249,7 +258,10 @@ $(function () {
                 "purchaseBalance.comment": comment
             };
 
-            if(checkRowValue()){
+            if(com.validate('layerEdit')){
+                return;
+            }
+            //if(checkRowValue()){
                 com.post(api.inventory.addPurchaseBalance, editArr, function () {
                     $('#list ul.item-list').remove();
                     queryPurchaseBalanceByPid(pid);
@@ -258,7 +270,7 @@ $(function () {
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 }, false);
-            }
+            //}
 
         });
 
@@ -290,28 +302,28 @@ $(function () {
 
     });
 
-    function checkRowValue() {
-
-        var flag = true;
-
-        var num = $('#balance');
-        var numRex = /^(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/;
-        if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "结算值输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-        return flag;
-    }
+    //function checkRowValue() {
+    //
+    //    var flag = true;
+    //
+    //    var num = $('#balance');
+    //    var numRex = /^(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/;
+    //    if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
+    //        num.focus().select();
+    //        num.addClass('tooltip-info').attr({
+    //            "data-rel": "popover",
+    //            "data-placement": "top",
+    //            "data-original-title": "",
+    //            "title": "",
+    //            "data-content": "结算值输入内容格式错误!"
+    //        }).popover('show');
+    //        flag = false;
+    //    } else {
+    //        num.popover('destroy');
+    //    }
+    //
+    //    return flag;
+    //}
 
 
 

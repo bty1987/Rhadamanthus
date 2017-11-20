@@ -67,7 +67,7 @@ $(function(){
 
     
     $uploadBtn.click(function(){
-
+        com.clearValidator();
         if($status == 4 || $status == 5 ||$status == 3){
             $("#importProductionPicture").addClass("hide")
         }
@@ -77,7 +77,8 @@ $(function(){
         openlayerImportProduction();
 
         $("#importProductionPicture").click(function(){
-            if(!checkAddValue()){
+
+            if(com.validate("layerProductionImport",null)){
                 return false;
             }
         });
@@ -191,27 +192,5 @@ $(function(){
         });
 
     }
-
-    function checkAddValue(){
-        var flag = true;
-        //判断说明是否输入正确
-        var $pictureComment = $layerImport.find("input[name='pictureComment']");
-
-        if(!$pictureComment.val()){
-            $pictureComment.focus().select();
-            $pictureComment.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "right",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "图纸说明不能为空"
-            }).popover('show');
-            flag= false;
-        }else{
-            $pictureComment.popover('destroy');
-        }
-        return flag;
-    }
-
 
 });

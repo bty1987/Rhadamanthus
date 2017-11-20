@@ -29,9 +29,11 @@ public class CheckListDaoImpl extends DaoImpl<CheckListPO> implements CheckListD
 	}
 	
 	@Override
-	public List<CheckListPO> pageCheckList(Paging paging, List<Filter> filters) {
+	public List<CheckListPO> pageCheckList(Paging paging, List<Filter> filters, List<Long> shids) {
 		
 		PagingQuery<CheckListPO> query = pagingQuery(paging, CheckListPO.class);
+		
+		query.alias("storehouse", "storehouse").add(query.getCriterion(CheckListPO.COLUMN_STOREHOUSE_SHID_STR, shids, "in"));
 		
 		queryFilterExecute(query, filters);
 		
@@ -63,5 +65,6 @@ public class CheckListDaoImpl extends DaoImpl<CheckListPO> implements CheckListD
 			}
 		}
 	}
+
 
 }

@@ -73,11 +73,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO != null){
-			String duty = userPO.getDuty();
-			
-			if(duty.contains("监理")){
-				filters.add(new Filter(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR, userId, "eq"));
-			}
+			filters.add(new Filter(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR, userId, "eq"));
 		}
 		
 		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters, company);
@@ -110,11 +106,11 @@ public class ConstructionServiceImpl implements ConstructionService {
 		
 		filters.add(new Filter(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR, String.valueOf(AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT), acceptanceFlagOp));
 		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForAcceptance(paging, filters, company);
+		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForAcceptance(paging, filters, company);
 		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
 		
-		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){
-			decorationOrderVOs.add(decorationOrderPOToVO(constructionSchedulePO.getDecorationOrderPO()));
+		for(ConstructionPO constructionPO: constructionPOs){
+			decorationOrderVOs.add(decorationOrderPOToVO(constructionPO.getDecorationOrderPO()));
 		}
 		
 		paging.setData(decorationOrderVOs);
@@ -123,42 +119,20 @@ public class ConstructionServiceImpl implements ConstructionService {
 	@Override
 	public ConstructionVO queryConstructionById(int cid){
 		
-		ConstructionPO constructionSchedulePO = constructionDao.get(cid);
-		ConstructionVO constructionScheduleVO = new ConstructionVO();
+		ConstructionPO constructionPO = constructionDao.get(cid);
+		ConstructionVO constructionVO = new ConstructionVO();
 		
-		BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO);
+		BeanUtil.copyProperties(constructionPO, constructionVO);
 		
-		return constructionScheduleVO;
+		return constructionVO;
 	}
 	
 	@Override
-	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO, String userId){
+	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO){
 		
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
 		
 		BeanUtil.copyProperties(constructionPO, constructionVO);
-		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		if(userPO != null && constructionPO != null){
-			
-			int schedule = constructionPO.getSchedule();
-			
-			if(userPO.getDuty().contains("质检") && (userPO.getDuty().contains("水暖工") || userPO.getDuty().contains("电工") || userPO.getDuty().contains("力工"))){
-				
-				if(schedule >= ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT && schedule < ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT){
-					constructionVO.setSchedule(ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT);
-				}else if(schedule >= ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT){
-					constructionVO.setSchedule(ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT);
-				}
-			}else if(userPO.getDuty().contains("质检") && (userPO.getDuty().contains("铲大白"))){
-				
-				if(schedule >= ConstructionPO.SCHEDULE_TYPE_CHAN_INT && schedule < ConstructionPO.SCHEDULE_TYPE_GROUNDLEVELING_INT){
-					constructionVO.setSchedule(ConstructionPO.SCHEDULE_TYPE_CHAN_INT);
-				}else if(schedule >= ConstructionPO.SCHEDULE_TYPE_GROUNDLEVELING_INT){
-					constructionVO.setSchedule(ConstructionPO.SCHEDULE_TYPE_GROUNDLEVELING_INT);
-				}
-			}
-		}
 		
 		return constructionVO;
 	}

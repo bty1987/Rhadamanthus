@@ -1,11 +1,6 @@
 
 $(function(){
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
     var $workflowName = $('#workflowName');
     var displayFunc  = (function() {
 
@@ -25,8 +20,6 @@ $(function(){
                 });
             }
         };
-
-
 
         var createTableTitle = function(){
 
@@ -75,11 +68,7 @@ $(function(){
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
             var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑'));
-
-            //var $btnShow = $('<li></li>').append($('<a></a>').html('查看'));
-
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
-
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
             $btnUl.append($btnEdit).append($btnStart).append($btnStop);
@@ -92,32 +81,20 @@ $(function(){
 
 
             $btnEdit.on("click",function () {
-
                 var name = $('#layerAdd').find('input[name="name"]').val(v.name);
                 $('#layerAdd').attr('data-atid', v.wfid);
+                com.clearValidator();
                 openlayer(function(){
                     var id = $('#layerAdd').attr('data-atid');
-                        if(submitValidate()){
-                            saveData(id, function(){
-                                Seacher.doSearch();
-                                layer.closeAll();
-                                $workflowName.val("");
-                            });
-                        }
-
+                    if(!com.validate("layerAdd",null)){
+                        saveData(id, function(){
+                            Seacher.doSearch();
+                            layer.closeAll();
+                            $workflowName.val("");
+                        });
+                    }
                 });
-
             });
-
-
-           /* $btnShow.click(function () {
-
-                $('#layerAdd').attr('data-wfid', v.wfid);
-                var id = $('#layerAdd').attr('data-wfid');
-                ShowWorkplan(id);
-
-            });*/
-
 
             $btnStart.click(function () {
 
@@ -137,7 +114,6 @@ $(function(){
                 });
 
             });
-
 
             $btnStop.click(function () {
 
@@ -173,7 +149,6 @@ $(function(){
         };
     })();
 
-
         var Seacher = new Searcher();
 
         Seacher.init(["workflowName"], "condList", api.production.pageWorkflow, function (data) {
@@ -185,8 +160,9 @@ $(function(){
             var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
             $adda.on("click",function () {
+                com.clearValidator();
                 openlayer(function(index, layero){
-                    if(submitValidate()){
+                    if(!com.validate("layerAdd",null)){
                         saveData(null, function(){
                             Seacher.doSearch();
                             layer.closeAll();
@@ -199,7 +175,6 @@ $(function(){
 
             return [$adda];
         },'resultList');
-
 
     function openlayer(callback){
         layer.closeAll();
@@ -225,31 +200,6 @@ $(function(){
             }
         });
     }
-
-
-    //function ShowWorkplan(wfid) {
-    //
-    //    var $popup = $('#checkWorkplan');
-    //    $popup.attr({'data-wfid': wfid});
-    //
-    //    //弹出即全屏
-    //    var index = layer.open({
-    //        type: 1,
-    //        skin: 'layui-layer-molv',
-    //        title: "查看工序组",
-    //        content: $popup,
-    //        area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-    //        maxmin: true,
-    //        zIndex: 9999,
-    //        btn: ['取消'],
-    //        success: function (layer, index) {
-    //            $popup.load("views/production/checkWorkplan.html");
-    //        },
-    //        end: function () {
-    //            $popup.attr('data-wfid', null);
-    //        }
-    //    });
-    //}
 
     function saveData(id,callback){
         var $layer = $('#layerAdd');
@@ -316,23 +266,4 @@ $(function(){
         }
     }
 
-    function submitValidate() {
-        var flag = true;
-        if(!$workflowName.val()){
-            $workflowName.focus().select();
-            $workflowName.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写工序名称"
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            $workflowName.popover('destroy');
-
-        }
-        return flag;
-    }
 });

@@ -20,6 +20,5 @@ import com.fanglin.utils.Paging;
 
 public interface CheckListDao extends Dao<CheckListPO> {
 	
-	public List<CheckListPO> pageCheckList(Paging paging, List<Filter> filters);
-
+	public List<CheckListPO> pageCheckList(Paging paging, List<Filter> filters, List<Long> shids);
 }

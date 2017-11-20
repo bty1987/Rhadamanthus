@@ -167,7 +167,7 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		if(com.validate()|| complaint.repeatFlg)
+		if(com.validate("complaintModal")|| complaint.repeatFlg)
 			return;
 
 		var url;

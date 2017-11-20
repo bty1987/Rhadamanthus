@@ -39,13 +39,13 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	public List<DecorationOrderPO> pageDecorationOrder(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company){
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
+		query.add(query.getCriterion("company", company, "eq"));
+			
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
 			query.alias("designerPO", "designer");
 			query.alias("designer.dept", "designerDept");
 			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
 		}
-		
-		query.add(query.getCriterion("company", company, "eq"));
 		
 		if(statuses != null && statuses.size() > 0){
 			query.add(Restrictions.in("status", statuses));
@@ -76,21 +76,11 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 	
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company) {
+	public List<DecorationOrderPO> pageDecorationOrderForDesign(Paging paging, List<Filter> filters, int company) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 		
 		query.add(query.getCriterion("company", company, "eq"));
-	
-		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
-			query.alias("designerPO", "designer");
-			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
-		}
-		
-		if(statuses != null && statuses.size() > 0){
-			query.add(Restrictions.in("status", statuses));
-		}
 		
 		queryFilterExcute(query, filters);
 		
@@ -100,21 +90,11 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 	}
 
 	@Override
-	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company) {
+	public List<DecorationOrderPO> pageDecorationOrderForSalesman(Paging paging, List<Filter> filters, int company) {
 		
 		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
 
 		query.add(query.getCriterion("company", company, "eq"));
-		
-		if(salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0){
-			query.alias("salesmanPO", "salesman");
-			query.alias("salesman.dept", "salesmanDept");
-			query.add(Restrictions.in("salesmanDept.did", salesmanDepartmentIds));
-		}
-		
-		if(statuses != null && statuses.size() > 0){
-			query.add(Restrictions.in("status", statuses));
-		}
 		
 		queryFilterExcute(query, filters);
 		
@@ -169,6 +149,53 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 		return query.list();
 	}
 	
+	@Override
+	public List<DecorationOrderPO> pageDecorationOrderForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company) {
+		
+		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+		
+		query.add(query.getCriterion("company", company, "eq"));
+	
+		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
+			query.alias("designerPO", "designer");
+			query.alias("designer.dept", "designerDept");
+			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
+		}
+		
+		if(statuses != null && statuses.size() > 0){
+			query.add(Restrictions.in("status", statuses));
+		}
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("autoId");
+		
+		return query.list();
+	}
+
+	@Override
+	public List<DecorationOrderPO> pageDecorationOrderForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company) {
+		
+		PagingQuery<DecorationOrderPO> query = pagingQuery(paging, DecorationOrderPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
+		
+		if(salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0){
+			query.alias("salesmanPO", "salesman");
+			query.alias("salesman.dept", "salesmanDept");
+			query.add(Restrictions.in("salesmanDept.did", salesmanDepartmentIds));
+		}
+		
+		if(statuses != null && statuses.size() > 0){
+			query.add(Restrictions.in("status", statuses));
+		}
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("autoId");
+		
+		return query.list();
+	}
 	@Override
 	public List<DecorationOrderPO> queryDecorationOrder(List<Filter> filters){
 		
@@ -296,7 +323,7 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					if(field.contains("Region")){
 						query.alias("designer.dept", "designerDept");
 						query.alias("designerDept.fatherDept", "designerRegion");
-				}
+					}
 				}else if((field.startsWith("business") || field.startsWith("salesman"))){
 					
 					query.alias("salesmanPO", "salesman");
@@ -313,6 +340,28 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 					query.alias("villagePO", "village");
 				}else if(field.startsWith("customer")){
 					query.alias("customerPO", "customer");
+				}else if(field.startsWith("quoter")){
+					query.alias("quoterPO", "quoter");
+					
+					if(field.contains("Department")){
+						query.alias("quoter.dept", "quoterDept");
+					}
+					
+					if(field.contains("Region")){
+						query.alias("quoter.dept", "quoterDept");
+						query.alias("quoterDept.fatherDept", "quoterRegion");
+					}
+				}else if(field.startsWith("escorter")){
+					query.alias("escorterPO", "escorter");
+					
+					if(field.contains("Department")){
+						query.alias("escorter.dept", "escorterDept");
+					}
+					
+					if(field.contains("Region")){
+						query.alias("escorter.dept", "escorterDept");
+						query.alias("escorterDept.fatherDept", "escorterRegion");
+					}
 				}
 				
 				if("orderId".equals(field)){
@@ -348,6 +397,14 @@ public class DecorationOrderDaoImpl extends DaoImpl<DecorationOrderPO> implement
 				}else if("supervisor".equals(field)){
 					query.alias("orderSupervisorPO", "supervisor");
 					query.add(query.getCriterion("supervisor.currentName", data, op));
+				}else if("quoterId".equals(field)){
+					query.add(query.getCriterion("quoter.userId", data, op));
+				}else if("quoter".equals(field)){
+					query.add(query.getCriterion("quoter.currentName", data, op));
+				}else if("escorterId".equals(field)){
+					query.add(query.getCriterion("escorter.userId", data, op));
+				}else if("escorter".equals(field)){
+					query.add(query.getCriterion("escorter.currentName", data, op));
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.villageName", data, op));
 				}else if("company".equals(field)){

@@ -79,7 +79,7 @@ public class NoticeDepartmentServiceImpl implements NoticeDepartmentService {
 		}
 		
 		noticeDepartmentDao.deleteNoticeDepartment(nid);
-		
+
 		for (Integer did: dids) {
 			NoticeDepartmentPO noticeDepartmentPO = new NoticeDepartmentPO(nid, did);
 			

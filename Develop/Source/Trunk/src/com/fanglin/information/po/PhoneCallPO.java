@@ -39,18 +39,13 @@ public class PhoneCallPO implements java.io.Serializable {
 	
 	private String callee;
 	
-	private Timestamp startTime;
+	private long startTime;
 	
-	private Timestamp endTime;
+	private long endTime;
 	
 	private int stopReason;
 	
 	private int duration;
-	
-	private int recordType;
-	
-	private String recordUrl;
-
 
 	public PhoneCallPO() {
 		super();
@@ -128,20 +123,20 @@ public class PhoneCallPO implements java.io.Serializable {
 	}
 
 	@Column(name = "startTime")
-	public Timestamp getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(long startTime) {
 		this.startTime = startTime;
 	}
 
 	@Column(name = "endTime")
-	public Timestamp getEndTime() {
+	public long getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Timestamp endTime) {
+	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
 
@@ -162,26 +157,5 @@ public class PhoneCallPO implements java.io.Serializable {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-	
-	@Column(name = "recordType")
-	public int getRecordType() {
-		return recordType;
-	}
-
-	public void setRecordType(int recordType) {
-		this.recordType = recordType;
-	}
-	
-	@Column(name = "recordUrl")
-	public String getRecordUrl() {
-		return recordUrl;
-	}
-
-	public void setRecordUrl(String recordUrl) {
-		this.recordUrl = recordUrl;
-	}
-	
-	
-
 
 }

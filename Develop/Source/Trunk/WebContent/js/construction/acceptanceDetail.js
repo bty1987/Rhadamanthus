@@ -72,7 +72,7 @@ jQuery(function($) {
 
 		if(constructers && constructers.length > 0){
 			for(var i = 0; i < constructers.length; i++){
-				constructerImg(constructers[i].user.userPhoto, constructers[i].user.userName, constructers[i].user.duty, constructers[i].schedule);
+				constructerImg(constructers[i].user.userPhoto, constructers[i].user.userName, constructers[i].user.duty.name, constructers[i].schedule);
 			}
 		}else{
 			var pane = $("<div>当前订单没有分配工人!</div>").addClass("alert alert-info").appendTo($("#constructerDiv"));

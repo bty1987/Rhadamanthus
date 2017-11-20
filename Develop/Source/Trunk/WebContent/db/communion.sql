@@ -495,8 +495,8 @@ CREATE TABLE `village` (
   `villageId` varchar(10) NOT NULL,
   `buildingNameRuleId` varchar(10) NOT NULL,
   `villageName` varchar(20) NOT NULL,
-  `villageNamePinYinAB` varchar(256) DEFAULT NULL,
-  `villageNamePinYinAll` varchar(256) DEFAULT NULL,
+  `villageNamePinYinAB` varchar(64) DEFAULT NULL,
+  `villageNamePinYinAll` varchar(64) DEFAULT NULL,
   `cityProperId` varchar(10) NOT NULL,
   `developer` varchar(20) DEFAULT NULL,
   `salesPhone` varchar(15) DEFAULT NULL,
@@ -508,10 +508,11 @@ CREATE TABLE `village` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`vId`),
   UNIQUE KEY `uniqueone` (`villageId`),
-  KEY `indexone` (`buildingNameRuleId`,`cityProperId`),
-  KEY `indextwo` (`villageId`,`cityProperId`,`buildingNameRuleId`),
-  KEY `indexthr` (`x`,`y`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
+  KEY `indexone` (`villageId`),
+  KEY `indextwo` (`villageName`),
+  KEY `indexthr` (`villageNamePinYinAB`),
+  KEY `indexfor` (`villageNamePinYinAll`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='楼盘表';
 
 DROP TABLE IF EXISTS `worktype`;
 CREATE TABLE `worktype` (

@@ -51,7 +51,7 @@ public class MemberDetailServiceImpl  implements MemberDetailService {
 		for(MemberDetailPO memberDetailPO: memberDetailPOs){
 			memberDetailVO = new MemberDetailVO(new UserVO());
 			BeanUtil.copyProperties(memberDetailPO, memberDetailVO, Arrays.asList("memberCard", "cuId"));
-			BeanUtil.copyProperties(memberDetailPO.getCuId(), memberDetailVO.getCuId(), Arrays.asList("role","dept"));
+			BeanUtil.copyProperties(memberDetailPO.getCuId(), memberDetailVO.getCuId(), Arrays.asList("role","dept","duty"));
 			memberDetailVOs.add(memberDetailVO);
 		}
 		

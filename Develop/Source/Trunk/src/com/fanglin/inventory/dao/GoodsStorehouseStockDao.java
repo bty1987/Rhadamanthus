@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsStorehouseStockDao extends Dao<GoodsStorehouseStockPO> {
 	
-	public List<GoodsStorehouseStockPO> pageGoodsStorehouseStock(Paging paging, List<Filter> filters);
+	public List<GoodsStorehouseStockPO> pageGoodsStorehouseStock(Paging paging, List<Filter> filters, List<Long> shids);
 	
 	public GoodsStorehouseStockPO queryGoodsStorehouseStockByShIdAGId(long gid, long cid, long fid, long shId);
 	

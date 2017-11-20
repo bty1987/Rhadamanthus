@@ -109,7 +109,6 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		approvalDecorationRefundPO.setPaymentId(paymentId);
 		
 		approvalDecorationRefundDao.save(approvalDecorationRefundPO);
-		
 
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
 		
@@ -126,13 +125,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		if(approvalDecorationRefundPO == null){
 			throw new FLException(240003, "审批信息不完整");
 		}
-		
-		ApprovalPO approvalPOs = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT,ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT,String.valueOf(approvalDecorationRefundPO.getPaymentId()));
 
-		if(approvalPOs != null){
-			throw new FLException(240002, "不能重复审批");
-		}
-		
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(approvalDecorationRefundPO.getPaymentId());
 		
 		if(decorationPaymentPO == null){

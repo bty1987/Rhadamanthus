@@ -53,8 +53,8 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	}
 	
 	@Override
-	public ReceiptTypePO queryReceiptTypeByKey(String key,int company) {
-		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_KEY_STR, key)).uniqueResult();
+	public ReceiptTypePO queryReceiptTypeByNo(String no,int company) {
+		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

@@ -9,7 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface SalesDao extends Dao<SalesPO> {
 	
-	public List<SalesPO> pageSales(Paging paging, List<Filter> filter,int company);
+	public List<SalesPO> pageSales(Paging paging, List<Filter> filter,int company,int uid);
+	
+	public List<SalesPO> pageSalesForAdvance(Paging paging, List<Filter> filter,int company);
 	
 	public List<SalesPO> pageSalesForBalance(Paging paging, List<Filter> filter,int company);
 	

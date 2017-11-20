@@ -9,7 +9,7 @@ jQuery(function($) {
 		editFlg: false,
 		
 		postParam: {
-			"user.duty": "驻店导购"
+			"user.duty.name": "驻店导购"
 		},
 		
 		userId: "",

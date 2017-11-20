@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.production.dao.ProductionUserWorkFlowDao;
 import com.fanglin.production.po.ProductionUserWorkFlowPO;
@@ -24,27 +23,29 @@ public class ProductionUserWorkFlowServiceImpl implements ProductionUserWorkFlow
 	private ProductionUserWorkFlowDao productionUserWorkFlowDao;
 	
 	@Override
-	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowByPwfid(ProductionUserWorkFlowVO productionUserWorkFlowVO) throws FLException {
-		List<ProductionUserWorkFlowPO> productionUserWorkFlowPOs = productionUserWorkFlowDao.queryProductionUserWorkFlowByPwfid(productionUserWorkFlowVO.getProductionworkflow().getPwfid());
-		List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs = null;
+	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowsByPwfids(List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs){
 		
-		if(productionUserWorkFlowPOs.size() != 0){
+		List<ProductionUserWorkFlowVO> _productionUserWorkFlowVOs = new ArrayList<ProductionUserWorkFlowVO>();
+		
+		for(ProductionUserWorkFlowVO productionUserWorkFlowVO : productionUserWorkFlowVOs){
 			
-			productionUserWorkFlowVOs = new ArrayList<ProductionUserWorkFlowVO>();
+			List<ProductionUserWorkFlowPO> productionUserWorkFlowPOs = productionUserWorkFlowDao.queryProductionUserWorkFlowByPwfid(productionUserWorkFlowVO.getProductionworkflow().getPwfid());
 			
-			for(ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs){
-				productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserVO());
-				BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow","operator"));
-				BeanUtil.copyProperties(productionUserWorkFlowPO.getProductionworkflow(), productionUserWorkFlowVO.getProductionworkflow(), Arrays.asList("workflow"));
-				BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowVO.getOperator(), Arrays.asList("role","dept","contracts","experiences"));
-				productionUserWorkFlowVOs.add(productionUserWorkFlowVO);
-			}			
+			if(productionUserWorkFlowPOs.size() != 0){
+		
+				for(ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs){
+					productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserVO());
+					BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow","operator"));
+					BeanUtil.copyProperties(productionUserWorkFlowPO.getProductionworkflow(), productionUserWorkFlowVO.getProductionworkflow(), Arrays.asList("workflow"));
+					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowVO.getOperator(), Arrays.asList("role","dept","duty"));
+					_productionUserWorkFlowVOs.add(productionUserWorkFlowVO);
+				}			
+				
+			}
 			
 		}
-		return productionUserWorkFlowVOs;
 		
-		
-		
+		return _productionUserWorkFlowVOs;
 		
 	}
 

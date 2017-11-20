@@ -79,6 +79,7 @@ jQuery(function($) {
 		}),
 		//全退按钮
 		fullRefundBtn: $('#fullRefundBtn').on("click", function(){
+
             var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
             if(fullStatus == 3 || fullStatus == 2){
                 var options = {};
@@ -96,6 +97,7 @@ jQuery(function($) {
 		}),
 		//倒单按钮
 		daodanBtn: $('#daodanBtn').on("click", function(){
+
             var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
             if(fullStatus == 3 || fullStatus == 2){
                 var options = {};

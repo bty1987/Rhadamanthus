@@ -40,7 +40,7 @@ jQuery(function($) {
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(approvalTrack.approvalTypeData[v.type]));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons')
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 			// 查看主材退款,主材详细信息按钮
 			var $btnDetails = $('<a></a>').addClass('btn btn-minier btn-primary').html('详情');
 			var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过').prepend($('<i></i>'));
@@ -74,14 +74,12 @@ jQuery(function($) {
 			}
 
 			$liLine.append($h3).append($ulProperty).append($content);
-			var $sign=$('<i></i>').addClass("icon-spinner icon-spin white bigger-125");
 			$btnPass.bindClick(function() {
-				approveApproval(v.aid);
+				approve(v.aid,api.approval.approveApproval);
 			});
 
 			$btnRefuse.bindClick(function() {
-
-				refuseApproval(v.aid);
+				approve(v.aid,api.approval.refuseApproval);
 			});
 
 			// 详细信息按钮
@@ -99,7 +97,7 @@ jQuery(function($) {
 			drawLine : function(v) {
 				return creatLine(v);
 			}
-		}
+		};
 	})();
 
 	var searcher = new Searcher();
@@ -109,24 +107,8 @@ jQuery(function($) {
 				displayFunc.init('resultList', data);
 			}, "pagenation", "approvalTrackPostData");
 
-	function approveApproval(aId,$this) {
-
-		var options = {
-			"approval.aid" : aId,
-		};
-
-		com.post(api.approval.approveApproval, options, function(res) {
-			searcher.doSearch();
-		},null,false);
-	}
-
-	function refuseApproval(aId) {
-
-		var options = {
-			"approval.aid" : aId,
-		}
-
-		com.post(api.approval.refuseApproval, options, function(res) {
+	function approve(aid,url,$this) {
+		com.post(url,{"approval.aid" : aid}, function(res) {
 			searcher.doSearch();
 		},null,false);
 	}
@@ -149,7 +131,7 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
 						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');
-				})
+				});
 				$('#msoiModel').modal("show");
 			}, null, false);
 		}
@@ -165,7 +147,7 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('10', '数量  : ', v.num))
 						.append(approvalUtils.addspan('40', '总价  : ', v.total))
 						.append('<hr/>');
-				})
+				});
 				$('#msoiModel').modal("show");
 			}, null, false);
 		}

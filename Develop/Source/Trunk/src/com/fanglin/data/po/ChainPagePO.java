@@ -22,13 +22,17 @@ public class ChainPagePO  implements java.io.Serializable {
 	
 	private String comment;
 	
+	private short companymark;
+	
 	public ChainPagePO() {
 		super();
 	}
+	
 	public ChainPagePO(long cpid) {
 		super();
 		this.cpid = cpid;
 	}
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cpid")
@@ -65,5 +69,17 @@ public class ChainPagePO  implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}	
+	}
+	
+	@Column(name = "companymark")
+	public short getCompanymark() {
+		return companymark;
+	}
+
+	public void setCompanymark(short companymark) {
+		this.companymark = companymark;
+	}
+
+
+	
 }

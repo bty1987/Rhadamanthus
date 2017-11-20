@@ -3,8 +3,17 @@ $(function () {
     var goodsSuitPopUp = $('#goodsSuitPopUp');
 
     var goodsSuit = {
-        'flag':true
+        'flag':true,
+        validator: {
+            num: {
+                type: "v_num",
+                regex: /^[0-9]*[1-9][0-9]*$/,
+                errorMsg: "数量输入内容格式错误"
+            }
+        }
     };
+
+    $.extend(com.validator, goodsSuit.validator);
 
     var _goodsPackage = params['goods'];
 
@@ -82,16 +91,23 @@ $(function () {
             var $input;
             var $select;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
+
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
+                if(v.cellClass == "name"){
+                    $input.addClass('v_required');
+                }
+                if(v.cellClass == "number"){
+                    $input.addClass('v_num');
+                }
                 $cell.append($input);
             }
             if (v.hasSelectColor) {
-                $select = $('<select></select>');
+                $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
             if (v.hasSelectFormat) {
-                $select = $('<select></select>');
+                $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
 
@@ -173,25 +189,27 @@ $(function () {
 
         $btncheck.click(function (e) {
             e.stopPropagation();
+            if(com.validate('addGoodsPackage','bottom')){
+                return;
+            }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var cid = $(this).parents('li.line.current').find('.color select').val();
             var colorName = $(this).parents('li.line.current').find('.color select option:selected').text();
             var fid = $(this).parents('li.line.current').find('.format select').val();
             var formatInfo = $(this).parents('li.line.current').find('.format select option:selected').text();
             var num = $(this).parents('li.line.current').find('.number input').val();
-
-            if (checkRowValue($line) && goodsSuit.flag) {
+            if(checkRowValue($line)) {
                 com.post(api.inventory.queryGoodsByGId, {
-                    'goods.gid':gid
+                    'goods.gid': gid
                 }, function (data) {
                     $('#list').empty();
                     addline(1).addClass('current').appendTo('#list');
-                    addlinePackge(data.goods,cid,colorName,fid,formatInfo,num).addClass('current').appendTo('#showList');
+                    addlinePackge(data.goods, cid, colorName, fid, formatInfo, num).addClass('current').appendTo('#showList');
                 }, function (e) {
                     com.showAlert(com.info, e.errorMsg);
                 })
-
             }
+
         })
 
         $btndel.click(function (e) {
@@ -211,78 +229,6 @@ $(function () {
     function checkRowValue($line) {
 
         var flag = true;
-
-        var color = $line.find('.color select');
-
-        if(!color.val()){
-            color.focus().select();
-
-            color.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请选择颜色信息"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            color.popover('destroy');
-        }
-
-        //对规格判断
-        var format = $line.find('.format select');
-        if(!format.val()){
-            format.focus().select();
-
-            format.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请选择规格信息"
-
-            }).popover('show');
-
-            flag =  false;
-        }else{
-            format.popover('destroy');
-        }
-
-        var name = $line.find('.name input');
-        if (!name.val()) {
-            name.focus().select();
-
-            name.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请填写主材名称"
-
-            }).popover('show');
-
-            flag = false;
-        } else {
-            name.popover('destroy');
-        }
-
-        var num = $line.find('.number input');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if(!(numRex.test(num.val()) && parseFloat(num.val()) > 0)){
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "数量输入内容格式错误!"
-            }).popover('show');
-            flag =  false;
-        }else{
-            num.popover('destroy');
-        }
 
         var brand = $line.find('.brand');
         if(brand.text()!=_goodsPackage['goods.brand']){

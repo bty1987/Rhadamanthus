@@ -8,7 +8,6 @@
  * @Email			: bty1987@163.com
  * @Describing	: 
  */
-
 package com.fanglin.data.common.service;
 
 import java.util.List;
@@ -27,5 +26,9 @@ public interface ReceiptTypeService {
 	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO,int company);
 	
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO,int company) throws FLException;
+	
+	public int updateReceiptType(ReceiptTypeVO receiptTypeVO, int company ) throws FLException;
+	
+	public  void  updateReceiptTypeForStatus(ReceiptTypeVO receiptTypeVO)throws FLException;
 	
 }

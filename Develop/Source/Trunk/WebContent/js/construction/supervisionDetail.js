@@ -53,6 +53,13 @@ jQuery(function($) {
 			"8": false,
 			"9": false,
 		},
+		validator: {
+			salary: {
+				type: "v_salary",
+				regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
+				errorMsg: "请正确输入工人工费，小数点后最多保留3位"
+			},
+		},
 	};
 
 	var colorboxArgs = {
@@ -67,6 +74,7 @@ jQuery(function($) {
 		maxHeight:'100%'
 	}
 
+	$.extend(com.validator, supervisionDetail.validator);
 	var orderId = params.orderId;
 
 	//获取节点名称
@@ -352,7 +360,7 @@ jQuery(function($) {
 				//buttonSpan工人工费按钮
 				var buttonSpan = $('<div id="workerNameSpan"></div>').html('<a style="float: left; margin-left: -5px;" class="icon-money icon-2x" href="#"></a>').appendTo(buttonsDiv);
 				//工人编号, 名称, 职务
-				var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.user.userId + "" + workerInfo.user.userName + "<br/>" + workerInfo.user.duty).appendTo(buttonsDiv);
+				var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.user.userId + "" + workerInfo.user.userName + "<br/>" + workerInfo.user.duty.name).appendTo(buttonsDiv);
 
 				//循环一个人, 将当前这个人的下标绑定到原始对象上, 因为jquery对象是原始对象的封装，每次获取都不一样, 所以没法用jquery对象存
 				//这个就是存储到原始dom对象上, 简单说就是给你的对应的按钮添加一个_index属性正好和循环的i进行绑定
@@ -416,16 +424,16 @@ jQuery(function($) {
 			})
 
 			var salaryDiv = $('<div></div>').addClass("form-group").css("height","50px").css("margin-bottom","0px");
-			var salaryDivT = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv);
+			var salaryDivT = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv);
 			var salaryLabelT = $('<label><b>添加工费</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","salary").appendTo(salaryDivT);
-			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9").attr("id","salary").attr("data-toggle","popover").attr("data-trigger","manual").css("width", "320px").css("height", "30px").appendTo(salaryDivT);
+			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9 v_salary").attr("id","salary").attr("data-toggle","popover").attr("data-trigger","manual").css("width", "320px").css("height", "30px").appendTo(salaryDivT);
 			var salaryText = $('<span><b>* 扣款项请输入负数, 如: -123 !!!</b></span>').css("color","red").css("margin-left","-50px").appendTo(salaryDiv);
 
 			var salaryDiv3 = $('<div></div>').addClass("form-group").css("height","50px").css("margin","0px");
-			var salaryDivTh = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv3);
+			var salaryDivTh = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv3);
 			var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","salaryType").appendTo(salaryDivTh);
 			var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
-			var salaryTypeS = $('<select></select>').attr("id","salaryType").css("width","320px").css("height", "30px").append('<option value="0">请选择类型...</option>').appendTo($item);
+			var salaryTypeS = $('<select></select>').attr("id","salaryType").css("width","320px").css("height", "30px").appendTo($item);
 
 			com.post(api.ds.salary, {}, function(data){
 				var constructerSalaryType = data.SalaryType;
@@ -437,7 +445,7 @@ jQuery(function($) {
 			}, null, false);
 
 			var salaryDiv4 = $('<div></div>').addClass("form-group").css("height","80px").css("margin","0px 0px 15px 0px");
-			var salaryDivF = $('<div></div>').addClass("col-sm-9").css("width", "550px").appendTo(salaryDiv4);
+			var salaryDivF = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv4);
 			var salaryBz = $('<label><b>备注</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for","form-field-1").attr("for","comment").appendTo(salaryDivF);
 			var salaryBzInp = $('<textarea></textarea>').attr("id","comment").attr("maxlength","256").css("width","320px").appendTo(salaryDivF);
 
@@ -476,29 +484,24 @@ jQuery(function($) {
 	function saveData(options){
 
 		var url = api.salary.addWorkerSalary;
-
-		if(($('#salary').val()) == ""){
-			com.showAlert(com.error,"请输入工人工费!");
-		}else if($("#salaryType").val() == 0){
-			com.showAlert(com.error,"请选择工费类型!");
-		}else{
-			if(/^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/.test($('#salary').val()) ){
-				if($("#salaryType").val() == 1 || $("#salaryType").val() == 2 || $("#salaryType").val() == 3 ){
-					options["workerSalary.type"] = 0;
-				}else if($("#salaryType").val() == 4 && $('#salary').val() > 0){
-					options["workerSalary.type"] = 0;
-				}else{
-					options["workerSalary.type"] = 1;
-				}
-				options["workerSalary.salary"] = $('#salary').val();
-				options["workerSalary.subtype"] = $("#salaryType").val();
-				options["workerSalary.comment"] = $("#comment").val();
-				com.post(url,options);
-				$('#guaranteeModal').modal('hide');
-			}else{
-				com.showAlert(com.error,"请正确输入工人工费, 小数点后最多保留3位!");
-			}
+		
+		if(com.validate("workerSalaryList")){
+			return;
 		}
+		
+		if(($("#salaryType").val() > 0 && $("#salaryType").val() < 4) || ($("#salaryType").val() > 9 && $("#salaryType").val() < 14)){
+			options["workerSalary.type"] = 0;
+		}else if($("#salaryType").val() == 4 && $('#salary').val() > 0){
+			options["workerSalary.type"] = 0;
+		}else{
+			options["workerSalary.type"] = 1;
+		}
+
+		options["workerSalary.salary"] = $('#salary').val();
+		options["workerSalary.subtype"] = $("#salaryType").val();
+		options["workerSalary.comment"] = $("#comment").val();
+		com.post(url,options);
+		$('#guaranteeModal').modal('hide');
 	}
 
 	//画节点信息轴

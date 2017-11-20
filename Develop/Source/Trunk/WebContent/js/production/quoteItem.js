@@ -109,6 +109,7 @@ $(function(){
                     return;
                 }*/
                 editOnly();
+                com.clearValidator();
                 var $layeradd = $('#layerAdd');
                 $layeradd.find('input[name = "name"]').val(v.name);
                 $layeradd.find('input[name = "format"]').val(v.format);
@@ -118,7 +119,7 @@ $(function(){
                 $layeradd.attr('qiid',v.qiid);
                  //展开弹窗
                 openlayer(function () {
-                    if(submitValidate() && checkRowValue() == true){
+                    if(!com.validate("layerAdd",null)){
                         var qiid = $('#layerAdd').attr('qiid');
                         var format = $('#layerAdd').find('input[name = "format"]').val();
                         var unitprice = $('#layerAdd').find('input[name = "unitprice"]').val();
@@ -163,6 +164,8 @@ $(function(){
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
         $adda.click(function () {
+            closeEditReadOnly();
+            com.clearValidator();
             addOpenlayer();
         });
         return [$adda];
@@ -179,17 +182,14 @@ $(function(){
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
-                closeEditReadOnly();
                 callback(index,layero);
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                closeEditReadOnly();
                 $('#layerAdd').find('input').val("");
             },
             cancel: function () {
                 //右上角关闭回调;
-                closeEditReadOnly();
                 $('#layerAdd').find('input').val("");
             }
         });
@@ -206,19 +206,16 @@ $(function(){
             zIndex: 9999,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
-                if(submitValidate() && checkRowValue()){
+                if(!com.validate("layerAdd",null)){
                     addData();
                 }
-                //closeEditReadOnly();
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                //closeEditReadOnly()
                 $('#layerAdd').find('input').val("");
             },
             cancel: function () {
                 //右上角关闭回调
-                //closeEditReadOnly()
                 $('#layerAdd').find('input').val("");
             }
         });
@@ -267,96 +264,11 @@ $(function(){
         $layer.find('input[name="measureunit"]').removeAttr('disabled');
         $layer.find('select[name="quoteType"]').removeAttr('disabled');
     }
-//绑定报价类型
+    //绑定报价类型
     com.post(api.production.queryQuoteType,{},function (res) {
         $('select[name = "quoteType"]').bindData(res.quoteTypes,"qtid","name");
     });
 
-    //表单校验*/
-    function submitValidate() {
-        var flag = true;
-        var $name = $('input[name="name"]');
-        var $format = $('input[name="format"]');
-        var $measureunit = $('input[name="measureunit"]');
-        var $unitprice = $('input[name="unitprice"]');
-
-        if(!$name.val()){
-            $name.focus().select();
-            $name.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写名称"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $name.popover('destroy');
-        }
-        if(!$format.val()){
-            $format.focus().select();
-            $format.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写型号"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $format.popover('destroy');
-        }
-        if(!$measureunit.val()){
-            $measureunit.focus().select();
-            $measureunit.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写单位"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $measureunit.popover('destroy');
-        }
-        if(!$unitprice.val()){
-            $unitprice.focus().select();
-            $unitprice.addClass('popover-notitle').attr({
-                "data-rel" : "popover",
-                "data-placement" : "top",
-                "data-original-title" : "",
-                "title" : "",
-                "data-content" : "请填写单价"
-            }).popover('show');
-            flag =  false;
-        }else{
-            $unitprice.popover('destroy');
-        }
-        return flag;
-    }
-    //校验数量输入格式
-    function checkRowValue() {
-
-        var flag = true;
-
-        var pieceNum = $('#layerAdd').find('input[name = "unitprice"]');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!(numRex.test(pieceNum.val()) && parseFloat(pieceNum.val()) >= 0)) {
-            pieceNum.focus().select();
-            pieceNum.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            pieceNum.popover('destroy');
-        }
-
-        return flag;
-    }
     //添加方法
     function addData() {
         var name = $('#layerAdd').find('input[name="name"]').val();

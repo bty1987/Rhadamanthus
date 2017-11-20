@@ -6,6 +6,15 @@ $(function(){
         cancelBtn : null,
         savebtn : null,
         editFlg : false,
+        validator: {
+            
+            drawlingroup: {
+                type: "v_drawlingroup",
+                regex: /^([\u4e00-\u9fa5][\u4e00-\u9fa5][\u653e][\u7ebf][\u5c0f][\u7ec4])|([\u653e][\u7ebf][\u4e00|\u4e8c|\u4e09|\u56db|\u4e94|\u516d|\u4e03|\u516b|\u4e5d|\u5341]{1,2}[\u7ec4])$/,
+                errorMsg: "放线小组不能重复且为中文 例 放线x组,放线x-xx组"
+            },
+
+        }
     }
 
     group.cancelBtn = $("#cancelBtn");
@@ -14,6 +23,8 @@ $(function(){
     group.groupadd.drawLineGroup = $("#drawLineGroup");
     group.groupadd.contentadd = $("#contentadd");
     //添加的保存按钮
+    
+    $.extend(com.validator, group.validator);
     group.savebtn = $("#groupadd").on("click", saveData);
 
     var displayFunc  = (function(){
@@ -113,50 +124,38 @@ $(function(){
     });
 
     function saveData(){
+    	
+    	if( !com.validate("addModal")) {
+    		var url;
+    	
+    		var options = {
+                "drawLineGroup.gid" : group.groupadd.gid.val(),
 
-                var url;
+                "drawLineGroup.name": group.groupadd.drawLineGroup.val(),
 
-                var judgment2 = /^[\u4e00-\u9fa5][\u4e00-\u9fa5][\u653e][\u7ebf][\u5c0f][\u7ec4]$/;
-                var judgment = /^[\u653e][\u7ebf][\u4e00|\u4e8c|\u4e09|\u56db|\u4e94|\u516d|\u4e03|\u516b|\u4e5d|\u5341][\u7ec4]$/;
-                var Group = group.groupadd.drawLineGroup.val();
+                "drawLineGroup.content": group.groupadd.contentadd.val(),
 
-                if(Group == null || Group == ''){
-                    bootbox.alert("放线小组不能为空");
-                    popoverInit();
-                    return;
-                }
-
-                if (judgment.test(Group) || judgment2.test(Group)) {
-
-                var options = {
-                    "drawLineGroup.gid" : group.groupadd.gid.val(),
-
-                    "drawLineGroup.name": group.groupadd.drawLineGroup.val(),
-
-                    "drawLineGroup.content": group.groupadd.contentadd.val(),
-
-                };
-
-                if(group.editFlg){
-                    url = api.data.addDrawlineGroup;
-                }else{
-                    url = api.data.updateDrawlineGroup;
-                }
-
-                com.post(url, options, function (res) {
+            };
+                
+    		if(group.editFlg){
+    			url = api.data.addDrawlineGroup;
+    		}else{
+    			url = api.data.updateDrawlineGroup;
+    		}
+    	
+    		com.post(url, options, function (res) {
                     //刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
+    		com.showAlert(com.info, "操作成功");
+    		searcher.doSearch();
+    		},function(){
+    			com.showAlert(com.error, "放线小组已存在");
+    			
+    		});
                 //隐藏动态框
-                group.addmodal.modal("hide");
-            }else{
-                    bootbox.alert("请严格按照放线小组输入规则输入");
-                    popoverInit();
-                    $('#drawLineGroup').popover('show');
-                    return;
-                }
-            }
+    		group.addmodal.modal("hide");
+    	 }
+            
+	}
 
     function update(v){
         group.editFlg = false ;

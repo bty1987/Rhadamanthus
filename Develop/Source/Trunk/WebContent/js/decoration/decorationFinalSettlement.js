@@ -38,7 +38,7 @@ $(function(){
     decorationOrderDetail.orderType = params.type;
 
     $('#btnBack').on(ace.click_event, function(){
-        com.switchPage(api.index.decorationOrderDesignerIndex.url);
+        com.switchPage(params.historyOrderPage);
     });
 
     initWizard(discount);
@@ -64,7 +64,7 @@ function initWizard(discount) {
             drawTable(discount);
         }
     }).on('finished', function(e) {
-        com.switchPage(api.index.decorationOrderDesignerIndex.url);
+        com.switchPage(params.historyOrderPage);
     }).on('stepclick', function(e,info){
 
         if (info.step == 1) {

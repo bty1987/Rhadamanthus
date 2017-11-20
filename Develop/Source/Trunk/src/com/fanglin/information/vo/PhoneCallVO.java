@@ -25,9 +25,9 @@ public class PhoneCallVO implements Serializable {
 	
 	private String callee;
 	
-	private Timestamp startTime;
+	private Long startTime;
 	
-	private Timestamp endTime;
+	private Long endTime;
 	
 	private Integer stopReason;
 	
@@ -36,6 +36,8 @@ public class PhoneCallVO implements Serializable {
 	private Integer recordType;
 	
 	private String recordUrl;
+	
+	private String token;
 	
 	public PhoneCallVO() {
 		super();
@@ -103,21 +105,19 @@ public class PhoneCallVO implements Serializable {
 		this.callee = callee;
 	}
 
-	@JSON(format="yyyy-MM-dd hh:mm:ss")
-	public Timestamp getStartTime() {
+	public Long getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(Long startTime) {
 		this.startTime = startTime;
 	}
 
-	@JSON(format="yyyy-MM-dd hh:mm:ss")
-	public Timestamp getEndTime() {
+	public Long getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Timestamp endTime) {
+	public void setEndTime(Long endTime) {
 		this.endTime = endTime;
 	}
 
@@ -153,5 +153,12 @@ public class PhoneCallVO implements Serializable {
 		this.recordUrl = recordUrl;
 	}
 
-	
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }

@@ -146,7 +146,7 @@ jQuery(function () {
     $("#add").click(function () {
 
         var $line = $('#left');
-        if (checkNum($line) == true && sales.flag == true) {
+        if (com.validate('left','bottom')==false && sales.flag == true) {
             //添加折让审批
             var $postDis1 = $('#postDis').val();
             var $otherStatus = 0;
@@ -200,8 +200,6 @@ jQuery(function () {
                 $liParent.remove();
                 $('.list-group-item:last').css("border-bottom", "solid 1px");
             });
-        } else {
-            com.showAlert(com.warning, "该商品信息不完善,不允许添加");
         }
         $('#totals').val(cycTotal());
     });
@@ -228,109 +226,6 @@ jQuery(function () {
 
     }
 
-    //表单校验
-    function checkNum($line) {
-        var flag = true;
-        var $goodsName = $line.find('#goodsName');
-        if ($goodsName.val() == "" || $goodsName.attr('data-name') == "") {
-            $goodsName.focus().select();
-            $goodsName.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "商品名称不正确"
-            }).popover('show');
-            flag = false;
-        } else {
-            $goodsName.popover('destroy');
-        }
-        ////检验折扣价
-        var $disPrice = $line.find('#disPrice');
-        var disPriceRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!disPriceRex.test($disPrice.val()) || parseFloat($disPrice.val()) < 0) {
-            $disPrice.focus().select();
-            $disPrice.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折扣价格式输入错误"
-            }).popover('show');
-            flag = false;
-        } else {
-            $disPrice.popover('destroy');
-        }
-        //检验折让
-        var $postDis = $line.find('#postDis');
-        var postDisRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-        if (!postDisRex.test($line.find('#postDis').val())) {
-            $postDis.focus().select();
-            $postDis.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折让格式输入错误,折让值应在0-1之间"
-            }).popover('show');
-            flag = false;
-        } else {
-            $postDis.popover('destroy');
-
-        }
-        ////检验折让价
-        var $selling = $line.find('#selling');
-        var sellingRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!sellingRex.test($selling.val()) || parseFloat($selling.val()) < 0) {
-            $selling.focus().select();
-            $selling.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折让价格式输入错误"
-            }).popover('show');
-            flag = false;
-        } else {
-            $selling.popover('destroy');
-
-        }
-        //数量校验
-        var $num = $line.find('#num');
-        var numRex = /^\d+$/;
-        if (!numRex.test($num.val()) || parseFloat($num.val()) < 0) {
-            $num.focus().select();
-            $num.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入错误"
-            }).popover('show');
-            flag = false;
-        } else {
-            $num.popover('destroy');
-
-        }
-        ////备注校验
-        var $remark = $line.find('#remark');
-        if ($remark.val().length > 128) {
-            $remark.focus().select();
-            $remark.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "备注长度应在128个字符以内"
-            }).popover('show');
-            flag = false;
-        } else {
-            $remark.popover('destroy');
-        }
-
-        return flag;
-    }
-
     /*
     折扣价 折让 折让价 数量变化
         折扣价变化 影响折让价和总价 折让变化影响折让价和总价 数量变化影响总价
@@ -352,7 +247,7 @@ jQuery(function () {
     });
 
     function count(flag, boolean) {
-        if (checkNaN() == true) {
+        if (com.validate('left','bottom') == false) {
             if (flag == true && boolean == true) {
                 $('#disPrice').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val()))));
                 $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
@@ -365,43 +260,6 @@ jQuery(function () {
                 $('#postDis').val((utils.accDiv(parseFloat($('#selling').val()), parseFloat($('#disPrice').val()))).toFixed(2));
             }
         }
-    }
-
-//先判断是否 NaN 不是的话不允许计算
-    function checkNaN() {
-        var $disprice = $('#disPrice');
-        var $posDis = $('#postDis');
-        var $selling = $('#selling');
-        var $num = $('#num');
-        var $total = $('#total');
-        if (!$disprice.val() || !$selling.val() || !$posDis.val() || !$num.val() || !$total.val()) {
-            return false;
-        }
-        if (isNaN($disprice.val())) {
-            com.showAlert(com.warning, "折扣价需要数字类型信息!");
-            return false;
-        }
-
-        if (isNaN($posDis.val())) {
-            com.showAlert(com.warning, "折让需要数字类型信息!");
-            return false;
-        }
-
-        if (isNaN($selling.val())) {
-            com.showAlert(com.warning, "折让价需要数字类型信息!");
-            return false;
-        }
-
-        if (isNaN($num.val())) {
-            com.showAlert(com.warning, "数量需要数字类型信息!");
-            return false;
-        }
-
-        if (isNaN($total.val())) {
-            com.showAlert(com.warning, "总价需要数字类型信息!");
-            return false;
-        }
-        return true;
     }
 
     function cycTotal() {
@@ -497,7 +355,7 @@ jQuery(function () {
                 if (_brand != $v.find('.s_brand').find('.b_brand').text()) {
                     $v.css("border", "solid red 2px");
                     var r = i + 1;
-                    layer.msg("销售项第" + r + "项中品牌与主材品牌不符,请检查", {icon: 2});
+                    com.showAlert(null, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
                     flag = false;
                 }
             });
