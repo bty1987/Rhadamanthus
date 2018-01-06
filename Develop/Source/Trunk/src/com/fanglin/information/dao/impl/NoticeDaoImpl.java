@@ -72,11 +72,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 			
 			for(Filter filter: filters){
 			
-				if("deptId".equals(filter.getField())){
-				
-					query.alias("dept", "dept");
-					query.add(query.getCriterion("dept.deptId", filter));
-				}else if("dateRange".equals(filter.getField())){
+				if("dateRange".equals(filter.getField())){
 					
 					String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 					String eTime = filter.getData().split("-")[1].replaceAll("/", "-");

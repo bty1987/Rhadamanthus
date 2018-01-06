@@ -19,11 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.data.common.dao.CustomerDao;
+import com.fanglin.data.common.dao.CustomerPhoneDao;
+import com.fanglin.data.common.vo.HouseVO;
 import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.data.po.CustomerPO;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.data.po.CustomerPhonePO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.secret.service.SecretService;
 
 @Service("secretService")
@@ -31,53 +34,63 @@ import com.fanglin.secret.service.SecretService;
 public class SecretServiceImpl implements SecretService {
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private CustomerDao customerDao;
 	
+	@Autowired
+	private CustomerPhoneDao customerPhoneDao;
+	
 	@Override
-	public String CVLIBHQMVWFSPQWU(String VZYKHFFK) {
+	public List<String> CVLIBHQMVWFSPQWU(String VZYKHFFK) {
 		
-		String OTCVCJSC = "";
+		List<String> OTCVCJSC = new ArrayList<String>();
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(VZYKHFFK);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(VZYKHFFK);
 		
-		if(decorationOrderPO != null){
-			OTCVCJSC = decorationOrderPO.getCustomerPO().getPhone();
+		if(decorationPO != null){
+			List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByCid(decorationPO.getCustomer().getCid(), CustomerPhonePO.STATUS_ENABLE_INT);
+			
+			for(CustomerPhonePO customerPhonePO: customerPhonePOs){
+				OTCVCJSC.add(customerPhonePO.getPhone());
+			}
 		}
 		
 		return OTCVCJSC;
 	}
 
 	@Override
-	public List<DecorationOrderVO> KGZPHFBAOKWVMWGW(String FAKKGDAZ) {
+	public List<DecorationVO> KGZPHFBAOKWVMWGW(String FAKKGDAZ) {
 		
-		List<DecorationOrderVO> decorationOrderVOs = new ArrayList<DecorationOrderVO>();
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
-		List<CustomerPO> customerPOs = customerDao.queryCustomerByPhone(FAKKGDAZ);
+		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(FAKKGDAZ, CustomerPhonePO.STATUS_ENABLE_INT);
 		
-		if(customerPOs != null && customerPOs.size() > 0){
+		if(customerPhonePOs != null && customerPhonePOs.size() > 0){
 
-			DecorationOrderVO decorationOrderVO;
-			CustomerPO customerPO = customerPOs.get(0);
+			DecorationVO decorationVO;
+			CustomerPO customerPO = customerDao.get(customerPhonePOs.get(0).getCid());
 			
-			List<DecorationOrderPO> decorationOrderPOs = decorationOrderDao.queryDecorationOrderByCustomerId(customerPO.getId());
+			if(customerPO != null){
 			
-			for(DecorationOrderPO decorationOrderPO: decorationOrderPOs){
+				List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerId(customerPO.getCid());
 				
-				decorationOrderVO = new DecorationOrderVO();
-				decorationOrderVO.setVillage(new VillageVO());
-				
-				decorationOrderVO.setOrderId(decorationOrderPO.getOrderId());
-				decorationOrderVO.setHouseNumber(decorationOrderPO.getHouseNumber());
-				decorationOrderVO.getVillage().setVillageName(decorationOrderPO.getVillagePO().getVillageName());
-
-				decorationOrderVOs.add(decorationOrderVO);
+				for(DecorationPO decorationPO: decorationPOs){
+					
+					decorationVO = new DecorationVO();
+					decorationVO.setHouse(new HouseVO(new VillageVO()));
+					
+					decorationVO.setOrderId(decorationPO.getOrderId());
+					decorationVO.getHouse().getVillage().setName(decorationPO.getHouse().getVillage().getName());
+					decorationVO.getHouse().setHouseNumber(decorationPO.getHouse().getHouseNumber());
+	
+					decorationVOs.add(decorationVO);
+				}
 			}
 		}
 		
-		return decorationOrderVOs;
+		return decorationVOs;
 	}
 
 }

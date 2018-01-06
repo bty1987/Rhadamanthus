@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.VillageService;
 import com.fanglin.data.common.vo.VillageVO;
 
@@ -36,14 +37,12 @@ public class VillageAction extends BaseListAction {
 	private VillageVO village;
 	
 	private List<VillageVO> villages;
-	
-	private List<String> villageIds;
-	
-	private String pinyinName;
-	
+
 	private List<String> autoFillList;
 	
 	private List<KeyValueVO> autoFillKeyValue;
+	
+	private String pinyinName;
 	
 	@Action(value="pageVillage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageVillage(){
@@ -53,16 +52,8 @@ public class VillageAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="queryVillage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVillage(){
-		
-		villages = villageService.queryVillage(getFilters());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryVillageById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVillageById(){
+	public String queryVillageById() throws FLException{
 		
 		village = villageService.queryVillageById(village);
 		
@@ -71,42 +62,67 @@ public class VillageAction extends BaseListAction {
 	
 	@Action(value="queryVillageForNameByPinyin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryVillageForNameByPinyin(){
+	
+		villages = villageService.queryVillageForNameByPinyin(pinyinName);
 		
-		List<VillageVO> villageVOs = villageService.queryVillageForNameByPinyin(pinyinName);
-		
-		for(VillageVO villageVO: villageVOs){
+		for(VillageVO villageVO: villages){
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(String.valueOf(villageVO.getVillageId()));
-			keyValueVO.setValue(villageVO.getVillageName() + "-" + villageVO.getCityProper().getCityProperName());
+			keyValueVO.setKey(String.valueOf(villageVO.getNo()));
+			keyValueVO.setValue(villageVO.getName() + "-" + villageVO.getCityProper().getCityProperName());
 			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(villageVO.getVillageName());
+			getAutoFillList().add(villageVO.getName());
+			
 		}
 		
 		return SUCCESS;
 	}
+
+	 @Action(value="addVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String addVillage() throws FLException{
+	    villageService.addVillage(village);
 	
-	public VillageVO getVillage(){
+	    return SUCCESS;
+	  }
+	
+	  @Action(value="updateVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateVillage() throws FLException{
+	    
+		  villageService.updateVillage(village);
+	
+	    return SUCCESS;
+	  }
+	
+	  @Action(value="updateVillageForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateVillageForStatus() throws FLException{
+		  
+	   villageService.updateVillageForStatus(village);
+	
+	    return SUCCESS;
+	  }
+	
+	  @Action(value="updateVillageForPosition", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateVillageForPosition() throws FLException
+	  {
+	   
+		  villageService.updateVillageForPosition(village);
+	
+	    return SUCCESS;
+	  }
+
+	public VillageVO getVillage() {
 		return village;
 	}
 
-	public void setVillage(VillageVO village){
+	public void setVillage(VillageVO village) {
 		this.village = village;
 	}
 
-	public List<String> getVillageIds(){
-		return villageIds;
+	public List<VillageVO> getVillages() {
+		return villages;
 	}
 
-	public void setVillageIds(List<String> villageIds){
-		this.villageIds = villageIds;
-	}
-
-	public String getPinyinName(){
-		return pinyinName;
-	}
-
-	public void setPinyinName(String pinyinName){
-		this.pinyinName = pinyinName;
+	public void setVillages(List<VillageVO> villages) {
+		this.villages = villages;
 	}
 
 	public List<String> getAutoFillList(){
@@ -131,11 +147,13 @@ public class VillageAction extends BaseListAction {
 		this.autoFillKeyValue = autoFillKeyValue;
 	}
 
-	public List<VillageVO> getVillages(){
-		return villages;
+	public String getPinyinName() {
+		return pinyinName;
 	}
 
-	public void setVillages(List<VillageVO> villages){
-		this.villages = villages;
+	public void setPinyinName(String pinyinName) {
+		this.pinyinName = pinyinName;
 	}
+
+	
 }

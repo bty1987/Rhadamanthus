@@ -16,7 +16,7 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.vo.StorehouseVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Paging;
 
 public interface StorehouseService {
@@ -25,7 +25,7 @@ public interface StorehouseService {
 	
 	public List<StorehouseVO> queryStorehouse(List<Filter> filters);
 	
-	public List<StorehouseVO> queryStorehouseByUserId(UserVO userVO);
+	public List<StorehouseVO> queryStorehouseByUserId(UserBaseVO user);
 	
 	public int addStorehouse(StorehouseVO storehouseVO) throws FLException;
 	

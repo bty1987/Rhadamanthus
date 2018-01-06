@@ -21,27 +21,26 @@ import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.dao.RefundsDao;
-import com.fanglin.inventory.dao.RefundsItemDao;
-import com.fanglin.inventory.dao.SalesBalanceDao;
-import com.fanglin.inventory.dao.SalesBalanceItemDao;
-import com.fanglin.inventory.dao.SalesDao;
-import com.fanglin.inventory.dao.SalesItemDao;
-import com.fanglin.inventory.po.RefundsItemPO;
-import com.fanglin.inventory.po.RefundsPO;
-import com.fanglin.inventory.po.SalesBalanceItemPO;
-import com.fanglin.inventory.po.SalesBalancePO;
-import com.fanglin.inventory.po.SalesItemPO;
-import com.fanglin.inventory.po.SalesPO;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
-import com.fanglin.inventory.vo.SalesItemVO;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-
+import com.fanglin.sales.dao.RefundsDao;
+import com.fanglin.sales.dao.RefundsItemDao;
+import com.fanglin.sales.dao.SalesBalanceDao;
+import com.fanglin.sales.dao.SalesBalanceItemDao;
+import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesItemDao;
+import com.fanglin.sales.po.RefundsItemPO;
+import com.fanglin.sales.po.RefundsPO;
+import com.fanglin.sales.po.SalesBalanceItemPO;
+import com.fanglin.sales.po.SalesBalancePO;
+import com.fanglin.sales.po.SalesItemPO;
+import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -110,7 +109,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	    	
 	    	BeanUtil.copyProperties(approvalSalesRefundItemPO, approvalSalesRefundItemVO, Arrays.asList("salesItem"));
 	    	BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem(), approvalSalesRefundItemVO.getSalesItem(), Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getGoods(), approvalSalesRefundItemVO.getSalesItem().getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getGoods(), approvalSalesRefundItemVO.getSalesItem().getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getColor(), approvalSalesRefundItemVO.getSalesItem().getColor());
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getFormat(), approvalSalesRefundItemVO.getSalesItem().getFormat());
 	    	approvalSalesRefundItemVOs.add(approvalSalesRefundItemVO);
@@ -134,7 +133,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			}
 		}
 
-		SalesPO salesPO = salesDao.querySalesBySid(sid);
+		SalesPO salesPO = salesDao.get(sid);
 		
 		if (salesPO == null) {
 			throw new FLException(260021 , "销售单不存在");
@@ -172,7 +171,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
 			if(approvalSalesRefundItemVO!=null){
-			SalesItemPO salesItemPO = salesItemDao.querySalesItemBySiid(approvalSalesRefundItemVO.getSalesItem().getSiid());
+			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
 			
 			salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
 			salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
@@ -204,7 +203,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(240003, "审批信息不完整");
 		}
 
-		SalesPO salesPO = salesDao.querySalesBySid(approvalSalesRefundPO.getSid());
+		SalesPO salesPO = salesDao.get(approvalSalesRefundPO.getSid());
 
 		if (salesPO == null) {
 			throw new FLException(260021 , "销售单不存在");
@@ -333,7 +332,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		SalesPO salesPO = salesDao.querySalesBySid(approvalSalesRefundPO.getSid());
+		SalesPO salesPO = salesDao.get(approvalSalesRefundPO.getSid());
 		
 		if (salesPO == null) {
 			throw new FLException(260021 , "销售单不存在");
@@ -346,7 +345,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
 		
 		for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
-			SalesItemPO salesItemPO = salesItemDao.querySalesItemBySiid(approvalSalesRefundItemPO.getSalesItem().getSiid());
+			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemPO.getSalesItem().getSiid());
 			
 			salesItemPO.setNum(Arith.add(salesItemPO.getNum(), approvalSalesRefundItemPO.getNum()));
 			salesItemPO.setTotal(Arith.add(salesItemPO.getTotal(), approvalSalesRefundItemPO.getTotal()));

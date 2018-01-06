@@ -12,6 +12,7 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		for(DecorationPicturePO decorationPicturePO: decorationPicturePOs){
 			DecorationPictureVO _decorationPictureVO = new DecorationPictureVO();
 			
-			BeanUtil.copyProperties(decorationPicturePO, _decorationPictureVO);
+			BeanUtil.copyProperties(decorationPicturePO, _decorationPictureVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			
 			_decorationPictureVO.setOrderId(decorationPicturePO.getOrderId());
 			_decorationPictureVO.setUserId(decorationPicturePO.getUserPO().getUserId());
@@ -63,7 +64,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		
 		DecorationPicturePO decorationPicturePO = new DecorationPicturePO();
 		
-		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO);
+		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		
 		String name = decorationPictureVO.getName();
 		String _name = name.split("\\.")[0];

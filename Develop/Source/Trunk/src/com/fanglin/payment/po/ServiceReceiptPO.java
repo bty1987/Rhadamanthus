@@ -23,13 +23,15 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	public static final String COLUMN_INFO_STR = "";
 	
-	public static final float COLUMN_MONEY_STR = 0f;
+	public static final float COLUMN_MONEY_INT = 0f;
 	
-	public static final short COLUMN_ADVANCETYPE_STR = 0;
+	public static final short COLUMN_ADVANCETYPE_INT = 0;
 	
-	public static final float COLUMN_RATIO_STR = 1.1f;
+	public static final float COLUMN_RATIO_INT = 1.1f;
 	
-	private long srId;        			//收据ID
+	private long srId;
+	
+	private short type;
 	
 	private UserPO collecter;
 	
@@ -45,27 +47,27 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	private float realMoney;
 	
-	private float cash;                //现金
+	private float cash;
 	
-	private String cashInfo;           //现金信息
+	private String cashInfo;
 	
-	private float bank;                //刷卡
+	private float bank;
 	
-	private String bankInfo;           //刷卡信息
+	private String bankInfo;
 	
-	private float checkv;              //转账
+	private float checkv;
 	
-	private String checkvBank;         //转账银行
+	private String checkvBank;
 	
-	private float installment;         //分期
+	private float installment;
 	
-	private String installBank;        //分期银行
+	private String installBank;
 	
-	private float accounts;            //对公
+	private float accounts;
 	
-	private String accountsBank;       //对公银行
+	private String accountsBank;
 	
-	private String des;                //说明
+	private String comment;
 	
 	public ServiceReceiptPO() {
 		super();
@@ -85,6 +87,15 @@ public class ServiceReceiptPO  implements Serializable{
 
 	public void setSrId(long srId) {
 		this.srId = srId;
+	}
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -244,13 +255,13 @@ public class ServiceReceiptPO  implements Serializable{
 		this.accountsBank = accountsBank;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

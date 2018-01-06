@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationOperateService;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -39,13 +39,13 @@ public class DecorationOperateServiceImpl implements DecorationOperateService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationOrderPO decorationOrderPO, List<DecorationBelongInfoPO> salesmans, List<DecorationBelongInfoPO> designers, UserPO operater, float value, int flag, short type){
+	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationPO decorationPO, List<DecorationBelongInfoPO> salesmans, List<DecorationBelongInfoPO> designers, UserPO operater, float value, int flag, short type){
 		
 		for(DecorationBelongInfoPO salesman: salesmans){
 			for(DecorationBelongInfoPO designer: designers){
 				
 				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-				decorationOperatePO.setDecorationOrder(decorationOrderPO);
+				decorationOperatePO.setDecoration(decorationPO);
 				decorationOperatePO.setSourcer(salesman.getBelongUserPO());
 				decorationOperatePO.setTarger(designer.getBelongUserPO());
 				decorationOperatePO.setOperater(operater);

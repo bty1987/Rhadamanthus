@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.inventory.dao.AssisTypeDao;
+import com.fanglin.inventory.dao.AccessoriesTypeDao;
 import com.fanglin.inventory.dao.GoodsDao;
-import com.fanglin.inventory.po.AssisTypePO;
+import com.fanglin.inventory.po.AccessoriesTypePO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.utils.PinYin4Util;
 
@@ -21,7 +21,7 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 	private static final short COLUMN_TYPE_INT = 0;
 
 	@Autowired
-	private AssisTypeDao assisTypeDao;
+	private AccessoriesTypeDao accessoriesTypeDao;
 
 	@Autowired
 	private GoodsDao goodsDao;
@@ -32,7 +32,7 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 
 		int index = 1;
 
-		AssisTypePO assisTypePO;
+		AccessoriesTypePO accessoriesTypePO;
 		GoodsPO goodsPO;
 
 		for (int i = 0; i < excels.size(); i++) {
@@ -53,13 +53,13 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 
 			Float pieceNum = Float.valueOf(_salary.get(6));
 
-			String assisTypeName = _salary.get(7);
+			String accessoriesTypeName = _salary.get(7);
 
 			goodsPO = new GoodsPO();
 
-			if (assisTypeName != "" || assisTypeName != null) {
-				assisTypePO = assisTypeDao.queryAssisTypeByName(assisTypeName);
-				goodsPO.setAssisType(assisTypePO);
+			if (accessoriesTypeName != "" || accessoriesTypeName != null) {
+				accessoriesTypePO = accessoriesTypeDao.queryAccessoriesTypeByName(accessoriesTypeName);
+				goodsPO.setAccessoriesType(accessoriesTypePO);
 			}
 
 			goodsPO.setNo(no);
@@ -84,7 +84,7 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 			index++;
 
 			if (index % 100 == 0) {
-				assisTypeDao.flush();
+				accessoriesTypeDao.flush();
 				goodsDao.flush();
 			}
 		}

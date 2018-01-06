@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.service.SalesPaymentService;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.payment.vo.SalesReceiptVO;
-import com.fanglin.inventory.vo.SalesVO;
+import com.fanglin.sales.vo.SalesVO;
 
 @ParentPackage("base")
 @Namespace("/")

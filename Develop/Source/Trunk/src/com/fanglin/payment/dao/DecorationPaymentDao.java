@@ -26,7 +26,7 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public List<DecorationPaymentPO> queryDecorationPayment(List<Filter> filters);
 	
-	public List<DecorationPaymentPO> queryDecorationPaymentByIds(List<Long> ids);
+	public List<DecorationPaymentPO> queryDecorationPaymentByIds(List<Long> dpids);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds);
 	

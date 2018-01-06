@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -63,7 +63,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -73,57 +73,23 @@ public class AddReduceServiceImpl implements AddReduceService{
 	
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
-		
 		filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
-		
 		List<AddReducePO> addReducePOs = addReduceDao.pageAddReduceByOrderId(paging, filters, addReduceVO.getOrderId());
-		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
-		
-		for(AddReducePO addReducePO: addReducePOs){
-			
-			AddReduceVO _addReduceVO = new AddReduceVO();
-			
-			BeanUtil.copyProperties(addReducePO, _addReduceVO);
-			
-			addReduceVOs.add(_addReduceVO);
-		}
-		
+		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 		paging.setData(addReduceVOs);
 	}
 
 	@Override
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO){
-		
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
-		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
-		
-		for(AddReducePO addReducePO: addReducePOs){
-			
-			AddReduceVO _addReduceVO = new AddReduceVO();
-			
-			BeanUtil.copyProperties(addReducePO, _addReduceVO);
-			
-			addReduceVOs.add(_addReduceVO);
-		}
-		
+		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 		return addReduceVOs;
 	}
 	
 	@Override
 	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) {
-		
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForPayedByOrderId(addReduceVO.getOrderId());
-		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
-		
-		for(AddReducePO addReducePO: addReducePOs){
-			
-			AddReduceVO _addReduceVO = new AddReduceVO();
-			
-			BeanUtil.copyProperties(addReducePO, _addReduceVO);
-			
-			addReduceVOs.add(_addReduceVO);
-		}
-		
+		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 		return addReduceVOs;
 	}
 
@@ -295,9 +261,9 @@ public class AddReduceServiceImpl implements AddReduceService{
 			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(addReducePO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
@@ -322,8 +288,8 @@ public class AddReduceServiceImpl implements AddReduceService{
 			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_REDUCE_INT);
 		}
-		decorationPaymentPO.setDecorationOrderPO(decorationOrderPO);
-		decorationPaymentPO.setCreateUserPO(userDao.queryUserByUserId(userId));
+		decorationPaymentPO.setDecoration(decorationPO);
+		decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
@@ -331,7 +297,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
 		
 		addReducePO.setStatus(1);
-		addReducePO.setDpId(decorationPaymentPO.getAutoId());
+		addReducePO.setDpId(decorationPaymentPO.getDpid());
 		addReducePO.setTotal(addReduceVO.getTotal());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		
@@ -340,6 +306,21 @@ public class AddReduceServiceImpl implements AddReduceService{
 		return 0;
 	}
 	
+	private List<AddReduceVO> handleAddReduce(List<AddReducePO> addReducePOs){
+		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
+		
+		for(AddReducePO addReducePO: addReducePOs){
+			
+			AddReduceVO _addReduceVO = new AddReduceVO();
+			
+			BeanUtil.copyProperties(addReducePO, _addReduceVO);
+			
+			addReduceVOs.add(_addReduceVO);
+		}
+		
+		return addReduceVOs;
+	}
+
 	public static void convertAddReduceVOToPOForAdvance(AddReduceVO addReduceVO, AddReducePO addReducePO){
 		addReducePO.setTotal(addReduceVO.getTotal());
 	}

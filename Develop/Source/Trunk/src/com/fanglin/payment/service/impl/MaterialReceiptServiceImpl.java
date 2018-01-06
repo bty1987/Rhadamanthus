@@ -12,6 +12,7 @@
 package com.fanglin.payment.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class MaterialReceiptServiceImpl implements MaterialReceiptService {
 			throw new FLException(150026, "收据不存在");
 		}
 		
-		BeanUtil.copyProperties(materialReceiptPO, materialReceiptVO);
+		BeanUtil.copyProperties(materialReceiptPO, materialReceiptVO,Arrays.asList("collecter","confirmer"));
 		
 		return materialReceiptVO;
 	}

@@ -26,7 +26,7 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ReceiptTypeDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.finance.dao.AccountDao;
 import com.fanglin.finance.dao.AssistantDao;
 import com.fanglin.finance.dao.SubjectBalanceUpinfoDao;
@@ -38,7 +38,7 @@ import com.fanglin.finance.po.SubjectPO;
 import com.fanglin.finance.po.VoucherPO;
 import com.fanglin.finance.service.FinanceService;
 import com.fanglin.finance.vo.AccountVO;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -48,7 +48,6 @@ import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.payment.po.MaterialReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
-import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -88,11 +87,8 @@ public class FinanceServiceImpl implements FinanceService {
 	@Autowired
 	private ReceiptTypeDao receiptTypeDao;
 	
-	@Autowired
-	private UserDao userDao;
-	
 	@Override
-	public int buildAdvanceFinance(DecorationOrderPO decorationOrderPO, AdvanceReceiptPO advanceReceiptPO, UserPO poster) throws FLException {
+	public int buildAdvanceFinance(DecorationPO decorationPO, AdvanceReceiptPO advanceReceiptPO, UserPO poster) throws FLException {
 		
 		boolean relat = true;
 		String word = null;
@@ -105,16 +101,16 @@ public class FinanceServiceImpl implements FinanceService {
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
 		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		int company = decorationOrderPO.getCompany();
+		int company = decorationPO.getCompany();
 		
-		String orderId = decorationOrderPO.getOrderId();
-		String orderAddr = decorationOrderPO.getVillagePO().getVillageName() + " " + decorationOrderPO.getHouseNumber();
+		String orderId = decorationPO.getOrderId();
+		String orderAddr = decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber();
 		
-		if(advanceReceiptPO.getReceiptType() == DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT){
+		if(advanceReceiptPO.getType() == DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT){
 			relat = false;
 		}else{
 			relat = true;
@@ -151,8 +147,8 @@ public class FinanceServiceImpl implements FinanceService {
 			abstracts = String.format("退订单%s的预付款", orderId);
 		}
 		
-		voucherPO.setOriginator(advanceReceiptPO.getCollectUser());
-		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
+		voucherPO.setOriginator(advanceReceiptPO.getCollecter());
+		voucherPO.setPostor(poster);
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");
@@ -213,19 +209,19 @@ public class FinanceServiceImpl implements FinanceService {
 		if(checkv != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCheckvBankName(), checkv, company);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getCheckvBank(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getInstallmentBankName(), installment, company);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getInstallmentBank(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getAccountsBankName(), accounts, company);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, advanceReceiptPO.getAccountsBank(), accounts, company);
 		}
 		
 		handleSubjectBalance(subjectBalances);
@@ -235,7 +231,7 @@ public class FinanceServiceImpl implements FinanceService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int buildDecorationFinance(DecorationOrderPO decorationOrderPO, DecorationReceiptPO decorationReceiptPO, UserPO poster) throws FLException {
+	public int buildDecorationFinance(DecorationPO decorationPO, DecorationReceiptPO decorationReceiptPO, UserPO poster) throws FLException {
 		
 		boolean relat = true;
 		String word = null;
@@ -248,17 +244,17 @@ public class FinanceServiceImpl implements FinanceService {
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
 		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		int company = decorationOrderPO.getCompany();
+		int company = decorationPO.getCompany();
 		
-		String orderId = decorationOrderPO.getOrderId();
-		String orderAddr = decorationOrderPO.getVillagePO().getVillageName() + " " + decorationOrderPO.getHouseNumber();
-		UserPO designer = decorationOrderPO.getDesignerPO();
+		String orderId = decorationPO.getOrderId();
+		String orderAddr = decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber();
+		UserPO designer = decorationPO.getDesigner();
 		
-		if(decorationReceiptPO.getReceiptType() == DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT){
+		if(decorationReceiptPO.getType() == DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT){
 			relat = false;
 		}else{
 			relat = true;
@@ -295,8 +291,8 @@ public class FinanceServiceImpl implements FinanceService {
 			abstracts = String.format("退订单%s的工程款", orderId);
 		}
 		
-		voucherPO.setOriginator(decorationReceiptPO.getCollectUserPO());
-		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
+		voucherPO.setOriginator(decorationReceiptPO.getCollecter());
+		voucherPO.setPostor(poster);
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");
@@ -320,8 +316,8 @@ public class FinanceServiceImpl implements FinanceService {
 
 			AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 			
-			if(decorationOrderPO.getSupervisorPO() != null){
-				assistantPO.setSupervisor(decorationOrderPO.getSupervisorPO());
+			if(decorationPO.getSupervisor() != null){
+				assistantPO.setSupervisor(decorationPO.getSupervisor());
 			}
 			
 			String sid = null;
@@ -365,19 +361,19 @@ public class FinanceServiceImpl implements FinanceService {
 			
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCheckvBankName(), checkv, company);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getCheckvBank(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getInstallmentBankName(), installment, company);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getInstallmentBank(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getAccountsBankName(), accounts, company);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, decorationReceiptPO.getAccountsBank(), accounts, company);
 		}
 		
 		if(advance != 0f){
@@ -419,7 +415,7 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int buildMaterialFinance(DecorationOrderPO decorationOrderPO, MaterialSubOrderPO materialSubOrderPO, MaterialReceiptPO materialReceiptPO, UserPO poster) throws FLException {
+	public int buildMaterialFinance(DecorationPO decorationPO, MaterialPO materialPO, MaterialReceiptPO materialReceiptPO, UserPO poster) throws FLException {
 		
 		boolean relat = true;
 		String word = null;
@@ -432,20 +428,20 @@ public class FinanceServiceImpl implements FinanceService {
 		Map<String, SubjectPO> subjectPOs = SubjectInfoUtil.getSubjectInfos();
 		Map<String, List<Float>> subjectBalances = new HashMap<String, List<Float>>();
 		
-		if(materialSubOrderPO == null){
+		if(materialPO == null){
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		int company = materialSubOrderPO.getCompany();
+		int company = materialPO.getCompany();
 		
-		String orderId = materialSubOrderPO.getOrderId();
-		String orderAddr = materialSubOrderPO.getOrderAddr();
-		String msoNo = materialSubOrderPO.getMsoNo();
-		String brandName = materialSubOrderPO.getMaterialBrand();
+		String orderId = materialPO.getOrderId();
+		String orderAddr = decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber();
+		String no = materialPO.getNo();
+		String brand = materialPO.getBrand();
 		
-		UserPO designer = decorationOrderPO.getDesignerPO();
+		UserPO designer = decorationPO.getDesigner();
 		
-		if(materialReceiptPO.getReceiptType() == MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT){
+		if(materialReceiptPO.getType() == MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT){
 			relat = false;
 		}else{
 			relat = true;
@@ -467,7 +463,7 @@ public class FinanceServiceImpl implements FinanceService {
 			voucherPO.setWord(VoucherPO.PERIOD_CC_STR);
 			
 			word = VoucherPO.PERIOD_CC_STR;
-			abstracts = String.format("收订单%s子订单%s的主材款", orderId, msoNo);
+			abstracts = String.format("收订单%s子订单%s的主材款", orderId, no);
 		}else{
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 			
@@ -479,11 +475,11 @@ public class FinanceServiceImpl implements FinanceService {
 			voucherPO.setWord(VoucherPO.PERIOD_CR_STR);
 			
 			word = VoucherPO.PERIOD_CR_STR;
-			abstracts = String.format("退订单%s子订单%s的主材款", orderId, msoNo);
+			abstracts = String.format("退订单%s子订单%s的主材款", orderId, no);
 		}
 		
-		voucherPO.setOriginator(userDao.queryUserByUserId(materialReceiptPO.getCollectUserId()));
-		voucherPO.setPostor(userDao.queryUserByUserId(poster.getUserId()));
+		voucherPO.setOriginator(materialReceiptPO.getCollecter());
+		voucherPO.setPostor(poster);
 		voucherPO.setAttachmentNum(0);
 		voucherPO.setStatus(VoucherPO.STATUS_TYPE_FORMAL_INT);
 		voucherPO.setComment("");
@@ -506,8 +502,8 @@ public class FinanceServiceImpl implements FinanceService {
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
 			AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 			
-			assistantPO.setMsoNo(materialPaymentPO.getMsoNo());
-			assistantPO.setBrandName(brandName);
+			assistantPO.setNo(materialPaymentPO.getMaterial().getNo());
+			assistantPO.setBrand(brand);
 			
 			if(designer != null){
 				assistantPO.setDesignInfo(designer, designer.getDept(), designer.getDept().getFatherDept());
@@ -522,7 +518,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				boolean _relat = relat ? false : true;
 				
-				List<MaterialPaymentPO> _materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMsoIdAType(materialPaymentPO.getMaterialSubOrder().getMsoId(), MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+				List<MaterialPaymentPO> _materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(materialPaymentPO.getMaterial().getMid(), MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
 				
 				if(_materialPaymentPOs.size() > 1){
 					throw new FLException(250007, "主材定金存在多条");
@@ -569,19 +565,19 @@ public class FinanceServiceImpl implements FinanceService {
 		if(checkv != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getCheckvBankName(), checkv, company);
+			convertCheckvToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getCheckvBank(), checkv, company);
 		}
 		
 		if(installment != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getInstallmentBankName(), installment, company);
+			convertInstallmentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getInstallmentBank(), installment, company);
 		}
 		
 		if(accounts != 0f){
 			accountVO.setSaId(subAccountId++);
 			
-			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getAccountsBankName(), accounts, company);
+			convertAccountsToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, null, relat, materialReceiptPO.getAccountsBank(), accounts, company);
 		}
 		
 		if(advance != 0f){
@@ -606,7 +602,7 @@ public class FinanceServiceImpl implements FinanceService {
 				
 				AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 				
-				assistantPO.setBrandName(brandName);
+				assistantPO.setBrand(brand);
 				
 				if(designer != null){
 					assistantPO.setDesignInfo(designer, designer.getDept(), designer.getDept().getFatherDept());

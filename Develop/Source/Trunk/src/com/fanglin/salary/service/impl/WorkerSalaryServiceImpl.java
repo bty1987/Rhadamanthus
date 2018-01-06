@@ -12,12 +12,12 @@ import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.data.common.vo.DutyVO;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
 import com.fanglin.salary.service.WorkerSalaryService;
@@ -42,39 +42,31 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	public void pageWorkerSalary(Paging paging, List<Filter> filters, int company) {
 		
 		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging,filters,company);
+		
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs){
 			
-			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO());
-			
-			if(workerSalaryPO.getApprover() != null){
-				
-				workerSalaryVO.getApprover().setUserName(workerSalaryPO.getApprover().getUserName());
-				
-			}
-			workerSalaryVO.getCreater().setUserName(workerSalaryPO.getCreater().getUserName());
-			
-			if(workerSalaryPO.getDecorationOrder() != null){
-				
-				workerSalaryVO.getDecorationOrder().setOrderId(workerSalaryPO.getDecorationOrder().getOrderId());
-				workerSalaryVO.getDecorationOrder().setHouseNumber(workerSalaryPO.getDecorationOrder().getHouseNumber());
-				
-				if(workerSalaryPO.getDecorationOrder().getVillagePO() != null){
-					
-					VillageVO villageVO = new VillageVO();
-					villageVO.setVillageName(workerSalaryPO.getDecorationOrder().getVillagePO().getVillageName());
-					workerSalaryVO.getDecorationOrder().setVillage(villageVO);
-				}
-				if(workerSalaryPO.getDecorationOrder().getSupervisorPO() != null){
-					
-					workerSalaryVO.getDecorationOrder().setSupervisor(workerSalaryPO.getDecorationOrder().getSupervisorPO().getUserName());
-				}
+			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(),new UserBaseVO(new DutyVO()),new UserBaseVO(),new UserBaseVO());
 
+			if(workerSalaryPO.getDecoration() != null){
+				
+				workerSalaryVO.setDecoration(new DecorationVO());
+				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
+				if(workerSalaryPO.getDecoration().getSupervisor() != null){
+					
+					UserBaseVO supervisorVO = new UserBaseVO();
+					supervisorVO.setUserName(workerSalaryPO.getDecoration().getSupervisor().getUserName());
+					workerSalaryVO.getDecoration().setSupervisor(supervisorVO);
+				}
+				
 			}
-			
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decorationOrder","user","creater","approver"));
+			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration","user","creater","approver"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(),Arrays.asList("departmentType"));
+		
 			WorkerSalaryVOs.add(workerSalaryVO);
 		}
 		paging.setData(WorkerSalaryVOs);
@@ -89,9 +81,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 			
-			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationOrderVO(),new UserVO(),new UserVO(),new UserVO() );
+			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationVO(),new UserBaseVO(),new UserBaseVO(),new UserBaseVO() );
 			
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user","decorationOrder","creater","approver"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo,Arrays.asList("user","decoration","creater","approver"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(),workerSalaryvo.getUser(), Arrays.asList("dept", "role","duty"));
 			workerSalarys.add(workerSalaryvo);
 		}
@@ -105,7 +97,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		UserPO user = userdao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
 	
 		UserPO	userpo = userdao.queryUserByUserId(userId);
-		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(new DecorationOrderPO(), user,userpo);
+		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(user,userpo);
 		
 		if(workerSalaryVO.getCid() != null){
 			
@@ -115,10 +107,10 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		    if(constructionPO == null){
 			      throw new FLException(120020, "工程信息不存在");
 			}
-		    workerSalaryPO.getDecorationOrder().setOrderId(constructionPO.getDecorationOrderPO().getOrderId());
+		    workerSalaryPO.setDecoration(new DecorationPO());
+		    workerSalaryPO.getDecoration().setOrderId(constructionPO.getDecoration().getOrderId());
 		    workerSalaryPO.setCid(cid);
 		}else{
-			
 		    workerSalaryPO.setCid(WorkerSalaryPO.CSID_INIT_STR);
 		}
 		workerSalaryPO.setCompany(company);
@@ -128,9 +120,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	    workerSalaryPO.setSalary(workerSalaryVO.getSalary());
 	    workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 	    workerSalaryPO.setBalanceTime(new Timestamp(System.currentTimeMillis()));
-	    
 	    workerSalaryDao.save(workerSalaryPO);
-	    
+	   	    	    
 	    workerSalaryVO.setCreateTime(workerSalaryPO.getCreateTime());
 	    workerSalaryVO.setStatus(workerSalaryPO.getStatus());
 		workerSalaryVO.setSubtype(workerSalaryPO.getSubtype());

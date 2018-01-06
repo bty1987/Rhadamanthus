@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
-import com.fanglin.decoration.vo.DecorationOrderVO;
-import com.fanglin.personel.vo.UserVO;
 
 public class WorkerSalaryVO  implements Serializable{
 	
@@ -14,17 +14,17 @@ public class WorkerSalaryVO  implements Serializable{
 
 	private Long wsId;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private Long cid;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
-	private  UserVO creater;
+	private  UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
-	private  UserVO   approver;
+	private  UserBaseVO   approver;
 	
 	private Timestamp approveTime ;
 	
@@ -44,9 +44,9 @@ public class WorkerSalaryVO  implements Serializable{
 		super();
 	}
 
-	public WorkerSalaryVO(DecorationOrderVO decorationOrder, UserVO user,UserVO creater,UserVO approver) {
+	public WorkerSalaryVO(DecorationVO decoration, UserBaseVO user,UserBaseVO creater,UserBaseVO approver) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 		this.approver = approver;
@@ -68,35 +68,36 @@ public class WorkerSalaryVO  implements Serializable{
 		this.cid = cid;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 
-	public UserVO getApprover() {
+	public UserBaseVO getApprover() {
 		return approver;
 	}
 
-	public void setApprover(UserVO approver) {
+	public void setApprover(UserBaseVO approver) {
 		this.approver = approver;
 	}
 

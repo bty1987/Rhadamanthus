@@ -28,7 +28,7 @@ public class DecorationInclusiveDaoImpl extends DaoImpl<DecorationInclusivePO> i
 	
 	@Override
 	public DecorationInclusivePO queryDecorationInclusiveByOrderId(String orderId) {
-		return (DecorationInclusivePO) session().createCriteria(DecorationInclusivePO.class).add(Restrictions.eq("decorationOrder.orderId",orderId)).uniqueResult();
+		return (DecorationInclusivePO) session().createCriteria(DecorationInclusivePO.class).add(Restrictions.eq("decoration.orderId",orderId)).uniqueResult();
 	}
 
 	private void queryFilterExcute(Paging paging,List<Filter> filters,PagingQuery<DecorationInclusivePO> query){
@@ -39,9 +39,9 @@ public class DecorationInclusiveDaoImpl extends DaoImpl<DecorationInclusivePO> i
 				String data = filter.getData();
 				String op = filter.getOp();
 				
-				query.alias("decorationOrder", "decorationOrder");
-				query.alias("decorationOrder.villagePO", "village");
-				query.alias("decorationOrder.designerPO", "designer");
+				query.alias("decoration", "decoration");
+				query.alias("decoration.house.village", "village");
+				query.alias("decoration.designer", "designer");
 				
 				if("orderId".equals(field)){
 					query.add(query.getCriterion(DecorationInclusivePO.COLUMN_ORDERID_STR, data, op));

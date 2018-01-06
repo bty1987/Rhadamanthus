@@ -21,15 +21,21 @@ public class SalesReceiptPO  implements Serializable{
 	
 	public static final String COLUMN_SRID_STR = "srId";
 	
-	public static final float COLUMN_COUPON_STR = 0f;
+	public static final float COLUMN_COUPON_INT = 0f;
 	
-	public static final float COLUMN_MONEY_STR = 0f;
+	public static final float COLUMN_MONEY_INT = 0f;
 	
-	public static final short COLUMN_ADVANCETYPE_STR = 0;
+	public static final short COLUMN_ADVANCETYPE_INT = 0;
 	
 	public static final String COLUMN_COUPONINFO_STR = "";
 	
-	private long srId;        			//收据ID
+	public static final short COLUMN_SALESRECEIPT_TYPE_INT = 0;
+	
+	public static final short COLUMN_SALESRECEIPT_REFUND_TYPE_INT = 1;
+	
+	private long srId;
+	
+	private short type;
 	
 	private UserPO collecter;
 	
@@ -45,35 +51,35 @@ public class SalesReceiptPO  implements Serializable{
 	
 	private float realMoney;
 	
-	private float cash;                //现金
+	private float cash;                
 	
-	private String cashInfo;           //现金信息
+	private String cashInfo;           
 	
-	private float bank;                //刷卡
+	private float bank;                
 	
-	private String bankInfo;           //刷卡信息;
+	private String bankInfo;           
 	
-	private float checkv;              //转账
+	private float checkv;              
 	
-	private String checkvBank;         //转账银行
+	private String checkvBank;         
 	
-	private float installment;         //分期
+	private float installment;         
 	
-	private String installBank;        //分期银行
+	private String installBank;        
 	
-	private float accounts;            //对公
+	private float accounts;            
 	
-	private String accountsBank;       //对公银行
+	private String accountsBank;       
 	
-	private float advance;             //预付款
+	private float advance;             
 	
-	private short advanceType;         //预付款类型
+	private short advanceType;         
 	
-	private float coupon;              //券值
+	private float coupon;              
 	
-	private String couponInfo;         //券信息
+	private String couponInfo;         
 	
-	private String des;                //说明
+	private String comment;                
 	
 	public SalesReceiptPO() {
 		super();
@@ -95,12 +101,20 @@ public class SalesReceiptPO  implements Serializable{
 		this.srId = srId;
 	}
 
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cluid", referencedColumnName = "uid")
 	public UserPO getCollecter() {
 		return collecter;
 	}
-
 
 	public void setCollecter(UserPO collecter) {
 		this.collecter = collecter;
@@ -111,7 +125,6 @@ public class SalesReceiptPO  implements Serializable{
 	public UserPO getConfirmer() {
 		return confirmer;
 	}
-
 
 	public void setConfirmer(UserPO confirmer) {
 		this.confirmer = confirmer;
@@ -288,13 +301,13 @@ public class SalesReceiptPO  implements Serializable{
 		this.couponInfo = couponInfo;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

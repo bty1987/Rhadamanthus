@@ -15,7 +15,7 @@ import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.service.DecorationActivityService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -30,7 +30,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Autowired
 	private DecorationActivityItemService decorationActivityItemService;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private DecorationActivityVO decorationActivity;
 	
@@ -51,7 +51,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Action(value="queryDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationActivityItem(){
 		
-		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemByOrderId(decorationOrder);
+		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemByOrderId(decoration);
 		
 		return SUCCESS;
 	}
@@ -59,7 +59,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Action(value="queryDecorationActivityItemForCouponAVaildByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationActivityItemForCouponAVaildByOrderId(){
 		
-		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemForCouponAVaildByOrderId(decorationOrder);
+		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemForCouponAVaildByOrderId(decoration);
 		
 		return SUCCESS;
 	}
@@ -104,12 +104,12 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public DecorationActivityItemVO getDecorationActivityItem() {

@@ -2,16 +2,15 @@ package com.fanglin.personel.dao.impl;
 
 import java.math.BigInteger;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.DutyPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.RolePO;
@@ -36,7 +35,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
 		
 		query.asc("userId");
-	
+		
 		return query.list();
 	}
 	
@@ -162,8 +161,11 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty){
 		
-		String sql="select * from communion.user ,communion.duty where uid= :uid and duty.name= :duty";
-		List<UserPO>  userPOs = session().createSQLQuery(sql).setString("deptId", deptId).setString("duty.name", duty).list();
+		DutyPO dutyPO = (DutyPO)session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, duty)).uniqueResult();
+
+		String sql="select * from communion.user  where deptId= :deptId and did= :did";
+		
+		List<UserPO> userPOs = session().createSQLQuery(sql).addEntity(UserPO.class).setString("deptId", deptId).setLong("did", dutyPO.getDid()).list();
 		
 		return userPOs;
 		}
@@ -201,20 +203,23 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 				if("userId".equals(field)){
 					query.add(query.getCriterion("userId", filter));
 				}else if("userName".equals(field)){
-					query.add(query.getCriterion("currentName", filter));
+					query.add(query.getCriterion("userId", filter));
 				}else if("roleId".equals(field)){
 					query.add(query.getCriterion("role.roleId", filter));
-				}else if("dtid".equals(field)){
-					query.add(query.getCriterion("dtid", filter));
 				}else if("deptId".equals(field)){
 					query.add(query.getCriterion("dept.deptId", filter));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion("status", filter));
-				}else if("duty".equals(field)){
-					query.add(query.getCriterion("duty.did", filter));
+				}else if("duty.name".equals(field)){
+					query.add(query.getCriterion("duty.name", filter));
 				}else if("identity".equals(field)){
 					query.add(query.getCriterion("identity", filter));
+				}else if("phone".equals(field)){
+					query.add(query.getCriterion("phone", filter));
+				}else if("deptType".equals(field)){
+					query.add(Restrictions.eq("dtid", Integer.valueOf(filter.getData())));
 				}
+				
 			}
 		}
 	}

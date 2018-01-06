@@ -18,13 +18,13 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -301890437525155657L;
 
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
-	public static final String COLUMN_VILLAGE_STR = "village.villageName";
+	public static final String COLUMN_VILLAGE_STR = "village.no";
 	
-	public static final String COLUMN_DESIGNER_STR = "designer.currentName";
+	public static final String COLUMN_DESIGNER_STR = "designer.userId";
 
-	public static final String COLUMN_COMPANY_STR = "decorationOrder.company";
+	public static final String COLUMN_COMPANY_STR = "decoration.company";
 	
 	public static final float MONEY_SERVICEPAIDUP_FLOAT = 0f;
 	
@@ -32,7 +32,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	
 	private long dhid;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private String name;
 	
@@ -62,9 +62,9 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 		super();
 	}
 
-	public DecorationHolonomyPO(DecorationOrderPO decorationOrder) {
+	public DecorationHolonomyPO(DecorationPO decoration) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 
 	@Id
@@ -80,12 +80,12 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 

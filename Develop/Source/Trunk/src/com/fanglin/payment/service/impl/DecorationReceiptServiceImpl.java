@@ -12,6 +12,7 @@
 package com.fanglin.payment.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.service.DecorationReceiptService;
 import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("decorationReceiptService")
@@ -33,7 +35,7 @@ public class DecorationReceiptServiceImpl implements DecorationReceiptService {
 	@Autowired
 	private DecorationReceiptDao decorationReceiptDao;
 
-	@Override
+	@Override                  
 	public DecorationReceiptVO queryDecorationReceiptByDrId(DecorationReceiptVO decorationReceiptVO) throws FLException {
 		
 		DecorationReceiptPO decorationReceiptPO = decorationReceiptDao.get(decorationReceiptVO.getDrId());
@@ -42,20 +44,18 @@ public class DecorationReceiptServiceImpl implements DecorationReceiptService {
 			throw new FLException(150026, "收据不存在");
 		}
 		
-		BeanUtil.copyProperties(decorationReceiptPO, decorationReceiptVO);
+		BeanUtil.copyProperties(decorationReceiptPO, decorationReceiptVO, Arrays.asList("collecter","confirmer"));
 		
-		if(decorationReceiptPO.getCollectUserPO() != null){
-			UserPO collectUserPO = decorationReceiptPO.getCollectUserPO();
-			
-			decorationReceiptVO.setCollectUserId(collectUserPO.getUserId());
-			decorationReceiptVO.setCollectUserName(collectUserPO.getUserName());
+		UserPO collecterUser = decorationReceiptPO.getCollecter();
+		if(collecterUser != null){
+			decorationReceiptVO.setCollecter(new UserBaseVO());
+			BeanUtil.copyProperties(collecterUser, decorationReceiptVO.getCollecter(), Arrays.asList("duty","dept"));
 		}
 		
-		if(decorationReceiptPO.getConfirmUserPO() != null){
-			UserPO confirmUserPO = decorationReceiptPO.getConfirmUserPO();
-			
-			decorationReceiptVO.setConfirmUserId(confirmUserPO.getUserId());
-			decorationReceiptVO.setConfirmUserName(confirmUserPO.getUserName());
+		UserPO confirmUserPO = decorationReceiptPO.getConfirmer();
+		if(confirmUserPO != null){
+			decorationReceiptVO.setConfirmer(new UserBaseVO());
+			BeanUtil.copyProperties(confirmUserPO, decorationReceiptVO.getConfirmer(), Arrays.asList("duty","dept"));
 		}
 		
 		return decorationReceiptVO;
@@ -71,18 +71,14 @@ public class DecorationReceiptServiceImpl implements DecorationReceiptService {
 			DecorationReceiptVO decorationReceiptVO = new DecorationReceiptVO();
 			BeanUtil.copyProperties(decorationReceiptPO, decorationReceiptVO);
 			
-			if(decorationReceiptPO.getCollectUserPO() != null){
-				UserPO collectUserPO = decorationReceiptPO.getCollectUserPO();
-				
-				decorationReceiptVO.setCollectUserId(collectUserPO.getUserId());
-				decorationReceiptVO.setCollectUserName(collectUserPO.getUserName());
+			if(decorationReceiptPO.getCollecter() != null){
+				UserPO collectUserPO = decorationReceiptPO.getCollecter();
+				BeanUtil.copyProperties(collectUserPO, decorationReceiptVO, Arrays.asList("duty","dept"));
 			}
 			
-			if(decorationReceiptPO.getConfirmUserPO() != null){
-				UserPO confirmUserPO = decorationReceiptPO.getConfirmUserPO();
-				
-				decorationReceiptVO.setConfirmUserId(confirmUserPO.getUserId());
-				decorationReceiptVO.setConfirmUserName(confirmUserPO.getUserName());
+			if(decorationReceiptPO.getConfirmer() != null){
+				UserPO confirmUserPO = decorationReceiptPO.getConfirmer();
+				BeanUtil.copyProperties(confirmUserPO, decorationReceiptVO, Arrays.asList("duty","dept"));
 			}
 			
 			decorationReceiptVOs.add(decorationReceiptVO);

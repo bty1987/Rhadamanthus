@@ -86,7 +86,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 				workerSalarypo.setType(WorkerSalaryPO.TYPE_SALARY_STRONE);
 				
 			}
-			
+			workerSalarypo.setCompany(creater.getCompany());
 			workerSalarypo.setUser(user);
 			workerSalarypo.setSubtype(subtype);
 			workerSalarypo.setComment(comment);

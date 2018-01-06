@@ -18,13 +18,13 @@ public class DecorationInclusivePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -301890437525155657L;
 
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
-	public static final String COLUMN_VILLAGE_STR = "village.villageName";
+	public static final String COLUMN_VILLAGE_STR = "village.name";
 	
-	public static final String COLUMN_DESIGNER_STR = "designer.currentName";
+	public static final String COLUMN_DESIGNER_STR = "designer.userId";
 
-	public static final String COLUMN_COMPANY_STR = "decorationOrder.company";
+	public static final String COLUMN_COMPANY_STR = "decoration.no";
 	
 	public static final float MONEY_ZERO_FLOAT = 0f;
 	
@@ -32,7 +32,7 @@ public class DecorationInclusivePO implements java.io.Serializable {
 	
 	private long diid;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private float contractPrice;
 	
@@ -52,9 +52,9 @@ public class DecorationInclusivePO implements java.io.Serializable {
 		super();
 	}
 
-	public DecorationInclusivePO(DecorationOrderPO decorationOrder) {
+	public DecorationInclusivePO(DecorationPO decoration) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 	
 	@Id
@@ -70,12 +70,12 @@ public class DecorationInclusivePO implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 	
 	@Column(name = "contractPrice")

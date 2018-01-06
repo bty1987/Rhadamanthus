@@ -10,7 +10,7 @@ import com.fanglin.payment.dao.ServiceReceiptDao;
 import com.fanglin.payment.po.ServiceReceiptPO;
 import com.fanglin.payment.service.ServiceReceiptService;
 import com.fanglin.payment.vo.ServiceReceiptVO;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("serviceReceiptService")
@@ -28,20 +28,17 @@ public class ServiceReceiptServiceImpl implements ServiceReceiptService{
 		if(serviceReceiptPO == null){
 			throw new FLException(150026, "收据不存在");
 		}
+		serviceReceiptVO = new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO());
 		BeanUtil.copyProperties(serviceReceiptPO, serviceReceiptVO, Arrays.asList("collecter","confirmer"));
 		
 		if(serviceReceiptPO.getCollecter() != null){
-			UserPO collectUserPO = serviceReceiptPO.getCollecter();
-			
-			serviceReceiptVO.setCollecterId(collectUserPO.getUserId());
-			serviceReceiptVO.setCollecterName(collectUserPO.getUserName());
+			serviceReceiptVO.setCollecter(new UserBaseVO());
+			BeanUtil.copyProperties(serviceReceiptPO.getCollecter(), serviceReceiptVO.getCollecter(), Arrays.asList("dept","duty"));
 		}
 		
 		if(serviceReceiptPO.getConfirmer() != null){
-			UserPO confirmUserPO = serviceReceiptPO.getConfirmer();
-			
-			serviceReceiptVO.setConfirmerId(confirmUserPO.getUserId());
-			serviceReceiptVO.setConfirmerName(confirmUserPO.getUserName());
+			serviceReceiptVO.setConfirmer(new UserBaseVO());
+			BeanUtil.copyProperties(serviceReceiptPO.getConfirmer(), serviceReceiptVO.getConfirmer(), Arrays.asList("dept","duty"));
 		}
 		
 		return serviceReceiptVO;

@@ -17,6 +17,8 @@ public interface PurchaseService {
 	
 	public void pagePurchase(Paging paging, List<Filter> filters,int company);
 	
+	public void pagePurchaseObDelivery(Paging paging, List<Filter> filters, int company);
+	
 	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
 	
 	public int updatePurchaseForStatus(PurchaseVO purchaseVO) throws FLException;

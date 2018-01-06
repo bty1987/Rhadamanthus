@@ -36,7 +36,7 @@ public class DecorationContractDaoImpl extends DaoImpl<DecorationContractPO> imp
 
 			for(Filter filter : filters){
 				if("orderId".equals(filter.getField())){
-					query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));
+					query.add(query.getCriterion("decorationPO.orderId",(filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(),(filter.getData()), filter.getOp()));
 				}
@@ -48,6 +48,6 @@ public class DecorationContractDaoImpl extends DaoImpl<DecorationContractPO> imp
 	
 	@Override
 	public DecorationContractPO queryDecorationContractByOrderId(String orderId){
-		return (DecorationContractPO) createCriteria(DecorationContractPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).uniqueResult();
+		return (DecorationContractPO) createCriteria(DecorationContractPO.class).add(Restrictions.eq("decorationPO.orderId", orderId)).uniqueResult();
 	}
 }

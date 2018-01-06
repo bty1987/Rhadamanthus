@@ -18,13 +18,14 @@ import com.fanglin.utils.Paging;
 
 public interface VillageDao extends Dao<VillagePO> {
 	
-	public List<VillagePO> pageVillages(Paging paging, List<Filter> filters);
+	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters);
 	
-	public List<VillagePO> queryVillage(List<Filter> filters);
+	public List<VillagePO> queryVillageByPinyin(Paging paging, String name);
 	
-	public List<VillagePO> queryVillagesName(Paging paging, String pinyinName);
+	public List<VillagePO> queryVillageByName(String pinyinName);
 	
-	public List<VillagePO> queryVillagesByCityProperId(String cityProperId);
+	public List<VillagePO> queryVillageByCityProperId(String cityProperId);
 	
 	public int countVillageByCityProperId(String cityProperId);
+	
 }

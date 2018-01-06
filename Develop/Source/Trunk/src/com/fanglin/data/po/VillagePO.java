@@ -24,19 +24,17 @@ public class VillagePO implements Serializable {
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
-	private int vId;
+	private long vid;
 
-	private String villageId;
+	private String no;
 
-	private String villageName;
+	private String name;
 
-	private String villageNamePinYinAB;
+	private String pinyinAB ;
 
-	private String villageNamePinYinAll;
+	private String pinyinAll ;
 
 	private CityProperPO cityProper;
-
-	private BuildingNameRulePO buildingNameRule;
 
 	private String developer;
 
@@ -44,13 +42,11 @@ public class VillagePO implements Serializable {
 
 	private String deliveryTime;
 
-	private String villageContent;
+	private String content;
 	
 	private double x;
 	
 	private double y;
-	
-	private int count;
 	
 	private short status;
 
@@ -58,55 +54,61 @@ public class VillagePO implements Serializable {
 		super();
 	}
 
-	public VillagePO(String villageId){
-		this.villageId = villageId;
+	public VillagePO(String no) {
+		super();
+		this.no = no;
 	}
 
+	public VillagePO(CityProperPO cityProper) {
+		super();
+		this.cityProper = cityProper;
+	}
+	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "vId") 
-	public int getvId() {
-		return vId;
+	@Column(name = "vid") 
+	public long getVid() {
+		return vid;
 	}
 
-	public void setvId(int vId) {
-		this.vId = vId;
+	public void setVid(long vid) {
+		this.vid = vid;
 	}
 
 	@Id
-	@Column(name = "villageId")
-	public String getVillageId(){
-		return villageId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setVillageId(String villageId){
-		this.villageId = villageId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = "villageName")
-	public String getVillageName(){
-		return villageName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setVillageName(String villageName){
-		this.villageName = villageName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = "villageNamePinYinAll")
-	public String getVillageNamePinYinAll(){
-		return villageNamePinYinAll;
+	@Column(name = "pinyinAll")
+	public String getPinyinAll() {
+		return pinyinAll;
 	}
 
-	public void setVillageNamePinYinAll(String villageNamePinYinAll){
-		this.villageNamePinYinAll = villageNamePinYinAll;
+	public void setPinyinAll(String pinyinAll) {
+		this.pinyinAll = pinyinAll;
 	}
 
-	@Column(name = "villageNamePinYinAB")
-	public String getVillageNamePinYinAB(){
-		return villageNamePinYinAB;
+	@Column(name = "pinyinAB")
+	public String getPinyinAB() {
+		return pinyinAB;
 	}
 
-	public void setVillageNamePinYinAB(String villageNamePinYinAB){
-		this.villageNamePinYinAB = villageNamePinYinAB;
+	public void setPinyinAB(String pinyinAB) {
+		this.pinyinAB = pinyinAB;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.EAGER)
@@ -117,16 +119,6 @@ public class VillagePO implements Serializable {
 
 	public void setCityProper(CityProperPO cityProper){
 		this.cityProper = cityProper;
-	}
-
-	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "buildingNameRuleId", referencedColumnName = "id")
-	public BuildingNameRulePO getBuildingNameRule(){
-		return buildingNameRule;
-	}
-
-	public void setBuildingNameRule(BuildingNameRulePO buildingNameRule){
-		this.buildingNameRule = buildingNameRule;
 	}
 
 	@Column(name = "developer")
@@ -156,13 +148,13 @@ public class VillagePO implements Serializable {
 		this.deliveryTime = deliveryTime;
 	}
 
-	@Column(name = "villageContent")
-	public String getVillageContent(){
-		return villageContent;
+	@Column(name = "content")
+	public String getContent(){
+		return content;
 	}
 
-	public void setVillageContent(String villageContent){
-		this.villageContent = villageContent;
+	public void setContent(String content){
+		this.content = content;
 	}
 
 	@Column(name = "x")
@@ -181,15 +173,6 @@ public class VillagePO implements Serializable {
 
 	public void setY(double y){
 		this.y = y;
-	}
-
-	@Column(name = "count")
-	public int getCount(){
-		return count;
-	}
-
-	public void setCount(int count){
-		this.count = count;
 	}
 
 	@Column(name = "status")

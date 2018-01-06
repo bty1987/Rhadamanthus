@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class CheckListVO implements java.io.Serializable {
 
@@ -26,13 +26,13 @@ public class CheckListVO implements java.io.Serializable {
 	
 	private Timestamp createTime;
 	
-	private UserVO createUser;
+	private UserBaseVO createUser;
 
 	public CheckListVO() {
 		super();
 	}
 
-	public CheckListVO(GoodsVO goods, ColorVO color,FormatVO format,StorehouseVO storehouse, UserVO createUser) {
+	public CheckListVO(GoodsVO goods, ColorVO color,FormatVO format,StorehouseVO storehouse, UserBaseVO createUser) {
 		super();
 		this.goods = goods;
 		this.color = color;
@@ -105,11 +105,11 @@ public class CheckListVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	public UserVO getCreateUser() {
+	public UserBaseVO getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(UserVO createUser) {
+	public void setCreateUser(UserBaseVO createUser) {
 		this.createUser = createUser;
 	}
 

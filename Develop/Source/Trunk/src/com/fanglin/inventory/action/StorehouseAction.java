@@ -24,7 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.StorehouseService;
 import com.fanglin.inventory.vo.StorehouseVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -40,7 +40,7 @@ public class StorehouseAction extends BaseListAction {
 	
 	private List<StorehouseVO> storehouses;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
 	@Action(value = "pageStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageStorehouse(){
@@ -61,7 +61,7 @@ public class StorehouseAction extends BaseListAction {
 	@Action(value = "queryStorehouseForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryStorehouseForSelf() throws FLException{
 		
-		storehouses = storehouseService.queryStorehouseByUserId(new UserVO(queryUserId()));
+		storehouses = storehouseService.queryStorehouseByUserId(new UserBaseVO(queryUserId()));
 		
 		return SUCCESS;
 	}
@@ -98,12 +98,12 @@ public class StorehouseAction extends BaseListAction {
 		this.storehouses = storehouses;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
-
+	
 }

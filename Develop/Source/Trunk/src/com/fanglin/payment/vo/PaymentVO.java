@@ -15,19 +15,15 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class PaymentVO implements Serializable {
 
 	private static final long serialVersionUID = -4900471974953513592L;
 
-	private Integer paymentId;
+	private Long pid;
 	
 	private CustomerVO customer;
-	
-	private String customerId;
-	
-	private String customerName;
 	
 	private String orderId;
 	
@@ -39,6 +35,8 @@ public class PaymentVO implements Serializable {
 	
 	private String paymentType;
 	
+	private String status;
+	
 	private Float cash = 0f;
 	
 	private String cashInfo;
@@ -49,39 +47,35 @@ public class PaymentVO implements Serializable {
 	
 	private Float checkv = 0f;
 	
-	private String checkvBankName;
+	private String checkvBank;
 	
 	private Float installment = 0f;
 	
-	private String installmentBankName;
+	private String installmentBank;
 	
 	private Float accounts = 0f;
 	
-	private String accountsBankName;
+	private String accountsBank;
 	
-	private String des;
-	
-	private UserVO collectUser;
-	
-	private String collectUserName;
+	private UserBaseVO collectUser;
 	
 	private Timestamp collectTime;
 	
-	private UserVO confirmUser;
+	private UserBaseVO confirmUser;
 	
 	private Timestamp confirmTime;
 	
-	private String status;
+	private String comment;
 	
 	public PaymentVO(){
 	}
 
-	public Integer getPaymentId(){
-		return paymentId;
+	public Long getPid() {
+		return pid;
 	}
 
-	public void setPaymentId(Integer paymentId){
-		this.paymentId = paymentId;
+	public void setPid(Long pid) {
+		this.pid = pid;
 	}
 
 	public CustomerVO getCustomer(){
@@ -90,22 +84,6 @@ public class PaymentVO implements Serializable {
 
 	public void setCustomer(CustomerVO customer){
 		this.customer = customer;
-	}
-
-	public String getCustomerId(){
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId){
-		this.customerId = customerId;
-	}
-
-	public String getCustomerName(){
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
 	}
 
 	public String getOrderId() {
@@ -164,12 +142,12 @@ public class PaymentVO implements Serializable {
 		this.cashInfo = cashInfo;
 	}
 
-	public String getInstallmentBankName(){
-		return installmentBankName;
+	public String getInstallmentBank(){
+		return installmentBank;
 	}
 
-	public void setInstallmentBankName(String installmentBankName){
-		this.installmentBankName = installmentBankName;
+	public void setInstallmentBank(String installmentBank){
+		this.installmentBank = installmentBank;
 	}
 
 	public Float getInstallment(){
@@ -180,12 +158,12 @@ public class PaymentVO implements Serializable {
 		this.installment = installment;
 	}
 
-	public String getAccountsBankName(){
-		return accountsBankName;
+	public String getAccountsBank(){
+		return accountsBank;
 	}
 
-	public void setAccountsBankName(String accountsBankName){
-		this.accountsBankName = accountsBankName;
+	public void setAccountsBank(String accountsBank){
+		this.accountsBank = accountsBank;
 	}
 
 	public Float getAccounts(){
@@ -196,28 +174,12 @@ public class PaymentVO implements Serializable {
 		this.accounts = accounts;
 	}
 
-	public String getDes(){
-		return des;
-	}
-
-	public void setDes(String des){
-		this.des = des;
-	}
-
-	public UserVO getCollectUser(){
+	public UserBaseVO getCollectUser(){
 		return collectUser;
 	}
 
-	public void setCollectUser(UserVO collectUser){
+	public void setCollectUser(UserBaseVO collectUser){
 		this.collectUser = collectUser;
-	}
-
-	public String getCollectUserName(){
-		return collectUserName;
-	}
-
-	public void setCollectUserName(String collectUserName){
-		this.collectUserName = collectUserName;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -229,11 +191,11 @@ public class PaymentVO implements Serializable {
 		this.collectTime = collectTime;
 	}
 
-	public UserVO getConfirmUser(){
+	public UserBaseVO getConfirmUser(){
 		return confirmUser;
 	}
 
-	public void setConfirmUser(UserVO confirmUser){
+	public void setConfirmUser(UserBaseVO confirmUser){
 		this.confirmUser = confirmUser;
 	}
 
@@ -270,12 +232,12 @@ public class PaymentVO implements Serializable {
 		this.checkv = checkv;
 	}
 
-	public String getCheckvBankName(){
-		return checkvBankName;
+	public String getCheckvBank(){
+		return checkvBank;
 	}
 
-	public void setCheckvBankName(String checkvBankName){
-		this.checkvBankName = checkvBankName;
+	public void setCheckvBank(String checkvBank){
+		this.checkvBank = checkvBank;
 	}
 
 	public String getBankInfo(){
@@ -284,6 +246,14 @@ public class PaymentVO implements Serializable {
 
 	public void setBankInfo(String bankInfo){
 		this.bankInfo = bankInfo;
+	}
+	
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

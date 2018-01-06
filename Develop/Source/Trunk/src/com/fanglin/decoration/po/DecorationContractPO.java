@@ -30,7 +30,7 @@ public class DecorationContractPO implements Serializable {
 
 	private long autoId;
 	
-	private DecorationOrderPO decorationOrderPO;
+	private DecorationPO decorationPO;
 	
 	private String additionalInfo;
 	
@@ -63,12 +63,12 @@ public class DecorationContractPO implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrderPO(){
-		return decorationOrderPO;
+	public DecorationPO getDecorationPO(){
+		return decorationPO;
 	}
 
-	public void setDecorationOrderPO(DecorationOrderPO orderId){
-		this.decorationOrderPO = orderId;
+	public void setDecorationPO(DecorationPO decorationPO){
+		this.decorationPO = decorationPO;
 	}
 	
 	public String getAdditionalInfo(){

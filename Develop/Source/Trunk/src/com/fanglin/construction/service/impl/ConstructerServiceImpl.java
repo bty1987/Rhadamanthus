@@ -110,9 +110,8 @@ public class ConstructerServiceImpl implements ConstructerService {
 		
 		ConstructerPO constructerPO = new ConstructerPO(userPO, userC);
 		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));
-		BeanUtil.copyProperties(userPO, constructerPO.getUser(), Arrays.asList("role", "dept", "duty"));
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		constructerPO.setOrderId(constructionPO.getDecorationOrderPO().getOrderId());
+		constructerPO.setOrderId(constructionPO.getDecoration().getOrderId());
 		constructerDao.save(constructerPO);
 		constructerVO.setCrid(constructerPO.getCrid());
 		constructerVO.setUser(new UserVO().setBaseInfo(userPO));

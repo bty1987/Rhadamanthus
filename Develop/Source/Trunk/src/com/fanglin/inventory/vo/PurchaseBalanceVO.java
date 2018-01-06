@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class PurchaseBalanceVO implements Serializable{
 
@@ -16,7 +16,7 @@ public class PurchaseBalanceVO implements Serializable{
 	
 	private Long pid;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
@@ -30,7 +30,7 @@ public class PurchaseBalanceVO implements Serializable{
 		super();
 	}
 
-	public PurchaseBalanceVO(UserVO creater) {
+	public PurchaseBalanceVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}
@@ -51,11 +51,11 @@ public class PurchaseBalanceVO implements Serializable{
 		this.pid = pid;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -56,7 +56,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_CREATETIME = "createTime"; 
 	
-	public static final String ORDERID_STR = "decorationOrder.orderId"; 
+	public static final String ORDERID_STR = "decoration.orderId"; 
 	
 	public static final String COLUMN_USER_USERNAME = "user.userName";
 	
@@ -66,7 +66,7 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	private long cid;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private UserPO user;
 	
@@ -96,17 +96,17 @@ public class WorkerSalaryPO  implements Serializable{
 		super();
 	}
 
-	public WorkerSalaryPO(DecorationOrderPO decorationOrder, UserPO user, UserPO creater,UserPO   approver) {
+	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater,UserPO   approver) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 		this.approver = approver;
 	}
 
-	public WorkerSalaryPO( DecorationOrderPO decorationOrder ,UserPO user, UserPO creater) {
+	public WorkerSalaryPO( DecorationPO decoration ,UserPO user, UserPO creater) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 	}
@@ -193,12 +193,12 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 	
 	@Column(name="approveTime")

@@ -17,7 +17,7 @@ public class AssistantVO implements java.io.Serializable {
 	
 	private String orderAddr;
 	
-	private String msoNo;
+	private String no;
 	
 	private DepartmentVO department;
 	
@@ -51,7 +51,7 @@ public class AssistantVO implements java.io.Serializable {
 	
 	private UserVO materialer;
 	
-	private String brandName;
+	private String brand;
 	
 	private short company;
 	
@@ -79,12 +79,12 @@ public class AssistantVO implements java.io.Serializable {
 		this.orderAddr = orderAddr;
 	}
 
-	public String getMsoNo() {
-		return msoNo;
+	public String getNo() {
+		return no;
 	}
 
-	public void setMsoNo(String msoNo) {
-		this.msoNo = msoNo;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public DepartmentVO getDepartment() {
@@ -215,12 +215,12 @@ public class AssistantVO implements java.io.Serializable {
 		this.materialer = materialer;
 	}
 
-	public String getBrandName() {
-		return brandName;
+	public String getBrand() {
+		return brand;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 	
 	public short getCompany() {
@@ -237,8 +237,8 @@ public class AssistantVO implements java.io.Serializable {
 		
 		assistantPO.setOrderId(getOrderId());
 		assistantPO.setOrderAddr(getOrderAddr());
-		assistantPO.setMsoNo(getMsoNo());
-		assistantPO.setBrandName(getBrandName());
+		assistantPO.setNo(getNo());
+		assistantPO.setBrand(getBrand());
 		assistantPO.setCompany(getCompany());
 		
 		if(getDepartment() != null && getDepartment().getDid() != 0){
@@ -314,8 +314,8 @@ public class AssistantVO implements java.io.Serializable {
 		
 		assistantPO.setOrderId(getOrderId());
 		assistantPO.setOrderAddr(getOrderAddr());
-		assistantPO.setMsoNo(getMsoNo());
-		assistantPO.setBrandName(getBrandName());
+		assistantPO.setNo(getNo());
+		assistantPO.setBrand(getBrand());
 		assistantPO.setCompany(getCompany());
 		
 		if(getDepartment() != null && getDepartment().getDid() != 0){

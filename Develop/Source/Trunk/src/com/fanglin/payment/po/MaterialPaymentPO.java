@@ -11,7 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.po.MaterialPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "materialpayment", catalog = "payment")
@@ -23,9 +24,9 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static final String COLUMN_MSOID_STR = "msoId";
+	public static final String COLUMN_MID_STR = "mid";
 	
-	public static final String COLUMN_MSONO_STR = "msoNo";
+	public static final String COLUMN_NO_STR = "material.no";
 	
 	public static final String COLUMN_MPID_STR = "mpId";
 	
@@ -35,23 +36,23 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	
 	public static final String COLUMN_COLLECTTIME_STR = "collectTime";
 	
-	public static final String COLUMN_MRID_STR = "materialReceiptPO.mrId";
+	public static final String COLUMN_MRID_STR = "materialReceipt.mrId";
 	
-	public static final int PAYMENTTYPE_TYPE_INIT_INT = 0;
+	public static final short PAYMENTTYPE_TYPE_INIT_INT = 0;
 	
-	public static final int PAYMENTTYPE_TYPE_ADVANCE_INT = 1;
+	public static final short PAYMENTTYPE_TYPE_ADVANCE_INT = 1;
 	
-	public static final int PAYMENTTYPE_TYPE_DEPOSIT_INT = 2;
+	public static final short PAYMENTTYPE_TYPE_DEPOSIT_INT = 2;
 	
-	public static final int PAYMENTTYPE_TYPE_FULL_INT = 3;
+	public static final short PAYMENTTYPE_TYPE_FULL_INT = 3;
 	
-	public static final int PAYMENTTYPE_TYPE_REJECT_INT = 4;
+	public static final short PAYMENTTYPE_TYPE_REJECT_INT = 4;
 	
-	public static final int PAYMENTTYPE_TYPE_FULL_REFUND_INT = 5;
+	public static final short PAYMENTTYPE_TYPE_FULL_REFUND_INT = 5;
 	
-	public static final int PAYMENTTYPE_TYPE_COUPON_REFUND_INT = 6;
+	public static final short PAYMENTTYPE_TYPE_COUPON_REFUND_INT = 6;
 	
-	public static final int PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT = 7;
+	public static final short PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT = 7;
 	
 	public static final String PAYMENTTYPE_TYPE_ADVANCE_STR = "预付款";
 	
@@ -67,39 +68,31 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	
 	public static final String PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR = "定金退款";
 	
-	public static final int PAYMENTSTATUS_TYPE_INIT_INT = 0;
+	public static final short PAYMENTSTATUS_TYPE_INIT_INT = 0;
 	
-	public static final int PAYMENTSTATUS_TYPE_COLLECT_INT = 1;
+	public static final short PAYMENTSTATUS_TYPE_COLLECT_INT = 1;
 	
-	public static final int PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
+	public static final short PAYMENTSTATUS_TYPE_CONFIRM_INT = 2;
 	
-	public static final int ADVANCETYPE_TYPE_MATERIAL_INT = 1;
+	public static final short ADVANCETYPE_TYPE_MATERIAL_INT = 1;
 	
-	public static final int ADVANCETYPE_TYPE_ZATERIAL_INT = 2;
+	public static final short ADVANCETYPE_TYPE_ZATERIAL_INT = 2;
 
 	private long mpId;
 	
-	private MaterialSubOrderPO materialSubOrder;
-	
-	private String msoNo;
-	
-	private int paymentType; // 初始, 预付款 , 定金 , 补款, 退款
-	
-	private int paymentStatus;
-	
-	private String materialType;
-	
-	private String materialBrand;
-	
-	private String customerId;
-	
-	private String customerName;
-	
-	private String createUserId;
-	
-	private String createUserName;
-	
 	private MaterialReceiptPO materialReceipt;
+	
+	private MaterialPO material;
+	
+	private String category;
+	
+	private String brand;
+	
+	private short paymentType; 
+	
+	private short paymentStatus;
+	
+	private UserPO creater;
 	
 	private float referMoney;
 	
@@ -113,98 +106,7 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	public void setMpId(long mpId){
 		this.mpId = mpId;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "msoId", referencedColumnName = "msoId")
-	public MaterialSubOrderPO getMaterialSubOrder() {
-		return materialSubOrder;
-	}
-
-	public void setMaterialSubOrder(MaterialSubOrderPO materialSubOrder) {
-		this.materialSubOrder = materialSubOrder;
-	}
-
-	@Column(name = "paymentType")
-	public int getPaymentType(){
-		return this.paymentType;
-	}
-
-	public void setPaymentType(int paymentType){
-		this.paymentType = paymentType;
-	}
-
-	@Column(name = "paymentStatus")
-	public int getPaymentStatus(){
-		return this.paymentStatus;
-	}
-
-	public void setPaymentStatus(int paymentStatus){
-		this.paymentStatus = paymentStatus;
-	}
-
-	@Column(name = "createUserId")
-	public String getCreateUserId(){
-		return this.createUserId;
-	}
-
-	public void setCreateUserId(String createUserId){
-		this.createUserId = createUserId;
-	}
-
-	@Column(name = "referMoney")
-	public float getReferMoney(){
-		return this.referMoney;
-	}
-
-	public void setReferMoney(float referMoney){
-		this.referMoney = referMoney;
-	}
-
-	@Column(name = "createUserName")
-	public String getCreateUserName(){
-		return createUserName;
-	}
-
-	public void setCreateUserName(String createUserName){
-		this.createUserName = createUserName;
-	}
-
-	@Column(name = "customerName")
-	public String getCustomerName(){
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
-	}
-
-	@Column(name = "customerId")
-	public String getCustomerId(){
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId){
-		this.customerId = customerId;
-	}
-
-	@Column(name = "msoNo")
-	public String getMsoNo(){
-		return msoNo;
-	}
-
-	public void setMsoNo(String msoNo){
-		this.msoNo = msoNo;
-	}
-
-	@Column(name = "materialType")
-	public String getMaterialType(){
-		return materialType;
-	}
-
-	public void setMaterialType(String materialType){
-		this.materialType = materialType;
-	}
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mrId", referencedColumnName = "mrId")
 	public MaterialReceiptPO getMaterialReceipt() {
@@ -215,13 +117,69 @@ public class MaterialPaymentPO implements java.io.Serializable {
 		this.materialReceipt = materialReceipt;
 	}
 
-	@Column(name = "materialBrand")
-	public String getMaterialBrand(){
-		return materialBrand;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "mid", referencedColumnName = "mid")
+	public MaterialPO getMaterial() {
+		return material;
 	}
 
-	public void setMaterialBrand(String materialBrand){
-		this.materialBrand = materialBrand;
+	public void setMaterial(MaterialPO material) {
+		this.material = material;
 	}
+
+	@Column(name = "category")
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	@Column(name = "brand")
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	@Column(name = "paymentType")
+	public short getPaymentType(){
+		return this.paymentType;
+	}
+
+	public void setPaymentType(short paymentType){
+		this.paymentType = paymentType;
+	}
+
+	@Column(name = "paymentStatus")
+	public short getPaymentStatus(){
+		return this.paymentStatus;
+	}
+
+	public void setPaymentStatus(short paymentStatus){
+		this.paymentStatus = paymentStatus;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	public UserPO getCreater(){
+		return creater;
+	}
+
+	public void setCreater(UserPO creater){
+		this.creater = creater;
+	}
+
 	
+	@Column(name = "referMoney")
+	public float getReferMoney(){
+		return this.referMoney;
+	}
+
+	public void setReferMoney(float referMoney){
+		this.referMoney = referMoney;
+	}
 }

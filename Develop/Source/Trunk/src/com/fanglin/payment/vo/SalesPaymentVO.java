@@ -3,72 +3,66 @@ package com.fanglin.payment.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
-import com.fanglin.personel.vo.UserVO;
-import com.fanglin.inventory.vo.SalesVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.vo.SalesVO;
 
 public class SalesPaymentVO  implements Serializable{
 
 	private static final long serialVersionUID = 1075349217063354824L;
 
-	private Long spid;                 //款项ID
+	private Long spid;                 
 	
-	private Long sid;                  //款项ID
+	private SalesReceiptVO salesReceipt;  
 	
-	private Short type;                //款项类型
+	private SalesVO sales;             
 	
-	private Short status;              //状态
+	private Short type;                
 	
-	private String category;           //品类
+	private Short status;              
 	
-	private String brand;              //品牌
+	private UserBaseVO creater;            
 	
-	private SalesVO sales;             //销售单
-		
-	private UserVO creater;            //创建人
+	private Timestamp createTime;
 	
-	private String createrName;        //创建人姓名
+	private UserBaseVO collecter;          
 	
-	private Float referMoney;          //应收金额
+	private Timestamp collectTime;	  
 	
-	private SalesReceiptVO salesReceipt;  //收据ID
+	private UserBaseVO confirmer;         
 	
-	private UserVO collecter;          //收款人
+	private Timestamp confirmTime;     
 	
-	private Timestamp collectTime;	   //收款时间
+	private Float referMoney;          
 	
-	private UserVO confirmer;          //确认人
+	private Float cash;                
 	
-	private Timestamp confirmTime;     //确认时间
+	private String cashInfo;           
 	
-	private Float cash;                //现金
+	private Float bank;                
 	
-	private String cashInfo;           //现金信息
+	private String bankInfo;           
 	
-	private Float bank;                //刷卡
+	private Float checkv;              
 	
-	private String bankInfo;           //刷卡信息;
+	private String checkvBank;        
 	
-	private Float checkv;              //转账
+	private Float installment;        
 	
-	private String checkvBank;         //转账银行
+	private String installBank;        
 	
-	private Float installment;         //分期
+	private Float accounts;            
 	
-	private String installBank;        //分期银行
+	private String accountsBank;       
 	
-	private Float accounts;            //对公
+	private Float coupon;              
 	
-	private String accountsBank;       //对公银行
+	private String couponInfo;        
 	
-	private Float coupon;              //券值
+	private Float advance;             
 	
-	private String couponInfo;         //券信息
+	private Short advanceType;         
 	
-	private Float advance;             //预付款
-	
-	private Short advanceType;         //预付款类型
-	
-	private String des;                //说明
+	private String comment;               
 
 	public SalesPaymentVO() {
 		super();
@@ -79,13 +73,13 @@ public class SalesPaymentVO  implements Serializable{
 		this.spid = spid;
 	}
 	
-	public SalesPaymentVO(UserVO creater,SalesVO sales) {
+	public SalesPaymentVO(UserBaseVO creater,SalesVO sales) {
 		super();
 		this.creater = creater;
 		this.sales = sales;
 	}
 	
-	public SalesPaymentVO(UserVO creater,SalesVO sales, SalesReceiptVO salesReceipt) {
+	public SalesPaymentVO(UserBaseVO creater,SalesVO sales, SalesReceiptVO salesReceipt) {
 		super();
 		this.creater = creater;
 		this.sales = sales;
@@ -105,14 +99,6 @@ public class SalesPaymentVO  implements Serializable{
 		this.spid = spid;
 	}
 	
-	public Long getSid() {
-		return sid;
-	}
-
-	public void setSid(Long sid) {
-		this.sid = sid;
-	}
-
 	public SalesVO getSales() {
 		return sales;
 	}
@@ -137,35 +123,28 @@ public class SalesPaymentVO  implements Serializable{
 		this.status = status;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
+	
+	@JSON(format="yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
 
-	public UserVO getCollecter() {
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public UserBaseVO getCollecter() {
 		return collecter;
 	}
 
-	public void setCollecter(UserVO collecter) {
+	public void setCollecter(UserBaseVO collecter) {
 		this.collecter = collecter;
 	}
 
@@ -178,11 +157,11 @@ public class SalesPaymentVO  implements Serializable{
 		this.collectTime = collectTime;
 	}
 
-	public UserVO getConfirmer() {
+	public UserBaseVO getConfirmer() {
 		return confirmer;
 	}
 
-	public void setConfirmer(UserVO confirmer) {
+	public void setConfirmer(UserBaseVO confirmer) {
 		this.confirmer = confirmer;
 	}
 
@@ -315,27 +294,19 @@ public class SalesPaymentVO  implements Serializable{
 		this.advanceType = advanceType;
 	}
 
-	public String getDes() {
-		return des;
-	}
-
-	public void setDes(String des) {
-		this.des = des;
-	}
-	
-	public String getCreaterName() {
-		return createrName;
-	}
-
-	public void setCreaterName(String createrName) {
-		this.createrName = createrName;
-	}
-
 	public SalesReceiptVO getSalesReceipt() {
 		return salesReceipt;
 	}
 
 	public void setSalesReceipt(SalesReceiptVO salesReceipt) {
 		this.salesReceipt = salesReceipt;
-	}	
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 }

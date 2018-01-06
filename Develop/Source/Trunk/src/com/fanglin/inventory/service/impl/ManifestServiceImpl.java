@@ -24,16 +24,16 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.inventory.dao.AssisManifestDao;
-import com.fanglin.inventory.dao.AssisOrderDao;
+import com.fanglin.inventory.dao.AccessoriesManifestDao;
+import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.ManifestDao;
 import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.dao.PurchaseDao;
 import com.fanglin.inventory.dao.PurchaseItemDao;
 import com.fanglin.inventory.dao.PurchaseManifestDao;
 import com.fanglin.inventory.dao.StorehouseDao;
-import com.fanglin.inventory.po.AssisManifestPO;
-import com.fanglin.inventory.po.AssisOrderPO;
+import com.fanglin.inventory.po.AccessoriesPO;
+import com.fanglin.inventory.po.AccessoriesManifestPO;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
@@ -51,7 +51,7 @@ import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -75,13 +75,13 @@ public class ManifestServiceImpl implements ManifestService {
 	private PurchaseItemDao purchaseItemDao;
 	
 	@Autowired
-	private AssisOrderDao assisOrderDao;
+	private AccessoriesDao accessoriesDao;
 	
 	@Autowired
 	private UserDao userDao;
 	
 	@Autowired
-	private AssisManifestDao assisManifestDao;
+	private AccessoriesManifestDao accessoriesManifestDao;
 	
 	@Autowired
 	private PurchaseManifestDao purchaseManifestDao;
@@ -106,7 +106,7 @@ public class ManifestServiceImpl implements ManifestService {
 		ManifestVO manifestVO;
 		
 		for(ManifestPO manifestPO: manifestPOs){
-			manifestVO = new ManifestVO(new UserVO());
+			manifestVO = new ManifestVO(new UserBaseVO());
 			
 			BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser","quoteManifest"));
 			manifestVO.getCreateUser().setBaseInfo(manifestPO.getCreateUser());
@@ -122,7 +122,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 		
-		manifestVO = new ManifestVO(new UserVO());
+		manifestVO = new ManifestVO(new UserBaseVO());
 		
 		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser","quoteManifest"));
 		manifestVO.getCreateUser().setBaseInfo(manifestPO.getCreateUser());
@@ -565,11 +565,11 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId,int company)throws FLException {
+	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aids, String userId,int company)throws FLException {
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
-		if(aoids == null || aoids.size() <= 0){
+		if(aids == null || aids.size() <= 0){
 			throw new FLException(260023, "辅料单不存在");
 		}
 		
@@ -634,21 +634,21 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		manifestDao.update(manifestPO);
 		
-		AssisOrderPO assisOrderPO;
-		AssisManifestPO assisManifestPO;
-		for(Long aoid : aoids){
+		AccessoriesPO accessoriesPO;
+		AccessoriesManifestPO accessoriesManifestPO;
+		for(Long aid : aids){
 			
-			assisOrderPO = assisOrderDao.get(aoid);
+			accessoriesPO = accessoriesDao.get(aid);
 			
-			assisOrderPO.setStatus(AssisOrderPO.STATUS_DISABLE_INT);
-			assisOrderPO.setApprover(userPO);
-			assisOrderPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+			accessoriesPO.setStatus(AccessoriesPO.STATUS_DISABLE_INT);
+			accessoriesPO.setApprover(userPO);
+			accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
 			
-			assisOrderDao.update(assisOrderPO);
+			accessoriesDao.update(accessoriesPO);
 			
-			assisManifestPO = new AssisManifestPO(assisOrderPO,manifestPO);
+			accessoriesManifestPO = new AccessoriesManifestPO(accessoriesPO,manifestPO);
 			
-			assisManifestDao.save(assisManifestPO);
+			accessoriesManifestDao.save(accessoriesManifestPO);
 		}
 		
 		return 0;

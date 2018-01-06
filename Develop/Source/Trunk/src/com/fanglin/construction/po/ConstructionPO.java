@@ -24,7 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 
 @Entity
 @Table(name="construction", catalog = "construction")
@@ -32,7 +32,7 @@ public class ConstructionPO implements Serializable{
 
 	private static final long serialVersionUID = -3113263670279309498L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrderPO.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
 	
@@ -66,7 +66,7 @@ public class ConstructionPO implements Serializable{
 	
 	private long cid;
 	
-	private DecorationOrderPO decorationOrderPO;
+	private DecorationPO decoration;
 	
 	private String supervisorQualityId;
 	
@@ -89,12 +89,12 @@ public class ConstructionPO implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrderPO() {
-		return decorationOrderPO;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO) {
-		this.decorationOrderPO = decorationOrderPO;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@Column(name="supervisorQualityId")

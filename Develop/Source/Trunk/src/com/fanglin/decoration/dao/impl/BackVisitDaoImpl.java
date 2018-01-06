@@ -36,7 +36,7 @@ public class BackVisitDaoImpl extends DaoImpl<BackVisitPO> implements BackVisitD
 		PagingQuery<BackVisitPO> query = pagingQuery(paging, BackVisitPO.class);
 		
 		if(!"".equals(orderId)){
-			query.add(query.getCriterion("decorationOrder.orderId", orderId, "eq"));
+			query.add(query.getCriterion("decoration.orderId", orderId, "eq"));
 		}
 
 		query.desc(BackVisitPO.COLUMN_CREATETIME_STR);
@@ -47,14 +47,14 @@ public class BackVisitDaoImpl extends DaoImpl<BackVisitPO> implements BackVisitD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<BackVisitPO> queryBackVisitByOrderId(String orderId) {
-		return session().createCriteria(BackVisitPO.class).createAlias("decorationOrder", "decorationOrder").add(Restrictions.eq(BackVisitPO.COLUMN_ORDERID_STR, orderId)).addOrder(Order.desc(BackVisitPO.COLUMN_CREATETIME_STR)).list();
+		return session().createCriteria(BackVisitPO.class).createAlias("decoration", "decoration").add(Restrictions.eq(BackVisitPO.COLUMN_ORDERID_STR, orderId)).addOrder(Order.desc(BackVisitPO.COLUMN_CREATETIME_STR)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<BackVisitPO> queryBackVisitByOrderIdAStartAEndTime(String orderId,Timestamp start, Timestamp end){
-		return createCriteria(BackVisitPO.class).createAlias("decorationOrder", "decorationOrder")
-				.add(Restrictions.eq("decorationOrder.orderId", orderId))
+		return createCriteria(BackVisitPO.class).createAlias("decoration", "decoration")
+				.add(Restrictions.eq("decoration.orderId", orderId))
 				.add(Restrictions.gt("createTime", start))
 				.add(Restrictions.lt("createTime", end))
 				.list();

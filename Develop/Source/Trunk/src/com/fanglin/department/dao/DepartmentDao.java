@@ -31,7 +31,5 @@ public interface DepartmentDao extends Dao<DepartmentPO> {
     
     public List<DepartmentPO> queryDepartmentBytype(String type ,Integer company);
     
-    public DepartmentTypePO queryTypeNamebydtid(Integer dtid);
-    
     public DepartmentPO queryDepartmentByDeptId(String deptId );
 }

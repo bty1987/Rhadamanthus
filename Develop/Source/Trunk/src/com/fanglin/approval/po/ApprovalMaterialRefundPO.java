@@ -19,7 +19,7 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 	
 	private int aid;
 	
-	private long msoId;
+	private long mid;
 	
 	private float refund;
 	
@@ -45,13 +45,13 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 		this.aid = aid;
 	}
 
-	@Column(name = "msoId")
-	public long getMsoId() {
-		return this.msoId;
+	@Column(name = "mid")
+	public long getMid() {
+		return mid;
 	}
 
-	public void setMsoId(long msoId) {
-		this.msoId = msoId;
+	public void setMid(long mid) {
+		this.mid = mid;
 	}
 
 	@Column(name = "refund")

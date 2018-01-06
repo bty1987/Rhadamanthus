@@ -1,6 +1,6 @@
 /**
- * @File Name		: DecorationOrderOperateHistoryDao.java
- * @Package   	: com.fanglin.dao.decorationOrder
+ * @File Name		: DecorationOperateHistoryDao.java
+ * @Package   	: com.fanglin.dao.decoration
  * @Version		: 1.0
  * @Date			: 2015-3-7
  * @Copyright	: Copyright Creators 2014

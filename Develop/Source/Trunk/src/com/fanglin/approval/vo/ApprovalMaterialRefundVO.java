@@ -8,7 +8,7 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 	
 	private Integer aid;
 	
-	private Long msoId;
+	private Long mid;
 	
 	private Float refund;
 	
@@ -32,12 +32,12 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 		this.aid = aid;
 	}
 
-	public Long getMsoId() {
-		return this.msoId;
+	public Long getMid() {
+		return mid;
 	}
 
-	public void setMsoId(Long msoId) {
-		this.msoId = msoId;
+	public void setMid(Long mid) {
+		this.mid = mid;
 	}
 
 	public Float getRefund() {

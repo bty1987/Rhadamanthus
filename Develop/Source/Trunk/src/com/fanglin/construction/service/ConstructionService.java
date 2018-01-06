@@ -19,11 +19,11 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionService {
 	
-	public void pageDecorationOrderForConstruction(Paging paging, List<Filter> filters, Integer company);
+	public void pageDecorationForConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public void pageDecorationOrderForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company);
+	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company);
 
-	public void pageDecorationOrderForAcceptance(Paging paging, List<Filter> filters, Integer company);
+	public void pageDecorationForAcceptance(Paging paging, List<Filter> filters, Integer company);
 	
 	public ConstructionVO queryConstructionById(int cid);
 	

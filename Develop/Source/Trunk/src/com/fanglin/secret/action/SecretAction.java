@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.secret.service.SecretService;
 
 @ParentPackage("base")
@@ -38,9 +38,9 @@ public class SecretAction extends BaseAction {
 	
 	private String FAKKGDAZ;
 	
-	private String OTCVCJSC;
+	private List<String> OTCVCJSC;
 	
-	private List<DecorationOrderVO> AJIGRRVT;
+	private List<DecorationVO> AJIGRRVT;
 	
 	@Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String CVLIBHQMVWFSPQWU(){
@@ -74,19 +74,19 @@ public class SecretAction extends BaseAction {
 		FAKKGDAZ = fAKKGDAZ;
 	}
 
-	public String getOTCVCJSC() {
+	public List<String> getOTCVCJSC() {
 		return OTCVCJSC;
 	}
 
-	public void setOTCVCJSC(String oTCVCJSC) {
+	public void setOTCVCJSC(List<String> oTCVCJSC) {
 		OTCVCJSC = oTCVCJSC;
 	}
 
-	public List<DecorationOrderVO> getAJIGRRVT() {
+	public List<DecorationVO> getAJIGRRVT() {
 		return AJIGRRVT;
 	}
 
-	public void setAJIGRRVT(List<DecorationOrderVO> aJIGRRVT) {
+	public void setAJIGRRVT(List<DecorationVO> aJIGRRVT) {
 		AJIGRRVT = aJIGRRVT;
 	}
 	

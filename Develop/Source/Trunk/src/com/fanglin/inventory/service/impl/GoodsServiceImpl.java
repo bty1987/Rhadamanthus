@@ -21,16 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.inventory.dao.AssisTypeDao;
+import com.fanglin.inventory.dao.AccessoriesTypeDao;
 import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.GoodsPackageDao;
-import com.fanglin.inventory.po.AssisTypePO;
+import com.fanglin.inventory.po.AccessoriesTypePO;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.GoodsPackagePO;
 import com.fanglin.inventory.service.GoodsService;
-import com.fanglin.inventory.vo.AssisTypeVO;
+import com.fanglin.inventory.vo.AccessoriesTypeVO;
 import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
@@ -45,7 +45,7 @@ public class GoodsServiceImpl implements GoodsService {
 	private GoodsDao goodsDao;
 	
 	@Autowired
-	private AssisTypeDao assisTypeDao;
+	private AccessoriesTypeDao accessoriesTypeDao;
 	
 	@Autowired
 	private GoodsPackageDao goodsPackageDao;
@@ -60,10 +60,10 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		for(GoodsPO goodsPO: goodsPOs){
 				
-			goodsVO = new GoodsVO(new AssisTypeVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO());
 				
-			BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(), Arrays.asList("workType"));
+			BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
 				
 			goodsVOs.add(goodsVO);
 				
@@ -82,10 +82,10 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		for(GoodsPO goodsPO: goodsPOs){
 			
-			goodsVO = new GoodsVO(new AssisTypeVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO());
 			
-			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(), Arrays.asList("workType"));
+			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			
 			goodsVOs.add(goodsVO);
 		}
@@ -101,10 +101,10 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		for(GoodsPO goodsPO: goodsPOs){
 			
-			goodsVO = new GoodsVO(new AssisTypeVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO());
 			
-			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(), Arrays.asList("workType"));
+			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			
 			goodsVOs.add(goodsVO);
 		}
@@ -120,10 +120,10 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		for(GoodsPO goodsPO: goodsPOs){
 			
-			goodsVO = new GoodsVO(new AssisTypeVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO());
 			
-			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(),Arrays.asList("workType"));
+			BeanUtil.copyProperties(goodsPO, goodsVO,Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(),Arrays.asList("workType"));
 			
 			goodsVOs.add(goodsVO);
 		}
@@ -134,15 +134,15 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO,int company){
 		
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAssisType().getAtid(),company);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAccessoriesType().getAtid(),company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){
 			
-			goodsVO = new GoodsVO(new AssisTypeVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO());
 			
-			BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("assisType"));
-			BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(), Arrays.asList("workType"));
+			BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			
 			goodsVOs.add(goodsVO);
 			
@@ -156,10 +156,10 @@ public class GoodsServiceImpl implements GoodsService {
 
 		GoodsPO goodsPO = goodsDao.queryGoodsByBarcode(goodsVO.getBarcode(),company);
 		
-		goodsVO = new GoodsVO(new AssisTypeVO());
+		goodsVO = new GoodsVO(new AccessoriesTypeVO());
 		
-		BeanUtil.copyProperties(goodsPO, goodsVO ,Arrays.asList("assisType"));
-		BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(),Arrays.asList("workType"));
+		BeanUtil.copyProperties(goodsPO, goodsVO ,Arrays.asList("accessoriesType"));
+		BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(),Arrays.asList("workType"));
 		
 		return goodsVO;
 	}
@@ -169,10 +169,10 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		GoodsPO goodsPO = goodsDao.get(goodsVO.getGid());
 		
-		goodsVO = new GoodsVO(new AssisTypeVO());
+		goodsVO = new GoodsVO(new AccessoriesTypeVO());
 		
-		BeanUtil.copyProperties(goodsPO, goodsVO ,Arrays.asList("assisType"));
-		BeanUtil.copyProperties(goodsPO.getAssisType(), goodsVO.getAssisType(),Arrays.asList("workType"));
+		BeanUtil.copyProperties(goodsPO, goodsVO ,Arrays.asList("accessoriesType"));
+		BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(),Arrays.asList("workType"));
 		
 		return goodsVO;
 	}
@@ -181,16 +181,16 @@ public class GoodsServiceImpl implements GoodsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addGoods(GoodsVO goodsVO,int company) throws FLException {
 		
-		GoodsPO goodsPO;
+		GoodsPO goodsPO = goodsDao.queryGoodsByName(goodsVO.getName(), company);
 		
-		if(goodsVO.getAssisType().getAtid()!=null){
-			goodsPO = new GoodsPO(new AssisTypePO());
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
-			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+		if(goodsVO.getAccessoriesType().getAtid()!=null){
+			goodsPO = new GoodsPO(new AccessoriesTypePO());
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType","gid", "type" ,"status"));
+			BeanUtil.copyProperties(goodsVO.getAccessoriesType(), goodsPO.getAccessoriesType(),Arrays.asList("workType"));
 			
 		}else{
 			goodsPO = new GoodsPO();
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType","gid", "type" ,"status"));
 		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
@@ -218,13 +218,13 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260004, "商品不存在");
 		}
 		
-		if(goodsVO.getAssisType().getAtid()!=null){
+		if(goodsVO.getAccessoriesType().getAtid()!=null){
 			
-			AssisTypePO assisTypePO = assisTypeDao.get(goodsVO.getAssisType().getAtid());
+			AccessoriesTypePO accessoriesTypePO = accessoriesTypeDao.get(goodsVO.getAccessoriesType().getAtid());
 			
-			goodsPO.setAssisType(assisTypePO);
+			goodsPO.setAccessoriesType(accessoriesTypePO);
 		}else{
-			goodsPO.setAssisType(null);
+			goodsPO.setAccessoriesType(null);
 		}
 		
 		goodsDao.update(goodsPO);
@@ -255,14 +255,14 @@ public class GoodsServiceImpl implements GoodsService {
 
 		GoodsPO goodsPO;
 		
-		if(goodsVO.getAssisType().getAtid()!=null){
-			goodsPO = new GoodsPO(new AssisTypePO());
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
-			BeanUtil.copyProperties(goodsVO.getAssisType(), goodsPO.getAssisType(),Arrays.asList("workType"));
+		if(goodsVO.getAccessoriesType().getAtid()!=null){
+			goodsPO = new GoodsPO(new AccessoriesTypePO());
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType","gid", "type" ,"status"));
+			BeanUtil.copyProperties(goodsVO.getAccessoriesType(), goodsPO.getAccessoriesType(),Arrays.asList("workType"));
 			
 		}else{
 			goodsPO = new GoodsPO();
-			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("assisType","gid", "type" ,"status"));
+			BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType","gid", "type" ,"status"));
 		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
@@ -304,7 +304,7 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 			
 			BeanUtil.copyProperties(goodsPackageVO, goodsPackagePO, Arrays.asList("pid","goods","color","format"));
-			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(goodsPackageVO.getColor(), goodsPackagePO.getColor());
 			BeanUtil.copyProperties(goodsPackageVO.getFormat(), goodsPackagePO.getFormat());
 			

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.ProductionPlanDao;
 import com.fanglin.production.dao.ProductionWorkFlowDao;
 import com.fanglin.production.dao.ProductionWorkPlanDao;
@@ -57,12 +57,13 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 		List<ProductionWorkPlanVO> ProductionWorkPlanVOs = new ArrayList<ProductionWorkPlanVO>();
 		
 		for(ProductionWorkPlanPO productionWorkPlanPO : ProductionWorkPlanPOs){
-			ProductionWorkPlanVO productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(new WorkshopVO()), new UserVO());
+			ProductionWorkPlanVO productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(new WorkshopVO()), new UserBaseVO());
 			
 			BeanUtil.copyProperties(productionWorkPlanPO, productionWorkPlanVO, Arrays.asList("workplan","creater"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan(), productionWorkPlanVO.getWorkplan(),Arrays.asList("workshop"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan().getWorkshop(), productionWorkPlanVO.getWorkplan().getWorkshop(), "");
-			BeanUtil.copyProperties(productionWorkPlanPO.getCreater(), productionWorkPlanVO.getCreater(), Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(productionWorkPlanPO.getCreater(),productionWorkPlanVO.getCreater(),Arrays.asList("duty","dept"));
+	
 			ProductionWorkPlanVOs.add(productionWorkPlanVO);
 		}
 		return ProductionWorkPlanVOs;

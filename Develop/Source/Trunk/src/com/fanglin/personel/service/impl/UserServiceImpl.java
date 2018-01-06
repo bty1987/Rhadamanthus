@@ -339,8 +339,8 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getDeptName(), userPO.getDuty().getName()));
-	
+		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getDeptName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
+
 		userExperienceDao.save(userExperiencePO);
 	}
 

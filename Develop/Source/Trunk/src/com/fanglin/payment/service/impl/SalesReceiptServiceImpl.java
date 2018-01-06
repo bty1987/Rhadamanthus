@@ -9,7 +9,7 @@ import com.fanglin.payment.dao.SalesReceiptDao;
 import com.fanglin.payment.po.SalesReceiptPO;
 import com.fanglin.payment.service.SalesReceiptService;
 import com.fanglin.payment.vo.SalesReceiptVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("salesReceiptService")
@@ -24,11 +24,11 @@ public class SalesReceiptServiceImpl implements SalesReceiptService {
 		
 		SalesReceiptPO salesReceiptPO = salesReceiptDao.querySalesReceiptBySrId(salesReceiptVO.getSrId());
 		
-		salesReceiptVO = new SalesReceiptVO(new UserVO(),new UserVO());
+		salesReceiptVO = new SalesReceiptVO(new UserBaseVO(),new UserBaseVO());
 		
 		BeanUtil.copyProperties(salesReceiptPO, salesReceiptVO, Arrays.asList("collecter","confirmer"));
-		BeanUtil.copyProperties(salesReceiptPO.getCollecter(), salesReceiptVO.getCollecter(), Arrays.asList("role","dept","duty"));
-		BeanUtil.copyProperties(salesReceiptPO.getConfirmer(), salesReceiptVO.getConfirmer(), Arrays.asList("role","dept","duty"));
+		BeanUtil.copyProperties(salesReceiptPO.getCollecter(), salesReceiptVO.getCollecter(), Arrays.asList("dept","duty"));
+		BeanUtil.copyProperties(salesReceiptPO.getConfirmer(), salesReceiptVO.getConfirmer(), Arrays.asList("dept","duty"));
 		
 		return salesReceiptVO;
 		

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ProductionUserWorkFlowVO implements Serializable{
 
@@ -15,7 +15,7 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	
 	private ProductionWorkFlowVO productionworkflow;
 	
-	private UserVO operator;
+	private UserBaseVO operator;
 	
 	private Timestamp operateTime;
 
@@ -24,7 +24,7 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	}
 
 	public ProductionUserWorkFlowVO(ProductionWorkFlowVO productionworkflow,
-			UserVO operator) {
+			UserBaseVO operator) {
 		super();
 		this.productionworkflow = productionworkflow;
 		this.operator = operator;
@@ -46,11 +46,11 @@ public class ProductionUserWorkFlowVO implements Serializable{
 		this.productionworkflow = productionworkflow;
 	}
 
-	public UserVO getOperator() {
+	public UserBaseVO getOperator() {
 		return operator;
 	}
 
-	public void setOperator(UserVO operator) {
+	public void setOperator(UserBaseVO operator) {
 		this.operator = operator;
 	}
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
@@ -61,11 +61,6 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
-	
-	
 
-
-	
-	
 
 }

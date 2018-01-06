@@ -22,7 +22,7 @@ public interface ServicePaymentService {
 
 	public int collectServicePayment(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,AdvanceReceiptVO advanceReceiptVO,String cuid) throws FLException;
 	
-	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException;
+	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO, String userId) throws FLException;
 	
-	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException;
+	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO, String userId) throws FLException;
 }

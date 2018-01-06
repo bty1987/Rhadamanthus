@@ -16,12 +16,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.utils.DateUtil;
@@ -45,7 +44,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 	
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op) {
+	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, Short status, String op) {
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
 		
@@ -71,14 +70,14 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(String orderId) {
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.orderId", orderId)).list();
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.orderId", orderId)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoId(long msoId, Integer paymentStatus){
+	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus){
 		
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
 		
 		if(paymentStatus != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus));
@@ -89,14 +88,14 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIds(List<Long> msoIds) {
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.in("materialSubOrder.msoId", msoIds)).list();
+	public List<MaterialPaymentPO> queryMaterialPaymentByMids(List<Long> mids) {
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.in("material.mid", mids)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdAType(long msoId, Integer paymentType){
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidAType(long mid, Short paymentType){
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
 		
 		if(paymentType != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
@@ -107,9 +106,9 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdATypeAStatus(long msoId, Integer paymentType, Integer paymentStatus) {
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypeAStatus(long mid, Short paymentType, Short paymentStatus) {
 		
-		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder").add(Restrictions.eq("materialSubOrder.msoId", msoId));
+		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
 		
 		if(paymentType != null){
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
@@ -123,19 +122,19 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMsoId(long msoId){
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder")
-				.add(Restrictions.eq("materialSubOrder.msoId", msoId))
+	@SuppressWarnings("unchecked") 
+	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMid(long mid){
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
+				.add(Restrictions.eq("material.mid", mid))
 				.add(Restrictions.ne(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
 				.list();
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMsoId(long msoId) {
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialSubOrder", "materialSubOrder")
-				.add(Restrictions.eq("materialSubOrder.msoId", msoId))
+	@SuppressWarnings("unchecked") 
+	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMid(long mid) {
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
+				.add(Restrictions.eq("material.mid", mid))
 				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
 				.list();
 	}
@@ -153,21 +152,26 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 	
 	@Override
-	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Integer paymentType){
-		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).add(Restrictions.eq(MaterialPaymentPO.COLUMN_MSONO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).uniqueResult();
+	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Short paymentType){
+		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
+				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_NO_STR, msoNo))
+				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType))
+				.uniqueResult();
 	}
 	
 	@Override
-	public int countMaterialPaymentByMsoIdAType(long msoId, Integer paymentType) {
+	public int countMaterialPaymentByMidAType(long mid, Short paymentType) {
 
-		String sql = "select count(*) from payment.materialpayment where msoId =:msoId and paymentType =:paymentType";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("msoId", msoId).setInteger("paymentType", paymentType).uniqueResult();
+		String sql = "select count(*) from payment.materialpayment where mid =:mid and paymentType =:paymentType";
+		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("mid", mid).setInteger("paymentType", paymentType).uniqueResult();
 		return num.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
-		query.alias("materialSubOrder", "materialSubOrder");
+		query.alias("material", "material");
+		query.alias("material.house", "house");
+		query.alias("house.village", "village");
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -177,17 +181,15 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				String op = filter.getOp();
 				
 				if(MaterialPaymentPO.COLUMN_ORDERID_STR.equals(field)){
-					query.add(query.getCriterion("materialSubOrder.orderId", data, op));
-				}else if(MaterialSubOrderPO.COLUMN_ORDERADDR_STR.equals(field)){
-					query.add(Restrictions.ilike("materialSubOrder.orderAddr", data, MatchMode.ANYWHERE));
-				}else if(MaterialSubOrderPO.COLUMN_MSOID_STR.equals(field)){
-					query.add(query.getCriterion("materialSubOrder.msoId", data, op));
-				}else if(MaterialPaymentPO.COLUMN_MSONO_STR.equals(field)){
+					query.add(query.getCriterion("material.orderId", data, op));
+				}else if("villageName".equals(field)){
+					query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
+				}else if(MaterialPO.COLUMN_NO_STR.equals(field)){
+					query.add(query.getCriterion("material.no", data, op));
+				}else if(MaterialPaymentPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
-				}else if(MaterialSubOrderPO.COLUMN_SALESMANNAME_STR.equals(field) || MaterialSubOrderPO.COLUMN_DESIGNERNAME_STR.equals(field)){
-					query.add(Restrictions.ilike("materialSubOrder.salesmanName", data, MatchMode.ANYWHERE));
-				}else if(MaterialSubOrderPO.COLUMN_SALESMANID_STR.equals(field)){
-					query.add(Restrictions.ilike("materialSubOrder.salesmanId", data, MatchMode.ANYWHERE));
+				}else if("designer".equals(field)){
+					query.add(query.getCriterion("material.salesman.userId", filter.getData(), filter.getOp()));
 				}else if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)){
 					query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, Integer.parseInt(data), op));
 				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)){

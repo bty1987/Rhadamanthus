@@ -22,7 +22,9 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.CustomerService;
+import com.fanglin.data.common.vo.CustomerPhoneVO;
 import com.fanglin.data.common.vo.CustomerVO;
 
 @ParentPackage("base")
@@ -37,12 +39,18 @@ public class CustomerAction extends BaseListAction {
 
 	private CustomerVO customer;
 	
+	private List<CustomerPhoneVO> customerPhones;
+	
 	private Set<Integer> customerIds;
 
 	private List<KeyValueVO> autoFillCustomer;
 
 	private List<String> autoFillList;
-
+	
+	private List<CustomerVO> customers;
+	
+	private CustomerPhoneVO  customerPhone;
+	
 	private String pinyinName;
 	
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -64,27 +72,75 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "queryCustomerForName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerForName(){
 		
-		List<CustomerVO> customerVOs = customerService.queryCustomerForName(pinyinName);
+		customers = customerService.queryCustomerForName(pinyinName);
 		
-		for(CustomerVO customerVO : customerVOs){
+		for(CustomerVO customerVO : customers){
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(String.valueOf(customerVO.getId()));
-			keyValueVO.setValue(customerVO.getCustomerName() + "-" + customerVO.getPhone().split(",")[0]);
+			keyValueVO.setKey(String.valueOf(customerVO.getCid()));
+			keyValueVO.setValue(customerVO.getName());
 			getAutoFillCustomer().add(keyValueVO);
-			getAutoFillList().add(customerVO.getCustomerName());
+			getAutoFillList().add(customerVO.getName());
 		}
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkCustomerForPhone(){
+	public String checkCustomerForPhone() throws FLException{
 		
-		customerIds = customerService.checkCustomerForPhone(customer);
+		customers = customerService.checkCustomerForPhone(customerPhone);
 		
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryCustomerPhoneByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerPhoneByCid() throws FLException{
+		
+		customerPhones= customerService.queryCustomerPhoneByCid(customerPhone);
+		
+		return SUCCESS;
+	}
+	
+	 @Action(value="addCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String addCustomer() throws FLException{
+	 
+		 customerService.addCustomer(customer);
+
+	    return "success";
+	  }
+
+	  @Action(value="updateCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateCustomer() throws FLException{
+	    customerService.updateCustomer(customer);
+
+	    return "success";
+	  }
+	  
+	  @Action(value="updateCustomerPhoneForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateCustomerPhoneForStatus() throws FLException{
+	    
+		  customerService.updateCustomerPhoneForStatus(customerPhone);
+
+	    return "success";
+	  }
+	  
+	  
+	  @Action(value="addCustomerPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String addCustomerPhone() throws FLException{
+	 
+		 customerService.addCustomerPhone(customerPhone);
+
+	    return "success";
+	  }
+	 
+	  @Action(value="updateCustomerNameAPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateCustomerNameAPhone() throws FLException{
+	 
+		 customerService.updateCustomerNameAPhone(customer);
+
+	    return "success";
+	  }
+	 
 	public CustomerVO getCustomer(){
 		return customer;
 	}
@@ -123,12 +179,38 @@ public class CustomerAction extends BaseListAction {
 		this.autoFillList = autoFillList;
 	}
 
-	public String getPinyinName(){
+	public CustomerPhoneVO getCustomerPhone() {
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(CustomerPhoneVO customerPhone) {
+		this.customerPhone = customerPhone;
+	}
+
+	public List<CustomerPhoneVO> getCustomerPhones() {
+		return customerPhones;
+	}
+
+	public void setCustomerPhones(List<CustomerPhoneVO> customerPhones) {
+		this.customerPhones = customerPhones;
+	}
+
+	public String getPinyinName() {
 		return pinyinName;
 	}
 
-	public void setPinyinName(String pinyinName){
+	public void setPinyinName(String pinyinName) {
 		this.pinyinName = pinyinName;
 	}
+
+	public List<CustomerVO> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<CustomerVO> customers) {
+		this.customers = customers;
+	}
+
+	
 
 }

@@ -15,14 +15,14 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.vo.StorehouseUserVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public interface StorehouseUserService {
 	
-	public List<StorehouseUserVO> queryStorehouseUserByUId(UserVO userVO);
+	public List<StorehouseUserVO> queryStorehouseUserByUId(UserBaseVO userVO);
 	
-	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserVO userVO);
+	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserBaseVO userVO);
 	
-	public int updateStorehouseUser(UserVO userVO, List<Long> shIds) throws FLException;
+	public int updateStorehouseUser(UserBaseVO userVO, List<Long> shIds) throws FLException;
 
 }

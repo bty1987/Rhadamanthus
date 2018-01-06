@@ -35,26 +35,26 @@ public class ConstructionAction extends BaseListAction{
 	
 	private ConstructionVO construction;
 	
-	@Action(value = "pageDecorationOrderForConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForConstruction() throws FLException{
+	@Action(value = "pageDecorationForConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForConstruction() throws FLException{
 		
-		constructionService.pageDecorationOrderForConstruction(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationOrderForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForSupervisionByUserId() throws FLException{
-		
-		constructionService.pageDecorationOrderForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), queryCompany());
+		constructionService.pageDecorationForConstruction(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDecorationOrderForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationOrderForAcceptance() throws FLException{
+	@Action(value = "pageDecorationForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForSupervisionByUserId() throws FLException{
 		
-		constructionService.pageDecorationOrderForAcceptance(getPaging(), getFilters(), queryCompany());
+		constructionService.pageDecorationForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageDecorationForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForAcceptance() throws FLException{
+		
+		constructionService.pageDecorationForAcceptance(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}

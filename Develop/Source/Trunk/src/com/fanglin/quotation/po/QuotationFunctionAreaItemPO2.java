@@ -43,6 +43,8 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO  i
 	
 	private String formula;
 	
+	private float initNum;
+	
 	private float num;
 	
 	private short type;
@@ -111,6 +113,15 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO  i
 
 	public void setFormula(String formula) {
 		this.formula = formula;
+	}
+	
+	@Column(name = "initNum")
+	public float getInitNum() {
+		return initNum;
+	}
+
+	public void setInitNum(float initNum) {
+		this.initNum = initNum;
 	}
 
 	@Column(name = "num")

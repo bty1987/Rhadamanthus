@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.ProductionPictureDao;
 import com.fanglin.production.po.ProductionPicturePO;
 import com.fanglin.production.service.ProductionPictureService;
@@ -43,10 +43,10 @@ public class ProductionPictureServiceImpl implements ProductionPictureService {
 		
 		for(ProductionPicturePO productionPicturePO:productionPicturePOs){
 			
-			_productionPictureVO = new ProductionPictureVO(new UserVO()); 
+			_productionPictureVO = new ProductionPictureVO(new UserBaseVO()); 
 			
 			BeanUtil.copyProperties(productionPicturePO, _productionPictureVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(productionPicturePO.getCreater(), _productionPictureVO.getCreater(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(productionPicturePO.getCreater(),_productionPictureVO.getCreater(),Arrays.asList("duty","dept"));
 			
 			productionPictureVOs.add(_productionPictureVO);
 			
@@ -63,10 +63,8 @@ public class ProductionPictureServiceImpl implements ProductionPictureService {
 		
 		UserPO creater = userDao.queryUserByUserId(userId);
 		
-	
 		BeanUtil.copyProperties(productionPictureVO, productionPicturePO, Arrays.asList("creater"));
 		BeanUtil.copyProperties(creater, productionPicturePO.getCreater(), Arrays.asList("role","dept","duty"));
-		
 		
 		productionPicturePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPicturePO.setStatus(productionPictureVO.getStatus());

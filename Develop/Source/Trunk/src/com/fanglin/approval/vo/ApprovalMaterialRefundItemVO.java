@@ -1,6 +1,6 @@
 package com.fanglin.approval.vo;
 
-import com.fanglin.material.vo.MaterialSubOrderItemVO;
+import com.fanglin.material.vo.MaterialItemVO;
 
 public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 
@@ -18,15 +18,15 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 	
 	private String packageName;
 	
-	private MaterialSubOrderItemVO materialSubOrderItem;
+	private MaterialItemVO materialItem;
 
 	public ApprovalMaterialRefundItemVO() {
 		super();
 	}
 
-	public ApprovalMaterialRefundItemVO(MaterialSubOrderItemVO materialSubOrderItem) {
+	public ApprovalMaterialRefundItemVO(MaterialItemVO materialItem) {
 		super();
-		this.materialSubOrderItem = materialSubOrderItem;
+		this.materialItem = materialItem;
 	}
 
 	public Integer getAmriId() {
@@ -77,12 +77,12 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 		this.packageName = packageName;
 	}
 
-	public MaterialSubOrderItemVO getMaterialSubOrderItem() {
-		return materialSubOrderItem;
+	public MaterialItemVO getMaterialItem() {
+		return materialItem;
 	}
 
-	public void setMaterialSubOrderItem(MaterialSubOrderItemVO materialSubOrderItem) {
-		this.materialSubOrderItem = materialSubOrderItem;
+	public void setMaterialItem(MaterialItemVO materialItem) {
+		this.materialItem = materialItem;
 	}
 
 }

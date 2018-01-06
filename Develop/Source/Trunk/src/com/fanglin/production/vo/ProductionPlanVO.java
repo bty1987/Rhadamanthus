@@ -27,9 +27,8 @@ public class ProductionPlanVO implements Serializable{
 	
 	public ProductionPlanVO() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
-
 
 	public Long getPpid() {
 		return ppid;
@@ -65,6 +64,7 @@ public class ProductionPlanVO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getStartTime() {
 		return startTime;
@@ -73,6 +73,7 @@ public class ProductionPlanVO implements Serializable{
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
+	
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getEndTime() {
 		return endTime;

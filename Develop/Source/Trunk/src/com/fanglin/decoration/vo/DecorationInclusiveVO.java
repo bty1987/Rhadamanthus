@@ -8,7 +8,7 @@ public class DecorationInclusiveVO implements Serializable {
 	
 	private Long diid;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private Float contractPrice;
 	
@@ -30,9 +30,9 @@ public class DecorationInclusiveVO implements Serializable {
 		super();
 	}
 
-	public DecorationInclusiveVO(DecorationOrderVO decorationOrder) {
+	public DecorationInclusiveVO(DecorationVO decoration) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 
 	public Long getDiid() {
@@ -43,12 +43,12 @@ public class DecorationInclusiveVO implements Serializable {
 		this.diid = diid;
 	}
 	
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public Float getContractPrice() {

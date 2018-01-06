@@ -28,7 +28,7 @@ import com.fanglin.inventory.vo.StorehouseUserVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("storehouseUserService")
@@ -45,7 +45,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 	private UserDao userDao;
 
 	@Override
-	public List<StorehouseUserVO> queryStorehouseUserByUId(UserVO userVO) {
+	public List<StorehouseUserVO> queryStorehouseUserByUId(UserBaseVO userVO) {
 		
 		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUId(userVO.getUid());
 		List<StorehouseUserVO> storehouseUserVOs = new ArrayList<StorehouseUserVO>();
@@ -54,7 +54,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 		
 		for(StorehouseUserPO storehouseUserPO: storehouseUserPOs){
 			
-			storehouseUserVO = new StorehouseUserVO(new UserVO(), new StorehouseVO());
+			storehouseUserVO = new StorehouseUserVO(new UserBaseVO(), new StorehouseVO());
 			
 			storehouseUserVO.setShuId(storehouseUserPO.getShuId());
 			storehouseUserVO.getUser().setBaseInfo(storehouseUserPO.getUser());
@@ -68,7 +68,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 	}
 
 	@Override
-	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserVO userVO) {
+	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserBaseVO userVO) {
 
 		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(userVO.getUserId());
 		List<StorehouseUserVO> storehouseUserVOs = new ArrayList<StorehouseUserVO>();
@@ -77,7 +77,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 		
 		for(StorehouseUserPO storehouseUserPO: storehouseUserPOs){
 			
-			storehouseUserVO = new StorehouseUserVO(new UserVO(), new StorehouseVO());
+			storehouseUserVO = new StorehouseUserVO(new UserBaseVO(), new StorehouseVO());
 			
 			storehouseUserVO.setShuId(storehouseUserPO.getShuId());
 			storehouseUserVO.getUser().setBaseInfo(storehouseUserPO.getUser());
@@ -92,7 +92,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateStorehouseUser(UserVO userVO, List<Long> shIds) throws FLException {
+	public int updateStorehouseUser(UserBaseVO userVO, List<Long> shIds) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		

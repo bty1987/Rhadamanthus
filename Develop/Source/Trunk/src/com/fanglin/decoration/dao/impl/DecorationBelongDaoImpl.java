@@ -31,7 +31,7 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> imp
 	@SuppressWarnings("unchecked")
 	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIdAType(String orderId,String belongType){
 		 return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				 .add(Restrictions.eq("decorationPO.orderId", orderId))
 				 .add(Restrictions.eq("belongType", belongType))
 				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_APPLY_STR))
 				 .list();
@@ -41,7 +41,7 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> imp
 	@SuppressWarnings("unchecked")
 	public List<DecorationBelongInfoPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId,String belongType){
 		 return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				 .add(Restrictions.eq("decorationPO.orderId", orderId))
 				 .add(Restrictions.eq("belongType", belongType))
 				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_PASS_STR))
 				 .list();
@@ -51,7 +51,7 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> imp
 	@SuppressWarnings("unchecked")
 	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderId(String orderId){
 		return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				 .add(Restrictions.eq("decorationPO.orderId", orderId))
 				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_PASS_STR))
 				 .list();
 	}
@@ -59,7 +59,7 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> imp
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIds(List<String> orderIds) {
-		return session().createCriteria(DecorationBelongInfoPO.class).add(Restrictions.in("decorationOrderPO.orderId", orderIds)).add(Restrictions.ne("status", DecorationBelongInfoPO.STATUS_REPLACE_STR)).list();
+		return session().createCriteria(DecorationBelongInfoPO.class).add(Restrictions.in("decorationPO.orderId", orderIds)).add(Restrictions.ne("status", DecorationBelongInfoPO.STATUS_REPLACE_STR)).list();
 	}
 
 	@Override

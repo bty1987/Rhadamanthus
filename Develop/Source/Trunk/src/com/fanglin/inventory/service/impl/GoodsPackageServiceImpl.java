@@ -36,7 +36,7 @@ public class GoodsPackageServiceImpl implements GoodsPackageService{
 			goodsPackageVO = new GoodsPackageVO(new GoodsVO(),new ColorVO(),new FormatVO());
 			
 			BeanUtil.copyProperties(goodsPackagePO, goodsPackageVO , Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(goodsPackagePO.getGoods(), goodsPackageVO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(goodsPackagePO.getGoods(), goodsPackageVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(goodsPackagePO.getColor(), goodsPackageVO.getColor());
 			BeanUtil.copyProperties(goodsPackagePO.getFormat(), goodsPackageVO.getFormat());
 			

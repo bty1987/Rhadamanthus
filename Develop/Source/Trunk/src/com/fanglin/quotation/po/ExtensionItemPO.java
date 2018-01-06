@@ -37,7 +37,7 @@ public class ExtensionItemPO implements Serializable{
 	
 	private float num;
 	
-	private QuotationFunctionAreaPO quotationFunctionAreaPO;
+	private QuotationFunctionAreaPO quotationFunctionArea;
 	
 	private long quoteItemId ;
 	
@@ -124,13 +124,12 @@ public class ExtensionItemPO implements Serializable{
 	}
 	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
 	@javax.persistence.JoinColumn(name="quotationFunctionAreaId", referencedColumnName="qfaId")
-	public QuotationFunctionAreaPO getQuotationFunctionAreaPO() {
-		return quotationFunctionAreaPO;
+	public QuotationFunctionAreaPO getQuotationFunctionArea() {
+		return quotationFunctionArea;
 	}
 
-	public void setQuotationFunctionAreaPO(
-			QuotationFunctionAreaPO quotationFunctionAreaPO) {
-		this.quotationFunctionAreaPO = quotationFunctionAreaPO;
+	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea) {
+		this.quotationFunctionArea = quotationFunctionArea;
 	}
 	
 	@Column(name = "quoteItemId")

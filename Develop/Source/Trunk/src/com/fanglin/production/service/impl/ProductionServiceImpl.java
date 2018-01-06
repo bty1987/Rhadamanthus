@@ -14,12 +14,12 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 
-import com.fanglin.data.common.dao.VillageDao;
+import com.fanglin.data.common.vo.HouseVO;
 import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.VillagePO;
+import com.fanglin.data.po.HousePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.ProductionDao;
 import com.fanglin.production.po.ProductionPO;
 import com.fanglin.production.service.ProductionService;
@@ -39,10 +39,7 @@ public class ProductionServiceImpl implements ProductionService {
 	
 	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
-	private VillageDao villageDao;
-	
+
 	@Autowired
 	private CountingService countingService;
 
@@ -56,13 +53,14 @@ public class ProductionServiceImpl implements ProductionService {
 		
 		for(ProductionPO productionPO:productionPOs){
 			
-			productionVO = new ProductionVO(new VillageVO(), new UserVO(), new UserVO());
+			productionVO = new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO());
 			
-			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("village","creater","designer"));
-			BeanUtil.copyProperties(productionPO.getVillage(), productionVO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
-			BeanUtil.copyProperties(productionPO.getCreater(), productionVO.getCreater(),Arrays.asList("role","dept","duty"));
-			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(),Arrays.asList("role","dept","duty"));
-			
+			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("house","creater","designer"));
+			BeanUtil.copyProperties(productionPO.getHouse(), productionVO.getHouse(),Arrays.asList("village"));
+			BeanUtil.copyProperties(productionPO.getHouse().getVillage(), productionVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(productionPO.getCreater(),productionVO.getCreater(),Arrays.asList("duty","dept"));
+			BeanUtil.copyProperties(productionPO.getDesigner(),productionVO.getDesigner(),Arrays.asList("duty","dept"));
+	
 			productionVOs.add(productionVO);
 		}
 		
@@ -74,7 +72,7 @@ public class ProductionServiceImpl implements ProductionService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addProduction(ProductionVO productionVO,String userId,int company) throws FLException{
 		
-		ProductionPO productionPO = new ProductionPO(new VillagePO(), new UserPO(), new UserPO());
+		ProductionPO productionPO = new ProductionPO(new HousePO(), new UserPO(), new UserPO());
 		
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate);
@@ -83,12 +81,12 @@ public class ProductionServiceImpl implements ProductionService {
 		
 		UserPO designer = userDao.queryUserByUserId(productionVO.getDesigner().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);
-		VillagePO village = villageDao.get(productionVO.getVillage().getVillageId());
 		
-		BeanUtil.copyProperties(productionVO, productionPO, Arrays.asList("village","creater","designer"));
+		BeanUtil.copyProperties(productionVO, productionPO, Arrays.asList("house","creater","designer"));
 		BeanUtil.copyProperties(designer, productionPO.getDesigner(),Arrays.asList("role","dept","duty"));
 		BeanUtil.copyProperties(creater, productionPO.getCreater(),Arrays.asList("role","dept","duty"));
-		BeanUtil.copyProperties(village, productionPO.getVillage(),Arrays.asList("cityProper","buildingNameRule"));
+		BeanUtil.copyProperties(new HousePO(productionVO.getHouse().getHid()), productionPO.getHouse(),Arrays.asList("village"));
+		
 		productionPO.setCompany(company);
 		productionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPO.setPno(no);

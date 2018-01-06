@@ -25,8 +25,8 @@ import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.vo.ApprovalMaterialFullPaymentVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.material.dao.MaterialSubOrderDao;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.dao.MaterialDao;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -45,7 +45,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 	private ApprovalMaterialFullPaymentDao approvalMaterialFullPaymentDao;
 	
 	@Autowired
-	private MaterialSubOrderDao materialSubOrderDao;
+	private MaterialDao materialDao;
 	
 	@Autowired
 	private MaterialPaymentDao materialPaymentDao;
@@ -65,18 +65,18 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
+		MaterialPO materialPO = materialDao.get(msoId);
 		
-		if(materialSubOrderPO == null){
+		if(materialPO == null){
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		if(materialSubOrderPO.getFullStatus() != MaterialSubOrderPO.FINANCE_STATUS_TYPE_INIT_INT){
+		if(materialPO.getFullStatus() != MaterialPO.FINANCE_STATUS_TYPE_INIT_INT){
 			throw new FLException(180017, "主材订单当前状态不能提交补款");
 		}
 		
-		materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_APPROVAL_INT);
-		materialSubOrderDao.update(materialSubOrderPO);
+		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_APPROVAL_INT);
+		materialDao.update(materialPO);
 		
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
@@ -88,7 +88,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(msoId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialSubOrderPO.getOrderId(), materialSubOrderPO.getMsoNo(), approvalMaterialFullPaymentVO.getReferMoney()));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialPO.getOrderId(), materialPO.getNo(), approvalMaterialFullPaymentVO.getReferMoney()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
@@ -117,15 +117,15 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		
 		long msoId = approvalMaterialFullPaymentPO.getMsoId();
 		
-		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
+		MaterialPO materialPO = materialDao.get(msoId);
 		
-		if(materialSubOrderPO == null){
+		if(materialPO == null){
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		int fullStatus = materialSubOrderPO.getFullStatus();
+		int fullStatus = materialPO.getFullStatus();
 		
-		if(fullStatus != MaterialSubOrderPO.FINANCE_STATUS_TYPE_INIT_INT && fullStatus != MaterialSubOrderPO.FINANCE_STATUS_TYPE_APPROVAL_INT){
+		if(fullStatus != MaterialPO.FINANCE_STATUS_TYPE_INIT_INT && fullStatus != MaterialPO.FINANCE_STATUS_TYPE_APPROVAL_INT){
 			throw new FLException(180017, "主材订单当前状态不能提交补款");
 		}
 		
@@ -133,28 +133,23 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 		
-		materialPaymentPO.setMaterialSubOrder(materialSubOrderPO);
-		materialPaymentPO.setMsoNo(materialSubOrderPO.getMsoNo());
-		materialPaymentPO.setMaterialType(materialSubOrderPO.getMaterialType());
-		materialPaymentPO.setMaterialBrand(materialSubOrderPO.getMaterialBrand());
+		materialPaymentPO.setMaterial(materialPO);
+		materialPaymentPO.setCategory(materialPO.getCategory());
+		materialPaymentPO.setBrand(materialPO.getBrand());
 		
 		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
 		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
 		
-		materialPaymentPO.setCustomerId(materialSubOrderPO.getCustomerId());
-		materialPaymentPO.setCustomerName(materialSubOrderPO.getCustomerName());
-		
-		materialPaymentPO.setCreateUserId(sender.getUserId());
-		materialPaymentPO.setCreateUserName(sender.getUserName());
+		materialPaymentPO.setCreater(sender);
 		
 		materialPaymentPO.setReferMoney(approvalMaterialFullPaymentPO.getReferMoney());
 		
 		materialPaymentDao.save(materialPaymentPO);
 		
-		materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_COMMIT_INT);
-		materialSubOrderPO.setFullPayment(materialPaymentPO.getReferMoney());
+		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
+		materialPO.setFullPayment(materialPaymentPO.getReferMoney());
 		
-		materialSubOrderDao.update(materialSubOrderPO);
+		materialDao.update(materialPO);
 		
 		return 0;
 	}
@@ -171,14 +166,14 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		
 		long msoId = approvalMaterialFullPaymentPO.getMsoId();
 		
-		MaterialSubOrderPO materialSubOrderPO = materialSubOrderDao.get(msoId);
+		MaterialPO materialPO = materialDao.get(msoId);
 		
-		if(materialSubOrderPO == null){
+		if(materialPO == null){
 			throw new FLException(180001, "主材订单不存在");
 		}
 		
-		materialSubOrderPO.setFullStatus(MaterialSubOrderPO.FINANCE_STATUS_TYPE_INIT_INT);
-		materialSubOrderDao.update(materialSubOrderPO);
+		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+		materialDao.update(materialPO);
 		
 		return 0;
 	}

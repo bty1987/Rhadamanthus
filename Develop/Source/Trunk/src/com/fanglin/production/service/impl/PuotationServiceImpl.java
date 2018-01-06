@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.PuotationDao;
 import com.fanglin.production.dao.PuotationItemDao;
 import com.fanglin.production.po.PuotationItemPO;
@@ -44,12 +44,13 @@ public class PuotationServiceImpl implements PuotationService{
 		List <PuotationVO> puotationVOs = new ArrayList<PuotationVO>();
 		for (PuotationPO puotationPO : puotationPOs) {
 			
-			puotationVO = new PuotationVO(new UserVO());
+			puotationVO = new PuotationVO(new UserBaseVO());
 			
 			BeanUtil.copyProperties(puotationPO, puotationVO,Arrays.asList("creater"));
-			puotationVO.setCreater(new UserVO());
-			BeanUtil.copyProperties(puotationPO.getCreater(),puotationVO.getCreater(),Arrays.asList("role","dept","duty"));
+			puotationVO.setCreater(new UserBaseVO());
 			
+			BeanUtil.copyProperties(puotationPO.getCreater(),puotationVO.getCreater(),Arrays.asList("duty","dept"));
+
 			puotationVOs.add(puotationVO);
 		}
 		return puotationVOs;

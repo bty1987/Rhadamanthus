@@ -45,7 +45,7 @@ public class ManifestAction extends BaseListAction {
 	
 	private List<Long> siids;
 	
-	private List<Long> aoids;
+	private List<Long> aids;
 	
 	private List<Long> pids;
 	
@@ -130,7 +130,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForAS", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForAS() throws FLException{
 		
-		manifestService.addManifestForAS(manifest, manifestItems, aoids ,queryUserId(),queryCompany());
+		manifestService.addManifestForAS(manifest, manifestItems, aids ,queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -199,12 +199,12 @@ public class ManifestAction extends BaseListAction {
 		this.manifestItem = manifestItem;
 	}
 
-	public List<Long> getAoids() {
-		return aoids;
+	public List<Long> getAids() {
+		return aids;
 	}
 
-	public void setAoids(List<Long> aoids) {
-		this.aoids = aoids;
+	public void setAids(List<Long> aids) {
+		this.aids = aids;
 	}
 
 	public List<Long> getPids() {

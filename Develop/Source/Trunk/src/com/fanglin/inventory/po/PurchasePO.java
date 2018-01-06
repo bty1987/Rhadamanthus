@@ -29,9 +29,13 @@ public class PurchasePO implements Serializable{
 	
 	public static final String COLUMN_USER_NAME_STR = "user.userName";  //创建人名字
 	
+	public static final String COLUMN_USER_USERID_STR = "user.userId";	//创建人ID
+	
 	public static final String COLUMN_CREATETIME_STR = "createTime";    //创建时间
 	
 	public static final String COLUMN_BALANCETIME_STR = "balanceTime";  //结算时间
+	
+	public static final String COLUMN_ALLSTATUS_STR = "status";			//入库状态
 	
 	public static final short COLUMN_STATUS_STR = 0;                    //初始入库状态
 	

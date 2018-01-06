@@ -122,16 +122,11 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<DepartmentPO> queryDepartmentBytype(String type , Integer company) {
 		
-		 return session().createCriteria(DepartmentPO.class).add(Restrictions.sqlRestriction("type = ? ", String.valueOf(type), Hibernate.STRING)).add(Restrictions.eq("company", company)).list();
+		 return session().createCriteria(DepartmentPO.class).add(Restrictions.sqlRestriction("type = ? ", String.valueOf(type), Hibernate.STRING)).add(Restrictions.eq("company", company)).add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT)).list();
 		
 	}
 	
-	@Override
-   public DepartmentTypePO queryTypeNamebydtid(Integer dtid){
-	  
-	  return (DepartmentTypePO)session().createCriteria(DepartmentTypePO.class).add(Restrictions.eq("dtid",dtid)).uniqueResult();
-		
-   }
+
 	 @Override
 	  public DepartmentPO queryDepartmentByDeptId(String deptId){
 		 

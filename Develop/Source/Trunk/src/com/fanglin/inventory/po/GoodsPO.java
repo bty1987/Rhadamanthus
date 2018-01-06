@@ -31,7 +31,7 @@ public class GoodsPO implements java.io.Serializable {
 	
 	public static final String COLUMN_BRAND_STR = "brand";
 	
-	public static final String COLUMN_ATID_STR = "assisType.atid";
+	public static final String COLUMN_ATID_STR = "accessoriesType.atid";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
@@ -63,7 +63,7 @@ public class GoodsPO implements java.io.Serializable {
 	
 	private float pieceNum;
 	
-	private AssisTypePO assisType;
+	private AccessoriesTypePO accessoriesType;
 	
 	private short type;
 	
@@ -78,9 +78,9 @@ public class GoodsPO implements java.io.Serializable {
 		this.gid = gid;
 	}
 	
-	public GoodsPO(AssisTypePO assisType) {
+	public GoodsPO(AccessoriesTypePO accessoriesType) {
 		super();
-		this.assisType = assisType;
+		this.accessoriesType = accessoriesType;
 	}
 
 	@Id
@@ -177,19 +177,19 @@ public class GoodsPO implements java.io.Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "atid", referencedColumnName = "atid")
-	public AssisTypePO getAssisType() {
-		return assisType;
+	public AccessoriesTypePO getAccessoriesType() {
+		return accessoriesType;
 	}
 
-	public void setAssisType(AssisTypePO assisType) {
-		this.assisType = assisType;
+	public void setAccessoriesType(AccessoriesTypePO accessoriesType) {
+		this.accessoriesType = accessoriesType;
 	}
 
 	@Column(name = "pinyin")
 	public String getPinyin() {
 		return pinyin;
 	}
-
+	
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
 	}

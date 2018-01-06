@@ -25,7 +25,7 @@ import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.po.StorehouseUserPO;
 import com.fanglin.inventory.service.StorehouseService;
 import com.fanglin.inventory.vo.StorehouseVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -81,9 +81,9 @@ public class StorehouseServiceImpl implements StorehouseService{
 	}
 
 	@Override
-	public List<StorehouseVO> queryStorehouseByUserId(UserVO userVO) {
+	public List<StorehouseVO> queryStorehouseByUserId(UserBaseVO user) {
 		
-		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(userVO.getUserId());
+		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(user.getUserId());
 		List<StorehouseVO> storehouseVOs = new ArrayList<StorehouseVO>();
 		
 		StorehouseVO storehouseVO;

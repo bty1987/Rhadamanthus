@@ -5,8 +5,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.data.common.vo.HouseVO;
+import com.fanglin.personel.vo.UserBaseVO;
+
 
 public class ProductionVO implements Serializable {
 	
@@ -18,15 +19,13 @@ public class ProductionVO implements Serializable {
 	
 	private String pno;
 	
-	private VillageVO village;
-	
-	private String houseNumber;
+	private HouseVO house;
 	
 	private Float total;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
-	private UserVO designer;
+	private UserBaseVO designer;
 	
 	private Short status;
 	
@@ -52,9 +51,9 @@ public class ProductionVO implements Serializable {
 		super();
 	}
 
-	public ProductionVO(VillageVO village, UserVO creater, UserVO designer) {
+	public ProductionVO(HouseVO house, UserBaseVO creater, UserBaseVO designer) {
 		super();
-		this.village = village;
+		this.house = house;
 		this.creater = creater;
 		this.designer = designer;
 	}
@@ -75,20 +74,12 @@ public class ProductionVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public VillageVO getVillage() {
-		return village;
+	public HouseVO getHouse() {
+		return house;
 	}
 
-	public void setVillage(VillageVO village) {
-		this.village = village;
-	}
-
-	public String getHouseNumber() {
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber) {
-		this.houseNumber = houseNumber;
+	public void setHouse(HouseVO house) {
+		this.house = house;
 	}
 
 	public Float getTotal() {
@@ -99,19 +90,19 @@ public class ProductionVO implements Serializable {
 		this.total = total;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 
-	public UserVO getDesigner() {
+	public UserBaseVO getDesigner() {
 		return designer;
 	}
 
-	public void setDesigner(UserVO designer) {
+	public void setDesigner(UserBaseVO designer) {
 		this.designer = designer;
 	}
 

@@ -100,7 +100,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			}
 			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
 			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
-			
+			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		}else{
 
@@ -121,7 +121,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			
 			quotationFunctionAreaItemVO.setQfaiId(quotationFunctionAreaItemPO.getQfaiId());
 		}
-		
+
 		quotationDao.update(quotationPO);
 		
 		return quotationFunctionAreaItemVO;
@@ -210,6 +210,4 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		
 		return 0;
 	}
-
-
 }

@@ -16,8 +16,8 @@ import com.fanglin.payment.po.AdvancePaymentPO;
 
 public interface AdvancePaymentDao extends Dao<AdvancePaymentPO> {
 	
-	public AdvancePaymentPO queryAdvancePaymentByCid(int cid,int company);
+	public AdvancePaymentPO queryAdvancePaymentByCid(long cid,int company);
 	
-	public AdvancePaymentPO queryAdvancePaymentByCustomerId(String customerId,int company);
+	public AdvancePaymentPO queryAdvancePaymentByCustomerId(long cid,int company);
 	
 }

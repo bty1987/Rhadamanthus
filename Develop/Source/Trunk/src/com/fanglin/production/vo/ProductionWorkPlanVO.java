@@ -2,7 +2,7 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ProductionWorkPlanVO implements Serializable{
 
@@ -14,7 +14,7 @@ public class ProductionWorkPlanVO implements Serializable{
 	
 	private WorkplanVO workplan;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private short status;
 
@@ -22,7 +22,7 @@ public class ProductionWorkPlanVO implements Serializable{
 		super();
 	}
 
-	public ProductionWorkPlanVO(WorkplanVO workplan, UserVO creater) {
+	public ProductionWorkPlanVO(WorkplanVO workplan, UserBaseVO creater) {
 		super();
 		this.workplan = workplan;
 		this.creater = creater;
@@ -52,11 +52,11 @@ public class ProductionWorkPlanVO implements Serializable{
 		this.workplan = workplan;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

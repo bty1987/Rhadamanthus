@@ -15,14 +15,14 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.vo.PaymentVO;
 
 public interface AdvancePaymentService {
 	
 	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company);
 	
-	public List<Float> queryAdvancePaymentByOrderId(DecorationOrderVO decorationOrderVO) throws FLException;
+	public List<Float> queryAdvancePaymentByOrderId(DecorationVO decorationVO) throws FLException;
 	
 	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException;
 	
