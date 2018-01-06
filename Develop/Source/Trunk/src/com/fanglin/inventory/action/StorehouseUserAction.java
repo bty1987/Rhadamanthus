@@ -24,7 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.StorehouseUserService;
 import com.fanglin.inventory.vo.StorehouseUserVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -38,7 +38,7 @@ public class StorehouseUserAction extends BaseListAction {
 	
 	private List<StorehouseUserVO> storehouseUsers;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
 	private List<Long> shIds;
 	
@@ -58,11 +58,11 @@ public class StorehouseUserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 

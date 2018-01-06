@@ -24,7 +24,7 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -36,9 +36,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	private DecorationActivityItemDao decorationActivityItemDao;
 
 	@Override
-	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationOrderVO decorationOrderVO) {
+	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
 		
-		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemByOrderId(decorationOrderVO.getOrderId());
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemByOrderId(decorationVO.getOrderId());
 		List<DecorationActivityItemVO> decorationActivityItemVOs = new ArrayList<DecorationActivityItemVO>();
 		
 		for(DecorationActivityItemPO decorationActivityItemPO: decorationActivityItemPOs){
@@ -52,9 +52,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	}
 
 	@Override
-	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationOrderVO decorationOrderVO) {
+	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationVO decorationVO) {
 		
-		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemForCouponAVaildByOrderId(decorationOrderVO.getOrderId());
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemForCouponAVaildByOrderId(decorationVO.getOrderId());
 		List<DecorationActivityItemVO> decorationActivityItemVOs = new ArrayList<DecorationActivityItemVO>();
 		
 		for(DecorationActivityItemPO decorationActivityItemPO: decorationActivityItemPOs){

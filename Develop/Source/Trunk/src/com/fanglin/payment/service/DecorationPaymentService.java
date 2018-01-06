@@ -1,6 +1,6 @@
 /**
  * @File Name		: DecorationPaymentService
- * @Package   	: com.fanglin.service.decorationOrder;
+ * @Package   	: com.fanglin.service.decoration;
  * @Version		: 1.0
  * @Date			: 2014-9-27
  * @Copyright	: Copyright Creators 2014
@@ -31,7 +31,7 @@ public interface DecorationPaymentService {
 
 	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters);
 	
-	public DecorationPaymentVO queryDecorationPaymentById(long autoId);
+	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO);
 	
@@ -39,7 +39,7 @@ public interface DecorationPaymentService {
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO);
 	
-	public void checkDecorationPayment(long autoId) throws FLException;
+	public void checkDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 	
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 	
@@ -49,11 +49,11 @@ public interface DecorationPaymentService {
 	
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
 	
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs) throws FLException;
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;
 	
-	public int collectDecorationPaymentForRefund(DecorationPaymentVO decorationPaymentVO) throws FLException;
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 
-	public int confirmDecorationPayment(List<Long> paymentIds, String confirmUserId) throws FLException;
+	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
 	
 	public int deleteDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	

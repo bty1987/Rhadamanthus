@@ -2,12 +2,7 @@ package com.fanglin.approval.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.inventory.vo.SalesItemVO;
-
-
-
-
-
+import com.fanglin.sales.vo.SalesItemVO;
 
 public class ApprovalSalesRefundItemVO implements Serializable {
 

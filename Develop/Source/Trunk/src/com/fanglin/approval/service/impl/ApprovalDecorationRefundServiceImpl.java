@@ -25,7 +25,7 @@ import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.vo.ApprovalDecorationRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -77,9 +77,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
+		DecorationPO decorationPO = decorationPaymentPO.getDecoration();
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
@@ -97,7 +97,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(paymentId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecorationOrderPO().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
@@ -132,25 +132,25 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
+		DecorationPO decorationPO = decorationPaymentPO.getDecoration();
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
 		DecorationPaymentPO decorationRefundPO = new DecorationPaymentPO();
-		decorationRefundPO.setDecorationOrderPO(decorationPaymentPO.getDecorationOrderPO());
+		decorationRefundPO.setDecoration(decorationPaymentPO.getDecoration());
 		decorationRefundPO.setPaymentType(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_REFUND_STR);
 		decorationRefundPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 		decorationRefundPO.setTwoType(decorationPaymentPO.getTwoType());
 		decorationRefundPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
 		decorationRefundPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationRefundPO.setCreateUserPO(approvalPO.getSender());
+		decorationRefundPO.setCreater(approvalPO.getSender());
 		decorationRefundPO.setReferMoney(decorationPaymentPO.getReferMoney());
 		
 		decorationPaymentDao.save(decorationRefundPO);
 		
-		if (decorationPaymentPO.getOneType()==DecorationPaymentPO.ONETYPE_ADD_INT&&(decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_DEAL_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_REDUCE_INT)) {
+		if (decorationPaymentPO.getOneType()==DecorationPaymentPO.ONETYPE_ADD_INT&&(decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_DEAL_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT)) {
 			
 		DecorationPaymentPO initialDecorationPaymentPO = new DecorationPaymentPO();
 		BeanUtil.copyProperties(decorationRefundPO, initialDecorationPaymentPO);
@@ -161,9 +161,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	
 		decorationPaymentDao.save(initialDecorationPaymentPO);
 		
-		if (decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_REDUCE_INT) {
+		if (decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT) {
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(approvalDecorationRefundPO.getPaymentId());
-			    addReducePO.setDpId(initialDecorationPaymentPO.getAutoId());
+			    addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
 			    addReduceDao.update(addReducePO);
 			}
 		}

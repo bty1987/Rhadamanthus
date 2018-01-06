@@ -5,8 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ProductionPictureVO implements Serializable{
 
@@ -18,7 +17,7 @@ public class ProductionPictureVO implements Serializable{
 	
 	private String name;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
@@ -32,7 +31,7 @@ public class ProductionPictureVO implements Serializable{
 		super();
 	}
 	
-	public ProductionPictureVO(UserVO creater) {
+	public ProductionPictureVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}
@@ -61,11 +60,11 @@ public class ProductionPictureVO implements Serializable{
 		this.name = name;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

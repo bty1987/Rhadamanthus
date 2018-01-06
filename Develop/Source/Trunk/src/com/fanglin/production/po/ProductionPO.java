@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import com.fanglin.data.po.VillagePO;
+import com.fanglin.data.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -56,9 +56,7 @@ public class ProductionPO implements Serializable{
 	
 	private String pno;
 	
-	private VillagePO village;
-	
-	private String houseNumber;
+	private HousePO house;
 	
 	private float total;
 	
@@ -90,9 +88,9 @@ public class ProductionPO implements Serializable{
 		super();
 	}
 	
-	public ProductionPO(VillagePO village, UserPO creater, UserPO designer) {
+	public ProductionPO(HousePO house, UserPO creater, UserPO designer) {
 		super();
-		this.village = village;
+		this.house = house;
 		this.creater = creater;
 		this.designer = designer;
 	}
@@ -127,22 +125,13 @@ public class ProductionPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "vid", referencedColumnName = "vid")
-	public VillagePO getVillage() {
-		return village;
+	@JoinColumn(nullable = false, name = "hid", referencedColumnName = "hid")
+	public HousePO getHouse() {
+		return house;
 	}
 
-	public void setVillage(VillagePO village) {
-		this.village = village;
-	}
-
-	@Column(name="houseNumber")
-	public String getHouseNumber() {
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber) {
-		this.houseNumber = houseNumber;
+	public void setHouse(HousePO house) {
+		this.house = house;
 	}
 
 	@Column(name="total")

@@ -61,7 +61,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
 			
 			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
 			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
 			
@@ -85,7 +85,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
 			
 			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
 			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
 			
@@ -109,7 +109,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
 			
 			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("assisType"));
+			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
 			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
 			

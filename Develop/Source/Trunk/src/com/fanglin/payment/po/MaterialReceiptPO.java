@@ -3,10 +3,16 @@ package com.fanglin.payment.po;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "materialreceipt", catalog = "payment")
@@ -22,17 +28,19 @@ public class MaterialReceiptPO implements java.io.Serializable {
 
 	private long mrId;
 	
-	private short receiptType;
+	private short type;
 	
-	private String collectUserId;
+	private short status;
 	
-	private String collectUserName;
+	private UserPO collecter;
+	
+	private UserPO confirmer;
+	
+	private String collecterName;
+	
+	private String confirmerName;
 	
 	private Timestamp collectTime;
-	
-	private String confirmUserId;
-	
-	private String confirmUserName;
 	
 	private Timestamp confirmTime;
 	
@@ -48,15 +56,15 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	
 	private float checkv;
 	
-	private String checkvBankName;
+	private String checkvBank;
 	
 	private float installment;
 	
-	private String installmentBankName;
+	private String installmentBank;
 	
 	private float accounts;
 	
-	private String accountsBankName;
+	private String accountsBank;
 	
 	private float advance;
 	
@@ -68,25 +76,21 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	
 	private String couponInfo;
 	
-	private short status;
-	
-	private String des;
+	private String comment;
 
 	public MaterialReceiptPO() {
 		super();
 		
-		this.collectUserId = "";
-		this.collectUserName = "";
-		this.confirmUserId = "";
-		this.confirmUserName = "";
+		this.collecterName = "";
+		this.confirmerName = "";
 		
 		this.bankInfo = "";
-		this.checkvBankName = "";
-		this.installmentBankName = "";
-		this.accountsBankName = "";
+		this.checkvBank = "";
+		this.installmentBank = "";
+		this.accountsBank = "";
 		this.couponInfo = "";
 		
-		this.des = "";
+		this.comment = "";
 	}
 
 	@Id
@@ -99,67 +103,78 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	public void setMrId(long mrId) {
 		this.mrId = mrId;
 	}
-
-	@Column(name = "receiptType")
-	public short getReceiptType() {
-		return receiptType;
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
 	}
 
-	public void setReceiptType(short receiptType) {
-		this.receiptType = receiptType;
+	public void setType(short type) {
+		this.type = type;
 	}
 
-	@Column(name = "collectUserId")
-	public String getCollectUserId() {
-		return this.collectUserId;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setCollectUserId(String collectUserId) {
-		this.collectUserId = collectUserId;
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
-	@Column(name = "collectUserName")
-	public String getCollectUserName() {
-		return this.collectUserName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "collecterId", referencedColumnName = "userId")
+	public UserPO getCollecter(){
+		return collecter;
+	}
+	
+	public void setCollecter(UserPO collecter){
+		this.collecter = collecter;
 	}
 
-	public void setCollectUserName(String collectUserName) {
-		this.collectUserName = collectUserName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "confirmerId", referencedColumnName = "userId")
+	public UserPO getConfirmer(){
+		return confirmer;
+	}
+	
+	public void setConfirmer(UserPO confirmer){
+		this.confirmer = confirmer;
+	}
+	
+	@Column(name = "collecterName")
+	public String getCollecterName() {
+		return collecterName;
+	}
+
+	public void setCollecterName(String collecterName) {
+		this.collecterName = collecterName;
+	}
+
+	@Column(name = "confirmerName")
+	public String getConfirmerName() {
+		return confirmerName;
+	}
+
+	public void setConfirmerName(String confirmerName) {
+		this.confirmerName = confirmerName;
 	}
 
 	@Column(name = "collectTime")
-	public Timestamp getCollectTime() {
-		return this.collectTime;
+	public Timestamp getCollectTime(){
+		return collectTime;
 	}
 
-	public void setCollectTime(Timestamp collectTime) {
+	public void setCollectTime(Timestamp collectTime){
 		this.collectTime = collectTime;
 	}
 
-	@Column(name = "confirmUserId")
-	public String getConfirmUserId() {
-		return this.confirmUserId;
-	}
-
-	public void setConfirmUserId(String confirmUserId) {
-		this.confirmUserId = confirmUserId;
-	}
-
-	@Column(name = "confirmUserName")
-	public String getConfirmUserName() {
-		return this.confirmUserName;
-	}
-
-	public void setConfirmUserName(String confirmUserName) {
-		this.confirmUserName = confirmUserName;
-	}
-
 	@Column(name = "confirmTime")
-	public Timestamp getConfirmTime() {
-		return this.confirmTime;
+	public Timestamp getConfirmTime(){
+		return confirmTime;
 	}
 
-	public void setConfirmTime(Timestamp confirmTime) {
+	public void setConfirmTime(Timestamp confirmTime){
 		this.confirmTime = confirmTime;
 	}
 
@@ -217,13 +232,13 @@ public class MaterialReceiptPO implements java.io.Serializable {
 		this.checkv = checkv;
 	}
 
-	@Column(name = "checkvBankName")
-	public String getCheckvBankName() {
-		return this.checkvBankName;
+	@Column(name = "checkvBank")
+	public String getCheckvBank() {
+		return this.checkvBank;
 	}
 
-	public void setCheckvBankName(String checkvBankName) {
-		this.checkvBankName = checkvBankName;
+	public void setCheckvBank(String checkvBank) {
+		this.checkvBank = checkvBank;
 	}
 
 	@Column(name = "installment")
@@ -235,13 +250,13 @@ public class MaterialReceiptPO implements java.io.Serializable {
 		this.installment = installment;
 	}
 
-	@Column(name = "installmentBankName")
-	public String getInstallmentBankName() {
-		return this.installmentBankName;
+	@Column(name = "installmentBank")
+	public String getInstallmentBank() {
+		return this.installmentBank;
 	}
 
-	public void setInstallmentBankName(String installmentBankName) {
-		this.installmentBankName = installmentBankName;
+	public void setInstallmentBank(String installmentBank) {
+		this.installmentBank = installmentBank;
 	}
 
 	@Column(name = "accounts")
@@ -253,13 +268,13 @@ public class MaterialReceiptPO implements java.io.Serializable {
 		this.accounts = accounts;
 	}
 
-	@Column(name = "accountsBankName")
-	public String getAccountsBankName() {
-		return this.accountsBankName;
+	@Column(name = "accountsBank")
+	public String getAccountsBank() {
+		return this.accountsBank;
 	}
 
-	public void setAccountsBankName(String accountsBankName) {
-		this.accountsBankName = accountsBankName;
+	public void setAccountsBank(String accountsBank) {
+		this.accountsBank = accountsBank;
 	}
 
 	@Column(name = "advance")
@@ -307,22 +322,13 @@ public class MaterialReceiptPO implements java.io.Serializable {
 		this.couponInfo = couponInfo;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return this.des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
-	}
-
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

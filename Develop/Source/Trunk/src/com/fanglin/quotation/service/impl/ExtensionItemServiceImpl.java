@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
@@ -37,26 +37,12 @@ public class ExtensionItemServiceImpl implements ExtensionItemService{
 	private ExtensionDao extensionDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
-
 		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEid(extensionItemVO.getEid());
-		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
-		for(ExtensionItemPO extensionItemPO: extensionItemPOs){
-			ExtensionItemVO _extensionItemVO = new ExtensionItemVO();
-			BeanUtil.copyProperties(extensionItemPO, _extensionItemVO,Arrays.asList("quotationFunctionAreaPO"));
-			_extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionAreaPO().getQfaId());
-			_extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionAreaPO().getFunctionAreaName());
-			if(extensionItemPO.getQuoteItemId()!=0){
-				QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
-				if (quotationItemPO != null) {
-					_extensionItemVO.setContent(quotationItemPO.getQuotationItemDes());
-				}
-			}
-			extensionItemVOs.add(_extensionItemVO);
-		}
+		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
 		return extensionItemVOs;
 	}
 
@@ -66,23 +52,8 @@ public class ExtensionItemServiceImpl implements ExtensionItemService{
 		if (extensionItemIDs == null || extensionItemIDs.size() == 0) {
 			return null;
 		}
-		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
 		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEids(extensionItemIDs);
-		
-		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
-			ExtensionItemVO extensionItemVO = new ExtensionItemVO();
-			BeanUtil.copyProperties(extensionItemPO, extensionItemVO,Arrays.asList("quotationFunctionAreaPO"));
-			extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionAreaPO().getQfaId());
-			extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionAreaPO().getFunctionAreaName());
-			if(extensionItemPO.getQuoteItemId()!=0){
-				QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
-				if (quotationItemPO != null) {
-					extensionItemVO.setContent(quotationItemPO.getQuotationItemDes());
-					extensionItemVO.setQuotationType(quotationItemPO.getQuotationType().getName());
-				}
-			}
-			extensionItemVOs.add(extensionItemVO);
-		}
+		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
 		return extensionItemVOs;
 	}
 
@@ -101,15 +72,15 @@ public class ExtensionItemServiceImpl implements ExtensionItemService{
 		ExtensionItemPO extensionItemPO = null;
 		if(extensionItemVO.getEiId() == null){
 			extensionItemPO= new ExtensionItemPO();
-			BeanUtil.copyProperties(extensionItemVO, extensionItemPO,Arrays.asList("quotationFunctionAreaPO"));
-			extensionItemPO.setQuotationFunctionAreaPO(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
+			BeanUtil.copyProperties(extensionItemVO, extensionItemPO,Arrays.asList("quotationFunctionArea"));
+			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		}else{
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiId());
 			if(extensionItemPO == null){
 				throw new FLException(200027, "扩展项不存在");
 			}
-			BeanUtil.copyProperties(extensionItemVO, extensionItemPO,Arrays.asList("quotationFunctionAreaPO"));
-			extensionItemPO.setQuotationFunctionAreaPO(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
+			BeanUtil.copyProperties(extensionItemVO, extensionItemPO,Arrays.asList("quotationFunctionArea"));
+			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		}
 		extensionPO.setTotal(extensionVO.getTotal());
 		extensionDao.update(extensionPO);
@@ -142,12 +113,30 @@ public class ExtensionItemServiceImpl implements ExtensionItemService{
 	}
 	private void checkExtensionItemForStatusByOrderId(String orderId)throws FLException{
 		
-		DecorationOrderPO	decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO	decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR,DecorationOrderPO.STATUS_RESIGNED_STR,DecorationOrderPO.STATUS_WASTE_STR,DecorationOrderPO.STATUS_COMPLETED_STR,DecorationOrderPO.STATUS_TERMINATION_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR,DecorationPO.STATUS_RESIGNED_STR,DecorationPO.STATUS_WASTE_STR,DecorationPO.STATUS_COMPLETED_STR,DecorationPO.STATUS_TERMINATION_STR});
 		
-		if(status.contains(decorationOrderPO.getStatus())){
+		if(status.contains(decorationPO.getStatus())){
 			throw new FLException(140049, "装修单状态,不可操作");
 		}
 	}
+	private List<ExtensionItemVO> handleExtensionItem(List<ExtensionItemPO> extensionItemPOs){
+		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
+		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
+			ExtensionItemVO extensionItemVO = new ExtensionItemVO();
+			BeanUtil.copyProperties(extensionItemPO, extensionItemVO,Arrays.asList("quotationFunctionArea"));
+			extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
+			extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
+			if(extensionItemPO.getQuoteItemId()!=0){
+				QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
+				if (quotationItemPO != null) {
+					extensionItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				}
+			}
+			extensionItemVOs.add(extensionItemVO);
+		}
+		return extensionItemVOs;
+	}
+	
 }

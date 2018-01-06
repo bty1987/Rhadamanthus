@@ -27,8 +27,8 @@ import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.vo.ApprovalQuotationDiscountVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -49,7 +49,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 	private ApprovalQuotationDiscountDao approvalQuotationDiscountDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private QuotationDao quotationDao;
@@ -64,7 +64,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, int company) throws FLException {
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR, DecorationPO.STATUS_RESIGNED_STR});
 		
 		String orderId = approvalQuotationDiscountVO.getOrderId();
 		Long quotationId = approvalQuotationDiscountVO.getQuotationId();
@@ -75,9 +75,9 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		if(!status.contains(decorationOrderPO.getStatus())){
+		if(!status.contains(decorationPO.getStatus())){
 			throw new FLException(200007, "订单合同已签订不可折扣修改");
 		}
 		
@@ -127,17 +127,17 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(approvalQuotationDiscountPO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalQuotationDiscountPO.getOrderId());
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<String> status = Arrays.asList(DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR);
+		List<String> status = Arrays.asList(DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR);
 		
-		if(!status.contains(decorationOrderPO.getStatus())){
+		if(!status.contains(decorationPO.getStatus())){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationOrderPO.getStatus()));
+			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationPO.getStatus()));
 		}else{
 				QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
 				

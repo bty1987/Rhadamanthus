@@ -34,6 +34,8 @@ public class BuildingNameRulePO implements Serializable {
 	
 	private String ruleContent;
 	
+	private String rulefill;
+	
 	public BuildingNameRulePO(){
 		
 	}
@@ -87,5 +89,16 @@ public class BuildingNameRulePO implements Serializable {
 	public void setRuleContent(String ruleContent){
 		this.ruleContent = ruleContent;
 	}
+
+	@Column(name="rulefill")
+	public String getRulefill() {
+		return rulefill;
+	}
+
+	public void setRulefill(String rulefill) {
+		this.rulefill = rulefill;
+	}
+	
+	
 	
 }

@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
-import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.service.impl.DecorationHolonomyServiceImpl;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -34,7 +31,7 @@ import com.fanglin.payment.vo.ServicePaymentVO;
 import com.fanglin.payment.vo.ServiceReceiptVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -50,13 +47,10 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	private ServiceReceiptDao serviceReceiptDao;
 
 	@Autowired
-	private DecorationHolonomyServiceImpl decorationHolonomyService;
-
-	@Autowired
 	private UserDao userDao;
 
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private DecorationHolonomyDao decorationHolonomyDao;
@@ -70,9 +64,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	@Autowired
 	private PaymentDao paymentDao;
 	
-	/**
-	 * 服务款查询—已收款服务款收款信息-历史收款
-	 */
 	@Override
 	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
 
@@ -87,18 +78,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 
-			servicePaymentVO = new ServicePaymentVO(new UserVO(),new UserVO(),new UserVO(),new DecorationOrderVO(),new ServiceReceiptVO());
-			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decorationOrder","serviceReceipt"));
+			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
+			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
 			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
-			CustomerVO customer = new CustomerVO();
-			servicePaymentVO.getDecorationOrder().setCustomer(customer);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), servicePaymentVO.getDecorationOrder().getCustomer());
-			VillageVO village = new VillageVO();
-			servicePaymentVO.getDecorationOrder().setVillage(village);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getVillagePO(), servicePaymentVO.getDecorationOrder().getVillage(), Arrays.asList("cityProper","buildingNameRule"));
-			decorationHolonomyService.copyDecorationHolonomyPOToVO(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder());
+			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 
 			servicePaymentVOs.add(servicePaymentVO);
@@ -109,9 +94,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 	}
 	
-	/**
-	 * 服务款已确认查询—历史收款
-	 */
 	@Override
 	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters) {
 
@@ -126,18 +108,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 
-			servicePaymentVO = new ServicePaymentVO(new UserVO(),new UserVO(),new UserVO(),new DecorationOrderVO(),new ServiceReceiptVO());
-			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decorationOrder","serviceReceipt"));
+			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
+			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
 			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
-			CustomerVO customer = new CustomerVO();
-			servicePaymentVO.getDecorationOrder().setCustomer(customer);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), servicePaymentVO.getDecorationOrder().getCustomer());
-			VillageVO village = new VillageVO();
-			servicePaymentVO.getDecorationOrder().setVillage(village);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getVillagePO(), servicePaymentVO.getDecorationOrder().getVillage(), Arrays.asList("cityProper","buildingNameRule"));
-			decorationHolonomyService.copyDecorationHolonomyPOToVO(servicePaymentPO.getDecorationOrder(), servicePaymentVO.getDecorationOrder());
+			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 			
 			servicePaymentVOs.add(servicePaymentVO);
@@ -156,7 +132,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO();
-			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
+			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
 			
 			servicePaymentVOs.add(_servicePaymentVO);
 		}
@@ -168,19 +144,13 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	public List<ServicePaymentVO> queryServicePaymentByOrderId(ServicePaymentVO servicePaymentVO) {
 		
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
-		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
+		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO(new UserVO(),new UserVO(),new UserVO(),new DecorationOrderVO(),new ServiceReceiptVO());
-			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder(), _servicePaymentVO.getDecorationOrder(), Arrays.asList("customer","village","quoter","escorter"));
-			CustomerVO customer = new CustomerVO();
-			_servicePaymentVO.getDecorationOrder().setCustomer(customer);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getCustomerPO(), _servicePaymentVO.getDecorationOrder().getCustomer());
-			VillageVO village = new VillageVO();
-			_servicePaymentVO.getDecorationOrder().setVillage(village);
-			BeanUtil.copyProperties(servicePaymentPO.getDecorationOrder().getVillagePO(), _servicePaymentVO.getDecorationOrder().getVillage(), Arrays.asList("cityProper","buildingNameRule"));
-			decorationHolonomyService.copyDecorationHolonomyPOToVO(servicePaymentPO.getDecorationOrder(), _servicePaymentVO.getDecorationOrder());
+			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
+			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
+			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), _servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), _servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 			
 			servicePaymentVOs.add(_servicePaymentVO);
@@ -189,23 +159,20 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		return servicePaymentVOs;
 	}
 	
-	/**
-	 * 生成服务款信息与收据(servicePayment、serviceReceipt),并生成或更新:payment,advancePayment,advancereceipt,decorationholonomy
-	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectServicePayment(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,AdvanceReceiptVO advanceReceiptVO,String cuid) throws FLException {
 
-		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
+		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if(decorationHolonomy == null){
 			throw new FLException(260021, "半价信息不存在");
 		}
 
-		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
-		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
-		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
+		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
+		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
@@ -216,62 +183,54 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
 
-		//拆分服务费
 		Float money = servicePaymentVO.getReferMoney();
-		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ServicePaymentPO.COLUMN_RATIO_STR));
+		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ServicePaymentPO.COLUMN_RATIO_INT));
 		servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 
-		//如果现有服务费加上原交服务费 >总服务费,将差额给预付款
 		if(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup())>decorationHolonomy.getServicePrice()){
 			Float sumMoney = Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup());
 			Float subMoney = Arith.sub(sumMoney, decorationHolonomy.getServicePrice());
 			servicePaymentPO.setAdvanceMoney(Arith.add(servicePaymentPO.getAdvanceMoney(), subMoney));
 			servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 		}
-		//生成服务款款项
+		
 		servicePaymentDao.save(servicePaymentPO);
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		//生成服务款款项收据
 		serviceReceiptVO.setRealMoney(money);
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setMaterialPaidup(Arith.add(servicePaymentPO.getAdvanceMoney(), decorationHolonomy.getMaterialPaidup()));
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 
-		//查询该客户是否有记录,如有进行更新,否则添加
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrder.getCustomerPO().getCustomerId(),decorationOrder.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decoration.getCustomer().getCid(),decoration.getCompany());
 		if(advancePaymentPO != null){
-			//如果有记录,需要将materialBalance – 原有主材预付款金额 + 新的主材预付款金额 ;然后更新
 			advancePaymentPO.setMaterialBalance(Arith.add(advancePaymentPO.getMaterialBalance(), servicePaymentPO.getAdvanceMoney()));
 			advancePaymentDao.update(advancePaymentPO);
 		}else{
-			//生成advancePayment表中的materialBalance – 主材预付款金额
 			advancePaymentPO = new AdvancePaymentPO(new CustomerPO());
-			BeanUtil.copyProperties(decorationOrder.getCustomerPO(), advancePaymentPO.getCustomer());
+			BeanUtil.copyProperties(decoration.getCustomer(), advancePaymentPO.getCustomer());
 			advancePaymentPO.setBalance(0f);
 			advancePaymentPO.setProjectBalance(0f);
 			advancePaymentPO.setMaterialBalance(servicePaymentPO.getAdvanceMoney());
 			advancePaymentPO.setZhenglinBalance(0f);
-			advancePaymentPO.setCompany(decorationOrder.getCompany());
+			advancePaymentPO.setCompany(decoration.getCompany());
 			advancePaymentDao.save(advancePaymentPO);
 		}
 
-		//生成payment预付款记录
 		PaymentPO payment = new PaymentPO(new CustomerPO(), new AdvanceReceiptPO());
-		BeanUtil.copyProperties(decorationOrder.getCustomerPO(), payment.getCustomer());
+		BeanUtil.copyProperties(decoration.getCustomer(), payment.getCustomer());
 		payment.setBalance(advancePaymentPO.getMaterialBalance());
 		payment.setRecharge(servicePaymentPO.getAdvanceMoney());
 		payment.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_STR);
 		payment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR);
-		payment.setDes(servicePaymentPO.getDes());
+		payment.setComment(servicePaymentPO.getComment());
 		payment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-		payment.setOrderId(servicePaymentPO.getDecorationOrder().getOrderId());
-		payment.setCompany(decorationOrder.getCompany());
-		//生成payment预付款款项收据
+		payment.setOrderId(servicePaymentPO.getDecoration().getOrderId());
+		payment.setCompany(decoration.getCompany());
+		
 		advanceReceiptVO.setRealMoney(servicePaymentPO.getAdvanceMoney());
 		AdvanceReceiptPO advanceReceiptPO = addAdvanceReceipt(advanceReceiptVO,cuid);
 
@@ -281,23 +240,20 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		return 0;
 	}
 	
-	/**
-	 * 服务款项收款,主要针对服务费收款
-	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException {
 
-		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
+		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if(decorationHolonomy == null){
 			throw new FLException(260021, "半价信息不存在");
 		}
 
-		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
-		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
-		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
+		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
+		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
@@ -309,41 +265,35 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
 
 		servicePaymentPO.setServiceMoney(servicePaymentVO.getReferMoney());
-		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_STR);
+		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_INT);
 
-		//生成服务款款项
 		servicePaymentDao.save(servicePaymentPO);
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		//生成服务款服务费款项收据
 		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 
 		return 0;
 	}
 	
-	/**
-	 * 服务费退款
-	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException {
 
-		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
+		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if(decorationHolonomy == null){
 			throw new FLException(260021, "半价信息不存在");
 		}
 
-		DecorationOrderPO decorationOrder = decorationOrderDao.queryDecorationOrderByOrderId(servicePaymentVO.getDecorationOrder().getOrderId());
-		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationOrderPO());
-		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decorationOrder","creater","collecter","confirmer","serviceReceipt"));
-		BeanUtil.copyProperties(decorationOrder, servicePaymentPO.getDecorationOrder(), Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO","quoter","escorter"));
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
+		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
+		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreaterName(userPO.getUserName());
@@ -355,27 +305,21 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_TTYPE_INT);
 		
 		servicePaymentPO.setServiceMoney(servicePaymentVO.getReferMoney());
-		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_STR);
+		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_INT);
 
-		//生成服务款款项
 		servicePaymentDao.save(servicePaymentPO);
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		//生成服务款服务费款项收据
 		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		//更新decorationHolonomy表中的,实收主材额和实收服务费
 		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
 		decorationHolonomyDao.update(decorationHolonomy);
 
 		return 0;
 	}
 
-	/**
-	 * 服务款已收款-确认
-	 */
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int confirmServicePayment(List<Long> spids,String userId)  throws FLException{
@@ -404,26 +348,23 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		return 0;
 	}
 
-	/**
-	 * 生成AdvanceReceipt收据
-	 */
 	@Transactional(rollbackFor=Exception.class)
 	private AdvanceReceiptPO addAdvanceReceipt(AdvanceReceiptVO advanceReceiptVO,String userId){
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		UserPO user = userDao.queryUserByUserId(userId);
-		advanceReceiptPO.setCollectUser(user);
-		advanceReceiptPO.setCollectUserName(user.getUserName());
+		advanceReceiptPO.setCollecter(user);
+		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
-		advanceReceiptPO.setConfirmUserName("");
+		advanceReceiptPO.setConfirmerName("");
 		advanceReceiptPO.setStatus(AdvanceReceiptPO.STATUS_COLLRCT_INT);
-		advanceReceiptPO.setReceiptType(AdvanceReceiptPO.STATUS_RECEIPTTYPE_INT);
+		advanceReceiptPO.setType(AdvanceReceiptPO.STATUS_RECEIPTTYPE_INT);
 
 		if(advanceReceiptVO.getCash() != null){
 			advanceReceiptPO.setCash(advanceReceiptVO.getCash());
 			advanceReceiptPO.setCashInfo(advanceReceiptVO.getCashInfo());
 		}else{
-			advanceReceiptPO.setCash(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			advanceReceiptPO.setCash(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			advanceReceiptPO.setCashInfo("");
 		}
 
@@ -431,38 +372,38 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			advanceReceiptPO.setBank(advanceReceiptVO.getBank());
 			advanceReceiptPO.setBankInfo(advanceReceiptVO.getBankInfo());
 		}else{
-			advanceReceiptPO.setBank(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			advanceReceiptPO.setBank(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			advanceReceiptPO.setBankInfo("");
 		}
 
 		if(advanceReceiptVO.getCheckv() != null){
 			advanceReceiptPO.setCheckv(advanceReceiptVO.getCheckv());
-			advanceReceiptPO.setCheckvBankName(advanceReceiptVO.getCheckvBankName());
+			advanceReceiptPO.setCheckvBank(advanceReceiptVO.getCheckvBank());
 		}else{
-			advanceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_STR);
-			advanceReceiptPO.setCheckvBankName("");
+			advanceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_INT);
+			advanceReceiptPO.setCheckvBank("");
 		}
 
 		if(advanceReceiptVO.getInstallment() != null){
 			advanceReceiptPO.setInstallment(advanceReceiptVO.getInstallment());
-			advanceReceiptPO.setInstallmentBankName(advanceReceiptVO.getInstallmentBankName());
+			advanceReceiptPO.setInstallmentBank(advanceReceiptVO.getInstallmentBank());
 		}else{
-			advanceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_STR);
-			advanceReceiptPO.setInstallmentBankName("");
+			advanceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_INT);
+			advanceReceiptPO.setInstallmentBank("");
 		}
 
 		if(advanceReceiptVO.getAccounts() != null){
 			advanceReceiptPO.setAccounts(advanceReceiptVO.getAccounts());
-			advanceReceiptPO.setAccountsBankName(advanceReceiptVO.getAccountsBankName());
+			advanceReceiptPO.setAccountsBank(advanceReceiptVO.getAccountsBank());
 		}else{
-			advanceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_STR);
-			advanceReceiptPO.setAccountsBankName("");
+			advanceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_INT);
+			advanceReceiptPO.setAccountsBank("");
 		}
 
-		if(advanceReceiptVO.getDes() != null){
-			advanceReceiptPO.setDes(advanceReceiptVO.getDes());
+		if(advanceReceiptVO.getComment() != null){
+			advanceReceiptPO.setComment(advanceReceiptVO.getComment());
 		}else{
-			advanceReceiptPO.setDes("");
+			advanceReceiptPO.setComment("");
 		}
 
 		advanceReceiptDao.save(advanceReceiptPO);
@@ -470,9 +411,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		return advanceReceiptPO;
 	}
 
-	/**
-	 * 生成servicePayment服务款收据
-	 */
 	@Transactional(rollbackFor=Exception.class)
 	private int generateServicePayment(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String userId){
 
@@ -489,7 +427,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setCash(serviceReceiptVO.getCash());
 			serviceReceiptPO.setCashInfo(serviceReceiptVO.getCashInfo());
 		}else{
-			serviceReceiptPO.setCash(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			serviceReceiptPO.setCash(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setCashInfo("");
 		}
 
@@ -497,7 +435,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setBank(serviceReceiptVO.getBank());
 			serviceReceiptPO.setBankInfo(serviceReceiptVO.getBankInfo());
 		}else{
-			serviceReceiptPO.setBank(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			serviceReceiptPO.setBank(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setBankInfo("");
 		}
 
@@ -505,7 +443,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setCheckv(serviceReceiptVO.getCheckv());
 			serviceReceiptPO.setCheckvBank(serviceReceiptVO.getCheckvBank());
 		}else{
-			serviceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			serviceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setCheckvBank("");
 		}
 
@@ -513,7 +451,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setInstallment(serviceReceiptVO.getInstallment());
 			serviceReceiptPO.setInstallBank(serviceReceiptVO.getInstallBank());
 		}else{
-			serviceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			serviceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setInstallBank("");
 		}
 
@@ -521,15 +459,17 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setAccounts(serviceReceiptVO.getAccounts());
 			serviceReceiptPO.setAccountsBank(serviceReceiptVO.getAccountsBank());
 		}else{
-			serviceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_STR);
+			serviceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setAccountsBank("");
 		}
 
-		if(serviceReceiptVO.getDes() != null){
-			serviceReceiptPO.setDes(serviceReceiptVO.getDes());
+		if(serviceReceiptVO.getComment() != null){
+			serviceReceiptPO.setComment(serviceReceiptVO.getComment());
 		}else{
-			serviceReceiptPO.setDes("");
+			serviceReceiptPO.setComment("");
 		}
+		
+		serviceReceiptPO.setType(servicePayment.getType());
 
 		serviceReceiptDao.save(serviceReceiptPO);
 

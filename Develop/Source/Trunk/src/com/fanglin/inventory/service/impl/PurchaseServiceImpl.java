@@ -22,7 +22,7 @@ import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -45,23 +45,44 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	private UserDao userDao;
 	
 	@Override
-	public void pagePurchase(Paging paging, List<Filter> filters,int company) {
+	public void pagePurchase(Paging paging, List<Filter> filters, int company) {
 		
-		List<PurchasePO> purchasePOs = purchaseDao.pagePurchase(paging, filters,company);
+		List<PurchasePO> purchasePOs = purchaseDao.pagePurchase(paging, filters, company);
+		
+		List<PurchaseVO> purchaseVOs = purchasePage(purchasePOs);
+		
+		paging.setData(purchaseVOs);
+		
+	}
+	
+	@Override
+	public void pagePurchaseObDelivery(Paging paging, List<Filter> filters,int company) {
+		
+		List<PurchasePO> purchasePOs = purchaseDao.pagePurchaseObDelivery(paging, filters,company);
+		
+		List<PurchaseVO> purchaseVOs = purchasePage(purchasePOs);
+		
+		paging.setData(purchaseVOs);
+		
+	}
+	
+	public List<PurchaseVO> purchasePage(List<PurchasePO> purchasePOs){
+		
 		List<PurchaseVO> purchaseVOs = new ArrayList<PurchaseVO>();
 		
 		PurchaseVO purchaseVO;
 		
 		for(PurchasePO purchasePO: purchasePOs){
-			purchaseVO = new PurchaseVO(new UserVO());
+				
+				purchaseVO = new PurchaseVO(new UserBaseVO());
 			
-			BeanUtil.copyProperties(purchasePO, purchaseVO, Arrays.asList("user"));
-			purchaseVO.getUser().setBaseInfo(purchasePO.getUser());
-			purchaseVOs.add(purchaseVO);
+				BeanUtil.copyProperties(purchasePO, purchaseVO, Arrays.asList("user"));
+				purchaseVO.getUser().setBaseInfo(purchasePO.getUser());
+				purchaseVOs.add(purchaseVO);
+				
 		}
-
-		paging.setData(purchaseVOs);
 		
+		return purchaseVOs;
 	}
 	
 	@Override
@@ -202,4 +223,5 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		return 0;
 	}
+
 }

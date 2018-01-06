@@ -69,7 +69,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(),new FormatVO(), new StorehouseVO(), new StorehouseVO());
 
 			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse","outstorehouse"));
-			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(manifestItemPO.getColor(),manifestItemVO.getColor());
 			BeanUtil.copyProperties(manifestItemPO.getFormat(),manifestItemVO.getFormat());
 			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(),manifestItemVO.getInstorehouse());
@@ -94,7 +94,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(),new FormatVO(), new StorehouseVO(), new StorehouseVO());
 
 			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse","outstorehouse"));
-			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(manifestItemPO.getColor(),manifestItemVO.getColor());
 			BeanUtil.copyProperties(manifestItemPO.getFormat(),manifestItemVO.getFormat());
 			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(),manifestItemVO.getInstorehouse());
@@ -134,7 +134,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		float num = manifestItemVO.getNum();
 
 		BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods", "color", "format", "instorehouse", "outstorehouse"));
-		BeanUtil.copyProperties(manifestItemVO.getGoods(),manifestItemPO.getGoods(), Arrays.asList("assisType"));
+		BeanUtil.copyProperties(manifestItemVO.getGoods(),manifestItemPO.getGoods(), Arrays.asList("accessoriesType"));
 		BeanUtil.copyProperties(manifestItemVO.getColor(),manifestItemPO.getColor());
 		BeanUtil.copyProperties(manifestItemVO.getFormat(),manifestItemPO.getFormat());
 

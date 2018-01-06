@@ -3,8 +3,8 @@ package com.fanglin.payment.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
-import com.fanglin.decoration.vo.DecorationOrderVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ServicePaymentVO   implements Serializable{
 
@@ -12,19 +12,21 @@ public class ServicePaymentVO   implements Serializable{
 
 	private Long spid;
 	
-	private DecorationOrderVO decorationOrder;
+	private ServiceReceiptVO serviceReceipt;
 	
-	private Short type; 
+	private DecorationVO decoration;
 	
 	private Integer pid;
 	
+	private Short type; 
+	
 	private Short status;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
-	private UserVO collecter;
+	private UserBaseVO collecter;
 	
-	private UserVO confirmer;
+	private UserBaseVO confirmer;
 	
 	private String createrName;           
 	
@@ -42,28 +44,26 @@ public class ServicePaymentVO   implements Serializable{
 	
 	private Float advanceMoney;
 	
-	private String des;
-	
 	private Float referMoney;
 	
-	private ServiceReceiptVO serviceReceipt;
+	private String comment;
 	
 	public ServicePaymentVO() {
 		super();
 	}
 	
-	public ServicePaymentVO(UserVO creater,DecorationOrderVO decorationOrder) {
+	public ServicePaymentVO(UserBaseVO creater,DecorationVO decoration) {
 		super();
 		this.creater = creater;
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 	
-	public ServicePaymentVO(UserVO creater,UserVO collecter,UserVO confirmer,DecorationOrderVO decorationOrder,ServiceReceiptVO serviceReceipt) {
+	public ServicePaymentVO(UserBaseVO creater,UserBaseVO collecter,UserBaseVO confirmer,DecorationVO decoration,ServiceReceiptVO serviceReceipt) {
 		super();
 		this.creater = creater;
 		this.collecter = collecter;
 		this.confirmer = confirmer;
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.serviceReceipt = serviceReceipt;
 	}
 	
@@ -75,12 +75,12 @@ public class ServicePaymentVO   implements Serializable{
 		this.spid = spid;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 	
 	public Short getType() {
@@ -107,27 +107,27 @@ public class ServicePaymentVO   implements Serializable{
 		this.status = status;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 
-	public UserVO getCollecter() {
+	public UserBaseVO getCollecter() {
 		return collecter;
 	}
 
-	public void setCollecter(UserVO collecter) {
+	public void setCollecter(UserBaseVO collecter) {
 		this.collecter = collecter;
 	}
 
-	public UserVO getConfirmer() {
+	public UserBaseVO getConfirmer() {
 		return confirmer;
 	}
 
-	public void setConfirmer(UserVO confirmer) {
+	public void setConfirmer(UserBaseVO confirmer) {
 		this.confirmer = confirmer;
 	}
 
@@ -198,14 +198,6 @@ public class ServicePaymentVO   implements Serializable{
 		this.advanceMoney = advanceMoney;
 	}
 
-	public String getDes() {
-		return des;
-	}
-
-	public void setDes(String des) {
-		this.des = des;
-	}
-
 	public Float getReferMoney() {
 		return referMoney;
 	}
@@ -220,6 +212,14 @@ public class ServicePaymentVO   implements Serializable{
 
 	public void setServiceReceipt(ServiceReceiptVO serviceReceipt) {
 		this.serviceReceipt = serviceReceipt;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

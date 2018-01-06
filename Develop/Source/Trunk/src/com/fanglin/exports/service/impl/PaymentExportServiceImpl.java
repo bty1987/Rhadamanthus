@@ -22,11 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.VillagePO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.exports.service.PaymentExportService;
 import com.fanglin.exports.vo.DecorationPaymentExportVO;
 import com.fanglin.exports.vo.MaterialPaymentExportVO;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
@@ -69,15 +69,15 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 				decorationPaymentExportVO.setCouponInfo(decorationReceiptPO.getCouponInfo());
 			}
 			
-			DecorationOrderPO decorationOrderPO = decorationPaymentPO.getDecorationOrderPO();
-			VillagePO villagePO = decorationOrderPO.getVillagePO();
-			UserPO designer = decorationOrderPO.getDesignerPO();
+			DecorationPO decorationPO = decorationPaymentPO.getDecoration();
+			VillagePO villagePO = decorationPO.getHouse().getVillage();
+			UserPO designer = decorationPO.getDesigner();
 			
 			decorationPaymentExportVO.setDesigner(designer.getUserName());
 			decorationPaymentExportVO.setDesignerDepartment(designer.getDept().getDeptName());
-			decorationPaymentExportVO.setOrderId(decorationOrderPO.getOrderId());
-			decorationPaymentExportVO.setVillage(villagePO.getVillageName());
-			decorationPaymentExportVO.setHouseNumber(decorationOrderPO.getHouseNumber());
+			decorationPaymentExportVO.setOrderId(decorationPO.getOrderId());
+			decorationPaymentExportVO.setVillage(villagePO.getName());
+			decorationPaymentExportVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
 			
 			decorationPaymentExportVOs.add(decorationPaymentExportVO);
 		}
@@ -99,7 +99,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
 		List<MaterialPaymentExportVO> materialPaymentExportVOs = new ArrayList<MaterialPaymentExportVO>();
 		
-		MaterialSubOrderPO materialSubOrderPO;
+		MaterialPO materialPO;
 		MaterialPaymentExportVO materialPaymentExportVO;
 		
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
@@ -112,13 +112,13 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentExportVO);
 			}
 			
-			materialSubOrderPO = materialPaymentPO.getMaterialSubOrder();
+			materialPO = materialPaymentPO.getMaterial();
 			
-			if(materialSubOrderPO != null){
-				BeanUtil.copyProperties(materialSubOrderPO, materialPaymentExportVO);
+			if(materialPO != null){
+				BeanUtil.copyProperties(materialPO, materialPaymentExportVO);
 				
-				materialPaymentExportVO.setMsoCoupon(materialSubOrderPO.getCoupon());
-				materialPaymentExportVO.setMsoCouponInfo(materialSubOrderPO.getCouponInfo());
+				materialPaymentExportVO.setMsoCoupon(materialPO.getCoupon());
+				materialPaymentExportVO.setMsoCouponInfo(materialPO.getCouponInfo());
 			}
 			
 			materialPaymentExportVO.setPaymentTypeName(types.get(materialPaymentPO.getPaymentType()));

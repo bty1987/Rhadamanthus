@@ -45,7 +45,7 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 		
 		List<AuditRecordVO> auditRecordVOs = new ArrayList<AuditRecordVO>();
 		
-		AuditPO auditPO = auditDao.queryAuditByOrderId(auditRecord.getAudit().getDecorationOrder().getOrderId());
+		AuditPO auditPO = auditDao.queryAuditByOrderId(auditRecord.getAudit().getDecoration().getOrderId());
 		
 		if(auditPO == null){
 			throw new FLException(140044 , "审批记录不存在");
@@ -68,7 +68,7 @@ public class AuditRecordServiceImpl implements AuditRecordService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addAuditRecord(AuditRecordVO auditRecord, String userId)throws FLException {
-		AuditPO auditPO = auditDao.queryAuditByOrderId(auditRecord.getAudit().getDecorationOrder().getOrderId());
+		AuditPO auditPO = auditDao.queryAuditByOrderId(auditRecord.getAudit().getDecoration().getOrderId());
 		if(auditPO==null){
 			throw new FLException(140044 , "审批记录不存在");
 		}

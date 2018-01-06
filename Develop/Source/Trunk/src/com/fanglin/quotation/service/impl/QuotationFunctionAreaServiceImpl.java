@@ -251,7 +251,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(quotationPO.getDecorationOrder().getOrderId());
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(quotationPO.getDecoration().getOrderId());
 		if(extensionPOs != null && extensionPOs.size()>0){
 			List<Long> extensionIds =new ArrayList<Long>();
 			for (ExtensionPO extensionPO:extensionPOs) {

@@ -30,41 +30,39 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
-	public List<VillagePO> pageVillages(Paging paging, List<Filter> filters){
+	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters){
 
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 
 		queryFilterExcute(query, filters);
+		
+		query.asc("vid");
 
 		return query.list();
 	}
-
+	
 	@Override
-	public List<VillagePO> queryVillage(List<Filter> filters){
-		
-		PagingQuery<VillagePO> query = pagingQuery(new Paging(), VillagePO.class);
-		
-		queryFilterExcute(query, filters);
-		
-		query.notPaging();
-		
-		return query.list();
-	}
-
-	@Override
-	public List<VillagePO> queryVillagesName(Paging paging, String pinyinName){
+	public List<VillagePO> queryVillageByPinyin(Paging paging, String pinyinName){
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.eq(VillagePO.COLUMN_STATUS_STR, VillagePO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.ilike("villageName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("villageNamePinYinAB", pinyinName, MatchMode.ANYWHERE)));
+			query.add(Restrictions.eq(VillagePO.COLUMN_STATUS_STR, VillagePO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.ilike("name", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("pinyinAB", pinyinName, MatchMode.ANYWHERE)));
 		}
 		
 		return query.list();
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<VillagePO> queryVillageByName(String name){
+		
+		return session().createCriteria(VillagePO.class).add(Restrictions.eq("name", name)).list();
+		
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<VillagePO> queryVillagesByCityProperId(String cityProperId){
+	public List<VillagePO> queryVillageByCityProperId(String cityProperId){
 		return session().createCriteria(VillagePO.class).add(Restrictions.eq("cityProper.cityProperId", cityProperId)).list();
 	}
 
@@ -82,9 +80,10 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 		if(filters != null){
 			query.alias("cityProper", "cityProper");
 			for(Filter filter: filters){
+			
 				if(StringUtils.isNotEmpty(filter.getData())){
-					if("villageName".equals(filter.getField()))
-						query.add(query.getCriterion("villageName", filter));
+					if("no".equals(filter.getField()))
+						query.add(query.getCriterion("no", filter));
 					else if("cityProperId".equals(filter.getField())){
 						query.add(query.getCriterion("cityProper.cityProperId", filter));
 					} else if("cityId".equals(filter.getField())){

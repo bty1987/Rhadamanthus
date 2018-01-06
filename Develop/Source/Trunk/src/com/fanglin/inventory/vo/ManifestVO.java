@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ManifestVO implements java.io.Serializable {
 
@@ -12,15 +12,13 @@ public class ManifestVO implements java.io.Serializable {
 
 	private Long mid;
 	
-	private Integer company;
-	
 	private String code;
 	
 	private Timestamp createTime;
 	
 	private Timestamp manifestTime;
 	
-	private UserVO createUser;
+	private UserBaseVO createUser;
 	
 	private Float total;
 	
@@ -38,7 +36,7 @@ public class ManifestVO implements java.io.Serializable {
 		super();
 	}
 
-	public ManifestVO(UserVO createUser) {
+	public ManifestVO(UserBaseVO createUser) {
 		super();
 		this.createUser = createUser;
 	}
@@ -49,14 +47,6 @@ public class ManifestVO implements java.io.Serializable {
 
 	public void setMid(Long mid) {
 		this.mid = mid;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
 	}
 
 	public String getCode() {
@@ -85,11 +75,11 @@ public class ManifestVO implements java.io.Serializable {
 		this.manifestTime = manifestTime;
 	}
 
-	public UserVO getCreateUser() {
+	public UserBaseVO getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(UserVO createUser) {
+	public void setCreateUser(UserBaseVO createUser) {
 		this.createUser = createUser;
 	}
 

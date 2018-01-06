@@ -1,6 +1,6 @@
 /**
  * @File Name		: OrderDesignPictureService
- * @Package   	: com.fanglin.service.decorationOrder;
+ * @Package   	: com.fanglin.service.decoration;
  * @Version		: 1.0
  * @Date			: 2014-9-27
  * @Copyright	: Copyright Creators 2014

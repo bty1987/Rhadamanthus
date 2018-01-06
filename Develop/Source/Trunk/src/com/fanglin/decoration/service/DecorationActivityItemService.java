@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 public interface DecorationActivityItemService {
 	
-	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationOrderVO decorationOrderVO);
+	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO);
 	
-	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationOrderVO decorationOrderVO);
+	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationVO decorationVO);
 	
 	public int convertDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
 	

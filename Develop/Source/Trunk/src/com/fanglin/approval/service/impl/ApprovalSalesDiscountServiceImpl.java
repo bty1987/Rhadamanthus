@@ -14,13 +14,12 @@ import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.vo.ApprovalSalesDiscountVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.dao.SalesDao;
-import com.fanglin.inventory.po.SalesPO;
-
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -55,7 +54,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-		SalesPO salesPO = salesDao.querySalesBySid(sid);
+		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
@@ -109,7 +108,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		}
 		long sid = approvalSalesDiscountPO.getSid();
 
-		SalesPO salesPO = salesDao.querySalesBySid(sid);
+		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
@@ -152,7 +151,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		}
 
 		long sid = approvalSalesDiscountPO.getSid();
-		SalesPO salesPO = salesDao.querySalesBySid(sid);
+		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");

@@ -8,7 +8,7 @@ public class DecorationHolonomyVO implements Serializable {
 	
 	private Long dhid;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private String name;
 	
@@ -40,9 +40,9 @@ public class DecorationHolonomyVO implements Serializable {
 		super();
 	}
 
-	public DecorationHolonomyVO(DecorationOrderVO decorationOrder) {
+	public DecorationHolonomyVO(DecorationVO decoration) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 
 
@@ -54,12 +54,12 @@ public class DecorationHolonomyVO implements Serializable {
 		this.dhid = dhid;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public String getName() {

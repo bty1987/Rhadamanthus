@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.inventory.po.SalesPO;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -22,31 +22,31 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_SALES_ORDERID_STR = "sales.orderId";
 	
-	public static final String COLUMN_SALES_SALESMAN_USERNAME_STR = "salesman.currentName";
+	public static final String COLUMN_SALES_SALESMAN_USERID_STR = "salesman.userId";
 	
 	public static final String COLUMN_SALES_NO_STR = "sales.no";
 	
-	public static final String COLUMN_SALES_VILLAGE_VILLAGENAME_STR = "village.villageName";
+	public static final String COLUMN_SALES_VILLAGE_NO_STR = "village.no";
 	
-	public static final short COLUMN_SALES_INITIALSTATUS_INT = 0;            //销售单初始状态
+	public static final short COLUMN_SALES_INITIALSTATUS_INT = 0;
 	
-	public static final short COLUMN_SALES_PAIDFORSTATUS_INT = 1;            //销售单已收款状态
+	public static final short COLUMN_SALES_PAIDFORSTATUS_INT = 1;
 	
-	public static final short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;          //销售单已确认状态
+	public static final short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;
 	
-	public static final short COLUMN_DEPOSITTYPE_INT = 2;                    //定金
+	public static final short COLUMN_DEPOSITTYPE_INT = 2;
 	
-	public static final short COLUMN_REPLENISHMENTTYPE_INT = 3;              //补款
+	public static final short COLUMN_REPLENISHMENTTYPE_INT = 3;
 	
-	public static final short COLUMN_REFUNDSTYPE_INT = 4;                    //退款
+	public static final short COLUMN_REFUNDSTYPE_INT = 4;
 	
-	public static final short COLUMN_MAKEAREFUNDTYPE_INT = 5;                //补款退款
+	public static final short COLUMN_MAKEAREFUNDTYPE_INT = 5;
 	
-	public static final short COLUMN_VOUCHERREFUNDTYPE_INT = 6;              //券退款
+	public static final short COLUMN_VOUCHERREFUNDTYPE_INT = 6;
 	
-	public static final short COLUMN_DEPOSITREFUNDTYPE_INT = 7;              //定金退款
+	public static final short COLUMN_DEPOSITREFUNDTYPE_INT = 7;
 	
-	public static final String COLUMN_SALES_STATUS_STR = "status";        
+	public static final String COLUMN_SALES_STATUS_STR = "status";
 	
 	public static final String COLUMN_SID_STR ="sid";
 	
@@ -56,33 +56,33 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_CONFIRMTIME_STR ="salesReceipt.confirmTime";
 	
-	public static final short COLUMN_ADVANCETYPECONTRACT_INT = 1; 
+	public static final short COLUMN_ADVANCETYPECONTRACT_INT = 1;
 	
-	public static final short COLUMN_ADVANCETYPEENGINEERING_INT = 2; 
+	public static final short COLUMN_ADVANCETYPEENGINEERING_INT = 2;
 	
 	public static final short COLUMN_ADVANCETYPEMATERIAL_INT = 3;
 	
-	public static final short COLUMN_ADVANCETYPEZHENGLIN_INT = 4; 
+	public static final short COLUMN_ADVANCETYPEZHENGLIN_INT = 4;
 	
-	private long spid;                    //款项ID
-
-	private SalesPO sales;                //销售单ID
-
-	private short type;                   //款项类型
-
-	private short status;                 //状态
-
-	private String category;              //品类
-
-	private String brand;                 //品牌
-
-	private UserPO creater;               //创建人
+	private long spid;
 	
-	private String createrName;           //创建人姓名
+	private SalesReceiptPO salesReceipt;
 
-	private float referMoney;             //应收金额
+	private SalesPO sales;
+
+	private short type;
+
+	private short status;
 	
-	private SalesReceiptPO salesReceipt;  //收据ID
+	private String category;             
+
+	private String brand;           
+
+	private UserPO creater;
+	
+	private String createrName;
+
+	private float referMoney;
 
 	public SalesPaymentPO() {
 		super();
@@ -136,10 +136,6 @@ public class SalesPaymentPO  implements Serializable{
 		return status;
 	}
 
-	public void setStatus(short status) {
-		this.status = status;
-	}
-
 	@Column(name = "category")
 	public String getCategory() {
 		return category;
@@ -156,6 +152,10 @@ public class SalesPaymentPO  implements Serializable{
 
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

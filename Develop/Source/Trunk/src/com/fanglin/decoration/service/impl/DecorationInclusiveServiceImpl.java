@@ -10,24 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.decoration.dao.DecorationInclusiveDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationInclusivePO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationInclusiveService;
 import com.fanglin.decoration.vo.DecorationInclusiveVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -40,12 +35,6 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	
 	@Autowired
 	private QuotationDao quotationDao;
-	
-	@Autowired
-	private ExtensionDao extensionDao ;
-	
-	@Autowired
-	private DecorationOrderDao decorationOrderDao;
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
@@ -63,11 +52,14 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		
 		for(DecorationInclusivePO decorationInclusivePO:decorationInclusivePOs){
 			
-			DecorationInclusiveVO decorationInclusiveVO = new DecorationInclusiveVO(new DecorationOrderVO());
+			DecorationInclusiveVO decorationInclusiveVO = new DecorationInclusiveVO(new DecorationVO());
 			
-			BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO,Arrays.asList("decorationOrder"));
+			BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO,Arrays.asList("decoration"));
 			
-			copyDecorationPOToVO(decorationInclusivePO.getDecorationOrder(), decorationInclusiveVO.getDecorationOrder());
+			decorationInclusiveVO.getDecoration().setEscorter(new UserBaseVO());
+			decorationInclusiveVO.getDecoration().setQuoter(new UserBaseVO());
+			
+			decorationInclusivePO.getDecoration().ptvcascade(decorationInclusiveVO.getDecoration());
 			
 			decorationInclusiveVOs.add(decorationInclusiveVO);
 		}
@@ -78,14 +70,17 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	@Override
 	public DecorationInclusiveVO queryDecorationInclusive(DecorationInclusiveVO decorationInclusiveVO) {
 		
-		DecorationInclusiveVO _decorationInclusiveVO = new DecorationInclusiveVO(new DecorationOrderVO());
-		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(decorationInclusiveVO.getDecorationOrder().getOrderId());
+		DecorationInclusiveVO _decorationInclusiveVO = new DecorationInclusiveVO(new DecorationVO());
+		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(decorationInclusiveVO.getDecoration().getOrderId());
 		
 		if(decorationInclusivePO == null) return null;
 		
-		BeanUtil.copyPropertie(decorationInclusivePO, _decorationInclusiveVO,Arrays.asList("decorationOrder"));
+		BeanUtil.copyPropertie(decorationInclusivePO, _decorationInclusiveVO,Arrays.asList("decoration"));
 		
-		copyDecorationPOToVO(decorationInclusivePO.getDecorationOrder(), _decorationInclusiveVO.getDecorationOrder());
+		decorationInclusiveVO.getDecoration().setEscorter(new UserBaseVO());
+		decorationInclusiveVO.getDecoration().setQuoter(new UserBaseVO());
+		
+		decorationInclusivePO.getDecoration().ptvcascade(decorationInclusiveVO.getDecoration());
 		
 		return _decorationInclusiveVO;
 	}
@@ -95,21 +90,21 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	@Transactional(rollbackFor=Exception.class)
 	public void makeDecorationInclusive(DecorationInclusiveVO decorationInclusiveVO, String userId)throws FLException {
 		
-		String orderId = decorationInclusiveVO.getDecorationOrder().getOrderId();
+		String orderId = decorationInclusiveVO.getDecoration().getOrderId();
 		
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
 			
 		if(decorationInclusivePO != null){
 			
-			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationInclusiveVO.getDecorationOrder().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationInclusiveVO.getDecoration().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
 			
 			if(decorationPayments != null && decorationPayments.size() > 0){
 				throw new FLException(140043,"订单整装信息不可更新");
 			}
 			
 		}else{
-			decorationInclusivePO = new DecorationInclusivePO(new DecorationOrderPO());
+			decorationInclusivePO = new DecorationInclusivePO(new DecorationPO(orderId));
 		}
 		
 		QuotationPO quotation = quotationDao.queryQuotationForDefaultByOrderId(orderId);
@@ -118,12 +113,11 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 			throw new FLException(200003,"报价不存在");
 		}
 		
-		BeanUtil.copyPropertie(decorationInclusiveVO, decorationInclusivePO,Arrays.asList("decorationOrder"));
-		decorationInclusivePO.setDecorationOrder(decorationOrderDao.queryDecorationOrderByOrderId(orderId));
+		BeanUtil.copyPropertie(decorationInclusiveVO, decorationInclusivePO,Arrays.asList("decoration"));
 
 		decorationInclusivePO.setProjectPrice(quotation.getTotalPrice());
-		decorationInclusivePO.setCdiff(extensionDao.sumExtensionByOrderId(orderId,(short)0));
-		decorationInclusivePO.setMdiff(extensionDao.sumExtensionByOrderId(orderId,(short)1));
+		decorationInclusivePO.setCdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
+		decorationInclusivePO.setMdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
 		decorationInclusivePO.setMaterialPaidup(DecorationInclusivePO.MONEY_ZERO_FLOAT);
 		decorationInclusivePO.setManagePrice(quotation.getManagePrice());
 		decorationInclusivePO.setManageRate(quotation.getManageRate());
@@ -133,67 +127,13 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		DecorationPaymentVO decorationpaymentVO = new DecorationPaymentVO();
 		
 		decorationpaymentVO.setReferMoney(decorationInclusiveVO.getContractPrice());
-		decorationpaymentVO.setOrderId(orderId);
+		decorationpaymentVO.setDecoration(decorationInclusiveVO.getDecoration());
 		decorationpaymentVO.setPsId(decorationInclusiveVO.getPsId());
 		
 		decorationPaymentService.makeDecorationPayment(decorationpaymentVO, userId);
 		
-		BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO,Arrays.asList("decorationOrder"));
+		BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO,Arrays.asList("decoration"));
 		
 	}
-	
-	public void copyDecorationPOToVO(DecorationOrderPO decorationOrderPO,DecorationOrderVO decorationOrderVO){
-		
-		BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
-		
-		if(decorationOrderVO.getOrderTotalPrice() == null){
-			decorationOrderVO.setOrderTotalPrice(new Float(0));
-		}
-		
-		VillageVO villageVO = new VillageVO();
-		CityProperVO cityProperVO = new CityProperVO();
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
-		villageVO.setCityProper(cityProperVO);
-		decorationOrderVO.setVillage(villageVO);
-		
-		CustomerVO customerVO = new CustomerVO();
-		BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-		customerVO.setConfidentialInfo();
-		decorationOrderVO.setCustomer(customerVO);
-		
-		UserPO designer = decorationOrderPO.getDesignerPO();
-		
-		decorationOrderVO.setDesigner(designer.getCurrentName());
-		decorationOrderVO.setDesignerId(designer.getUserId());
-		decorationOrderVO.setDesignerPhone(designer.getPhone());
-		decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
-		
-		if(decorationOrderPO.getDesignerPO().getDept().getFatherDept() != null){
-			decorationOrderVO.setDesignRegion(decorationOrderPO.getDesignerPO().getDept().getFatherDept().getDeptName());
-		}
-		
-		UserPO salesman = decorationOrderPO.getSalesmanPO();
-		
-		decorationOrderVO.setSalesman(salesman.getCurrentName());
-		decorationOrderVO.setSalesmanId(salesman.getUserId());
-		decorationOrderVO.setSalesmanPhone(salesman.getPhone());
-		decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
-		
-		UserPO quoter = decorationOrderPO.getQuoterPO();
-		
-		if(quoter != null){
-			decorationOrderVO.setQuoterId(quoter.getUserId());
-			decorationOrderVO.setQuoter(quoter.getUserName());
-		}
-		
-		UserPO escorter = decorationOrderPO.getEscorterPO();
-		
-		if(escorter != null){
-			decorationOrderVO.setEscorterId(escorter.getUserId());
-			decorationOrderVO.setEscorter(escorter.getUserName());
-		}
-	}
-
 
 }

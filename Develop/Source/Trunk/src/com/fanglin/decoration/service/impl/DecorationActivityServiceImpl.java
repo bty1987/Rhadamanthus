@@ -22,9 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
 import com.fanglin.decoration.vo.DecorationActivityVO;
 import com.fanglin.information.dao.ActivityDao;
@@ -41,7 +41,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 	private DecorationActivityDao decorationActivityDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private ActivityDao activityDao;
@@ -70,9 +70,9 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 	@Transactional(rollbackFor=Exception.class)
 	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException {
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationActivityVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityVO.getOrderId());
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		

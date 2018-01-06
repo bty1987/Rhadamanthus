@@ -38,7 +38,7 @@ public interface ManifestService {
 	
 	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs,List<ManifestItemVO> manifestItemVOs, String uid,int company) throws FLException;
 	
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aoids, String userId,int company) throws FLException;
+	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aids, String userId,int company) throws FLException;
 	
 	public int addManifestForPS(List<ManifestItemPO> manifestItemPOs,String userId,int company) throws FLException;
 	

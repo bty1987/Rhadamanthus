@@ -1,0 +1,20 @@
+package com.fanglin.building.dao;
+
+import java.util.List;
+
+import com.fanglin.building.po.HouseSourcePO;
+import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
+
+public interface HouseSourceDao extends Dao<HouseSourcePO> {
+
+	public List<HouseSourcePO> pageHouseSource(Paging paging, List<Filter> filters);
+	
+	public HouseSourcePO queryHouseSourceForNo(String no);
+
+	public HouseSourcePO checkHouseSourceByHidAndType(Long hid, Short type);
+	
+	public int countHouseSource(Long hid, Short type);
+
+}

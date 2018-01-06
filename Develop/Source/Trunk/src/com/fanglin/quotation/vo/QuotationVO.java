@@ -70,6 +70,8 @@ public class QuotationVO implements Serializable {
 	
 	private Float undisPrice;
 	
+	private Float disPrice;
+	
 	private Float trafficRate;
 	
 	public QuotationVO() {
@@ -280,6 +282,14 @@ public class QuotationVO implements Serializable {
 
 	public void setUndisPrice(Float undisPrice) {
 		this.undisPrice = undisPrice;
+	}
+
+	public Float getDisPrice() {
+		return disPrice;
+	}
+
+	public void setDisPrice(Float disPrice) {
+		this.disPrice = disPrice;
 	}
 
 	public Float getTrafficRate() {

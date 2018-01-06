@@ -23,7 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
+
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -36,7 +37,7 @@ public class QuotationPO implements Serializable {
 
 	private long qid;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private String quotationName;
 	
@@ -49,6 +50,8 @@ public class QuotationPO implements Serializable {
 	private String content;
 
 	private float undisPrice;
+	
+	private float disPrice;
 	
 	private float discount;
 	
@@ -88,12 +91,12 @@ public class QuotationPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrder(){
-		return decorationOrder;
+	public DecorationPO getDecoration(){
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder){
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration){
+		this.decoration = decoration;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -222,7 +225,15 @@ public class QuotationPO implements Serializable {
 	public void setUndisPrice(float undisPrice) {
 		this.undisPrice = undisPrice;
 	}
-	
+	@Column(name = "disPrice")
+	public float getDisPrice() {
+		return disPrice;
+	}
+
+	public void setDisPrice(float disPrice) {
+		this.disPrice = disPrice;
+	}
+
 	@Column(name = "trafficRate")
 	public float getTrafficRate() {
 		return trafficRate;

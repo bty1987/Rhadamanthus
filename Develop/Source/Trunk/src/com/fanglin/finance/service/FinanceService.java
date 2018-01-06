@@ -12,8 +12,8 @@
 package com.fanglin.finance.service;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.po.AdvanceReceiptPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.MaterialReceiptPO;
@@ -21,10 +21,10 @@ import com.fanglin.personel.po.UserPO;
 
 public interface FinanceService {
 	
-	public int buildAdvanceFinance(DecorationOrderPO decorationOrderPO, AdvanceReceiptPO advanceReceiptPO,  UserPO poster) throws FLException;
+	public int buildAdvanceFinance(DecorationPO decorationPO, AdvanceReceiptPO advanceReceiptPO,  UserPO poster) throws FLException;
 	
-	public int buildDecorationFinance(DecorationOrderPO decorationOrderPO, DecorationReceiptPO decorationReceiptPO,  UserPO poster) throws FLException;
+	public int buildDecorationFinance(DecorationPO decorationPO, DecorationReceiptPO decorationReceiptPO,  UserPO poster) throws FLException;
 	
-	public int buildMaterialFinance(DecorationOrderPO decorationOrderPO, MaterialSubOrderPO materialSubOrderPO, MaterialReceiptPO materialReceiptPO,  UserPO poster) throws FLException;
+	public int buildMaterialFinance(DecorationPO decorationPO, MaterialPO materialPO, MaterialReceiptPO materialReceiptPO,  UserPO poster) throws FLException;
 	
 }

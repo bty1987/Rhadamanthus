@@ -1,5 +1,7 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,12 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.inventory.po.SalesItemPO;
-
-
-
-
-import static javax.persistence.GenerationType.IDENTITY;
+import com.fanglin.sales.po.SalesItemPO;
 
 @Entity
 @Table(name = "approvalsalesrefunditem", catalog = "approval")

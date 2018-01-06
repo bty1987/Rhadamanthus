@@ -11,7 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.material.po.MaterialSubOrderItemPO;
+import com.fanglin.material.po.MaterialItemPO;
 
 @Entity
 @Table(name = "approvalmaterialrefunditem", catalog = "approval")
@@ -25,7 +25,7 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	
 	private int amrId;
 	
-	private long msoId;
+	private long mid;
 	
 	private float num;
 	
@@ -33,7 +33,7 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	
 	private String packageName;
 	
-	private MaterialSubOrderItemPO materialSubOrderItem;
+	private MaterialItemPO materialItem;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -55,13 +55,13 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 		this.amrId = amrId;
 	}
 
-	@Column(name = "msoId")
-	public long getMsoId() {
-		return this.msoId;
+	@Column(name = "mid")
+	public long getMid() {
+		return mid;
 	}
 
-	public void setMsoId(long msoId) {
-		this.msoId = msoId;
+	public void setMid(long mid) {
+		this.mid = mid;
 	}
 
 	@Column(name = "num")
@@ -92,13 +92,13 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "msoiId", referencedColumnName="msoiId")
-	public MaterialSubOrderItemPO getMaterialSubOrderItem() {
-		return materialSubOrderItem;
+	@JoinColumn(name = "miid", referencedColumnName="miid")
+	public MaterialItemPO getMaterialItem() {
+		return materialItem;
 	}
 
-	public void setMaterialSubOrderItem(MaterialSubOrderItemPO materialSubOrderItem) {
-		this.materialSubOrderItem = materialSubOrderItem;
+	public void setMaterialItem(MaterialItemPO materialItem) {
+		this.materialItem = materialItem;
 	}
 	
 }

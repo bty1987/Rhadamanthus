@@ -35,7 +35,7 @@ public class CityAction extends BaseListAction {
 
 	private CityVO city;
 
-	private List<CityVO> cityList;
+	private List<CityVO> citys;  
 
 	private List<String> cityIds;
 	
@@ -52,7 +52,7 @@ public class CityAction extends BaseListAction {
 	@Action(value = "queryCity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCity(){
 		
-		cityList = cityService.queryCity();
+		citys = cityService.queryCity();
 		
 		return SUCCESS;
 	}
@@ -68,7 +68,7 @@ public class CityAction extends BaseListAction {
 	@Action(value = "queryCityByRegionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityByRegionId(){
 		
-		cityList = cityService.queryCityByRegionId(city);
+		citys = cityService.queryCityByRegionId(city);
 		
 		return SUCCESS;
 	}
@@ -76,7 +76,7 @@ public class CityAction extends BaseListAction {
 	@Action(value = "queryCityByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityByName(){
 		
-		cityList = cityService.queryCityByName(city);
+		citys = cityService.queryCityByName(city);
 		
 		return SUCCESS;
 	}
@@ -98,12 +98,12 @@ public class CityAction extends BaseListAction {
 		this.cityIds = cityIds;
 	}
 
-	public List<CityVO> getCityList(){
-		return cityList;
+	public List<CityVO> getCitys() {
+		return citys;
 	}
 
-	public void setCityList(List<CityVO> cityList){
-		this.cityList = cityList;
+	public void setCitys(List<CityVO> citys) {
+		this.citys = citys;
 	}
 
 	public List<String> getAutoFillList(){

@@ -21,8 +21,8 @@ import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -35,7 +35,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	private AcceptanceDao acceptanceDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -64,13 +64,13 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		
 		acceptanceVO.setOrderId(orderId);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		if(decorationOrderPO != null){
-			acceptanceVO.setCustomer(decorationOrderPO.getCustomerPO().getCustomerName());
-			acceptanceVO.setOrderAddr(decorationOrderPO.getVillagePO().getVillageName()+" "+decorationOrderPO.getHouseNumber());
-			acceptanceVO.setContractCode(decorationOrderPO.getContractCode());
-			acceptanceVO.setDesigner(decorationOrderPO.getDesignerPO().getCurrentName());
+		if(decorationPO != null){
+			acceptanceVO.setCustomer(decorationPO.getCustomer().getName());
+			acceptanceVO.setOrderAddr(decorationPO.getHouse().getVillage().getName()+" "+decorationPO.getHouse().getHouseNumber());
+			acceptanceVO.setContractCode(decorationPO.getContractCode());
+			acceptanceVO.setDesigner(decorationPO.getDesigner().getCurrentName());
 		}
 		
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
@@ -111,11 +111,11 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		
 		acceptanceDao.saveOrUpdate(acceptancePO);
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(acceptanceVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 		
-		if(decorationOrderPO != null){
-			decorationOrderPO.setProjectStatus("已完工");
-			decorationOrderDao.update(decorationOrderPO);
+		if(decorationPO != null){
+			decorationPO.setProjectStatus("已完工");
+			decorationDao.update(decorationPO);
 		}
 	}
 

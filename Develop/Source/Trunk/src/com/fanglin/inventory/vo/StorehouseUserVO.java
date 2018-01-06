@@ -1,6 +1,6 @@
 package com.fanglin.inventory.vo;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class StorehouseUserVO implements java.io.Serializable {
 
@@ -8,7 +8,7 @@ public class StorehouseUserVO implements java.io.Serializable {
 
 	private Long shuId;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
 	private StorehouseVO storehouse;
 	
@@ -16,7 +16,7 @@ public class StorehouseUserVO implements java.io.Serializable {
 		super();
 	}
 
-	public StorehouseUserVO(UserVO user, StorehouseVO storehouse) {
+	public StorehouseUserVO(UserBaseVO user, StorehouseVO storehouse) {
 		super();
 		this.user = user;
 		this.storehouse = storehouse;
@@ -30,11 +30,11 @@ public class StorehouseUserVO implements java.io.Serializable {
 		this.shuId = shuId;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 

@@ -24,8 +24,6 @@ public class UserWorkflowServiceImpl implements UserWorkflowService {
 	@Autowired
 	private UserWorkflowDao userWorkflowDao;
 
-	
-
 	@Override
 	public List<UserWorkflowVO> queryUserWorkflowByUid(UserWorkflowVO userWorkflowVO) {
 

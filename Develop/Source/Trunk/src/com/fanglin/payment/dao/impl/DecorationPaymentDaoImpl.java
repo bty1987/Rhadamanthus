@@ -44,13 +44,13 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByIds(List<Long> ids) {
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("autoId", ids)).list();
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("dpid", ids)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds) {
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("decorationOrderPO.orderId", orderIds)).list();
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("decoration.orderId", orderIds)).list();
 	}
 
 	@Override
@@ -88,18 +88,18 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId){
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).list();
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 
 	@Override
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType){
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, String[] paymentStatus, short oneType, short twoType){
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decorationOrderPO.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
 	@Override
@@ -138,27 +138,25 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){
 		
 		if(filters != null){
-			query.alias("decorationOrderPO", "order");
-			query.alias("order.customerPO", "customer");
-			query.alias("order.villagePO", "village");
-			query.alias("order.designerPO", "designer");
+			query.alias("decoration", "order");
+			query.alias("order.house", "house");
+			query.alias("house.village", "village");
+			query.alias("order.designer", "designer");
 			
 			for(Filter filter: filters){
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
 						query.add(query.getCriterion("order.orderId", filter.getData(), filter.getOp()));
 					}else if("designer".equals(filter.getField())){
-						query.add(query.getCriterion("designer.currentName", filter.getData(), filter.getOp()));
-					}else if("customerPhone".equals(filter.getField())){
-						query.add(query.getCriterion("customer.phone", filter.getData(), filter.getOp()));
+						query.add(query.getCriterion("designer.userId", filter.getData(), filter.getOp()));
 					}else if("village".equals(filter.getField())){
-						query.add(query.getCriterion("village.villageName", filter.getData(), filter.getOp()));
+						query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
 					}else if("houseNumber".equals(filter.getField())){
-						query.add(query.getCriterion("order.houseNumber", filter.getData(), filter.getOp()));
+						query.add(query.getCriterion("house.houseNumber", filter.getData(), filter.getOp()));
 					}else if("collectUser".equals(filter.getField())){
 						query.alias("decorationReceipt", "decorationReceipt");
-						query.alias("decorationReceipt.collectUserPO", "collectUser");
-						query.add(query.getCriterion("collectUser.currentName", filter.getData(), filter.getOp()));
+						query.alias("decorationReceipt.collecter", "collecter");
+						query.add(query.getCriterion("collecter.currentName", filter.getData(), filter.getOp()));
 					}else if("collectTime".equals(filter.getField())){
 						
 						query.alias("decorationReceipt", "decorationReceipt");

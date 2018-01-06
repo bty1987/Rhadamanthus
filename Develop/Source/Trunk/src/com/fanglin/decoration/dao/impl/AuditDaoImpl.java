@@ -30,11 +30,11 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 		
 		PagingQuery<AuditPO> query = pagingQuery(paging,AuditPO.class);
 		
-		query.add(query.getCriterion("decorationOrder.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);		
 		
-		return query.alias("decorationOrder","decorationOrder").add(Restrictions.not(Restrictions.in("decorationOrder.status", status))).list();
+		return query.alias("decoration","decoration").add(Restrictions.not(Restrictions.in("decoration.status", status))).list();
 	}
 	
 	@Override
@@ -49,30 +49,30 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				query.alias("decorationOrder","decorationOrder");
+				query.alias("decoration","decoration");
 				if(StringUtils.isNotEmpty(data)){				
 					if("orderId".equals(field)){
-						query.add(query.getCriterion("decorationOrder.orderId", data, op));
-					}else if("village".equals(field)){ 
-						query.alias("decorationOrder.villagePO","village");
-						query.add(query.getCriterion("village.villageName", data, op));		
-					}else if("designer".equals(field)){
-						query.alias("decorationOrder.designerPO", "designer");
-						query.add(query.getCriterion("designer.currentName", data, op));
-					}else if("salesman".equals(field)){
-						query.add(query.getCriterion("salesman.currentName", data, op));
+						query.add(query.getCriterion("decoration.orderId", data, op));
+					}else if("villageId".equals(field)){ 
+						query.alias("decoration.house.village","village");
+						query.add(query.getCriterion("village.no", data, op));		
+					}else if("designerId".equals(field)){
+						query.alias("decoration.designer", "designer");
+						query.add(query.getCriterion("designer.userId", data, op));
+					}else if("salesmanId".equals(field)){
+						query.add(query.getCriterion("salesman.userId", data, op));
 					}else if("supervisor".equals(field)){
-						query.alias("decorationOrder.supervisorPO", "supervisor");
-						query.add(query.getCriterion("supervisor.currentName", data, op));
+						query.alias("decoration.supervisorPO", "supervisor");
+						query.add(query.getCriterion("supervisor.userId", data, op));
 					}else if("orderType".equals(field)){
-						query.add(query.getCriterion("decorationOrder.type", Short.valueOf(data), op));
+						query.add(query.getCriterion("decoration.type", Short.valueOf(data), op));
 					}else if("salesmanType".equals(field)){
-						query.add(query.getCriterion("decorationOrder.salesmanType", data, op));
+						query.add(query.getCriterion("decoration.salesmanType", data, op));
 					}else if("auditer".equals(field)){
 						query.alias("auditer","auditer");
-						query.add(query.getCriterion("auditer.currentName", data, op));
+						query.add(query.getCriterion("auditer.userId", data, op));
 					}else if("designerDepartmentId".equals(field)){
-						query.alias("decorationOrder.designerPO", "designer");
+						query.alias("decoration.designerPO", "designer");
 						query.alias("designer.dept", "designerDept");
 						query.add(query.getCriterion("designerDept.deptId", data, op));
 					}else if("createTimeDateRange".equals(field)){
@@ -85,8 +85,8 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 						
-						query.add(query.getCriterion("decorationOrder.createTime", eTimestamp, "le"));
-						query.add(query.getCriterion("decorationOrder.createTime", sTimestamp, "ge"));
+						query.add(query.getCriterion("decoration.createTime", eTimestamp, "le"));
+						query.add(query.getCriterion("decoration.createTime", sTimestamp, "ge"));
 					}else if("signTimeDateRange".equals(field)){
 						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
@@ -97,10 +97,10 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 						
-						query.add(query.getCriterion("decorationOrder.contractTime", eTimestamp, "le"));
-						query.add(query.getCriterion("decorationOrder.contractTime", sTimestamp, "ge"));
+						query.add(query.getCriterion("decoration.contractTime", eTimestamp, "le"));
+						query.add(query.getCriterion("decoration.contractTime", sTimestamp, "ge"));
 					}else if("status".equals(field)){
-						query.add(query.getCriterion("decorationOrder.status", data, op));
+						query.add(query.getCriterion("decoration.status", data, op));
 					}else if("auditStatus".equals(field)){
 						if(data.equals("已审批")){
 							query.add(Restrictions.isNotNull("auditer"));

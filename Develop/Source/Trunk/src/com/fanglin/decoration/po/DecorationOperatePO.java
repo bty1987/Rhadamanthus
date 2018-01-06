@@ -47,7 +47,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	private long doId;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private UserPO sourcer;
 	
@@ -78,12 +78,12 @@ public class DecorationOperatePO implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "orderId", referencedColumnName="orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -22,19 +22,23 @@ public class CustomerPO implements Serializable{
 	
 	public static final String BALANCE_TYPE_PROJECT_STR = "工程预付款";
 	
-	private Integer id;
+	private long cid;
 	
-	private String customerId;
+	private String no;
 	
-	private String customerName;
+	private String name;
 	
-	private String customerNamePYAll;
+	private String pinyinAll;
 	
-	private String customerNamePYAB;
+	private String pinyinAB;
 	
 	private String gender;
 	
-	private String phone;
+	private String identity;
+	
+	private String officer;
+	
+	private String passport;
 	
 	private String qq;
 	
@@ -46,133 +50,143 @@ public class CustomerPO implements Serializable{
 	
 	private String relationshipType;
 	
-	private Integer approveStatus;
-	
-	public CustomerPO(){
+	public CustomerPO() {
 		super();
 	}
-	
-	public CustomerPO(Integer id){
-		this.id = id;
+
+	public CustomerPO(long cid) {
+		super();
+		this.cid = cid;
 	}
 
 	@Id
 	@GeneratedValue
-	@Column(name="id")
-	public Integer getId(){
-		return id;
+	@Column(name="cid")
+	public long getCid() {
+		return cid;
 	}
 
-	public void setId(Integer id){
-		this.id = id;
+	public void setCid(long cid) {
+		this.cid = cid;
 	}
 
-	@Column(name="customerId")
-	public String getCustomerId(){
-		return customerId;
+	@Column(name="no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setCustomerId(String customerId){
-		this.customerId = customerId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name="customerName")
-	public String getCustomerName(){
-		return customerName;
+	@Column(name="name")
+	public String getName() {
+		return name;
 	}
 
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name="customerNamePYAll")
-	public String getCustomerNamePYAll(){
-		return customerNamePYAll;
+	@Column(name="pinyinAll")
+	public String getPinyinAll() {
+		return pinyinAll;
 	}
 
-	public void setCustomerNamePYAll(String customerNamePYAll){
-		this.customerNamePYAll = customerNamePYAll;
+	public void setPinyinAll(String pinyinAll) {
+		this.pinyinAll = pinyinAll;
 	}
 
-	@Column(name="customerNamePYAB")
-	public String getCustomerNamePYAB(){
-		return customerNamePYAB;
+	@Column(name="pinyinAB")
+	public String getPinyinAB() {
+		return pinyinAB;
 	}
 
-	public void setCustomerNamePYAB(String customerNamePYAB){
-		this.customerNamePYAB = customerNamePYAB;
+	public void setPinyinAB(String pinyinAB) {
+		this.pinyinAB = pinyinAB;
 	}
 
 	@Column(name="gender")
-	public String getGender(){
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender){
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
-	@Column(name="phone")
-	public String getPhone(){
-		return phone;
+	@Column(name="identity")
+	public String getIdentity() {
+		return identity;
 	}
 
-	public void setPhone(String phone){
-		this.phone = phone;
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+
+	@Column(name="officer")
+	public String getOfficer() {
+		return officer;
+	}
+
+	public void setOfficer(String officer) {
+		this.officer = officer;
+	}
+
+	@Column(name="passport")
+	public String getPassport() {
+		return passport;
+	}
+
+	public void setPassport(String passport) {
+		this.passport = passport;
 	}
 
 	@Column(name="qq")
-	public String getQq(){
+	public String getQq() {
 		return qq;
 	}
 
-	public void setQq(String qq){
+	public void setQq(String qq) {
 		this.qq = qq;
 	}
 
 	@Column(name="wechat")
-	public String getWechat(){
+	public String getWechat() {
 		return wechat;
 	}
 
-	public void setWechat(String wechat){
+	public void setWechat(String wechat) {
 		this.wechat = wechat;
 	}
 
 	@Column(name="email")
-	public String getEmail(){
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email){
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	@Column(name="address")
-	public String getAddress(){
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address){
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
 	@Column(name="relationshipType")
-	public String getRelationshipType(){
+	public String getRelationshipType() {
 		return relationshipType;
 	}
 
-	public void setRelationshipType(String relationshipType){
+	public void setRelationshipType(String relationshipType) {
 		this.relationshipType = relationshipType;
 	}
-
-	@Column(name="approveStatus")
-	public Integer getApproveStatus(){
-		return approveStatus;
-	}
-
-	public void setApproveStatus(Integer approveStatus){
-		this.approveStatus = approveStatus;
-	}
 	
-}
+}	
+	
+	

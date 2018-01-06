@@ -34,7 +34,7 @@ public class CityProperAction extends BaseListAction {
 	@Autowired
 	private CityProperService cityProperService;
 	
-	private List<CityProperVO> cityProperList;
+	private List<CityProperVO> cityPropers;  
 	
 	private CityProperVO cityProper;
 	
@@ -51,7 +51,7 @@ public class CityProperAction extends BaseListAction {
 	@Action(value = "queryCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityProper(){
 		
-		cityProperList = cityProperService.queryCityProper();
+		cityPropers = cityProperService.queryCityProper();
 		
 		return SUCCESS;
 	}
@@ -67,7 +67,7 @@ public class CityProperAction extends BaseListAction {
 	@Action(value = "queryCityProperByCityId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityProperByCityId(){
 		
-		cityProperList = cityProperService.queryCityProperByCityId(cityProper);
+		cityPropers = cityProperService.queryCityProperByCityId(cityProper);
 		
 		return SUCCESS;
 	}
@@ -75,17 +75,17 @@ public class CityProperAction extends BaseListAction {
 	@Action(value = "queryCityProperByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCityProperByName(){
 		
-		cityProperList = cityProperService.queryCityProperByName(cityProper);
+		cityPropers = cityProperService.queryCityProperByName(cityProper);
 		
 		return SUCCESS;
 	}
 	
-	public List<CityProperVO> getCityProperList(){
-		return cityProperList;
+	public List<CityProperVO> getCityPropers() {
+		return cityPropers;
 	}
 
-	public void setCityProperList(List<CityProperVO> cityProperList){
-		this.cityProperList = cityProperList;
+	public void setCityPropers(List<CityProperVO> cityPropers) {
+		this.cityPropers = cityPropers;
 	}
 
 	public CityProperVO getCityProper(){

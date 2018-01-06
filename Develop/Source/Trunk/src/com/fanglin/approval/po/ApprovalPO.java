@@ -62,7 +62,7 @@ public class ApprovalPO implements java.io.Serializable {
 	// 审批时间
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
 
-	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,电话:%s,修改为客户名:%s,电话:%s";
+	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,修改为客户名:%s,新增电话:%s";
 
 	public static final String APPROVAL_CONTENTS_VILLAGE_STR = "订单号:%s,楼盘:%s,楼号:%s,修改为楼盘:%s,楼号:%s";
 

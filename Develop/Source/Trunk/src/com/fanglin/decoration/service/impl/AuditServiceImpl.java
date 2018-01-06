@@ -11,13 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.VillageVO;
+import com.fanglin.data.common.vo.DutyVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.dao.AuditDao;
 import com.fanglin.decoration.po.AuditPO;
 import com.fanglin.decoration.service.AuditService;
 import com.fanglin.decoration.vo.AuditVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -45,41 +46,35 @@ public class AuditServiceImpl implements AuditService{
 			
 			AuditVO auditVO = new AuditVO();
 			
-			BeanUtil.copyProperties(auditPO, auditVO, Arrays.asList("decorationOrder","auditer"));
+			BeanUtil.copyProperties(auditPO, auditVO, Arrays.asList("decoration","auditer"));
 			
-			auditVO.setDecorationOrder(new DecorationOrderVO());
+			auditVO.setDecoration(new DecorationVO());
 			
 			if(auditPO.getAuditer()!=null){
 				
-				auditVO.setAuditer(new UserVO());			
+				auditVO.setAuditer(new UserVO());
 				
 				BeanUtil.copyProperties(auditPO.getAuditer(), auditVO.getAuditer(),Arrays.asList("role","dept","duty"));
 				
 			}
 			
-			BeanUtil.copyProperties(auditPO.getDecorationOrder(), auditVO.getDecorationOrder(),
-					Arrays.asList("villagePO","customerPO","designerPO","versionPO"));
+			auditPO.getDecoration().ptvcascade(auditVO.getDecoration()); 
 			
-			auditVO.getDecorationOrder().setVersionId(auditPO.getDecorationOrder().getVersionPO().getVersionId());
+			auditVO.getDecoration().setVersion(new QuotationVersionVO());
+			auditVO.getDecoration().getVersion().setVersionId(auditPO.getDecoration().getVersion().getVersionId());			
+			auditVO.getDecoration().getVersion().setVersionName(auditPO.getDecoration().getVersion().getVersionName());
+
+
 			
-			auditVO.getDecorationOrder().setVersionName(auditPO.getDecorationOrder().getVersionPO().getVersionName());
+			UserPO designer = auditPO.getDecoration().getDesigner();
+			auditVO.getDecoration().getDesigner().setDuty(new DutyVO());
+			auditVO.getDecoration().getDesigner().setDept(new DepartmentVO());
+			auditVO.getDecoration().getDesigner().getDept().setFatherDept(new DepartmentVO());
 			
-			auditVO.getDecorationOrder().setVillage(new VillageVO());
-			
-			BeanUtil.copyProperties(auditPO.getDecorationOrder().getVillagePO(), auditVO.getDecorationOrder().getVillage(),
-					Arrays.asList("cityProper","buildingNameRule"));
-			
-			auditVO.getDecorationOrder().setCustomer(new CustomerVO());
-			
-			BeanUtil.copyProperties(auditPO.getDecorationOrder().getCustomerPO(), auditVO.getDecorationOrder().getCustomer());
-			
-			UserPO designer = auditPO.getDecorationOrder().getDesignerPO();
-			auditVO.getDecorationOrder().setDesigner(designer.getCurrentName());
-			auditVO.setDesignerId(designer.getUid());
-			auditVO.getDecorationOrder().setDesignerId(designer.getUserId());
-			auditVO.getDecorationOrder().setDesignerPhone(designer.getPhone());
-			auditVO.getDecorationOrder().setDesignDepartment(designer.getDept().getDeptName());
-			auditVO.setDeptId(designer.getDept().getDeptId());
+			BeanUtil.copyPropertie(designer, auditVO.getDecoration().getDesigner(), Arrays.asList("duty","dept"));
+			BeanUtil.copyPropertie(designer.getDuty(), auditVO.getDecoration().getDesigner().getDuty(), Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(designer.getDept(), auditVO.getDecoration().getDesigner().getDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(designer.getDept().getFatherDept(), auditVO.getDecoration().getDesigner().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));		
 			
 			AuditVOs.add(auditVO);
 		}
@@ -96,11 +91,11 @@ public class AuditServiceImpl implements AuditService{
 		AuditPO auditPO = auditDao.get(auditVO.getAid());
 		
 		if(auditPO == null){
-			throw new FLException(140044 , "审批记录不存在");	
+			throw new FLException(140044 , "审批记录不存在");
 		}
 		
 		if(auditPO.getAuditer()!=null){
-			throw new FLException(140048, "审核人已存在");			
+			throw new FLException(140048, "审核人已存在");
 		}
 		
 		auditPO.setAuditer(userDao.queryUserByUserId(UserId));

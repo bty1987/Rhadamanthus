@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class PurchaseVO implements Serializable{
 
@@ -15,7 +15,7 @@ public class PurchaseVO implements Serializable{
 	
 	private String no;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
 	private Timestamp createTime;
 	
@@ -29,13 +29,12 @@ public class PurchaseVO implements Serializable{
 	
 	private String comment;
 	
-	private Integer company;
 	
 	public PurchaseVO() {
 		super();
 	}
 	
-	public PurchaseVO(UserVO user) {
+	public PurchaseVO(UserBaseVO user) {
 		super();
 		this.user = user;
 	}
@@ -56,11 +55,11 @@ public class PurchaseVO implements Serializable{
 		this.no = no;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
 
@@ -113,14 +112,6 @@ public class PurchaseVO implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
 	}
 	
 }

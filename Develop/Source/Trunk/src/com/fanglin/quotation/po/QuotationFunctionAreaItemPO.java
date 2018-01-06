@@ -42,6 +42,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private String formula;
 	
+	private float initNum;
+	
 	private float num;
 	
 	private short type;
@@ -118,6 +120,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	public void setFormula(String formula) {
 		this.formula = formula;
+	}
+
+	public float getInitNum() {
+		return initNum;
+	}
+
+	public void setInitNum(float initNum) {
+		this.initNum = initNum;
 	}
 
 	public float getNum(){

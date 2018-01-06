@@ -45,14 +45,15 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Autowired
     private UserDao userDao;
-
+    
     @Override
     public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication){
 
-        List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
         List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
         
-        for(NoticePO noticePO: noticePOs){
+        List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
+        
+		for(NoticePO noticePO: noticePOs){
             noticeVOs.add(convertBean(noticePO));
         }
         

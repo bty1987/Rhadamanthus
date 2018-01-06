@@ -55,6 +55,14 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pagePurchaseObDelivery", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pagePurchaseObDelivery() throws FLException{
+		
+		purchaseService.pagePurchaseObDelivery(getPaging(), getFilters(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryPurchaseItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPurchaseItemBySiids(){
 		

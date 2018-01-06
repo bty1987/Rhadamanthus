@@ -39,7 +39,7 @@ public class RoleAction extends BaseListAction {
 
 	private List<String> roleIds;
 
-	private List<RoleVO> roleList;
+	private List<RoleVO> roles;  
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageRole(){
@@ -52,7 +52,7 @@ public class RoleAction extends BaseListAction {
 	@Action(value = "queryRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRole(){
 		
-		roleList = roleService.queryRole();
+		roles = roleService.queryRole();
 		
 		return SUCCESS;
 	}
@@ -81,12 +81,12 @@ public class RoleAction extends BaseListAction {
 		this.role = role;
 	}
 
-	public List<RoleVO> getRoleList(){
-		return roleList;
+	public List<RoleVO> getRoles() {
+		return roles;
 	}
 
-	public void setRoleList(List<RoleVO> roleList){
-		this.roleList = roleList;
+	public void setRoles(List<RoleVO> roles) {
+		this.roles = roles;
 	}
 
 	public List<String> getRoleIds(){

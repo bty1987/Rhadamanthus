@@ -8,19 +8,13 @@ public class VillageVO implements Serializable {
 
 	private static final long serialVersionUID = 6573242903839888845L;
 	
-	private int vId;
+	private Long vid;
 
-	private String villageId;
+	private String no;
 
-	private String villageName;
-
-	private String villagePinYinAB;
-
-	private String villagePinYinAll;
+	private String name;
 
 	private CityProperVO cityProper;
-
-	private BuildingNameRuleVO buildingNameRule;
 
 	private String developer;
 
@@ -28,135 +22,101 @@ public class VillageVO implements Serializable {
 
 	private String deliveryTime;
 
-	private String villageContent;
+	private String content;
 	
 	private Double x;
 	
 	private Double y;
 	
-	private Integer count;
-	
 	private Short status;
-
+	
 	public VillageVO() {
 		super();
 	}
 
-	public VillageVO(String villageId) {
+	public VillageVO(CityProperVO cityProper) {
 		super();
-		this.villageId = villageId;
-	}
-
-	public int getvId() {
-		return vId;
-	}
-
-	public void setvId(int vId) {
-		this.vId = vId;
-	}
-
-	public String getVillageId(){
-		return villageId;
-	}
-
-	public String getVillageName(){
-		return villageName;
-	}
-
-	public void setVillageName(String villageName){
-		this.villageName = villageName;
-	}
-
-	public String getVillagePinYinAB(){
-		return villagePinYinAB;
-	}
-
-	public void setVillagePinYinAB(String villagePinYinAB){
-		this.villagePinYinAB = villagePinYinAB;
-	}
-
-	public String getVillagePinYinAll(){
-		return villagePinYinAll;
-	}
-
-	public void setVillagePinYinAll(String villagePinYinAll){
-		this.villagePinYinAll = villagePinYinAll;
-	}
-
-	public CityProperVO getCityProper(){
-		return cityProper;
-	}
-
-	public void setCityProper(CityProperVO cityProper){
 		this.cityProper = cityProper;
 	}
 
-	public BuildingNameRuleVO getBuildingNameRule(){
-		return buildingNameRule;
+	public Long getVid() {
+		return vid;
 	}
 
-	public void setBuildingNameRule(BuildingNameRuleVO buildingNameRule){
-		this.buildingNameRule = buildingNameRule;
+	public void setVid(Long vid) {
+		this.vid = vid;
 	}
 
-	public String getDeveloper(){
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public CityProperVO getCityProper() {
+		return cityProper;
+	}
+
+	public void setCityProper(CityProperVO cityProper) {
+		this.cityProper = cityProper;
+	}
+
+	public String getDeveloper() {
 		return developer;
 	}
 
-	public void setDeveloper(String developer){
+	public void setDeveloper(String developer) {
 		this.developer = developer;
 	}
 
-	public String getSalesPhone(){
+	public String getSalesPhone() {
 		return salesPhone;
 	}
 
-	public void setSalesPhone(String salesPhone){
+	public void setSalesPhone(String salesPhone) {
 		this.salesPhone = salesPhone;
 	}
 
-	public String getDeliveryTime(){
+	public String getDeliveryTime() {
 		return deliveryTime;
 	}
 
-	public void setDeliveryTime(String deliveryTime){
+	public void setDeliveryTime(String deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 
-	public String getVillageContent(){
-		return villageContent;
+	public String getContent() {
+		return content;
 	}
 
-	public void setVillageContent(String villageContent){
-		this.villageContent = villageContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public void setVillageId(String villageId){
-		this.villageId = villageId;
-	}
-
-	public Double getX(){
+	public Double getX() {
 		return x;
 	}
 
-	public void setX(Double x){
+	public void setX(Double x) {
 		this.x = x;
 	}
 
-	public Double getY(){
+	public Double getY() {
 		return y;
 	}
 
-	public void setY(Double y){
+	public void setY(Double y) {
 		this.y = y;
-	}
-
-	public Integer getCount(){
-		return count;
-	}
-
-	public void setCount(Integer count){
-		this.count = count;
 	}
 
 	public Short getStatus() {
@@ -167,4 +127,5 @@ public class VillageVO implements Serializable {
 		this.status = status;
 	}
 
+	
 }

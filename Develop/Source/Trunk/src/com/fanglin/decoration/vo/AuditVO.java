@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class AuditVO implements Serializable{
@@ -14,7 +14,7 @@ public class AuditVO implements Serializable{
 	
 	private Long aid;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private UserVO auditer;
 	
@@ -36,12 +36,12 @@ public class AuditVO implements Serializable{
 		this.aid = aid;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 	
 	public UserVO getAuditer() {
@@ -98,9 +98,9 @@ public class AuditVO implements Serializable{
 		this.designerId = designerId;
 	}
 
-	public AuditVO(DecorationOrderVO decorationOrder, UserVO auditer) {
+	public AuditVO(DecorationVO decoration, UserVO auditer) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.auditer = auditer;
 	}
 }

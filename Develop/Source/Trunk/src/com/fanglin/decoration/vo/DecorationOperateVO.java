@@ -10,7 +10,7 @@ public class DecorationOperateVO implements java.io.Serializable {
 	
 	private Long doId;
 	
-	private DecorationOrderVO decorationOrder;
+	private DecorationVO decoration;
 	
 	private UserVO targer;
 	
@@ -36,12 +36,12 @@ public class DecorationOperateVO implements java.io.Serializable {
 		this.doId = doId;
 	}
 
-	public DecorationOrderVO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderVO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public UserVO getSourcer() {

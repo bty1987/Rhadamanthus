@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
@@ -34,7 +34,7 @@ public class ExtensionServiceImpl implements ExtensionService{
 	private ExtensionItemDao extensionItemDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 
 	@Override
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters,ExtensionVO extensionVO) {
@@ -42,12 +42,7 @@ public class ExtensionServiceImpl implements ExtensionService{
 		filters.add(new Filter(ExtensionPO.COLUMN_ORDERID_STR, extensionVO.getOrderId(), "eq"));
 		
 		List<ExtensionPO> extensionPOs = extensionDao.pageExtensionByOrderId(paging,filters);
-		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
-		for(ExtensionPO extensionPO: extensionPOs){
-			ExtensionVO _extensionVO = new ExtensionVO();
-			BeanUtil.copyProperties(extensionPO, _extensionVO);
-			extensionVOs.add(_extensionVO);
-		}
+		List<ExtensionVO> extensionVOs = handleExtension(extensionPOs);
 		paging.setData(extensionVOs);
 	}
 	
@@ -59,13 +54,7 @@ public class ExtensionServiceImpl implements ExtensionService{
 		}else{
 			extensionPOs	 = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
 		}
-		
-		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
-		for(ExtensionPO extensionPO: extensionPOs){
-			ExtensionVO _extensionVO = new ExtensionVO();
-			BeanUtil.copyProperties(extensionPO, _extensionVO);
-			extensionVOs.add(_extensionVO);
-		}
+		List<ExtensionVO> extensionVOs = handleExtension(extensionPOs);
 		return extensionVOs;
 	}
 	
@@ -128,15 +117,23 @@ public class ExtensionServiceImpl implements ExtensionService{
 		}
 		extensionDao.delete(extensionPO);
 	}
-
+	private List<ExtensionVO> handleExtension(List<ExtensionPO> extensionPOs){
+		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
+		for(ExtensionPO extensionPO: extensionPOs){
+			ExtensionVO _extensionVO = new ExtensionVO();
+			BeanUtil.copyProperties(extensionPO, _extensionVO);
+			extensionVOs.add(_extensionVO);
+		}
+		return extensionVOs;
+	}
 	
 	private void checkExtensionItemForStatusByOrderId(String orderId)throws FLException{
 		
-		DecorationOrderPO	decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO	decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_SIGNED_STR,DecorationOrderPO.STATUS_RESIGNED_STR,DecorationOrderPO.STATUS_WASTE_STR,DecorationOrderPO.STATUS_COMPLETED_STR,DecorationOrderPO.STATUS_TERMINATION_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR,DecorationPO.STATUS_RESIGNED_STR,DecorationPO.STATUS_WASTE_STR,DecorationPO.STATUS_COMPLETED_STR,DecorationPO.STATUS_TERMINATION_STR});
 		
-		if(status.contains(decorationOrderPO.getStatus())){
+		if(status.contains(decorationPO.getStatus())){
 			throw new FLException(140049, "装修单状态,不可操作");
 		}
 	}

@@ -24,9 +24,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.CustomerDao;
 import com.fanglin.data.common.vo.CustomerVO;
 import com.fanglin.data.po.CustomerPO;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -61,14 +61,14 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	private UserDao userDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Override
 	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company) {
 		
 		List<Float> advances = new ArrayList<Float>();
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCustomerId(),company);
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCid(),company);
 		
 		if(advancePaymentPO != null){
 			advances.add(advancePaymentPO.getBalance());
@@ -83,16 +83,16 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	}
 
 	@Override
-	public List<Float> queryAdvancePaymentByOrderId(DecorationOrderVO decorationOrderVO) throws FLException {
+	public List<Float> queryAdvancePaymentByOrderId(DecorationVO decorationVO) throws FLException {
 		
 		List<Float> advances = new ArrayList<Float>();	
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(decorationOrderVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationOrderPO.getCustomerPO().getCustomerId(),decorationOrderPO.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decorationPO.getCustomer().getCid(),decorationPO.getCompany());
 		
 		if(advancePaymentPO != null){
 			advances.add(advancePaymentPO.getBalance());
@@ -113,13 +113,13 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		float recharge = 0;
 		List<String> plusStatus = Arrays.asList(new String[]{PaymentPO.PAYMENT_TYPE_COLLECTION_STR, PaymentPO.PAYMENT_TYPE_REFUND_STR, PaymentPO.PAYMENT_TYPE_CONVERT_STR});
 		
-		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getId());
+		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getCid());
 		
 		if(customerPO == null){
 			throw new FLException(230001, "客户信息不存在");
 		}
 		
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCustomerId(),company);
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),company);
 		
 		if(advancePaymentPO == null){
 			
@@ -157,13 +157,13 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		
 		advanceReceiptPO.setCash(paymentVO.getCash());
-		advanceReceiptPO.setDes(paymentVO.getDes());
+		advanceReceiptPO.setComment(paymentVO.getComment());
 		advanceReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		advanceReceiptPO.setStatus((short) AdvanceReceiptPO.STATUS_INIT_INT);
 		UserPO userPO = userDao.queryUserByUserId(paymentVO.getCollectUser().getUserId());
-		advanceReceiptPO.setCollectUser(userPO);
-		advanceReceiptPO.setCollectUserName(userPO.getUserName());
-		advanceReceiptPO.setConfirmUserName("");
+		advanceReceiptPO.setCollecter(userPO);
+		advanceReceiptPO.setCollecterName(userPO.getUserName());
+		advanceReceiptPO.setConfirmerName("");
 		
 		advanceReceiptDao.save(advanceReceiptPO);
 		
@@ -176,7 +176,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 		paymentDao.save(paymentPO);
 		
-		paymentVO.setPaymentId(paymentPO.getPaymentId());
+		paymentVO.setPid(paymentPO.getPid());
 		
 		return 0;
 	}

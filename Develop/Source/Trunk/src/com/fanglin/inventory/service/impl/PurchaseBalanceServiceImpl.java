@@ -21,7 +21,7 @@ import com.fanglin.inventory.service.PurchaseBalanceService;
 import com.fanglin.inventory.vo.PurchaseBalanceVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -48,7 +48,7 @@ public class PurchaseBalanceServiceImpl implements PurchaseBalanceService {
 		
 		for (PurchaseBalancePO purchaseBalancePO : purchaseBalancePOs) {
 			
-			purchaseBalanceVO = new PurchaseBalanceVO(new UserVO());
+			purchaseBalanceVO = new PurchaseBalanceVO(new UserBaseVO());
 			
 			BeanUtil.copyProperties(purchaseBalancePO, purchaseBalanceVO, Arrays.asList("creater"));
 			

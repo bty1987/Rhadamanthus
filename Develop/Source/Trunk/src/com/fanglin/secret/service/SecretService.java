@@ -13,12 +13,12 @@ package com.fanglin.secret.service;
 
 import java.util.List;
 
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 public interface SecretService {
 	
-	public String CVLIBHQMVWFSPQWU(String VZYKHFFK);
+	public List<String> CVLIBHQMVWFSPQWU(String VZYKHFFK);
 	
-	public List<DecorationOrderVO> KGZPHFBAOKWVMWGW(String FAKKGDAZ);
+	public List<DecorationVO> KGZPHFBAOKWVMWGW(String FAKKGDAZ);
 
 }

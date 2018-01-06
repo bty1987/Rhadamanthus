@@ -24,7 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.DrawLineGroupPO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -35,7 +35,7 @@ public class DrawLinePO implements Serializable {
 
 	private long dlId;
 	
-	private DecorationOrderPO decorationOrderPO;
+	private DecorationPO decoration;
 
 	private Timestamp  applayTime;
 	
@@ -49,15 +49,13 @@ public class DrawLinePO implements Serializable {
 	
 	private Integer applayCount;
 	
-	private UserPO applayUserPO;
+	private UserPO applayUser;
 	
-	private DrawLineGroupPO drawLineGroupPO;
+	private DrawLineGroupPO drawLineGroup;
 	
-	private String 	drawLineGroup;
+	private String drawLineGroupName;
 	
-	private UserPO 	drawLineUserPO;
-	
-	
+	private UserPO drawLineUser;
 	
 	@Id
 	@GeneratedValue
@@ -72,24 +70,25 @@ public class DrawLinePO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrderPO(){
-		return decorationOrderPO;
+	public DecorationPO getDecoration(){
+		return decoration;
 	}
 
-	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO){
-		this.decorationOrderPO = decorationOrderPO;
+	public void setDecoration(DecorationPO decoration){
+		this.decoration = decoration;
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "applayUserId", referencedColumnName = "userId")
-	public UserPO getApplayUserPO(){
-		return applayUserPO;
+	public UserPO getApplayUser(){
+		return applayUser;
 	}
 
-	public void setApplayUserPO(UserPO applayUserPO){
-		this.applayUserPO = applayUserPO;
+	public void setApplayUser(UserPO applayUser){
+		this.applayUser = applayUser;
 	}
 
+	@Column(name = "applayTime")
 	public Timestamp getApplayTime(){
 		return applayTime;
 	}
@@ -98,6 +97,7 @@ public class DrawLinePO implements Serializable {
 		this.applayTime = applayTime;
 	}
 
+	@Column(name = "applayDes")
 	public String getApplayDes(){
 		return applayDes;
 	}
@@ -106,6 +106,7 @@ public class DrawLinePO implements Serializable {
 		this.applayDes = applayDes;
 	}
 
+	@Column(name = "actualStartTime")
 	public Timestamp getActualStartTime(){
 		return actualStartTime;
 	}
@@ -114,6 +115,7 @@ public class DrawLinePO implements Serializable {
 		this.actualStartTime = actualStartTime;
 	}
 
+	@Column(name = "actualEndTime")
 	public Timestamp getActualEndTime(){
 		return actualEndTime;
 	}
@@ -122,6 +124,7 @@ public class DrawLinePO implements Serializable {
 		this.actualEndTime = actualEndTime;
 	}
 
+	@Column(name = "status")
 	public String getStatus(){
 		return status;
 	}
@@ -130,6 +133,7 @@ public class DrawLinePO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "applayCount")
 	public Integer getApplayCount(){
 		return applayCount;
 	}
@@ -140,30 +144,31 @@ public class DrawLinePO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true,name = "dgid", referencedColumnName = "gid")
-	public DrawLineGroupPO getDrawLineGroupPO() {
-		return drawLineGroupPO;
-	}
-
-	public void setDrawLineGroupPO(DrawLineGroupPO drawLineGroupPO) {
-		this.drawLineGroupPO = drawLineGroupPO;
-	}
-
-	public String getDrawLineGroup() {
+	public DrawLineGroupPO getDrawLineGroup() {
 		return drawLineGroup;
 	}
 
-	public void setDrawLineGroup(String drawLineGroup) {
+	public void setDrawLineGroup(DrawLineGroupPO drawLineGroup) {
 		this.drawLineGroup = drawLineGroup;
 	}
 
-	public void setDrawLineUserPO(UserPO drawLineUserPO){
-		this.drawLineUserPO = drawLineUserPO;
+	@Column(name = "drawLineGroup")
+	public String getDrawLineGroupName() {
+		return drawLineGroupName;
 	}
-	
+
+	public void setDrawLineGroupName(String drawLineGroupName) {
+		this.drawLineGroupName = drawLineGroupName;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "drawLineUserId", referencedColumnName = "userId")
-	public UserPO getDrawLineUserPO(){
-		return drawLineUserPO;
+	public UserPO getDrawLineUser(){
+		return drawLineUser;
+	}
+	
+	public void setDrawLineUser(UserPO drawLineUser){
+		this.drawLineUser = drawLineUser;
 	}
 
 }

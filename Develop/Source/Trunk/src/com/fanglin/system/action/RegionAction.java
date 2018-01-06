@@ -35,7 +35,7 @@ public class RegionAction extends BaseListAction {
 
 	private RegionVO region;
 
-	private List<RegionVO> regionList;
+	private List<RegionVO> regions; 
 
 	private List<String> regionIds;
 	
@@ -50,7 +50,7 @@ public class RegionAction extends BaseListAction {
 	@Action(value = "queryRegion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRegion(){
 		
-		regionList = regionService.queryRegion();
+		regions = regionService.queryRegion();
 		
 		return SUCCESS;
 	}
@@ -66,7 +66,7 @@ public class RegionAction extends BaseListAction {
 	@Action(value = "queryRegionByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageRegionByName(){
 		
-		regionList = regionService.queryRegionByName(region);
+		regions = regionService.queryRegionByName(region);
 		
 		return SUCCESS;
 	}
@@ -88,12 +88,13 @@ public class RegionAction extends BaseListAction {
 		this.regionIds = regionIds;
 	}
 
-	public List<RegionVO> getRegionList(){
-		return regionList;
+	public List<RegionVO> getRegions() {
+		return regions;
 	}
 
-	public void setRegionList(List<RegionVO> regionList){
-		this.regionList = regionList;
+	public void setRegions(List<RegionVO> regions) {
+		this.regions = regions;
 	}
+
 
 }

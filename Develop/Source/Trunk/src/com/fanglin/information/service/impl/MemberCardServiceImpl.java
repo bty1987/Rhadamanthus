@@ -18,7 +18,7 @@ import com.fanglin.information.po.MemberDetailPO;
 import com.fanglin.information.service.MemberCardService;
 import com.fanglin.information.vo.MemberCardVO;
 import com.fanglin.information.vo.MemberDetailVO;
-import com.fanglin.material.po.MaterialSubOrderPO;
+import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -176,9 +176,9 @@ public class MemberCardServiceImpl  implements MemberCardService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int IncreaseMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
+	public int IncreaseMemberCardIntegraldivider(MaterialPO materialPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
 		
-		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialSubOrderPO.getOrderId());
+		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialPO.getOrderId());
 		
 		if(memberCard != null){
 			//integraldivider  积分比例       integralmultiple  积分倍数
@@ -209,9 +209,9 @@ public class MemberCardServiceImpl  implements MemberCardService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int MinusMemberCardIntegraldivider(MaterialSubOrderPO materialSubOrderPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
+	public int MinusMemberCardIntegraldivider(MaterialPO materialPO,MaterialPaymentPO materialPaymentPO,UserPO userPO) throws FLException {
 		
-		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialSubOrderPO.getOrderId());
+		MemberCardPO memberCard = memberCardDao.queryMemberCardByOrderId(materialPO.getOrderId());
 		float refundMoney = materialPaymentPO.getReferMoney();
 		float refundIntegral = 0f;
 		if(memberCard != null){

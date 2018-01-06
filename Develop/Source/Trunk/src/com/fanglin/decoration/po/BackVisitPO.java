@@ -28,13 +28,13 @@ public class BackVisitPO implements Serializable {
 
 	private static final long serialVersionUID = 1000000000011112L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	private long bvId;
 
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 
 	private UserPO sender;
 	
@@ -56,12 +56,12 @@ public class BackVisitPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrder(){
-		return decorationOrder;
+	public DecorationPO getDecoration(){
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

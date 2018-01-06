@@ -6,19 +6,19 @@ public class CustomerVO implements Serializable {
 
 	private static final long serialVersionUID = -7469004001329405496L;
 
-	private Integer id;
+	private Long cid;
 	
-	private String customerId;
+	private String no;
 	
-	private String customerName;
-	
-	private String customerNamePYAll;
-	
-	private String customerNamePYAB;
+	private String name;
 	
 	private String gender;
 	
-	private String phone;
+	private String identity;
+	
+	private String officer;
+	
+	private String passport;
 	
 	private String qq;
 	
@@ -38,158 +38,158 @@ public class CustomerVO implements Serializable {
 	
 	private Float projectBalance;
 	
-	private Integer approveStatus;
+	private String phone;
 
-	public CustomerVO(){
+	public CustomerVO() {
 		super();
 	}
 
-	public CustomerVO(Integer id){
+	public CustomerVO(Long cid) {
 		super();
-		setId(id);
+		this.cid = cid;
 	}
 
-	public Integer getId(){
-		return id;
+	public Long getCid() {
+		return cid;
 	}
 
-	public void setId(Integer id){
-		this.id = id;
+	public void setCid(Long cid) {
+		this.cid = cid;
 	}
 
-	public String getCustomerId(){
-		return customerId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setCustomerId(String customerId){
-		this.customerId = customerId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getCustomerName(){
-		return customerName;
+	public String getName() {
+		return name;
 	}
 
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getCustomerNamePYAll(){
-		return customerNamePYAll;
-	}
-
-	public void setCustomerNamePYAll(String customerNamePYAll){
-		this.customerNamePYAll = customerNamePYAll;
-	}
-
-	public String getCustomerNamePYAB(){
-		return customerNamePYAB;
-	}
-
-	public void setCustomerNamePYAB(String customerNamePYAB){
-		this.customerNamePYAB = customerNamePYAB;
-	}
-
-	public String getGender(){
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender){
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
-	public String getPhone(){
-		return phone;
+	public String getIdentity() {
+		return identity;
 	}
 
-	public void setPhone(String phone){
-		this.phone = phone;
+	public void setIdentity(String identity) {
+		this.identity = identity;
 	}
 
-	public String getQq(){
+	public String getOfficer() {
+		return officer;
+	}
+
+	public void setOfficer(String officer) {
+		this.officer = officer;
+	}
+
+	public String getPassport() {
+		return passport;
+	}
+
+	public void setPassport(String passport) {
+		this.passport = passport;
+	}
+
+	public String getQq() {
 		return qq;
 	}
 
-	public void setQq(String qq){
+	public void setQq(String qq) {
 		this.qq = qq;
 	}
 
-	public String getWechat(){
+	public String getWechat() {
 		return wechat;
 	}
 
-	public void setWechat(String wechat){
+	public void setWechat(String wechat) {
 		this.wechat = wechat;
 	}
 
-	public String getEmail(){
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email){
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getAddress(){
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address){
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public String getRelationshipType(){
+	public String getRelationshipType() {
 		return relationshipType;
 	}
 
-	public void setRelationshipType(String relationshipType){
+	public void setRelationshipType(String relationshipType) {
 		this.relationshipType = relationshipType;
 	}
 
+	public Float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Float balance) {
+		this.balance = balance;
+	}
+
+	public Float getMaterialBalance() {
+		return materialBalance;
+	}
+
+	public void setMaterialBalance(Float materialBalance) {
+		this.materialBalance = materialBalance;
+	}
+
+	public Float getZhenglinBalance() {
+		return zhenglinBalance;
+	}
+
+	public void setZhenglinBalance(Float zhenglinBalance) {
+		this.zhenglinBalance = zhenglinBalance;
+	}
+
+	public Float getProjectBalance() {
+		return projectBalance;
+	}
+
+	public void setProjectBalance(Float projectBalance) {
+		this.projectBalance = projectBalance;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
 	public void setConfidentialInfo(){
 		this.email = "-";
 		this.qq = "-";
 		this.phone = "-";
 		this.wechat = "-";
 	}
-
-	public Float getBalance(){
-		return balance;
-	}
-
-	public void setBalance(Float balance){
-		this.balance = balance;
-	}
 	
-	public Float getMaterialBalance(){
-		return materialBalance;
-	}
-
-	public void setMaterialBalance(Float materialBalance){
-		this.materialBalance = materialBalance;
-	}
-
-	public Float getZhenglinBalance(){
-		return zhenglinBalance;
-	}
-
-	public void setZhenglinBalance(Float zhenglinBalance){
-		this.zhenglinBalance = zhenglinBalance;
-	}
-
-	public Float getProjectBalance(){
-		return projectBalance;
-	}
-
-	public void setProjectBalance(Float projectBalance){
-		this.projectBalance = projectBalance;
-	}
-
-	public Integer getApproveStatus(){
-		return approveStatus;
-	}
-
-	public void setApproveStatus(Integer approveStatus){
-		this.approveStatus = approveStatus;
-	}
-
 }

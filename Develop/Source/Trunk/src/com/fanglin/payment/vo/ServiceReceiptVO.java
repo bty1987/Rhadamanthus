@@ -2,22 +2,20 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import org.apache.struts2.json.annotations.JSON;
-import com.fanglin.personel.vo.UserVO;
+
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ServiceReceiptVO  implements Serializable{
 
 	private static final long serialVersionUID = 1851130876530178256L;
 
-	private Long srId;        			//收据ID
+	private Long srId;        			
 	
-	private UserVO collecter;
+	private UserBaseVO collecter;
 	
-	private String collecterName;
-	
-	private UserVO confirmer;
-	
-	private String confirmerName;
+	private UserBaseVO confirmer;
 	
 	private Timestamp collectTime;
 	
@@ -25,44 +23,38 @@ public class ServiceReceiptVO  implements Serializable{
 	
 	private Float realMoney;
 	
-	private Float cash;                //现金
+	private Float cash;                
 	
-	private String cashInfo;           //现金信息
+	private String cashInfo;           
 	
-	private Float bank;                //刷卡
+	private Float bank;                
 	
-	private String bankInfo;           //刷卡信息;
+	private String bankInfo;           
 	
-	private Float checkv;              //转账
+	private Float checkv;              
 	
-	private String checkvBank;         //转账银行
+	private String checkvBank;         
 	
-	private Float installment;         //分期
+	private Float installment;        
 	
-	private String installBank;        //分期银行
+	private String installBank;       
 	
-	private Float accounts;            //对公
+	private Float accounts;            
 	
-	private String accountsBank;       //对公银行
+	private String accountsBank;       
 	
-	private String des;                //说明
-	
-	private ServiceReceiptVO serviceReceipt;  //收据ID
-	
-	private String collecterId;
-	
-	private String confirmerId;
+	private String comment;               
 	
 	public ServiceReceiptVO() {
 		super();
 	}
 	
-	public ServiceReceiptVO(UserVO collecter) {
+	public ServiceReceiptVO(UserBaseVO collecter) {
 		super();
 		this.collecter = collecter;
 	}
 
-	public ServiceReceiptVO(UserVO collecter,UserVO confirmer) {
+	public ServiceReceiptVO(UserBaseVO collecter,UserBaseVO confirmer) {
 		super();
 		this.collecter = collecter;
 		this.confirmer = confirmer;
@@ -76,35 +68,19 @@ public class ServiceReceiptVO  implements Serializable{
 		this.srId = srId;
 	}
 	
-	public UserVO getCollecter() {
+	public UserBaseVO getCollecter() {
 		return collecter;
 	}
 
-	public void setCollecter(UserVO collecter) {
+	public void setCollecter(UserBaseVO collecter) {
 		this.collecter = collecter;
 	}
-	
-	public String getCollecterName() {
-		return collecterName;
-	}
 
-	public void setCollecterName(String collecterName) {
-		this.collecterName = collecterName;
-	}
-
-	public String getConfirmerName() {
-		return confirmerName;
-	}
-
-	public void setConfirmerName(String confirmerName) {
-		this.confirmerName = confirmerName;
-	}
-
-	public UserVO getConfirmer() {
+	public UserBaseVO getConfirmer() {
 		return confirmer;
 	}
 
-	public void setConfirmer(UserVO confirmer) {
+	public void setConfirmer(UserBaseVO confirmer) {
 		this.confirmer = confirmer;
 	}
 
@@ -214,36 +190,12 @@ public class ServiceReceiptVO  implements Serializable{
 		this.accountsBank = accountsBank;
 	}
 
-	public String getDes() {
-		return des;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
-	}
-	
-	public ServiceReceiptVO getServiceReceipt() {
-		return serviceReceipt;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public void setServiceReceipt(ServiceReceiptVO serviceReceipt) {
-		this.serviceReceipt = serviceReceipt;
-	}
-	
-	public String getCollecterId() {
-		return collecterId;
-	}
-
-	public void setCollecterId(String collecterId) {
-		this.collecterId = collecterId;
-	}
-
-	public String getConfirmerId() {
-		return confirmerId;
-	}
-
-	public void setConfirmerId(String confirmerId) {
-		this.confirmerId = confirmerId;
-	}
-	
 }

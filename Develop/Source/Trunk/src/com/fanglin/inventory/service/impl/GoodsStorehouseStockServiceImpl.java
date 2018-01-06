@@ -105,7 +105,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 				goodsStorehouseStockVO.setGshsId(goodsStorehouseStockVO.getGshsId());
 				goodsStorehouseStockVO.setNum(goodsStorehouseStockPO.getNum());
 				
-				BeanUtil.copyProperties(goodsStorehouseStockPO.getGoods(), goodsStorehouseStockVO.getGoods(),Arrays.asList("assisType"));
+				BeanUtil.copyProperties(goodsStorehouseStockPO.getGoods(), goodsStorehouseStockVO.getGoods(),Arrays.asList("accessoriesType"));
 				BeanUtil.copyProperties(goodsStorehouseStockPO.getColor(), goodsStorehouseStockVO.getColor());
 				BeanUtil.copyProperties(goodsStorehouseStockPO.getFormat(), goodsStorehouseStockVO.getFormat());
 				BeanUtil.copyProperties(goodsStorehouseStockPO.getStorehouse(), goodsStorehouseStockVO.getStorehouse());

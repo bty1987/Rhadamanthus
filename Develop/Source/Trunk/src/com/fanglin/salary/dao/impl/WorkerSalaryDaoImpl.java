@@ -22,7 +22,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	}
 	
 	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging,List<Filter> filters,int company) {
-
+		
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
 		
 		query.add(Restrictions.eq("company", company));
@@ -58,12 +58,12 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				
 				 if ("userName".equals(filet)) {
 						query.alias("user", "user");
-						query.add(query.getCriterion("user.userName", data, op));
+						query.add(query.getCriterion("user.userId", data, op));
 				  }
 				
 				 if ("orderId".equals(filet)) {
-					query.alias("decorationOrder", "decorationOrder");
-					query.add(query.getCriterion("decorationOrder.orderId", data, op));
+					query.alias("decoration", "decoration");
+					query.add(query.getCriterion("decoration.orderId", data, op));
 				  } 
 				
 				 if ("duty".equals(filet)) {

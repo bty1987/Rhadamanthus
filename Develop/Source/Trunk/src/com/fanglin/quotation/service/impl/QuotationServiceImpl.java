@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationVersionPO;
-import com.fanglin.decoration.dao.DecorationOrderDao;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.ExtensionDao;
@@ -52,7 +52,7 @@ public class QuotationServiceImpl implements QuotationService {
 	private QuotationDao quotationDao;
 	
 	@Autowired
-	private DecorationOrderDao decorationOrderDao;
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
@@ -76,87 +76,36 @@ public class QuotationServiceImpl implements QuotationService {
 	public QuotationVO queryQuotationById(long qId){
 		QuotationPO quotationPO = quotationDao.get(qId);
 		QuotationVO quotationVO = new QuotationVO();
-		
-		if(quotationPO != null){
-			
-			DecorationOrderPO decorationOrderPO = quotationPO.getDecorationOrder();
-			UserPO createUser = quotationPO.getCreateUser();
-			
-			BeanUtil.copyProperties(quotationPO, quotationVO);
-
-			quotationVO.setCreaterId(createUser.getUserId());
-			quotationVO.setCreaterName(createUser.getCurrentName());
-			quotationVO.setOrderId(decorationOrderPO.getOrderId());
-			quotationVO.setOrderAddr(String.format("%s %s", decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber()));
-			quotationVO.setCustomerName(decorationOrderPO.getCustomerPO().getCustomerName());
-			quotationVO.setDesignerName(decorationOrderPO.getDesignerPO().getCurrentName());
-			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
-			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
-			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
-			
-			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
-			
-			if(decorationOrderPO.getSupervisorPO() != null){
-				quotationVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getCurrentName());
-			}
-		}
-		
+		handleQuotation(quotationVO,quotationPO);
 		return quotationVO;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO){
-		
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(quotationVO.getOrderId());
-		
-		if(quotationPO != null){
-			
-			DecorationOrderPO decorationOrderPO = quotationPO.getDecorationOrder();
-			UserPO createUser = quotationPO.getCreateUser();
-			
-			BeanUtil.copyProperties(quotationPO, quotationVO);
-
-			quotationVO.setCreaterId(createUser.getUserId());
-			quotationVO.setCreaterName(createUser.getCurrentName());
-			quotationVO.setOrderId(decorationOrderPO.getOrderId());
-			quotationVO.setOrderAddr(String.format("%s %s", decorationOrderPO.getVillagePO().getVillageName(), decorationOrderPO.getHouseNumber()));
-			quotationVO.setCustomerName(decorationOrderPO.getCustomerPO().getCustomerName());
-			quotationVO.setDesignerName(decorationOrderPO.getDesignerPO().getCurrentName());
-			quotationVO.setDesignDepartmentName(decorationOrderPO.getDesignerPO().getDept().getDeptName());
-			quotationVO.setHouseArea(decorationOrderPO.getHouseArea());
-			quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
-			
-			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
-			
-			if(decorationOrderPO.getSupervisorPO() != null){
-				quotationVO.setSupervisorName(decorationOrderPO.getSupervisorPO().getCurrentName());
-			}
-		}
-		
+		handleQuotation(quotationVO,quotationPO);
 		return quotationVO;
 	}
 	
 	@Override
 	public int checkQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO, boolean priceFlag) throws FLException{
 		
-		DecorationOrderPO decorationOrderPO = null;
+		DecorationPO decorationPO = null;
 		
 		if(quotationVO != null){
-			decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(quotationVO.getOrderId());
+			decorationPO = decorationDao.queryDecorationByOrderId(quotationVO.getOrderId());
 		}else if(quotationPO != null){
-			decorationOrderPO = quotationPO.getDecorationOrder();
+			decorationPO = quotationPO.getDecoration();
 		}
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR, DecorationOrderPO.STATUS_QUOTATION_STR, DecorationOrderPO.STATUS_DEPOSIT_STR, DecorationOrderPO.STATUS_RESIGNED_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR});
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		if(!status.contains(decorationOrderPO.getStatus())){
+		if(!status.contains(decorationPO.getStatus())){
 			throw new FLException(200005, "报价不能修改");
 		}
 		
@@ -173,18 +122,18 @@ public class QuotationServiceImpl implements QuotationService {
 		for(QuotationPO quotationPO: quotationPOs){
 			QuotationVO _quotationVO = new QuotationVO();
 			
-			DecorationOrderPO decorationOrderPO = quotationPO.getDecorationOrder();
+			DecorationPO decorationPO = quotationPO.getDecoration();
 			UserPO createUser = quotationPO.getCreateUser();
 			
 			BeanUtil.copyProperties(quotationPO, _quotationVO);
 			
 			_quotationVO.setCreaterId(createUser.getUserId());
 			_quotationVO.setCreaterName(createUser.getCurrentName());
-			_quotationVO.setOrderId(decorationOrderPO.getOrderId());
-			_quotationVO.setOrderTotalPrice(decorationOrderPO.getOrderTotalPrice());
-			quotationVO.setNotSalesmanRate(decorationOrderPO.getNotSalesmanRate());
+			_quotationVO.setOrderId(decorationPO.getOrderId());
+			_quotationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
 			
-			quotationVO.setVersionId(decorationOrderPO.getVersionPO().getVersionId());
+			quotationVO.setVersionId(decorationPO.getVersion().getVersionId());
 			
 			quotationVOs.add(_quotationVO);
 		}
@@ -210,7 +159,7 @@ public class QuotationServiceImpl implements QuotationService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException{
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR});
 		
 		String orderId = quotationVO.getOrderId();
 		
@@ -223,19 +172,19 @@ public class QuotationServiceImpl implements QuotationService {
 		checkQuotationForStatusByOrderId(quotationVO, null, false);
 		
 		BeanUtil.copyProperties(quotationVO, quotationPO);
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		if(decorationOrderPO == null){
+		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		QuotationVersionPO quotationVersionPO = decorationOrderPO.getVersionPO();
+		QuotationVersionPO quotationVersionPO = decorationPO.getVersion();
 		
 		if(quotationVersionPO == null){
 			throw new FLException(200022, "报价版本不存在");
 		}
 		
-		quotationPO.setDecorationOrder(decorationOrderPO);
+		quotationPO.setDecoration(decorationPO);
 		quotationPO.setCreateUser(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotationPO.setSaveStatus(1);
@@ -248,9 +197,9 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setStatus(0);
 		}
 		
-		if(status.contains(decorationOrderPO.getStatus())){
-			decorationOrderPO.setStatus(DecorationOrderPO.STATUS_QUOTATION_STR);
-			decorationOrderDao.saveOrUpdate(decorationOrderPO);
+		if(status.contains(decorationPO.getStatus())){
+			decorationPO.setStatus(DecorationPO.STATUS_QUOTATION_STR);
+			decorationDao.saveOrUpdate(decorationPO);
 		}
 		
 		quotationDao.save(quotationPO);
@@ -328,7 +277,7 @@ public class QuotationServiceImpl implements QuotationService {
 		checkQuotationForStatusByOrderId(null, quotationPO, false);
 		
 		convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
-		
+		handleDecorationForTotalPrice(quotationPO);
 		quotationDao.update(quotationPO);
 		
 		return 0;
@@ -340,7 +289,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		long replicaQId = quotationVO.getQid();
 		
-		List<String> status = Arrays.asList(new String[]{DecorationOrderPO.STATUS_INIT_STR});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR});
 		
 		QuotationPO quotationPO = new QuotationPO();
 		
@@ -358,18 +307,18 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		if(decorationOrderPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
+		if(decorationPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
-			decorationOrderPO.setQuotationTimeLimit(decorationOrderPO.getQuotationTimeLimit() + 1);
-			decorationOrderDao.update(decorationOrderPO);
+			decorationPO.setQuotationTimeLimit(decorationPO.getQuotationTimeLimit() + 1);
+			decorationDao.update(decorationPO);
 		}
 		
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
 		
-		quotationPO.setDecorationOrder(decorationOrderPO);
+		quotationPO.setDecoration(decorationPO);
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		quotationPO.setQuotationName(copyQuotationPO.getQuotationName());
@@ -381,11 +330,11 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setContent("");
 		
 		
-		if(orderId.equals(copyQuotationPO.getDecorationOrder().getOrderId())){
+		if(orderId.equals(copyQuotationPO.getDecoration().getOrderId())){
 			throw new FLException(200019, "拷贝报价不能在订单内完成");
 		}
 		
-		if(!decorationOrderPO.getVersionPO().getVersionId().equals(copyQuotationPO.getDecorationOrder().getVersionPO().getVersionId())){
+		if(!decorationPO.getVersion().getVersionId().equals(copyQuotationPO.getDecoration().getVersion().getVersionId())){
 			throw new FLException(200002, "复制报价与当前报价版本不同,不能拷贝");
 		}
 		
@@ -401,9 +350,9 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		copyQuotation(replicaQId, quotationPO.getQid());
 		
-		if(status.contains(decorationOrderPO.getStatus())){
-			decorationOrderPO.setStatus("已报价");
-			decorationOrderDao.saveOrUpdate(decorationOrderPO);
+		if(status.contains(decorationPO.getStatus())){
+			decorationPO.setStatus("已报价");
+			decorationDao.saveOrUpdate(decorationPO);
 		}
 		
 		return 0;
@@ -430,17 +379,17 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		DecorationOrderPO decorationOrderPO = decorationOrderDao.queryDecorationOrderByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		if(decorationOrderPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
+		if(decorationPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
-			decorationOrderPO.setQuotationTimeLimit(decorationOrderPO.getQuotationTimeLimit() + 1);
-			decorationOrderDao.update(decorationOrderPO);
+			decorationPO.setQuotationTimeLimit(decorationPO.getQuotationTimeLimit() + 1);
+			decorationDao.update(decorationPO);
 		}
 		
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid"));
-		quotationPO.setDecorationOrder(decorationOrderPO);
+		quotationPO.setDecoration(decorationPO);
 		quotationPO.setCreateUser(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
@@ -477,7 +426,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200014, "默认报价不能删除");
 		}
 		
-		deleteQuotationByQId(qId,quotationPO.getDecorationOrder().getOrderId());
+		deleteQuotationByQId(qId,quotationPO.getDecoration().getOrderId());
 		
 		return 0;
 	}
@@ -552,7 +501,9 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
 		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
 		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
+		quotationPO.setDisPrice(quotationVO.getDisPrice());
 	}
+	
 	private void convertQuotationPOForAdvance(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO,String itemName, String measurementUnit, String workType, float unitPrice, String formula ,float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content,short subtype){
 		quotationFunctionAreaItemPO.setItemName(itemName);
 		quotationFunctionAreaItemPO.setMeasurementUnit(measurementUnit);
@@ -567,4 +518,36 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationFunctionAreaItemPO.setSubtype(subtype);
 	}
 	
+	private void handleDecorationForTotalPrice(QuotationPO quotationPO){
+		DecorationPO decorationPO = decorationDao.get(quotationPO.getDecoration().getOrderId());
+		decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
+		decorationDao.update(decorationPO);
+	}
+	
+	private void  handleQuotation(QuotationVO quotationVO,QuotationPO quotationPO){
+		if(quotationPO != null){
+			
+			DecorationPO decorationPO = quotationPO.getDecoration();
+			UserPO createUser = quotationPO.getCreateUser();
+			
+			BeanUtil.copyProperties(quotationPO, quotationVO);
+
+			quotationVO.setCreaterId(createUser.getUserId());
+			quotationVO.setCreaterName(createUser.getCurrentName());
+			quotationVO.setOrderId(decorationPO.getOrderId());
+			quotationVO.setOrderAddr(String.format("%s %s", decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()));
+			quotationVO.setCustomerName(decorationPO.getCustomer().getName());
+			quotationVO.setDesignerName(decorationPO.getDesigner().getCurrentName());
+			quotationVO.setDesignDepartmentName(decorationPO.getDesigner().getDept().getDeptName());
+			quotationVO.setHouseArea(decorationPO.getHouseArea());
+			quotationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
+			
+			quotationVO.setVersionId(decorationPO.getVersion().getVersionId());
+			
+			if(decorationPO.getSupervisor() != null){
+				quotationVO.setSupervisorName(decorationPO.getSupervisor().getCurrentName());
+			}
+		}
+	}
 }

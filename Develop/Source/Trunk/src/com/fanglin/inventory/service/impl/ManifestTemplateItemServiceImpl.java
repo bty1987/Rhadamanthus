@@ -51,7 +51,7 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 			
 			manifestTemplateItemVO.setMtiId(manifestTemplateItemPO.getMtiId());
 			
-			BeanUtil.copyProperties(manifestTemplateItemPO.getGoods(), manifestTemplateItemVO.getGoods(), Arrays.asList("assisType"));
+			BeanUtil.copyProperties(manifestTemplateItemPO.getGoods(), manifestTemplateItemVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(manifestTemplateItemPO.getManifestTemplate(), manifestTemplateItemVO.getManifestTemplate());
 			
 			manifestTemplateItemVOs.add(manifestTemplateItemVO);

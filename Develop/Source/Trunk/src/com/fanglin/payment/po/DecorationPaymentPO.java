@@ -23,7 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -32,9 +32,9 @@ public class DecorationPaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 1341114461146L;
 	
-	public static final int ADVANCETYPE_TYPE_BALANCE_INT = 1; // 合同预付款
+	public static final short ADVANCETYPE_TYPE_BALANCE_INT = 1; 
 	
-	public static final int ADVANCETYPE_TYPE_PROJECT_INT = 2; // 工程预付款
+	public static final short ADVANCETYPE_TYPE_PROJECT_INT = 2; 
 	
 	public static final String PAYMENTTYPE_ADVANCE_STR = "预付款";
 	
@@ -68,7 +68,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTSTATUS_REFUND_STR = "申请退款";
 	
-	public static final int CHARSCALE_COUNT_INT = 0;
+	public static final short CHARSCALE_COUNT_INT = 0;
 	
 	public static final short ONETYPE_ADD_INT = 0;         //收款
 	
@@ -86,33 +86,27 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final short TWOTYPE_OTHER_INT = 4;       //其他
 
-	private long autoId;
+	private long dpid;
 	
-	private DecorationOrderPO decorationOrderPO;
+	private DecorationPO decoration;
+	
+	private DecorationReceiptPO decorationReceipt;
+	
+	private short oneType;
+	
+	private short twoType;
 	
 	private String paymentType;
 	
 	private String paymentStatus;
 	
-	private UserPO createUserPO;
+	private UserPO creater;
 	
 	private Timestamp createTime;
-	
-	private String createDes;
-	
-	private DecorationReceiptPO decorationReceipt;
 	
 	private float referMoney =  0f;
 	
 	private float realMoney = 0f;
-	
-	private float paymentBlance =  0f;
-	
-	private float other =  0f;
-	
-	private short oneType;
-	
-	private short twoType;
 	
 	public DecorationPaymentPO() {
 		super();
@@ -120,25 +114,26 @@ public class DecorationPaymentPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "autoId")
-	public long getAutoId(){
-		return autoId;
+	@Column(name = "dpid")
+	public long getDpid() {
+		return dpid;
 	}
-	
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
+
+	public void setDpid(long dpid) {
+		this.dpid = dpid;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrderPO(){
-		return decorationOrderPO;
+	public DecorationPO getDecoration(){
+		return decoration;
 	}
 
-	public void setDecorationOrderPO(DecorationOrderPO decorationOrderPO){
-		this.decorationOrderPO = decorationOrderPO;
+	public void setDecoration(DecorationPO decoration){
+		this.decoration = decoration;
 	}
 
+	@Column(name = "paymentType")
 	public String getPaymentType(){
 		return paymentType;
 	}
@@ -147,6 +142,7 @@ public class DecorationPaymentPO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
+	@Column(name = "paymentStatus")
 	public String getPaymentStatus(){
 		return paymentStatus;
 	}
@@ -155,6 +151,7 @@ public class DecorationPaymentPO implements Serializable {
 		this.paymentStatus = paymentStatus;
 	}
 
+	@Column(name = "referMoney")
 	public float getReferMoney(){
 		return referMoney;
 	}
@@ -163,6 +160,7 @@ public class DecorationPaymentPO implements Serializable {
 		this.referMoney = referMoney;
 	}
 
+	@Column(name="createTime")
 	public Timestamp getCreateTime(){
 		return createTime;
 	}
@@ -172,13 +170,13 @@ public class DecorationPaymentPO implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createUserId", referencedColumnName = "userId")
-	public UserPO getCreateUserPO(){
-		return createUserPO;
+	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	public UserPO getCreater(){
+		return creater;
 	}
 
-	public void setCreateUserPO(UserPO createUserPO){
-		this.createUserPO = createUserPO;
+	public void setCreater(UserPO creater){
+		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -191,30 +189,7 @@ public class DecorationPaymentPO implements Serializable {
 		this.decorationReceipt = decorationReceipt;
 	}
 
-	public void setPaymentBlance(float paymentBlance){
-		this.paymentBlance = paymentBlance;
-	}
-	
-	public float getPaymentBlance(){
-		return paymentBlance;
-	}
-	
-	public void setOther(float other){
-		this.other = other;
-	}
-	
-	public float getOther(){
-		return other;
-	}
-	
-	public void setCreateDes(String createDes){
-		this.createDes = createDes;
-	}
-	
-	public String getCreateDes(){
-		return createDes;
-	}
-	
+	@Column(name="realMoney")
 	public float getRealMoney(){
 		return realMoney;
 	}

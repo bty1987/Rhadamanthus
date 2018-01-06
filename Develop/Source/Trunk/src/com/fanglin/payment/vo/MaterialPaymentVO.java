@@ -16,53 +16,36 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.material.vo.MaterialVO;
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class MaterialPaymentVO implements Serializable{
 
 	private static final long serialVersionUID = 7379370514634255371L;
 	
 	private Long mpId;
 	
-	private Long msoId;
+	private Long mrId;
 	
-	private String msoNo;
+	private MaterialVO material;
 	
-	private String orderId;
+	private String category;
 	
-	private String orderAddr;
+	private String brand;
 	
-	private String customerId;
+	private Short paymentType;
 	
-	private String customerName;
+	private Short paymentStatus;
 	
-	private String salesmanName;
+	private UserBaseVO creater;
 	
-	private String departmentName;
+	private Timestamp createTime;
 	
-	private String regionName;
-	
-	private Integer paymentType;
-	
-	private String paymentTypeName;
-	
-	private Integer paymentStatus;
-	
-	private String materialType;
-	
-	private String materialBrand;
-	
-	private String createUserId;
-	
-	private String createUserName;
-	
-	private String collectUserId;
-	
-	private String collectUserName;
+	private UserBaseVO collecter;
 	
 	private Timestamp collectTime;
 	
-	private String confirmUserId;
-	
-	private String confirmUserName;
+	private UserBaseVO confirmer;
 	
 	private Timestamp confirmTime;
 	
@@ -80,15 +63,15 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private Float checkv;
 	
-	private String checkvBankName;
+	private String checkvBank;
 	
 	private Float installment;
 	
-	private String installmentBankName;
+	private String installmentBank;
 	
 	private Float accounts;
 	
-	private String accountsBankName;
+	private String accountsBank;
 	
 	private Float advance;
 	
@@ -100,14 +83,23 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private String couponInfo;
 	
-	private Float msoCoupon;
+	private String comment;
 	
-	private String msoCouponInfo;
+	public MaterialPaymentVO() {
+		super();
+	}
 	
-	private String des;
+	public MaterialPaymentVO(MaterialVO material) {
+		super();
+		this.material = material;
+	}
 	
-	private Long mrId;
-
+	public MaterialPaymentVO(MaterialVO material,UserBaseVO creater) {
+		super();
+		this.material = material;
+		this.creater = creater;
+	}
+	
 	public Long getMpId(){
 		return mpId;
 	}
@@ -116,44 +108,85 @@ public class MaterialPaymentVO implements Serializable{
 		this.mpId = mpId;
 	}
 
-	public Long getMsoId(){
-		return msoId;
+	public Long getMrId() {
+		return mrId;
 	}
 
-	public void setMsoId(Long msoId){
-		this.msoId = msoId;
+	public void setMrId(Long mrId) {
+		this.mrId = mrId;
 	}
 
-	public Integer getPaymentType(){
+	public MaterialVO getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(MaterialVO material) {
+		this.material = material;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public Short getPaymentType(){
 		return paymentType;
 	}
 
-	public void setPaymentType(Integer paymentType){
+	public void setPaymentType(Short paymentType){
 		this.paymentType = paymentType;
 	}
 
-	public Integer getPaymentStatus(){
+	public Short getPaymentStatus(){
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(Integer paymentStatus){
+	public void setPaymentStatus(Short paymentStatus){
 		this.paymentStatus = paymentStatus;
 	}
 
-	public String getCreateUserId(){
-		return createUserId;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUserId(String createUserId){
-		this.createUserId = createUserId;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+	
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public String getCollectUserId(){
-		return collectUserId;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
-	public void setCollectUserId(String collectUserId){
-		this.collectUserId = collectUserId;
+	public UserBaseVO getCollecter() {
+		return collecter;
+	}
+
+	public void setCollecter(UserBaseVO collecter) {
+		this.collecter = collecter;
+	}
+
+	public UserBaseVO getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(UserBaseVO confirmer) {
+		this.confirmer = confirmer;
 	}
 
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
@@ -163,14 +196,6 @@ public class MaterialPaymentVO implements Serializable{
 
 	public void setCollectTime(Timestamp collectTime){
 		this.collectTime = collectTime;
-	}
-
-	public String getConfirmUserId(){
-		return confirmUserId;
-	}
-
-	public void setConfirmUserId(String confirmUserId){
-		this.confirmUserId = confirmUserId;
 	}
 
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
@@ -222,12 +247,12 @@ public class MaterialPaymentVO implements Serializable{
 		this.bank = bank;
 	}
 
-	public String getCheckvBankName(){
-		return checkvBankName;
+	public String getCheckvBank(){
+		return checkvBank;
 	}
 
-	public void setCheckvBankName(String checkvBankName){
-		this.checkvBankName = checkvBankName;
+	public void setCheckvBank(String checkvBank){
+		this.checkvBank = checkvBank;
 	}
 
 	public Float getInstallment(){
@@ -238,12 +263,12 @@ public class MaterialPaymentVO implements Serializable{
 		this.installment = installment;
 	}
 
-	public String getInstallmentBankName(){
-		return installmentBankName;
+	public String getInstallmentBank(){
+		return installmentBank;
 	}
 
-	public void setInstallmentBankName(String installmentBankName){
-		this.installmentBankName = installmentBankName;
+	public void setInstallmentBank(String installmentBank){
+		this.installmentBank = installmentBank;
 	}
 
 	public Float getAccounts(){
@@ -254,12 +279,12 @@ public class MaterialPaymentVO implements Serializable{
 		this.accounts = accounts;
 	}
 
-	public String getAccountsBankName(){
-		return accountsBankName;
+	public String getAccountsBank(){
+		return accountsBank;
 	}
 
-	public void setAccountsBankName(String accountsBankName){
-		this.accountsBankName = accountsBankName;
+	public void setAccountsBank(String accountsBank){
+		this.accountsBank = accountsBank;
 	}
 
 	public Float getCoupon(){
@@ -270,84 +295,12 @@ public class MaterialPaymentVO implements Serializable{
 		this.coupon = coupon;
 	}
 
-	public String getCreateUserName(){
-		return createUserName;
-	}
-
-	public void setCreateUserName(String createUserName){
-		this.createUserName = createUserName;
-	}
-
-	public String getCollectUserName(){
-		return collectUserName;
-	}
-
-	public void setCollectUserName(String collectUserName){
-		this.collectUserName = collectUserName;
-	}
-
-	public String getConfirmUserName(){
-		return confirmUserName;
-	}
-
-	public void setConfirmUserName(String confirmUserName){
-		this.confirmUserName = confirmUserName;
-	}
-
-	public String getOrderId(){
-		return orderId;
-	}
-
-	public void setOrderId(String orderId){
-		this.orderId = orderId;
-	}
-
 	public Float getCheckv(){
 		return checkv;
 	}
 
 	public void setCheckv(Float checkv){
 		this.checkv = checkv;
-	}
-
-	public String getMsoNo(){
-		return msoNo;
-	}
-
-	public void setMsoNo(String msoNo){
-		this.msoNo = msoNo;
-	}
-
-	public String getOrderAddr(){
-		return orderAddr;
-	}
-
-	public void setOrderAddr(String orderAddr){
-		this.orderAddr = orderAddr;
-	}
-
-	public String getCustomerName(){
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName){
-		this.customerName = customerName;
-	}
-
-	public String getDes(){
-		return des;
-	}
-
-	public void setDes(String des){
-		this.des = des;
-	}
-
-	public String getCustomerId(){
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId){
-		this.customerId = customerId;
 	}
 
 	public Short getCouponType(){
@@ -389,77 +342,13 @@ public class MaterialPaymentVO implements Serializable{
 	public void setBankInfo(String bankInfo){
 		this.bankInfo = bankInfo;
 	}
-
-	public String getMaterialType(){
-		return materialType;
+	
+	public String getComment() {
+		return comment;
 	}
 
-	public void setMaterialType(String materialType){
-		this.materialType = materialType;
-	}
-
-	public String getMaterialBrand(){
-		return materialBrand;
-	}
-
-	public void setMaterialBrand(String materialBrand){
-		this.materialBrand = materialBrand;
-	}
-
-	public String getSalesmanName(){
-		return salesmanName;
-	}
-
-	public void setSalesmanName(String salesmanName){
-		this.salesmanName = salesmanName;
-	}
-
-	public String getDepartmentName(){
-		return departmentName;
-	}
-
-	public void setDepartmentName(String departmentName){
-		this.departmentName = departmentName;
-	}
-
-	public String getRegionName(){
-		return regionName;
-	}
-
-	public void setRegionName(String regionName){
-		this.regionName = regionName;
-	}
-
-	public String getPaymentTypeName(){
-		return paymentTypeName;
-	}
-
-	public void setPaymentTypeName(String paymentTypeName){
-		this.paymentTypeName = paymentTypeName;
-	}
-
-	public String getMsoCouponInfo(){
-		return msoCouponInfo;
-	}
-
-	public void setMsoCouponInfo(String msoCouponInfo){
-		this.msoCouponInfo = msoCouponInfo;
-	}
-
-	public Float getMsoCoupon() {
-		return msoCoupon;
-	}
-
-	public void setMsoCoupon(Float msoCoupon) {
-		this.msoCoupon = msoCoupon;
-	}
-
-	public Long getMrId() {
-		return mrId;
-	}
-
-	public void setMrId(Long mrId) {
-		this.mrId = mrId;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

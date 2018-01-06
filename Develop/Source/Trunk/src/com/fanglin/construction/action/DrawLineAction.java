@@ -58,7 +58,7 @@ public class DrawLineAction extends BaseListAction{
 	public String pageDrawLineForAssign() throws FLException{
 		
 		getFilters().add(new Filter("status", "排队", "ne"));
-		getFilters().add(new Filter("drawLineGroup", drawLine.getDrawLineGroup(), "eq"));
+		getFilters().add(new Filter("drawLineGroupName", drawLine.getDrawLineGroupName(), "eq"));
 		
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
 	

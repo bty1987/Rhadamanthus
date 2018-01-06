@@ -10,9 +10,6 @@
 package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +25,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	public CustomerDaoImpl(){
 		super(CustomerPO.class);
 	}
-
+	
 	@Override
 	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters){
 
@@ -36,58 +33,39 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		
 		queryFilterExcute(query, filters);
 
+		query.asc("cid");
+
 		return query.list();
 	}
 
 	@Override
-	public List<CustomerPO> queryCustomerForNameByPinyin(Paging paging, String pinyinName){
-
-		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
+	@SuppressWarnings("unchecked")
+	public List<CustomerPO> queryCustomerByPinyin(String pinyinName ){
 		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.or(Restrictions.ilike("customerName", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("customerNamePYAll", pinyinName, MatchMode.ANYWHERE)), Restrictions.ilike("phone", pinyinName, MatchMode.ANYWHERE)));
-		}
-		
-		return query.list();
-	}
+		String sql="select * from communion.customer  where cid in (select cid from communion.customer  where name like '%"+pinyinName+"%'  or pinyinAll like '%"+pinyinName+"%'  or pinyinAB like '%"+pinyinName+"%')  or cid in (select cid from communion.customerphone   where phone like '%"+pinyinName+"%' and status = 0) limit 10" ;
+	    
+	    List<CustomerPO> customerPOs = session().createSQLQuery(sql).addEntity(CustomerPO.class).list();
 
-	@Override
-	public CustomerPO queryCustomerByCustomerId(String customerId){
-		return (CustomerPO) session().createCriteria(CustomerPO.class).add(Restrictions.eq("customerId", customerId)).uniqueResult();
+		return customerPOs;
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<CustomerPO> queryCustomerByPhone(String phone){
-		return session().createCriteria(CustomerPO.class).add(Restrictions.ilike("phone", phone, MatchMode.ANYWHERE)).list();
-	}
-
-	@Override
-	public CustomerPO queryCustomerFromCommunionById(int cId) {
-		return (CustomerPO) communionSession().createCriteria(CustomerPO.class).add(Restrictions.eq("id", cId)).uniqueResult();
-	}
-
-	@Override
-	public int merge(CustomerPO customerPO) {
-		
-		communionSession().merge(customerPO);
-		
-		return 0;
+	public CustomerPO queryCustomerByNo(String no){
+		return (CustomerPO) session().createCriteria(CustomerPO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
+			
 			for(Filter filter : filters){
 				if("customerName".equals(filter.getField())){
 					query.add(query.getCriterion("customerName", filter));
-				} else if("customerPhone".equals(filter.getField())){
-					query.add(query.getCriterion("phone", filter));
 				} else if("relationshipType".equals(filter.getField())){
 					query.add(query.getCriterion("relationshipType", filter));
 				}
 			}
 		}
 	}
-	
+
 }

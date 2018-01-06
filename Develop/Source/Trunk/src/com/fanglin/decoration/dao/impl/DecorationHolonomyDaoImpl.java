@@ -28,7 +28,7 @@ public class DecorationHolonomyDaoImpl extends DaoImpl<DecorationHolonomyPO> imp
 	
 	@Override
 	public DecorationHolonomyPO queryDecorationHolonomyByOrderId(String orderId) {
-		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decorationOrder.orderId",orderId)).uniqueResult();
+		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decoration.orderId",orderId)).uniqueResult();
 	}
 
 	private void queryFilterExcute(Paging paging,List<Filter> filters,PagingQuery<DecorationHolonomyPO> query){
@@ -39,9 +39,10 @@ public class DecorationHolonomyDaoImpl extends DaoImpl<DecorationHolonomyPO> imp
 				String data = filter.getData();
 				String op = filter.getOp();
 				
-				query.alias("decorationOrder", "decorationOrder");
-				query.alias("decorationOrder.villagePO", "village");
-				query.alias("decorationOrder.designerPO", "designer");
+				query.alias("decoration", "decoration");
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
+				query.alias("decoration.designer", "designer");
 				
 				if("orderId".equals(field)){
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));

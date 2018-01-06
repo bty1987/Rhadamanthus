@@ -26,6 +26,8 @@ public class BuildingNameRuleVO implements Serializable {
 	private String ruleExample;
 	
 	private String ruleContent;
+	
+	private String rulefill;
 
 	public int getId(){
 		return id;
@@ -66,7 +68,13 @@ public class BuildingNameRuleVO implements Serializable {
 	public void setRuleContent(String ruleContent){
 		this.ruleContent = ruleContent;
 	}
-	
-	
 
+	public String getRulefill() {
+		return rulefill;
+	}
+
+	public void setRulefill(String rulefill) {
+		this.rulefill = rulefill;
+	}
+	
 }

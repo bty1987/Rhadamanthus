@@ -22,30 +22,30 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
 	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, int status, String op);
+	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, Short status, String op);
 	
 	public List<MaterialPaymentPO> queryMaterialPayment(List<Filter> filters);
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(String orderId);
 	
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoId(long msoId, Integer paymentStatus);
+	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus);
 	
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIds(List<Long> msoIds);
+	public List<MaterialPaymentPO> queryMaterialPaymentByMids(List<Long> mids);
 	
-	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMsoId(long msoId);
+	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMid(long mid);
 	
-	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMsoId(long msoId);
+	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMid(long mid);
 
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdAType(long msoId, Integer paymentType);
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidAType(long mid, Short paymentType);
 	
-	public List<MaterialPaymentPO> queryMaterialPaymentByMsoIdATypeAStatus(long msoId, Integer paymentType, Integer paymentStatus);
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypeAStatus(long mid, Short paymentType, Short paymentStatus);
 
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMrId(long mrId);
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId);
 	
-	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Integer paymentType);
+	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String no, Short paymentType);
 	
-	public int countMaterialPaymentByMsoIdAType(long msoId, Integer paymentType);
+	public int countMaterialPaymentByMidAType(long mid, Short paymentType);
 	
 }

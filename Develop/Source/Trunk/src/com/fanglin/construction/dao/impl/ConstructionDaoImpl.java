@@ -37,7 +37,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -49,7 +49,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -77,7 +77,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -110,7 +110,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
-		query.alias("decorationOrderPO", "decorationOrderPO");
+		query.alias("decoration", "decoration");
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -134,39 +134,35 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				}
 				
 				if(field.startsWith("design")){
-					query.alias("decorationOrderPO.designerPO", "designer");
+					query.alias("decoration.designer", "designer");
 				}else if((field.startsWith("business") || field.startsWith("salesman"))){
-					query.alias("decorationOrderPO.salesmanPO", "salesman");
+					query.alias("decoration.salesman", "salesman");
 				}else if(field.startsWith("village")){
-					query.alias("decorationOrderPO.villagePO", "village");
+					query.alias("decoration.house", "house");
+					query.alias("house.village", "village");
 				}
 				
 				if("orderId".equals(field)){
-					query.add(query.getCriterion("decorationOrderPO.orderId", data, op));
+					query.add(query.getCriterion("decoration.orderId", data, op));
 				}else if("houseNumber".equals(field)){
-					query.add(query.getCriterion("decorationOrderPO.houseNumber", data, op));
-				}else if("designerId".equals(field)){
-					query.add(query.getCriterion("designer.userId", data, op));
-				}else if("salesmanId".equals(field)){
-					query.add(query.getCriterion("salesman.userId", data, op));
-				}else if("villageId".equals(field)){
-					query.add(query.getCriterion("village.villageId", data, op));
+					query.alias("decoration.house", "house");
+					query.add(query.getCriterion("house.houseNumber", data, op));
 				}else if("designer".equals(field)){
-					query.add(query.getCriterion("designer.currentName", data, op));
+					query.add(query.getCriterion("designer.userId", data, op));
 				}else if("salesman".equals(field)){
-					query.add(query.getCriterion("salesman.currentName", data, op));
+					query.add(query.getCriterion("salesman.userId", data, op));
 				}else if("supervisor".equals(field)){
-					query.alias("decorationOrderPO.supervisorPO", "supervisor");
-					query.add(query.getCriterion("supervisor.currentName", data, op));
+					query.alias("decoration.supervisor", "supervisor");
+					query.add(query.getCriterion("supervisor.userId", data, op));
 				}else if("village".equals(field)){ 
-					query.add(query.getCriterion("village.villageName", data, op));
+					query.add(query.getCriterion("village.no", data, op));
 				}else if(ConstructionPO.COLUMN_SCHEDULE_STR.equals(field)){
 					query.add(Restrictions.eq(field, Integer.valueOf(data)));
 				}else if("projectStatus".equals(field) && !"other".equals(data)){
 					if("未完工".equals(data)){
-						query.add(query.getCriterion("decorationOrderPO.projectStatus", "已完工", "ne"));
+						query.add(query.getCriterion("decoration.projectStatus", "已完工", "ne"));
 					}else{
-						query.add(query.getCriterion("decorationOrderPO.projectStatus", "已完工", "eq"));
+						query.add(query.getCriterion("decoration.projectStatus", "已完工", "eq"));
 					}
 				}
 			}

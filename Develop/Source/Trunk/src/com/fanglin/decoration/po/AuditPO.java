@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -21,11 +21,11 @@ public class AuditPO implements Serializable {
 
 	private static final long serialVersionUID = -6062235951940054913L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
 	private long aid;
 	
-	private DecorationOrderPO decorationOrder;
+	private DecorationPO decoration;
 	
 	private UserPO auditer ;
 	
@@ -43,12 +43,12 @@ public class AuditPO implements Serializable {
 	}
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "auid", referencedColumnName = "uid")
@@ -74,9 +74,9 @@ public class AuditPO implements Serializable {
 		super();
 	}
 
-	public AuditPO(DecorationOrderPO decorationOrder, UserPO auditer) {
+	public AuditPO(DecorationPO decoration, UserPO auditer) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 		this.auditer = auditer;
 	}
 

@@ -40,7 +40,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 
 		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -54,7 +54,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 
 		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
 		
-		query.add(query.getCriterion("decorationOrderPO.company", company, "eq"));
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -70,9 +70,9 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				
-				.createAlias("decorationOrderPO", "decorationOrderPO")
+				.createAlias("decoration", "decoration")
 				
-				.add(Restrictions.eq("decorationOrderPO.company", company))
+				.add(Restrictions.eq("decoration.company", company))
 
 				.add(Restrictions.not(Restrictions.in("status", status)))
 
@@ -88,7 +88,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	public List<DrawLinePO> queryDrawLineByOrderId(String orderId){
 		return createCriteria(DrawLinePO.class)
 
-				.add(Restrictions.eq("decorationOrderPO.orderId", orderId))
+				.add(Restrictions.eq("decoration.orderId", orderId))
 
 				.addOrder(Order.desc("dlId"))
 				
@@ -102,10 +102,10 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
 	
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
-				.createAlias("decorationOrderPO", "decorationOrderPO")
-				.createAlias("drawLineGroupPO", "drawLineGroupPO")
-				.add(Restrictions.eq("decorationOrderPO.company", company))
-				.add(Restrictions.eq("drawLineGroupPO.gid", gid))
+				.createAlias("decoration", "decoration")
+				.createAlias("drawLineGroup", "drawLineGroup")
+				.add(Restrictions.eq("decoration.company", company))
+				.add(Restrictions.eq("drawLineGroup.gid", gid))
 				.add(Restrictions.not(Restrictions.in("status", status)))
 				.add(Restrictions.or(
 						Restrictions.or(
@@ -125,25 +125,24 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		if(filters != null){
 
-			query.alias("decorationOrderPO", "decorationOrderPO");
-			query.alias("decorationOrderPO.villagePO", "villagePO");
-			query.alias("decorationOrderPO.designerPO", "designerPO");
-			query.alias("decorationOrderPO.salesmanPO", "salesmanPO");
+			query.alias("decoration", "decoration");
+			query.alias("decoration.house", "house");
+			query.alias("decoration.designer", "designer");
+			query.alias("decoration.salesman", "salesman");
 			
-			query.alias("designerPO.dept", "designerDept");
-			query.alias("salesmanPO.dept", "salesmanDept");
+			query.alias("house.village", "village");
+			query.alias("designer.dept", "designerDept");
+			query.alias("salesman.dept", "salesmanDept");
 			
 			for(Filter filter: filters){
 
 				if(StringUtils.isNotEmpty(filter.getData())){
 					if("orderId".equals(filter.getField())){
-						query.add(query.getCriterion("decorationOrderPO.orderId",(filter.getData()), filter.getOp()));
-					}else if("villageId".equals(filter.getField())){
-						query.add(query.getCriterion("villagePO.villageId", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("decoration.orderId",(filter.getData()), filter.getOp()));
 					}else if("village".equals(filter.getField())){
-						query.add(query.getCriterion("villagePO.villageName", (filter.getData()), filter.getOp()));
-					}else if("drawLineGroup".equals(filter.getField())){
-						query.add(query.getCriterion("drawLineGroup", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("village.no", (filter.getData()), filter.getOp()));
+					}else if("drawLineGroupName".equals(filter.getField())){
+						query.add(query.getCriterion("drawLineGroupName", (filter.getData()), filter.getOp()));
 					}else if("businessDepartment".equals(filter.getField())){				
 						query.add(query.getCriterion("salesmanDept.deptName", (filter.getData()), filter.getOp()));
 					}else if("designDepartment".equals(filter.getField())){
@@ -152,14 +151,10 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 						query.add(query.getCriterion("salesmanDept.deptId", (filter.getData()), filter.getOp()));
 					}else if("designDepartmentId".equals(filter.getField())){
 						query.add(query.getCriterion("designerDept.deptId", (filter.getData()), filter.getOp()));
-					}else if("salesmanId".equals(filter.getField())){
-						query.add(query.getCriterion("salesmanPO.userId", (filter.getData()), filter.getOp()));
-					}else if("designerId".equals(filter.getField())){
-						query.add(query.getCriterion("designerPO.userId", (filter.getData()), filter.getOp()));
 					}else if("salesman".equals(filter.getField())){
-						query.add(query.getCriterion("salesmanPO.currentName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("salesman.userId", (filter.getData()), filter.getOp()));
 					}else if("designer".equals(filter.getField())){
-						query.add(query.getCriterion("designerPO.currentName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("designer.userId", (filter.getData()), filter.getOp()));
 					}else if("status".equals(filter.getField())){
 						query.add(query.getCriterion("status", (filter.getData()), filter.getOp()));
 					}else if("actualDate".equals(filter.getField())){

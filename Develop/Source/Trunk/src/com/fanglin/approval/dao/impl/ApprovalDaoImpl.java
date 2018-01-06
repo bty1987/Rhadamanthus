@@ -97,12 +97,12 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 				query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 			}else if("type".equals(filter.getField())){
 				query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
-			}else if("userName".equals(filter.getField())){
+			}else if("senderName".equals(filter.getField())){
 				query.alias("sender", "sender");
-				query.add(query.getCriterion("sender.currentName", filter));
+				query.add(query.getCriterion("sender.userId", filter));
 			}else if("receiverName".equals(filter.getField())){
 				query.alias("receiver", "receiver");
-				query.add(query.getCriterion("receiver.currentName", filter));
+				query.add(query.getCriterion("receiver.userId", filter));
 			}else if("dateRange".equals(filter.getField())){
 				String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 				String eTime = filter.getData().split("-")[1].replaceAll("/", "-");

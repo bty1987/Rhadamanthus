@@ -37,7 +37,7 @@ public class PaymentAction extends BaseListAction {
 	
 	private List<PaymentVO> payments;
 
-	private List<Integer> paymentIds;
+	private List<Long> paymentIds;
 	
 	@Action(value = "pagePaymentForHistory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pagePaymentForHistory() throws FLException{
@@ -111,11 +111,11 @@ public class PaymentAction extends BaseListAction {
 		this.payment = payment;
 	}
 
-	public List<Integer> getPaymentIds(){
+	public List<Long> getPaymentIds(){
 		return paymentIds;
 	}
 
-	public void setPaymentIds(List<Integer> paymentIds){
+	public void setPaymentIds(List<Long> paymentIds){
 		this.paymentIds = paymentIds;
 	}
 

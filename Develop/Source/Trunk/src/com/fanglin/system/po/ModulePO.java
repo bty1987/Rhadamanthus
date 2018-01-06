@@ -25,6 +25,8 @@ public class ModulePO implements Serializable {
 	
 	private String name;
 	
+	private String alias;
+	
 	private String icon;
 	
 	private String url;
@@ -72,6 +74,15 @@ public class ModulePO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "alias")
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	@Column(name = "icon")

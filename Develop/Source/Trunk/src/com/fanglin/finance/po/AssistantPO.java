@@ -32,7 +32,7 @@ public class AssistantPO implements java.io.Serializable {
 	
 	private String orderAddr;
 	
-	private String msoNo;
+	private String no;
 	
 	private DepartmentPO department;
 	
@@ -66,7 +66,7 @@ public class AssistantPO implements java.io.Serializable {
 	
 	private UserPO materialer;
 	
-	private String brandName;
+	private String brand;
 	
 	private short company;
 
@@ -109,13 +109,13 @@ public class AssistantPO implements java.io.Serializable {
 		this.orderAddr = orderAddr;
 	}
 
-	@Column(name = "msoNo", length = 15)
-	public String getMsoNo() {
-		return this.msoNo;
+	@Column(name = "no", length = 15)
+	public String getNo() {
+		return this.no;
 	}
 
-	public void setMsoNo(String msoNo) {
-		this.msoNo = msoNo;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -278,13 +278,13 @@ public class AssistantPO implements java.io.Serializable {
 		this.materialer = materialer;
 	}
 
-	@Column(name = "brandName")
-	public String getBrandName() {
-		return brandName;
+	@Column(name = "brand")
+	public String getBrand() {
+		return brand;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 	
 	@Column(name = "company")
@@ -313,8 +313,8 @@ public class AssistantPO implements java.io.Serializable {
 		
 		assistantTmpPO.setOrderId(getOrderId());
 		assistantTmpPO.setOrderAddr(getOrderAddr());
-		assistantTmpPO.setMsoNo(getMsoNo());
-		assistantTmpPO.setBrandName(getBrandName());
+		assistantTmpPO.setNo(getNo());
+		assistantTmpPO.setBrand(getBrand());
 		assistantTmpPO.setCompany(getCompany());
 		
 		if(getDepartment() != null){
@@ -389,8 +389,8 @@ public class AssistantPO implements java.io.Serializable {
 		
 		assistantVO.setOrderId(getOrderId());
 		assistantVO.setOrderAddr(getOrderAddr());
-		assistantVO.setMsoNo(getMsoNo());
-		assistantVO.setBrandName(getBrandName());
+		assistantVO.setNo(getNo());
+		assistantVO.setBrand(getBrand());
 		assistantVO.setCompany(getCompany());
 		
 		if(getDepartment() != null){

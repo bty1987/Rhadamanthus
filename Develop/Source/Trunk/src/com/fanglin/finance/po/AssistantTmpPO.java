@@ -32,7 +32,7 @@ public class AssistantTmpPO implements java.io.Serializable {
 	
 	private String orderAddr;
 	
-	private String msoNo;
+	private String no;
 	
 	private DepartmentPO department;
 	
@@ -66,7 +66,7 @@ public class AssistantTmpPO implements java.io.Serializable {
 	
 	private UserPO materialer;
 	
-	private String brandName;
+	private String brand;
 	
 	private short company;
 
@@ -90,13 +90,13 @@ public class AssistantTmpPO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "msoNo")
-	public String getMsoNo() {
-		return this.msoNo;
+	@Column(name = "no")
+	public String getNo() {
+		return this.no;
 	}
 
-	public void setMsoNo(String msoNo) {
-		this.msoNo = msoNo;
+	public void setNo(String no) {
+		this.no = no;
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -268,13 +268,13 @@ public class AssistantTmpPO implements java.io.Serializable {
 		this.orderAddr = orderAddr;
 	}
 
-	@Column(name = "brandName")
-	public String getBrandName() {
-		return this.brandName;
+	@Column(name = "brand")
+	public String getBrand() {
+		return this.brand;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 	
 	@Column(name = "company")
@@ -292,8 +292,8 @@ public class AssistantTmpPO implements java.io.Serializable {
 		
 		assistantPO.setOrderId(getOrderId());
 		assistantPO.setOrderAddr(getOrderAddr());
-		assistantPO.setMsoNo(getMsoNo());
-		assistantPO.setBrandName(getBrandName());
+		assistantPO.setNo(getNo());
+		assistantPO.setBrand(getBrand());
 		
 		if(getDesigner() != null){
 			assistantPO.setDesigner(getDesigner());
@@ -359,8 +359,8 @@ public class AssistantTmpPO implements java.io.Serializable {
 		
 		assistantVO.setOrderId(getOrderId());
 		assistantVO.setOrderAddr(getOrderAddr());
-		assistantVO.setMsoNo(getMsoNo());
-		assistantVO.setBrandName(getBrandName());
+		assistantVO.setNo(getNo());
+		assistantVO.setBrand(getBrand());
 		assistantVO.setCompany(getCompany());
 		
 		if(getDepartment() != null){

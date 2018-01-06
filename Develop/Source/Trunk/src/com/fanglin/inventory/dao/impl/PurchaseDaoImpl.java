@@ -20,7 +20,21 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 	}
 
 	@Override
-	public List<PurchasePO> pagePurchase(Paging paging, List<Filter> filters,int company) {
+	public List<PurchasePO> pagePurchase(Paging paging, List<Filter> filters, int company) {
+		
+		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
+		
+		query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, company, "eq"));
+		
+		queryFilterExecute(query, filters);
+		
+		query.desc("pid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<PurchasePO> pagePurchaseObDelivery(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
 		
@@ -28,8 +42,10 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 
 		queryFilterExecute(query, filters);
 		
-		query.desc("pid");
-
+		query.add(query.getCriterion(PurchasePO.COLUMN_ALLSTATUS_STR, (short)2, "ne"));
+		
+		query.asc("deliveryTime");
+		
 		return query.list();
 	}
 	
@@ -51,7 +67,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 				query.alias("user", "user");
 				
 				if("purchaseUserName".equals(field)){
-					query.add(query.getCriterion(PurchasePO.COLUMN_USER_NAME_STR, data, op));
+					query.add(query.getCriterion(PurchasePO.COLUMN_USER_USERID_STR, data, op));
 				}else if(PurchasePO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(PurchasePO.COLUMN_NO_STR, data, op));
 				}else if("createTime".equals(field)){
@@ -71,5 +87,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 			}
 		}
 	}
+
+	
 	
 }

@@ -23,7 +23,7 @@ public class DecorationReceiptPO implements java.io.Serializable {
 	
 	public static final String COLUMN_DRID_STR = "drId";
 	
-	public static final int STATUS_CONFIRM_INT = 2;
+	public static final short STATUS_CONFIRM_INT = 2;
 	
 	public static final short RECEIPT_TYPE_COLLECT_INT = 0;
 	
@@ -31,13 +31,19 @@ public class DecorationReceiptPO implements java.io.Serializable {
 
 	private long drId;
 	
-	private short receiptType;
+	private short type;
 	
-	private UserPO collectUserPO;
+	private short status;
+	
+	private UserPO collecter;
+	
+	private UserPO confirmer;
+	
+	private String collecterName;
+	
+	private String confirmerName;
 	
 	private Timestamp collectTime;
-	
-	private UserPO confirmUserPO;
 	
 	private Timestamp confirmTime;
 	
@@ -51,15 +57,15 @@ public class DecorationReceiptPO implements java.io.Serializable {
 	
 	private float checkv;
 	
-	private String checkvBankName;
+	private String checkvBank;
 	
 	private float installment;
 	
-	private String installmentBankName;
+	private String installmentBank;
 	
 	private float accounts;
 	
-	private String accountsBankName;
+	private String accountsBank;
 	
 	private float advance;
 	
@@ -69,19 +75,17 @@ public class DecorationReceiptPO implements java.io.Serializable {
 	
 	private String couponInfo;
 	
-	private short status;
-	
-	private String des;
+	private String comment;
 
 	public DecorationReceiptPO() {
 		super();
 		
 		this.bankInfo = "";
-		this.accountsBankName = "";
-		this.checkvBankName = "";
-		this.installmentBankName = "";
+		this.accountsBank = "";
+		this.checkvBank = "";
+		this.installmentBank = "";
 		this.couponInfo = "";
-		this.des = "";
+		this.comment = "";
 	}
 
 	@Id
@@ -94,36 +98,63 @@ public class DecorationReceiptPO implements java.io.Serializable {
 	public void setDrId(long drId) {
 		this.drId = drId;
 	}
-
-	@Column(name = "receiptType")
-	public short getReceiptType() {
-		return receiptType;
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
 	}
 
-	public void setReceiptType(short receiptType) {
-		this.receiptType = receiptType;
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "collectUserId", referencedColumnName = "userId")
-	public UserPO getCollectUserPO(){
-		return collectUserPO;
+	@JoinColumn(name = "collecterId", referencedColumnName = "userId")
+	public UserPO getCollecter(){
+		return collecter;
 	}
 	
-	public void setCollectUserPO(UserPO collectUserPO){
-		this.collectUserPO = collectUserPO;
+	public void setCollecter(UserPO collecter){
+		this.collecter = collecter;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "confirmUserId", referencedColumnName = "userId")
-	public UserPO getConfirmUserPO(){
-		return confirmUserPO;
+	@JoinColumn(name = "confirmerId", referencedColumnName = "userId")
+	public UserPO getConfirmer(){
+		return confirmer;
 	}
 	
-	public void setConfirmUserPO(UserPO confirmUserPO){
-		this.confirmUserPO = confirmUserPO;
+	public void setConfirmer(UserPO confirmer){
+		this.confirmer = confirmer;
 	}
 	
+	@Column(name = "collecterName")
+	public String getCollecterName() {
+		return collecterName;
+	}
+
+	public void setCollecterName(String collecterName) {
+		this.collecterName = collecterName;
+	}
+
+	@Column(name = "confirmerName")
+	public String getConfirmerName() {
+		return confirmerName;
+	}
+
+	public void setConfirmerName(String confirmerName) {
+		this.confirmerName = confirmerName;
+	}
+
 	@Column(name = "collectTime")
 	public Timestamp getCollectTime(){
 		return collectTime;
@@ -187,13 +218,13 @@ public class DecorationReceiptPO implements java.io.Serializable {
 		this.checkv = checkv;
 	}
 
-	@Column(name = "checkvBankName")
-	public String getCheckvBankName() {
-		return this.checkvBankName;
+	@Column(name = "checkvBank")
+	public String getCheckvBank() {
+		return this.checkvBank;
 	}
 
-	public void setCheckvBankName(String checkvBankName) {
-		this.checkvBankName = checkvBankName;
+	public void setCheckvBank(String checkvBank) {
+		this.checkvBank = checkvBank;
 	}
 
 	@Column(name = "installment")
@@ -205,13 +236,13 @@ public class DecorationReceiptPO implements java.io.Serializable {
 		this.installment = installment;
 	}
 
-	@Column(name = "installmentBankName")
-	public String getInstallmentBankName() {
-		return this.installmentBankName;
+	@Column(name = "installmentBank")
+	public String getInstallmentBank() {
+		return this.installmentBank;
 	}
 
-	public void setInstallmentBankName(String installmentBankName) {
-		this.installmentBankName = installmentBankName;
+	public void setInstallmentBank(String installmentBank) {
+		this.installmentBank = installmentBank;
 	}
 
 	@Column(name = "accounts")
@@ -223,13 +254,13 @@ public class DecorationReceiptPO implements java.io.Serializable {
 		this.accounts = accounts;
 	}
 
-	@Column(name = "accountsBankName")
-	public String getAccountsBankName() {
-		return this.accountsBankName;
+	@Column(name = "accountsBank")
+	public String getAccountsBank() {
+		return this.accountsBank;
 	}
 
-	public void setAccountsBankName(String accountsBankName) {
-		this.accountsBankName = accountsBankName;
+	public void setAccountsBank(String accountsBank) {
+		this.accountsBank = accountsBank;
 	}
 
 	@Column(name = "advance")
@@ -268,22 +299,13 @@ public class DecorationReceiptPO implements java.io.Serializable {
 		this.couponInfo = couponInfo;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return this.des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
-	}
-
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

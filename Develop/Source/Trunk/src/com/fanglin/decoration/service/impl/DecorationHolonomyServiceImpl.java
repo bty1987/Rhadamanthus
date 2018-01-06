@@ -10,21 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
-import com.fanglin.decoration.dao.DecorationOrderDao;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationHolonomyService;
 import com.fanglin.decoration.vo.DecorationHolonomyVO;
-import com.fanglin.decoration.vo.DecorationOrderVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -35,9 +31,6 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	
 	@Autowired
 	private DecorationHolonomyDao decorationHolonomyDao; 
-	
-	@Autowired
-	private DecorationOrderDao decorationOrderDao;
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
@@ -55,11 +48,15 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		
 		for(DecorationHolonomyPO decorationHolonomyPO: decorationHolonomyPOs){
 			
-			DecorationHolonomyVO _decorationHolonomyVO = new DecorationHolonomyVO(new DecorationOrderVO());
+			DecorationHolonomyVO _decorationHolonomyVO = new DecorationHolonomyVO(new DecorationVO());
 			
-			BeanUtil.copyProperties(decorationHolonomyPO, _decorationHolonomyVO, Arrays.asList("decorationOrder"));
+			BeanUtil.copyProperties(decorationHolonomyPO, _decorationHolonomyVO, Arrays.asList("decoration"));
 			
-			copyDecorationHolonomyPOToVO(decorationHolonomyPO.getDecorationOrder(), _decorationHolonomyVO.getDecorationOrder());
+			_decorationHolonomyVO.getDecoration().setEscorter(new UserBaseVO());
+			_decorationHolonomyVO.getDecoration().setQuoter(new UserBaseVO());
+			
+			decorationHolonomyPO.getDecoration().ptvcascade(_decorationHolonomyVO.getDecoration());
+			
 			
 			decorationHolonomyVOs.add(_decorationHolonomyVO);
 		}
@@ -71,16 +68,19 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	@Override
 	public DecorationHolonomyVO queryDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO) {
 		
-		DecorationHolonomyVO _decorationHolonomyVO = new DecorationHolonomyVO(new DecorationOrderVO());
-		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(decorationHolonomyVO.getDecorationOrder().getOrderId());
+		DecorationHolonomyVO _decorationHolonomyVO = new DecorationHolonomyVO(new DecorationVO());
+		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(decorationHolonomyVO.getDecoration().getOrderId());
 		
 		if(decorationHolonomyPO == null){
 			return _decorationHolonomyVO;
 		}
 		
-		BeanUtil.copyProperties(decorationHolonomyPO, _decorationHolonomyVO, Arrays.asList("decorationOrder"));
+		BeanUtil.copyProperties(decorationHolonomyPO, _decorationHolonomyVO, Arrays.asList("decoration"));
 		
-		copyDecorationHolonomyPOToVO(decorationHolonomyPO.getDecorationOrder(), _decorationHolonomyVO.getDecorationOrder());
+		_decorationHolonomyVO.getDecoration().setEscorter(new UserBaseVO());
+		_decorationHolonomyVO.getDecoration().setQuoter(new UserBaseVO());
+		
+		decorationHolonomyPO.getDecoration().ptvcascade(_decorationHolonomyVO.getDecoration());
 		
 		return _decorationHolonomyVO;
 	}
@@ -89,7 +89,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	@Transactional(rollbackFor=Exception.class)
 	public void makeDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException {
 		
-		String orderId = decorationHolonomyVO.getDecorationOrder().getOrderId();
+		String orderId = decorationHolonomyVO.getDecoration().getOrderId();
 		
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
@@ -99,16 +99,15 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 				throw new FLException(140043,"订单半价信息不可更新");
 			}
 			
-			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationHolonomyVO.getDecorationOrder().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationHolonomyVO.getDecoration().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
 			
 			if(decorationPayments != null && decorationPayments.size() > 0){
 				throw new FLException(140043,"订单半价信息不可更新");
 			}
-			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decorationOrder","dhid"));
+			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decoration","dhid"));
 		}else{
-			decorationHolonomyPO = new DecorationHolonomyPO(new DecorationOrderPO());
-			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decorationOrder"));
-			BeanUtil.copyProperties(decorationOrderDao.queryDecorationOrderByOrderId(decorationHolonomyVO.getDecorationOrder().getOrderId()), decorationHolonomyPO.getDecorationOrder(),Arrays.asList("customerPO","villagePO","designerPO","salesmanPO","supervisorPO","inspectionPO","versionPO","createUserPO"));
+			decorationHolonomyPO = new DecorationHolonomyPO(new DecorationPO(orderId));
+			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decoration"));
 		}
 		
 		Float manageRate = decorationHolonomyVO.getManageRate();
@@ -132,7 +131,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		DecorationPaymentVO decorationpaymentVO = new DecorationPaymentVO();
 		
 		decorationpaymentVO.setReferMoney((float) Math.floor(Arith.add(disprojectPrice, managePrice)));
-		decorationpaymentVO.setOrderId(orderId);
+		decorationpaymentVO.setDecoration(decorationHolonomyVO.getDecoration());
 		decorationpaymentVO.setPsId(decorationHolonomyVO.getPsId());
 		
 		decorationPaymentService.makeDecorationPayment(decorationpaymentVO, userId);
@@ -144,59 +143,5 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 		
 	}
-
-	public void copyDecorationHolonomyPOToVO(DecorationOrderPO decorationOrderPO,DecorationOrderVO decorationOrderVO){
-		
-		BeanUtil.copyProperties(decorationOrderPO, decorationOrderVO);
-		
-		if(decorationOrderVO.getOrderTotalPrice() == null){
-			decorationOrderVO.setOrderTotalPrice(new Float(0));
-		}
-		
-		VillageVO villageVO = new VillageVO();
-		CityProperVO cityProperVO = new CityProperVO();
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO().getCityProper(), cityProperVO, Arrays.asList("city"));	
-		BeanUtil.copyProperties(decorationOrderPO.getVillagePO(), villageVO, Arrays.asList("cityProper","buildingNameRule"));	
-		villageVO.setCityProper(cityProperVO);
-		decorationOrderVO.setVillage(villageVO);
-		
-		CustomerVO customerVO = new CustomerVO();
-		BeanUtil.copyProperties(decorationOrderPO.getCustomerPO(), customerVO);
-		customerVO.setConfidentialInfo();
-		decorationOrderVO.setCustomer(customerVO);
-		
-		UserPO designer = decorationOrderPO.getDesignerPO();
-		
-		decorationOrderVO.setDesigner(designer.getCurrentName());
-		decorationOrderVO.setDesignerId(designer.getUserId());
-		decorationOrderVO.setDesignerPhone(designer.getPhone());
-		decorationOrderVO.setDesignDepartment(decorationOrderPO.getDesignerPO().getDept().getDeptName());
-		
-		if(decorationOrderPO.getDesignerPO().getDept().getFatherDept() != null){
-			decorationOrderVO.setDesignRegion(decorationOrderPO.getDesignerPO().getDept().getFatherDept().getDeptName());
-		}
-		
-		UserPO salesman = decorationOrderPO.getSalesmanPO();
-		
-		decorationOrderVO.setSalesman(salesman.getCurrentName());
-		decorationOrderVO.setSalesmanId(salesman.getUserId());
-		decorationOrderVO.setSalesmanPhone(salesman.getPhone());
-		decorationOrderVO.setBusinessDepartment(decorationOrderPO.getSalesmanPO().getDept().getDeptName());
-		
-		UserPO quoter = decorationOrderPO.getQuoterPO();
-		
-		if(quoter != null){
-			decorationOrderVO.setQuoterId(quoter.getUserId());
-			decorationOrderVO.setQuoter(quoter.getUserName());
-		}
-		
-		UserPO escorter = decorationOrderPO.getEscorterPO();
-		
-		if(escorter != null){
-			decorationOrderVO.setEscorterId(escorter.getUserId());
-			decorationOrderVO.setEscorter(escorter.getUserName());
-		}
-	}
 	
-
 }

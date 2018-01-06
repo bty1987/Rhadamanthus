@@ -30,7 +30,7 @@ import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.StorehouseVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -65,10 +65,10 @@ public class CheckListServiceImpl implements CheckListService {
 		
 			for(CheckListPO checkListPO: checkListPOs){
 				
-				checkListVO = new CheckListVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new UserVO());
+				checkListVO = new CheckListVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new UserBaseVO());
 				
 				BeanUtil.copyProperties(checkListPO, checkListVO, Arrays.asList("goods", "color","format","storehouse", "createUser"));
-				BeanUtil.copyProperties(checkListPO.getGoods(), checkListVO.getGoods(),Arrays.asList("assisType"));
+				BeanUtil.copyProperties(checkListPO.getGoods(), checkListVO.getGoods(),Arrays.asList("accessoriesType"));
 				BeanUtil.copyProperties(checkListPO.getColor(), checkListVO.getColor());
 				BeanUtil.copyProperties(checkListPO.getFormat(), checkListVO.getFormat());
 				BeanUtil.copyProperties(checkListPO.getStorehouse(), checkListVO.getStorehouse());

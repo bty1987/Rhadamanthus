@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.decoration.po.DecorationOrderPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -20,11 +20,11 @@ public class ServicePaymentPO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5195595430982438028L;
 	
-	public static final String COLUMN_ORDERID_STR = "decorationOrder.orderId";
+	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 	
 	public static final String COLUMN_DESIGNER_STR = "designer.userName";
 	
-	public static final String COLUMN_VILLAGE_VILLAGENAME_STR = "village.villageName";
+	public static final String COLUMN_VILLAGE_VILLAGENAME_STR = "village.name";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
@@ -38,59 +38,59 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	public static final short COLUMN_CONFIRMEDSTATUS_INT = 2; 
 	
-	public static final float COLUMN_RATIO_STR = 1.1f; 
+	public static final float COLUMN_RATIO_INT = 1.1f; 
 	
-	public static final float COLUMN_MONEY_STR = 0f; 
+	public static final float COLUMN_MONEY_INT = 0f; 
 	
-	private long spid;                    //款项ID
+	private long spid;
 	
-	private DecorationOrderPO decorationOrder;    //订单编号
+	private ServiceReceiptPO serviceReceipt;
 	
-	private short type;                   //类型 ,0: 收款,1: 退款
+	private DecorationPO decoration;
 	
-	private int pid;                      //预付款款项ID
+	private int pid;
 	
-	private short status;                 //状态,0: 初始,1: 已收款,2: 已确认
+	private short type;
 	
-	private UserPO creater;               //创建人ID
+	private short status;
 	
-	private UserPO collecter;             //收款人ID
+	private UserPO creater;
 	
-	private UserPO confirmer;             //确认人ID
+	private UserPO collecter;
 	
-	private String createrName;           //创建人姓名
+	private UserPO confirmer;
 	
-	private String collecterName;         //收款人姓名
+	private String createrName;
 	
-	private String confirmerName;         //确认人姓名
+	private String collecterName;
 	
-	private Timestamp createTime;         //创建时间
+	private String confirmerName;
 	
-	private Timestamp collcetTime;        //收款时间
+	private Timestamp createTime;
 	
-	private Timestamp confirmTime;        //确认时间
+	private Timestamp collcetTime;
 	
-	private float serviceMoney;           //服务费金额
+	private Timestamp confirmTime;
 	
-	private float advanceMoney;           //预付款金额
+	private float serviceMoney;
 	
-	private String des;                   //说明
+	private float advanceMoney;
 	
-	private ServiceReceiptPO serviceReceipt;  //收据ID
+	private String comment;
 	
 	public ServicePaymentPO() {
 		super();
 	}
 	
-	public ServicePaymentPO(DecorationOrderPO decorationOrder) {
+	public ServicePaymentPO(DecorationPO decoration) {
 		super();
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 	
-	public ServicePaymentPO(UserPO creater,DecorationOrderPO decorationOrder) {
+	public ServicePaymentPO(UserPO creater,DecorationPO decoration) {
 		super();
 		this.creater = creater;
-		this.decorationOrder = decorationOrder;
+		this.decoration = decoration;
 	}
 	
 	@Id
@@ -103,15 +103,25 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	public void setSpid(long spid) {
 		this.spid = spid;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "srid", referencedColumnName = "srid")
+	public ServiceReceiptPO getServiceReceipt() {
+		return serviceReceipt;
+	}
+
+	public void setServiceReceipt(ServiceReceiptPO serviceReceipt) {
+		this.serviceReceipt = serviceReceipt;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
-	public DecorationOrderPO getDecorationOrder() {
-		return decorationOrder;
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setDecorationOrder(DecorationOrderPO decorationOrder) {
-		this.decorationOrder = decorationOrder;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 	
 	@Column(name = "type")
@@ -243,22 +253,13 @@ public class ServicePaymentPO  implements java.io.Serializable {
 		this.advanceMoney = advanceMoney;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
- 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "srid", referencedColumnName = "srid")
-	public ServiceReceiptPO getServiceReceipt() {
-		return serviceReceipt;
-	}
-
-	public void setServiceReceipt(ServiceReceiptPO serviceReceipt) {
-		this.serviceReceipt = serviceReceipt;
-	}
+	
 }

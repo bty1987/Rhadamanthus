@@ -6,8 +6,6 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Long gid;
 	
-	private Integer company;
-	
 	private String no;
 	
 	private String name;
@@ -24,7 +22,7 @@ public class GoodsVO implements java.io.Serializable {
 	
 	private Float pieceNum;
 	
-	private AssisTypeVO assisType;
+	private AccessoriesTypeVO accessoriesType;
 	
 	private Short type;
 	
@@ -34,9 +32,9 @@ public class GoodsVO implements java.io.Serializable {
 		super();
 	}
 
-	public GoodsVO(AssisTypeVO assisType) {
+	public GoodsVO(AccessoriesTypeVO accessoriesType) {
 		super();
-		this.assisType = assisType;
+		this.accessoriesType = accessoriesType;
 	}
 
 	public Long getGid() {
@@ -45,14 +43,6 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setGid(Long gid) {
 		this.gid = gid;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
 	}
 
 	public String getNo() {
@@ -119,12 +109,12 @@ public class GoodsVO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public AssisTypeVO getAssisType() {
-		return assisType;
+	public AccessoriesTypeVO getAccessoriesType() {
+		return accessoriesType;
 	}
 
-	public void setAssisType(AssisTypeVO assisType) {
-		this.assisType = assisType;
+	public void setAccessoriesType(AccessoriesTypeVO accessoriesType) {
+		this.accessoriesType = accessoriesType;
 	}
 
 	public String getPinyin() {

@@ -125,7 +125,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value="checkDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String checkDecorationPayment() throws FLException{
 		
-		decorationPaymentService.checkDecorationPayment(decorationPayment.getAutoId());
+		decorationPaymentService.checkDecorationPayment(decorationPayment);
 		
 		return SUCCESS;
 	}
@@ -149,17 +149,15 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectDecorationPayment() throws FLException{
 		
-		decorationPayment.setCollectUserId(queryUserId());
-		decorationPaymentService.collectDecorationPayment(decorationPayment, decorationActivityItems);
+		decorationPaymentService.collectDecorationPayment(decorationPayment, decorationActivityItems, queryUserId());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "collectDecorationPaymentForRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String collectDecorationPaymentForRefund() throws FLException{
+	@Action(value = "refundDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundDecorationPayment() throws FLException{
 		
-		decorationPayment.setCollectUserId(queryUserId());
-		decorationPaymentService.collectDecorationPaymentForRefund(decorationPayment);
+		decorationPaymentService.refundDecorationPayment(decorationPayment, queryUserId());
 		
 		return SUCCESS;
 	}

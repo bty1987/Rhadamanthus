@@ -31,7 +31,7 @@ public class AuditAction extends BaseListAction{
 	private AuditVO auditVO;
 	
 	@Action(value = "pageAudit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForPlan() throws FLException{
+	public String pageAudit() throws FLException{
 		
 		auditVOs = auditService.pageAudit(getPaging(), getFilters(), queryCompany());
 	
@@ -39,7 +39,7 @@ public class AuditAction extends BaseListAction{
 	}
 	
 	@Action(value = "applyAudit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String applayDecorationOrderDrawLine() throws FLException{
+	public String applyAudit() throws FLException{
 		
 		auditService.applyAudit(auditVO,queryUserId());
 		

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class PuotationVO implements Serializable{
 
@@ -17,7 +17,7 @@ public class PuotationVO implements Serializable{
 	
 	private String name;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
@@ -29,7 +29,7 @@ public class PuotationVO implements Serializable{
 	
 	private String comment;
 	
-	public PuotationVO(UserVO creater) {
+	public PuotationVO(UserBaseVO creater) {
 		super();
 		this.creater = creater ;
 	}
@@ -58,10 +58,10 @@ public class PuotationVO implements Serializable{
 		this.name = name;
 	}
 	
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 	

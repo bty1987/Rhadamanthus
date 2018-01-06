@@ -34,8 +34,7 @@ public class PaymentPO implements Serializable {
 	
 	public static final String PAYMENT_PAYMENTTYPE_ZATERIAL_STR = "正林预付款";
 	
-	//提现,收款,退款,付款,转换款项,预付款转换
-	public static final String PAYMENT_TYPE_EXTRACT_STR = "提现"; //减
+	public static final String PAYMENT_TYPE_EXTRACT_STR = "提现"; 
 	
 	public static final String PAYMENT_TYPE_COLLECTION_STR = "收款";
 	
@@ -59,13 +58,13 @@ public class PaymentPO implements Serializable {
 	
 	public static final String PAYMENT_MATERIAL_PAYMENTNAME_STR = "主材款";
 	
-	private int paymentId;
+	private long pid;
+	
+	private AdvanceReceiptPO advanceReceipt;
 	
 	private CustomerPO customer;
 	
 	private String orderId;
-	
-	private AdvanceReceiptPO advanceReceipt;
 	
 	private float balance;
 	
@@ -77,11 +76,9 @@ public class PaymentPO implements Serializable {
 	
 	private String status;
 	
-	private String des;
-	
-	private long convertPaymentId; // 对应转换款项关联表的id,致远表对应
-	
 	private int company;
+	
+	private String comment;
 	
 	public PaymentPO(){
 		super();
@@ -95,17 +92,17 @@ public class PaymentPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "paymentId")
-	public int getPaymentId(){
-		return paymentId;
+	@Column(name = "pid")
+	public long getPid() {
+		return pid;
 	}
 
-	public void setPaymentId(int paymentId){
-		this.paymentId = paymentId;
+	public void setPid(long pid) {
+		this.pid = pid;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "customerId", referencedColumnName = "id")
+	@javax.persistence.JoinColumn(nullable = false, name = "customerId", referencedColumnName = "cid")
 	public CustomerPO getCustomer(){
 		return customer;
 	}
@@ -169,15 +166,6 @@ public class PaymentPO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	@Column(name="des")
-	public String getDes(){
-		return des;
-	}
-
-	public void setDes(String des){
-		this.des = des;
-	}
-
 	@Column(name="status")
 	public String getStatus(){
 		return status;
@@ -187,15 +175,6 @@ public class PaymentPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name="convertPaymentId")
-	public long getConvertPaymentId(){
-		return convertPaymentId;
-	}
-
-	public void setConvertPaymentId(long convertPaymentId){
-		this.convertPaymentId = convertPaymentId;
-	}
-
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -203,5 +182,14 @@ public class PaymentPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+	
+	@Column(name="comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

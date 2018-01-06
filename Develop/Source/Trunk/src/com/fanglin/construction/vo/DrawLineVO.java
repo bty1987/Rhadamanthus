@@ -70,7 +70,7 @@ public class DrawLineVO implements Serializable {
 	
 	private Long   gid;
 	
-	private String drawLineGroup;
+	private String drawLineGroupName;
 	
 	private String drawLineUser;
 	
@@ -246,12 +246,12 @@ public class DrawLineVO implements Serializable {
 		this.gid = gid;
 	}
 
-	public void setDrawLineGroup(String drawLineGroup){
-		this.drawLineGroup = drawLineGroup;
+	public void setDrawLineGroupName(String drawLineGroupName){
+		this.drawLineGroupName = drawLineGroupName;
 	}
 
-	public String getDrawLineGroup(){
-		return drawLineGroup;
+	public String getDrawLineGroupName(){
+		return drawLineGroupName;
 	}
 
 	public void setDrawLineUser(String drawLineUser){

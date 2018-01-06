@@ -26,7 +26,7 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 	@SuppressWarnings("unchecked")
 	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId)
 	{
-		return session().createCriteria(ServicePaymentPO.class).createAlias("decorationOrder", "decorationOrder").add(Restrictions.eq("decorationOrder.orderId", orderId)).list();
+		return session().createCriteria(ServicePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 	
 	@Override
@@ -64,23 +64,23 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 		if(filters != null && filters.size() > 0){
 
 			for(Filter filter: filters){
-
+				
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-
 				
-				query.alias("decorationOrder", "decorationOrder");
-				query.alias("decorationOrder.villagePO", "village");
-				query.alias("decorationOrder.designerPO", "designer");
+				query.alias("decoration", "decoration");
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
+				query.alias("decoration.designer", "designer");
 				query.alias("serviceReceipt", "servicereceipt");
 				
 				if("orderId".equals(field)){
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));
 				}else if("designer".equals(field)){
-					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_DESIGNER_STR, data, op));
+					query.add(query.getCriterion("designer.userId", data, op));
 				}else if("village".equals(field)){
-					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_VILLAGE_STR, data, op));
+					query.add(query.getCriterion("village.no", data, op));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				}else if("collectTime".equals(filter.getField())){

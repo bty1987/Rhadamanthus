@@ -21,18 +21,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
-import com.fanglin.approval.service.ApprovalActivityService;
-import com.fanglin.approval.service.ApprovalCustomerService;
+import com.fanglin.approval.service.ApprovalDecorationActivityService;
+import com.fanglin.approval.service.ApprovalDecorationCustomerService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
-import com.fanglin.approval.service.ApprovalOrderBelongService;
+import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
-import com.fanglin.approval.service.ApprovalVillageService;
+import com.fanglin.approval.service.ApprovalDecorationHouseService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -48,10 +48,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private ApprovalDao approvalDao;
 	
 	@Autowired
-	private ApprovalActivityService approvalActivityService;
+	private ApprovalDecorationActivityService approvalDecorationActivityService;
 	
 	@Autowired
-	private ApprovalCustomerService approvalCustomerService;
+	private ApprovalDecorationCustomerService approvalDecorationCustomerService;
 	
 	@Autowired
 	private ApprovalDecorationRefundService approvalDecorationRefundService;
@@ -63,13 +63,13 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private ApprovalMaterialRefundService approvalMaterialRefundService;
 	
 	@Autowired
-	private ApprovalOrderBelongService approvalOrderBelongService;
+	private ApprovalDecorationBelongService approvalDecorationBelongService;
 	
 	@Autowired
 	private ApprovalQuotationDiscountService approvalQuotationDiscountService;
 	
 	@Autowired
-	private ApprovalVillageService approvalVillageService;
+	private ApprovalDecorationHouseService aprovalDecorationHouseService;
 	
 	@Autowired
 	private ApprovalManifestDBService approvalManifestDBService;
@@ -132,6 +132,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		BeanUtil.copyProperties(approvalPO, approvalVO);
 		
+		approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
+		approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());		
 		approvalVO.setSenderId(approvalPO.getSender().getUserId());
 		approvalVO.setSenderName(approvalPO.getSender().getUserName());
 		
@@ -159,13 +161,13 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT://1
-				approvalCustomerService.approvalForCustomer(approvalPO);
+				approvalDecorationCustomerService.approvalForCustomer(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT://2
-				approvalVillageService.approvalForVillage(approvalPO);
+				aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT://3
-				approvalOrderBelongService.approvalForOrderBelong(approvalPO);
+				approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT://4
 				approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
@@ -177,7 +179,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT://8
-				approvalActivityService.approvalForDecorationActivity(approvalPO);
+				approvalDecorationActivityService.approvalForDecorationActivity(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT://9
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);

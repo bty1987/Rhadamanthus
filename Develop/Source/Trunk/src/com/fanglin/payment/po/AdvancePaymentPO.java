@@ -18,7 +18,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3956125205251478439L;
 	
-	public static final String COLUMN_CUSTOMERID_STR = "customer.id";
+	public static final String COLUMN_CUSTOMERID_STR = "customer.cid";
 	
 	private int apId;
 	
@@ -91,7 +91,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="id")
+	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="cid")
 	public CustomerPO getCustomer() {
 		return customer;
 	}

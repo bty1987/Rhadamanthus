@@ -33,7 +33,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@SuppressWarnings("unchecked")
 	public List<QuotationPO> queryQuotationByOrderId(String orderId){
 		return createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("decorationOrder.orderId", orderId))
+				.add(Restrictions.eq("decoration.orderId", orderId))
 				.addOrder(Order.desc("createTime"))
 				.list();
 	}
@@ -47,7 +47,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@Override
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId){
 		return (QuotationPO) createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("decorationOrder.orderId", orderId))
+				.add(Restrictions.eq("decoration.orderId", orderId))
 				.add(Restrictions.eq("status", QuotationPO.STATUS_DEFAULT_INT))
 				.uniqueResult();
 	}

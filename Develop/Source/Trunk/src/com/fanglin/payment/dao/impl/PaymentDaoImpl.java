@@ -75,11 +75,9 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 			for(Filter filter: filters){
 				
 				if("customerId".equals(filter.getField())){
-					query.add(query.getCriterion("customer.customerId", filter));
+					query.add(query.getCriterion("customer.no", filter));
 				} else if("customerName".equals(filter.getField())){
 					query.add(query.getCriterion("customer.customerName", filter));
-				} else if("customerPhone".equals(filter.getField())){
-					query.add(query.getCriterion("customer.phone", filter));
 				} else if("orderId".equals(filter.getField())){
 					query.add(query.getCriterion("orderId", filter));
 				} else if("collectTimeDateRange".equals(filter.getField())){

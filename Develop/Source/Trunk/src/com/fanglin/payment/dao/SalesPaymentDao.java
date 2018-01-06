@@ -22,7 +22,7 @@ public interface SalesPaymentDao  extends Dao<SalesPaymentPO>{
 	
 	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids);
 	
-	public int countSalesPaymentBySidAType(Long sid,Short type);
+	public int countSalesPaymentBySidAType(Long sid, Short type);
 	
 	public int countSalesPaymentBySid(long sid);
 	

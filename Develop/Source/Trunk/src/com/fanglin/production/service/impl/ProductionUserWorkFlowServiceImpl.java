@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.ProductionUserWorkFlowDao;
 import com.fanglin.production.po.ProductionUserWorkFlowPO;
 import com.fanglin.production.service.ProductionUserWorkFlowService;
@@ -34,10 +34,11 @@ public class ProductionUserWorkFlowServiceImpl implements ProductionUserWorkFlow
 			if(productionUserWorkFlowPOs.size() != 0){
 		
 				for(ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs){
-					productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserVO());
+					productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserBaseVO());
 					BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow","operator"));
 					BeanUtil.copyProperties(productionUserWorkFlowPO.getProductionworkflow(), productionUserWorkFlowVO.getProductionworkflow(), Arrays.asList("workflow"));
-					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowVO.getOperator(), Arrays.asList("role","dept","duty"));
+					
+					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(),productionUserWorkFlowPO.getOperator(),Arrays.asList("duty","dept"));
 					_productionUserWorkFlowVOs.add(productionUserWorkFlowVO);
 				}			
 				
