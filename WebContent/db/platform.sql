@@ -51,11 +51,12 @@ CREATE TABLE `backvisit` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计师回访记录表';
 
 DROP TABLE IF EXISTS `chainpage`;
-CREATE TABLE `platform`.`chainpage` (
+CREATE TABLE `chainpage` (
   `cpid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `url` varchar(512) NOT NULL,
   `comment` varchar(256) NOT NULL,
+  `companymark` tinyint(1) NOT NULL,
   PRIMARY KEY (`cpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='外链';
 
@@ -101,48 +102,6 @@ CREATE TABLE `decorationcontract` (
   PRIMARY KEY (`autoId`),
   KEY `indexone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同表';
-
-DROP TABLE IF EXISTS `decorationdesignerdepartmentrank`;
-CREATE TABLE `decorationdesignerdepartmentrank` (
-  `dddrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerDeptId` varchar(15) NOT NULL,
-  `designerDeptName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`dddrId`),
-  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
-
-DROP TABLE IF EXISTS `decorationdesignerrank`;
-CREATE TABLE `decorationdesignerrank` (
-  `ddrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`ddrId`),
-  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
-
-DROP TABLE IF EXISTS `decorationdesignerregionrank`;
-CREATE TABLE `decorationdesignerregionrank` (
-  `ddrrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`ddrrId`),
-  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
 
 DROP TABLE IF EXISTS `decorationholonomy`;
 CREATE TABLE `decorationholonomy` (
@@ -198,21 +157,23 @@ DROP TABLE IF EXISTS `decorationorder`;
 CREATE TABLE `decorationorder` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL DEFAULT '',
-  `customerId` bigint(20) NOT NULL COMMENT '客户编号',
+  `customerId` int(11) NOT NULL COMMENT '客户编号',
   `villageId` varchar(10) NOT NULL COMMENT '楼盘编号',
   `houseNumber` varchar(30) NOT NULL COMMENT '门牌号',
   `houseType` varchar(15) NOT NULL DEFAULT ' 现房' COMMENT '期房 , 现房 . ',
   `houseClass` varchar(10) DEFAULT NULL COMMENT '清水 , 二手 , 别墅 , 阁楼 , 地下 . ',
-  `apartmentType` varchar(45) DEFAULT NULL COMMENT '举例：一室一厅,两室一厅,三室两厅,三室一厅,阁楼,别墅',
+  `apartmentType` varchar(45) DEFAULT NULL COMMENT '举例:一室一厅,两室一厅,三室两厅,三室一厅,阁楼,别墅',
   `houseArea` decimal(10,2) DEFAULT '0.00' COMMENT '建筑面积',
   `freeArea` decimal(10,2) DEFAULT '0.00' COMMENT '赠送面积',
   `designerId` varchar(15) DEFAULT NULL COMMENT '设计师编号',
   `salesmanId` varchar(15) DEFAULT NULL COMMENT '业务员编号',
   `supervisorId` varchar(15) DEFAULT NULL COMMENT '监理编号',
-  `inspectionId` varchar(15) DEFAULT NULL COMMENT '巡检编号',
+  `quoterId` varchar(15) DEFAULT NULL COMMENT '报价员编号',
+  `escorterId` varchar(15) DEFAULT NULL COMMENT '跟单员编号',
   `notSalesmanName` varchar(10) DEFAULT NULL COMMENT '非业务信息',
   `notSalesmanPhone` varchar(15) DEFAULT NULL,
   `notSalesmanContent` varchar(100) DEFAULT NULL,
+  `notSalesmanRate` decimal(10,3) NOT NULL DEFAULT '0.000',
   `backOrderName` varchar(20) DEFAULT NULL COMMENT '返单信息',
   `backOrderPhone` varchar(45) DEFAULT NULL,
   `backOrderContent` varchar(128) DEFAULT NULL,
@@ -223,17 +184,16 @@ CREATE TABLE `decorationorder` (
   `measureTime` timestamp NULL DEFAULT NULL,
   `createTime` timestamp NULL DEFAULT NULL COMMENT '订单创建时间',
   `createUser` varchar(15) DEFAULT NULL COMMENT '订单创建人',
-  `status` varchar(10) DEFAULT NULL COMMENT '咨询,量房,已报价,定金,已签约,废单,已完工,合同终止',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包 , 全包',
+  `status` varchar(10) DEFAULT NULL COMMENT '初始,已报价,定金,已签约,废单,已完工,合同终止',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包0, 全包1, 半价2',
   `projectStatus` varchar(10) DEFAULT NULL COMMENT '等待施工,放线申请,放线失败,放线成功,水电申请,水电,水电验收,瓦工申请,瓦工,瓦工验收,木工申请,木工,木工验收,油工申请,油工,油工验收,保洁申请,保洁,保洁验收,',
-  `paymentStatus` varchar(10) DEFAULT NULL COMMENT '预付款,设计费,定金,首付款,首付二期款,二期款,尾款',
   `versionId` varchar(11) NOT NULL COMMENT '订单使用报价版本号',
   `orderTotalPrice` decimal(10,3) DEFAULT '0.000' COMMENT '折后合同额',
-  `notSalesmanRate` decimal(10,3) NOT NULL DEFAULT '0.000',
   `salesmanType` varchar(10) NOT NULL DEFAULT '守园',
   `otherStatus` tinyint(4) DEFAULT '0' COMMENT '1合尺, 2设计费',
   `company` tinyint(4) NOT NULL COMMENT '订单所属公司',
   `quotationTimeLimit` int(11) NOT NULL DEFAULT '0',
+  `resourceType` tinyint(1) DEFAULT '0' COMMENT '资源类型:咨询0,量房1',
   PRIMARY KEY (`autoId`),
   UNIQUE KEY `uniqueone` (`orderId`),
   KEY `indexone` (`orderId`),
@@ -315,9 +275,9 @@ DROP TABLE IF EXISTS `drawlinegroup`;
 CREATE TABLE `drawlinegroup` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `content` varchar(128),
-  `company` int(11) NOT NULL,
+  `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线小组表';
 
@@ -333,16 +293,6 @@ CREATE TABLE `materialbrand` (
   KEY `indextwo` (`materialBrandName`,`materialBrandNamePinyin`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌表';
 
-DROP TABLE IF EXISTS `materialbrandcount`;
-CREATE TABLE `materialbrandcount` (
-  `mbcId` int(11) NOT NULL AUTO_INCREMENT,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`mbcId`),
-  KEY `indexone` (`materialBrand`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材品牌业绩统计';
-
 DROP TABLE IF EXISTS `materialbrandright`;
 CREATE TABLE `materialbrandright` (
   `mbrId` int(11) NOT NULL AUTO_INCREMENT,
@@ -351,101 +301,6 @@ CREATE TABLE `materialbrandright` (
   PRIMARY KEY (`mbrId`),
   KEY `indexone` (`userId`,`brandId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌权限表';
-
-DROP TABLE IF EXISTS `materialdepartmentcount`;
-CREATE TABLE `materialdepartmentcount` (
-  `mdcId` int(11) NOT NULL AUTO_INCREMENT,
-  `materialDeptId` varchar(10) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`mdcId`),
-  UNIQUE KEY `uniqueone` (`materialDeptId`,`createTime`),
-  KEY `indexone` (`materialDeptId`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
-
-DROP TABLE IF EXISTS `materialdesignercount`;
-CREATE TABLE `materialdesignercount` (
-  `mdcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `designerDepartmentId` varchar(15) NOT NULL,
-  `designerDepartmentName` varchar(32) NOT NULL,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`mdcId`),
-  UNIQUE KEY `uniqueone` (`designerId`,`createTime`),
-  KEY `indexone` (`designerId`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
-
-DROP TABLE IF EXISTS `materialdesignerdepartmentcount`;
-CREATE TABLE `materialdesignerdepartmentcount` (
-  `mddcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerDeptId` varchar(15) NOT NULL,
-  `designerDeptName` varchar(32) NOT NULL,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`mddcId`),
-  UNIQUE KEY `uniqueone` (`designerDeptId`,`designerRegionId`,`createTime`),
-  KEY `indexone` (`designerDeptId`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
-
-DROP TABLE IF EXISTS `materialdesignerdepartmentrank`;
-CREATE TABLE `materialdesignerdepartmentrank` (
-  `mddrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerDeptId` varchar(15) NOT NULL,
-  `designerDeptName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`mddrId`),
-  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
-
-DROP TABLE IF EXISTS `materialdesignerrank`;
-CREATE TABLE `materialdesignerrank` (
-  `mdrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`mdrId`),
-  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
-
-DROP TABLE IF EXISTS `materialdesignerregioncount`;
-CREATE TABLE `materialdesignerregioncount` (
-  `mdrcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`mdrcId`),
-  UNIQUE KEY `uniqueone` (`designerRegionId`,`createTime`),
-  KEY `indexone` (`designerRegionId`,`createTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
-
-DROP TABLE IF EXISTS `materialdesignerregionrank`;
-CREATE TABLE `materialdesignerregionrank` (
-  `mdrrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`mdrrId`),
-  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
 
 DROP TABLE IF EXISTS `materialmodel`;
 CREATE TABLE `materialmodel` (
@@ -488,14 +343,6 @@ CREATE TABLE `materialtypecount` (
   KEY `indexone` (`materialType`,`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材品类业绩统计';
 
-DROP TABLE IF EXISTS `measurementunit`;
-CREATE TABLE `measurementunit` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
-  `unitDes` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计量单位表';
-
 DROP TABLE IF EXISTS `orderbelonginfo`;
 CREATE TABLE `orderbelonginfo` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -517,7 +364,7 @@ CREATE TABLE `orderbelonginfo` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息';
 
 DROP TABLE IF EXISTS `paymentscale`;
-CREATE TABLE `platform`.`paymentscale` (
+CREATE TABLE `paymentscale` (
   `psid` int(11) NOT NULL AUTO_INCREMENT,
   `cid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -526,30 +373,13 @@ CREATE TABLE `platform`.`paymentscale` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例';
 
 DROP TABLE IF EXISTS `paymentscaleitem`;
-CREATE TABLE `platform`.`paymentscaleitem` (
+CREATE TABLE `paymentscaleitem` (
   `psiid` int(11) NOT NULL AUTO_INCREMENT,
   `psid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `scale` int(3) NOT NULL,
   PRIMARY KEY (`psiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例项';
-
-DROP TABLE IF EXISTS `quotationmaterialitem`;
-CREATE TABLE `quotationmaterialitem` (
-  `qmiId` int(11) NOT NULL AUTO_INCREMENT,
-  `qid` bigint(20) NOT NULL,
-  `no` varchar(64) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `category` varchar(32) NOT NULL,
-  `brand` varchar(32) NOT NULL,
-  `measurementUnit` varchar(10) NOT NULL,
-  `price` decimal(10,3) NOT NULL,
-  `diff` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`qmiId`),
-  KEY `indexone` (`qid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价主材项';
 
 DROP TABLE IF EXISTS `rolechainpage`;
 CREATE TABLE `rolechainpage` (

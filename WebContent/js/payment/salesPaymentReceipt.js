@@ -14,20 +14,19 @@ var receipt = {
 
 jQuery(function($) {
 
-    Api().init('../../js/api/');
+    var params = {};
+    api = parent.api;
+    config = parent.config ;
+    server = parent.server;
+    utils = parent.utils;
+    com = parent.com;
+    $ = parent.$;
 
     params.serverPath = window.server;
     params.authentication = parent.params.authentication;
-
-    var args = window.location.search.substr(1);
-    receipt.args = args.substring(args.indexOf('salesReceipt.srId='),args.indexOf('&')).split('=')[1];
-
-    if(args.indexOf('time=') != -1){
-        params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
-    }
+    params = parent.params;
 
     var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrId;
-    querySalesPaymentForNotInitBySrId.url = querySalesPaymentForNotInitBySrId.url + "?" + args;
 
     com.post(api.ds.payment, {}, function(res){
         $("#advanceType").bindData(res.advanceTypeForSalesMaterial, 'key', 'value');
@@ -44,7 +43,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    com.post(querySalesPaymentForNotInitBySrId, {}, function(res){
+    com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId":params.salesReceiptSrId}, function(res){
 
         var salesPayments = res.salesPayments;
 
@@ -59,12 +58,12 @@ jQuery(function($) {
             var salesPayment = salesPayments[i];
             salesBrand = salesPayment.brand;
 
-            commonInfo["orderId"] = salesPayment.sales.orderId
-            commonInfo["no"] = salesPayment.sales.no
-            commonInfo["orderAddr"] = salesPayment.sales.village.villageName + " " + salesPayment.sales.houseNumber;
-            commonInfo["customerName"] = salesPayment.sales.customer.customerName
-            commonInfo["salesmanName"] = salesPayment.sales.salesman.currentName
-            commonInfo["departmentName"] = salesPayment.sales.dept.deptName
+            commonInfo["orderId"] = salesPayment.sales.orderId;
+            commonInfo["no"] = salesPayment.sales.no;
+            commonInfo["orderAddr"] = salesPayment.sales.house.village.name + " " + salesPayment.sales.house.houseNumber;
+            commonInfo["customerName"] = salesPayment.sales.customer.name;
+            commonInfo["salesmanName"] = salesPayment.sales.salesman.currentName;
+            commonInfo["departmentName"] = salesPayment.sales.dept.deptName;
 
             commonInfo["collectUserName"] = salesPayment.salesReceipt.collecterName;
             commonInfo["collectTime"] = salesPayment.salesReceipt.collectTime;
@@ -84,11 +83,12 @@ jQuery(function($) {
     }, null ,false);
 
     var querysalesReceiptBySrId = api.payment.querySalesReceiptBySrId;
-    querysalesReceiptBySrId.url = querysalesReceiptBySrId.url + "?" + args;
 
-    com.post(querysalesReceiptBySrId, {}, function(res){
+    com.post(querysalesReceiptBySrId, {"salesReceipt.srId":params.salesReceiptSrId}, function(res){
 
         var salesReceipt = res.salesReceipt;
+
+        receipt.salesReceipt = res.salesReceipt;
 
         if(parseFloat(salesReceipt.cash) != 0){
             var tem = {
@@ -160,8 +160,8 @@ function createReceiptTable(){
     var paymentItems = receipt.paymentItems;
     var receiptItems = receipt.receiptItems;
 
-    var srId = receipt.args;
-    var noInit = "000000000000"+srId
+    var srId = parent.params.salesReceiptSrId;
+    var noInit = "000000000000"+srId;
 
     var no = noInit.substring(srId.length, noInit.length);
 
@@ -233,7 +233,7 @@ function createReceiptTable(){
     var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);;
     var summaryReceiptTd = $('<td colspan="4"></td>').appendTo(summaryReceiptTr);
     var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
-    var receReceiptSpan = $('<span></span>').text('收款人:' + commonInfo["collectUserName"]).appendTo(summaryReceiptDiv);
+    var receReceiptSpan = $('<span></span>').text('收款人:' + receipt.salesReceipt.collecter.currentName).appendTo(summaryReceiptDiv);
     var cashierReceiptSpan = $('<span></span>').text(' 交款人:').appendTo(summaryReceiptDiv);
 
     var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);

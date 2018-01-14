@@ -321,7 +321,7 @@ jQuery(function($) {
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.roleList = res.roleList;
+		userAdvance.roleList = res.roles;
 	}, null, false);
 
 	com.post(api.system.queryCompany,{},function(res){
@@ -453,7 +453,7 @@ jQuery(function($) {
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
 				showDesignDepartment();
-				com.post(api.right.queryDecorationOrderDesignDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
+				com.post(api.right.queryDecorationDesignDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
 					if(data.dids.length){
 						$.each(data.dids, function(i, v){
 							$wrap.find('input[value="'+ v +'"]').prop('checked', true);
@@ -461,7 +461,7 @@ jQuery(function($) {
 					}
 				}, null, false);
 				$dialog.modal("show");
-				this.postConf.path = api.right.updateDecorationOrderDesignDepartmentRight;
+				this.postConf.path = api.right.updateDecorationDesignDepartmentRight;
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
@@ -469,7 +469,7 @@ jQuery(function($) {
 			openSalesDialog : function(userId) {
 				var $dialog = this.$dialog;
 				showDepaermentModal();
-				com.post(api.right.queryDecorationOrderSalesmanDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
+				com.post(api.right.queryDecorationSalesmanDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
 					if(data.dids.length){
 						$.each(data.dids, function(i, v){
 							$wrap.find('input[value="'+ v +'"]').prop('checked', true);
@@ -477,7 +477,7 @@ jQuery(function($) {
 					}
 				}, null, false);
 				$dialog.modal("show");
-				this.postConf.path = api.right.updateDecorationOrderSalesmanDepartmentRight;
+				this.postConf.path = api.right.updateDecorationSalesmanDepartmentRight;
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
@@ -490,7 +490,7 @@ jQuery(function($) {
 				com.post(api.ds.decoration, {}, function(data){
 					list = list.concat(data.decorationOrderStatus);
 				}, null, false);
-				com.post(api.right.queryDecorationOrderStatusRightByUserId, { "user.userId" : userId}, function(data){
+				com.post(api.right.queryDecorationStatusRightByUserId, { "user.userId" : userId}, function(data){
 					userList = data.statuses;
 				}, null, false);
 
@@ -511,7 +511,7 @@ jQuery(function($) {
 
 				$dialog.modal("show");
 
-				this.postConf.path = api.right.updateDecorationOrderStatusRight;
+				this.postConf.path = api.right.updateDecorationStatusRight;
 				this.postConf.name = "statuses";
 				this.postConf["user.userId"] = userId;
 

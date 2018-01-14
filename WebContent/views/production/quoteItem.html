@@ -50,7 +50,7 @@
 
                             <div class="controls col-xs-8">
 
-                                <input type="text" class="col-xs-6 m-wrap v_required" name="measureunit"  rules="{required:true}">
+                                <select class="col-xs-6 m-wrap v_required" name="measureunit"  rules="{required:true}"></select>
 
                             </div>
 
@@ -73,7 +73,7 @@
                             <label class="control-label col-xs-4 no-padding-right">类型<i class="icon-asterisk"></i></label>
 
                             <div class="controls col-xs-8">
-                                <select name="quoteType" class="col-xs-6 m-wrap" rules="{required:true}"></select>
+                                <select name="quoteType" class="col-xs-6 m-wrap v_required" rules="{required:true}"></select>
                             </div>
 
                         </div>
@@ -85,9 +85,6 @@
 
 </div>
 
-<script>
-    $(function(){
-        $.getScript('js/production/quoteItem.js');
-    });
+<script type="text/javascript">
+	$.loadScript(['js/production/productionUtils.js','js/production/quoteItem.js']);
 </script>
-

@@ -64,7 +64,6 @@ $(function(){
                     return key=='level1' ? a.mid-b.mid : b.mid - a.mid;
                 });
             });
-
             return menuArr;
         };
 
@@ -111,6 +110,7 @@ $(function(){
             },
             getFatherModuleList : function(listData){
                 var result = sortData(listData);
+
                 return  {
                     level1 : result.level1,
                     level2 : result.level2,
@@ -120,7 +120,7 @@ $(function(){
     })();
 
     function search(){
-        com.post(api.system.queryModule, {'module.system' : config.system}, function(data){
+        com.post(api.system.queryModule, {'module.system' : parent.config.system}, function(data){
             Module.renderList( data.modules ,'moduleTable');
             fatherModuleArr = Module.getFatherModuleList(data.modules);
         }, null, false);

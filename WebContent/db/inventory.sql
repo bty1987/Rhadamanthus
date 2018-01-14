@@ -55,7 +55,7 @@ CREATE TABLE `checklist` (
   `shid` int(11) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `uid` int(11) NOT NULL,
   PRIMARY KEY (`clid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='盘点列表';
@@ -131,9 +131,27 @@ CREATE TABLE `manifest` (
   `comment` varchar(128) NOT NULL DEFAULT '',
   `attachment` varchar(256) NOT NULL DEFAULT '',
   `qmid` int(11) DEFAULT NULL COMMENT '引用货单ID',
-  `company` int(11) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单';
+
+DROP TABLE IF EXISTS `manifesttemplate`;
+CREATE TABLE `manifesttemplate` (
+  `mtid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `comment` varchar(128) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`mtid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版';
+
+DROP TABLE IF EXISTS `manifesttemplateitem`;
+CREATE TABLE `manifesttemplateitem` (
+  `mtiId` int(11) NOT NULL AUTO_INCREMENT,
+  `mtid` int(11) NOT NULL,
+  `gid` int(11) NOT NULL,
+  PRIMARY KEY (`mtiId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版项';
 
 DROP TABLE IF EXISTS `manifestitem`;
 CREATE TABLE `manifestitem` (
@@ -150,23 +168,6 @@ CREATE TABLE `manifestitem` (
   `comment` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`miid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单项';
-
-DROP TABLE IF EXISTS `manifesttemplate`;
-CREATE TABLE `manifesttemplate` (
-  `mtid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `comment` varchar(128) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`mtid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单模版';
-
-DROP TABLE IF EXISTS `manifesttemplateitem`;
-CREATE TABLE `manifesttemplateitem` (
-  `mtiId` int(11) NOT NULL AUTO_INCREMENT,
-  `mtid` int(11) NOT NULL,
-  `gid` int(11) NOT NULL,
-  PRIMARY KEY (`mtiId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单模版项';
 
 DROP TABLE IF EXISTS `price`;
 CREATE TABLE `price` (
@@ -185,12 +186,13 @@ CREATE TABLE `purchase` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL,
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `balanceTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结算时间',
-  `deliveryTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '预到货时间',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `balanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结算时间',
+  `deliveryTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '预到货时间',
   `status` tinyint(2) NOT NULL DEFAULT '0',
   `balanceStatus` tinyint(2) NOT NULL DEFAULT '0',
   `comment` varchar(128) DEFAULT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购单';
 
@@ -203,6 +205,7 @@ CREATE TABLE `purchaseamount` (
   KEY `indexone` (`month`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购金额';
 
+DROP TABLE IF EXISTS `purchasebalance`;
 CREATE TABLE `purchasebalance` (
   `pbid` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
@@ -235,187 +238,6 @@ CREATE TABLE `purchasemanifest` (
   `mid` int(11) NOT NULL COMMENT '货单ID',
   PRIMARY KEY (`pmid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购货单';
-
-DROP TABLE IF EXISTS `refunds`;
-CREATE TABLE `refunds` (
-  `rid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单ID',
-  `spid` int(11) NOT NULL COMMENT '款项ID',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` timestamp NULL DEFAULT NULL,
-  `balanceTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
-  `comment` varchar(128) NOT NULL,
-  `status` tinyint(2) DEFAULT '0',
-  PRIMARY KEY (`rid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退货单';
-
-DROP TABLE IF EXISTS `refundsitem`;
-CREATE TABLE `refundsitem` (
-  `riid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单ID',
-  `rid` int(11) NOT NULL COMMENT '退货单ID',
-  `siid` int(11) NOT NULL COMMENT '销售项ID',
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`riid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退货单';
-
-DROP TABLE IF EXISTS `sales`;
-CREATE TABLE `sales` (
-  `sid` int(11) NOT NULL AUTO_INCREMENT,
-  `no` varchar(20) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `company` int(11) NOT NULL,
-  `dompany` int(11) NOT NULL,
-  `vid` int(11) NOT NULL COMMENT '楼盘ID',
-  `houseNumber` varchar(30) NOT NULL COMMENT '楼号',
-  `cid` int(11) DEFAULT NULL COMMENT '客户ID',
-  `suid` int(11) NOT NULL COMMENT '业务员ID',
-  `did` int(11) NOT NULL COMMENT '业务部门ID',
-  `rid` int(11) NOT NULL COMMENT '业务分区ID',
-  `guid` int(11) DEFAULT NULL COMMENT '导购员ID',
-  `gdid` int(11) DEFAULT NULL COMMENT '导购部门ID',
-  `iuid` int(11) NOT NULL COMMENT '驻店员ID',
-  `category` varchar(32) NOT NULL,
-  `brand` varchar(32) NOT NULL,
-  `comment` varchar(128) DEFAULT '',
-  `createTime` timestamp NULL DEFAULT NULL,
-  `balanceTime` timestamp NULL DEFAULT NULL,
-  `fullpayTime` timestamp NULL DEFAULT NULL,
-  `status` tinyint(2) DEFAULT '0',
-  `depositpayStatus` tinyint(2) NOT NULL DEFAULT '-1',
-  `fullpayStatus` tinyint(2) DEFAULT '-1',
-  `balanceStatus` tinyint(2) DEFAULT '0',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `maling` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `venderMaling` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `couponInfo` varchar(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售单';
-
-DROP TABLE IF EXISTS `salesitem`;
-CREATE TABLE `salesitem` (
-  `siid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单ID',
-  `gid` int(11) NOT NULL COMMENT '商品ID',
-  `cid` int(11) NOT NULL COMMENT '颜色ID',
-  `fid` int(11) NOT NULL COMMENT '规格ID',
-  `purchase` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '进价',
-  `selling` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '售价',
-  `discount` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣',
-  `disPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣价',
-  `postDis` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让',
-  `price` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让价',
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `comment` varchar(128) DEFAULT NULL,
-  `rawCtype` tinyint(2) NOT NULL COMMENT '原结算方式',
-  `rawCvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原结算值',
-  `ctype` tinyint(2) NOT NULL COMMENT '结算方式',
-  `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
-  PRIMARY KEY (`siid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售项';
-
-DROP TABLE IF EXISTS `salesmanifestitem`;
-CREATE TABLE `salesmanifestitem` (
-  `smiid` int(11) NOT NULL AUTO_INCREMENT,
-  `siid` int(11) NOT NULL,
-  `miid` int(11) NOT NULL,
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `surplus` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '余额',
-  `type` tinyint(2) NOT NULL,
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`smiid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购项';
-
-DROP TABLE IF EXISTS `salespayment`;
-CREATE TABLE `salespayment` (
-  `spid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单ID',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `category` varchar(32) NOT NULL DEFAULT '',
-  `brand` varchar(32) NOT NULL DEFAULT '',
-  `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createrName` varchar(32) NOT NULL COMMENT '创建人名',
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `srid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`spid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售款项表';
-
-DROP TABLE IF EXISTS `salesreceipt`;
-CREATE TABLE `salesreceipt` (
-  `srid` int(11) NOT NULL AUTO_INCREMENT,
-  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
-  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
-  `collecterName` varchar(32) DEFAULT NULL COMMENT '收款人名',
-  `confirmerName` varchar(32) DEFAULT NULL COMMENT '确认人名',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankInfo` varchar(512) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBank` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBank` varchar(20) NOT NULL DEFAULT '',
-  `advance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `advanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `couponInfo` text NOT NULL,
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`srid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售收据表';
-
-DROP TABLE IF EXISTS `salesbalance`;
-CREATE TABLE `salesbalance` (
-  `sbid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单',
-  `rid` int(11) DEFAULT NULL COMMENT '退货单',
-  `cuid` varchar(32) NOT NULL COMMENT '创建人',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `puid` varchar(32) DEFAULT NULL COMMENT '结算人',
-  `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
-  `venderTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '总额',
-  `balance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '预结算值',
-  `difference` decimal(10,3) DEFAULT '0.000' COMMENT '差值',
-  `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '厂商结算',
-  `pbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
-  `type` tinyint(2) NOT NULL COMMENT '类型,0:购货,1:预结算退货,2:结算退货',
-  `status` tinyint(2) NOT NULL COMMENT '状态,0:预结算,1:厂商结算,2:结算',
-  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`sbid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算';
-
-DROP TABLE IF EXISTS `salesbalanceitem`;
-CREATE TABLE `salesbalanceitem` (
-  `sbiid` int(11) NOT NULL AUTO_INCREMENT,
-  `sbid` int(11) NOT NULL COMMENT '销售结算ID',
-  `siid` int(11) NOT NULL COMMENT '销售项ID',
-  `rawCtype` tinyint(2) NOT NULL COMMENT '原结算方式, 0:底价,1:结算',
-  `rawCvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原结算值',
-  `ctype` tinyint(2) NOT NULL COMMENT '结算方式',
-  `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
-  `num` decimal(10,3) NOT NULL COMMENT '数量',
-  `total` decimal(10,3) NOT NULL COMMENT '总价',
-  PRIMARY KEY (`sbiid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算项';
-
-DROP TABLE IF EXISTS `storehouse`;
-CREATE TABLE `storehouse` (
-  `shid` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(32) NOT NULL,
-  `name` varchar(64) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`shid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='仓库';
 
 DROP TABLE IF EXISTS `storehousestock`;
 CREATE TABLE `storehousestock` (

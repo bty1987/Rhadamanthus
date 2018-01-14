@@ -91,7 +91,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "queryGoodsByAtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsByAtid() throws FLException{
 		
-		goodes = goodsService.queryGoodsByAtid(goods,queryCompany());
+		goodes = goodsService.queryGoodsByAtid(goods);
 		
 		return SUCCESS;
 	}

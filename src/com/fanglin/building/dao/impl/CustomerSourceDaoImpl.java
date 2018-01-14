@@ -32,9 +32,9 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 				String data = filter.getData();
 				String op = filter.getOp();
 				
-				if("userName".equals(field)){
+				if("custumerName".equals(field)){
 					query.alias("customer", "customer");
-					query.add(query.getCriterion("customer.name", data, op));
+					query.add(query.getCriterion("customer.cid", Long.valueOf(data), op));
 				}else if("no".equals(field)){
 					query.add(query.getCriterion("no", data, op));
 				}
@@ -45,14 +45,14 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 	}
 	
 	@Override
-	public CustomerSourcePO queryCustomerSourceForNo(String no) {
+	public CustomerSourcePO queryCustomerSourceByNo(String no) {
 		
 		return (CustomerSourcePO)session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq(CustomerSourcePO.COLUMN_NO_STR, no)).uniqueResult();
 	
 	}
 	
 	@Override
-	public CustomerSourcePO checkCustomerSourceByCidAndType(Long cid, Short type) {
+	public CustomerSourcePO checkCustomerSource(Long cid, Short type) {
 		
 		return (CustomerSourcePO)session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq(CustomerSourcePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(CustomerSourcePO.COLUMN_TYPE_STR, type)).uniqueResult();
 		

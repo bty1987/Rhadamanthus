@@ -1,11 +1,6 @@
 ﻿
 jQuery(function () {
-   // var returnBtn = $('#returnBtn');
     var puotation={
-        typeahead: {
-            quoteItems : "quoteItems",
-            quoteItem : "quoteItem",
-        },
         qiids:null,
         quoteTypes:null,
         flag:true,

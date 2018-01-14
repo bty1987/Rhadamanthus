@@ -1,0 +1,638 @@
+<div id="decorationDetail" class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="widget-box no-border">
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+
+                                </div>
+                                <hr />
+                                <div class="step-content row-fluid position-relative" id="step-container">
+
+                                </div>
+
+                                <hr />
+                                <div class="row-fluid wizard-actions">
+                                    <button class="btn btn-info" type="button" id="btnSaveBasedecorationInfo"
+                                            data-loading-text="保存中...">
+                                        <i class="icon-ok bigger-110"></i>
+                                        保存
+                                    </button>
+                                    <button id="btnBack" class="btn btn-info" type="button">
+                                        <i class="icon-mail-forward "></i>返回
+                                    </button>
+                                    <button class="btn btn-prev">
+                                        <i class="icon-arrow-left"></i> 上一步
+                                    </button>
+
+                                    <button class="btn btn-success btn-next" data-last="完成">
+                                        下一步 <i class="icon-arrow-right icon-on-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="drawLineModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="agreementDialog">放线申请</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="drawLineDate" class="col-sm-3 control-label no-padding-right">放线时间</label>
+                            <div class="col-sm-9">
+                                <input class="date-picker col-xs-10 col-sm-5" id="drawLineDate" type="text"
+                                       data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="quotationTotalPriceModal" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="quotationTotalPriceDialog">选择报价总金额</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"
+                                   for="decorationTotalMoney">金额</label>
+                            <div class="col-md-8">
+                                <!-- select class="form-control v_required" id="decorationTotalMoney" data-toggle="popover" data-trigger='manual' ></select-->
+                                <input type='text' class="col-md-6 v_required v_number" id="decorationTotalMoney"
+                                       maxlength='15'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group hide" id="forDiscount">
+                            <label class="col-sm-3 control-label no-padding-right "
+                                   for="decorationDiscount">订单折扣</label>
+                            <div class="col-md-8">
+                                <select class="form-control v_required col-md-6" id="decorationDiscount"
+                                        data-toggle="popover" data-trigger='manual' style="width: 50%;"></select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="forPaymentScale">
+                            <label class="col-sm-3 control-label no-padding-right "
+                                   for="decorationDiscount">款项比例</label>
+                            <div class="col-md-8">
+                                <div id="paymentScale" class="col-xs-10 col-sm-6">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveGenerateDecorationPaymentBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelGenerateDecorationPaymentBtn" class="btn btn-default"
+                            data-dismiss="modal">取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="refundDecorationPaymentModal" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">退款款项信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div id="refundApprove">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="changeReason">审批备注</label>
+                                <div class="col-sm-9">
+                                    <textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required"
+                                              rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+                                    <span class='star'></span>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="refundApproveManSel"
+                                       class="col-sm-3 control-label no-padding-right">审批人</label>
+                                <div class="col-sm-9">
+                                    <div id="refundApproveManSel" class="col-xs-10 col-sm-6">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="referMoney">金额</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="autoId" class="hide"/>
+                                <input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float"
+                                       data-toggle="popover" data-trigger='manual' maxlength='6' readonly/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveRefundMoneyBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="otherPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">款项信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="otherPaymentType">款项类型</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='otherPaymentType'
+                                        data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="otherPayment">金额</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-5 v_required v_float"
+                                       data-toggle="popover" data-trigger='manual' maxlength='6'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveOtherPaymentBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- customer approve modal -->
+    <div class="modal fade" id="customerChangeModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">客户信息修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+                                        <div class="col-sm-9">
+                                            <input type="checkbox" id="gender" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6 v_identity" data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="officer">军官证</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6  v_officer" data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6  " data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+                                        <div class="col-sm-9">
+                                            <select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+                                        <div class="col-sm-9">
+                                            <textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <div class="col-md-6">
+                                <div class="col-sm-12" style="height: 460px;">
+                                    <label class="col-sm-2 control-label no-padding-right" style="margin-left: -30px">联系电话</label>
+
+                                    <div id="phoneList" class="clearfix tab-pane active" style="margin-top: 50px"></div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="col-sm-3 control-label no-padding-left" for="addphone">
+                                        <b style="line-height: 30px">添加电话</b>
+                                    </label>
+                                    <input class="col-sm-6 " id="addphone" style="margin-top: 10px;">
+                                    <button style="float: left;margin: 8px 0px 0px 10px;padding: 1px 8px;" class="btn btn-sm btn-primary" id="savePhoneBtn" >添加</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cSaveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cCancelBtn" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- village approve modal -->
+    <div class="modal fade" id="villageChangeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">房产信息修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="no" class="col-sm-3 control-label no-padding-right">楼盘名称</label>
+                            <div class="col-md-9">
+                                <select class="chosen-select col-xs-10 col-sm-6 v_required" id="no"
+                                        data-placeholder="请输入楼盘名称" data-toggle="popover" data-trigger='manual'
+                                        style="display: none;">
+                                    <option value="">&nbsp;</option>
+                                </select>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="nameRuleSel">楼号规则</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="nameRuleSel" ></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="v_required " maxlength="3" style="width:30px"  data-placement="top"   id="built" />栋
+                                <input type="text" class="v_required" maxlength="3" style="width:30px"  data-placement="top"  id="unit" />单元
+                                <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"  id="floor" />层
+                                <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"   id="door" />门
+                                <span class='star' id="errMsg"></span>
+
+                                <div class="col-md-12">
+                                    <span id="buildingRuleContent" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="vSaveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="vCancelBtn" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="printQuotationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="printQuotationDialog">报价</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p align="center">
+                        <a class="btn btn-app btn-primary no-radius" id='printProjectBtn' target="_blank">
+                            <i class="icon-print bigger-230"></i>
+                            打印工程
+                        </a>
+                        <a class="btn btn-app btn-primary no-radius" id='printFinanceBtn' target="_blank">
+                            <i class="icon-print bigger-230"></i>
+                            打印财务
+                        </a>
+                        <br/>
+                        <a class="btn btn-app btn-primary no-radius" id='printCustomerBtn' target="_blank">
+                            <i class="icon-print bigger-230"></i>
+                            项目清单
+                        </a>
+                        <a class="btn btn-app btn-primary no-radius" id='printEngineeringBtn' target="_blank">
+                            <i class="icon-print bigger-230"></i>
+                            工程清单
+                        </a>
+                        <a class="btn btn-app btn-primary no-radius" id='printMaterialBtn' target="_blank">
+                            <i class="icon-print bigger-230"></i>
+                            主材清单
+                        </a>
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="joinDecorationActivityModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="activityDialog">参加活动</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='activityInfo' data-toggle="popover"
+                                        data-trigger='manual'></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="submitDecorationActivityBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="applyDecorationActivityItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="agreementDialog">申领活动物品</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='activity' data-toggle="popover"
+                                        data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="things" class="col-sm-3 control-label no-padding-right">物品</label>
+                            <div class="col-sm-9">
+                                <select id="things" multiple="multiple"
+                                        class="col-sm-7 col-xs-10 chosen-select tag-input-style" data-placeholder="..."
+                                        data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="coupons" class="col-sm-3 control-label no-padding-right">券</label>
+                            <div class="col-sm-9">
+                                <select id="coupons" multiple="multiple"
+                                        class="col-sm-7 col-xs-10 chosen-select tag-input-style" data-placeholder="..."
+                                        data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="approveActivityItemManSel"
+                                   class="col-sm-3 control-label no-padding-right">审批人</label>
+                            <div class="col-sm-9">
+                                <div id="approveActivityItemManSel" class="col-xs-10 col-sm-6 ">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="submitDecorationActivityItemBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="applySpecialDecorationActivityItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="agreementDialog">特批活动物品</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">类型</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='activityType' data-toggle="popover"
+                                        data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group" id="thingInfo">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" class='col-xs-10 col-sm-5 v_required' id='activityItemName'
+                                       maxlength="10" data-toggle="popover" data-trigger='manual'>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div id="couponInfo">
+                            <div class="form-group">
+                                <label for="activity" class="col-sm-3 control-label no-padding-right">金额</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class='col-xs-10 col-sm-5 v_required v_price'
+                                           id='activityItemMoney' data-toggle="popover" data-trigger='manual'>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="activity" class="col-sm-3 control-label no-padding-right">数量</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class='col-xs-10 col-sm-5 v_required v_number'
+                                           id='activityItemNum' data-toggle="popover" data-trigger='manual'>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="approveSpecialActivityItemManSel"
+                                   class="col-sm-3 control-label no-padding-right">审批人</label>
+                            <div class="col-sm-9">
+                                <div id="approveSpecialActivityItemManSel" class="col-xs-10 col-sm-6 " >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="submitSpecialDecorationActivityItemBtn" class="btn btn-primary">保存
+                    </button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="convertDecorationActivityItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="agreementDialog">活动物品抵现</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="convertActivityItemName"
+                                   class="col-sm-3 control-label no-padding-right">活动物品名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="convertActivityItemName"
+                                       readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label for="convertActivityItemMoney"
+                                   class="col-sm-3 control-label no-padding-right">抵现金额</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required v_price"
+                                       id="convertActivityItemMoney">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="convertDecorationActivityItemBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/decorationPageUtils.js','js/utils/decorationUtils.js','js/utils/materialUtils.js','js/utils/approvalUtils.js','js/utils/quotationUtils.js','js/decoration/decorationDetail.js']);
+</script>

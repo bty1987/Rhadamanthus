@@ -1,6 +1,3 @@
-
-
-
 $(function () {
 
     var approvalPostData = {};
@@ -67,7 +64,7 @@ $(function () {
 
         if (calcRefundData(false)) {
 
-            approvalUtils.initqueryApprovalUser("approver",10);
+            approvalUtils.initqueryApprovalUser("approver", 10);
 
             openRefundlayer(function (index, layero) {
 
@@ -78,9 +75,9 @@ $(function () {
 
                 var radios = _approval.find('input:checked').attr('userid');
 
-                if (com.validate('layerRefund','right')==false) {
+                if (!com.validate('layerRefund', 'right')) {
 
-                    if(!checkNum(refund, "退货金额错误", "right")){
+                    if (!checkNum(refund, "退货金额错误", "right")) {
                         return false;
                     }
 
@@ -125,7 +122,7 @@ $(function () {
         recordMoney(true);
         calcRefundData(true);
 
-        approvalUtils.initqueryApprovalUser("approver",10);
+        approvalUtils.initqueryApprovalUser("approver", 10);
 
         openRefundlayer(function (index, layero) {
 
@@ -133,7 +130,7 @@ $(function () {
 
             var radio = _approval.find('input:checked').attr('userid');
 
-            if ( radio == null || radio == "") {
+            if (radio == null || radio == "") {
                 layer.msg('请选择审批人', {time: 3e3});
                 return false;
             }
@@ -141,9 +138,9 @@ $(function () {
             creatapprovalSalesRefundPostData("2");
             createApprovalPostData();
 
-            if (com.validate('layerRefund','right')==false) {
+            if (!com.validate('layerRefund', 'right')) {
 
-                if(!checkNum(refund, "退货金额错误", "right")){
+                if (!checkNum(refund, "退货金额错误", "right")) {
                     return false;
                 }
 
@@ -174,7 +171,7 @@ $(function () {
         recordMoney(true);
         calcRefundData(true);
 
-        approvalUtils.initqueryApprovalUser("approver",10);
+        approvalUtils.initqueryApprovalUser("approver", 10);
 
         openRefundlayer(function (index, layero) {
 
@@ -190,10 +187,8 @@ $(function () {
 
             creatapprovalSalesRefundPostData("3");
             createApprovalPostData();
-
-            if (com.validate('layerRefund','right')) {
-
-                if(!checkNum(refund, "退货金额错误", "right")){
+            if (!com.validate('layerRefund', 'right')) {
+                if (!checkNum(refund, "退货金额错误", "right")) {
                     return false;
                 }
 
@@ -222,7 +217,7 @@ $(function () {
 
                 var $liLine = $('<li></li>').addClass('clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html(' ' + v.goods.name);
+                var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html(v.goods.name +' '+v.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier').html('编辑');
@@ -233,16 +228,10 @@ $(function () {
                     ["商品颜色:", v.color.name, "grey"],
                     ["商品规格:", v.format.info, "grey"],
                     ["售价:", v.selling, "grey"],
-                    //["折扣:", v.discount, "grey"],
                     ["折扣价:", v.disPrice, "grey"],
-                    // ["折让:", v.postDis, "grey"],
                     ["折让价:", v.price, "grey"],
                     ["数量:", v.num, "grey"],
                     ["总价:", v.total, "grey"],
-                    //["原结算方式:", v.rawCtype==0?"底价":"点位", "grey"],
-                    //["原结算值:", v.rawCvalue, "grey"],
-                    //["结算方式:", v.ctype==0?"底价":"点位", "grey"],
-                    //["结算值:", v.cvalue, "grey"],
                     ["备注:", v.comment, "grey"],
                 ];
 
@@ -270,8 +259,9 @@ $(function () {
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                         com.post(api.inventory.deleteSalesItem, {"salesItem.siid": v.siid}, function () {
-                            $('#list ul.item-list').remove();
-                            querySalesItemBySid(v.sid);
+
+                            $btnDelete.parents('li.clearfix').remove();
+
                         }, function (e) {
                             com.showAlert(com.error, e.errorMsg);
                         });
@@ -290,7 +280,7 @@ $(function () {
                     $('#comment').val(v.comment);
 
                     $('#num').on('change', function () {
-                        if(com.validate('layerEdit','right') == false){
+                        if (com.validate('layerEdit', 'right') == false) {
                             $('#total').val(parseFloat($('#num').val()) * parseFloat(v.price));
                         }
                     });
@@ -307,7 +297,7 @@ $(function () {
                             "salesItem.comment": comment
                         };
 
-                        if(com.validate('layerEdit','right')==false){
+                        if (com.validate('layerEdit', 'right') == false) {
                             com.post(api.inventory.updateSalesItem, editArr, function () {
                                 $('#list ul.item-list').remove();
                                 querySalesItemBySid(v.sid);
@@ -316,7 +306,6 @@ $(function () {
                                 com.showAlert(com.error, e.errorMsg);
                             }, false);
                         }
-
 
 
                     });
@@ -409,7 +398,7 @@ $(function () {
 
         var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
 
-        if ($input.attr('max') < parseFloat($input.val()) || $input.attr('min') > $input.val() || $input.val()< 0||!priceRex.test($input.val())) {
+        if ($input.attr('max') < parseFloat($input.val()) || $input.attr('min') > $input.val() || $input.val() < 0 || !priceRex.test($input.val())) {
 
             $input.focus().select();
 
@@ -454,11 +443,11 @@ $(function () {
     function calcRefundData(isAll) {
 
         var flag = true;
-        
+
         var total = 0;
 
-        var itemTotal=0;
-        
+        var itemTotal = 0;
+
         $('#list input[name="num"]').each(function (i) {
 
             if (typeof($(this)) != "undefined") {
@@ -560,7 +549,7 @@ $(function () {
                 column: [
                     ['品牌系列', 'goods.category'],
                     ['产品名称', 'goods.name'],
-                    ['产品编码','goods.no'],
+                    ['产品编码', 'goods.no'],
                     //['商品颜色', 'color.name'],
                     ['产品规格', 'format.info'],
                     //['售价', 'selling'],
@@ -571,7 +560,7 @@ $(function () {
                     //["原结算方式:", 'rawCtype'],
                     //["原结算值:", 'rawCvalue'],
                     //["结算方式:", 'ctype'],
-                   // ["结算值:", 'cvalue'],
+                    // ["结算值:", 'cvalue'],
                     ["备注:", 'comment'],
                 ],
                 list: data.salesItems

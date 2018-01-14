@@ -105,7 +105,7 @@ jQuery(function($) {
     })();
 	
 	var searcher = new Searcher();
-	searcher.init(["orderId", "designer", "salesman"], "condList", api.drawline.pageDrawLineForPlan, function(data){
+	searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.drawline.pageDrawLineForPlan, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation","drawLineApplyPostData");
 	$("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');

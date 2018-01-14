@@ -59,15 +59,15 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var propertyArr = [
-               ["客户:", v.customer.customerName, "grey"],
+               ["客户:", v.customer.name, "grey"],
                ["收款类型:", v.type, "grey"],
                ["预付款类型:", v.paymentType, "grey"],
                ["操作金额:", v.recharge, "blue"],
                ["余额:", v.balance, "blue"],
-               ["收款人:", v.collectUser.userName, "grey"],
+               ["收款人:", v.collectUser.currentName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.status, "red"],
-               ["备注:", v.des, "grey"],
+               ["备注:", v.comment, "grey"],
             ];
             
             var $label = $('<label></label>');
@@ -75,9 +75,9 @@ jQuery(function($) {
 				"type": "checkbox",
 				"name": "pIds",
 				"class": "ace ace-checkbox-2",
-				"pId": v.paymentId,
+				"pId": v.pid,
 			}).val(v.arId);
-			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.customer.customerId);
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.customer.no);
             
             $.each(propertyArr, function (index,value) {
             var $liProperty = $('<li></li>');
@@ -132,7 +132,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "customerId", "customerPhone", "advancePaymentcollectTime"], "condList", api.payment.pagePaymentForHistory, function(data){
+	searcher.init(["orderId", "advancePaymentcollectTime"], "condList", api.payment.pagePaymentForHistory, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentCheckCheckPostData", null, false, null, function(){
 		
@@ -190,15 +190,15 @@ jQuery(function($) {
 					['收款类型','type'],
 					['预付款类型','paymentType'],
 					['操作金额','balance'],
-					['收款人', 'collectUserName'],
+					['收款人', 'collectUser.currentName'],
 					['收款时间', 'collectTime'],
 					['状态', 'status'],
-					['备注', 'des'],
+					['备注', 'comment'],
 					['现金', 'cash'],
 					['银行', ['bank', 'bankInfo']],
-					['转账', ['checkv', 'checkvBankName']],
-					['分期', ['installment', 'installmentBankName']],
-					['对公', ['accounts', 'accountsBankName']],
+					['转账', ['checkv', 'checkvBank']],
+					['分期', ['installment', 'installmentBank']],
+					['对公', ['accounts', 'accountsBank']],
 				],
 				list: res.paging.data,
 			}, function(v){
@@ -213,9 +213,9 @@ jQuery(function($) {
 					v.bankInfo = $info;
 				}
 				
-				v.checkvBankName = v.checkv != null && v.checkv != "0" ? paymentCheck.checkBankInfo[v.checkvBankName] : '';
-				v.installmentBankName = v.installment != null && v.installment != "0" ? paymentCheck.bankInfo[v.installmentBankName] : '';
-				v.accountsBankName = v.accounts != null && v.accounts != "0" ? paymentCheck.accountsInfo[v.accountsBankName] : '';
+				v.checkvBank = v.checkv != null && v.checkv != "0" ? paymentCheck.checkBankInfo[v.checkvBank] : '';
+				v.installmentBank = v.installment != null && v.installment != "0" ? paymentCheck.bankInfo[v.installmentBank] : '';
+				v.accountsBank = v.accounts != null && v.accounts != "0" ? paymentCheck.accountsInfo[v.accountsBank] : '';
 			});
 		});
     });

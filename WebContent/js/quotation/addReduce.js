@@ -104,7 +104,7 @@ jQuery(function($) {
 
 	//返回按钮
 	$('#btnBack').click(function(){
-		com.switchPage(params.historyOrderPage);
+		com.switchPage(params.historyPage);
 	});
 
 	//添加按钮
@@ -120,14 +120,14 @@ jQuery(function($) {
 	//打印按钮
 	$('#print').click(function(){
 		var $inputs = $('input[name="arids"]:checked');
-		var url = api.index.addReduceOutputIndex.url + "?";
+		var url = api.index.addReduceOutputIndex.url ;
+		var _addReduceIds = [];
 		if(!$inputs.length) return;
 		$.each($inputs, function(i, v){
-			url += 'addReduceIds[' + i + ']=' + $(v).val() + "&";
+			_addReduceIds.push(parseInt($(v).val()));
 		});
-		
-		url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
-		
+		params.addReduceIds = _addReduceIds;
+		//url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
 		com.popup("增减项打印",url,null,null,true)
 	});
 

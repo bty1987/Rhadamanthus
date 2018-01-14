@@ -1,66 +1,33 @@
 
 jQuery(function($) {
-	
+
 	var customer = {
+		relationshipType:[],
 		saveBtn: null,
 		cancellBtn: null,
 		modal: null,
 		items: {},
-		
+		phoneflag :true,
 		editFlag: false,
 		repeatFlg: false,
+		identityflg:true,
+		officerflg:true
 	};
 	
 	customer.saveBtn = $("#saveBtn").on("click", saveData);
 	customer.cancelBtn = $("#cancelBtn");
-	
+
 	customer.modal = $("#customerModal").on('show.bs.modal', function(e){
 		com.clearValidator();
 		com.clearValidator("#phone", true);
 	});
-	
+
 	customer.items.customerName = $("#customerName");
+	customer.items.identity = $("#identity");
+	customer.items.officer = $("#officer");
+	customer.items.passport = $("#passport");
 	customer.items.gender = $("#gender").switchBtn("gender");
-	customer.items.phone = $("#phone").on("blur", function(){
-		$this = $(this);
-		if($this.val() == undefined || $this.val().trim() == ""){
-			com.clearValidator("#phone", true);
-			customer.repeatFlg = false;
-			return;
-		}
-		if((com.validator.phones.regex).test($this.val())){
-			com.post(api.data.checkCustomerForPhone, {"customer.phone":$this.val()}, function(res){
-				var customerIds = res.customerIds;
-				var count = customerIds.length;
-				if(customer.editFlg){
-					if(count == 1){
-						if(customerIds[0] != customer.items.id){
-							com.showTips($this, "该联系方式已存在", true);
-							customer.repeatFlg = true;
-						}else{
-							com.clearValidator("#phone", true);
-							customer.repeatFlg = false;
-						}
-							
-					}else if(count > 1){
-						com.showTips($this, "该联系方式已存在", true);
-						customer.repeatFlg = true;
-					}else{
-						com.clearValidator("#phone", true);
-						customer.repeatFlg = false;
-					}
-				}else{
-					if(count > 0){
-						com.showTips($this, "该联系方式已存在", true);
-						customer.repeatFlg = true;
-					}else{
-						com.clearValidator("#phone", true);
-						customer.repeatFlg = false;
-					}
-				}
-			});
-		}
-	});
+	customer.items.phone= $("#phone").on("blur",function(){checkPhone(null,$("#phone"),1)});
 	customer.items.qq = $("#qq");
 	customer.items.wechat = $("#wechat");
 	customer.items.email = $("#email");
@@ -68,15 +35,12 @@ jQuery(function($) {
 	customer.items.relationshipType = $("#relationshipType");
 	
 	com.post(api.ds.data, {}, function(res){
-		
-		var relationshipType = [];
-		
 		$.each(res.relationshipType, function(i, k){
-			relationshipType.push(k.key);
+			customer.relationshipType.push(k.key);
 		});
-		
-		customer.items.relationshipType.bindData(relationshipType);
-	});
+		customer.items.relationshipType.bindData(customer.relationshipType);
+
+	},null,false);
 	
 	var displayFunc  = (function(){
 
@@ -87,16 +51,21 @@ jQuery(function($) {
             if(listData && listData.length){
                 $.each(listData,function(i, v){
                     var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.phone));
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
 
+					var $managephone = $('<a></a>').addClass('btn btn-minier btn-success').html('管理电话');
+
                     var propertyArr = [
-                        ["姓名:", v.customerName, "grey"],
+                        ["姓名:", v.name, "grey"],
                         ["性别:", v.gender, "grey"],
+						["身份证号:", v.identity, "grey"],
+						["军官证:", v.officer, "grey"],
+						["护照:", v.passport, "grey"],
                         ["客户关系:", v.relationshipType, "grey"],
                         ["邮箱:", v.email, "grey"],
                         ["QQ:", v.qq, "grey"],
@@ -111,11 +80,16 @@ jQuery(function($) {
 					});
                     
                     $btnEdit.click(function(){
-                    	customer.items.id = v.id;
+                    	customer.items.cid = v.cid;
                     	editCustomer(v);
                     });
-                    
-                    $divBtnWrap.append($btnEdit).appendTo($h3);
+
+					$managephone.click(function(){
+						customer.items.cid = v.cid;
+						managephone(v.cid, v.name);
+					});
+
+                    $divBtnWrap.append($btnEdit).append($managephone).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -125,19 +99,23 @@ jQuery(function($) {
         };
         
         var editCustomer = function (c){
+			customer.modal.modal("show");
         	customer.editFlg = true;
-        	
-			customer.items.id = c.id;
-			customer.items.customerName.val(c.customerName);
-			customer.items.phone.val(c.phone);
+			$("#phonehide").css({"display":"none"});
+			customer.repeatFlg = false
+
+			customer.items.cid = c.cid;
+			customer.items.customerName.val(c.name);
+			customer.items.identity.val(c.identity);
+			customer.items.officer.val(c.officer);
+			customer.items.passport.val(c.passport) ;
 			customer.items.qq.val(c.qq);
 			customer.items.wechat.val(c.wechat);
 			customer.items.email.val(c.email);
 			customer.items.address.val(c.address);
 			customer.items.relationshipType.val(c.relationshipType);
 			customer.items.gender.prop('checked', com.genderType[c.gender]);
-			
-			customer.modal.modal("show");
+
         };
         
         return {
@@ -147,18 +125,17 @@ jQuery(function($) {
             }, initAddCustomer: function(){
             	$('a[name="add"]','#pagenation').click(function(){
             		customer.editFlg = false;
-            		
-        			com.cleanItems(customer.items);
-        			
+					initcustomer()
+					$("#phonehide").css({"display":"block"});
         			customer.modal.modal("show");
                 });
             }
         }
     })();
-	
+
 	var searcher = new Searcher();
 	
-	searcher.init(['customerPhone', 'relationshipType'], "condList", api.data.pageCustomer, function(data){
+	searcher.init([ 'relationshipType'], "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "customerPostData", null, false, null, function(){
     	
@@ -170,37 +147,240 @@ jQuery(function($) {
     });
 	
 	displayFunc.initAddCustomer();
-	
+
 	function saveData(){
-		if(com.validate() || customer.repeatFlg){
+		com.clearValidator();
+		if(com.validate() || customer.repeatFlg ){
+			if(customer.editFlg == false){
+				checkPhone(null,$("#phone"),1)
+			}
 			return;
 		}
-		
 		var url;
 		var options = {
-			"customer.customerName": customer.items.customerName.val(),
+			"customer.name": customer.items.customerName.val(),
 			"customer.gender": com.genderType[customer.items.gender.prop("checked")],
 			"customer.phone": customer.items.phone.val(),
+			"customer.identity":customer.items.identity.val(),
+			"customer.officer":customer.items.officer.val(),
+			"customer.passport":customer.items.passport.val() ,
 			"customer.qq": customer.items.qq.val(),
 			"customer.wechat": customer.items.wechat.val(),
 			"customer.email": customer.items.email.val(),
 			"customer.relationshipType": customer.items.relationshipType.val(),
 			"customer.address": customer.items.address.val()
 		};
-		
+
 		if(customer.editFlg){
 			url = api.data.updateCustomer;
-			options['customer.id'] = customer.items.id;
+			options['customer.cid'] = customer.items.cid;
 		}else {
 			url = api.data.addCustomer;
-			options['customer.approveStatus'] = 0;
 		}
-		
+
 		com.post(url, options, function(res){
 			searcher.doSearch();
+			initcustomer()
+
 		});
 		
 		customer.modal.modal("hide");
 	}
+
+	//查询工人工费
+	function managephone(cid,name) {
+		if ($('#customerphoneList').children()) {
+			$('#customerphoneList').empty();
+		}
+		if ($('#phoneModalfoot').children()) {
+			$("#phoneModalfoot").empty();
+		}
+		var flag =false;
+		com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": cid}, function (res) {
+			$('#customerphoneModal').modal('show');
+			$.each(res.customerPhones, function (i, v) {
+				var  vstatus;
+				switch (v.status) {
+					case 0:
+						vstatus = "启用"
+						break;
+					case 1:
+						vstatus = "禁用"
+						break;
+				}
+
+				var Phonelist = $('<div></div>').prop("id", "customerPhone" + i);
+				Phonelist.append(addspan('10', '客户姓名  : ', name))
+					.append(addspan('40', '电话号码  : ', v.phone));
+
+				var $btnStatus =$('<div style="float: right;margin-right: 30px;"></div>')
+				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", "deleteBtn" + i);
+				var $span = $('<span></span>').addClass('lbl status-lbl');
+
+				var $hr= $('<hr/>');
+
+				!v.status && $statusSwitch.prop("checked", true);
+				$statusSwitch.on("click",function() {
+
+					if($statusSwitch.prop("checked")){
+						var option={
+							"customerPhone.phone":v.phone,
+						    "customerPhone.status":0,
+						}
+						//先查询该电话是否被被人启用
+                         com.post(api.data.checkCustomerForPhone,option,function(res){
+							 com.showAlert(com.warning, "该电话已经被其他客户启用");
+							 $statusSwitch.prop("checked", false);
+							 searcher.doSearch();
+						 },function(res){
+							 updateCustomerPhoneForStatus(cid,v.phone, 0, function(){$this.removeAttr("checked")})
+						 },false);
+						}else{
+						updateCustomerPhoneForStatus(cid,v.phone, 1,function(){$this.prop("checked")})
+					}
+
+				})
+
+				$btnStatus.append($statusSwitch).append($span);
+
+				Phonelist.append($btnStatus).append($hr).appendTo($("#customerphoneList"))
+				 });
+
+			var salaryDiv = $('<div></div>').addClass("form-group").css("height", "50px").css("margin-bottom", "0px");
+			var salaryLabelT = $('<label><b style="line-height: 30px">添加电话</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "phone").appendTo(salaryDiv);
+			var salaryInputT = $('<input />').addClass("col-xs-10 col-sm-9 v_phones2").attr("id", "addphone").attr("data-toggle", "popover").attr("data-trigger", "manual").css("width", "320px").css("height", "34px").appendTo(salaryDiv);
+
+			var salaryBtn = $('<button style="float: left;margin-left: 100px"><b>保存</b></button>').addClass("btn btn-sm  btn-primary").attr("id", "saveBtn").appendTo(salaryDiv)
+				.click(function () {
+					savecustomerPhone(cid,$("#addphone").val(),name);
+				});
+
+			var salaryDivFi = $('<div></div>').addClass("col-sm-9").css("width", "850px").css("text-align", "center")
+			var CancelBtn = $('<button><b>关闭</b></button>').addClass("btn btn-sm  btn-default").attr("data-dismiss", "modal").appendTo(salaryDivFi)
+
+			salaryDiv.appendTo($("#customerphoneList"));
+			salaryDivFi.appendTo($("#phoneModalfoot"));
+
+			salaryInputT.on("blur",function(){checkPhone(cid,$("#addphone"),0)});
+		}, null, false)
+
+	}
+
+	function addspan(px, name, value) {
+		var $10pxdiv = $('<div></div>').css({
+			'display' : 'inline-block',
+			'margin-left' : '10px'
+		});
+		var $40pxdiv = $('<div></div>').css({
+			'display' : 'inline-block',
+			'margin-left' : '40px'
+		});
+		var $nameSpan = $('<b></b>').html(name);
+		var $valueSpan = $('<span></span>').text(value);
+
+		if (px == '40') {
+			return $40pxdiv.append($nameSpan).append($valueSpan);
+		} else if (px == '10') {
+			return $10pxdiv.append($nameSpan).append($valueSpan);
+		}
+	}
+
+	function savecustomerPhone(cid,phone,name){
+
+		if( com.validate("customerphoneModal") || customer.phoneflag){
+			return;
+		}
+		var param={
+			"customerPhone.phone":phone,
+			"customerPhone.cid":cid,
+		}
+		com.post(api.data.addCustomerPhone, param,function(res){
+			managephone(cid,name);
+		})
+
+	}
+
+	//启用禁用功能
+	function updateCustomerPhoneForStatus(cid,phone, status, failcallBack){
+		com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cid":cid,"customerPhone.phone" : phone,"customerPhone.status" : status}, function(){
+		},function(res){
+			failcallBack && failcallBack();
+
+		},null,false);
+	}
+
+	//清空
+	function initcustomer(){
+		customer.items.customerName.val("");
+		customer.items.gender.get(0).selectedIndex = 0
+		customer.items.qq.val("");
+		customer.items.wechat.val("");
+		customer.items.email.val("");
+		customer.items.identity.val("");
+		customer.items.officer.val("");
+		customer.items.passport.val("");
+		customer.items.relationshipType.get(0).selectedIndex = 0
+		customer.items.address.val("");
+		customer.items.phone.val("");
+		com.clearValidator();
+
+	}
+
+	function checkPhone(cid,$id,num) {
+		var phones=[];
+		var reg = /^((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10}))((#((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10})))){0,4}$/;
+		if ($id.val() == "" || $id.val() == 0) {
+			num ? customer.repeatFlg = true : customer.phoneflag = true;
+			com.showPopover($id, {errorMsg: "电话号码不能为空"}, "right")
+		} else {
+			if (reg.test($id.val()) == false) {
+				num ? customer.repeatFlg =  true : customer.phoneflag = true;
+				com.showPopover($id, {errorMsg: "请输入正确的手机号或固定电话!!"}, "right");
+			} else {
+				//判断该客户是否有该电话
+				if(cid != null){
+					com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": cid},
+						function (res) {
+							$.each(res.customerPhones,function(i,val){
+								phones.push(val.phone);
+							})
+
+							if(phones.contains($id.val())){
+								num ? customer.repeatFlg = true : customer.phoneflag = true;
+								com.showPopover($id,{errorMsg: "该客户已经有该电话"}, "right");
+
+							}else{
+								com.post(api.data.checkCustomerForPhone, {
+									"customerPhone.phone": $id.val(),
+									"customerPhone.status":0,
+								}, function(res) {
+									num ? customer.repeatFlg = true : customer.phoneflag = true;
+									com.showPopover($id,{errorMsg: "电话号码已经是其他客户的启用电话"}, "right");
+								}, function(res){
+									num ? customer.repeatFlg = false : customer.phoneflag = false;
+									$id.css("border", "1px solid #d5d5d5").popover("destroy")
+								},false);
+							}
+
+						},
+						null,false);
+				}else{
+					//是否是其他的客户的启用电话
+					com.post(api.data.checkCustomerForPhone, {
+					 "customerPhone.phone": $id.val(),
+					 "customerPhone.status":0,
+					 }, function(res) {
+						 num ? customer.repeatFlg = true : customer.phoneflag = true;
+						 com.showPopover($id,{errorMsg: "电话号码已经是其他客户的启用电话"}, "right");
+					}, function(res){
+						 num ? customer.repeatFlg = false : customer.phoneflag = false;
+						 $id.css("border", "1px solid #d5d5d5").popover("destroy")
+					 },false);
+				}
+
+			}
+		}
+	}
+
 });
 

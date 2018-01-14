@@ -1,0 +1,158 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="houseModal" tabindex="-1">
+    <div class="modal-dialog" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">房产</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group " >
+                                        <label for="no" class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                                        <div class="col-md-9">
+                                            <select class="chosen-select col-md-4 v_required" id="no"  style="display: none;">
+                                                <option value="">&nbsp;</option>
+                                            </select>
+                                            <span class='star'></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="rulename">
+                                        <label class="col-sm-3 control-label no-padding-right" for="nameRuleSel">楼号规则</label>
+                                        <div class="col-sm-9">
+                                            <select class="col-xs-10 col-sm-6 v_required" id="nameRuleSel" ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="v_required " maxlength="7" style="width:30px"  data-placement="top"   id="built" />栋
+                                            <input type="text" class="v_required" maxlength="3" style="width:30px"  data-placement="top"  id="unit" />单元
+                                            <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"  id="floor" />层
+                                            <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"   id="door" />门
+                                            <span class='star' id="errMsg"></span>
+
+                                            <div class="col-md-12">
+                                                <span id="buildingRuleContent" class="red"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="type">房产类型</label>
+                                        <div class="col-sm-9">
+                                            <select class="col-xs-10 col-sm-6 v_required" id="type" ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-6 v_required v_float" />
+                                            <span style = "margin-left: 10px; line-height: 34px">平</span>
+                                            <span class='star'></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="maxFloor">最高楼层</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="maxFloor" maxlength="3" class="col-xs-10 col-sm-6 v_number "/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="through" class="col-sm-3 control-label no-padding-right">是否越层</label>
+                                        <div class="col-sm-9">
+                                            <select class='col-xs-10 col-sm-6' id='through' ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="ohousetype">
+                                        <label class="col-sm-3 control-label no-padding-right" for="oldhousetype">原户型</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="oldhousetype" maxlength="3" class="col-xs-10 col-sm-6  " readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right">户型</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="" style="width:30px"   data-placement="top"   id="houseTypeOne" /> 室
+                                            <input type="text" class="" style="width:30px"  data-placement="top"  id="houseTypeTwo" /> 厅
+                                            <input type="text" class="" style="width:30px"   data-placement="top"  id="houseTypeThr" /> 厨
+                                            <input type="text" class="" style="width:30px"  data-placement="top"   id="houseTypeFour" /> 卫
+                                            <span class='star'></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="orientation" class="col-sm-3 control-label no-padding-right">房屋朝向</label>
+                                        <div class="col-sm-9">
+                                            <select class='col-xs-10 col-sm-6' id='orientation' ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="feature">三不</label>
+                                        <div class="col-sm-9">
+                                            <textarea id="feature" maxlength="100" class="col-xs-10 col-sm-6" rows="3" ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="waterVapour" class="col-sm-3 control-label no-padding-right">水气设施</label>
+                                        <div class="col-sm-9">
+                                            <select class='col-xs-10 col-sm-6' id='waterVapour' ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="parlourType" class="col-sm-3 control-label no-padding-right">客厅类型</label>
+                                        <div class="col-sm-9">
+                                            <select class='col-xs-10 col-sm-6' id='parlourType' ></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="heatingType" class="col-sm-3 control-label no-padding-right">供暖类型</label>
+                                        <div class="col-sm-9">
+                                            <select class='col-xs-10 col-sm-6' id='heatingType'></select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveHouseBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelHouselBtn" class="btn btn-default" >重置</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $.loadScript(['js/data/house.js']);
+</script>

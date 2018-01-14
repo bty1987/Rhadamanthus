@@ -93,7 +93,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init([ "receiverName", "approvalType", "approvalcreateTime", "approvalTime" ], "condList",
+	searcher.init([ "approval_receiverName", "approval_Type", "approval_createTime", "approval_Time" ], "condList",
 			api.approval.pageApprovalBySenderId, function(data) {
 				displayFunc.init('resultList', data);
 			}, "pagenation", "approvalSenderTrackPostData");
@@ -108,11 +108,11 @@ jQuery(function($) {
 				$("#materialInfo").html("主材信息");
 				$.each(res.approvalMaterialRefundItems, function(i, v) {
 					$('#materialInfoList')
-						.append(approvalUtils.addspan('10', '型号  : ', v.materialSubOrderItem.materialModelName))
-						.append(approvalUtils.addspan('40', '品类  : ', v.materialSubOrderItem.materialTypeName))
-						.append(approvalUtils.addspan('40', '品牌  : ', v.materialSubOrderItem.materialBrandName))
+						.append(approvalUtils.addspan('10', '型号  : ', v.materialItem.name))
+						.append(approvalUtils.addspan('40', '品类  : ', v.materialItem.category))
+						.append(approvalUtils.addspan('40', '品牌  : ', v.materialItem.brand))
 						.append('<br/>')
-						.append(approvalUtils.addspan('10', '售价  : ', v.materialSubOrderItem.price))
+						.append(approvalUtils.addspan('10', '售价  : ', v.materialItem.price))
 						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
 						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');

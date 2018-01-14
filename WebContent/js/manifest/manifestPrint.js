@@ -1,27 +1,17 @@
 jQuery(function($) {
-    Api().init('../../js/api/');
+
+    var params = {};
+    api = parent.api;
+    config = parent.config ;
+    server = parent.server;
+    utils = parent.utils;
+    com = parent.com;
+    params = parent.params;
 
     params.server = window.server;
     params.authentication = parent.params.authentication;
 
-    var args = window.location.search.substr(1);//mid=21
-
-    var itemUrl = '';
-    var ename = '';
-
-    //if(args.indexOf('mid=') != -1){
-    //    itemUrl = api.inventory.queryManifestItemByMId;
-        //ename = 'manifestItems';
-    //}
-
-    if(args.indexOf('time=') != -1){
-        params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
-    }
-
-    var url = api.inventory.queryManifestByMId;
-    url.url = url.url + "?" + args;
-
-    com.post(url, {}, function(res){
+    com.post(api.inventory.queryManifestByMId, {"manifest.mid":params.manifestMid}, function(res){
         var manifest = res.manifest;
 
         var commonInfo = {};
@@ -34,11 +24,11 @@ jQuery(function($) {
         commonInfo["total"] = manifest.total;
         commonInfo["status"] = manifest.status;
         commonInfo["type"] = manifest.type;
-        //itemUrl.url = itemUrl.url + "?" + ename + ".msoId=" + materialSubOrder.msoId;
+
         com.post(api.inventory.queryManifestItemByMId, {"manifest.mid":manifest.mid}, function(res){
             createReceiptTable(commonInfo, res.manifestItems);
         }, null, false);
-    });
+    }, null, false);
 
     function createReceiptTable(commonInfo, itemInfo, type){
 
@@ -62,7 +52,7 @@ jQuery(function($) {
         (commonInfo.status == 0) && (status = "初始");
         (commonInfo.status == 1) && (status = "已确认");
 
-        var center = $("<center></center>").appendTo("#manifestPrint");
+        var center = $("<center></center>").appendTo($("#manifestPrint"));
 
         var noTable = $('<table style="width: 80%; border-collapse:collapse;"></table>').appendTo(center);
         var noTr = $('<tr></tr>').appendTo(noTable);

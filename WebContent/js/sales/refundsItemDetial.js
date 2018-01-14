@@ -1,23 +1,23 @@
 
 
 $(function () {
-    
+
 	var sid = params.sid
 
     $('#backBtn').click(function () {
         com.switchPage(api.index.querySalesIndex.url);
     });
 
-    var initList = function(listData) { 
+    var initList = function(listData) {
         var $tableWrap = $('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
-                
+
                 var $liLine = $('<li></li>').addClass('clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color:"grey","font-weight":"bold"}).html(' ' + v.salesItem.goods.name );
+                var $h3 = $('<h3></h3>').css({"color":"grey","font-weight":"bold"}).html(v.salesItem.goods.name + ' '+v.salesItem.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                 var propertyArr = [
@@ -25,9 +25,7 @@ $(function () {
                     ["商品颜色:", v.salesItem.color.name, "grey"],
                     ["商品规格:", v.salesItem.format.info, "grey"],
                     ["售价:", v.salesItem.selling, "grey"],
-                    //["折扣:", v.salesItem.discount, "grey"],
                     ["折扣价:", v.salesItem.disPrice, "grey"],
-                    //["折让:", v.salesItem.postDis, "grey"],
                     ["折让价:", v.salesItem.price, "grey"],
                     ["数量:", v.num, "grey"],
                     ["总价:", v.total, "grey"],
@@ -57,9 +55,9 @@ $(function () {
             $ul.appendTo($tableWrap);
         }
     };
-    
+
     querySalesItemBySid(sid);
-    
+
     function querySalesItemBySid(sid) {
         com.post(api.inventory.queryRefundsItemBySid,{"refunds.sid":sid},function (data) {
             initList(data.refundsItems);

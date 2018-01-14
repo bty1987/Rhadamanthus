@@ -21,7 +21,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -52,9 +52,9 @@ public class AuditServiceImpl implements AuditService{
 			
 			if(auditPO.getAuditer()!=null){
 				
-				auditVO.setAuditer(new UserVO());
+				auditVO.setAuditer(new UserBaseVO());			
 				
-				BeanUtil.copyProperties(auditPO.getAuditer(), auditVO.getAuditer(),Arrays.asList("role","dept","duty"));
+				BeanUtil.copyProperties(auditPO.getAuditer(), auditVO.getAuditer(),Arrays.asList("dept","duty"));
 				
 			}
 			
@@ -91,11 +91,11 @@ public class AuditServiceImpl implements AuditService{
 		AuditPO auditPO = auditDao.get(auditVO.getAid());
 		
 		if(auditPO == null){
-			throw new FLException(140044 , "审批记录不存在");
+			throw new FLException(140044 , "审批记录不存在");	
 		}
 		
 		if(auditPO.getAuditer()!=null){
-			throw new FLException(140048, "审核人已存在");
+			throw new FLException(140048, "审核人已存在");			
 		}
 		
 		auditPO.setAuditer(userDao.queryUserByUserId(UserId));

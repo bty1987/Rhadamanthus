@@ -125,7 +125,7 @@
                                 "user.userid" : v.userId,
                                 "user.name":v.currentName,
                                 "user.Mobile":v.phone,
-                                "user.Position":v.duty,
+                                "user.Position":v.duty.name,
                             };
 
                             if(length){
@@ -177,7 +177,7 @@
                                 "user.userid" : v.userId,
                                 "user.name":v.currentName,
                                 "user.Mobile":phone,
-                                "user.Position":v.duty,
+                                "user.Position":v.duty.name,
                                  "dids":selectedDepts
                             }
 
@@ -276,7 +276,7 @@
             }
         }
     })();
-    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity'];
+    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity','phone'];
 
     var userSeacher = new Searcher();
 

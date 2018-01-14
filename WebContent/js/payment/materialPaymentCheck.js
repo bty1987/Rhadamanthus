@@ -95,17 +95,17 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var propertyArr = [
-               ["订单号:", v.orderId, "grey"],
-               ["主材号:", v.msoNo, "grey"],
-               ["楼盘地址:", v.orderAddr, "grey"],
-               ["客户:", v.customerName, "grey"],
-               ["品牌:", v.materialBrand, "grey"],
-               ["操作人:", v.createUserName, "grey"],
+               ["订单号:", v.material.orderId, "grey"],
+               ["主材号:", v.material.no, "grey"],
+               ["楼盘地址:", v.material.house.village.name+ '' +v.material.house.houseNumber, "grey"],
+               ["客户:", v.material.customer.name, "grey"],
+               ["品牌:", v.material.brand, "grey"],
+               ["操作人:", v.creater.currentName, "grey"],
                ["应收金额:", v.referMoney, "blue"],
-               ["收款人:", v.collectUserName, "grey"],
+               ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
-               ["备注:", v.des, "grey"],
+               ["备注:", v.comment, "grey"],
             ];
             
             var $label = $('<label></label>');
@@ -170,7 +170,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
+	searcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		
@@ -212,21 +212,21 @@ jQuery(function($) {
 
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            
+
             var propertyArr = [
-               ["订单号:", v.orderId, "grey"],
-               ["主材号:", v.msoNo, "grey"],
-               ["楼盘地址:", v.orderAddr, "grey"],
-               ["客户:", v.customerName, "grey"],
-               ["品牌:", v.materialBrand, "grey"],
-               ["操作人:", v.createUserName, "grey"],
+               ["订单号:", v.material.orderId, "grey"],
+               ["主材号:", v.material.no, "grey"],
+               ["楼盘地址:", v.material.house.village.name+ '' +v.material.house.houseNumber, "grey"],
+               ["客户:", v.material.customer.name, "grey"],
+               ["品牌:", v.material.brand, "grey"],
+               ["操作人:", v.creater.currentName, "grey"],
                ["应收金额:", v.referMoney, "blue"],
-               ["收款人:", v.collectUserName, "grey"],
+               ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
-		       ["确认人:", v.confirmUserName, "grey"],
+		       ["确认人:", v.confirmer.currentName, "grey"],
 		       ["确认时间:", v.confirmTime, "grey"],
                ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
-               ["备注:", v.des, "grey"],
+               ["备注:", v.comment, "grey"],
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -282,7 +282,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "msoNo", "msoDesigner", "orderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
+	hsearcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
 	
@@ -327,24 +327,24 @@ jQuery(function($) {
 		}
 		
 		com.post(api.payment.pageMaterialPaymentForCollect, $.extend({}, params.materialPaymentCheckPostData, {"paging.noPage": 1}), function(res){
-			
+
 			$.exceler({
 				column : [
-					["订单号","orderId"],
-					["主材号","msoNo"],
-					['楼盘地址','orderAddr'],
-					['品牌','materialBrand'],
+					["订单号","material.orderId"],
+					["主材号","material.no"],
+					['楼盘地址',['material.house.village.name', 'material.house.houseNumber']],
+					['品牌','material.brand'],
 					['应收金额', 'referMoney'],
-					['收款人', 'collectUserName'],
+					['收款人', 'collecter.currentName'],
 					['收款时间', 'collectTime'],
 					['类型', 'paymentType'],
 					['状态', 'paymentStatus'],
-					['备注', 'des'],
+					['备注', 'comment'],
 					['现金', 'cash'],
 					['银行', ['bank', 'bankInfo']],
-					['转账', ['checkv', 'checkvBankName']],
-					['分期', ['installment', 'installmentBankName']],
-					['对公', ['accounts', 'accountsBankName']],
+					['转账', ['checkv', 'checkvBank']],
+					['分期', ['installment', 'installmentBank']],
+					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],
 					['券', ['coupon', 'couponInfo']],
 				],
@@ -361,11 +361,11 @@ jQuery(function($) {
 					  v.bankInfo = $info;
 				}
 				
-				v.checkvBankName = v.checkv != null && v.checkv != "0" ? materialPaymentCheck.checkBankInfo[v.checkvBankName] : '';
-				v.installmentBankName = v.installment != null && v.installment != "0" ? materialPaymentCheck.bankInfo[v.installmentBankName] : '';
-				v.accountsBankName = v.accounts != null && v.accounts != "0" ? materialPaymentCheck.accountsInfo[v.accountsBankName] : '';
+				v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPaymentCheck.checkBankInfo[v.checkvBank] : '';
+				v.installmentBank = v.installment != null && v.installment != "0" ? materialPaymentCheck.bankInfo[v.installmentBank] : '';
+				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPaymentCheck.accountsInfo[v.accountsBank] : '';
 				
-				v.paymentType = materialPayment.materialPaymentTypeData[v.paymentType];
+				v.paymentType = materialPaymentCheck.materialPaymentTypeData[v.paymentType];
 				v.paymentStatus = v.paymentStatus == 1 ? '待确认' : '已确认';
 			});
 		});

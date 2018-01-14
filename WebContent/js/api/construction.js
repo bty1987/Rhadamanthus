@@ -35,9 +35,9 @@ $.extend(api, {construction: {
     queryAcceptance: {url: "queryAcceptance.do", demo: true},
     updateAcceptance: {url: "updateAcceptance.do"},
 
-    pageDecorationOrderForConstruction: {url: "pageDecorationOrderForConstruction.do", demo: true},
-    pageDecorationOrderForSupervisionByUserId: {url: "pageDecorationOrderForSupervisionByUserId.do", demo: true},
-    pageDecorationOrderForAcceptance: {url: "pageDecorationOrderForAcceptance.do", demo: true},
+    pageDecorationForConstruction: {url: "pageDecorationForConstruction.do", demo: true},
+    pageDecorationForSupervisionByUserId: {url: "pageDecorationForSupervisionByUserId.do", demo: true},
+    pageDecorationForAcceptance: {url: "pageDecorationForAcceptance.do", demo: true},
     queryConstructionByOrderId: {url: "queryConstructionByOrderId.do", demo: true},
     queryConstructionForWorkerNameByOrderId: {url: "queryConstructionForWorkerNameByOrderId.do", demo: true},
     updateConstructionByOrderId: {url: "updateConstructionByOrderId.do"},

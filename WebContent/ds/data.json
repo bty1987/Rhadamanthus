@@ -6,6 +6,59 @@
     {"key":"领导关系客户","value":"领导关系客户"},
     {"key":"员工关系","value":"员工关系"}
   ],
+  "houseType" :[
+    {"key":"0", "value":"住宅"},
+    {"key":"1", "value":"半越住宅"},
+    {"key":"2", "value":"全越住宅"},
+    {"key":"3", "value":"门市房"},
+    {"key":"4", "value":"窗改门"},
+    {"key":"5", "value":"商住综合"},
+    {"key":"6", "value":"酒店公寓"},
+    {"key":"7", "value":"写字间"},
+    {"key":"8", "value":"别墅厂房"},
+    {"key":"9", "value":"仓库"},
+    {"key":"10", "value":"车库"},
+    {"key":"11", "value":"其它"}
+  ],"through":[
+    {"key":"0", "value":"否"},
+    {"key":"1", "value":"是"}
+  ],
+  "orientation": [
+    {"key":"0", "value":"南北"},
+    {"key":"1", "value":"东西"},
+    {"key":"2", "value":"双阳"},
+    {"key":"3", "value":"双东"},
+    {"key":"4", "value":"双西"},
+    {"key":"5", "value":"双北"},
+    {"key":"6", "value":"东南"},
+    {"key":"7", "value":"东北"},
+    {"key":"8", "value":"西南"},
+    {"key":"9", "value":"西北"},
+    {"key":"10", "value":"其它"}
+  ],"roomNum": [
+    {"key":"1", "value":"一室"},
+    {"key":"2", "value":"二室"},
+    {"key":"3", "value":"三室"},
+    {"key":"4", "value":"四室"},
+    {"key":"5", "value":"五室"}
+  ],"waterVapour": [
+    {"key":"0", "value":"两水一气"},
+    {"key":"1", "value":"两水两气"},
+    {"key":"2", "value":"三水两气"}
+  ],"parlourType": [
+    {"key":"0", "value":"明厅"},
+    {"key":"1", "value":"暗厅"}
+  ],"heatingType": [
+    {"key":"0", "value":"热网"},
+    {"key":"1", "value":"锅炉房"},
+    {"key":"2", "value":"燃气"}
+  ],"status":[
+    {"key":"0", "value":"初始"},
+    {"key":"1", "value":"签约"},
+    {"key":"2", "value":"失效"}
+  ],
+
+
   "errorCode": 0,
   "errorMsg": null
 }

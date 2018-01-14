@@ -237,7 +237,7 @@ $(function(){
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
                 callback(index, layero);
@@ -261,7 +261,7 @@ $(function(){
             content: $('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
                 callback(index, layero);
@@ -320,9 +320,8 @@ $(function(){
             content: $('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定'],
-            zIndex: 9999,
             success: function (layers, index) {
 
             },

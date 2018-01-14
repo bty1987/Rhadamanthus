@@ -1,0 +1,190 @@
+<link rel="stylesheet" href="assets/ace/css/photoswipe.css">
+<link rel="stylesheet" href="assets/ace/css/default-skin.css">
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12 ">
+            <div class="timeline-container timeline-center">
+
+                <div class="timeline-items">
+                
+                    <div class="timeline-item clearfix" id="orderId">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-star btn btn-danger no-hover"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-red widget-header-small">
+                                <h3 class="smaller">订单号:<b id="oid"></b></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--基本信息-->
+                    <div class="timeline-item clearfix" id="baseinfo">
+                    
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-star btn btn-success no-hover"></i>
+                        </div>
+                    
+                        <div class="widget-box">
+                            <div class="widget-header header-color-green widget-header-small">
+                                <h5 class="smaller">基本信息</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main clearfix" >
+
+                                    <div class="col-xs-12 col-sm-12">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>楼盘地址 ：<i class="icon-map-marker light-orange bigger-110"></i></span>
+                                        <span name="addr"></span>
+                                    </div>
+
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>客户名 ：</span>
+                                        <span name="uname"> 小明</span>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>设计师 ：</span>
+                                        <span name="dname"></span>
+                                        <span class="blue" name="dphone"></span>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>业务员 ：</span>
+                                        <span name="sname"></span>
+                                        <span class="blue" name="sphone"></span>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>监理 ：</span>
+                                        <span name="vname"></span>
+                                        <span class="blue" name="vphone"></span>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <i class="icon-caret-right blue"></i>
+                                        <span>订单状态 ：</span>
+                                        <span name="status"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--报价-->
+                    <div class="timeline-item clearfix" id="quotations">
+
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-star btn btn-warning no-hover"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-orange widget-header-small">
+                                <h5 class="smaller">报价</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--图纸-->
+                    <div class="timeline-item clearfix" id="orderpics">
+
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-star btn btn-info no-hover"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-blue widget-header-small">
+                                <h5 class="smaller">图纸</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main" >
+                                    <div class="clearfix">
+                                        <p class="orange">效果图</p>
+                                        <div name="effect" class="timeline-gallery"></div>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <p class="green">工程图</p>
+                                        <div name="project" class="timeline-gallery"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--款项-->
+                    <div class="timeline-item clearfix" id="payment">
+                        <div class="timeline-info">
+                            <i class="timeline-indicator icon-trophy btn btn-grey no-hover green"></i>
+                        </div>
+
+                        <div class="widget-box">
+                            <div class="widget-header header-color-grey widget-header-small">
+                                <h5 class="smaller">款项信息</h5>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <ul name="list" class="list-unstyled list-striped pricing-table-header"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片弹层 -->
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+            <div class="pswp__container">
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            <div class="pswp__ui pswp__ui--hidden">
+                <div class="pswp__top-bar">
+                    <div class="pswp__counter"></div>
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                    <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                            <div class="pswp__preloader__cut">
+                                <div class="pswp__preloader__donut"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div>
+                </div>
+
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    $.loadScript(['assets/ace/js/photoswipe.min.js','assets/ace/js/photoswipe-ui-default.min.js','js/decoration/decorationTimeline.js']);
+</script>

@@ -41,14 +41,6 @@ public class BuildingAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="queryBuilding", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBuilding() throws FLException{
-		
-		building = buildingService.queryBuilding(building);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="bindBuilding", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String bindBuilding() throws FLException{
 		
@@ -69,14 +61,6 @@ public class BuildingAction extends BaseListAction{
 	public String updateBuildingForBalanceStatus() throws FLException{
 		
 		buildingService.updateBuildingForBalanceStatus(building);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updateBuildingForPayType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateBuildingForPayType() throws FLException{
-		
-		buildingService.updateBuildingForPayType(building, queryUserId());
 		
 		return SUCCESS;
 	}

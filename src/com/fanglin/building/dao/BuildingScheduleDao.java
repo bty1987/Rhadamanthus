@@ -8,5 +8,7 @@ import com.fanglin.core.dao.Dao;
 public interface BuildingScheduleDao extends Dao<BuildingSchedulePO>{
 
 	public List<BuildingSchedulePO> queryBuildingScheduleByBoid(long boid);
+
+	public void resetBuildingSchedule(Long boid, Integer uid);
 	
 }

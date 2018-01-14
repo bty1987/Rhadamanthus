@@ -2,422 +2,446 @@
     <div class="row">
         <div class="col-xs-12">
 
-            <div class='user_info'>
-                <div id="userinfo" class="accordion-style1 panel-group">
+            <div id='timeline-1'>
+                <div class="row">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title accordion-toggle">
-                                个人基本信息
-                            </h3>
-                        </div>
+                    <div id="userinfo" class="col-xs-12 col-sm-12 "  >
+                        <div >
+                            <div class="timeline-items">
+                                <div class="timeline-item clearfix">
 
-                        <div class="panel-collapse collapse in" id="personalInfo">
-                            <div class="panel-body">
-                                <form class="form-horizontal">
+                                    <div class="widget-box transparent" style="margin:0px;border-left:0px ">
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="userName">姓名</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="userName" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
+                                        <div class="widget-header widget-header-small" style="background-color: white">
+                                            <h5 class="smaller" Style="font-size: 15px; ">个人基本信息</h5>
+                                           <span class="widget-toolbar " style="float:initial ;position: initial">
+                                                 <a href="#" data-action="collapse">
+                                                     <i class="icon-chevron-up"></i>
+                                                 </a>
+                                            </span>
                                         </div>
-                                    </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="currentName">现用名</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="currentName" class="col-sm-7 col-xs-10 v_required" />
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                        <div class="widget-body">
+                                            <div class="widget-body-inner"  style="display: block; background-color: white !important;">
+                                                <div class="widget-main" >
+                                                    <form class="form-horizontal" style=" clear: inherit">
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="gender" class="col-sm-7 col-xs-10"/>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="userName">姓名</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="userName" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="age">年龄</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="2" class="col-sm-7 col-xs-10 v_required v_number" id="age" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="currentName">现用名</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="currentName" class="col-sm-7 col-xs-10 v_required" />
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="birthday">出生日期</label>
-                                        <div class="col-sm-9">
-                                            <input class="col-sm-7 col-xs-10  date-picker  v_required " id="birthday" type="text" data-date-format="yyyy-mm-dd">
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="gender" class="col-sm-7 col-xs-10"/>
+                                                            </div>
+                                                        </div >
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="politicalSel">政治面貌</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="politicalSel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="age">年龄</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="2" class="col-sm-7 col-xs-10 v_required v_number" id="age" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="jobYears">工作年限</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="2" id="jobYears" class="col-sm-7 col-xs-10 v_number"/>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="birthday">出生日期</label>
+                                                            <div class="col-sm-9">
+                                                                <input class="col-sm-7 col-xs-10  date-picker  v_required " id="birthday" type="text" data-date-format="yyyy-mm-dd">
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="21" id="identity" class="col-sm-7 col-xs-10 v_required v_identity" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="politicalSel">政治面貌</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="politicalSel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="phone">手机号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="phone" class="col-sm-7 col-xs-10 v_required v_phones" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="jobYears">工作年限</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="2" id="jobYears" class="col-sm-7 col-xs-10 v_number"/>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="address">现住地址</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="128" id="address" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="21" id="identity" class="col-sm-7 col-xs-10 v_required v_identity" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="hometownAddress">户籍地址</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="128" id="hometownAddress" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="phone">手机号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" id="phone" class="col-sm-7 col-xs-10 v_required v_phones" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="householdSel">户籍类型</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="householdSel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="address">现住地址</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="128" id="address" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="emergencyMan">紧急联系人</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="emergencyMan" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="hometownAddress">户籍地址</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="128" id="hometownAddress" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="emergencyPhone">紧急联系人电话</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="emergencyPhone" class="col-sm-7 col-xs-10 v_phones v_required " data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="householdSel">户籍类型</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="householdSel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="emergencyMan">紧急联系人</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="emergencyMan" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="emergencyPhone">紧急联系人电话</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" id="emergencyPhone" class="col-sm-7 col-xs-10 v_phones v_required " data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
 
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate">应届生</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isPresentGraduate" />
-                                        </div>
-                                    </div>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate">应届生</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isPresentGraduate" />
+                                                            </div>
+                                                        </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="graduateTime">毕业时间</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group col-sm-7 col-xs-10 no-padding">
-                                                <input class="form-control date-picker" id="graduateTime" type="text" data-date-format="yyyy-mm-dd">
-												<span class="input-group-addon">
-													<i class="icon-calendar bigger-110"></i>
-												</span>
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="graduateTime">毕业时间</label>
+                                                            <div class="col-sm-9">
+                                                                <div class="input-group col-sm-7 col-xs-10 no-padding">
+                                                                    <input class="form-control date-picker" id="graduateTime" type="text" data-date-format="yyyy-mm-dd">
+					                                                    <span class="input-group-addon">
+					                                                        <i class="icon-calendar bigger-110"></i>
+					                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="school">毕业学校</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="school" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="educationSel">学历</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10" id="educationSel"></select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="specialty">专业</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength='32' id="specialty" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="houseTypeSel">住房类型</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10" id="houseTypeSel"></select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isMarried">婚姻状况</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isMarried" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isBirth">生育状况</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isBirth" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isHouseLoan">房贷</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isHouseLoan" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5"  style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isCarLoan">车贷</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isCarLoan" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="lover">配偶</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="lover" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="timeline-item clearfix">
+                                    <div class="widget-box transparent" style="margin:0px ;border-left:0px ">
+                                        <div class="widget-header widget-header-small" style="background-color: white !important">
+                                            <h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+                                            <span class="widget-toolbar " style="float:initial ;position: initial">
+                                                 <a href="#" data-action="collapse">
+                                                     <i class="icon-chevron-up"></i>
+                                                 </a>
+                                            </span>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="school">毕业学校</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="school" class="col-sm-7 col-xs-10" />
+                                        </div>
+                                        <div class="widget-body" id="basicInfo">
+                                            <div class="widget-body-inner" style="display: block; background-color: white !important;">
+                                                 <div class="widget-main">
+                                                <form class="form-horizontal" style=" clear: inherit">
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="userId">工号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="15" id="userId" class="col-sm-7 col-xs-10" readonly="readonly"  data-toggle="popover" data-trigger='manual'/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="oldUserId">原始工号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="15" id="oldUserId" class="col-sm-7 col-xs-10"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="loginId">用户名</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="loginId" class="col-sm-7 col-xs-10 " data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text"  class="col-sm-7 col-xs-10 " id="company"  readonly>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="deptTypeSel">部门类型</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="deptTypeSel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="deptSel">部门/大区</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="deptSel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="dutySel">职位</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="dutySel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="statusSel">状态</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="statusSel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="employWaySel">招聘渠道</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10 v_required" id="employWaySel" data-toggle="popover" data-trigger='manual'></select>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="employTypeSel">录用类型</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="col-sm-7 col-xs-10" id="employTypeSel"></select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="recommendMan">推荐人</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="recommendMan" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="entryTime">入职时间</label>
+                                                            <div class="col-sm-9">
+                                                                <input class="col-sm-7 col-xs-10 date-picker v_required"  id="entryTime" type="text" data-date-format="yyyy-mm-dd">
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5 clear-both" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="employTime">转正时间</label>
+                                                            <div class="col-sm-9">
+                                                                <div class="input-group col-sm-7 col-xs-10 no-padding">
+                                                                    <input class="form-control date-picker" id="employTime" type="text" data-date-format="yyyy-mm-dd">
+																	<span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5 " style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isContract">签订劳动合同</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isContract" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5 clear-both" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="isInsurance">上保险</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="checkbox" id="isInsurance" class=""/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="serviceYears">服务年限</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="2" id="serviceYears" class="col-sm-7 col-xs-10 v_number"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="insuranceTime">保险起始时间</label>
+                                                            <div class="col-sm-9">
+                                                                <div class="input-group col-sm-7 col-xs-10 no-padding">
+                                                                    <input class="form-control date-picker" id="insuranceTime" type="text" data-date-format="yyyy-mm-dd">
+																	<span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="pensionNum">养老编号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="pensionNum" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="medicalNum">医疗编号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="medicalNum" class="col-sm-7 col-xs-10" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="salary">工资</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" id="salary" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="bank">开户行</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="10" id="bank" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-5" style=" clear: inherit">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="bankCardNum">银行卡号</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" maxlength="32" id="bankCardNum" class="col-sm-7 col-xs-10 v_required v_number" data-toggle="popover" data-trigger='manual'/>
+                                                                <span class='star'></span>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-offset-3 col-md-9" >
+                                    <button id='saveBtn' class="btn btn-info" type="button">
+                                        <i class="icon-ok bigger-110"></i>
+                                        保存
+                                    </button>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="educationSel">学历</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10" id="educationSel"></select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="specialty">专业</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength='32' id="specialty" class="col-sm-7 col-xs-10" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="houseTypeSel">住房类型</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10" id="houseTypeSel"></select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isMarried">婚姻状况</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isMarried" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isBirth">生育状况</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isBirth" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isHouseLoan">房贷</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isHouseLoan" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isCarLoan">车贷</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isCarLoan" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="lover">配偶</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="lover" class="col-sm-7 col-xs-10" />
-                                        </div>
-                                    </div>
-                                </form>
+                                    &nbsp; &nbsp; &nbsp;
+                                    <button id='cancelBtn' class="btn" type="reset">
+                                        <i class="icon-undo bigger-110"></i>
+                                        取消
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title accordion-toggle">
-                                入职基本信息
-                            </h3>
-                        </div>
-
-                        <div class="panel-collapse collapse in" id="basicInfo">
-                            <div class="panel-body">
-                                <form class="form-horizontal">
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="userId">工号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="15" id="userId" class="col-sm-7 col-xs-10" readonly="readonly"  data-toggle="popover" data-trigger='manual'/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="oldUserId">原始工号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="15" id="oldUserId" class="col-sm-7 col-xs-10"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="loginId">用户名</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="loginId" class="col-sm-7 col-xs-10 " data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
-                                        <div class="col-sm-9">
-                                            <input type="text"  class="col-sm-7 col-xs-10 " id="company"  readonly>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="deptTypeSel">部门类型</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="deptTypeSel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="deptSel">部门/大区</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="deptSel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="dutySel">职位</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="dutySel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
 
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="statusSel">状态</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="statusSel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="employWaySel">招聘渠道</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10 v_required" id="employWaySel" data-toggle="popover" data-trigger='manual'></select>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="employTypeSel">录用类型</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-sm-7 col-xs-10" id="employTypeSel"></select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="recommendMan">推荐人</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="recommendMan" class="col-sm-7 col-xs-10" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="entryTime">入职时间</label>
-                                        <div class="col-sm-9">
-                                            <input class="col-sm-7 col-xs-10 date-picker v_required"  id="entryTime" type="text" data-date-format="yyyy-mm-dd">
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5 clear-both">
-                                        <label class="col-sm-3 control-label no-padding-right" for="employTime">转正时间</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group col-sm-7 col-xs-10 no-padding">
-                                                <input class="form-control date-picker" id="employTime" type="text" data-date-format="yyyy-mm-dd">
-												<span class="input-group-addon">
-													<i class="icon-calendar bigger-110"></i>
-												</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5 ">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isContract">签订劳动合同</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isContract" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5 clear-both">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isInsurance">上保险</label>
-                                        <div class="col-sm-9">
-                                            <input type="checkbox" id="isInsurance" class=""/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="serviceYears">服务年限</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="2" id="serviceYears" class="col-sm-7 col-xs-10 v_number"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="insuranceTime">保险起始时间</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group col-sm-7 col-xs-10 no-padding">
-                                                <input class="form-control date-picker" id="insuranceTime" type="text" data-date-format="yyyy-mm-dd">
-												<span class="input-group-addon">
-													<i class="icon-calendar bigger-110"></i>
-												</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="pensionNum">养老编号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="pensionNum" class="col-sm-7 col-xs-10" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="medicalNum">医疗编号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="medicalNum" class="col-sm-7 col-xs-10" />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="salary">工资</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="salary" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="bank">开户行</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="10" id="bank" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-sm-5">
-                                        <label class="col-sm-3 control-label no-padding-right" for="bankCardNum">银行卡号</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" maxlength="32" id="bankCardNum" class="col-sm-7 col-xs-10 v_required v_number" data-toggle="popover" data-trigger='manual'/>
-                                            <span class='star'></span>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clearfix form-actions">
-                        <div class="col-md-offset-3 col-md-9">
-                            <button id='saveBtn' class="btn btn-info" type="button">
-                                <i class="icon-ok bigger-110"></i>
-                                保存
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button id='cancelBtn' class="btn" type="reset">
-                                <i class="icon-undo bigger-110"></i>
-                                取消
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -445,4 +469,6 @@
     </div>
 </div>
 
-<script src="js/personnel/userEdit.js"></script>
+<script type="text/javascript">
+    $.loadScript(['js/personnel/userEdit.js']);
+</script>

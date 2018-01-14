@@ -28,7 +28,7 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "users", "userId", "userName");
 	
 	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
 	
@@ -50,18 +50,18 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	var user = v.user;
+        	var userBase = v.userBase;
         	
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + user.currentName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + userBase.currentName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
             var propertyArr = [
-                ["编号:", user.userId, "grey"],
-                ["职位:", user.duty.name, "grey"],
+                ["编号:", userBase.userId, "grey"],
+                ["职位:", userBase.duty.name, "grey"],
                 ["类型:", approve.approvalTypeData[v.type], "red"],
                 ["说明:", v.comment, "grey"]
             ];
@@ -98,7 +98,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 
-	searcher.init(["userName", "approvalType"], "condList", api.approval.pageApproveUser, function(data){
+	searcher.init(["approval_senderName", "approval_Type"], "condList", api.approval.pageApprover, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "approvalUserPostData", null, false, null, function(){
 		
@@ -121,10 +121,10 @@ jQuery(function($) {
 	function deleteApprovalUser(approveId){
 		
 		var options = {
-			"approveUserIds[0]": approveId
+			"approverIds[0]": approveId
 		};
 		
-		com.post(api.approval.deleteApproveUser, options, function(){
+		com.post(api.approval.deleteApprover, options, function(){
 			searcher.doSearch();
 		},null,false);
 	}
@@ -137,11 +137,11 @@ jQuery(function($) {
 		
 		var url;
 		var options = {
-			'approveUser.user.userId': approve.items.userSel.val(),
-			'approveUser.type': approve.items.type.val(),
-			'approveUser.comment': approve.items.comment.val(),
+			'approver.userBase.userId': approve.items.userSel.val(),
+			'approver.type': approve.items.type.val(),
+			'approver.comment': approve.items.comment.val(),
 		};
-			url = api.approval.addApproveUser;
+			url = api.approval.addApprover;
 			
 		com.post(url, options, function(res){
 			searcher.doSearch();

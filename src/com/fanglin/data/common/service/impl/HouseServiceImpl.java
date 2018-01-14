@@ -39,18 +39,11 @@ public class HouseServiceImpl implements HouseService {
 		List<HousePO> housePOs = houseDao.pageHouse(paging, filters);
 		List<HouseVO> houseVOs = new ArrayList<HouseVO>();
 		
-		HouseVO houseVO;
-		
 		for (HousePO housePO : housePOs) {
-			houseVO= new HouseVO(new VillageVO());
-			
-			houseVO = convertBean(housePO);
-			
-			houseVOs.add(houseVO);
+			houseVOs.add(convertBean(housePO));
 		}
 		
 		paging.setData(houseVOs);
-
 	}
 
 	@Override
@@ -58,7 +51,7 @@ public class HouseServiceImpl implements HouseService {
 		
 		HousePO housePO=houseDao.get(houseVO.getHid());
 		
-		if(housePO==null){
+		if(housePO == null){
 			throw new FLException(320002, "房产不存在");
 		}
 		
@@ -72,19 +65,18 @@ public class HouseServiceImpl implements HouseService {
 		
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),houseVO.getStatus());
 		
-		if(housePO==null){
+		if(housePO == null){
 			throw new FLException(320002, "房产不存在");
 		}
 		
 		houseVO = convertBean(housePO);
 		
 		return houseVO;
-		
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addHouse(HouseVO houseVO) throws FLException{
+	public int addHouse(HouseVO houseVO) throws FLException{
 		
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),null);
 		
@@ -96,7 +88,7 @@ public class HouseServiceImpl implements HouseService {
 		
 		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village"));
 		
-		VillagePO villagePO =villageDao.get(houseVO.getVillage().getNo());
+		VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
 		
 		housePO.setVillage(villagePO);
 		
@@ -104,11 +96,12 @@ public class HouseServiceImpl implements HouseService {
 		
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
 		
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateHouse(HouseVO houseVO) throws FLException{
+	public int updateHouse(HouseVO houseVO) throws FLException{
 		
 		HousePO housePO = houseDao.get(houseVO.getHid());
 		
@@ -122,6 +115,7 @@ public class HouseServiceImpl implements HouseService {
 		
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
 		
+		return 0;
 	}
 
 	private HouseVO convertBean(HousePO housePO) throws FLException{

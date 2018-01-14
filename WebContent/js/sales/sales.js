@@ -255,11 +255,11 @@ $(function () {
                         com.switchPage(api.index.refundsItemDetialIndex.url);
                     });
 
-                    $btnPrint.click(function () {
+                    /*$btnPrint.click(function () {
 
                         printPayment(v.orderId, v.sid);
 
-                    });
+                    });*/
 
                     if (!salesDic[v.sid]) {
                         salesDic[v.sid] = $.extend({}, v)
@@ -946,8 +946,9 @@ $(function () {
     }
 
     function printPayment(orderId, sid) {
-
-        com.popup("专用合同__订单编号：" + orderId, api.index.salesPrintIndex.url + "?sales.sid=" + sid + "&time=" + params.loginTime, function () {
+        params.salesSid = sid;
+       // + "?sales.sid=" + sid + "&time=" + params.loginTime
+        com.popup("专用合同__订单编号：" + orderId, api.index.salesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
 

@@ -1,53 +1,55 @@
-
-var decorationOrderDetail = {
-    decorationOrderId:null,
-    orderType:"",
-
-    type:{
-        "半包":0,
-        "全包":1,
-        "半价":2,
-    },
-
-    decorationOrder: {},
-    customer:{},
-    village:{},
-
-    quotationDetail:{},
-
-    btnSaveBaseDecorationOrderInfo:null,
-
-    validator: {
-        houseNumber: {
-            type: "v_houseNumber",
-            regex: /^D_\d{3}$/g,
-            errorMsg: "楼盘名称规则"
-        }
-    },
-
-    items: {},
-
-    vRepeatFlg: false,
-    cRepeatFlg: false
-};
 $(function(){
+    var decorationDetail = {
+        decorationOrderId:null,
+        orderType:"",
+
+        type:{
+            "半包":0,
+            "全包":1,
+            "半价":2,
+        },
+
+        decoration: {},
+        customer:{},
+        village:{},
+
+        quotationDetail:{},
+
+        btnSaveBasedecorationInfo:null,
+
+        validator: {
+            houseNumber: {
+                type: "v_houseNumber",
+                regex: /^D_\d{3}$/g,
+                errorMsg: "楼盘名称规则"
+            }
+        },
+
+        items: {},
+
+        vRepeatFlg: false,
+        cRepeatFlg: false
+    };
 
     var discount = 10;
 
-    decorationOrderDetail.decorationOrderId = params.decorationOrderId;
-    decorationOrderDetail.orderType = params.type;
+    decorationDetail.decorationOrderId = params.decorationOrderId;
+    decorationDetail.orderType = params.type;
 
     $('#btnBack').on(ace.click_event, function(){
-        com.switchPage(params.historyOrderPage);
+        com.switchPage(params.historyPage);
     });
 
-    initWizard(discount);
+    decorationUtils.init();
+    decorationUtils.initMaterial(decorationDetail);
+    
+    initWizard(discount,decorationDetail);
 
     setTimeout(function () { quotationUtils.loadQuotationDetail(); }, 500);
 
 })
 
-function initWizard(discount) {
+function initWizard(discount,decorationDetail) {
     $('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {
 
         var curstep = 0;
@@ -57,23 +59,23 @@ function initWizard(discount) {
         if (curstep == 1) {
             quotationUtils.loadQuotationDetail();
         } else if (curstep == 2){
-           decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
+           decorationUtils.initMaterial(decorationDetail);
         }else if (curstep == 3) {
             $('#step3').empty();
-            drawBase("step3");
+            drawBase("step3",decorationDetail);
             drawTable(discount);
         }
     }).on('finished', function(e) {
-        com.switchPage(params.historyOrderPage);
+        com.switchPage(params.historyPage);
     }).on('stepclick', function(e,info){
 
         if (info.step == 1) {
             quotationUtils.loadQuotationDetail();
         }else if (info.step == 2){
-           decorationUtils.initMaterial(decorationOrderDetail.decorationOrderId);
+           decorationUtils.initMaterial(decorationDetail);
         }else if (info.step == 3) {
            $('#step3').empty();
-            drawBase("step3");
+            drawBase("step3",decorationDetail);
             drawTable(discount);
         }
     }).on('next', function(e, info) {
@@ -82,20 +84,20 @@ function initWizard(discount) {
 }
 function drawTable(discount) {
     var machingType = {};
-    var quotation = decorationOrderDetail.quotation;
+    var decorationDetail = quotationUtils.quotationDetail;
+    var quotation = decorationDetail.quotation;
     var payed = utils.changeTwoDecimal($('#materialPaidup').text() + $('#servicePaidup').text());
 
     com.post(api.ds.decoration,{},function(res){
         machingType = res.machingType;
     },null,false);
 
-    var partCanDiscount = utils.changeTwoDecimal(decorationOrderDetail.quotationUndisPrice + decorationOrderDetail.minusQuoUndisPrice);
-    var partNotDiscount = utils.changeTwoDecimal(decorationOrderDetail.quotationTotalPrice + decorationOrderDetail.addReduceTotal + decorationOrderDetail.minusQuoTotalPrice + decorationOrderDetail.minusAddReduceTotal + decorationOrderDetail.minusExtensionTotalPrice + decorationOrderDetail.extensionItemTotalPrice);
-    var holonomyCanDiscount = utils.changeTwoDecimal(decorationOrderDetail.quotationUndisPrice + decorationOrderDetail.minusQuoUndisPrice + decorationOrderDetail.quotationTotalPrice + decorationOrderDetail.addReduceTotal + decorationOrderDetail.minusQuoTotalPrice + decorationOrderDetail.minusAddReduceTotal );
-    var holonomyNotDiscount = utils.changeTwoDecimal(decorationOrderDetail.minusExtensionTotalPrice + decorationOrderDetail.extensionItemTotalPrice);
+    var partCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice);
+    var partNotDiscount = utils.changeTwoDecimal(decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal + decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
+    var holonomyCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice + decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal );
+    var holonomyNotDiscount = utils.changeTwoDecimal(decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
 
-    var partTotal = utils.changeTwoDecimal(quotationUtils.quotationCalculator(10,0));
-    var holonomyTotal = utils.changeTwoDecimal(quotationUtils.quotationCalculator(10,2));
+    var partTotal = utils.changeTwoDecimal(quotationUtils.quotationTotal());
     var discountTotal = utils.changeTwoDecimal(quotationUtils.quotationCalculator(discount,0));
     var transfee = utils.changeTwoDecimal(quotation.trafficPrice);
     var managefee = utils.changeTwoDecimal(quotation.managePrice);
@@ -126,9 +128,9 @@ function drawTable(discount) {
 
         if(i == Math.ceil(machingType.length / 2) - 1){
             if(machingType.length != 1){
-                holonomyDiv.append(createCalItem("半价",'normal border-top-bottom'),createCalItem(holonomyTotal,'normal border-top-bottom'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top-bottom'),createCalItem("-",'normal border-top-bottom'),createCalItem(managefee,'normal border-top-bottom'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total),'normal alert-warning');
+                holonomyDiv.append(createCalItem("半价",'normal border-top-bottom'),createCalItem(partTotal,'normal border-top-bottom'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top-bottom'),createCalItem("-",'normal border-top-bottom'),createCalItem(managefee,'normal border-top-bottom'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total),'normal alert-warning');
             }else {
-                holonomyDiv.append(createCalItem("半价",'normal border-top'),createCalItem(holonomyTotal,'normal border-top'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top'),createCalItem("-",'normal border-top'),createCalItem(managefee,'normal border-top'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem((total),'normal alert-warning'));
+                holonomyDiv.append(createCalItem("半价",'normal border-top'),createCalItem(partTotal,'normal border-top'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top'),createCalItem("-",'normal border-top'),createCalItem(managefee,'normal border-top'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem((total),'normal alert-warning'));
             }
         }else if(i == (machingType.length - 1)){
             holonomyDiv.append(createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total,'normal alert-warning'));
@@ -144,7 +146,7 @@ function drawTable(discount) {
         discount = $("#calDiscount").val();
         $(".fl-quo-cal").remove();
 
-        drawTable(discount,decorationOrderDetail.undisPrice,decorationOrderDetail.totalPrice);
+        drawTable(discount,decorationDetail.undisPrice,decorationDetail.totalPrice);
     });
 
     inputMainDiv.append(createCalItem("输入折扣",'normal'),input,inputButton,createCalItem(" ",'normal  border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'small border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'small border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal').css({"border-width":"1px 0px 0px 0px"}),createCalItem("",'normal border-top ').css({"border-width":"1px 0px 0px 0px"})).appendTo(table);
@@ -155,8 +157,8 @@ function drawTable(discount) {
     }
 
 }
-function  drawBase(divid) {
-    var mainDiv = $('#' + divid);
+function  drawBase(divid,decorationDetail) {
+    var mainDiv = $('#' + divid);console.log(decorationDetail)
 
     var holonomyDiv = $("<div></div>").addClass('row');
     var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半价款项信息")));
@@ -171,7 +173,7 @@ function  drawBase(divid) {
     $('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
     holonomyDiv.appendTo(mainDiv);
 
-    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decorationOrder.orderId": decorationOrderDetail.decorationOrderId}, function (res) {
+    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
 
         res = res.decorationHolonomy;
 
@@ -180,8 +182,8 @@ function  drawBase(divid) {
         $('#materialPrice').html(checkNull(res.materialPrice));
         $('#servicePrice').html(checkNull(res.servicePrice));
         $('#servicePaidup').html(checkNull(res.servicePaidup));
-        $('#materialPaidup').html(checkNull(decorationOrderDetail.materialTotal));
-        var materialPaidup = decorationOrderDetail.materialTotal;
+        $('#materialPaidup').html(checkNull(decorationDetail.materialTotal));
+        var materialPaidup = decorationDetail.materialTotal;
 
         if(res.managePrice == null){
             $('#quotationPrice').html(0);

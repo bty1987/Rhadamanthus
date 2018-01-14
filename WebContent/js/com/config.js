@@ -1,6 +1,5 @@
 ﻿var config = {
 	versionCode: "1.6.003",
-    	isPC: false,
 	system: 1,
 	uploadTimeout: 30,
 	quotationLimitDiscount: 8.8,
@@ -29,5 +28,8 @@
     communion: '',
 	inventory: '',
 	production: '',
-    logflag: ''
+    logflag: '',
+
+    isPC: false,
+    isEncryption : false
 };

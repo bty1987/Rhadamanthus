@@ -1,7 +1,6 @@
-
 $(function(){
 
-    var $workflowName = $('#workflowName');
+    //var $workflowName = $('#workflowName');
     var displayFunc  = (function() {
 
         var renderList = function(tableId,listData){
@@ -43,7 +42,6 @@ $(function(){
             return $ulTitle;
         };
 
-
         var creatLine = function(i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
@@ -72,25 +70,21 @@ $(function(){
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
             $btnUl.append($btnEdit).append($btnStart).append($btnStop);
-
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-
             $btnEdit.on("click",function () {
-                var name = $('#layerAdd').find('input[name="name"]').val(v.name);
-                $('#layerAdd').attr('data-atid', v.wfid);
+                productionUtils.clearForm("form1");
                 com.clearValidator();
-                openlayer(function(){
-                    var id = $('#layerAdd').attr('data-atid');
+                $('#layerAdd').find('input[name="name"]').val(v.name);
+                openlayer("编辑",function(){
                     if(!com.validate("layerAdd",null)){
-                        saveData(id, function(){
+                        saveData(v.wfid, function(){
                             Seacher.doSearch();
                             layer.closeAll();
-                            $workflowName.val("");
                         });
                     }
                 });
@@ -101,17 +95,11 @@ $(function(){
                 layer.confirm('是否启用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-atid', v.wfid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-atid');
-                    var status = $('#layerAdd').attr('data-status');
-                    startStatus(id,status,function(){
+                    changeQuoteTypeStatus(v.wfid,0,(v.status == 0) ,function(){
                         layer.closeAll();
                         layer.msg('启用成功',{icon:1,time:2e3});
                     });
-                }, function(){
-
-                });
+                }, function(){});
 
             });
 
@@ -120,19 +108,12 @@ $(function(){
                 layer.confirm('是否禁用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-atid', v.wfid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-atid');
-                    var status = $('#layerAdd').attr('data-status');
-                    stopStatus(id,status,function(){
+                    changeQuoteTypeStatus(v.wfid,1,(v.status == 1),function(){
                         layer.closeAll();
                         layer.msg('禁用成功',{icon:1,time:2e3});
                     });
-                }, function(){
-
-                });
+                }, function(){});
             });
-
 
         return $liLine;
         };
@@ -151,7 +132,7 @@ $(function(){
 
         var Seacher = new Searcher();
 
-        Seacher.init(["workflowName"], "condList", api.production.pageWorkflow, function (data) {
+        Seacher.init(["p_workflowName"], "condList", api.production.pageWorkflow, function (data) {
             displayFunc.init('resultList', data);
         }, "pagenation", "Workflow", null, false, null,function () {
 
@@ -160,13 +141,13 @@ $(function(){
             var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
             $adda.on("click",function () {
+                productionUtils.clearForm("form1");
                 com.clearValidator();
-                openlayer(function(index, layero){
+                openlayer("添加",function(index, layero){
                     if(!com.validate("layerAdd",null)){
                         saveData(null, function(){
                             Seacher.doSearch();
                             layer.closeAll();
-                            $workflowName.val("");
                         });
                     }
 
@@ -176,90 +157,67 @@ $(function(){
             return [$adda];
         },'resultList');
 
-    function openlayer(callback){
+    function openlayer(layerType,callback){
         layer.closeAll();
         layer.open({
             type: 1,
-            title:"添加",
+            title:layerType,
             content: $('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
-            zIndex:9999,
+            zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);
-
             },
             btn2: function(index, layero){
                 //按钮【按钮二】的回调
-                $workflowName.val("");
             },
             cancel: function(){
                 //右上角关闭回调
-                $workflowName.val("");
             }
         });
     }
 
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
-        var name = $layer.find('input[name="name"]').val();
+        var name = $('#layerAdd').find('input[name="name"]').val();
 
         if(!id){
-
             com.post(api.production.addWorkflow, {
                 "workflow.name": name
             }, function(res){
-
                 callback();
                 layer.msg('添加成功',{icon:1,time:2e3});
-
             });
-
         }
         else{
-          com.post(api.production.updateWorkflow, {
+            com.post(api.production.updateWorkflow, {
                 "workflow.wfid": id,
                 "workflow.name": name
             }, function(res){
-              callback();
-                    layer.alert('操作完成', {
-                        icon: 1,
-                        skin: 'layer-ext-moon'
-                    });
-            });
-
-
-        }
-    }
-    function startStatus(id,status,callback){
-        if(status=="1"){
-
-            com.post(api.production.updateWorkflowForStatus,{
-                "workflow.wfid": id,
-                "workflow.status": "0"
-            },function(res){
                 callback();
-               Seacher.doSearch();
-            });
-        }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
+                layer.alert('操作完成', {
+                    icon: 1,
+                    skin: 'layer-ext-moon'
+                });
             });
         }
     }
-    function stopStatus(id,status,callback){
-        if(status=="0"){
-            com.post(api.production.updateWorkflowForStatus,{
-                "workflow.wfid": id,
-                "workflow.status": "1"
-            },function(res){
+
+    /*btnType:0 启用功能,1 禁用功能
+     statusFlag:当前状态是否与想要完成的功能相冲 */
+    function changeQuoteTypeStatus(qtid,btnType,statusFlag ,callback) {
+
+        if(!statusFlag){
+            com.post(api.production.updateWorkflowForStatus, {
+                "workflow.wfid": qtid,
+                "workflow.status": btnType
+            }, function (res) {
                 callback();
                 Seacher.doSearch();
             });
         }else{
-            layer.alert('已经禁用', {
+            layer.alert(btnType == 0 ? '已经启用':'已经禁用', {
                 icon: 0,
                 skin: 'layer-ext-moon'
             });

@@ -4,7 +4,8 @@ $.extend(api.index, {
     brandIndex: {url: "/views/data/brand.html"},
     customerIndex: {url: "/views/data/customer.html"},
     villageIndex: {url: "/views/data/village.html"},
-	PaymentScale: {url: "/views/data/paymentScale.html"}
+	PaymentScale: {url: "/views/data/paymentScale.html"},
+    houseIndex:{url: "/views/data/house.html"}
 });
 
 $.extend(api, {data: {
@@ -44,20 +45,30 @@ $.extend(api, {data: {
     queryCustomerById: {url: "queryCustomerById.do"},
     queryCustomerForName: {url: "queryCustomerForName.do"},
     checkCustomerForPhone: {url: "checkCustomerForPhone.do"},
+    queryCustomerPhoneByCid: {url:"queryCustomerPhoneByCid.do"},
+  
     addCustomer: {url: "addCustomer.do", server: "communion"},
     updateCustomer: {url: "updateCustomer.do", server: "communion"},
-    updateCustomerForBalance: {url: "updateCustomerForBalance.do", server: "communion"},
-
+    addCustomerPhone: {url:"addCustomerPhone.do", server: "communion"},
+    updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
+    updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
+    
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
     queryVillageById: {url: "queryVillageById.do"},
     queryVillageForNameByPinyin: {url: "queryVillageForNameByPinyin.do", demo: true},
+   
     addVillage: {url: "addVillage.do", server: "communion"},
     updateVillage: {url: "updateVillage.do", server: "communion"},
     updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communion"},
     updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"},
-
-
+    
+    pageHouse:{url:"pageHouse.do"},
+    queryHouseByHid:{url:"queryHouseByHid.do"},
+    queryHouseByNoAHnum:{url:"queryHouseByNoAHnum.do"},
+    addHouse:{url:"addHouse.do", server: "communion"},
+    updateHouse:{url:"updateHouse.do", server: "communion"},
+   
     pageDrawlineGroup: {url:"pageDrawlineGroup.do"},
     queryDrawlineGroup:{url:"queryDrawlineGroup.do"},
     addDrawlineGroup: {url:"addDrawlineGroup.do"},

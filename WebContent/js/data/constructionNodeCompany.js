@@ -63,7 +63,7 @@ $(function(){
 
 	var companySeacher = new Searcher();
 
-	companySeacher.init( ["companyName"], "condList", api.system.pageCompany, function(data){
+	companySeacher.init( ["c_name"], "condList", api.system.pageCompany, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "constructionNodeCompanyPostData", null, false, null, null);
 

@@ -1,5 +1,5 @@
 var decorationUtils = {
-    initMaterial: function (orderId) {
+    initMaterial: function (decorationDetail) {
 
         var $fanglinMaterial = $('#fanglinMaterialPayment').html("");
         var $salesMaterialPayment = $('#salesMaterialPayment').html("");
@@ -13,25 +13,25 @@ var decorationUtils = {
         var materialPayments = null;
         var salesPayments = null;
 
-        com.post(api.payment.queryMaterialPaymentByOrderId, {"materialPayment.orderId": orderId}, function (res) {
+        com.post(api.payment.queryMaterialPaymentByOrderId, {"materialPayment.material.orderId": decorationDetail.decorationOrderId}, function (res) {
             materialPayments = res.materialPayments;
         }, null, false);
 
         if (materialPayments && materialPayments.length) {
             $.each(materialPayments, function (i, v) {
-
+                console.log(v)
                 if (v.paymentStatus == 0) return true;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.msoNo + " " + materialUtils.materialPaymentTypeData[v.paymentType]));
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.material.no + " " + materialUtils.materialPaymentTypeData[v.paymentType]));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                 var propertyArr = [
-                    ["品类:", v.materialType, "grey"],
-                    ["品牌:", v.materialBrand, "grey"],
+                    ["品类:", v.category, "grey"],
+                    ["品牌:", v.brand, "grey"],
                     ["应收额:", v.referMoney, "grey"],
                     ["实收额:", v.realMoney, "grey"],
                     ["收款时间:", v.collectTime, "grey"],
@@ -73,7 +73,7 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulfanglin);
 
-                var $materialBrands = $("[name='" + v.materialBrand + "']");
+                var $materialBrands = $("[name='" + v.brand + "']");
 
                 if ($materialBrands.length > 0) {
 
@@ -89,14 +89,14 @@ var decorationUtils = {
 
                     $total = utils.changeThrDecimal($total + _refer);
                 } else {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.materialBrand);
-                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.materialBrand));
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
+                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                     var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
 
-                    $('<b></b>').html(v.materialType).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
-                    $('<b></b>').html(v.materialBrand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
@@ -106,7 +106,7 @@ var decorationUtils = {
             });
         }
 
-        com.post(api.payment.querySalesPaymentByOrderId, {"sales.orderId": orderId}, function (res) {
+        com.post(api.payment.querySalesPaymentByOrderId, {"sales.orderId": decorationDetail.decorationOrderId}, function (res) {
             salesPayments = res.salesPayments;
         }, null, false)
 
@@ -123,8 +123,8 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                 var propertyArr = [
-                    ["品类:", v.category, "grey"],
-                    ["品牌:", v.brand, "grey"],
+                    ["品类:", v.sales.category, "grey"],
+                    ["品牌:", v.sales.brand, "grey"],
                     ["应收额:", v.referMoney, "grey"],
                     ["实收额:", salesReceipt.realMoney, "grey"],
                     ["收款时间:", salesReceipt.collectTime, "grey"],
@@ -166,7 +166,7 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulsales);
 
-                var $salesBrands = $("[name='" + v.brand + "']");
+                var $salesBrands = $("[name='" + v.sales.brand + "']");
 
                 if ($salesBrands.length > 0) {
 
@@ -182,14 +182,14 @@ var decorationUtils = {
 
                     $total = utils.changeThrDecimal($total + _refer);
                 } else {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
-                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
+                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                     var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
 
-                    $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
-                    $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').html(v.sales.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
@@ -213,7 +213,7 @@ var decorationUtils = {
             totalData();
         }
 
-        decorationOrderDetail.materialTotal = $total;
+        decorationDetail.materialTotal = $total;
 
         function noData(div) {
             var $resultList = $('#' + div).html('');
@@ -228,22 +228,6 @@ var decorationUtils = {
 
             $liLine.append($h4).appendTo($ulbrand);
         }
-
-    }, decorationActivityInfo: function (activitys, uiBtnMethod, orderId) {
-
-        var options = {
-            "decorationActivity.orderId": orderId,
-        }
-
-        activitys.html('');
-
-        com.post(api.decoration.queryDecorationActivityByOrderId, options, function (res) {
-            var decorationActivitys = res.decorationActivitys;
-
-            for (var i = 0; i < decorationActivitys.length; i++) {
-                decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
-            }
-        });
 
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod) {
 
@@ -265,10 +249,26 @@ var decorationUtils = {
             uiBtnMethod(uiPgDiv, _decorationActivity);
         }
 
+    }, decorationActivityInfo: function (activitys, uiBtnMethod, orderId) {
+
+        var options = {
+            "decorationActivity.orderId": orderId,
+        }
+
+        activitys.html('');
+
+        com.post(api.decoration.queryDecorationActivityByOrderId, options, function (res) {
+            var decorationActivitys = res.decorationActivitys;
+
+            for (var i = 0; i < decorationActivitys.length; i++) {
+                decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
+            }
+        });
+
     }, decorationActivityItemInfo: function (activityItems, uiBtnMethod, orderId) {
 
         var options = {
-            "decorationOrder.orderId": orderId,
+            "decoration.orderId": orderId,
         }
 
         activityItems.html("");
@@ -321,8 +321,8 @@ var decorationUtils = {
         if (uiBtnMethod != null) {
             uiBtnMethod(uiPgDiv, _activityItem);
         }
-    }, initPayment: function (orderId, isDesign) {
-
+    }, initPayment: function (decorationDetail, isDesign) {
+        console.log(decorationDetail)
         var totalMoney = 0;
         var receiveMoney = 0;
         var addMoney = 0;
@@ -337,14 +337,14 @@ var decorationUtils = {
 
         var decorationPayments = null;
 
-        com.post(api.payment.queryAdvancePaymentByOrderId, {"decorationOrder.orderId": orderId}, function (res) {
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
             $("#balanceAdvance").text(res.balanceAdvance);
             $("#projectAdvance").text(res.projectAdvance);
             $("#materialAdvance").text(res.materialAdvance);
             $("#zaterialAdvance").text(res.zaterialAdvance);
         });
 
-        com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.orderId": orderId}, function (res) {
+        com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
             decorationPayments = res.decorationPayments;
         }, null, false);
 
@@ -404,9 +404,9 @@ var decorationUtils = {
 
                 $refundBtn.click(function () {
                     approvalUtils.initqueryApprovalUser("refundApproveManSel", 5);
-                    $('#autoId').val(v.autoId);
+                    $('#autoId').val(v.dpid);
                     $('#referMoney').val(v.referMoney);
-                    decorationOrderDetail.refundDecorationPaymentModal.modal("show");
+                    decorationDetail.refundDecorationPaymentModal.modal("show");
                 });
 
                 if (isDesign) {
@@ -468,8 +468,8 @@ var decorationUtils = {
         $('#addTotal').html(addMoney);
         $('#reduceTotal').html(reduceMoney);
 
-    }, initDecorationInclusive: function (divid, orederId) {
-        var mainDiv = $('#' + divid);
+    }, initDecorationInclusive: function (orederId) {
+        var mainDiv = $('#preparePayment').parent();
         $('#preparePayment').remove();
 
         var paymentDiv = $("<div></div>").addClass('row');
@@ -497,7 +497,7 @@ var decorationUtils = {
         $('<div></div>').addClass('hr col-md-12').prependTo(inclusiveDiv);
         inclusiveDiv.appendTo(mainDiv);
 
-        com.post(api.decoration.queryDecorationInclusive, {"decorationInclusive.decorationOrder.orderId": orederId}, function (res) {
+        com.post(api.decoration.queryDecorationInclusive, {"decorationInclusive.decoration.orderId": orederId}, function (res) {
 
             res = res.decorationInclusive;
 
@@ -589,7 +589,7 @@ var decorationUtils = {
                 "decorationPicture.path": dateObj.resUrl,
                 "decorationPicture.name": dateObj.strutsUploadsFileName,
                 "decorationPicture.content": "",
-                "decorationPicture.orderId": decorationOrderDetail.decorationOrderId,
+                "decorationPicture.orderId": params.decorationOrderId,
                 "decorationPicture.type": type
             };
 
@@ -619,7 +619,7 @@ var decorationUtils = {
                 var decorationPicture = decorationPictures[i];
 
                 if (decorationPicture.type == 0) {
-                    decorationUtils.addCAD($cad, decorationPicture);
+                    decorationUtils.addCAD($cad, decorationPicture, dFlag);
                 } else if (decorationPicture.type == 1) {
                     decorationUtils.addPicture($desgin, decorationPicture, dFlag);
                 } else if (decorationPicture.type == 2) {
@@ -666,24 +666,35 @@ var decorationUtils = {
 
         com.downloadFile($downA, i.path, i.name);
 
-    }, addCAD: function (e, i) {
+    }, addCAD: function (e, i, dFlag) {
 
         var $name = i.name;
 
-        var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').appendTo(e);
+        var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').attr("id","cad_" + i.dpId).appendTo(e);
         var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
         var $downIcon = $('<a></a>').addClass('icon-download-alt').appendTo($infoboxIcon);
 
         com.downloadFile($downIcon, i.path, new Date().getTime() + '.'  + $name.split('.')[1]);
 
         var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
-        var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxData);
-        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxData);
+        var $infoboxLeft = $('<div></div>').css('float','left').appendTo($infoboxData);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxLeft);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxLeft);
 
+
+        if (dFlag) {
+            var $delA = $('<a></a>').addClass("icon-remove").css({'float':'right','font-size':'22px','color':'white'}).appendTo($infoboxData);
+
+            $delA.click(function () {
+                com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
+                    $("#cad_" + res.decorationPicture.dpId).remove();
+                })
+            });
+        }
     }, initConstructionScheduleInfo: function () {
 
         var options = {};
-        options["constructionSchedule.orderId"] = decorationOrderDetail.decorationOrderId;
+        options["constructionSchedule.orderId"] = params.decorationOrderId;
 
         com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function (res) {
             for (var qualityName in decorationUtils.qualityIds) {
@@ -694,12 +705,12 @@ var decorationUtils = {
         });
     }, initBaseInfo: function (orderId, $api, callback) {
 
-        com.post($api, {"decorationOrder.orderId": orderId}, function (res) {
-            callback(res.decorationOrder);
+        com.post($api, {"decoration.orderId": orderId}, function (res) {
+            callback(res.decoration);
         }, null, false);
 
-    }, initDecorationHolonomy: function (divid, orederId) {
-        var mainDiv = $('#' + divid);
+    }, initDecorationHolonomy: function (orederId) {
+        var mainDiv = $('#preparePayment').parent();
         $('#preparePayment').remove();
 
         var paymentDiv = $("<div></div>").addClass('row');
@@ -729,7 +740,7 @@ var decorationUtils = {
         $('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
         holonomyDiv.appendTo(mainDiv);
 
-        com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decorationOrder.orderId": orederId}, function (res) {
+        com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": orederId}, function (res) {
 
             res = res.decorationHolonomy;
 
@@ -762,7 +773,7 @@ var decorationUtils = {
 
         });
 
-        com.post(api.payment.queryServicePaymentByOrderId, {"servicePayment.decorationOrder.orderId": orederId}, function (res) {
+        com.post(api.payment.queryServicePaymentByOrderId, {"servicePayment.decoration.orderId": orederId}, function (res) {
             drawList(res.servicePayments);
         })
 
@@ -825,7 +836,7 @@ var decorationUtils = {
 
             $ul.appendTo($tableWrap);
         }
-    }, initAddreduce: function (orderId) {
+    }, initAddreduce: function (orderId, type) {
         var $resList = $('#resLists').html('');
         var $table = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable ');
 
@@ -837,8 +848,8 @@ var decorationUtils = {
         com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': orderId}, function (data) {
             com.post(api.quotation.queryQuotationForDefaultByOrderId,
                 {
-                    "quotation.orderId": params.decorationOrderId,
-                    "quotation.type": params.orderType
+                    "quotation.orderId": orderId,
+                    "quotation.type": type
                 }, function (res) {
                     discount = res.quotation.discount;
                     qid = res.quotation.qid;
@@ -953,4 +964,5 @@ var decorationUtils = {
         }, null, false);
     }
 }
+
 

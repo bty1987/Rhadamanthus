@@ -12,15 +12,11 @@ public interface BuildingService {
 	public void pageBuilding(Paging paging, List<Filter> filters);
 
 	public BuildingVO queryBuildingByBoid(BuildingVO building);
-	
-	public BuildingVO queryBuilding(BuildingVO building) throws FLException;
 
 	public void bindBuilding(BuildingVO building, String userId) throws FLException;
 
 	public void unbindBuilding(BuildingVO building) throws FLException;
 
 	public void updateBuildingForBalanceStatus(BuildingVO building) throws FLException;
-
-	public void updateBuildingForPayType(BuildingVO building, String userId) throws FLException;
 
 }

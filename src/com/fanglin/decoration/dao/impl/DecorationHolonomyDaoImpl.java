@@ -48,7 +48,7 @@ public class DecorationHolonomyDaoImpl extends DaoImpl<DecorationHolonomyPO> imp
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));
 				}else if("designer".equals(field)){
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_DESIGNER_STR, data, op));
-				}else if("village".equals(field)){
+				}else if("villageId".equals(field)){
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_VILLAGE_STR, data, op));
 				}
 			}

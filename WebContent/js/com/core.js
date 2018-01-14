@@ -1,4 +1,4 @@
-com = {
+﻿com = {
     alertDiv: 'fl-alert',
     error: 'error',
     warning: 'warning',
@@ -9,8 +9,20 @@ com = {
     currentTime: function() {
         var date = new Date();
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getSeconds();
-    }, resizeContainer: function(){
-    }, post: function(url, options, callback, failCallback, asyncFlag) {
+    },
+    resizeContainer: function(){
+    },
+    post: function(url, options, callback, failCallback, asyncFlag) {
+
+        if(url == null){
+            return;
+        }
+
+        if(window.notOperate){
+            com.showAlert(com.warning, "已锁屏不能进行操作！");
+            return;
+        }
+
         var dfd = $.Deferred();
         var opts = $.extend({}, options || {});
         var optAsync = true;
@@ -21,9 +33,14 @@ com = {
         }
 
         var $ct = new Date();
-        if(!params.loginTime || (params.loginTime + config.timeout * 60 * 1000) < $ct.getTime()){
-            isF5 = true;
-            window.location.href = '/';
+        var timeout = "";
+        if(parent.config.isPC){
+            timeout = parent.config.timeout;
+        }else{
+            timeout = config.timeout;
+        }
+        if(!params.loginTime || (params.loginTime + timeout * 60 * 1000) < $ct.getTime()){
+            $("#userLock").click();
         }else{
             params.loginTime = $ct.getTime();
         }
@@ -74,9 +91,11 @@ com = {
                         return res;
                     }
                 }else if(res.errorCode == 110005){
-                    isF5 = true;
-                    //api.common.logout.url + "?timestamp="+new Date().getTime();
-                    window.location.href = '/';
+                    if(config.isPC){
+                        document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
+                    }else{
+                       $("#userLock").click();
+                    }
                 }else{
                     if(failCallback){
                         failCallback(res);
@@ -95,7 +114,8 @@ com = {
         });
 
         return dfd.promise();
-    }, adaptDataArray: function(obj,callback){
+    },
+    adaptDataArray: function(obj,callback){
         var result = [];
         if (obj != undefined){
             for(var i = 0; i < obj.length; i++){
@@ -105,7 +125,8 @@ com = {
         }
 
         return result;
-    }, cleanItems: function(items){
+    },
+    cleanItems: function(items){
         for(var i in items){
             if(typeof items[i] != 'object') continue;
             if(items[i][0].type == 'checkbox'){
@@ -118,7 +139,8 @@ com = {
                 items[i].val("");
             }
         }
-    }, validator: {
+    },
+    validator: {
         required: {
             type: "v_required",
             errorMsg: "内容不能为空",
@@ -129,55 +151,80 @@ com = {
                     return obj.val().toString().trim().length == 0 ? true : false;
                 return obj.val().trim().length == 0 ? true : false;
             }
-        }, number: {
+        },
+        number: {
             type: "v_number",
             regex: /^[0-9]*$/,
             errorMsg: "请输入数字."
-        }, float: {
+        },
+        float: {
             type: "v_float",
             regex: /^(((\d)+(\.)?(\d)*)|(\d)*)$/,
             errorMsg: "请输入浮点数."
-        }, name: {
+        },
+        name: {
             type: "v_name",
             regex: /^[\w\u4e00-\u9fa5-.@&!, \/()%\[\]（）*，;。；！、：:?？><]*$/,
             errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
-        }, nameen:{
+        },
+        nameen:{
             type: "v_name_en",
             regex: /^[\w-_]*$/,
             errorMsg: "内容可以由字母, 数字, '-', '_'组成."
-        }, email:{
+        },
+        email:{
             type: "v_email",
             regex: /^(([a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)|(\s)*)$/,
             errorMsg: "内容可以由字母, 数字, '-', '_', '.', '@'组成.(如:muzh@163.com)"
-        }, dateTime:{
+        },
+        dateTime:{
             type: "v_dateTime",
             regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
             errorMsg: "请输入正确格式的日期.(YYYY-MM-DD hh:mm:ss)"
-        }, date:{
+        },
+        date:{
             type: "v_date",
             regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
             errorMsg: "请输入正确格式的日期.(YYYY-MM-DD)"
-        }, time:{
+        },
+        time:{
             type: "v_time",
             regex: /^(([01][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/,
             errorMsg: "请输入正确格式的时间.(hh:mm:ss)"
-        }, phone: {
+        },
+        phone: {
             type: "v_phone",
-            regex: /^((1[3|4|5|7|8][0-9]{9})*)$/,
+            regex: /^((1[3|4|5|6|7|8|9][0-9]{9})*)$/,
             errorMsg: "请输入正确的手机格式 (如:13619181918)."
-        }, phones: {
+        },
+        phones: {
             type: "v_phones",
-            regex: /^(1[3|4|5|7|8][0-9]{9})((#1[3|4|5|7|8][0-9]{9})){0,4}$/,
+            regex: /^(1[3|4|5|6|7|8|9][0-9]{9})((#1[3|4|5|6|7|8|9][0-9]{9})){0,4}$/,
             errorMsg: "请输入正确的手机格式 (如:13619181918).如果为多条电话请用#号分隔"
-        }, phones2: {
+        },
+        phones2: {
             type: "v_phones2",
-            regex: /^((1[3|4|5|7|8][0-9]{9})|(0[0-9]{10}))((#((1[3|4|5|7|8][0-9]{9})|(0[0-9]{10})))){0,4}$/,
+            regex: /^((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10}))((#((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10})))){0,4}$/,
             errorMsg: "请输入正确的手机号或固定电话 (如:13619181918#02425601918).如果为多条号码请用#号分隔"
-        }, identity: {
+        },
+        identity: {
             type: "v_identity",
-            regex: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+            /*
+            * xxxxxx yyyy MM dd 375 0     十八位
+            * xxxxxx   yy MM dd  75 0     十五位
+            * 地区： [1-9]\d{5}
+            * 年的前两位： (18|19|([23]\d))        1800-2399
+            * 年的后两位： \d{2}
+            * 月份： ((0[1-9])|(10|11|12))
+            * 天数： (([0-2][1-9])|10|20|30|31)    闰年不能禁止29+
+            * 三位顺序码： \d{3}
+            * 两位顺序码： \d{2}
+            * 校验码： [0-9Xx]
+            * */
+            regex: /^\s*$|(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/,
             errorMsg: "请输入正确的身份证号码."
-        }, price: {
+        },
+        price: {
             type: "v_price",
             regex: /^[0-9]+(\.[0-9]{1,2})?$/,
             errorMsg: "请输入正确的金额格式."
@@ -190,9 +237,21 @@ com = {
         numberAll: {                   // 正数或负数 小数两位
             type: "v_numberAll",
             regex: /^(\d{0,8}|\d{0,8}\.[0-9]{1,2})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,2})$/,
-            errorMsg: "请输入正数或负数"
+            errorMsg: "请输入正数或负数."
+        },
+        officer: {
+            type: "v_officer",
+            regex: /^\s*$|^[\u4e00-\u9fa5]{3}\d{8}[\u4e00-\u9fa5]$/,
+            errorMsg: "请输入正确的军官证号."
+        },
+        amount: {   // 小数点前最多8位,小数点后最多两位
+            type: "v_amount",
+            regex: /^\s*$|^\d{1,8}(\.\d{1,2})?$/,   // ^\s*$表示验证可以为空，可以是空格和制表符
+            errorMsg: "请输入正确的金额格式."
         }
-    }, validate: function (scopeID,placement) {
+
+    },
+    validate: function (scopeID,placement) {
 
         var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? $("#fl-container") : $("#" + scopeID);
         var _placement = placement == "" || placement == null || placement == undefined ? 'right': placement;
@@ -328,7 +387,8 @@ com = {
         if(isTip){
             $obj.data("tip", isTip);
         }
-    }, showAlert: function(type, contents){
+    },
+    showAlert: function(type, contents){
 
         var outtime = 1000;
         var gritterTypeClass = "gritter-info";
@@ -354,7 +414,8 @@ com = {
             class_name: gritterTypeClass + ' gritter-center ' + gritterLightClass,
             time: outtime
         });
-    }, showInfo: function(title, contents){
+    },
+    showInfo: function(title, contents){
         $.gritter.removeAll();
 
         setTimeout(function(){
@@ -365,11 +426,13 @@ com = {
                 time: 5000
             });
         }, 500)
-    }, switchPage: function(url, data, callback){
+    },
+    switchPage: function(url, data, callback){
         $("#fl-container").load(url, data, function(response, status, xhr){
             callback && callback(response, status, xhr);
         });
-    }, dateramgepickerdefault: {
+    },
+    dateramgepickerdefault: {
         format: 'YYYY/MM/DD',
         separator:'-',
         locale: {
@@ -380,7 +443,8 @@ com = {
             daysOfWeek: ['日', '一', '二', '三', '四', '五','六'],
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
         }
-    }, initChosen: function(id, url, name, post, result, key, value){
+    },
+    initChosen: function(id, url, name, post, result, key, value){
 
         var $e = $('#' + id);
 
@@ -420,9 +484,11 @@ com = {
         $c.css("width", "200px");
 
         return $e;
-    }, updateChosen: function(id, key, value){
+    },
+    updateChosen: function(id, key, value){
         return $("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
-    }, showImg: function($e, url, width, height, alt, defaultUrl, type){
+    },
+    showImg: function($e, url, width, height, alt, defaultUrl, type){
 
         var $media = '', imgUrl = '';
 
@@ -439,9 +505,11 @@ com = {
         });
 
         return $media + api.common.showImg.url + '?imgBasePath=' + url;
-    }, downloadFile: function($e, url, name){
+    },
+    downloadFile: function($e, url, name){
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
-    }, popup: function (title, url, success, cancel, isPrint) {
+    },
+    popup: function (title, url, success, cancel, isPrint) {
         var layerPra = {
             type: 2,
             skin: 'layui-layer-lan',
@@ -486,9 +554,11 @@ com = {
         layer.full(
             layer.open(layerPra)
         );
-    }, sealJournal: function (level, content) {
+    },
+    sealJournal: function (level, content) {
         (config.logflag) && console[level](content);
-    }, splitUrl: function(url){
+    },
+    splitUrl: function(url){
 
         var _url = url == "" || url == undefined || url == null ? location.href : url;
 
@@ -504,19 +574,22 @@ com = {
 
         return result;
 
-    },showPopover: function ($obj, msg, placement) {
+    },
+    showPopover: function ($obj, msg, placement) {
 
         $obj.css('border', '1px red solid');
         $obj.focus().select();
-        $obj.removeAttr("data-placement").addClass('popover-notitle').attr({
+        $obj.removeAttr("data-placement").attr({
             "data-rel":"popover",
             "data-placement": placement,
             "data-content": msg.errorMsg
         }).removeAttr("data-toggle").popover('show');
 
-    },checkNull:function(obj,rep){
-        return obj==null ? rep : obj;
+    },
+    checkNull:function(obj,rep){
+        return obj == null || obj == undefined || obj == "" ? rep : obj;
     }
+
 };
 
 Array.prototype.formatArrayMapToStr = function(k, v){
@@ -571,6 +644,7 @@ $.extend($, {
         }
     }
 });
+
 
 (function($){
 

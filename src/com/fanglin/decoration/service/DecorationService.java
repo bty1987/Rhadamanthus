@@ -27,15 +27,11 @@ public interface DecorationService {
 	
 	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication);
 	
-	public void pageDecorationForMaterial(Paging paging, List<Filter> filters, Authentication authentication);
-	
 	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication);
 
 	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication);
 	
 	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication);
-	
-	public void pageDecorationForAdvance(Paging paging, List<Filter> filters, Authentication authentication);
 	
 	public void pageDecorationForQuoter(Paging paging, List<Filter> filters, Authentication authentication);
 	
@@ -68,6 +64,8 @@ public interface DecorationService {
 	public void changeDecorationForStatus(DecorationVO decorationVO, String userId);
 	
 	public void changeDecorationForType(DecorationVO decorationVO, String userId);
+	
+	public void changeDecorationForHouse(DecorationVO decorationVO, String userId);
 
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, Authentication authentication) throws FLException;
 
@@ -77,6 +75,6 @@ public interface DecorationService {
 	
 	public int subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 
-	public DecorationVO checkdecoration(Paging paging,List<Filter> filters, Authentication authentication);
+	public DecorationVO checkDecoration(Paging paging,List<Filter> filters, Authentication authentication);
 	
 }

@@ -84,8 +84,11 @@ public class ApprovalDecorationHouseServiceImpl implements ApprovalDecorationHou
 		if(oldhousePO == null && newhousePO == null){
 			throw new FLException(320005, "房源不存在");
 		}
-		// 需要decoration中dao层提供查询新房源hid是否被其他装修单所用	
-		
+
+		DecorationPO decorationPOs = decorationDao.queryDecorationByHid(newHouseId, company);
+		if(decorationPOs != null){
+			throw new FLException(320004, "房源已存在");//130019 房产已存在
+		}
 		approvalPO = new ApprovalPO();
 		BeanUtil.copyProperties(approvalVO, approvalPO);
 		

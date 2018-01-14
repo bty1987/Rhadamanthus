@@ -45,8 +45,6 @@ jQuery(function () {
             $('#left').find('input').val("");
             $('#left').find('select').empty();
 
-            //k---gid  v---name
-            var $content = $('#left');
             //查询商品信息
             var list = this.options.list;
 
@@ -55,7 +53,8 @@ jQuery(function () {
             $.each(list, function (index, val) {
                 if (val.gid == k) {
                     sales.gtype = val.type;
-                    $('#goodsName').attr('data-name', val.name).val(val.name);
+                    $('#goodsName').attr('data-name', val.name);
+                    $('#goodsNo').attr('data-no',val.no).val(val.no);
                     $('#category').attr('data-category', val.category).val(val.category);
                     $('#brand').attr('data-brand', val.brand).val(val.brand);
                     $('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
@@ -136,21 +135,32 @@ jQuery(function () {
         /*
          表单校验
          */
-        var $line = $('#left');
         if (com.validate('left', 'bottom') == false && sales.flag == true) {
-            //添加折让审批
-            var $postDis1 = $('#postDis').val();
+            //折让价
+            var $selling = parseFloat($('#selling').val());
+            //折扣价
+            var $disPrice = parseFloat($('#disPrice').val());
+            //售价
+            var $purchase = parseFloat($('#purchase option:selected').text());
+            //折扣
+            var $discount = parseFloat($('#discount').val());
+
             var $otherStatus = 0;
-            if ($postDis1 < 0.9) {
+
+            if ($selling != $disPrice || $purchase * $discount != $disPrice) {
                 $otherStatus = 1;
             }
 
             var $liList = $('<li></li>').addClass('list-group-item').attr({
-                'data-discount': $('#discount').val(),
-                'data-postDis': $postDis1,
+                'data-discount': $discount,
+                'data-selling': $selling,
+                'data-purchase': $purchase,
+                'data-disPrice': $disPrice,
+                'data-postDis': $('#postDis').val(),
                 'data-otherStatus': $otherStatus
             });
-            var $h4 = $('<h4></h4>').html($('#goodsName').attr('data-name')).attr('addData', sales.gids);
+
+            var $h4 = $('<h4></h4>').html($('#goodsName').attr('data-name') + ' ' + $('#goodsNo').attr('data-no')).attr('addData', sales.gids);
 
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
             var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
@@ -244,18 +254,16 @@ jQuery(function () {
     });
 
     function count(flag, boolean) {
-        if (com.validate('left', 'bottom') == false) {
-            if (flag == true && boolean == true) {
-                $('#disPrice').val(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val())));
-                $('#selling').val(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val())));
-                $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
-            } else if (flag == true && boolean == false) {
-                $('#selling').val(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val())));
-                $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
-            } else if (flag == false && boolean == true) {
-                $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
-                $('#postDis').val((utils.accDiv(parseFloat($('#selling').val()), parseFloat($('#disPrice').val()))).toFixed(2));
-            }
+        if (flag == true && boolean == true) {
+            $('#disPrice').val(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val())));
+            $('#selling').val(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val())));
+            $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
+        } else if (flag == true && boolean == false) {
+            $('#selling').val(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val())));
+            $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
+        } else if (flag == false && boolean == true) {
+            $('#total').val(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val())));
+            $('#postDis').val((utils.accDiv(parseFloat($('#selling').val()), parseFloat($('#disPrice').val()))).toFixed(2));
         }
     }
 
@@ -283,7 +291,7 @@ jQuery(function () {
         option["decorationOrder.orderId"] = $('#orderId').val();
         com.post(sales.queryDecorationOrderByOrderIdUrl, option, function (data) {
             $("#customerName").val(data.decorationOrder.customer.customerName);
-            $("#salesmanName").val(data.decorationOrder.designer);
+            $("#salesmanName").removeAttr('data-typeahead-key').val(data.decorationOrder.designer);
             $("#orderAddr").val(data.decorationOrder.village.villageName + " " + data.decorationOrder.houseNumber);
 
             if ($('#searchInfo').find('#customerName').val() != "") {
@@ -319,11 +327,11 @@ jQuery(function () {
 
     //业务员发生改变
     $('#salesmanName').typeahead({
-        url: api.personel.queryUserForNameByPinyinName,//获取下拉列表的接口
+        url: api.personel.queryUserForNameByDuty,//获取下拉列表的接口
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -342,7 +350,7 @@ jQuery(function () {
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: "驻店"}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -357,11 +365,11 @@ jQuery(function () {
     });
     //主材导购
     $('#guider').typeahead({
-        url: api.personel.queryUserForNameByDutysAO,
+        url: api.personel.queryUserForNameByDuty,
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, "dutysO[0]": "主材导购"}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -406,9 +414,9 @@ jQuery(function () {
 
         var _option = {};
 
-        if (com.validate('searchInfo','bottom')==false ) {
+        if (com.validate('searchInfo', 'bottom') == false) {
 
-            if(submitCheck() == false){
+            if (submitCheck() == false) {
                 return
             }
 

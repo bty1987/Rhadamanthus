@@ -133,9 +133,9 @@
 								<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">转账</h4>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="checkvBankName">银行</label>
+										<label class="col-sm-3 control-label no-padding-right" for="checkvBank">银行</label>
 										<div class="col-sm-9">
-											<select id="checkvBankName" class="col-xs-10 col-sm-5"></select>
+											<select id="checkvBank" class="col-xs-10 col-sm-5"></select>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -153,9 +153,9 @@
 								<div id="installmentDiv" referCheckbox="installmentCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">分期</h4>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="installmentBankName">银行</label>
+										<label class="col-sm-3 control-label no-padding-right" for="installmentBank">银行</label>
 										<div class="col-sm-9">
-											<select id="installmentBankName" class="col-xs-10 col-sm-5"></select>
+											<select id="installmentBank" class="col-xs-10 col-sm-5"></select>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -172,9 +172,9 @@
 								<div id="accountsDiv" referCheckbox="accountsCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">对公账户</h4>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="accountsBankName">银行</label>
+										<label class="col-sm-3 control-label no-padding-right" for="accountsBank">银行</label>
 										<div class="col-sm-9">
-											<select id="accountsBankName" class="col-xs-10 col-sm-5"></select>
+											<select id="accountsBank" class="col-xs-10 col-sm-5"></select>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -299,6 +299,5 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript('js/payment/decorationPayment.js?version=' + versionCode);
-	$.getScript('js/utils/approvalUtils.js?version=' + versionCode);
+	$.loadScript(['js/payment/decorationPayment.js','js/utils/approvalUtils.js']);
 </script>

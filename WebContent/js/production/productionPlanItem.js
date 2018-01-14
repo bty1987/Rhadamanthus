@@ -27,7 +27,7 @@ jQuery(function ($) {
                         ["高:",v.height,"grey"],
                         ["宽:",v.width,"grey"],
                         ["厚:",v.thick,"grey"],
-                        ["面积(平方米):",utils.accMul(parseFloat(utils.accDiv(v.height,100)),parseFloat(utils.accDiv(v.width,100))),"grey"],
+                        //["面积(平方米):",utils.accMul(parseFloat(utils.accDiv(v.height,100)),parseFloat(utils.accDiv(v.width,100))),"grey"],
                         ["颜色:",v.color,"grey"],
                         //["单价:",v.unitprice,"grey"],
                         ["数量:",v.num,"grey"],
@@ -71,21 +71,22 @@ jQuery(function ($) {
     })();
 
     var searcher  = new Searcher();
+
     searcher.init([],'condList',api.production.pageProductionPlanItemByPpid,function (data) {
         displayFunc.init('resultList', data);
     },"pagenation","productionPlanItemPostData",{"productionPlanItem.productionPlan.ppid" :ppid},false,null,function () {
+
         var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
         hidBtn($adda,$productionPlanStatus);
 
         $adda.click(function () {
-        	 $('#layerAddItem').find('input').val("");
+            productionUtils.clearForm('form1');
             com.clearValidator();
             addProductionPlanItem(function (index,lyero) {
                 if(!com.validate("layerAddItem",null)){
                     addItem();
-                    layer.closeAll();
                 }
             });
         });
@@ -93,21 +94,51 @@ jQuery(function ($) {
         var $back = $('<a></a>').addClass('btn btn-xs pull-left').attr('name', 'back').css("margin", "0px 3px");
         var $backi = $('<i></i>').addClass('m-icon-swapleft').appendTo($back);
         var $backspan = $('<span></span>').text('返回').appendTo($back);
+
         $back.click(function () {
             com.switchPage(api.index.productionPlanIndex.url);
         });
+
         return [$adda,$back];
 
     });
 
+    $('#layerAddItem').find("#itemName").typeahead({
+        url: api.production.queryQuoteItemByPinyin,
+        list: [],
+        postData: {},
+        source: function (query, process) {
+            var params = $.extend({"quoteItem.name": query, "quoteItem.pinyin": query}, this.options.postData);
+            com.post(this.options.url, params, $.proxy(this.options.callback, this));
+        }, matcher: function (item) {
+            return true;
+        }, callback: function (data) {
+            this.options.list = data['quoteItems'];
+            this.flprocess(this.options.list, 'qiid', 'name');
+        },
+        isResultTypeMap: true
+        , flupdater: function (k, v) {
+            //k: key, v:value
+            var list = this.options.list;
+            $.each(list, function (index, val) {
 
+                if (val.qiid == k) {
+                    $('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
+                    $('#layerAddItem').find('#typeNo').val(val.format);
+                }
+
+
+            });
+            return v;
+        }
+    });
 
     function addProductionPlanItem(callback){
         layer.closeAll();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
-            title: "新增",
+            title: "添加计划项",
             content: $('#layerAddItem'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
@@ -117,12 +148,37 @@ jQuery(function ($) {
                 callback(index,layero)
             },
             btn2: function (index, layero) {
-                //按钮【按钮二】的回调
+
             },
             cancel: function () {
                 //右上角关闭回调
             }
         });
+    }
+
+    function addItem() {
+        var option = [];
+        var $color = $('#color').val();
+
+        option["productionPlanItem.productionPlan.ppid"] = ppid;
+        option["productionPlanItem.typeno"] = $('#typeNo').val();
+        option["productionPlanItem.name"] = $('#itemName').val();
+        option["productionPlanItem.height"] = $('#height').val();
+        option["productionPlanItem.width"] = $('#width').val();
+        option["productionPlanItem.thick"] = $('#thick').val();
+        option["productionPlanItem.color"] = $color ? $color : ' ';
+        option["productionPlanItem.unitprice"] = 0;
+        option["productionPlanItem.num"] = $('#num').val();
+        option["productionPlanItem.total"] = 0;
+        option["productionPlanItem.comment"] = $('#comment').val();
+        com.post(api.production.addProductionPlanItem,option,function (res) {
+            layer.msg("添加成功");
+            searcher.doSearch();
+            productionUtils.clearForm('form1');
+        },function () {
+            layer.msg("添加失败");
+        })
+
     }
 
     function deleteProductionPlanItem(id) {
@@ -138,28 +194,6 @@ jQuery(function ($) {
             })
         }
     }
-    
-    function addItem() {
-        var option = [];
-        option["productionPlanItem.productionPlan.ppid"] = ppid;
-        option["productionPlanItem.typeno"] = $('#typeno').val();
-        option["productionPlanItem.name"] = $('#itemName').val();
-        option["productionPlanItem.height"] = $('#height').val();
-        option["productionPlanItem.width"] = $('#width').val();
-        option["productionPlanItem.thick"] = $('#thick').val();
-        option["productionPlanItem.color"] = $('#color').val();
-        option["productionPlanItem.unitprice"] = $('#unitprice').val();
-        option["productionPlanItem.num"] = $('#num').val();
-        option["productionPlanItem.total"] = $('#total').val();
-        option["productionPlanItem.comment"] = $('#comment').val();
-        com.post(api.production.addProductionPlanItem,option,function (res) {
-            layer.msg("添加成功");
-            searcher.doSearch();
-        },function () {
-            layer.msg("添加失败");
-        })
-
-    }
 
     function hidBtn(btnId,otherStatus){
         btnId.removeClass('hide');
@@ -170,5 +204,20 @@ jQuery(function ($) {
         }
 
     }
+
+    //$('#layerAddItem').find(".num input").on("change",function(){
+    //    com.clearValidator();
+    //    if(com.validate("layerAddItem","top")){
+    //        return false;
+    //    }
+    //    calcTotal();
+    //})
+
+    //function calcTotal(){
+    //    var _num =  $('#layerAddItem').find('.num input').val();
+    //    var _unitPrice =  $('#layerAddItem').find('.unitPrice').attr('data-unitPrice');
+    //    var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
+    //    $('#layerAddItem').find('.total').text(_total);
+    //}
 
 });

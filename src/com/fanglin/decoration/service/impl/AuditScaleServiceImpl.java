@@ -20,7 +20,7 @@ import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -44,11 +44,11 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 		List<AuditScalePO> auditScalePOs = auditScaleDao.queryAudtiScaleByArid(auditScale.getAuditRecord().getArid());
 		
 		for(AuditScalePO auditScalePO:auditScalePOs){
-			AuditScaleVO auditScaleVO = new AuditScaleVO(new UserVO(),new DepartmentVO(),new UserVO());
+			AuditScaleVO auditScaleVO = new AuditScaleVO(new UserBaseVO(),new DepartmentVO(),new UserBaseVO());
 			
 			BeanUtil.copyProperties(auditScalePO, auditScaleVO,Arrays.asList("belongUser","belongDepartment","creater"));
-			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("role", "dept","duty"));
-			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("role", "dept","duty"));
+			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("dept","duty"));
 			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "cityProper","type"));
 			
 			auditScaleVOs.add(auditScaleVO);

@@ -36,11 +36,9 @@
 										<div class="form-group">
 											<label for="houseNumber" class="col-sm-3 control-label no-padding-right">楼牌号</label>
 											<div class="col-sm-9">
-												<input type="text" class="col-xs-10 col-sm-5 v_required v_houseNumber" id="houseNumber" data-toggle="popover" data-trigger='manual' maxlength="30">
-													<i class='icon-asterisk'></i>
-												<div class="col-md-12">
-													<span id="buildingRuleContent" class="red"></span>
-												</div>
+												<input type="text" class="col-xs-10 col-sm-5 v_required" id="houseNumber" data-toggle="popover" data-trigger='manual' maxlength="30">
+												<i class='icon-asterisk'></i>
+												<button type="button" id="createHouse" class="btn btn-xs btn-info">创建房产</button>
 											</div>
 										</div>
 
@@ -192,7 +190,7 @@
 </div>
 
 <div class="modal fade" id="customerModal" tabindex="-1">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:60%" >
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
@@ -201,81 +199,250 @@
 				<h4 class="modal-title" id="customerDialog">客户</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal">
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
-						<div class="col-sm-9">
-							<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
-						</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<form class="form-horizontal">
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+										<div class="col-sm-9">
+											<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+										<div class="col-sm-9">
+											<input type="checkbox" id="gender" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="officer">军官证</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6  " data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6  " data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group" id="phonehide">
+										<label class="col-sm-3 control-label no-padding-right" for="phone">联系方式</label>
+										<div class="col-sm-9">
+											<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+										</div>
+									</div>
+
+
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+										<div class="col-sm-9">
+											<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+										<div class="col-sm-9">
+											<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+										<div class="col-sm-9">
+											<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+										<div class="col-sm-9">
+											<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</form>
 					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
-						<div class="col-sm-9">
-							<input type="checkbox" id="gender" />
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="phone">联系方式</label>
-						<div class="col-sm-9">
-							<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/>
-							<span class='star'></span>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
-						<div class="col-sm-9">
-							<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
-						<div class="col-sm-9">
-							<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
-						<div class="col-sm-9">
-							<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
-						<div class="col-sm-9">
-							<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
-						</div>
-					</div>
-					<div class="space-4"></div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
-						<div class="col-sm-9">
-							<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
-						</div>
-					</div>
-					<div class="space-4"></div>
-				</form>
+				</div>
+
 			</div>
+
 			<div class="modal-footer">
-				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary">保存</button>
 				<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="houseModal" tabindex="-1">
+	<div class="modal-dialog" style="width:60%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">房产</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<form class="form-horizontal">
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group " >
+										<label for="no" class="col-sm-3 control-label no-padding-right">楼盘名</label>
+										<div class="col-md-9">
+											<select class="chosen-select col-md-4 v_required" id="no"  style="display: none;">
+												<option value="">&nbsp;</option>
+											</select>
+											<span class='star'></span>
+										</div>
+									</div>
+
+									<div class="form-group" id="rulename">
+										<label class="col-sm-3 control-label no-padding-right" for="nameRuleSel">楼号规则</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="nameRuleSel" ></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label  class="col-sm-3 control-label no-padding-right">楼牌号</label>
+										<div class="col-sm-9">
+											<input type="text" class="v_required " maxlength="3" style="width:30px"  data-placement="top"   id="built" />栋
+											<input type="text" class="v_required" maxlength="3" style="width:30px"  data-placement="top"  id="unit" />单元
+											<input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"  id="floor" />层
+											<input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"   id="door" />门
+											<span class='star' id="errMsg"></span>
+
+											<div class="col-md-12">
+												<span id="buildingRuleContent" class="red"></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="type">房产类型</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="type" ></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
+										<div class="col-sm-9">
+											<input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-6 v_required v_float" />
+											<span style = "margin-left: 10px; line-height: 34px">平</span>
+											<span class='star'></span>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="maxFloor">最高楼层</label>
+										<div class="col-sm-9">
+											<input type="text" id="maxFloor" maxlength="3" class="col-xs-10 col-sm-6 v_number "/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="through" class="col-sm-3 control-label no-padding-right">是否越层</label>
+										<div class="col-sm-9">
+											<select class='col-xs-10 col-sm-6' id='through' ></select>
+										</div>
+									</div>
+
+								</div>
+								<div class="col-sm-6">
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">户型</label>
+										<div class="col-sm-9">
+											<input type="text" class="" style="width:30px"   data-placement="top"   id="houseTypeOne" /> 室
+											<input type="text" class="" style="width:30px"  data-placement="top"  id="houseTypeTwo" /> 厅
+											<input type="text" class="" style="width:30px"   data-placement="top"  id="houseTypeThr" /> 厨
+											<input type="text" class="" style="width:30px"  data-placement="top"   id="houseTypeFour" /> 卫
+											<span class='star'></span>
+										</div>
+
+									</div>
+
+									<div class="form-group">
+										<label for="orientation" class="col-sm-3 control-label no-padding-right">房屋朝向</label>
+										<div class="col-sm-9">
+											<select class='col-xs-10 col-sm-6' id='orientation' ></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="feature">三不</label>
+										<div class="col-sm-9">
+											<textarea id="feature" maxlength="512" class="col-xs-10 col-sm-6" rows="3" ></textarea>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="waterVapour" class="col-sm-3 control-label no-padding-right">水气设施</label>
+										<div class="col-sm-9">
+											<select class='col-xs-10 col-sm-6' id='waterVapour' ></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="parlourType" class="col-sm-3 control-label no-padding-right">客厅类型</label>
+										<div class="col-sm-9">
+											<select class='col-xs-10 col-sm-6' id='parlourType' ></select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="heatingType" class="col-sm-3 control-label no-padding-right">供暖类型</label>
+										<div class="col-sm-9">
+											<select class='col-xs-10 col-sm-6' id='heatingType'></select>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="saveHouseBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelHouselBtn" class="btn btn-default" >取消</button>
+			</div>
+
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	$.getScript('js/decoration/createOrder.js?version=' + versionCode);
+	$.loadScript(['js/decoration/createOrder.js']);
 </script>

@@ -32,18 +32,17 @@ $.extend(api.index, {
 		url : "views/production/hardware.html"
 	},
 	hardwareItemIndex : {
-		url : "views/production/viewHardwareItem.html"
+		url : "views/production/hardwareItem.html"
 	},
 	productionPlanIndex : {
 		url : "views/production/productionPlan.html"
 	},
 	productionPlanItemIndex : {
 		url : "views/production/productionPlanItem.html"
-	},hardwareItemImportIndex : {
-		url : "views/production/hardwareItemImport.html"
-	},productionPlanDetailIndex : {
-		url : "views/production/productionPlanDetail.html"
 	},
+	productionPlanDetailIndex : {
+		url : "views/production/productionPlanDetail.html"
+	}
 	
 });
 
@@ -142,6 +141,6 @@ $.extend(api,{production:{
 	queryProductionWorkFlowByPwpid : {url : "queryProductionWorkFlowByPwpid.do"},
 	queryProductionWorkFlowByPwpidAWfid : {url : "queryProductionWorkFlowByPwpidAWfid.do"},
 	operateProductionWorkFlow : {url : "operateProductionWorkFlow.do"},
-	queryProductionUserWorkFlowsByPwfids:{url:"queryProductionUserWorkFlowsByPwfids.do"},
-	
+	queryProductionUserWorkFlowsByPwfids:{url:"queryProductionUserWorkFlowsByPwfids.do"}
+
 }});

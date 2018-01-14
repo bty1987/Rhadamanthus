@@ -11,7 +11,7 @@ jQuery(function () {
         },
         addSalesItemsPostData: {},
         gids: null,
-        gtype:null,
+        gtype: null,
         colorids: null,
         formatids: null,
         flag: false,
@@ -23,9 +23,9 @@ jQuery(function () {
     }, function (res) {
         $('#orderNo').val(res.sales.orderId);
         $('#customerName').val(res.sales.customer.customerName);
-        $('#salesmanName').val(res.sales.salesman.userName);
-        $('#instorer').val(res.sales.instorer.userName);
-        $('#guider').val(res.sales.guider.userName);
+        $('#salesmanName').val(res.sales.salesman.currentName);
+        $('#instorer').val(res.sales.instorer.currentName);
+        $('#guider').val(res.sales.guider.currentName);
         $('#brands').attr('data-brand', res.sales.brand).val(res.sales.brand);
         $('#coupon').val(res.sales.coupon);
         $('#couponInfoo').val(res.sales.couponInfoo);
@@ -67,7 +67,8 @@ jQuery(function () {
             $.each(list, function (index, val) {
                 if (val.gid == k) {
                     sales.gtype = val.type;
-                    $('#goodsName').attr('data-name', val.name).val(val.name);
+                    $('#goodsName').attr('data-name', val.name);
+                    $('#goodsNo').attr('data-no', val.no).val(val.no);
                     $('#category').attr('data-category', val.category).val(val.category);
                     $('#brand').attr('data-brand', val.brand).val(val.brand);
                     $('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
@@ -83,7 +84,10 @@ jQuery(function () {
                     com.post(api.inventory.queryPriceByPid, {
                         "price.pid": $('#purchase').val()
                     }, function (data) {
-                        $('#bid').attr({'data-ctype':data.price.ctype,"data-cvalue":data.price.cvalue}).val(data.price.purchase);
+                        $('#bid').attr({
+                            'data-ctype': data.price.ctype,
+                            "data-cvalue": data.price.cvalue
+                        }).val(data.price.purchase);
 
                     });
                     $('#discount').val(1);
@@ -139,32 +143,42 @@ jQuery(function () {
         com.post(api.inventory.queryPriceByPid, {
             "price.pid": $('#purchase').val()
         }, function (data) {
-            $('#bid').attr({'data-ctype':data.price.ctype,"data-cvalue":data.price.cvalue}).val(data.price.purchase);
+            $('#bid').attr({'data-ctype': data.price.ctype, "data-cvalue": data.price.cvalue}).val(data.price.purchase);
         });
     });
     //点击添加按钮
     $("#add").click(function () {
 
-        var $line = $('#left');
-        if (com.validate('left','bottom')==false && sales.flag == true) {
-            //添加折让审批
-            var $postDis1 = $('#postDis').val();
+        if (com.validate('left', 'bottom') == false && sales.flag == true) {
+
+            //折让价
+            var $selling = parseFloat($('#selling').val());
+            //折扣价
+            var $disPrice = parseFloat($('#disPrice').val());
+            //售价
+            var $purchase = parseFloat($('#purchase option:selected').text());
+            //折扣
+            var $discount = parseFloat($('#discount').val());
+
             var $otherStatus = 0;
-            if ($postDis1 < 0.9) {
+
+            if ($selling != $disPrice || $purchase * $discount != $disPrice) {
                 $otherStatus = 1;
             }
 
             var $liList = $('<li></li>').addClass('list-group-item').attr({
-                'data-discount': $('#discount').val(),
+                'data-discount': $discount,
+                'data-selling': $selling,
+                'data-purchase': $purchase,
+                'data-disPrice': $disPrice,
                 'data-postDis': $('#postDis').val(),
                 'data-otherStatus': $otherStatus
             });
 
-
-            var $h4 = $('<h4></h4>').html($('#goodsName').attr('data-name')).attr('addData', sales.gids);
+            var $h4 = $('<h4></h4>').html($('#goodsName').attr('data-name') + ' ' + $('#goodsNo').attr('data-no')).attr('addData', sales.gids);
 
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn red btn-minier').html('删除'));
-            var $edit = $('<div></div>').css('margin-right','5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn blue btn-minier _delete').html('查看')).click(function(){
+            var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn blue btn-minier _delete').html('查看')).click(function () {
                 openPackageGoods($h4.attr('addData'));
             });
 
@@ -175,7 +189,7 @@ jQuery(function () {
             }
             $liList.append(addSpan('品类：', 's_category', $('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', $('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', $('#measurementUnit').val(), " ", 'b_unit', null)).append(addSpan('颜色：', 's_color', $('#color').find("option:selected").text(), " ", 'b_color', sales.colorids)).append(addSpan('规格：', 's_format', $('#format').find("option:selected").text(), " ", 'b_format', sales.formatids)).append(addSpan('售价：', 's_selling', $('#purchase').find("option:selected").text(), 'blue', 'b_selling', null)).//append(addSpan('折扣：','s_count',$('#discount').val(),'red','b_count',null)).
             append(addSpan('折扣价：', 's_countSelling', $('#disPrice').val(), 'blue', 'b_countSelling', null)).//append(addSpan('折让：','s_zherang',$('#postDis').val(),'red','b_zherang',null)).
-            append(addSpan('折让价：', 's_price', $('#selling').val(), 'blue', 'b_price', null)).append(addSpan('数量：', 's_number', $('#num').val(), 'red', 'b_number')).append(addSpan('总价：', 's_total', $('#total').val(), 'blue', 'b_total', null)).append(addSpan('备注：', 's_remark', $('#remark').val(), " ", 'b_remark', null)).append($('<span></span>').css('display','none').text($('#bid').val()).attr("id", "invisiblePurchase")).append($('<span></span>').css('display','none').text($('#bid').attr('data-ctype')).attr("id", "invisibleCtype")).append($('<span></span>').css('display','none').text($('#bid').attr('data-cvalue')).attr("id", "invisibleCvalue"));
+            append(addSpan('折让价：', 's_price', $('#selling').val(), 'blue', 'b_price', null)).append(addSpan('数量：', 's_number', $('#num').val(), 'red', 'b_number')).append(addSpan('总价：', 's_total', $('#total').val(), 'blue', 'b_total', null)).append(addSpan('备注：', 's_remark', $('#remark').val(), " ", 'b_remark', null)).append($('<span></span>').css('display', 'none').text($('#bid').val()).attr("id", "invisiblePurchase")).append($('<span></span>').css('display', 'none').text($('#bid').attr('data-ctype')).attr("id", "invisibleCtype")).append($('<span></span>').css('display', 'none').text($('#bid').attr('data-cvalue')).attr("id", "invisibleCvalue"));
             $('#salesItemList').append($liList);
             //给最后一个li标签加上底框,除了最后一个li 其他的li均无底框
             $('.list-group-item').css("border-bottom", "none");
@@ -247,18 +261,16 @@ jQuery(function () {
     });
 
     function count(flag, boolean) {
-        if (com.validate('left','bottom') == false) {
-            if (flag == true && boolean == true) {
-                $('#disPrice').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val()))));
-                $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
-                $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
-            } else if (flag == true && boolean == false) {
-                $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
-                $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
-            } else if (flag == false && boolean == true) {
-                $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
-                $('#postDis').val((utils.accDiv(parseFloat($('#selling').val()), parseFloat($('#disPrice').val()))).toFixed(2));
-            }
+        if (flag == true && boolean == true) {
+            $('#disPrice').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val()))));
+            $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
+            $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
+        } else if (flag == true && boolean == false) {
+            $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
+            $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
+        } else if (flag == false && boolean == true) {
+            $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
+            $('#postDis').val((utils.accDiv(parseFloat($('#selling').val()), parseFloat($('#disPrice').val()))).toFixed(2));
         }
     }
 
@@ -392,7 +404,7 @@ jQuery(function () {
         });
     }
 
-    function openPackageGoods(gid){
+    function openPackageGoods(gid) {
         var $popup = $('#viewPopUp');
         $popup.attr({'data-gid': gid});
         //弹出即全屏
@@ -401,7 +413,7 @@ jQuery(function () {
             skin: 'layui-layer-molv',
             title: "查看套餐",
             content: $popup,
-            area: [ "1400px", ( $(window).height() * 0.84 < 720 ? $(window).height() * 0.84 : 720 ) + "px"],
+            area: ["1400px", ( $(window).height() * 0.84 < 720 ? $(window).height() * 0.84 : 720 ) + "px"],
             //maxmin: true,
             zIndex: 9000,
             btn: ['确定'],

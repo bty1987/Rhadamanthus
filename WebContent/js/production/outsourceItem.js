@@ -97,11 +97,14 @@ $(function () {
         hidBtn($adda,outsourceStatus);
 
         $adda.click(function(){
-            if(outsourceStatus == 1 ||outsourceStatus == 2 ){
-                layer.msg("当前外协单状态不可以添加外协项",{icon: 2,time:2e3})
-                return false;
-            }
-            addoutsourceItem();
+            com.clearValidator();
+            productionUtils.clearForm('form1');
+            addOutsourceItem(function(){
+                if(!com.validate("layerAddItem",null)){
+                    calcTotal();
+                    addItem();
+                }
+            });
         });
 
         $backBtn.click(function() {
@@ -112,28 +115,97 @@ $(function () {
 
     });
 
-    function addoutsourceItem() {
-        var $popup = $('#addPopUp');
-        $popup.attr({'data-oid': oid});
-        //弹出即全屏
-        var index = layer.open({
+
+    $('#layerAddItem').find("#itemName").typeahead({
+        url: api.production.queryQuoteItemByPinyin,
+        list: [],
+        postData: {},
+        source: function (query, process) {
+            var params = $.extend({"quoteItem.name": query, "quoteItem.pinyin": query}, this.options.postData);
+            com.post(this.options.url, params, $.proxy(this.options.callback, this));
+        }, matcher: function (item) {
+            return true;
+        }, callback: function (data) {
+            this.options.list = data['quoteItems'];
+            this.flprocess(this.options.list, 'qiid', 'name');
+        },
+        isResultTypeMap: true
+        , flupdater: function (k, v) {
+            var list = this.options.list;
+
+            $.each(list, function (index, val) {
+
+                if (val.qiid == k) {
+                    $('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
+                    $('#layerAddItem').find('#unitPrice').val(val.unitprice);
+                }
+
+            });
+            return v;
+        }
+    });
+
+    function addOutsourceItem(callback){
+        layer.closeAll();
+        layer.open({
             type: 1,
             skin: 'layui-layer-lan',
             title: "添加外协项",
-            content: $popup,
-            area: ["950px", ( $(window).height() * 0.84 < 600 ? $(window).height() * 0.84 : 600 ) + "px"],
+            content: $('#layerAddItem'),
+            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            btn: ["取消"],
             zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/production/addoutsourceItem.html");
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                callback(index,layero)
             },
-            end: function () {
-                $popup.attr({'data-oid': null});
-                $popup.empty();
-                outsourceSeacher.doSearch();
+            btn2: function (index, layero) {
+
+            },
+            cancel: function () {
+                //右上角关闭回调
             }
         });
+    }
+
+    function addItem(){
+        var options = {};
+        var $layerAdd = $('#layerAddItem');
+        var modeling = $layerAdd.find('#modelling').val();
+
+        options["outsource.oid"] = oid;
+        options["outsourceItems[0].name"] = $layerAdd.find('#itemName').val();
+        options["outsourceItems[0].height"] = $layerAdd.find('#height').val();
+        options["outsourceItems[0].width"] = $layerAdd.find('#width').val();
+        options["outsourceItems[0].thick"] = $layerAdd.find('#thick').val();
+        options["outsourceItems[0].modelling"] = modeling ? modeling : '';
+        options["outsourceItems[0].num"] = $layerAdd.find('#itemNum').val();
+        options["outsourceItems[0].unitprice"] = $layerAdd.find('#unitPrice').val();
+        options["outsourceItems[0].total"] = $layerAdd.find('#total').val();
+        options["outsourceItems[0].comment"] = $layerAdd.find('#comment').val();
+
+        com.post(api.production.addOutsourceItem,options,function(res){
+            com.clearValidator();
+            productionUtils.clearForm('form1');
+            outsourceSeacher.doSearch();
+            com.showAlert(com.info,"添加成功");
+        },function(e){
+            com.showAlert(com.info,"添加失败");
+        })
+    }
+
+    $('#layerAddItem').find("#itemNum").on("change",function(){
+        com.clearValidator();
+        if(!com.validate('itemNum')){
+            calcTotal();
+        }
+    });
+
+    function calcTotal(){
+        var _num =  $('#layerAddItem').find("#itemNum").val();
+        var _unitPrice =  $('#layerAddItem').find('#unitPrice').val();
+        var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
+        $('#layerAddItem').find('#total').val(_total);
     }
 
     function hidBtn(btnId,otherStatus){

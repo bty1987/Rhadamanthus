@@ -11,6 +11,5 @@ public interface BuildingNodeDao extends Dao<BuildingNodePO>{
 
 	public List<BuildingNodePO> pageBuildingNode(Paging paging, List<Filter> filters);
 	
-	public List<BuildingNodePO> queryBuildingNodeByType(Short type);
-	
+	public BuildingNodePO queryBuildingNodeByType(Short type, Short sore);
 }

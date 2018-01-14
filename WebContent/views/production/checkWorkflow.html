@@ -2,7 +2,7 @@
     <div class="flex-wrap" id="form">
 
         <div class="stay-bottom">
-            <button class="btn btn-yellow" id="addSaleOrder" >添加一条工序信息</button>
+            <button class="btn btn-yellow" id="addWorkPlan" >添加一条工序信息</button>
             <button id="submitHardwareItem" class="btn btn-info" data-loading-text="提交中..." type="submit"><i class="icon-ok"></i>保存</button>
         </div>
 
@@ -31,8 +31,6 @@
 
 </div>
 
-<script>
-    $(function(){
-        $.getScript('js/production/checkWorkflow.js');
-    });
+<script type="text/javascript">
+	$.loadScript(['js/production/checkWorkflow.js']);
 </script>

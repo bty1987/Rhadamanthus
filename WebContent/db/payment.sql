@@ -1,6 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `payment`;
 USE `payment`;
 
+DROP TABLE IF EXISTS `advancepayment`;
 CREATE TABLE `advancepayment` (
   `apId` int(11) NOT NULL AUTO_INCREMENT,
   `customerId` int(11) NOT NULL,
@@ -13,6 +14,7 @@ CREATE TABLE `advancepayment` (
   UNIQUE KEY `uniqueone` (`customerId`,`company`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户预付款';
 
+DROP TABLE IF EXISTS `advancereceipt`;
 CREATE TABLE `advancereceipt` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
   `collectUserId` varchar(15) NOT NULL DEFAULT '',
@@ -39,9 +41,13 @@ CREATE TABLE `advancereceipt` (
   PRIMARY KEY (`arId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款项收据表';
 
+DROP TABLE IF EXISTS `decorationpayment`;
 CREATE TABLE `decorationpayment` (
   `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `drId` int(11) DEFAULT NULL,
   `orderId` varchar(15) NOT NULL,
+  `onetype` tinyint(1) NOT NULL,
+  `twotype` tinyint(1) NOT NULL,
   `paymentType` varchar(10) NOT NULL COMMENT '预付款、设计费、定金、首付款、首付二期款、二期款、尾款、增项款、减项款、退款、违约金',
   `paymentStatus` varchar(10) NOT NULL DEFAULT '未提交' COMMENT '申请审批,审批未通过,未提交 , 未付款 , 已付款,已确认',
   `createUserId` varchar(15) DEFAULT NULL,
@@ -70,7 +76,6 @@ CREATE TABLE `decorationpayment` (
   `couponInfo` text,
   `advance` decimal(10,3) NOT NULL DEFAULT '0.000',
   `advanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `drId` int(11) DEFAULT NULL,
   PRIMARY KEY (`autoId`),
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`createUserId`),
@@ -78,6 +83,7 @@ CREATE TABLE `decorationpayment` (
   KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `decorationreceipt`;
 CREATE TABLE `decorationreceipt` (
   `drId` int(11) NOT NULL AUTO_INCREMENT,
   `collectUserId` varchar(15) DEFAULT NULL,
@@ -105,98 +111,7 @@ CREATE TABLE `decorationreceipt` (
   PRIMARY KEY (`drId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款项收据表';
 
-CREATE TABLE `materialinsidepayment` (
-  `mipId` int(11) NOT NULL AUTO_INCREMENT,
-  `miId` int(11) NOT NULL,
-  `paymentType` tinyint(4) NOT NULL DEFAULT '0',
-  `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL,
-  `materialBrandName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL DEFAULT '',
-  `createUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` date DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` date DEFAULT NULL,
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankName` varchar(20) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`mipId`),
-  KEY `indexone` (`miId`),
-  KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内收款表';
-
-CREATE TABLE `materialoutsidepayment` (
-  `mopId` int(11) NOT NULL AUTO_INCREMENT,
-  `moId` int(11) NOT NULL,
-  `paymentType` tinyint(4) NOT NULL DEFAULT '0',
-  `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL,
-  `materialBrandName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL DEFAULT '',
-  `createUserName` varchar(32) NOT NULL DEFAULT '',
-  `createTime` timestamp NULL DEFAULT NULL,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankName` varchar(20) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `morId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`mopId`),
-  KEY `indexone` (`moId`),
-  KEY `indextwo` (`paymentStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外收款表';
-
-CREATE TABLE `materialoutsidereceipt` (
-  `morId` int(11) NOT NULL AUTO_INCREMENT,
-  `collectUserId` varchar(15) NOT NULL DEFAULT '',
-  `collectUserName` varchar(32) NOT NULL DEFAULT '',
-  `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmUserId` varchar(15) DEFAULT '',
-  `confirmUserName` varchar(32) NOT NULL DEFAULT '',
-  `confirmTime` timestamp NULL DEFAULT NULL,
-  `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `cashInfo` varchar(20) DEFAULT NULL,
-  `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `bankName` varchar(20) NOT NULL DEFAULT '',
-  `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBankName` varchar(20) NOT NULL DEFAULT '',
-  `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `installmentBankName` varchar(20) NOT NULL DEFAULT '',
-  `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `accountsBankName` varchar(20) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `mopId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`morId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外款项收据表';
-
+DROP TABLE IF EXISTS `materialpayment`;
 CREATE TABLE `materialpayment` (
   `mpId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,
@@ -236,6 +151,7 @@ CREATE TABLE `materialpayment` (
   KEY `indexone` (`msoId`,`paymentStatus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单款项表';
 
+DROP TABLE IF EXISTS `materialreceipt`;
 CREATE TABLE `materialreceipt` (
   `mrId` int(11) NOT NULL AUTO_INCREMENT,
   `collectUserId` varchar(15) NOT NULL DEFAULT '',
@@ -267,6 +183,7 @@ CREATE TABLE `materialreceipt` (
   PRIMARY KEY (`mrId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材款项收据表';
 
+DROP TABLE IF EXISTS `payment`;
 CREATE TABLE `payment` (
   `paymentId` bigint(32) NOT NULL AUTO_INCREMENT,
   `customerId` int(11) NOT NULL,
@@ -296,6 +213,7 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`paymentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `salespayment`;
 CREATE TABLE `salespayment` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) NOT NULL COMMENT '销售单ID',
@@ -310,6 +228,7 @@ CREATE TABLE `salespayment` (
   PRIMARY KEY (`spid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售款项表';
 
+DROP TABLE IF EXISTS `salesreceipt`;
 CREATE TABLE `salesreceipt` (
   `srid` int(11) NOT NULL AUTO_INCREMENT,
   `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
@@ -337,6 +256,7 @@ CREATE TABLE `salesreceipt` (
   PRIMARY KEY (`srid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售收据表';
 
+DROP TABLE IF EXISTS `servicepayment`;
 CREATE TABLE `servicepayment` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
@@ -359,6 +279,7 @@ CREATE TABLE `servicepayment` (
   PRIMARY KEY (`spid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务款项';
 
+DROP TABLE IF EXISTS `servicereceipt`;
 CREATE TABLE `servicereceipt` (
   `srid` int(11) NOT NULL AUTO_INCREMENT,
   `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',

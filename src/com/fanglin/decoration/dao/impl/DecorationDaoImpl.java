@@ -19,10 +19,13 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.CustomerPhoneDao;
+import com.fanglin.data.po.CustomerPhonePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.DateUtil;
@@ -34,6 +37,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	public DecorationDaoImpl(){
 		super(DecorationPO.class);
 	}
+	
+	@Autowired
+	private CustomerPhoneDao customerPhoneDao;
 	
 	@Override
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company){
@@ -387,10 +393,13 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				}else if("customerId".equals(field)){
 					query.add(query.getCriterion("customer.no", data, op));
 				}else if("customerPhone".equals(field)){
-					query.add(query.getCriterion("customer.phone", data, op));
+					Long cid = (long) -1;
+					List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(data,(short)0);
+					if(!customerPhones.isEmpty()) cid = customerPhones.get(0).getCid();
+					query.add(query.getCriterion("customer.cid", cid, op));
 				}else if("houseNumber".equals(field)){
 					query.add(query.getCriterion("house.houseNumber", data, op));
-				}else if("houseid".equals(field)){
+				}else if("houseId".equals(field)){
 					query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
 				}else if("houseClass".equals(field)){
 					query.add(query.getCriterion("houseClass", data, op));

@@ -13,9 +13,9 @@ public interface HouseSourceService {
 
 	public HouseSourceVO queryHouseSourceByHsid(HouseSourceVO houseSource);
 	
-	public HouseSourceVO queryHouseSourceForNo(HouseSourceVO houseSource) throws FLException;
+	public HouseSourceVO queryHouseSourceByNo(HouseSourceVO houseSource) throws FLException;
 	
-	public HouseSourceVO checkHouseSourceByHidAndType(HouseSourceVO houseSource) throws FLException;
+	public HouseSourceVO checkHouseSource(HouseSourceVO houseSource) throws FLException;
 
 	public void addHouseSource(HouseSourceVO houseSource, String userId) throws FLException;
 

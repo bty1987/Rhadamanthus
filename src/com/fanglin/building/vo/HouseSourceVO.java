@@ -73,8 +73,6 @@ public class HouseSourceVO implements Serializable{
 	
 	private String comment;
 	
-	private Integer drawingNum;
-	
 	public HouseSourceVO() {
 		super();
 	}
@@ -327,14 +325,6 @@ public class HouseSourceVO implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public Integer getDrawingNum() {
-		return drawingNum;
-	}
-
-	public void setDrawingNum(Integer drawingNum) {
-		this.drawingNum = drawingNum;
 	}
 	
 }

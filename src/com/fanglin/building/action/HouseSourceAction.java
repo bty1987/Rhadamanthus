@@ -48,18 +48,18 @@ public class HouseSourceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryHouseSourceForNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryHouseSourceForNo() throws FLException{
+	@Action(value = "queryHouseSourceByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryHouseSourceByNo() throws FLException{
 		
-		houseSource = houseSourceService.queryHouseSourceForNo(houseSource);
+		houseSource = houseSourceService.queryHouseSourceByNo(houseSource);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkHouseSourceByHidAndType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkHouseSourceByHidAndType() throws FLException{
+	@Action(value = "checkHouseSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkHouseSource() throws FLException{
 		
-		houseSource = houseSourceService.checkHouseSourceByHidAndType(houseSource);
+		houseSource = houseSourceService.checkHouseSource(houseSource);
 		
 		return SUCCESS;
 	}

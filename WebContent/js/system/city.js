@@ -31,7 +31,7 @@ jQuery(function($) {
 	$.extend(com.validator, city.validator);
 	
 	com.post(api.system.queryRegion, {}, function(res){
-		city.cityItems.regionSel.bindData(res.regionList, "regionId", "regionName");
+		city.cityItems.regionSel.bindData(res.regions, "regionId", "regionName");
 	});
 	
 	var displayFunc  = (function(){

@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.building.dao.BuildingDao;
 import com.fanglin.building.dao.CustomerSourceDao;
+import com.fanglin.building.po.BuildingPO;
 import com.fanglin.building.po.CustomerSourcePO;
 import com.fanglin.building.service.CustomerSourceService;
 import com.fanglin.building.vo.CustomerSourceVO;
@@ -49,6 +51,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	@Autowired
 	private CountingService countingService;
 	
+	@Autowired
+	private BuildingDao buildingDao;
+	
 	@Override
 	public void pageCustomerSource(Paging paging, List<Filter> filters, String userId) {
 		
@@ -77,9 +82,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	}
 	
 	@Override
-	public CustomerSourceVO queryCustomerSourceForNo(CustomerSourceVO customerSource) throws FLException {
+	public CustomerSourceVO queryCustomerSourceByNo(CustomerSourceVO customerSource) throws FLException {
 		
-		CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSourceForNo(customerSource.getNo());
+		CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSourceByNo(customerSource.getNo());
 		
 		if(customerSourcePO == null){
 			throw new FLException(320008, "客源不存在");
@@ -91,9 +96,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	}
 	
 	@Override
-	public CustomerSourceVO checkCustomerSourceByCidAndType(CustomerSourceVO customerSource) throws FLException {
+	public CustomerSourceVO checkCustomerSource(CustomerSourceVO customerSource) throws FLException {
 		
-		CustomerSourcePO customerSourcePO = customerSourceDao.checkCustomerSourceByCidAndType(customerSource.getCustomer().getCid(), customerSource.getType());
+		CustomerSourcePO customerSourcePO = customerSourceDao.checkCustomerSource(customerSource.getCustomer().getCid(), customerSource.getType());
 		
 		if(customerSourcePO == null){
 			throw new FLException(320008, "客源不存在");
@@ -167,6 +172,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		
 		if(customerSourcePO.getStatus() == 2){
 			throw new FLException(320009, "客源状态不可操作");
+		}
+		
+		if(customerSourceVO.getStatus() == 0){
+			BuildingPO buildingPO = buildingDao.queryBuildingByCsid(customerSourceVO.getCsid());
+			
+			if(buildingPO != null){
+				throw new FLException(320009, "客源状态不可操作");
+			}
 		}
 		
 		customerSourcePO.setStatus(customerSourceVO.getStatus());

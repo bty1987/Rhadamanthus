@@ -188,7 +188,7 @@ $(function(){
         }
     })();
 
-    var _condArr = ['theme', 'dateRange', 'deptId'];
+    var _condArr = ['theme', 'dateRange'];
     var NoticeMngSeacher = new Searcher();
     NoticeMngSeacher.init( _condArr, "condList", api.information.pageNotice, function(list){
         displayFunc.init('resultList', list);

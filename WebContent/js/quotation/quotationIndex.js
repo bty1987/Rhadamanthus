@@ -11,8 +11,8 @@ var decorationQuotation = {
 jQuery(function($) {
 	$('#fl-statement').statement("装修订单报价", "报价信息列表");
 	
-	decorationQuotation.decorationOrderId = decorationOrderPostData.decorationOrderId;
-	decorationQuotation.type = decorationOrderPostData.decorationOrderType;
+	decorationQuotation.decorationOrderId = params.decorationOrderId;
+	decorationQuotation.type = params.decorationType;
 	
 	decorationQuotation.quotationItems.qid = $("#qid");
 	decorationQuotation.quotationItems.quotationName = $("#quotationName");
@@ -122,7 +122,7 @@ jQuery(function($) {
 	},5000);
 	
 	$('#btnBack').on(ace.click_event, function(){
-		com.switchPage(params.historyOrderPage);
+		com.switchPage(params.historyPage);
 	});
 	
 	$('#createQuotation').on(ace.click_event, function(){

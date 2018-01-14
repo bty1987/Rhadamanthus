@@ -5,11 +5,102 @@
             <div id="condList" class="fl_search clearfix"></div>
             <div class="clearfix" id="resultList"></div>
             <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
-
         </div>
     </div>
 </div>
 
-<div id="addPopUp"></div>
+<div id="layerAddItem" style="padding: 40px 0;display:none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="itemName">名称</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="itemName"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="height">高度</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="height"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="width">宽度</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="width"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="thick">厚度</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="thick"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="modeling">造型</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="modeling"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="measurementUnit" >单位</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="measurementUnit" readonly/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="unitPrice" >单价</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="unitPrice" readonly/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="itemNum" >数量</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="itemNum"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="total" >总价</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="total"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-<script src="js/production/outsourceItem.js"></script>
+
+<script type="text/javascript">
+	$.loadScript(['js/production/outsourceItem.js','js/production/productionUtils']);
+</script>

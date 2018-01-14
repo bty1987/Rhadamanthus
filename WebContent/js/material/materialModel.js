@@ -138,11 +138,6 @@ $(function(){
                 regex: /^.{2,64}$/g,
                 errorMsg: "主材型号名称格式错误."
             },
-            price: {
-                type: "v_price",
-                regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-                errorMsg: "价格内容输入错误."
-            },
             point: {
                 type: "v_point",
                 regex: /^(1\.0{1,2}|1|0|0\.[0-9]{1,3})$/g,

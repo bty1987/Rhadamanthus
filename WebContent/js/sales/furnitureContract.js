@@ -1,27 +1,31 @@
 $(function () {
-    Api().init('../../js/api/');
+
+    var params = {};
+
+    api = parent.api;
+    config = parent.config ;
+    server = parent.server;
+    utils = parent.utils;
+    com = parent.com;
+    $ = parent.$;
 
     params.serverPath = window.server;
     params.authentication = parent.params.authentication;
-
-    var args = window.location.search.substr(1);
+    params = parent.params;
 
     var amountInTotal = 0;
 
     var numberOfCases = 0;
-
-    if (args.indexOf('time=') != -1) {
-        params.loginTime = args.substring(args.indexOf('time=')).split('=')[1];
-    }
 
     var trList = $('#resultList');
     var $amountInTotal = $('#amountInTotal');
     var $numberOfCases = $('#numberOfCases');
 
     var querySalesItemBySid = api.inventory.querySalesItemBySid;
-    querySalesItemBySid.url = querySalesItemBySid.url + "?" + args;
 
-    com.post(querySalesItemBySid, {}, function (data) {
+    com.post(querySalesItemBySid, {
+        'sales.sid':params.salesSid
+    }, function (data) {
 
         $.each(data.salesItems, function (i, v) {
 
@@ -45,8 +49,6 @@ $(function () {
         var index = i + 1;
 
         var propertyArr = [
-            //v.gid,
-            //v.no,
             index,
             v.goods.brand,
             v.goods.name,

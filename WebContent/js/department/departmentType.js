@@ -44,26 +44,11 @@ jQuery(function($) {
 		var creatLine = function(v){
 
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.deptName));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
 
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
-			var propertyArr = [
-				["部门名称:", v.name, "grey"],
-			];
-
-			$.each(propertyArr, function (index,value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
-
-			$divBtnWrap.appendTo($h3);
-
-			$liLine.append($h3).append($ulProperty);
+			$liLine.append($h3)
 
 			return $liLine;
 		};

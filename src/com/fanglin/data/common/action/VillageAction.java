@@ -71,43 +71,10 @@ public class VillageAction extends BaseListAction {
 			keyValueVO.setValue(villageVO.getName() + "-" + villageVO.getCityProper().getCityProperName());
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(villageVO.getName());
-			
 		}
 		
 		return SUCCESS;
 	}
-
-	 @Action(value="addVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String addVillage() throws FLException{
-	    villageService.addVillage(village);
-	
-	    return SUCCESS;
-	  }
-	
-	  @Action(value="updateVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateVillage() throws FLException{
-	    
-		  villageService.updateVillage(village);
-	
-	    return SUCCESS;
-	  }
-	
-	  @Action(value="updateVillageForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateVillageForStatus() throws FLException{
-		  
-	   villageService.updateVillageForStatus(village);
-	
-	    return SUCCESS;
-	  }
-	
-	  @Action(value="updateVillageForPosition", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateVillageForPosition() throws FLException
-	  {
-	   
-		  villageService.updateVillageForPosition(village);
-	
-	    return SUCCESS;
-	  }
 
 	public VillageVO getVillage() {
 		return village;
@@ -154,6 +121,5 @@ public class VillageAction extends BaseListAction {
 	public void setPinyinName(String pinyinName) {
 		this.pinyinName = pinyinName;
 	}
-
 	
 }

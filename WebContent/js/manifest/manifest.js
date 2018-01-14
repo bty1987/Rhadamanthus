@@ -367,8 +367,9 @@ $(function () {
 
     //打印货单项
     function printManifest(mid,code){
+        params.manifestMid = mid;
 
-        com.popup("货单编号" + code, api.index.manifestPrintIndex.url + "?manifest.mid=" + mid + "&time=" + params.loginTime, function () {
+        com.popup("货单编号" + code, api.index.manifestPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
 

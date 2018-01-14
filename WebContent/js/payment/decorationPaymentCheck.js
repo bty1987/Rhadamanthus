@@ -79,16 +79,16 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var propertyArr = [
-               ["订单号:", v.orderId, "grey"],
-               ["楼盘地址:", v.village + ''+v.houseNumber, "grey"],
-               ["客户:", v.customer, "grey"],
-               ["设计师:", v.designer, "grey"],
-               ["设计部:", v.designerDepartment, "grey"],
+               ["订单号:", v.decoration.orderId, "grey"],
+               ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+               ["客户:", v.decoration.customer.name, "grey"],
+               ["设计师:", v.decoration.designer.currentName, "grey"],
+               ["设计部:", v.decoration.designer.dept.deptName, "grey"],
                ["应收金额:", v.referMoney, "blue"],
-               ["收款人:", v.collectUser, "grey"],
+               ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
                ["状态:", v.paymentStatus, "red"],
-               ["备注:", v.des, "grey"],
+               ["备注:", v.comment, "grey"],
             ];
             
             var $label = $('<label></label>');
@@ -96,7 +96,7 @@ jQuery(function($) {
 				"type": "checkbox",
 				"name": "dpIds",
 				"class": "ace ace-checkbox-2",
-				"dpId": v.autoId,
+				"dpId": v.dpid,
 			}).val(v.arId);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.paymentType);
             
@@ -153,7 +153,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "designer", "village", "houseNumber", "collectTimeDateRange"], "condList", api.payment.pageDecorationPaymentForCollect, function(data){
+	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "condList", api.payment.pageDecorationPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationPaymentCheckPostData", null, false, null, function(){
 		
@@ -194,18 +194,18 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var propertyArr = [
-               ["订单号:", v.orderId, "grey"],
-               ["楼盘地址:", v.village + ''+v.houseNumber, "grey"],
-               ["客户:", v.customer, "grey"],
-               ["设计师:", v.designer, "grey"],
-               ["设计部:", v.designerDepartment, "grey"],
+               ["订单号:", v.decoration.orderId, "grey"],
+               ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+               ["客户:", v.decoration.customer.name, "grey"],
+               ["设计师:", v.decoration.designer.currentName, "grey"],
+               ["设计部:", v.decoration.designer.dept.deptName, "grey"],
                ["应收金额:", v.referMoney, "blue"],
-               ["收款人:", v.collectUser, "grey"],
+               ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "grey"],
 		       ["确认人:", v.confirmUser, "grey"],
 			   ["确认时间:", v.confirmTime, "grey"],
                ["状态:", v.paymentStatus, "red"],
-               ["备注:", v.des, "grey"],
+               ["备注:", v.comment, "grey"],
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -259,7 +259,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "designer", "village", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
+	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
 	
@@ -300,25 +300,25 @@ jQuery(function($) {
 		}
 		
 		com.post(api.payment.pageDecorationPaymentForCollect, $.extend({}, params.decorationPaymentCheckPostData, {"paging.noPage": 1}), function(res){
-			
+
 			$.exceler({
 				column : [
-					["订单号","orderId"],
-					['楼盘地址',['village', 'houseNumber']],
-					['客户','customer'],
-					['设计师','designer'],
-					['设计部','designerDepartment'],
+					["订单号","decoration.orderId"],
+					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
+					['客户','decoration.customer.name'],
+					['设计师','decoration.designer.currentName'],
+					['设计部','decoration.designer.dept.deptName'],
 					['应收金额', 'referMoney'],
-					['收款人', 'collectUser'],
+					['收款人', 'collecter.currentName'],
 					['收款时间', 'collectTime'],
 					['类型', 'paymentType'],
 					['状态', 'paymentStatus'],
-					['备注', 'des'],
+					['备注', 'comment'],
 					['现金', 'cash'],
 					['银行', ['bank', 'bankInfo']],
-					['转账', ['checkv', 'checkvBankName']],
-					['分期', ['installment', 'installmentBankName']],
-					['对公', ['accounts', 'accountsBankName']],
+					['转账', ['checkv', 'checkvBank']],
+					['分期', ['installment', 'installmentBank']],
+					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],
 					['券', ['coupon', 'couponInfo']],
 				],
@@ -335,9 +335,9 @@ jQuery(function($) {
 					  v.bankInfo = $info;
 				}
 				
-				v.checkvBankName = v.checkv != null && v.checkv != "0" ? decorationPaymentCheck.checkBankInfo[v.checkvBankName] : '';
-				v.installmentBankName = v.installment != null && v.installment != "0" ? decorationPaymentCheck.bankInfo[v.installmentBankName] : '';
-				v.accountsBankName = v.accounts != null && v.accounts != "0" ? decorationPaymentCheck.accountsInfo[v.accountsBankName] : '';
+				v.checkvBank = v.checkv != null && v.checkv != "0" ? decorationPaymentCheck.checkBankInfo[v.checkvBank] : '';
+				v.installmentBank = v.installment != null && v.installment != "0" ? decorationPaymentCheck.bankInfo[v.installmentBank] : '';
+				v.accountsBank = v.accounts != null && v.accounts != "0" ? decorationPaymentCheck.accountsInfo[v.accountsBank] : '';
 			});
 		});
     });

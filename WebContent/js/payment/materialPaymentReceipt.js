@@ -11,22 +11,24 @@ var receipt = {
 };
 
 jQuery(function($) {
-	Api().init('../../js/api/');
+
+	var params = {};
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+	$ = parent.$;
+
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
-	
-	var args = window.location.search.substr(1);
-	
-	if(args.indexOf('time=') != -1){
-		params.loginTime = parent.params.loginTime;
-	}
-	
-	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
-	queryDecorationOrderForCommonByOrderId.url = queryDecorationOrderForCommonByOrderId.url + "?" + args;
-	
+	params = parent.params;
+
+
+	var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
+
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
-	queryMaterialPaymentForNotInitByMrId.url = queryMaterialPaymentForNotInitByMrId.url + "?" + args;
-	
+
 	com.post(api.ds.payment, {}, function(res){
 		$("#advanceType").bindData(res.advanceType, 'key', 'value');
 		
@@ -41,25 +43,26 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	com.post(queryDecorationOrderForCommonByOrderId, {}, function(res){
-		
-		var decorationOrder = res.decorationOrder;
+	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.decorationOrderMOrderId}, function(res){
+
+		var decorationOrder = res.decoration;
 		var commonInfo = {};
 		
 		commonInfo["orderId"] = decorationOrder.orderId;
-		commonInfo["orderAddr"] = decorationOrder.village.villageName + " " + decorationOrder.houseNumber;
-		commonInfo["customerName"] = decorationOrder.customer.customerName;
-		commonInfo["salesmanName"] = decorationOrder.designer;
-		commonInfo["supervisorName"] = decorationOrder.supervisor == null ? "" : decorationOrder.supervisor;
-		commonInfo["supervisorPhone"] = decorationOrder.supervisorPhone == null ? "" : decorationOrder.supervisorPhone;
-		commonInfo["departmentName"] = decorationOrder.designDepartment;
-		
+		commonInfo["orderAddr"] = decorationOrder.house.village.name + " " + decorationOrder.house.houseNumber;
+		commonInfo["customerName"] = decorationOrder.customer.name;
+		commonInfo["salesmanName"] = decorationOrder.designer.currentName;
+		commonInfo["supervisorName"] = decorationOrder.supervisor.currentName == null ? "" : decorationOrder.supervisor.currentName;
+		commonInfo["supervisorPhone"] = decorationOrder.supervisor.phone == null ? "" : decorationOrder.supervisor.phone;
+		commonInfo["departmentName"] = decorationOrder.designer.dept.deptName;
+
 		receipt.commonInfo = commonInfo;
+
 	}, null, false);
 	
-	com.post(queryMaterialPaymentForNotInitByMrId, {}, function(res){
+	com.post(queryMaterialPaymentForNotInitByMrId, {"materialReceipt.mrId":params.mrId}, function(res){
+
 		var materialPayments = res.materialPayments;
-		
 		var paymentItems = [];
 		var materialBrand = "";
 		var materialPaymentDes = "";
@@ -68,28 +71,28 @@ jQuery(function($) {
 			
 			var materialPayment = materialPayments[i];
 			
-			materialBrand = materialPayment.materialBrand;
-			
-			receipt.commonInfo["collectUserName"] = materialPayment.collectUserName;
+			materialBrand = materialPayment.brand;
+
+			receipt.commonInfo["collectUserName"] = materialPayment.collecter.currentName;
 			receipt.commonInfo["collectTime"] = materialPayment.collectTime;
 			
 			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialPayment.materialBrand});
 			
-			if(materialPayment.des && materialPayment.des != ""){
-				materialPaymentDes += materialPayment.des + " "
+			if(materialPayment.comment && materialPayment.comment != ""){
+				materialPaymentDes += materialPayment.comment + " "
 			}
 		}
 		
 		receipt.commonInfo["materialPaymentDes"] = materialPaymentDes;
+
 	}, null ,false);
 	
 	var queryMaterialReceiptByMrId = api.payment.queryMaterialReceiptByMrId;
-	queryMaterialReceiptByMrId.url = queryMaterialReceiptByMrId.url + "?" + args;
-	
-	com.post(queryMaterialReceiptByMrId, {}, function(res){
+
+	com.post(queryMaterialReceiptByMrId, {"materialReceipt.mrId":params.mrId}, function(res){
 		
 		var materialReceipt = res.materialReceipt;
-		
+
 		if(parseFloat(materialReceipt.cash) != 0){
 			var tem = {
 				"money":parseFloat(materialReceipt.cash),
@@ -159,7 +162,7 @@ function createReceiptTable(){
 	var commonInfo = receipt.commonInfo;
 	var paymentItems = receipt.paymentItems;
 	var receiptItems = receipt.receiptItems;
-	
+
 	var center = $("<center></center>").appendTo("#materialPaymentReceipt");
 	
 	var noTable = $('<table style="width: 100%; border-collapse:collapse;"></table>').appendTo(center);

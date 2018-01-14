@@ -132,9 +132,9 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 	
 	@Override
-	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO,int company){
-		
-		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAccessoriesType().getAtid(),company);
+	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO){
+		System.out.println(goodsVO.getAccessoriesType().getAtid());
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAccessoriesType().getAtid());
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		for(GoodsPO goodsPO: goodsPOs){

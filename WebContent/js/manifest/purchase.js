@@ -82,7 +82,7 @@ $(function(){
                 v.balanceTime,
                 v.deliveryTime,
                 v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库") ,
-                v.balanceStatus == "0" ? "初始" :  "已结算",
+                v.balanceStatus == "0" ? "初始" :  (v.balanceStatus == "1" ? "已结算" : "已完结"),
                 v.comment,
             ];
 
@@ -186,7 +186,7 @@ $(function(){
 
     var goodsSeacher = new Searcher();
 
-    goodsSeacher.init( ["purchaseUserName","purchaseNo","purchaseTime"], "condList", api.inventory.pagePurchase, function(data){
+    goodsSeacher.init( ["purchaseUserName","purchaseNo","purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function(){
 
@@ -370,7 +370,7 @@ $(function(){
             return false;
         }
 
-        com.post(api.inventory.pagePurchase, $.extend({}, params.purchasePostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.inventory.pagePurchaseObDelivery, $.extend({}, params.purchasePostData, {"paging.noPage": 1}), function (res) {
 
             $.each(res.paging.data,function(i,v){
                 v.balanceStatus = (v.balanceStatus == "0" ? "初始" : "已结算");

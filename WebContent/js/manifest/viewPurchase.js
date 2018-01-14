@@ -31,9 +31,9 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
 
-            var titleName = '商品编号,商品型号,商品名称,商品类别,品牌,单位,颜色,规格,采购单价,数量,件数,剩余数量';
+            var titleName = '商品编号,商品名称,商品类别,品牌,单位,颜色,规格,采购单价,数量,件数,剩余数量';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -54,9 +54,8 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
             var propertyArr = [
-                v.goods.gid,
                 v.goods.no,
                 v.goods.name,
                 v.goods.category,

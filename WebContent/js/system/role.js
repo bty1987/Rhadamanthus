@@ -135,7 +135,7 @@ jQuery(function($) {
 				$.each(menuArr.level1, function(i, v){
 
 					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
 
 					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
 					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px'});
@@ -152,7 +152,7 @@ jQuery(function($) {
 				$.each(menuArr.level2, function(i, v){
 
 					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
 
 					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
 					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px'});
@@ -181,7 +181,7 @@ jQuery(function($) {
 				$.each(menuArr.level3, function(i, v){
 
 					var $li = $('<li></li>').addClass('dd-item item-blue2');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
 
 					var $input = $('<input>').attr({type : 'checkbox', name : 'module'}).addClass('ace').val(v.mid);
 

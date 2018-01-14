@@ -61,8 +61,8 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			customerVOs.add(customerVO);
 		}
-		paging.setData(customerVOs);
 		
+		paging.setData(customerVOs);
     }
     
 	@Override
@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 	
 		if(!customerPhones.isEmpty()){
 			
-			String phones ="";
+			String phones = "";
 		
 			for(CustomerPhonePO customerphone : customerPhones){
 				
@@ -91,8 +91,8 @@ public class CustomerServiceImpl implements CustomerService {
 				}
 				
 			}
+			
 			customerVO.setPhone(phones);
-		
 	    }
 	
 		return customerVO;
@@ -103,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
 		
-		List<CustomerPO> customerPOs = customerDao.queryCustomerByPinyin(pinyinName);
+		List<CustomerPO> customerPOs = customerDao.queryCustomerByPinyin(pinyinName,10);
 		
 		for(CustomerPO customerPO: customerPOs){
 			
@@ -113,6 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			customerVOs.add(customerVO);
 		}
+		
 		return customerVOs;
 	}
 	
@@ -121,22 +122,21 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		List<CustomerPhonePO>  customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone.getPhone(),customerPhone.getStatus());
 		
-		if( customerPhonePOs.size()==0 ){
-			
-			  throw new FLException(130002, "客户信息不存在");
+		if(customerPhonePOs.size() == 0){
+			throw new FLException(130002, "客户信息不存在");
 		}
 		
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
 		
-		for(CustomerPhonePO customerPhonePO :customerPhonePOs){
-			CustomerVO customerVO =new CustomerVO();
+		for(CustomerPhonePO customerPhonePO: customerPhonePOs){
+			
+			CustomerVO customerVO = new CustomerVO();
 			
 			CustomerPO customerPO = customerDao.get(customerPhonePO.getCid());
 			
 			BeanUtil.copyProperties(customerPO, customerVO);
 			
 			customerVOs.add(customerVO);
-			
 		}
 		
 		return customerVOs;
@@ -160,7 +160,6 @@ public class CustomerServiceImpl implements CustomerService {
 			BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
 			
 			customerPhoneVOs.add(customerPhoneVO);
-		
 		}
 		
 		return customerPhoneVOs;
@@ -168,7 +167,7 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	  public int addCustomer(CustomerVO customerVO)throws FLException{
+	public int addCustomer(CustomerVO customerVO)throws FLException{
 	  
 		if (customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT).size() != 0) {
 	      
@@ -177,20 +176,18 @@ public class CustomerServiceImpl implements CustomerService {
 
 	    CustomerPO customerPO = new CustomerPO();
 
-	    String currentDate = DateUtil.current("yyyy-MM-dd").toString().substring(2);
+	    String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 	    
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate);
 
 	    String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-
-	    String newno=no.replaceAll("-", "");
-	
-	    customerPO.setNo(newno);
+	   
+	    customerPO.setNo(no);
 
 	    BeanUtil.copyProperties(customerVO, customerPO);
 
-	    customerPO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
-	    customerPO.setPinyinAll((String)PinYin4Util.getPinyin(customerVO.getName()).get(0));
+	    customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
+	    customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 	   
 	    customerDao.save(customerPO);
 	    
@@ -202,14 +199,14 @@ public class CustomerServiceImpl implements CustomerService {
 	   
 		customerPhoneDao.save(customerPhonePO);
 		
-		 BeanUtil.copyProperties(customerPO, customerVO);
+		BeanUtil.copyProperties(customerPO, customerVO);
 
 	    return 0;
-	  }
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	  public int updateCustomer(CustomerVO customerVO)throws FLException{
+	public int updateCustomer(CustomerVO customerVO)throws FLException{
 		
 	    CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
@@ -219,19 +216,19 @@ public class CustomerServiceImpl implements CustomerService {
 
 	    BeanUtil.copyProperties(customerVO, customerPO);
 
-	    customerPO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
-	    customerPO.setPinyinAll((String)PinYin4Util.getPinyin(customerVO.getName()).get(0));
+	    customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
+	    customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 	   
 	    customerDao.update(customerPO);
 	    
 	    BeanUtil.copyProperties(customerPO, customerVO);
 	    
 	    return 0;
-	  }
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException{
+	public int updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException{
 	
 		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPhoneVO.getCid(),customerPhoneVO.getPhone());
 		
@@ -244,11 +241,13 @@ public class CustomerServiceImpl implements CustomerService {
 	    customerDao.update(customerPhonePO);
 	  
 	    BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
+	    
+	    return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void  addCustomerPhone(CustomerPhoneVO customerPhoneVO) throws FLException{
+	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO) throws FLException{
 		 
 		if (customerPhoneDao.queryCustomerPhoneByPhone(customerPhoneVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT) .size() != 0) {
 		      
@@ -262,41 +261,8 @@ public class CustomerServiceImpl implements CustomerService {
 	    customerPhonePO.setStatus((short)0);
 	   
 		customerPhoneDao.save(customerPhonePO);
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void  updateCustomerNameAPhone(CustomerVO customerVO)throws FLException{
 		
-		CustomerPO customerPO = customerDao.get(customerVO.getCid());
-		
-		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
-
-	    if (customerPO == null) {
-	      throw new FLException(130002, "客户信息不存在");
-	    }
-		
-	    customerPO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
-	    customerPO.setPinyinAll((String)PinYin4Util.getPinyin(customerVO.getName()).get(0));
-	   
-	    customerPO.setName(customerVO.getName());
-	    
-	    customerDao.update(customerPO);
-
-	    if((customerVO.getPhone()) !=null){
-		
-	    	 if (customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT).size() != 0) {
-			      
-	 			throw new FLException(130006, "客户电话已存在");
-	 	    }
-	 		
-	 	    customerPhonePO.setCid(customerVO.getCid());
-	 	    customerPhonePO.setPhone(customerVO.getPhone());
-	 	    customerPhonePO.setStatus((short)0);
-	 	   
-	 		customerPhoneDao.save(customerPhonePO);
-	    }
-	 	
+		return 0;
 	}
 	
 }

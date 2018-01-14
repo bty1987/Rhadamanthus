@@ -20,7 +20,7 @@ public interface CustomerDao extends Dao<CustomerPO> {
 
 	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters);
 	
-	public List<CustomerPO> queryCustomerByPinyin(String pinyinName);
+	public List<CustomerPO> queryCustomerByPinyin(String pinyinName,int limit);
 	
 	public CustomerPO queryCustomerByNo(String no);
 	

@@ -1,6 +1,18 @@
 
 jQuery(function($) {
-	var $decorationType;
+	var params = {};
+
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+
+	params.server = window.server;
+	params.authentication = parent.params.authentication;
+	params = parent.params;
+
+	var $decorationType = params.decorationType;
 	var addReduceDetail = {
 		addReduceDetails: null,
 		addItems: {},
@@ -9,13 +21,11 @@ jQuery(function($) {
 	var reduceNums = {};
 	var $addReduceItems = {};
 	var _addReduceIds = [];
-	var _orderId = null;
-	Api().init('../../js/api/');
-    
-    params.server = window.server;
-	params.authentication = parent.params.authentication;
-	
-	var p = window.location.search.substr(1);
+	var _orderId = params.decorationOrderId;
+	//Api().init('../../js/api/');
+
+
+	/*		var p = window.location.search.substr(1);
 
 	if(p.indexOf('time=') != -1){
 		params.loginTime = parent.params.loginTime;
@@ -31,11 +41,11 @@ jQuery(function($) {
 		if(v.indexOf('quotation.orderId=') != -1){
 			_orderId = v.substring(v.indexOf('quotation.orderId=')).split('=')[1];
 		}
-	});
+	});*/
+	_addReduceIds = params.addReduceIds;
 	var url = api.quotation.queryQuotationForDefaultByOrderId;
-	url.url = url.url + "?" + p;
-	
-	com.post(url, {}, function(res){
+
+	com.post(url, {"quotation.orderId": _orderId}, function(res){
 		addReduceDetail.quotation = res.quotation;
 	}, null ,false);
 
@@ -156,7 +166,7 @@ jQuery(function($) {
 
 			html += '</tbody></table>';
 			html += addReduceType + '金额:' + utils.changeThrDecimal(addReduceTotal)  + '元';
-			html += '<hr><p>';
+			html += '<hr><p></p>';
 			addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '工程减项' ? utils.changeThrDecimal(-addReduceTotal) : utils.changeThrDecimal(addReduceTotal),addReduceTotalPrice));
 		})
 		$("#labSumMoney").html("工程最终增减合计金额:" + utils.changeThrDecimal(addReduceTotalPrice) + "元");
@@ -173,7 +183,6 @@ jQuery(function($) {
 
 		html += generateAddReduceItem(addReduceDetail.addItems);
 
-		
 		$("#content").html(html);
 	}
 });

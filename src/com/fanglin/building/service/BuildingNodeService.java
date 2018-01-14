@@ -10,7 +10,7 @@ public interface BuildingNodeService {
 
 	public void pageBuildingNode(Paging paging, List<Filter> filters);
 	
-	public List<BuildingNodeVO> queryBuildingNodeByType(BuildingNodeVO buildingNodeVO);
+	public BuildingNodeVO queryBuildingNodeByType(BuildingNodeVO buildingNodeVO);
 	
 	public int addBuildingNode(BuildingNodeVO buildingNodeVO);
 	

@@ -5,13 +5,13 @@ $.extend(api.index, {
 
 
 $.extend(api, {right: {
-    queryDecorationOrderDesignDepartmentRightByUserId: {url: "queryDecorationOrderDesignDepartmentRightByUserId.do", demo: true},
-    queryDecorationOrderSalesmanDepartmentRightByUserId: {url: "queryDecorationOrderSalesmanDepartmentRightByUserId.do", demo: true},
-    queryDecorationOrderStatusRightByUserId: {url: "queryDecorationOrderStatusRightByUserId.do", demo: true},
+    queryDecorationDesignDepartmentRightByUserId: {url: "queryDecorationDesignDepartmentRightByUserId.do", demo: true},
+    queryDecorationSalesmanDepartmentRightByUserId: {url: "queryDecorationSalesmanDepartmentRightByUserId.do", demo: true},
+    queryDecorationStatusRightByUserId: {url: "queryDecorationStatusRightByUserId.do", demo: true},
 
-    updateDecorationOrderDesignDepartmentRight: {url: "updateDecorationOrderDesignDepartmentRight.do"},
-    updateDecorationOrderSalesmanDepartmentRight: {url: "updateDecorationOrderSalesmanDepartmentRight.do"},
-    updateDecorationOrderStatusRight: {url: "updateDecorationOrderStatusRight.do"},
+    updateDecorationDesignDepartmentRight: {url: "updateDecorationDesignDepartmentRight.do"},
+    updateDecorationSalesmanDepartmentRight: {url: "updateDecorationSalesmanDepartmentRight.do"},
+    updateDecorationStatusRight: {url: "updateDecorationStatusRight.do"},
     
     queryRoleChainPageByRid: {url:"queryRoleChainPageByRid.do"},
     updateRoleChainPage: {url:"updateRoleChainPage.do"},

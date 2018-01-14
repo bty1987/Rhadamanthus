@@ -6,50 +6,48 @@ var receipt = {
 };
 
 jQuery(function($) {
-	Api().init('../../js/api/');
+	
+	var params = {};
+
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+	$ = parent.$;
+
+	
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
+	params = parent.params;
 	
-	var p = window.location.search.substr(1);
-	var a = p.split("&");
-	
-	if(p.indexOf('time=') != -1){
-		params.loginTime = parent.params.loginTime;
-	}
-	
-	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
-	
-	queryDecorationOrderForCommonByOrderId.url = queryDecorationOrderForCommonByOrderId.url + "?" + p;
+	var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
 
-	com.post(queryDecorationOrderForCommonByOrderId, {}, function(res){
-		receipt.order = res.decorationOrder;
+	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.decorationOrderOrderId}, function(res){
+		receipt.order = res.decoration;
 	}, null, false);
-	
+
 	var queryDecorationPaymentForNotInitByDrId = api.payment.queryDecorationPaymentForNotInitByDrId;
-	
-	queryDecorationPaymentForNotInitByDrId.url = queryDecorationPaymentForNotInitByDrId.url + "?" + p;
-	
-	com.post(queryDecorationPaymentForNotInitByDrId, {}, function(res){
+
+	com.post(queryDecorationPaymentForNotInitByDrId, {"decorationReceipt.drId":params.decorationReceiptDrId}, function(res){
 		var payments = res.decorationPayments;
-		
+
 		for(var i=0;i<payments.length;i++){
 			var payment = payments[i];
-			
+
 			receipt.payments.push({"paymentType": payment.paymentType, "referMoney": payment.referMoney});
 		}
-		
+
 	}, null, false);
-	
+
 	var queryDecoraionReceiptByDrId = api.payment.queryDecoraionReceiptByDrId;
 
-	queryDecoraionReceiptByDrId.url = queryDecoraionReceiptByDrId.url + "?" + p;
-	
-	com.post(queryDecoraionReceiptByDrId, {}, function(res){
-		
+	com.post(queryDecoraionReceiptByDrId, {"decorationReceipt.drId":params.decorationReceiptDrId}, function(res){
+
 		var decorationReceiptDes = "";
 		
 		var decorationReceipt = res.decorationReceipt;
-		
+
 		if(parseFloat(decorationReceipt.cash)!=0){
 			var tem = {
 				"paymentId":decorationReceipt.drId,
@@ -63,7 +61,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.bank)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -74,7 +72,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.checkv)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -85,7 +83,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.installment)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -96,7 +94,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.accounts)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -107,7 +105,7 @@ jQuery(function($) {
 		}
 		if(parseFloat(decorationReceipt.coupon)!=0){
 			var tem = {
-				"paymentId":decorationReceipt.autoId,
+				"paymentId":decorationReceipt.drId,
 				"collectTime":decorationReceipt.collectTime,
 				"collectUser":decorationReceipt.collectUserName,
 				"paymentType":decorationReceipt.paymentType,
@@ -127,12 +125,13 @@ jQuery(function($) {
 			};
 			receipt.receipts.push(tem);
 		}
-		
-		if(decorationReceipt.des && decorationReceipt.des != ""){
-			decorationReceiptDes += decorationReceipt.des + " ";
+
+		if(decorationReceipt.comment && decorationReceipt.comment != ""){
+			decorationReceiptDes += decorationReceipt.comment + " ";
 		}
-		
+
 		receipt.order.decorationReceiptDes = decorationReceiptDes;
+		receipt.decorationReceipt = res.decorationReceipt;
 	}, null, false);
 	
 	if(receipt.payments.length != 0 && receipt.receipts.length != 0){
@@ -183,14 +182,14 @@ function generateOneReceipt(){
 		var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var noReceiptTd = $('<td style="width: 15%"></td>').text('订单编号: ' + receipt.order.orderId).appendTo(orderReceiptTr);
 		var timeReceiptTd = $('<td style="width: 20%"></td>').text('合同编号: ' + receipt.order.contractCode).appendTo(orderReceiptTr);
-		var customerReceiptTd = $('<td style="width: 35%"></td>').html('设 计 师: ' + receipt.order.designer + "-" + receipt.order.designDepartment).appendTo(orderReceiptTr);
+		var customerReceiptTd = $('<td style="width: 35%"></td>').html('设 计 师: ' + receipt.order.designer.currentName + "-" + receipt.order.designer.dept.deptName).appendTo(orderReceiptTr);
 		var designerReceiptTd = $('<td style="width: 30%"></td>').text('').appendTo(orderReceiptTr);
 
 
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-		var addrReceiptTd = $('<td colspan="2"></td>').text('客户地址: ' + receipt.order.village.villageName + receipt.order.houseNumber).appendTo(presonReceiptTr);
+		var addrReceiptTd = $('<td colspan="2"></td>').text('客户地址: ' + receipt.order.house.village.name + receipt.order.house.houseNumber).appendTo(presonReceiptTr);
         var supervisorNameTd = $('<td style="width: 35%"></td>').text('收款日期: ' + first.collectTime).appendTo(presonReceiptTr);
-		var designerReceiptTd = $('<td style="width: 30%"></td>').text('监 理: ' + supervisor).appendTo(presonReceiptTr);
+		var designerReceiptTd = $('<td style="width: 30%"></td>').text('监 理: ' + (supervisor.currentName == null ? "-" : supervisor.currentName)).appendTo(presonReceiptTr);
 
 		var sumMoney = 0;
 
@@ -231,7 +230,7 @@ function generateOneReceipt(){
 		var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);;
 		var summaryReceiptTd = $('<td colspan="4"></td>').appendTo(summaryReceiptTr);
 		var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
-		var receReceiptSpan = $('<span></span>').text('收款人: ' + first.collectUser + "  ").appendTo(summaryReceiptDiv);
+		var receReceiptSpan = $('<span></span>').text('收款人: ' + receipt.decorationReceipt.collecter.currentName + "  ").appendTo(summaryReceiptDiv);
 		var cashierReceiptSpan = $('<span></span>').text(' 交款人: ').appendTo(summaryReceiptDiv);
 
 		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
