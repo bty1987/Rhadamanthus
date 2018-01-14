@@ -6,14 +6,14 @@ var decorationActivityItemPostData = {};
 
 jQuery(function($) {
 	
-	decorationActivityItemPostData.decorationOrderId = params.decorationOrderId;
+	decorationActivityItemPostData.decorationOrderID = params.decorationOrderID;
 	
 	decorationActivityItem.items.decorationActivityItems = $("#decorationActivityItems");
 	decorationActivityItem.items.backBtn = $("#backBtn").on("click", function(){
 		$("#decorationActivityItemPageContent").load(api.index.decorationActivityIndex.url);
 	});
 	
-	decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.decorationActivityItems, uiBtnMethod, decorationActivityItemPostData.decorationOrderId);
+	decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.decorationActivityItems, uiBtnMethod, decorationActivityItemPostData.decorationOrderID);
 	
 });
 

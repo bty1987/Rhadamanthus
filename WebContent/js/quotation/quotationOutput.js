@@ -1,17 +1,7 @@
-var decorationOrderDetail = {
-	decorationOrderId:null,
-	
-	customer:{},
-	village:{},
-	quotationData:{},
-	quotationDetail:{},
-	decorationOrder:null,
-	decorationOrderQuotationItemData:[]
-};
 
 function printHeader(headStr){
 	
-	var quotation = decorationOrderDetail.quotation;
+	var quotation = quotationUtils.quotationDetail.quotation;
 	
 	var headHtml = "";
 	
@@ -42,7 +32,7 @@ function printHeader(headStr){
 
 function printProjectTable(){
 	var index = 0;
-	var discount = decorationOrderDetail.quotation.discount;
+	var discount = quotationUtils.quotationDetail.quotation.discount;
 	
 	var contentHtml = '';
 	
@@ -58,7 +48,7 @@ function printProjectTable(){
 	contentHtml += '</tr>';
 	contentHtml += '</tbody></table>';
 	
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
 
 	
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
@@ -92,7 +82,7 @@ function printProjectTable(){
 	})
 	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="11" align="left">工程总价:' + decorationOrderDetail.quotationData.UndisPrice + '元</td>';
+	contentHtml += '<td colspan="11" align="left">工程总价:' + quotationUtils.quotationDetail.UndisPrice + '元</td>';
 	contentHtml += '</tr>';
 	
 	contentHtml += '</tbody>';
@@ -115,8 +105,8 @@ function printProjectTable(){
 
 function printFinanceTable(){
 	var index = 0;
-	var discount = decorationOrderDetail.quotation.discount;
-	var totalPrice = decorationOrderDetail.quotation.totalPrice;
+	var discount = quotationUtils.quotationDetail.quotation.discount;
+	var totalPrice = quotationUtils.quotationDetail.quotation.totalPrice;
 
 	var contentHtml = '';
 
@@ -137,7 +127,7 @@ function printFinanceTable(){
 	var discountPrice = 0.0;
 	var preDiscountPrice = 0.0;
 
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
 
 	$.each(quotationFunctionAreas, function (i, v){
 		var sum = 0.0;
@@ -193,7 +183,7 @@ function printFinanceTable(){
 
 
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + decorationOrderDetail.quotationData.TotalPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + decorationOrderDetail.quotationData.UndisPrice + '</strong></td>';
+	contentHtml += '<td colspan="9" align="left"><strong>总 计&nbsp;&nbsp;&nbsp;&nbsp;折前:' + quotationUtils.quotationDetail.TotalPrice + '&nbsp;&nbsp;&nbsp;&nbsp;折后:' + quotationUtils.quotationDetail.UndisPrice + '</strong></td>';
 	contentHtml += '</tr>';
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
@@ -215,7 +205,7 @@ function printCustomerTable(subtype){
 	contentHtml += '<td width="72%"><strong>工艺做法及材料说明</strong></td>';
 	contentHtml += '</tr>';
 
-	var quotationFunctionAreas = decorationOrderDetail.quotationFunctionAreaItemCs;
+	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
 
 	$.each(quotationFunctionAreas, function (i, v){
 		var _index = 1;
@@ -229,7 +219,7 @@ function printCustomerTable(subtype){
 		contentHtml += '</tr>';
 
 		$.each(v, function (j, qv){
-			if(subtype && qv.subtype!=subtype){
+			if(subtype && subtype != -1 && qv.subtype!=subtype){
 				return true;
 			}
 			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
@@ -319,14 +309,24 @@ function printCustomerTable(subtype){
 
 jQuery(function($) {
 
-	Api().init('../../js/api/');
-	
+	//Api().init('../../js/api/');
+
+	var params = {};
+
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+
+
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
-	
+	params = parent.params;
+
 	var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
 	
-	var type,subtype, p = window.location.search.substr(1);
+/*	var type,subtype, p = window.location.search.substr(1);
 	
 	if(p.indexOf('time=') != -1){
 		//params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
@@ -341,7 +341,7 @@ jQuery(function($) {
 
 	$.each(p.split('&'), function(i, v){
 		if(v.indexOf('orderType=') != -1){
-			decorationOrderDetail.orderType = v.substring(v.indexOf('orderType=')).split('=')[1];
+			decorationDetail.orderType = v.substring(v.indexOf('orderType=')).split('=')[1];
 		}
 	});
 
@@ -349,26 +349,24 @@ jQuery(function($) {
 		if(v.indexOf('subtype=') != -1){
 			subtype = v.substring(v.indexOf('subtype=')).split('=')[1];
 		}
-	});
+	});*/
+	quotationUtils.quotationDetail = {};
 	var url = api.quotation.queryQuotationById;
-	
-	url.url = url.url+"?"+p;
 
-	com.post(url, {}, function(res){
-		decorationOrderDetail.quotation = res.quotation;
+	com.post(url, {"quotation.qid":params.quotationId }, function(res){
+		quotationUtils.quotationDetail.quotation = res.quotation;
 	}, null, false);
 
 	url = api.quotation.queryQuotationFunctionAreaByQuotationId;
-	
-	url.url = url.url+"?"+p;
-	
-	com.post(url, {}, function(res){
-		decorationOrderDetail.quotationFunctionAreas = res.quotationFunctionAreas;
+
+	com.post(url, {"quotation.qid":params.quotationId }, function(res){
+		quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
 
 	url = api.quotation.queryExtensionByOrderId;
 	var extensionItemIDs = {};
-	com.post(url,{"extension.orderId": decorationOrderDetail.quotation.orderId}, function (res) {
+
+	com.post(url,{"extension.orderId": params.decorationOrderId}, function (res) {
 		var extensions = res.extensions;
 		$.each(extensions, function (i, v) {
 			extensionItemIDs["extensionItemIDs[" + i + "]"] = v.eid;
@@ -376,7 +374,7 @@ jQuery(function($) {
 	}, null, false);
 
 	com.post(api.quotation.queryExtensionItemByEids, extensionItemIDs, function (res) {
-		decorationOrderDetail.quotationDetail.extensions = res.extensionItems;
+		quotationUtils.quotationDetail.extensions = res.extensionItems;
 	}, null, false);
 
 	url = api.addReduce.queryAddReduceByOrderId;
@@ -384,25 +382,25 @@ jQuery(function($) {
 	
 	var addReduceIds = {};
 
-	com.post(url, {'addReduce.orderId': decorationOrderDetail.quotation.orderId}, function(res){
+	com.post(url, {'addReduce.orderId': params.decorationOrderId}, function(res){
 		$.each(res.addReduces, function(i, v){
 			addReduceIds['addReduceIds[' + i + ']'] = v.arId;
 		});
 	}, null, false);
 
 	com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function(res){
-		decorationOrderDetail.quotationDetail.addReduceItems = res.addReduceItems;
+		quotationUtils.quotationDetail.addReduceItems = res.addReduceItems;
 	}, null, false);
 
-	quotationUtils.statisticalQuotationItem(decorationOrderDetail.quotationFunctionAreas,decorationOrderDetail.quotationDetail.addReduceItems,decorationOrderDetail.quotationDetail.extensions);
+	quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions);
 
-	quotationUtils.initQuotationDetailItem(decorationOrderDetail.quotation,decorationOrderDetail.quotationFunctionAreas,decorationOrderDetail.quotationDetail.addReduceItems,decorationOrderDetail.quotationDetail.extensions);
+	quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions,params.orderType);
 
-	decorationOrderDetail.quotationData.UndisPrice = quotationUtils.quotationCalculator(decorationOrderDetail.quotation.discount,decorationOrderDetail.orderType);
+	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType);
 
-	decorationOrderDetail.quotationData.TotalPrice = quotationUtils.quotationTotal();
+	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-	generatePrintPage(type,subtype);
+	generatePrintPage(params.type, params.subtype);
 });
 
 function generatePrintPage(type,subtype){

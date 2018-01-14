@@ -269,7 +269,7 @@ jQuery(function ($) {
 
     }
 
-    function assisOrderAdd() {
+    function accessoriesAdd() {
         var index = $('.line', '#list').length;
         com.post(api.inventory.queryManifestItemByMId, {
             "manifest.mid": manifest.mid
@@ -305,7 +305,7 @@ jQuery(function ($) {
 
     }
 
-    assisOrderAdd();
+    accessoriesAdd();
 
     function checkRowValue($line) {
 

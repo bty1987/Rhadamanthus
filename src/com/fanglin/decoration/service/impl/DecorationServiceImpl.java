@@ -31,7 +31,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.HouseDao;
 import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.HousePO;
 import com.fanglin.data.po.QuotationVersionPO;
@@ -50,13 +52,11 @@ import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.payment.dao.AdvancePaymentDao;
+import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
-import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
-import com.fanglin.payment.service.impl.AdvancePaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -117,9 +117,6 @@ public class DecorationServiceImpl implements DecorationService {
 	private ServiceRecordDao serviceRecordDao;
 	
 	@Autowired
-	private AdvancePaymentDao advancePaymentDao;
-	
-	@Autowired
 	private DecorationRankService decorationRankService;
 	
 	@Autowired
@@ -133,6 +130,9 @@ public class DecorationServiceImpl implements DecorationService {
 	
 	@Autowired
 	private DecorationStatusRightDao decorationStatusRightDao;
+	
+	@Autowired
+	private HouseDao houseDao;
 	
 	@Autowired
 	private AuditDao auditDao;
@@ -161,6 +161,7 @@ public class DecorationServiceImpl implements DecorationService {
 		for(DecorationPO decorationPO: decorationPOs){
 			DecorationVO decorationVO = new DecorationVO();
 			
+			decorationVO.setSupervisor(new UserBaseVO());
 			decorationVO.setEscorter(new UserBaseVO());
 			decorationVO.setQuoter(new UserBaseVO());
 			
@@ -258,30 +259,6 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 	
 	@Override
-	public void pageDecorationForMaterial(Paging paging, List<Filter> filters,  Authentication authentication){
-		
-		if(filters.size() == 0) return;
-		
-		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-		
-		if(userPO == null) return;
-		
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForMaterial(paging, filters, authentication.getCompany());
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-		
-		for(DecorationPO decorationPO: decorationPOs){
-			DecorationVO decorationVO = new DecorationVO();
-			
-			decorationVO.setSupervisor(new UserBaseVO());
-			decorationPO.ptvcascade(decorationVO);
-			
-			decorationVOs.add(decorationVO);
-		}
-	
-		paging.setData(decorationVOs);
-	}
-	
-	@Override
 	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication){
 		
 		if(filters.size() == 0) return;
@@ -301,34 +278,6 @@ public class DecorationServiceImpl implements DecorationService {
 			DecorationVO decorationVO = new DecorationVO();
 			
 			decorationPO.ptvcascade(decorationVO);
-			
-			decorationVOs.add(decorationVO);
-		}
-		
-		paging.setData(decorationVOs);
-	}
-	
-	@Override
-	public void pageDecorationForAdvance(Paging paging, List<Filter> filters,  Authentication authentication) {
-		
-		if(filters.size() == 0) return ;
-		
-		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-		
-		if(userPO == null) return;
-		
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForGeneral(paging, filters, authentication.getCompany());
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-		
-		for(DecorationPO decorationPO: decorationPOs){
-			DecorationVO decorationVO = new DecorationVO();
-			
-			decorationPO.ptvcascade(decorationVO);
-			
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(decorationVO.getCustomer().getCid(),decorationPO.getCompany());
-			if(advancePaymentPO != null){
-				AdvancePaymentServiceImpl.setCustomerBalance(advancePaymentPO, decorationVO.getCustomer());
-			}
 			
 			decorationVOs.add(decorationVO);
 		}
@@ -805,12 +754,19 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 	
 	@Override
-	public DecorationVO checkdecoration(Paging paging,List<Filter> filters, Authentication authentication) {
+	public DecorationVO checkDecoration(Paging paging,List<Filter> filters, Authentication authentication) {
 		
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		DecorationVO decorationVO = new DecorationVO();
-		DecorationPO decorationPO = new DecorationPO();
 		
+		if(filters.size() == 0) return decorationVO;
+		
+		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return decorationVO;
 		
 		if(paging == null){
 			paging = new Paging();
@@ -820,16 +776,41 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		List<DecorationPO> decorationPOs = decorationDao.checkDeoration(paging, filters, company);
 		
-		if(!decorationPOs.isEmpty()){
-			decorationPO = decorationPOs.get(0);
+		if(decorationPOs.isEmpty()) return decorationVO;
+		
+		for(DecorationPO decorationPO: decorationPOs){
+			
+			decorationVO = new DecorationVO();
 			
 			decorationVO.setOrderId(decorationPO.getOrderId());
+			
 			decorationVO.setDesigner(new UserBaseVO());
+			decorationVO.getDesigner().setDuty(new DutyVO());
+			decorationVO.getDesigner().setDept(new DepartmentVO());
+			decorationVO.getDesigner().getDept().setFatherDept(new DepartmentVO());
 			
 			BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("duty","dept"));
+			BeanUtil.copyPropertie(decorationPO.getDesigner().getDuty(), decorationVO.getDesigner().getDuty(), Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));		
+			
+			decorationVO.setSalesman(new UserBaseVO());
+			decorationVO.getSalesman().setDuty(new DutyVO());
+			decorationVO.getSalesman().setDept(new DepartmentVO());
+			decorationVO.getSalesman().getDept().setFatherDept(new DepartmentVO());
+			
+			BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty","dept"));
+			BeanUtil.copyPropertie(decorationPO.getSalesman().getDuty(), decorationVO.getSalesman().getDuty(), Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
+
+			
+			decorationVOs.add(decorationVO);
 		}
 		
-		return decorationVO;
+		paging.setData(decorationVOs);
+		
+		return decorationVOs.get(0);
 	}
 
 	@Override
@@ -859,7 +840,9 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		if(status.contains(decorationPO.getStatus()) && decorationVO.getNotSalesmanRate() != null){
+		if(!status.contains(decorationPO.getStatus())) return 0;
+		
+		if(decorationVO.getNotSalesmanRate() != null){
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
 		
@@ -990,7 +973,7 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		String orderId = decorationVO.getOrderId();
 
-		Timestamp oldCreateTime = null;
+		Timestamp oldTime = null;
 		
 		Map<Integer, String> types = new HashMap<Integer, String>();
 		types.put(1, "录入时间");
@@ -1001,11 +984,11 @@ public class DecorationServiceImpl implements DecorationService {
 		if(DecorationPO != null){
 			
 			if(timeType == 1){
-				oldCreateTime = DecorationPO.getCreateTime();
+				oldTime = DecorationPO.getMeasureTime();
 				
 				DecorationPO.setMeasureTime(dateTime);
 			}else if(timeType == 2){
-				oldCreateTime = DecorationPO.getContractTime();
+				oldTime = DecorationPO.getContractTime();
 				
 				DecorationPO.setContractTime(dateTime);
 			}
@@ -1016,7 +999,7 @@ public class DecorationServiceImpl implements DecorationService {
 			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_DATETIME_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(String.format("订单编号:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, types.get(timeType), oldCreateTime != null ? oldCreateTime.toString() : "空", dateTime.toString()));
+			serviceRecordPO.setInfo(String.format("订单编号:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, types.get(timeType), oldTime != null ? oldTime.toString() : "空", dateTime.toString()));
 			
 			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}
@@ -1071,6 +1054,35 @@ public class DecorationServiceImpl implements DecorationService {
 			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void changeDecorationForHouse(DecorationVO decorationVO,	String userId) {
+		String orderId = decorationVO.getOrderId();
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		if(decorationPO != null){
+			String oldHouse = String.valueOf(decorationPO.getHouse().getHid() + "  " +decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+			
+			HousePO housePO = houseDao.get(decorationVO.getHouse().getHid());
+			decorationPO.setHouse(housePO);
+
+			String newHouse = String.valueOf(housePO.getHid() + "  " +housePO.getVillage().getName() + " " + housePO.getHouseNumber());
+			
+			decorationDao.update(decorationPO);
+			
+			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+			serviceRecordPO.setType((short)9);
+			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			serviceRecordPO.setOperateUserId(userId);
+			serviceRecordPO.setInfo(String.format("订单编号:%s房产修改,原房产:%s,修改房产为:%s.", orderId, oldHouse, newHouse));
+			
+			serviceRecordDao.saveOrUpdate(serviceRecordPO);
+		}
+		
+	}
+
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

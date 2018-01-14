@@ -4,40 +4,43 @@ var receipt = {
 };
 
 jQuery(function($) {
-	Api().init('../../js/api/');
+
+	var params = {};
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+	$ = parent.$;
+
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
+	params = parent.params;
 
-	var args = window.location.search.substr(1);
-	
-	if(args.indexOf('time=') != -1){
-        params.loginTime = parent.params.loginTime;
-	}
-	
+
 	var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;
-	queryPaymentByPaymentId.url = queryPaymentByPaymentId.url + "?" + args;
-	
-	var queryDecorationOrderByCustomerId = api.decoration.queryDecorationOrderByCustomerId;
+
+	var queryDecorationByCustomerId = api.decoration.queryDecorationByCustomerId;
 	
 	var orderInfo = null;
 	var commonInfo = {};
 	var paymentInfo = [];
 	
-	var customerId = "";
-	
-	com.post(queryPaymentByPaymentId, {}, function(res){
-		
+	com.post(queryPaymentByPaymentId, {"payment.pid": params.paymentPaymentId}, function(res){
+
 		var payment = res.payment;
 		
-		if(!payment.paymentId){
+		if(!payment.pid){
 			return;
 		}
 		
-		commonInfo["customerName"] = payment.customer.customerName;
-		commonInfo["collectUserName"] = payment.collectUserName;
+		commonInfo["customerName"] = payment.customer.name;
+		commonInfo["collectUserName"] = payment.collectUser.currentName;
 		commonInfo["collectTime"] = payment.collectTime;
 		
 		orderInfo = res.payment.orders;
+
+
 		var paymentItems = [];
 		
 		if(parseFloat(payment.cash) != 0){
@@ -85,7 +88,7 @@ jQuery(function($) {
 			paymentItems.push(tem);
 		}
 		
-		commonInfo["des"] = payment.des
+		commonInfo["comment"] = payment.comment;
 		
 		var _items = [];
 		
@@ -102,11 +105,9 @@ jQuery(function($) {
 		if(_items.length != 0){
 			paymentInfo.push(_items);
 		}
-		
-		queryDecorationOrderByCustomerId.url = queryDecorationOrderByCustomerId.url + "?decorationOrder.customer.customerId=" + res.payment.customer.customerId;
-		
-		com.post(queryDecorationOrderByCustomerId, {}, function(res){
-			createReceiptTable(commonInfo, paymentInfo, res.decorationOrders);
+
+		com.post(queryDecorationByCustomerId, {"decoration.customer.no":res.payment.customer.no}, function(data){
+			createReceiptTable(commonInfo, paymentInfo, data.decorations);
 		}, null, false);
 	}, null, false);
 });
@@ -133,18 +134,18 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var customerReceiptTd = $('<td style="width: 33%"></td>').text('客 户 名: ' + commonInfo["customerName"]).appendTo(presonReceiptTr);
 		var timeReceiptTd = $('<td colspan="2"></td>').text('收款日期: ' + commonInfo["collectTime"]).appendTo(presonReceiptTr);
-		
+
 		for(var k=0;k<orderInfo.length;k++){
 			
 			var $order = orderInfo[k];
-			
+
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 			var noReceiptTd = $('<td style="width: 33%"></td>').text('订单编号: ' + $order.orderId).appendTo(orderReceiptTr);
-			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + $order.village.villageName + ' ' + $order.houseNumber).appendTo(orderReceiptTr);
+			var timeReceiptTd = $('<td colspan="2" style="width: 33%"></td>').text('楼盘: ' + $order.house.village.name + ' ' + $order.house.houseNumber).appendTo(orderReceiptTr);
 			var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + $order.designer + "-" + $order.designDepartment + " " + $order.designerPhone).appendTo(orderReceiptTr);
+			var designerNameTd = $('<td style="width: 33%"></td>').html('设计师:' + $order.designer.currentName + "-" + $order.designer.dept.deptName + " " + $order.designer.phone).appendTo(orderReceiptTr);
 			var salesmanNameTd = $('<td style="width: 33%"></td>').html('').appendTo(orderReceiptTr);
-			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + ($order.supervisor == null ? "" : $order.supervisor) + " " + ($order.supervisorPhone == null ? "" : $order.supervisorPhone)).appendTo(orderReceiptTr);
+			var supervisorNameTd = $('<td style="width: 33%"></td>').html('监理: ' + ($order.supervisor.currentName == null ? "" : $order.supervisor.currentName) + "-" + ($order.supervisor.phone == null ? "" : $order.supervisor.phone)).appendTo(orderReceiptTr);
 		}
 		
 		var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
@@ -176,7 +177,7 @@ function createReceiptTable(commonInfo, paymentInfo, orderInfo){
 		var cashierReceiptSpan = $('<span></span>').text(' 交款人:').appendTo(summaryReceiptDiv);
 		
 		var desTr = $('<tr></tr>').appendTo(receiptTable);
-		var desTd = $('<td colspan="3"></td>').text('备注: ' + commonInfo["des"]).appendTo(desTr);
+		var desTd = $('<td colspan="3"></td>').text('备注: ' + commonInfo["comment"]).appendTo(desTr);
 
 	}
 }

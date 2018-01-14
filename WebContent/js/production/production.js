@@ -1,15 +1,8 @@
 $(function(){
-
     var productionPostData={};
-
     var $layerAdd = $('#layerAdd');
-    var $designer = $layerAdd.find('input[name="designer"]');
+    var transferData= {};
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     **/
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -17,9 +10,7 @@ $(function(){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
-            if(listData && listData.length){
-
-                $.each(listData,function(i, v){
+                listData && listData.length && ($.each(listData,function(i, v){
 
                     var $liLine = $('<li></li>').addClass('clearfix item-blue');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -35,8 +26,8 @@ $(function(){
                     var $btnHard = $('<a></a>').addClass(' btn btn-minier btn-pink').html('五金');
                     var $btnOut = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('外协');
                     var $btnBind = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('绑定');
-                    var $btnAbandon = $('<a></a>').addClass(' btn btn-minier ').html('废弃');
-                    var $btnPicture = $('<a></a>').addClass(' btn btn-minier btn-grey').html('图纸');
+                    var $btnAbandon = $('<a></a>').addClass(' btn btn-minier btn-danger').html('废弃');
+                    var $btnPicture = $('<a></a>').addClass(' btn btn-minier btn-primary').html('图纸');
 
                     var status = "";
                     var diliverystatus = "";
@@ -61,31 +52,20 @@ $(function(){
                         case 1: _type = "售后单"; break;
                     }
 
-                    //计算剩余工期
-                    var remainTime = 0;
-                    var unit = utils.accMul(24,utils.accMul(3600,1000));//转换单位
-                    var createDate = new Date(v.createTime);
-
-                    var currentDate = new Date();
-
-                    var overMillisecond = currentDate.getHours()*3600*1000 + currentDate.getMinutes()*60*1000 + currentDate.getSeconds()*1000 + currentDate.getMilliseconds();
-
-                    var pastDate = utils.accSub(currentDate.getTime(),utils.accAdd(overMillisecond,createDate.getTime()));
-                    var pastDay = utils.accDiv(pastDate,unit);
-
-                    var remainDay = v.timeLimit - pastDay;
+                    var remainDate = dateDiffer(v.createTime, v.timeLimit);//计算剩余工期
+                    var remainDay = 0 ;  //显示剩余工期
 
                     if(v.status == 4 || v.status == 5){
-                        remainTime = "订单已结束";
-                    }else if(remainDay < 0){
-                        remainTime="已超过期限"+Math.abs(Math.round(remainDay))+"天";
+                        remainDay = "订单已结束";
+                    }else if(remainDate < 0){
+                        remainDay = "已超过期限"+Math.abs(remainDate)+"天";
                     }else {
-                        remainTime = Math.round(remainDay);
+                        remainDay = "剩余工期"+Math.abs(remainDate)+"天"
                     }
 
                     var propertyArr = [
                         ["订单编号:", v.orderId, "grey"],
-                        ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
+                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["创建人:", v.creater.userName, "grey"],
                         ["创建时间:", v.createTime , "grey"],
                         ["设计师:", v.designer.userName, "grey"],
@@ -98,7 +78,7 @@ $(function(){
                         ["工期:", v.timeLimit, "grey"],
                         ["订单类型:", _type, "grey"],
                         ["父级生产单号:", (v.spid == 0 ? null: v.spid) , "grey"],
-                        ["订单剩余时间:",remainTime,(remainDay < 5 ? "red":"grey")]
+                        ["订单剩余时间:",remainDay,(remainDate < 5 ? "red":"grey")]
                     ];
 
                     $.each(propertyArr,function (index,value) {
@@ -108,43 +88,25 @@ $(function(){
                         $liProperty.appendTo($ulProperty);
                     });
 
-
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
-                    if(v.status == 0 ){
-                        $btnDiv.append($btnBind).append($btnsigned)
-                               .append($btnquote).append($btnPlan)
-                               .append($btnHard).append($btnOut)
-                               .append($btnAbandon).append($btnPicture).appendTo($h3);
+                    $btnDiv.append($btnBind).append($btnquote).append($btnPlan)
+                           .append($btnHard).append($btnOut).append($btnPicture);
+
+                    if( v.status == 0 ){
+                        $btnDiv.append($btnsigned).append($btnAbandon);
+                    }else if( v.status == 1){
+                        $btnDiv.append($btnconfirm).append($btnAbandon);
+                    }else if( v.status == 2){
+                        $btnDiv.append($btnAbandon);
+                    } else if ( v.status == 3 && v.diliverystatus == 0){
+                        $btnDiv.append($btndeliver).append($btnAfter).append($btnAbandon);
+                    }else if ( v.status == 3 && v.diliverystatus == 1){
+                        $btnDiv.append($btnAfter).append($btnAbandon);
                     }
 
-                    if(v.status == 1){
-                        $btnDiv.append($btnBind).append($btnconfirm)
-                               .append($btnquote).append($btnPlan)
-                               .append($btnHard).append($btnOut)
-                               .append($btnAbandon).append($btnPicture).appendTo($h3);
-                    }
-
-                    if ( v.status == 3 && v.diliverystatus == 0){
-                        $btnDiv.append($btnBind).append($btnquote).append($btnPlan)
-                               .append($btnHard).append($btnOut)
-                               .append($btndeliver).append($btnAfter)
-                               .append($btnAbandon).append($btnPicture).appendTo($h3);
-                    }
-
-                    if (( v.status == 3 && v.diliverystatus == 1)|| v.status == 2  ){
-                        $btnDiv.append($btnBind).append($btnquote).append($btnPlan)
-                            .append($btnHard).append($btnOut)
-                            .append($btnAfter)
-                            .append($btnAbandon).append($btnPicture).appendTo($h3);
-                    }
-
-                    if(v.status == 4 || v.status == 5){
-                        $btnDiv.append($btnBind).append($btnquote).append($btnPlan)
-                               .append($btnHard).append($btnOut).append($btnPicture)
-                               .appendTo($h3);
-                    }
+                    $btnDiv.appendTo($h3);
 
                     $btnsigned.click(function(){
                         var options = {};
@@ -153,7 +115,7 @@ $(function(){
                         options["production.status"] = 1;
 
                         layer.confirm('确认订单已签约 ?', {
-                            btn: ['确定', '取消'] //按钮
+                            btn: ['确定', '取消']
                         }, function (index, layero) {
                             com.post(api.production.updateProductionForStatus, options, function (res) {
                                 productionSearcher.doSearch();
@@ -167,13 +129,12 @@ $(function(){
 
                     });
 
-
                     $btnBind.click(function () {
-                        params["pid"] = v.pid;
-                        params["address"] = v.village.villageName + " " + v.houseNumber;
-                        params["villageId"] = v.village.villageId;
-                        params["status"] = v.status;
-                        params["orderId"] = v.orderId;
+                        transferData = {};
+                        transferData.pid = v.pid;
+                        transferData.status = v.status;
+                        transferData.orderId = v.orderId;
+                        params["transferData"] = transferData;
 
                         com.switchPage(api.index.productionSalesIndex.url);
 
@@ -186,7 +147,7 @@ $(function(){
                         options["production.status"] = 4;
 
                         layer.confirm('确定要将此条生产单废弃,废弃后无法恢复 ?', {
-                            btn: ['确定', '取消'] //按钮
+                            btn: ['确定', '取消']
                         }, function (index, layero) {
                             com.post(api.production.updateProductionForStatus, options, function (res) {
                                 productionSearcher.doSearch();
@@ -206,7 +167,7 @@ $(function(){
                         options["production.diliverystatus"] = 1;
 
                         layer.confirm('确认生产完毕开始送货 ?', {
-                            btn: ['确定', '取消'] //按钮
+                            btn: ['确定', '取消']
                         }, function (index, layero) {
                             com.post(api.production.updateProductionForDeliveryStatus, options, function (res) {
                                 productionSearcher.doSearch();
@@ -222,30 +183,27 @@ $(function(){
                     $btnAfter.click(function(){
 
                         productionUtils.clearForm('form1');
-                        var productionOptions = {};
                         com.clearValidator();
+                        var productionOptions = {};
 
                         $layerAdd.find("input[name = 'orderId']").val(v.orderId);
                         $layerAdd.find("input[name = 'designer']").val(v.designer.userName);
 
-                        com.post(api.decoration.queryDecorationOrderForCommonByOrderId,{"decorationOrder.orderId":v.orderId},function (data) {
+                        com.post(api.decoration.queryDecorationForCommonByOrderId,{"decoration.orderId":v.orderId},function (data) {
 
-                            $layerAdd.find("input[name='orderAddr']").val(data.decorationOrder.village.villageName+"  "+data.decorationOrder.houseNumber);
+                                $layerAdd.find("input[name='orderAddr']").val(data.decoration.house.village.name+"  "+data.decoration.house.houseNumber);
 
-                            productionOptions["production.village.villageId"] = data.decorationOrder.village.villageId;
+                               // productionOptions["production.village.villageId"] = data.decorationOrder.village.villageId;
 
-                        },
-                            function (e) {
-                            com.showAlert(null,"未查询到此订单！");
-                            $layerAdd.find("input[name='orderAddr']").val(null);
-                        });
-                        
+                            });
+
                         openlayer(function (index, layero) {
-                            
+
                             if(!com.validate("layerAdd",null)){
 
                                 productionOptions["production.orderId"] = v.orderId;
-                                productionOptions["production.houseNumber"] = v.houseNumber;
+                              //productionOptions["production.houseNumber"] = v.houseNumber;
+                                productionOptions["production.house.hid"] = v.house.hid;
                                 productionOptions["production.designer.userId"] = v.designer.userId;
                                 productionOptions["production.type"] = 1;
                                 productionOptions["production.spid"] = v.pno;
@@ -255,11 +213,6 @@ $(function(){
                                 com.post(api.production.addProduction,productionOptions,function(res){
                                     layer.closeAll();
                                     layer.msg('添加成功', {icon: 1, time: 2e3});
-                                    productionSearcher.doSearch();
-                                },function(e){
-                                    layer.closeAll();
-                                    layer.msg('添加失败', {icon: 2, time: 2e3});
-                                    com.showAlert(com.info, e.exception.errorMassage);
                                     productionSearcher.doSearch();
                                 });
                             }
@@ -276,7 +229,7 @@ $(function(){
                         option["production.status"] = 2;
 
                         layer.confirm('确定已经核对生产单信息并进行流转?', {
-                            btn: ['确定', '取消'] //按钮
+                            btn: ['确定', '取消']
                         }, function (index, layero) {
                             com.post(api.production.updateProductionForStatus, option, function (res) {
                                 productionSearcher.doSearch();
@@ -292,7 +245,7 @@ $(function(){
                     $btnquote.click(function(){
                         params["pid"] = v.pid;
                         params["status"] = v.status;
-                        params["address"] = v.village.villageName + " " + v.houseNumber;
+                        params["address"] = v.house.village.name + " " + v.house.houseNumber;
 
                         com.switchPage(api.index.puotationIndex.url);
                     });
@@ -321,13 +274,14 @@ $(function(){
                     $btnPicture.click(function(){
                         params["pid"] = v.pid;
                         params["status"] = v.status;
+
                         com.switchPage(api.index.productionPictureIndex.url);
                     });
 
-                });
+                }));
 
                 $ul.appendTo($tableWrap);
-            }
+
         };
 
         return {
@@ -340,7 +294,7 @@ $(function(){
     })();
 
     /*分页*/
-    var _condArr = ["orderId","productionPNo","productionStatus"];
+    var _condArr = ["p_orderId","p_productionPNo","p_productionStatus"];
 
     var productionSearcher = new Searcher();
 
@@ -366,35 +320,30 @@ $(function(){
         return [$adda];
     },'resultList');
 
-
     function openlayer(callback){
         layer.closeAll();
         layer.open({
             type: 1,
-            //skin: 'layui-layer-lan',
             title:"添加" ,
             content:$('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
-            zIndex:9999,
+            zIndex:9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);
-
             },
             btn2: function(index, layero){
                 //按钮【按钮二】的回调
-
             },
             cancel: function(){
                 //右上角关闭回调
-
             }
         });
     }
 
     //设计师人员查询
-    $designer.typeahead({
+    $layerAdd.find('input[name="designer"]').typeahead({
         url: api.personel.queryUserForNameByDuty,//获取下拉列表的接口
         list: [],
         postData: {"duty" : "设计师"},//获取下拉列表的参数
@@ -413,33 +362,29 @@ $(function(){
         }
     });
 
-
     $layerAdd.find("input[name = 'orderId']").on('change',(function () {
 
         var option = {};
 
-        option["decorationOrder.orderId"] = $layerAdd.find("input[name='orderId']").val();
+        option["decoration.orderId"] = $layerAdd.find("input[name='orderId']").val();
 
-        com.post(api.decoration.queryDecorationOrderForCommonByOrderId,option,function (data) {
+        com.post(api.decoration.queryDecorationForCommonByOrderId,option,function (data) {
 
-            $layerAdd.find("input[name='orderAddr']").val(data.decorationOrder.village.villageName+"  "+data.decorationOrder.houseNumber);
+            //$layerAdd.find("input[name='orderAddr']").val(data.decorationOrder.village.villageName+"  "+data.decorationOrder.houseNumber);
+            $layerAdd.find("input[name='orderAddr']").val(data.decoration.house.village.name+"  "+data.decoration.house.houseNumber);
             //装修订单id
             productionPostData["production.orderId"] = $('#layerAdd').find("input[name='orderId']").val();
-            //楼盘id
-            productionPostData["production.village.villageId"] = data.decorationOrder.village.villageId;
+            //房源id
+            productionPostData["production.house.hid"] = data.decoration.house.hid;
             //楼盘编号
-            if(data.decorationOrder.houseNumber==null){
-                productionPostData["production.houseNumber"] ="";
-            }else{
-                productionPostData["production.houseNumber"] = data.decorationOrder.houseNumber;
-            }
+            //if(data.decorationOrder.houseNumber==null){
+            //    productionPostData["production.houseNumber"] ="";
+            //}else{
+            //    productionPostData["production.houseNumber"] = data.decorationOrder.houseNumber;
+            //}
 
-        },function (e) {
-            com.showAlert(null,"未查询到此订单！");
-            $layerAdd.find("input[name='orderAddr']").val(null);
         });
     }));
-
 
     function saveData(callback){
 
@@ -447,18 +392,28 @@ $(function(){
 
             productionPostData["production.type"] = 0;
             productionPostData["production.spid"] = 0;
-            productionPostData["production.designer.userId"] = $designer.attr('data-typeahead-key');
+            productionPostData["production.designer.userId"] = $layerAdd.find('input[name="designer"]').attr('data-typeahead-key');
             productionPostData["production.total"] = 0;
             productionPostData["production.timeLimit"] = $layerAdd.find("input[name = 'timeLimit']").val();
 
             com.post(api.production.addProduction,productionPostData,function(res){
                         callback();
                         layer.msg('添加成功', {icon: 1, time: 2e3});
-                    },function(e){
-                        callback();
-                        layer.msg('添加失败', {icon: 2, time: 2e3});
                     });
         }
+    }
+
+    function dateDiffer(createTime,timeLimit){
+        var currentDate,createDate,createDateList,unit,workingDate,remainDate;
+        unit = utils.accMul(24,utils.accMul(3600,1000));//转换单位
+        currentDate = new Date();
+        createDateList = createTime.split("-");
+        createDate = new Date(createDateList[1]+"-"+createDateList[2]+"-"+createDateList[0]);
+
+        workingDate = parseInt( utils.accDiv(utils.accSub(currentDate,createDate),unit));
+        remainDate = utils.accSub(timeLimit,workingDate);
+
+        return remainDate;
     }
 
 });

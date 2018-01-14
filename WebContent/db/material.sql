@@ -1,6 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `material`;
 USE `material`;
 
+DROP TABLE IF EXISTS `materialinside`;
 CREATE TABLE `materialinside` (
   `miId` int(11) NOT NULL AUTO_INCREMENT,
   `orderAddr` varchar(128) NOT NULL,
@@ -23,7 +24,7 @@ CREATE TABLE `materialinside` (
   PRIMARY KEY (`miId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内信息';
 
-
+DROP TABLE IF EXISTS `materialoutside`;
 CREATE TABLE `materialoutside` (
   `moId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
@@ -47,7 +48,7 @@ CREATE TABLE `materialoutside` (
   PRIMARY KEY (`moId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外信息';
 
-
+DROP TABLE IF EXISTS `materialsuborder`;
 CREATE TABLE `materialsuborder` (
   `msoId` int(11) NOT NULL AUTO_INCREMENT,
   `msoNo` varchar(15) NOT NULL,
@@ -63,7 +64,6 @@ CREATE TABLE `materialsuborder` (
   `instoreName` varchar(32) DEFAULT NULL,
   `materialType` varchar(32) NOT NULL DEFAULT '',
   `materialBrand` varchar(32) NOT NULL DEFAULT '',
-  `designerFlag` tinyint(4) NOT NULL DEFAULT '0',
   `packageFlag` tinyint(4) NOT NULL DEFAULT '0',
   `regionId` varchar(10) NOT NULL,
   `regionName` varchar(32) NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE `materialsuborder` (
   KEY `indexsix` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
 
-
+DROP TABLE IF EXISTS `materialsuborderbalance`;
 CREATE TABLE `materialsuborderbalance` (
   `msobId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `materialsuborderbalance` (
   KEY `indextwo` (`instorerId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
-
+DROP TABLE IF EXISTS `materialsuborderitem`;
 CREATE TABLE `materialsuborderitem` (
   `msoiId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE `materialsuborderitem` (
   KEY `indextwo` (`msoId`,`status`,`refundStatus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
 
-
+DROP TABLE IF EXISTS `materialsuborderpostbalance`;
 CREATE TABLE `materialsuborderpostbalance` (
   `msopobId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE `materialsuborderpostbalance` (
   KEY `indexone` (`msoId`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
-
+DROP TABLE IF EXISTS `materialsuborderprebalance`;
 CREATE TABLE `materialsuborderprebalance` (
   `msoprbId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,
@@ -191,7 +191,7 @@ CREATE TABLE `materialsuborderprebalance` (
   KEY `indexone` (`msoId`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单预结算表';
 
-
+DROP TABLE IF EXISTS `materialsuborderrefund`;
 CREATE TABLE `materialsuborderrefund` (
   `msorId` int(11) NOT NULL AUTO_INCREMENT,
   `msoId` int(11) NOT NULL,

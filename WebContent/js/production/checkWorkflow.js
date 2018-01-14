@@ -1,22 +1,18 @@
-/**
- * Created by Administrator on 2017/4/17.
- */
 jQuery(function ($) {
 
     $('#checkWorkflow').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
 
-    var mycars = [];
-
     var workflowItem = {
         wpid: $('#checkWorkflow').attr('data-wpid'),
+        workflows:[],
+        currentWpid : []   //当前启用以及要启用的工序
     };
 
-    $('#addSaleOrder').click(function () {
-
-        var num = $('.line', '#list').length;
-        var returnFlag = false;
+    /*添加一条新的工序*/
+    $('#addWorkPlan').click(function () {
         var $lines = $('.line', '#list');
-        
+
+        var returnFlag = false;
         $lines.each(function(){
             var $this = $(this);
             if(!checkRowValue($this)){
@@ -24,20 +20,20 @@ jQuery(function ($) {
                 return false;
             }
         });
-        
         if(returnFlag) return;
 
         com.post(api.production.queryWorkflow,{}, function(res){
             var workflowStatus = [];
+            /*将已添加的工序从下拉菜单中删除*/
             $.each(res.workflows,function(i,v){
-                if(mycars.indexOf(v.wfid) == -1){
+                if(workflowItem.currentWpid.indexOf(v.wfid) == -1){
                     workflowStatus.push(v);
                 }
-            })
+            });
             workflowItem.workflows = workflowStatus;
         }, null, false);
 
-        var $line = addline(num + 1);
+        var $line = addline($lines.length + 1);
         $line.appendTo('#list');
         reorder();
     });
@@ -52,14 +48,15 @@ jQuery(function ($) {
 
             {cellClass: "name", hasInput: !0},//名称
             {cellClass: "status"},             //编号
+
         ];
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
+
         $.each(_lineInfoSet, function (i, v) {
-            var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
-                $select = $('<select></select>');
+                var $select = $('<select></select>');
                 $select.bindData(workflowItem.workflows,"wfid","name");
                 $cell.append($select);
             }
@@ -70,26 +67,27 @@ jQuery(function ($) {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        $btncheck.click(function (e) {
-            if( $line.find('.name select').find("option:selected").text()!="") {
-                e.stopPropagation();
+        $btncheck.click(function () {
+
+            var $selectValue = $line.find('select option:selected');
+
+            if($selectValue.text()){
                 $line.attr('data-wfid', $line.find('.name select').val());
-                $line.attr('data-name', $line.find('.name select').find("option:selected").text());
-                $line.find('.name').html($line.attr('data-name'));
-                var wfid = $line.attr('data-wfid')
-                mycars.push(parseInt(wfid));
+                $line.find('.name').html($selectValue.text());
+                workflowItem.currentWpid.push(parseInt($selectValue.val()));
+
                 $lineInfoWrap.find('.status').text("启用");
             }
+
         });
 
-        $btndel.click(function (e) {
-            e.stopPropagation();
-            var wfid = $line.attr('data-wfid')
-            removeByValue(mycars,parseInt(wfid));
+        $btndel.click(function () {
+
+            var wfid = $line.attr('data-wfid');
             $line.remove();
 
+            removeByValue(workflowItem.currentWpid,parseInt(wfid));
             reorder();
-            return;
 
         });
 
@@ -102,70 +100,72 @@ jQuery(function ($) {
     $("#submitHardwareItem").click(function () {
 
         var options = {};
-        var $lines = $('.line', '#list');
         var returnFlag = false;
+        var $lines = $('.line', '#list');
+
         $lines.each(function(i){
             var $this = $(this);
             if(!checkRowValue($this)){
                 returnFlag = true;
-            };
-            options["wfids["+i+"]"] = $this.attr('data-wfid')           //– 名称
+            }
+
+            options["wfids["+i+"]"] = $this.attr('data-wfid');           //– 名称
+
         });
+
         if(returnFlag) return;
+
         options["workflowPlan.workplan.wpid"] = workflowItem.wpid;
 
         com.post(api.production.updateWorkflowPlan,options,function(res){
+            $lines.remove()
             layer.closeAll();
             layer.msg("保存成功",{icon: 1,time:2e3})
-            $("#list").empty();
             workflowAdd();
-        },function(e){
-            com.showAlert(com.info, e.exception.errorMessage);
         })
     });
 
-    function removeByValue(arr, val) {
-        for(var i=0; i<arr.length; i++) {
-            if(arr[i] == val) {
-                arr.splice(i, 1);
-                break;
-            }
-        }
-    }
-
     function workflowAdd() {
         var wpid = workflowItem.wpid;
-        var index = $('.line', '#list').length;
+        var index ;
+
         com.post(api.production.queryWorkflowPlanByWpid, {
             "workflowPlan.workplan.wpid": wpid
         }, function (res) {
-            for (var i = 0; i < res.workflowPlans.length; i++) {
+            for (var i = 0, len = res.workflowPlans.length; i < len; i++) {
+
                 index = $('.line', '#list').length;
-                autoAddline(index);
-                mycars.push(res.workflowPlans[i].workflow.wfid);
+                workflowItem.currentWpid.push(res.workflowPlans[i].workflow.wfid);
+                autoAddline(index,res.workflowPlans[i]);
+
             }
-            function autoAddline(index) {
-                index = $('.line', '#list').length;
-                addline(1 + index).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr({
-                    'data-wfid': res.workflowPlans[i].workflow.wfid,
-                });
-                $lineInfoWrap1.find('div.status').text(res.workflowPlans[i].workflow.status==0?"启用":"禁用");
-                $lineInfoWrap1.find('div.name').text(res.workflowPlans[i].workflow.name);
- 
-            }
+
         });
+
     }
 
+    /*添加*/
+    function autoAddline(index,data) {
 
+        addline(1 + index).appendTo('#list');
+
+        var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
+
+        $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+            'data-wfid': data.workflow.wfid
+        });
+
+        $lineInfoWrap1.find('div.status').text(data.workflow.status == 0 ? "启用":"禁用");
+        $lineInfoWrap1.find('div.name').text(data.workflow.name);
+
+    }
 
     function checkRowValue($line) {
         var flag = true;
         var status = $line.find('.status');
         var iconok = $line.find('.green');
 
-        if (status.text()=="") {
+        if (!status.text()) {
             iconok.focus().select();
             iconok.addClass('tooltip-info').attr({
                 "data-rel": "popover",
@@ -185,9 +185,22 @@ jQuery(function ($) {
     //重排序
     function reorder(){
         var $list = $('.line', '#list');
+
         $list.length && $list.each(function(i){
             var $this = $(this);
             $this.find('.index').text(i + 1);
         });
+
     }
+
+    //在currentWpid数组中移除需要删除的工序
+    function removeByValue(arr, val) {
+        for(var i = 0,len = arr.length; i < len; i++) {
+            if(arr[i] == val) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+    }
+
 });

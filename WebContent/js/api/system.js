@@ -103,3 +103,20 @@ $.extend(api, {system: {
     updateCompanyForStatus: {url: "updateCompanyForStatus.do", server: "communion"}
 
 }});
+
+
+$.extend(api, {upgrade: {
+
+    pageUpgrade:{url:"pageUpgrade.do"},
+    queryUpgrade :{url:"queryUpgrade.do"},
+    matchUpgrade:{url:"matchUpgrade.do"},
+    addUpgrade:{url:"addUpgrade.do"},
+    deleteUpgrade:{url:"deleteUpgrade.do"},
+    pageVersion:{url:"pageVersion.do"},
+    queryVersion:{url:"queryVersion.do"},
+    addVersion:{url:"addVersion.do",server:"communion"},
+    updateVersion:{url:"updateVersion.do",server:"communion"},
+    updateVersionForStatus:{url:"updateVersionForStatus.do",server:"communion"},
+    deleteVersion:{url:"deleteVersion.do",server:"communion"}
+
+}});

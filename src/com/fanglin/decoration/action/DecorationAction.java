@@ -77,27 +77,11 @@ public class DecorationAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "pageDecorationForMaterial", results = { @Result(name = "success", type = "json", params = {	"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForMaterial() throws FLException{
-		
-		decorationService.pageDecorationForMaterial(getPaging(), getFilters(), authentication());
-		
-		return SUCCESS;
-	}
-	
+
 	@Action(value = "pageDecorationForBelong", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForBelong() throws FLException{
 
 		decorationService.pageDecorationForBelong(getPaging(), getFilters(), authentication());
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForAdvance() throws FLException{
-
-		decorationService.pageDecorationForAdvance(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -166,10 +150,10 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkdecoration", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkdecoration() throws FLException{
+	@Action(value = "checkDecoration", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkDecoration() throws FLException{
 		
-		decoration = decorationService.checkdecoration(getPaging(), getFilters(), authentication());
+		decoration = decorationService.checkDecoration(getPaging(), getFilters(), authentication());
 		
 		return SUCCESS;
 	}
@@ -210,6 +194,14 @@ public class DecorationAction extends BaseListAction {
 	public String changeDecorationForStatus() throws FLException{
 		
 		decorationService.changeDecorationForStatus(decoration, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "changeDecorationForHouse", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForHouse() throws FLException{
+		
+		decorationService.changeDecorationForHouse(decoration, queryUserId());
 		
 		return SUCCESS;
 	}

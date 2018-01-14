@@ -2,7 +2,7 @@ $(function () {
 
     if (jQuery().datepicker) {
         $('#layerAdd input[name="deliveryTime"]').datepicker({
-            autoclose:true,
+            autoclose: true,
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
         });
     }
@@ -108,7 +108,7 @@ $(function () {
                         "data-fullPayStatus": v.fullpayStatus
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold').html(v.no)
+                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.no)
 
                     _label.append($input).append(_span).appendTo($label)
 
@@ -154,7 +154,7 @@ $(function () {
         };
 
     })();
-    var _condArr = ['no', 'orderId', 'instorerId', 'salesmanId','salesDeptName','fullpayTime'];
+    var _condArr = ['no', 'orderId', 'instorerId', 'salesmanId', 'salesDeptName', 'fullpayTime'];
 
     var salesSwitchPurchaseSearcher = new Searcher();
 
@@ -230,7 +230,7 @@ $(function () {
     }
 
     function savePurchase() {
-        if (com.validate('layerAdd','right')) return;
+        if (com.validate('layerAdd', 'right')) return;
         var options = {
             "purchase.comment": $('#layerAdd input[name="comment"]').val(),
             "purchase.deliveryTime": $('#layerAdd input[name="deliveryTime"]').val()
@@ -276,7 +276,10 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var $liLine = $('<li></li>').addClass('clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix  col-xs-12').attr({'data-discount':v.discount,'data-postDis':v.postDis});
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix  col-xs-12').attr({
+                        'data-discount': v.discount,
+                        'data-postDis': v.postDis
+                    });
                     var $h3 = $('<h3></h3>').addClass('siid')
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
@@ -285,15 +288,15 @@ $(function () {
                         ["商品颜色:", v.color.name, "grey", "color"],
                         ["商品规格:", v.format.info, "grey", "format"],
                         ["售价:", v.selling, "grey", "selling"],
-                       // ["折扣:", v.discount, "grey", "discount"],
+                        // ["折扣:", v.discount, "grey", "discount"],
                         ["折扣价:", v.disPrice, "grey", "disPrice"],
                         //["折让:", v.postDis, "grey", "postDis"],
                         ["折让价:", v.price, "grey", "price"],
                         ["数量:", v.num, "grey", "num"],
                         ["总价:", v.total, "grey", "total"],
-                        ["原结算方式:", v.rawCtype==0?"底价":"点位", "grey", "rawCtype"],
+                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "grey", "rawCtype"],
                         ["原结算值:", v.rawCvalue, "grey", "rawCvalue"],
-                        ["结算方式:", v.ctype==0?"底价":"点位", "grey", "ctype"],
+                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "grey", "ctype"],
                         ["结算值:", v.cvalue, "grey", "cvalue"],
                         ["备注:", v.comment, "grey", "conment"],
                     ];
@@ -326,8 +329,8 @@ $(function () {
                     var btnSpanSearchStroeStock = $('<label></label>').addClass('pull-right').css({
                         'font-size': '20px',
                         'font-weight': 'bold',
-                        'height':'26px',
-                        'margin-top':'-4px',
+                        'height': '26px',
+                        'margin-top': '-4px',
                     });
                     var btnSearchStroeStock = $('<button></button>').addClass('btn btn-xs btn-info btn-search').attr('name', 'search').css("margin", "0px 3px").html('库存').appendTo(btnSpanSearchStroeStock);
 
@@ -345,7 +348,7 @@ $(function () {
                         "data-num": v.num,
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold').html(v.goods.name)
+                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no)
 
                     _label.append($input).append(_span).appendTo($label)
 
@@ -364,17 +367,17 @@ $(function () {
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
-                    btnSearchStroeStock.bindClick(function(){
+                    btnSearchStroeStock.bindClick(function () {
                         var _option = {
                             "goodsStorehouseStock.goods.gid": v.goods.gid,
                             "goodsStorehouseStock.color.cid": v.color.cid,
                             "goodsStorehouseStock.format.fid": v.format.fid
                         }
 
-                        com.post(api.inventory.queryGoodsStorehouseStockByGid,_option,function(res){
-                            if(res.nums == null){
-                                layer.msg('该商品没有库存',{time:3e3});
-                            }else{
+                        com.post(api.inventory.queryGoodsStorehouseStockByGid, _option, function (res) {
+                            if (res.nums == null) {
+                                layer.msg('该商品没有库存', {time: 3e3});
+                            } else {
                                 layer.msg('该商品剩余库存:' + res.nums);
                             }
                         })
@@ -439,26 +442,26 @@ $(function () {
         var flags = {};
 
         com.post(api.inventory.queryPurchaseItemBySiids, _option, function (res) {
-            $.each(res.purchaseItems,function(i,v){
-                if(!flags[v.siid]){
-                    flags[v.siid]=0;
-                    flags[v.siid]+=v.num;
-                }else{
-                    flags[v.siid]+=v.num;
+            $.each(res.purchaseItems, function (i, v) {
+                if (!flags[v.siid]) {
+                    flags[v.siid] = 0;
+                    flags[v.siid] += v.num;
+                } else {
+                    flags[v.siid] += v.num;
                 }
 
             })
-        },null,false);
+        }, null, false);
 
 
-        $.each($line,function(i,v){
+        $.each($line, function (i, v) {
 
             var num = $(v).find('input.inputNumber');
             var Tnum = $(v).next().find('[name="num"]').next().text();
             var subnum = flags[$(v).find('input[name="siids"]').attr('data-siid')];
             var numRex = /^\d+$/;
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0 && parseFloat(Tnum)>=parseFloat(num.val()) && parseFloat(num.val())<= parseFloat(subnum==undefined?Tnum:parseFloat(Tnum-subnum)))) {
+            if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0 && parseFloat(Tnum) >= parseFloat(num.val()) && parseFloat(num.val()) <= parseFloat(subnum == undefined ? Tnum : parseFloat(Tnum - subnum)))) {
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",

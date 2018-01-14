@@ -229,7 +229,7 @@ jQuery(function ($) {
 
     var searcher  = new Searcher();
 
-    var _arr = ["startTime","endTime","productionPlanStatus"];
+    var _arr = ["p_startTime","p_endTime","p_productionPlanStatus"];
 
     searcher.init(_arr,'condList',api.production.pageProductionPlan,function (data) {
         displayFunc.init('resultList', data);
@@ -274,7 +274,7 @@ jQuery(function ($) {
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
 
@@ -298,7 +298,7 @@ jQuery(function ($) {
             content: $('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
                 callback(index,layero);
@@ -370,9 +370,8 @@ jQuery(function ($) {
             content: $('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定'],
-            zIndex: 9999,
             success: function (layers, index) {
 
             },

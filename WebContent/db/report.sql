@@ -16,46 +16,6 @@ CREATE TABLE `checkwork` (
   KEY `indexone` (`userId`,`workDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='考勤记录';
 
-DROP TABLE IF EXISTS `citycountdetail`;
-CREATE TABLE `citycountdetail` (
-  `ccdId` int(11) NOT NULL AUTO_INCREMENT,
-  `cId` int(11) NOT NULL,
-  `consult` int(11) NOT NULL DEFAULT '0',
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `quotation` int(11) NOT NULL DEFAULT '0',
-  `deposit` int(11) NOT NULL DEFAULT '0',
-  `resigned` int(11) NOT NULL DEFAULT '0',
-  `signed` int(11) NOT NULL DEFAULT '0',
-  `waste` int(11) NOT NULL DEFAULT '0',
-  `completed` int(11) NOT NULL DEFAULT '0',
-  `termination` int(11) NOT NULL DEFAULT '0',
-  `contractPrice` decimal(13,3) DEFAULT '0.000',
-  `createDate` date NOT NULL,
-  PRIMARY KEY (`ccdId`),
-  UNIQUE KEY `uniqueone` (`cId`,`createDate`),
-  KEY `indexone` (`cId`,`createDate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市统计详细';
-
-DROP TABLE IF EXISTS `citypropercountdetail`;
-CREATE TABLE `citypropercountdetail` (
-  `cpcdId` int(11) NOT NULL AUTO_INCREMENT,
-  `cpId` int(11) NOT NULL,
-  `consult` int(11) NOT NULL DEFAULT '0',
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `quotation` int(11) NOT NULL DEFAULT '0',
-  `deposit` int(11) NOT NULL DEFAULT '0',
-  `resigned` int(11) NOT NULL DEFAULT '0',
-  `signed` int(11) NOT NULL DEFAULT '0',
-  `waste` int(11) NOT NULL DEFAULT '0',
-  `completed` int(11) NOT NULL DEFAULT '0',
-  `termination` int(11) NOT NULL DEFAULT '0',
-  `contractPrice` decimal(12,3) DEFAULT '0.000',
-  `createDate` date NOT NULL,
-  PRIMARY KEY (`cpcdId`),
-  UNIQUE KEY `uniqueone` (`cpId`,`createDate`),
-  KEY `indexone` (`cpId`,`createDate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城区统计详细';
-
 DROP TABLE IF EXISTS `ddepartmentcountdetail`;
 CREATE TABLE `ddepartmentcountdetail` (
   `ddcdId` int(11) NOT NULL AUTO_INCREMENT,
@@ -82,8 +42,8 @@ CREATE TABLE `decorationdesignerdepartmentrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`dddrId`),
-  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计部门业绩排名';
 
 DROP TABLE IF EXISTS `decorationdesignerrank`;
 CREATE TABLE `decorationdesignerrank` (
@@ -96,8 +56,8 @@ CREATE TABLE `decorationdesignerrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`ddrId`),
-  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计师业绩排名';
 
 DROP TABLE IF EXISTS `decorationdesignerregionrank`;
 CREATE TABLE `decorationdesignerregionrank` (
@@ -110,9 +70,8 @@ CREATE TABLE `decorationdesignerregionrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`ddrrId`),
-  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
-
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程设计分区业绩排名';
 
 DROP TABLE IF EXISTS `dregioncountdetail`;
 CREATE TABLE `dregioncountdetail` (
@@ -151,9 +110,9 @@ CREATE TABLE `materialdepartmentcount` (
   `createTime` date NOT NULL,
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mdcId`),
-  UNIQUE KEY `uniqueone` (`materialDeptId`,`createTime`) USING BTREE,
-  KEY `indexone` (`materialDeptId`,`createTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
+  UNIQUE KEY `uniqueone` (`materialDeptId`,`createTime`),
+  KEY `indexone` (`materialDeptId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材部门业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignercount`;
 CREATE TABLE `materialdesignercount` (
@@ -167,9 +126,9 @@ CREATE TABLE `materialdesignercount` (
   `createTime` date NOT NULL,
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mdcId`),
-  UNIQUE KEY `uniqueone` (`designerId`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerId`,`createTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2366 DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
+  UNIQUE KEY `uniqueone` (`designerId`,`createTime`),
+  KEY `indexone` (`designerId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerdepartmentcount`;
 CREATE TABLE `materialdesignerdepartmentcount` (
@@ -181,9 +140,9 @@ CREATE TABLE `materialdesignerdepartmentcount` (
   `createTime` date NOT NULL,
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mddcId`),
-  UNIQUE KEY `uniqueone` (`designerDeptId`,`designerRegionId`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerDeptId`,`createTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=791 DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
+  UNIQUE KEY `uniqueone` (`designerDeptId`,`designerRegionId`,`createTime`),
+  KEY `indexone` (`designerDeptId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerdepartmentrank`;
 CREATE TABLE `materialdesignerdepartmentrank` (
@@ -196,8 +155,8 @@ CREATE TABLE `materialdesignerdepartmentrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mddrId`),
-  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计部门排名';
 
 DROP TABLE IF EXISTS `materialdesignerrank`;
 CREATE TABLE `materialdesignerrank` (
@@ -210,8 +169,8 @@ CREATE TABLE `materialdesignerrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mdrId`),
-  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计师排名';
 
 DROP TABLE IF EXISTS `materialdesignerregioncount`;
 CREATE TABLE `materialdesignerregioncount` (
@@ -221,9 +180,9 @@ CREATE TABLE `materialdesignerregioncount` (
   `createTime` date NOT NULL,
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mdrcId`),
-  UNIQUE KEY `uniqueone` (`designerRegionId`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerRegionId`,`createTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=421 DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
+  UNIQUE KEY `uniqueone` (`designerRegionId`,`createTime`),
+  KEY `indexone` (`designerRegionId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计分区业绩统计';
 
 DROP TABLE IF EXISTS `materialdesignerregionrank`;
 CREATE TABLE `materialdesignerregionrank` (
@@ -236,151 +195,5 @@ CREATE TABLE `materialdesignerregionrank` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mdrrId`),
-  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
-
-DROP TABLE IF EXISTS `regioncountdetail`;
-CREATE TABLE `regioncountdetail` (
-  `rcdId` int(11) NOT NULL AUTO_INCREMENT,
-  `rId` int(11) NOT NULL,
-  `consult` int(11) NOT NULL DEFAULT '0',
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `quotation` int(11) NOT NULL DEFAULT '0',
-  `deposit` int(11) NOT NULL DEFAULT '0',
-  `resigned` int(11) NOT NULL DEFAULT '0',
-  `signed` int(11) NOT NULL DEFAULT '0',
-  `waste` int(11) NOT NULL DEFAULT '0',
-  `completed` int(11) NOT NULL DEFAULT '0',
-  `termination` int(11) NOT NULL DEFAULT '0',
-  `contractPrice` decimal(13,3) DEFAULT '0.000',
-  `createDate` date NOT NULL,
-  PRIMARY KEY (`rcdId`),
-  UNIQUE KEY `uniqueone` (`rId`,`createDate`),
-  KEY `indexone` (`rId`,`createDate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='大区统计详细';
-
-DROP TABLE IF EXISTS `villagecount`;
-CREATE TABLE `villagecount` (
-  `vcId` int(11) NOT NULL AUTO_INCREMENT,
-  `vId` int(11) NOT NULL,
-  `consult` int(11) NOT NULL DEFAULT '0',
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `quotation` int(11) NOT NULL DEFAULT '0',
-  `deposit` int(11) NOT NULL DEFAULT '0',
-  `resigned` int(11) NOT NULL DEFAULT '0',
-  `signed` int(11) NOT NULL DEFAULT '0',
-  `waste` int(11) NOT NULL DEFAULT '0',
-  `completed` int(11) NOT NULL DEFAULT '0',
-  `termination` int(11) NOT NULL DEFAULT '0',
-  `contractPrice` decimal(12,3) DEFAULT '0.000',
-  PRIMARY KEY (`vcId`),
-  UNIQUE KEY `uniqueone` (`vId`),
-  KEY `indexone` (`vId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='楼盘统计';
-
-DROP TABLE IF EXISTS `villagecountdetail`;
-CREATE TABLE `villagecountdetail` (
-  `vcdId` int(11) NOT NULL AUTO_INCREMENT,
-  `vId` int(11) NOT NULL,
-  `consult` int(11) NOT NULL DEFAULT '0',
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `quotation` int(11) NOT NULL DEFAULT '0',
-  `deposit` int(11) NOT NULL DEFAULT '0',
-  `resigned` int(11) NOT NULL DEFAULT '0',
-  `signed` int(11) NOT NULL DEFAULT '0',
-  `waste` int(11) NOT NULL DEFAULT '0',
-  `completed` int(11) NOT NULL DEFAULT '0',
-  `termination` int(11) NOT NULL DEFAULT '0',
-  `contractPrice` decimal(12,3) DEFAULT '0.000',
-  `createDate` date NOT NULL,
-  PRIMARY KEY (`vcdId`),
-  UNIQUE KEY `uniqueone` (`vId`,`createDate`),
-  KEY `indexone` (`vId`,`createDate`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='楼盘统计详细';
-
-DROP TABLE IF EXISTS `zaterialdesignercount`;
-CREATE TABLE `zaterialdesignercount` (
-  `zdcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `designerDepartmentId` varchar(15) NOT NULL,
-  `designerDepartmentName` varchar(32) NOT NULL,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`zdcId`),
-  UNIQUE KEY `uniqueone` (`designerId`,`materialBrand`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerId`,`createTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师业绩统计';
-
-DROP TABLE IF EXISTS `zaterialdesignerdepartmentcount`;
-CREATE TABLE `zaterialdesignerdepartmentcount` (
-  `zddcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerDeptId` varchar(15) NOT NULL,
-  `designerDeptName` varchar(32) NOT NULL,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`zddcId`),
-  UNIQUE KEY `uniqueone` (`designerDeptId`,`materialBrand`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerDeptId`,`createTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门业绩统计';
-
-DROP TABLE IF EXISTS `zaterialdesignerdepartmentrank`;
-CREATE TABLE `zaterialdesignerdepartmentrank` (
-  `zddrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerDeptId` varchar(15) NOT NULL,
-  `designerDeptName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`zddrId`),
-  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
-
-DROP TABLE IF EXISTS `zaterialdesignerrank`;
-CREATE TABLE `zaterialdesignerrank` (
-  `zdrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`zdrId`),
-  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
-
-DROP TABLE IF EXISTS `zaterialdesignerregioncount`;
-CREATE TABLE `zaterialdesignerregioncount` (
-  `zdrcId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`zdrcId`),
-  UNIQUE KEY `uniqueone` (`designerRegionId`,`materialBrand`,`createTime`) USING BTREE,
-  KEY `indexone` (`designerRegionId`,`createTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计分区业绩统计';
-
-DROP TABLE IF EXISTS `zaterialdesignerregionrank`;
-CREATE TABLE `zaterialdesignerregionrank` (
-  `zdrrId` int(11) NOT NULL AUTO_INCREMENT,
-  `designerRegionId` varchar(15) NOT NULL,
-  `designerRegionName` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `rank` double NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`zdrrId`),
-  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';

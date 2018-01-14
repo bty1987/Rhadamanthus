@@ -97,6 +97,10 @@ jQuery(function($) {
 				dialogCustomerServiceComplaintHandle(v);
 			});
 			$btnDel.click(function(){
+				if(v.status == 1){
+					com.showAlert(com.warning, "当前信息已处理，不能删除！");
+					return;
+				}
 				removeRow(v.cscId);
 			});
 
@@ -215,7 +219,6 @@ jQuery(function($) {
 
 	function removeRow(id){
 
-
 		bootbox.confirm("确认删除投诉吗？", function(res){
 			if(res){
 				com.post(api.construction.deleteCustomerServiceComplaint, {"cscIds[0]"  : id}, successCallback);
@@ -233,9 +236,9 @@ jQuery(function($) {
 
 		complaint.complaintItems.handleOrderId.val(row.orderId).attr('disabled', true);
 		complaint.complaintItems.handleCustomerName.val(row.customerName).attr('disabled', true);
-		complaint.complaintItems.handleComplaintLevel.val(row.complaintLevel).attr('disabled', true);
-		complaint.complaintItems.handleComplaintType.val(row.complaintType).attr('disabled', true);
-		complaint.complaintItems.complaintHandleDes.val(row.complaintHandle);
+		complaint.complaintItems.handleComplaintLevel.val(row.level).attr('disabled', true);
+		complaint.complaintItems.handleComplaintType.val(row.type).attr('disabled', true);
+		complaint.complaintItems.complaintHandleDes.val(row.handle);
 
 		if(row.complaintStatus == "1"){
 			complaint.complaintItems.complaintHandleDes.attr("disabled", true);

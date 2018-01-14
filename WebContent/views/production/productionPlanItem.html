@@ -11,6 +11,7 @@
     </div>
 </div>
 
+
 <div id="layerAddItem" style="padding: 40px 0;display:none;">
     <div class="row-fluid">
         <form class="form-horizontal" novalidate="novalidate" id="form1">
@@ -18,40 +19,57 @@
                 <div class="row" style="margin-right: 0px">
                     <div class="col-xs-12">
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="typeno" >类型编号</label>
+                            <label class="control-label col-xs-4 no-padding-center" for="itemName" >名称</label>
                             <div class="controls col-xs-8">
-                                <input name="date" class="m-wrap m-ctrl-medium col-xs-7"  size="16" type="text" value="" id="typeno"/>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="itemname" >名称</label>
-                            <div class="controls col-xs-8">
-                                <input name="name" class="m-wrap m-ctrl-medium col-xs-7 v_required"  rules="{required:true}" size="16" type="text" value="" id="itemName"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="itemName"/>
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
                         <div class="space5"></div>
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="height" >高</label>
+                            <label class="control-label col-xs-4 no-padding-center" for="typeNo" >型号</label>
                             <div class="controls col-xs-8">
-                                <input name="height" class="m-wrap m-ctrl-medium col-xs-7 v_required v_float"  rules="{required:true}" size="16" type="text" value="" id="height"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7"  size="16" type="text" value="" id="typeNo" readonly/>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="height" >高度</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="height"/>
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
                         <div class="space5"></div>
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="width" >宽</label>
+                            <label class="control-label col-xs-4 no-padding-center" for="width" >宽度</label>
                             <div class="controls col-xs-8">
-                                <input name="width" class="m-wrap m-ctrl-medium col-xs-7 v_required v_float"  rules="{required:true}" size="16" type="text" value="" id="width"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="width"/>
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
                         <div class="space5"></div>
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="thick" >厚</label>
+                            <label class="control-label col-xs-4 no-padding-center" for="thick" >厚度</label>
                             <div class="controls col-xs-8">
-                                <input name="thick" class="m-wrap m-ctrl-medium col-xs-7 v_required v_float"  rules="{required:true}" size="16" type="text" value="" id="thick"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="thick"/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="measurementUnit" >单位</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="measurementUnit" readonly/>
+                                <i class="icon-asterisk"></i>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4 no-padding-center" for="num" >数量</label>
+                            <div class="controls col-xs-8">
+                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="num"/>
                                 <i class="icon-asterisk"></i>
                             </div>
                         </div>
@@ -59,24 +77,14 @@
                         <div class="form-group">
                             <label class="control-label col-xs-4 no-padding-center" for="color" >颜色</label>
                             <div class="controls col-xs-8">
-                                <input name="color" class="m-wrap m-ctrl-medium col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="color"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="color"/>
                             </div>
                         </div>
-                        
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="num" >数量</label>
-                            <div class="controls col-xs-8">
-                                <input name="num" class="m-wrap m-ctrl-medium col-xs-7 v_required v_float"  rules="{required:true}" size="16" type="text" value="" id="num"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                       
                         <div class="space5"></div>
                         <div class="form-group">
                             <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
                             <div class="controls col-xs-8">
-                                <input name="comment" class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
+                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
                             </div>
                         </div>
                         <div class="space5"></div>
@@ -89,8 +97,6 @@
     </div>
 </div>
 
-<script>
-    $(function(){
-        $.getScript('js/production/productionPlanItem.js');
-    });
+<script type="text/javascript">
+	$.loadScript(['js/production/productionPlanItem.js','js/production/productionUtils.js']);
 </script>

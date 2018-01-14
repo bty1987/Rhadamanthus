@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import com.fanglin.building.service.BuildingScheduleService;
 import com.fanglin.building.vo.BuildingNodeVO;
 import com.fanglin.building.vo.BuildingScheduleVO;
 import com.fanglin.building.vo.BuildingVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -53,8 +55,6 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 			
 			BeanUtil.copyProperties(buildingSchedulePO, buildingSchedule, Arrays.asList("building","buildingNode", "operater"));
 			
-			//BeanUtil.copyProperties(buildingSchedulePO.getBuilding(), buildingSchedule.getBuilding(), Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "creater", "buildingNode"));
-			
 			BeanUtil.copyProperties(buildingSchedulePO.getBuildingNode(), buildingSchedule.getBuildingNode());
 			
 			UserPO operater = userDao.queryUserByUserId(buildingSchedulePO.getOperater().getUserId());
@@ -69,27 +69,42 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addBuildingSchedule(BuildingScheduleVO buildingScheduleVO, Authentication authentication) {
+	public int nextBuildingSchedule(BuildingScheduleVO buildingScheduleVO, Authentication authentication) {
 		
-		UserPO userPO= userDao.queryUserByUserId(authentication.getUserId());
+		if(buildingScheduleVO.getBsid() != null){
+			
+			BuildingSchedulePO buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
+			
+			if(buildingSchedulePO != null && buildingSchedulePO.getStatus() == BuildingSchedulePO.STATUS_INIT_SHORT){
+				
+				buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_END_SHORT);
+				
+				buildingScheduleDao.update(buildingSchedulePO);
+			}
+			
+		}
 		
-		BuildingSchedulePO buildingSchedulePO = new BuildingSchedulePO();
+		BuildingSchedulePO nextBuildingSchedulePO = new BuildingSchedulePO();
 		
-		BeanUtil.copyProperties(buildingScheduleVO, buildingSchedulePO, Arrays.asList("building","buildingNode", "operater"));
+		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
 		
-		BuildingNodePO buildingNodePO = buildingNodeDao.get(buildingScheduleVO.getBuildingNode().getBnid());
+		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingScheduleVO.getBuildingNode().getType(), buildingScheduleVO.getBuildingNode().getSore());
 		
 		BuildingPO buildingPO = buildingDao.get(buildingScheduleVO.getBuilding().getBoid());
 		
-		buildingSchedulePO.setBuilding(buildingPO);
+		nextBuildingSchedulePO.setName(buildingNodePO.getName());
 		
-		buildingSchedulePO.setBuildingNode(buildingNodePO);
+		nextBuildingSchedulePO.setBuilding(buildingPO);
 		
-		buildingSchedulePO.setOperater(userPO);
+		nextBuildingSchedulePO.setBuildingNode(buildingNodePO);
 		
-		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
+		nextBuildingSchedulePO.setOperater(operater);
 		
-		buildingScheduleDao.save(buildingSchedulePO);
+		nextBuildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
+		
+		nextBuildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
+		
+		buildingScheduleDao.save(nextBuildingSchedulePO);
 		
 		return 0;
 	}
@@ -128,4 +143,41 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void resetBuildingSchedule(BuildingVO buildingVO, String userId) throws FLException {
+		
+		BuildingPO buildingPO = buildingDao.get(buildingVO.getBoid());
+		
+		if(buildingPO == null){
+			throw new FLException(320010, "房产单不存在");
+		}
+		
+		if(buildingPO.getStatus() != 0){
+			throw new FLException(320011, "房产单状态不可操作");
+		}
+		
+		buildingPO.setPayType(buildingVO.getPayType());
+		
+		buildingDao.update(buildingPO);
+		
+		//修改当前房产单的房产流转
+		UserPO operaterPO = userDao.queryUserByUserId(userId);
+		
+		buildingScheduleDao.resetBuildingSchedule(buildingVO.getBoid(), operaterPO.getUid());
+		
+		//生成新的房产单流转节点	
+		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		
+		BuildingSchedulePO buildingSchedulePO = new BuildingSchedulePO(buildingNodePO, buildingPO, operaterPO);
+		
+		buildingSchedulePO.setName(buildingNodePO.getName());
+		
+		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
+		
+		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
+		
+		buildingScheduleDao.save(buildingSchedulePO);
+		
+	}
 }

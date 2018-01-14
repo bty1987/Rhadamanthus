@@ -31,13 +31,13 @@ jQuery(function($) {
 			var $btnRevisit = $('<a></a>').addClass('btn btn-minier btn-danger').html("回访");
 
 			var propertyArr = [
-				["楼盘名:", v.village.villageName, "grey"],
+				["楼盘名:", v.house.village.name, "grey"],
 				["客户电话:", v.customer.phone, "grey"],
-				["设计部门:", v.designDepartment, "grey"],
-				["设计师:", v.designer, "grey"],
-				["监理:", v.supervisor, "grey"],
+				["设计部门:", v.designer.dept.deptName, "grey"],
+				["设计师:", v.designer.userName, "grey"],
+				["监理:", v.supervisor.userName, "grey"],
 				["总价:", v.orderTotalPrice, "blue"],
-				["折扣:", v.discount, "blue"],
+				//["折扣:", v.discount, "blue"],
 				["面积:", v.houseArea, "blue"],
 				["进度:", v.projectStatus, "red"],
 			];
@@ -57,13 +57,13 @@ jQuery(function($) {
 				viewCustomerServiceDetailIndex(v.orderId)
 			});
 			$btnComplain.click(function(){
-				viewCustomerServiceComplaintIndex(v.orderId, v.customer.customerName);
+				viewCustomerServiceComplaintIndex(v.orderId, v.customer.name);
 			});
 			$btnRepair.click(function(){
-				viewCustomerServiceGuaranteeIndex(v.orderId, v.customer.customerName);
+				viewCustomerServiceGuaranteeIndex(v.orderId, v.customer.name);
 			});
 			$btnRevisit.click(function(){
-				viewCustomerServiceBackVisitIndex(v.orderId, v.village.villageName, v.customer.customerName);
+				viewCustomerServiceBackVisitIndex(v.orderId, v.house.village.name, v.customer.name);
 			});
 
 			return $liLine;
@@ -81,7 +81,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
+	searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule'], "condList", api.construction.pageDecorationForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "customerServiceSeacherPostData");
 

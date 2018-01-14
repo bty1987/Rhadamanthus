@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.fanglin.department.vo.DepartmentVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class AuditScaleVO implements Serializable {
 
@@ -14,7 +14,7 @@ public class AuditScaleVO implements Serializable {
 	
 	private AuditRecordVO auditRecord;
 	
-	private UserVO belongUser;
+	private UserBaseVO belongUser;
 	
 	private DepartmentVO belongDepartment;
 	
@@ -24,11 +24,11 @@ public class AuditScaleVO implements Serializable {
 	
 	private Short status;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 
-	public AuditScaleVO(AuditRecordVO auditRecord, UserVO belongUser,
+	public AuditScaleVO(AuditRecordVO auditRecord, UserBaseVO belongUser,
 			DepartmentVO belongDepartment) {
 		super();
 		this.auditRecord = auditRecord;
@@ -36,8 +36,8 @@ public class AuditScaleVO implements Serializable {
 		this.belongDepartment = belongDepartment;
 	}
 
-	public AuditScaleVO(UserVO belongUser,
-			DepartmentVO belongDepartment, UserVO creater) {
+	public AuditScaleVO(UserBaseVO belongUser,
+			DepartmentVO belongDepartment, UserBaseVO creater) {
 		super();
 		this.belongUser = belongUser;
 		this.belongDepartment = belongDepartment;
@@ -64,11 +64,11 @@ public class AuditScaleVO implements Serializable {
 		this.auditRecord = auditRecord;
 	}
 
-	public UserVO getBelongUser() {
+	public UserBaseVO getBelongUser() {
 		return belongUser;
 	}
 
-	public void setBelongUser(UserVO belongUser) {
+	public void setBelongUser(UserBaseVO belongUser) {
 		this.belongUser = belongUser;
 	}
 
@@ -104,11 +104,11 @@ public class AuditScaleVO implements Serializable {
 		this.status = status;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

@@ -14,6 +14,8 @@ public class BuildingNodePO implements java.io.Serializable {
 	
 	public static final String COLUMN_TYPE_STR = "type";
 	
+	public static final Short COLUMN_SORE_ONE = 1;
+	
 	private long bnid;
 	
 	private String name;

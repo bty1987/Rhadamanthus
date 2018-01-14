@@ -42,26 +42,19 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 		paging.setData(buildingNodeVOs);
 	}
 
-
 	@Override
-	public List<BuildingNodeVO> queryBuildingNodeByType(BuildingNodeVO buildingNodeVO) {
+	public BuildingNodeVO queryBuildingNodeByType(BuildingNodeVO buildingNodeVO) {
 		
-		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType());
+		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), buildingNodeVO.getSore());
 		
-		List<BuildingNodeVO> BuildingNodeVOs = new ArrayList<BuildingNodeVO>();
+		BuildingNodeVO buildingNode =  new BuildingNodeVO();
 		
-		for (BuildingNodePO buildingNodePO : buildingNodePOs) {
-			
-			BuildingNodeVO buildingNode = new BuildingNodeVO();
-			
-			BeanUtil.copyProperties(buildingNodePO, buildingNode);
-			
-			BuildingNodeVOs.add(buildingNode);
-			
-		}
+		BeanUtil.copyProperties(buildingNodePO, buildingNode);
 		
-		return BuildingNodeVOs;
+		
+		return buildingNode;
 	}
+
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -99,5 +92,8 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 		buildingNodeDao.update(buildingNodePO);
 		
 	}
+
+
+	
 	
 }

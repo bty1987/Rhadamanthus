@@ -11,9 +11,9 @@ public interface CustomerSourceDao extends Dao<CustomerSourcePO> {
 	
 	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters, Integer uid);
 	
-	public CustomerSourcePO queryCustomerSourceForNo(String no);
+	public CustomerSourcePO queryCustomerSourceByNo(String no);
 	
-	public CustomerSourcePO checkCustomerSourceByCidAndType(Long cid, Short type);
+	public CustomerSourcePO checkCustomerSource(Long cid, Short type);
 	
 	public int countCustomerSource(Long id, Short type);
 

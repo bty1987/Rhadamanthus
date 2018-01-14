@@ -1,6 +1,5 @@
 var servicePaymentCheck = {
 
-
 	paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts"],
 
 	moreMsg:{},
@@ -27,7 +26,6 @@ $("#servicePaymentHistoryList").removeClass("active");
 
 jQuery(function($) {
 
-	//服务款未确认信息查询
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
@@ -53,17 +51,17 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
 			var propertyArr = [
-				["订单号:", v.decorationOrder.orderId, "grey"],
-				["楼盘地址:", v.decorationOrder.village.villageName + ''+v.decorationOrder.houseNumber, "grey"],
-				["客户:", v.decorationOrder.customer.customerName, "grey"],
-				["设计师:", v.decorationOrder.designer, "grey"],
-				["设计部:", v.decorationOrder.designDepartment, "grey"],
+				["订单号:", v.decoration.orderId, "grey"],
+				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+				["客户:", v.decoration.customer.name, "grey"],
+				["设计师:", v.decoration.designer.currentName, "grey"],
+				["设计部:", v.decoration.designer.dept.deptName, "grey"],
 				["应收金额:", v.advanceMoney, "blue"],
 				["服务费:", v.serviceMoney, "blue"],
-				["收款人:", v.collecter.currentName, "grey"],
+				["收款人:", v.collecterName, "grey"],
 				["收款时间:", v.collcetTime, "grey"],
 				["状态:", v.status == "1" ? "已收款" : "", "red"],
-				["备注:", v.des, "grey"],
+				["备注:", v.comment, "grey"],
 			];
 
 			var $label = $('<label></label>');
@@ -100,7 +98,6 @@ jQuery(function($) {
 		};
 	})();
 
-	//查询付款银行信息
 	com.post(api.common.queryReceiptType, {}, function(res){
 
 		servicePaymentCheck.cash = [];
@@ -138,10 +135,9 @@ jQuery(function($) {
 		$("#accountsBankName").bindData(servicePaymentCheck.accounts, 'no', 'name');
 	}, null, false);
 
-	//查询服务款未确认信息
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "designer", "village", "collectTimeDateRange"], "condList", api.payment.pageServicePaymentForCollect, function(data){
+	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "condList", api.payment.pageServicePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "pageServicePaymentForCollectData", null, false, null, function(){
 
@@ -172,17 +168,17 @@ jQuery(function($) {
 
 			$.exceler({
 				column : [
-					["订单号","decorationOrder.orderId"],
-					['楼盘地址',['decorationOrder.village.villageName', 'decorationOrder.houseNumber']],
-					['客户','decorationOrder.customer.customerName'],
-					['设计师','decorationOrder.designer'],
-					['设计部','decorationOrder.designDepartment'],
+					["订单号","decoration.orderId"],
+					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
+					['客户','decoration.customer.name'],
+					['设计师','decoration.designer.currentName'],
+					['设计部','decoration.designer.dept.deptName'],
 					['应收金额', 'advanceMoney'],
 					['服务费', 'serviceMoney'],
-					['收款人', 'collecter.currentName'],
+					['收款人', 'collecterName'],
 					['收款时间', 'collcetTime'],
 					['状态', 'status == "1" ? "已收款" : ""'],
-					['备注', 'des'],
+					['备注', 'comment'],
 					['现金', 'serviceReceipt.cash'],
 					['银行', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
 					['转账', ['serviceReceipt.checkv', 'serviceReceipt.checkvBank']],
@@ -235,19 +231,19 @@ jQuery(function($) {
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier');
 
 			var propertyArr = [
-				["订单号:", v.decorationOrder.orderId, "grey"],
-				["楼盘地址:", v.decorationOrder.village.villageName + ''+v.decorationOrder.houseNumber, "grey"],
-				["客户:", v.decorationOrder.customer.customerName, "grey"],
-				["设计师:", v.decorationOrder.designer, "grey"],
-				["设计部:", v.decorationOrder.designDepartment, "grey"],
+				["订单号:", v.decoration.orderId, "grey"],
+				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+				["客户:", v.decoration.customer.name, "grey"],
+				["设计师:", v.decoration.designer.currentName, "grey"],
+				["设计部:", v.decoration.designer.dept.deptName, "grey"],
 				["应收金额:", v.advanceMoney, "blue"],
 				["服务费:", v.serviceMoney, "blue"],
-				["收款人:", v.collecter.currentName, "grey"],
+				["收款人:", v.collecterName, "grey"],
 				["收款时间:", v.collcetTime, "grey"],
 				["确认人:", v.confirmerName, "grey"],
 				["确认时间:", v.confirmTime, "grey"],
 				["状态:", v.status == "2" ? "已确认" : "", "red"],
-				["备注:", v.des, "grey"],
+				["备注:", v.comment, "grey"],
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -280,7 +276,7 @@ jQuery(function($) {
 	//查询服务款已确认信息
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId", "designer", "village", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
+	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentForConfirmPostData", null, false, null, function(){}, "hresultList");
 

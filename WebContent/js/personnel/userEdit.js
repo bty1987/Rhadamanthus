@@ -40,9 +40,7 @@ jQuery(function(a) {
         contractList: [],
         loginFlag:true,
     };
-    a(".collapse").collapse({
-        toggle: !1
-    });
+ 
     user.saveBtn = a("#saveBtn").on("click", saveData);
     user.cancelBtn = a("#cancelBtn").on("click",function() {
         com.switchPage(api.index.userIndex.url);

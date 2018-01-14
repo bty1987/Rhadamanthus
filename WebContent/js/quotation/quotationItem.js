@@ -106,12 +106,16 @@ $(function(){
     	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
-    	
-    	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
-    	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
-    	var $impspan = $('<span></span>').text('导出').appendTo($impa);
-    	
-    	return [$adda, $impa];
+
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
+        var $impi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($impa);
+        var $impspan = $('<span></span>').text('导入').appendTo($impa);
+
+    	var $expa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'export').css("margin", "0px 3px");
+    	var $expi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($expa);
+    	var $expspan = $('<span></span>').text('导出').appendTo($expa);
+
+    	return [$adda,$expa,$impa];
     });
 
     var quotationItem = {
@@ -253,6 +257,37 @@ $(function(){
         quotationItem.quotationItemItems.version.bindData(quotationItem.data.VersionData, "versionId", "versionName");
         $("#importVersion").bindData(quotationItem.data.VersionData, "versionId", "versionName");
     });
+    //导出按钮
+    $('a[name="import"]').on("click", function () {
+
+        $('#importModal').modal("show");
+    });
+
+    $('#import').Huploadify({
+
+        'debug' : false, // 开启调试
+        'auto':true, // 是否自动上传
+        'successTimeout':config.uploadTimeout, // 超时时间
+        'formData':{
+            'uploadType':4
+        },
+        'buttonClass': 'btn btn-success col-sm-12',
+        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'uploader': config.host + "importQuotationItem.do", // 上传处理程序
+        'height':'30', // 浏览按钮的高度
+        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit':'2MB', // 上传文件的大小限制
+        'queueSizeLimit' : 1, // 上传数量
+        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+            var dateObj = eval("("+data+")");
+            if(data.indexOf("导入文件错误") > 0 ){
+                bootbox.alert("导入文件错误");
+            }
+            quotationItemSeacher.doSearch();
+        }
+    });
 
     //添加按钮
     $('a[name="add"]', '#pagenation').click(function () {
@@ -265,7 +300,7 @@ $(function(){
         quotationItem.modal.modal("show");
     });
     //导出功能
-    $('a[name="import"]', '#pagenation').click(function () {
+    $('a[name="export"]', '#pagenation').click(function () {
     	
     	if($('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");

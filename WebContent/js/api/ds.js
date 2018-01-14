@@ -11,4 +11,6 @@ $.extend(api, {ds: {
     data:{url: "ds/data.json", demo: true},
     manifest:{url:"ds/manifest.json",demo: true},
     quotation:{url:"ds/quotation.json",demo: true},
+    building:{url: "ds/building.json", demo: true},
+    production:{url: "ds/production.json", demo: true},
 }});

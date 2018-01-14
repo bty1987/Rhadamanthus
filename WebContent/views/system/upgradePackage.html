@@ -1,0 +1,95 @@
+<style>
+    .uploadify-button-text{line-height: 0 !important;}
+    .lineheight0{line-height:15px !important;}
+</style>
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- 查询条件-->
+            <div id="condList" class="fl_search clearfix"></div>
+            <!--查询结果-->
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <!--分页-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="upgradeModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加版本</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="upgradeNumber">最新版本</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="upgradeNumber" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="trialUpgrade">适用版本</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="trialUpgrade" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="createTime">创建时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="createTime" maxlength="64" class="col-xs-10 col-sm-7 v_required date-picker" data-toggle="popover" data-trigger='manual'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="content">版本说明</label>
+                            <div class="col-sm-9">
+                                <div class="input-group col-xs-10 col-sm-7 no-padding" data-toggle="popover" data-trigger='manual'>
+                                    <textarea name="" id="content" cols="41" rows="5" maxlength="255" style="resize: none" class="v_required"></textarea>
+                                </div>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="path">版本路径</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="path" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual' readonly/>
+                                <span class='star'></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="path">文件大小</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="fileSize" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual' readonly/>
+                                <span class='star'></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="path">上传文件</label>
+                            <div class="col-sm-9">
+                                <div id="file"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/system/upgradePackage.js']);
+</script>

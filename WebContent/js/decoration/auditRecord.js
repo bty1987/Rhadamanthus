@@ -9,7 +9,7 @@ $(function () {
         managerId:"",
         decorationOrderId:"",
         auditStatusType:"",
-        rollback :params.rollback,
+        rollback :params.historyPage,
     };
     var auditScale = {
         asid:0,
@@ -83,7 +83,7 @@ $(function () {
         num:"auditRecord.num",
         discount:"auditRecord.discount",
         status:"auditRecord.status",
-        orderId:"auditRecord.audit.decorationOrder.orderId"
+        orderId:"auditRecord.audit.decoration.orderId"
     };
 
     com.post(api.ds.decoration,{},function (res) {
@@ -251,7 +251,7 @@ $(function () {
     }
 
     function initPage() {
-        com.post(api.decoration.queryAuditRecordByOrderId, {'auditRecord.audit.decorationOrder.orderId':auditRecord.decorationOrderId},function (res) {
+        com.post(api.decoration.queryAuditRecordByOrderId, {"auditRecord.audit.decoration.orderId":auditRecord.decorationOrderId},function (res) {
             if(res.auditRecords && res.auditRecords.length){
                 auditRecord.aid = res.auditRecords[0].audit.aid;
             }
@@ -265,6 +265,7 @@ $(function () {
         var number = /^[1-9]\d*$/;
         var num = /^([1-9]|10)$/;
         auditRecordPage.add.click(function () {
+            clearAuditRecordModel()
             auditRecordPage.changeAuditRecordModel.attr("type","addR");
             auditRecordPage.changeAuditRecordModel.modal("show");
 

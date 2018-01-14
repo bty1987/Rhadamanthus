@@ -11,7 +11,7 @@ $(function(){
             layer.closeAll();
         })
     }else{
-        com.post(api.decoration.queryDecorationOrderForCommonByOrderId,{
+        com.post(api.decoration.queryDecorationForCommonByOrderId,{
             "decorationOrder.orderId": orderId
         },function(res){
             var $table = $('table.table');
@@ -20,15 +20,15 @@ $(function(){
             $td.css('text-align','right');
             var $th = $('table.table th');
             $th.css('text-align','center');
-            var v = res.decorationOrder;
-            $table.find('#villageName').next().text(v.village.villageName+" "+ v.houseNumber);
+            var v = res.decoration;
+            $table.find('#villageName').next().text(v.house.village.name+" "+ v.house.houseNumber);
             $table.find('#designDepartment').next().text(v.designDepartment);
             $table.find('#businessDepartment').next().text(v.businessDepartment);
             $table.find('#houseArea').next().text(v.houseArea+"m²");
             $table.find('#measureTime').next().text(v.measureTime==null||""?"----":v.measureTime);
             $table.find('#status').next().text(v.status);
 
-            $table.find('#customerName').next().text(v.customer.customerName);
+            $table.find('#customerName').next().text(v.customer.name);
             $table.find('#designer').next().text(v.designer);
             $table.find('#salesman').next().text(v.salesman);
             $table.find('#orderTotalPrice').next().text(v.orderTotalPrice);

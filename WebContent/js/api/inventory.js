@@ -254,6 +254,11 @@ $.extend(api, {
         pagePurchase: {
             url: "pagePurchase.do",
         },
+
+        pagePurchaseObDelivery: {
+            url: "pagePurchaseObDelivery.do",
+        },
+
         addPurchase: {
             url: "addPurchase.do",
         },
@@ -299,48 +304,48 @@ $.extend(api, {
         updatePurchaseBalanceForStatus: {
             url: "updatePurchaseBalanceForStatus.do",
         },
-        pageAssisType: {
-            url: "pageAssisType.do",
+        pageAccessoriesType: {
+            url: "pageAccessoriesType.do",
         },
-        queryAssisType: {
-            url: "queryAssisType.do",
+        queryAccessoriesType: {
+            url: "queryAccessoriesType.do",
         },
-        queryAssisTypeByWtid: {
-            url: "queryAssisTypeByWtid.do",
+        queryAccessoriesTypeByWtid: {
+            url: "queryAccessoriesTypeByWtid.do",
         },
-        updateAssisTypeForStatus: {
-            url: "updateAssisTypeForStatus.do",
+        updateAccessoriesTypeForStatus: {
+            url: "updateAccessoriesTypeForStatus.do",
         },
-        addAssisType: {
-            url: "addAssisType.do",
+        addAccessoriesType: {
+            url: "addAccessoriesType.do",
         },
-        updateAssisType: {
-            url: "updateAssisType.do",
+        updateAccessoriesType: {
+            url: "updateAccessoriesType.do",
         },
 
-        pageAssisOrder: {
-            url: "pageAssisOrder.do",
+        pageAccessories: {
+            url: "pageAccessories.do",
         },
-        queryAssisOrderItemByAoid: {
-            url: "queryAssisOrderItemByAoid.do",
+        queryAccessoriesItemByAid: {
+            url: "queryAccessoriesItemByAid.do",
         },
-        queryAssisOrderItemByAoids: {
-            url: "queryAssisOrderItemByAoids.do",
+        queryAccessoriesItemByAids: {
+            url: "queryAccessoriesItemByAids.do",
         },
-        addAssisOrder: {
-            url: "addAssisOrder.do",
+        addAccessories: {
+            url: "addAccessories.do",
         },
-        updateAssisOrderForStatus: {
-            url: "updateAssisOrderForStatus.do",
+        updateAccessoriesForStatus: {
+            url: "updateAccessoriesForStatus.do",
         },
-        addAssisOrderItem: {
-            url: "addAssisOrderItem.do",
+        addAccessoriesItem: {
+            url: "addAccessoriesItem.do",
         },
-        updateAssisOrderItem: {
-            url: "updateAssisOrderItem.do",
+        updateAccessoriesItem: {
+            url: "updateAccessoriesItem.do",
         },
-        deleteAssisOrderItem: {
-            url: "deleteAssisOrderItem.do",
+        deleteAccessoriesItem: {
+            url: "deleteAccessoriesItem.do",
         },
 
         addSales: {

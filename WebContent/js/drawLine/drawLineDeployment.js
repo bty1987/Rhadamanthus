@@ -125,7 +125,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
 
-			var drawLineGroup = v.drawLineGroup;
+			var drawLineGroup = v.drawLineGroupName;
 			var nub = 0;
 			var boo = true ;
 			if(pageGroup.length>0){
@@ -153,7 +153,7 @@ jQuery(function($) {
         		var groupWidgetBox = $("<div></div>").addClass("widget-box transparent").appendTo(groupDiv);
         		var groupWidgetHeader = $("<div></div>").addClass("widget-header").appendTo(groupWidgetBox);
         		var groupH5 = $("<h4></h4>").appendTo(groupWidgetHeader);
-        		var groupStrong = $("<strong></strong>").text(v.drawLineGroup).appendTo(groupH5);
+        		var groupStrong = $("<strong></strong>").text(v.drawLineGroupName).appendTo(groupH5);
         		var groupWidgetBody = $("<div></div>").addClass("widget-body").appendTo(groupWidgetBox);
         		var groupWidgetBodyInner = $("<div></div>").addClass("widget-body-inner").css("display", "block").appendTo(groupWidgetBody);
         		var resultList = $('<div></div>').attr("id", "group" + nub).addClass("clearfix tab-pane active").appendTo(groupWidgetBodyInner);
@@ -175,7 +175,7 @@ jQuery(function($) {
                ["楼盘地址:", v.village + ' ' + v.houseNumber, "grey"],
                ["面积:", v.houseArea, "blue"],
                ["合同额:", v.orderTotalPrice, "blue"],
-               ["折扣:", v.discount, "blue"],
+              // ["折扣:", v.discount, "blue"],
                ["申请人:", v.applayUser, "grey"],
                ["监理:", v.supervisor, "grey"],
                ["放线时间:", v.actualDate, "grey"],
@@ -228,7 +228,7 @@ jQuery(function($) {
     })();
 	
 	var searcher = new Searcher();
-	searcher.init(["drawLineStatus", "actualDate"], "condList", api.drawline.queryDrawLine, function(data){
+	searcher.init(["c_drawLineStatus", "c_actualDate"], "condList", api.drawline.queryDrawLine, function(data){
 		$("#resultList").html("");
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLineDeploymentPostData", null, true, "drawLines");

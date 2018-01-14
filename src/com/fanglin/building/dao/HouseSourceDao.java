@@ -11,9 +11,9 @@ public interface HouseSourceDao extends Dao<HouseSourcePO> {
 
 	public List<HouseSourcePO> pageHouseSource(Paging paging, List<Filter> filters);
 	
-	public HouseSourcePO queryHouseSourceForNo(String no);
+	public HouseSourcePO queryHouseSourceByNo(String no);
 
-	public HouseSourcePO checkHouseSourceByHidAndType(Long hid, Short type);
+	public HouseSourcePO checkHouseSource(Long hid, Short type);
 	
 	public int countHouseSource(Long hid, Short type);
 

@@ -2,6 +2,7 @@ $(function(){
 
     var $uploadBtn = $("#uploadBtn");
     var $back = $("#backBtn");
+    var $layerImport = $("#layerProductionImport");
 
     var $pid = params["pid"];
     var $status = params["status"];
@@ -9,11 +10,10 @@ $(function(){
     var $pictureStatus = false;
     var $replacePicture = {};
 
-    var $layerImport = $("#layerProductionImport");
-
     createPage();
 
     function createPage(){
+
         com.post(api.production.queryProductionPictureByPid,{"productionPicture.pid":$pid},function(listData){
 
             $.each(listData.productionPictures,function(i,v){
@@ -68,16 +68,16 @@ $(function(){
     
     $uploadBtn.click(function(){
         com.clearValidator();
+        productionUtils.clearForm('form1');
+
         if($status == 4 || $status == 5 ||$status == 3){
             $("#importProductionPicture").addClass("hide")
         }
 
-        productionUtils.clearForm('form1');
         $('#importProductionPicture').empty();
         openlayerImportProduction();
 
         $("#importProductionPicture").click(function(){
-
             if(com.validate("layerProductionImport",null)){
                 return false;
             }
@@ -118,9 +118,8 @@ $(function(){
             content: $layerImport ,
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             btn: ['确定'],
-            zIndex: 9999,
             success: function (layers, index) {
 
             },

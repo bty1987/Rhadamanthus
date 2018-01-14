@@ -97,7 +97,7 @@ jQuery(function($) {
 
     //返回按钮
     $('#btnBack').click(function(){
-        com.switchPage(params.historyOrderPage);
+        com.switchPage(params.historyPage);
     });
 
     //添加按钮

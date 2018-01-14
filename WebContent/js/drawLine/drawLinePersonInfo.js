@@ -66,10 +66,10 @@ jQuery(function($) {
             var $btnDeploy = $('<a></a>').addClass('btn btn-minier btn-primary').html('人员部署');
 
             var propertyArr = [
-               ["楼盘地址:", v.village.villageName + ' ' + v.houseNumber, "grey"],
-               ["客户:", v.customer.customerName, "grey"],
-               ["设计师:", v.designer, "grey"],
-               ["面积:", v.houseArea, "blue"],
+               ["楼盘地址:", v.house.village.name + ' ' + v.house.houseNumber, "grey"],
+               ["客户:", v.customer.name, "grey"],
+               ["设计师:", v.designer.userName, "grey"],
+               ["面积:", v.house.buildArea, "blue"],
                ["创建时间:", v.createTime, "grey"],
                ["进度:", v.projectStatus, "green"],
                ["状态:", v.status, "red"],
@@ -107,7 +107,7 @@ jQuery(function($) {
     })();
 	
 	var searcher = new Searcher();
-	searcher.init(["orderId", "designer", "salesman"], "condList", api.construction.pageDecorationOrderForConstruction, function(data){
+	searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.construction.pageDecorationForConstruction, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "drawLinePersonPostData");
 	

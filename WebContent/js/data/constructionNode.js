@@ -82,7 +82,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["companyName"], "condList", api.data.pageConstructionNode, function(data){
+	searcher.init(["c_name"], "condList", api.data.pageConstructionNode, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "constructionNodePostData",null, false, null, function(){
 

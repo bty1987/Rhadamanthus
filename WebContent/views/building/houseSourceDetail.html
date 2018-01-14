@@ -1,0 +1,241 @@
+<div id="houseSourceDatailPageContent" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<h4>房源信息</h4>
+					<div class="pull-right" style="padding-top:8px">
+						<a class="btn btn-primary icon-ok" id="saveBtn" style = "padding:4px 8px;">保存</a>
+						<a class="btn btn-primary icon-undo" id="backBtn" style = "padding:4px 8px;">返回</a>
+					</div>
+				</div>
+
+				<div class="widget-body" id = "houseSourceDatail">
+					<div class="widget-main">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="hsType">房源类型</label>
+									<div class="col-sm-1">
+										<input id="hsType" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="type">房产类型</label>
+									<div class="col-sm-1">
+										<input id="type" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="houseType">户型</label>
+									<div class="col-sm-1">
+										<input id="houseType" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="buildArea">建筑面积</label>
+									<div class="col-sm-1">
+										<input id="buildArea" type="text" class="col-sm-10" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+										<span style="line-height: 34px;padding-left:6px;">平</span>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="feature">三不</label>
+									<div class="col-sm-2">
+										<input id="feature" type="text" class="col-sm-10" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="orientation">房屋朝向</label>
+									<div class="col-sm-1">
+										<input id="orientation" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="parlourType">客厅类型</label>
+									<div class="col-sm-1">
+										<input id="parlourType" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="heatingType">供暖类型</label>
+									<div class="col-sm-1">
+										<input id="heatingType" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="waterVapour">水气设施</label>
+									<div class="col-sm-1">
+										<input id="waterVapour" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="maxFloor">最高楼层</label>
+									<div class="col-sm-1">
+										<input id="maxFloor" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="through">是否越层</label>
+									<div class="col-sm-1">
+										<input id="through" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="rentType">交租方式</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12" id="rentType"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="checkingTime">看房时间</label>
+									<div class="col-sm-1">
+										<input id="checkingTime" type="text" class="col-sm-12" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="elevator">电梯</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="elevator"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="history">房屋历史</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="history"></select>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="followId">跟进人</label>
+									<div class="col-sm-1">
+										<input id="followId" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="discussType">商议类型</label>
+									<div class="col-sm-1">
+										<select class='col-xs-10 col-sm-12' id='discussType' data-toggle="popover" data-trigger='manual'></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="onlyHousing">唯一住房</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="onlyHousing"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="deedValue">契证原值</label>
+									<div class="col-sm-1">
+										<input id="deedValue" type="text" class="col-sm-12 v_required v_amount" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="deedNum">契证编号</label>
+									<div class="col-sm-2">
+										<input id="deedNum" type="text" class="col-sm-10 v_required" maxlength="15" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="sourceType">信息来源</label>
+									<div class="col-sm-1">
+										<select class='col-xs-10 col-sm-12' id='sourceType' data-toggle="popover" data-trigger='manual'></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="housingGrade">房源等级</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="housingGrade"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="allowLoan">允许贷款</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="allowLoan"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="beingLoan">有无贷款</label>
+									<div class="col-sm-1">
+										<select class="col-xs-10 col-sm-12 v_required" id="beingLoan"></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="documentsDate">下证日期</label>
+									<div class="col-sm-1">
+										<input id="documentsDate" class="date-picker col-sm-12 v_required" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="decorateTime">装修时间</label>
+									<div class="col-sm-1">
+										<input id="decorateTime" class="date-picker col-sm-12 v_required" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="decorateDegree">装修程度</label>
+									<div class="col-sm-1">
+										<select class='col-xs-10 col-sm-12' id='decorateDegree' data-toggle="popover" data-trigger='manual'></select>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="unitPrice">单价</label>
+									<div class="col-sm-1">
+										<input id="unitPrice" type="text" class="col-sm-12 v_required v_amount" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="totalPrice">总价</label>
+									<div class="col-sm-1">
+										<input id="totalPrice" type="text" class="col-sm-12 v_required v_amount" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="propertyFee">物业费</label>
+									<div class="col-sm-1">
+										<input id="propertyFee" type="text" class="col-sm-12 v_required v-float" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group" style="margin-top: 20px">
+									<div class="form-group col-sm-12">
+										<label class="col-sm-1 control-label no-padding-right" for="indoores">室内设施</label>
+										<div class="col-sm-7">
+											<input id="indoores" type="text" class="col-sm-12" data-toggle="popover" data-trigger='manual'/>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="form-group col-sm-12">
+										<label class="col-sm-1 control-label no-padding-right" for="comment">备注</label>
+										<div class="col-sm-6">
+											<textarea id="comment" maxlength="128" class="col-xs-10 col-sm-7" rows="5"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<a class="btn-danger" id="houseBtn" style="padding:4px 8px; text-decoration:none">房产信息</a>
+				</div>
+
+				<div class="widget-body" id = "houseData" style="display: none">
+					<div class="widget-main">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<div class="form-group">
+									<label class="col-sm-1 control-label no-padding-right" for="customerId">房源所属人</label>
+									<div class="col-sm-1">
+										<input id="customerId" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="customerPhone">联系方式</label>
+									<div class="col-sm-1">
+										<input id="customerPhone" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+									<label class="col-sm-1 control-label no-padding-right" for="no">楼盘地址</label>
+									<div class="col-sm-2">
+										<input id="no" type="text" class="col-sm-12" readonly="readonly" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-xs-12">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<h4>房源图片信息</h4>
+					<div class="pull-right col-sm-1" style="padding-top:2px">
+						<a class="form-group" id = "houseSourceUpload"></a>
+					</div>
+				</div>
+
+				<div class="row" style="padding-top: 10px;">
+					<div class="col-xs-12">
+						<div class="row-fluid">
+							<ul class="ace-thumbnails" id="houseSourceDrawing">
+
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/building/houseSourceDetail.js']);
+</script>

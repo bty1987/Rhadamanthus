@@ -72,9 +72,9 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "grey"],
                 ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
                 ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "grey"],
-                ["订单号:", v.decorationOrder.orderId == null ? "无" : v.decorationOrder.orderId, "grey"],
-                ["楼盘地址:", ( v.decorationOrder.houseNumber) == null ? "无" : (v.decorationOrder.village.villageName + "" + v.decorationOrder.houseNumber), "grey"],
-                ["监理:", v.decorationOrder.supervisor == null ? "无" : v.decorationOrder.supervisor, "grey"],
+                ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "grey"],
+                ["楼盘地址:", (v.decoration.house) == null ? "无" : (v.decoration.house.village.name + " " + v.decoration.house.houseNumber), "grey"],
+                ["监理:", v.decoration.supervisor == null ? "无" : v.decoration.supervisor.userName, "grey"],
                 ["类型：", v.type == 0 ? "工费" : "扣款", "red"],
                 ["金额:", v.salary, "grey"],
                 ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回"), "grey"]
@@ -138,6 +138,7 @@ jQuery(function ($) {
 
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
+        
     }, "pagenation", "workersalaryPostData", null, false, null, function () {
 
 
@@ -200,6 +201,7 @@ jQuery(function ($) {
     });
 
     $('a[name="export"]', '#pagenation').on("click", function () {
+    	
 
         if ($('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -210,9 +212,9 @@ jQuery(function ($) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-
+        
         com.post(api.salary.pageWorkerSalary, $.extend({}, params.workersalaryPostData, {"paging.noPage": 1}), function (res) {
-
+            
             $.exceler({
                 column: [
                     ["工费Id","wsId"],
@@ -222,11 +224,11 @@ jQuery(function ($) {
                     ["创建时间", "createTime"],
                     ["审批人", 'approver.userName'],
                     ["审批时间", "approveTime"],
-                    ["订单号", "decorationOrder.orderId"],
-                    ['楼盘地址', ['decorationOrder.village', 'decorationOrder.houseNumber']],
-                    ['监理', 'decorationOrder.supervisor'],
+                    ["订单号", "decoration.orderId"],
+                    ['楼盘地址',"decoration.house"],
+                    ['监理', 'decoration.supervisor'],
                     ['金额', 'salary'],
-                    ['工种', 'user.duty'],
+                    ['工种', 'user.duty.name'],
                     ['类型', 'subtype'],
                     ['备注', 'comment'],
                     ['状态',"status"]
@@ -238,10 +240,11 @@ jQuery(function ($) {
                 v.approver.userName = v.approver.userName == null ? "" : v.approver.userName;
                 v.comment = v.comment == null ? "" : v.comment;
                 v.approveTime = v.approveTime == null ? "" : v.approveTime;
-                v.decorationOrder.supervisor = v.decorationOrder.supervisor == null ? "" : v.decorationOrder.supervisor;
-                v.decorationOrder.orderId = v.decorationOrder.orderId == null ? "" : v.decorationOrder.orderId;
-                v.decorationOrder.village = v.decorationOrder.village == null ? "" : v.decorationOrder.village.villageName;
-                v.decorationOrder.houseNumber = v.decorationOrder.houseNumber == null ? "" : v.decorationOrder.houseNumber;
+                v.decoration.supervisor = (v.decoration.supervisor == null ? "" : v.decoration.supervisor.userName);
+                v.decoration.orderId = (v.decoration.orderId == null ? "" : v.decoration.orderId);
+
+                v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.houseNumber +""+ v.decoration.house.village.name);
+
                 v.status =  v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回") ;
                 v.subtype = salaryType[v.subtype];
 
@@ -303,7 +306,6 @@ jQuery(function ($) {
            options["workerSalary.salary"] = $('#workersalary').val();
            options["workerSalary.subtype"] = $("#workersalarySubtype").val();
            options["workerSalary.comment"] = $("#workersalarycomment").val();
-
            com.post(url, options, function () {
                searcher.doSearch();
            });

@@ -816,7 +816,7 @@ var AddReduceDetail = (function(){
 				$('#addSystemDefineItemBtn').removeClass('hide');
 				$('#addItemBtn').removeClass('hide');
 			}
-			addReduceDetail.ordertype = params.decorationOrderType;
+			addReduceDetail.ordertype = params.decorationType;
 			addReduceDetail.arid = params.addReduceId;
 			addReduceDetail.basicParams["addReduce.arId"] = params.addReduceId;
 			addReduceDetail.basicParams["addReduceItem.arId"] = params.addReduceId;

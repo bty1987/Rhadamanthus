@@ -70,21 +70,21 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final short CHARSCALE_COUNT_INT = 0;
 	
-	public static final short ONETYPE_ADD_INT = 0;         //收款
+	public static final short ONETYPE_ADD_INT = 0;         
 	
-	public static final short ONETYPE_REFUND_INT = 1;      //退款
+	public static final short ONETYPE_REFUND_INT = 1;      
 	
-	public static final short ONETYPE_HISTORY_INT = 2;     //历史
+	public static final short ONETYPE_HISTORY_INT = 2;     
 	
-	public static final short TWOTYPE_BASE_INT = 0;        //基础
+	public static final short TWOTYPE_BASE_INT = 0;        
 	
-	public static final short TWOTYPE_DEAL_INT = 1;        //合同
+	public static final short TWOTYPE_DEAL_INT = 1;        
 	
-	public static final short TWOTYPE_ADD_INT = 2;   	   //增项
+	public static final short TWOTYPE_ADD_INT = 2;   	   
 	
-	public static final short TWOTYPE_REDUCE_INT = 3;      //减项
+	public static final short TWOTYPE_REDUCE_INT = 3;      
 	
-	public static final short TWOTYPE_OTHER_INT = 4;       //其他
+	public static final short TWOTYPE_OTHER_INT = 4;       
 
 	private long dpid;
 	

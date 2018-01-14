@@ -42,35 +42,34 @@ var Searcher = function(){
                     var condRule = Condition.getRuleByCondName(val);
                     var $item = null;
                     condRule && ($item = that.createCondItem(val,condRule));
-
                     $item && $item.appendTo(basicConf.$searcher);
                 }),
-                basicConf.$searcher.append($searchBtn),
-                basicConf.$searcher.append($cleanBtn),
-                $searchBtn.click(function(){
-                    if(basicConf.noPagingFlag){
-                        _params = getParams();
-                        if(_params){
-                            queryData(_params);
-                        }
+                    basicConf.$searcher.append($searchBtn),
+                    basicConf.$searcher.append($cleanBtn),
+                    $searchBtn.click(function(){
+                        if(basicConf.noPagingFlag){
+                            _params = getParams();
+                            if(_params){
+                                queryData(_params);
+                            }
 
-                    }else{
-                        basicConf.$pager.hide();
+                        }else{
+                            basicConf.$pager.hide();
 
-                        paging.nowPage["paging.page"] = 0;
-                        paging.nowPostParams = null;
-                        var _params = paging.getParams();
-                        if(_params){
-                            _params["paging.page"] += 1;
-                            paging.getDataByPage( _params);
+                            paging.nowPage["paging.page"] = 0;
+                            paging.nowPostParams = null;
+                            var _params = paging.getParams();
+                            if(_params){
+                                _params["paging.page"] += 1;
+                                paging.getDataByPage( _params);
+                            }
                         }
-                    }
-                }),
-                $cleanBtn.click(function(){
-                	basicConf.$searcher.find('.inline').each(function(i, v){
-                		$($(v).children()[1]) && $($(v).children()[1]).val('');
-                	});
-                })
+                    }),
+                    $cleanBtn.click(function(){
+                        basicConf.$searcher.find('.inline').each(function(i, v){
+                            $($(v).children()[1]) && $($(v).children()[1]).removeAttr('data-typeahead-key').val('');
+                        });
+                    })
             );
         },
         /**
@@ -109,7 +108,8 @@ var Searcher = function(){
 //                    "placeholder" : "请输入" + _rlabel,
                     "name" : condCode,
                     "data-rqs" : _rname,
-                    "data-op" : _rop
+                    "data-op" : _rop,
+                    "data-type":_rtype
                 }).appendTo($item);
                 // $line.addClass("text");
             }
@@ -122,15 +122,16 @@ var Searcher = function(){
                     "data-op": _rop,
                     "data-rqs": _rname,
                     "readonly": true,
+                    "data-type":_rtype
                 }).appendTo($item);
 
                 $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
                     $(this).next().focus();
                 });
             }
-            
+
             if(_rtype == "datePicker"){
-            	$showItem = $('<input>').attr({
+                $showItem = $('<input>').attr({
                     "type": "text",
 //                    "placeholder": "请输入" + _rlabel,
                     "name": condCode,
@@ -138,9 +139,10 @@ var Searcher = function(){
                     "data-rqs": _rname,
                     "data-date-format": "dd-mm-yyyy",
                     "readonly": true,
+                    "data-type":_rtype
                 }).appendTo($item);
-            	
-            	$showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});
+
+                $showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});
             }
 
             if(_rtype=="autofill"){
@@ -151,6 +153,7 @@ var Searcher = function(){
                     "autocomplete": "off",
                     "data-op": _rop,
                     "data-rqs": _rname,
+                    "data-type":_rtype
                 }).appendTo($item);
 
                 $showItem.typeahead({
@@ -163,8 +166,15 @@ var Searcher = function(){
                     }, matcher: function (item) {
                         return true;
                     }, callback: function(data){
-                        this.options.list = data.autoFillList;
-                        this.process(this.options.list);
+                        this.options.list = data[_rresult];
+                        this.flprocess(this.options.list,[_rkey],[_rvalue]);
+                    },
+                    isResultTypeMap: true //必填值为true,获取key,value的标识,
+                    , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
+                        if(v.indexOf('-')!=-1){
+                            v = v.split('-')[0]
+                        }
+                        return v;
                     }
                 });
             }
@@ -175,7 +185,7 @@ var Searcher = function(){
                     "name" : condCode,
                     "data-rqs" : _rname,
                     "data-op" : _rop,
-                    "data-rqs" : _rname
+                    "data-type":_rtype
                 }).append('<option value="">全部</option>').appendTo($item);
 
                 if(_rurl){
@@ -229,10 +239,12 @@ var Searcher = function(){
             _condArr && _condArr.length &&(
                 $.each(_condArr,function(i,val){
                     var $input = $('[name=' + val + ']', basicConf.$searcher);
+                    var _inputType = $input.attr("data-type");
                     var _postName = $input.attr("data-rqs");
                     var _rule = Condition.getRuleByCondName( val);
                     var _reg = _rule.submitConfig.validate;
                     var _inputValue = $input.val();
+                    var _inputKey = _inputValue!=""?$input.attr("data-typeahead-key"):$input.removeAttr("data-typeahead-key");
                     var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
                     if(_inputValue){
 
@@ -250,22 +262,24 @@ var Searcher = function(){
 
                             }else{
                                 $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                                _params['filters[' + _count + '].data'] = _inputValue;
+                                _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
                                 _params['filters[' + _count + '].field'] = _postName;
                                 _params['filters[' + _count + '].op'] = _op;
+                                _params['filters[' + _count + '].inputValue'] = _inputValue;
                                 _count +=1;
                             }
                         }else{
                             $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                            _params['filters[' + _count + '].data'] = _inputValue;
+                            _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
                             _params['filters[' + _count + '].field'] = _postName;
                             _params['filters[' + _count + '].op'] = _op;
+                            _params['filters[' + _count + '].inputValue'] = _inputValue;
                             _count +=1;
                         }
                     }
                 })
             );
-            
+
             if(_params){
                 _params["paging.page"] = this.nowPage["paging.page"];
                 _params["paging.rows"] = this.nowPage["paging.rows"];
@@ -284,7 +298,7 @@ var Searcher = function(){
                 this.showPagenation(result.paging.page, result.paging.rows, result.paging.totalPage, result.paging.totalRecords);
                 //params全局变量,给全局变量赋当前查询条件的值
                 params[basicConf.historyName] = _params;
-                
+
                 (result.paging.data && result.paging.data.length > 0) ? basicConf.displayFunc(result.paging.data) : emptyData();
             }, this), null, false);
         },
@@ -297,21 +311,21 @@ var Searcher = function(){
             $('span[name="rows"]', basicConf.$pager).html(rows);
             $('span[name="totalPage"]', basicConf.$pager).html(totalPage);
             $('span[name="totalRecords"]', basicConf.$pager).html(totalRecords);
-            
+
             $(basicConf.$pager).show();
         },
 
         /*给分页的上一页下一页绑定点击事件*/
         init : function(){
             var _pagenation = this;
-			
-			//增加分页操作元素
+
+            //增加分页操作元素
             basicConf.$pager.html('');
-            
+
             basicConf.$cusBtns && $.each(basicConf.$cusBtns, function(i, v){
-            	v.appendTo(basicConf.$pager);
+                v.appendTo(basicConf.$pager);
             });
-            
+
             var $infodiv = $('<div></div>').addClass('pager-info text-center').appendTo(basicConf.$pager);
             var $di = $('<span></span>').text('第').appendTo($infodiv);
             var $nowPage = $('<span></span>').addClass('bigger-120 blue').attr('name', 'nowPage').appendTo($infodiv);
@@ -325,16 +339,16 @@ var Searcher = function(){
             var $input = $('<input></input>').addClass('fl-page-input').attr('type', 'text').css('font-size', '10px').attr('id', 'pginput').appendTo($infodiv);
             var $di = $('<span></span>').text('页, 条数').appendTo($infodiv);
             var $select = $('<select></select>').addClass('fl-page-select').bindData([{'key': '10', 'value': '10'}, {'key': '30', 'value': '30'}], 'key', 'value').appendTo($infodiv);
-            
+
             var $ul = $('<ul></ul>').addClass('pager pull-right').appendTo($infodiv);
             var $prevli = $('<li></li>').addClass('previous').attr('name', 'prev').appendTo($ul);
             var $preva = $('<a></a>').attr('href', 'javascript:void(0);').text('< 上一页').appendTo($prevli);
             var $nextli = $('<li></li>').addClass('next').attr('name', 'next').appendTo($ul);
             var $nexta = $('<a></a>').attr('href', 'javascript:void(0);').text('下一页 >').appendTo($nextli);
-			
+
             //页面初始化的时候隐藏分页
             basicConf.$pager.hide();
-			
+
             //上一页下一页绑定
             $prevli.click(function(){
                 var _params;
@@ -351,37 +365,37 @@ var Searcher = function(){
                 );
             });
             $input.bind('keypress',function(event){
-            	
-            	var _p = $(this).val();
-            	
-            	if(event.keyCode == "13" && /\d+/.test(_p)){
-            		var _params;
-                	
-                	(_p <= _pagenation.nowPage["paging.totalPage"] && _p >= 1) && (
+
+                var _p = $(this).val();
+
+                if(event.keyCode == "13" && /\d+/.test(_p)){
+                    var _params;
+
+                    (_p <= _pagenation.nowPage["paging.totalPage"] && _p >= 1) && (
                         _params = _pagenation.getParams(),
                         _params && (_params["paging.page"] = parseInt(_p), _pagenation.getDataByPage(_params))
                     );
-            	}
+                }
             });
             $select.change(function(){
-            	_params = _pagenation.getParams(),
-            	_params && (_params["paging.rows"] = $(this).val(), _pagenation.getDataByPage(_params))
+                _params = _pagenation.getParams(),
+                _params && (_params["paging.rows"] = $(this).val(), _pagenation.getDataByPage(_params))
             });
         }
     };
-    
+
     var emptyData = function(){
-    	var $resultList = $('#' + basicConf.resultListId).html('');
-    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+        var $resultList = $('#' + basicConf.resultListId).html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
 
     var queryData = function(_params){
         com.post(basicConf.url, _params, $.proxy(function(result){
             //params全局变量,给全局变量赋当前查询条件的值
             params[basicConf.historyName] = _params;
-            
+
             (result[basicConf.resultListName] && result[basicConf.resultListName].length > 0) ? basicConf.displayFunc(result[basicConf.resultListName]) : emptyData();
         }, this), null, false);
     };
@@ -394,10 +408,12 @@ var Searcher = function(){
         _condArr && _condArr.length &&(
             $.each(_condArr,function(i,val){
                 var $input = $('[name=' + val + ']', basicConf.$searcher);
+                var _inputType = $input.attr("data-type");
                 var _postName = $input.attr("data-rqs");
                 var _rule = Condition.getRuleByCondName( val);
                 var _reg = _rule.submitConfig.validate;
                 var _inputValue = $input.val();
+                var _inputKey = _inputValue!=""?$input.attr("data-typeahead-key"):$input.removeAttr("data-typeahead-key");
                 var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
                 if(_inputValue){
 
@@ -415,22 +431,24 @@ var Searcher = function(){
 
                         }else{
                             $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                            _params['filters[' + _count + '].data'] = _inputValue;
+                            _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
                             _params['filters[' + _count + '].field'] = _postName;
                             _params['filters[' + _count + '].op'] = _op;
+                            _params['filters[' + _count + '].inputValue'] = _inputValue;
                             _count += 1;
                         }
                     }else{
                         $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                        _params['filters[' + _count + '].data'] = _inputValue;
+                        _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
                         _params['filters[' + _count + '].field'] = _postName;
                         _params['filters[' + _count + '].op'] = _op;
+                        _params['filters[' + _count + '].inputValue'] = _inputValue;
                         _count += 1;
                     }
                 }
             })
         );
-        
+
         if(_params){
             _params = $.extend(true,{},_params,basicConf.extraParams);
         }
@@ -438,29 +456,30 @@ var Searcher = function(){
     };
 
     var searchByPresentParams = function(){
-    	var _count = 0;
+        var _count = 0;
         var _params = params[basicConf.historyName] ? params[basicConf.historyName] : {};
-        
+
         //给查询条件赋值
         !jQuery.isEmptyObject(_params) && $.each(_params, function(key, val){
-            var _pname,_pvalue;
+            var _pname,_pvalue,_pkey;
             key.indexOf("field") != -1 && (
                 _pname = val,
-                _pvalue = _params[key.substring(0,key.length-5) + "data"],
-                $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).val(_pvalue),
-                _count++    
+                    _pvalue = _params[key.substring(0,key.length-5) + "inputValue"],
+                    _pkey = _params[key.substring(0,key.length-5) + "data"],
+                    $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).attr('data-typeahead-key',_pkey).val(_pvalue),
+                    _count++
             );
         });
-        
+
         if(!basicConf.noPagingFlag){
             jQuery.isEmptyObject(_params) && (_params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"]);
-            
+
             _params = $.extend({},_params,basicConf.extraParams);
             paging.nowPostParams = _params;
-            
+
             $('.fl-page-input').val(_params["paging.page"]);
             $('.fl-page-select').val(_params["paging.rows"]);
-            
+
             paging.getDataByPage(_params);
         }else{
             _params = $.extend({},_params,basicConf.extraParams);
@@ -493,9 +512,9 @@ var Searcher = function(){
             noPagingFlag && (basicConf.noPagingFlag = noPagingFlag);
             basicConf.resultListName = resultListName;
             basicConf.resultListId = resultListId ? resultListId : "resultList";
-            
-			cusBtns && (basicConf.$cusBtns = cusBtns());
-			
+
+            cusBtns && (basicConf.$cusBtns = cusBtns());
+
             //绑定上一页下一页事件
             !noPagingFlag && paging.init();
             //初始化查询条件

@@ -349,6 +349,7 @@ $(function(){
     }
 
     function successFunctionAreaItemCallback() {
+        functionAreaItem.modal.modal("hide");
         com.showAlert(com.info, "操作成功");
         initFunctionAreaItemList();
     }
@@ -450,8 +451,9 @@ $(function(){
             var quotationClassification,itemName;
             quotationClassification = $(this).attr('data-quotationClassification');
             itemName = $(this).attr('data-itemName');
-            quotationClassification == functionAreaType || "普通" == functionAreaType && ("基础部分" == quotationClassification || "其他部分" == quotationClassification) ? (_params["functionAreaItems[" + i + "].functionArea.faId"] = $("#selectFunctionAreaId").val(), _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(), _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification) : bootbox.alert("不能将(" + itemName + ")添加到该功能区中")
-
+            _params["functionAreaItems[" + i + "].functionArea.faId"] = $("#selectFunctionAreaId").val(),
+            _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(),
+            _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification;
         }), !jQuery.isEmptyObject(_params) && com.post(api.quotation.addFunctionAreaItem, _params, successFunctionAreaItemCallback));
     }
 });

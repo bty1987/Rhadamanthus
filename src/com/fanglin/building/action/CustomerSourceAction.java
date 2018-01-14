@@ -48,18 +48,18 @@ public class CustomerSourceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryCustomerSourceForNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerSourceForNo() throws FLException{
+	@Action(value = "queryCustomerSourceByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerSourceByNo() throws FLException{
 		
-		customerSource = customerSourceService.queryCustomerSourceForNo(customerSource);
+		customerSource = customerSourceService.queryCustomerSourceByNo(customerSource);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "checkCustomerSourceByCidAndType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkCustomerSourceByCidAndType() throws FLException{
+	@Action(value = "checkCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkCustomerSource() throws FLException{
 		
-		customerSource = customerSourceService.checkCustomerSourceByCidAndType(customerSource);
+		customerSource = customerSourceService.checkCustomerSource(customerSource);
 		
 		return SUCCESS;
 	}

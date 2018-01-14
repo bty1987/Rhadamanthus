@@ -46,7 +46,7 @@ jQuery(function ($) {
         businessDept.items.departmenttype.bindData(res.departmentTypes, "dtid", "name", false);
     });//部门类型
     com.post(api.system.queryCityProper, {}, function (res) {//"cityProperId", "cityProperName", true
-        businessDept.items.cityProperSel.bindData(res.cityProperList, "cityProperId", "cityProperName", true);
+        businessDept.items.cityProperSel.bindData(res.cityPropers, "cityProperId", "cityProperName", true);
     });//城市
 
     var displayFunc = (function () {

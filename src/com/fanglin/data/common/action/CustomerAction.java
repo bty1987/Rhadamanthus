@@ -27,6 +27,7 @@ import com.fanglin.data.common.service.CustomerService;
 import com.fanglin.data.common.vo.CustomerPhoneVO;
 import com.fanglin.data.common.vo.CustomerVO;
 
+
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -101,46 +102,6 @@ public class CustomerAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	 @Action(value="addCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String addCustomer() throws FLException{
-	 
-		 customerService.addCustomer(customer);
-
-	    return "success";
-	  }
-
-	  @Action(value="updateCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateCustomer() throws FLException{
-	    customerService.updateCustomer(customer);
-
-	    return "success";
-	  }
-	  
-	  @Action(value="updateCustomerPhoneForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateCustomerPhoneForStatus() throws FLException{
-	    
-		  customerService.updateCustomerPhoneForStatus(customerPhone);
-
-	    return "success";
-	  }
-	  
-	  
-	  @Action(value="addCustomerPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String addCustomerPhone() throws FLException{
-	 
-		 customerService.addCustomerPhone(customerPhone);
-
-	    return "success";
-	  }
-	 
-	  @Action(value="updateCustomerNameAPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateCustomerNameAPhone() throws FLException{
-	 
-		 customerService.updateCustomerNameAPhone(customer);
-
-	    return "success";
-	  }
-	 
 	public CustomerVO getCustomer(){
 		return customer;
 	}
@@ -210,7 +171,5 @@ public class CustomerAction extends BaseListAction {
 	public void setCustomers(List<CustomerVO> customers) {
 		this.customers = customers;
 	}
-
-	
 
 }

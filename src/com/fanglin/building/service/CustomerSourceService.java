@@ -13,9 +13,9 @@ public interface CustomerSourceService {
 	
 	public CustomerSourceVO queryCustomerSourceByCsid(CustomerSourceVO customerSource);
 	
-	public CustomerSourceVO queryCustomerSourceForNo(CustomerSourceVO customerSource) throws FLException;
+	public CustomerSourceVO queryCustomerSourceByNo(CustomerSourceVO customerSource) throws FLException;
 	
-	public CustomerSourceVO checkCustomerSourceByCidAndType(CustomerSourceVO customerSource) throws FLException;
+	public CustomerSourceVO checkCustomerSource(CustomerSourceVO customerSource) throws FLException;
 
 	public void addCustomerSource(CustomerSourceVO customerSource, String userId) throws FLException;
 

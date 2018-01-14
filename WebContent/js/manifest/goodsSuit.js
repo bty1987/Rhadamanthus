@@ -81,7 +81,7 @@ $(function () {
             {cellClass: "color", hasSelectColor: !0},//颜色
             {cellClass: "format",hasSelectFormat: !0},//规格
             {cellClass: "measurementUnit", },//单位
-            {cellClass: "assisTypeName"},//辅类
+            {cellClass: "accessoriesTypeName"},//辅类
             {cellClass: "number" , hasInput :!0},//数量
             {cellClass: "status"},//状态
         ];
@@ -143,7 +143,7 @@ $(function () {
                         $lineInfoWrap.find('.category').text(val.category);
                         $lineInfoWrap.find('.brand').text(val.brand);
                         $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
-                        $lineInfoWrap.find('.assisTypeName').text(val.assisType.name == null ? "" : val.assisType.name);
+                        $lineInfoWrap.find('.accessoriesTypeName').text(val.accessoriesType.name == null ? "" : val.accessoriesType.name);
                         $lineInfoWrap.find('.status').text(val.status == "0" ? "启用" : "禁用");
                         $line.attr({'data-gid' : val.gid, 'data-type' : val.type});
                         com.post(api.inventory.queryColorForEnableByGid,{

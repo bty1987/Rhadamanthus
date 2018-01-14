@@ -35,7 +35,7 @@ jQuery(function($) {
 	cityProper.items.citySel =$("#citySel");
 	cityProper.items.regionSel=$("#regionSel").on("change", function(e, callback){
 		com.post(api.system.queryCityByRegionId, {"city.region.regionId":$(this).val()}, function(res){
-			cityProper.items.citySel.bindData(res.cityList, "cityId", "cityName", false);
+			cityProper.items.citySel.bindData(res.citys, "cityId", "cityName", false);
 			if(callback) callback();
 		});
 	});
@@ -48,7 +48,7 @@ jQuery(function($) {
 	$.extend(com.validator, cityProper.validator);
 	
 	com.post(api.system.queryRegion, {}, function(res){
-		cityProper.items.regionSel.bindData(res.regionList, "regionId", "regionName", false).trigger("change");
+		cityProper.items.regionSel.bindData(res.regions, "regionId", "regionName", false).trigger("change");
 	});
 	
 	var displayFunc  = (function(){

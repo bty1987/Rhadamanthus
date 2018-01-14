@@ -3,6 +3,17 @@
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=utf8">
     <meta name=Generator content="Microsoft Word 14 (filtered)">
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
+    <script src="../../assets/ace/js/bootstrap.min.js"></script>
+    <script src="../../assets/ace/js/bootbox.min.js"></script>
+    <script src="../../assets/ace/js/date-time/moment.min.js"></script>
+    <script src="../../assets/ace/js/date-time/daterangepicker.min.js"></script>
+    <script src="../../assets/ace/js/jquery.gritter.min.js"></script>
+    <script src="../../assets/ace/js/ace-elements.js"></script>
+    <script src="../../assets/ace/js/ace.js"></script>
+    <script src="../../assets/ace/js/jquery.validate.min.js"></script>
+    <script src="../../js/sales/furnitureContract.js"></script>
     <title>臻邻家居交易合同</title>
     <style>
         <!--
@@ -329,109 +340,6 @@ font-family:宋体'>《产品订货明细单》</span></b></p>
         <span style='font-size:14.0pt;font-family:宋体;'>日&nbsp;期:</span>
     </p>
 
-    <script type="text/javascript">
-
-
-        var server = "http://" + document.location.host + "/";
-        var versionCode = "";
-        var cookies = document.cookie.split(";");
-
-        for(var i=0;i<cookies.length;i++){
-            var cookie = cookies[i];
-
-            if(cookie.indexOf("versionCode") != -1){
-                versionCode = cookie.split("=")[1];
-            }else if(cookie.indexOf("authentication") != -1){
-                window.authentication = cookie.split("=")[1];
-            }
-        }
-
-        var jses = "";
-
-        jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
-
-        if("ontouchend" in document){
-            jses += '<script src="' + server + 'assets/ace/js/jquery.mobile.custom.min.js"><\/script>';
-        }
-
-
-        jses += '<script src="' + server + 'js/com/api.js"><\/script>';
-        jses += '<script src="' + server + 'assets/ace/js/bootstrap.min.js"><\/script>';
-        jses += '<script src="' + server + 'assets/ace/js/bootbox.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/ace/js/date-time/moment.min.js"><\/script>';
-        jses += '<script src="' + server + 'assets/ace/js/date-time/daterangepicker.min.js"><\/script>';
-        jses += '<script src="' + server + 'assets/ace/js/jquery.gritter.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/ace/js/ace-elements.js"><\/script>';
-        jses += '<script src="' + server + 'assets/ace/js/ace.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/ace/js/jquery.validate.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'js/api/payment.js"><\/script>';
-        jses += '<script src="' + server + 'js/api/decoration.js"><\/script>';
-        jses += '<script src="' + server + 'js/api/inventory.js"><\/script>';
-        jses += '<script src="' + server + 'js/api/material.js"><\/script>';
-
-        jses += '<script src="' + server + 'js/com/config.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="' + server + 'js/com/server.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="' + server + 'js/com/utils.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="' + server + 'js/com/core.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="' + server + 'js/com/params.js?version=' + versionCode + '"><\/script>';
-
-        jses += '<script src="' + server + 'js/sales/furnitureContract.js"><\/script>';
-
-        document.write(jses);
-    </script>
-
-       <!-- var server = "http://" + document.location.host + "/";
-        var versionCode = "";
-        var cookies = document.cookie.split(";");
-
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-
-            if (cookie.indexOf("versionCode") != -1) {
-                versionCode = cookie.split("=")[1];
-            } else if (cookie.indexOf("authentication") != -1) {
-                window.authentication = cookie.split("=")[1];
-            }
-        }
-
-        var jses = "";
-
-        jses += '<script src="' + server + 'assets/js/jquery-2.0.3.min.js"><\/script>';
-
-        if ("ontouchend" in document) {
-            jses += '<script src="' + server + 'assets/js/jquery.mobile.custom.min.js"><\/script>';
-        }
-
-        jses += '<script src="' + server + 'js/core/api.js"><\/script>';
-        jses += '<script src="' + server + 'assets/js/bootstrap.min.js"><\/script>';
-        jses += '<script src="' + server + 'assets/js/bootbox.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/js/date-time/moment.min.js"><\/script>';
-        jses += '<script src="' + server + 'assets/js/date-time/daterangepicker.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/js/jquery.gritter.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/js/ace-elements.js"><\/script>';
-        jses += '<script src="' + server + 'assets/js/ace.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'assets/js/jquery.validate.min.js"><\/script>';
-
-        jses += '<script src="' + server + 'js/api/inventory.js"><\/script>';
-
-
-        jses += '<script src="' + server + 'js/core/config.js"><\/script>';
-        jses += '<script src="' + server + 'js/core/utils.js"><\/script>';
-        jses += '<script src="' + server + 'js/core/core.js"><\/script>';
-        jses += '<script src="' + server + 'js/core/params.js"><\/script>';
-
-        jses += '<script src="' + server + 'js/sales/furnitureContract.js"><\/script>';
-
-        document.write(jses);
-    </script>-->
 </div>
 </body>
 

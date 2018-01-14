@@ -77,7 +77,7 @@ public class BuildingServiceImpl implements BuildingService {
 		List<BuildingVO> buildingVOs = new ArrayList<BuildingVO>();
 		
 		for (BuildingPO buildingPO : buildingPOs) {
-			buildingVOs.add(BuildingPOToVO(buildingPO));
+			buildingVOs.add(buildingPOToVO(buildingPO));
 		}
 		
 		paging.setData(buildingVOs);
@@ -89,27 +89,7 @@ public class BuildingServiceImpl implements BuildingService {
 		
 		BuildingPO buildingPO = buildingDao.get(building.getBoid());
 		
-		BuildingVO buildingVO = BuildingPOToVO(buildingPO);
-		
-		return buildingVO;
-	}
-	
-	@Override
-	public BuildingVO queryBuilding(BuildingVO building) throws FLException {
-		
-		BuildingPO buildingPO = null;
-		
-		if(building.getHouseSource() != null){
-			buildingPO = buildingDao.queryBuildingByHsid(building.getHouseSource().getHsid());
-		}else if(building.getCustomerSource() != null){
-			buildingPO = buildingDao.queryBuildingByCsid(building.getCustomerSource().getCsid());
-		}
-		
-		if(buildingPO == null){
-			throw new FLException(320010, "房产单不存在");
-		}
-		
-		BuildingVO buildingVO = BuildingPOToVO(buildingPO);
+		BuildingVO buildingVO = buildingPOToVO(buildingPO);
 		
 		return buildingVO;
 	}
@@ -154,11 +134,18 @@ public class BuildingServiceImpl implements BuildingService {
 			customerSourceAgentPO = customerDao.get(cacid);
 		}
 		
-		List<BuildingNodePO> buildingNodes = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType());
+		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
 		
-		BuildingNodePO buildingNodePO = buildingNodes.get(0);
 		BuildingPO buildingPO = new BuildingPO(houseSourcePO, customerSourcePO, houseSourceAgentPO, customerSourceAgentPO, createPO, buildingNodePO);
 		BeanUtil.copyProperties(buildingVO, buildingPO, Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "customerSourceAgent", "creater", "buildingNode"));
+		
+		BuildingSchedulePO buildingSchedulePO = new BuildingSchedulePO(buildingNodePO, buildingPO, createPO);
+		
+		buildingSchedulePO.setName(buildingNodePO.getName());
+		
+		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
+		
+		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
 		
 		//NO
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
@@ -174,6 +161,7 @@ public class BuildingServiceImpl implements BuildingService {
 		houseSourceDao.update(houseSourcePO);
 		customerSourceDao.update(customerSourcePO);
 		buildingDao.save(buildingPO);
+		buildingScheduleDao.save(buildingSchedulePO);
 	}
 
 	@Override
@@ -224,56 +212,7 @@ public class BuildingServiceImpl implements BuildingService {
 		
 	}
 	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateBuildingForPayType(BuildingVO buildingVO, String userId) throws FLException {
-		
-		BuildingPO buildingPO = buildingDao.get(buildingVO.getBoid());
-		
-		if(buildingPO == null){
-			throw new FLException(320010, "房产单不存在");
-		}
-		
-		if(buildingPO.getStatus() != 0){
-			throw new FLException(320011, "房产单状态不可操作");
-		}
-		
-		buildingPO.setPayType(buildingVO.getPayType());
-		
-		buildingDao.update(buildingPO);
-		
-		//修改当前房产单的房产流转
-		UserPO operaterPO = userDao.queryUserByUserId(userId);
-		List<BuildingSchedulePO> buildingSchedules = buildingScheduleDao.queryBuildingScheduleByBoid(buildingVO.getBoid());
-		
-		for (BuildingSchedulePO buildingSchedulePO : buildingSchedules) {
-			
-			buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_DISABLE_SHORT);
-			
-			buildingSchedulePO.setOperater(operaterPO);
-			
-			buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
-			
-			buildingScheduleDao.update(buildingSchedulePO);
-		}
-		
-		//生成新的房产单流转节点
-		
-		List<BuildingNodePO> buildingNodes = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType());
-		
-		BuildingSchedulePO buildingSchedulePO = new BuildingSchedulePO(buildingNodes.get(0), buildingPO, operaterPO);
-		
-		buildingSchedulePO.setName(buildingNodes.get(0).getName());
-		
-		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
-		
-		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
-		
-		buildingScheduleDao.save(buildingSchedulePO);
-		
-	}
-	
-	public BuildingVO BuildingPOToVO(BuildingPO buildingPO){
+	public BuildingVO buildingPOToVO(BuildingPO buildingPO){
 		
 		HouseVO houseVO = new HouseVO(new VillageVO(new CityProperVO()));
 		HouseSourceVO houseSourceVO = new HouseSourceVO(houseVO, new CustomerVO(), new UserVO(), new UserVO());

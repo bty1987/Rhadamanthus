@@ -39,8 +39,8 @@ public class DecorationExportAction extends BaseExportAction{
 	@Autowired
 	private DecorationExportService decorationExportService;
 	
-	@Action(value = "exportDecorationorderByContractTime", results = { @Result(name = "success", type = "stream", params = { "contentType", "text/html", "contentDisposition", "attachment;fileName=${fileName}", "inputName", "downloadFileInputStream", "encode", "true"}) })
-	public String exportDecorationorderByContractTime(){
+	@Action(value = "exportDecorationByContractTime", results = { @Result(name = "success", type = "stream", params = { "contentType", "text/html", "contentDisposition", "attachment;fileName=${fileName}", "inputName", "downloadFileInputStream", "encode", "true"}) })
+	public String exportDecorationByContractTime(){
 		
 		setFileName("订单签单信息.xls");
 		

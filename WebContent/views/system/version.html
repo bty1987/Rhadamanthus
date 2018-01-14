@@ -1,0 +1,54 @@
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- 查询条件-->
+            <div id="condList" class="fl_search clearfix"></div>
+            <!--查询结果-->
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <!--分页-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="versionModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加版本</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="versionNo">版本号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="versionNo" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="createTime">创建时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="createTime" maxlength="64" class="col-xs-10 col-sm-7 v_required date-picker" data-toggle="popover" data-trigger='manual'/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"  style="padding: 0 10px;">
+                            <div class="wysiwyg-editor" id="contents" data-toggle="popover" data-trigger='manual'></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/system/version.js']);
+</script>

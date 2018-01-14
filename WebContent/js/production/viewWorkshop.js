@@ -1,9 +1,7 @@
 $(function(){
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
+    //弹出内容许些样式
+    $('#resultList1').css({'width':'96%','margin':'0 auto'});
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -37,7 +35,6 @@ $(function(){
                 $cell.appendTo($contentWrap);
             });
 
-
             $liTitle.append($indexWrap)
                 .append($contentWrap)
                 .appendTo($ulTitle);
@@ -46,7 +43,6 @@ $(function(){
         };
 
         var creatLine = function(i, v, lastFlag){
-
 
             var $liLine = $('<li></li>').addClass('line');
 
@@ -64,14 +60,17 @@ $(function(){
 
             var $btnGroup = $('<div></div>').addClass('btn-group');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
+
             $btnGroup
                 .append($btnUl)
                 .appendTo($cellOption);
             $liLine.append($indexWrap)
                 .append($contentWrap);
+
             return $liLine;
         };
         return {
+
             init : function(tableId,listData){
                 if(!listData.length){
                     $('#' + tableId).html("暂无工序组信息");
@@ -86,16 +85,16 @@ $(function(){
             }
         };
     })();
-    var $popup = $('#viewPopUp');
-    var mid =  $popup.attr('data-mid');
+
+    var mid =  $('#viewPopUp').attr('data-wsid');
+
     com.post(api.production.queryWorkplanByWsid,{
         "workplan.workshop.wsid": mid
     },function(res){
             displayFunc.init('resultList1',res.workplans);
     });
 
-    //弹出内容许些样式
-    $('#resultList1').css({'width':'96%','margin':'0 auto'});
+
 
 });
 

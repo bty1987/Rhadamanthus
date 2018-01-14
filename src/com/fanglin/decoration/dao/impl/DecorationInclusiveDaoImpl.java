@@ -40,14 +40,15 @@ public class DecorationInclusiveDaoImpl extends DaoImpl<DecorationInclusivePO> i
 				String op = filter.getOp();
 				
 				query.alias("decoration", "decoration");
-				query.alias("decoration.house.village", "village");
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
 				query.alias("decoration.designer", "designer");
 				
 				if("orderId".equals(field)){
 					query.add(query.getCriterion(DecorationInclusivePO.COLUMN_ORDERID_STR, data, op));
 				}else if("designer".equals(field)){
 					query.add(query.getCriterion(DecorationInclusivePO.COLUMN_DESIGNER_STR, data, op));
-				}else if("village".equals(field)){
+				}else if("villageId".equals(field)){
 					query.add(query.getCriterion(DecorationInclusivePO.COLUMN_VILLAGE_STR, data, op));
 				}
 			}

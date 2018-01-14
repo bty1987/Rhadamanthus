@@ -37,12 +37,12 @@ jQuery(function($) {
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 
 			var propertyArr = [
-				["楼盘名:", v.village.villageName, "grey"],
-				["设计师:", v.designer, "grey"],
-				["监理:", v.supervisor, "grey"],
+				["楼盘名:", v.house.village.name, "grey"],
+				["设计师:", v.designer.userName, "grey"],
+				["监理:", v.supervisor.userName, "grey"],
 				["总价:", v.orderTotalPrice, "blue"],
-				["折扣:", v.discount, "blue"],
-				["面积:", v.houseArea, "blue"],
+				//["折扣:", v.discount, "blue"],
+				["面积:", v.house.buildArea, "blue"],
 				["进度:", v.projectStatus, "red"]
 			];
 
@@ -76,7 +76,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init(['orderId', 'village', 'designer', 'schedule'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
+	searcher.init(['c_orderId', 'c_village', 'c_designer', 'c_schedule'], "condList", api.construction.pageDecorationForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "workerAllocationSeacherPostData");
 	

@@ -56,12 +56,12 @@ $(function(){
         };
     })();
 
-    com.post(api.system.queryModule, {'module.system' : config.system}, function(data){
+    com.post(api.system.queryModule, {'module.system' : parent.config.system}, function(data){
         fatherModuleArr =  data.modules;
     }, null, false);
 
     function search(){
-        com.post(api.system.queryOperation, {'operation.system': config.system}, function(data){
+        com.post(api.system.queryOperation, {'operation.system': parent.config.system}, function(data){
             Operation.renderList( data.operations ,'operationTable');
         }, null, false);
     }

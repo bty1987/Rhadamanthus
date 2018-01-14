@@ -53,8 +53,8 @@ $(function(){
         };
         return {
             init : function(){
-                basicConf.postParams = {"backVisit.orderId" : decorationOrderPostData.decorationOrderId};
-                basicConf.historyPage = params.historyOrderPage;
+                basicConf.postParams = {"backVisit.orderId" : params.decorationOrderId};
+                basicConf.historyPage = params.historyPage;
                 
                 getList();
 
@@ -99,13 +99,13 @@ $(function(){
     };
 
     $('#btnBack').click(function(){
-        com.switchPage(params.historyOrderPage);
+        com.switchPage(params.historyPage);
     });
 
     function saveData() {
         if (!com.validate()) {
             var a = {
-                "backVisit.orderId" : decorationOrderPostData.decorationOrderId,
+                "backVisit.orderId" : params.decorationOrderId,
                 "backVisit.content": backVisit.backVisitItems.backVisitContent.val()
             };
             var _people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');

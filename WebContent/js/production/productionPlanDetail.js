@@ -71,6 +71,7 @@ jQuery(function ($) {
             if(productionUserWorkFlows.length != 0){
 
                 $.each(productionUserWorkFlows,function (i,v) {
+
                     var imgUrl = config.media + '/showImg.do' + '?imgBasePath=' + v.userPhoto + '&divFlag=1&width=' + 150 + '&height=' + 150 + '&timestamp='+ new Date().getTime();
 
                     var $photo = $('<img onerror="javascript:this.src=\'./assets/altogether/images/avatar2.png\';" />').attr("src",imgUrl).css("margin", "10px 10px").css("width", "50px").css("height", "50px").css("margin-bottom", "10px");
@@ -78,8 +79,8 @@ jQuery(function ($) {
                     var $operator = $('<span></span>').html('操作人：');
                     var $workflowSpan = $('<span></span>').html(v.operator.currentName != null ? v.operator.currentName : '暂无').addClass('workflowSpan').css('font-size','150%');
 
-                    $workflowli.append($photo).append($operator).append($workflowSpan);
-
+                    $workflowli.append($photo).append($operator).append($workflowSpan)
+                        .append(i%2 == 0 ? null : $('<br/>'))
                 })
 
             }
@@ -143,7 +144,7 @@ jQuery(function ($) {
 
     function addProductionWorkPlans(ppid) {
         var $popup = $('#addPopUp');
-        $popup.attr({'data-ppid': ppid});
+        $popup.attr('data-ppid', ppid);
         //弹出即全屏
         layer.open({
             type: 1,
@@ -152,7 +153,7 @@ jQuery(function ($) {
             content: $popup,
             area:["1200px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
             maxmin: false,
-            zIndex: 9999,
+            zIndex: 9000,
             success: function (layer, index) {
                 params["ppid"] = ppid;
                 $popup.load("views/production/addWorkPlans.html");

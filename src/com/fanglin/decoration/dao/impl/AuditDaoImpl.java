@@ -13,6 +13,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.AuditDao;
 import com.fanglin.decoration.po.AuditPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -26,7 +27,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 
 	@Override
 	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters, int company) {
-		List<String> status = Arrays.asList(new String[]{"咨询", "量房","已报价"});
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR,DecorationPO.STATUS_QUOTATION_STR});
 		
 		PagingQuery<AuditPO> query = pagingQuery(paging,AuditPO.class);
 		

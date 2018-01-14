@@ -1,7 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `quotation`;
 USE `quotation`;
 
-
+DROP TABLE IF EXISTS `addreduce`;
 CREATE TABLE `addreduce` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
@@ -16,12 +16,13 @@ CREATE TABLE `addreduce` (
   KEY `indexone` (`orderId`,`type`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项表';
 
-
+DROP TABLE IF EXISTS `addreduceitem`;
 CREATE TABLE `addreduceitem` (
   `ariId` bigint(20) NOT NULL AUTO_INCREMENT,
   `arId` int(11) NOT NULL COMMENT '增减项编号',
   `itemName` varchar(128) NOT NULL,
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -34,7 +35,7 @@ CREATE TABLE `addreduceitem` (
   KEY `indexone` (`arId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项目';
 
-
+DROP TABLE IF EXISTS `extension`;
 CREATE TABLE `extension` (
   `eId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
@@ -43,13 +44,17 @@ CREATE TABLE `extension` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(256) NOT NULL,
-  PRIMARY KEY (`eId`)
+  PRIMARY KEY (`eId`),
+  KEY `indexone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项';
 
+DROP TABLE IF EXISTS `extensionitem`;
 CREATE TABLE `extensionitem` (
   `eiId` int(11) NOT NULL AUTO_INCREMENT,
   `eId` int(11) NOT NULL,
   `itemName` varchar(128) NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0扩展项增项,1增项自定义,2扩展项减项,3减项自定义',
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -57,10 +62,11 @@ CREATE TABLE `extensionitem` (
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quoteItemId` int(11) NOT NULL,
   `content` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`eiId`)
+  PRIMARY KEY (`eiId`),
+  KEY `indexone` (`eId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项目';
 
-
+DROP TABLE IF EXISTS `functionarea`;
 CREATE TABLE `functionarea` (
   `faId` bigint(20) NOT NULL AUTO_INCREMENT,
   `functionAreaId` varchar(10) NOT NULL,
@@ -75,7 +81,7 @@ CREATE TABLE `functionarea` (
   KEY `indextwo` (`versionId`) 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区表';
 
-
+DROP TABLE IF EXISTS `functionareaquoteitem`;
 CREATE TABLE `functionareaquoteitem` (
   `faiId` bigint(20) NOT NULL AUTO_INCREMENT,
   `functionAreaId` bigint(20) NOT NULL,
@@ -85,8 +91,9 @@ CREATE TABLE `functionareaquoteitem` (
   KEY `indextwo` (`quoteItemId`,`functionAreaId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
 
+DROP TABLE IF EXISTS `quotation`;
 CREATE TABLE `quotation` (
-  `qid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `qid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `quotationName` varchar(64) NOT NULL,
   `decorationStyle` varchar(10) DEFAULT NULL,
@@ -107,9 +114,10 @@ CREATE TABLE `quotation` (
   KEY `indexone` (`orderId`,`createTime`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价表';
 
+DROP TABLE IF EXISTS `quotationfunctionarea`;
 CREATE TABLE `quotationfunctionarea` (
-  `qfaId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `quotationId` bigint(20) NOT NULL,
+  `qfaId` int(11) NOT NULL AUTO_INCREMENT,
+  `quotationId` int(11) NOT NULL,
   `functionAreaName` varchar(10) NOT NULL,
   `functionAreaOrder` int(11) DEFAULT NULL,
   `functionAreaType` varchar(10) DEFAULT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
@@ -119,15 +127,18 @@ CREATE TABLE `quotationfunctionarea` (
   KEY `indexone` (`quotationId`,`functionAreaOrder`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区';
 
-CREATE TABLE `quotationfunctionareaitem` (
+DROP TABLE IF EXISTS `quotationfunctionareaitem0`;
+CREATE TABLE `quotationfunctionareaitem0` (
   `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
   `itemName` varchar(192) NOT NULL,
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
+  `formula` varchar(16) NOT NULL DEFAULT '0',
   `num` decimal(10,3) NOT NULL,
   `discount` tinyint(4) NOT NULL DEFAULT '1',
   `type` tinyint(4) NOT NULL,
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` bigint(20) NOT NULL,
   `quotationItemId` bigint(20) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -136,7 +147,87 @@ CREATE TABLE `quotationfunctionareaitem` (
   KEY `indextwo` (`quotationItemId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
 
+DROP TABLE IF EXISTS `quotationfunctionareaitem1`;
+CREATE TABLE `quotationfunctionareaitem1` (
+  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(192) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `formula` varchar(16) NOT NULL DEFAULT '0',
+  `num` decimal(10,3) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL,
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `quotationFunctionAreaId` bigint(20) NOT NULL,
+  `quotationItemId` bigint(20) DEFAULT NULL,
+  `content` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`qfaiId`),
+  KEY `indexone` (`quotationFunctionAreaId`),
+  KEY `indextwo` (`quotationItemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
 
+DROP TABLE IF EXISTS `quotationfunctionareaitem2`;
+CREATE TABLE `quotationfunctionareaitem2` (
+  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(192) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `formula` varchar(16) NOT NULL DEFAULT '0',
+  `num` decimal(10,3) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL,
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `quotationFunctionAreaId` bigint(20) NOT NULL,
+  `quotationItemId` bigint(20) DEFAULT NULL,
+  `content` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`qfaiId`),
+  KEY `indexone` (`quotationFunctionAreaId`),
+  KEY `indextwo` (`quotationItemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+
+DROP TABLE IF EXISTS `quotationfunctionareaitem3`;
+CREATE TABLE `quotationfunctionareaitem3` (
+  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(192) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `formula` varchar(16) NOT NULL DEFAULT '0',
+  `num` decimal(10,3) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL,
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `quotationFunctionAreaId` bigint(20) NOT NULL,
+  `quotationItemId` bigint(20) DEFAULT NULL,
+  `content` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`qfaiId`),
+  KEY `indexone` (`quotationFunctionAreaId`),
+  KEY `indextwo` (`quotationItemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+
+DROP TABLE IF EXISTS `quotationfunctionareaitem4`;
+CREATE TABLE `quotationfunctionareaitem4` (
+  `qfaiId` int(11) NOT NULL AUTO_INCREMENT,
+  `itemName` varchar(192) NOT NULL,
+  `measurementUnit` varchar(10) NOT NULL,
+  `workType` varchar(15) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `formula` varchar(16) NOT NULL DEFAULT '0',
+  `num` decimal(10,3) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT '1',
+  `type` tinyint(4) NOT NULL,
+  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `quotationFunctionAreaId` bigint(20) NOT NULL,
+  `quotationItemId` bigint(20) DEFAULT NULL,
+  `content` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`qfaiId`),
+  KEY `indexone` (`quotationFunctionAreaId`),
+  KEY `indextwo` (`quotationItemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价功能区报价表';
+
+DROP TABLE IF EXISTS `quotationitem`;
 CREATE TABLE `quotationitem` (
   `qiId` bigint(20) NOT NULL AUTO_INCREMENT,
   `itemId` varchar(10) NOT NULL,
@@ -153,9 +244,10 @@ CREATE TABLE `quotationitem` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `discount` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`qiId`),
-  KEY `indexone` (`itemId`,`versionId`) 
+  KEY `indexone` (`itemId`,`versionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项目表';
 
+DROP TABLE IF EXISTS `quotationversion`;
 CREATE TABLE `quotationversion` (
   `qvId` int(11) NOT NULL AUTO_INCREMENT,
   `versionId` varchar(11) NOT NULL,
@@ -171,6 +263,7 @@ CREATE TABLE `quotationversion` (
   UNIQUE KEY `uniqueone` (`versionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';
 
+DROP TABLE IF EXISTS `systemdefineitem`;
 CREATE TABLE `systemdefineitem` (
   `sdiId` bigint(20) NOT NULL AUTO_INCREMENT,
   `itemId` varchar(10) NOT NULL,

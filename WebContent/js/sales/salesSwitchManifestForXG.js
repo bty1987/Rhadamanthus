@@ -309,9 +309,7 @@ $(function () {
                         ["商品颜色:", v.color.name, "grey", "color"],
                         ["商品规格:", v.format.info, "grey", "format"],
                         ["售价:", v.selling, "grey", "selling"],
-                        //["折扣:", v.discount, "grey", "discount"],
                         ["折扣价:", v.disPrice, "grey", "disPrice"],
-                        //["折让:", v.postDis, "grey", "postDis"],
                         ["折让价:", v.price, "grey", "price"],
                         ["数量:", v.num, "grey", "num"],
                         ["总价:", v.total, "grey", "total"],
@@ -380,7 +378,7 @@ $(function () {
                         "data-num": v.num,
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.goods.name);
+                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
 
                     _label.append($input).append(_span).appendTo($label)
 

@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
-import com.fanglin.approval.service.ApprovalDecorationCustomerService;
+//import com.fanglin.approval.service.ApprovalDecorationCustomerService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
@@ -32,7 +32,7 @@ import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
-import com.fanglin.approval.service.ApprovalDecorationHouseService;
+//import com.fanglin.approval.service.ApprovalDecorationHouseService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -50,8 +50,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Autowired
 	private ApprovalDecorationActivityService approvalDecorationActivityService;
 	
-	@Autowired
-	private ApprovalDecorationCustomerService approvalDecorationCustomerService;
+//	@Autowired
+//	private ApprovalDecorationCustomerService approvalDecorationCustomerService;
 	
 	@Autowired
 	private ApprovalDecorationRefundService approvalDecorationRefundService;
@@ -68,9 +68,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Autowired
 	private ApprovalQuotationDiscountService approvalQuotationDiscountService;
 	
-	@Autowired
-	private ApprovalDecorationHouseService aprovalDecorationHouseService;
-	
+//	@Autowired
+//	private ApprovalDecorationHouseService aprovalDecorationHouseService;
+//	
 	@Autowired
 	private ApprovalManifestDBService approvalManifestDBService;
 	
@@ -161,10 +161,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		switch (type) {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT://1
-				approvalDecorationCustomerService.approvalForCustomer(approvalPO);
+//				approvalDecorationCustomerService.approvalForCustomer(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT://2
-				aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
+//				aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT://3
 				approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);

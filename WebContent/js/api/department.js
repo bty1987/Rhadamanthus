@@ -6,7 +6,8 @@ $.extend(api.index, {
     businessDeptIndex: {url: "/views/department/businessDept.html"},
     materialDeptIndex: {url: "/views/department/materialDept.html"},
     engineeringDeptIndex: {url: "/views/department/engineeringDept.html"},
-    dutyDeptIndex: {url: "/views/department/dutyDept.html"}
+    dutyDeptIndex: {url: "/views/department/dutyDept.html"},
+    departmentTree: {url: "/views/department/departmentTree.html"}
 });
 
 $.extend(api, {department: {

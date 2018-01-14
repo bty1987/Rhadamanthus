@@ -41,9 +41,9 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
 
-            var titleName = '商品,条形码,品类,品牌,单位,件数,辅类,类型,状态';
+            var titleName = '编号,商品,条形码,品类,品牌,单位,件数,辅类,类型,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -65,18 +65,18 @@ $(function () {
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
             //显示字段
             var propertyArr = [
                 //v.gid,
-                //v.no,
+                v.no,
                 v.name,
                 v.barcode,
                 v.category,
                 v.brand,
                 v.measurementUnit,
                 v.pieceNum,
-                v.assisType.name,
+                v.accessoriesType.name,
                 v.type == "0" ? "商品" : "套餐",
                 v.status == "0" ? "启用" : "禁用"
             ];
@@ -135,7 +135,7 @@ $(function () {
                 var brand = $('#layerAdd').find('input[name="brand"]').val(v.brand);
                 var measurementUnit = $('#layerAdd').find('select[name="measurementUnit"]').val(v.measurementUnit);
                 var pieceNum = $('#layerAdd').find('input[name="pieceNum"]').val(v.pieceNum);
-                var atid = $('#layerAdd').find('select[name="atid"]').val(v.assisType.atid);
+                var atid = $('#layerAdd').find('select[name="atid"]').val(v.accessoriesType.atid);
 
                 $('#layerAdd').attr('data-gid', v.gid);
                 openlayer(function () {
@@ -243,14 +243,14 @@ $(function () {
         $('select[name="measurementUnit"]').bindData(res.measurementUnits, "name", "name");
     });
 
-    com.post(api.inventory.queryAssisType, {}, function (res) {
-        var assisTypesStatus = [];
-        $.each(res.assisTypes,function(i,v){
+    com.post(api.inventory.queryAccessoriesType, {}, function (res) {
+        var accessoriesTypesStatus = [];
+        $.each(res.accessoriesTypes,function(i,v){
             if(v.status==0){
-                assisTypesStatus.push(v);
+                accessoriesTypesStatus.push(v);
             }
         });
-        $('select[name="atid"]').bindData(assisTypesStatus, 'atid', 'name', true);
+        $('select[name="atid"]').bindData(accessoriesTypesStatus, 'atid', 'name', true);
     });
 
     $('input[name="brand"]').typeahead({
@@ -686,7 +686,7 @@ $(function () {
                         "goods.brand": brand,
                         "goods.measurementUnit": measurementUnit,
                         "goods.pieceNum": pieceNum,
-                        "goods.assisType.atid": atid == null || atid == "" ? "" : atid
+                        "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
                     }, function (res) {
                         layer.closeAll()
                         goodsSeacher.doSearch();
@@ -701,7 +701,7 @@ $(function () {
                     params.goods["goods.brand"] = brand;
                     params.goods["goods.measurementUnit"] = measurementUnit;
                     params.goods["goods.pieceNum"] = pieceNum;
-                    params.goods["goods.assisType.atid"] = atid == null || atid == "" ? "" : atid;
+                    params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
                     openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
                 }
 
@@ -710,7 +710,7 @@ $(function () {
         } else {
             com.post(api.inventory.updateGoods, {
                 "goods.gid": id,
-                "goods.assisType.atid": atid == null || atid == "" ? "" : atid
+                "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
             }, function (res) {
                 layer.closeAll()
                 goodsSeacher.doSearch();
@@ -745,27 +745,7 @@ $(function () {
         $layerAdd.find('input[name="pieceNum"]').removeAttr('disabled');
     }
 
-    //function checkRowValue($line) {
-    //    var flag = true;
-    //
-    //    var pieceNum = $line.find('input[name="pieceNum"]');
-    //    var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-    //    if (!(numRex.test(pieceNum.val()) && parseFloat(pieceNum.val()) >= 1)) {
-    //        pieceNum.focus().select();
-    //        pieceNum.addClass('tooltip-info').attr({
-    //            "data-rel": "popover",
-    //            "data-placement": "right",
-    //            "data-original-title": "",
-    //            "title": "",
-    //            "data-content": "数量输入内容格式错误!"
-    //        }).popover('show');
-    //        flag = false;
-    //    } else {
-    //        pieceNum.popover('destroy');
-    //    }
-    //
-    //    return flag;
-    //}
+
 
 
 });

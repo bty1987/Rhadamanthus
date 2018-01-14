@@ -22,7 +22,7 @@ public class HouseSourceDaoImpl extends DaoImpl<HouseSourcePO> implements HouseS
 	@Override
 	public List<HouseSourcePO> pageHouseSource(Paging paging, List<Filter> filters) {
 		
-		//条件：城区(楼盘) , 单价 , 面积 , 朝向 , 户型(房间数)
+		//条件：城区(楼盘) , 单价 , 面积 , 朝向 , 户型(房间数), 房源类型, 装修程度, 房产类型
 		PagingQuery<HouseSourcePO> query = pagingQuery(paging, HouseSourcePO.class);
 		
 		if(filters != null){
@@ -60,6 +60,18 @@ public class HouseSourceDaoImpl extends DaoImpl<HouseSourcePO> implements HouseS
 					String price[] = filter.getData().split("-");
 					query.add(Restrictions.ge("totalPrice", Float.valueOf(price[0])));
 					query.add(Restrictions.le("totalPrice", Float.valueOf(price[1])));
+				}else if("houseSourceType".equals(filter.getField())){
+					query.add(query.getCriterion("type", Short.valueOf(data), op));
+				}else if("decorateDegree".equals(filter.getField())){
+					query.add(query.getCriterion("decorateDegree", Short.valueOf(data), op));
+				}else if("type".equals(filter.getField())){
+					query.add(query.getCriterion("house.type", Short.valueOf(data), op));
+				}else if("allowLoan".equals(filter.getField())){
+					query.add(query.getCriterion("allowLoan", Short.valueOf(data), op));
+				}else if("housingGrade".equals(filter.getField())){
+					query.add(query.getCriterion("housingGrade", data, op));
+				}else if("rentType".equals(filter.getField())){
+					query.add(query.getCriterion("rentType", Short.valueOf(data), op));
 				}
 			}
 			
@@ -70,14 +82,14 @@ public class HouseSourceDaoImpl extends DaoImpl<HouseSourcePO> implements HouseS
 	}
 	
 	@Override
-	public HouseSourcePO queryHouseSourceForNo(String no) {
+	public HouseSourcePO queryHouseSourceByNo(String no) {
 		
 		return (HouseSourcePO)session().createCriteria(HouseSourcePO.class).add(Restrictions.eq(HouseSourcePO.COLUMN_NO_STR, no)).uniqueResult();
 		
 	}
 	
 	@Override
-	public HouseSourcePO checkHouseSourceByHidAndType(Long hid, Short type) {
+	public HouseSourcePO checkHouseSource(Long hid, Short type) {
 		
 		return (HouseSourcePO)session().createCriteria(HouseSourcePO.class).add(Restrictions.eq(HouseSourcePO.COLUMN_HID_STR, hid)).add(Restrictions.eq(HouseSourcePO.COLUMN_TYPE_STR, type)).uniqueResult();
 	

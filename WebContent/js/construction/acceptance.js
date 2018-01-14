@@ -29,11 +29,11 @@ jQuery(function($) {
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 
 			var propertyArr = [
-				["楼盘名:", v.village.villageName, "grey"],
-				["设计部门:", v.designDepartment, "grey"],
-				["设计师:", v.designer, "grey"],
-				["监理:", v.supervisor, "grey"],
-				["面积:", v.houseArea, "blue"],
+				["楼盘名:", v.house.village.name, "grey"],
+				["设计部门:", v.designer.dept.deptName, "grey"],
+				["设计师:", v.designer.userName, "grey"],
+				["监理:", v.supervisor.userName, "grey"],
+				["面积:", v.house.buildArea, "blue"],
 				["进度:", v.projectStatus, "red"],
 			];
 
@@ -67,7 +67,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	searcher.init(['orderId', 'village', 'houseNumber', 'supervisor', 'acceptanceFlag'], "condList", api.construction.pageDecorationOrderForAcceptance, function(list){
+	searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_supervisor', 'c_acceptanceFlag'], "condList", api.construction.pageDecorationForAcceptance, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "acceptanceSeacherSeacherPostData");
 

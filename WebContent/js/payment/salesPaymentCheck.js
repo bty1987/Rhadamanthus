@@ -1,29 +1,20 @@
 
 $(function () {
     var salesPaymentForStatus = {
-        //付款方式选择 cash:现金 bank:银行 checkv:转账 installment:分期 accounts:对公 advance:预付款 coupon:卷值
         salesLayerNameData: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"],
 
         salesPaymentTypeData: {},
-        salesPaymentRevTypeData: {},//反向
-        //卷值类型
+        salesPaymentRevTypeData: {},
         couponType: {},
-        //卷值类型信息
         couponTypeData: {},
-        //客户id
         customerId: null,
-        //银行卡信息集合
         bankDataList: [],
-        //销售款子项
         salesPaymentItems: {},
-        //多条
         items: {},
 
         editFlag: false,
         historyFlag: false,
-        //批量
         batchFlag: true,
-        //校验
         validator: {
             price: {
                 type: 'v_price',
@@ -31,8 +22,8 @@ $(function () {
                 errorMsg: "价格内容输入错误"
             }
         }
-    }
-//销售单提交信息
+    };
+
     var salesPaymentPostDataForStauts = {};
 
     com.post(api.common.queryReceiptType, {}, function (res) {
@@ -108,14 +99,14 @@ $(function () {
                 var propertyArr = [
                     ["订单号:", v.sales.orderId, "grey"],
                     ["销售单号:", v.sales.no, "grey"],
-                    ["楼盘地址:", v.sales.village.villageName+" "+ v.sales.houseNumber, "grey"],
-                    ["客户:", v.sales.customer.customerName, "grey"],
-                    ["品牌:", v.brand, "grey"],
+                    ["楼盘地址:", v.sales.house.village.name+" "+ v.sales.house.houseNumber, "grey"],
+                    ["客户:", v.sales.customer.name, "grey"],
+                    ["品牌:", v.sales.brand, "grey"],
                     ["应收金额:", v.referMoney, "blue"],
-                    ["收款人:", v.salesReceipt.collecterName, "grey"],
+                    ["收款人:", v.salesReceipt.collecter.currentName, "grey"],
                     ["收款时间:", v.salesReceipt.collectTime, "grey"],
                     ["状态:", v.status == 1 ? '待确认' : '已确认', "red"],
-                    ["备注:", v.salesReceipt.des, "grey"],
+                    ["备注:", v.salesReceipt.comment, "grey"],
                 ];
 
                 var $label = $('<label></label>').addClass('control-label').css({
@@ -133,7 +124,7 @@ $(function () {
 
                 var _span = $('<span></span>').addClass('lbl blue bigger-150').html(salesPaymentForStatus.salesPaymentTypeData[v.type]);
 
-                _label.append($input).append(_span).appendTo($label)
+                _label.append($input).append(_span).appendTo($label);
 
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
@@ -245,16 +236,16 @@ $(function () {
                 var propertyArr = [
                     ["订单号:", v.sales.orderId, "grey"],
                     ["销售单号:", v.sales.no, "grey"],
-                    ["楼盘地址:", v.sales.village.villageName+" "+ v.sales.houseNumber, "grey"],
-                    ["客户:", v.sales.customer.customerName, "grey"],
-                    ["品牌:", v.brand, "grey"],
+                    ["楼盘地址:", v.sales.house.village.name+" "+ v.sales.house.houseNumber, "grey"],
+                    ["客户:", v.sales.customer.name, "grey"],
+                    ["品牌:", v.sales.brand, "grey"],
                     ["应收金额:", v.referMoney, "blue"],
-                    ["收款人:", v.salesReceipt.collecterName, "grey"],
+                    ["收款人:", v.salesReceipt.collecter.currentName, "grey"],
                     ["收款时间:", v.salesReceipt.collectTime, "grey"],
-                    ["确认人:", v.salesReceipt.confirmerName, "grey"],
+                    ["确认人:", v.salesReceipt.confirmer.currentName, "grey"],
                     ["确认时间:", v.salesReceipt.confirmTime, "grey"],
                     ["状态:", v.status == 1 ? '待确认' : '已确认', "red"],
-                    ["备注:", v.salesReceipt.des, "grey"],
+                    ["备注:", v.salesReceipt.comment, "grey"],
                 ];
 
                 $.each(propertyArr, function (index, value) {
@@ -326,12 +317,12 @@ $(function () {
 
             $impa.click(function () {
                 salesPaymentForConfirmImport("hpagenation");
-            })
+            });
 
             return [$impa];
         }, "hresultList");
 
-    })
+    });
 
     function salesPaymentForCollentImport(id) {
 
@@ -346,18 +337,19 @@ $(function () {
         }
 
         com.post(api.payment.pageSalesPaymentForCollect, $.extend({}, params.salesPaymentForStatusPostData, {"paging.noPage": 1}), function (res) {
+
             $.exceler({
                 column: [
                     ["订单号", "sales.orderId"],
                     ["销售单号", "sales.no"],
-                    ['楼盘地址', ['sales.village.villageName','sales.houseNumber']],
-                    ['品牌', 'brand'],
+                    ['楼盘地址', ['sales.house.village.name','sales.house.houseNumber']],
+                    ['品牌', 'sales.brand'],
                     ['应收金额', 'referMoney'],
-                    ['收款人', 'salesReceipt.collecterName'],
+                    ['收款人', 'salesReceipt.collecter.currentName'],
                     ['收款时间', 'salesReceipt.collectTime'],
                     ['类型', 'type'],
                     ['状态', 'status'],
-                    ['备注', 'salesReceipt.des'],
+                    ['备注', 'salesReceipt.comment'],
                     ['现金', 'salesReceipt.cash'],
                     ['银行', ['salesReceipt.bank', 'salesReceipt.bankInfo']],
                     ['转账', ['salesReceipt.checkv', 'salesReceipt.checkvBank']],
@@ -466,7 +458,7 @@ $(function () {
         });
         $.each(spids, function (index, value) {
             option["spids[" + index + "]"] = value;
-        })
+        });
 
         layer.confirm('确定要将符合条件的所有收款项目,置为已确认状态吗?', {
             btn: ['确定', '取消'] //按钮
@@ -487,10 +479,11 @@ $(function () {
             com.showAlert(com.warning, "收款人不匹配，不能打印");
             return false;
         }else{
+            params.salesReceiptSrId = srId;
             com.popup("专用收款收据__订单编号：" + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
                 parent.layer.getFrameIndex(window.name);
             },null,true);
         }
-    };
+    }
 
 });

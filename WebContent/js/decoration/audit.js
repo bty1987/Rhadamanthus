@@ -26,7 +26,7 @@ jQuery(function($) {
         var creatLine = function (v) {
             com.sealJournal("info",v)
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decorationOrder.orderId));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -38,16 +38,15 @@ jQuery(function($) {
 
             var propertyArr = [
                 //显示的信息类型,显示信息的数据,显示信息的颜色
-                ["楼盘地址:", v.decorationOrder.village.villageName + ' ' + v.decorationOrder.houseNumber, "grey"],
-                ["客户:", v.decorationOrder.customer.customerName, "grey"],
-                ["设计师:", v.decorationOrder.designer, "grey"],
-                ["设计部:", v.decorationOrder.designDepartment, "grey"],
-                ["设计部经理:", v.deptDutyName, "grey"],
-                ["面积:", v.decorationOrder.houseArea, "grey"],
-                ["量房时间:", v.decorationOrder.createTime , "grey"],
-                ["签单时间:", v.decorationOrder.contractTime, "grey"],
-                ["类型:", v.decorationOrder.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
-                ["状态:", v.decorationOrder.status, "red"],
+                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
+                ["客户:", v.decoration.customer.customerName, "grey"],
+                ["设计师:", v.decoration.designer.currentName, "grey"],
+                ["设计部:", v.decoration.designer.dept.deptName, "grey"],
+                ["面积:", v.decoration.houseArea, "grey"],
+                ["量房时间:", v.decoration.measureTime , "grey"],
+                ["签单时间:", v.decoration.contractTime, "grey"],
+                ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
+                ["状态:", v.decoration.status, "red"],
                 ["审核状态:", v.auditer?'已审核':'未审核', "red"],
             ];
             if(v.auditer){
@@ -68,16 +67,16 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function(){
-                auditScale(v.decorationOrder.orderId,v.decorationOrder.type, v.versionId, v.notSalesmanRate);
+                auditScale(v.decoration.orderId,v.decoration.type, v.versionId, v.notSalesmanRate);
             })
 
             $btnPrice.click(function(){
                 com.sealJournal("info",v)
-                viewAuditRecord(v.decorationOrder.orderId, v.designerId,v.deptId);
+                viewAuditRecord(v.decoration.orderId, v.decoration.designer.uid,v.decoration.designer.dept.deptId);
             });
 
             $btnAddMinus.click(function(){
-                viewDecorationOrderTimelineIndex(v.decorationOrder.orderId);
+                viewdecorationTimelineIndex(v.decoration.orderId);
             })
 
             $btnInfo && $btnInfo.click(function(){
@@ -93,7 +92,8 @@ jQuery(function($) {
             params["designerId"] = designerId;
             params["deptId"] = deptId;
             params['auditStatusType'] = 'admin';
-            params['rollback'] = api.index.auditIndex.url;
+            params['historyPage'] = api.index.auditIndex.url;
+            params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}]
             com.switchPage(api.index.auditRecordIndex.url);
         }
 
@@ -110,7 +110,7 @@ jQuery(function($) {
             }
         }
     })();
-    var _condArr = ['orderId', 'village', 'designer','supervisor','designerDepartmentId',
+    var _condArr = ['orderId', 'village', 'designer','c_supervisor','designerDepartmentId',
         'createTimeDateRange','signTimeDateRange','auditTime','status','auditStatus','auditName'];
     var searcher = new Searcher();
     //查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
@@ -139,11 +139,13 @@ jQuery(function($) {
         params["orderType"] = type;
         params["versionId"] = versionId;
         params["notSalesmanRate"] = notSalesmanRate;
-        com.switchPage(api.index.auditDetail.url);
+        params['historyPage'] = api.index.auditIndex.url;
+        params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",wizard:{"editPicture":true} },{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}]
+        com.switchPage(api.index.decorationDetailIndex.url);
     }
 
-    var viewDecorationOrderTimelineIndex = function(orderId){
+    var viewdecorationTimelineIndex = function(orderId){
         params.decorationOrderId = orderId;
-        com.switchPage(api.index.decorationOrderTimelineIndex.url);
+        com.switchPage(api.index.decorationTimelineIndex.url);
     }
 })

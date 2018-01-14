@@ -55,8 +55,8 @@ public class VillageServiceImpl implements VillageService {
 		VillagePO villagePO = villageDao.get(villageVO.getNo());
 		
 		if (villagePO == null) {
-		      throw new FLException(130003, "楼盘信息不存在");
-		    }
+			throw new FLException(130003, "楼盘信息不存在");
+	    }
 		
 		villageVO = covertBean(villagePO);
 		
@@ -81,11 +81,13 @@ public class VillageServiceImpl implements VillageService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addVillage(VillageVO villageVO)throws FLException{
-	 List<VillagePO> villagePOs = villageDao.queryVillageByName(villageVO.getName());
-		//缺少一个错误编码:楼盘信息已存在
+	public int addVillage(VillageVO villageVO)throws FLException{
+		
+		List<VillagePO> villagePOs = villageDao.queryVillageByName(villageVO.getName());
+		
 		if(villagePOs.size() > 0){
-			throw new FLException(130003, "楼盘信息不存在");
+			
+			throw new FLException(130020, "楼盘已存在");
 		}
 		
 		VillagePO villagePO = new VillagePO();
@@ -106,11 +108,13 @@ public class VillageServiceImpl implements VillageService {
 	    villagePO.setPinyinAll((String)PinYin4Util.getPinyin(villageVO.getName()).get(0));
 
 	    villageDao.save(villagePO);
+	    
+	    return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateVillage(VillageVO villageVO) throws FLException{
+	public int updateVillage(VillageVO villageVO) throws FLException{
 		
 		VillagePO villagePO = villageDao.get(villageVO.getNo());
 
@@ -127,12 +131,14 @@ public class VillageServiceImpl implements VillageService {
 	    villagePO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 	    villagePO.setPinyinAll((String)PinYin4Util.getPinyin(villageVO.getName()).get(0));
 
-	   villageDao.update(villagePO);
+	    villageDao.update(villagePO);
+	    
+	    return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateVillageForStatus(VillageVO villageVO) throws FLException{
+	public int updateVillageForStatus(VillageVO villageVO) throws FLException{
 	 
 		VillagePO villagePO = villageDao.get(villageVO.getNo());
 
@@ -142,12 +148,14 @@ public class VillageServiceImpl implements VillageService {
 
 	    villagePO.setStatus(villageVO.getStatus());
 
-	   villageDao.update(villagePO);
+	    villageDao.update(villagePO);
+	    
+	    return 0;
 	}
 	                                                                          
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateVillageForPosition(VillageVO villageVO) throws FLException{
+	public int updateVillageForPosition(VillageVO villageVO) throws FLException{
 		 
 		VillagePO villagePO = (VillagePO)this.villageDao.get(villageVO.getNo());
 
@@ -159,6 +167,8 @@ public class VillageServiceImpl implements VillageService {
 	    villagePO.setY(villageVO.getY());
 
 	    villageDao.update(villagePO);
+	    
+	    return 0;
 	}
 	
 	

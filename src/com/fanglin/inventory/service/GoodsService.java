@@ -29,7 +29,7 @@ public interface GoodsService {
 	
 	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO,int company);
 	
-	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO,int company);
+	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO);
 	
 	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO,int company);
 	

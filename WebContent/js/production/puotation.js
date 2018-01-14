@@ -1,6 +1,4 @@
-﻿
-
-$(function () {
+﻿$(function () {
     var backBtn = $('#backBtn');
     var addpuotationBtn = $('#addpuotationBtn');
     var pid =params["pid"];
@@ -174,7 +172,7 @@ $(function () {
             content: $('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
-            zIndex:9999,
+            zIndex:9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);
@@ -195,7 +193,7 @@ $(function () {
             content: $('#layerAdd2'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
-            zIndex:9999,
+            zIndex:9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);

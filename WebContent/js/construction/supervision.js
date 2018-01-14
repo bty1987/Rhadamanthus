@@ -33,12 +33,12 @@ $(function(){
 			var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 
 			var propertyArr = [
-				["楼盘名:", v.village.villageName + " " + v.houseNumber, "grey"],
-				["设计师:", v.designer, "grey"],
-				["监理:", v.supervisor, "grey"],
+				["楼盘名:", v.house.village.name + " " + v.house.houseNumber, "grey"],
+				["设计师:", v.designer.userName, "grey"],
+				["监理:", v.supervisor.userName, "grey"],
 				["总价:", v.orderTotalPrice, "blue"],
-				["折扣:", v.discount, "blue"],
-				["面积:", v.houseArea, "blue"],
+				//["折扣:", v.discount, "blue"],
+				["面积:", v.house.buildArea, "blue"],
 				["进度:", v.projectStatus, "red"],
 			];
 
@@ -85,7 +85,7 @@ $(function(){
 
 	var ActivitySeacher = new Searcher();
 	
-	ActivitySeacher.init(['orderId', 'village', 'houseNumber', 'designer', 'schedule', 'projectStatusFlag'], "condList", api.construction.pageDecorationOrderForConstruction, function(list){
+	ActivitySeacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "condList", api.construction.pageDecorationForConstruction, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
 	
@@ -97,7 +97,7 @@ $(function(){
 	function viewAddReduceIndex(orderId, type){
 		params.decorationOrderId = orderId;
 	    params.decorationOrderType = type;
-	    params.historyOrderPage = api.index.supervisionIndex.url;
+		params.historyPage = api.index.supervisionIndex.url;
 	    com.switchPage(api.index.addReduceIndex.url);
 	}
 
@@ -109,7 +109,7 @@ $(function(){
 	function viewDelGold(orderId){
 		params['decorationOrderId'] = orderId;
 		params['auditStatusType'] = 'select';
-		params['rollback'] = api.index.supervisionIndex.url;
+		params['historyPage'] = api.index.supervisionIndex.url;
 		com.switchPage(api.index.auditRecordIndex.url);
 	}
 

@@ -6,30 +6,29 @@ var receipt = {
 };
 
 jQuery(function($) {
-	Api().init('../../js/api/');
+
+	var params = {};
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+	$ = parent.$;
+
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
+	params = parent.params;
 	
-	var p = window.location.search.substr(1);
-	var a = p.split("&");
-	
-	if(p.indexOf('time=') != -1){
-        params.loginTime = parent.params.loginTime;
-	}
-	
-	var queryDecorationOrderForCommonByOrderId = api.decoration.queryDecorationOrderForCommonByOrderId;
-	
-	queryDecorationOrderForCommonByOrderId.url = queryDecorationOrderForCommonByOrderId.url + "?" + p;
 
-	com.post(queryDecorationOrderForCommonByOrderId, {}, function(res){
-		receipt.order = res.decorationOrder;
+	var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
+	
+	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.decorationOrderSOrderId}, function(res){
+		receipt.order = res.decoration;
 	}, null, false);
 	
 	var queryServicePaymentForNotInitBySrId = api.payment.queryServicePaymentForNotInitBySrId;
 
-	queryServicePaymentForNotInitBySrId.url = queryServicePaymentForNotInitBySrId.url + "?" + p;
-	
-	com.post(queryServicePaymentForNotInitBySrId, {}, function(res){
+	com.post(queryServicePaymentForNotInitBySrId, {"serviceReceipt.srId":params.serviceReceiptSrId}, function(res){
 		var payments = res.servicePayments;
 
 		for(var i=0;i<payments.length;i++){
@@ -42,14 +41,12 @@ jQuery(function($) {
 	
 	var queryServiceReceiptBySrId = api.payment.queryServiceReceiptBySrId;
 
-	queryServiceReceiptBySrId.url = queryServiceReceiptBySrId.url + "?" + p;
-	
-	com.post(queryServiceReceiptBySrId, {}, function(res){
+	com.post(queryServiceReceiptBySrId, {"serviceReceipt.srId":params.serviceReceiptSrId}, function(res){
 		
 		var serviceReceiptDes = "";
 
 		var serviceReceipt = res.serviceReceipt;
-		
+
 		if(parseFloat(serviceReceipt.cash)!=0){
 			var tem = {
 				"paymentId":serviceReceipt.srId,
@@ -106,6 +103,7 @@ jQuery(function($) {
 		}
 		
 		receipt.order.serviceReceiptDes = serviceReceiptDes;
+		receipt.serviceReceipt = res.serviceReceipt;
 	}, null, false);
 	
 	if(receipt.payments.length != 0 && receipt.receipts.length != 0){
@@ -136,7 +134,7 @@ function generateOneReceipt(){
 		if(i != 0){
 			var pageNext = $("#<div></div>").addClass("PageNext").appendTo(decorationPaymentReceipt);
 		}
-		
+
 		if(receipt.order.supervisor != null){
 			supervisor = receipt.order.supervisor;
 		}
@@ -156,15 +154,15 @@ function generateOneReceipt(){
 		var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 		var noReceiptTd = $('<td style="width: 15%"></td>').text('订单编号: ' + receipt.order.orderId).appendTo(orderReceiptTr);
 		var timeReceiptTd = $('<td style="width: 20%"></td>').text('合同编号: ' + receipt.order.contractCode).appendTo(orderReceiptTr);
-		var customerReceiptTd = $('<td style="width: 35%"></td>').html('设 计 师: ' + receipt.order.designer + "-" + receipt.order.designDepartment).appendTo(orderReceiptTr);
+		var customerReceiptTd = $('<td style="width: 35%"></td>').html('设 计 师: ' + receipt.order.designer.currentName + "-" + receipt.order.designer.dept.deptName).appendTo(orderReceiptTr);
 		var designerReceiptTd = $('<td style="width: 30%"></td>').text('').appendTo(orderReceiptTr);
 		
 		
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-		var addrReceiptTd = $('<td colspan="2"></td>').text('客户地址: ' + receipt.order.village.villageName + receipt.order.houseNumber).appendTo(presonReceiptTr);
+		var addrReceiptTd = $('<td colspan="2"></td>').text('客户地址: ' + receipt.order.house.village.name + receipt.order.house.houseNumber).appendTo(presonReceiptTr);
 		var supervisorNameTd = $('<td style="width: 35%"></td>').text('收款日期: ' + first.collectTime).appendTo(presonReceiptTr);
-		var designerReceiptTd = $('<td style="width: 30%"></td>').text('监 理: ' + supervisor).appendTo(presonReceiptTr);
-		
+		var designerReceiptTd = $('<td style="width: 30%"></td>').text('监 理: ' + (supervisor.currentName == null ? "-" : supervisor.currentName)).appendTo(presonReceiptTr);
+
 		var sumMoney = 0;
 
 		var recePaymentTr = $('<tr></tr>').appendTo(receiptTable);
@@ -212,7 +210,7 @@ function generateOneReceipt(){
 		var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);;
 		var summaryReceiptTd = $('<td colspan="4"></td>').appendTo(summaryReceiptTr);
 		var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
-		var receReceiptSpan = $('<span></span>').text('收款人: ' + first.collectUser + "  ").appendTo(summaryReceiptDiv);
+		var receReceiptSpan = $('<span></span>').text('收款人: ' + receipt.serviceReceipt.collecter.currentName + "  ").appendTo(summaryReceiptDiv);
 		var cashierReceiptSpan = $('<span></span>').text(' 交款人: ').appendTo(summaryReceiptDiv);
 		
 		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);

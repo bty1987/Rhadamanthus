@@ -15,8 +15,8 @@ public interface HouseService {
 	
 	public HouseVO queryHouseByNoAHnum(HouseVO houseVO) throws FLException;
 	
-	public void addHouse(HouseVO house) throws FLException ;
+	public int addHouse(HouseVO house) throws FLException ;
 	
-	public void updateHouse(HouseVO house) throws FLException;
+	public int updateHouse(HouseVO house) throws FLException;
 	
 }

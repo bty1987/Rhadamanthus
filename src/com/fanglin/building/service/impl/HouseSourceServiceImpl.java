@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.building.dao.BuildingDrawingDao;
+import com.fanglin.building.dao.BuildingDao;
 import com.fanglin.building.dao.HouseSourceDao;
-import com.fanglin.building.po.BuildingDrawingPO;
+import com.fanglin.building.po.BuildingPO;
 import com.fanglin.building.po.CustomerSourcePO;
 import com.fanglin.building.po.HouseSourcePO;
 import com.fanglin.building.service.HouseSourceService;
@@ -61,7 +61,7 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	private CustomerPhoneDao customerPhoneDao;
 	
 	@Autowired
-	private BuildingDrawingDao buildingDrawingDao;
+	private BuildingDao buildingDao;
 	
 	@Override
 	public void pageHouseSource(Paging paging, List<Filter> filters) {
@@ -71,8 +71,6 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		
 		for (HouseSourcePO houseSourcePO : houseSourcePOs) {
 			HouseSourceVO houseSourceVO = houseSourcePOToVO(houseSourcePO);
-			List<BuildingDrawingPO> buildingDrawings = buildingDrawingDao.queryBuildingDrawing(houseSourceVO.getHsid(), BuildingDrawingPO.TYPE_HSDRAWING_INT);
-			houseSourceVO.setDrawingNum(buildingDrawings.size());
 			houseSourceVOs.add(houseSourceVO);
 		}
 		
@@ -90,9 +88,9 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	}
 	
 	@Override
-	public HouseSourceVO queryHouseSourceForNo(HouseSourceVO houseSource) throws FLException {
+	public HouseSourceVO queryHouseSourceByNo(HouseSourceVO houseSource) throws FLException {
 		
-		HouseSourcePO houseSourcePO = houseSourceDao.queryHouseSourceForNo(houseSource.getNo());
+		HouseSourcePO houseSourcePO = houseSourceDao.queryHouseSourceByNo(houseSource.getNo());
 		
 		if(houseSourcePO == null){
 			throw new FLException(320005, "房源不存在");
@@ -104,9 +102,9 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	}
 	
 	@Override
-	public HouseSourceVO checkHouseSourceByHidAndType(HouseSourceVO houseSource) throws FLException {
+	public HouseSourceVO checkHouseSource(HouseSourceVO houseSource) throws FLException {
 		
-		HouseSourcePO houseSourcePO = houseSourceDao.checkHouseSourceByHidAndType(houseSource.getHouse().getHid(), houseSource.getType());
+		HouseSourcePO houseSourcePO = houseSourceDao.checkHouseSource(houseSource.getHouse().getHid(), houseSource.getType());
 		
 		if(houseSourcePO == null){
 			throw new FLException(320005, "房源不存在");
@@ -202,6 +200,14 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		
 		if(houseSourcePO.getStatus() == 2){
 			throw new FLException(320006, "房源状态不可操作");
+		}
+		
+		if(houseSourceVO.getStatus() == 0){
+			BuildingPO buildingPO = buildingDao.queryBuildingByHsid(houseSourceVO.getHsid());
+			
+			if(buildingPO != null){
+				throw new FLException(320006, "房源状态不可操作");
+			}
 		}
 		
 		houseSourcePO.setStatus(houseSourceVO.getStatus());

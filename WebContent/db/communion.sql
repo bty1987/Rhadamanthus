@@ -72,12 +72,12 @@ CREATE TABLE `cityproper` (
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
-  `no` tinyint(2) NOT NULL,
+  `no` int(11) NOT NULL,
   `name` varchar(16) NOT NULL,
-  `fullname` varchar(32) NOT NULL,
-  `address` varchar(64) NOT NULL,
-  `corporation` varchar(8) NOT NULL,
-  `phone` varchar(16) NOT NULL,
+  `fullname` varchar(32),
+  `address` varchar(64),
+  `corporation` varchar(8),
+  `phone` varchar(16),
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
@@ -86,8 +86,8 @@ DROP TABLE IF EXISTS `constructionnode`;
 CREATE TABLE `constructionnode` (
   `cnid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: 启用, 1: 禁用',
-  `sort` tinyint(2) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: 启用, 1: 禁用',
+  `sort` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cnid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程节点表';
 
@@ -139,20 +139,30 @@ CREATE TABLE `department` (
   `type` varchar(10) NOT NULL COMMENT '部门类型',
   `subType` varchar(10) DEFAULT NULL COMMENT '二级部门分类',
   `createTime` date NOT NULL COMMENT '创建时间',
-  `des` varchar(128) DEFAULT NULL COMMENT '表述',
   `contractPrefix` varchar(32) DEFAULT NULL COMMENT '设计部门合同前缀(独有)',
   `company` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1',
+  `des` varchar(128) DEFAULT NULL COMMENT '表述',
   PRIMARY KEY (`dId`),
   UNIQUE KEY `uniqueone` (`deptId`),
   KEY `indexone` (`deptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='部门表';
+
+DROP TABLE IF EXISTS `departmenttype`;
+CREATE TABLE `departmenttype` (
+  `dtid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`dtid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `duty`;
 CREATE TABLE `duty` (
   `did` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
+  `departmentType` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `lead` tinyint(1) NOT NULL,
   PRIMARY KEY (`did`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='职位表';
 
@@ -183,7 +193,7 @@ CREATE TABLE `module` (
   `mId` int(10) NOT NULL AUTO_INCREMENT,
   `fatherModuleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
-  `icon` varchar(15) DEFAULT NULL,
+  `icon` varchar(20) DEFAULT NULL,
   `url` varchar(256) DEFAULT NULL,
   `level` tinyint(4) NOT NULL,
   `system` tinyint(4) NOT NULL,
@@ -194,13 +204,16 @@ CREATE TABLE `module` (
 
 DROP TABLE IF EXISTS `monitor`;
 CREATE TABLE `monitor` (
+  `mid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `host` varchar(20) NOT NULL,
   `type` varchar(16) NOT NULL,
-  `comment` varchar(128) NOT NULL,
+  `value` varchar(32) NOT NULL DEFAULT '',
+  `comment` varchar(512) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `count` int(11) NOT NULL DEFAULT 0,
-  `updateTime` timestamp NOT NULL
+  `count` int(11) NOT NULL DEFAULT '0',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='监控';
 
 DROP TABLE IF EXISTS `operation`;
@@ -210,7 +223,8 @@ CREATE TABLE `operation` (
   `name` varchar(32) NOT NULL DEFAULT '',
   `operation` varchar(128) NOT NULL,
   `system` tinyint(4) NOT NULL,
-  PRIMARY KEY (`oId`)
+  PRIMARY KEY (`oId`),
+  KEY `indexone` (`operation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作';
 
 DROP TABLE IF EXISTS `quotationbigcategory`;
@@ -247,14 +261,15 @@ DROP TABLE IF EXISTS `receipttype`;
 CREATE TABLE `receipttype` (
   `rtId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(36) NOT NULL,
-  `key` varchar(36) NOT NULL,
+  `no` varchar(36) NOT NULL,
   `subjectName` varchar(64) NOT NULL,
   `oneCode` varchar(6) NOT NULL,
   `twoCode` varchar(4) NOT NULL,
   `thrCode` varchar(4) NOT NULL,
   `direction` tinyint(4) NOT NULL COMMENT '余额方向,借 1, 贷 -1',
-  `type` varchar(32) NOT NULL,
+  `type` tinyint(1) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`rtId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -349,8 +364,9 @@ CREATE TABLE `systemconfig` (
   `cuid` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(128),
-  `company` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`scid`)
+  `company` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`scid`),
+  KEY `indexone` (`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 DROP TABLE IF EXISTS `token`;
@@ -368,7 +384,7 @@ CREATE TABLE `trackpoint` (
   `userId` varchar(15) NOT NULL,
   `x` double NOT NULL,
   `y` double NOT NULL,
-  `createTime` timestamp NULL NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tpId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='轨迹点表';
 
@@ -386,8 +402,8 @@ CREATE TABLE `user` (
   `userNamePinYin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
   `currentName` varchar(32) DEFAULT NULL COMMENT '现用名',
   `status` varchar(10) NOT NULL COMMENT '人员状态(在职,离职..)',
-  `deptType` varchar(10) NOT NULL COMMENT '部门类型',
-  `duty` varchar(256) NOT NULL COMMENT '职位',
+  `dtid` int(11) NOT NULL COMMENT '部门类型ID',
+  `did` int(11) NOT NULL COMMENT '职位ID',
   `gender` varchar(2) NOT NULL COMMENT '性别',
   `birthday` date NOT NULL COMMENT '出生日期',
   `identity` varchar(21) NOT NULL COMMENT '身份证号',
@@ -399,7 +415,9 @@ CREATE TABLE `user` (
   PRIMARY KEY (`uId`),
   UNIQUE KEY `uniqueone` (`loginId`),
   UNIQUE KEY `uniquetwo` (`userId`),
-  KEY `indexone` (`userId`,`company`)
+  KEY `indexone` (`userId`,`company`),
+  KEY `indextwo` (`userName`),
+  KEY `indexthr` (`userNamePinYin`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 DROP TABLE IF EXISTS `usercompany`;
@@ -424,20 +442,6 @@ CREATE TABLE `usercontract` (
 
 DROP TABLE IF EXISTS `userexperience`;
 CREATE TABLE `userexperience` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `startTime` date NOT NULL,
-  `endTime` date NOT NULL,
-  `company` varchar(32) NOT NULL,
-  `position` varchar(32) NOT NULL,
-  `createTime` datetime NOT NULL,
-  `des` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作经历表';
-
-DROP TABLE IF EXISTS  `userexperience`;
-CREATE TABLE `userexperience` (
   `upid` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(15) NOT NULL,
   `type` varchar(10) NOT NULL,
@@ -450,15 +454,15 @@ DROP TABLE IF EXISTS `userinfo`;
 CREATE TABLE `userinfo` (
   `uiid` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `employWay` varchar(10) NOT NULL COMMENT '招聘渠道',
+  `employWay` varchar(10) DEFAULT 'Null' COMMENT '招聘渠道',
   `recommendMan` varchar(32) DEFAULT NULL COMMENT '推荐人',
   `jobYears` int(2) DEFAULT NULL COMMENT '工作年限',
   `employType` varchar(10) DEFAULT NULL COMMENT '录用类型',
-  `entryTime` date NOT NULL COMMENT '入职时间',
+  `entryTime` date DEFAULT NULL COMMENT '入职时间',
   `employTime` date DEFAULT NULL COMMENT '转正时间',
   `serviceYears` int(2) DEFAULT NULL COMMENT '服务年限',
-  `age` int(2) NOT NULL COMMENT '年龄',
-  `political` varchar(10) NOT NULL COMMENT '政治面貌',
+  `age` int(2) NOT NULL DEFAULT '0' COMMENT '年龄',
+  `political` varchar(10) DEFAULT NULL COMMENT '政治面貌',
   `emergencyMan` varchar(32) DEFAULT NULL COMMENT '紧急联系人',
   `emergencyPhone` varchar(15) DEFAULT NULL COMMENT '紧急联系人电话',
   `isPresentGraduate` varchar(2) DEFAULT NULL COMMENT '是否是应届生',
@@ -466,28 +470,39 @@ CREATE TABLE `userinfo` (
   `school` varchar(32) DEFAULT NULL COMMENT '毕业学校',
   `education` varchar(10) DEFAULT NULL COMMENT '学历',
   `specialty` varchar(32) DEFAULT NULL COMMENT '最高学历专业',
-  `isMarried` varchar(2) NOT NULL COMMENT '婚姻状况',
-  `isBirth` varchar(2) NOT NULL COMMENT '生育状况',
-  `isHouseLoan` varchar(2) NOT NULL COMMENT '是否有房贷',
-  `isCarLoan` varchar(2) NOT NULL COMMENT '是否有车贷',
+  `isMarried` varchar(2) DEFAULT NULL COMMENT '婚姻状况',
+  `isBirth` varchar(2) DEFAULT NULL COMMENT '生育状况',
+  `isHouseLoan` varchar(2) DEFAULT NULL COMMENT '是否有房贷',
+  `isCarLoan` varchar(2) DEFAULT NULL COMMENT '是否有车贷',
   `houseType` varchar(32) DEFAULT NULL COMMENT '房屋类型',
-  `householdType` varchar(10) NOT NULL COMMENT '户口类型',
-  `hometownAddress` varchar(128) NOT NULL COMMENT '户籍地址',
-  `address` varchar(128) NOT NULL COMMENT '现住地址',
-  `isContract` varchar(2) NOT NULL COMMENT '是否签订劳动合同',
-  `isInsurance` varchar(2) NOT NULL COMMENT '是否上保险',
+  `householdType` varchar(10) DEFAULT NULL COMMENT '户口类型',
+  `hometownAddress` varchar(128) DEFAULT NULL COMMENT '户籍地址',
+  `address` varchar(128) DEFAULT NULL COMMENT '现住地址',
+  `isContract` varchar(2) DEFAULT NULL COMMENT '是否签订劳动合同',
+  `isInsurance` varchar(2) DEFAULT NULL COMMENT '是否上保险',
   `insuranceTime` date DEFAULT NULL COMMENT '保险起始时间',
   `pensionNum` varchar(32) DEFAULT NULL COMMENT '养老金编号',
   `medicalNum` varchar(32) DEFAULT NULL COMMENT '医疗编号',
-  `salary` decimal(10,3) NOT NULL COMMENT '工资',
+  `salary` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '工资',
   `lover` varchar(32) DEFAULT NULL COMMENT '爱人',
-  `bank` varchar(10) NOT NULL COMMENT '开户行',
-  `bankCardNum` varchar(32) NOT NULL COMMENT '银行卡号',
+  `bank` varchar(10) DEFAULT NULL COMMENT '开户行',
+  `bankCardNum` varchar(32) DEFAULT NULL COMMENT '银行卡号',
   `qq` varchar(15) DEFAULT NULL COMMENT 'QQ',
   `wechat` varchar(15) DEFAULT NULL COMMENT '微信',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  PRIMARY KEY (`uiid`)
+  PRIMARY KEY (`uiid`),
+  KEY `indexone` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+
+DROP TABLE IF EXISTS `version`;
+CREATE TABLE `version` (
+  `vid` int(11) NOT NULL AUTO_INCREMENT COMMENT '版本ID',
+  `no` varchar(64) NOT NULL COMMENT '版本编号',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建事件',
+  `comment` text NOT NULL COMMENT '更新说明',
+  `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`vid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `village`;
 CREATE TABLE `village` (
