@@ -198,16 +198,8 @@ jQuery(function($) {
 		var flag =false;
 		com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": cid}, function (res) {
 			$('#customerphoneModal').modal('show');
+
 			$.each(res.customerPhones, function (i, v) {
-				var  vstatus;
-				switch (v.status) {
-					case 0:
-						vstatus = "启用"
-						break;
-					case 1:
-						vstatus = "禁用"
-						break;
-				}
 
 				var Phonelist = $('<div></div>').prop("id", "customerPhone" + i);
 				Phonelist.append(addspan('10', '客户姓名  : ', name))
@@ -216,6 +208,10 @@ jQuery(function($) {
 				var $btnStatus =$('<div style="float: right;margin-right: 30px;"></div>')
 				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", "deleteBtn" + i);
 				var $span = $('<span></span>').addClass('lbl status-lbl');
+
+				var $btnDStatus =$('<div style="float: right;margin-right: 30px;"></div>')
+				var $DstatusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", "deleteBtn" + i);
+				var $Dspan = $('<span></span>').addClass('lbl default-lbl');
 
 				var $hr= $('<hr/>');
 
@@ -233,17 +229,42 @@ jQuery(function($) {
 							 $statusSwitch.prop("checked", false);
 							 searcher.doSearch();
 						 },function(res){
-							 updateCustomerPhoneForStatus(cid,v.phone, 0, function(){$this.removeAttr("checked")})
+							 updateCustomerPhoneForStatus(cid,name,v.phone, 0, function(){$this.removeAttr("checked")})
 						 },false);
 						}else{
-						updateCustomerPhoneForStatus(cid,v.phone, 1,function(){$this.prop("checked")})
-					}
+						 if(v.defaults == 1){
+							 com.showAlert(com.warning, "默认电话不能禁用");
+							 $statusSwitch.prop("checked", true);
+							 searcher.doSearch();
+						 }else{
+							 updateCustomerPhoneForStatus(cid,name,v.phone, 1,function(){$this.prop("checked")})
+						 }
+						}
 
 				})
 
+				v.defaults && $DstatusSwitch.prop("checked", true);
+				$DstatusSwitch.on("click",function() {
+					if($DstatusSwitch.prop("checked")){
+						if(v.status==1){
+							$DstatusSwitch.prop("checked", false);
+							com.showAlert(com.warning, "禁用电话不能选为默认电话");
+
+							searcher.doSearch();
+						}else{
+							updateCustomerPhoneForDstatus(cid,name,v.phone, 1,function(){$this.prop("checked")})
+						 }
+					}else{
+						$DstatusSwitch.prop("checked", true);
+					}
+
+				});
+
+				$btnDStatus.append($DstatusSwitch).append($Dspan);
+
 				$btnStatus.append($statusSwitch).append($span);
 
-				Phonelist.append($btnStatus).append($hr).appendTo($("#customerphoneList"))
+				Phonelist.append($btnDStatus).append($btnStatus).append($hr).appendTo($("#customerphoneList"))
 				 });
 
 			var salaryDiv = $('<div></div>').addClass("form-group").css("height", "50px").css("margin-bottom", "0px");
@@ -287,6 +308,8 @@ jQuery(function($) {
 
 	function savecustomerPhone(cid,phone,name){
 
+		var defaultstatus=[];
+
 		if( com.validate("customerphoneModal") || customer.phoneflag){
 			return;
 		}
@@ -294,6 +317,7 @@ jQuery(function($) {
 			"customerPhone.phone":phone,
 			"customerPhone.cid":cid,
 		}
+
 		com.post(api.data.addCustomerPhone, param,function(res){
 			managephone(cid,name);
 		})
@@ -301,14 +325,22 @@ jQuery(function($) {
 	}
 
 	//启用禁用功能
-	function updateCustomerPhoneForStatus(cid,phone, status, failcallBack){
+	function updateCustomerPhoneForStatus(cid,name,phone, status, failcallBack){
 		com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cid":cid,"customerPhone.phone" : phone,"customerPhone.status" : status}, function(){
+			managephone(cid,name)
 		},function(res){
 			failcallBack && failcallBack();
 
 		},null,false);
 	}
-
+  //客户电话是否是默认的
+	function updateCustomerPhoneForDstatus(cid,name,phone, defaults, failcallBack){
+		com.post(api.data.updateCustomerPhoneForDstatus, {"customerPhone.cid":cid,"customerPhone.phone" : phone,"customerPhone.defaults" : defaults}, function(){
+			managephone(cid,name)
+		},function(res){
+			failcallBack && failcallBack();
+		},null,false);
+	}
 	//清空
 	function initcustomer(){
 		customer.items.customerName.val("");
@@ -328,7 +360,7 @@ jQuery(function($) {
 
 	function checkPhone(cid,$id,num) {
 		var phones=[];
-		var reg = /^((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10}))((#((1[3|4|5|6|7|8|9][0-9]{9})|(0[0-9]{10})))){0,4}$/;
+		var reg = /^((1[0-9]{10})|(0[0-9]{10}))((#((1[0-9]{10})|(0[0-9]{10})))){0,4}$/;
 		if ($id.val() == "" || $id.val() == 0) {
 			num ? customer.repeatFlg = true : customer.phoneflag = true;
 			com.showPopover($id, {errorMsg: "电话号码不能为空"}, "right")

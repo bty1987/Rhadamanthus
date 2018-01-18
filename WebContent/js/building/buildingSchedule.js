@@ -589,8 +589,7 @@ jQuery(function($) {
 	
 	//画节点信息轴
 	function showBuildingNode(stepul, schedule){
-		console.log(schedule);
-		console.log(buildingSchedules[schedule-1].status);
+	
 		if(buildingSchedules[schedule-1].status == 2){
 			showCondition = true;
 		}else{

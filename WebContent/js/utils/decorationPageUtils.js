@@ -347,12 +347,12 @@ $(function(){
 
     function convertDecorationActivityItem(activityItem){
 
-        decorationDetail.convertActivityItemId = activityItem.daiId;
+        params.convertActivityItemId = activityItem.daiId;
 
-        decorationDetail.activity.convertActivityItemName.val(activityItem.activityItemName);
-        decorationDetail.activity.convertActivityItemMoney.val(0);
+        params.activity.convertActivityItemName.val(activityItem.activityItemName);
+        params.activity.convertActivityItemMoney.val(0);
 
-        decorationDetail.convertDecorationActivityItemModal.modal("show");
+        $("#convertDecorationActivityItemModal").modal("show");
     }
 
     function abateDecorationActivityItem(daiId, activityItemName){
@@ -471,7 +471,7 @@ $(function(){
             }
         },getConfig:function (page) {
             var pageConfig = {};
-            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType','depositTimeDateRange','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','createTimeDateRange','signTimeDateRange','houseClass','status'];
+            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','measureTimeDateRange','depositTimeDateRange','signTimeDateRange','houseClass','status'];
 
             pageConfig.postDataName = "";
 

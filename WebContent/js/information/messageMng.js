@@ -19,7 +19,7 @@ $(function(){
 		repeatFlg: false,
 	};
 	
-	com.initChosen('receiver', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+	com.initChosen('receiver', api.personel.queryUserForNameByPinyinName, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	$("#returnBtn").on("click", function(){
 		$(".sysMessage").text("系统消息");

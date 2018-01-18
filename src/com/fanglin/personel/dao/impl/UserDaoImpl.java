@@ -56,7 +56,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company){
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer company){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
@@ -66,17 +66,18 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
 		}
 		
-		query.add(Restrictions.eq("status", "在职"));
-		
 		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
 	
+		if(status != null ){
+			query.add(Restrictions.eq("status", status));
+		}
 		return query.list();
 
 	}
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName, String duty){
+	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName,Short status, String duty){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
@@ -90,8 +91,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		query.add(Restrictions.ilike("duty.name", duty, MatchMode.ANYWHERE));
 		
-		query.add(Restrictions.eq("status", "在职"));
-		
+		if(status != null ){
+			query.add(Restrictions.eq("status", status));
+		}
 		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
 
 		return query.list();
@@ -143,7 +145,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			query.add(criterionO);
 		}
 	
-		query.add(Restrictions.eq("status", "在职"));
+		query.add(Restrictions.eq("status", UserPO.STATUS_ENABLE_INT));
 		
 		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
 		
@@ -209,7 +211,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 				}else if("deptId".equals(field)){
 					query.add(query.getCriterion("dept.deptId", filter));
 				}else if("status".equals(field)){
-					query.add(query.getCriterion("status", filter));
+					query.add(Restrictions.eq("status",Short.valueOf(filter.getData())));
 				}else if("duty.name".equals(field)){
 					query.add(query.getCriterion("duty.name", filter));
 				}else if("identity".equals(field)){

@@ -360,6 +360,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		if(userPO != null){
 			materialPaymentPO.setMaterial(materialPO);
 			materialPaymentPO.setCreater(userPO);
+			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 
 		int materialPaymentType = materialPaymentPO.getPaymentType();
@@ -1051,6 +1052,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
 			materialPaymentPO.setCreater(userPO);
+			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 		
 		materialPaymentPO.setCategory(materialPO.getCategory());
@@ -1093,6 +1095,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			
 			UserPO userCreater = userDao.queryUserByUserId(userId);
 			materialPaymentPO.setCreater(userCreater);
+			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			materialPaymentDao.save(materialPaymentPO);
 		}

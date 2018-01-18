@@ -102,6 +102,46 @@ public class CustomerAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	//@Action(value="addCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addCustomer() throws FLException{
+		
+		customerService.addCustomer(customer);
+		
+		return "success";
+	}
+	
+	//@Action(value="updateCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateCustomer() throws FLException{
+	
+		customerService.updateCustomer(customer);
+	
+		return "success";
+	}
+	  
+	//@Action(value="updateCustomerPhoneForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateCustomerPhoneForStatus() throws FLException{
+
+		customerService.updateCustomerPhoneForStatus(customerPhone);
+
+		return "success";
+	}
+
+	//@Action(value="addCustomerPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addCustomerPhone() throws FLException{
+
+		customerService.addCustomerPhone(customerPhone);
+
+		return "success";
+	}
+	
+	//@Action(value="updateCustomerPhoneForDstatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateCustomerPhoneForDstatus() throws FLException{
+
+		customerService.updateCustomerPhoneForDstatus(customerPhone);
+
+		return "success";
+	}
+	
 	public CustomerVO getCustomer(){
 		return customer;
 	}

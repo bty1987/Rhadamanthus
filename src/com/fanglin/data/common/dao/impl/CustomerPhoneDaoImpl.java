@@ -58,4 +58,13 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		return  (CustomerPhonePO) session().createCriteria(CustomerPhonePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("cid", cid)).uniqueResult();
 	}
 	
+	@Override
+	public int clearCustomerPhoneForDefault(Long cid){
+		
+		String sql = "update communion.customerphone c set c.defaults = 0 where c.cid = :cid";
+		
+		return session().createSQLQuery(sql).setLong("cid", cid).executeUpdate();
+		 
+	}
+	
 }

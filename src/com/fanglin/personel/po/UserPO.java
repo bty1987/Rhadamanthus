@@ -45,6 +45,10 @@ public class UserPO implements Serializable {
 	
 	public static final short FREEDOM_REQUEST_AUTH_INT = 4;
 	
+	public static final short STATUS_ENABLE_INT = 0;
+		
+	public static final short STATUS_DISABLE_INT = 1;
+	
 	private int uid;
 
 	private String userId;
@@ -67,7 +71,7 @@ public class UserPO implements Serializable {
 	
 	private String currentName;
 	
-	private String status;
+	private short status;
 	
 	private int dtid;
 	
@@ -202,11 +206,11 @@ public class UserPO implements Serializable {
 	}
 
 	@Column(name = "status")
-	public String getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -215,6 +219,7 @@ public class UserPO implements Serializable {
 		return dtid;
 	}
 
+	
 	public void setDtid(int dtid) {
 		this.dtid = dtid;
 	}

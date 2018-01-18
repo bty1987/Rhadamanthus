@@ -105,7 +105,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setVillage(decorationPO.getHouse().getVillage().getName());
 			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getCityProperName());
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
-			drawLineVO.setHouseArea(decorationPO.getHouseArea());
+			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
 			
 			drawLineVO.setApplayUser(drawLinePO.getApplayUser().getCurrentName());
@@ -178,7 +178,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setVillage(decorationPO.getHouse().getVillage().getName());
 			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getCityProperName());
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
-			drawLineVO.setHouseArea(decorationPO.getHouseArea());
+			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
 			
 			drawLineVO.setApplayUser(drawLinePO.getApplayUser().getCurrentName());

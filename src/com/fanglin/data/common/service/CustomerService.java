@@ -38,4 +38,8 @@ public interface CustomerService {
 
 	public int updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException;
 	
+	public int updateCustomerPhoneForDstatus(CustomerPhoneVO customerPhoneVO) throws FLException;
+	
+	
+	
 }

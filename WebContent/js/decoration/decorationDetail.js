@@ -260,8 +260,8 @@ jQuery(function($) {
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
     }, null, false);
 
-    com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-    com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+    com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+    com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
     com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
     if(decorationDetail.orderType == decorationDetail.type["半价"]){
@@ -436,7 +436,7 @@ jQuery(function($) {
             return;
         }
 
-        var daiId = decorationDetail.convertActivityItemId;
+        var daiId = params.convertActivityItemId;
 
         var options = {
             "decorationActivityItem.daiId": daiId,
@@ -843,7 +843,7 @@ jQuery(function($) {
         decorationDetail.items.orderType.val(decoration.type);
         decorationDetail.items.houseType.val(decoration.houseType);
         decorationDetail.items.houseClass.val(decoration.houseClass);
-        decorationDetail.items.houseArea.val(decoration.houseArea);
+        decorationDetail.items.houseArea.val(decoration.house.buildArea);
         decorationDetail.items.freeArea.val(decoration.freeArea);
         decorationDetail.items.status.val(decoration.status);
         decorationDetail.items.measureTime.val(decoration.measureTime);
@@ -851,6 +851,7 @@ jQuery(function($) {
         decorationDetail.notSalesmanRate = decoration.notSalesmanRate;
 
         com.post(api.decoration.queryDecorationInfoByOrderId,{"orderId":decorationDetail.decorationOrderId},function (res) {
+            res = res.decorationInfo;
             decorationDetail.items.backOrderName.val(res.backOrderName);
             decorationDetail.items.backOrderPhone.val(res.backOrderPhone);
             decorationDetail.items.backOrderContent.val(res.backOrderContent);
@@ -876,9 +877,6 @@ jQuery(function($) {
         decorationDetail.village.villageId = decoration.house.village.villageId;
         decorationDetail.village.villageName = decoration.house.village.villageName;
         decorationDetail.village.houseNumber = decoration.house.houseNumber;
-        // decorationDetail.village.ruleExample = decoration.house.village.buildingNameRule.ruleExample;
-        // decorationDetail.village.ruleContent = decoration.house.village.buildingNameRule.ruleContent;
-        // decorationDetail.village.rule = decoration.village.buildingNameRule.rule;
 
         decorationDetail.decoration.type = decoration.type;
     });
@@ -898,7 +896,6 @@ jQuery(function($) {
                     "decoration.type": decorationDetail.items.orderType.val(),
                     "decoration.houseType": decorationDetail.items.houseType.val(),
                     "decoration.houseClass": decorationDetail.items.houseClass.val(),
-                    "decoration.houseArea": decorationDetail.items.houseArea.val(),
                     "decoration.freeArea": decorationDetail.items.freeArea.val(),
                     "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
                     "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
@@ -944,6 +941,8 @@ jQuery(function($) {
                     break;
                 case "activity":
                     if(!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true,wizard,params.viewNode[curstep].wizard);
+                    params.convertActivityItemId = decorationDetail.convertActivityItemId;
+                    params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
                     decorationUtils.decorationActivityItemInfo(decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
                     break;
@@ -976,6 +975,8 @@ jQuery(function($) {
                     break;
                 case "activity":
                     if(!$.isEmptyObject(params.viewNode[info.step-1].wizard)) $.extend(true,wizard,params.viewNode[info.step-1].wizard);
+                    params.convertActivityItemId = decorationDetail.convertActivityItemId;
+                    params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
                     decorationUtils.decorationActivityItemInfo(decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
                     break;

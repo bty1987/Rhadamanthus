@@ -185,10 +185,10 @@ jQuery(function($) {
 	
 	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 	
-	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-	com.initChosen('salesmanId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-	com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
-	com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('salesmanId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
@@ -320,7 +320,6 @@ jQuery(function($) {
 			"decoration.houseType": orderEntry.orderItems.houseType.val(),
 			"decoration.houseClass": orderEntry.orderItems.houseClass.val(),
 			"decoration.apartmentType": orderEntry.orderItems.apartmentType.val(),
-			"decoration.houseArea": orderEntry.orderItems.houseArea.val(),
 			"decoration.designer.userId": orderEntry.orderItems.designerId.val(),
 			"decoration.salesman.userId": orderEntry.orderItems.salesmanId.val(),
 			"decoration.salesmanType": orderEntry.orderItems.salesmanType.val(),

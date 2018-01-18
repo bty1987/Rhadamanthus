@@ -11,5 +11,5 @@ public interface HouseDao extends Dao<HousePO> {
 	
 	public List<HousePO> pageHouse(Paging paging, List<Filter> filters);
 	
-	public HousePO queryHouseByNoAHnum(String no,String houseNumber,Short status);
+	public HousePO queryHouseByNoAHnum(String no, String houseNumber,Short status);
 }

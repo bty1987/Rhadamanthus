@@ -847,7 +847,6 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 		
 		decorationPO.setHouseType(decorationVO.getHouseType());
-		decorationPO.setHouseArea(decorationVO.getHouseArea());
 		decorationPO.setFreeArea(decorationVO.getFreeArea());
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setType(type);
@@ -1113,7 +1112,6 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 		
 
-		decorationPO.setHouseArea(decorationVO.getHouseArea());
 		decorationPO.setFreeArea((float) 0);
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setHouseType(decorationVO.getHouseType());

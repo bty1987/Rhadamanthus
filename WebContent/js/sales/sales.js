@@ -33,11 +33,8 @@ $(function () {
     };
 
     var salesPaymentPostDataString = {
-        sid: "salesPayment.sid",
-        salesid: "salesPayment.sales.sid",
+        sid: "salesPayment.sales.sid",
         referMoney: "salesPayment.referMoney",
-        category: "salesPayment.category",
-        brand: "salesPayment.brand",
         type: "salesPayment.type"
     };
 
@@ -150,12 +147,12 @@ $(function () {
                     }
                     var propertyArr = [
                         ["订单编号:", v.orderId, "grey"],
-                        ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
-                        ["客户名:", v.customer.customerName, "grey"],
-                        ["渠道:", v.salesman.userName, "grey"],
+                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
+                        ["客户名:", v.customer.name, "grey"],
+                        ["渠道:", v.salesman.currentName, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
                         ["分区:", v.region.deptName, "grey"],
-                        ["导购:", v.guider.userName, "grey"],
+                        ["导购:", v.guider.currentName, "grey"],
                         ["驻店:", v.instorer.currentName, "grey"],
                         ["主材部:", v.guideDept.deptName, "grey"],
                         ["品类:", v.category, "grey"],
@@ -283,7 +280,7 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['no', 'orderId', 'instorerId', 'salesmanId', 'salesDeptName'];
+    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName'];
 
     var salesSearcher = new Searcher();
 
@@ -381,8 +378,7 @@ $(function () {
                 return false;
             }
 
-            com.post(api.payment.addSalesPayment, makeSalesPaymentPostData(sales.sid, null, querySales.depositPayment.val(),
-                sales.category, sales.brand, type.depositPayment), function (res) {
+            com.post(api.payment.addSalesPayment, makeSalesPaymentPostData(sales.sid, querySales.depositPayment.val(), type.depositPayment), function (res) {
 
                 querySales.realDepositPayment.val(querySales.depositPayment.val());
                 hideButtons([querySales.depositPaymentBtn, querySales.fullPaymentBtn]);
@@ -426,8 +422,7 @@ $(function () {
 
             var sales = salesDic[$layerAdd.attr("data-sid")];
 
-            com.post(api.payment.refundSalesPayment, makeSalesPaymentPostData(sales.sid, null, querySales.depositPayment.val(),
-                null, null, type.depositPaymentRefund), function () {
+            com.post(api.payment.refundSalesPayment, makeSalesPaymentPostData(sales.sid, querySales.depositPayment.val(), type.depositPaymentRefund), function () {
 
                 controlSpan(querySales.depositPaymentInfo, "clear", null);
                 querySales.depositPayment.val(0);
@@ -493,8 +488,7 @@ $(function () {
                 }
                 else {
 
-                    com.post(api.payment.addSalesPayment, makeSalesPaymentPostData(sales.sid, null, querySales.fullPayment.val(),
-                        sales.category, sales.brand, type.fullPayment), function (res) {
+                    com.post(api.payment.addSalesPayment, makeSalesPaymentPostData(sales.sid, querySales.fullPayment.val(), type.fullPayment), function (res) {
 
                         querySales.realFullPayment.val(querySales.fullPayment.val());
                         hideButtons([querySales.fullPaymentBtn, querySales.couponBtn, querySales.malingBtn, querySales.depositPaymentBtn, querySales.depositRefundBtn]);
@@ -576,8 +570,7 @@ $(function () {
 
             var sales = salesDic[$layerAdd.attr("data-sid")];
 
-            com.post(api.payment.refundSalesPayment, makeSalesPaymentPostData(sales.sid, null, -querySales.fullPayment.val(),
-                null, null, type.fullPaymentRefund), function (res) {
+            com.post(api.payment.refundSalesPayment, makeSalesPaymentPostData(sales.sid, -querySales.fullPayment.val(), type.fullPaymentRefund), function (res) {
 
                 controlSpan(querySales.fullPaymentInfo, "add", "提交中");
                 querySales.realFullPayment.val(querySales.fullPaymentInfo.val());
@@ -708,7 +701,7 @@ $(function () {
         refundPostData = {};
         refundPostData[salesPostDataString.sid] = sales.sid;
 
-        com.post(api.payment.querySalesPaymentBySid, makeSalesPaymentPostData(null, sales.sid), function (data) {
+        com.post(api.payment.querySalesPaymentBySid, makeSalesPaymentPostData(sales.sid), function (data) {
             $.each(data.salesPayments, function (i, v) {
 
                 if (!salesPaymentDic[v.type]) {
@@ -890,22 +883,13 @@ $(function () {
         }
     }
 
-    function makeSalesPaymentPostData(sid, salesid, referMoney, category, brand, type) {
+    function makeSalesPaymentPostData(sid, referMoney,type) {
         salesPaymentPostData = {};
         if (sid) {
             salesPaymentPostData[salesPaymentPostDataString.sid] = sid
         }
-        if (salesid) {
-            salesPaymentPostData[salesPaymentPostDataString.salesid] = salesid
-        }
         if (referMoney) {
             salesPaymentPostData[salesPaymentPostDataString.referMoney] = referMoney
-        }
-        if (category) {
-            salesPaymentPostData[salesPaymentPostDataString.category] = category
-        }
-        if (brand) {
-            salesPaymentPostData[salesPaymentPostDataString.brand] = brand
         }
         if (type) {
             salesPaymentPostData[salesPaymentPostDataString.type] = type

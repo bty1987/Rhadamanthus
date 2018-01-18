@@ -217,7 +217,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentPO.setSales(salesPO);
 		
 		salesPaymentPO.setCreater(approvalPO.getSender());
-		salesPaymentPO.setCreaterName(approvalPO.getSender().getUserName());
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());//退款金额
 		salesPaymentPO.setBrand(salesPO.getBrand());//品牌

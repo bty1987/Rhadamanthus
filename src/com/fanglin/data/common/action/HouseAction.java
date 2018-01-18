@@ -59,6 +59,22 @@ public class HouseAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	//@Action(value = "addHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addHouse() throws FLException{
+		
+		houseService.addHouse(house);
+		
+		return SUCCESS;
+	}
+	
+	//@Action(value = "updateHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateHouse() throws FLException{
+		
+		houseService.updateHouse(house);
+		
+		return SUCCESS;
+	}
+	
 	public HouseVO getHouse() {
 		return house;
 	}

@@ -177,11 +177,10 @@ public class CustomerServiceImpl implements CustomerService {
 	    CustomerPO customerPO = new CustomerPO();
 
 	    String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-	    
+	  
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate);
-
+		
 	    String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-	   
 	    customerPO.setNo(no);
 
 	    BeanUtil.copyProperties(customerVO, customerPO);
@@ -195,8 +194,9 @@ public class CustomerServiceImpl implements CustomerService {
 	   
 	    customerPhonePO.setCid(customerPO.getCid());
 	    customerPhonePO.setPhone(customerVO.getPhone());
-	    customerPhonePO.setStatus((short)0);
-	   
+	    customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+	    customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+	    
 		customerPhoneDao.save(customerPhonePO);
 		
 		BeanUtil.copyProperties(customerPO, customerVO);
@@ -255,14 +255,40 @@ public class CustomerServiceImpl implements CustomerService {
 	    }
 		
 	    CustomerPhonePO customerPhonePO = new CustomerPhonePO();
-	   
 	    customerPhonePO.setCid(customerPhoneVO.getCid());
 	    customerPhonePO.setPhone(customerPhoneVO.getPhone());
-	    customerPhonePO.setStatus((short)0);
-	   
+	    customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+	    customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+	    
+	    customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
+	    
 		customerPhoneDao.save(customerPhonePO);
 		
 		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateCustomerPhoneForDstatus(CustomerPhoneVO customerPhoneVO) throws FLException{
+	
+		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPhoneVO.getCid(),customerPhoneVO.getPhone());
+		
+	    if (customerPhonePO == null) {
+	    	throw new FLException(130002, "客户信息不存在");
+	    }
+	    
+	    if(customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_DISABLE_INT){
+	    	
+	    	customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
+		 	
+		 	customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
+		 	
+		    customerDao.update(customerPhonePO);
+	    }
+	    
+	    BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
+	    
+	    return 0;
 	}
 	
 }

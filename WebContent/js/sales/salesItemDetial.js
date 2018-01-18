@@ -62,44 +62,43 @@ $(function () {
 
     refundCommitBtn.click(function () {
 
-        if (calcRefundData(false)) {
+        if (!calcRefundData(false)) return
 
-            approvalUtils.initqueryApprovalUser("approver", 10);
+        approvalUtils.initqueryApprovalUser("approver", 10);
 
-            openRefundlayer(function (index, layero) {
+        openRefundlayer(function (index, layero) {
 
-                createApprovalPostData();
-                creatapprovalSalesRefundPostData("0");
+            createApprovalPostData();
+            creatapprovalSalesRefundPostData("0");
 
-                var _approval = $('#approver')
+            var _approval = $('#approver')
 
-                var radios = _approval.find('input:checked').attr('userid');
+            var radios = _approval.find('input:checked').attr('userid');
 
-                if (!com.validate('layerRefund', 'right')) {
+            if (!com.validate('layerRefund', 'right')) {
 
-                    if (!checkNum(refund, "退货金额错误", "right")) {
-                        return false;
-                    }
-
-                    if (radios == null || radios == "") {
-                        layer.msg('请选择审批人', {time: 3e3});
-                        return false;
-                    }
-
-                    com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
-                        function () {
-                            refundCancelBtn.trigger('click');
-                            refreshPage();
-                            refundLayerOut();
-                            layer.msg("退货申请已提交.");
-                            $('#approver').empty();
-                        }, function (e) {
-                            com.showAlert(com.error, e.errorMsg);
-                        });
+                if (!checkNum(refund, "退货金额错误", "right")) {
+                    return false;
                 }
 
-            });
-        }
+                if (radios == null || radios == "") {
+                    layer.msg('请选择审批人', {time: 3e3});
+                    return false;
+                }
+
+                com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
+                    function () {
+                        refundCancelBtn.trigger('click');
+                        refreshPage();
+                        refundLayerOut();
+                        layer.msg("退货申请已提交.");
+                        $('#approver').empty();
+                    }, function (e) {
+                        com.showAlert(com.error, e.errorMsg);
+                    });
+            }
+
+        });
     });
 
     refundCancelBtn.click(function () {
@@ -120,7 +119,7 @@ $(function () {
         }
 
         recordMoney(true);
-        calcRefundData(true);
+        if (!calcRefundData(true)) return
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
@@ -169,7 +168,8 @@ $(function () {
         }
 
         recordMoney(true);
-        calcRefundData(true);
+        console.log(calcRefundData(true))
+        if (!calcRefundData(true)) return
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
@@ -217,7 +217,10 @@ $(function () {
 
                 var $liLine = $('<li></li>').addClass('clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html(v.goods.name +' '+v.goods.no);
+                var $h3 = $('<h3></h3>').css({
+                    color: "grey",
+                    "font-weight": "bold"
+                }).html(v.goods.name + ' ' + v.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier').html('编辑');

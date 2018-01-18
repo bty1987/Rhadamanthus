@@ -78,13 +78,14 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 
-			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
+			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
 			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept","duty"));
 
 			servicePaymentVOs.add(servicePaymentVO);
 
@@ -108,13 +109,14 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 
-			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
+			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			servicePaymentVO.getCollecter().setBaseInfo(servicePaymentPO.getCollecter());
 			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept","duty"));
 			
 			servicePaymentVOs.add(servicePaymentVO);
 
@@ -175,11 +177,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
-		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		servicePaymentPO.setCollecter(userPO);
-		servicePaymentPO.setCollecterName(userPO.getUserName());
-		servicePaymentPO.setCollcetTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
 
@@ -256,11 +254,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
-		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		servicePaymentPO.setCollecter(userPO);
-		servicePaymentPO.setCollecterName(userPO.getUserName());
-		servicePaymentPO.setCollcetTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
 
@@ -296,11 +290,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
-		servicePaymentPO.setCreaterName(userPO.getUserName());
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		servicePaymentPO.setCollecter(userPO);
-		servicePaymentPO.setCollecterName(userPO.getUserName());
-		servicePaymentPO.setCollcetTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_TTYPE_INT);
 		
@@ -331,9 +321,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			UserPO user = userDao.queryUserByUserId(userId);
 
 			servicePayment.setStatus(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
-			servicePayment.setConfirmer(user);
-			servicePayment.setConfirmerName(user.getUserName());
-			servicePayment.setConfirmTime(new Timestamp(System.currentTimeMillis()));
 			servicePaymentDao.update(servicePayment);
 
 			ServiceReceiptPO serviceReceiptPO = serviceReceiptDao.queryServiceReceiptBySrId(servicePayment.getServiceReceipt().getSrId());

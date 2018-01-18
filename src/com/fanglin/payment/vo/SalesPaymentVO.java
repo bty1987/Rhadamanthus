@@ -131,7 +131,7 @@ public class SalesPaymentVO  implements Serializable{
 		this.creater = creater;
 	}
 	
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -148,7 +148,7 @@ public class SalesPaymentVO  implements Serializable{
 		this.collecter = collecter;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}

@@ -12,7 +12,7 @@ jQuery(function($) {
 	$('#fl-statement').statement("装修订单报价", "报价信息列表");
 	
 	decorationQuotation.decorationOrderId = params.decorationOrderId;
-	decorationQuotation.type = params.decorationType;
+	decorationQuotation.type = params.orderType;
 	
 	decorationQuotation.quotationItems.qid = $("#qid");
 	decorationQuotation.quotationItems.quotationName = $("#quotationName");

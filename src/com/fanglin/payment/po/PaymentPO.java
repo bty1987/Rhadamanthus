@@ -10,15 +10,19 @@
 package com.fanglin.payment.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.CustomerPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "payment", catalog = "payment")
@@ -77,6 +81,10 @@ public class PaymentPO implements Serializable {
 	private String status;
 	
 	private int company;
+	
+	private UserPO creater;
+	
+	private Timestamp createTime;
 	
 	private String comment;
 	
@@ -184,6 +192,25 @@ public class PaymentPO implements Serializable {
 		this.company = company;
 	}
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	public UserPO getCreater(){
+		return creater;
+	}
+
+	public void setCreater(UserPO creater){
+		this.creater = creater;
+	}
+	
+	@Column(name="createTime")
+	public Timestamp getCreateTime(){
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime){
+		this.createTime = createTime;
+	}
+	
 	@Column(name="comment")
 	public String getComment() {
 		return comment;
@@ -192,4 +219,5 @@ public class PaymentPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
 }

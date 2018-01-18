@@ -42,7 +42,7 @@ jQuery(function($) {
                 ["客户:", v.decoration.customer.customerName, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.deptName, "grey"],
-                ["面积:", v.decoration.houseArea, "grey"],
+                ["面积:", v.decoration.house.buildArea, "grey"],
                 ["量房时间:", v.decoration.measureTime , "grey"],
                 ["签单时间:", v.decoration.contractTime, "grey"],
                 ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],

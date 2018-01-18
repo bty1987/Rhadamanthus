@@ -15,6 +15,7 @@ public interface CustomerPhoneDao extends Dao<CustomerPhonePO> {
 	 
 	 public CustomerPhonePO queryCustomerPhone(Long cid, String phone);
 	 
+	 public int clearCustomerPhoneForDefault(Long cid);
 
 	
 }

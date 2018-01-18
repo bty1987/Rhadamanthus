@@ -2,6 +2,8 @@ package com.fanglin.payment.vo;
 
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class MaterialReceiptVO implements java.io.Serializable {
@@ -76,10 +78,12 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.confirmer = confirmer;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}

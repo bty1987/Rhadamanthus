@@ -132,8 +132,6 @@ public class DecorationPO implements Serializable {
 	
 	private int resourceType;
 	
-	private float houseArea;
-	
 	private float freeArea;
 
 	
@@ -246,14 +244,6 @@ public class DecorationPO implements Serializable {
 
 	public void setApartmentType(String apartmentType){
 		this.apartmentType = apartmentType;
-	}
-
-	public float getHouseArea(){
-		return houseArea;
-	}
-
-	public void setHouseArea(float houseArea){
-		this.houseArea = houseArea;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -19,6 +19,7 @@ jQuery(function($) {
 		orientation: [],
 		payType: [],
 		balanceStatus: [],
+		rentType: [],
 		repeatFlg: null,
 		validator: null,
 	};
@@ -40,7 +41,7 @@ jQuery(function($) {
 	});
 
 	$.extend(com.validator, houseSource.validator);
-	com.initChosen("belongUser", api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+	com.initChosen("belongUser", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	houseSource.buildItems.hsNo = $("#hsNo");
 	houseSource.buildItems.csNo = $("#csNo");
@@ -58,25 +59,28 @@ jQuery(function($) {
 		houseSource.buildItems.balanceStatus.bindData(res.balanceStatus,"key", "value");
 
 		$.each(res.hsType, function (i,va) {
-			houseSource.hsType[i] = va.value;
+			houseSource.hsType[va.key] = va.value;
 		});
 		$.each(res.houseType, function (i,va) {
-			houseSource.houseType[i] = va.value;
+			houseSource.houseType[va.key] = va.value;
 		});
 		$.each(res.discussType, function (i,val) {
-			houseSource.discussType[i] = val.value;
+			houseSource.discussType[val.key] = val.value;
 		});
 		$.each(res.decorateDegree, function (i,val) {
-			houseSource.decorateDegree[i] = val.value;
+			houseSource.decorateDegree[val.key] = val.value;
 		});
 		$.each(res.payType, function (i,v) {
-			houseSource.payType[i] = v.value;
+			houseSource.payType[v.key] = v.value;
 		});
 		$.each(res.balanceStatus, function (i,v) {
-			houseSource.balanceStatus[i] = v.value;
+			houseSource.balanceStatus[v.key] = v.value;
 		});
 		$.each(res.orientation, function (i,v) {
-			houseSource.orientation[i] = v.value;
+			houseSource.orientation[v.key] = v.value;
+		});
+		$.each(res.rentType, function (i,v) {
+			houseSource.rentType[v.key] = v.value;
 		});
 
 	}, null, false);
@@ -140,7 +144,7 @@ jQuery(function($) {
 				["户型:", v.house.houseType, "blue"],
 				["房屋朝向:", houseSource.orientation[v.house.orientation], "blue"],
 				["商议类型:", houseSource.discussType[v.discussType], "red"],
-				["交租方式:", v.rentType + "月", "blue"],
+				["交租方式:", houseSource.rentType[v.rentType], "blue"],
 				["房源等级:", v.housingGrade, "red"]
 				//["备注:", v.comment, "red"]
 			];

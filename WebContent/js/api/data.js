@@ -52,6 +52,7 @@ $.extend(api, {data: {
     addCustomerPhone: {url:"addCustomerPhone.do", server: "communion"},
     updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
     updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
+    updateCustomerPhoneForDstatus:{url:"updateCustomerPhoneForDstatus.do", server: "communion"},
     
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},

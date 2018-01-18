@@ -539,7 +539,7 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setCustomerName(decorationPO.getCustomer().getName());
 			quotationVO.setDesignerName(decorationPO.getDesigner().getCurrentName());
 			quotationVO.setDesignDepartmentName(decorationPO.getDesigner().getDept().getDeptName());
-			quotationVO.setHouseArea(decorationPO.getHouseArea());
+			quotationVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			quotationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
 			

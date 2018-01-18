@@ -198,10 +198,11 @@ $(function(){
         village.editFlg ? (url=api.data.updateVillage ): (url=api.data.addVillage);
 
         com.post(url,option, function(res){
+            village.modal.modal("hide");
             searcher.doSearch();
         });
 
-        village.modal.modal("hide");
+
     }
 
     //编辑按钮

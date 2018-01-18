@@ -99,9 +99,9 @@ $(function () {
                     }
                     var propertyArr = [
                         ["订单编号:", v.sales.orderId, "grey"],
-                        ["楼盘地址:", v.sales.village.villageName + " " + v.sales.houseNumber, "grey"],
+                        ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                         ["品牌:", v.sales.brand, "grey"],
-                        ["渠道:", v.sales.salesman.userName, "grey"],
+                        ["渠道:", v.sales.salesman.currentName, "grey"],
                         ["归属大区:", v.sales.region.deptName, "grey"],
                         ["归属部门:", v.sales.dept.deptName, "grey"],
                         ["总价:", v.total, "grey"],
@@ -316,7 +316,7 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['salesBalanceOrderId', 'salesBalanceNo', 'salesBalanceBrand', 'salesBalanceVillage', 'salesBalanceRegion', 'salesBalanceDept', 'salesBalanceStatus', 'salesBalanceType', 'salesBalanceFullpayTime', 'salesBalanceCreateTime', 'salesBalanceVenderTime', 'salesBalancePostTiem'];
+    var _condArr = ['sales_balanceOrderId', 'sales_balanceNo', 'sales_balanceBrand', 'sales_balanceVillage', 'sales_balanceRegion', 'sales_balanceDept', 'sales_balanceStatus', 'sales_balanceType', 'sales_balanceFullpayTime', 'sales_balanceCreateTime', 'sales_balanceVenderTime', 'sales_balancePostTiem'];
 
     var salesBalanceSearcher = new Searcher();
 
@@ -566,9 +566,7 @@ $(function () {
                     ["商品颜色:", v.salesItem.color.name, "grey"],
                     ["商品规格:", v.salesItem.format.info, "grey"],
                     ["售价:", v.salesItem.selling, "grey"],
-                    //["折扣:", v.salesItem.discount, "grey"],
                     ["折扣价:", v.salesItem.disPrice, "grey"],
-                    //["折让:", v.salesItem.postDis, "grey"],
                     ["折让价:", v.salesItem.price, "grey"],
                     ["数量:", v.num, "grey"],
                     ["总价:", v.total, "grey"],

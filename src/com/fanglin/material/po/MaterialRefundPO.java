@@ -73,6 +73,8 @@ public class MaterialRefundPO implements java.io.Serializable {
 	
 	private int balanceType;
 	
+	private float prePoint;
+	
 	private String comment;
 
 	@Id
@@ -264,6 +266,15 @@ public class MaterialRefundPO implements java.io.Serializable {
 
 	public void setBalanceType(int balanceType) {
 		this.balanceType = balanceType;
+	}
+	
+	@Column(name = "prePoint")
+	public float getPrePoint() {
+		return prePoint;
+	}
+
+	public void setPrePoint(float prePoint) {
+		this.prePoint = prePoint;
 	}
 
 	@Column(name = "comment")

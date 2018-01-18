@@ -56,21 +56,7 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	private UserPO creater;
 	
-	private UserPO collecter;
-	
-	private UserPO confirmer;
-	
-	private String createrName;
-	
-	private String collecterName;
-	
-	private String confirmerName;
-	
 	private Timestamp createTime;
-	
-	private Timestamp collcetTime;
-	
-	private Timestamp confirmTime;
 	
 	private float serviceMoney;
 	
@@ -161,53 +147,6 @@ public class ServicePaymentPO  implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cluid", referencedColumnName = "uid")
-	public UserPO getCollecter() {
-		return collecter;
-	}
-
-	public void setCollecter(UserPO collecter) {
-		this.collecter = collecter;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cfuid", referencedColumnName = "uid")
-	public UserPO getConfirmer() {
-		return confirmer;
-	}
-
-	public void setConfirmer(UserPO confirmer) {
-		this.confirmer = confirmer;
-	}
-
-	@Column(name = "createrName")
-	public String getCreaterName() {
-		return createrName;
-	}
-
-	public void setCreaterName(String createrName) {
-		this.createrName = createrName;
-	}
-
-	@Column(name = "collecterName")
-	public String getCollecterName() {
-		return collecterName;
-	}
-
-	public void setCollecterName(String collecterName) {
-		this.collecterName = collecterName;
-	}
-
-	@Column(name = "confirmerName")
-	public String getConfirmerName() {
-		return confirmerName;
-	}
-
-	public void setConfirmerName(String confirmerName) {
-		this.confirmerName = confirmerName;
-	}
-
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -215,24 +154,6 @@ public class ServicePaymentPO  implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
-	}
-
-	@Column(name = "collectTime")
-	public Timestamp getCollcetTime() {
-		return collcetTime;
-	}
-
-	public void setCollcetTime(Timestamp collcetTime) {
-		this.collcetTime = collcetTime;
-	}
-
-	@Column(name = "confirmTime")
-	public Timestamp getConfirmTime() {
-		return confirmTime;
-	}
-
-	public void setConfirmTime(Timestamp confirmTime) {
-		this.confirmTime = confirmTime;
 	}
 
 	@Column(name = "serviceMoney")

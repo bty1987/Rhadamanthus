@@ -183,7 +183,7 @@ jQuery(function($) {
 		createHouseSource.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
 	}, null, false);
 
-	com.initChosen('followId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": ""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('followId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
 		if($(this).val() == "" || $("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
@@ -512,7 +512,7 @@ jQuery(function($) {
 			createHouseSource.validator.houseNumber["regex"] = eval("/^" + res.buildingNameRule.rule+"$/g");
 			createHouseSource.validator.houseNumber["errorMsg"] = "楼盘名称规则(" + res.buildingNameRule.ruleContent+")";
 
-			$("#buildingRuleContent").html("说明："+ res.buildingNameRule.ruleContent + ";eg." + res.buildingNameRule.ruleExample);
+			$("#buildingRuleContent").html("说明："+ res.buildingNameRule.ruleContent + ";eg." + res.buildingNameRule.ruleExample + "! 楼牌号参数项无数据值时请填0!");
 			createHouseSource.rulefill = res.buildingNameRule.rulefill
 		}, null, false);
 	}

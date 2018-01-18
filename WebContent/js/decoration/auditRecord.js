@@ -92,7 +92,7 @@ $(function () {
         })
     });
 
-    com.initChosen('userId', api.personel.queryUserForNameByPinyinName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+    com.initChosen('userId', api.personel.queryUserForNameByPinyinName, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
     auditScalePage.userId.on('change',function () {
         com.post(api.personel.queryUserByUserId,{"user.userId":auditScalePage.userId.val()},function (res) {
             auditScalePage.deptId.val(res.user.dept.deptName);

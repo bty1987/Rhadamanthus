@@ -135,7 +135,7 @@ jQuery(function(a) {
                 },null,false)
 
         }).trigger("change");
-    user.items.statusSel = a("#statusSel").bindData(user.statusType);
+    user.items.statusSel = a("#statusSel").bindData(user.statusType,"key", "value");
     user.items.employWaySel = a("#employWaySel").bindData(user.employWayType);
     user.items.employTypeSel = a("#employTypeSel").bindData(user.employType);
     user.items.recommendMan = a("#recommendMan");
