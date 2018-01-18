@@ -1,6 +1,6 @@
 jQuery(function () {
     var sales = {
-        queryDecorationOrderByOrderIdUrl: api.decoration.queryDecorationOrderForCommonByOrderId,
+        queryDecorationByOrderIdUrl: api.decoration.queryDecorationForCommonByOrderId,
         typeahead: {
             goodes: "goodes",
             goods: "goods",
@@ -22,16 +22,16 @@ jQuery(function () {
         "sales.sid": sales.sid
     }, function (res) {
         $('#orderNo').val(res.sales.orderId);
-        $('#customerName').val(res.sales.customer.customerName);
+        $('#customerName').val(res.sales.customer.name);
         $('#salesmanName').val(res.sales.salesman.currentName);
         $('#instorer').val(res.sales.instorer.currentName);
         $('#guider').val(res.sales.guider.currentName);
-        $('#brands').attr('data-brand', res.sales.brand).val(res.sales.brand);
+        $('#brands').attr({'data-brand': res.sales.brand,'data-category':res.sales.category}).val(res.sales.brand+'-'+res.sales.category);
         $('#coupon').val(res.sales.coupon);
         $('#couponInfoo').val(res.sales.couponInfoo);
         $('#pretotals').val(res.sales.total);
         $('#comment').val(res.sales.comment);
-        $('#orderAdd').val(res.sales.village.villageName + " " + res.sales.houseNumber);
+        $('#orderAdd').val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
 
     }, null, false);
     /**销售项区 自动赋值 (校验同品牌)

@@ -83,10 +83,7 @@ public class VillageServiceImpl implements VillageService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addVillage(VillageVO villageVO)throws FLException{
 		
-		List<VillagePO> villagePOs = villageDao.queryVillageByName(villageVO.getName());
-		
-		if(villagePOs.size() > 0){
-			
+		if(villageDao.countVillageByNameACityProperId(villageVO.getName(),villageVO.getCityProper().getCityProperId()) > 0){
 			throw new FLException(130020, "楼盘已存在");
 		}
 		
@@ -121,7 +118,14 @@ public class VillageServiceImpl implements VillageService {
 	    if (villagePO == null) {
 	      throw new FLException(130003, "楼盘信息不存在");
 	    }
-
+		
+		if(!(villagePO.getName()).equals(villageVO.getName()) || (!(villagePO.getCityProper().getCityProperId()).equals(villageVO.getCityProper().getCityProperId())) ){
+			    
+			 if(villageDao.countVillageByNameACityProperId(villageVO.getName(),villageVO.getCityProper().getCityProperId()) > 0){
+					throw new FLException(130020, "楼盘已存在");
+				}
+		 } 
+		
 	    villageVO.setVid(villagePO.getVid());
 
 	    BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("villageId", "x", "y", "cityProper" ));
@@ -129,6 +133,7 @@ public class VillageServiceImpl implements VillageService {
 	    villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCityProperId()));
 
 	    villagePO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
+	    
 	    villagePO.setPinyinAll((String)PinYin4Util.getPinyin(villageVO.getName()).get(0));
 
 	    villageDao.update(villagePO);

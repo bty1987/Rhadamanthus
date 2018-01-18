@@ -155,7 +155,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.confirmerName = confirmerName;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -164,7 +164,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollcetTime() {
 		return collcetTime;
 	}
@@ -173,7 +173,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.collcetTime = collcetTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}

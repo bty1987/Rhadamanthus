@@ -59,6 +59,8 @@ public class MaterialRefundVO implements Serializable {
 	
 	private Integer balanceType;
 	
+	private Float prePoint;
+	
 	private String comment;
 	
 	public Long getMrid() {
@@ -227,6 +229,14 @@ public class MaterialRefundVO implements Serializable {
 
 	public void setBalanceType(Integer balanceType) {
 		this.balanceType = balanceType;
+	}
+	
+	public Float getPrePoint() {
+		return prePoint;
+	}
+
+	public void setPrePoint(Float prePoint) {
+		this.prePoint = prePoint;
 	}
 
 	public String getComment() {

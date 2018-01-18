@@ -43,7 +43,6 @@ var QuotationDetail = (function(){
 				//$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&orderType="+ quo.decorationType + "&type=2&time=" + params.loginTime),
 				$btnPrint : $('#printFinanceBtn').click(function () {
 					params.quotationId = quo.quotationid;
-					params.decorationOrderType = quo.decorationType;
 					params.type = 2;
 					params.subtype = -1;
 					com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
@@ -223,7 +222,7 @@ var QuotationDetail = (function(){
 			//未计算车运费之前的总价格+车运费+管理费(未打折的总价格)
 			_total = utils.changeThrDecimal(utils.accAdd( utils.accAdd(utils.accAdd(_undisPrice, _disPrice) , _transfee),  _managefee));
 			//如果订单类型为半价  2:半价
-			if(params.decorationOrderType == 2){
+			if(quo.decorationType == 2){
 				//(未计算车运费之前的总价格+车运费)*折扣
 				var dfee =  utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice),_transfee),_discount));
 				//计算车运费的总价格+折扣后的管理费(打折扣的总价格)
@@ -1407,8 +1406,7 @@ var QuotationDetail = (function(){
 			quo.orderid = params.orderId;
 			//报价ID
 			quo.quotationid = params.quotationId;
-			quo.decorationType = params.decorationOrderType;
-
+			quo.decorationType = params.orderType;
 			//管理费选择弹层初始化
 			com.post(api.quotation.queryQuotationForConfig, {}, function(res){
 				//将管理费取出 放入select标签中(下拉框)
@@ -1484,7 +1482,7 @@ var QuotationDetail = (function(){
 					_dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(utils.accAdd(_disPrice,_undisPrice), _transfee), _manageRate), _manageDiscount));
 					//未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
 					_total = utils.changeThrDecimal(utils.accAdd( utils.accAdd(utils.accAdd(_disPrice,_undisPrice) , _transfee),  _managefee));
-					if(params.decorationOrderType == 2){
+					if(quo.decorationType == 2){
 						//(未计算车运费之前的总价格+车运费)*折扣
 						var dfee =  utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice,_undisPrice),_transfee),_discount));
 						//计算车运费的总价格+折扣后的管理费(打折扣的总价格)

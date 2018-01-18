@@ -6,7 +6,7 @@ jQuery(function($) {
 		items: [],
 			
 		decorationOrderTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, ],
-		decorationOrderStatusMap: [{"key":"咨询", "value":"咨询"}, {"key":"量房", "value":"量房"}, {"key":"已报价", "value":"已报价"}, {"key":"定金", "value":"定金"}, {"key":"已签约", "value":"已签约"}, {"key":"废单", "value":"废单"}, {"key":"已完工", "value":"已完工"}, {"key":"合同终止", "value":"合同终止"}, ],
+		decorationOrderStatusMap: [],
 		decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
 		decorationPaymentRefundMap: [{"key":"设计费", "value":"设计费"}, {"key":"定金", "value":"定金"}, ],
 		materialPaymentTypeMap: [{"key":"2", "value":"定金"}, {"key":"3", "value":"补款"},{"key":"4", "value":"退款"}, {"key":"5", "value":"补款退款"},{"key":"6", "value":"券退款"},],
@@ -155,8 +155,10 @@ jQuery(function($) {
 	});
 	
 	$("#changeDecorationOrderForStatus").click(function(){
-		
-		$("#orderStatus").bindData(management.decorationOrderStatusMap, 'key', 'value');
+		com.post(api.ds.decoration,{},function (res) {
+			$("#orderStatus").bindData(res.decorationOrderStatus, 'key', 'value');
+		})
+
 		
 		management.decorationOrderForStatusModal.modal("show");
 	});
@@ -168,12 +170,12 @@ jQuery(function($) {
 		management.decorationPaymentForTimeModal.modal("show");
 	});
 	
-	$("#refundOrderForOrderId").click(function(){
-		
-		$("#refundOrderPaymentType").bindData(management.decorationPaymentRefundMap, 'key', 'value');
-		
-		management.refundOrderPaymentByOrderModal.modal("show");
-	});
+	// $("#refundOrderForOrderId").click(function(){
+	//
+	// 	$("#refundOrderPaymentType").bindData(management.decorationPaymentRefundMap, 'key', 'value');
+	//
+	// 	management.refundOrderPaymentByOrderModal.modal("show");
+	// });
 	
 	$("#changeMaterialSubOrderForOrderId").click(function(){
 		
@@ -219,11 +221,11 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"decorationOrder.orderId": $("#oldOrderId").val(),
+			"decoration.orderId": $("#oldOrderId").val(),
 			"decorationOrderId": $("#newOrderId").val(),
 		};
 		
-		com.post(api.decoration.changeDecorationOrderForOrderId, options, function(res){
+		com.post(api.decoration.changeDecorationForOrderId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -237,12 +239,12 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"decorationOrder.orderId": $("#orderIdForTime").val(),
+			"decoration.orderId": $("#orderIdForTime").val(),
 			"timeType": $("#timeType").val(),
 			"dateTime": $("#orderDate").val() + " " + $("#orderTime").val(),
 		};
 		
-		com.post(api.decoration.changeDecorationOrderForTime, options, function(res){
+		com.post(api.decoration.changeDecorationForTime, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -256,11 +258,11 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"decorationOrder.orderId": $("#orderIdForVersionId").val(),
-			"decorationOrder.versionId": $("#versionId").val(),
+			"decoration.orderId": $("#orderIdForVersionId").val(),
+			"decoration.version.versionId": $("#versionId").val(),
 		};
 		
-		com.post(api.decoration.changeDecorationOrderForVersionId, options, function(res){
+		com.post(api.decoration.changeDecorationForVersionId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -329,11 +331,11 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"decorationOrder.orderId": $("#orderIdForStatus").val(),
-			"decorationOrder.status": $("#orderStatus").val(),
+			"decoration.orderId": $("#orderIdForStatus").val(),
+			"decoration.status": $("#orderStatus").val(),
 		};
 		
-		com.post(api.decoration.changeDecorationOrderForStatus, options, function(res){
+		com.post(api.decoration.changeDecorationForStatus, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -366,10 +368,10 @@ jQuery(function($) {
 		}
 		
 		var options = {
-			"decorationOrder.orderId": $("#orderIdForQuotationTime").val(),
+			"decoration.orderId": $("#orderIdForQuotationTime").val(),
 		};
 		
-		com.post(api.decoration.subDecorationOrderForQuotationTime, options, function(res){
+		com.post(api.decoration.subDecorationForQuotationTime, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
@@ -410,7 +412,7 @@ jQuery(function($) {
 			return;
 		}
 		
-		var url = api.decoration.exportDecorationorderByContractTime.url + "?filters[0].data=" + $("#contractTimeRange").val() + "&filters[0].field=signTimeDateRange&filters[0].op=between&filters[1].field=status&filters[1].data=已签约&filters[1].op=eq";
+		var url = api.decoration.exportDecorationByContractTime.url + "?filters[0].data=" + $("#contractTimeRange").val() + "&filters[0].field=signTimeDateRange&filters[0].op=between&filters[1].field=status&filters[1].data=已签约&filters[1].op=eq";
 		
 		window.open(decodeURI(url));
 	});

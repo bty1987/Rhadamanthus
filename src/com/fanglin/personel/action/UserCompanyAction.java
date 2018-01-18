@@ -12,8 +12,8 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserCompanyService;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserCompanyVO;
-import com.fanglin.personel.vo.UserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -27,8 +27,9 @@ public class UserCompanyAction extends BaseListAction {
 	
 	private List<UserCompanyVO>  userCompanys;
 	
-	private UserVO user;
+	private UserBaseVO user;
 	
+	private List<String> cids;
 	
 	@Action(value = "queryUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserCompany() throws FLException{
@@ -38,6 +39,13 @@ public class UserCompanyAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	//@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserCompany() throws FLException{
+      
+		 userCompanyService.updateUserCompany(user,cids);
+		
+		return SUCCESS;
+	}
 	
 	public List<UserCompanyVO> getUserCompanys() {
 		return userCompanys;
@@ -47,12 +55,20 @@ public class UserCompanyAction extends BaseListAction {
 		this.userCompanys = userCompanys;
 	}
 
-	public UserVO getUser() {
+	public UserBaseVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user) {
+	public void setUser(UserBaseVO user) {
 		this.user = user;
+	}
+
+	public List<String> getCids() {
+		return cids;
+	}
+
+	public void setCids(List<String> cids) {
+		this.cids = cids;
 	}
 
 	

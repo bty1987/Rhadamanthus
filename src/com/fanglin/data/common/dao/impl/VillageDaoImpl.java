@@ -54,14 +54,6 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<VillagePO> queryVillageByName(String name){
-		
-		return session().createCriteria(VillagePO.class).add(Restrictions.eq("name", name)).list();
-		
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<VillagePO> queryVillageByCityProperId(String cityProperId){
 		return session().createCriteria(VillagePO.class).add(Restrictions.eq("cityProper.cityProperId", cityProperId)).list();
 	}
@@ -75,6 +67,15 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 		return count.intValue();
 	}
 	
+	@Override
+	public int countVillageByNameACityProperId(String name, String cityProperId) {
+
+		String sql = "select count(*) from communion.village where name = :name and cityProperId = :cityProperId";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("name", name).setString("cityProperId", cityProperId).uniqueResult();
+		
+		return count.intValue();
+	}
+	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
@@ -82,9 +83,9 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 			for(Filter filter: filters){
 			
 				if(StringUtils.isNotEmpty(filter.getData())){
-					if("no".equals(filter.getField()))
-						query.add(query.getCriterion("no", filter));
-					else if("cityProperId".equals(filter.getField())){
+					if("villageName".equals(filter.getField())){
+						query.add(Restrictions.or(Restrictions.ilike("name", filter.getData(),MatchMode.ANYWHERE),Restrictions.or(Restrictions.ilike("pinyinAB", filter.getData(),MatchMode.ANYWHERE),Restrictions.ilike("pinyinAll", filter.getData(),MatchMode.ANYWHERE))));
+					}else if("cityProperId".equals(filter.getField())){
 						query.add(query.getCriterion("cityProper.cityProperId", filter));
 					} else if("cityId".equals(filter.getField())){
 						query.alias("cityProper.city", "city");

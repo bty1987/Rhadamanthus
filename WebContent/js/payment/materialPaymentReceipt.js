@@ -70,17 +70,18 @@ jQuery(function($) {
 		for(var i=0;i<materialPayments.length;i++){
 			
 			var materialPayment = materialPayments[i];
-			
+
 			materialBrand = materialPayment.brand;
 
 			receipt.commonInfo["collectUserName"] = materialPayment.collecter.currentName;
 			receipt.commonInfo["collectTime"] = materialPayment.collectTime;
 			
-			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialPayment.materialBrand});
-			
-			if(materialPayment.comment && materialPayment.comment != ""){
-				materialPaymentDes += materialPayment.comment + " "
-			}
+			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialBrand});
+
+		}
+
+		if(materialPayment.comment && materialPayment.comment != ""){
+			materialPaymentDes = materialPayment.comment
 		}
 		
 		receipt.commonInfo["materialPaymentDes"] = materialPaymentDes;
@@ -196,7 +197,7 @@ function createReceiptTable(){
 	for(var j=0;j<paymentItems.length;j++){
 		
 		var paymentItem = paymentItems[j];
-		
+
 		var receInfoPaymentTr = $('<tr></tr>').appendTo(receiptTable);
 		var typeInfoPaymentTd = $('<td style="width: 20%; text-align: center;"></td>').text(paymentItem["materialBrand"]).appendTo(receInfoPaymentTr);
 		var typeInfoPaymentTd = $('<td style="width: 35%; text-align: center;"></td>').text(paymentItem["paymentType"]).appendTo(receInfoPaymentTr);

@@ -3,6 +3,7 @@ package com.fanglin.payment.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("salesPaymentService")
@@ -374,7 +376,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 	    BeanUtil.copyProperties(salesDao.get(salesPaymentVO.getSales().getSid()), salesPaymentPO.getSales(), Arrays.asList("house", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept"));
 	    UserPO userPO = userDao.queryUserByUserId(cuid);
 	    salesPaymentPO.setCreater(userPO);
-	    salesPaymentPO.setCreaterName(userPO.getUserName());
+	    salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 	    salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
 	    salesPaymentPO.setType(salesPaymentVO.getType());
 	    salesPaymentPO.setBrand(sales.getBrand());
@@ -913,7 +915,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		BeanUtil.copyProperties(salesDao.get(salesPaymentVO.getSales().getSid()), salesPaymentPO.getSales(), Arrays.asList("village", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept" ));
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		salesPaymentPO.setCreater(userPO);
-		salesPaymentPO.setCreaterName(userPO.getUserName());
+		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
 		salesPaymentPO.setType(salesPaymentVO.getType());
 		salesPaymentPO.setBrand(sales.getBrand());

@@ -36,7 +36,7 @@ jQuery(function($) {
                 ["设计师:", v.designer.currentName, "grey"],
                 ["业务部:", v.salesman.dept.deptName, "grey"],
                 ["业务员:", v.salesman.currentName, "grey"],
-                ["面积:", v.houseArea, "blue"],
+                ["面积:", v.house.buildArea, "blue"],
                 ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.measureTime, "grey"],
                 ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],

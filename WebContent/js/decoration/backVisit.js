@@ -67,7 +67,7 @@ $(function(){
                     isStaticResource : false,
                     flsource: {
                         url : api.personel.queryUserForNameByPinyinName,
-                        postData : {},
+                        postData : {"duty": "", "user.status":0},
                         resultList : "autoFillKeyValue",
                         keyPath : "key",
                         valuePath : "value",

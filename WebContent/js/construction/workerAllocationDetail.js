@@ -221,7 +221,7 @@ jQuery(function($) {
 				}, null, false);
 
 
-				com.initChosen('chanWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
+				com.initChosen('chanWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty, "user.status":0}, "autoFillKeyValue", "key", "value");
 
 				$("#chanWorkerSubmit").unbind("click");
 				$("#chanWorkerSubmit").on("click", function(){
@@ -267,7 +267,7 @@ jQuery(function($) {
 				}, null, false);
 
 
-				com.initChosen('putlineWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty}, "autoFillKeyValue", "key", "value");
+				com.initChosen('putlineWorkerName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": operate.duty, "user.status":0}, "autoFillKeyValue", "key", "value");
 
 				$("#putlineWorkerSubmit").unbind("click");
 				$("#putlineWorkerSubmit").on("click", function(){
@@ -337,7 +337,7 @@ jQuery(function($) {
 				if(schedule == 3 || schedule == 8){
 					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty}, "autoFillKeyValue", "key", "value");
 				}else{
-					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":operate.duty}, "autoFillKeyValue", "key", "value");
+					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {"duty":operate.duty, "user.status":0}, "autoFillKeyValue", "key", "value");
 				}
 
 				$("#" + operate.name + "StartTime").val(element[0].startTime);

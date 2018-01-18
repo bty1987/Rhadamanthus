@@ -19,6 +19,10 @@ public class CustomerPhonePO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;
+	
+	public static final short DEFAULTS_DISABLE_INT = 0;
+	
+	public static final short DEFAULTS_ENABLE_INT = 1;
 
 	private long cpid;
 	
@@ -27,6 +31,8 @@ public class CustomerPhonePO implements Serializable {
 	private String phone;
 	
 	private short status;
+	
+	private short defaults;
 	
 	public CustomerPhonePO() {
 		super();
@@ -73,6 +79,15 @@ public class CustomerPhonePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name="defaults")
+	public short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(short defaults) {
+		this.defaults = defaults;
 	}
 	
 }

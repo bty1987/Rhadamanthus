@@ -14,6 +14,8 @@ public class CustomerPhoneVO implements Serializable {
 	
 	private Short status;
 
+	private Short defaults;
+	
 	public Long getCpid() {
 		return cpid;
 	}
@@ -46,6 +48,13 @@ public class CustomerPhoneVO implements Serializable {
 		this.status = status;
 	}
 
-	
+	public Short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(Short defaults) {
+		this.defaults = defaults;
+	}
+
 	
 }

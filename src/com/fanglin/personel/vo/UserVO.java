@@ -42,7 +42,7 @@ public class UserVO implements Serializable {
 	
 	private String currentName;
 	
-	private String status;
+	private Short status;
 	
 	private Integer dtid;
 	
@@ -175,15 +175,15 @@ public class UserVO implements Serializable {
 		this.currentName = currentName;
 	}
 
-	public String getStatus(){
+    public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
-    public Integer getDtid() {
+	public Integer getDtid() {
 		return dtid;
 	}
 

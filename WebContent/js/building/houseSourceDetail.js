@@ -295,9 +295,9 @@ jQuery(function($) {
 		houseSourceDetail.items.sourceType.val(houseSources.sourceType);
 		houseSourceDetail.items.customerId.val(houseSources.customer.name);
 		houseSourceDetail.items.deedNum.val(houseSources.deedNum);
-		houseSourceDetail.items.deedValue.val(toMoney(houseSources.deedValue));
-		houseSourceDetail.items.unitPrice.val(toMoney(houseSources.unitPrice));
-		houseSourceDetail.items.totalPrice.val(toMoney(houseSources.totalPrice));
+		houseSourceDetail.items.deedValue.val(houseSources.deedValue);
+		houseSourceDetail.items.unitPrice.val(houseSources.unitPrice);
+		houseSourceDetail.items.totalPrice.val(houseSources.totalPrice);
 		houseSourceDetail.items.decorateTime.val(houseSources.decorateTime);
 		houseSourceDetail.items.decorateDegree.val(houseSources.decorateDegree);
 		houseSourceDetail.items.discussType.val(houseSources.discussType);
@@ -376,12 +376,4 @@ jQuery(function($) {
 		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 		imgA.colorbox(colorboxArgs);
 	};
-
-	//转换金额
-	function toMoney(num){
-		num = num.toFixed(2);
-		num = parseFloat(num)
-		num = num.toLocaleString();
-		return num;
-	}
 });

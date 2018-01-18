@@ -82,12 +82,12 @@ $(function () {
 
                     var propertyArr = [
                         ["订单编号:", v.orderId, "grey"],
-                        ["楼盘地址:", v.village.villageName + " " + v.houseNumber, "grey"],
+                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.customerName, "grey"],
-                        ["渠道:", v.salesman.userName, "grey"],
+                        ["渠道:", v.salesman.currentName, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
                         ["分区:", v.region.deptName, "grey"],
-                        ["导购:", v.guider.userName, "grey"],
+                        ["导购:", v.guider.currentName, "grey"],
                         ["驻店:", v.instorer.currentName, "grey"],
                         ["主材部:", v.guideDept.deptName, "grey"],
                         ["品类:", v.category, "grey"],
@@ -169,7 +169,7 @@ $(function () {
         };
 
     })();
-    var _condArr = ['no', 'orderId', 'instorerId', 'salesmanId', 'salesDeptName', 'fullpayTime'];
+    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTime'];
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 

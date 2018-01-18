@@ -2,6 +2,8 @@ package com.fanglin.payment.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -80,8 +82,8 @@ public class SalesPaymentPO  implements Serializable{
 
 	private UserPO creater;
 	
-	private String createrName;
-
+	private Timestamp createTime;
+	
 	private float referMoney;
 
 	public SalesPaymentPO() {
@@ -167,14 +169,14 @@ public class SalesPaymentPO  implements Serializable{
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-
-	@Column(name = "createrName")
-	public String getCreaterName() {
-		return createrName;
+	
+	@Column(name="createTime")
+	public Timestamp getCreateTime(){
+		return createTime;
 	}
 
-	public void setCreaterName(String createrName) {
-		this.createrName = createrName;
+	public void setCreateTime(Timestamp createTime){
+		this.createTime = createTime;
 	}
 
 	@Column(name = "referMoney")

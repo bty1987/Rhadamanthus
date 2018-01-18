@@ -108,6 +108,7 @@ jQuery(function($) {
 
 		if(qualityName == "supervisor"){
 			options["duty"] = qualityInfo[qualityName];
+			options["user.status"] = 0;
 			queryUserNameUrl = api.personel.queryUserForNameByDuty;
 		}
 		com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");

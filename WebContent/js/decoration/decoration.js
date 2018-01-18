@@ -164,30 +164,27 @@ $(function(){
 		}, false);
 
 		com.post(api.quotation.queryQuotationForDefaultByOrderId,{"quotation.orderId":params["decoration.orderId"]},function (res) {
-			if(utils.accSub($("#customerInfoDialog").attr("totalPrice"), res.totalPrice) > 100){
+			if(utils.accSub($("#customerInfoDialog").attr("totalPrice"), res.quotation.totalPrice) > 100){
 				bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function(yes) {
-					if(!yes){
-						return;
+					if(yes){
+						com.post(api.decoration.signDecorationContract, options, function(res){
+							searcher.doSearch();
+						}, null, false);
+						order.customerInfoModal.modal("hide");
 					}
 				});
+			}else {
+				com.post(api.decoration.signDecorationContract, options, function(res){
+					searcher.doSearch();
+				}, null, false);
+				order.customerInfoModal.modal("hide");
 			}
 		},function () {
 			com.showAlert(com.error,"报价不存在")
 			return;
 		},false)
 
-		com.post(api.decoration.signDecorationContract, options, function(res){
-			if(res.errorCode == 0){
-				com.post(api.data.updateCustomerNameAPhone, options, function(res){
-					com.showAlert(com.info, "操作成功");
-					searcher.doSearch();
-				}, null, false);
-			}else{
-				com.showAlert(com.error, res.errorMsg);
-			}
-		}, null, false);
 
-		order.customerInfoModal.modal("hide");
 	});
 
 	initializeContent();
@@ -253,10 +250,10 @@ $(function(){
 								propertyArr.push(["业务员:", v.salesman.currentName, "grey"]);
 								break;
 							case "面积":
-								propertyArr.push(["面积:", v.houseArea, "blue"]);
+								propertyArr.push(["面积:", v.house.buildArea, "blue"]);
 								break;
 							case "折扣":
-								propertyArr.push(["折扣:", v.discount = null? "":v.discount, "blue"]);
+								propertyArr.push(["折扣:", com.checkNull(v.discount,10), "blue"]);
 								break;
 							case "签单额":
 								propertyArr.push(["签单额:", v.orderTotalPrice, "grey"]);
@@ -437,8 +434,7 @@ $(function(){
 		//报价
 		var viewDecorationQuotateIndex = function (decorationOrderId, type){
 			params["decorationOrderId"] = decorationOrderId;
-			params["decorationType"] = type;
-			params.decorationType = type;
+			params["orderType"] = type;
 			params.historyPage = api.index.decorationIndex.url;
 			com.switchPage(api.index.quotationIndex.url);
 		}
@@ -530,13 +526,45 @@ $(function(){
 		}
 		//签订合同
 		function signOrder(orderId, customerId, orderTotalPrice){
-			params["decoration.orderId"] = orderId;
-			params["customer.customerId"] = customerId;
-			$("#customerInfoDialog").attr("totalPrice",orderTotalPrice);
+			// params["decoration.orderId"] = orderId;
+			// params["customer.customerId"] = customerId;
+			// $("#customerInfoDialog").attr("totalPrice",orderTotalPrice);
 
-			com.cleanItems(decorationAdvance.items);
+			// com.cleanItems(decorationAdvance.items);
+            //
+			// order.customerInfoModal.modal("show");
 
-			order.customerInfoModal.modal("show");
+			var cId = params["customer.customerId"];
+
+			var options = {
+				"decorationContract.orderId": orderId,
+			}
+
+			com.post(api.quotation.queryQuotationForDefaultByOrderId,{"quotation.orderId":orderId},function (res) {
+
+				if(res.quotation.qid == null){
+					com.showAlert(com.error,"报价不存在")
+					return;
+				}
+
+				if(utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100){
+					bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function(yes) {
+						if(yes){
+							com.post(api.decoration.signDecorationContract, options, function(res){
+								searcher.doSearch();
+							}, null, false);
+						}
+					});
+				}else {
+					com.post(api.decoration.signDecorationContract, options, function(res){
+						searcher.doSearch();
+					}, null, false);
+				}
+			},function () {
+				com.showAlert(com.error,"报价不存在")
+				return;
+			},false)
+
 		}
 		//合同终止
 		function terminalOrder(decorationOrderId, rowId){

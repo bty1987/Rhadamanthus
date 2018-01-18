@@ -64,8 +64,6 @@ public class DecorationVO implements Serializable {
 	
 	private Integer resourceType;
 	
-	private Float houseArea;
-	
 	private Float freeArea;
 	
 	
@@ -162,14 +160,6 @@ public class DecorationVO implements Serializable {
 
 	public void setApartmentType(String apartmentType) {
 		this.apartmentType = apartmentType;
-	}
-
-	public Float getHouseArea() {
-		return houseArea;
-	}
-
-	public void setHouseArea(Float houseArea) {
-		this.houseArea = houseArea;
 	}
 
 	public Float getFreeArea() {

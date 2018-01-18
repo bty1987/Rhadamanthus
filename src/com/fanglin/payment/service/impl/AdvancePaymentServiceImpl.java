@@ -171,6 +171,8 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setCompany(company);
+		paymentPO.setCreater(userPO);
+		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
 

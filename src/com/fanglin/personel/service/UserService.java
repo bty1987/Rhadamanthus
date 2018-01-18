@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
@@ -31,22 +32,22 @@ public interface UserService {
 	
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
-	public List<UserVO> queryUserForNameByPinyinName(String pinyinName,Integer company) throws FLException ;
+	public List<UserBaseVO> queryUserForNameByPinyinName(String pinyinName,UserVO userVO,Integer company) throws FLException ;
 	
-	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty) throws FLException;
+	public List<UserBaseVO> queryUserForNameByDuty(String pinyinName,UserVO userVO, String duty) throws FLException;
 	
-	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO)throws FLException ;
+	public List<UserBaseVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO)throws FLException ;
 		
 	public UserVO validateUser(String loginId, String password) throws FLException;
 	
-	public int resetPassword(String UserId,Integer company) throws FLException;
+	public int resetPassword(UserVO userVO,Integer company) throws FLException;
 	
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
 	
 	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
 	
 	public void updateUserForBaseInfo(UserInfoVO userInfoVO) throws FLException;
-	
+
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
 	
 	public void updateUserForAdvance(UserVO userVO) throws FLException;

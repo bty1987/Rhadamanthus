@@ -56,7 +56,7 @@ jQuery(function($) {
         for(var i=0;i<salesPayments.length;i++){
 
             var salesPayment = salesPayments[i];
-            salesBrand = salesPayment.brand;
+            salesBrand = salesPayment.sales.brand;
 
             commonInfo["orderId"] = salesPayment.sales.orderId;
             commonInfo["no"] = salesPayment.sales.no;
@@ -68,12 +68,12 @@ jQuery(function($) {
             commonInfo["collectUserName"] = salesPayment.salesReceipt.collecterName;
             commonInfo["collectTime"] = salesPayment.salesReceipt.collectTime;
 
-            receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[salesPayment.type], "money": salesPayment.referMoney, "salesBrand": salesPayment.brand});
+            receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[salesPayment.type], "money": salesPayment.referMoney, "salesBrand": salesBrand});
 
-            if(salesPayment.salesReceipt.des && salesPayment.salesReceipt.des != ""){
-                salesPaymentDes += salesPayment.salesReceipt.des + " "
-            }
+        }
 
+        if(salesPayment.salesReceipt.comment && salesPayment.salesReceipt.comment != ""){
+            salesPaymentDes = salesPayment.salesReceipt.comment
         }
 
         commonInfo["salesPaymentDes"] = salesPaymentDes;

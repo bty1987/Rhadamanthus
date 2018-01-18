@@ -33,7 +33,7 @@ $.extend(api, {common: {
    
 
     changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},
-    changeMaterialSubOrderForOrderId: {url: "changeMaterialSubOrderForOrderId.do"},
+    changeMaterialForOrderId: {url: "changeMaterialForOrderId.do"},
     changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},
     
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},

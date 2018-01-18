@@ -13,8 +13,8 @@ import com.fanglin.core.security.AESHelper;
 import com.fanglin.personel.dao.UserCompanyDao;
 import com.fanglin.personel.po.UserCompanyPO;
 import com.fanglin.personel.service.UserCompanyService;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserCompanyVO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
@@ -29,7 +29,7 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 	private UserCompanyDao userCompanyDao;
 	
 	@Override
-	public List<UserCompanyVO> queryUserCompany(UserVO userVO) throws FLException {
+	public List<UserCompanyVO> queryUserCompany(UserBaseVO userVO) throws FLException {
 	
 		List<UserCompanyVO> userCompanyVOs = new ArrayList<UserCompanyVO>();
 		List<UserCompanyPO> userCompanyPOs = userCompanyDao.queryUserCompany(userVO.getUid());
@@ -59,7 +59,7 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateUserCompany(UserVO userVO, List<String> cids)throws FLException {
+	public int updateUserCompany(UserBaseVO userVO, List<String> cids)throws FLException {
 		
 		int uid = userVO.getUid();
 		

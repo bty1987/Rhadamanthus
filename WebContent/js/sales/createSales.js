@@ -1,7 +1,7 @@
 jQuery(function () {
 
     var sales = {
-        queryDecorationOrderByOrderIdUrl: api.decoration.queryDecorationOrderForCommonByOrderId,
+        queryDecorationByOrderIdUrl: api.decoration.queryDecorationForCommonByOrderId,
         typeahead: {
             goodes: "goodes",
             goods: "goods",
@@ -14,7 +14,7 @@ jQuery(function () {
         gtype: null,
         colorids: null,
         formatids: null,
-        customerid: null,
+        cid: null,
         salesmanid: null,
         flag: true,
         salePostData: {},
@@ -288,11 +288,11 @@ jQuery(function () {
     $('#orderId').on("change", function () {
 
         var option = {};
-        option["decorationOrder.orderId"] = $('#orderId').val();
-        com.post(sales.queryDecorationOrderByOrderIdUrl, option, function (data) {
-            $("#customerName").val(data.decorationOrder.customer.customerName);
-            $("#salesmanName").removeAttr('data-typeahead-key').val(data.decorationOrder.designer);
-            $("#orderAddr").val(data.decorationOrder.village.villageName + " " + data.decorationOrder.houseNumber);
+        option["decoration.orderId"] = $('#orderId').val();
+        com.post(sales.queryDecorationByOrderIdUrl, option, function (data) {
+            $("#customerName").val(data.decoration.customer.name);
+            $("#salesmanName").removeAttr('data-typeahead-key').val(data.decoration.designer.currentName);
+            $("#orderAddr").val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
 
             if ($('#searchInfo').find('#customerName').val() != "") {
                 $('#searchInfo').find('#customerName').next().remove();
@@ -304,18 +304,13 @@ jQuery(function () {
                 $('#searchInfo').find('#orderAddr').next().remove();
             }
             //客户Id
-            sales.customerid = data.decorationOrder.customer.customerId;
+            sales.cid = data.decoration.customer.cid;
             //业务员Id
-            sales.salesmanid = data.decorationOrder.designerId;
+            sales.salesmanid = data.decoration.designer.userId;
             //楼盘id
-            sales.salePostData["sales.village.villageId"] = data.decorationOrder.village.villageId;
-            //楼盘编号
-            if (data.decorationOrder.houseNumber == null) {
-                sales.salePostData["sales.houseNumber"] = "";
-            } else {
-                sales.salePostData["sales.houseNumber"] = data.decorationOrder.houseNumber;
-            }
-            sales.salePostData["sales.dompanys"] = data.decorationOrder.dompany;
+            sales.salePostData["sales.house.hid"] = data.decoration.house.hid;
+
+            sales.salePostData["sales.dompanys"] = data.decoration.dompany;
 
         }, function (e) {
             com.showAlert(null, "未查询到此订单!");
@@ -331,7 +326,7 @@ jQuery(function () {
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -350,7 +345,7 @@ jQuery(function () {
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -369,7 +364,7 @@ jQuery(function () {
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: ""}, this.options.postData);
+            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -422,7 +417,7 @@ jQuery(function () {
 
             _option = {
                 "sales.orderId": $('#orderId').val(),
-                "sales.customer.customerId": sales.customerid,
+                "sales.customer.cid": sales.cid,
                 "sales.guider.userId": $('#guider').attr('data-typeahead-key'),
                 "sales.instorer.userId": $('#instorer').attr('data-typeahead-key'),
                 "sales.category": $('#brands').attr('data-brand').split('-')[1],
@@ -431,16 +426,13 @@ jQuery(function () {
                 "sales.comment": $('#comment').val(),
                 "sales.maling": $('#maling').val() != "" ? parseFloat($('#maling').val()) : 0,
                 "sales.total": isNaN(parseFloat($('#totals').val())) ? 0 : parseFloat($('#totals').val()),
-                "sales.fullpayStatus": -1,
-                "sales.depositpayStatus": -1,
-                "sales.village.villageId": sales.salePostData["sales.village.villageId"],
-                "sales.houseNumber": sales.salePostData["sales.houseNumber"],
+                "sales.house.hid": sales.salePostData["sales.house.hid"],
                 "sales.dompanys": sales.salePostData["sales.dompanys"],
             }
 
             //客户id
             //业务员(有问题)
-            if ($('#salesmanName')[0].hasAttribute('data-typeahead-key')) {
+            if ($('#salesmanName').attr('data-typeahead-key')!=undefined) {
                 _option["sales.salesman.userId"] = $('#salesmanName').attr('data-typeahead-key');
             } else {
                 _option["sales.salesman.userId"] = sales.salesmanid;

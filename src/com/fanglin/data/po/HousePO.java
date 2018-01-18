@@ -96,7 +96,7 @@ public class HousePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "no", referencedColumnName="no")
+	@JoinColumn(name = "vid", referencedColumnName="vid")
 	public VillagePO getVillage() {
 		return village;
 	}

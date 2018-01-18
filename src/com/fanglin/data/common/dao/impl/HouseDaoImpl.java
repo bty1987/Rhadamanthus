@@ -3,6 +3,7 @@ package com.fanglin.data.common.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -32,10 +33,11 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 	}
 	
 	@Override
-	public HousePO queryHouseByNoAHnum(String no,String houseNumber,Short status){
+	public HousePO queryHouseByNoAHnum(String no, String houseNumber, Short status){
 		
 		Criteria criteria =  session()
 		        .createCriteria(HousePO.class)
+		        .createAlias("village", "village")
 		        .add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR , no))
 		        .add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
 		
@@ -44,7 +46,6 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 		}
 		
 		return (HousePO) criteria.uniqueResult();
-		
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
@@ -53,8 +54,8 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 			query.alias("village", "village");
 			for(Filter filter : filters){
 			
-				if("no".equals(filter.getField())){
-					query.add(query.getCriterion("village.no", filter));
+				if("villageName".equals(filter.getField())){
+					query.add(Restrictions.or(Restrictions.ilike("village.name", filter.getData(),MatchMode.ANYWHERE),Restrictions.or(Restrictions.ilike("village.pinyinAB", filter.getData(),MatchMode.ANYWHERE),Restrictions.ilike("village.pinyinAll", filter.getData(),MatchMode.ANYWHERE))));
 				}else if("type".equals(filter.getField())){
 					query.add(Restrictions.eq("type",Short.valueOf(filter.getData())));
 				}else if("through".equals(filter.getField())){

@@ -241,10 +241,10 @@ jQuery(function($) {
                 ["设计部:", v.decoration.designer.dept.deptName, "grey"],
                 ["应收金额:", v.advanceMoney, "blue"],
                 ["服务费:", v.serviceMoney, "blue"],
-                ["收款人:", v.collecter.currentName, "grey"],
-                ["收款时间:", v.collcetTime, "grey"],
+                ["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
+                ["收款时间:", v.serviceReceipt.collectTime, "grey"],
                 ["状态:", v.status == "1" ? "已收款" : "", "red"],
-                ["备注:", v.des, "grey"],
+                ["备注:", v.comment, "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -259,7 +259,7 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				if(v.collecter.userId!=params.userInfo.user.userId){
+				if(v.serviceReceipt.collecter.userId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
@@ -323,8 +323,8 @@ jQuery(function($) {
 				 ['设计部','decoration.designer.dept.deptName'],
 				 ['应收金额', 'advanceMoney'],
 				 ['服务费', 'serviceMoney'],
-				 ['收款人', 'collecter.currentName'],
-				 ['收款时间', 'collcetTime'],
+				 ['收款人', 'serviceReceipt.collecter.currentName'],
+				 ['收款时间', 'serviceReceipt.collectTime'],
 				 ['状态', 'status == "1" ? "已收款" : ""'],
 				 ['备注', 'comment'],
 				 ['现金', 'serviceReceipt.cash'],

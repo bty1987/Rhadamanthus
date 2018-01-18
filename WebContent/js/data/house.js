@@ -211,7 +211,7 @@ $(function() {
 
     searcher.init(_condArr, "condList", api.data.pageHouse, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "villagePostData", null, false, null, function () {
+    }, "pagenation", "housePostData", null, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addHouse').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -419,7 +419,7 @@ $(function() {
                 house.validator.houseNumber["regex"] = eval("/^"+res.buildingNameRule.rule+"$/g");
                 house.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+res.buildingNameRule.ruleContent+")";
 
-                $("#buildingRuleContent").html("说明："+res.buildingNameRule.ruleContent+";eg."+res.buildingNameRule.ruleExample+"空出来的输入框添0");
+                $("#buildingRuleContent").html("说明："+res.buildingNameRule.ruleContent+";eg."+res.buildingNameRule.ruleExample+"! 楼牌号参数项无数据值时请填0!");
                 house.rulefill=res.buildingNameRule.rulefill
             }, null, false);
     }

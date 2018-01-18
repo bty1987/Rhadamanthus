@@ -26,9 +26,9 @@ public interface UserDao extends Dao<UserPO> {
 	
 	public UserPO queryUserByOldUserId(String oldUserId);
 	
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Integer company);
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName, String duty);
+	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName,Short status, String duty);
 	
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO);
 

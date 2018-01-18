@@ -23,6 +23,7 @@ import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserService;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 
@@ -44,7 +45,7 @@ public class UserAction extends BaseListAction {
 	
 	private String duty;
 	
-	private List<UserVO> users;
+	private List<UserBaseVO> userBases;
 	
 	private List<String> dutys;
 	
@@ -53,6 +54,10 @@ public class UserAction extends BaseListAction {
 	private List<KeyValueVO> autoFillKeyValue;
 	
 	private List<String> autoFillList;	
+	
+	private String password;
+
+	private String rePassword;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
@@ -106,19 +111,19 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByPinyinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByPinyinName() throws FLException{
 		
-		users = userService.queryUserForNameByPinyinName(pinyinName,queryCompany());
-		
-		packageUserName(users);
+		userBases = userService.queryUserForNameByPinyinName(pinyinName,user,queryCompany());
+	
+		packageUserName(userBases);
 		
 		return SUCCESS;
 	}
 
 	@Action(value = "queryUserForNameByDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDuty() throws FLException{
-		
-		users = userService.queryUserForNameByDuty(pinyinName, duty);
-		
-		packageUserName(users);
+	
+		userBases = userService.queryUserForNameByDuty(pinyinName,user, duty);
+	
+		packageUserName(userBases);
 		
 		return SUCCESS;
 	}
@@ -126,36 +131,74 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserForNameByDutysAO", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserForNameByDutysAO() throws FLException{
 		
-		users = userService.queryUserForNameByDutysAO(pinyinName, dutys, dutysO);
-		
-		packageUserName(users);
+		userBases = userService.queryUserForNameByDutysAO(pinyinName,dutys, dutysO);
+	
+		packageUserName(userBases);
 		
 		return SUCCESS;
 	}
 
-	
 	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resetPassword() throws FLException{
 		
-		userService.resetPassword(user.getUserId(),queryCompany());
+		userService.resetPassword(user,queryCompany());
 	
 		return SUCCESS;
 	}
 	
-	private void packageUserName(List<UserVO> users){
-		for(UserVO userVO: users){
+	//@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String addUser() throws FLException {
+
+		userService.addUser(userInfo, queryCompany());
+
+		return SUCCESS;
+	}
+
+	//@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateUser() throws FLException {
+		
+		userService.updateUser(userInfo, queryCompany());
+
+		return SUCCESS;
+	}
+
+	//@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateUserForAdvance() throws FLException {
+		
+		userService.updateUserForAdvance(user);
+
+		return SUCCESS;
+	}
+
+	//@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String changePassword() throws FLException {
+		
+		userService.checkUserForPassword(queryUserId(), password, rePassword);
+
+		return SUCCESS;
+	}
+
+	//@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateUserForBaseInfo() throws FLException {
+	
+		userService.updateUserForBaseInfo(userInfo);
+
+		return SUCCESS;
+	}
+	private void packageUserName(List<UserBaseVO> users){
+		for(UserBaseVO userBaseVO: users){
 			KeyValueVO keyValueVO = new KeyValueVO();
 			
 			StringBuffer value = new StringBuffer();
-			value.append(userVO.getCurrentName());
+			value.append(userBaseVO.getCurrentName());
 			value.append("-");
-			value.append(userVO.getDept().getDeptName());
+			value.append(userBaseVO.getDept().getDeptName());
 			
-			keyValueVO.setKey(userVO.getUserId());
+			keyValueVO.setKey(userBaseVO.getUserId());
 			keyValueVO.setValue(value.toString());
 			
 			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(userVO.getCurrentName());
+			getAutoFillList().add(userBaseVO.getCurrentName());
 		}
 	}
 
@@ -229,13 +272,28 @@ public class UserAction extends BaseListAction {
 		this.dutysO = dutysO;
 	}
 
-	public List<UserVO> getUsers() {
-		return users;
+	public List<UserBaseVO> getUserBases() {
+		return userBases;
 	}
 
-	public void setUsers(List<UserVO> users) {
-		this.users = users;
+	public void setUserBases(List<UserBaseVO> userBases) {
+		this.userBases = userBases;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public String getRePassword() {
+		return rePassword;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setRePassword(String rePassword) {
+		this.rePassword = rePassword;
+	}
 
 }

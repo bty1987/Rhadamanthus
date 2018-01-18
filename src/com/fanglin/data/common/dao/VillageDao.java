@@ -22,10 +22,10 @@ public interface VillageDao extends Dao<VillagePO> {
 	
 	public List<VillagePO> queryVillageByPinyin(Paging paging, String name);
 	
-	public List<VillagePO> queryVillageByName(String pinyinName);
-	
 	public List<VillagePO> queryVillageByCityProperId(String cityProperId);
 	
 	public int countVillageByCityProperId(String cityProperId);
+	
+	public int countVillageByNameACityProperId(String name, String cityProperId);
 	
 }

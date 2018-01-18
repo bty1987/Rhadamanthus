@@ -90,7 +90,7 @@ public class SalesReceiptVO  implements Serializable{
 		this.confirmer = confirmer;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -99,7 +99,7 @@ public class SalesReceiptVO  implements Serializable{
 		this.confirmTime = confirmTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}

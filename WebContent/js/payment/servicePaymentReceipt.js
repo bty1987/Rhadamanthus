@@ -115,7 +115,7 @@ function generateOneReceipt(){
 
 	var num = receipt.receipts.length;
 	var count = 0;
-	
+
 	if(num%receipt.onePageCount == 0){
 		count = Math.floor(num / receipt.onePageCount);
 	}else{
@@ -214,7 +214,7 @@ function generateOneReceipt(){
 		var cashierReceiptSpan = $('<span></span>').text(' 交款人: ').appendTo(summaryReceiptDiv);
 		
 		var addrReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-		var collectDesTd = $('<td colspan="4"></td>').text('备注: ' + receipt.order.serviceReceiptDes).appendTo(addrReceiptTr);
+		var collectDesTd = $('<td colspan="4"></td>').text('备注: ' + receipt.serviceReceipt.comment).appendTo(addrReceiptTr);
 
 	}
 }

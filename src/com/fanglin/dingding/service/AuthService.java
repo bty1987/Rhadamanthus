@@ -36,9 +36,13 @@ public class AuthService {
 
 		JSONObject response = HttpHelper.httpGet(url);
 		
-		DAccessTokenPO dAccessTokenPO = response.getObject("dAccessToken", DAccessTokenPO.class);
-		
-		return dAccessTokenPO.getAccesstoken();
+		if(response == null){
+			return "";
+		}else{
+			DAccessTokenPO dAccessTokenPO = response.getObject("dAccessToken", DAccessTokenPO.class);
+			
+			return dAccessTokenPO.getAccesstoken();
+		}
 	}
 	
 	public   String getJsapiTicket(String company) {

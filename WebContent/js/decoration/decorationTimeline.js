@@ -231,7 +231,7 @@ $(function(){
         var decoration = req.decoration;
 
         $('[name="uname"]',$info).text(decoration.customer.name);
-        $('[name="addr"]',$info).text(decoration.house.village.villageName+' '+decoration.house.houseNumber);
+        $('[name="addr"]',$info).text(decoration.house.village.name+' '+decoration.house.houseNumber);
         $('[name="dname"]',$info).text(decoration.designer.currentName);
         $('[name="dphone"]',$info).text(decoration.designer.phone|| '');
         $('[name="sname"]',$info).text(decoration.salesman.currentName);

@@ -225,6 +225,8 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setCompany(decorationPO.getCompany());
+		paymentPO.setCreater(user);
+		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 		advanceReceiptDao.save(advanceReceiptPO);
@@ -410,6 +412,8 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_STR);
 		paymentPO.setCompany(decorationPO.getCompany());
+		paymentPO.setCreater(user);
+		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
@@ -477,6 +481,9 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setType(PaymentPO.PAYMENT_TYPE_EXTRACT_STR);
 		paymentPO.setCompany(decorationPO.getCompany());
+		paymentPO.setCreater(user);
+		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);

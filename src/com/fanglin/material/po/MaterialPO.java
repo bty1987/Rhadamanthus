@@ -44,9 +44,9 @@ public class MaterialPO implements java.io.Serializable {
 	
 	public static final String COLUMN_INSTOREID_STR = "instorer.userId";
 	
-	public static final String COLUMN_REGIONID_STR = "regionId";
+	public static final String COLUMN_REGIONID_STR = "regionName";
 	
-	public static final String COLUMN_DEPARTMENTID_STR = "departmentId";
+	public static final String COLUMN_DEPARTMENTID_STR = "departmentName";
 	
 	public static final String COLUMN_MATERIALDEPARTMENT_STR = "materialDepartment";
 

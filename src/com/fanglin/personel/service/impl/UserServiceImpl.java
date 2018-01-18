@@ -43,6 +43,7 @@ import com.fanglin.personel.po.UserExperiencePO;
 import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
@@ -148,7 +149,7 @@ public class UserServiceImpl implements UserService {
 	public UserInfoVO queryUserInfoByUserId(UserInfoVO userInfoVO) throws FLException {
 		
 		UserVO userVO = userInfoVO.getUser();
-	
+		
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 		
 		if(userInfoPO == null){
@@ -177,7 +178,7 @@ public class UserServiceImpl implements UserService {
 	public UserInfoVO queryUserForSelfByUserId(UserInfoVO userInfoVO) throws FLException {
 		
 		UserVO userVO = userInfoVO.getUser();
-	
+		
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 		
 		if(userInfoPO == null){
@@ -207,54 +208,60 @@ public class UserServiceImpl implements UserService {
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
 		}
-		
+	
 	    userVO = convertBean(userPO);
 		
 		return userVO;
 	}
 	
 	@Override
-	public List<UserVO> queryUserForNameByPinyinName(String pinyinName,Integer company) throws FLException{
-		List<UserVO> userVOs = new ArrayList<UserVO>();
-
-		Paging paging = new Paging(0, 10);
-
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName, company);
-
+	public List<UserBaseVO> queryUserForNameByPinyinName(String pinyinName,UserVO userVO,Integer company) throws FLException{
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 		
+		Paging paging = new Paging(0, 10);
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName,userVO.getStatus(), company);
+
 		for(UserPO userPO: userPOs){
-			userVOs.add(convertBean(userPO));
+			
+			userBaseVOs.add(convertBaseBean(userPO));
+			
 		}
 		
-		return userVOs;
-	}
-	
-	@Override
-	public List<UserVO> queryUserForNameByDuty(String pinyinName, String duty) throws FLException{
-		List<UserVO> userVOs = new ArrayList<UserVO>();
-
-		Paging paging = new Paging(0, 10);
-	
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADuty(paging, pinyinName, duty);
-		for(UserPO userPO: userPOs){
-			userVOs.add(convertBean(userPO));
-		}
-		return userVOs;
+		return userBaseVOs;
 	}
 
 	@Override
-	public List<UserVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO) throws FLException{
-		List<UserVO> userVOs = new ArrayList<UserVO>();
-
+	public List<UserBaseVO> queryUserForNameByDuty(String pinyinName,UserVO userVO, String duty) throws FLException{
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
+		
 		Paging paging = new Paging(0, 10);
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADuty(paging, pinyinName,userVO.getStatus(), duty);
+		
+		for(UserPO userPO: userPOs){
+			
+			userBaseVOs.add(convertBaseBean(userPO));
+			
+		}
+		return userBaseVOs;
+	}
 
+	@Override
+	public List<UserBaseVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO) throws FLException{
+		
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
+		
+		Paging paging = new Paging(0, 10);
+		
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADutysAO(paging, pinyinName, dutysA, dutysO);
 
 		for(UserPO userPO: userPOs){
-			userVOs.add(convertBean(userPO));
+			
+			userBaseVOs.add(convertBaseBean(userPO));
+			
 		}
-		
-		return userVOs;
+		return userBaseVOs;
 	}
 	
 	@Override
@@ -264,7 +271,7 @@ public class UserServiceImpl implements UserService {
 		UserVO userVO = null;
 		
 		if(userPO != null){
-			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getStatus().equals("离职")){
+			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && userPO.getStatus() !=1){
 				
 				userVO = new UserVO(new RoleVO(), new DepartmentVO(),new DutyVO());
 				
@@ -284,7 +291,7 @@ public class UserServiceImpl implements UserService {
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException {
 		
 		UserVO userVO = userInfoVO.getUser();
-		
+	
 		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
 		
 		if(userPOs.size() > 0){
@@ -358,8 +365,8 @@ public class UserServiceImpl implements UserService {
 		
 		UserPO userPO = userInfoPO.getUser();
 		
-		String newstatus = userInfoVO.getUser().getStatus();
-		String oldstatus = userPO.getStatus();
+		short newstatus = userInfoVO.getUser().getStatus();
+		short oldstatus = userPO.getStatus();
 		
 		String newdeptId = userVO.getDept().getDeptId();
 		String olddeptId = userPO.getDept().getDeptId();
@@ -381,7 +388,7 @@ public class UserServiceImpl implements UserService {
 		
 		userDao.update(userPO);
 		
-		if(!newstatus.equals(oldstatus) || !newdeptId.equals(olddeptId) || !oldduty.equals(newduty)){
+		if(newstatus !=oldstatus || !newdeptId.equals(olddeptId) || !oldduty.equals(newduty)){
 			
 			DepartmentPO ndept = departmentDao.queryDepartmentByDeptId(newdeptId);
 		
@@ -390,7 +397,7 @@ public class UserServiceImpl implements UserService {
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 			
 			userExperiencePO.setUid(userPO.getUid());
-			userExperiencePO.setType(newstatus.equals(oldstatus) ? "调职" : newstatus.equals("在职") ? "入职" : "离职");
+			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus==0 ? "入职" : "离职");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", odept.getDeptName(), oldduty, ndept.getDeptName(), newduty));
 			
@@ -514,7 +521,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException {
-		
+	
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
@@ -532,9 +539,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public int resetPassword(String userId,Integer company) throws FLException{
-		
-		UserPO userPO = userDao.queryUserByUserId(userId);
+	public int resetPassword(UserVO userVO,Integer company) throws FLException{
+	
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
 			throw new FLException(220005, "员工不存在");
@@ -552,13 +559,13 @@ public class UserServiceImpl implements UserService {
 		
 		String api = "resetPassword.do";
 		
-		String params = String.format("user.userId=%s&password=%s&rePassword=%s", userId,newPassword,EncryptPassword);
+		String params = String.format("user.userId=%s&password=%s&rePassword=%s",userVO.getUserId(),newPassword,EncryptPassword);
 		
-		String content = String.format("修改密码用户的id为:%s&密码明文=%s&密码密文=%s",userId,newPassword,EncryptPassword);
+		String content = String.format("修改密码用户的id为:%s&密码明文=%s&密码密文=%s",userVO.getUserId(),newPassword,EncryptPassword);
 		
 		assassinService.proxy("communion", api, params, content, userPO);
 
-		messageService.sendMessage(userId,"", "修改密码为:"+newPassword,MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR,company);
+		messageService.sendMessage(userVO.getUserId(),"", "修改密码为:"+newPassword,MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR,company);
 		
 		return 0;
 	}
@@ -592,6 +599,18 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return userVO;
+	}
+	
+	private UserBaseVO convertBaseBean(UserPO userPO) throws FLException{
+		UserBaseVO userBaseVO = new UserBaseVO(new DutyVO(), new DepartmentVO());
+		
+		BeanUtil.copyProperties(userPO, userBaseVO, Arrays.asList("role", "dept","duty", "password", "identity","company"));
+		
+		BeanUtil.copyProperties(userPO.getDuty(), userBaseVO.getDuty(),Arrays.asList("departmentType"));
+
+		BeanUtil.copyProperties(userPO.getDept(), userBaseVO.getDept(), Arrays.asList("fatherDept", "cityProper","type"));
+
+		return userBaseVO;
 	}
 	
 	

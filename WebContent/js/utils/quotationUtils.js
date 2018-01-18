@@ -233,15 +233,17 @@ var quotationUtils = {
                 var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, _dcp));
 
                 if (quotationFunctionArea.type == 3) {
+                    quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
                     quotationFunctionAreaItem.dcp = 0;
                     quotationFunctionAreaItem.dcpt = 0;
                     quotationFunctionAreaItem._discountNum = 0;
                     quotationFunctionAreaItem.quotationTotalPrice = 0;
                 } else {
+                    quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
                     quotationFunctionAreaItem.dcp = _dcp;
                     quotationFunctionAreaItem.dcpt = _dcpt;
                     quotationFunctionAreaItem._discountNum = _discountNum;
-                    quotationFunctionAreaItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.num, quotationFunctionAreaItem.unitPrice));
+                    quotationFunctionAreaItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, quotationFunctionAreaItem.unitPrice));
                 }
 
                 if (quotationFunctionAreaItem.type == 2) {

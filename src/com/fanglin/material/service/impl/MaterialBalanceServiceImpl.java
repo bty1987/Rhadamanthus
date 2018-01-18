@@ -75,20 +75,20 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 			
 			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO() ,new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 			
-			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, "material", "creater", "instorer", "poster");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial(), "house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse(), materialBalanceVO.getMaterial().getHouse(), "village");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse().getVillage(), materialBalanceVO.getMaterial().getHouse().getVillage(), "cityProper");
+			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial(), Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse(), materialBalanceVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse().getVillage(), materialBalanceVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
 			
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getCustomer(), materialBalanceVO.getMaterial().getCustomer());
 			
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getSalesman(), materialBalanceVO.getMaterial().getSalesman(), "dept", "duty");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialer(), materialBalanceVO.getMaterial().getMaterialer(), "dept", "duty");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getInstorer(), materialBalanceVO.getMaterial().getInstorer(), "dept", "duty");
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getSalesman(), materialBalanceVO.getMaterial().getSalesman(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialer(), materialBalanceVO.getMaterial().getMaterialer(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getInstorer(), materialBalanceVO.getMaterial().getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getRegion(), materialBalanceVO.getMaterial().getRegion(), "type", "fatherDept", "cityProper");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getDepartment(), materialBalanceVO.getMaterial().getDepartment(), "type", "fatherDept", "cityProper");
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialDepartment(), materialBalanceVO.getMaterial().getMaterialDepartment(), "type", "fatherDept", "cityProper");
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getRegion(), materialBalanceVO.getMaterial().getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getDepartment(), materialBalanceVO.getMaterial().getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialDepartment(), materialBalanceVO.getMaterial().getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
 			
 			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
 			materialBalanceVO.getInstorer().setBaseInfo(materialBalancePO.getInstorer());
@@ -126,7 +126,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 		for(MaterialBalancePO materialBalancePO: materialBalancePOs){
 			
 			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			BeanUtil.copyProperties(materialBalancePO, 	materialBalanceVO, "material", "creater", "instorer", "poster");
+			BeanUtil.copyProperties(materialBalancePO, 	materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial());
 			
 			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
